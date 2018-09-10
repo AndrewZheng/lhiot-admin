@@ -55,7 +55,7 @@ export default {
 </script>
 
 <style lang="less">
-.charts{
+.charts {
   //
 }
 </style>
