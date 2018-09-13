@@ -1,1 +1,6 @@
 routers.js
+/build/
+/config/
+/dist/
+/*.js
+/test/unit/coverage/

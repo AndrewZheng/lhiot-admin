@@ -1,5 +1,5 @@
-import { getBreadCrumbList, setTagNavListInLocalstorage, getMenuByRouter, getTagNavListFromLocalstorage, getHomeRoute, routeHasExist } from '@/libs/util'
-import routers from '@/router/routers'
+import { getBreadCrumbList, setTagNavListInLocalstorage, getMenuByRouter, getTagNavListFromLocalstorage, getHomeRoute, routeHasExist } from '@/libs/util';
+import routers from '@/router/routers';
 export default {
   state: {
     breadCrumbList: [],
@@ -12,26 +12,26 @@ export default {
   },
   mutations: {
     setBreadCrumb (state, routeMetched) {
-      state.breadCrumbList = getBreadCrumbList(routeMetched, state.homeRoute)
+      state.breadCrumbList = getBreadCrumbList(routeMetched, state.homeRoute);
     },
     setTagNavList (state, list) {
       if (list) {
-        state.tagNavList = [...list]
-        setTagNavListInLocalstorage([...list])
-      } else state.tagNavList = getTagNavListFromLocalstorage()
+        state.tagNavList = [...list];
+        setTagNavListInLocalstorage([...list]);
+      } else state.tagNavList = getTagNavListFromLocalstorage();
     },
     addTag (state, { route, type = 'unshift' }) {
       if (!routeHasExist(state.tagNavList, route)) {
-        if (type === 'push') state.tagNavList.push(route)
+        if (type === 'push') state.tagNavList.push(route);
         else {
-          if (route.name === 'home') state.tagNavList.unshift(route)
-          else state.tagNavList.splice(1, 0, route)
+          if (route.name === 'home') state.tagNavList.unshift(route);
+          else state.tagNavList.splice(1, 0, route);
         }
-        setTagNavListInLocalstorage([...state.tagNavList])
+        setTagNavListInLocalstorage([...state.tagNavList]);
       }
     },
     setLocal (state, lang) {
-      state.local = lang
+      state.local = lang;
     }
   }
-}
+};

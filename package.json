@@ -21,6 +21,9 @@
     "iview": "^3.0.0",
     "iview-area": "^1.5.17",
     "js-cookie": "^2.2.0",
+    "lockr": "^0.8.4",
+    "lodash": "^4.17.10",
+    "moment": "^2.22.2",
     "simplemde": "^1.11.2",
     "sortablejs": "^1.7.0",
     "vue": "^2.5.10",
@@ -45,6 +48,8 @@
     "less-loader": "^4.0.5",
     "lint-staged": "^6.0.0",
     "mockjs": "^1.0.1-beta3",
+    "node-sass": "^4.9.3",
+    "sass-loader": "^7.1.0",
     "vue-template-compiler": "^2.5.13"
   },
   "browserslist": [

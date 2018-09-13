@@ -2,14 +2,19 @@
   <div>
     <Card>
       <tables ref="tables" editable searchable search-place="top" v-model="tableData" :columns="columns" @on-delete="handleDelete"/>
+      <div style="margin: 10px;overflow: hidden">
+        <div style="float: right;">
+            <Page :total="100" :current="1" @on-change="changePage"></Page>
+        </div>
+      </div>
       <Button style="margin: 10px 0;" type="primary" @click="exportExcel">导出为Csv文件</Button>
     </Card>
   </div>
 </template>
 
 <script>
-import Tables from '_c/tables'
-import { getTableData } from '@/api/data'
+import Tables from '_c/tables';
+import { getTableData } from '@/api/data';
 export default {
   name: 'tables_page',
   components: {
@@ -34,36 +39,36 @@ export default {
                 },
                 on: {
                   'on-ok': () => {
-                    vm.$emit('on-delete', params)
-                    vm.$emit('input', params.tableData.filter((item, index) => index !== params.row.initRowIndex))
+                    vm.$emit('on-delete', params);
+                    vm.$emit('input', params.tableData.filter((item, index) => index !== params.row.initRowIndex));
                   }
                 }
               }, [
-                h('Button', '自定义删除')
-              ])
+                h('Button', '删除')
+              ]);
             }
           ]
         }
       ],
       tableData: []
-    }
+    };
   },
   methods: {
     handleDelete (params) {
-      console.log(params)
+      console.log(params);
     },
     exportExcel () {
       this.$refs.tables.exportCsv({
         filename: `table-${(new Date()).valueOf()}.csv`
-      })
+      });
     }
   },
   mounted () {
     getTableData().then(res => {
-      this.tableData = res.data
-    })
+      this.tableData = res.data;
+    });
   }
-}
+};
 </script>
 
 <style>
