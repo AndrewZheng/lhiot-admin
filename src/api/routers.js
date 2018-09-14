@@ -1,7 +1,7 @@
-import axios from '@/libs/api.request'
+import Vue from 'vue';
 
 export const getRouterReq = (access) => {
-  return axios.request({
+  return Vue.prototype.$http.request({
     url: 'get_router',
     params: {
       access

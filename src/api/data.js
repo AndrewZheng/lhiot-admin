@@ -1,15 +1,21 @@
-import axios from '@/libs/api.request'
+import Vue from 'vue';
 
-export const getTableData = () => {
-  return axios.request({
+export const getTableData = ({ page, rows }) => {
+  const data = {
+    page,
+    rows
+  };
+
+  return Vue.prototype.$http.request({
     url: 'get_table_data',
+    params: data,
     method: 'get'
-  })
-}
+  });
+};
 
 export const getDragList = () => {
-  return axios.request({
+  return Vue.prototype.$http.request({
     url: 'get_drag_list',
     method: 'get'
-  })
-}
+  });
+};

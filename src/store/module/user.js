@@ -36,8 +36,7 @@ export default {
           userName,
           password
         }).then(res => {
-          const data = res.data;
-          commit('setToken', data.token);
+          commit('setToken', res.token);
           resolve();
         }).catch(err => {
           reject(err);
@@ -64,12 +63,11 @@ export default {
     getUserInfo ({ state, commit }) {
       return new Promise((resolve, reject) => {
         getUserInfo(state.token).then(res => {
-          const data = res.data;
-          commit('setAvator', data.avator);
-          commit('setUserName', data.user_name);
-          commit('setUserId', data.user_id);
-          commit('setAccess', data.access);
-          resolve(data);
+          commit('setAvator', res.avator);
+          commit('setUserName', res.user_name);
+          commit('setUserId', res.user_id);
+          commit('setAccess', res.access);
+          resolve(res);
         }).catch(err => {
           reject(err);
         });
