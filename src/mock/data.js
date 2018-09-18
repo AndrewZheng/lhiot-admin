@@ -13,8 +13,12 @@ export const getTableData = req => {
   } = getParams(req.url);
   doCustomTimes(47, () => {
     tableData.push(Mock.mock({
+      'id|1-47': 1,
       name: '@name',
+      'age|18-40': 1,
+      sex: Random.integer(0, 1),
       email: '@email',
+      birth: Random.date(),
       createTime: '@date'
     }));
   });

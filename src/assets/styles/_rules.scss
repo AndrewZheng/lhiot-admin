@@ -1,8 +1,15 @@
 /*
- **修改mint-ui toast的z-index
+ ** 覆盖mint-ui的样式
 */
 .mint-toast{
   z-index:1100 !important;
+}
+/*
+ ** 覆盖iview-ui的样式
+*/
+
+.ivu-btn-small{
+  padding: 1px 5px 2px !important;
 }
 
 @media only screen and (max-width:320px) {
