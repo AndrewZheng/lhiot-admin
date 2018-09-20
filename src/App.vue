@@ -5,9 +5,17 @@
 </template>
 
 <script>
+import * as util from '@/libs/util.js';
+
 export default {
-  name: 'App'
-}
+  name: 'App',
+  data() {
+    return {
+      menuData: null,
+      userData: null
+    };
+  }
+};
 </script>
 
 <style lang="less">

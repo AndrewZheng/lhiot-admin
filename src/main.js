@@ -11,10 +11,7 @@ import i18n from '@/locale';
 import config from '@/config';
 import importDirective from '@/directive';
 import axiosPlugin from '@/libs/api.request';
-import {
-  enums,
-  PcEncrypt
-} from '@/util/';
+import { enums, PcEncrypt } from '@/util/';
 
 import 'iview/dist/styles/iview.css';
 import './index.less';

@@ -28,8 +28,8 @@
   </div>
 </template>
 <script>
-import DragList from '_c/drag-list'
-import { getDragList } from '@/api/data'
+import DragList from '_c/drag-list';
+import { getDragList } from '@/api/data';
 export default {
   name: 'drag_list_page',
   components: {
@@ -44,20 +44,20 @@ export default {
         right: ['drop-box', 'right-drop-box']
       },
       handleList: []
-    }
+    };
   },
   methods: {
     handleChange ({ src, target, oldIndex, newIndex }) {
-      this.handleList.push(`${src} => ${target}, ${oldIndex} => ${newIndex}`)
+      this.handleList.push(`${src} => ${target}, ${oldIndex} => ${newIndex}`);
     }
   },
   mounted () {
     getDragList().then(res => {
-      this.list1 = res.data
-      this.list2 = [res.data[0]]
-    })
+      this.list1 = res;
+      this.list2 = [res[0]];
+    });
   }
-}
+};
 </script>
 <style lang="less">
 .drag-box-card{

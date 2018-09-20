@@ -1,4 +1,4 @@
-import directive from './directives'
+import directive from './directives';
 
 const importDirective = Vue => {
   /**
@@ -9,7 +9,7 @@ const importDirective = Vue => {
    *  recover: /拖动结束之后是否恢复到原来的位置/
    * }
    */
-  Vue.directive('draggable', directive.draggable)
-}
+  Vue.directive('draggable', directive.draggable);
+};
 
-export default importDirective
+export default importDirective;

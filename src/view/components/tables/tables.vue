@@ -19,7 +19,6 @@
 
      <Modal
         v-model="modalEdit"
-        title="Common Modal dialog box title"
         :loading="loadingBtn"
         :mask-closable="false"
         @on-ok="handleOk"
@@ -39,19 +38,16 @@
          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
           <i-col span="2">性别</i-col>
           <i-col span="8">
-            <RadioGroup v-model="rowData.sex">
+            <RadioGroup v-model="rowData.sex" @on-change="changeSex">
                 <Radio label="1">
-                    <Icon type="logo-apple"></Icon>
                     <span>男</span>
                 </Radio>
                 <Radio label="0">
-                    <Icon type="logo-android"></Icon>
                     <span>女</span>
                 </Radio>
             </RadioGroup>
           </i-col>
          </Row>
-         
          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
           <i-col span="2">邮箱</i-col>
           <i-col span="12"> <Input v-model="rowData.email" placeholder="" clearable /></i-col>
@@ -139,8 +135,9 @@ export default {
       rowData: {
         name: '',
         age: 0,
+        sex: 0,
         email: '',
-        sex: 0
+        createTime: ''
       }
     };
   },
@@ -156,6 +153,7 @@ export default {
     },
     handleDelete(params) {
       console.log(params);
+      // 发送axios请求
     },
     handleEdit(params) {
       console.log(params);
@@ -168,6 +166,7 @@ export default {
         this.modalEdit = false;
         this.$Message.info('保存成功');
       }, 2000);
+      // 发送axios请求
     },
     handleCancel() {
       this.$Message.info('取消成功');
@@ -176,6 +175,9 @@ export default {
       this.$refs.tables.exportCsv({
         filename: `table-${new Date().valueOf()}.csv`
       });
+    },
+    changeSex(selectItem) {
+      console.log(`${selectItem}`);
     },
     changePage(currentPage) {
       // console.log(currentPage);

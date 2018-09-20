@@ -6,10 +6,37 @@ import iView from 'iview';
 import { getToken, canTurnTo } from '@/libs/util';
 
 Vue.use(Router);
+
+let baseRoute = [{
+  path: '/login',
+  name: 'login',
+  meta: {
+    title: 'Login - 登录',
+    hideInMenu: true
+  },
+  component: (resolve) => require(['@/view/login/login.vue'], resolve)
+}, {
+  path: '/401',
+  name: 'error_401',
+  meta: {
+    hideInMenu: true
+  },
+  component: (resolve) => require(['@/view/error-page/401.vue'], resolve)
+}, {
+  path: '*',
+  name: 'error_404',
+  meta: {
+    hideInMenu: true
+  },
+  component: (resolve) => require(['@/view/error-page/404.vue'], resolve)
+}];
+
 const router = new Router({
+  // routes: baseRoute,
   routes,
   mode: 'history'
 });
+
 const LOGIN_PAGE_NAME = 'login';
 
 router.beforeEach((to, from, next) => {
