@@ -73,7 +73,8 @@ export default [
     name: 'components',
     meta: {
       icon: 'logo-buffer',
-      title: '组件'
+      title: '组件',
+      access: ['admin']
     },
     component: Main,
     children: [
@@ -130,6 +131,15 @@ export default [
           title: '富文本编辑器'
         },
         component: () => import('@/view/components/editor/editor.vue')
+      },
+      {
+        path: 'tinymce_editor_page',
+        name: 'tinymce_editor_page',
+        meta: {
+          icon: 'ios-create',
+          title: 'Tinymce编辑器'
+        },
+        component: () => import('@/view/components/tinymce-editor/tinymce-editor.vue')
       },
       {
         path: 'icons_page',

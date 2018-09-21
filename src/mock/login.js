@@ -16,6 +16,13 @@ const USER_MAP = {
     access: ['admin'],
     token: 'admin',
     avator: 'https://avatars0.githubusercontent.com/u/20942571?s=460&v=4'
+  },
+  opreator: {
+    name: 'opreator',
+    user_id: '3',
+    access: ['opreator'],
+    token: 'opreator',
+    avator: 'https://avatars0.githubusercontent.com/u/20942571?s=460&v=4'
   }
 };
 
@@ -69,7 +76,7 @@ export const getMenusByUser = req => {
         'path': '/join',
         'title': '',
         'icon': '',
-        children: [{
+        'children': [{
           'id': '4',
           'parentid': 3,
           'name': 'join_page',
@@ -86,7 +93,7 @@ export const getMenusByUser = req => {
         'path': '/components',
         'title': '组件',
         'icon': 'logo-buffer',
-        children: [{
+        'children': [{
             'id': '6',
             'parentid': 5,
             'name': 'count_to_page',
