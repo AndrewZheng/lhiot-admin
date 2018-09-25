@@ -1,7 +1,6 @@
 <template>
   <div>
-    <tinymce-editor ref="editor" :value.sync="content" />
-    <!-- <button @click="changeContent">修改编辑器内容</button> -->
+    <tinymce-editor id="tinymce" ref="editor" v-model="content" :height="300" />
   </div>
 </template>
 
@@ -20,12 +19,11 @@ export default {
   methods: {},
   watch: {
     content(val, oldVal) {
-      console.log('new: %s, old: %s', val, oldVal);
+      console.log(`new: ${val}, old: ${oldVal}`);
     }
   }
 };
 </script>
 
 <style>
-
 </style>

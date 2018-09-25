@@ -1,5 +1,14 @@
-import { login, logout, getUserInfo } from '@/api/user';
-import { setToken, getToken } from '@/libs/util';
+import {
+  login,
+  logout,
+  getUserInfo
+} from '@/api/user';
+import {
+  setToken,
+  getToken,
+  buildMenu
+} from '@/libs/util';
+import Vue from 'vue';
 
 export default {
   state: {
@@ -7,29 +16,39 @@ export default {
     userId: '',
     avatorImgPath: '',
     token: getToken(),
-    access: ''
+    access: '',
+    menuList: ''
   },
   mutations: {
-    setAvator (state, avatorPath) {
+    setAvator(state, avatorPath) {
       state.avatorImgPath = avatorPath;
     },
-    setUserId (state, id) {
+    setUserId(state, id) {
       state.userId = id;
     },
-    setUserName (state, name) {
+    setUserName(state, name) {
       state.userName = name;
     },
-    setAccess (state, access) {
+    setAccess(state, access) {
       state.access = access;
     },
-    setToken (state, token) {
+    setToken(state, token) {
       state.token = token;
       setToken(token);
+    },
+    updateMenuList(state, routeList) {
+      console.log('routeList', ...routeList);
+      // buildMenu(routeList, 'parentid');
     }
   },
   actions: {
     // 登录
-    handleLogin ({ commit }, {userName, password}) {
+    handleLogin({
+      commit
+    }, {
+      userName,
+      password
+    }) {
       userName = userName.trim();
       return new Promise((resolve, reject) => {
         login({
@@ -44,7 +63,10 @@ export default {
       });
     },
     // 退出登录
-    handleLogOut ({ state, commit }) {
+    handleLogOut({
+      state,
+      commit
+    }) {
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
           commit('setToken', '');
@@ -60,17 +82,37 @@ export default {
       });
     },
     // 获取用户相关信息
-    getUserInfo ({ state, commit }) {
+    getUserInfo({
+      state,
+      commit,
+      dispatch
+    }) {
       return new Promise((resolve, reject) => {
         getUserInfo(state.token).then(res => {
           commit('setAvator', res.avator);
           commit('setUserName', res.user_name);
           commit('setUserId', res.user_id);
           commit('setAccess', res.access);
+          dispatch('getMenuByUser', res);
           resolve(res);
         }).catch(err => {
           reject(err);
         });
+      });
+    },
+    getMenuByUser({
+      state,
+      commit,
+      dispatch
+    }, user) {
+      Vue.prototype.$http.request({
+        url: 'get_menus_list',
+        params: {
+          userid: user.user_id
+        },
+        method: 'get'
+      }).then(res => {
+        commit('updateMenuList', res.routeList);
       });
     }
   }

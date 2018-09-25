@@ -1,6 +1,6 @@
 <template>
   <div class="tinymce">
-    <editor :id="id" v-model="tinyHtml" :init='tinymceOps'></editor>
+    <editor :id="id" v-model="content" :init="defalutOps" @onInit="handleInit" @onChange="handleChange" @onKeyUp="handleKeyup" />
   </div>
 </template>
 
@@ -8,52 +8,104 @@
 import tinymce from 'tinymce/tinymce';
 import 'tinymce/themes/modern/theme';
 import Editor from '@tinymce/tinymce-vue';
-import 'tinymce/plugins/image';
-import 'tinymce/plugins/link';
-import 'tinymce/plugins/code';
-import 'tinymce/plugins/table';
-import 'tinymce/plugins/lists';
-import 'tinymce/plugins/contextmenu';
+// Any plugins you want to use has to be imported
+import 'tinymce/plugins/advlist';
 import 'tinymce/plugins/wordcount';
+import 'tinymce/plugins/autolink';
+import 'tinymce/plugins/autosave';
+import 'tinymce/plugins/charmap';
+import 'tinymce/plugins/codesample';
+import 'tinymce/plugins/contextmenu';
+import 'tinymce/plugins/emoticons';
+import 'tinymce/plugins/fullscreen';
+import 'tinymce/plugins/hr';
+import 'tinymce/plugins/imagetools';
+import 'tinymce/plugins/insertdatetime';
+import 'tinymce/plugins/link';
+import 'tinymce/plugins/media';
+import 'tinymce/plugins/noneditable';
+import 'tinymce/plugins/paste';
+import 'tinymce/plugins/print';
+import 'tinymce/plugins/searchreplace';
+import 'tinymce/plugins/tabfocus';
+import 'tinymce/plugins/template';
+import 'tinymce/plugins/textpattern';
+import 'tinymce/plugins/visualblocks';
+import 'tinymce/plugins/anchor';
+import 'tinymce/plugins/autoresize';
+import 'tinymce/plugins/bbcode';
+import 'tinymce/plugins/code';
 import 'tinymce/plugins/colorpicker';
+import 'tinymce/plugins/directionality';
+import 'tinymce/plugins/fullpage';
+import 'tinymce/plugins/help';
+import 'tinymce/plugins/image';
+import 'tinymce/plugins/importcss';
+import 'tinymce/plugins/legacyoutput';
+import 'tinymce/plugins/lists';
+import 'tinymce/plugins/nonbreaking';
+import 'tinymce/plugins/pagebreak';
+import 'tinymce/plugins/preview';
+import 'tinymce/plugins/save';
+import 'tinymce/plugins/spellchecker';
+import 'tinymce/plugins/table';
 import 'tinymce/plugins/textcolor';
+import 'tinymce/plugins/toc';
+import 'tinymce/plugins/visualchars';
 import _ from 'lodash';
 
-const INIT = 0;
-const INPUT = 1;
-const CHANGED = 2;
-
 export default {
-  name: 'tinymce',
-  components: { Editor },
+  name: 'tinymce-editor',
   props: {
-    value: {
-      type: String,
-      default: ''
-    },
-    setup: {
-      type: Function,
-      default: function() {}
-    },
-    setting: {
-      type: Object,
+    id: {
       default: function() {
-        return this.tinymceOps;
-      }
+        return 'vue-tinymce-' + Date.now();
+      },
+      type: String
     },
+    value: { default: '', type: String },
     /**
-     * 绑定的值的类型, enum: ['html', 'text']
+     * @description 设置编辑器的插件
      */
-    valueType: {
+    plugins: {
+      default:
+        'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking save table contextmenu directionality template paste textcolor colorpicker textpattern imagetools toc help emoticons hr',
       type: String,
-      default: 'html'
+      required: false
     },
     /**
+     * @description 设置编辑器的工具栏
+     */
+    toolbar: {
+      default:
+        'bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | undo redo | link unlink image code | removeformat',
+      type: String,
+      required: false
+    },
+    /**
+     * @description 编辑器的其他设置 参考tinymce文档
+     */
+    other0ptions: {
+      default: function() {
+        return {};
+      },
+      type: Object,
+      required: false
+    },
+    /**
+     * @description 设置编辑器的高度
+     */
+    height: {
+      type: [Number, String],
+      default: 300,
+      required: false
+    },
+     /**
      * @description 设置change事件触发时间间隔
      */
     changeInterval: {
       type: Number,
-      default: 200
+      default: 300
     },
     /**
      * @description 是否开启本地存储
@@ -63,21 +115,21 @@ export default {
       default: true
     }
   },
+  components: { Editor },
   data() {
     return {
-      id: 'vue-tinymce-' + Date.now(),
-      tinyHtml: '',
+      content: '',
       editor: null,
-      status: INIT,
-      tinymceOps: {
+      cTinyMce: null,
+      checkerTimeout: null,
+      isTyping: false,
+      defalutOps: {
         language_url: '/tinymce/zh_CN.js',
         language: 'zh_CN',
         skin_url: '/tinymce/skins/lightgray',
-        height: 300,
-        plugins:
-          'link lists image code table colorpicker textcolor wordcount contextmenu',
-        toolbar:
-          'bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | undo redo | link unlink image code | removeformat',
+        height: this.height,
+        plugins: this.plugins,
+        toolbar: this.toolbar,
         branding: false,
         images_upload_url:
           'https://resource.food-see.com/v1/upload/product_image',
@@ -103,43 +155,38 @@ export default {
       }
     };
   },
-  watch: {
-    value(val) {
-      // console.log('value change', val, this.status);
-      if (this.status === CHANGED) return (this.status = INPUT);
-      if (!this.editor || !this.editor.initialized) return; // fix editor plugin is loading and set content will throw error.
-      this.editor.setContent(val);
-    }
-  },
   created() {
     if (typeof tinymce === 'undefined') throw new Error('tinymce undefined');
   },
   mounted() {
-    const setting = Object.assign({}, this.setting, {
-      selector: '#' + this.id,
-      setup: editor => {
-        this.setup(editor);
-        this.editor = editor;
-        // console.log('setup');
-        editor.on('init', () => {
-          // console.log('init', this.value);
-          editor.setContent(this.value);
-          // fix execCommand not change ,more see issues#2
-          editor.on('input change undo redo execCommand KeyUp', () => {
-            if (this.status === INPUT || this.status === INIT) { return (this.status = CHANGED); }
-            this.$emit('input', editor.getContent());
-            // console.log('editor change', editor.getContent());
-          });
-          // fix have chang not to emit input,more see issues #4
-          editor.on('NodeChange', () => {
-            this.$emit('input', editor.getContent());
-          });
-        });
-      }
-    });
-    tinymce.init(setting);
+    // 如果本地有存储加载本地存储内容
+    this.content = this.value || localStorage.editorCache;
+    this.init();
   },
   methods: {
+    init() {
+      const ops = Object.assign({}, this.defalutOps, this.other0ptions);
+      tinymce.init(ops);
+    },
+    handleInit() {
+      this.editor=tinymce.get(this.id);
+      this.editor.setContent(this.content);
+      this.$emit('input', this.content);
+    },
+    handleChange() {
+      if (this.editor.getContent() !== this.value) {
+        this.handleKeyup();
+      }
+    },
+    handleKeyup() {
+      this.isTyping = true;
+      if (this.checkerTimeout !== null) clearTimeout(this.checkerTimeout);
+      this.checkerTimeout = setTimeout(() => {
+        this.isTyping = false;
+        if (this.cache) localStorage.editorCache = this.editor.getContent();
+      }, this.changeInterval);
+      this.$emit('input', this.editor.getContent());
+    },
     handleImgUpload(blobInfo, success, failure) {
       let formdata = new FormData();
       formdata.set('file', blobInfo.blob());
@@ -157,7 +204,7 @@ export default {
         });
     }
   },
-  beforeDestroy: function() {
+  beforeDestroy() {
     this.editor.remove();
   }
 };

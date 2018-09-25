@@ -44,19 +44,25 @@ export const logout = req => {
 
 export const getMenusByUser = req => {
   const params = getParams(req.url);
-  const {
-    userid
-  } = params;
-
+  const { userid } = params;
+  /**
+   * hideInMenu: (default: false) 设为true后在左侧菜单不会显示该页面选项
+    showAlways: (default: false) 设为true后如果该路由只有一个子路由，在菜单中也会显示该父级菜单
+    notCache: (default: false) 设为true后页面不会缓存
+    access: (default: null) 可访问该页面的权限数组，当前路由设置的权限会影响子路由
+    icon: (default: -) 该页面在左侧菜单、面包屑和标签导航处显示的图标，如果是自定义图标，需要在图标名称前加下划线'_'
+    href: 'https://xxx' (default: null) 用于跳转到外部连接
+   */
   return {
-    'userid': userid,
-    'menuList': [{
+    'routeList': [{
         'id': '1',
         'parentid': 0,
         'name': 'home',
         'path': '/home',
-        'title': '首页',
-        'icon': 'ios-home',
+        'meta': {
+          'title': '首页',
+          'icon': 'ios-home'
+        },
         'children': []
       },
       {
@@ -64,9 +70,11 @@ export const getMenusByUser = req => {
         'parentid': 0,
         'name': 'doc',
         'path': '',
-        'title': '文档',
-        'icon': 'ios-book',
-        'href': 'https://lison16.github.io/iview-admin-doc/#/',
+        'meta': {
+          'title': '文档',
+          'icon': 'ios-book',
+          'href': 'https://lison16.github.io/iview-admin-doc/#/'
+        },
         'children': []
       },
       {
@@ -74,16 +82,16 @@ export const getMenusByUser = req => {
         'parentid': 0,
         'name': 'join',
         'path': '/join',
-        'title': '',
-        'icon': '',
         'children': [{
           'id': '4',
           'parentid': 3,
           'name': 'join_page',
           'path': 'join_page',
-          'title': '实战演练',
-          'icon': '_qq',
-          'href': ''
+          'meta': {
+            'title': '实战演练',
+            'icon': '_qq',
+            'href': ''
+          }
         }]
       },
       {
@@ -91,63 +99,79 @@ export const getMenusByUser = req => {
         'parentid': 0,
         'name': 'components',
         'path': '/components',
-        'title': '组件',
-        'icon': 'logo-buffer',
+        meta: {
+          'title': '组件',
+          'icon': 'logo-buffer'
+        },
         'children': [{
             'id': '6',
             'parentid': 5,
             'name': 'count_to_page',
             'path': 'count_to_page',
-            'title': '数字渐变',
-            'icon': 'md-trending-up'
+            meta: {
+              'title': '数字渐变',
+              'icon': 'md-trending-up'
+            }
           },
           {
             'id': '7',
             'parentid': 5,
             'name': 'drag_list_page',
             'path': 'drag_list_page',
-            'title': '拖拽列表',
-            'icon': 'ios-infinite'
+            meta: {
+              'title': '拖拽列表',
+              'icon': 'ios-infinite'
+            }
           },
           {
             'id': '8',
             'parentid': 5,
             'path': 'tables_page',
             'name': 'tables_page',
-            'title': '多功能表格',
-            'icon': 'md-grid'
+            meta: {
+              'title': '多功能表格',
+              'icon': 'md-grid'
+            }
           },
           {
             'id': '9',
             'parentid': 5,
             'path': 'split_pane_page',
             'name': 'split_pane_page',
-            'title': '分割窗口',
-            'icon': 'md-pause'
+            meta: {
+              'title': '分割窗口',
+              'icon': 'md-pause'
+            }
           },
           {
             'id': '10',
             'parentid': 5,
             'path': 'markdown_page',
             'name': 'markdown_page',
-            'icon': 'logo-markdown',
-            'title': 'Markdown编辑器'
+            meta: {
+              'icon': 'logo-markdown',
+              'title': 'Markdown编辑器'
+            }
           },
           {
             'id': '11',
             'parentid': 5,
             'path': 'editor_page',
             'name': 'editor_page',
-            'icon': 'ios-create',
-            'title': '富文本编辑器'
+            meta: {
+              'icon': 'ios-create',
+              'title': '富文本编辑器'
+            }
           },
           {
             'id': '12',
             'parentid': 5,
             'path': 'icons_page',
             'name': 'icons_page',
-            'icon': '_bear',
-            'title': '自定义图标'
+            meta: {
+              'icon': '_bear',
+              'title': '自定义图标'
+            }
           }
         ]
       }
