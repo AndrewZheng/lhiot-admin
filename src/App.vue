@@ -5,25 +5,18 @@
 </template>
 
 <script>
-import * as util from '@/libs/util.js';
-
 export default {
-  name: 'App',
-  data() {
-    return {
-      menuData: null,
-      userData: null
-    };
-  }
+  name: 'App'
 };
 </script>
 
 <style lang="less">
-.size{
+.size {
   width: 100%;
   height: 100%;
 }
-html,body{
+html,
+body {
   .size;
   overflow: hidden;
   margin: 0;

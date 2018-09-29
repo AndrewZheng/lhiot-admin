@@ -28,6 +28,7 @@ if (process.env.NODE_ENV === 'production') {
 
 const enums = {
   USER: {
+    ID: 'ID',
     LOGIN_NAME: 'LOGIN_NAME',
     MENU_LIST: 'MENU_LIST',
     AUTH_TOKEN: 'AUTH_TOKEN',

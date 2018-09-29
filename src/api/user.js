@@ -28,3 +28,13 @@ export const logout = (token) => {
     method: 'post'
   });
 };
+
+export const getRouterByUser= (userid) => {
+  return Vue.prototype.$http.request({
+    url: 'get_menus_list',
+    params: {
+      userid: userid
+    },
+    method: 'get'
+  });
+};

@@ -1,4 +1,6 @@
 import { on } from '@/libs/tools';
+import Vue from 'vue';
+
 const directives = {
   draggable: {
     inserted: (el, binding, vnode) => {
@@ -38,6 +40,13 @@ const directives = {
       if (!binding.value.recover) return;
       let bodyDom = document.querySelector(binding.value.body);
       bodyDom.style.transform = '';
+    }
+  },
+  has: {
+    bind: (el, binding) => {
+      if (!Vue.prototype.$_has(binding.value)) {
+        el.parentNode.removeChild(el);
+      }
     }
   }
 };

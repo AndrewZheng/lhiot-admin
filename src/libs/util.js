@@ -1,11 +1,7 @@
 import Cookies from 'js-cookie';
 // cookie保存的天数
 import config from '@/config';
-import {
-  forEach,
-  hasOneOf,
-  objEqual
-} from '@/libs/tools';
+import { forEach, hasOneOf, objEqual } from '@/libs/tools';
 
 export const TOKEN_KEY = 'token';
 
@@ -31,6 +27,7 @@ const showThisMenuEle = (item, access) => {
     else return false;
   } else return true;
 };
+
 /**
  * @param {Array} list 通过路由列表得到菜单列表
  * @returns {Array}
@@ -359,12 +356,12 @@ export const deepcopy = function (source) {
 };
 
 // 菜单数据组织
-export const buildMenu = function (array, ckey) {
+export const buildMenu = (array, ckey) => {
   let menuData = [];
   let indexKeys = Array.isArray(array) ? array.map((e) => {
     return e.id;
   }) : [];
-  ckey = ckey || 'parent_id';
+  ckey = ckey || 'parentid';
   array.forEach(function (e) {
     // 一级菜单
     if (!e[ckey] || (e[ckey] === e.id)) {
@@ -400,4 +397,27 @@ export const buildMenu = function (array, ckey) {
   };
   findChildren(menuData);
   return menuData;
+};
+
+export const getRoutes = (userPermissions) => {
+  let routeHash = {};
+  let setMenu2Hash = function (array, base) {
+    array.map(key => {
+      if (key.path) {
+        let hashKey = ((base ? base + '/' : '') + key.path).replace(/^\//, '');
+        routeHash['/' + hashKey] = true;
+        if (Array.isArray(key.children)) {
+          setMenu2Hash(key.children, key.path);
+        }
+      }
+    });
+  };
+
+  if (Array.isArray(userPermissions)) {
+    let arrayMenus = buildMenu(userPermissions);
+    console.log('built menus: ' + arrayMenus);
+    setMenu2Hash(arrayMenus);
+  }
+  // Get hash structure
+  return routeHash;
 };
