@@ -1,20 +1,35 @@
-import { getBreadCrumbList, setTagNavListInLocalstorage, getMenuByRouter, getTagNavListFromLocalstorage, getHomeRoute, routeHasExist } from '@/libs/util';
+import {
+  getBreadCrumbList,
+  setTagNavListInLocalstorage,
+  getTagNavListFromLocalstorage,
+  getHomeRoute,
+  getNextRoute,
+  routeHasExist,
+  routeEqual,
+  getRouteTitleHandled
+} from '@/libs/util';
+import beforeClose from '@/router/before-close';
+import router from '@/router';
 import routers from '@/router/routers';
 
-const state={
+const closePage = (state, route) => {
+  const nextRoute = getNextRoute(state.tagNavList, route);
+  state.tagNavList = state.tagNavList.filter(item => {
+    return !routeEqual(item, route);
+  });
+  router.push(nextRoute);
+};
+
+const state= {
   breadCrumbList: [],
   tagNavList: [],
   homeRoute: getHomeRoute(routers),
   local: ''
 };
 
-const getters={
-  menuList: (state, getters, rootState) => getMenuByRouter(routers, rootState.user.access)
-};
-
-const mutations={
-  setBreadCrumb (state, routeMetched) {
-    state.breadCrumbList = getBreadCrumbList(routeMetched, state.homeRoute);
+const mutations= {
+  setBreadCrumb (state, route) {
+    state.breadCrumbList = getBreadCrumbList(route, state.homeRoute);
   },
   setTagNavList (state, list) {
     if (list) {
@@ -22,15 +37,31 @@ const mutations={
       setTagNavListInLocalstorage([...list]);
     } else state.tagNavList = getTagNavListFromLocalstorage();
   },
+  closeTag (state, route) {
+    let tag = state.tagNavList.filter(item => routeEqual(item, route));
+    route = tag[0] ? tag[0] : null;
+    if (!route) return;
+    if (route.meta && route.meta.beforeCloseName && route.meta.beforeCloseName in beforeClose) {
+      new Promise(beforeClose[route.meta.beforeCloseName]).then(close => {
+        if (close) {
+          closePage(state, route);
+        }
+      });
+    } else {
+      closePage(state, route);
+    }
+  },
   addTag (state, { route, type = 'unshift' }) {
-    if (!routeHasExist(state.tagNavList, route)) {
-      if (type === 'push') state.tagNavList.push(route);
+    let router = getRouteTitleHandled(route);
+    if (!routeHasExist(state.tagNavList, router)) {
+      if (type === 'push') state.tagNavList.push(router);
       else {
-        if (route.name === 'home') state.tagNavList.unshift(route);
-        else state.tagNavList.splice(1, 0, route);
+        if (router.name === 'home') state.tagNavList.unshift(router);
+        else state.tagNavList.splice(1, 0, router);
       }
       setTagNavListInLocalstorage([...state.tagNavList]);
     }
+    setTagNavListInLocalstorage([...state.tagNavList]);
   },
   setLocal (state, lang) {
     state.local = lang;
@@ -43,7 +74,6 @@ const actions={
 
 export default {
   state,
-  getters,
   mutations,
   actions
 };

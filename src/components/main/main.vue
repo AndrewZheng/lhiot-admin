@@ -114,21 +114,16 @@ export default {
       this.collapsed = state;
     },
     handleCloseTag (res, type, route) {
-      let openName = '';
       if (type === 'all') {
-        this.turnToPage('home');
-        openName = 'home';
+        this.turnToPage('home')
       } else if (routeEqual(this.$route, route)) {
         if (type === 'others') {
-          openName = route.name;
         } else {
-          const nextRoute = getNextRoute(this.tagNavList, route);
-          this.$router.push(nextRoute);
-          openName = nextRoute.name;
+          const nextRoute = getNextRoute(this.tagNavList, route)
+          this.$router.push(nextRoute)
         }
       }
-      this.setTagNavList(res);
-      this.$refs.sideMenu.updateOpenName(openName);
+      this.setTagNavList(res)
     },
     handleClick (item) {
       this.turnToPage(item);
@@ -136,8 +131,14 @@ export default {
   },
   watch: {
     '$route' (newRoute) {
-      this.setBreadCrumb(newRoute.matched);
-      this.setTagNavList(getNewTagList(this.tagNavList, newRoute));
+      const { name, query, params, meta } = newRoute
+      this.addTag({
+        route: { name, query, params, meta },
+        type: 'push'
+      })
+      this.setBreadCrumb(newRoute)
+      this.setTagNavList(getNewTagList(this.tagNavList, newRoute))
+      this.$refs.sideMenu.updateOpenName(newRoute.name)
     }
   },
   mounted () {
@@ -147,8 +148,8 @@ export default {
     this.setTagNavList();
     this.addTag({
       route: this.$store.state.app.homeRoute
-    });
-    this.setBreadCrumb(this.$route.matched);
+    })
+    this.setBreadCrumb(this.$route)
     // 设置初始语言
     this.setLocal(this.$i18n.locale);
     // 文档提示

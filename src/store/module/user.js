@@ -1,7 +1,6 @@
 import { login, logout, getUserInfo, getRouterByUser } from '@/api/user';
 import { setToken, getToken, getRoutes } from '@/libs/util';
 import routersComponent from '@/router/routersComponent';
-import routers from '@/router/routers';
 import { PcLockr, enums, gbs } from '@/util/';
 
 const state = {
@@ -10,7 +9,7 @@ const state = {
   avatorImgPath: '',
   token: getToken(),
   access: '',
-  menuList: '',
+  hasGetInfo: false,
   userPermission: [],
   routePermission: {},
   actualRouter: []
@@ -44,6 +43,9 @@ const mutations = {
       PcLockr.delete(enums.USER.ID);
     }
     PcLockr.set(enums.USER.ID, id);
+  },
+  setHasGetInfo (state, status) {
+    state.hasGetInfo = status;
   },
   setUserName(state, name) {
     state.userName = name;
@@ -139,6 +141,7 @@ const actions = {
         commit('setUserName', res.name);
         commit('setUserId', res.user_id);
         commit('setAccess', res.access);
+        commit('setHasGetInfo', true);
         resolve(res);
       }).catch(err => {
         reject(err);
