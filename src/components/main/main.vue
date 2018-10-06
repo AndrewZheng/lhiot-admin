@@ -13,8 +13,9 @@
       <Header class="header-con">
         <header-bar :collapsed="collapsed" @on-coll-change="handleCollapsedChange">
           <user :user-avator="userAvator"/>
-          <language @on-lang-change="setLocal" style="margin-right: 10px;" :lang="local"/>
-          <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
+          <System style="margin-right: 10px;" :system="systemCurrent" :system-list="systemList" />
+          <language @on-lang-change="setLocal" style="margin-right: 10px;" :lang="local" />
+          <fullscreen v-model="isFullscreen" style="margin-right: 10px;" />
         </header-bar>
       </Header>
       <Content class="main-content-con">
@@ -37,6 +38,7 @@ import SideMenu from './components/side-menu';
 import HeaderBar from './components/header-bar';
 import TagsNav from './components/tags-nav';
 import User from './components/user';
+import System from './components/system';
 import Fullscreen from './components/fullscreen';
 import Language from './components/language';
 import { mapMutations, mapActions } from 'vuex';
@@ -52,7 +54,8 @@ export default {
     Language,
     TagsNav,
     Fullscreen,
-    User
+    User,
+    System
   },
   data () {
     return {
@@ -78,8 +81,14 @@ export default {
     menuList () {
       return this.$store.getters.menuList;
     },
+    systemList() {
+      return this.$store.getters.systemList;
+    },
     local () {
       return this.$store.state.app.local;
+    },
+    systemCurrent () {
+      return this.$store.getters.systemCurrent;
     }
   },
   methods: {
@@ -115,15 +124,15 @@ export default {
     },
     handleCloseTag (res, type, route) {
       if (type === 'all') {
-        this.turnToPage('home')
+        this.turnToPage('home');
       } else if (routeEqual(this.$route, route)) {
         if (type === 'others') {
         } else {
-          const nextRoute = getNextRoute(this.tagNavList, route)
-          this.$router.push(nextRoute)
+          const nextRoute = getNextRoute(this.tagNavList, route);
+          this.$router.push(nextRoute);
         }
       }
-      this.setTagNavList(res)
+      this.setTagNavList(res);
     },
     handleClick (item) {
       this.turnToPage(item);
@@ -131,14 +140,14 @@ export default {
   },
   watch: {
     '$route' (newRoute) {
-      const { name, query, params, meta } = newRoute
+      const { name, query, params, meta } = newRoute;
       this.addTag({
         route: { name, query, params, meta },
         type: 'push'
-      })
-      this.setBreadCrumb(newRoute)
-      this.setTagNavList(getNewTagList(this.tagNavList, newRoute))
-      this.$refs.sideMenu.updateOpenName(newRoute.name)
+      });
+      this.setBreadCrumb(newRoute);
+      this.setTagNavList(getNewTagList(this.tagNavList, newRoute));
+      this.$refs.sideMenu.updateOpenName(newRoute.name);
     }
   },
   mounted () {
@@ -148,8 +157,8 @@ export default {
     this.setTagNavList();
     this.addTag({
       route: this.$store.state.app.homeRoute
-    })
-    this.setBreadCrumb(this.$route)
+    });
+    this.setBreadCrumb(this.$route);
     // 设置初始语言
     this.setLocal(this.$i18n.locale);
     // 文档提示

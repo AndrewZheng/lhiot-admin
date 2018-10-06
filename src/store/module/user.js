@@ -1,11 +1,12 @@
 import { login, logout, getUserInfo, getRouterByUser } from '@/api/user';
-import { setToken, getToken, getRoutes, filterLocalRoute } from '@/libs/util';
+import { setToken, getToken, filterLocalRoute } from '@/libs/util';
 import routersLocal, { constantRouterMap } from '@/router/routers';
-import { PcLockr, enums, gbs } from '@/util/';
+import { PcLockr, enums, gbs } from 'util/';
 
 const state = {
   userName: '',
   userId: '',
+  sessionId: '',
   avatorImgPath: '',
   token: getToken(),
   access: '',
@@ -69,13 +70,8 @@ const mutations = {
   generateRoutes(state, routeList) {
     console.log('routeList', routeList);
     state.userPermission = routeList;
-
-    // let routePermission = getRoutes(routeList);
-    // console.log('routePermission: ', routePermission);
-    // state.routePermission = routePermission;
-
     let actualRouter= filterLocalRoute(routeList, routersLocal);
-    console.log('actualRouter: ', ...actualRouter);
+    console.log('actualRouter: ', actualRouter);
     state.actualRouter = actualRouter;
     state.routers = constantRouterMap.concat(actualRouter);
   }
@@ -83,11 +79,10 @@ const mutations = {
 
 const actions = {
   // 登录
-  handleLogin({ commit }, { userName, password }) {
+  handleLogin({ commit, dispatch }, { userName, password }) {
     userName = userName.trim();
     return new Promise((resolve, reject) => {
       login({ userName, password }).then(res => {
-        // step 1
         commit('setToken', res.token);
         resolve();
       }).catch(err => {
@@ -112,7 +107,7 @@ const actions = {
     });
   },
   // 获取用户相关信息
-  getUserInfo({ state, commit }) {
+  getUserInfo({ state, commit, dispatch }) {
     return new Promise((resolve, reject) => {
       getUserInfo(state.token).then(res => {
         commit('setAvator', res.avator);
@@ -120,6 +115,7 @@ const actions = {
         commit('setUserId', res.user_id);
         commit('setAccess', res.access);
         commit('setHasGetInfo', true);
+        dispatch('getSystemList', null, { root: true });
         resolve(res);
       }).catch(err => {
         reject(err);
@@ -130,7 +126,19 @@ const actions = {
     return new Promise((resolve, reject) => {
       getRouterByUser(id).then(res => {
         if (res && res.length > 0) {
-          commit('generateRoutes', res[0].routeList);
+          // 默认第一次用系统数组第一项生成菜单
+          let list = res[0].routeList;
+          if (PcLockr.get(enums.SYSTEM)!=null) {
+            const system=JSON.parse(PcLockr.get(enums.SYSTEM));
+            console.log('system from lockr: ', system);
+            res.forEach(obj => {
+              if (obj.systemType == system.code) {
+                list= obj.routeList;
+              }
+            });
+            console.log('routelist: ', list);
+          }
+          commit('generateRoutes', list);
         }
         resolve(res);
       }).catch(err => {

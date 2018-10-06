@@ -70,7 +70,7 @@ class HttpRequest {
       // 全局追加openid
       config.params = (
         Object.assign((config.params ? config.params : {}), {
-          'SESSION': store.state.openid
+          'X-SessionId': store.state.sessionId
         })
       );
       // 解决axios post请求后台获取不到参数问题 如果支持json参数格式的介绍则不需要

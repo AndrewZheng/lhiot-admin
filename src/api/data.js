@@ -19,3 +19,10 @@ export const getDragList = () => {
     method: 'get'
   });
 };
+
+export const getSystemList = () => {
+  return Vue.prototype.$http.request({
+    url: 'get_system_list',
+    method: 'get'
+  });
+};

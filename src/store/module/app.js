@@ -12,6 +12,8 @@ import {
 import beforeClose from '@/router/before-close';
 import router from '@/router';
 import routers from '@/router/routers';
+import { getSystemList } from '@/api/data';
+import { PcLockr, enums, gbs } from 'util/';
 
 const closePage = (state, route) => {
   const nextRoute = getNextRoute(state.tagNavList, route);
@@ -25,7 +27,9 @@ const state= {
   breadCrumbList: [],
   tagNavList: [],
   homeRoute: getHomeRoute(routers),
-  local: ''
+  local: '',
+  systemList: [],
+  systemCurrent: null
 };
 
 const getters={
@@ -33,6 +37,12 @@ const getters={
     const menuData=getMenuByRouter(rootState.user.actualRouter);
     console.log('menuData: ', menuData);
     return menuData;
+  },
+  systemCurrent: (state) => {
+     if (!state.systemCurrent) {
+      state.systemCurrent= PcLockr.get(enums.SYSTEM)? JSON.parse(PcLockr.get(enums.SYSTEM)): {};
+     }
+     return state.systemCurrent;
   }
 };
 
@@ -45,6 +55,21 @@ const mutations= {
       state.tagNavList = [...list];
       setTagNavListInLocalstorage([...list]);
     } else state.tagNavList = getTagNavListFromLocalstorage();
+  },
+  setSystemList(state, list) {
+    if (list) {
+      state.systemList = [...list];
+    }
+  },
+  setCurrentSystem(state, list) {
+    // 如果不是第一次登录则从Pclockr里取
+    if (!PcLockr.get(enums.SYSTEM)) {
+      let obj= list[0] || {};
+      state.systemCurrent= obj;
+      PcLockr.set(enums.SYSTEM, JSON.stringify(obj));
+    } else {
+      state.systemCurrent= PcLockr.get(enums.SYSTEM)? JSON.parse(PcLockr.get(enums.SYSTEM)): {};
+    }
   },
   closeTag (state, route) {
     let tag = state.tagNavList.filter(item => routeEqual(item, route));
@@ -78,7 +103,17 @@ const mutations= {
 };
 
 const actions={
-
+  getSystemList({ commit }) {
+    return new Promise((resolve, reject) => {
+      getSystemList().then(res => {
+        commit('setSystemList', res.array);
+        commit('setCurrentSystem', res.array);
+        resolve();
+      }).catch(err => {
+        reject(err);
+      });
+    });
+  }
 };
 
 export default {
