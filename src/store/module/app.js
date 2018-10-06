@@ -2,6 +2,7 @@ import {
   getBreadCrumbList,
   setTagNavListInLocalstorage,
   getTagNavListFromLocalstorage,
+  getMenuByRouter,
   getHomeRoute,
   getNextRoute,
   routeHasExist,
@@ -25,6 +26,14 @@ const state= {
   tagNavList: [],
   homeRoute: getHomeRoute(routers),
   local: ''
+};
+
+const getters={
+  menuList: (state, getters, rootState) => {
+    const menuData=getMenuByRouter(rootState.user.actualRouter);
+    console.log('menuData: ', menuData);
+    return menuData;
+  }
 };
 
 const mutations= {
@@ -74,6 +83,7 @@ const actions={
 
 export default {
   state,
+  getters,
   mutations,
   actions
 };

@@ -1,7 +1,11 @@
 import Cookies from 'js-cookie';
 // cookie保存的天数
 import config from '@/config';
-import { forEach, hasOneOf, objEqual } from '@/libs/tools';
+import {
+  forEach,
+  hasOneOf,
+  objEqual
+} from '@/libs/tools';
 
 export const TOKEN_KEY = 'token';
 
@@ -32,7 +36,7 @@ const showThisMenuEle = (item, access) => {
  * @param {Array} list 通过路由列表得到菜单列表
  * @returns {Array}
  */
-export const getMenuByRouter = (list, access) => {
+export const getMenuByRouter = (list) => {
   let res = [];
   forEach(list, item => {
     if (!item.meta || (item.meta && !item.meta.hideInMenu)) {
@@ -41,14 +45,48 @@ export const getMenuByRouter = (list, access) => {
         name: item.name,
         meta: item.meta
       };
-      if ((hasChild(item) || (item.meta && item.meta.showAlways)) && showThisMenuEle(item, access)) {
-        obj.children = getMenuByRouter(item.children, access);
+      if ((hasChild(item) || (item.meta && item.meta.showAlways))) {
+        obj.children = getMenuByRouter(item.children);
       }
       if (item.meta && item.meta.href) obj.href = item.meta.href;
-      if (showThisMenuEle(item, access)) res.push(obj);
+      res.push(obj);
     }
   });
   return res;
+};
+
+/**
+ * @param {Array} list 通过返回的用户权限菜单
+ * @param {Array} list 本地所有路由
+ * @returns {Array}
+ */
+export const filterLocalRoute = (routeList, routersLocal) => {
+  let actualRouter = [];
+  let findLocalRoute = (array, base) => {
+    let replyResult = [];
+    array.forEach(route => {
+      // let pathKey = (base ? base + '/' : '') + route.path;
+      // if (route.path == '/' || route.path == '/home') {
+      //   pathKey = route.path;
+      // }
+      routeList.forEach(accessRoute => {
+        if (accessRoute.code === route.name) {
+          if (Array.isArray(route.children)) {
+            route.children = findLocalRoute(route.children, route.path);
+          }
+          replyResult.push(route);
+        }
+      });
+    });
+
+    if (base) {
+      return replyResult;
+    } else {
+      actualRouter = actualRouter.concat(replyResult);
+    }
+  };
+  findLocalRoute(routersLocal);
+  return actualRouter;
 };
 
 /**
@@ -60,7 +98,8 @@ export const getBreadCrumbList = (route, homeRoute) => {
   let res = routeMetched.filter(item => {
     return item.meta === undefined || !item.meta.hide;
   }).map(item => {
-    let meta = {...item.meta};
+    let meta = { ...item.meta
+    };
     if (meta.title && typeof meta.title === 'function') meta.title = meta.title(route);
     let obj = {
       icon: (item.meta && item.meta.icon) || '',
@@ -78,8 +117,10 @@ export const getBreadCrumbList = (route, homeRoute) => {
 };
 
 export const getRouteTitleHandled = route => {
-  let router = {...route};
-  let meta = {...route.meta};
+  let router = { ...route
+  };
+  let meta = { ...route.meta
+  };
   if (meta.title && typeof meta.title === 'function') meta.title = meta.title(router);
   router.meta = meta;
   return router;
@@ -388,7 +429,7 @@ export const buildMenu = (array, ckey) => {
   ckey = ckey || 'parentid';
   array.forEach(function (e) {
     // 一级菜单
-    if (!e[ckey] || (e[ckey] === e.id)) {
+    if (!e[ckey] || (e[ckey] === e.id) || e[ckey]== '0') {
       delete e[ckey];
       menuData.push(deepcopy(e)); // 深拷贝
     } else if (Array.isArray(indexKeys)) {
@@ -401,6 +442,7 @@ export const buildMenu = (array, ckey) => {
       }
     }
   });
+  console.log('menuData first level: ', menuData);
   let findChildren = function (parentArr) {
     if (Array.isArray(parentArr) && parentArr.length) {
       parentArr.forEach(function (parentNode) {
@@ -420,10 +462,11 @@ export const buildMenu = (array, ckey) => {
     }
   };
   findChildren(menuData);
+  console.log('menuData mutile level: ', menuData);
   return menuData;
 };
 
-export const getRoutes = (userPermissions) => {
+export const getRoutes = (routeList) => {
   let routeHash = {};
   let setMenu2Hash = function (array, base) {
     array.map(key => {
@@ -437,9 +480,9 @@ export const getRoutes = (userPermissions) => {
     });
   };
 
-  if (Array.isArray(userPermissions)) {
-    let arrayMenus = buildMenu(userPermissions);
-    console.log('built menus: ' + arrayMenus);
+  if (Array.isArray(routeList)) {
+    let arrayMenus = buildMenu(routeList, 'parentid');
+    console.log('built menus: ', arrayMenus);
     setMenu2Hash(arrayMenus);
   }
   // Get hash structure

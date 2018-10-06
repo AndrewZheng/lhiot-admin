@@ -39,11 +39,11 @@ export const getUserInfo = req => {
 export const logout = req => {
   return null;
 };
-
+ 
 export const getMenusByUser = req => {
   const params = getParams(req.url);
   const { userid } = params;
-  /**
+   /**
    *  meta: {
         hideInMenu: (default: false) 设为true后在左侧菜单不会显示该页面选项
         showAlways: (default: false) 设为true后如果该路由只有一个子路由，在菜单中也会显示该父级菜单
@@ -55,161 +55,148 @@ export const getMenusByUser = req => {
    */
   return [{
     'systemType': 'APP',
-    'routeList': [{
+    'routeList': [
+      {
         'id': '1',
         'parentid': 0,
-        'name': '_home',
-        'path': '/',
-        'redirect': '/home',
-        'component': 'Main',
+        'code': 'home',
+        'path': '/home',
+        'component': 'Home',
         'meta': {
+          'title': '首页',
+          'icon': 'ios-home',
           hideInMenu: true,
           notCache: true
-        },
-        'children': [{
-          'id': '13',
-          'parentid': 1,
-          'name': 'home',
-          'path': '/home',
-          'component': 'Home',
-          'meta': {
-            'title': '首页',
-            'icon': 'ios-home',
-            hideInMenu: true,
-            notCache: true
-          }
-        }]
+        }
       },
       {
         'id': '2',
         'parentid': 0,
-        'name': 'doc',
+        'code': 'doc',
         'path': '',
         'meta': {
           'title': '文档',
           'icon': 'ios-book',
           'href': 'https://lison16.github.io/iview-admin-doc/#/'
-        },
-        'children': []
+        }
       },
       {
         'id': '3',
         'parentid': 0,
-        'name': 'join',
+        'code': 'join',
         'path': '/join',
-        'component': 'Main',
-        'children': [{
-          'id': '4',
-          'parentid': 3,
-          'name': 'join_page',
-          'path': 'join_page',
-          'component': 'JoinPage',
-          'meta': {
-            'title': '实战演练',
-            'icon': '_qq',
-            'href': ''
-          }
-        }]
+        'component': 'Main'
+      },
+      {
+        'id': '4',
+        'parentid': 3,
+        'code': 'join_page',
+        'path': 'join_page',
+        'component': 'JoinPage',
+        'meta': {
+          'title': '实战演练',
+          'icon': '_qq',
+          'href': ''
+        }
       },
       {
         'id': '5',
         'parentid': 0,
-        'name': 'components',
+        'code': 'components',
         'path': '/components',
         'meta': {
           'title': '组件',
           'icon': 'logo-buffer'
         },
-        'component': 'Main',
-        'children': [{
-            'id': '6',
-            'parentid': 5,
-            'name': 'count_to_page',
-            'path': 'count_to_page',
-            'component': 'CountTo',
-            'meta': {
-              'title': '数字渐变',
-              'icon': 'md-trending-up'
-            }
-          },
-          {
-            'id': '7',
-            'parentid': 5,
-            'name': 'drag_list_page',
-            'path': 'drag_list_page',
-            'component': 'DragList',
-            'meta': {
-              'title': '拖拽列表',
-              'icon': 'ios-infinite'
-            }
-          },
-          {
-            'id': '8',
-            'parentid': 5,
-            'path': 'tables_page',
-            'name': 'tables_page',
-            'component': 'Tables',
-            'meta': {
-              'title': '多功能表格',
-              'icon': 'md-grid'
-            }
-          },
-          {
-            'id': '9',
-            'parentid': 5,
-            'path': 'split_pane_page',
-            'name': 'split_pane_page',
-            'component': 'SplitPane',
-            'meta': {
-              'title': '分割窗口',
-              'icon': 'md-pause'
-            }
-          },
-          {
-            'id': '10',
-            'parentid': 5,
-            'path': 'markdown_page',
-            'name': 'markdown_page',
-            'component': 'MarkDown',
-            'meta': {
-              'icon': 'logo-markdown',
-              'title': 'Markdown编辑器'
-            }
-          },
-          {
-            'id': '11',
-            'parentid': 5,
-            'path': 'editor_page',
-            'name': 'editor_page',
-            'component': 'Editor',
-            'meta': {
-              'icon': 'ios-create',
-              'title': '富文本编辑器'
-            }
-          },
-          {
-            'id': '12',
-            'parentid': 5,
-            'component': 'Icons',
-            'path': 'icons_page',
-            'name': 'icons_page',
-            'meta': {
-              'icon': '_bear',
-              'title': '自定义图标'
-            }
-          },
-          {
-            'id': '14',
-            'parentid': 5,
-            'path': 'tinymce_editor_page',
-            'name': 'tinymce_editor_page',
-            'component': 'TinymceEditor',
-            'meta': {
-              'icon': 'ios-create',
-              'title': 'Tinymce编辑器'
-            }
-          }
-        ]
+        'component': 'Main'
+      },
+      {
+        'id': '6',
+        'parentid': 5,
+        'code': 'count_to_page',
+        'path': 'count_to_page',
+        'component': 'CountTo',
+        'meta': {
+          'title': '数字渐变',
+          'icon': 'md-trending-up'
+        }
+      },
+      {
+        'id': '7',
+        'parentid': 5,
+        'code': 'drag_list_page',
+        'path': 'drag_list_page',
+        'component': 'DragList',
+        'meta': {
+          'title': '拖拽列表',
+          'icon': 'ios-infinite'
+        }
+      },
+      {
+        'id': '8',
+        'parentid': 5,
+        'path': 'tables_page',
+        'code': 'tables_page',
+        'component': 'Tables',
+        'meta': {
+          'title': '多功能表格',
+          'icon': 'md-grid'
+        }
+      },
+      {
+        'id': '9',
+        'parentid': 5,
+        'path': 'split_pane_page',
+        'code': 'split_pane_page',
+        'component': 'SplitPane',
+        'meta': {
+          'title': '分割窗口',
+          'icon': 'md-pause'
+        }
+      },
+      {
+        'id': '10',
+        'parentid': 5,
+        'path': 'markdown_page',
+        'code': 'markdown_page',
+        'component': 'MarkDown',
+        'meta': {
+          'icon': 'logo-markdown',
+          'title': 'Markdown编辑器'
+        }
+      },
+      // {
+      //   'id': '11',
+      //   'parentid': 5,
+      //   'path': 'editor_page',
+      //   'code': 'editor_page',
+      //   'component': 'Editor',
+      //   'meta': {
+      //     'icon': 'ios-create',
+      //     'title': '富文本编辑器'
+      //   }
+      // },
+      // {
+      //   'id': '12',
+      //   'parentid': 5,
+      //   'component': 'Icons',
+      //   'path': 'icons_page',
+      //   'code': 'icons_page',
+      //   'meta': {
+      //     'icon': '_bear',
+      //     'title': '自定义图标'
+      //   }
+      // },
+      {
+        'id': '13',
+        'parentid': 5,
+        'path': 'tinymce_editor_page',
+        'code': 'tinymce_editor_page',
+        'component': 'TinymceEditor',
+        'meta': {
+          'icon': 'ios-create',
+          'title': 'Tinymce编辑器'
+        }
       }
     ]
   }];

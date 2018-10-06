@@ -1,5 +1,5 @@
 
-const Main = (resolve) => require(['@/view/main'], resolve);
+const Main = (resolve) => require(['@/components/main'], resolve);
 const ParentView= (resolve) => require(['@/components/parent-view'], resolve);
 const Home = (resolve) => require(['@/view/single-page/home'], resolve);
 const JoinPage = (resolve) => require(['@/view/join-page.vue'], resolve);
@@ -11,17 +11,6 @@ const MarkDown = (resolve) => require(['@/view/components/markdown/markdown.vue'
 const Editor = (resolve) => require(['@/view/components/editor/editor.vue'], resolve);
 const TinymceEditor = (resolve) => require(['@/view/components/tinymce-editor/tinymce-editor.vue'], resolve);
 const Icons = (resolve) => require(['@/view/components/icons/icons.vue'], resolve);
-const UpdateTable = (resolve) => require(['@/view/update/update-table.vue'], resolve);
-const UpdatePaste = (resolve) => require(['@/view/update/update-paste.vue'], resolve);
-
-// const DragList =(resolve) => require(['@/view/components/drag-list/drag-list.vue'], resolve);
-// const DragList =(resolve) => require(['@/view/components/drag-list/drag-list.vue'], resolve);
-// const DragList =(resolve) => require(['@/view/components/drag-list/drag-list.vue'], resolve);
-// const DragList =(resolve) => require(['@/view/components/drag-list/drag-list.vue'], resolve);
-// const DragList =(resolve) => require(['@/view/components/drag-list/drag-list.vue'], resolve);
-// const DragList =(resolve) => require(['@/view/components/drag-list/drag-list.vue'], resolve);
-// const DragList =(resolve) => require(['@/view/components/drag-list/drag-list.vue'], resolve);
-// const DragList =(resolve) => require(['@/view/components/drag-list/drag-list.vue'], resolve);
 
 export default {
   Main,
@@ -35,7 +24,5 @@ export default {
   MarkDown,
   Editor,
   TinymceEditor,
-  Icons,
-  UpdateTable,
-  UpdatePaste
+  Icons
 };

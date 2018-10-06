@@ -1,6 +1,6 @@
 import { login, logout, getUserInfo, getRouterByUser } from '@/api/user';
-import { setToken, getToken, getRoutes } from '@/libs/util';
-import routersComponent from '@/router/routersComponent';
+import { setToken, getToken, getRoutes, filterLocalRoute } from '@/libs/util';
+import routersLocal, { constantRouterMap } from '@/router/routers';
 import { PcLockr, enums, gbs } from '@/util/';
 
 const state = {
@@ -12,6 +12,7 @@ const state = {
   hasGetInfo: false,
   userPermission: [],
   routePermission: {},
+  routers: constantRouterMap,
   actualRouter: []
 };
 
@@ -34,6 +35,10 @@ const getters = {
 };
 
 const mutations = {
+  setRouters: (state, routers) => {
+    state.actualRouter = routers;
+    state.routers = constantRouterMap.concat(routers);
+  },
   setAvator(state, avatorPath) {
     state.avatorImgPath = avatorPath;
   },
@@ -62,44 +67,17 @@ const mutations = {
     setToken(token);
   },
   generateRoutes(state, routeList) {
-    console.log('routeList', ...routeList);
-    // Save information, if it is used elsewhere.
+    console.log('routeList', routeList);
     state.userPermission = routeList;
-    let routePermission = getRoutes(routeList);
-    console.log('routePermission: ', routePermission);
-    state.routePermission = routePermission;
 
-    let actualRouter = [];
-    let findLocalRoute = (array, base) => {
-      let replyResult = [];
-      array.forEach(route => {
-        let pathKey = (base ? base + '/' : '') + route.path;
-        if (route.path== '/' || route.path=='/home') {
-          pathKey= route.path;
-        }
-        let component = route.component? routersComponent[route.component]: null;
-        route.component = component;
+    // let routePermission = getRoutes(routeList);
+    // console.log('routePermission: ', routePermission);
+    // state.routePermission = routePermission;
 
-        if (routePermission[pathKey]) {
-          if (Array.isArray(route.children)) {
-            route.children = findLocalRoute(route.children, route.path);
-          }
-          replyResult.push(route);
-        }
-      });
-      if (base) {
-        return replyResult;
-      } else {
-        actualRouter = actualRouter.concat(replyResult);
-      }
-    };
-
-    findLocalRoute(routeList);
-    state.actualRouter= actualRouter.concat([{
-      path: '*',
-      redirect: '/404'
-    }]);
+    let actualRouter= filterLocalRoute(routeList, routersLocal);
     console.log('actualRouter: ', ...actualRouter);
+    state.actualRouter = actualRouter;
+    state.routers = constantRouterMap.concat(actualRouter);
   }
 };
 
@@ -134,7 +112,7 @@ const actions = {
     });
   },
   // 获取用户相关信息
-  getUserInfo({ state, commit, dispatch }) {
+  getUserInfo({ state, commit }) {
     return new Promise((resolve, reject) => {
       getUserInfo(state.token).then(res => {
         commit('setAvator', res.avator);
@@ -148,9 +126,9 @@ const actions = {
       });
     });
   },
-  getRouterByUser({ state, commit }, user) {
+  getRouterByUser({ state, commit }, id) {
     return new Promise((resolve, reject) => {
-      getRouterByUser(user.user_id).then(res => {
+      getRouterByUser(id).then(res => {
         if (res && res.length > 0) {
           commit('generateRoutes', res[0].routeList);
         }
