@@ -106,8 +106,10 @@ const actions={
   getSystemList({ commit }) {
     return new Promise((resolve, reject) => {
       getSystemList().then(res => {
-        commit('setSystemList', res.array);
-        commit('setCurrentSystem', res.array);
+        if (res && res.array.length >0) {
+          commit('setSystemList', res.array);
+          commit('setCurrentSystem', res.array);
+        }
         resolve();
       }).catch(err => {
         reject(err);

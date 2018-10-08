@@ -69,6 +69,12 @@ const enums = {
       version: 'v1-0-0'
     }
   },
+  IMS_SERVICE: {
+    serviceID: 'ims-service',
+    headers: {
+      version: 'v1-0'
+    }
+  },
   PAYTYPE: {
     RECHARGE: 'RECHARGE', // 充值
     ORDER: 'ORDER' // 订单

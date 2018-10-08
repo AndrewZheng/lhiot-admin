@@ -5,7 +5,7 @@ import store from '@/store';
 import iView from 'iview';
 
 import { getToken } from '@/libs/util';
-
+import { PcLockr, enums } from 'util/';
 Vue.use(Router);
 
 const router = new Router({
@@ -27,9 +27,16 @@ router.beforeEach((to, from, next) => {
         name: 'home' // 跳转到home页
       });
     } else {
+      console.log('hasGetInfo: ', store.getters.hasGetInfo);
       if (!store.getters.hasGetInfo) {
         store.dispatch('getUserInfo').then(user => {
-          store.dispatch('getRouterByUser', user.user_id).then(res => {
+          // 当前的system已经缓存
+          let pid= 0;
+          if (PcLockr.get(enums.SYSTEM)) {
+            const system= JSON.parse(PcLockr.get(enums.SYSTEM));
+            pid= system.id;
+          }
+          store.dispatch('getRouteListById', pid).then(res => {
             console.log('getActualRouter: ', store.getters.getActualRouter);
             router.addRoutes(store.getters.getActualRouter); // 动态添加可访问路由表
             next({ ...to, replace: true });

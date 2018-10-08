@@ -57,7 +57,7 @@ export const getMenusByUser = req => {
   */
   return [{
       'systemType': 'team-buy-system',
-      'routeList': [{
+      'array': [{
           'id': '1',
           'parentid': 0,
           'code': 'home',
@@ -152,7 +152,7 @@ export const getMenusByUser = req => {
     },
     {
       'systemType': 'system',
-      'routeList': [{
+      'array': [{
           'id': '2',
           'parentid': 0,
           'code': 'doc',
@@ -161,25 +161,6 @@ export const getMenusByUser = req => {
             'title': '文档',
             'icon': 'ios-book',
             'href': 'https://lison16.github.io/iview-admin-doc/#/'
-          }
-        },
-        {
-          'id': '3',
-          'parentid': 0,
-          'code': 'join',
-          'path': '/join',
-          'component': 'Main'
-        },
-        {
-          'id': '4',
-          'parentid': 3,
-          'code': 'join_page',
-          'path': 'join_page',
-          'component': 'JoinPage',
-          'meta': {
-            'title': '实战演练',
-            'icon': '_qq',
-            'href': ''
           }
         },
         {
@@ -194,27 +175,28 @@ export const getMenusByUser = req => {
           'component': 'Main'
         },
         {
-        'id': '11',
-        'parentid': 5,
-        'path': 'editor_page',
-        'code': 'editor_page',
-        'component': 'Editor',
-        'meta': {
-          'icon': 'ios-create',
-          'title': '富文本编辑器'
+          'id': '11',
+          'parentid': 5,
+          'path': 'editor_page',
+          'code': 'editor_page',
+          'component': 'Editor',
+          'meta': {
+            'icon': 'ios-create',
+            'title': '富文本编辑器'
+          }
+        },
+        {
+          'id': '12',
+          'parentid': 5,
+          'component': 'Icons',
+          'path': 'icons_page',
+          'code': 'icons_page',
+          'meta': {
+            'icon': '_bear',
+            'title': '自定义图标'
+          }
         }
-      },
-      {
-        'id': '12',
-        'parentid': 5,
-        'component': 'Icons',
-        'path': 'icons_page',
-        'code': 'icons_page',
-        'meta': {
-          'icon': '_bear',
-          'title': '自定义图标'
-        }
-      }]
+      ]
     }
   ];
 };

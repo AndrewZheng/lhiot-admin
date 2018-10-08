@@ -1,7 +1,8 @@
-import { login, logout, getUserInfo, getRouterByUser } from '@/api/user';
+import { login, logout, getUserInfo, getRouterByUser, getRouterById } from '@/api/user';
 import { setToken, getToken, filterLocalRoute } from '@/libs/util';
 import routersLocal, { constantRouterMap } from '@/router/routers';
 import { PcLockr, enums, gbs } from 'util/';
+import _ from 'lodash';
 
 const state = {
   userName: '',
@@ -67,11 +68,18 @@ const mutations = {
     state.token = token;
     setToken(token);
   },
+  setRoutePermission(state, routePermission) {
+    state.routePermission=routePermission;
+  },
   generateRoutes(state, routeList) {
     console.log('routeList', routeList);
     state.userPermission = routeList;
     let actualRouter= filterLocalRoute(routeList, routersLocal);
     console.log('actualRouter: ', actualRouter);
+    // 清空上一次的数据
+    if (state.actualRouter.length>0) {
+      state.actualRouter =[];
+    }
     state.actualRouter = actualRouter;
     state.routers = constantRouterMap.concat(actualRouter);
   }
@@ -127,20 +135,34 @@ const actions = {
       getRouterByUser(id).then(res => {
         if (res && res.length > 0) {
           // 默认第一次用系统数组第一项生成菜单
-          let list = res[0].routeList;
+          let list = res[0].array;
           if (PcLockr.get(enums.SYSTEM)!=null) {
             const system=JSON.parse(PcLockr.get(enums.SYSTEM));
             console.log('system from lockr: ', system);
             res.forEach(obj => {
               if (obj.systemType == system.code) {
-                list= obj.routeList;
+                list= obj.array;
               }
             });
-            console.log('routelist: ', list);
           }
+          console.log('routelist from mock: ', list);
           commit('generateRoutes', list);
         }
         resolve(res);
+      }).catch(err => {
+        reject(err);
+      });
+    });
+  },
+  getRouteListById({ state, commit }, pid) {
+    console.log('pid: ', pid);
+    return new Promise((resolve, reject) => {
+      getRouterById(pid).then(res => {
+        if (res && res.array && res.array.length > 0) {
+          console.log('res.array：', res.array);
+          commit('generateRoutes', res.array);
+        }
+        resolve();
       }).catch(err => {
         reject(err);
       });

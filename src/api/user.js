@@ -38,3 +38,13 @@ export const getRouterByUser= (userid) => {
     method: 'get'
   });
 };
+
+export const getRouterById= (pid) => {
+  return Vue.prototype.$http.request({
+    url: 'get_route_list',
+    params: {
+      pid: pid
+    },
+    method: 'get'
+  });
+};

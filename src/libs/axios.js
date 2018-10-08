@@ -8,7 +8,7 @@ import {
 import _ from 'lodash';
 
 class HttpRequest {
-  constructor(baseUrl = baseURL, centerType = '') {
+  constructor(baseUrl = '/', centerType = '') {
     this.baseUrl = baseUrl;
     this.centerType = centerType;
     this.queue = {};
@@ -55,6 +55,12 @@ class HttpRequest {
           headers: enums.FRUIT_DOCTOR_CENTER.headers
         });
         return fruitDoctorCenterOps;
+      case 'IMS_SERVICE':
+        const imsServiceOps = _.merge({}, defaultOps, {
+          baseURL: this.baseURL + '/' + enums.IMS_SERVICE.serviceID,
+          headers: enums.IMS_SERVICE.headers
+        });
+        return imsServiceOps;
       default:
         return defaultOps;
     }
@@ -67,9 +73,9 @@ class HttpRequest {
   interceptors(instance, url) {
     // 请求拦截
     instance.interceptors.request.use(config => {
-      // 全局追加openid
-      config.params = (
-        Object.assign((config.params ? config.params : {}), {
+      // 全局追加X-SessionId
+      config.headers = (
+        Object.assign((config.headers ? config.headers : {}), {
           'X-SessionId': store.state.sessionId
         })
       );

@@ -8,6 +8,7 @@ const contentAxios = new HttpRequest(baseUrl, 'CONTENT_CENTER');
 const orderAxios = new HttpRequest(baseUrl, 'ORDER_CENTER');
 const fruitDoctorAxios = new HttpRequest(baseUrl, 'FRUIT_DOCTOR_CENTER');
 const baseUserAxios = new HttpRequest(baseUrl, 'BASE_USER_CENTER');
+const imsAxios=new HttpRequest(baseUrl, 'IMS_SERVICE');
 
 export default {
   install: function (Vue, Option) {
@@ -33,6 +34,10 @@ export default {
 
     Object.defineProperty(Vue.prototype, '$baseUserCenter', {
       value: baseUserAxios
+    });
+
+    Object.defineProperty(Vue.prototype, '$imsService', {
+      value: imsAxios
     });
   }
 };
