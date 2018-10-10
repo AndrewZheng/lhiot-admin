@@ -11,6 +11,7 @@ const MarkDown = (resolve) => require(['@/view/components/markdown/markdown.vue'
 const Editor = (resolve) => require(['@/view/components/editor/editor.vue'], resolve);
 const TinymceEditor = (resolve) => require(['@/view/components/tinymce-editor/tinymce-editor.vue'], resolve);
 const Icons = (resolve) => require(['@/view/components/icons/icons.vue'], resolve);
+const Roles = (resolve) => require(['@/view/components/roles/roles.vue'], resolve);
 
 export default {
   Main,
@@ -24,5 +25,6 @@ export default {
   MarkDown,
   Editor,
   TinymceEditor,
-  Icons
+  Icons,
+  Roles
 };

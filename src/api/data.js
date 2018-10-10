@@ -26,3 +26,23 @@ export const getSystemList = () => {
     method: 'get'
   });
 };
+
+export const getRoleData = ({ page, rows }) => {
+  const data = {
+    page,
+    rows
+  };
+
+  return Vue.prototype.$http.request({
+    url: 'get_role_data',
+    params: data,
+    method: 'get'
+  });
+};
+
+export const getMenuData = () => {
+  return Vue.prototype.$http.request({
+    url: 'get_menu_data',
+    method: 'get'
+  });
+};

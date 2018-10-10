@@ -41,3 +41,41 @@ export const getDragList = req => {
   });
   return dragList;
 };
+
+export const getRoleData = req => {
+  let tableData = [];
+  const {
+    page = 1, rows = 10
+  } = getParams(req.url);
+  doCustomTimes(47, () => {
+    tableData.push(Mock.mock({
+      'id|1-47': 1,
+      name: '@name',
+      status: Random.integer(0, 1),
+      roleDesc: Random.csentence(10, 13),
+      createBy: '@name',
+      createAt: '@now'
+    }));
+  });
+
+  const pageList = tableData.filter((item, index) => index < rows * page && index >= rows * (page - 1));
+
+  return {
+    'data': pageList,
+    'total': tableData.length
+  };
+};
+
+export const getMenuData = req => {
+  let menuList = [];
+  doCustomTimes(5, () => {
+    menuList.push(Mock.mock({
+      'id|1-15': 1,
+      'pId|0-8': 0,
+      name: Random.csentence(4, 8)
+    }));
+  });
+  return {
+    'data': menuList
+  };
+};
