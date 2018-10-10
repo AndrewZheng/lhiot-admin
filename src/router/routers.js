@@ -247,6 +247,53 @@ export const asyncRouterMap = [
     ]
   },
   {
+    path: '/system',
+    name: 'system',
+    meta: {
+      icon: 'ios-cube',
+      title: '系统管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'menu',
+        name: 'menu',
+        meta: {
+          icon: 'md-menu',
+          title: '菜单管理'
+        },
+        component: () => import('@/view/system/menu/menu.vue')
+      },
+      {
+        path: 'config',
+        name: 'config',
+        meta: {
+          icon: 'md-settings',
+          title: '参数管理'
+        },
+        component: () => import('@/view/system/config/config.vue')
+      },
+      {
+        path: 'permission',
+        name: 'permission',
+        meta: {
+          icon: 'md-lock',
+          title: '权限管理'
+        },
+        component: () => import('@/view/system/permission/permission.vue')
+      },
+      {
+        path: 'role',
+        name: 'role',
+        meta: {
+          icon: 'ios-people',
+          title: '角色管理'
+        },
+        component: () => import('@/view/system/role/role.vue')
+      }
+    ]
+  },
+  {
     path: '*',
     redirect: '/404',
     hidden: true

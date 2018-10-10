@@ -117,6 +117,57 @@ export const getRouteListById = req => {
               'icon': 'ios-create',
               'title': 'Tinymce编辑器'
             }
+          },
+          {
+            'id': '17',
+            'parentid': 0,
+            'code': 'system',
+            'path': '/system',
+            'meta': {
+              'title': '系统管理',
+              'icon': 'ios-settings'
+            },
+            'component': 'Main'
+          },
+          {
+            'id': '18',
+            'parentid': 17,
+            'code': 'menu',
+            'path': 'menu',
+            'meta': {
+              'title': '菜单管理',
+              'icon': 'ios-settings'
+            }
+          },
+          {
+            'id': '19',
+            'parentid': 17,
+            'code': 'config',
+            'path': 'config',
+            'meta': {
+              'title': '参数管理',
+              'icon': 'md-settings'
+            }
+          },
+          {
+            'id': '20',
+            'parentid': 17,
+            'code': 'permission',
+            'path': 'permission',
+            'meta': {
+              'title': '权限管理',
+              'icon': 'md-lock'
+            }
+          },
+          {
+            'id': '21',
+            'parentid': 17,
+            'code': 'role',
+            'path': 'role',
+            'meta': {
+              'title': '角色管理',
+              'icon': 'ios-people'
+            }
           }
         ]
       };
