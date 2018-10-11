@@ -421,7 +421,7 @@ export const deepcopy = function (source) {
 };
 
 // 菜单数据组织
-export const buildMenu = (array, ckey) => {
+export const buildMenu = (array, ckey, isFind=true) => {
   let menuData = [];
   let indexKeys = Array.isArray(array) ? array.map((e) => {
     return e.id;
@@ -455,7 +455,7 @@ export const buildMenu = (array, ckey) => {
             }
           }
         });
-        if (parentNode.children) {
+        if (parentNode.children && isFind) {
           findChildren(parentNode.children);
         }
       });

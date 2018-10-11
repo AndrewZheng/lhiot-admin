@@ -26,3 +26,10 @@ export const getSystemList = () => {
     method: 'get'
   });
 };
+
+export const getMenuList = () => {
+  return Vue.prototype.$http.request({
+    url: 'get_menu_list',
+    method: 'get'
+  });
+};
