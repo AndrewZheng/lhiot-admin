@@ -239,6 +239,19 @@ export const getMenuData = req => {
       'icon': 'ios-people'
     },
     'type': 'SON'
+  },
+  {
+    'id': 25,
+    'parentid': 16,
+    'sort': 20,
+    'code': 'user',
+    'path': 'user',
+    'title': '用户管理',
+    'meta': {
+      'title': '用户管理',
+      'icon': 'md-person'
+    },
+    'type': 'SON'
   }];
   
   const two=[{
@@ -480,6 +493,19 @@ export const getMenuData = req => {
       'icon': 'ios-people'
     },
     'type': 'SON'
+  },
+  {
+    'id': 25,
+    'parentid': 16,
+    'sort': 20,
+    'code': 'user',
+    'path': 'user',
+    'title': '用户管理',
+    'meta': {
+      'title': '用户管理',
+      'icon': 'md-person'
+    },
+    'type': 'SON'
   }];
 
   switch (parentid) {
@@ -511,6 +537,55 @@ export const getMenuData = req => {
   return {
     'data': pageList,
     'total': tableData.length
+  };
+};
+
+export const getRoleData = req => {
+  let roleData = [];
+  const {
+    page = 1, rows = 10
+  } = getParams(req.url);
+  doCustomTimes(15, () => {
+    roleData.push(Mock.mock({
+      'id|1-47': 1,
+      name: '@name',
+      status: Random.integer(0, 1),
+      roleDesc: Random.csentence(10, 13),
+      createBy: '@name',
+      createAt: '@now'
+    }));
+  });
+  const pageList = roleData.filter((item, index) => index < rows * page && index >= rows * (page - 1));
+
+  return {
+    'data': pageList,
+    'total': roleData.length
+  };
+};
+
+export const getUserData = req => {
+  let userData = [];
+  const {
+    page = 1, rows = 10
+  } = getParams(req.url);
+  doCustomTimes(15, () => {
+    userData.push(Mock.mock({
+      'id|1-47': 1,
+      name: '@name',
+      account: '@name',
+      tel: Random.integer(13100000000, 19999999999),
+      avatarUrl: '@image',
+      status: Random.integer(0, 1),
+      createAt: '@now',
+      lastLoginAt: '@now',
+      remark: Random.csentence(1, 5)
+    }));
+  });
+  const pageList = userData.filter((item, index) => index < rows * page && index >= rows * (page - 1));
+
+  return {
+    'data': pageList,
+    'total': userData.length
   };
 };
 

@@ -168,6 +168,17 @@ export const getRouteListById = req => {
               'title': '角色管理',
               'icon': 'ios-people'
             }
+          },
+          {
+            'id': 25,
+            'parentid': 17,
+            'code': 'user',
+            'path': 'user',
+            'meta': {
+              'title': '用户管理',
+              'icon': 'md-person'
+            },
+            'type': 'SON'
           }
         ]
       };
@@ -584,6 +595,19 @@ export const getMenuList = req => {
         'meta': {
           icon: 'md-download',
           title: '导出EXCEL'
+        },
+        'type': 'SON'
+      },
+      {
+        'id': 25,
+        'parentid': 16,
+        'sort': 20,
+        'code': 'user',
+        'path': 'user',
+        'title': '用户管理',
+        'meta': {
+          'title': '用户管理',
+          'icon': 'md-person'
         },
         'type': 'SON'
       }

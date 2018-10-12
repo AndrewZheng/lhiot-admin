@@ -74,7 +74,7 @@ const btns = {
       ])
     ]);
   },
-  relation: (h, params, vm) => {
+  role: (h, params, vm) => {
     return h('Button', {
       props: {
         type: 'success',
@@ -85,7 +85,7 @@ const btns = {
       },
       on: {
         click: () => {
-          vm.$emit('on-relation', params);
+          vm.$emit('on-role', params);
         }
       }
     }, [h('Icon', {

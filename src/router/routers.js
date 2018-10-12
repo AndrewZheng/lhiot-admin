@@ -290,7 +290,16 @@ export const asyncRouterMap = [
           title: '角色管理'
         },
         component: () => import('@/view/system/role/role.vue')
-      }
+      },
+      {
+        path: 'user',
+        name: 'user',
+        meta: {
+          icon: 'md-person',
+          title: '用户管理'
+        },
+        component: () => import('@/view/system/user/user.vue')
+      },
     ]
   },
   {
