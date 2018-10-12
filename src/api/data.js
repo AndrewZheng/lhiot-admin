@@ -34,6 +34,20 @@ export const getMenuList = () => {
   });
 };
 
+export const getMenuData = ({ page, rows, parentid }) => {
+  const data = {
+    page,
+    rows,
+    parentid
+  };
+  
+  return Vue.prototype.$http.request({
+    url: 'get_menu_data',
+    params: data,
+    method: 'get'
+  });
+};
+
 export const getRoleData = ({ page, rows }) => {
   const data = {
     page,
