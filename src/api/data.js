@@ -60,3 +60,16 @@ export const getRoleData = ({ page, rows }) => {
     method: 'get'
   });
 };
+
+export const getUserData = ({ page, rows }) => {
+  const data = {
+    page,
+    rows
+  };
+
+  return Vue.prototype.$http.request({
+    url: 'get_user_data',
+    params: data,
+    method: 'get'
+  });
+};

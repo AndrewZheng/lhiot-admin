@@ -341,6 +341,7 @@ export default {
         rows: this.pageSize,
         parentid: id
       }).then(res => {
+        console.log(res);
         this.tableData = res.data;
         this.total = res.total;
         this.loading = false;

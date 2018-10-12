@@ -239,6 +239,19 @@ export const getMenuData = req => {
       'icon': 'ios-people'
     },
     'type': 'SON'
+  },
+  {
+    'id': 25,
+    'parentid': 16,
+    'sort': 20,
+    'code': 'user',
+    'path': 'user',
+    'title': '用户管理',
+    'meta': {
+      'title': '用户管理',
+      'icon': 'md-person'
+    },
+    'type': 'SON'
   }];
   
   const two=[{
@@ -480,6 +493,19 @@ export const getMenuData = req => {
       'icon': 'ios-people'
     },
     'type': 'SON'
+  },
+  {
+    'id': 25,
+    'parentid': 16,
+    'sort': 20,
+    'code': 'user',
+    'path': 'user',
+    'title': '用户管理',
+    'meta': {
+      'title': '用户管理',
+      'icon': 'md-person'
+    },
+    'type': 'SON'
   }];
 
   switch (parentid) {
@@ -505,15 +531,22 @@ export const getMenuData = req => {
     tableData.push(...sixteen);
     break;
   }
+
+  const pageList = tableData.filter((item, index) => index < rows * page && index >= rows * (page - 1));
+
+  return {
+    'data': pageList,
+    'total': tableData.length
+  };
 };
 
 export const getRoleData = req => {
-  let tableData = [];
+  let roleData = [];
   const {
     page = 1, rows = 10
   } = getParams(req.url);
-  doCustomTimes(47, () => {
-    tableData.push(Mock.mock({
+  doCustomTimes(15, () => {
+    roleData.push(Mock.mock({
       'id|1-47': 1,
       name: '@name',
       status: Random.integer(0, 1),
@@ -522,10 +555,36 @@ export const getRoleData = req => {
       createAt: '@now'
     }));
   });
-  const pageList = tableData.filter((item, index) => index < rows * page && index >= rows * (page - 1));
+  const pageList = roleData.filter((item, index) => index < rows * page && index >= rows * (page - 1));
 
   return {
     'data': pageList,
-    'total': tableData.length
+    'total': roleData.length
+  };
+};
+
+export const getUserData = req => {
+  let userData = [];
+  const {
+    page = 1, rows = 10
+  } = getParams(req.url);
+  doCustomTimes(15, () => {
+    userData.push(Mock.mock({
+      'id|1-47': 1,
+      name: '@name',
+      account: '@name',
+      tel: Random.integer(13100000000, 19999999999),
+      avatarUrl: '@image',
+      status: Random.integer(0, 1),
+      createAt: '@now',
+      lastLoginAt: '@now',
+      remark: Random.csentence(1, 5)
+    }));
+  });
+  const pageList = userData.filter((item, index) => index < rows * page && index >= rows * (page - 1));
+
+  return {
+    'data': pageList,
+    'total': userData.length
   };
 };

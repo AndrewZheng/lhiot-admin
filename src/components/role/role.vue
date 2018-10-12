@@ -1,14 +1,25 @@
 <template>
   <div>
     <div v-if="searchable && searchPlace === 'top'" class="search-con search-con-top">
-      <Select v-model="searchKey" class="search-col">
-        <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
-      </Select>
-      <Input @on-change="handleClear" clearable placeholder="角色名称" class="search-input" v-model="searchValue"/>
-      <Button @click="handleSearch" class="search-btn" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button>
-      <!-- <Button @click="exportExcel" class="right-export" type="primary">导出</Button> -->
-      <Button @click="handleDeleteSome" class="right-delete" type="error">删除</Button>
-      <Button @click="handleAdd" class="right-add" type="success">新增</Button>
+      <Row :gutter="24" type="flex" align="top" justify="space-between">
+        <i-col span="18">
+          <Select v-model="searchKey" class="search-col">
+            <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
+          </Select>
+          <Input @on-change="handleClear" clearable placeholder="角色名称" class="search-input" v-model="searchValue"/>
+          <Button @click="handleSearch" class="search-btn" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button>
+          <!-- <Button @click="exportExcel" class="right-export" type="primary">导出</Button> -->
+          <!-- <Button @click="handleDeleteSome" class="right-delete" type="error">删除</Button>
+          <Button @click="handleAdd" class="right-add" type="success">新增</Button> -->
+        </i-col>
+        <i-col span="6">
+          <Row :gutter="24" type="flex" align="top" justify="end">
+            <i-col span="24">
+              <slot name="operations"></slot>
+            </i-col>
+          </Row>
+        </i-col>
+      </Row>
     </div>
     <Table
       ref="tablesMain"
@@ -223,12 +234,6 @@ export default {
         res.initRowIndex = index;
         return res;
       });
-    },
-    handleAdd() {
-      this.$emit('on-add');
-    },
-    handleDeleteSome() {
-      this.$emit('on-delete-some');
     },
     exportCsv (params) {
       this.$refs.tablesMain.exportCsv(params);

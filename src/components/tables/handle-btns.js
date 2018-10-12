@@ -73,6 +73,29 @@ const btns = {
         })
       ])
     ]);
+  },
+  relation: (h, params, vm) => {
+    return h('Button', {
+      props: {
+        type: 'success',
+        size: 'small'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        click: () => {
+          vm.$emit('on-relation', params);
+        }
+      }
+    }, [h('Icon', {
+      props: {
+        type: 'md-unlock',
+        size: 16,
+        color: '#fff'
+      }
+    })
+    ]);
   }
 };
 

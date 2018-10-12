@@ -1,6 +1,6 @@
 <template>
-<div class="m-role">
-    <Card>
+  <div class="m-user">
+      <Card>
       <tables ref="tables" editable searchable
       search-place="top" size="small"
       v-model="tableData"
@@ -9,7 +9,7 @@
       @on-delete="handleDelete"
       @on-view="handleView"
       @on-edit="handleEdit"
-      @on-relation="handleMenu"
+      @on-relation="handleRole"
       >
         <div slot="operations">
           <Button @click="handleAdd" type="success" style="margin-right: 5px"><Icon type="md-add"/>新增</Button>
@@ -32,12 +32,24 @@
         @on-ok="handleEditOk"
         @on-cancel="handleCancel">
         <p slot="header">
-            <span>角色管理</span>
+            <span>用户管理</span>
         </p>
        <div class="modal-content">
          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="4">角色名称</i-col>
+          <i-col span="4">姓名</i-col>
           <i-col span="8"><Input v-model="rowData.name" placeholder="" clearable /></i-col>
+         </Row>
+         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+          <i-col span="4">账号</i-col>
+          <i-col span="8"><Input v-model="rowData.account" placeholder="" clearable /></i-col>
+         </Row>
+         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+          <i-col span="4">电话</i-col>
+          <i-col span="8"><Input v-model="rowData.tel" placeholder="" clearable /></i-col>
+         </Row>
+         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+          <i-col span="4">用户头像</i-col>
+          <i-col span="8"><img src=""/></i-col>
          </Row>
          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
           <i-col span="4">角色状态</i-col>
@@ -53,31 +65,43 @@
           </i-col>
          </Row>
          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="4">角色描述</i-col>
-          <i-col span="8"><Input v-model="rowData.roleDesc" placeholder="" clearable /></i-col>
-         </Row>
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="4">创建人</i-col>
-          <i-col span="8"><Input v-model="rowData.createBy" placeholder="" clearable /></i-col>
-         </Row>
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
           <i-col span="4">创建时间</i-col>
           <i-col span="8"><Input v-model="rowData.createAt" placeholder="" clearable /></i-col>
+         </Row>
+         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+          <i-col span="4">最后登录时间</i-col>
+          <i-col span="8"><Input v-model="rowData.lastLoginAt" placeholder="" clearable /></i-col>
+         </Row>
+         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+          <i-col span="4">备注</i-col>
+          <i-col span="8"><Input v-model="rowData.remark" placeholder="" clearable /></i-col>
          </Row>
        </div>
     </Modal>
 
     <!-- 添加模态框 -->
-     <Modal
-        v-model="modalAdd"
-        :loading="loadingBtn"
-        :mask-closable="false">
-       <div class="modal-content">
-          <Tabs :value="tabOperation.tabSelected">
-            <TabPane label="创建角色" name="roleAdd" :disabled="tabOperation.roleDisabled">
+    <Modal
+      v-model="modalAdd"
+      :loading="loadingBtn"
+      :mask-closable="false">
+      <div class="modal-content">
+        <Tabs :value="tabOperation.tabSelected">
+          <TabPane label="创建用户" name="userAdd" :disabled="tabOperation.userDisabled">
               <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                <i-col span="4">角色名称 </i-col>
+                <i-col span="4">姓名</i-col>
                 <i-col span="8"><Input v-model="rowData.name" placeholder="" clearable /></i-col>
+              </Row>
+              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+                <i-col span="4">账号</i-col>
+                <i-col span="8"><Input v-model="rowData.account" placeholder="" clearable /></i-col>
+              </Row>
+              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+                <i-col span="4">电话</i-col>
+                <i-col span="8"><Input v-model="rowData.tel" placeholder="" clearable /></i-col>
+              </Row>
+              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+                <i-col span="4">用户头像</i-col>
+                <i-col span="8"><img src=""/></i-col>
               </Row>
               <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
                 <i-col span="4">角色状态</i-col>
@@ -93,57 +117,57 @@
                 </i-col>
               </Row>
               <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                <i-col span="4">角色描述</i-col>
-                <i-col span="8"><Input v-model="rowData.roleDesc" placeholder="" clearable /></i-col>
-              </Row>
-              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                <i-col span="4">创建人</i-col>
-                <i-col span="8"><Input v-model="rowData.createBy" placeholder="" clearable /></i-col>
-              </Row>
-              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
                 <i-col span="4">创建时间</i-col>
                 <i-col span="8"><Input v-model="rowData.createAt" placeholder="" clearable /></i-col>
               </Row>
-            </TabPane>
-            <TabPane label="权限管理" name="menuAdd" :disabled="tabOperation.menuDisabled">
-              <Tree :data="menuList" :render="renderContent" show-checkbox multiple></Tree>
-            </TabPane>
-          </Tabs>
-       </div>
-        <div slot="footer">
-          <div v-if="tabOperation.tabSelected==='roleAdd'">
-              <Button type="primary" @click="handleAddNext">下一步</Button>
-          </div>
-          <div  v-else-if="tabOperation.tabSelected==='menuAdd'">
-              <Button type="primary" @click="handleMenuOk">完成</Button>
-          </div>
-       </div>
+              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+                <i-col span="4">最后登录时间</i-col>
+                <i-col span="8"><Input v-model="rowData.lastLoginAt" placeholder="" clearable /></i-col>
+              </Row>
+              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+                <i-col span="4">备注</i-col>
+                <i-col span="8"><Input v-model="rowData.remark" placeholder="" clearable /></i-col>
+              </Row>
+          </TabPane>
+          <TabPane label="角色管理" name="roleAdd" :disabled="tabOperation.roleDisabled">
+            角色管理
+          </TabPane>
+        </Tabs>
+      </div>
+      <div slot="footer">
+        <div v-if="tabOperation.tabSelected==='userAdd'">
+            <Button type="primary" @click="handleAddNext">下一步</Button>
+        </div>
+        <div  v-else-if="tabOperation.tabSelected==='roleAdd'">
+            <Button type="primary" @click="handleRoleOk">完成</Button>
+        </div>
+      </div>
     </Modal>
 
-    <!-- 管理权限 -->
+     <!-- 角色权限 -->
     <Modal
-        v-model="modalMenu"
+        v-model="modalRole"
         :loading="loadingBtn"
         :mask-closable="false"
-        @on-ok="handleMenuOk"
+        @on-ok="handleRoleOk"
         @on-cancel="handleCancel">
         <p slot="header">
-            <span>管理权限</span>
+            <span>角色权限</span>
         </p>
        <div class="modal-content">
-         <Tree :data="menuList" :render="renderContent" show-checkbox multiple></Tree>
-       </div>
+          角色管理
+      </div>
     </Modal>
+
   </div>
 </template>
 
-<script>
+<script type='text/ecmascript-6'>
 import Tables from '_c/tables';
-import { getRoleData, getMenuList } from '@/api/data';
-import { buildMenu } from '@/libs/util';
+import { getUserData } from '@/api/data';
 
 export default {
-  name: 'role_page',
+  name: 'user_page',
   components: {
     Tables
   },
@@ -166,8 +190,20 @@ export default {
             return h('span', row.id + '');
           }
         },
-        { title: '角色名称', key: 'name', sortable: true },
-        { title: '角色状态',
+        { title: '姓名', key: 'name', sortable: true },
+        { title: '账号', key: 'account', sortable: true },
+        { title: '电话', key: 'tel', sortable: true },
+        { title: '用户头像url',
+          key: 'avatarUrl',
+          sortable: true,
+          render: (h, params, vm) => {
+            const { row, index, column } = params;
+            // const str = row.status == '1' ? <span style="color:green">{this.getDictByName('status', row.status)}</span> : <span style="color:red">{this.getDictByName('status', row.status)}</span>;
+            const str = <img src={row.avatarUrl} height="80px" width="150px"></img>;
+            return <div>{str}</div>;
+          }
+        },
+        { title: '用户状态',
           key: 'status',
           sortable: true,
           render: (h, params, vm) => {
@@ -176,9 +212,9 @@ export default {
             return <div>{str}</div>;
           }
         },
-        { title: '角色描述', key: 'roleDesc', sortable: true },
-        { title: '创建人', key: 'createBy', sortable: true },
         { title: '创建时间', key: 'createAt', sortable: true },
+        { title: '最后登录时间', key: 'lastLoginAt', sortable: true },
+        { title: '备注', key: 'remark', sortable: true },
         {
           title: '操作',
           key: 'handle',
@@ -221,19 +257,22 @@ export default {
         createBy: '',
         createAt: ''
       },
-      modalMenu: false,
       // 待翻译字典对象信息
       translateDicts: {},
-      menuList: [],
+      modalRole: false,
       tabOperation: {
-        tabSelected: 'roleAdd',
-        menuDisabled: true,
-        roleDisabled: false
+        tabSelected: 'userAdd',
+        roleDisabled: true,
+        userDisabled: false
       }
     };
   },
-  computed: {
+  created() {},
+  mounted() {
+    this.getUserData();
   },
+  computed: {},
+  filters: {},
   methods: {
     renderContent(h, { root, node, data }) {
       if (data.chirenderContentldren) {
@@ -260,12 +299,15 @@ export default {
     },
     handleView(params) {
       this.$Modal.info({
-        title: '角色管理详情',
-        content: `角色名称: ${this.tableData[params.row.initRowIndex].name}<br>
+        title: '用户管理详情',
+        content: `姓名: ${this.tableData[params.row.initRowIndex].name}<br>
+          账号: ${this.tableData[params.row.initRowIndex].account}<br>
+          电话: ${this.tableData[params.row.initRowIndex].tel}<br>
+          头像: <img src=${this.tableData[params.row.initRowIndex].avatarUrl}/><br>
           角色状态: `+this.getDictByName('status', this.tableData[params.row.initRowIndex].status)+`<br>
-          角色描述: ${this.tableData[params.row.initRowIndex].roleDesc}<br>
-          创建人: ${this.tableData[params.row.initRowIndex].createBy}<br>
-          创建时间: ${this.tableData[params.row.initRowIndex].createAt}`
+          创建时间: ${this.tableData[params.row.initRowIndex].createAt}<br>
+          最后登录时间: ${this.tableData[params.row.initRowIndex].lastLoginAt}<br>
+          备注: ${this.tableData[params.row.initRowIndex].remark}`
       });
     },
     handleDelete(params) {
@@ -289,26 +331,6 @@ export default {
       }, 2000);
       // 发送axios请求
     },
-    handleMenu(params) {
-      console.log(params);
-      const { row, index, column } = params;
-      this.rowData = row;
-      this.modalMenu = true;
-    },
-    handleMenuOk() {
-      this.loadingBtn = true;
-      this.modalAdd = false;
-      this.modalMenu = false;
-      setTimeout(() => {
-        this.$Message.info('保存成功');
-        // 模态框消失再切换tab选项卡的属性
-        this.tabOperation.tabSelected = 'roleAdd';
-        this.tabOperation.menuDisabled = true;
-        this.tabOperation.roleDisabled = false;
-      }, 1000);
-
-      // 发送axios请求
-    },
     handleCancel() {
       this.$Message.info('取消成功');
     },
@@ -318,14 +340,33 @@ export default {
     },
     handleAddNext() {
       this.loadingBtn = false;
-      this.tabOperation.tabSelected = 'menuAdd';
-      this.tabOperation.menuDisabled = false;
-      this.tabOperation.roleDisabled = true;
+      this.tabOperation.tabSelected = 'roleAdd';
+      this.tabOperation.roleDisabled = false;
+      this.tabOperation.userDisabled = true;
       // setTimeout(() => {
       //   this.$Message.info('保存成功');
       // }, 2000);
       // 发送axios请求
       // TODO字段验证
+    },
+    handleRole(params) {
+      console.log(params);
+      const { row, index, column } = params;
+      this.rowData = row;
+      this.modalRole = true;
+    },
+    handleRoleOk() {
+      this.loadingBtn = true;
+      this.modalAdd = false;
+      this.modalRole = false;
+      setTimeout(() => {
+        this.$Message.info('保存成功');
+        // 模态框消失再切换tab选项卡的属性
+        this.tabOperation.tabSelected = 'userAdd';
+        this.tabOperation.roleDisabled = true;
+        this.tabOperation.userDisabled = false;
+      }, 1000);
+      // 发送axios请求
     },
     // exportExcel() {
     //   this.$refs.tables.exportCsv({
@@ -347,23 +388,14 @@ export default {
       this.pageSize = pageSize;
       this.getRoleData();
     },
-    getRoleData() {
-      getRoleData({
+    getUserData() {
+      getUserData({
         page: this.page,
         rows: this.pageSize
       }).then(res => {
         this.tableData = res.data;
         this.total = res.total;
         this.loading = false;
-      });
-    },
-    getMenuList() {
-       // 获取系统所有的菜单列表
-      getMenuList().then(res => {
-        if (res && res.array.length > 0) {
-          console.log('buildMenu: ', buildMenu(res.array, 'parentid', true));
-          this.menuList = buildMenu(res.array, 'parentid', true);
-        }
       });
     },
     // 获取所有要翻译字典信息
@@ -390,13 +422,9 @@ export default {
         }
         return translateDictName == '' ? value : translateDictName;
     }
-  },
-  mounted() {
-    this.getRoleData();
-    this.getMenuList();
   }
 };
 </script>
 
-<style>
+<style rel='stylesheet/scss' lang='scss' scoped>
 </style>
