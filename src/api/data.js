@@ -47,3 +47,17 @@ export const getMenuData = ({ page, rows, parentid }) => {
     method: 'get'
   });
 };
+
+export const getOperateData= ({ page, rows, menuId }) => {
+  const data = {
+    page,
+    rows,
+    menuId
+  };
+  
+  return Vue.prototype.$http.request({
+    url: 'get_operate_data',
+    params: data,
+    method: 'get'
+  });
+};

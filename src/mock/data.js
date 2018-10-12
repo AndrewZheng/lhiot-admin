@@ -513,3 +513,38 @@ export const getMenuData = req => {
     'total': tableData.length
   };
 };
+
+export const getOperateData = req => {
+  let tableData = [];
+  const { page = 1, rows = 10, menuId= 0 } = getParams(req.url);
+  const data=[{
+    'id': 1,
+    'type': 'get,post',
+    'menuId': 0,
+    'name': '菜单操作限制',
+    'antUrl': '/**/ims-menu/**'
+  },
+  {
+    'id': 2,
+    'type': 'get',
+    'menuId': 0,
+    'name': '菜单获取限制',
+    'antUrl': '/ims-menu/{id}'
+  },
+  {
+    'id': 3,
+    'type': 'post',
+    'menuId': 0,
+    'name': '菜单添加限制',
+    'antUrl': '/ims-menu/create'
+  }];
+  
+  tableData.push(...data);
+
+  const pageList = tableData.filter((item, index) => index < rows * page && index >= rows * (page - 1));
+
+  return {
+    'data': pageList,
+    'total': tableData.length
+  };
+};
