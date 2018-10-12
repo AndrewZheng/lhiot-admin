@@ -6,6 +6,9 @@
       </Select>
       <Input @on-change="handleClear" clearable placeholder="角色名称" class="search-input" v-model="searchValue"/>
       <Button @click="handleSearch" class="search-btn" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button>
+      <!-- <Button @click="exportExcel" class="right-export" type="primary">导出</Button> -->
+      <Button @click="handleDeleteSome" class="right-delete" type="error">删除</Button>
+      <Button @click="handleAdd" class="right-add" type="success">新增</Button>
     </div>
     <Table
       ref="tablesMain"
@@ -221,6 +224,12 @@ export default {
         return res;
       });
     },
+    handleAdd() {
+      this.$emit('on-add');
+    },
+    handleDeleteSome() {
+      this.$emit('on-delete-some');
+    },
     exportCsv (params) {
       this.$refs.tablesMain.exportCsv(params);
     },
@@ -256,6 +265,11 @@ export default {
     },
     onExpand (row, status) {
       this.$emit('on-expand', row, status);
+    },
+    exportExcel() {
+      this.exportCsv({
+        filename: `table-${new Date().valueOf()}.csv`
+      });
     }
   },
   watch: {

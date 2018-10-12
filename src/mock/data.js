@@ -65,17 +65,3 @@ export const getRoleData = req => {
     'total': tableData.length
   };
 };
-
-export const getMenuData = req => {
-  let menuList = [];
-  doCustomTimes(5, () => {
-    menuList.push(Mock.mock({
-      'id|1-15': 1,
-      'pId|0-8': 0,
-      name: Random.csentence(4, 8)
-    }));
-  });
-  return {
-    'data': menuList
-  };
-};

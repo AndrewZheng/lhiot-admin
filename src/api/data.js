@@ -27,6 +27,13 @@ export const getSystemList = () => {
   });
 };
 
+export const getMenuList = () => {
+  return Vue.prototype.$http.request({
+    url: 'get_menu_list',
+    method: 'get'
+  });
+};
+
 export const getRoleData = ({ page, rows }) => {
   const data = {
     page,
@@ -36,13 +43,6 @@ export const getRoleData = ({ page, rows }) => {
   return Vue.prototype.$http.request({
     url: 'get_role_data',
     params: data,
-    method: 'get'
-  });
-};
-
-export const getMenuData = () => {
-  return Vue.prototype.$http.request({
-    url: 'get_menu_data',
     method: 'get'
   });
 };

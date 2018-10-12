@@ -9,16 +9,20 @@
       @on-delete="handleDelete"
       @on-view="handleView"
       @on-edit="handleEdit"
-      @on-role="handleRole" />
+      @on-role="handleRole"
+      @on-add="handleAdd"
+      @on-delete-some="handleDeleteSome"
+      />
       <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
             <Page :total="total" :current="page" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer show-total></Page>
         </Row>
       </div>
-      <Button style="margin: 10px 0;" type="primary" @click="exportExcel">导出为Csv文件</Button>
     </Card>
+
+    <!-- 添加或修改模态框 -->
      <Modal
-        v-model="modalEdit"
+        v-model="modalAddOrEdit"
         :loading="loadingBtn"
         :mask-closable="false"
         @on-ok="handleOk"
@@ -28,11 +32,11 @@
         </p>
        <div class="modal-content">
          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="2">角色名称</i-col>
+          <i-col span="4">角色名称</i-col>
           <i-col span="8"><Input v-model="rowData.name" placeholder="" clearable /></i-col>
          </Row>
          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="2">角色状态</i-col>
+          <i-col span="4">角色状态</i-col>
           <i-col span="8">
             <RadioGroup v-model="rowData.status" @on-change="changeSex">
                 <Radio label="1">
@@ -45,15 +49,15 @@
           </i-col>
          </Row>
          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="2">角色描述</i-col>
+          <i-col span="4">角色描述</i-col>
           <i-col span="8"><Input v-model="rowData.roleDesc" placeholder="" clearable /></i-col>
          </Row>
          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="2">创建人</i-col>
+          <i-col span="4">创建人</i-col>
           <i-col span="8"><Input v-model="rowData.createBy" placeholder="" clearable /></i-col>
          </Row>
          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="2">创建时间</i-col>
+          <i-col span="4">创建时间</i-col>
           <i-col span="8"><Input v-model="rowData.createAt" placeholder="" clearable /></i-col>
          </Row>
        </div>
@@ -69,9 +73,8 @@
         <p slot="header">
             <span>管理权限</span>
         </p>
-        {{hufan}}
        <div class="modal-content">
-          <Tree :data="menus" show-checkbox multiple></Tree>
+         <Tree :data="menuList" :render="renderContent" show-checkbox multiple></Tree>
        </div>
     </Modal>
   </div>
@@ -79,7 +82,9 @@
 
 <script>
 import Role from '_c/role';
-import { getRoleData, getMenuData } from '@/api/data';
+import { getRoleData, getMenuList } from '@/api/data';
+import { buildMenu } from '@/libs/util';
+
 export default {
   name: 'role_page',
   components: {
@@ -88,6 +93,7 @@ export default {
   data() {
     return {
       columns: [
+        // 选择框
         // {
         //   type: "selection",
         //   width: 60,
@@ -105,12 +111,12 @@ export default {
         },
         { title: '角色名称', key: 'name', sortable: true },
         { title: '角色状态',
-key: 'status',
-sortable: true,
-           render: (h, params, vm) => {
+          key: 'status',
+          sortable: true,
+          render: (h, params, vm) => {
             const { row, index, column } = params;
-            const str = row.status == '1' ? '可用' : '不可用';
-            return <span>{str}</span>;
+            const str = row.status == '1' ? <span style="color:green">可用</span> : <span style="color:red">不可用</span>;
+            return <div>{str}</div>;
           }},
         { title: '角色描述', key: 'roleDesc', sortable: true },
         { title: '创建人', key: 'createBy', sortable: true },
@@ -146,7 +152,8 @@ sortable: true,
       page: 1,
       pageSize: 10,
       total: 0,
-      modalEdit: false,
+      modalAddOrEdit: false,
+      modalAdd: false,
       loading: true,
       loadingBtn: true,
       rowData: {
@@ -157,52 +164,34 @@ sortable: true,
         createAt: ''
       },
       modalRole: false,
-      menus: [
-        {
-            title: 'parent 1',
-            expand: true,
-            selected: true,
-            children: [
-                {
-                    title: 'parent 1-1',
-                    expand: true,
-                    children: [
-                        {
-                            title: 'leaf 1-1-1',
-                            disabled: true
-                        },
-                        {
-                            title: 'leaf 1-1-2'
-                        }
-                    ]
-                },
-                {
-                    title: 'parent 1-2',
-                    expand: true,
-                    children: [
-                        {
-                            title: 'leaf 1-2-1',
-                            checked: true
-                        },
-                        {
-                            title: 'leaf 1-2-1'
-                        }
-                    ]
-                }
-            ]
-        }
-    ],
-    hufan: {
-        id: '',
-        title: '',
-        pId: '',
-        expand: true,
-        selected: false
-      }
+      menuList: []
     };
   },
   computed: {},
   methods: {
+    renderContent(h, { root, node, data }) {
+      if (data.chirenderContentldren) {
+        return (
+          <span
+            style={{ display: 'inline-block', width: '100%', fontSize: '14px' }}
+          >
+            <span>
+            </span>
+            <span>{data.meta.title}</span>
+          </span>
+        );
+      } else {
+        return (
+          <span
+            style={{ display: 'inline-block', width: '100%', fontSize: '14px' }}
+          >
+            <span>
+            </span>
+            <span>{data.meta.title}</span>
+          </span>
+        );
+      }
+    },
     handleView(params) {
       this.$Modal.info({
         title: 'Role Info',
@@ -221,7 +210,7 @@ sortable: true,
       console.log(params);
       const { row, index, column } = params;
       this.rowData = row;
-      this.modalEdit = true;
+      this.modalAddOrEdit = true;
     },
     handleRole(params) {
       console.log(params);
@@ -231,7 +220,7 @@ sortable: true,
     },
     handleOk() {
       setTimeout(() => {
-        this.modalEdit = false;
+        this.modalAddOrEdit = false;
         this.$Message.info('保存成功');
       }, 2000);
       // 发送axios请求
@@ -239,11 +228,19 @@ sortable: true,
     handleCancel() {
       this.$Message.info('取消成功');
     },
-    exportExcel() {
-      this.$refs.tables.exportCsv({
-        filename: `table-${new Date().valueOf()}.csv`
-      });
+    handleAdd() {
+      this.rowData = {};
+      this.modalAddOrEdit = true;
     },
+    handleDeleteSome() {
+      console.log('删除多条记录');
+      // TODO 删除多条记录
+    },
+    // exportExcel() {
+    //   this.$refs.tables.exportCsv({
+    //     filename: `table-${new Date().valueOf()}.csv`
+    //   });
+    // },
     changeSex(selectItem) {
       console.log(`${selectItem}`);
     },
@@ -269,15 +266,29 @@ sortable: true,
         this.loading = false;
       });
     },
-    getMenuData() {
-       getMenuData().then(res => {
-        this.hufan = res.data;
-      });
+    getMenuList() {
+       // 获取系统所有的菜单列表
+      getMenuList().then(res => {
+      if (res && res.array.length > 0) {
+        console.log('buildMenu: ', buildMenu(res.array, 'parentid', true));
+        this.menuList = buildMenu(res.array, 'parentid', true);
+      }
+    });
     }
+  },
+  created() {
+    // fetch
+    fetch('^/apis/page/query', {
+      method: 'post',
+      body: 'hufan'
+    })
+    .then(result => {
+      console.log(result);
+    });
   },
   mounted() {
     this.getRoleData();
-    this.getMenuData();
+    this.getMenuList();
   }
 };
 </script>
