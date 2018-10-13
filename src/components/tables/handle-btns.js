@@ -96,6 +96,35 @@ const btns = {
       }
     })
     ]);
+  },
+  permission: (h, params, vm) => {
+    const { row }= params;
+    // 父级菜单不显示修改权限按钮
+    if (row.type=='PARENT') {
+      return '';
+    } else {
+      return h('Button', {
+        props: {
+          type: 'success',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-edit-permission', params);
+          }
+        }
+      }, [h('Icon', {
+        props: {
+          type: 'md-lock',
+          size: 16,
+          color: '#fff'
+        }
+      })
+      ]);
+    }
   }
 };
 

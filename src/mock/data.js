@@ -613,9 +613,41 @@ export const getOperateData = req => {
     'name': '菜单添加限制',
     'antUrl': '/ims-menu/create'
   }];
-  
-  tableData.push(...data);
 
+  const data2=[{
+    'id': 1,
+    'type': 'get',
+    'menuId': 6,
+    'name': '首页获取数据限制',
+    'antUrl': '/**/ims-home/**'
+  }];
+
+  const data3=[{
+    'id': 1,
+    'type': 'post',
+    'menuId': 17,
+    'name': '操作权限创建限制',
+    'antUrl': '/ims-operation/create'
+  },
+  {
+    'id': 2,
+    'type': 'get',
+    'menuId': 17,
+    'name': '操作权限获取限制',
+    'antUrl': '/ims-operation/{menuId}'
+  }];
+
+  switch (menuId) {
+    case '6':
+    tableData.push(...data2);
+    break;
+    case '17':
+    tableData.push(...data3);
+    break;
+    default:
+    tableData.push(...data);
+  }
+  
   const pageList = tableData.filter((item, index) => index < rows * page && index >= rows * (page - 1));
 
   return {

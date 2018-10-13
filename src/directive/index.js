@@ -1,4 +1,7 @@
 import directive from './directives';
+import waves from './waves';
+import clipboard from './clipboard';
+import sticky from './sticky';
 
 const importDirective = Vue => {
   /**
@@ -11,6 +14,9 @@ const importDirective = Vue => {
    */
   Vue.directive('draggable', directive.draggable);
   Vue.directive('has', directive.has);
+  Vue.directive('waves', waves);
+  Vue.directive('clipboard', clipboard);
+  Vue.directive('sticky', sticky);
 };
 
 export default importDirective;
