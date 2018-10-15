@@ -49,7 +49,7 @@
          </Row>
          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
           <i-col span="4">用户头像</i-col>
-          <i-col span="8"><img src=""/></i-col>
+          <i-col span="8"><img :src="rowData.avatarUrl" width="250px" height="100px"/></i-col>
          </Row>
          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
           <i-col span="4">角色状态</i-col>
@@ -65,21 +65,13 @@
           </i-col>
          </Row>
          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="4">创建时间</i-col>
-          <i-col span="8"><Input v-model="rowData.createAt" placeholder="" clearable /></i-col>
-         </Row>
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="4">最后登录时间</i-col>
-          <i-col span="8"><Input v-model="rowData.lastLoginAt" placeholder="" clearable /></i-col>
-         </Row>
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
           <i-col span="4">备注</i-col>
           <i-col span="8"><Input v-model="rowData.remark" placeholder="" clearable /></i-col>
          </Row>
        </div>
     </Modal>
 
-    <!-- 添加模态框 -->
+    <!-- 添加模态框(创建用户/关联角色) -->
     <Modal
       v-model="modalAdd"
       :loading="loadingBtn"
@@ -101,7 +93,39 @@
               </Row>
               <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
                 <i-col span="4">用户头像</i-col>
-                <i-col span="8"><img src=""/></i-col>
+                <i-col span="20">
+                  <Upload
+                  ref="upload"
+                  :show-upload-list="false"
+                  :default-file-list="defaultList"
+                  :on-success="handleImageSuccess"
+                  :format="['jpg','jpeg','png']"
+                  :max-size="2048"
+                  :on-format-error="handleImageFormatError"
+                  :on-exceeded-size="handleImageMaxSize"
+                  :before-upload="handleImageBeforeUpload"
+                  multiple
+                  type="drag"
+                  action="//jsonplaceholder.typicode.com/posts/"
+                  style="display: inline-block;width:58px;">
+                    <div style="width: 58px;height:58px;line-height: 58px;">
+                        <Icon type="ios-camera" size="20"></Icon>
+                    </div>
+                  </Upload>
+                  <div class="demo-upload-list" v-for="(item, index) in uploadList" :key="index">
+                    <template v-if="item.status === 'finished'">
+                        <img :src="item.url">
+                        <div class="demo-upload-list-cover">
+                            <Icon type="ios-eye-outline" @click.native="handleImageView(item.name)"></Icon>
+                            <Icon type="ios-trash-outline" @click.native="handleImageRemove(item)"></Icon>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    </template>
+                  </div>
+                  
+                </i-col>
               </Row>
               <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
                 <i-col span="4">角色状态</i-col>
@@ -117,20 +141,17 @@
                 </i-col>
               </Row>
               <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                <i-col span="4">创建时间</i-col>
-                <i-col span="8"><Input v-model="rowData.createAt" placeholder="" clearable /></i-col>
-              </Row>
-              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                <i-col span="4">最后登录时间</i-col>
-                <i-col span="8"><Input v-model="rowData.lastLoginAt" placeholder="" clearable /></i-col>
-              </Row>
-              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
                 <i-col span="4">备注</i-col>
                 <i-col span="8"><Input v-model="rowData.remark" placeholder="" clearable /></i-col>
               </Row>
           </TabPane>
-          <TabPane label="角色管理" name="roleAdd" :disabled="tabOperation.roleDisabled">
-            角色管理
+          <TabPane label="关联角色" name="roleAdd" :disabled="tabOperation.roleDisabled">
+            <Transfer
+            :data="data1"
+            :target-keys="targetKeys1"
+            :render-format="render1"
+            :titles="titles"
+            @on-change="handleChange1"></Transfer>
           </TabPane>
         </Tabs>
       </div>
@@ -155,7 +176,13 @@
             <span>角色权限</span>
         </p>
        <div class="modal-content">
-          角色管理
+         <Transfer
+            :data="data1"
+            :target-keys="targetKeys1"
+            :render-format="render1"
+            :titles="titles"
+            @on-change="handleChange1">
+          </Transfer>
       </div>
     </Modal>
 
@@ -173,6 +200,7 @@ export default {
   },
   data() {
     return {
+      // 表格数据
       columns: [
         // 选择框
         // {
@@ -186,7 +214,7 @@ export default {
           sortable: true,
           maxWidth: 80,
           render: (h, params, vm) => {
-            const { row, index, column } = params;
+            const { row } = params;
             return h('span', row.id + '');
           }
         },
@@ -197,7 +225,7 @@ export default {
           key: 'avatarUrl',
           sortable: true,
           render: (h, params, vm) => {
-            const { row, index, column } = params;
+            const { row } = params;
             // const str = row.status == '1' ? <span style="color:green">{this.getDictByName('status', row.status)}</span> : <span style="color:red">{this.getDictByName('status', row.status)}</span>;
             const str = <img src={row.avatarUrl} height="80px" width="150px"></img>;
             return <div>{str}</div>;
@@ -207,7 +235,7 @@ export default {
           key: 'status',
           sortable: true,
           render: (h, params, vm) => {
-            const { row, index, column } = params;
+            const { row } = params;
             const str = row.status == '1' ? <span style="color:green">{this.getDictByName('status', row.status)}</span> : <span style="color:red">{this.getDictByName('status', row.status)}</span>;
             return <div>{str}</div>;
           }
@@ -260,16 +288,36 @@ export default {
       // 待翻译字典对象信息
       translateDicts: {},
       modalRole: false,
+      // tab选项操作数据
       tabOperation: {
         tabSelected: 'userAdd',
         roleDisabled: true,
         userDisabled: false
-      }
+      },
+      // 图片上传数据
+      defaultList: [
+          {
+              'name': 'a42bdcc1178e62b4694c830f028db5c0',
+              'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
+          },
+          {
+              'name': 'bc7521e033abdd1e92222d733590f104',
+              'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
+          }
+      ],
+      imgName: '',
+      visible: false,
+      uploadList: [],
+      // 双栏穿梭选择框数据
+      data1: this.getMockData(),
+      targetKeys1: this.getTargetKeys(),
+      titles: ['所有角色', '已关联角色']
     };
   },
   created() {},
   mounted() {
     this.getUserData();
+    this.uploadList = this.$refs.upload.fileList;
   },
   computed: {},
   filters: {},
@@ -303,12 +351,13 @@ export default {
         content: `姓名: ${this.tableData[params.row.initRowIndex].name}<br>
           账号: ${this.tableData[params.row.initRowIndex].account}<br>
           电话: ${this.tableData[params.row.initRowIndex].tel}<br>
-          头像: <img src=${this.tableData[params.row.initRowIndex].avatarUrl}/><br>
+          头像:<img src="`+this.tableData[params.row.initRowIndex].avatarUrl+`" width="250px" height="100px"/><br>
           角色状态: `+this.getDictByName('status', this.tableData[params.row.initRowIndex].status)+`<br>
           创建时间: ${this.tableData[params.row.initRowIndex].createAt}<br>
           最后登录时间: ${this.tableData[params.row.initRowIndex].lastLoginAt}<br>
           备注: ${this.tableData[params.row.initRowIndex].remark}`
       });
+      console.log(this.tableData[params.row.initRowIndex].avatarUrl);
     },
     handleDelete(params) {
       console.log(params);
@@ -320,8 +369,10 @@ export default {
     },
     handleEdit(params) {
       console.log(params);
-      const { row, index, column } = params;
+      const { row } = params;
       this.rowData = row;
+      // 将status由number变为string(否则单选框无法正常显示)
+      this.rowData.status = row.status + '';
       this.modalEdit = true;
     },
     handleEditOk() {
@@ -351,7 +402,7 @@ export default {
     },
     handleRole(params) {
       console.log(params);
-      const { row, index, column } = params;
+      const { row } = params;
       this.rowData = row;
       this.modalRole = true;
     },
@@ -379,14 +430,14 @@ export default {
     changePage(currentPage) {
       // console.log(currentPage);
       this.page = currentPage;
-      this.getRoleData();
+      this.getUserData();
     },
     changePageSize(pageSize) {
       // console.log(pageSize);
       // 如果切换页数需要变为页码1
       this.page = 1;
       this.pageSize = pageSize;
-      this.getRoleData();
+      this.getUserData();
     },
     getUserData() {
       getUserData({
@@ -397,6 +448,33 @@ export default {
         this.total = res.total;
         this.loading = false;
       });
+    },
+    // 模拟双栏穿梭选择框数据
+    getMockData () {
+      let mockData = [];
+      for (let i = 1; i <= 10; i++) {
+          mockData.push({
+              key: i.toString(),
+              label: 'Content ' + i,
+              description: 'The desc of content  ' + i,
+              disabled: Math.random() * 3 < 1
+          });
+      }
+      return mockData;
+    },
+    getTargetKeys () {
+        return this.getMockData()
+                .filter(() => Math.random() * 2 > 1)
+                .map(item => item.key);
+    },
+    render1 (item) {
+        return item.label;
+    },
+    handleChange1 (newTargetKeys, direction, moveKeys) {
+        console.log(newTargetKeys);
+        console.log(direction);
+        console.log(moveKeys);
+        this.targetKeys1 = newTargetKeys;
     },
     // 获取所有要翻译字典信息
     getAllDicts() {
@@ -421,10 +499,81 @@ export default {
             translateDictName = this.translateDicts[fieldName][value];
         }
         return translateDictName == '' ? value : translateDictName;
+    },
+    // 图片上传
+    handleImageView (name) {
+        this.imgName = name;
+        this.visible = true;
+    },
+    handleImageRemove (file) {
+        const fileList = this.$refs.upload.fileList;
+        this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+    },
+    handleImageSuccess (res, file) {
+        file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
+        file.name = file.name;
+    },
+    handleImageFormatError (file) {
+        this.$Notice.warning({
+            title: '图片格式不正确',
+            desc: file.name + ' 图片格式不正确, 请选择jpg or png图片'
+        });
+    },
+    handleImageMaxSize (file) {
+        this.$Notice.warning({
+            title: '超过文件大小限制',
+            desc: file.name + '图片超过2M.'
+        });
+    },
+    handleImageBeforeUpload () {
+      const check = this.uploadList.length < 5;
+      if (!check) {
+          this.$Notice.warning({
+              title: '最多上传5张图片！'
+          });
+      }
+      return check;
     }
-  }
+   }
 };
 </script>
 
 <style rel='stylesheet/scss' lang='scss' scoped>
+  // 图片上传样式
+  .demo-upload-list{
+        display: inline-block;
+        width: 60px;
+        height: 60px;
+        text-align: center;
+        line-height: 60px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        overflow: hidden;
+        background: #fff;
+        position: relative;
+        box-shadow: 0 1px 1px rgba(0,0,0,.2);
+        margin-right: 4px;
+    }
+    .demo-upload-list img{
+        width: 100%;
+        height: 100%;
+    }
+    .demo-upload-list-cover{
+        display: none;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0,0,0,.6);
+    }
+    .demo-upload-list:hover .demo-upload-list-cover{
+        display: block;
+    }
+    .demo-upload-list-cover i{
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+        margin: 0 2px;
+    }
 </style>
