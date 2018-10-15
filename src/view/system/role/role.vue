@@ -56,14 +56,6 @@
           <i-col span="4">角色描述</i-col>
           <i-col span="8"><Input v-model="rowData.roleDesc" placeholder="" clearable /></i-col>
          </Row>
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="4">创建人</i-col>
-          <i-col span="8"><Input v-model="rowData.createBy" placeholder="" clearable /></i-col>
-         </Row>
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="4">创建时间</i-col>
-          <i-col span="8"><Input v-model="rowData.createAt" placeholder="" clearable /></i-col>
-         </Row>
        </div>
     </Modal>
 
@@ -95,14 +87,6 @@
               <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
                 <i-col span="4">角色描述</i-col>
                 <i-col span="8"><Input v-model="rowData.roleDesc" placeholder="" clearable /></i-col>
-              </Row>
-              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                <i-col span="4">创建人</i-col>
-                <i-col span="8"><Input v-model="rowData.createBy" placeholder="" clearable /></i-col>
-              </Row>
-              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                <i-col span="4">创建时间</i-col>
-                <i-col span="8"><Input v-model="rowData.createAt" placeholder="" clearable /></i-col>
               </Row>
             </TabPane>
             <TabPane label="权限管理" name="menuAdd" :disabled="tabOperation.menuDisabled">
@@ -162,7 +146,7 @@ export default {
           sortable: true,
           maxWidth: 80,
           render: (h, params, vm) => {
-            const { row, index, column } = params;
+            const { row } = params;
             return h('span', row.id + '');
           }
         },
@@ -171,7 +155,7 @@ export default {
           key: 'status',
           sortable: true,
           render: (h, params, vm) => {
-            const { row, index, column } = params;
+            const { row } = params;
             const str = row.status == '1' ? <span style="color:green">{this.getDictByName('status', row.status)}</span> : <span style="color:red">{this.getDictByName('status', row.status)}</span>;
             return <div>{str}</div>;
           }
@@ -233,6 +217,24 @@ export default {
     };
   },
   computed: {
+    // 校验字段
+    tableVerification: function() {
+      if (!this.rowData.name) {
+        this.$Message.warning('请填写角色名称');
+        return false;
+      }
+
+      if (!this.rowData.status) {
+        this.$Message.warning('请选择角色状态');
+        return false;
+      }
+
+      if (!this.rowData.roleDesc) {
+        this.$Message.warning('请填写角色描述');
+        return false;
+      }
+      return true;
+    }
   },
   methods: {
     renderContent(h, { root, node, data }) {
@@ -278,20 +280,25 @@ export default {
     },
     handleEdit(params) {
       console.log(params);
-      const { row, index, column } = params;
+      const { row } = params;
       this.rowData = row;
+      // 将status由number变为string(否则单选框无法正常显示)
+      this.rowData.status = row.status + '';
       this.modalEdit = true;
     },
     handleEditOk() {
-      setTimeout(() => {
-        this.modalEdit = false;
-        this.$Message.info('保存成功');
-      }, 2000);
-      // 发送axios请求
+      if (this.tableVerification) {
+        this.loadingBtn = false;
+        setTimeout(() => {
+          this.modalEdit = false;
+          this.$Message.info('保存成功');
+        }, 2000);
+        // 发送axios请求
+      }
     },
     handleMenu(params) {
       console.log(params);
-      const { row, index, column } = params;
+      const { row } = params;
       this.rowData = row;
       this.modalMenu = true;
     },
@@ -317,15 +324,16 @@ export default {
       this.modalAdd = true;
     },
     handleAddNext() {
-      this.loadingBtn = false;
-      this.tabOperation.tabSelected = 'menuAdd';
-      this.tabOperation.menuDisabled = false;
-      this.tabOperation.roleDisabled = true;
-      // setTimeout(() => {
-      //   this.$Message.info('保存成功');
-      // }, 2000);
-      // 发送axios请求
-      // TODO字段验证
+      if (this.tableVerification) {
+        this.loadingBtn = false;
+        this.tabOperation.tabSelected = 'menuAdd';
+        this.tabOperation.menuDisabled = false;
+        this.tabOperation.roleDisabled = true;
+        // setTimeout(() => {
+        //   this.$Message.info('保存成功');
+        // }, 2000);
+        // 发送axios请求
+      }
     },
     // exportExcel() {
     //   this.$refs.tables.exportCsv({
