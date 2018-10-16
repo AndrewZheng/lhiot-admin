@@ -52,7 +52,7 @@
           <i-col span="8"><img :src="rowData.avatarUrl" width="250px" height="100px"/></i-col>
          </Row>
          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="4">角色状态</i-col>
+          <i-col span="4">用户状态</i-col>
           <i-col span="8">
             <RadioGroup v-model="rowData.status" @on-change="changeSex">
                 <Radio label="1">
@@ -128,7 +128,7 @@
                 </i-col>
               </Row>
               <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                <i-col span="4">角色状态</i-col>
+                <i-col span="4">用户状态</i-col>
                 <i-col span="8">
                   <RadioGroup v-model="rowData.status" @on-change="changeSex">
                       <Radio label="1">
@@ -352,10 +352,11 @@ export default {
           账号: ${this.tableData[params.row.initRowIndex].account}<br>
           电话: ${this.tableData[params.row.initRowIndex].tel}<br>
           头像:<img src="`+this.tableData[params.row.initRowIndex].avatarUrl+`" width="250px" height="100px"/><br>
-          角色状态: `+this.getDictByName('status', this.tableData[params.row.initRowIndex].status)+`<br>
+          用户状态: `+this.getDictByName('status', this.tableData[params.row.initRowIndex].status)+`<br>
           创建时间: ${this.tableData[params.row.initRowIndex].createAt}<br>
           最后登录时间: ${this.tableData[params.row.initRowIndex].lastLoginAt}<br>
-          备注: ${this.tableData[params.row.initRowIndex].remark}`
+          备注: ${this.tableData[params.row.initRowIndex].remark}<br>
+          关联角色：<Tag type="border">角色1</Tag><Tag type="border">角色2</Tag><Tag type="border">角色3</Tag>`
       });
       console.log(this.tableData[params.row.initRowIndex].avatarUrl);
     },
