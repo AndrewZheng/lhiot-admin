@@ -29,33 +29,26 @@
         v-model="modalEdit"
         :loading="loadingBtn"
         :mask-closable="false"
-        @on-ok="handleEditOk"
+        @on-ok="handleEditOk('formValidate')"
         @on-cancel="handleCancel">
         <p slot="header">
             <span>角色管理</span>
         </p>
        <div class="modal-content">
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="4">角色名称</i-col>
-          <i-col span="8"><Input v-model="rowData.name" placeholder="" clearable /></i-col>
-         </Row>
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="4">角色状态</i-col>
-          <i-col span="8">
-            <RadioGroup v-model="rowData.status" @on-change="changeSex">
-                <Radio label="1">
-                    <span>{{getDictByName('status',1)}}</span>
-                </Radio>
-                <Radio label="0">
-                    <span>{{getDictByName('status',0)}}</span>
-                </Radio>
-            </RadioGroup>
-          </i-col>
-         </Row>
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="4">角色描述</i-col>
-          <i-col span="8"><Input v-model="rowData.roleDesc" placeholder="" clearable /></i-col>
-         </Row>
+         <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
+            <FormItem label="角色名称" prop="name">
+                <Input v-model="rowData.name" placeholder="请输入角色名称"></Input>
+            </FormItem>
+            <FormItem label="角色状态" prop="status">
+                <RadioGroup v-model="rowData.status" @on-change="changeRadio">
+                    <Radio label="1">{{getDictByName('status',1)}}</Radio>
+                    <Radio label="0">{{getDictByName('status',0)}}</Radio>
+                </RadioGroup>
+            </FormItem>
+            <FormItem label="角色描述" prop="roleDesc">
+                <Input v-model="rowData.roleDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入角色描述"></Input>
+            </FormItem>
+        </Form>
        </div>
     </Modal>
 
@@ -65,43 +58,37 @@
         :loading="loadingBtn"
         :mask-closable="false">
        <div class="modal-content">
-          <Tabs :value="tabOperation.tabSelected">
-            <TabPane label="创建角色" name="roleAdd" :disabled="tabOperation.roleDisabled">
-              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                <i-col span="4">角色名称 </i-col>
-                <i-col span="8"><Input v-model="rowData.name" placeholder="" clearable /></i-col>
-              </Row>
-              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                <i-col span="4">角色状态</i-col>
-                <i-col span="8">
-                  <RadioGroup v-model="rowData.status" @on-change="changeSex">
-                      <Radio label="1">
-                          <span>{{getDictByName('status',1)}}</span>
-                      </Radio>
-                      <Radio label="0">
-                          <span>{{getDictByName('status',0)}}</span>
-                      </Radio>
-                  </RadioGroup>
-                </i-col>
-              </Row>
-              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                <i-col span="4">角色描述</i-col>
-                <i-col span="8"><Input v-model="rowData.roleDesc" placeholder="" clearable /></i-col>
-              </Row>
+          <Tabs size="small" v-model="step">
+            <TabPane label="创建角色" name="roleAdd">
+              <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
+                  <FormItem label="角色名称" prop="name">
+                      <Input v-model="rowData.name" placeholder="请输入角色名称"></Input>
+                  </FormItem>
+                  <FormItem label="角色状态" prop="status">
+                      <RadioGroup v-model="rowData.status" @on-change="changeRadio">
+                          <Radio label="1">{{getDictByName('status',1)}}</Radio>
+                          <Radio label="0">{{getDictByName('status',0)}}</Radio>
+                      </RadioGroup>
+                  </FormItem>
+                  <FormItem label="角色描述" prop="roleDesc">
+                      <Input v-model="rowData.roleDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入角色描述"></Input>
+                  </FormItem>
+              </Form>
             </TabPane>
-            <TabPane label="权限管理" name="menuAdd" :disabled="tabOperation.menuDisabled">
+            <TabPane label="权限管理" name="menuAdd" :disabled="isDisable">
               <Tree :data="menuList" :render="renderContent" show-checkbox multiple></Tree>
             </TabPane>
           </Tabs>
        </div>
-        <div slot="footer">
-          <div v-if="tabOperation.tabSelected==='roleAdd'">
-              <Button type="primary" @click="handleAddNext">下一步</Button>
-          </div>
-          <div  v-else-if="tabOperation.tabSelected==='menuAdd'">
-              <Button type="primary" @click="handleMenuOk">完成</Button>
-          </div>
+       <div slot="footer" v-if="step=='roleAdd' && !isCreated">
+        <Button type="primary" @click="goNext('formValidate')">下一步</Button>
+      </div>
+      <div slot="footer" v-else-if="step=='menuAdd'">
+        <Button type="primary" @click="handleMenuOk">保存</Button>
        </div>
+      <div slot="footer" v-else>
+        <Button type="primary" @click="handleCloseAdd">关闭</Button>
+      </div>
     </Modal>
 
     <!-- 管理权限 -->
@@ -209,32 +196,24 @@ export default {
       // 待翻译字典对象信息
       translateDicts: {},
       menuList: [],
-      tabOperation: {
-        tabSelected: 'roleAdd',
-        menuDisabled: true,
-        roleDisabled: false
+      // tab选项操作数据
+      step: 'roleAdd',
+      isDisable: true,
+      isCreated: false,
+      // 表单验证
+      ruleValidate: {
+        name: [
+            { required: true, message: '角色名称不能为空', trigger: 'blur' }
+            // { type: 'string', max: 64, message: '64个字以内', trigger: 'blur'}
+        ],
+        status: [
+            { required: true, message: '请选择角色状态', trigger: 'change' }
+        ]
       }
     };
   },
   computed: {
-    // 校验字段
-    tableVerification: function() {
-      if (!this.rowData.name) {
-        this.$Message.warning('请填写角色名称');
-        return false;
-      }
-
-      if (!this.rowData.status) {
-        this.$Message.warning('请选择角色状态');
-        return false;
-      }
-
-      if (!this.rowData.roleDesc) {
-        this.$Message.warning('请填写角色描述');
-        return false;
-      }
-      return true;
-    }
+    
   },
   methods: {
     renderContent(h, { root, node, data }) {
@@ -286,15 +265,19 @@ export default {
       this.rowData.status = row.status + '';
       this.modalEdit = true;
     },
-    handleEditOk() {
-      if (this.tableVerification) {
-        this.loadingBtn = false;
-        setTimeout(() => {
-          this.modalEdit = false;
-          this.$Message.info('保存成功');
-        }, 2000);
-        // 发送axios请求
-      }
+    handleEditOk(name) {
+       this.$refs[name].validate((valid) => {
+          if (valid) {
+              this.loadingBtn = false;
+              setTimeout(() => {
+                this.modalEdit = false;
+                this.$Message.info('修改成功');
+              }, 2000);
+              // 发送axios请求
+          } else {
+              this.$Message.error('修改失败!');
+          }
+      });
     },
     handleMenu(params) {
       console.log(params);
@@ -323,24 +306,29 @@ export default {
       this.rowData = {};
       this.modalAdd = true;
     },
-    handleAddNext() {
-      if (this.tableVerification) {
-        this.loadingBtn = false;
-        this.tabOperation.tabSelected = 'menuAdd';
-        this.tabOperation.menuDisabled = false;
-        this.tabOperation.roleDisabled = true;
-        // setTimeout(() => {
-        //   this.$Message.info('保存成功');
-        // }, 2000);
-        // 发送axios请求
-      }
+    goNext(name) {
+       this.$refs[name].validate((valid) => {
+          if (valid) {
+            // this.loadingBtn = false;
+            this.step = 'menuAdd';
+            this.isDisable = false;
+            this.isCreated = true;
+            // setTimeout(() => {
+            //   this.$Message.info('保存成功');
+            // }, 2000);
+            // 发送axios请求
+              this.$Message.success('创建成功!');
+          } else {
+              this.$Message.error('创建失败!');
+          }
+      });
     },
     // exportExcel() {
     //   this.$refs.tables.exportCsv({
     //     filename: `table-${new Date().valueOf()}.csv`
     //   });
     // },
-    changeSex(selectItem) {
+    changeRadio(selectItem) {
       console.log('选择按钮的值:'+`${selectItem}`);
     },
     changePage(currentPage) {

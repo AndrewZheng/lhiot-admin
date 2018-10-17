@@ -29,71 +29,30 @@
         v-model="modalEdit"
         :loading="loadingBtn"
         :mask-closable="false"
-        @on-ok="handleEditOk"
-        @on-cancel="handleCancel">
+        @on-ok="handleEditOk('formValidate')"
+        @on-cancel="handleCancel"
+        ref="formValidate" :model="rowData" :rules="ruleValidate" >
         <p slot="header">
             <span>用户管理</span>
         </p>
        <div class="modal-content">
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="4">姓名</i-col>
-          <i-col span="8"><Input v-model="rowData.name" placeholder="" clearable /></i-col>
-         </Row>
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="4">账号</i-col>
-          <i-col span="8"><Input v-model="rowData.account" placeholder="" clearable /></i-col>
-         </Row>
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="4">电话</i-col>
-          <i-col span="8"><Input v-model="rowData.tel" placeholder="" clearable /></i-col>
-         </Row>
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="4">用户头像</i-col>
-          <i-col span="8"><img :src="rowData.avatarUrl" width="250px" height="100px"/></i-col>
-         </Row>
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="4">用户状态</i-col>
-          <i-col span="8">
-            <RadioGroup v-model="rowData.status" @on-change="changeSex">
-                <Radio label="1">
-                    <span>{{getDictByName('status',1)}}</span>
-                </Radio>
-                <Radio label="0">
-                    <span>{{getDictByName('status',0)}}</span>
-                </Radio>
-            </RadioGroup>
-          </i-col>
-         </Row>
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-          <i-col span="4">备注</i-col>
-          <i-col span="8"><Input v-model="rowData.remark" placeholder="" clearable /></i-col>
-         </Row>
-       </div>
-    </Modal>
-
-    <!-- 添加模态框(创建用户/关联角色) -->
-    <Modal
-      v-model="modalAdd"
-      :loading="loadingBtn"
-      :mask-closable="false">
-      <div class="modal-content">
-        <Tabs :value="tabOperation.tabSelected">
-          <TabPane label="创建用户" name="userAdd" :disabled="tabOperation.userDisabled">
-              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                <i-col span="4">姓名</i-col>
-                <i-col span="8"><Input v-model="rowData.name" placeholder="" clearable /></i-col>
-              </Row>
-              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                <i-col span="4">账号</i-col>
-                <i-col span="8"><Input v-model="rowData.account" placeholder="" clearable /></i-col>
-              </Row>
-              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                <i-col span="4">电话</i-col>
-                <i-col span="8"><Input v-model="rowData.tel" placeholder="" clearable /></i-col>
-              </Row>
-              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                <i-col span="4">用户头像</i-col>
-                <i-col span="20">
+         <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
+              <FormItem label="姓名" prop="name">
+                  <Input v-model="rowData.name" placeholder="请输入姓名"></Input>
+              </FormItem>
+              <FormItem label="账号" prop="account">
+                  <Input v-model="rowData.account" placeholder="请输入账号"></Input>
+              </FormItem>
+              <FormItem label="密码" prop="password">
+                  <Input v-model="rowData.password" type="password"></Input>
+              </FormItem>
+              <FormItem label="确认密码" prop="passwdCheck">
+                  <Input v-model="rowData.passwdCheck" type="password"></Input>
+              </FormItem>
+              <FormItem label="电话" prop="tel">
+                  <Input v-model="rowData.tel" placeholder="请输入电话号码"></Input>
+              </FormItem>
+              <FormItem label="用户头像" prop="avatarUrl">
                   <Upload
                   ref="upload"
                   :show-upload-list="false"
@@ -124,28 +83,89 @@
                         <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
                     </template>
                   </div>
-                  
-                </i-col>
-              </Row>
-              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                <i-col span="4">用户状态</i-col>
-                <i-col span="8">
-                  <RadioGroup v-model="rowData.status" @on-change="changeSex">
-                      <Radio label="1">
-                          <span>{{getDictByName('status',1)}}</span>
-                      </Radio>
-                      <Radio label="0">
-                          <span>{{getDictByName('status',0)}}</span>
-                      </Radio>
+              </FormItem>
+              <FormItem label="用户状态" prop="status">
+                  <RadioGroup v-model="rowData.status" @on-change="changeRadio">
+                      <Radio label="1">{{getDictByName('status',1)}}</Radio>
+                      <Radio label="0">{{getDictByName('status',0)}}</Radio>
                   </RadioGroup>
-                </i-col>
-              </Row>
-              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                <i-col span="4">备注</i-col>
-                <i-col span="8"><Input v-model="rowData.remark" placeholder="" clearable /></i-col>
-              </Row>
+              </FormItem>
+              <FormItem label="备注" prop="remark">
+                  <Input v-model="rowData.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入备注"></Input>
+              </FormItem>
+            </Form>
+       </div>
+    </Modal>
+
+    <!-- 添加模态框(创建用户/关联角色) -->
+    <Modal
+      v-model="modalAdd"
+      :loading="loadingBtn"
+      :mask-closable="false">
+      <div class="modal-content">
+        <Tabs size="small" v-model="step">
+          <!-- :value="tabOperation.tabSelected" -->
+          <TabPane label="创建用户" name="userAdd">
+            <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
+              <FormItem label="姓名" prop="name">
+                  <Input v-model="rowData.name" placeholder="请输入姓名"></Input>
+              </FormItem>
+              <FormItem label="账号" prop="account">
+                  <Input v-model="rowData.account" placeholder="请输入账号"></Input>
+              </FormItem>
+              <FormItem label="密码" prop="password">
+                  <Input v-model="rowData.password" type="password"></Input>
+              </FormItem>
+              <FormItem label="确认密码" prop="passwdCheck">
+                  <Input v-model="rowData.passwdCheck" type="password"></Input>
+              </FormItem>
+              <FormItem label="电话" prop="tel">
+                  <Input v-model="rowData.tel" placeholder="请输入电话号码"></Input>
+              </FormItem>
+              <FormItem label="用户头像" prop="avatarUrl">
+                  <Upload
+                  ref="upload"
+                  :show-upload-list="false"
+                  :default-file-list="defaultList"
+                  :on-success="handleImageSuccess"
+                  :format="['jpg','jpeg','png']"
+                  :max-size="2048"
+                  :on-format-error="handleImageFormatError"
+                  :on-exceeded-size="handleImageMaxSize"
+                  :before-upload="handleImageBeforeUpload"
+                  multiple
+                  type="drag"
+                  action="//jsonplaceholder.typicode.com/posts/"
+                  style="display: inline-block;width:58px;">
+                    <div style="width: 58px;height:58px;line-height: 58px;">
+                        <Icon type="ios-camera" size="20"></Icon>
+                    </div>
+                  </Upload>
+                  <div class="demo-upload-list" v-for="(item, index) in uploadList" :key="index">
+                    <template v-if="item.status === 'finished'">
+                        <img :src="item.url">
+                        <div class="demo-upload-list-cover">
+                            <Icon type="ios-eye-outline" @click.native="handleImageView(item.name)"></Icon>
+                            <Icon type="ios-trash-outline" @click.native="handleImageRemove(item)"></Icon>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    </template>
+                  </div>
+              </FormItem>
+              <FormItem label="用户状态" prop="status">
+                  <RadioGroup v-model="rowData.status" @on-change="changeRadio">
+                      <Radio label="1">{{getDictByName('status',1)}}</Radio>
+                      <Radio label="0">{{getDictByName('status',0)}}</Radio>
+                  </RadioGroup>
+              </FormItem>
+              <FormItem label="备注" prop="remark">
+                  <Input v-model="rowData.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入备注"></Input>
+              </FormItem>
+            </Form>
           </TabPane>
-          <TabPane label="关联角色" name="roleAdd" :disabled="tabOperation.roleDisabled">
+          <TabPane label="关联角色" name="roleAdd" :disabled="isDisable">
             <Transfer
             :data="data1"
             :target-keys="targetKeys1"
@@ -155,14 +175,15 @@
           </TabPane>
         </Tabs>
       </div>
-      <div slot="footer">
-        <div v-if="tabOperation.tabSelected==='userAdd'">
-            <Button type="primary" @click="handleAddNext">下一步</Button>
-        </div>
-        <div  v-else-if="tabOperation.tabSelected==='roleAdd'">
-            <Button type="primary" @click="handleRoleOk">完成</Button>
-        </div>
+      <div slot="footer" v-if="step=='userAdd' && !isCreated">
+        <Button type="primary" @click="goNext('formValidate')">下一步</Button>
       </div>
+      <div slot="footer" v-else-if="step=='roleAdd'">
+        <Button type="primary" @click="handleRoleOk">保存</Button>
+       </div>
+      <div slot="footer" v-else>
+        <Button type="primary" @click="handleCloseAdd">关闭</Button>
+       </div>
     </Modal>
 
      <!-- 角色权限 -->
@@ -199,6 +220,15 @@ export default {
     Tables
   },
   data() {
+    const validatePassCheck = (rule, value, callback) => {
+      if (value === '') {
+          callback(new Error('请再次输入您的密码'));
+      } else if (value !== this.rowData.password) {
+          callback(new Error('两次输入密码不匹配!'));
+      } else {
+          callback();
+      }
+    };
     return {
       // 表格数据
       columns: [
@@ -279,21 +309,24 @@ export default {
       loading: true,
       loadingBtn: true,
       rowData: {
+        id: '',
         name: '',
+        account: '',
+        password: '',
+        passwdCheck: '',
+        tel: '',
+        avatarUrl: '',
         status: '',
-        roleDesc: '',
-        createBy: '',
-        createAt: ''
+        createAt: '',
+        lastLoginAt: '',
+        remark: ''
       },
       // 待翻译字典对象信息
       translateDicts: {},
       modalRole: false,
-      // tab选项操作数据
-      tabOperation: {
-        tabSelected: 'userAdd',
-        roleDisabled: true,
-        userDisabled: false
-      },
+      step: 'userAdd',
+      isDisable: true,
+      isCreated: false,
       // 图片上传数据
       defaultList: [
           {
@@ -311,7 +344,28 @@ export default {
       // 双栏穿梭选择框数据
       data1: this.getMockData(),
       targetKeys1: this.getTargetKeys(),
-      titles: ['所有角色', '已关联角色']
+      titles: ['所有角色', '已关联角色'],
+      // 表单验证
+      ruleValidate: {
+        name: [
+            { required: true, message: '姓名不能为空', trigger: 'blur' }
+        ],
+        account: [
+            { required: true, message: '账号不能为空', trigger: 'blur' }
+        ],
+        password: [
+            { required: true, message: '密码不能为空', trigger: 'blur' }
+        ],
+        passwdCheck: [
+            { required: true, validator: validatePassCheck, trigger: 'blur' }
+        ],
+        tel: [
+            { required: true, message: '电话号码不能为空', trigger: 'blur' }
+        ],
+        status: [
+            { required: true, message: '请选择角色状态', trigger: 'change' }
+        ]
+      }
     };
   },
   created() {},
@@ -372,16 +426,23 @@ export default {
       console.log(params);
       const { row } = params;
       this.rowData = row;
+      this.rowData.passwdCheck = row.password;
       // 将status由number变为string(否则单选框无法正常显示)
       this.rowData.status = row.status + '';
       this.modalEdit = true;
     },
-    handleEditOk() {
-      setTimeout(() => {
-        this.modalEdit = false;
-        this.$Message.info('保存成功');
-      }, 2000);
-      // 发送axios请求
+    handleEditOk(name) {
+       this.$refs[name].validate((valid) => {
+          if (valid) {
+            setTimeout(() => {
+              this.modalEdit = false;
+              this.$Message.info('保存成功');
+            }, 2000);
+            // 发送axios请求
+            } else {
+              this.$Message.error('创建失败!');
+          }
+      });
     },
     handleCancel() {
       this.$Message.info('取消成功');
@@ -390,16 +451,24 @@ export default {
       this.rowData = {};
       this.modalAdd = true;
     },
-    handleAddNext() {
-      this.loadingBtn = false;
-      this.tabOperation.tabSelected = 'roleAdd';
-      this.tabOperation.roleDisabled = false;
-      this.tabOperation.userDisabled = true;
-      // setTimeout(() => {
-      //   this.$Message.info('保存成功');
-      // }, 2000);
-      // 发送axios请求
-      // TODO字段验证
+    goNext(name) {
+      this.$refs[name].validate((valid) => {
+          if (valid) {
+            // this.loadingBtn = false;
+            this.step = 'roleAdd';
+            this.isDisable = false;
+            this.isCreated = true;
+            // 获取操作权限数据
+            // this.getOperateData();
+            // setTimeout(() => {
+            //   this.$Message.info('保存成功');
+            // }, 2000);
+            // 发送axios请求
+              this.$Message.success('创建成功!');
+          } else {
+              this.$Message.error('创建失败!');
+          }
+      });
     },
     handleRole(params) {
       console.log(params);
@@ -425,7 +494,7 @@ export default {
     //     filename: `table-${new Date().valueOf()}.csv`
     //   });
     // },
-    changeSex(selectItem) {
+    changeRadio(selectItem) {
       console.log('选择按钮的值:'+`${selectItem}`);
     },
     changePage(currentPage) {
