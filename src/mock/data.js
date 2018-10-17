@@ -44,7 +44,7 @@ export const getDragList = req => {
 
 export const getMenuData = req => {
   let tableData = [];
-  const { page = 1, rows = 10, parentid } = getParams(req.url);
+  const { page = 1, rows = 10, pid } = getParams(req.url);
   const one=[{
     'id': 6,
     'parentid': 1,
@@ -508,7 +508,7 @@ export const getMenuData = req => {
     'type': 'SON'
   }];
 
-  switch (parentid) {
+  switch (pid) {
     case '1':
     tableData.push(...one);
     break;

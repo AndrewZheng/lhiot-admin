@@ -1,8 +1,9 @@
 import Vue from 'vue';
+import { enums } from 'util/';
 
-export const login = ({ userName, password }) => {
+export const login = ({ account, password }) => {
   const data = {
-    userName,
+    account,
     password
   };
   return Vue.prototype.$http.request({
@@ -10,6 +11,11 @@ export const login = ({ userName, password }) => {
     data,
     method: 'post'
   });
+  // return Vue.prototype.$imsService.request({
+  //   url: '/admin/sessions',
+  //   data,
+  //   method: 'post'
+  // });
 };
 
 export const getUserInfo = (token) => {
@@ -20,6 +26,10 @@ export const getUserInfo = (token) => {
     },
     method: 'get'
   });
+  // return Vue.prototype.$imsService.request({
+  //     url: '/admin/sessions',
+  //     method: 'get'
+  // });
 };
 
 export const logout = (token) => {
@@ -27,24 +37,8 @@ export const logout = (token) => {
     url: 'logout',
     method: 'post'
   });
-};
-
-export const getRouterByUser= (userid) => {
-  return Vue.prototype.$http.request({
-    url: 'get_menus_list',
-    params: {
-      userid: userid
-    },
-    method: 'get'
-  });
-};
-
-export const getRouterById= (pid) => {
-  return Vue.prototype.$http.request({
-    url: 'get_route_list',
-    params: {
-      pid: pid
-    },
-    method: 'get'
-  });
+  // return Vue.prototype.$imsService.request({
+  //   url: '/admin/sessions',
+  //   method: 'delete'
+  // });
 };

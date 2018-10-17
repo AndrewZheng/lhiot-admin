@@ -296,12 +296,8 @@
 </template>
 
 <script type='text/ecmascript-6'>
-import {
-  getTableData,
-  getMenuList,
-  getMenuData,
-  getOperateData
-} from '@/api/data';
+import { getTableData, getMenuData, getOperateData } from '@/api/data';
+import { getMenuList } from '@/api/system';
 import { buildMenu } from '@/libs/util';
 import Tables from '_c/tables';
 import CommonIcon from '_c/common-icon';
@@ -542,7 +538,7 @@ export default {
       getMenuData({
         page: this.page,
         rows: this.pageSize,
-        parentid: this.currentPid
+        pid: this.currentPid
       }).then(res => {
         console.log(res);
         this.tableData = res.data;

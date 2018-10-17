@@ -1,15 +1,13 @@
 const gbs = {
   host: 'https://health.food-see.com',
-  lockr_prefix: 'FRUITDOCTOR_PAAS_',
-  cookie_prefix: 'FRUITDOCTOR__PAAS_',
+  lockr_prefix: 'LHIOTADMIN_PAAS_',
+  cookie_prefix: 'LHIOTADMIN__PAAS_',
   secret_key: '^#rwd6Ffz$X5alRN',
   domain: '.food-see.com',
   secret: {
     key_str: 'om8q6fq#A0Yl@qJy',
     iv_str: '0#86gzOcsv1bXyIx'
-  },
-  ASSORTMENT: '/weixin/mall/detail/',
-  ARTICLE: '/weixin/foodfresh/detail/'
+  }
 };
 const cbs = {};
 const taxPercent = 0.0336;
@@ -39,36 +37,6 @@ const enums = {
     USER_INFO: 'USER_INFO'
   },
   SYSTEM: 'SYSTEM',
-  BASIC_DATA_CENTER: {
-    serviceID: 'basic-data-center',
-    headers: {
-      version: 'v1-1-0'
-    }
-  },
-  CONTENT_CENTER: {
-    serviceID: 'content-center',
-    headers: {
-      version: 'v1-0-0'
-    }
-  },
-  ORDER_CENTER: {
-    serviceID: 'order-center',
-    headers: {
-      version: 'v1-1-0'
-    }
-  },
-  FRUIT_DOCTOR_CENTER: {
-    serviceID: 'fruitdoctor-user-service',
-    headers: {
-      version: 'v1-0-0'
-    }
-  },
-  BASE_USER_CENTER: {
-    serviceID: 'base-user-service',
-    headers: {
-      version: 'v1-0-0'
-    }
-  },
   IMS_SERVICE: {
     serviceID: 'ims-service',
     headers: {

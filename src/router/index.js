@@ -17,7 +17,7 @@ const router = new Router({
 });
 
 const LOGIN_PAGE_NAME = 'login';
-const whiteList = ['/login', '/redirect', '/401', '/404', '/500'];
+const whiteList = ['/login', '/redirect', '/401', '/404', '/500', '/home'];
 
 // permission judge function
 function hasPermission(userPermission, currentRoute) {

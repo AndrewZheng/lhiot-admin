@@ -1,4 +1,5 @@
-import { login, logout, getUserInfo, getRouterByUser, getRouterById } from '@/api/user';
+import { login, logout, getUserInfo } from '@/api/user';
+import { getRouterById } from '@/api/system';
 import { setToken, getToken, filterLocalRoute } from '@/libs/util';
 import routersLocal, { constantRouterMap } from '@/router/routers';
 import { PcLockr, enums, gbs } from 'util/';
@@ -87,10 +88,12 @@ const mutations = {
 
 const actions = {
   // 登录
-  handleLogin({ commit, dispatch }, { userName, password }) {
-    userName = userName.trim();
+  handleLogin({ commit, dispatch }, { account, password }) {
+    account = account.trim();
     return new Promise((resolve, reject) => {
-      login({ userName, password }).then(res => {
+      login({ account, password }).then(res => {
+        // console.log('res from backend: ', res.XSessionId);
+        // commit('setToken', res.XSessionId);
         commit('setToken', res.token);
         resolve();
       }).catch(err => {
@@ -114,36 +117,11 @@ const actions = {
   getUserInfo({ state, commit, dispatch }) {
     return new Promise((resolve, reject) => {
       getUserInfo(state.token).then(res => {
-        commit('setAvator', res.avator);
+        commit('setAvator', res.avatorUrl);
         commit('setUserName', res.name);
-        commit('setUserId', res.user_id);
-        commit('setAccess', res.access);
+        commit('setUserId', res.id);
         commit('setHasGetInfo', true);
         dispatch('getSystemList', null, { root: true });
-        resolve(res);
-      }).catch(err => {
-        reject(err);
-      });
-    });
-  },
-  getRouterByUser({ state, commit }, id) {
-    return new Promise((resolve, reject) => {
-      getRouterByUser(id).then(res => {
-        if (res && res.length > 0) {
-          // 默认第一次用系统数组第一项生成菜单
-          let list = res[0].array;
-          if (PcLockr.get(enums.SYSTEM)!=null) {
-            const system=JSON.parse(PcLockr.get(enums.SYSTEM));
-            console.log('system from lockr: ', system);
-            res.forEach(obj => {
-              if (obj.systemType == system.code) {
-                list= obj.array;
-              }
-            });
-          }
-          console.log('routelist from mock: ', list);
-          commit('generateRoutes', list);
-        }
         resolve(res);
       }).catch(err => {
         reject(err);

@@ -16,8 +16,8 @@
 </template>
 
 <script>
-import LoginForm from '_c/login-form'
-import { mapActions } from 'vuex'
+import LoginForm from '_c/login-form';
+import { mapActions } from 'vuex';
 export default {
   components: {
     LoginForm
@@ -27,17 +27,17 @@ export default {
       'handleLogin',
       'getUserInfo'
     ]),
-    handleSubmit ({ userName, password }) {
-      this.handleLogin({ userName, password }).then(res => {
+    handleSubmit ({ account, password }) {
+      this.handleLogin({ account, password }).then(res => {
         this.getUserInfo().then(res => {
           this.$router.push({
             name: 'home'
-          })
-        })
-      })
+          });
+        });
+      });
     }
   }
-}
+};
 </script>
 
 <style>

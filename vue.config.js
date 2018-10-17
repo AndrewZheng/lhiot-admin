@@ -13,7 +13,7 @@ const resolve = dir => {
 // 需要将它改为'/my-app/'
 const BASE_URL = process.env.NODE_ENV === 'production' ?
   '/lhiot-admin' :
-  '/';
+  '/api';
 
 module.exports = {
   baseUrl: BASE_URL,
@@ -37,21 +37,21 @@ module.exports = {
   productionSourceMap: false,
   // 这里写你调用接口的基础路径，来解决跨域，如果设置了代理，那你本地开发环境的axios的baseUrl要写为 '' ，即空字符串
   devServer: {
-    // port: 80, // 端口号
-    // host: '192.168.1.154',
-    // https: false, // https:{type:Boolean}
-    // open: true, // 配置自动启动浏览器
-    // proxy: {
-    //   '/api': {
-    //     target: 'http://192.168.1.110:2018',
-    //     ws: true,
-    //     logLevel: 'debug',
-    //     changeOrigin: true,
-    //     pathRewrite: {
-    //       '^/api': ''
-    //     }
-    //   }
-    // }
+    port: 8080, // 端口号
+    host: 'localhost',
+    https: false, // https:{type:Boolean}
+    open: true, // 配置自动启动浏览器
+    proxy: {
+      '/api': {
+        target: 'http://192.168.1.110:2018',
+        ws: true,
+        logLevel: 'debug',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    }
   },
   css: {
     modules: false,

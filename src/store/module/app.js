@@ -12,7 +12,7 @@ import {
 import beforeClose from '@/router/before-close';
 import router from '@/router';
 import routers from '@/router/routers';
-import { getSystemList } from '@/api/data';
+import { getSystemList } from '@/api/system';
 import { PcLockr, enums, gbs } from 'util/';
 
 const closePage = (state, route) => {

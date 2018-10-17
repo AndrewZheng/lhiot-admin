@@ -20,25 +20,11 @@ export const getDragList = () => {
   });
 };
 
-export const getSystemList = () => {
-  return Vue.prototype.$http.request({
-    url: 'get_system_list',
-    method: 'get'
-  });
-};
-
-export const getMenuList = () => {
-  return Vue.prototype.$http.request({
-    url: 'get_menu_list',
-    method: 'get'
-  });
-};
-
-export const getMenuData = ({ page, rows, parentid }) => {
+export const getMenuData = ({ page, rows, pid }) => {
   const data = {
     page,
     rows,
-    parentid
+    pid
   };
   
   return Vue.prototype.$http.request({
@@ -46,6 +32,11 @@ export const getMenuData = ({ page, rows, parentid }) => {
     params: data,
     method: 'get'
   });
+  // return Vue.prototype.$imsService.request({
+  //   url: '/ims-menu/pages',
+  //   params: data,
+  //   method: 'get'
+  // });
 };
 
 export const getRoleData = ({ page, rows }) => {
@@ -59,6 +50,11 @@ export const getRoleData = ({ page, rows }) => {
     params: data,
     method: 'get'
   });
+  // return Vue.prototype.$imsService.request({
+  //   url: '/ims-role/pages',
+  //   params: data,
+  //   method: 'get'
+  // });
 };
 
 export const getUserData = ({ page, rows }) => {
@@ -72,6 +68,11 @@ export const getUserData = ({ page, rows }) => {
     params: data,
     method: 'get'
   });
+  // return Vue.prototype.$imsService.request({
+  //   url: '/admin/pages',
+  //   params: data,
+  //   method: 'get'
+  // });
 };
 
 export const getOperateData= ({ page, rows, menuId }) => {
@@ -86,4 +87,9 @@ export const getOperateData= ({ page, rows, menuId }) => {
     params: data,
     method: 'get'
   });
+  // return Vue.prototype.$imsService.request({
+  //   url: '/ims-operation/pages',
+  //   params: data,
+  //   method: 'get'
+  // });
 };
