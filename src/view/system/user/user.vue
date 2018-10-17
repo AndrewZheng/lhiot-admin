@@ -38,19 +38,19 @@
        <div class="modal-content">
          <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
               <FormItem label="姓名" prop="name">
-                  <Input v-model="rowData.name" placeholder="请输入姓名"></Input>
+                  <Input v-model="rowData.name" placeholder="请输入姓名"/>
               </FormItem>
               <FormItem label="账号" prop="account">
-                  <Input v-model="rowData.account" placeholder="请输入账号"></Input>
+                  <Input v-model="rowData.account" placeholder="请输入账号"/>
               </FormItem>
               <FormItem label="密码" prop="password">
-                  <Input v-model="rowData.password" type="password"></Input>
+                  <Input v-model="rowData.password" type="password"/>
               </FormItem>
               <FormItem label="确认密码" prop="passwdCheck">
-                  <Input v-model="rowData.passwdCheck" type="password"></Input>
+                  <Input v-model="rowData.passwdCheck" type="password"/>
               </FormItem>
               <FormItem label="电话" prop="tel">
-                  <Input v-model="rowData.tel" placeholder="请输入电话号码"></Input>
+                  <Input v-model="rowData.tel" placeholder="请输入电话号码"/>
               </FormItem>
               <FormItem label="用户头像" prop="avatarUrl">
                   <Upload
@@ -91,7 +91,7 @@
                   </RadioGroup>
               </FormItem>
               <FormItem label="备注" prop="remark">
-                  <Input v-model="rowData.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入备注"></Input>
+                  <Input v-model="rowData.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入备注"/>
               </FormItem>
             </Form>
        </div>
@@ -108,19 +108,19 @@
           <TabPane label="创建用户" name="userAdd">
             <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
               <FormItem label="姓名" prop="name">
-                  <Input v-model="rowData.name" placeholder="请输入姓名"></Input>
+                  <Input v-model="rowData.name" placeholder="请输入姓名"/>
               </FormItem>
               <FormItem label="账号" prop="account">
-                  <Input v-model="rowData.account" placeholder="请输入账号"></Input>
+                  <Input v-model="rowData.account" placeholder="请输入账号"/>
               </FormItem>
               <FormItem label="密码" prop="password">
-                  <Input v-model="rowData.password" type="password"></Input>
+                  <Input v-model="rowData.password" type="password"/>
               </FormItem>
               <FormItem label="确认密码" prop="passwdCheck">
-                  <Input v-model="rowData.passwdCheck" type="password"></Input>
+                  <Input v-model="rowData.passwdCheck" type="password"/>
               </FormItem>
               <FormItem label="电话" prop="tel">
-                  <Input v-model="rowData.tel" placeholder="请输入电话号码"></Input>
+                  <Input v-model="rowData.tel" placeholder="请输入电话号码"/>
               </FormItem>
               <FormItem label="用户头像" prop="avatarUrl">
                   <Upload
@@ -161,7 +161,7 @@
                   </RadioGroup>
               </FormItem>
               <FormItem label="备注" prop="remark">
-                  <Input v-model="rowData.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入备注"></Input>
+                  <Input v-model="rowData.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入备注"/>
               </FormItem>
             </Form>
           </TabPane>

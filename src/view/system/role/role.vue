@@ -37,7 +37,7 @@
        <div class="modal-content">
          <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
             <FormItem label="角色名称" prop="name">
-                <Input v-model="rowData.name" placeholder="请输入角色名称"></Input>
+                <Input v-model="rowData.name" placeholder="请输入角色名称"/>
             </FormItem>
             <FormItem label="角色状态" prop="status">
                 <RadioGroup v-model="rowData.status" @on-change="changeRadio">
@@ -62,7 +62,7 @@
             <TabPane label="创建角色" name="roleAdd">
               <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
                   <FormItem label="角色名称" prop="name">
-                      <Input v-model="rowData.name" placeholder="请输入角色名称"></Input>
+                      <Input v-model="rowData.name" placeholder="请输入角色名称"/>
                   </FormItem>
                   <FormItem label="角色状态" prop="status">
                       <RadioGroup v-model="rowData.status" @on-change="changeRadio">
