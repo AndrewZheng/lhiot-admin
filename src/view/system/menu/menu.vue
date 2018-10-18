@@ -41,7 +41,7 @@
   <Modal
         v-model="modalView"
         :mask-closable="false"
-        :width="rowData.type=='SON'?'750':'auto'"
+        :width="rowData.type=='SON'?'750':''"
         >
         <p slot="header">
             <span>查看菜单</span>
@@ -57,7 +57,7 @@
            <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
               <i-col span="4">名称</i-col>
-              <i-col span="20">{{rowData.title}}</i-col>
+              <i-col span="20">{{rowData.name}}</i-col>
             </Row>
            </i-col>
          </Row>
@@ -93,7 +93,7 @@
   <Modal
         v-model="modalEdit"
         :mask-closable="false"
-        @on-cancel="handleCancel">
+        >
         <p slot="header">
             <span>{{rowData.id==0?'创建菜单':'编辑菜单'}}</span>
         </p>
@@ -108,7 +108,7 @@
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
               <i-col span="4">名称</i-col>
-              <i-col span="12"><Input v-model="rowData.title" placeholder="" clearable /></i-col>
+              <i-col span="12"><Input v-model="rowData.name" placeholder="" clearable /></i-col>
             </Row>
           </i-col>
          </Row>
@@ -157,7 +157,7 @@
                 <i-col span="4">类型</i-col>
                 <i-col span="20">
                   <CheckboxGroup v-model="requestTypeList">
-                      <Checkbox v-for="item in optionList" :label="item.value" :key="item.name">{{ item.name }}</Checkbox>
+                      <Checkbox v-for="item in optionList" :label="item" :key="item">{{ item }}</Checkbox>
                   </CheckboxGroup>
                 </i-col>
               </Row>
@@ -217,7 +217,7 @@
                   <i-col span="12">
                     <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
                       <i-col span="4">名称</i-col>
-                      <i-col span="12"><Input v-model="rowData.title" placeholder="" clearable /></i-col>
+                      <i-col span="12"><Input v-model="rowData.name" placeholder="" clearable /></i-col>
                     </Row>
                   </i-col>
                 </Row>
@@ -249,7 +249,7 @@
                       <i-col span="4">类型</i-col>
                       <i-col span="20">
                         <CheckboxGroup v-model="requestTypeList">
-                            <Checkbox v-for="item in optionList" :label="item.value" :key="item.name">{{ item.name }}</Checkbox>
+                            <Checkbox v-for="item in optionList" :label="item" :key="item">{{ item }}</Checkbox>
                         </CheckboxGroup>
                       </i-col>
                     </Row>
@@ -296,7 +296,7 @@
 </template>
 
 <script type='text/ecmascript-6'>
-import { getTableData, getMenuData, getOperateData } from '@/api/data';
+import { getMenuData, getOperateData } from '@/api/data';
 import { getMenuList } from '@/api/system';
 import { buildMenu } from '@/libs/util';
 import Tables from '_c/tables';
@@ -314,7 +314,7 @@ const menuColumns = [
       return h('span', row.id + '');
     }
   },
-  { title: '名称', key: 'title', sortable: true },
+  { title: '名称', key: 'name', sortable: true },
   { title: '编码', key: 'code', sortable: false },
   {
     title: '类型',
@@ -424,25 +424,8 @@ export default {
   data() {
     return {
       menuList: [],
-      requestTypeList: ['get'],
-      optionList: [
-        {
-          name: 'GET',
-          value: 'get'
-        },
-        {
-          name: 'POST',
-          value: 'post'
-        },
-        {
-          name: 'PUT',
-          value: 'put'
-        },
-        {
-          name: 'DELETE',
-          value: 'delete'
-        }
-      ],
+      requestTypeList: ['GET'],
+      optionList: ['GET', 'POST', 'PUT', 'DELETE'],
       step: 'addMenu',
       columns: menuColumns,
       oColumns: operateColumns,
@@ -472,7 +455,7 @@ export default {
         parentid: 0,
         sort: 0,
         code: '',
-        title: '',
+        name: '',
         type: ''
       },
       operateRowData: {
@@ -486,17 +469,7 @@ export default {
   },
   mounted() {
     // 获取系统所有的菜单列表
-    getMenuList().then(res => {
-      if (res && res.array.length > 0) {
-        console.log('menuList from mock: ', res.array);
-        console.log('buildMenu: ', buildMenu(res.array));
-        this.menuList = buildMenu(res.array, 'parentid', false);
-        const { id, title } = this.menuList[0];
-        this.currentPid = id;
-        this.currentName = title;
-        this.getTableData();
-      }
-    });
+    this.initMenuList();
   },
   filters: {
     switchType(value) {
@@ -511,8 +484,26 @@ export default {
     }
   },
   methods: {
+    initMenuList() {
+      getMenuList().then(res => {
+        if (res && res.array.length > 0) {
+          console.log('menuList from mock: ', res.array);
+          console.log('buildMenu: ', buildMenu(res.array));
+          this.menuList = buildMenu(res.array, 'parentid', false);
+          const { id, title } = this.menuList[0];
+          this.currentPid = id;
+          this.currentName = title;
+          this.getTableData();
+        }
+      });
+    },
+    refreshMenuList() {
+      getMenuList().then(res => {
+          this.menuList = buildMenu(res.array, 'parentid', false);
+      });
+    },
     renderContent(h, { root, node, data }) {
-      if (data.children) {
+      if (data.type=='PARENT') {
         return (
           <div
             style={{
@@ -557,7 +548,7 @@ export default {
         rows: this.pageSize,
         pid: this.currentPid
       }).then(res => {
-        this.tableData = res.data;
+        this.tableData = res.array;
         this.total = res.total;
         this.loading = false;
       });
@@ -568,7 +559,7 @@ export default {
         rows: this.operatePageSize,
         menuId: this.currentMenuId
       }).then(res => {
-        this.operateData = res.data;
+        this.operateData = res.array;
         this.operateTotal = res.total;
         this.loading = false;
       });
@@ -584,12 +575,13 @@ export default {
       this.getTableData();
     },
     addChildren() {
-      console.log('addChildren');
-      this.rowData.type = 'SON';
+      this.resetRowData();
+      this.resetOperateRowData();
       this.modalAdd = true;
+      this.rowData.type = 'SON';
     },
     addParent() {
-      console.log('addParent');
+      this.resetRowData();
       this.rowData.type = 'PARENT';
       this.modalEdit = true;
     },
@@ -607,22 +599,22 @@ export default {
     },
     handleClick({ root, node, data }) {
       // 展开当前节点-先Pending过后handle
-      console.log('node: ', data);
-      // if (typeof data.expand === 'undefined') {
-      //   this.$set(data, 'expend', true);
-      //   if(data.children){
-      //     this.expandChildren(data.children);
-      //   }
-      // } else {
-      //   data.expand = !data.expand;
-      // }
+      console.log('current data: ', data);
+      if (typeof data.expand === 'undefined') {
+        this.$set(data, 'expend', true);
+        if (data.children) {
+          this.expandChildren(data.children);
+        }
+      } else {
+        data.expand = !data.expand;
+      }
       this.currentName = data.title;
       this.currentPid = data.id;
       // 获取新数据
       this.getTableData();
     },
     handleView(params) {
-      const { row, index, column } = params;
+      const { row } = params;
       this.rowData = row;
       this.modalView = true;
       if (row.type=='SON') {
@@ -632,40 +624,38 @@ export default {
       }
     },
     handleDelete(params) {
-      setTimeout(() => {
-        this.$Message.info('删除成功');
-      }, 500);
-      const { row, index, column } = params;
+      const { row } = params;
       // 发送axios请求删除
-      // this.$http.request({
-      //   url: '/ims-menu/delete/'+row.id,
-      //   method: 'delete',
-      // }).then(res => {
-      //   // 刷新表格数据
-      //   this.getTableData(this.currentPid);
-      // });
+      this.$http.request({
+        url: '/ims-menu/'+ row.id,
+        method: 'delete'
+      }).then(res => {
+        this.$Message.info('删除成功');
+        // 刷新左边菜单
+        this.refreshMenuList();
+        // 刷新表格数据
+        this.getTableData();
+      });
     },
     handleDeleteOperate(params) {
-      setTimeout(() => {
-        this.$Message.info('删除成功');
-      }, 500);
-      const { row, index, column } = params;
+      const { row } = params;
       // 发送axios请求删除
-      // this.$http.request({
-      //   url: '/ims-/delete/'+row.id,
-      //   method: 'delete',
-      // }).then(res => {
-      //   // 刷新表格数据
-      //   this.getOperateData();
-      // });
+      this.$http.request({
+        url: '/ims-operation/'+row.id,
+        method: 'delete'
+      }).then(res => {
+        this.$Message.info('删除成功');
+        // 刷新表格数据
+        this.getOperateData();
+      });
     },
     handleEdit(params) {
-      const { row, index, column } = params;
+      const { row } = params;
       this.rowData = _.merge({}, this.rowData, row);
       this.modalEdit = true;
     },
     handleEditPermission(params) {
-      const { row, index, column } = params;
+      const { row } = params;
       this.modalPermission=true;
       this.currentMenuId= row.id;
       console.log(`row.id ${row.id}`);
@@ -674,7 +664,7 @@ export default {
     handleOk() {
       this.loadingBtn = true;
       // 提交前校验
-      if (!this.rowData.title) {
+      if (!this.rowData.name) {
         this.$Message.warning('请填写菜单的名称');
         this.loadingBtn = false;
         return;
@@ -686,43 +676,43 @@ export default {
         return;
       }
 
-      setTimeout(() => {
-        this.modalEdit = false;
-        this.loadingBtn = false;
-        this.resetRowData();
-        this.$Message.info('保存成功');
-      }, 1000);
-
       if (this.rowData.id == 0) {
         // 组织rowData数据
         this.rowData.parentid = this.currentPid;
         // 发送axios请求创建菜单
-        // this.$http.request({
-        //   url: '/ims-menu/create',
-        //   method: 'post',
-        //   data: this.rowData
-        // }).then(res => {
-        //   // 清空rowData对象
-        //   this.resetRowData();
-        //   // 刷新表格数据
-        //   this.getTableData();
-        // });
+        this.$http.request({
+          url: '/ims-menu/',
+          method: 'post',
+          data: this.rowData
+        }).then(res => {
+          this.loadingBtn = false;
+          this.modalEdit= false;
+          this.$Message.info('保存成功');
+          // 刷新左边菜单
+          this.refreshMenuList();
+          // 清空rowData对象
+          this.resetRowData();
+          // 刷新表格数据
+          this.getTableData();
+        });
       } else {
         // 发送axios请求修改菜单
-        // this.$http.request({
-        //   url: '/ims-menu/update/'+ this.rowData.id,
-        //   method: 'post',
-        //   data: this.rowData
-        // }).then(res => {
-        //   // 清空rowData对象
-        //   this.resetRowData();
-        //   // 刷新表格数据
-        //   this.getTableData();
-        // });
+        this.$http.request({
+          url: '/ims-menu/'+ this.rowData.id,
+          method: 'put',
+          data: this.rowData
+        }).then(res => {
+          this.loadingBtn = false;
+          this.modalEdit= false;
+          this.$Message.info('更新成功');
+          // 刷新左边菜单
+          this.refreshMenuList();
+          // 清空rowData对象
+          this.resetRowData();
+          // 刷新表格数据
+          this.getTableData();
+        });
       }
-    },
-    handleCancel() {
-      this.resetRowData();
     },
     handleAdd() {
       // 校验字段
@@ -746,62 +736,55 @@ export default {
       this.operateRowData.menuId= this.currentMenuId;
  
       this.loadingAdd = true;
-      setTimeout(() => {
-        this.loadingAdd = false;
-        this.resetOperateRowData();
-        this.$Message.info('保存成功');
-      }, 1000);
       // 发送axios请求创建菜单
-      // this.$http.request({
-      //   url: '/ims-operation/create/'+this.currentMenuId,
-      //   method: 'post',
-      //   data: this.operateRowData
-      // }).then(res => {
-      //   // 清空rowData对象
-      //   this.resetOperateRowData();
-      //   // 刷新表格数据
-      //   this.getOperateData();
-      // });
+      this.$http.request({
+        url: '/ims-operation/',
+        method: 'post',
+        data: this.operateRowData
+      }).then(res => {
+        this.loadingAdd = false;
+        this.$Message.info('保存成功');
+        // 清空类型列表
+        this.requestTypeList= ['GET'];
+        // 清空rowData对象
+        this.resetOperateRowData();
+        // 刷新表格数据
+        this.getOperateData();
+      });
     },
     handleClose() {
       this.modalView = false;
-      this.resetRowData();
     },
     handleCloseAdd() {
       this.modalAdd = false;
       this.isCreated = false;
       this.isDisable= true;
       this.step='addMenu';
-      this.resetRowData();
-      this.resetOperateRowData();
     },
     handleCloseEdit() {
       this.modalPermission=false;
       // 初始化
       this.currentMenuId= 0;
-      this.requestTypeList=['get'];
-      this.resetOperateRowData();
+      this.requestTypeList=['GET'];
     },
     resetRowData() {
-      const rowData = {
+      this.rowData = {
         id: 0,
         parentid: 0,
         sort: 0,
         code: '',
-        title: '',
+        name: '',
         type: ''
       };
-      this.rowData = _.merge({}, this.rowData, rowData);
     },
     resetOperateRowData() {
-      const operateRowData= {
+      this.operateRowData = {
         id: 0,
         type: '',
         menuId: 0,
         name: '',
         antUrl: ''
       };
-      this.operateRowData = _.merge({}, this.operateRowData, operateRowData);
     },
     exportExcel() {
       this.$refs.tables.exportCsv({
@@ -810,7 +793,7 @@ export default {
     },
     goNext() {
       // 校验字段
-      if (!this.rowData.title) {
+      if (!this.rowData.name) {
         this.$Message.warning('请填写菜单的名称');
         return false;
       }
@@ -821,25 +804,22 @@ export default {
       }
       // 组织rowData数据
       this.rowData.parentid = this.currentPid;
-      this.step = 'addPermission';
-      this.isDisable = false;
-      this.isCreated = true;
-      this.getOperateData();
       // 下一步之前先创建子菜单
-      // this.$http.request({
-      //   url: '/ims-menu/create',
-      //   method: 'post',
-      //   data: this.rowData
-      // }).then(res => {
-      //   // 清空rowData对象
-      //   this.resetRowData();
-      //   this.step='addPermission';
-      //   this.isDisable= false;
-      //   this.isCreated = true;
-      //   this.currentMenuId= res.id;
-      //   // 刷新表格数据
-      //   this.getOperateData();
-      // });
+      this.$http.request({
+        url: '/ims-menu/',
+        method: 'post',
+        data: this.rowData
+      }).then(res => {
+        this.$Message.info('创建成功');
+        this.step='addPermission';
+        this.isDisable= false;
+        this.isCreated = true;
+        this.currentMenuId= res.id;
+
+        // 刷新表格数据
+        this.getTableData();
+        this.getOperateData();
+      });
     }
   }
 };

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import axios from 'axios';
 import store from '../store/';
-import { gbs, enums } from '@/util/';
+import router from '@/router';
 import _ from 'lodash';
 
 class HttpRequest {
@@ -24,7 +24,7 @@ class HttpRequest {
     switch (this.centerType) {
       case 'IMS_SERVICE':
         const imsServiceOps = _.merge({}, defaultOps, {
-          baseURL: this.baseUrl + '/' + enums.IMS_SERVICE.serviceID+'-'+ enums.IMS_SERVICE.headers.version
+          baseURL: this.baseUrl
         });
         return imsServiceOps;
       default:
@@ -62,12 +62,26 @@ class HttpRequest {
       // 2. 需要重定向到错误页面
       const errorInfo = error.response;
       console.log(errorInfo);
-      // if (errorInfo) {
-      //   const errorStatus = errorInfo.status; // 404 403 500 ...
-      //   router.push({
-      //     path: `/error/${errorStatus}`
-      //   });
-      // }
+      if (errorInfo) {
+        const errorStatus = errorInfo.status; // 404 403 500 ...
+        switch (errorStatus) {
+          case '404':
+          router.push({
+            name: '/404'
+          });
+          break;
+          case '401':
+          router.push({
+            name: '/401'
+          });
+          break;
+          case '500':
+          router.push({
+            name: '/500'
+          });
+          break;
+        }
+      }
       Vue.prototype.$Message.error('请求失败或超时!');
       return Promise.reject(error);
     });
@@ -94,6 +108,8 @@ class HttpRequest {
           errorMsg = error.response.data;
         } else if (error.response.status === 401) {
           errorMsg = '您无访问权限';
+        } else if (error.response.status === 402) {
+          errorMsg = '页面已过期，请重新登录';
         } else if (error.response.status === 403) {
           errorMsg = '拒绝访问';
         } else if (error.response.status === 405) {
