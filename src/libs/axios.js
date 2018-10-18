@@ -1,14 +1,11 @@
 import Vue from 'vue';
 import axios from 'axios';
 import store from '../store/';
-import {
-  gbs,
-  enums
-} from '@/util/';
+import { gbs, enums } from '@/util/';
 import _ from 'lodash';
 
 class HttpRequest {
-  constructor(baseUrl = '/', centerType = '') {
+  constructor(baseUrl = '', centerType = '') {
     this.baseUrl = baseUrl;
     this.centerType = centerType;
     this.queue = {};
@@ -23,42 +20,11 @@ class HttpRequest {
       },
       withCredentials: true // 是否允许带cookie
     };
-
+    // 后端微服务有需求再扩展
     switch (this.centerType) {
-      case 'BASIC_DATA_CENTER':
-        const dataCenterOps = _.merge({}, defaultOps, {
-          baseURL: this.baseUrl + '/' + enums.BASIC_DATA_CENTER.serviceID,
-          headers: enums.BASIC_DATA_CENTER.headers
-        });
-        return dataCenterOps;
-      case 'CONTENT_CENTER':
-        const contentCenterOps = _.merge({}, defaultOps, {
-          baseURL: this.baseUrl + '/' + enums.CONTENT_CENTER.serviceID,
-          headers: enums.CONTENT_CENTER.headers
-        });
-        return contentCenterOps;
-      case 'ORDER_CENTER':
-        const orderCenterOps = _.merge({}, defaultOps, {
-          baseURL: this.baseURL + '/' + enums.ORDER_CENTER.serviceID,
-          headers: enums.ORDER_CENTER.headers
-        });
-        return orderCenterOps;
-      case 'BASE_USER_CENTER':
-        const baseUserCenterOps = _.merge({}, defaultOps, {
-          baseURL: this.baseURL + '/' + enums.BASE_USER_CENTER.serviceID,
-          headers: enums.BASE_USER_CENTER.headers
-        });
-        return baseUserCenterOps;
-      case 'FRUIT_DOCTOR_CENTER':
-        const fruitDoctorCenterOps = _.merge({}, defaultOps, {
-          baseURL: this.baseURL + '/' + enums.FRUIT_DOCTOR_CENTER.serviceID,
-          headers: enums.FRUIT_DOCTOR_CENTER.headers
-        });
-        return fruitDoctorCenterOps;
       case 'IMS_SERVICE':
         const imsServiceOps = _.merge({}, defaultOps, {
-          baseURL: this.baseURL + '/' + enums.IMS_SERVICE.serviceID,
-          headers: enums.IMS_SERVICE.headers
+          baseURL: this.baseUrl + '/' + enums.IMS_SERVICE.serviceID+'-'+ enums.IMS_SERVICE.headers.version
         });
         return imsServiceOps;
       default:
@@ -76,7 +42,7 @@ class HttpRequest {
       // 全局追加X-SessionId
       config.headers = (
         Object.assign((config.headers ? config.headers : {}), {
-          'X-SessionId': store.state.sessionId
+          'X-SessionId': store.getters.token
         })
       );
       // 解决axios post请求后台获取不到参数问题 如果支持json参数格式的介绍则不需要
@@ -108,17 +74,13 @@ class HttpRequest {
     // 响应拦截
     instance.interceptors.response.use(res => {
       this.destory(url);
-      const {
-        data,
-        status
-      } = res;
+      const { data, status } = res;
       // 后续再做修改
       if (status < 400) {
         if (data == '' || data) {
           return data;
         }
       } else {
-        // 与后端约定的code实现
         Vue.prototype.$Message.info(data.message);
         return Promise.reject(res);
       }
@@ -171,4 +133,5 @@ class HttpRequest {
     return instance(options);
   }
 }
+
 export default HttpRequest;

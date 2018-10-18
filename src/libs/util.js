@@ -442,7 +442,6 @@ export const buildMenu = (array, ckey, isFind=true) => {
       }
     }
   });
-  console.log('menuData first level: ', menuData);
   let findChildren = function (parentArr) {
     if (Array.isArray(parentArr) && parentArr.length) {
       parentArr.forEach(function (parentNode) {

@@ -25,7 +25,10 @@ module.exports = {
     'space-infix-ops':0,
     'eqeqeq': 0,
     'space-before-blocks': ['warn','always'],
-    'indent':0,
+    'indent': 0,
     'quotes': ['warn','single']
+  },
+  parserOptions: {
+    parser: 'babel-eslint'
   }
 }

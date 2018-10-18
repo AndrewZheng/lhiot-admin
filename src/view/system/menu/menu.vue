@@ -296,12 +296,8 @@
 </template>
 
 <script type='text/ecmascript-6'>
-import {
-  getTableData,
-  getMenuList,
-  getMenuData,
-  getOperateData
-} from '@/api/data';
+import { getTableData, getMenuData, getOperateData } from '@/api/data';
+import { getMenuList } from '@/api/system';
 import { buildMenu } from '@/libs/util';
 import Tables from '_c/tables';
 import CommonIcon from '_c/common-icon';
@@ -516,35 +512,51 @@ export default {
   },
   methods: {
     renderContent(h, { root, node, data }) {
-      const iconType = data.children ? 'ios-folder' : 'ios-paper';
-      const isClick = data.children ? 'pointer' : 'auto';
-
-      return (
-        <div
-          style={{
-            display: 'inline-block',
-            width: '100%',
-            fontSize: '14px',
-            cursor: isClick
-          }}
-        >
-          <span>
-            <CommonIcon type={iconType} class="mr10" />
-          </span>
-          <span onClick={() => this.handleClick({ root, node, data })}>
-            {data.meta.title}
-          </span>
-        </div>
-      );
+      if (data.children) {
+        return (
+          <div
+            style={{
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
+            }}
+          >
+            <span>
+              <CommonIcon type='ios-folder' class="mr10" />
+            </span>
+            <span onClick={() => this.handleClick({ root, node, data })}>
+              {data.meta.title}
+            </span>
+          </div>
+        );
+      } else {
+        return (
+          <div
+            style={{
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'auto'
+            }}
+          >
+            <span>
+              <CommonIcon type='ios-paper' class="mr10" />
+            </span>
+            <span>
+              {data.meta.title}
+            </span>
+          </div>
+        );
+      }
     },
     getTableData() {
       console.log('currentPid：', this.currentPid);
       getMenuData({
         page: this.page,
         rows: this.pageSize,
-        parentid: this.currentPid
+        pid: this.currentPid
       }).then(res => {
-        console.log(res);
         this.tableData = res.data;
         this.total = res.total;
         this.loading = false;
@@ -581,14 +593,29 @@ export default {
       this.rowData.type = 'PARENT';
       this.modalEdit = true;
     },
+    expandChildren(array) {
+      array.forEach(item => {
+          if (typeof item.expand === 'undefined') {
+            this.$set(item, 'expend', true);
+          } else {
+            item.expand = !item.expand;
+          }
+          if (item.children) {
+            this.expandChildren(item.children);
+          }
+      });
+    },
     handleClick({ root, node, data }) {
       // 展开当前节点-先Pending过后handle
-      console.log('node: ', node);
-      if (typeof node.expand === 'undefined') {
-        this.$set(node, 'expend', true);
-      } else {
-        node.expand = !node.expand;
-      }
+      console.log('node: ', data);
+      // if (typeof data.expand === 'undefined') {
+      //   this.$set(data, 'expend', true);
+      //   if(data.children){
+      //     this.expandChildren(data.children);
+      //   }
+      // } else {
+      //   data.expand = !data.expand;
+      // }
       this.currentName = data.title;
       this.currentPid = data.id;
       // 获取新数据
@@ -634,7 +661,7 @@ export default {
     },
     handleEdit(params) {
       const { row, index, column } = params;
-      this.rowData = row;
+      this.rowData = _.merge({}, this.rowData, row);
       this.modalEdit = true;
     },
     handleEditPermission(params) {

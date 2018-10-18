@@ -110,7 +110,8 @@
 
 <script>
 import Tables from '_c/tables';
-import { getRoleData, getMenuList } from '@/api/data';
+import { getRoleData } from '@/api/data';
+import { getMenuList } from '@/api/system';
 import { buildMenu } from '@/libs/util';
 
 export default {

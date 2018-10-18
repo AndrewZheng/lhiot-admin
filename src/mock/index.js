@@ -1,5 +1,5 @@
 import Mock from 'mockjs';
-import { login, logout, getUserInfo, getMenusByUser } from './login';
+import { login, logout, getUserInfo } from './login';
 import { getTableData, getDragList, getMenuData, getRoleData, getUserData, getOperateData } from './data';
 import { getSystemList, getRouteListById, getMenuList } from './system';
 
@@ -9,7 +9,6 @@ Mock.mock(/\/get_info/, getUserInfo);
 Mock.mock(/\/logout/, logout);
 Mock.mock(/\/get_table_data/, getTableData);
 Mock.mock(/\/get_drag_list/, getDragList);
-Mock.mock(/\/get_menus_list/, getMenusByUser);
 Mock.mock(/\/get_system_list/, getSystemList);
 Mock.mock(/\/get_route_list/, getRouteListById);
 Mock.mock(/\/get_menu_list/, getMenuList);
