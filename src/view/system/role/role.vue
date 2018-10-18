@@ -46,7 +46,7 @@
                 </RadioGroup>
             </FormItem>
             <FormItem label="角色描述" prop="roleDesc">
-                <Input v-model="rowData.roleDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入角色描述"></Input>
+                <Input v-model="rowData.roleDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入角色描述"/>
             </FormItem>
         </Form>
        </div>
@@ -71,7 +71,7 @@
                       </RadioGroup>
                   </FormItem>
                   <FormItem label="角色描述" prop="roleDesc">
-                      <Input v-model="rowData.roleDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入角色描述"></Input>
+                      <Input v-model="rowData.roleDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入角色描述"/>
                   </FormItem>
               </Form>
             </TabPane>

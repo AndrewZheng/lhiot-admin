@@ -206,7 +206,6 @@
           </Transfer>
       </div>
     </Modal>
-
   </div>
 </template>
 
@@ -557,10 +556,7 @@ export default {
           };
       }
     },
-    /**
-     * 翻译字典
-     * fieldName 需要翻译的字段名称，value 需要翻译的字段值
-     */
+    // 翻译字典 fieldName 需要翻译的字段名称，value 需要翻译的字段值
     getDictByName(fieldName, value) {
         this.getAllDicts();
         var translateDictName = '';// 需要翻译字典名称
