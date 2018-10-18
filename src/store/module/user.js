@@ -92,9 +92,9 @@ const actions = {
     account = account.trim();
     return new Promise((resolve, reject) => {
       login({ account, password }).then(res => {
-        // console.log('res from backend: ', res.XSessionId);
-        // commit('setToken', res.XSessionId);
-        commit('setToken', res.token);
+        console.log('res from backend: ', res.XSessionId);
+        commit('setToken', res.XSessionId);
+        // commit('setToken', res.token);
         resolve();
       }).catch(err => {
         reject(err);
@@ -117,7 +117,7 @@ const actions = {
   getUserInfo({ state, commit, dispatch }) {
     return new Promise((resolve, reject) => {
       getUserInfo(state.token).then(res => {
-        commit('setAvator', res.avatorUrl);
+        commit('setAvator', res.avatar);
         commit('setUserName', res.name);
         commit('setUserId', res.id);
         commit('setHasGetInfo', true);
@@ -139,6 +139,21 @@ const actions = {
         resolve();
       }).catch(err => {
         reject(err);
+      });
+    });
+  },
+  // 动态修改权限
+  ChangeRoles({ commit, dispatch }, pid) {
+    console.log('current pid: ', pid);
+    return new Promise(resolve => {
+      getUserInfo(role).then(response => {
+        commit('setAvator', res.avatar);
+        commit('setUserName', res.name);
+        commit('setUserId', res.id);
+        commit('setHasGetInfo', true);
+        dispatch('getSystemList', null, { root: true });
+        commit('generateRoutes', data); // 动态修改权限后 重绘侧边菜单
+        resolve();
       });
     });
   }

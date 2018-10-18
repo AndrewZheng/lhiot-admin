@@ -19,7 +19,7 @@ import 'assets/icons/iconfont.css';
 import 'assets/styles/style.scss';
 import moment from 'moment';
 
-if (process.env.NODE_ENV !== 'production') require('@/mock');
+// if (process.env.NODE_ENV !== 'production') require('@/mock');
 
 Vue.mixin(Mixin);
 Vue.use(axiosPlugin);
