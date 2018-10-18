@@ -24,6 +24,21 @@
       </div>
     </Card>
 
+    <pan-thumb :image="image"/>
+
+  <Button type="primary" icon="upload" style="position: absolute;bottom: 15px;margin-left: 40px;" @click="imagecropperShow=true">Change Avatar
+  </Button>
+
+  <image-cropper
+    v-show="imagecropperShow"
+    :width="300"
+    :height="300"
+    :key="imagecropperKey"
+    url="https://httpbin.org/post"
+    lang-type="en"
+    @close="close"
+    @crop-upload-success="cropSuccess"/>
+
     <!-- 修改模态框 -->
      <Modal
         v-model="modalEdit"
@@ -212,11 +227,15 @@
 <script type='text/ecmascript-6'>
 import Tables from '_c/tables';
 import { getUserData } from '@/api/data';
+import ImageCropper from '_c/ImageCropper';
+import PanThumb from '_c/PanThumb';
 
 export default {
   name: 'user_page',
   components: {
-    Tables
+    Tables,
+    ImageCropper,
+    PanThumb
   },
   data() {
     const validatePassCheck = (rule, value, callback) => {
@@ -364,7 +383,11 @@ export default {
         status: [
             { required: true, message: '请选择角色状态', trigger: 'change' }
         ]
-      }
+      },
+      // 头像上传
+      imagecropperShow: false,
+      imagecropperKey: 0,
+      image: 'https://wpimg.wallstcn.com/577965b9-bb9e-4e02-9f0c-095b41417191'
     };
   },
   created() {},
@@ -599,6 +622,15 @@ export default {
           });
       }
       return check;
+    },
+    // 头像上传
+    cropSuccess(resData) {
+      this.imagecropperShow = false;
+      this.imagecropperKey = this.imagecropperKey + 1;
+      this.image = resData.files.avatar;
+    },
+    close() {
+      this.imagecropperShow = false;
     }
    }
 };
@@ -642,4 +674,10 @@ export default {
         cursor: pointer;
         margin: 0 2px;
     }
+    //  头像
+    .avatar{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+  }
 </style>
