@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import CommonIcon from '_c/common-icon'
+import CommonIcon from '_c/common-icon';
 export default {
   name: 'InforCard',
   components: {
@@ -44,13 +44,13 @@ export default {
   },
   computed: {
     leftWidth () {
-      return `${this.left}%`
+      return `${this.left}%`;
     },
     rightWidth () {
-      return `${100 - this.left}%`
+      return `${100 - this.left}%`;
     }
   }
-}
+};
 </script>
 
 <style lang="less">

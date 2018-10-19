@@ -23,24 +23,24 @@ export default {
   },
   computed: {
     isEditting () {
-      return this.edittingCellId === `editting-${this.params.index}-${this.params.column.key}`
+      return this.edittingCellId === `editting-${this.params.index}-${this.params.column.key}`;
     }
   },
   methods: {
     handleInput (val) {
-      this.$emit('input', val)
+      this.$emit('input', val);
     },
     startEdit () {
-      this.$emit('on-start-edit', this.params)
+      this.$emit('on-start-edit', this.params);
     },
     saveEdit () {
-      this.$emit('on-save-edit', this.params)
+      this.$emit('on-save-edit', this.params);
     },
     canceltEdit () {
-      this.$emit('on-cancel-edit', this.params)
+      this.$emit('on-cancel-edit', this.params);
     }
   }
-}
+};
 </script>
 
 <style lang="less">

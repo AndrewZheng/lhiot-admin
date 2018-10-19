@@ -46,14 +46,14 @@ export default {
         body: '.draggable-btn'
       },
       statu: 1
-    }
+    };
   },
   methods: {
     showModal () {
-      this.modalVisible = true
+      this.modalVisible = true;
     }
   }
-}
+};
 </script>
 
 <style>

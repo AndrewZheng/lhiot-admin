@@ -24,10 +24,10 @@ export default {
       return {
         fontSize: `${this.size}px`,
         color: this.color
-      }
+      };
     }
   }
-}
+};
 </script>
 
 <style>

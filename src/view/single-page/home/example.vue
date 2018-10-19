@@ -3,18 +3,18 @@
 </template>
 
 <script>
-import echarts from 'echarts'
-import { on, off } from '@/libs/tools'
+import echarts from 'echarts';
+import { on, off } from '@/libs/tools';
 export default {
   name: 'serviceRequests',
   data () {
     return {
       dom: null
-    }
+    };
   },
   methods: {
     resize () {
-      this.dom.resize()
+      this.dom.resize();
     }
   },
   mounted () {
@@ -100,15 +100,15 @@ export default {
           data: [820, 645, 546, 745, 872, 624, 258]
         }
       ]
-    }
+    };
     this.$nextTick(() => {
-      this.dom = echarts.init(this.$refs.dom)
-      this.dom.setOption(option)
-      on(window, 'resize', this.resize())
-    })
+      this.dom = echarts.init(this.$refs.dom);
+      this.dom.setOption(option);
+      on(window, 'resize', this.resize());
+    });
   },
   beforeDestroy () {
-    off(window, 'resize', this.resize())
+    off(window, 'resize', this.resize());
   }
-}
+};
 </script>

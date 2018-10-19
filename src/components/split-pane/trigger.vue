@@ -16,26 +16,26 @@ export default {
     return {
       prefix: 'ivu-split-trigger',
       initOffset: 0
-    }
+    };
   },
   computed: {
     isVertical () {
-      return this.mode === 'vertical'
+      return this.mode === 'vertical';
     },
     classes () {
       return [
         this.prefix,
         this.isVertical ? `${this.prefix}-vertical` : `${this.prefix}-horizontal`
-      ]
+      ];
     },
     barConClasses () {
       return [
         `${this.prefix}-bar-con`,
         this.isVertical ? 'vertical' : 'horizontal'
-      ]
+      ];
     }
   }
-}
+};
 </script>
 
 <style lang="less">

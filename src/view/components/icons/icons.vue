@@ -30,8 +30,8 @@
 </template>
 
 <script>
-import Icons from '_c/icons'
-import CommonIcon from '_c/common-icon'
+import Icons from '_c/icons';
+import CommonIcon from '_c/common-icon';
 export default {
   name: 'icons_pages',
   components: {
@@ -48,9 +48,9 @@ export default {
         'frown',
         'bear'
       ]
-    }
+    };
   }
-}
+};
 </script>
 
 <style lang="less">

@@ -17,10 +17,10 @@
   </Submenu>
 </template>
 <script>
-import mixin from './mixin'
-import itemMixin from './item-mixin'
+import mixin from './mixin';
+import itemMixin from './item-mixin';
 export default {
   name: 'SideMenuItem',
   mixins: [ mixin, itemMixin ]
-}
+};
 </script>

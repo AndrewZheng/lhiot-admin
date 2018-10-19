@@ -3,9 +3,9 @@
 </template>
 
 <script>
-import echarts from 'echarts'
-import tdTheme from './theme.json'
-echarts.registerTheme('tdTheme', tdTheme)
+import echarts from 'echarts';
+import tdTheme from './theme.json';
+echarts.registerTheme('tdTheme', tdTheme);
 export default {
   name: 'ChartPie',
   props: {
@@ -15,7 +15,7 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-      let legend = this.value.map(_ => _.name)
+      let legend = this.value.map(_ => _.name);
       let option = {
         title: {
           text: this.text,
@@ -46,12 +46,12 @@ export default {
             }
           }
         ]
-      }
-      let dom = echarts.init(this.$refs.dom, 'tdTheme')
-      dom.setOption(option)
-    })
+      };
+      let dom = echarts.init(this.$refs.dom, 'tdTheme');
+      dom.setOption(option);
+    });
   }
-}
+};
 </script>
 
 <style lang="less">
