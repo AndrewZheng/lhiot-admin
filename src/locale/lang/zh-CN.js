@@ -17,4 +17,4 @@ export default {
   level_1: 'level-1',
   level_2: 'level-2',
   level_2_1: 'level-2-1'
-}
+};

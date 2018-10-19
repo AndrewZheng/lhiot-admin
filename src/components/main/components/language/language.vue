@@ -30,22 +30,22 @@ export default {
         'zh-TW': '中文繁体',
         'en-US': 'English'
       }
-    }
+    };
   },
   watch: {
     lang (lang) {
-      this.$i18n.locale = lang
+      this.$i18n.locale = lang;
     }
   },
   computed: {
     title () {
-      return this.langList[this.lang]
+      return this.langList[this.lang];
     }
   },
   methods: {
     selectLang (name) {
-      this.$emit('on-lang-change', name)
+      this.$emit('on-lang-change', name);
     }
   }
-}
+};
 </script>

@@ -24,10 +24,10 @@
   </div>
 </template>
 <script>
-import SideMenuItem from './side-menu-item.vue'
-import CollapsedMenu from './collapsed-menu.vue'
-import { getUnion } from '@/libs/tools'
-import mixin from './mixin'
+import SideMenuItem from './side-menu-item.vue';
+import CollapsedMenu from './collapsed-menu.vue';
+import { getUnion } from '@/libs/tools';
+import mixin from './mixin';
 
 export default {
   name: 'SideMenu',
@@ -40,7 +40,7 @@ export default {
     menuList: {
       type: Array,
       default () {
-        return []
+        return [];
       }
     },
     collapsed: {
@@ -71,43 +71,43 @@ export default {
   data () {
     return {
       openedNames: []
-    }
+    };
   },
   methods: {
     handleSelect (name) {
-      this.$emit('on-select', name)
+      this.$emit('on-select', name);
     },
     getOpenedNamesByActiveName (name) {
-      return this.$route.matched.map(item => item.name).filter(item => item !== name)
+      return this.$route.matched.map(item => item.name).filter(item => item !== name);
     },
     updateOpenName (name) {
-      if (name === 'home') this.openedNames = []
-      else this.openedNames = this.getOpenedNamesByActiveName(name)
+      if (name === 'home') this.openedNames = [];
+      else this.openedNames = this.getOpenedNamesByActiveName(name);
     }
   },
   computed: {
     textColor () {
-      return this.theme === 'dark' ? '#fff' : '#495060'
+      return this.theme === 'dark' ? '#fff' : '#495060';
     }
   },
   watch: {
     activeName (name) {
-      if (this.accordion) this.openedNames = this.getOpenedNamesByActiveName(name)
-      else this.openedNames = getUnion(this.openedNames, this.getOpenedNamesByActiveName(name))
+      if (this.accordion) this.openedNames = this.getOpenedNamesByActiveName(name);
+      else this.openedNames = getUnion(this.openedNames, this.getOpenedNamesByActiveName(name));
     },
     openNames (newNames) {
-      this.openedNames = newNames
+      this.openedNames = newNames;
     },
     openedNames () {
       this.$nextTick(() => {
-        this.$refs.menu.updateOpened()
-      })
+        this.$refs.menu.updateOpened();
+      });
     }
   },
   mounted () {
-    this.openedNames = getUnion(this.openedNames, this.getOpenedNamesByActiveName(name))
+    this.openedNames = getUnion(this.openedNames, this.getOpenedNamesByActiveName(name));
   }
-}
+};
 </script>
 <style lang="less">
 @import './side-menu.less';

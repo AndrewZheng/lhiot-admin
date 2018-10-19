@@ -17,10 +17,10 @@ export default {
   },
   methods: {
     handleChange () {
-      this.$emit('on-change', !this.collapsed)
+      this.$emit('on-change', !this.collapsed);
     }
   }
-}
+};
 </script>
 <style lang="less">
 @import './sider-trigger.less';

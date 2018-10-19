@@ -121,7 +121,7 @@ const actions = {
         commit('setUserName', res.name);
         commit('setUserId', res.id);
         commit('setHasGetInfo', true);
-        dispatch('getSystemList', null, { root: true });
+        dispatch('getSystemList');
         resolve(res);
       }).catch(err => {
         reject(err);
@@ -143,19 +143,15 @@ const actions = {
     });
   },
   // 动态修改权限
-  ChangeRoles({ commit, dispatch }, pid) {
-    console.log('current pid: ', pid);
-    return new Promise(resolve => {
-      getUserInfo(role).then(response => {
-        commit('setAvator', res.avatar);
-        commit('setUserName', res.name);
-        commit('setUserId', res.id);
-        commit('setHasGetInfo', true);
-        dispatch('getSystemList', null, { root: true });
-        commit('generateRoutes', data); // 动态修改权限后 重绘侧边菜单
-        resolve();
-      });
-    });
+  async changePermission({ commit, dispatch }) {
+    await dispatch('getUserInfo');
+    let pid=0;
+    if (PcLockr.get(enums.SYSTEM)) {
+      const system = JSON.parse(PcLockr.get(enums.SYSTEM));
+      pid = system.id;
+    }
+    // 不退出登录重新获取用户的信息-生成右上角系统菜单，生成左边菜单
+    return dispatch('getRouteListById', pid);
   }
 };
 
