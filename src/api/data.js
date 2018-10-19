@@ -45,16 +45,16 @@ export const getRoleData = ({ page, rows }) => {
     rows
   };
 
-  return Vue.prototype.$http.request({
-    url: 'get_role_data',
-    params: data,
-    method: 'get'
-  });
   // return Vue.prototype.$http.request({
-  //   url: '/ims-role/pages',
+  //   url: 'get_role_data',
   //   params: data,
   //   method: 'get'
   // });
+  return Vue.prototype.$http.request({
+    url: '/ims-role/pages',
+    data: data,
+    method: 'post'
+  });
 };
 
 export const getUserData = ({ page, rows }) => {
@@ -63,16 +63,16 @@ export const getUserData = ({ page, rows }) => {
     rows
   };
 
-  return Vue.prototype.$http.request({
-    url: 'get_user_data',
-    params: data,
-    method: 'get'
-  });
   // return Vue.prototype.$http.request({
-  //   url: '/admin/pages',
+  //   url: 'get_user_data',
   //   params: data,
   //   method: 'get'
   // });
+  return Vue.prototype.$http.request({
+    url: '/admin/pages',
+    data: data,
+    method: 'post'
+  });
 };
 
 export const getOperateData= ({ page, rows, menuId }) => {
