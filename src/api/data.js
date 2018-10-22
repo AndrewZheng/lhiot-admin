@@ -55,7 +55,7 @@ export const getUserData = ({ page, rows }) => {
 
   return Vue.prototype.$http.request({
     url: '/admin/pages', // get_user_data
-    params: data,
+    data: data,
     method: 'get'
   });
 };

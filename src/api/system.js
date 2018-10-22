@@ -27,3 +27,53 @@ export const getMenuList = () => {
     method: 'get'
   });
 };
+
+export const getRelationMenu = (id) => {
+  return Vue.prototype.$http.request({
+    url: '/ims-role/relation/menus/' + id,
+    method: 'post'
+  });
+};
+
+export const getRoleData = ({ page, rows }) => {
+  const data = {
+    page,
+    rows
+  };
+
+  // return Vue.prototype.$http.request({
+  //   url: 'get_role_data',
+  //   params: data,
+  //   method: 'get'
+  // });
+  return Vue.prototype.$http.request({
+    url: '/ims-role/pages',
+    data: data,
+    method: 'post'
+  });
+};
+
+export const getRoleList = () => {
+  return Vue.prototype.$http.request({
+    url: '/ims-role/list/all',
+    method: 'get'
+  });
+};
+
+export const getUserData = ({ page, rows }) => {
+  const data = {
+    page,
+    rows
+  };
+
+  // return Vue.prototype.$http.request({
+  //   url: 'get_user_data',
+  //   params: data,
+  //   method: 'get'
+  // });
+  return Vue.prototype.$http.request({
+    url: '/admin/pages',
+    data: data,
+    method: 'post'
+  });
+};
