@@ -521,11 +521,10 @@ export default {
       this.targetKeys = [];
       getRelationRoles(this.rowData.id).then(res => {
         if (res && res.length > 0) {
-            console.log('relationRoleIds: ', this.getTargetKeys(res));
-            this.targetKeys = this.getTargetKeys(res);
+            console.log('relationRoleIds: ', this.getRelationRoleIds(res));
+            this.targetKeys = this.getRelationRoleIds(res);
         }
       });
-
       this.modalRole = true;
     },
     handleRoleOk() {
@@ -610,7 +609,7 @@ export default {
       });
       return role;
     },
-    getTargetKeys (res) {
+    getRelationRoleIds (res) {
       let relationRoles = [];
       for (let i = 0; i < res.length; i++) {
         relationRoles.push({
