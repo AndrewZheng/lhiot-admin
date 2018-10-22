@@ -497,8 +497,7 @@ export default {
              title: 'title',
              children: 'children'
           };
-          this.menuList = convertTree(menuList, map);
-          // 转换为tree后第一项默认展开
+          this.menuList = convertTree(menuList, map, true);
           console.log('after convert: ', this.menuList);
           this.getTableData();
         }
@@ -509,10 +508,10 @@ export default {
         if (res && res.array.length > 0) {
           const menuList = buildMenu(res.array);
           const map= {
-             title: 'name',
+             title: 'title',
              children: 'children'
           };
-          this.menuList = convertTree(menuList, map);
+          this.menuList = convertTree(menuList, map, true);
         }
       });
     },
