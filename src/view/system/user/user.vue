@@ -360,11 +360,10 @@ export default {
       imgName: '',
       visible: false,
       uploadList: [],
-      relationRoles: [],
       // 双栏穿梭选择框数据
       roleData: this.getRoleData(),
-      targetKeys: this.getTargetKeys(),
-      titles: ['所有角色', '已关联角色'],
+      targetKeys: [],
+      titles: ['未关联角色', '已关联角色'],
       // 表单验证
       ruleValidate: {
         name: [
@@ -458,8 +457,6 @@ export default {
       const { row } = params;
       this.rowData = _.merge({}, this.rowData, row);
       this.rowData.passwdCheck = row.password;
-      // this.targetKeys = this.getRelationRoles().map(item => item.key);
-      this.targetKeys = ['2', '3'];
       this.modalEdit = true;
     },
     handleAddOrEditOk(name) {
@@ -521,19 +518,36 @@ export default {
       console.log(params);
       const { row } = params;
       this.rowData = row;
+      this.targetKeys = [];
+      getRelationRoles(this.rowData.id).then(res => {
+        if (res && res.length > 0) {
+            console.log('relationRoleIds: ', this.getTargetKeys(res));
+            this.targetKeys = this.getTargetKeys(res);
+        }
+      });
+
       this.modalRole = true;
     },
     handleRoleOk() {
-      this.loadingBtn = true;
-      this.modalAdd = false;
-      this.modalRole = false;
-      setTimeout(() => {
-        this.$Message.info('保存成功');
-        this.step = 'userAdd';
-        this.isDisable = false;
-        this.isCreated = true;
-      }, 1000);
+      let roleIds = this.targetKeys.join(',');
       // 发送axios请求
+      this.$http.request({
+        url: '/admin/update/relation/'+ this.rowData.id + '/' + roleIds,
+        method: 'put'
+      }).then(res => {
+        this.loadingBtn = false;
+        if (this.modalRole == true) {
+          this.modalRole= false;
+          this.targetKeys = [];
+          this.$Message.info('修改成功!');
+        } else if (this.modalAdd == true) {
+          this.modalAdd = false;
+          this.$Message.info('保存成功!');
+          this.step = 'userAdd';
+          this.isDisable = false;
+          this.isCreated = true;
+        }
+      });
     },
     // exportExcel() {
     //   this.$refs.tables.exportCsv({
@@ -596,32 +610,16 @@ export default {
       });
       return role;
     },
-    getTargetKeys () {
-      // return ["1","2"];
-      
-      console.log('relationRoles' + this.relationRoles);
-      return ['1'];
-      // if(typeof this.relationRoles === 'undefined'){
-      //   return [];
-      // } else{
-      //    return this.relationRoles.map(item => item.key);
-      // }
-        // return this.getRoleData()
-        //         // .filter(() => Math.random() * 2 > 1)
-        //         .map(item => item.key);
-    },
-    getRelationRoles() {
-      getRelationRoles(this.rowData.id).then(res => {
-        if (res && res.length > 0) {
-          for (let i = 0; i < res.length; i++) {
-            this.relationRoles.push({
-              key: res[i].id.toString(),
-              label: res[i].name,
-              description: res[i].roleDesc
-            });
-          }
-        }
-      });
+    getTargetKeys (res) {
+      let relationRoles = [];
+      for (let i = 0; i < res.length; i++) {
+        relationRoles.push({
+          key: res[i].id.toString(),
+          label: res[i].name,
+          description: res[i].roleDesc
+        });
+      }
+      return relationRoles.map(item => item.key);
     },
     render1 (item) {
         return item.label;
