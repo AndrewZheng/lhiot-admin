@@ -102,7 +102,7 @@
             <span>管理权限</span>
         </p>
        <div class="modal-content">
-         <Tree :data="menuList" :render="renderContent" show-checkbox multiple></Tree>
+         <Tree :data="menuList" :render="renderContent" show-checkbox multiple ref="menuTree" @on-check-change="handleChange"></Tree>
        </div>
     </Modal>
   </div>
@@ -112,22 +112,18 @@
 import Tables from '_c/tables';
 import { getRoleData } from '@/api/data';
 import { getMenuList } from '@/api/system';
-import { buildMenu } from '@/libs/util';
+import { buildMenu, convertTree, setTreeNodeChecked } from '@/libs/util';
+import { dedupe } from '@/libs/tools';
 
 export default {
   name: 'role_page',
+  inject: ['reload'],
   components: {
     Tables
   },
   data() {
     return {
       columns: [
-        // 选择框
-        // {
-        //   type: "selection",
-        //   width: 60,
-        //   align: "center"
-        // },
         {
           title: '编号',
           key: 'id',
@@ -191,12 +187,15 @@ export default {
         status: '',
         roleDesc: '',
         createBy: '',
-        createAt: ''
+        createAt: '',
+        menuids: ''
       },
       modalMenu: false,
       // 待翻译字典对象信息
       translateDicts: {},
       menuList: [],
+      originMenuList: [],
+      selectedIds: [],
       // tab选项操作数据
       step: 'roleAdd',
       isDisable: true,
@@ -216,9 +215,13 @@ export default {
   computed: {
     
   },
+  mounted() {
+    this.getRoleData();
+    this.getMenuList();
+  },
   methods: {
     renderContent(h, { root, node, data }) {
-      if (data.chirenderContentldren) {
+      if (data.chirldren) {
         return (
           <span
             style={{ display: 'inline-block', width: '100%', fontSize: '14px' }}
@@ -261,7 +264,9 @@ export default {
     handleEdit(params) {
       console.log(params);
       const { row } = params;
-      this.rowData = row;
+      this.rowData = Object.assign({}, row);
+      // 测试先写死
+      this.rowData.menuids='11,12,13,14';
       // 将status由number变为string(否则单选框无法正常显示)
       this.rowData.status = row.status + '';
       this.modalEdit = true;
@@ -283,8 +288,43 @@ export default {
     handleMenu(params) {
       console.log(params);
       const { row } = params;
-      this.rowData = row;
+      this.rowData = Object.assign({}, row);
+      // 测试先写死
+      this.rowData.menuids='11,12,13,14';
+      // 反选中已有的权限
+      this.checkMenuByIds();
       this.modalMenu = true;
+    },
+    handleChange(checkedArr) {
+      console.log('checkedArr: ', checkedArr);
+      // 循环执行所有选中的节点链,找到他们的id以及他们父级id，父级的父级id
+      let result = [];
+      checkedArr.forEach(item => {
+         // 递归寻找父级
+         result.push(...this.findParent(item));
+      });
+      this.selectedIds=dedupe(result);
+      console.log('result: ', result);
+      console.log('uniq result: ', this.selectedIds);
+    },
+    findParent(item) {
+      let result=[];
+      let findParentIds= (node) => {
+        result.push(node.id);
+        if (node && node.parentid) {
+          let parent= this.originMenuList.find(o => o.id==node.parentid);
+          findParentIds(parent);
+        };
+      };
+      findParentIds(item);
+      console.log('result from parent:', result);
+      return result;
+    },
+    checkMenuByIds() {
+      const menuids= this.rowData.menuids.split(',');
+      console.log('menuids: ', menuids);
+      setTreeNodeChecked(this.menuList, menuids);
+      console.log('this.menuList selected:', this.menuList);
     },
     handleMenuOk() {
       this.loadingBtn = true;
@@ -299,6 +339,12 @@ export default {
       }, 1000);
 
       // 发送axios请求
+      // 分发action动态修改权限
+      this.$store.dispatch('changePermission').then(res => {
+        this.$router.addRoutes(this.$store.getters.getActualRouter);
+        // 刷新当前路由
+        this.reload();
+      });
     },
     handleCancel() {
       this.$Message.info('取消成功');
@@ -349,7 +395,7 @@ export default {
         page: this.page,
         rows: this.pageSize
       }).then(res => {
-        this.tableData = res.data;
+        this.tableData = res.array;
         this.total = res.total;
         this.loading = false;
       });
@@ -358,8 +404,15 @@ export default {
        // 获取系统所有的菜单列表
       getMenuList().then(res => {
         if (res && res.array.length > 0) {
-          console.log('buildMenu: ', buildMenu(res.array, 'parentid', true));
-          this.menuList = buildMenu(res.array, 'parentid', true);
+          console.log('buildMenu: ', buildMenu(res.array));
+          const menuList= buildMenu(res.array);
+          const map= {
+             title: 'name',
+             children: 'children'
+          };
+          this.menuList = convertTree(menuList, map, true);
+          this.originMenuList= res.array;// 保留一份元数据供后续处理
+          console.log('after convert: ', this.menuList);
         }
       });
     },
@@ -387,10 +440,6 @@ export default {
         }
         return translateDictName == '' ? value : translateDictName;
     }
-  },
-  mounted() {
-    this.getRoleData();
-    this.getMenuList();
   }
 };
 </script>

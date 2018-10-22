@@ -298,7 +298,7 @@
 <script type='text/ecmascript-6'>
 import { getMenuData, getOperateData } from '@/api/data';
 import { getMenuList } from '@/api/system';
-import { buildMenu } from '@/libs/util';
+import { buildMenu, convertTree } from '@/libs/util';
 import Tables from '_c/tables';
 import CommonIcon from '_c/common-icon';
 import _ from 'lodash';
@@ -488,18 +488,32 @@ export default {
       getMenuList().then(res => {
         if (res && res.array.length > 0) {
           console.log('menuList from mock: ', res.array);
-          console.log('buildMenu: ', buildMenu(res.array));
-          this.menuList = buildMenu(res.array, 'parentid', false);
-          const { id, title } = this.menuList[0];
+          const menuList = buildMenu(res.array);
+          console.log('menuList after build: ', buildMenu(res.array));
+          const { id, title } = menuList[0];
           this.currentPid = id;
           this.currentName = title;
+          const map= {
+             title: 'title',
+             children: 'children'
+          };
+          this.menuList = convertTree(menuList, map);
+          // 转换为tree后第一项默认展开
+          console.log('after convert: ', this.menuList);
           this.getTableData();
         }
       });
     },
     refreshMenuList() {
       getMenuList().then(res => {
-          this.menuList = buildMenu(res.array, 'parentid', false);
+        if (res && res.array.length > 0) {
+          const menuList = buildMenu(res.array);
+          const map= {
+             title: 'name',
+             children: 'children'
+          };
+          this.menuList = convertTree(menuList, map);
+        }
       });
     },
     renderContent(h, { root, node, data }) {
@@ -517,7 +531,7 @@ export default {
               <CommonIcon type='ios-folder' class="mr10" />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
-              {data.meta.title}
+              {data.title}
             </span>
           </div>
         );
@@ -535,7 +549,7 @@ export default {
               <CommonIcon type='ios-paper' class="mr10" />
             </span>
             <span>
-              {data.meta.title}
+              {data.title}
             </span>
           </div>
         );

@@ -13,7 +13,7 @@ const resolve = dir => {
 // 需要将它改为'/my-app/'
 const BASE_URL = process.env.NODE_ENV === 'production' ?
   '/lhiot-admin' :
-  '/api';
+  '/';
 
 module.exports = {
   baseUrl: BASE_URL,
@@ -43,7 +43,7 @@ module.exports = {
     open: true, // 配置自动启动浏览器
     proxy: {
       '/api': {
-        target: 'http://192.168.1.110:2018',
+        target: 'http://192.168.1.124:2018',// 192.168.1.110
         ws: true,
         logLevel: 'debug',
         changeOrigin: true,

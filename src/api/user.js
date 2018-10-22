@@ -6,13 +6,9 @@ export const login = ({ account, password }) => {
     account,
     password
   };
-  // return Vue.prototype.$http.request({
-  //   url: 'login',
-  //   data,
-  //   method: 'post'
-  // });
+
   return Vue.prototype.$http.request({
-    url: '/admin/sessions',
+    url: '/admin/sessions', // login
     data,
     method: 'post'
   });
