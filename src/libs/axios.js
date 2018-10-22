@@ -110,6 +110,12 @@ class HttpRequest {
           errorMsg = '您无访问权限';
         } else if (error.response.status === 402) {
           errorMsg = '页面已过期，请重新登录';
+          // 退出登录然后重新登录
+          store.dispatch('handleLogOut').then(() => {
+            router.push({
+              name: 'login'
+            });
+          });
         } else if (error.response.status === 403) {
           errorMsg = '拒绝访问';
         } else if (error.response.status === 405) {

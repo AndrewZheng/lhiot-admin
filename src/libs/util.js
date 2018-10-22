@@ -6,6 +6,7 @@ import {
   hasOneOf,
   objEqual
 } from '@/libs/tools';
+import _ from 'lodash';
 
 export const TOKEN_KEY = 'token';
 
@@ -410,9 +411,7 @@ export const getUUID = function (len) {
 
 // 深拷贝
 export const deepcopy = function (source) {
-  if (!source) {
-    return source;
-  }
+  if (!source) return source;
   let sourceCopy = source instanceof Array ? [] : {};
   for (let item in source) {
     sourceCopy[item] = typeof source[item] === 'object' ? deepcopy(source[item]) : source[item];
@@ -427,14 +426,14 @@ export const buildMenu = (array, ckey, isFind=true) => {
     return e.id;
   }) : [];
   ckey = ckey || 'parentid';
-  array.forEach(function (e) {
+  array.forEach((e) => {
     // 一级菜单
     if (!e[ckey] || (e[ckey] === e.id) || e[ckey]== '0') {
       delete e[ckey];
       menuData.push(deepcopy(e)); // 深拷贝
     } else if (Array.isArray(indexKeys)) {
       // 检测ckey有效性
-      let parentIndex = indexKeys.findIndex(function (id) {
+      let parentIndex = indexKeys.findIndex((id) => {
         return id == e[ckey];
       });
       if (parentIndex === -1) {
@@ -442,10 +441,11 @@ export const buildMenu = (array, ckey, isFind=true) => {
       }
     }
   });
-  let findChildren = function (parentArr) {
+  console.log('menuData parent level: ', menuData);
+  let findChildren = (parentArr) => {
     if (Array.isArray(parentArr) && parentArr.length) {
-      parentArr.forEach(function (parentNode) {
-        array.forEach(function (node) {
+      parentArr.forEach((parentNode) => {
+        array.forEach((node) => {
           if (parentNode.id === node[ckey]) {
             if (parentNode.children) {
               parentNode.children.push(node);
@@ -454,6 +454,8 @@ export const buildMenu = (array, ckey, isFind=true) => {
             }
           }
         });
+        // 过滤掉重复的项
+        parentNode.children= _.uniqBy(parentNode.children, 'id');
         if (parentNode.children && isFind) {
           findChildren(parentNode.children);
         }
@@ -486,4 +488,82 @@ export const getRoutes = (routeList) => {
   }
   // Get hash structure
   return routeHash;
+};
+
+/**
+ * tree 数据转换
+ * @param  {Array} tree 待转换的 tree
+ * @param  {Object} map  键值对映射
+ * @param  {Boolean} isExpand 默人是否全展开
+ * @return {Array}    转换后的 tree
+ */
+export const convertTree = (tree, map, isExpand=false) => {
+  const result = [];
+
+  // 遍历 tree
+  tree.forEach((item) => {
+      // 读取 map 的键值映射
+      const title = item[ map.title ];
+      let children = item[ map.children ];
+
+      // 对应iview Tree Props
+      let obj= {
+        expand: isExpand,
+        disabled: false,
+        disableCheckbox: false,
+        selected: false,
+        checked: false
+      };
+      // 如果有子节点，递归
+      if (children) {
+        children = convertTree(children, map, isExpand);
+      }
+
+      result.push({
+        ...item,
+        ...obj,
+        title,
+        children
+      });
+  });
+
+  return result;
+};
+
+export const setTreeNodeChecked = (tree, ids) => {
+    ids.forEach(id => {
+      tree.forEach(node => {
+        if (id == node.id && node.type ==='SON') {
+          node.checked= true;
+        }
+        if (node.children.length > 0) {
+          setTreeNodeChecked(node.children, ids);
+        }
+      });
+    });
+    return tree;
+};
+
+export const getParent= (array, childs, ids) => {
+  array.forEach(item => {
+    if (Number(item.id) === Number(ids)) {
+      childs.push(item);
+      return childs;
+    }
+
+    if (item.children && item.children.length > 0) {
+      childs.push(item);
+      let rs = getParent(item.children, childs, ids);
+      if (rs) {
+        return rs;
+      } else {
+        let index= childs.indexOf(item);
+        if (index > -1) {
+          childs.splice(index, 1);
+        }
+      }
+    }
+  });
+
+  return false;
 };

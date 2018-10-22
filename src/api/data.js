@@ -27,13 +27,8 @@ export const getMenuData = ({ page, rows, pid }) => {
     pid
   };
   
-  // return Vue.prototype.$http.request({
-  //   url: 'get_menu_data',
-  //   params: data,
-  //   method: 'get'
-  // });
   return Vue.prototype.$http.request({
-    url: '/ims-menu/pages',
+    url: '/ims-menu/pages', // get_menu_data
     data: data,
     method: 'post'
   });
@@ -45,13 +40,8 @@ export const getRoleData = ({ page, rows }) => {
     rows
   };
 
-  // return Vue.prototype.$http.request({
-  //   url: 'get_role_data',
-  //   params: data,
-  //   method: 'get'
-  // });
   return Vue.prototype.$http.request({
-    url: '/ims-role/pages',
+    url: '/ims-role/pages', // get_role_data
     data: data,
     method: 'post'
   });
@@ -63,15 +53,10 @@ export const getUserData = ({ page, rows }) => {
     rows
   };
 
-  // return Vue.prototype.$http.request({
-  //   url: 'get_user_data',
-  //   params: data,
-  //   method: 'get'
-  // });
   return Vue.prototype.$http.request({
-    url: '/admin/pages',
+    url: '/admin/pages', // get_user_data
     data: data,
-    method: 'post'
+    method: 'get'
   });
 };
 
@@ -81,15 +66,10 @@ export const getOperateData= ({ page, rows, menuId }) => {
     rows,
     menuId
   };
-  
-  // return Vue.prototype.$http.request({
-  //   url: 'get_operate_data',
-  //   params: data,
-  //   method: 'get'
-  // });
+
   return Vue.prototype.$http.request({
-    url: '/ims-operation/pages',
+    url: '/ims-operation/pages', // get_operate_data
     data: data,
-    method: 'post'
+    method: 'post' // 'get'
   });
 };
