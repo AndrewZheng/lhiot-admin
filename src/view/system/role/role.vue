@@ -216,7 +216,7 @@ export default {
     
   },
   mounted() {
-    this.getRoleData();
+    this.getTableData();
     this.getMenuList();
   },
   methods: {

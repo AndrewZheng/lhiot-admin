@@ -31,13 +31,13 @@ Vue.use(iView, {
 // 循环注册filters
 Object.keys(filters).forEach(k => Vue.filter(k, filters[k]));
 
+// 引用第三方库 挂载到vue原型对象上，优雅的使用
+Object.defineProperty(Vue.prototype, '$config', { value: config });
+Object.defineProperty(Vue.prototype, '$moment', { value: moment });
+Object.defineProperty(Vue.prototype, '$pcEnum', { value: enums });
+Object.defineProperty(Vue.prototype, '$pcEncrypt', { value: PcEncrypt });
+
 Vue.config.productionTip = false;
-
-Vue.prototype.$config = config;
-Vue.prototype.$moment = moment;
-Vue.prototype.$pcEnum = enums;
-Vue.prototype.$pcEncrypt = PcEncrypt;
-
 importDirective(Vue);
 
 /* eslint-disable no-new */

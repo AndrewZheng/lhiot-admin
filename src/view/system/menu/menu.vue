@@ -41,7 +41,7 @@
   <Modal
         v-model="modalView"
         :mask-closable="false"
-        :width="rowData.type=='SON'?'750':''"
+        :width="rowData.type=='SON'?'750':'540'"
         >
         <p slot="header">
             <span>查看菜单</span>
@@ -274,7 +274,7 @@
                   </i-col>
                 </Row>
 
-                <tables ref="tables"
+                <tables ref="operate_tables"
                 search-place="top" size="small"
                 v-model="operateData"
                 :loading="loading"
@@ -310,7 +310,7 @@ const menuColumns = [
     sortable: true,
     maxWidth: 80,
     render: (h, params, vm) => {
-      const { row, index, column } = params;
+      const { row } = params;
       return h('span', row.id + '');
     }
   },
@@ -322,7 +322,7 @@ const menuColumns = [
     sortable: true,
     maxWidth: 100,
     render: (h, params, vm) => {
-      const { row, index, column } = params;
+      const { row } = params;
       const str = row.type == 'PARENT' ? '父级菜单' : '子级菜单';
       return <span>{str}</span>;
     }
@@ -363,7 +363,7 @@ const operateColumns = [
     sortable: true,
     maxWidth: 80,
     render: (h, params, vm) => {
-      const { row, index, column } = params;
+      const { row } = params;
       return h('span', row.id + '');
     }
   },
@@ -406,7 +406,7 @@ const operateColumns2 = [
     sortable: true,
     maxWidth: 80,
     render: (h, params, vm) => {
-      const { row, index, column } = params;
+      const { row } = params;
       return h('span', row.id + '');
     }
   },
@@ -611,7 +611,7 @@ export default {
       });
     },
     handleClick({ root, node, data }) {
-      // 展开当前节点-先Pending过后handle
+      // 展开当前节点
       console.log('current data: ', data);
       if (typeof data.expand === 'undefined') {
         this.$set(data, 'expend', true);
@@ -632,7 +632,6 @@ export default {
       this.modalView = true;
       if (row.type=='SON') {
         this.currentMenuId= row.id;
-        console.log(`row.id ${row.id}`);
         this.getOperateData();
       }
     },
