@@ -60,6 +60,13 @@ export const getRoleList = () => {
   });
 };
 
+export const getRelationRoles = (id) => {
+  return Vue.prototype.$http.request({
+    url: '/admin/relation/roles/' + id,
+    method: 'post'
+  });
+};
+
 export const getUserData = ({ page, rows }) => {
   const data = {
     page,

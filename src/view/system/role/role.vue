@@ -75,7 +75,7 @@
               </Form>
             </TabPane>
             <TabPane label="权限管理" name="menuAdd" :disabled="isDisable">
-              <Tree :data="menuList" :render="renderContent" show-checkbox multiple></Tree>
+              <Tree :data="menuList" :render="renderContent" show-checkbox multiple ref="menuTree" @on-check-change="handleChange"></Tree>
             </TabPane>
           </Tabs>
        </div>
@@ -273,7 +273,7 @@ export default {
       const { row } = params;
       this.rowData = Object.assign({}, row);
       // 测试先写死
-      this.rowData.menuids='11,12,13,14';
+      // this.rowData.menuids='11,12,13,14';
       this.rowData = _.merge({}, this.rowData, row);
       // 将status由number变为string(否则单选框无法正常显示)
       // this.rowData.status = row.status + '';
@@ -295,6 +295,7 @@ export default {
                 this.step = 'menuAdd';
                 this.isDisable = false;
                 this.isCreated = true;
+                // TODO 获取新增的角色id，进行菜单关联操作。
               });
             } else {
               // 发送axios请求
@@ -322,10 +323,21 @@ export default {
       const { row } = params;
       this.rowData = Object.assign({}, row);
       // 测试先写死
-      this.rowData.menuids='11,12,13,14';
-      // 反选中已有的权限
-      this.checkMenuByIds();
+      // this.rowData.menuids='11,12,13,14';
+      getRelationMenu(this.rowData.id).then(res => {
+        if (res && res.array.length > 0) {
+          console.log('menuids: ', this.getRelationMenuIds(res.array));
+          this.rowData.menuids = this.getRelationMenuIds(res.array);
+          // 反选中已有的权限
+          this.checkMenuByIds();
+        }
+      });
       this.modalMenu = true;
+    },
+    getRelationMenuIds(res) {
+      let relationMenuIds = res.map(item => item.id.toString());
+      console.log(relationMenuIds);
+      return relationMenuIds.toString();
     },
     handleChange(checkedArr) {
       console.log('checkedArr: ', checkedArr);
@@ -335,7 +347,7 @@ export default {
          // 递归寻找父级
          result.push(...this.findParent(item));
       });
-      this.selectedIds=dedupe(result);
+      this.selectedIds = dedupe(result);
       console.log('result: ', result);
       console.log('uniq result: ', this.selectedIds);
     },
@@ -359,23 +371,39 @@ export default {
       console.log('this.menuList selected:', this.menuList);
     },
     handleMenuOk() {
-      this.loadingBtn = true;
-      this.modalAdd = false;
-      this.modalMenu = false;
-      setTimeout(() => {
-        this.$Message.info('保存成功');
-        // 模态框消失再切换tab选项卡的属性
-        this.tabOperation.tabSelected = 'roleAdd';
-        this.tabOperation.menuDisabled = true;
-        this.tabOperation.roleDisabled = false;
-      }, 1000);
-
-      getRelationMenu(this.rowData.id).then(res => {
-        if (res && res.array.length > 0) {
-          console.log('getRelationMenu: ', buildMenu(res.array, 'parentid', true));
-          this.relationMenuList = buildMenu(res.array, 'parentid', true);
+      let menuIds = '';
+      if (this.selectedIds.length === 0) {
+        menuIds = '-1'; // 未选择
+      } else {
+        menuIds = this.selectedIds.join(',');
+      }
+      // 发送axios请求
+      this.$http.request({
+        url: '/ims-role/relation/'+ this.rowData.id + '/' + menuIds,
+        method: 'put'
+      }).then(res => {
+        this.loadingBtn = false;
+        if (this.modalMenu == true) {
+          this.modalMenu= false;
+          this.targetKeys = [];
+          this.$Message.info('修改成功!');
+        } else if (this.modalAdd == true) {
+          this.modalAdd = false;
+          this.$Message.info('保存成功!');
+          this.step = 'roleAdd';
+          this.isDisable = false;
+          this.isCreated = true;
         }
       });
+      this.rowData.menuids = '';
+      // TODO 清除已选择的菜单数据
+      // setTreeNodeChecked(this.menuList, ',');
+      // getRelationMenu(this.rowData.id).then(res => {
+      //   if (res && res.array.length > 0) {
+      //     console.log('getRelationMenu: ', buildMenu(res.array, 'parentid', true));
+      //     this.relationMenuList = buildMenu(res.array, 'parentid', true);
+      //   }
+      // });
       // 分发action动态修改权限 TODO:待测试
       // this.$store.dispatch('changePermission').then(res => {
       //   this.$router.addRoutes(this.$store.getters.getActualRouter);
@@ -385,6 +413,9 @@ export default {
     },
     handleCancel() {
       this.$Message.info('取消成功');
+      this.rowData.menuids = '';
+      // TODO 清除已选择的菜单数据
+      // setTreeNodeChecked(this.menuList, ',');
     },
     handleAdd() {
       this.rowData = {};
@@ -427,7 +458,8 @@ export default {
         status: '',
         roleDesc: '',
         createBy: '',
-        createAt: ''
+        createAt: '',
+        menuids: ''
       };
     },
     getTableData() {
