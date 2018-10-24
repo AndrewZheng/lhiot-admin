@@ -185,11 +185,11 @@ export default {
   data() {
     const validatePassCheck = (rule, value, callback) => {
       if (value === '') {
-          callback(new Error('请再次输入您的密码'));
+        callback(new Error('请再次输入您的密码'));
       } else if (value !== this.rowData.password) {
-          callback(new Error('两次输入密码不匹配!'));
+        callback(new Error('两次输入密码不匹配!'));
       } else {
-          callback();
+        callback();
       }
     };
     return {
@@ -214,22 +214,33 @@ export default {
         { title: '姓名', key: 'name', sortable: true },
         { title: '账号', key: 'account', sortable: true },
         { title: '电话', key: 'tel', sortable: true },
-        { title: '用户头像url',
+        {
+          title: '用户头像url',
           key: 'avatarUrl',
           sortable: true,
           render: (h, params, vm) => {
             const { row } = params;
             // const str = row.status == '1' ? <span style="color:green">{this.getDictByName('status', row.status)}</span> : <span style="color:red">{this.getDictByName('status', row.status)}</span>;
-            const str = <img src={row.avatarUrl} height="80px" width="80px"></img>;
+            const str = <img src={row.avatarUrl} height="60" width="60" />;
             return <div>{str}</div>;
           }
         },
-        { title: '用户状态',
+        {
+          title: '用户状态',
           key: 'status',
           sortable: true,
           render: (h, params, vm) => {
             const { row } = params;
-            const str = row.status == 'AVAILABLE' ? <span style="color:green">{this.getDictByName('status', row.status)}</span> : <span style="color:red">{this.getDictByName('status', row.status)}</span>;
+            const str =
+              row.status == 'AVAILABLE' ? (
+                <span style="color:green">
+                  {this.getDictByName('status', row.status)}
+                </span>
+              ) : (
+                <span style="color:red">
+                  {this.getDictByName('status', row.status)}
+                </span>
+              );
             return <div>{str}</div>;
           }
         },
@@ -288,7 +299,7 @@ export default {
       step: 'userAdd',
       isDisable: true,
       isCreated: false,
-      // 图片上传数据      
+      // 图片上传数据
       imageVisible: false,
       // 双栏穿梭选择框数据
       roleData: this.getRoleData(),
@@ -296,23 +307,24 @@ export default {
       titles: ['未关联角色', '已关联角色'],
       // 表单验证
       ruleValidate: {
-        name: [
-            { required: true, message: '姓名不能为空', trigger: 'blur' }
-        ],
-        account: [
-            { required: true, message: '账号不能为空', trigger: 'blur' }
-        ],
+        name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
+        account: [{ required: true, message: '账号不能为空', trigger: 'blur' }],
         password: [
-            { required: true, message: '密码不能为空', trigger: 'blur' }
+          { required: true, message: '密码不能为空', trigger: 'blur' }
         ],
         passwdCheck: [
-            { required: true, validator: validatePassCheck, trigger: 'blur' }
+          { required: true, validator: validatePassCheck, trigger: 'blur' }
         ],
         tel: [
-            {required: true, pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/, message: '电话号码不正确', trigger: 'blur'}
+          {
+            required: true,
+            pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/,
+            message: '电话号码不正确',
+            trigger: 'blur'
+          }
         ],
         status: [
-            { required: true, message: '请选择角色状态', trigger: 'change' }
+          { required: true, message: '请选择角色状态', trigger: 'change' }
         ]
       },
       // 头像上传
@@ -326,8 +338,7 @@ export default {
     this.getTableData();
   },
   computed: {},
-  filters: {
-  },
+  filters: {},
   methods: {
     renderContent(h, { root, node, data }) {
       if (data.chirenderContentldren) {
@@ -335,8 +346,7 @@ export default {
           <span
             style={{ display: 'inline-block', width: '100%', fontSize: '14px' }}
           >
-            <span>
-            </span>
+            <span />
             <span>{data.meta.title}</span>
           </span>
         );
@@ -345,8 +355,7 @@ export default {
           <span
             style={{ display: 'inline-block', width: '100%', fontSize: '14px' }}
           >
-            <span>
-            </span>
+            <span />
             <span>{data.meta.title}</span>
           </span>
         );
@@ -355,13 +364,23 @@ export default {
     handleView(params) {
       this.$Modal.info({
         title: '用户管理详情',
-        content: `姓名: ${this.tableData[params.row.initRowIndex].name}<br>
+        content:
+          `姓名: ${this.tableData[params.row.initRowIndex].name}<br>
           账号: ${this.tableData[params.row.initRowIndex].account}<br>
           电话: ${this.tableData[params.row.initRowIndex].tel}<br>
-          头像:<img src="`+this.tableData[params.row.initRowIndex].avatarUrl+`" width="80px" height="80px"/><br>
-          用户状态: `+this.getDictByName('status', this.tableData[params.row.initRowIndex].status)+`<br>
+          头像:<img src="` +
+          this.tableData[params.row.initRowIndex].avatarUrl +
+          `" width="80px" height="80px"/><br>
+          用户状态: ` +
+          this.getDictByName(
+            'status',
+            this.tableData[params.row.initRowIndex].status
+          ) +
+          `<br>
           创建时间: ${this.tableData[params.row.initRowIndex].createAt}<br>
-          最后登录时间: ${this.tableData[params.row.initRowIndex].lastLoginAt}<br>
+          最后登录时间: ${
+            this.tableData[params.row.initRowIndex].lastLoginAt
+          }<br>
           备注: ${this.tableData[params.row.initRowIndex].remark}<br>
           关联角色：<Tag type="border">角色1</Tag><Tag type="border">角色2</Tag><Tag type="border">角色3</Tag>`
       });
@@ -370,17 +389,19 @@ export default {
     handleDelete(params) {
       const { row } = params;
       // 发送axios请求
-      this.$http.request({
-        url: '/admin/batch/'+ row.id,
-        method: 'delete',
-        data: this.rowData
-      }).then(res => {
-        this.loadingBtn = false;
-        this.modalEdit= false;
-        this.$Message.info('删除成功!');
-        // 刷新表格数据
-        this.getTableData();
-      });
+      this.$http
+        .request({
+          url: '/admin/batch/' + row.id,
+          method: 'delete',
+          data: this.rowData
+        })
+        .then(res => {
+          this.loadingBtn = false;
+          this.modalEdit = false;
+          this.$Message.info('删除成功!');
+          // 刷新表格数据
+          this.getTableData();
+        });
     },
     handleEdit(params) {
       console.log(params);
@@ -391,41 +412,45 @@ export default {
       this.modalEdit = true;
     },
     handleAddOrEditOk(name) {
-       this.$refs[name].validate((valid) => {
-          if (valid) {
-            if (this.rowData.id == undefined) {
-              // 发送axios请求
-              this.$http.request({
+      this.$refs[name].validate(valid => {
+        if (valid) {
+          if (this.rowData.id == undefined) {
+            // 发送axios请求
+            this.$http
+              .request({
                 url: '/admin/',
                 method: 'post',
                 data: this.rowData
-              }).then(res => {
+              })
+              .then(res => {
                 this.loadingBtn = false;
-                this.modalEdit= false;
+                this.modalEdit = false;
                 this.$Message.info('保存成功!');
                 this.step = 'roleAdd';
                 this.isDisable = false;
                 this.isCreated = true;
               });
-            } else {
-              // 发送axios请求
-              this.$http.request({
-                url: '/admin/'+ this.rowData.id,
+          } else {
+            // 发送axios请求
+            this.$http
+              .request({
+                url: '/admin/' + this.rowData.id,
                 method: 'put',
                 data: this.rowData
-              }).then(res => {
+              })
+              .then(res => {
                 this.loadingBtn = false;
-                this.modalEdit= false;
+                this.modalEdit = false;
                 this.$Message.info('更新成功!');
                 // 清空rowData对象
                 this.resetRowData();
                 // 刷新表格数据
                 this.getTableData();
               });
-            }
-          } else {
-              this.$Message.error('提交失败!');
           }
+        } else {
+          this.$Message.error('提交失败!');
+        }
       });
     },
     handleCancel() {
@@ -434,8 +459,8 @@ export default {
     handleCloseAdd() {
       this.modalAdd = false;
       this.isCreated = false;
-      this.isDisable= true;
-      this.step='addUser';
+      this.isDisable = true;
+      this.step = 'addUser';
       // 清空rowData对象
       this.resetRowData();
       // 刷新表格数据
@@ -452,8 +477,8 @@ export default {
       this.targetKeys = [];
       getRelationRoles(this.rowData.id).then(res => {
         if (res && res.length > 0) {
-            console.log('relationRoleIds: ', this.getRelationRoleIds(res));
-            this.targetKeys = this.getRelationRoleIds(res);
+          console.log('relationRoleIds: ', this.getRelationRoleIds(res));
+          this.targetKeys = this.getRelationRoleIds(res);
         }
       });
       this.modalRole = true;
@@ -461,23 +486,25 @@ export default {
     handleRoleOk() {
       let roleIds = this.targetKeys.join(',');
       // 发送axios请求
-      this.$http.request({
-        url: '/admin/update/relation/'+ this.rowData.id + '/' + roleIds,
-        method: 'put'
-      }).then(res => {
-        this.loadingBtn = false;
-        if (this.modalRole == true) {
-          this.modalRole= false;
-          this.targetKeys = [];
-          this.$Message.info('修改成功!');
-        } else if (this.modalAdd == true) {
-          this.modalAdd = false;
-          this.$Message.info('保存成功!');
-          this.step = 'userAdd';
-          this.isDisable = false;
-          this.isCreated = true;
-        }
-      });
+      this.$http
+        .request({
+          url: '/admin/update/relation/' + this.rowData.id + '/' + roleIds,
+          method: 'put'
+        })
+        .then(res => {
+          this.loadingBtn = false;
+          if (this.modalRole == true) {
+            this.modalRole = false;
+            this.targetKeys = [];
+            this.$Message.info('修改成功!');
+          } else if (this.modalAdd == true) {
+            this.modalAdd = false;
+            this.$Message.info('保存成功!');
+            this.step = 'userAdd';
+            this.isDisable = false;
+            this.isCreated = true;
+          }
+        });
     },
     // exportExcel() {
     //   this.$refs.tables.exportCsv({
@@ -485,7 +512,7 @@ export default {
     //   });
     // },
     changeRadio(selectItem) {
-      console.log('选择按钮的值:'+`${selectItem}`);
+      console.log('选择按钮的值:' + `${selectItem}`);
     },
     changePage(currentPage) {
       this.page = currentPage;
@@ -524,7 +551,7 @@ export default {
       });
     },
     // 模拟双栏穿梭选择框数据
-    getRoleData () {
+    getRoleData() {
       let role = [];
       getRoleList().then(res => {
         if (res && res.length > 0) {
@@ -540,7 +567,7 @@ export default {
       });
       return role;
     },
-    getRelationRoleIds (res) {
+    getRelationRoleIds(res) {
       let relationRoles = [];
       for (let i = 0; i < res.length; i++) {
         relationRoles.push({
@@ -551,14 +578,14 @@ export default {
       }
       return relationRoles.map(item => item.key);
     },
-    render1 (item) {
-        return item.label;
+    render1(item) {
+      return item.label;
     },
-    handleChange (newTargetKeys, direction, moveKeys) {
-        console.log(newTargetKeys);
-        console.log(direction);
-        console.log(moveKeys);
-        this.targetKeys = newTargetKeys;
+    handleChange(newTargetKeys, direction, moveKeys) {
+      console.log(newTargetKeys);
+      console.log(direction);
+      console.log(moveKeys);
+      this.targetKeys = newTargetKeys;
     },
     // 头像上传
     cropSuccess(resData) {
@@ -570,13 +597,13 @@ export default {
     close() {
       this.imagecropperShow = false;
     }
-   }
+  }
 };
 </script>
 <style>
- .addImage {
-    line-height: 48px;
-    vertical-align: text-bottom;
-    margin-right:10px
- }
+.addImage {
+  line-height: 48px;
+  vertical-align: text-bottom;
+  margin-right: 10px;
+}
 </style>
