@@ -2,7 +2,7 @@ import Vue from 'vue';
 import axios from 'axios';
 import store from '../store/';
 import router from '@/router';
-import { setToken } from '@/util/';
+import { setToken } from '@/libs/util';
 import _ from 'lodash';
 
 class HttpRequest {

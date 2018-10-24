@@ -163,10 +163,10 @@
       :width="70"
       :height="70"
       :key="imagecropperKey"
-      url="https://httpbin.org/post"
+      url="https://resource.food-see.com/v1/upload/product_image"
       lang-type="zh"
       @close="close"
-      @crop-upload-success="cropSuccess"/>
+      @crop-upload-success="cropSuccess" />
   </div>
 </template>
 
@@ -562,9 +562,10 @@ export default {
     },
     // 头像上传
     cropSuccess(resData) {
+      console.log('resData: ', resData);
       this.imagecropperShow = false;
       this.imagecropperKey = this.imagecropperKey + 1;
-      this.image = resData.files.avatar;
+      this.image = resData.fileUrl;
       this.imageVisible = true;
     },
     close() {
