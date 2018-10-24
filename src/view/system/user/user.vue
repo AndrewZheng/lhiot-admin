@@ -24,21 +24,6 @@
       </div>
     </Card>
 
-    <pan-thumb :image="image"/>
-
-  <Button type="primary" icon="upload" style="position: absolute;bottom: 15px;margin-left: 40px;" @click="imagecropperShow=true">Change Avatar
-  </Button>
-
-  <image-cropper
-    v-show="imagecropperShow"
-    :width="300"
-    :height="300"
-    :key="imagecropperKey"
-    url="https://httpbin.org/post"
-    lang-type="en"
-    @close="close"
-    @crop-upload-success="cropSuccess"/>
-
     <!-- 修改模态框 -->
      <Modal
         v-model="modalEdit"
@@ -68,41 +53,15 @@
                   <Input v-model="rowData.tel" placeholder="请输入电话号码"/>
               </FormItem>
               <FormItem label="用户头像" prop="avatarUrl">
-                  <Upload
-                  ref="upload"
-                  :show-upload-list="false"
-                  :default-file-list="defaultList"
-                  :on-success="handleImageSuccess"
-                  :format="['jpg','jpeg','png']"
-                  :max-size="2048"
-                  :on-format-error="handleImageFormatError"
-                  :on-exceeded-size="handleImageMaxSize"
-                  :before-upload="handleImageBeforeUpload"
-                  multiple
-                  type="drag"
-                  action="//jsonplaceholder.typicode.com/posts/"
-                  style="display: inline-block;width:58px;">
-                    <div style="width: 58px;height:58px;line-height: 58px;">
+                  <Button @click="imagecropperShow=true" class="addImage">
                         <Icon type="ios-camera" size="20"></Icon>
-                    </div>
-                  </Upload>
-                  <div class="demo-upload-list" v-for="(item, index) in uploadList" :key="index">
-                    <template v-if="item.status === 'finished'">
-                        <img :src="item.url">
-                        <div class="demo-upload-list-cover">
-                            <Icon type="ios-eye-outline" @click.native="handleImageView(item.name)"></Icon>
-                            <Icon type="ios-trash-outline" @click.native="handleImageRemove(item)"></Icon>
-                        </div>
-                    </template>
-                    <template v-else>
-                        <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                    </template>
-                  </div>
+                  </Button>
+                  <img :src="image" width='80px' height='80px'/>
               </FormItem>
               <FormItem label="用户状态" prop="status">
                   <RadioGroup v-model="rowData.status" @on-change="changeRadio">
-                    <Radio label="AVAILABLE">{{getDictByName('status','AVAILABLE')}}</Radio>
-                    <Radio label="UNAVAILABLE">{{getDictByName('status','UNAVAILABLE')}}</Radio>
+                    <Radio label="AVAILABLE">{{this.getDictByName('status','AVAILABLE')}}</Radio>
+                    <Radio label="UNAVAILABLE">{{this.getDictByName('status','UNAVAILABLE')}}</Radio>
                   </RadioGroup>
               </FormItem>
               <FormItem label="备注" prop="remark">
@@ -138,41 +97,17 @@
                   <Input v-model="rowData.tel" placeholder="请输入电话号码"/>
               </FormItem>
               <FormItem label="用户头像" prop="avatarUrl">
-                  <Upload
-                  ref="upload"
-                  :show-upload-list="false"
-                  :default-file-list="defaultList"
-                  :on-success="handleImageSuccess"
-                  :format="['jpg','jpeg','png']"
-                  :max-size="2048"
-                  :on-format-error="handleImageFormatError"
-                  :on-exceeded-size="handleImageMaxSize"
-                  :before-upload="handleImageBeforeUpload"
-                  multiple
-                  type="drag"
-                  action="//jsonplaceholder.typicode.com/posts/"
-                  style="display: inline-block;width:58px;">
-                    <div style="width: 58px;height:58px;line-height: 58px;">
+                  <Button  @click="imagecropperShow=true" class="addImage">
                         <Icon type="ios-camera" size="20"></Icon>
-                    </div>
-                  </Upload>
-                  <div class="demo-upload-list" v-for="(item, index) in uploadList" :key="index">
-                    <template v-if="item.status === 'finished'">
-                        <img :src="item.url">
-                        <div class="demo-upload-list-cover">
-                            <Icon type="ios-eye-outline" @click.native="handleImageView(item.name)"></Icon>
-                            <Icon type="ios-trash-outline" @click.native="handleImageRemove(item)"></Icon>
-                        </div>
-                    </template>
-                    <template v-else>
-                        <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                    </template>
+                  </Button>
+                  <div v-if="imageVisible" style="display: inline-block">
+                      <img :src="image" width='80px' height='80px'/>
                   </div>
               </FormItem>
               <FormItem label="用户状态" prop="status">
                   <RadioGroup v-model="rowData.status" @on-change="changeRadio">
-                    <Radio label="AVAILABLE">{{getDictByName('status','AVAILABLE')}}</Radio>
-                    <Radio label="UNAVAILABLE">{{getDictByName('status','UNAVAILABLE')}}</Radio>
+                    <Radio label="AVAILABLE">{{this.getDictByName('status','AVAILABLE')}}</Radio>
+                    <Radio label="UNAVAILABLE">{{this.getDictByName('status','UNAVAILABLE')}}</Radio>
                   </RadioGroup>
               </FormItem>
               <FormItem label="备注" prop="remark">
@@ -221,6 +156,17 @@
           </Transfer>
       </div>
     </Modal>
+
+    <!-- 图片上传组件 -->
+    <image-cropper
+      v-show="imagecropperShow"
+      :width="70"
+      :height="70"
+      :key="imagecropperKey"
+      url="https://httpbin.org/post"
+      lang-type="zh"
+      @close="close"
+      @crop-upload-success="cropSuccess"/>
   </div>
 </template>
 
@@ -228,15 +174,13 @@
 import Tables from '_c/tables';
 import { getUserData, getRoleList, getRelationRoles } from '@/api/system';
 import ImageCropper from '_c/ImageCropper';
-import PanThumb from '_c/PanThumb';
 import _ from 'lodash';
 
 export default {
   name: 'user_page',
   components: {
     Tables,
-    ImageCropper,
-    PanThumb
+    ImageCropper
   },
   data() {
     const validatePassCheck = (rule, value, callback) => {
@@ -340,26 +284,12 @@ export default {
         lastLoginAt: '',
         remark: ''
       },
-      // 待翻译字典对象信息
-      translateDicts: {},
       modalRole: false,
       step: 'userAdd',
       isDisable: true,
       isCreated: false,
-      // 图片上传数据
-      defaultList: [
-          {
-              'name': 'a42bdcc1178e62b4694c830f028db5c0',
-              'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
-          },
-          {
-              'name': 'bc7521e033abdd1e92222d733590f104',
-              'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
-          }
-      ],
-      imgName: '',
-      visible: false,
-      uploadList: [],
+      // 图片上传数据      
+      imageVisible: false,
       // 双栏穿梭选择框数据
       roleData: this.getRoleData(),
       targetKeys: [],
@@ -379,7 +309,7 @@ export default {
             { required: true, validator: validatePassCheck, trigger: 'blur' }
         ],
         tel: [
-            { required: true, message: '电话号码不能为空', trigger: 'blur' }
+            {required: true, pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/, message: '电话号码不正确', trigger: 'blur'}
         ],
         status: [
             { required: true, message: '请选择角色状态', trigger: 'change' }
@@ -388,16 +318,16 @@ export default {
       // 头像上传
       imagecropperShow: false,
       imagecropperKey: 0,
-      image: 'https://wpimg.wallstcn.com/577965b9-bb9e-4e02-9f0c-095b41417191'
+      image: ''
     };
   },
   created() {},
   mounted() {
     this.getTableData();
-    this.uploadList = this.$refs.upload.fileList;
   },
   computed: {},
-  filters: {},
+  filters: {
+  },
   methods: {
     renderContent(h, { root, node, data }) {
       if (data.chirenderContentldren) {
@@ -457,6 +387,7 @@ export default {
       const { row } = params;
       this.rowData = _.merge({}, this.rowData, row);
       this.rowData.passwdCheck = row.password;
+      this.image = this.rowData.avatarUrl;
       this.modalEdit = true;
     },
     handleAddOrEditOk(name) {
@@ -629,70 +560,12 @@ export default {
         console.log(moveKeys);
         this.targetKeys = newTargetKeys;
     },
-    // 获取所有要翻译字典信息
-    getAllDicts() {
-      // 只初始化一次
-      if (JSON.stringify(this.translateDicts) == '{}') {
-          console.log('加载字典:::'+JSON.stringify(this.translateDicts));
-          this.translateDicts.status = {
-            'INITIAL': '初始化',
-            'AVAILABLE': '可用',
-            'UNAVAILABLE': '不可用',
-            'LOCK': '锁定，暂不可用',
-            'DELETE': '删除，永不可用',
-            'UNKNOWN': '未知'
-          };
-      }
-    },
-    // 翻译字典 fieldName 需要翻译的字段名称，value 需要翻译的字段值
-    getDictByName(fieldName, value) {
-        this.getAllDicts();
-        var translateDictName = '';// 需要翻译字典名称
-        // 判断字段名称存在字典对象  并且值也存在,则获取翻译名称
-        if (this.translateDicts.hasOwnProperty(fieldName) && this.translateDicts[fieldName].hasOwnProperty(value)) {
-            translateDictName = this.translateDicts[fieldName][value];
-        }
-        return translateDictName == '' ? value : translateDictName;
-    },
-    // 图片上传
-    handleImageView (name) {
-        this.imgName = name;
-        this.visible = true;
-    },
-    handleImageRemove (file) {
-        const fileList = this.$refs.upload.fileList;
-        this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
-    },
-    handleImageSuccess (res, file) {
-        file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
-        file.name = file.name;
-    },
-    handleImageFormatError (file) {
-        this.$Notice.warning({
-            title: '图片格式不正确',
-            desc: file.name + ' 图片格式不正确, 请选择jpg or png图片'
-        });
-    },
-    handleImageMaxSize (file) {
-        this.$Notice.warning({
-            title: '超过文件大小限制',
-            desc: file.name + '图片超过2M.'
-        });
-    },
-    handleImageBeforeUpload () {
-      const check = this.uploadList.length < 5;
-      if (!check) {
-          this.$Notice.warning({
-              title: '最多上传5张图片！'
-          });
-      }
-      return check;
-    },
     // 头像上传
     cropSuccess(resData) {
       this.imagecropperShow = false;
       this.imagecropperKey = this.imagecropperKey + 1;
       this.image = resData.files.avatar;
+      this.imageVisible = true;
     },
     close() {
       this.imagecropperShow = false;
@@ -700,49 +573,10 @@ export default {
    }
 };
 </script>
-
-<style rel='stylesheet/scss' lang='scss' scoped>
-  // 图片上传样式
-  .demo-upload-list{
-        display: inline-block;
-        width: 60px;
-        height: 60px;
-        text-align: center;
-        line-height: 60px;
-        border: 1px solid transparent;
-        border-radius: 4px;
-        overflow: hidden;
-        background: #fff;
-        position: relative;
-        box-shadow: 0 1px 1px rgba(0,0,0,.2);
-        margin-right: 4px;
-    }
-    .demo-upload-list img{
-        width: 100%;
-        height: 100%;
-    }
-    .demo-upload-list-cover{
-        display: none;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(0,0,0,.6);
-    }
-    .demo-upload-list:hover .demo-upload-list-cover{
-        display: block;
-    }
-    .demo-upload-list-cover i{
-        color: #fff;
-        font-size: 20px;
-        cursor: pointer;
-        margin: 0 2px;
-    }
-    //  头像
-    .avatar{
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-  }
+<style>
+ .addImage {
+    line-height: 48px;
+    vertical-align: text-bottom;
+    margin-right:10px
+ }
 </style>
