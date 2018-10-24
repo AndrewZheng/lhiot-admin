@@ -2,6 +2,8 @@
 let mixin = {
   data() {
     return {
+      // 待翻译字典对象信息
+      translateDicts: {}
     };
   },
   computed: {
@@ -171,6 +173,31 @@ let mixin = {
       if (type === 'email') {
         return /^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$/.test(value);
       }
+    },
+    // 获取所有要翻译字典信息
+    getAllDicts() {
+      // 只初始化一次
+      if (JSON.stringify(this.translateDicts) == '{}') {
+          console.log('加载字典:::'+JSON.stringify(this.translateDicts));
+          this.translateDicts.status = {
+            'INITIAL': '初始化',
+            'AVAILABLE': '可用',
+            'UNAVAILABLE': '不可用',
+            'LOCK': '锁定，暂不可用',
+            'DELETE': '删除，永不可用',
+            'UNKNOWN': '未知'
+          };
+      }
+    },
+    // 翻译字典 fieldName 需要翻译的字段名称，value 需要翻译的字段值
+    getDictByName(fieldName, value) {
+        this.getAllDicts();
+        var translateDictName = '';// 需要翻译字典名称
+        // 判断字段名称存在字典对象  并且值也存在,则获取翻译名称
+        if (this.translateDicts.hasOwnProperty(fieldName) && this.translateDicts[fieldName].hasOwnProperty(value)) {
+            translateDictName = this.translateDicts[fieldName][value];
+        }
+        return translateDictName == '' ? value : translateDictName;
     }
   },
   mounted() {
