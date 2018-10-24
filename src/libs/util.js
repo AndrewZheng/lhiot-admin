@@ -531,6 +531,7 @@ export const convertTree = (tree, map, isExpand=false) => {
 };
 
 export const setTreeNodeChecked = (tree, ids) => {
+  if (ids.length != 0) {
     ids.forEach(id => {
       tree.forEach(node => {
         if (id == node.id && node.type ==='SON') {
@@ -541,7 +542,16 @@ export const setTreeNodeChecked = (tree, ids) => {
         }
       });
     });
-    return tree;
+  } else {
+    tree.forEach(node => {
+      node.checked= false;
+      node.selected = false;
+      if (node.children.length > 0) {
+        setTreeNodeChecked(node.children, '');
+      }
+   });
+  }
+  return tree;
 };
 
 export const getParent= (array, childs, ids) => {

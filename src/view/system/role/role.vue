@@ -275,8 +275,6 @@ export default {
       // 测试先写死
       // this.rowData.menuids='11,12,13,14';
       this.rowData = _.merge({}, this.rowData, row);
-      // 将status由number变为string(否则单选框无法正常显示)
-      // this.rowData.status = row.status + '';
       this.modalEdit = true;
     },
     handleAddOrEditOk(name) {
@@ -289,13 +287,14 @@ export default {
                 method: 'post',
                 data: this.rowData
               }).then(res => {
-                this.loadingBtn = false;
-                this.modalEdit= false;
-                this.$Message.info('保存成功!');
-                this.step = 'menuAdd';
-                this.isDisable = false;
-                this.isCreated = true;
-                // TODO 获取新增的角色id，进行菜单关联操作。
+                  this.loadingBtn = false;
+                  this.modalEdit= false;
+                  this.$Message.info('保存成功!');
+                  this.step = 'menuAdd';
+                  this.isDisable = false;
+                  this.isCreated = true;
+                  // 获取新增加的id
+                  this.rowData.id = res.id;
               });
             } else {
               // 发送axios请求
@@ -330,6 +329,8 @@ export default {
           this.rowData.menuids = this.getRelationMenuIds(res.array);
           // 反选中已有的权限
           this.checkMenuByIds();
+        } else {
+          setTreeNodeChecked(this.menuList, '');
         }
       });
       this.modalMenu = true;
@@ -365,10 +366,15 @@ export default {
       return result;
     },
     checkMenuByIds() {
-      const menuids= this.rowData.menuids.split(',');
-      console.log('menuids: ', menuids);
-      setTreeNodeChecked(this.menuList, menuids);
-      console.log('this.menuList selected:', this.menuList);
+      if (this.rowData.menuids != undefined) {
+        const menuids= this.rowData.menuids.split(',');
+        console.log('menuids: ', menuids);
+        setTreeNodeChecked(this.menuList, menuids);
+        console.log('this.menuList selected:', this.menuList);
+      } else {
+        setTreeNodeChecked(this.menuList, '');
+        console.log('this.menuList selected:', this.menuList);
+      }
     },
     handleMenuOk() {
       let menuIds = '';
@@ -395,9 +401,8 @@ export default {
           this.isCreated = true;
         }
       });
-      this.rowData.menuids = '';
       // TODO 清除已选择的菜单数据
-      // setTreeNodeChecked(this.menuList, ',');
+      // setTreeNodeChecked(this.menuList, '');
       // getRelationMenu(this.rowData.id).then(res => {
       //   if (res && res.array.length > 0) {
       //     console.log('getRelationMenu: ', buildMenu(res.array, 'parentid', true));
@@ -413,8 +418,10 @@ export default {
     },
     handleCancel() {
       this.$Message.info('取消成功');
-      this.rowData.menuids = '';
       // TODO 清除已选择的菜单数据
+      // this.selectedIds = [];
+      setTreeNodeChecked(this.menuList, '');
+      // setTreeNodeChecked(this.menuList, 0);
       // setTreeNodeChecked(this.menuList, ',');
     },
     handleAdd() {
