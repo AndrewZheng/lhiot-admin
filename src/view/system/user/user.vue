@@ -33,8 +33,7 @@
         :mask-closable="false"
         @on-ok="handleAddOrEditOk('formValidate')"
         @on-cancel="handleCancel"
-        ref="formValidate" :model="rowData" :rules="ruleValidate"
-        :styles="{width: '600px'}" >
+        ref="formValidate" :model="rowData" :rules="ruleValidate" fullscreen>
         <p slot="header">
             <span>{{rowData.id==0?'创建用户':'编辑用户'}}</span>
         </p>
@@ -70,11 +69,10 @@
               <FormItem label="备注" prop="remark">
                   <Input v-model="rowData.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入备注"/>
               </FormItem>
-              <FormItem label="富文本编辑器">
-                  <TinymceEditor />
+              <FormItem label="富文本编辑器测试">
+                  <tinymce-editor id="tinymce" ref="editor" v-model="content" :height="300"/>
               </FormItem>
             </Form>
-            
        </div>
     </Modal>
 
@@ -183,14 +181,14 @@ import Tables from '_c/tables';
 import { getUserData, getRoleList, getRelationRoles } from '@/api/system';
 import ImageCropper from '_c/ImageCropper';
 import _ from 'lodash';
-import TinymceEditor from '_c/tinymce-editor';
+import tinymceEditor from '_c/tinymce-editor';
 
 export default {
   name: 'user_page',
   components: {
     Tables,
     ImageCropper,
-    TinymceEditor
+    tinymceEditor
   },
   data() {
     const validatePassCheck = (rule, value, callback) => {
@@ -208,7 +206,6 @@ export default {
           type: 'selection',
           key: '',
           width: 60,
-          fixed: 'left',
           align: 'center'
         },
         {
@@ -216,7 +213,6 @@ export default {
           key: 'id',
           sortable: true,
           maxWidth: 80,
-          fixed: 'left',
           render: (h, params, vm) => {
             const { row } = params;
             return h('span', row.id + '');
@@ -341,7 +337,8 @@ export default {
       imagecropperShow: false,
       imagecropperKey: 0,
       image: '',
-      ids: []
+      ids: [],
+      content: '请输入内容'
     };
   },
   created() {},
@@ -631,6 +628,11 @@ export default {
     },
     close() {
       this.imagecropperShow = false;
+    }
+  },
+  watch: {
+    content(val, oldVal) {
+      console.log(`new: ${val}, old: ${oldVal}`);
     }
   }
 };
