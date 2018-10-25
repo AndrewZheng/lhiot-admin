@@ -17,7 +17,7 @@ const router = new Router({
 });
 
 const LOGIN_PAGE_NAME = 'login';
-const whiteList = ['/login', '/redirect', '/401', '/404', '/500', '/home'];
+const whiteList = ['/login', '/redirect', '/401', '/404', '/500'];
 
 // permission judge function
 function hasPermission(userPermission, currentRoute) {
@@ -33,7 +33,7 @@ router.beforeEach((to, from, next) => {
     if (to.name === LOGIN_PAGE_NAME) {
       // 已登录且要跳转的页面是登录页
       next({
-        name: 'home' // 跳转到home页
+        name: 'home'
       });
     } else {
       console.log('hasGetInfo: ', store.getters.hasGetInfo);

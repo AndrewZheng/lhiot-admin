@@ -6,15 +6,19 @@
       v-model="tableData"
       :loading="loading"
       :columns="columns"
+      @on-select="handleSelect"
+      @on-select-cancel="handleSelectCancel"
+      @on-select-all="onSelectAll"
       @on-delete="handleDelete"
       @on-view="handleView"
       @on-edit="handleEdit"
       @on-relation="handleMenu"
       >
         <div slot="operations">
-          <Button @click="handleAdd" type="success" style="margin-right: 5px"><Icon type="md-add"/>新增</Button>
-          <Button @click="handleDeleteSome" type="error" style="margin-right: 5px"><Icon type="md-close"/>删除</Button>
-          <!-- <Button style="margin: 10px 0;" type="primary" @click="handleBtachDel"><Icon type="md-trash"/>删除</Button> -->
+          <Button v-waves @click="handleAdd" type="success" class="mr5">
+            <Icon type="md-add"/> 新增</Button>
+          <Button v-waves @click="handleDeleteBatch" type="error" class="mr5">
+            <Icon type="md-trash"/> 删除</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -29,7 +33,7 @@
         v-model="modalEdit"
         :loading="loadingBtn"
         :mask-closable="false"
-        @on-ok="handleEditOk('formValidate')"
+        @on-ok="handleAddOrEditOk('formValidate')"
         @on-cancel="handleCancel">
         <p slot="header">
             <span>角色管理</span>
@@ -41,12 +45,12 @@
             </FormItem>
             <FormItem label="角色状态" prop="status">
                 <RadioGroup v-model="rowData.status" @on-change="changeRadio">
-                    <Radio label="1">{{getDictByName('status',1)}}</Radio>
-                    <Radio label="0">{{getDictByName('status',0)}}</Radio>
+                    <Radio label="AVAILABLE">{{this.getDictByName('status','AVAILABLE')}}</Radio>
+                    <Radio label="UNAVAILABLE">{{this.getDictByName('status','UNAVAILABLE')}}</Radio>
                 </RadioGroup>
             </FormItem>
             <FormItem label="角色描述" prop="roleDesc">
-                <Input v-model="rowData.roleDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入角色描述"></Input>
+                <Input v-model="rowData.roleDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入角色描述" />
             </FormItem>
         </Form>
        </div>
@@ -66,22 +70,22 @@
                   </FormItem>
                   <FormItem label="角色状态" prop="status">
                       <RadioGroup v-model="rowData.status" @on-change="changeRadio">
-                          <Radio label="1">{{getDictByName('status',1)}}</Radio>
-                          <Radio label="0">{{getDictByName('status',0)}}</Radio>
+                          <Radio label="AVAILABLE">{{this.getDictByName('status','AVAILABLE')}}</Radio>
+                          <Radio label="UNAVAILABLE">{{this.getDictByName('status','UNAVAILABLE')}}</Radio>
                       </RadioGroup>
                   </FormItem>
                   <FormItem label="角色描述" prop="roleDesc">
-                      <Input v-model="rowData.roleDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入角色描述"></Input>
+                      <Input v-model="rowData.roleDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入角色描述" />
                   </FormItem>
               </Form>
             </TabPane>
             <TabPane label="权限管理" name="menuAdd" :disabled="isDisable">
-              <Tree :data="menuList" :render="renderContent" show-checkbox multiple></Tree>
+              <Tree :data="menuList" :render="renderContent" show-checkbox multiple ref="menuTree" @on-check-change="handleChange"></Tree>
             </TabPane>
           </Tabs>
        </div>
        <div slot="footer" v-if="step=='roleAdd' && !isCreated">
-        <Button type="primary" @click="goNext('formValidate')">下一步</Button>
+        <Button type="primary" @click="handleAddOrEditOk('formValidate')">下一步</Button>
       </div>
       <div slot="footer" v-else-if="step=='menuAdd'">
         <Button type="primary" @click="handleMenuOk">保存</Button>
@@ -102,7 +106,7 @@
             <span>管理权限</span>
         </p>
        <div class="modal-content">
-         <Tree :data="menuList" :render="renderContent" show-checkbox multiple></Tree>
+         <Tree :data="menuList" :render="renderContent" show-checkbox multiple ref="menuTree" @on-check-change="handleChange"></Tree>
        </div>
     </Modal>
   </div>
@@ -110,24 +114,26 @@
 
 <script>
 import Tables from '_c/tables';
-import { getRoleData } from '@/api/data';
-import { getMenuList } from '@/api/system';
-import { buildMenu } from '@/libs/util';
+import { getRoleData, getMenuList, getRelationMenu } from '@/api/system';
+import { buildMenu, convertTree, setTreeNodeChecked } from '@/libs/util';
+import { dedupe } from '@/libs/tools';
+import _ from 'lodash';
 
 export default {
   name: 'role_page',
+  inject: ['reload'],
   components: {
     Tables
   },
   data() {
     return {
       columns: [
-        // 选择框
-        // {
-        //   type: "selection",
-        //   width: 60,
-        //   align: "center"
-        // },
+        {
+          type: 'selection',
+          key: '',
+          width: 60,
+          align: 'center'
+        },
         {
           title: '编号',
           key: 'id',
@@ -139,12 +145,22 @@ export default {
           }
         },
         { title: '角色名称', key: 'name', sortable: true },
-        { title: '角色状态',
+        {
+          title: '角色状态',
           key: 'status',
           sortable: true,
           render: (h, params, vm) => {
             const { row } = params;
-            const str = row.status == '1' ? <span style="color:green">{this.getDictByName('status', row.status)}</span> : <span style="color:red">{this.getDictByName('status', row.status)}</span>;
+            const str =
+              row.status == 'AVAILABLE' ? (
+                <span style="color:green">
+                  {this.getDictByName('status', row.status)}
+                </span>
+              ) : (
+                <span style="color:red">
+                  {this.getDictByName('status', row.status)}
+                </span>
+              );
             return <div>{str}</div>;
           }
         },
@@ -191,12 +207,14 @@ export default {
         status: '',
         roleDesc: '',
         createBy: '',
-        createAt: ''
+        createAt: '',
+        menuids: ''
       },
       modalMenu: false,
-      // 待翻译字典对象信息
-      translateDicts: {},
       menuList: [],
+      originMenuList: [],
+      selectedIds: [],
+      relationMenuList: [],
       // tab选项操作数据
       step: 'roleAdd',
       isDisable: true,
@@ -204,27 +222,29 @@ export default {
       // 表单验证
       ruleValidate: {
         name: [
-            { required: true, message: '角色名称不能为空', trigger: 'blur' }
-            // { type: 'string', max: 64, message: '64个字以内', trigger: 'blur'}
+          { required: true, message: '角色名称不能为空', trigger: 'blur' }
+          // { type: 'string', max: 64, message: '64个字以内', trigger: 'blur'}
         ],
         status: [
-            { required: true, message: '请选择角色状态', trigger: 'change' }
+          { required: true, message: '请选择角色状态', trigger: 'change' }
         ]
-      }
+      },
+      ids: []
     };
   },
-  computed: {
-    
+  computed: {},
+  mounted() {
+    this.getTableData();
+    this.getMenuList();
   },
   methods: {
     renderContent(h, { root, node, data }) {
-      if (data.chirenderContentldren) {
+      if (data.chirldren) {
         return (
           <span
             style={{ display: 'inline-block', width: '100%', fontSize: '14px' }}
           >
-            <span>
-            </span>
+            <span />
             <span>{data.meta.title}</span>
           </span>
         );
@@ -233,8 +253,7 @@ export default {
           <span
             style={{ display: 'inline-block', width: '100%', fontSize: '14px' }}
           >
-            <span>
-            </span>
+            <span />
             <span>{data.meta.title}</span>
           </span>
         );
@@ -243,86 +262,243 @@ export default {
     handleView(params) {
       this.$Modal.info({
         title: '角色管理详情',
-        content: `角色名称: ${this.tableData[params.row.initRowIndex].name}<br>
-          角色状态: `+this.getDictByName('status', this.tableData[params.row.initRowIndex].status)+`<br>
+        content:
+          `角色名称: ${this.tableData[params.row.initRowIndex].name}<br>
+          角色状态: ` +
+          this.getDictByName(
+            'status',
+            this.tableData[params.row.initRowIndex].status
+          ) +
+          `<br>
           角色描述: ${this.tableData[params.row.initRowIndex].roleDesc}<br>
           创建人: ${this.tableData[params.row.initRowIndex].createBy}<br>
           创建时间: ${this.tableData[params.row.initRowIndex].createAt}`
       });
     },
     handleDelete(params) {
-      console.log(params);
+      const { row } = params;
       // 发送axios请求
+      this.$http
+        .request({
+          url: '/ims-role/' + row.id,
+          method: 'delete',
+          data: this.rowData
+        })
+        .then(res => {
+          this.loadingBtn = false;
+          this.modalEdit = false;
+          this.$Message.info('删除成功!');
+          // 刷新表格数据
+          this.getTableData();
+        });
     },
-    handleDeleteSome() {
-      console.log('删除多条记录');
-      // TODO 删除多条记录
+    handleDeleteBatch() {
+      // 发送axios请求
+      this.$http
+        .request({
+          url: '/ims-role/' + this.ids,
+          method: 'delete'
+        })
+        .then(res => {
+          this.loadingBtn = false;
+          this.modalEdit = false;
+          this.$Message.info('删除成功!');
+          // 刷新表格数据
+          this.getTableData();
+        });
+    },
+    handleSelect(selection, row) {
+      console.log('刚选择的项数据id' + selection);
+      this.ids = selection.map(item => item.id.toString());
+      console.log('选择 ids:' + this.ids);
+    },
+    handleSelectCancel(selection, row) {
+      console.log('刚取消的项数据id' + row.id);
+      this.ids = selection.map(item => item.id.toString());
+      console.log('取消选择 ids:' + this.ids);
+    },
+    onSelectAll(selection) {
+      this.ids = selection.map(item => item.id.toString());
+      console.log('全选 ids:' + this.ids);
+    },
+    onSelectAllCancel(selection) {
+      this.ids = selection.map(item => item.id.toString());
+      console.log('全选取消 ids:' + this.ids);
     },
     handleEdit(params) {
       console.log(params);
       const { row } = params;
-      this.rowData = row;
-      // 将status由number变为string(否则单选框无法正常显示)
-      this.rowData.status = row.status + '';
+      this.rowData = Object.assign({}, row);
+      // 测试先写死
+      // this.rowData.menuids='11,12,13,14';
+      this.rowData = _.merge({}, this.rowData, row);
       this.modalEdit = true;
     },
-    handleEditOk(name) {
-       this.$refs[name].validate((valid) => {
-          if (valid) {
-              this.loadingBtn = false;
-              setTimeout(() => {
+    handleAddOrEditOk(name) {
+      this.$refs[name].validate(valid => {
+        if (valid) {
+          if (this.rowData.id == undefined) {
+            // 发送axios请求
+            this.$http
+              .request({
+                url: '/ims-role/',
+                method: 'post',
+                data: this.rowData
+              })
+              .then(res => {
+                this.loadingBtn = false;
                 this.modalEdit = false;
-                this.$Message.info('修改成功');
-              }, 2000);
-              // 发送axios请求
+                this.$Message.info('保存成功!');
+                this.step = 'menuAdd';
+                this.isDisable = false;
+                this.isCreated = true;
+                // 获取新增加的id
+                this.rowData.id = res.id;
+              });
           } else {
-              this.$Message.error('修改失败!');
+            // 发送axios请求
+            this.$http
+              .request({
+                url: '/ims-role/' + this.rowData.id,
+                method: 'put',
+                data: this.rowData
+              })
+              .then(res => {
+                this.loadingBtn = false;
+                this.modalEdit = false;
+                this.$Message.info('更新成功!');
+                // 清空rowData对象
+                this.resetRowData();
+                // 刷新表格数据
+                this.getTableData();
+              });
           }
+        } else {
+          this.$Message.error('提交失败!');
+        }
       });
     },
     handleMenu(params) {
       console.log(params);
       const { row } = params;
-      this.rowData = row;
+      this.rowData = Object.assign({}, row);
+      // 测试先写死
+      // this.rowData.menuids='11,12,13,14';
+      getRelationMenu(this.rowData.id).then(res => {
+        if (res && res.array.length > 0) {
+          console.log('menuids: ', this.getRelationMenuIds(res.array));
+          this.rowData.menuids = this.getRelationMenuIds(res.array);
+          // 反选中已有的权限
+          this.checkMenuByIds();
+        } else {
+          setTreeNodeChecked(this.menuList, '');
+        }
+      });
       this.modalMenu = true;
     },
+    getRelationMenuIds(res) {
+      let relationMenuIds = res.map(item => item.id.toString());
+      console.log(relationMenuIds);
+      return relationMenuIds.toString();
+    },
+    handleChange(checkedArr) {
+      console.log('checkedArr: ', checkedArr);
+      // 循环执行所有选中的节点链,找到他们的id以及他们父级id，父级的父级id
+      let result = [];
+      checkedArr.forEach(item => {
+        // 递归寻找父级
+        result.push(...this.findParent(item));
+      });
+      this.selectedIds = dedupe(result);
+      console.log('result: ', result);
+      console.log('uniq result: ', this.selectedIds);
+    },
+    findParent(item) {
+      let result = [];
+      let findParentIds = node => {
+        result.push(node.id);
+        if (node && node.parentid) {
+          let parent = this.originMenuList.find(o => o.id == node.parentid);
+          findParentIds(parent);
+        }
+      };
+      findParentIds(item);
+      console.log('result from parent:', result);
+      return result;
+    },
+    checkMenuByIds() {
+      if (this.rowData.menuids != undefined) {
+        const menuids = this.rowData.menuids.split(',');
+        console.log('menuids: ', menuids);
+        setTreeNodeChecked(this.menuList, menuids);
+        console.log('this.menuList selected:', this.menuList);
+      } else {
+        setTreeNodeChecked(this.menuList, '');
+        console.log('this.menuList selected:', this.menuList);
+      }
+    },
     handleMenuOk() {
-      this.loadingBtn = true;
-      this.modalAdd = false;
-      this.modalMenu = false;
-      setTimeout(() => {
-        this.$Message.info('保存成功');
-        // 模态框消失再切换tab选项卡的属性
-        this.tabOperation.tabSelected = 'roleAdd';
-        this.tabOperation.menuDisabled = true;
-        this.tabOperation.roleDisabled = false;
-      }, 1000);
-
+      let menuIds = '';
+      if (this.selectedIds.length === 0) {
+        menuIds = '-1'; // 未选择
+      } else {
+        menuIds = this.selectedIds.join(',');
+      }
       // 发送axios请求
+      this.$http
+        .request({
+          url: '/ims-role/relation/' + this.rowData.id + '/' + menuIds,
+          method: 'put'
+        })
+        .then(res => {
+          this.loadingBtn = false;
+          if (this.modalMenu == true) {
+            this.modalMenu = false;
+            this.targetKeys = [];
+            this.$Message.info('修改成功!');
+          } else if (this.modalAdd == true) {
+            this.modalAdd = false;
+            this.$Message.info('保存成功!');
+            this.step = 'roleAdd';
+            this.isDisable = false;
+            this.isCreated = true;
+          }
+        });
+      // TODO 清除已选择的菜单数据
+      // setTreeNodeChecked(this.menuList, '');
+      // getRelationMenu(this.rowData.id).then(res => {
+      //   if (res && res.array.length > 0) {
+      //     console.log('getRelationMenu: ', buildMenu(res.array, 'parentid', true));
+      //     this.relationMenuList = buildMenu(res.array, 'parentid', true);
+      //   }
+      // });
+      // 分发action动态修改权限 TODO:待测试
+      // this.$store.dispatch('changePermission').then(res => {
+      //   this.$router.addRoutes(this.$store.getters.getActualRouter);
+      //   // 刷新当前路由
+      //   this.reload();
+      // });
     },
     handleCancel() {
-      this.$Message.info('取消成功');
+      // TODO 清除已选择的菜单数据
+      // this.selectedIds = [];
+      setTreeNodeChecked(this.menuList, '');
+      // setTreeNodeChecked(this.menuList, 0);
+      // setTreeNodeChecked(this.menuList, ',');
     },
     handleAdd() {
       this.rowData = {};
       this.modalAdd = true;
     },
-    goNext(name) {
-       this.$refs[name].validate((valid) => {
-          if (valid) {
-            // this.loadingBtn = false;
-            this.step = 'menuAdd';
-            this.isDisable = false;
-            this.isCreated = true;
-            // setTimeout(() => {
-            //   this.$Message.info('保存成功');
-            // }, 2000);
-            // 发送axios请求
-              this.$Message.success('创建成功!');
-          } else {
-              this.$Message.error('创建失败!');
-          }
-      });
+    handleCloseAdd() {
+      this.modalAdd = false;
+      this.isCreated = false;
+      this.isDisable = true;
+      this.step = 'addRole';
+      // 清空rowData对象
+      this.resetRowData();
+      // 刷新表格数据
+      this.getTableData();
     },
     // exportExcel() {
     //   this.$refs.tables.exportCsv({
@@ -330,67 +506,58 @@ export default {
     //   });
     // },
     changeRadio(selectItem) {
-      console.log('选择按钮的值:'+`${selectItem}`);
+      console.log('选择按钮的值:' + `${selectItem}`);
     },
     changePage(currentPage) {
       // console.log(currentPage);
       this.page = currentPage;
-      this.getRoleData();
+      this.getTableData();
     },
     changePageSize(pageSize) {
       // console.log(pageSize);
       // 如果切换页数需要变为页码1
       this.page = 1;
       this.pageSize = pageSize;
-      this.getRoleData();
+      this.getTableData();
     },
-    getRoleData() {
+    resetRowData() {
+      this.rowData = {
+        id: 0,
+        name: '',
+        status: '',
+        roleDesc: '',
+        createBy: '',
+        createAt: '',
+        menuids: ''
+      };
+    },
+    getTableData() {
       getRoleData({
         page: this.page,
         rows: this.pageSize
       }).then(res => {
-        this.tableData = res.data;
+        // this.tableData = res.data;
+        this.tableData = res.array;
         this.total = res.total;
         this.loading = false;
       });
     },
     getMenuList() {
-       // 获取系统所有的菜单列表
+      // 获取系统所有的菜单列表
       getMenuList().then(res => {
         if (res && res.array.length > 0) {
-          console.log('buildMenu: ', buildMenu(res.array, 'parentid', true));
-          this.menuList = buildMenu(res.array, 'parentid', true);
+          console.log('buildMenu: ', buildMenu(res.array));
+          const menuList = buildMenu(res.array);
+          const map = {
+            title: 'name',
+            children: 'children'
+          };
+          this.menuList = convertTree(menuList, map, true);
+          this.originMenuList = res.array; // 保留一份元数据供后续处理
+          console.log('after convert: ', this.menuList);
         }
       });
-    },
-    // 获取所有要翻译字典信息
-    getAllDicts() {
-      // 只初始化一次
-      if (JSON.stringify(this.translateDicts) == '{}') {
-          console.log('加载字典:::'+JSON.stringify(this.translateDicts));
-          this.translateDicts.status = {
-              '1': '可用',
-              '0': '不可用'
-          };
-      }
-    },
-    /**
-     * 翻译字典
-     * fieldName 需要翻译的字段名称，value 需要翻译的字段值
-     */
-    getDictByName(fieldName, value) {
-        this.getAllDicts();
-        var translateDictName = '';// 需要翻译字典名称
-        // 判断字段名称存在字典对象  并且值也存在,则获取翻译名称
-        if (this.translateDicts.hasOwnProperty(fieldName) && this.translateDicts[fieldName].hasOwnProperty(value)) {
-            translateDictName = this.translateDicts[fieldName][value];
-        }
-        return translateDictName == '' ? value : translateDictName;
     }
-  },
-  mounted() {
-    this.getRoleData();
-    this.getMenuList();
   }
 };
 </script>

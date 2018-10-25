@@ -2,6 +2,7 @@ import Vue from 'vue';
 import axios from 'axios';
 import store from '../store/';
 import router from '@/router';
+import { setToken } from '@/libs/util';
 import _ from 'lodash';
 
 class HttpRequest {
@@ -110,6 +111,11 @@ class HttpRequest {
           errorMsg = '您无访问权限';
         } else if (error.response.status === 402) {
           errorMsg = '页面已过期，请重新登录';
+          // 清除本地Token 然后重新登录
+          setToken('');
+          router.push({
+            name: 'login'
+          });
         } else if (error.response.status === 403) {
           errorMsg = '拒绝访问';
         } else if (error.response.status === 405) {

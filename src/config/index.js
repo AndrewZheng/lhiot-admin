@@ -10,7 +10,7 @@ export default {
    */
   useI18n: false,
   /**
-   * @description api请求基础路径
+   * @description api请求基础路径 /api
    */
   baseUrl: {
     dev: '/api',
