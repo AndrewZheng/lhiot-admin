@@ -12,9 +12,10 @@
       @on-relation="handleRole"
       >
         <div slot="operations">
-          <Button @click="handleAdd" type="success" style="margin-right: 5px"><Icon type="md-add"/>新增</Button>
-          <Button @click="handleDelete" type="error" style="margin-right: 5px"><Icon type="md-close"/>删除</Button>
-          <!-- <Button style="margin: 10px 0;" type="primary" @click="handleBtachDel"><Icon type="md-trash"/>删除</Button> -->
+          <Button @click="handleAdd" type="success" class="mr5">
+            <Icon type="md-add"/> 新增</Button>
+          <Button @click="handleDelete" type="error" class="mr5">
+            <Icon type="md-trash"/> 删除</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -193,14 +194,13 @@ export default {
       }
     };
     return {
-      // 表格数据
       columns: [
-        // 选择框
-        // {
-        //   type: "selection",
-        //   width: 60,
-        //   align: "center"
-        // },
+        {
+          type: 'selection',
+          key: '',
+          width: 60,
+          align: 'center'
+        },
         {
           title: '编号',
           key: 'id',
@@ -211,7 +211,7 @@ export default {
             return h('span', row.id + '');
           }
         },
-        { title: '姓名', key: 'name', sortable: true },
+        { title: '姓名', key: 'name', sortable: true, maxWidth: 80 },
         { title: '账号', key: 'account', sortable: true },
         { title: '电话', key: 'tel', sortable: true },
         {
@@ -220,7 +220,6 @@ export default {
           sortable: true,
           render: (h, params, vm) => {
             const { row } = params;
-            // const str = row.status == '1' ? <span style="color:green">{this.getDictByName('status', row.status)}</span> : <span style="color:red">{this.getDictByName('status', row.status)}</span>;
             const str = <img src={row.avatarUrl} height="60" width="60" />;
             return <div>{str}</div>;
           }

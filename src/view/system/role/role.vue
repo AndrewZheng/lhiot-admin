@@ -15,8 +15,10 @@
       @on-relation="handleMenu"
       >
         <div slot="operations">
-          <Button @click="handleAdd" type="success" style="margin-right: 5px"><Icon type="md-add"/>新增</Button>
-          <Button @click="handleDeleteSome" type="error" style="margin-right: 5px"><Icon type="md-close"/>删除</Button>
+          <Button v-waves @click="handleAdd" type="success" class="mr5">
+            <Icon type="md-add"/> 新增</Button>
+          <Button v-waves @click="handleDeleteBatch" type="error" class="mr5">
+            <Icon type="md-trash"/> 删除</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -126,9 +128,9 @@ export default {
   data() {
     return {
       columns: [
-        // 选择框
         {
           type: 'selection',
+          key: '',
           width: 60,
           align: 'center'
         },
@@ -290,13 +292,12 @@ export default {
           this.getTableData();
         });
     },
-    handleDeleteSome() {
+    handleDeleteBatch() {
       // 发送axios请求
       this.$http
         .request({
           url: '/ims-role/' + this.ids,
-          method: 'delete',
-          data: this.rowData
+          method: 'delete'
         })
         .then(res => {
           this.loadingBtn = false;
@@ -307,7 +308,7 @@ export default {
         });
     },
     handleSelect(selection, row) {
-      console.log('刚选择的项数据id' + row.id);
+      console.log('刚选择的项数据id' + selection);
       this.ids = selection.map(item => item.id.toString());
       console.log('选择 ids:' + this.ids);
     },
@@ -479,7 +480,6 @@ export default {
       // });
     },
     handleCancel() {
-      this.$Message.info('取消成功');
       // TODO 清除已选择的菜单数据
       // this.selectedIds = [];
       setTreeNodeChecked(this.menuList, '');
