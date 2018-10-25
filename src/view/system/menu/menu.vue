@@ -827,7 +827,8 @@ export default {
         this.isDisable= false;
         this.isCreated = true;
         this.currentMenuId= res.id;
-
+        // 刷新左边菜单
+        this.refreshMenuList();
         // 刷新表格数据
         this.getTableData();
         this.getOperateData();

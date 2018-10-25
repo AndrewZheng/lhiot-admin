@@ -90,8 +90,7 @@ export const asyncRouterMap = [
     name: 'components',
     meta: {
       icon: 'logo-buffer',
-      title: '组件',
-      access: ['admin']
+      title: '组件'
     },
     component: Main,
     children: [{

@@ -53,13 +53,15 @@ import 'tinymce/plugins/textcolor';
 import 'tinymce/plugins/toc';
 import 'tinymce/plugins/visualchars';
 import _ from 'lodash';
+import plugins from './plugins';
+import toolbar from './toolbar';
 
 export default {
   name: 'tinymce-editor',
   props: {
     id: {
       default: function() {
-        return 'vue-tinymce-' + Date.now();
+        return 'vue-tinymce-'+ new Date() + ((Math.random() * 1000).toFixed(0) + '');
       },
       type: String
     },
@@ -68,8 +70,7 @@ export default {
      * @description 设置编辑器的插件
      */
     plugins: {
-      default:
-        'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking save table contextmenu directionality template paste textcolor colorpicker textpattern imagetools toc help emoticons hr',
+      default: plugins,
       type: String,
       required: false
     },
@@ -77,8 +78,7 @@ export default {
      * @description 设置编辑器的工具栏
      */
     toolbar: {
-      default:
-        'bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | undo redo | link unlink image code | removeformat',
+      default: toolbar,
       type: String,
       required: false
     },
@@ -160,11 +160,12 @@ export default {
   },
   mounted() {
     // 如果本地有存储加载本地存储内容
-    this.content = this.value || localStorage.editorCache;
-    this.init();
+    this.content = this.cache && localStorage.editorCache? localStorage.editorCache: this.value;
+    console.log('init content: ', this.content);
+    this.initTinymce();
   },
   methods: {
-    init() {
+    initTinymce() {
       const ops = Object.assign({}, this.defalutOps, this.other0ptions);
       tinymce.init(ops);
     },
