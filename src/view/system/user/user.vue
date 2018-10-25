@@ -13,9 +13,10 @@
       @on-relation="handleRole"
       >
         <div slot="operations">
-          <Button @click="handleAdd" type="success" style="margin-right: 5px"><Icon type="md-add"/>新增</Button>
-          <Button @click="handleDelete" type="error" style="margin-right: 5px"><Icon type="md-trash"/>删除</Button>
-          <!-- <Button style="margin: 10px 0;" type="primary" @click="handleBtachDel"><Icon type="md-trash"/>删除</Button> -->
+          <Button @click="handleAdd" type="success" class="mr5">
+            <Icon type="md-add"/> 新增</Button>
+          <Button @click="handleDeleteBatch" type="error" class="mr5">
+            <Icon type="md-trash"/> 删除</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -25,16 +26,17 @@
       </div>
     </Card>
 
-    <!-- 修改模态框 -->
+    <!-- 创建/修改模态框 -->
      <Modal
         v-model="modalEdit"
         :loading="loadingBtn"
         :mask-closable="false"
         @on-ok="handleAddOrEditOk('formValidate')"
         @on-cancel="handleCancel"
-        ref="formValidate" :model="rowData" :rules="ruleValidate" >
+        ref="formValidate" :model="rowData" :rules="ruleValidate"
+        :styles="{width: '600px'}" >
         <p slot="header">
-            <span>用户管理</span>
+            <span>{{rowData.id==0?'创建用户':'编辑用户'}}</span>
         </p>
        <div class="modal-content">
          <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
@@ -68,11 +70,15 @@
               <FormItem label="备注" prop="remark">
                   <Input v-model="rowData.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入备注"/>
               </FormItem>
+              <FormItem label="富文本编辑器">
+                  <TinymceEditor />
+              </FormItem>
             </Form>
+            
        </div>
     </Modal>
 
-    <!-- 添加模态框(创建用户/关联角色) -->
+    <!-- 多功能添加模态框(创建用户/关联角色) -->
     <Modal
       v-model="modalAdd"
       :loading="loadingBtn"
@@ -137,7 +143,7 @@
        </div>
     </Modal>
 
-     <!-- 角色权限 -->
+     <!-- 关联角色 -->
     <Modal
         v-model="modalRole"
         :loading="loadingBtn"
@@ -145,7 +151,7 @@
         @on-ok="handleRoleOk"
         @on-cancel="handleCancel">
         <p slot="header">
-            <span>角色权限</span>
+            <span>关联角色</span>
         </p>
        <div class="modal-content">
          <Transfer
@@ -158,7 +164,7 @@
       </div>
     </Modal>
 
-    <!-- 图片上传组件 -->
+    <!-- 头像上传组件 -->
     <image-cropper
       v-show="imagecropperShow"
       :width="70"
@@ -168,6 +174,7 @@
       lang-type="zh"
       @close="close"
       @crop-upload-success="cropSuccess" />
+
   </div>
 </template>
 
@@ -176,12 +183,14 @@ import Tables from '_c/tables';
 import { getUserData, getRoleList, getRelationRoles } from '@/api/system';
 import ImageCropper from '_c/ImageCropper';
 import _ from 'lodash';
+import TinymceEditor from '_c/tinymce-editor';
 
 export default {
   name: 'user_page',
   components: {
     Tables,
-    ImageCropper
+    ImageCropper,
+    TinymceEditor
   },
   data() {
     const validatePassCheck = (rule, value, callback) => {
@@ -194,12 +203,12 @@ export default {
       }
     };
     return {
-      // 表格数据
       columns: [
-        // 选择框
         {
           type: 'selection',
+          key: '',
           width: 60,
+          fixed: 'left',
           align: 'center'
         },
         {
@@ -207,12 +216,13 @@ export default {
           key: 'id',
           sortable: true,
           maxWidth: 80,
+          fixed: 'left',
           render: (h, params, vm) => {
             const { row } = params;
             return h('span', row.id + '');
           }
         },
-        { title: '姓名', key: 'name', sortable: true },
+        { title: '姓名', key: 'name', sortable: true, maxWidth: 80 },
         { title: '账号', key: 'account', sortable: true },
         { title: '电话', key: 'tel', sortable: true },
         {
@@ -221,7 +231,6 @@ export default {
           sortable: true,
           render: (h, params, vm) => {
             const { row } = params;
-            // const str = row.status == '1' ? <span style="color:green">{this.getDictByName('status', row.status)}</span> : <span style="color:red">{this.getDictByName('status', row.status)}</span>;
             const str = <img src={row.avatarUrl} height="60" width="60" />;
             return <div>{str}</div>;
           }
@@ -234,13 +243,13 @@ export default {
             const { row } = params;
             const str =
               row.status == 'AVAILABLE' ? (
-                <span style="color:green">
+                <tag color="success">
                   {this.getDictByName('status', row.status)}
-                </span>
+                </tag>
               ) : (
-                <span style="color:red">
+                <tag color="error">
                   {this.getDictByName('status', row.status)}
-                </span>
+                </tag>
               );
             return <div>{str}</div>;
           }
@@ -365,7 +374,7 @@ export default {
     },
     handleView(params) {
       this.$Modal.info({
-        title: '用户管理详情',
+        title: '用户详情',
         content:
           `姓名: ${this.tableData[params.row.initRowIndex].name}<br>
           账号: ${this.tableData[params.row.initRowIndex].account}<br>
@@ -537,7 +546,7 @@ export default {
     //   });
     // },
     changeRadio(selectItem) {
-      console.log('选择按钮的值:'+ `${selectItem}`);
+      console.log('选择按钮的值:' + `${selectItem}`);
     },
     changePage(currentPage) {
       this.page = currentPage;

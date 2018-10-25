@@ -13,8 +13,10 @@
       @on-relation="handleMenu"
       >
         <div slot="operations">
-          <Button @click="handleAdd" type="success" style="margin-right: 5px"><Icon type="md-add"/>新增</Button>
-          <Button @click="handleDeleteSome" type="error" style="margin-right: 5px"><Icon type="md-close"/>删除</Button>
+          <Button v-waves @click="handleAdd" type="success" class="mr5">
+            <Icon type="md-add"/> 新增</Button>
+          <Button v-waves @click="handleDeleteBatch" type="error" class="mr5">
+            <Icon type="md-trash"/> 删除</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -24,7 +26,7 @@
       </div>
     </Card>
 
-    <!-- 修改模态框 -->
+    <!-- 创建/修改模态框 -->
      <Modal
         v-model="modalEdit"
         :loading="loadingBtn"
@@ -32,7 +34,7 @@
         @on-ok="handleAddOrEditOk('formValidate')"
         @on-cancel="handleCancel">
         <p slot="header">
-            <span>角色管理</span>
+            <span>{{rowData.id==0?'创建角色':'编辑角色'}}</span>
         </p>
        <div class="modal-content">
          <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
@@ -52,7 +54,7 @@
        </div>
     </Modal>
 
-    <!-- 添加模态框 -->
+    <!-- 多功能添加模态框 -->
      <Modal
         v-model="modalAdd"
         :loading="loadingBtn"
@@ -75,7 +77,7 @@
                   </FormItem>
               </Form>
             </TabPane>
-            <TabPane label="权限管理" name="menuAdd" :disabled="isDisable">
+            <TabPane label="关联菜单" name="menuAdd" :disabled="isDisable">
               <Tree :data="menuList" :render="renderContent" show-checkbox multiple ref="menuTree" @on-check-change="handleChange"></Tree>
             </TabPane>
           </Tabs>
@@ -91,7 +93,7 @@
       </div>
     </Modal>
 
-    <!-- 管理权限 -->
+    <!-- 关联菜单 -->
     <Modal
         v-model="modalMenu"
         :loading="loadingBtn"
@@ -99,7 +101,7 @@
         @on-ok="handleMenuOk"
         @on-cancel="handleCancel">
         <p slot="header">
-            <span>管理权限</span>
+            <span>关联菜单</span>
         </p>
        <div class="modal-content">
          <Tree :data="menuList" :render="renderContent" show-checkbox multiple ref="menuTree" @on-check-change="handleChange"></Tree>
@@ -124,9 +126,9 @@ export default {
   data() {
     return {
       columns: [
-        // 选择框
         {
           type: 'selection',
+          key: '',
           width: 60,
           align: 'center'
         },
@@ -149,13 +151,13 @@ export default {
             const { row } = params;
             const str =
               row.status == 'AVAILABLE' ? (
-                <span style="color:green">
+                <tag color="success">
                   {this.getDictByName('status', row.status)}
-                </span>
+                </tag>
               ) : (
-                <span style="color:red">
+                <tag color="error">
                   {this.getDictByName('status', row.status)}
-                </span>
+                </tag>
               );
             return <div>{str}</div>;
           }
@@ -257,7 +259,7 @@ export default {
     },
     handleView(params) {
       this.$Modal.info({
-        title: '角色管理详情',
+        title: '角色详情',
         content:
           `角色名称: ${this.tableData[params.row.initRowIndex].name}<br>
           角色状态: ` +
@@ -288,14 +290,13 @@ export default {
           this.getTableData();
         });
     },
-    handleDeleteSome() {
+    handleDeleteBatch() {
       if (this.ids.length != 0) {
         // 发送axios请求
         this.$http
           .request({
             url: '/ims-role/' + this.ids,
-            method: 'delete',
-            data: this.rowData
+            method: 'delete'
           })
           .then(res => {
             this.loadingBtn = false;
@@ -471,7 +472,6 @@ export default {
       // });
     },
     handleCancel() {
-      this.$Message.info('取消成功');
       // TODO 清除已选择的菜单数据
       // this.selectedIds = [];
       setTreeNodeChecked(this.menuList, '');

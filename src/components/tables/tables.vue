@@ -4,7 +4,7 @@
       <Row :gutter="24" type="flex" align="top" justify="space-between">
         <i-col span="12">
           <Select v-model="searchKey" class="search-col">
-            <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
+            <Option v-for="item in columns" v-if="item.key !== 'handle' && item.type!=='selection'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
           </Select>
           <Input @on-change="handleClear" clearable placeholder="输入关键字搜索" class="search-input" v-model="searchValue"/>
           <Button v-waves @click="handleSearch" class="search-btn" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button>
@@ -51,7 +51,7 @@
     </Table>
     <div v-if="searchable && searchPlace === 'bottom'" class="search-con search-con-top">
       <Select v-model="searchKey" class="search-col">
-        <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
+        <Option v-for="item in columns" v-if="item.key !== 'handle' && item.type!=='selection'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
       </Select>
       <Input placeholder="输入关键字搜索" class="search-input" v-model="searchValue"/>
       <Button class="search-btn" type="primary"><Icon type="search"/>&nbsp;&nbsp;搜索</Button>
@@ -217,7 +217,8 @@ export default {
       });
     },
     setDefaultSearchKey () {
-      this.searchKey = this.columns[0].key !== 'handle' && this.columns[0].key !== 'id' ? this.columns[0].key : (this.columns.length > 1 ? this.columns[1].key : '');
+      const columnArr= this.columns.filter(item => item.key !== 'handle' && item.key !== 'id' && item.type!=='selection');
+      this.searchKey = columnArr.length > 0 ? columnArr[0].key: '';
     },
     handleClear (e) {
       if (e.target.value === '') this.insideTableData = this.value;
