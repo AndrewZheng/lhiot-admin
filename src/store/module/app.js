@@ -34,8 +34,8 @@ const state= {
 
 const getters={
   menuList: (state, getters, rootState) => {
-    const menuData=getMenuByRouter(rootState.user.actualRouter);
-    console.log('menuData: ', menuData);
+    let menuData=getMenuByRouter(rootState.user.actualRouter);
+    console.log('menuData generate by router: ', menuData);
     return menuData;
   },
   systemCurrent: (state) => {

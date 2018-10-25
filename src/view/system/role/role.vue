@@ -473,11 +473,11 @@ export default {
       //   }
       // });
       // 分发action动态修改权限 TODO:待测试
-      // this.$store.dispatch('changePermission').then(res => {
-      //   this.$router.addRoutes(this.$store.getters.getActualRouter);
-      //   // 刷新当前路由
-      //   this.reload();
-      // });
+      this.$store.dispatch('changePermission').then(res => {
+        this.$router.addRoutes(this.$store.getters.getActualRouter);
+        // 刷新当前路由
+        this.reload();
+      });
     },
     handleCancel() {
       // TODO 清除已选择的菜单数据

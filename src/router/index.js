@@ -22,7 +22,7 @@ const whiteList = ['/login', '/redirect', '/401', '/404', '/500'];
 // permission judge function
 function hasPermission(userPermission, currentRoute) {
   if (!userPermission) return true;
-  if (whiteList.indexOf(currentRoute.path)>= 0) return true;
+  if (whiteList.indexOf(currentRoute.path) !== -1) return true;
   return userPermission.some(role => role.code === currentRoute.name);
 }
 
