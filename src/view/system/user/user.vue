@@ -6,6 +6,7 @@
       v-model="tableData"
       :loading="loading"
       :columns="columns"
+      @on-selection-change="onSelectionChange"
       @on-delete="handleDelete"
       @on-view="handleView"
       @on-edit="handleEdit"
@@ -13,7 +14,7 @@
       >
         <div slot="operations">
           <Button @click="handleAdd" type="success" style="margin-right: 5px"><Icon type="md-add"/>新增</Button>
-          <Button @click="handleDelete" type="error" style="margin-right: 5px"><Icon type="md-close"/>删除</Button>
+          <Button @click="handleDelete" type="error" style="margin-right: 5px"><Icon type="md-trash"/>删除</Button>
           <!-- <Button style="margin: 10px 0;" type="primary" @click="handleBtachDel"><Icon type="md-trash"/>删除</Button> -->
         </div>
       </tables>
@@ -196,11 +197,11 @@ export default {
       // 表格数据
       columns: [
         // 选择框
-        // {
-        //   type: "selection",
-        //   width: 60,
-        //   align: "center"
-        // },
+        {
+          type: 'selection',
+          width: 60,
+          align: 'center'
+        },
         {
           title: '编号',
           key: 'id',
@@ -330,7 +331,8 @@ export default {
       // 头像上传
       imagecropperShow: false,
       imagecropperKey: 0,
-      image: ''
+      image: '',
+      ids: []
     };
   },
   created() {},
@@ -402,6 +404,29 @@ export default {
           // 刷新表格数据
           this.getTableData();
         });
+    },
+    handleDeleteBatch() {
+      if (this.ids.length != 0) {
+        // 发送axios请求
+        this.$http
+          .request({
+            url: '/admin/batch/' + this.ids,
+            method: 'delete'
+          })
+          .then(res => {
+            this.loadingBtn = false;
+            this.modalEdit = false;
+            this.$Message.info('删除成功!');
+            // 刷新表格数据
+            this.getTableData();
+          });
+      } else {
+        this.$Message.error('请至少选择一行记录!');
+      }
+    },
+    onSelectionChange(selection) {
+      this.ids = selection.map(item => item.id.toString());
+      console.log('选择变化,当前页选择ids:' + this.ids);
     },
     handleEdit(params) {
       console.log(params);
@@ -512,7 +537,7 @@ export default {
     //   });
     // },
     changeRadio(selectItem) {
-      console.log('选择按钮的值:' + `${selectItem}`);
+      console.log('选择按钮的值:'+ `${selectItem}`);
     },
     changePage(currentPage) {
       this.page = currentPage;

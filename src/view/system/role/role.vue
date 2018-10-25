@@ -6,9 +6,7 @@
       v-model="tableData"
       :loading="loading"
       :columns="columns"
-      @on-select="handleSelect"
-      @on-select-cancel="handleSelectCancel"
-      @on-select-all="onSelectAll"
+      @on-selection-change="onSelectionChange"
       @on-delete="handleDelete"
       @on-view="handleView"
       @on-edit="handleEdit"
@@ -291,38 +289,28 @@ export default {
         });
     },
     handleDeleteSome() {
-      // 发送axios请求
-      this.$http
-        .request({
-          url: '/ims-role/' + this.ids,
-          method: 'delete',
-          data: this.rowData
-        })
-        .then(res => {
-          this.loadingBtn = false;
-          this.modalEdit = false;
-          this.$Message.info('删除成功!');
-          // 刷新表格数据
-          this.getTableData();
-        });
+      if (this.ids.length != 0) {
+        // 发送axios请求
+        this.$http
+          .request({
+            url: '/ims-role/' + this.ids,
+            method: 'delete',
+            data: this.rowData
+          })
+          .then(res => {
+            this.loadingBtn = false;
+            this.modalEdit = false;
+            this.$Message.info('删除成功!');
+            // 刷新表格数据
+            this.getTableData();
+          });
+      } else {
+        this.$Message.error('请至少选择一行记录!');
+      }
     },
-    handleSelect(selection, row) {
-      console.log('刚选择的项数据id' + row.id);
+    onSelectionChange(selection) {
       this.ids = selection.map(item => item.id.toString());
-      console.log('选择 ids:' + this.ids);
-    },
-    handleSelectCancel(selection, row) {
-      console.log('刚取消的项数据id' + row.id);
-      this.ids = selection.map(item => item.id.toString());
-      console.log('取消选择 ids:' + this.ids);
-    },
-    onSelectAll(selection) {
-      this.ids = selection.map(item => item.id.toString());
-      console.log('全选 ids:' + this.ids);
-    },
-    onSelectAllCancel(selection) {
-      this.ids = selection.map(item => item.id.toString());
-      console.log('全选取消 ids:' + this.ids);
+      console.log('选择变化,当前页选择ids:' + this.ids);
     },
     handleEdit(params) {
       console.log(params);
@@ -353,6 +341,10 @@ export default {
                 this.isCreated = true;
                 // 获取新增加的id
                 this.rowData.id = res.id;
+                // 清空rowData对象
+                this.resetRowData();
+                // 刷新表格数据
+                this.getTableData();
               });
           } else {
             // 发送axios请求
