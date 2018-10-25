@@ -55,13 +55,14 @@ import 'tinymce/plugins/visualchars';
 import _ from 'lodash';
 import plugins from './plugins';
 import toolbar from './toolbar';
+import { PcLockr, enums } from '@/util/';
 
 export default {
   name: 'tinymce-editor',
   props: {
     id: {
       default: function() {
-        return 'vue-tinymce-'+ new Date() + ((Math.random() * 1000).toFixed(0) + '');
+        return 'vue-tinymce-'+ new Date().getTime() + ((Math.random() * 1000).toFixed(0) + '');
       },
       type: String
     },
@@ -158,9 +159,18 @@ export default {
   created() {
     if (typeof tinymce === 'undefined') throw new Error('tinymce undefined');
   },
+  computed: {
+    cacheKey() {
+      return enums.EDITOR_CACHE+ '_'+ this.id;
+    }
+  },
   mounted() {
     // 如果本地有存储加载本地存储内容
-    this.content = this.cache && localStorage.editorCache? localStorage.editorCache: this.value;
+    if (this.cache && PcLockr.get(this.cacheKey)) {
+      this.content = PcLockr.get(this.cacheKey);
+    } else {
+      this.content = this.value;
+    }
     console.log('init content: ', this.content);
     this.initTinymce();
   },
@@ -184,7 +194,7 @@ export default {
       if (this.checkerTimeout !== null) clearTimeout(this.checkerTimeout);
       this.checkerTimeout = setTimeout(() => {
         this.isTyping = false;
-        if (this.cache) localStorage.editorCache = this.editor.getContent();
+        if (this.cache) PcLockr.set(this.cacheKey, this.editor.getContent());
       }, this.changeInterval);
       this.$emit('input', this.editor.getContent());
     },
@@ -207,6 +217,10 @@ export default {
   },
   beforeDestroy() {
     this.editor.remove();
+    // 清除掉localcahe
+    if (PcLockr.get(this.cacheKey)) {
+      PcLockr.delete(this.cacheKey);
+    }
   }
 };
 </script>

@@ -121,7 +121,6 @@ const actions = {
         commit('setUserName', res.name);
         commit('setUserId', res.id);
         commit('setHasGetInfo', true);
-        dispatch('getSystemList');
         resolve(res);
       }).catch(err => {
         reject(err);
@@ -141,6 +140,17 @@ const actions = {
         reject(err);
       });
     });
+  },
+  // 根据当前用户生成系统菜单（右上角系统菜单 + 左边栏非系统菜单）
+  async generateAllMenus({ dispatch }) {
+    await dispatch('getUserInfo');
+    await dispatch('getSystemList');
+    let pid=0;
+    if (PcLockr.get(enums.SYSTEM)) {
+      const system = JSON.parse(PcLockr.get(enums.SYSTEM));
+      pid = system.id;
+    }
+    return dispatch('getRouteListById', pid);
   },
   // 动态修改权限
   async changePermission({ commit, dispatch }) {
