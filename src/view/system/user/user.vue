@@ -33,7 +33,7 @@
         :mask-closable="false"
         @on-ok="handleAddOrEditOk('formValidate')"
         @on-cancel="handleCancel"
-        ref="formValidate" :model="rowData" :rules="ruleValidate" fullscreen>
+        ref="formValidate" :model="rowData" :rules="ruleValidate">
         <p slot="header">
             <span>{{rowData.id==0?'创建用户':'编辑用户'}}</span>
         </p>
@@ -68,9 +68,6 @@
               </FormItem>
               <FormItem label="备注" prop="remark">
                   <Input v-model="rowData.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入备注"/>
-              </FormItem>
-              <FormItem label="富文本编辑器测试">
-                  <tinymce-editor id="tinymce" ref="editor" v-model="content" :height="300"/>
               </FormItem>
             </Form>
        </div>
@@ -181,14 +178,12 @@ import Tables from '_c/tables';
 import { getUserData, getRoleList, getRelationRoles } from '@/api/system';
 import ImageCropper from '_c/ImageCropper';
 import _ from 'lodash';
-import tinymceEditor from '_c/tinymce-editor';
 
 export default {
   name: 'user_page',
   components: {
     Tables,
-    ImageCropper,
-    tinymceEditor
+    ImageCropper
   },
   data() {
     const validatePassCheck = (rule, value, callback) => {
@@ -337,8 +332,7 @@ export default {
       imagecropperShow: false,
       imagecropperKey: 0,
       image: '',
-      ids: [],
-      content: '请输入内容'
+      ids: []
     };
   },
   created() {},
@@ -628,11 +622,6 @@ export default {
     },
     close() {
       this.imagecropperShow = false;
-    }
-  },
-  watch: {
-    content(val, oldVal) {
-      console.log(`new: ${val}, old: ${oldVal}`);
     }
   }
 };
