@@ -46,7 +46,8 @@ const enums = {
   PAYTYPE: {
     RECHARGE: 'RECHARGE', // 充值
     ORDER: 'ORDER' // 订单
-  }
+  },
+  EDITOR_CACHE: 'EDITOR_CACHE'
 };
 
 export {

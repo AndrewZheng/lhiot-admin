@@ -38,21 +38,13 @@ router.beforeEach((to, from, next) => {
     } else {
       console.log('hasGetInfo: ', store.getters.hasGetInfo);
       if (!store.getters.hasGetInfo) {
-        store.dispatch('getUserInfo').then(user => {
-          // 当前的system已经缓存
-          let pid = 0;
-          if (PcLockr.get(enums.SYSTEM)) {
-            const system = JSON.parse(PcLockr.get(enums.SYSTEM));
-            pid = system.id;
-          }
-          store.dispatch('getRouteListById', pid).then(res => {
+          store.dispatch('generateAllMenus').then(() => {
             console.log('getActualRouter: ', store.getters.getActualRouter);
             router.addRoutes(store.getters.getActualRouter);
             next({ ...to,
               replace: true
             });
           });
-        });
       } else {
         // 没有动态改变权限的需求可直接next()
         console.log('userPermission: ', store.getters.getUserPermission);
