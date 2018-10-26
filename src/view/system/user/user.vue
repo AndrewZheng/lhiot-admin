@@ -6,6 +6,7 @@
       v-model="tableData"
       :loading="loading"
       :columns="columns"
+      @on-selection-change="onSelectionChange"
       @on-delete="handleDelete"
       @on-view="handleView"
       @on-edit="handleEdit"
@@ -14,7 +15,7 @@
         <div slot="operations">
           <Button @click="handleAdd" type="success" class="mr5">
             <Icon type="md-add"/> 新增</Button>
-          <Button @click="handleDelete" type="error" class="mr5">
+          <Button @click="handleDeleteBatch" type="error" class="mr5">
             <Icon type="md-trash"/> 删除</Button>
         </div>
       </tables>
@@ -25,16 +26,16 @@
       </div>
     </Card>
 
-    <!-- 修改模态框 -->
+    <!-- 创建/修改模态框 -->
      <Modal
         v-model="modalEdit"
         :loading="loadingBtn"
         :mask-closable="false"
         @on-ok="handleAddOrEditOk('formValidate')"
         @on-cancel="handleCancel"
-        ref="formValidate" :model="rowData" :rules="ruleValidate" >
+        ref="formValidate" :model="rowData" :rules="ruleValidate">
         <p slot="header">
-            <span>用户管理</span>
+            <span>{{rowData.id==0?'创建用户':'编辑用户'}}</span>
         </p>
        <div class="modal-content">
          <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
@@ -72,7 +73,7 @@
        </div>
     </Modal>
 
-    <!-- 添加模态框(创建用户/关联角色) -->
+    <!-- 多功能添加模态框(创建用户/关联角色) -->
     <Modal
       v-model="modalAdd"
       :loading="loadingBtn"
@@ -137,7 +138,7 @@
        </div>
     </Modal>
 
-     <!-- 角色权限 -->
+     <!-- 关联角色 -->
     <Modal
         v-model="modalRole"
         :loading="loadingBtn"
@@ -145,7 +146,7 @@
         @on-ok="handleRoleOk"
         @on-cancel="handleCancel">
         <p slot="header">
-            <span>角色权限</span>
+            <span>关联角色</span>
         </p>
        <div class="modal-content">
          <Transfer
@@ -158,7 +159,7 @@
       </div>
     </Modal>
 
-    <!-- 图片上传组件 -->
+    <!-- 头像上传组件 -->
     <image-cropper
       v-show="imagecropperShow"
       :width="70"
@@ -168,6 +169,7 @@
       lang-type="zh"
       @close="close"
       @crop-upload-success="cropSuccess" />
+
   </div>
 </template>
 
@@ -232,13 +234,13 @@ export default {
             const { row } = params;
             const str =
               row.status == 'AVAILABLE' ? (
-                <span style="color:green">
+                <tag color="success">
                   {this.getDictByName('status', row.status)}
-                </span>
+                </tag>
               ) : (
-                <span style="color:red">
+                <tag color="error">
                   {this.getDictByName('status', row.status)}
-                </span>
+                </tag>
               );
             return <div>{str}</div>;
           }
@@ -329,7 +331,8 @@ export default {
       // 头像上传
       imagecropperShow: false,
       imagecropperKey: 0,
-      image: ''
+      image: '',
+      ids: []
     };
   },
   created() {},
@@ -362,7 +365,7 @@ export default {
     },
     handleView(params) {
       this.$Modal.info({
-        title: '用户管理详情',
+        title: '用户详情',
         content:
           `姓名: ${this.tableData[params.row.initRowIndex].name}<br>
           账号: ${this.tableData[params.row.initRowIndex].account}<br>
@@ -401,6 +404,29 @@ export default {
           // 刷新表格数据
           this.getTableData();
         });
+    },
+    handleDeleteBatch() {
+      if (this.ids.length != 0) {
+        // 发送axios请求
+        this.$http
+          .request({
+            url: '/admin/batch/' + this.ids,
+            method: 'delete'
+          })
+          .then(res => {
+            this.loadingBtn = false;
+            this.modalEdit = false;
+            this.$Message.info('删除成功!');
+            // 刷新表格数据
+            this.getTableData();
+          });
+      } else {
+        this.$Message.error('请至少选择一行记录!');
+      }
+    },
+    onSelectionChange(selection) {
+      this.ids = selection.map(item => item.id.toString());
+      console.log('选择变化,当前页选择ids:' + this.ids);
     },
     handleEdit(params) {
       console.log(params);

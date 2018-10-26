@@ -6,9 +6,7 @@
       v-model="tableData"
       :loading="loading"
       :columns="columns"
-      @on-select="handleSelect"
-      @on-select-cancel="handleSelectCancel"
-      @on-select-all="onSelectAll"
+      @on-selection-change="onSelectionChange"
       @on-delete="handleDelete"
       @on-view="handleView"
       @on-edit="handleEdit"
@@ -28,7 +26,7 @@
       </div>
     </Card>
 
-    <!-- 修改模态框 -->
+    <!-- 创建/修改模态框 -->
      <Modal
         v-model="modalEdit"
         :loading="loadingBtn"
@@ -36,7 +34,7 @@
         @on-ok="handleAddOrEditOk('formValidate')"
         @on-cancel="handleCancel">
         <p slot="header">
-            <span>角色管理</span>
+            <span>{{rowData.id==0?'创建角色':'编辑角色'}}</span>
         </p>
        <div class="modal-content">
          <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
@@ -56,7 +54,7 @@
        </div>
     </Modal>
 
-    <!-- 添加模态框 -->
+    <!-- 多功能添加模态框 -->
      <Modal
         v-model="modalAdd"
         :loading="loadingBtn"
@@ -79,7 +77,7 @@
                   </FormItem>
               </Form>
             </TabPane>
-            <TabPane label="权限管理" name="menuAdd" :disabled="isDisable">
+            <TabPane label="关联菜单" name="menuAdd" :disabled="isDisable">
               <Tree :data="menuList" :render="renderContent" show-checkbox multiple ref="menuTree" @on-check-change="handleChange"></Tree>
             </TabPane>
           </Tabs>
@@ -95,7 +93,7 @@
       </div>
     </Modal>
 
-    <!-- 管理权限 -->
+    <!-- 关联菜单 -->
     <Modal
         v-model="modalMenu"
         :loading="loadingBtn"
@@ -103,7 +101,7 @@
         @on-ok="handleMenuOk"
         @on-cancel="handleCancel">
         <p slot="header">
-            <span>管理权限</span>
+            <span>关联菜单</span>
         </p>
        <div class="modal-content">
          <Tree :data="menuList" :render="renderContent" show-checkbox multiple ref="menuTree" @on-check-change="handleChange"></Tree>
@@ -153,13 +151,13 @@ export default {
             const { row } = params;
             const str =
               row.status == 'AVAILABLE' ? (
-                <span style="color:green">
+                <tag color="success">
                   {this.getDictByName('status', row.status)}
-                </span>
+                </tag>
               ) : (
-                <span style="color:red">
+                <tag color="error">
                   {this.getDictByName('status', row.status)}
-                </span>
+                </tag>
               );
             return <div>{str}</div>;
           }
@@ -261,7 +259,7 @@ export default {
     },
     handleView(params) {
       this.$Modal.info({
-        title: '角色管理详情',
+        title: '角色详情',
         content:
           `角色名称: ${this.tableData[params.row.initRowIndex].name}<br>
           角色状态: ` +
@@ -293,37 +291,27 @@ export default {
         });
     },
     handleDeleteBatch() {
-      // 发送axios请求
-      this.$http
-        .request({
-          url: '/ims-role/' + this.ids,
-          method: 'delete'
-        })
-        .then(res => {
-          this.loadingBtn = false;
-          this.modalEdit = false;
-          this.$Message.info('删除成功!');
-          // 刷新表格数据
-          this.getTableData();
-        });
+      if (this.ids.length != 0) {
+        // 发送axios请求
+        this.$http
+          .request({
+            url: '/ims-role/' + this.ids,
+            method: 'delete'
+          })
+          .then(res => {
+            this.loadingBtn = false;
+            this.modalEdit = false;
+            this.$Message.info('删除成功!');
+            // 刷新表格数据
+            this.getTableData();
+          });
+      } else {
+        this.$Message.error('请至少选择一行记录!');
+      }
     },
-    handleSelect(selection, row) {
-      console.log('刚选择的项数据id' + selection);
+    onSelectionChange(selection) {
       this.ids = selection.map(item => item.id.toString());
-      console.log('选择 ids:' + this.ids);
-    },
-    handleSelectCancel(selection, row) {
-      console.log('刚取消的项数据id' + row.id);
-      this.ids = selection.map(item => item.id.toString());
-      console.log('取消选择 ids:' + this.ids);
-    },
-    onSelectAll(selection) {
-      this.ids = selection.map(item => item.id.toString());
-      console.log('全选 ids:' + this.ids);
-    },
-    onSelectAllCancel(selection) {
-      this.ids = selection.map(item => item.id.toString());
-      console.log('全选取消 ids:' + this.ids);
+      console.log('选择变化,当前页选择ids:' + this.ids);
     },
     handleEdit(params) {
       console.log(params);
@@ -354,6 +342,10 @@ export default {
                 this.isCreated = true;
                 // 获取新增加的id
                 this.rowData.id = res.id;
+                // 清空rowData对象
+                this.resetRowData();
+                // 刷新表格数据
+                this.getTableData();
               });
           } else {
             // 发送axios请求
