@@ -12,6 +12,14 @@
       @on-edit="handleEdit"
       @on-relation="handleMenu"
       >
+       <div slot="searchCondition">
+          <Input  placeholder="角色名称" class="search-input" v-model="searchRowData.name" clearable/>
+          <Select v-model="searchRowData.status" class="search-col" placeholder="角色状态" clearable>
+            <Option v-for="item in roleStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
+          </Select>
+          <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button>
+          <Button v-waves @click="handleClear" class="search-btn" type="info"><Icon type="md-refresh"/>&nbsp;清除条件</Button>
+        </div>
         <div slot="operations">
           <Button v-waves @click="handleAdd" type="success" class="mr5">
             <Icon type="md-add"/> 新增</Button>
@@ -42,10 +50,9 @@
                 <Input v-model="rowData.name" placeholder="请输入角色名称"/>
             </FormItem>
             <FormItem label="角色状态" prop="status">
-                <RadioGroup v-model="rowData.status" @on-change="changeRadio">
-                    <Radio label="AVAILABLE">{{this.getDictByName('status','AVAILABLE')}}</Radio>
-                    <Radio label="UNAVAILABLE">{{this.getDictByName('status','UNAVAILABLE')}}</Radio>
-                </RadioGroup>
+               <Select v-model="rowData.status" class="search-col"  placeholder="请选择用户状态">
+                  <Option v-for="item in roleStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
+                </Select>
             </FormItem>
             <FormItem label="角色描述" prop="roleDesc">
                 <Input v-model="rowData.roleDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入角色描述" />
@@ -67,10 +74,9 @@
                       <Input v-model="rowData.name" placeholder="请输入角色名称"/>
                   </FormItem>
                   <FormItem label="角色状态" prop="status">
-                      <RadioGroup v-model="rowData.status" @on-change="changeRadio">
-                          <Radio label="AVAILABLE">{{this.getDictByName('status','AVAILABLE')}}</Radio>
-                          <Radio label="UNAVAILABLE">{{this.getDictByName('status','UNAVAILABLE')}}</Radio>
-                      </RadioGroup>
+                      <Select v-model="rowData.status" class="search-col"  placeholder="请选择用户状态">
+                        <Option v-for="item in roleStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
+                      </Select>
                   </FormItem>
                   <FormItem label="角色描述" prop="roleDesc">
                       <Input v-model="rowData.roleDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入角色描述" />
@@ -152,11 +158,11 @@ export default {
             const str =
               row.status == 'AVAILABLE' ? (
                 <tag color="success">
-                  {this.getDictByName('status', row.status)}
+                  {this.getDictValueByKey(this.roleStatusList, row.status)}
                 </tag>
               ) : (
                 <tag color="error">
-                  {this.getDictByName('status', row.status)}
+                  {this.getDictValueByKey(this.roleStatusList, row.status)}
                 </tag>
               );
             return <div>{str}</div>;
@@ -208,6 +214,10 @@ export default {
         createAt: '',
         menuids: ''
       },
+      searchRowData: {
+        name: '',
+        status: ''
+      },
       modalMenu: false,
       menuList: [],
       originMenuList: [],
@@ -223,17 +233,17 @@ export default {
           { required: true, message: '角色名称不能为空', trigger: 'blur' }
           // { type: 'string', max: 64, message: '64个字以内', trigger: 'blur'}
         ],
-        status: [
-          { required: true, message: '请选择角色状态', trigger: 'change' }
-        ]
+        status: [{ required: true, message: '请选择角色状态', trigger: 'blur' }]
       },
-      ids: []
+      ids: [],
+      roleStatusList: []
     };
   },
   computed: {},
   mounted() {
     this.getTableData();
     this.getMenuList();
+    this.getStatusList();
   },
   methods: {
     renderContent(h, { root, node, data }) {
@@ -263,8 +273,8 @@ export default {
         content:
           `角色名称: ${this.tableData[params.row.initRowIndex].name}<br>
           角色状态: ` +
-          this.getDictByName(
-            'status',
+          this.getDictValueByKey(
+            this.roleStatusList,
             this.tableData[params.row.initRowIndex].status
           ) +
           `<br>
@@ -323,9 +333,10 @@ export default {
       this.modalEdit = true;
     },
     handleAddOrEditOk(name) {
+      this.loadingBtn = false;
       this.$refs[name].validate(valid => {
         if (valid) {
-          if (this.rowData.id == undefined) {
+          if (this.rowData.id === undefined) {
             // 发送axios请求
             this.$http
               .request({
@@ -334,7 +345,6 @@ export default {
                 data: this.rowData
               })
               .then(res => {
-                this.loadingBtn = false;
                 this.modalEdit = false;
                 this.$Message.info('保存成功!');
                 this.step = 'menuAdd';
@@ -342,8 +352,6 @@ export default {
                 this.isCreated = true;
                 // 获取新增加的id
                 this.rowData.id = res.id;
-                // 清空rowData对象
-                this.resetRowData();
                 // 刷新表格数据
                 this.getTableData();
               });
@@ -366,7 +374,7 @@ export default {
               });
           }
         } else {
-          this.$Message.error('提交失败!');
+          this.$Message.warning('请先完善信息!');
         }
       });
     },
@@ -405,6 +413,26 @@ export default {
       console.log('result: ', result);
       console.log('uniq result: ', this.selectedIds);
     },
+    handleSearch(params) {
+      // 发送axios请求
+      this.$http
+        .request({
+          url: '/ims-role/pages',
+          data: this.searchRowData,
+          method: 'post'
+        })
+        .then(res => {
+          // this.tableData = res.data;
+          this.tableData = res.array;
+          this.total = res.total;
+          this.loading = false;
+        });
+    },
+    handleClear(params) {
+      // 重置数据
+      this.resetSearchRowData();
+      this.handleSearch();
+    },
     findParent(item) {
       let result = [];
       let findParentIds = node => {
@@ -419,7 +447,7 @@ export default {
       return result;
     },
     checkMenuByIds() {
-      if (this.rowData.menuids != undefined) {
+      if (this.rowData.menuids !== undefined) {
         const menuids = this.rowData.menuids.split(',');
         console.log('menuids: ', menuids);
         setTreeNodeChecked(this.menuList, menuids);
@@ -451,8 +479,6 @@ export default {
           } else if (this.modalAdd == true) {
             this.modalAdd = false;
             this.$Message.info('保存成功!');
-            this.step = 'roleAdd';
-            this.isDisable = false;
             this.isCreated = true;
           }
         });
@@ -480,15 +506,16 @@ export default {
     },
     handleAdd() {
       this.rowData = {};
+      this.step = 'roleAdd';
+      this.isDisable = true;
+      this.isCreated = false;
       this.modalAdd = true;
     },
     handleCloseAdd() {
       this.modalAdd = false;
       this.isCreated = false;
       this.isDisable = true;
-      this.step = 'addRole';
-      // 清空rowData对象
-      this.resetRowData();
+      this.step = 'roleAdd';
       // 刷新表格数据
       this.getTableData();
     },
@@ -523,6 +550,12 @@ export default {
         menuids: ''
       };
     },
+    resetSearchRowData() {
+      this.searchRowData = {
+        name: '',
+        status: ''
+      };
+    },
     getTableData() {
       getRoleData({
         page: this.page,
@@ -549,6 +582,10 @@ export default {
           console.log('after convert: ', this.menuList);
         }
       });
+    },
+    // 数据字典集合
+    getStatusList() {
+      this.roleStatusList = this.getDictListByName('userStatus');
     }
   }
 };
