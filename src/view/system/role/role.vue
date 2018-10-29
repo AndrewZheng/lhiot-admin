@@ -333,6 +333,7 @@ export default {
       this.modalEdit = true;
     },
     handleAddOrEditOk(name) {
+      this.loadingBtn = false;
       this.$refs[name].validate(valid => {
         if (valid) {
           if (this.rowData.id === undefined) {
@@ -344,7 +345,6 @@ export default {
                 data: this.rowData
               })
               .then(res => {
-                this.loadingBtn = false;
                 this.modalEdit = false;
                 this.$Message.info('保存成功!');
                 this.step = 'menuAdd';

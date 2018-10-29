@@ -464,6 +464,7 @@ export default {
     },
     handleAddOrEditOk(name) {
       this.rowData.avatarUrl = this.image;
+      this.loadingBtn = false;
       this.$refs[name].validate(valid => {
         if (valid) {
           if (this.rowData.id === undefined) {
@@ -475,7 +476,6 @@ export default {
                 data: this.rowData
               })
               .then(res => {
-                this.loadingBtn = false;
                 this.modalEdit = false;
                 this.$Message.info('保存成功!');
                 this.step = 'roleAdd';
