@@ -1,6 +1,9 @@
 import Vue from 'vue';
 
-export const getTableData = ({ page, rows }) => {
+export const getTableData = ({
+  page,
+  rows
+}) => {
   const data = {
     page,
     rows
@@ -20,56 +23,48 @@ export const getDragList = () => {
   });
 };
 
-export const getMenuData = ({ page, rows, pid }) => {
+export const getMenuData = ({
+  page,
+  rows,
+  pid
+}) => {
   const data = {
     page,
     rows,
     pid
   };
-  
+
+  // return Vue.prototype.$http.request({
+  //   url: 'get_menu_data',
+  //   params: data,
+  //   method: 'get'
+  // });
   return Vue.prototype.$http.request({
-    url: '/ims-menu/pages', // get_menu_data
+    url: '/ims-menu/pages',
     data: data,
     method: 'post'
   });
 };
 
-export const getRoleData = ({ page, rows }) => {
-  const data = {
-    page,
-    rows
-  };
-
-  return Vue.prototype.$http.request({
-    url: '/ims-role/pages', // get_role_data
-    data: data,
-    method: 'post'
-  });
-};
-
-export const getUserData = ({ page, rows }) => {
-  const data = {
-    page,
-    rows
-  };
-
-  return Vue.prototype.$http.request({
-    url: '/admin/pages', // get_user_data
-    data: data,
-    method: 'get'
-  });
-};
-
-export const getOperateData= ({ page, rows, menuId }) => {
+export const getOperateData = ({
+  page,
+  rows,
+  menuId
+}) => {
   const data = {
     page,
     rows,
     menuId
   };
 
+  // return Vue.prototype.$http.request({
+  //   url: 'get_operate_data',
+  //   params: data,
+  //   method: 'get'
+  // });
   return Vue.prototype.$http.request({
-    url: '/ims-operation/pages', // get_operate_data
+    url: '/ims-operation/pages',
     data: data,
-    method: 'post' // 'get'
+    method: 'post'
   });
 };

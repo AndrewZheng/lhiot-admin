@@ -1,9 +1,32 @@
-
 let mixin = {
   data() {
     return {
       // 待翻译字典对象信息
-      translateDicts: {}
+      userStatus: [{
+          key: 'INITIAL',
+          value: '初始化'
+        },
+        {
+          key: 'AVAILABLE',
+          value: '可用'
+        },
+        {
+          key: 'UNAVAILABLE',
+          value: '不可用'
+        },
+        {
+          key: 'LOCK',
+          value: '锁定，暂不可用'
+        },
+        {
+          key: 'DELETE',
+          value: '删除，永不可用'
+        },
+        {
+          key: 'UNKNOWN',
+          value: '未知'
+        }
+      ]
     };
   },
   computed: {
@@ -174,34 +197,28 @@ let mixin = {
         return /^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$/.test(value);
       }
     },
-    // 获取所有要翻译字典信息
-    getAllDicts() {
-      // 只初始化一次
-      if (JSON.stringify(this.translateDicts) == '{}') {
-          console.log('加载字典:::'+JSON.stringify(this.translateDicts));
-          this.translateDicts.status = {
-            'INITIAL': '初始化',
-            'AVAILABLE': '可用',
-            'UNAVAILABLE': '不可用',
-            'LOCK': '锁定，暂不可用',
-            'DELETE': '删除，永不可用',
-            'UNKNOWN': '未知'
-          };
+    // 根据需要翻译的字段名称，返回翻译字典集合
+    getDictListByName(name) {
+      console.log('getDictListByName：' + name);
+      let dictList = [];
+      switch (name) {
+        case 'userStatus':
+          dictList = this.userStatus;
+          break;
       }
+      return dictList;
     },
-    // 翻译字典 fieldName 需要翻译的字段名称，value 需要翻译的字段值
-    getDictByName(fieldName, value) {
-        this.getAllDicts();
-        var translateDictName = '';// 需要翻译字典名称
-        // 判断字段名称存在字典对象  并且值也存在,则获取翻译名称
-        if (this.translateDicts.hasOwnProperty(fieldName) && this.translateDicts[fieldName].hasOwnProperty(value)) {
-            translateDictName = this.translateDicts[fieldName][value];
-        }
-        return translateDictName == '' ? value : translateDictName;
+    // 翻译字典 list 需要翻译集合，key 需要翻译的字段
+    getDictValueByKey(list, key) {
+      console.log('getDictValueByKey:key：' + key);
+      if (list.length !== 0) {
+        let column = list.filter(item => item.key == key);
+        return column.length > 0 ? column[0].value : '';
+      }
+      return '';
     }
   },
-  mounted() {
-  }
+  mounted() {}
 };
 
 export default mixin;

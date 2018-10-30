@@ -2,14 +2,18 @@
   <div>
     <div v-if="searchable && searchPlace === 'top'" class="search-con search-con-top">
       <Row :gutter="24" type="flex" align="top" justify="space-between">
-        <i-col span="12">
-          <Select v-model="searchKey" class="search-col">
-            <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
+        <i-col span="18">
+          <!-- 下拉搜索 -->
+          <!-- <Select v-model="searchKey" class="search-col">
+            <Option v-for="item in columns" v-if="item.key !== 'handle' && item.type!=='selection'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
           </Select>
           <Input @on-change="handleClear" clearable placeholder="输入关键字搜索" class="search-input" v-model="searchValue"/>
-          <Button v-waves @click="handleSearch" class="search-btn" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button>
+          <Button v-waves @click="handleSearch" class="search-btn" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button> -->
+
+          <!-- 自定义搜索条件 -->
+          <slot name="searchCondition"></slot>
         </i-col>
-        <i-col span="12">
+        <i-col span="6">
           <Row :gutter="24" type="flex" align="top" justify="end">
             <i-col span="24">
               <slot name="operations"></slot>
@@ -159,7 +163,8 @@ export default {
       edittingCellId: '',
       edittingText: '',
       searchValue: '',
-      searchKey: ''
+      searchKey: '',
+      searchKeyColumns: this.cloumn
     };
   },
   methods: {

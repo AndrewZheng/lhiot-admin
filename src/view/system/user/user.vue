@@ -6,15 +6,25 @@
       v-model="tableData"
       :loading="loading"
       :columns="columns"
+      @on-selection-change="onSelectionChange"
       @on-delete="handleDelete"
       @on-view="handleView"
       @on-edit="handleEdit"
       @on-relation="handleRole"
       >
+        <div slot="searchCondition">
+          <Input  placeholder="姓名" class="search-input" v-model="searchRowData.name" clearable/>
+          <Input  placeholder="电话" class="search-input" v-model="searchRowData.tel" clearable/>
+          <Select v-model="searchRowData.status" class="search-col"  placeholder="用户状态" clearable>
+            <Option v-for="item in userStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
+          </Select>
+          <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button>
+          <Button v-waves @click="handleClear" class="search-btn" type="info"><Icon type="md-refresh"/>&nbsp;清除条件</Button>
+        </div>
         <div slot="operations">
           <Button @click="handleAdd" type="success" class="mr5">
             <Icon type="md-add"/> 新增</Button>
-          <Button @click="handleDelete" type="error" class="mr5">
+          <Button @click="handleDeleteBatch" type="error" class="mr5">
             <Icon type="md-trash"/> 删除</Button>
         </div>
       </tables>
@@ -25,16 +35,16 @@
       </div>
     </Card>
 
-    <!-- 修改模态框 -->
+    <!-- 创建/修改模态框 -->
      <Modal
         v-model="modalEdit"
         :loading="loadingBtn"
         :mask-closable="false"
         @on-ok="handleAddOrEditOk('formValidate')"
         @on-cancel="handleCancel"
-        ref="formValidate" :model="rowData" :rules="ruleValidate" >
+        ref="formValidate" :model="rowData" :rules="ruleValidate">
         <p slot="header">
-            <span>用户管理</span>
+            <span>{{rowData.id==0?'创建用户':'编辑用户'}}</span>
         </p>
        <div class="modal-content">
          <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
@@ -54,16 +64,15 @@
                   <Input v-model="rowData.tel" placeholder="请输入电话号码"/>
               </FormItem>
               <FormItem label="用户头像" prop="avatarUrl">
-                  <Button @click="imagecropperShow=true" class="addImage">
+                  <Button @click="imagecropperShow=true" class="add-image">
                         <Icon type="ios-camera" size="20"></Icon>
                   </Button>
                   <img :src="image" width='80px' height='80px'/>
               </FormItem>
               <FormItem label="用户状态" prop="status">
-                  <RadioGroup v-model="rowData.status" @on-change="changeRadio">
-                    <Radio label="AVAILABLE">{{this.getDictByName('status','AVAILABLE')}}</Radio>
-                    <Radio label="UNAVAILABLE">{{this.getDictByName('status','UNAVAILABLE')}}</Radio>
-                  </RadioGroup>
+                <Select v-model="rowData.status" class="search-col"  placeholder="请选择用户状态">
+                  <Option v-for="item in userStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
+                </Select>
               </FormItem>
               <FormItem label="备注" prop="remark">
                   <Input v-model="rowData.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入备注"/>
@@ -72,7 +81,7 @@
        </div>
     </Modal>
 
-    <!-- 添加模态框(创建用户/关联角色) -->
+    <!-- 多功能添加模态框(创建用户/关联角色) -->
     <Modal
       v-model="modalAdd"
       :loading="loadingBtn"
@@ -89,7 +98,7 @@
                   <Input v-model="rowData.account" placeholder="请输入账号"/>
               </FormItem>
               <FormItem label="密码" prop="password">
-                  <Input v-model="rowData.password" type="password"/>
+                  <Input v-model="rowData.password" type="password" placeholder="请输入密码"/>
               </FormItem>
               <FormItem label="确认密码" prop="passwdCheck">
                   <Input v-model="rowData.passwdCheck" type="password"/>
@@ -98,7 +107,7 @@
                   <Input v-model="rowData.tel" placeholder="请输入电话号码"/>
               </FormItem>
               <FormItem label="用户头像" prop="avatarUrl">
-                  <Button  @click="imagecropperShow=true" class="addImage">
+                  <Button  @click="imagecropperShow=true" class="add-image">
                         <Icon type="ios-camera" size="20"></Icon>
                   </Button>
                   <div v-if="imageVisible" style="display: inline-block">
@@ -106,10 +115,9 @@
                   </div>
               </FormItem>
               <FormItem label="用户状态" prop="status">
-                  <RadioGroup v-model="rowData.status" @on-change="changeRadio">
-                    <Radio label="AVAILABLE">{{this.getDictByName('status','AVAILABLE')}}</Radio>
-                    <Radio label="UNAVAILABLE">{{this.getDictByName('status','UNAVAILABLE')}}</Radio>
-                  </RadioGroup>
+                <Select v-model="rowData.status" class="search-col"  placeholder="请选择用户状态">
+                  <Option v-for="item in userStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
+                </Select>
               </FormItem>
               <FormItem label="备注" prop="remark">
                   <Input v-model="rowData.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入备注"/>
@@ -137,7 +145,7 @@
        </div>
     </Modal>
 
-     <!-- 角色权限 -->
+     <!-- 关联角色 -->
     <Modal
         v-model="modalRole"
         :loading="loadingBtn"
@@ -145,7 +153,7 @@
         @on-ok="handleRoleOk"
         @on-cancel="handleCancel">
         <p slot="header">
-            <span>角色权限</span>
+            <span>关联角色</span>
         </p>
        <div class="modal-content">
          <Transfer
@@ -158,7 +166,7 @@
       </div>
     </Modal>
 
-    <!-- 图片上传组件 -->
+    <!-- 头像上传组件 -->
     <image-cropper
       v-show="imagecropperShow"
       :width="70"
@@ -168,6 +176,7 @@
       lang-type="zh"
       @close="close"
       @crop-upload-success="cropSuccess" />
+
   </div>
 </template>
 
@@ -199,25 +208,28 @@ export default {
           type: 'selection',
           key: '',
           width: 60,
-          align: 'center'
+          align: 'center',
+          fixed: 'left'
         },
         {
           title: '编号',
           key: 'id',
           sortable: true,
-          maxWidth: 80,
+          width: 80,
           render: (h, params, vm) => {
             const { row } = params;
             return h('span', row.id + '');
-          }
+          },
+          fixed: 'left'
         },
-        { title: '姓名', key: 'name', sortable: true, maxWidth: 80 },
-        { title: '账号', key: 'account', sortable: true },
-        { title: '电话', key: 'tel', sortable: true },
+        { title: '姓名', key: 'name', sortable: true, width: 80 },
+        { title: '账号', key: 'account', sortable: true, width: 120 },
+        { title: '电话', key: 'tel', sortable: true, width: 140 },
         {
           title: '用户头像url',
           key: 'avatarUrl',
           sortable: true,
+          width: 120,
           render: (h, params, vm) => {
             const { row } = params;
             const str = <img src={row.avatarUrl} height="60" width="60" />;
@@ -228,27 +240,34 @@ export default {
           title: '用户状态',
           key: 'status',
           sortable: true,
+          width: 120,
           render: (h, params, vm) => {
             const { row } = params;
             const str =
               row.status == 'AVAILABLE' ? (
-                <span style="color:green">
-                  {this.getDictByName('status', row.status)}
-                </span>
+                <tag color="success">
+                  {this.getDictValueByKey(this.userStatus, row.status)}
+                </tag>
               ) : (
-                <span style="color:red">
-                  {this.getDictByName('status', row.status)}
-                </span>
+                <tag color="error">
+                  {this.getDictValueByKey(this.userStatus, row.status)}
+                </tag>
               );
             return <div>{str}</div>;
           }
         },
-        { title: '创建时间', key: 'createAt', sortable: true },
-        { title: '最后登录时间', key: 'lastLoginAt', sortable: true },
-        { title: '备注', key: 'remark', sortable: true },
+        { title: '创建时间', key: 'createAt', sortable: true, width: 160 },
+        {
+          title: '最后登录时间',
+          key: 'lastLoginAt',
+          sortable: true,
+          width: 160
+        },
+        { title: '备注', key: 'remark', sortable: true, width: 160 },
         {
           title: '操作',
           key: 'handle',
+          width: 180,
           options: ['view', 'edit', 'relation', 'delete'],
           button: [
             (h, params, vm) => {
@@ -294,6 +313,11 @@ export default {
         lastLoginAt: '',
         remark: ''
       },
+      searchRowData: {
+        name: '',
+        tel: '',
+        status: ''
+      },
       modalRole: false,
       step: 'userAdd',
       isDisable: true,
@@ -322,19 +346,23 @@ export default {
             trigger: 'blur'
           }
         ],
-        status: [
-          { required: true, message: '请选择角色状态', trigger: 'change' }
-        ]
+        avatarUrl: [
+          { required: true, message: '头像不能为空', trigger: 'blur' }
+        ],
+        status: [{ required: true, message: '请选择角色状态', trigger: 'blur' }]
       },
       // 头像上传
       imagecropperShow: false,
       imagecropperKey: 0,
-      image: ''
+      image: '',
+      ids: [],
+      userStatusList: []
     };
   },
   created() {},
   mounted() {
     this.getTableData();
+    this.getStatusList();
   },
   computed: {},
   filters: {},
@@ -362,7 +390,7 @@ export default {
     },
     handleView(params) {
       this.$Modal.info({
-        title: '用户管理详情',
+        title: '用户详情',
         content:
           `姓名: ${this.tableData[params.row.initRowIndex].name}<br>
           账号: ${this.tableData[params.row.initRowIndex].account}<br>
@@ -371,8 +399,8 @@ export default {
           this.tableData[params.row.initRowIndex].avatarUrl +
           `" width="80px" height="80px"/><br>
           用户状态: ` +
-          this.getDictByName(
-            'status',
+          this.getDictValueByKey(
+            this.userStatus,
             this.tableData[params.row.initRowIndex].status
           ) +
           `<br>
@@ -381,7 +409,7 @@ export default {
             this.tableData[params.row.initRowIndex].lastLoginAt
           }<br>
           备注: ${this.tableData[params.row.initRowIndex].remark}<br>
-          关联角色：<Tag type="border">角色1</Tag><Tag type="border">角色2</Tag><Tag type="border">角色3</Tag>`
+          关联角色：<tag type="border">角色1</tag><tag type="border">角色2</tag><tag type="border">角色3</tag>`
       });
       console.log(this.tableData[params.row.initRowIndex].avatarUrl);
     },
@@ -402,18 +430,44 @@ export default {
           this.getTableData();
         });
     },
+    handleDeleteBatch() {
+      if (this.ids.length != 0) {
+        // 发送axios请求
+        this.$http
+          .request({
+            url: '/admin/batch/' + this.ids,
+            method: 'delete'
+          })
+          .then(res => {
+            this.loadingBtn = false;
+            this.modalEdit = false;
+            this.$Message.info('删除成功!');
+            // 刷新表格数据
+            this.getTableData();
+          });
+      } else {
+        this.$Message.error('请至少选择一行记录!');
+      }
+    },
+    onSelectionChange(selection) {
+      this.ids = selection.map(item => item.id.toString());
+      console.log('选择变化,当前页选择ids:' + this.ids);
+    },
     handleEdit(params) {
       console.log(params);
       const { row } = params;
+      this.image = '';
       this.rowData = _.merge({}, this.rowData, row);
       this.rowData.passwdCheck = row.password;
       this.image = this.rowData.avatarUrl;
       this.modalEdit = true;
     },
     handleAddOrEditOk(name) {
+      this.rowData.avatarUrl = this.image;
+      this.loadingBtn = false;
       this.$refs[name].validate(valid => {
         if (valid) {
-          if (this.rowData.id == undefined) {
+          if (this.rowData.id === undefined) {
             // 发送axios请求
             this.$http
               .request({
@@ -422,12 +476,13 @@ export default {
                 data: this.rowData
               })
               .then(res => {
-                this.loadingBtn = false;
                 this.modalEdit = false;
                 this.$Message.info('保存成功!');
                 this.step = 'roleAdd';
                 this.isDisable = false;
                 this.isCreated = true;
+                // 获取新增加的id
+                this.rowData.id = res.id;
               });
           } else {
             // 发送axios请求
@@ -448,7 +503,7 @@ export default {
               });
           }
         } else {
-          this.$Message.error('提交失败!');
+          this.$Message.warning('请先完善信息!');
         }
       });
     },
@@ -466,7 +521,12 @@ export default {
       this.getTableData();
     },
     handleAdd() {
+      this.imageVisible = false;
+      this.rowData = _.merge({}, this.rowData);
       this.rowData = {};
+      this.step = 'userAdd';
+      this.isDisable = true;
+      this.isCreated = false;
       this.modalAdd = true;
     },
     handleRole(params) {
@@ -481,6 +541,26 @@ export default {
         }
       });
       this.modalRole = true;
+    },
+    handleSearch(params) {
+      // 发送axios请求
+      this.$http
+        .request({
+          url: '/admin/pages',
+          data: this.searchRowData,
+          method: 'post'
+        })
+        .then(res => {
+          // this.tableData = res.data;
+          this.tableData = res.array;
+          this.total = res.total;
+          this.loading = false;
+        });
+    },
+    handleClear(params) {
+      // 重置数据
+      this.resetSearchRowData();
+      this.handleSearch();
     },
     handleRoleOk() {
       let roleIds = this.targetKeys.join(',');
@@ -502,6 +582,10 @@ export default {
             this.step = 'userAdd';
             this.isDisable = false;
             this.isCreated = true;
+            // 清空rowData对象
+            // this.resetRowData();
+            // 刷新表格数据
+            this.getTableData();
           }
         });
     },
@@ -536,6 +620,13 @@ export default {
         createAt: '',
         lastLoginAt: '',
         remark: ''
+      };
+    },
+    resetSearchRowData() {
+      this.searchRowData = {
+        name: '',
+        tel: '',
+        status: ''
       };
     },
     getTableData() {
@@ -596,12 +687,16 @@ export default {
     },
     close() {
       this.imagecropperShow = false;
+    },
+    // 数据字典集合
+    getStatusList() {
+      this.userStatusList = this.getDictListByName('userStatus');
     }
   }
 };
 </script>
 <style>
-.addImage {
+.add-image {
   line-height: 48px;
   vertical-align: text-bottom;
   margin-right: 10px;

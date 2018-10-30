@@ -16,6 +16,15 @@
           @on-view="handleView"
           @on-edit="handleEdit"
           @on-edit-permission="handleEditPermission">
+            <div slot="searchCondition">
+              <Input  placeholder="菜单名称" class="search-input" v-model="searchRowData.name" clearable/>
+              <Select v-model="searchRowData.type" class="search-col"  placeholder="菜单类型" clearable>
+                <Option value="PARENT">父级菜单</Option>
+                <Option value="SON">子级菜单</Option>
+              </Select>
+              <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button>
+              <Button v-waves @click="handleClear" class="search-btn" type="info"><Icon type="md-refresh"/>&nbsp;清除条件</Button>
+            </div>
             <div slot="operations">
                 <Button v-waves type="success" class="mr5" @click="addChildren">
                   <Icon type="md-add"/>
@@ -25,7 +34,7 @@
                   <Icon type="md-add"/>
                   父菜单
                 </Button>
-                <Button v-waves type="primary" @click="exportExcel">导出为Csv文件</Button>
+                <Button v-waves type="primary" @click="exportExcel">导出</Button>
             </div>
           </tables>
           <div style="margin: 10px;overflow: hidden">
@@ -464,6 +473,10 @@ export default {
         menuId: 0,
         name: '',
         antUrl: ''
+      },
+      searchRowData: {
+        parentid: 0,
+        type: ''
       }
     };
   },
@@ -493,9 +506,9 @@ export default {
           const { id, title } = menuList[0];
           this.currentPid = id;
           this.currentName = title;
-          const map= {
-             title: 'title',
-             children: 'children'
+          const map = {
+            title: 'title',
+            children: 'children'
           };
           this.menuList = convertTree(menuList, map, true);
           console.log('after convert: ', this.menuList);
@@ -507,16 +520,16 @@ export default {
       getMenuList().then(res => {
         if (res && res.array.length > 0) {
           const menuList = buildMenu(res.array);
-          const map= {
-             title: 'title',
-             children: 'children'
+          const map = {
+            title: 'title',
+            children: 'children'
           };
           this.menuList = convertTree(menuList, map, true);
         }
       });
     },
     renderContent(h, { root, node, data }) {
-      if (data.type=='PARENT') {
+      if (data.type == 'PARENT') {
         return (
           <div
             style={{
@@ -527,7 +540,7 @@ export default {
             }}
           >
             <span>
-              <CommonIcon type='ios-folder' class="mr10" />
+              <CommonIcon type="ios-folder" class="mr10" />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -545,11 +558,9 @@ export default {
             }}
           >
             <span>
-              <CommonIcon type='ios-paper' class="mr10" />
+              <CommonIcon type="ios-paper" class="mr10" />
             </span>
-            <span>
-              {data.title}
-            </span>
+            <span>{data.title}</span>
           </div>
         );
       }
@@ -600,14 +611,14 @@ export default {
     },
     expandChildren(array) {
       array.forEach(item => {
-          if (typeof item.expand === 'undefined') {
-            this.$set(item, 'expend', true);
-          } else {
-            item.expand = !item.expand;
-          }
-          if (item.children) {
-            this.expandChildren(item.children);
-          }
+        if (typeof item.expand === 'undefined') {
+          this.$set(item, 'expend', true);
+        } else {
+          item.expand = !item.expand;
+        }
+        if (item.children) {
+          this.expandChildren(item.children);
+        }
       });
     },
     handleClick({ root, node, data }) {
@@ -630,36 +641,40 @@ export default {
       const { row } = params;
       this.rowData = row;
       this.modalView = true;
-      if (row.type=='SON') {
-        this.currentMenuId= row.id;
+      if (row.type == 'SON') {
+        this.currentMenuId = row.id;
         this.getOperateData();
       }
     },
     handleDelete(params) {
       const { row } = params;
       // 发送axios请求删除
-      this.$http.request({
-        url: '/ims-menu/'+ row.id,
-        method: 'delete'
-      }).then(res => {
-        this.$Message.info('删除成功');
-        // 刷新左边菜单
-        this.refreshMenuList();
-        // 刷新表格数据
-        this.getTableData();
-      });
+      this.$http
+        .request({
+          url: '/ims-menu/' + row.id,
+          method: 'delete'
+        })
+        .then(res => {
+          this.$Message.info('删除成功');
+          // 刷新左边菜单
+          this.refreshMenuList();
+          // 刷新表格数据
+          this.getTableData();
+        });
     },
     handleDeleteOperate(params) {
       const { row } = params;
       // 发送axios请求删除
-      this.$http.request({
-        url: '/ims-operation/'+row.id,
-        method: 'delete'
-      }).then(res => {
-        this.$Message.info('删除成功');
-        // 刷新表格数据
-        this.getOperateData();
-      });
+      this.$http
+        .request({
+          url: '/ims-operation/' + row.id,
+          method: 'delete'
+        })
+        .then(res => {
+          this.$Message.info('删除成功');
+          // 刷新表格数据
+          this.getOperateData();
+        });
     },
     handleEdit(params) {
       const { row } = params;
@@ -668,8 +683,8 @@ export default {
     },
     handleEditPermission(params) {
       const { row } = params;
-      this.modalPermission=true;
-      this.currentMenuId= row.id;
+      this.modalPermission = true;
+      this.currentMenuId = row.id;
       console.log(`row.id ${row.id}`);
       this.getOperateData();
     },
@@ -692,38 +707,42 @@ export default {
         // 组织rowData数据
         this.rowData.parentid = this.currentPid;
         // 发送axios请求创建菜单
-        this.$http.request({
-          url: '/ims-menu/',
-          method: 'post',
-          data: this.rowData
-        }).then(res => {
-          this.loadingBtn = false;
-          this.modalEdit= false;
-          this.$Message.info('保存成功');
-          // 刷新左边菜单
-          this.refreshMenuList();
-          // 清空rowData对象
-          this.resetRowData();
-          // 刷新表格数据
-          this.getTableData();
-        });
+        this.$http
+          .request({
+            url: '/ims-menu/',
+            method: 'post',
+            data: this.rowData
+          })
+          .then(res => {
+            this.loadingBtn = false;
+            this.modalEdit = false;
+            this.$Message.info('保存成功');
+            // 刷新左边菜单
+            this.refreshMenuList();
+            // 清空rowData对象
+            this.resetRowData();
+            // 刷新表格数据
+            this.getTableData();
+          });
       } else {
         // 发送axios请求修改菜单
-        this.$http.request({
-          url: '/ims-menu/'+ this.rowData.id,
-          method: 'put',
-          data: this.rowData
-        }).then(res => {
-          this.loadingBtn = false;
-          this.modalEdit= false;
-          this.$Message.info('更新成功');
-          // 刷新左边菜单
-          this.refreshMenuList();
-          // 清空rowData对象
-          this.resetRowData();
-          // 刷新表格数据
-          this.getTableData();
-        });
+        this.$http
+          .request({
+            url: '/ims-menu/' + this.rowData.id,
+            method: 'put',
+            data: this.rowData
+          })
+          .then(res => {
+            this.loadingBtn = false;
+            this.modalEdit = false;
+            this.$Message.info('更新成功');
+            // 刷新左边菜单
+            this.refreshMenuList();
+            // 清空rowData对象
+            this.resetRowData();
+            // 刷新表格数据
+            this.getTableData();
+          });
       }
     },
     handleAdd() {
@@ -737,32 +756,34 @@ export default {
         this.$Message.warning('请填写操作的匹配路径');
         return false;
       }
-      
-      if (this.requestTypeList.length==0) {
+
+      if (this.requestTypeList.length == 0) {
         this.$Message.warning('请至少选择一种请求类型');
         return false;
       }
 
       // 组织operateRowData数据
       this.operateRowData.type = this.requestTypeList.join(',');
-      this.operateRowData.menuId= this.currentMenuId;
- 
+      this.operateRowData.menuId = this.currentMenuId;
+
       this.loadingAdd = true;
       // 发送axios请求创建菜单
-      this.$http.request({
-        url: '/ims-operation/',
-        method: 'post',
-        data: this.operateRowData
-      }).then(res => {
-        this.loadingAdd = false;
-        this.$Message.info('保存成功');
-        // 清空类型列表
-        this.requestTypeList= ['GET'];
-        // 清空rowData对象
-        this.resetOperateRowData();
-        // 刷新表格数据
-        this.getOperateData();
-      });
+      this.$http
+        .request({
+          url: '/ims-operation/',
+          method: 'post',
+          data: this.operateRowData
+        })
+        .then(res => {
+          this.loadingAdd = false;
+          this.$Message.info('保存成功');
+          // 清空类型列表
+          this.requestTypeList = ['GET'];
+          // 清空rowData对象
+          this.resetOperateRowData();
+          // 刷新表格数据
+          this.getOperateData();
+        });
     },
     handleClose() {
       this.modalView = false;
@@ -770,14 +791,34 @@ export default {
     handleCloseAdd() {
       this.modalAdd = false;
       this.isCreated = false;
-      this.isDisable= true;
-      this.step='addMenu';
+      this.isDisable = true;
+      this.step = 'addMenu';
     },
     handleCloseEdit() {
-      this.modalPermission=false;
+      this.modalPermission = false;
       // 初始化
-      this.currentMenuId= 0;
-      this.requestTypeList=['GET'];
+      this.currentMenuId = 0;
+      this.requestTypeList = ['GET'];
+    },
+    handleSearch(params) {
+      this.searchRowData.parentid = this.currentPid;
+      // 发送axios请求
+      this.$http
+        .request({
+          url: '/ims-menu/pages',
+          data: this.searchRowData,
+          method: 'post'
+        })
+        .then(res => {
+          this.tableData = res.array;
+          this.total = res.total;
+          this.loading = false;
+        });
+    },
+    handleClear(params) {
+      // 重置数据
+      this.resetSearchRowData();
+      this.handleSearch();
     },
     resetRowData() {
       this.rowData = {
@@ -786,6 +827,12 @@ export default {
         sort: 0,
         code: '',
         name: '',
+        type: ''
+      };
+    },
+    resetSearchRowData() {
+      this.searchRowData = {
+        parentid: 0,
         type: ''
       };
     },
@@ -817,22 +864,24 @@ export default {
       // 组织rowData数据
       this.rowData.parentid = this.currentPid;
       // 下一步之前先创建子菜单
-      this.$http.request({
-        url: '/ims-menu/',
-        method: 'post',
-        data: this.rowData
-      }).then(res => {
-        this.$Message.info('创建成功');
-        this.step='addPermission';
-        this.isDisable= false;
-        this.isCreated = true;
-        this.currentMenuId= res.id;
-        // 刷新左边菜单
-        this.refreshMenuList();
-        // 刷新表格数据
-        this.getTableData();
-        this.getOperateData();
-      });
+      this.$http
+        .request({
+          url: '/ims-menu/',
+          method: 'post',
+          data: this.rowData
+        })
+        .then(res => {
+          this.$Message.info('创建成功');
+          this.step = 'addPermission';
+          this.isDisable = false;
+          this.isCreated = true;
+          this.currentMenuId = res.id;
+          // 刷新左边菜单
+          this.refreshMenuList();
+          // 刷新表格数据
+          this.getTableData();
+          this.getOperateData();
+        });
     }
   }
 };
