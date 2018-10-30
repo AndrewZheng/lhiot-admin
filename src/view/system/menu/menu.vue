@@ -351,12 +351,13 @@ const menuColumns = [
           on: {
             'on-ok': () => {
               vm.$emit('on-delete', params);
-              vm.$emit(
-                'input',
-                params.tableData.filter(
-                  (item, index) => index !== params.row.initRowIndex
-                )
-              );
+              // 删除前要判断是否满足删除条件
+              // vm.$emit(
+              //   'input',
+              //   params.tableData.filter(
+              //     (item, index) => index !== params.row.initRowIndex
+              //   )
+              // );
             }
           }
         });
@@ -655,11 +656,16 @@ export default {
           method: 'delete'
         })
         .then(res => {
-          this.$Message.info('删除成功');
-          // 刷新左边菜单
-          this.refreshMenuList();
-          // 刷新表格数据
-          this.getTableData();
+          // 返回结果为0则不能删除
+          if (res == 0) {
+            this.$Message.error('已关联角色 删除失败');
+          } else {
+            this.$Message.info('删除成功');
+            // 刷新左边菜单
+            this.refreshMenuList();
+            // 刷新表格数据
+            this.getTableData();
+          }
         });
     },
     handleDeleteOperate(params) {

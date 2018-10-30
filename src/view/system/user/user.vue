@@ -197,7 +197,7 @@ export default {
       if (value === '') {
         callback(new Error('请再次输入您的密码'));
       } else if (value !== this.rowData.password) {
-        callback(new Error('两次输入密码不匹配!'));
+        callback(new Error('两次输入密码不匹配'));
       } else {
         callback();
       }
@@ -423,9 +423,7 @@ export default {
           data: this.rowData
         })
         .then(res => {
-          this.loadingBtn = false;
-          this.modalEdit = false;
-          this.$Message.info('删除成功!');
+          this.$Message.info('删除成功');
           // 刷新表格数据
           this.getTableData();
         });
@@ -439,14 +437,12 @@ export default {
             method: 'delete'
           })
           .then(res => {
-            this.loadingBtn = false;
-            this.modalEdit = false;
-            this.$Message.info('删除成功!');
+            this.$Message.info('删除成功');
             // 刷新表格数据
             this.getTableData();
           });
       } else {
-        this.$Message.error('请至少选择一行记录!');
+        this.$Message.error('请至少选择一行记录');
       }
     },
     onSelectionChange(selection) {
@@ -477,7 +473,7 @@ export default {
               })
               .then(res => {
                 this.modalEdit = false;
-                this.$Message.info('保存成功!');
+                this.$Message.info('保存成功');
                 this.step = 'roleAdd';
                 this.isDisable = false;
                 this.isCreated = true;
@@ -495,7 +491,7 @@ export default {
               .then(res => {
                 this.loadingBtn = false;
                 this.modalEdit = false;
-                this.$Message.info('更新成功!');
+                this.$Message.info('更新成功');
                 // 清空rowData对象
                 this.resetRowData();
                 // 刷新表格数据
@@ -503,7 +499,7 @@ export default {
               });
           }
         } else {
-          this.$Message.warning('请先完善信息!');
+          this.$Message.warning('请先完善信息');
         }
       });
     },
@@ -575,10 +571,10 @@ export default {
           if (this.modalRole == true) {
             this.modalRole = false;
             this.targetKeys = [];
-            this.$Message.info('修改成功!');
+            this.$Message.info('修改成功');
           } else if (this.modalAdd == true) {
             this.modalAdd = false;
-            this.$Message.info('保存成功!');
+            this.$Message.info('保存成功');
             this.step = 'userAdd';
             this.isDisable = false;
             this.isCreated = true;
@@ -649,7 +645,8 @@ export default {
             role.push({
               key: res[i].id.toString(),
               label: res[i].name,
-              description: res[i].roleDesc
+              description: res[i].roleDesc,
+              disabled: res[i].status !== 'AVAILABLE'
               // disabled: Math.random() * 3 < 1
             });
           }

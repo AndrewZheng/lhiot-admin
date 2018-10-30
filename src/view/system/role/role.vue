@@ -185,12 +185,13 @@ export default {
                 on: {
                   'on-ok': () => {
                     vm.$emit('on-delete', params);
-                    vm.$emit(
-                      'input',
-                      params.tableData.filter(
-                        (item, index) => index !== params.row.initRowIndex
-                      )
-                    );
+                    // 删除前要判断是否满足删除条件
+                    // vm.$emit(
+                    //   'input',
+                    //   params.tableData.filter(
+                    //     (item, index) => index !== params.row.initRowIndex
+                    //   )
+                    // );
                   }
                 }
               });
@@ -293,11 +294,14 @@ export default {
           data: this.rowData
         })
         .then(res => {
-          this.loadingBtn = false;
-          this.modalEdit = false;
-          this.$Message.info('删除成功!');
-          // 刷新表格数据
-          this.getTableData();
+          // 返回结果为0则不能删除
+          if (res == 0) {
+            this.$Message.error('已关联用户 删除失败');
+          } else {
+            this.$Message.info('删除成功');
+            // 刷新表格数据
+            this.getTableData();
+          }
         });
     },
     handleDeleteBatch() {
@@ -309,14 +313,17 @@ export default {
             method: 'delete'
           })
           .then(res => {
-            this.loadingBtn = false;
-            this.modalEdit = false;
-            this.$Message.info('删除成功!');
-            // 刷新表格数据
-            this.getTableData();
+            // 返回结果为0则不能删除
+            if (res == 0) {
+              this.$Message.error('有角色已关联用户 删除失败');
+            } else {
+              this.$Message.info('删除成功');
+              // 刷新表格数据
+              this.getTableData();
+            }
           });
       } else {
-        this.$Message.error('请至少选择一行记录!');
+        this.$Message.error('请至少选择一行记录');
       }
     },
     onSelectionChange(selection) {
@@ -346,7 +353,7 @@ export default {
               })
               .then(res => {
                 this.modalEdit = false;
-                this.$Message.info('保存成功!');
+                this.$Message.info('保存成功');
                 this.step = 'menuAdd';
                 this.isDisable = false;
                 this.isCreated = true;
@@ -366,7 +373,7 @@ export default {
               .then(res => {
                 this.loadingBtn = false;
                 this.modalEdit = false;
-                this.$Message.info('更新成功!');
+                this.$Message.info('更新成功');
                 // 清空rowData对象
                 this.resetRowData();
                 // 刷新表格数据
@@ -374,7 +381,7 @@ export default {
               });
           }
         } else {
-          this.$Message.warning('请先完善信息!');
+          this.$Message.warning('请先完善信息');
         }
       });
     },
@@ -475,10 +482,10 @@ export default {
           if (this.modalMenu == true) {
             this.modalMenu = false;
             this.targetKeys = [];
-            this.$Message.info('修改成功!');
+            this.$Message.info('修改成功');
           } else if (this.modalAdd == true) {
             this.modalAdd = false;
-            this.$Message.info('保存成功!');
+            this.$Message.info('保存成功');
             this.isCreated = true;
           }
         });
