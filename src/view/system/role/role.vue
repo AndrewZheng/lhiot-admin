@@ -13,8 +13,8 @@
       @on-relation="handleMenu"
       >
        <div slot="searchCondition">
-          <Input  placeholder="角色名称" class="search-input" v-model="searchRowData.name" clearable/>
-          <Select v-model="searchRowData.status" class="search-col" placeholder="角色状态" clearable>
+          <Input  placeholder="角色名称" class="search-input" v-model="searchRowData.name" style="width: auto" clearable/>
+          <Select v-model="searchRowData.status" class="search-col" placeholder="角色状态" style="width: auto" clearable>
             <Option v-for="item in roleStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
           </Select>
           <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button>
@@ -42,7 +42,7 @@
         @on-ok="handleAddOrEditOk('formValidate')"
         @on-cancel="handleCancel">
         <p slot="header">
-            <span>{{rowData.id==0?'创建角色':'编辑角色'}}</span>
+            <span>{{rowData.id==''?'创建角色':'编辑角色'}}</span>
         </p>
        <div class="modal-content">
          <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
@@ -123,6 +123,15 @@ import { buildMenu, convertTree, setTreeNodeChecked } from '@/libs/util';
 import { dedupe } from '@/libs/tools';
 import _ from 'lodash';
 
+const roleRowData = {
+  name: '',
+  status: '',
+  roleDesc: '',
+  createBy: '',
+  createAt: '',
+  menuids: ''
+};
+
 export default {
   name: 'role_page',
   inject: ['reload'],
@@ -185,12 +194,13 @@ export default {
                 on: {
                   'on-ok': () => {
                     vm.$emit('on-delete', params);
-                    vm.$emit(
-                      'input',
-                      params.tableData.filter(
-                        (item, index) => index !== params.row.initRowIndex
-                      )
-                    );
+                    // 删除前要判断是否满足删除条件
+                    // vm.$emit(
+                    //   'input',
+                    //   params.tableData.filter(
+                    //     (item, index) => index !== params.row.initRowIndex
+                    //   )
+                    // );
                   }
                 }
               });
@@ -206,18 +216,8 @@ export default {
       modalAdd: false,
       loading: true,
       loadingBtn: true,
-      rowData: {
-        name: '',
-        status: '',
-        roleDesc: '',
-        createBy: '',
-        createAt: '',
-        menuids: ''
-      },
-      searchRowData: {
-        name: '',
-        status: ''
-      },
+      rowData: roleRowData,
+      searchRowData: roleRowData,
       modalMenu: false,
       menuList: [],
       originMenuList: [],
@@ -293,11 +293,14 @@ export default {
           data: this.rowData
         })
         .then(res => {
-          this.loadingBtn = false;
-          this.modalEdit = false;
-          this.$Message.info('删除成功!');
-          // 刷新表格数据
-          this.getTableData();
+          // 返回结果为0则不能删除
+          if (res == 0) {
+            this.$Message.error('已关联用户 删除失败');
+          } else {
+            this.$Message.info('删除成功');
+            // 刷新表格数据
+            this.getTableData();
+          }
         });
     },
     handleDeleteBatch() {
@@ -309,14 +312,17 @@ export default {
             method: 'delete'
           })
           .then(res => {
-            this.loadingBtn = false;
-            this.modalEdit = false;
-            this.$Message.info('删除成功!');
-            // 刷新表格数据
-            this.getTableData();
+            // 返回结果为0则不能删除
+            if (res == 0) {
+              this.$Message.error('有角色已关联用户 删除失败');
+            } else {
+              this.$Message.info('删除成功');
+              // 刷新表格数据
+              this.getTableData();
+            }
           });
       } else {
-        this.$Message.error('请至少选择一行记录!');
+        this.$Message.error('请至少选择一行记录');
       }
     },
     onSelectionChange(selection) {
@@ -346,7 +352,7 @@ export default {
               })
               .then(res => {
                 this.modalEdit = false;
-                this.$Message.info('保存成功!');
+                this.$Message.info('保存成功');
                 this.step = 'menuAdd';
                 this.isDisable = false;
                 this.isCreated = true;
@@ -366,7 +372,7 @@ export default {
               .then(res => {
                 this.loadingBtn = false;
                 this.modalEdit = false;
-                this.$Message.info('更新成功!');
+                this.$Message.info('更新成功');
                 // 清空rowData对象
                 this.resetRowData();
                 // 刷新表格数据
@@ -374,7 +380,7 @@ export default {
               });
           }
         } else {
-          this.$Message.warning('请先完善信息!');
+          this.$Message.warning('请先完善信息');
         }
       });
     },
@@ -475,10 +481,10 @@ export default {
           if (this.modalMenu == true) {
             this.modalMenu = false;
             this.targetKeys = [];
-            this.$Message.info('修改成功!');
+            this.$Message.info('修改成功');
           } else if (this.modalAdd == true) {
             this.modalAdd = false;
-            this.$Message.info('保存成功!');
+            this.$Message.info('保存成功');
             this.isCreated = true;
           }
         });
@@ -540,21 +546,10 @@ export default {
       this.getTableData();
     },
     resetRowData() {
-      this.rowData = {
-        id: 0,
-        name: '',
-        status: '',
-        roleDesc: '',
-        createBy: '',
-        createAt: '',
-        menuids: ''
-      };
+      this.rowData = roleRowData;
     },
     resetSearchRowData() {
-      this.searchRowData = {
-        name: '',
-        status: ''
-      };
+      this.searchRowData = roleRowData;
     },
     getTableData() {
       getRoleData({
