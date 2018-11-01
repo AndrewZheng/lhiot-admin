@@ -905,6 +905,10 @@ export default {
         });
     },
     handleDownload() {
+      // 表格数据导出字段翻译
+      this.tableData.forEach(item => {
+          item['type'] == 'PARENT' ? item['type'] = '父级菜单' : item['type'] = '子级菜单';
+      });
       this.$refs.tables.handleDownload({
         filename: `菜单-${new Date().valueOf()}`,
         data: this.tableData

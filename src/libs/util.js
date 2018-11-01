@@ -593,13 +593,13 @@ export const changeObjKeyName = (obj, oldKey, newKey) => {
       if (oldKey.length > newKey.length) {
         newKey.forEach((value, index) => {
           // 复制原有key的值，并把替换为新的key名称
-          obj[i][newKey[index].toString()] = obj[i][oldKey[index].toString()];
+          obj[i][newKey[index]] = obj[i][oldKey[index]];
           // 删除原有的key字段
           delete obj[i][oldKey[index]];
         });
       } else { // 如果oldKey数组长度 < newKey数组长度，则多余的那个newKey名称不替换,如果newKey数组长度 = oldKey数组，则全部替换
         oldKey.forEach((value, index) => {
-          obj[i][newKey[index].toString()] = obj[i][oldKey[index].toString()];
+          obj[i][newKey[index]] = obj[i][oldKey[index]];
           delete obj[i][oldKey[index]];
         });
       }
