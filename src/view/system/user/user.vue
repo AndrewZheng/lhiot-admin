@@ -13,9 +13,9 @@
       @on-relation="handleRole"
       >
         <div slot="searchCondition">
-          <Input  placeholder="姓名" class="search-input" v-model="searchRowData.name" clearable/>
-          <Input  placeholder="电话" class="search-input" v-model="searchRowData.tel" clearable/>
-          <Select v-model="searchRowData.status" class="search-col"  placeholder="用户状态" clearable>
+          <Input  placeholder="姓名" class="search-input" v-model="searchRowData.name" style="width: auto" clearable/>
+          <Input  placeholder="电话" class="search-input" v-model="searchRowData.tel" style="width: auto" clearable/>
+          <Select v-model="searchRowData.status" class="search-col"  placeholder="用户状态" style="width: auto" clearable>
             <Option v-for="item in userStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
           </Select>
           <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button>
@@ -44,7 +44,7 @@
         @on-cancel="handleCancel"
         ref="formValidate" :model="rowData" :rules="ruleValidate">
         <p slot="header">
-            <span>{{rowData.id==0?'创建用户':'编辑用户'}}</span>
+            <span>{{rowData.id==''?'创建用户':'编辑用户'}}</span>
         </p>
        <div class="modal-content">
          <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
@@ -186,6 +186,30 @@ import { getUserData, getRoleList, getRelationRoles } from '@/api/system';
 import ImageCropper from '_c/ImageCropper';
 import _ from 'lodash';
 
+const userRowData = {
+  id: '',
+  name: '',
+  account: '',
+  password: '',
+  passwdCheck: '',
+  tel: '',
+  avatarUrl: '',
+  status: '',
+  createAt: '',
+  lastLoginAt: '',
+  remark: ''
+};
+
+const validatePassCheck = (rule, value, callback) => {
+  if (value === '') {
+    callback(new Error('请再次输入您的密码'));
+  } else if (value !== this.rowData.password) {
+    callback(new Error('两次输入密码不匹配'));
+  } else {
+    callback();
+  }
+};
+
 export default {
   name: 'user_page',
   components: {
@@ -193,15 +217,6 @@ export default {
     ImageCropper
   },
   data() {
-    const validatePassCheck = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请再次输入您的密码'));
-      } else if (value !== this.rowData.password) {
-        callback(new Error('两次输入密码不匹配'));
-      } else {
-        callback();
-      }
-    };
     return {
       columns: [
         {
@@ -300,24 +315,8 @@ export default {
       modalAdd: false,
       loading: true,
       loadingBtn: true,
-      rowData: {
-        id: '',
-        name: '',
-        account: '',
-        password: '',
-        passwdCheck: '',
-        tel: '',
-        avatarUrl: '',
-        status: '',
-        createAt: '',
-        lastLoginAt: '',
-        remark: ''
-      },
-      searchRowData: {
-        name: '',
-        tel: '',
-        status: ''
-      },
+      rowData: userRowData,
+      searchRowData: userRowData,
       modalRole: false,
       step: 'userAdd',
       isDisable: true,
@@ -604,26 +603,10 @@ export default {
       this.getTableData();
     },
     resetRowData() {
-      this.rowData = {
-        id: '',
-        name: '',
-        account: '',
-        password: '',
-        passwdCheck: '',
-        tel: '',
-        avatarUrl: '',
-        status: '',
-        createAt: '',
-        lastLoginAt: '',
-        remark: ''
-      };
+      this.rowData = userRowData;
     },
     resetSearchRowData() {
-      this.searchRowData = {
-        name: '',
-        tel: '',
-        status: ''
-      };
+      this.searchRowData = userRowData;
     },
     getTableData() {
       getUserData({

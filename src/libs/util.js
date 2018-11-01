@@ -577,3 +577,33 @@ export const getParent= (array, childs, ids) => {
 
   return false;
 };
+
+/**
+ * @param {*} obj 对象
+ * @param {*} oldKey 原有的key名称数组
+ * @param {*} newKey 新的key名称数组
+ * @description 批量修改原有对象key的名称（两个key名称数组长度必须一致,长度不一致的多余的key不替换）
+ */
+export const changeObjKeyName = (obj, oldKey, newKey) => {
+  if (obj.length ===0) return [];
+  else if (oldKey.length === 0 && newKey.length === 0) return obj;
+  else {
+    for (var i = 0; i < obj.length; i++) {
+      // 如果oldKey数组长度 > newKey数组长度，则多余的那个oldKey名称不替换
+      if (oldKey.length > newKey.length) {
+        newKey.forEach((value, index) => {
+          // 复制原有key的值，并把替换为新的key名称
+          obj[i][newKey[index].toString()] = obj[i][oldKey[index].toString()];
+          // 删除原有的key字段
+          delete obj[i][oldKey[index]];
+        });
+      } else { // 如果oldKey数组长度 < newKey数组长度，则多余的那个newKey名称不替换,如果newKey数组长度 = oldKey数组，则全部替换
+        oldKey.forEach((value, index) => {
+          obj[i][newKey[index].toString()] = obj[i][oldKey[index].toString()];
+          delete obj[i][oldKey[index]];
+        });
+      }
+    }
+    return obj;
+  }
+};

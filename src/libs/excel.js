@@ -1,5 +1,6 @@
 /* eslint-disable */
 import XLSX from 'xlsx';
+import JSZip from 'jszip';
 
 function auto_width(ws, data){
     /*set worksheet max width per col*/
@@ -111,3 +112,4 @@ export default {
   export_json_to_excel,
   read
 }
+

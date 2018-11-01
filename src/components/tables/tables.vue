@@ -2,7 +2,7 @@
   <div>
     <div v-if="searchable && searchPlace === 'top'" class="search-con search-con-top">
       <Row :gutter="24" type="flex" align="top" justify="space-between">
-        <i-col span="18">
+        <i-col span="12">
           <!-- 下拉搜索 -->
           <!-- <Select v-model="searchKey" class="search-col">
             <Option v-for="item in columns" v-if="item.key !== 'handle' && item.type!=='selection'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
@@ -13,7 +13,7 @@
           <!-- 自定义搜索条件 -->
           <slot name="searchCondition"></slot>
         </i-col>
-        <i-col span="6">
+        <i-col span="12">
           <Row :gutter="24" type="flex" align="top" justify="end">
             <i-col span="24">
               <slot name="operations"></slot>
@@ -67,7 +67,11 @@
 <script>
 import TablesEdit from './edit.vue';
 import handleBtns from './handle-btns';
+import excel from '@/libs/excel';
+import zip from '@/libs/zip';
 import './index.less';
+// import './common.less';
+
 export default {
   name: 'Tables',
   props: {
@@ -148,6 +152,14 @@ export default {
     searchPlace: {
       type: String,
       default: 'top'
+    },
+    filename: {
+      type: String,
+      default: '导出'
+    },
+    exportType: {
+      type: String,
+      default: 'xlsx'
     }
   },
   /**
@@ -164,7 +176,8 @@ export default {
       edittingText: '',
       searchValue: '',
       searchKey: '',
-      searchKeyColumns: this.cloumn
+      exportTitle: [],
+      exportKey: []
     };
   },
   methods: {
@@ -240,6 +253,70 @@ export default {
     },
     exportCsv (params) {
       this.$refs.tablesMain.exportCsv(params);
+    },
+    exportExcel (params) {
+      // this.columns.forEach(item => {
+      //   if (item.key !== 'handle' && item.type!=='selection') {
+      //     this.exportTitle.push(item['title']);
+      //     this.exportKey.push(item['key']);
+      //   }
+      // });
+      if (params.data.length) {
+        const params1 = {
+          title: this.exportTitle,
+          key: this.exportKey,
+          data: params.data,
+          autoWidth: true,
+          filename: params.filename
+        };
+        excel.export_array_to_excel(params1);
+        // 清空数据
+        this.exportTitle = [];
+        this.exportKey = [];
+      } else {
+        this.$Message.info('表格数据不能为空！');
+      }
+    },
+    exportZip (params) {
+      // this.columns.forEach(item => {
+      //   if (item.key !== 'handle' && item.type!=='selection') {
+      //     this.exportTitle.push(item['title']);
+      //     this.exportKey.push(item['key']);
+      //   }
+      // });
+      const data = this.formatJson(this.exportKey, params.data);
+      const params1 = {
+        th: this.exportTitle,
+        jsonData: data,
+        txtName: params.filename,
+        zipName: params.filename
+      };
+      zip.export_txt_to_zip(params1);
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]));
+    },
+    handleDownload(params) {
+      this.columns.forEach(item => {
+        if (item.key !== 'handle' && item.type!=='selection') {
+          this.exportTitle.push(item['title']);
+          this.exportKey.push(item['key']);
+        }
+      });
+      switch (this.exportType) {
+        case 'xlsx':
+          this.exportExcel(params);
+          break;
+        case 'csv':
+          this.exportCsv({
+           filename: params.filename
+          });
+          break;
+        case 'zip':
+          // this.$Message.info('开发中...');
+          this.exportZip(params);
+          break;
+      }
     },
     clearCurrentRow () {
       this.$refs.talbesMain.clearCurrentRow();

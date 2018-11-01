@@ -13,8 +13,8 @@
       @on-relation="handleMenu"
       >
        <div slot="searchCondition">
-          <Input  placeholder="角色名称" class="search-input" v-model="searchRowData.name" clearable/>
-          <Select v-model="searchRowData.status" class="search-col" placeholder="角色状态" clearable>
+          <Input  placeholder="角色名称" class="search-input" v-model="searchRowData.name" style="width: auto" clearable/>
+          <Select v-model="searchRowData.status" class="search-col" placeholder="角色状态" style="width: auto" clearable>
             <Option v-for="item in roleStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
           </Select>
           <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button>
@@ -42,7 +42,7 @@
         @on-ok="handleAddOrEditOk('formValidate')"
         @on-cancel="handleCancel">
         <p slot="header">
-            <span>{{rowData.id==0?'创建角色':'编辑角色'}}</span>
+            <span>{{rowData.id==''?'创建角色':'编辑角色'}}</span>
         </p>
        <div class="modal-content">
          <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
@@ -122,6 +122,15 @@ import { getRoleData, getMenuList, getRelationMenu } from '@/api/system';
 import { buildMenu, convertTree, setTreeNodeChecked } from '@/libs/util';
 import { dedupe } from '@/libs/tools';
 import _ from 'lodash';
+
+const roleRowData = {
+  name: '',
+  status: '',
+  roleDesc: '',
+  createBy: '',
+  createAt: '',
+  menuids: ''
+};
 
 export default {
   name: 'role_page',
@@ -207,18 +216,8 @@ export default {
       modalAdd: false,
       loading: true,
       loadingBtn: true,
-      rowData: {
-        name: '',
-        status: '',
-        roleDesc: '',
-        createBy: '',
-        createAt: '',
-        menuids: ''
-      },
-      searchRowData: {
-        name: '',
-        status: ''
-      },
+      rowData: roleRowData,
+      searchRowData: roleRowData,
       modalMenu: false,
       menuList: [],
       originMenuList: [],
@@ -547,21 +546,10 @@ export default {
       this.getTableData();
     },
     resetRowData() {
-      this.rowData = {
-        id: 0,
-        name: '',
-        status: '',
-        roleDesc: '',
-        createBy: '',
-        createAt: '',
-        menuids: ''
-      };
+      this.rowData = roleRowData;
     },
     resetSearchRowData() {
-      this.searchRowData = {
-        name: '',
-        status: ''
-      };
+      this.searchRowData = roleRowData;
     },
     getTableData() {
       getRoleData({
