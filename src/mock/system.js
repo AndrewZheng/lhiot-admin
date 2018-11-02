@@ -4,7 +4,7 @@ export const getRouteListById = req => {
   const { pid } = params;
   let routes = {};
   switch (pid) {
-    case '1':
+    case '11':
       routes = {
         'array': [{
             'id': '1',
@@ -185,7 +185,21 @@ export const getRouteListById = req => {
       break;
     case '7':
       routes = {
-        'array': [{
+        'array': [
+          {
+            'id': '1',
+            'parentid': 0,
+            'code': 'home',
+            'path': '/home',
+            'component': 'Home',
+            'meta': {
+              'title': '首页',
+              'icon': 'ios-home',
+              hideInMenu: true,
+              notCache: true
+            }
+          },
+          {
             'id': '2',
             'parentid': 0,
             'code': 'doc',
@@ -241,7 +255,7 @@ export const getSystemList = req => {
   return {
     'array': [{
         'pid': null,
-        'id': 1,
+        'id': 7,
         'name': '拼团小程序',
         'code': 'team-buy-system',
         'status': null,
@@ -250,7 +264,7 @@ export const getSystemList = req => {
       },
       {
         'pid': null,
-        'id': 7,
+        'id': 11,
         'name': '后台管理系统',
         'code': 'system',
         'status': null,
@@ -268,7 +282,7 @@ export const getMenuList = req => {
         'parentid': null,
         'code': 'system',
         'sort': 2,
-        'name': '后台管理系统',
+        'title': '后台管理系统',
         'meta': {
           'title': '后台管理系统',
           'icon': 'logo-steam'
@@ -281,7 +295,7 @@ export const getMenuList = req => {
         'sort': 1,
         'code': 'home',
         'path': '/home',
-        'name': '首页',
+        'title': '首页',
         'meta': {
           'title': '首页',
           'icon': 'ios-home'
@@ -294,7 +308,7 @@ export const getMenuList = req => {
         'sort': 11,
         'code': 'system',
         'path': '/system',
-        'name': '系统管理',
+        'title': '系统管理',
         'meta': {
           'title': '系统管理',
           'icon': 'ios-settings'
@@ -307,7 +321,7 @@ export const getMenuList = req => {
         'sort': 12,
         'code': 'menu',
         'path': 'menu',
-        'name': '菜单管理',
+        'title': '菜单管理',
         'meta': {
           'title': '菜单管理',
           'icon': 'ios-settings'
@@ -320,7 +334,7 @@ export const getMenuList = req => {
         'sort': 13,
         'code': 'config',
         'path': 'config',
-        'name': '参数管理',
+        'title': '参数管理',
         'meta': {
           'title': '参数管理',
           'icon': 'md-settings'
@@ -333,7 +347,7 @@ export const getMenuList = req => {
         'sort': 14,
         'code': 'permission',
         'path': 'permission',
-        'name': '权限管理',
+        'title': '权限管理',
         'meta': {
           'title': '权限管理',
           'icon': 'md-lock'
@@ -346,7 +360,7 @@ export const getMenuList = req => {
         'sort': 15,
         'code': 'role',
         'path': 'role',
-        'name': '角色管理',
+        'title': '角色管理',
         'meta': {
           'title': '角色管理',
           'icon': 'ios-people'
@@ -359,7 +373,7 @@ export const getMenuList = req => {
         'sort': 20,
         'code': 'user',
         'path': 'user',
-        'name': '用户管理',
+        'title': '用户管理',
         'meta': {
           'title': '用户管理',
           'icon': 'md-person'

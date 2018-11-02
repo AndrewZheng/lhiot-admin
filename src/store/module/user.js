@@ -92,10 +92,10 @@ const actions = {
     account = account.trim();
     return new Promise((resolve, reject) => {
       login({ account, password }).then(res => {
-        console.log('res from backend: ', res.XSessionId);
-        commit('setToken', res.XSessionId);
+        // console.log('res from backend: ', res.XSessionId);
+        // commit('setToken', res.XSessionId);
         console.log('step 1');
-        // commit('setToken', res.token);
+        commit('setToken', res.token);
         resolve();
       }).catch(err => {
         reject(err);

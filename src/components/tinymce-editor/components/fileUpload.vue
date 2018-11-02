@@ -14,7 +14,7 @@
          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
             <i-col span="4">文件类型</i-col>
             <i-col span="20">
-              <Select v-model="fileObj.fileType" class="search-col" placeholder="" clearable>
+              <Select v-model="fileObj.fileType" class="search-col" placeholder="">
                 <Option value="video">视频</Option>
                 <Option value="audio">音频</Option>
               </Select>
@@ -50,7 +50,7 @@
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="8">封面上传</i-col>
               <i-col span="16">
-                <img-upload ref='posterUpload'
+                <img-upload ref="posterUpload"
                 :show-upload-list="false"
                 :default-list="defaultList"
                 :max-size="2048"
@@ -67,11 +67,11 @@
           <i-col span="10">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
               <i-col span="4">宽度</i-col>
-              <i-col span="12"><Input v-model="fileObj.width" placeholder=""  clearable /></i-col>
+              <i-col span="12"><Input v-model="fileObj.width" placeholder="默认值 300"  clearable /></i-col>
             </Row>
             <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
               <i-col span="4">高度</i-col>
-              <i-col span="12"><Input v-model="fileObj.height" placeholder="" clearable /></i-col>
+              <i-col span="12"><Input v-model="fileObj.height" placeholder="默认值 150" clearable /></i-col>
             </Row>
           </i-col>
         </Row>
@@ -107,6 +107,11 @@ export default {
       imgList: [],
       defaultList: []
     };
+  },
+  watch: {
+    imgList(val, oldVal) {
+      console.log(`new: ${val}, old: ${oldVal}`);
+    }
   },
   created() {},
   mounted() {
@@ -163,6 +168,11 @@ export default {
       });
     },
     handleSubmit() {
+      // 校验数据
+      if (!this.fileObj.fileUrl) {
+        this.$Message.warning('请先上传文件');
+        return false;
+      }
       // 组织对象
       this.fileObj.poster= this.imgList.length>0 ? this.imgList[0]: '';
       console.log('imgList: ', this.imgList);
@@ -177,11 +187,19 @@ export default {
       };
       this.imgList = [];
       this.modalUpload = false;
-      // this.$refs.posterUpload.clearFiles();
+      this.$refs.posterUpload.clearFiles();
     }
   }
 };
 </script>
 
 <style rel='stylesheet/scss' lang='scss' scoped>
+
+.ivu-select-dropdown-list{
+  padding: 4px;
+
+  .ivu-select-item{
+    padding: 6px;
+  }
+}
 </style>

@@ -2,7 +2,7 @@
 <div>
     <div class="demo-upload-list" v-for="item in uploadList" :key="item.uid" :style="demoStyle">
         <template v-if="item.status === 'finished'">
-            <img :src="item.response.fileUrl">
+            <img :src="item.response.fileUrl" />
             <div class="demo-upload-list-cover">
                 <Icon type="ios-eye-outline" @click.native="handlePreView(item)"></Icon>
                 <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
@@ -26,15 +26,15 @@
         :accept="accept"
         :format="format"
         :max-size="maxSize"
-        :before-upload="beforeUpload?beforeUpload:handleBeforeUpload"
-        :on-progress="onProgress?onProgress:handleProgress"
-        :on-success="onSuccess?onSuccess:handleSuccess"
-        :on-error="onError?onError:handleError"
-        :on-preview="onPreview?onPreview:handlePreView"
-        :on-remove="onRemove?onRemove:handleRemove"
+        :before-upload="handleBeforeUpload"
+        :on-progress="handleProgress"
+        :on-success="handleSuccess"
+        :on-error="handleError"
+        :on-preview="handlePreView"
+        :on-remove="handleRemove"
         :default-file-list="defaultList"
-        :on-format-error="onFormatError?onFormatError:handleFormatError"
-        :on-exceeded-size="onExceededSize?onExceededSize:handleMaxSize"
+        :on-format-error="handleFormatError"
+        :on-exceeded-size="handleMaxSize"
         :style="demoStyle3"
         >
         <div :style="demoStyle2">
@@ -43,7 +43,7 @@
         </div>
     </Upload>
 
-    <Modal title="图片预览" v-model="visible" draggable style="text-align:center;">
+    <Modal title="图片预览" v-model="visible" draggable style="text-align:center;" :z-index='1024'>
         <img :src="imgPreview" v-if="visible" style="max-width:100%;">
     </Modal>
 </div>
@@ -203,7 +203,9 @@ export default {
       this.$emit('update:img-list', val);
     }
   },
-  created() {},
+  created() {
+    // this.onSuccess=this.onSuccess? this.onSuccess: this.handleSuccess;
+  },
   mounted() {
     this.uploadList = this.$refs.upload.fileList;
     console.log('uploadList init:', this.uploadList);
@@ -257,6 +259,11 @@ export default {
         });
       }
       return check;
+    },
+    clearFiles() {
+      // 清空已上传的列表
+      this.uploadList=[];
+      this.$refs.upload.clearFiles();
     }
   },
   components: {}

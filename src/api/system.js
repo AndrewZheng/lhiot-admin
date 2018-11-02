@@ -6,7 +6,7 @@ import Vue from 'vue';
  */
 export const getRouterById = (pid) => {
   return Vue.prototype.$http.request({
-    url: '/ims-menu/list/pid', // get_route_list
+    url: 'get_route_list', // get_route_list /ims-menu/list/pid
     params: {
       pid: pid
     },
@@ -16,14 +16,14 @@ export const getRouterById = (pid) => {
 
 export const getSystemList = () => {
   return Vue.prototype.$http.request({
-    url: '/ims-menu/list/systems', // get_system_list
+    url: 'get_system_list', // get_system_list /ims-menu/list/systems
     method: 'get'
   });
 };
 
 export const getMenuList = () => {
   return Vue.prototype.$http.request({
-    url: '/ims-menu/list/all', // get_menu_list
+    url: 'get_menu_list', // get_menu_list /ims-menu/list/all
     method: 'get'
   });
 };
@@ -41,16 +41,16 @@ export const getRoleData = ({ page, rows }) => {
     rows
   };
 
-  // return Vue.prototype.$http.request({
-  //   url: 'get_role_data',
-  //   params: data,
-  //   method: 'get'
-  // });
   return Vue.prototype.$http.request({
-    url: '/ims-role/pages',
-    data: data,
-    method: 'post'
+    url: 'get_role_data',
+    params: data,
+    method: 'get'
   });
+  // return Vue.prototype.$http.request({
+  //   url: '/ims-role/pages',
+  //   data: data,
+  //   method: 'post'
+  // });
 };
 
 export const getRoleList = () => {
@@ -73,14 +73,14 @@ export const getUserData = ({ page, rows }) => {
     rows
   };
 
-  // return Vue.prototype.$http.request({
-  //   url: 'get_user_data',
-  //   params: data,
-  //   method: 'get'
-  // });
   return Vue.prototype.$http.request({
-    url: '/admin/pages',
-    data: data,
-    method: 'post'
+    url: 'get_user_data',
+    params: data,
+    method: 'get'
   });
+  // return Vue.prototype.$http.request({
+  //   url: '/admin/pages',
+  //   data: data,
+  //   method: 'post'
+  // });
 };
