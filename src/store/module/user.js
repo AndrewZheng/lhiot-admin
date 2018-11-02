@@ -94,6 +94,7 @@ const actions = {
       login({ account, password }).then(res => {
         console.log('res from backend: ', res.XSessionId);
         commit('setToken', res.XSessionId);
+        console.log('step 1');
         // commit('setToken', res.token);
         resolve();
       }).catch(err => {
@@ -117,7 +118,7 @@ const actions = {
   getUserInfo({ state, commit, dispatch }) {
     return new Promise((resolve, reject) => {
       getUserInfo(state.token).then(res => {
-        console.log('step 1');
+        console.log('step 3');
         commit('setAvator', res.avatar);
         commit('setUserName', res.name);
         commit('setUserId', res.id);
@@ -144,7 +145,7 @@ const actions = {
   },
   // 根据当前用户生成系统菜单（右上角系统菜单 + 左边栏非系统菜单）
   async generateAllMenus({ dispatch }) {
-    console.log('step 3');
+    console.log('step 2');
     await dispatch('getUserInfo');
     await dispatch('getSystemList');
     let pid=0;
