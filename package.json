@@ -19,10 +19,12 @@
     "cropperjs": "^1.2.2",
     "crypto-js": "^3.1.9-1",
     "echarts": "^4.0.4",
+    "file-saver": "^2.0.0-rc.4",
     "html2canvas": "^1.0.0-alpha.12",
     "iview": "^3.0.0",
     "iview-area": "^1.5.17",
     "js-cookie": "^2.2.0",
+    "jszip": "^3.1.5",
     "lockr": "^0.8.4",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
@@ -54,6 +56,7 @@
     "mockjs": "^1.0.1-beta3",
     "node-sass": "^4.9.3",
     "sass-loader": "^7.1.0",
+    "script-loader": "^0.7.2",
     "vue-template-compiler": "^2.5.13"
   },
   "browserslist": [
