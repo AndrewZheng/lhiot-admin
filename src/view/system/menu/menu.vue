@@ -12,10 +12,20 @@
           v-model="tableData"
           :loading="loading"
           :columns="columns"
+          :exportType="exportType"
           @on-delete="handleDelete"
           @on-view="handleView"
           @on-edit="handleEdit"
           @on-edit-permission="handleEditPermission">
+            <div slot="searchCondition">
+              <Input  placeholder="菜单名称" class="search-input" v-model="searchRowData.name" style="width: auto" clearable/>
+              <Select v-model="searchRowData.type" class="search-col"  placeholder="菜单类型" style="width: auto" clearable>
+                <Option value="PARENT">父级菜单</Option>
+                <Option value="SON">子级菜单</Option>
+              </Select>
+              <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button>
+              <Button v-waves @click="handleClear" class="search-btn" type="info"><Icon type="md-refresh"/>&nbsp;清除条件</Button>
+            </div>
             <div slot="operations">
                 <Button v-waves type="success" class="mr5" @click="addChildren">
                   <Icon type="md-add"/>
@@ -25,7 +35,15 @@
                   <Icon type="md-add"/>
                   父菜单
                 </Button>
-                <Button v-waves type="primary" @click="exportExcel">导出为Csv文件</Button>
+                <Button v-waves type="primary" @click="exportExcel">导出</Button>
+                <!-- 多类型导出 -->
+                <BookTypeOption v-model="exportType" class="mr5"/>
+                <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>多类型导出</Button>
+
+                <Button v-waves type="success" class="mr5" @click="handleUploadExcel">
+                  <Icon type="md-cloud-upload"/>
+                  导入Excel
+                </Button>
             </div>
           </tables>
           <div style="margin: 10px;overflow: hidden">
@@ -91,49 +109,49 @@
 
   <!--创建/编辑菜单 -->
   <Modal
-        v-model="modalEdit"
-        :mask-closable="false"
-        >
-        <p slot="header">
-            <span>{{rowData.id==0?'创建菜单':'编辑菜单'}}</span>
-        </p>
-       <div class="modal-content">
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+      v-model="modalEdit"
+      :mask-closable="false"
+      >
+      <p slot="header">
+          <span>{{rowData.id==''?'创建菜单':'编辑菜单'}}</span>
+      </p>
+      <div class="modal-content">
+        <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+        <i-col span="12">
+          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+            <i-col span="4">类型</i-col>
+            <i-col span="12"><Input v-model="menuType" placeholder=""  readonly /></i-col>
+          </Row>
+        </i-col>
+        <i-col span="12">
+          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+            <i-col span="4">名称</i-col>
+            <i-col span="12"><Input v-model="rowData.name" placeholder="" clearable /></i-col>
+          </Row>
+        </i-col>
+        </Row>
+        <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-              <i-col span="4">类型</i-col>
-              <i-col span="12"><Input v-model="menuType" placeholder=""  readonly /></i-col>
-            </Row>
+          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+            <i-col span="4">编码</i-col>
+            <i-col span="12"><Input v-model="rowData.code" placeholder="" clearable /></i-col>
+          </Row>
           </i-col>
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-              <i-col span="4">名称</i-col>
-              <i-col span="12"><Input v-model="rowData.name" placeholder="" clearable /></i-col>
-            </Row>
+          <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+            <i-col span="4">排序</i-col>
+            <i-col span="12"><Input v-model="rowData.sort" placeholder="" clearable /></i-col>
+          </Row>
           </i-col>
-         </Row>
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-              <i-col span="4">编码</i-col>
-              <i-col span="12"><Input v-model="rowData.code" placeholder="" clearable /></i-col>
-            </Row>
-           </i-col>
-           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-              <i-col span="4">排序</i-col>
-              <i-col span="12"><Input v-model="rowData.sort" placeholder="" clearable /></i-col>
-            </Row>
-           </i-col>
-         </Row>
-       </div>
-       <div slot="footer">
-          <Button type="primary" @click="handleOk" :loading="loadingBtn">
-            <span v-if="!loadingBtn">确定</span>
-            <span v-else>确定中...</span>
-          </Button>
-       </div>
-    </Modal>
+        </Row>
+      </div>
+      <div slot="footer">
+        <Button type="primary" @click="handleOk" :loading="loadingBtn">
+          <span v-if="!loadingBtn">确定</span>
+          <span v-else>确定中...</span>
+        </Button>
+      </div>
+  </Modal>
 
     <!--创建/编辑操作权限 -->
     <Modal
@@ -197,111 +215,123 @@
        </div>
     </Modal>
     
-    <!--创建子菜单并添加操作权限 -->
-    <Modal
-        v-model="modalAdd"
-        :loading="loadingBtn"
-        :mask-closable="false"
-        @on-cancel="handleCloseAdd"
-        width="750">
-        <div class="modal-content">
-          <Tabs size="small" v-model="step">
-            <TabPane label="创建菜单" name="addMenu">
-                <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                  <i-col span="12">
-                    <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                      <i-col span="4">类型</i-col>
-                      <i-col span="12"><Input v-model="menuType" placeholder=""  readonly /></i-col>
-                    </Row>
-                  </i-col>
-                  <i-col span="12">
-                    <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                      <i-col span="4">名称</i-col>
-                      <i-col span="12"><Input v-model="rowData.name" placeholder="" clearable /></i-col>
-                    </Row>
-                  </i-col>
-                </Row>
-                <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                  <i-col span="12">
-                    <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                      <i-col span="4">编码</i-col>
-                      <i-col span="12"><Input v-model="rowData.code" placeholder="" clearable /></i-col>
-                    </Row>
-                  </i-col>
-                  <i-col span="12">
-                    <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                      <i-col span="4">排序</i-col>
-                      <i-col span="12"><Input v-model="rowData.sort" placeholder="" clearable /></i-col>
-                    </Row>
-                  </i-col>
-                </Row>
-            </TabPane>
-            <TabPane label="添加操作权限" name="addPermission" :disabled="isDisable">
-                <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                  <i-col span="12">
-                    <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                      <i-col span="4">名称</i-col>
-                      <i-col span="12"><Input v-model="operateRowData.name" placeholder="" clearable /></i-col>
-                    </Row>
-                  </i-col>
-                  <i-col span="12">
-                    <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                      <i-col span="4">类型</i-col>
-                      <i-col span="20">
-                        <CheckboxGroup v-model="requestTypeList">
-                            <Checkbox v-for="item in optionList" :label="item" :key="item">{{ item }}</Checkbox>
-                        </CheckboxGroup>
-                      </i-col>
-                    </Row>
-                  </i-col>
-                </Row>
-                <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                  <i-col span="12">
-                    <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                      <i-col span="4">路径</i-col>
-                      <i-col span="16"><Input v-model="operateRowData.antUrl" placeholder="" clearable /></i-col>
-                    </Row>
-                  </i-col>
-                  <i-col span="12">
-                    <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
-                      <i-col span="24">
-                        <Button type="success" @click="handleAdd" :loading="loadingAdd">
-                           <span v-if="!loadingAdd">添加</span>
-                           <span v-else>保存中...</span>
-                        </Button>
-                      </i-col>
-                    </Row>
-                  </i-col>
-                </Row>
+  <!--创建子菜单并添加操作权限 -->
+  <Modal
+      v-model="modalAdd"
+      :loading="loadingBtn"
+      :mask-closable="false"
+      @on-cancel="handleCloseAdd"
+      width="750">
+      <div class="modal-content">
+        <Tabs size="small" v-model="step">
+          <TabPane label="创建菜单" name="addMenu">
+              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+                <i-col span="12">
+                  <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+                    <i-col span="4">类型</i-col>
+                    <i-col span="12"><Input v-model="menuType" placeholder=""  readonly /></i-col>
+                  </Row>
+                </i-col>
+                <i-col span="12">
+                  <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+                    <i-col span="4">名称</i-col>
+                    <i-col span="12"><Input v-model="rowData.name" placeholder="" clearable /></i-col>
+                  </Row>
+                </i-col>
+              </Row>
+              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+                <i-col span="12">
+                  <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+                    <i-col span="4">编码</i-col>
+                    <i-col span="12"><Input v-model="rowData.code" placeholder="" clearable /></i-col>
+                  </Row>
+                </i-col>
+                <i-col span="12">
+                  <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+                    <i-col span="4">排序</i-col>
+                    <i-col span="12"><Input v-model="rowData.sort" placeholder="" clearable /></i-col>
+                  </Row>
+                </i-col>
+              </Row>
+          </TabPane>
+          <TabPane label="添加操作权限" name="addPermission" :disabled="isDisable">
+              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+                <i-col span="12">
+                  <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+                    <i-col span="4">名称</i-col>
+                    <i-col span="12"><Input v-model="operateRowData.name" placeholder="" clearable /></i-col>
+                  </Row>
+                </i-col>
+                <i-col span="12">
+                  <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+                    <i-col span="4">类型</i-col>
+                    <i-col span="20">
+                      <CheckboxGroup v-model="requestTypeList">
+                          <Checkbox v-for="item in optionList" :label="item" :key="item">{{ item }}</Checkbox>
+                      </CheckboxGroup>
+                    </i-col>
+                  </Row>
+                </i-col>
+              </Row>
+              <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+                <i-col span="12">
+                  <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+                    <i-col span="4">路径</i-col>
+                    <i-col span="16"><Input v-model="operateRowData.antUrl" placeholder="" clearable /></i-col>
+                  </Row>
+                </i-col>
+                <i-col span="12">
+                  <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+                    <i-col span="24">
+                      <Button type="success" @click="handleAdd" :loading="loadingAdd">
+                          <span v-if="!loadingAdd">添加</span>
+                          <span v-else>保存中...</span>
+                      </Button>
+                    </i-col>
+                  </Row>
+                </i-col>
+              </Row>
 
-                <tables ref="operate_tables"
-                search-place="top" size="small"
-                v-model="operateData"
-                :loading="loading"
-                :columns="oColumns"
-                @on-delete="handleDeleteOperate"
-                />
-            
-            </TabPane>
-        </Tabs>
-       </div>
-       <div slot="footer" v-if="step=='addMenu' && !isCreated">
-        <Button type="primary" @click="goNext">下一步</Button>
-       </div>
-       <div slot="footer" v-else>
-        <Button type="primary" @click="handleCloseAdd">关闭</Button>
-       </div>
-    </Modal>
+              <tables ref="operate_tables"
+              search-place="top" size="small"
+              v-model="operateData"
+              :loading="loading"
+              :columns="oColumns"
+              @on-delete="handleDeleteOperate"
+              />
+          
+          </TabPane>
+      </Tabs>
+      </div>
+      <div slot="footer" v-if="step=='addMenu' && !isCreated">
+      <Button type="primary" @click="goNext">下一步</Button>
+      </div>
+      <div slot="footer" v-else>
+      <Button type="primary" @click="handleCloseAdd">关闭</Button>
+      </div>
+  </Modal>
+    
+  <!-- 导入excel -->
+  <Modal
+  v-model="modalUploadExcel"
+  :mask-closable="false"
+  :width="750"
+  @on-ok="handleUploadExcelOk">
+    <UploadExcel ref="uploadExcel"></UploadExcel>
+  </Modal>
+
 </div>
 </template>
 
 <script type='text/ecmascript-6'>
 import { getMenuData, getOperateData } from '@/api/data';
 import { getMenuList } from '@/api/system';
-import { buildMenu, convertTree } from '@/libs/util';
+import { buildMenu, convertTree, changeObjKeyName } from '@/libs/util';
 import Tables from '_c/tables';
 import CommonIcon from '_c/common-icon';
 import _ from 'lodash';
+import BookTypeOption from '_c/book-type-option';
+import UploadExcel from '_c/excel';
 
 const menuColumns = [
   {
@@ -342,12 +372,13 @@ const menuColumns = [
           on: {
             'on-ok': () => {
               vm.$emit('on-delete', params);
-              vm.$emit(
-                'input',
-                params.tableData.filter(
-                  (item, index) => index !== params.row.initRowIndex
-                )
-              );
+              // 删除前要判断是否满足删除条件
+              // vm.$emit(
+              //   'input',
+              //   params.tableData.filter(
+              //     (item, index) => index !== params.row.initRowIndex
+              //   )
+              // );
             }
           }
         });
@@ -415,11 +446,32 @@ const operateColumns2 = [
   { title: '路径', key: 'antUrl', sortable: false }
 ];
 
+const menuRowData = {
+  // id: 0,
+  id: '',
+  parentid: 0,
+  // sort: 0,
+  sort: '',
+  code: '',
+  name: '',
+  type: ''
+};
+
+const operateRowData = {
+  id: 0,
+  type: '',
+  menuId: 0,
+  name: '',
+  antUrl: ''
+};
+
 export default {
   name: 'menu_pages',
   components: {
     Tables,
-    CommonIcon
+    CommonIcon,
+    BookTypeOption,
+    UploadExcel
   },
   data() {
     return {
@@ -444,27 +496,20 @@ export default {
       modalEdit: false,
       modalView: false,
       modalAdd: false,
+      modalUploadExcel: false,
       modalPermission: false,
       loading: true,
       loadingBtn: false,
       loadingAdd: false,
       isDisable: true,
       isCreated: false,
-      rowData: {
-        id: 0,
-        parentid: 0,
-        sort: 0,
-        code: '',
-        name: '',
-        type: ''
-      },
-      operateRowData: {
-        id: 0,
-        type: '',
-        menuId: 0,
-        name: '',
-        antUrl: ''
-      }
+      rowData: menuRowData,
+      operateRowData: operateRowData,
+      searchRowData: menuRowData,
+      exportType: 'xlsx',
+      downloadLoading: false,
+      filename: '',
+      autoWidth: true
     };
   },
   mounted() {
@@ -493,9 +538,9 @@ export default {
           const { id, title } = menuList[0];
           this.currentPid = id;
           this.currentName = title;
-          const map= {
-             title: 'title',
-             children: 'children'
+          const map = {
+            title: 'title',
+            children: 'children'
           };
           this.menuList = convertTree(menuList, map, true);
           console.log('after convert: ', this.menuList);
@@ -507,16 +552,16 @@ export default {
       getMenuList().then(res => {
         if (res && res.array.length > 0) {
           const menuList = buildMenu(res.array);
-          const map= {
-             title: 'title',
-             children: 'children'
+          const map = {
+            title: 'title',
+            children: 'children'
           };
           this.menuList = convertTree(menuList, map, true);
         }
       });
     },
     renderContent(h, { root, node, data }) {
-      if (data.type=='PARENT') {
+      if (data.type == 'PARENT') {
         return (
           <div
             style={{
@@ -527,7 +572,7 @@ export default {
             }}
           >
             <span>
-              <CommonIcon type='ios-folder' class="mr10" />
+              <CommonIcon type="ios-folder" class="mr10" />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -545,11 +590,9 @@ export default {
             }}
           >
             <span>
-              <CommonIcon type='ios-paper' class="mr10" />
+              <CommonIcon type="ios-paper" class="mr10" />
             </span>
-            <span>
-              {data.title}
-            </span>
+            <span>{data.title}</span>
           </div>
         );
       }
@@ -600,14 +643,14 @@ export default {
     },
     expandChildren(array) {
       array.forEach(item => {
-          if (typeof item.expand === 'undefined') {
-            this.$set(item, 'expend', true);
-          } else {
-            item.expand = !item.expand;
-          }
-          if (item.children) {
-            this.expandChildren(item.children);
-          }
+        if (typeof item.expand === 'undefined') {
+          this.$set(item, 'expend', true);
+        } else {
+          item.expand = !item.expand;
+        }
+        if (item.children) {
+          this.expandChildren(item.children);
+        }
       });
     },
     handleClick({ root, node, data }) {
@@ -630,36 +673,45 @@ export default {
       const { row } = params;
       this.rowData = row;
       this.modalView = true;
-      if (row.type=='SON') {
-        this.currentMenuId= row.id;
+      if (row.type == 'SON') {
+        this.currentMenuId = row.id;
         this.getOperateData();
       }
     },
     handleDelete(params) {
       const { row } = params;
       // 发送axios请求删除
-      this.$http.request({
-        url: '/ims-menu/'+ row.id,
-        method: 'delete'
-      }).then(res => {
-        this.$Message.info('删除成功');
-        // 刷新左边菜单
-        this.refreshMenuList();
-        // 刷新表格数据
-        this.getTableData();
-      });
+      this.$http
+        .request({
+          url: '/ims-menu/' + row.id,
+          method: 'delete'
+        })
+        .then(res => {
+          // 返回结果为0则不能删除
+          if (res == 0) {
+            this.$Message.error('已关联角色 删除失败');
+          } else {
+            this.$Message.info('删除成功');
+            // 刷新左边菜单
+            this.refreshMenuList();
+            // 刷新表格数据
+            this.getTableData();
+          }
+        });
     },
     handleDeleteOperate(params) {
       const { row } = params;
       // 发送axios请求删除
-      this.$http.request({
-        url: '/ims-operation/'+row.id,
-        method: 'delete'
-      }).then(res => {
-        this.$Message.info('删除成功');
-        // 刷新表格数据
-        this.getOperateData();
-      });
+      this.$http
+        .request({
+          url: '/ims-operation/' + row.id,
+          method: 'delete'
+        })
+        .then(res => {
+          this.$Message.info('删除成功');
+          // 刷新表格数据
+          this.getOperateData();
+        });
     },
     handleEdit(params) {
       const { row } = params;
@@ -668,8 +720,8 @@ export default {
     },
     handleEditPermission(params) {
       const { row } = params;
-      this.modalPermission=true;
-      this.currentMenuId= row.id;
+      this.modalPermission = true;
+      this.currentMenuId = row.id;
       console.log(`row.id ${row.id}`);
       this.getOperateData();
     },
@@ -692,38 +744,42 @@ export default {
         // 组织rowData数据
         this.rowData.parentid = this.currentPid;
         // 发送axios请求创建菜单
-        this.$http.request({
-          url: '/ims-menu/',
-          method: 'post',
-          data: this.rowData
-        }).then(res => {
-          this.loadingBtn = false;
-          this.modalEdit= false;
-          this.$Message.info('保存成功');
-          // 刷新左边菜单
-          this.refreshMenuList();
-          // 清空rowData对象
-          this.resetRowData();
-          // 刷新表格数据
-          this.getTableData();
-        });
+        this.$http
+          .request({
+            url: '/ims-menu/',
+            method: 'post',
+            data: this.rowData
+          })
+          .then(res => {
+            this.loadingBtn = false;
+            this.modalEdit = false;
+            this.$Message.info('保存成功');
+            // 刷新左边菜单
+            this.refreshMenuList();
+            // 清空rowData对象
+            this.resetRowData();
+            // 刷新表格数据
+            this.getTableData();
+          });
       } else {
         // 发送axios请求修改菜单
-        this.$http.request({
-          url: '/ims-menu/'+ this.rowData.id,
-          method: 'put',
-          data: this.rowData
-        }).then(res => {
-          this.loadingBtn = false;
-          this.modalEdit= false;
-          this.$Message.info('更新成功');
-          // 刷新左边菜单
-          this.refreshMenuList();
-          // 清空rowData对象
-          this.resetRowData();
-          // 刷新表格数据
-          this.getTableData();
-        });
+        this.$http
+          .request({
+            url: '/ims-menu/' + this.rowData.id,
+            method: 'put',
+            data: this.rowData
+          })
+          .then(res => {
+            this.loadingBtn = false;
+            this.modalEdit = false;
+            this.$Message.info('更新成功');
+            // 刷新左边菜单
+            this.refreshMenuList();
+            // 清空rowData对象
+            this.resetRowData();
+            // 刷新表格数据
+            this.getTableData();
+          });
       }
     },
     handleAdd() {
@@ -737,32 +793,34 @@ export default {
         this.$Message.warning('请填写操作的匹配路径');
         return false;
       }
-      
-      if (this.requestTypeList.length==0) {
+
+      if (this.requestTypeList.length == 0) {
         this.$Message.warning('请至少选择一种请求类型');
         return false;
       }
 
       // 组织operateRowData数据
       this.operateRowData.type = this.requestTypeList.join(',');
-      this.operateRowData.menuId= this.currentMenuId;
- 
+      this.operateRowData.menuId = this.currentMenuId;
+
       this.loadingAdd = true;
       // 发送axios请求创建菜单
-      this.$http.request({
-        url: '/ims-operation/',
-        method: 'post',
-        data: this.operateRowData
-      }).then(res => {
-        this.loadingAdd = false;
-        this.$Message.info('保存成功');
-        // 清空类型列表
-        this.requestTypeList= ['GET'];
-        // 清空rowData对象
-        this.resetOperateRowData();
-        // 刷新表格数据
-        this.getOperateData();
-      });
+      this.$http
+        .request({
+          url: '/ims-operation/',
+          method: 'post',
+          data: this.operateRowData
+        })
+        .then(res => {
+          this.loadingAdd = false;
+          this.$Message.info('保存成功');
+          // 清空类型列表
+          this.requestTypeList = ['GET'];
+          // 清空rowData对象
+          this.resetOperateRowData();
+          // 刷新表格数据
+          this.getOperateData();
+        });
     },
     handleClose() {
       this.modalView = false;
@@ -770,33 +828,43 @@ export default {
     handleCloseAdd() {
       this.modalAdd = false;
       this.isCreated = false;
-      this.isDisable= true;
-      this.step='addMenu';
+      this.isDisable = true;
+      this.step = 'addMenu';
     },
     handleCloseEdit() {
-      this.modalPermission=false;
+      this.modalPermission = false;
       // 初始化
-      this.currentMenuId= 0;
-      this.requestTypeList=['GET'];
+      this.currentMenuId = 0;
+      this.requestTypeList = ['GET'];
+    },
+    handleSearch(params) {
+      this.searchRowData.parentid = this.currentPid;
+      // 发送axios请求
+      this.$http
+        .request({
+          url: '/ims-menu/pages',
+          data: this.searchRowData,
+          method: 'post'
+        })
+        .then(res => {
+          this.tableData = res.array;
+          this.total = res.total;
+          this.loading = false;
+        });
+    },
+    handleClear(params) {
+      // 重置数据
+      this.resetSearchRowData();
+      this.handleSearch();
     },
     resetRowData() {
-      this.rowData = {
-        id: 0,
-        parentid: 0,
-        sort: 0,
-        code: '',
-        name: '',
-        type: ''
-      };
+      this.rowData = menuRowData;
+    },
+    resetSearchRowData() {
+      this.searchRowData = menuRowData;
     },
     resetOperateRowData() {
-      this.operateRowData = {
-        id: 0,
-        type: '',
-        menuId: 0,
-        name: '',
-        antUrl: ''
-      };
+      this.operateRowData = operateRowData;
     },
     exportExcel() {
       this.$refs.tables.exportCsv({
@@ -817,22 +885,56 @@ export default {
       // 组织rowData数据
       this.rowData.parentid = this.currentPid;
       // 下一步之前先创建子菜单
-      this.$http.request({
-        url: '/ims-menu/',
-        method: 'post',
-        data: this.rowData
-      }).then(res => {
-        this.$Message.info('创建成功');
-        this.step='addPermission';
-        this.isDisable= false;
-        this.isCreated = true;
-        this.currentMenuId= res.id;
-        // 刷新左边菜单
-        this.refreshMenuList();
-        // 刷新表格数据
-        this.getTableData();
-        this.getOperateData();
+      this.$http
+        .request({
+          url: '/ims-menu/',
+          method: 'post',
+          data: this.rowData
+        })
+        .then(res => {
+          this.$Message.info('创建成功');
+          this.step = 'addPermission';
+          this.isDisable = false;
+          this.isCreated = true;
+          this.currentMenuId = res.id;
+          // 刷新左边菜单
+          this.refreshMenuList();
+          // 刷新表格数据
+          this.getTableData();
+          this.getOperateData();
+        });
+    },
+    handleDownload() {
+      // 表格数据导出字段翻译
+      this.tableData.forEach(item => {
+          item['type'] == 'PARENT' ? item['type'] = '父级菜单' : item['type'] = '子级菜单';
       });
+      this.$refs.tables.handleDownload({
+        filename: `菜单-${new Date().valueOf()}`,
+        data: this.tableData
+      });
+    },
+    handleUploadExcel() {
+      this.modalUploadExcel = true;
+    },
+    handleUploadExcelOk() {
+      console.log('handleUploadExcelOk 表格数据（JSON 字符串）' + JSON.stringify(this.$refs.uploadExcel.tableData));
+      // 由于表格的key为中文与后台所需key不对应，故更改json的key
+      var dataObj = this.$refs.uploadExcel.tableData; // 获取表格中的数据
+      var titleObj = this.$refs.uploadExcel.tableTitle; // 获取表格中的标题
+      var tableTitlesZh = []; // 原有的中文标题数组
+      titleObj.forEach((value, index) => tableTitlesZh.push(titleObj[index]['key']));
+      var tableTitlesEn = ['name', 'code', 'type', 'sort']; // 要替换成的英文标题数组    
+      console.log('tableTitlesZh(中文):' + tableTitlesZh);
+      console.log('tableTitlesEn(英文):' + tableTitlesEn);
+      var a = changeObjKeyName(dataObj, tableTitlesZh, tableTitlesEn);
+      console.log('更换key值后的javaScript对象' + a);
+      console.log('更换key值后的json' + JSON.stringify(a));
+      console.log('更换key值后的json' + a.map(v => tableTitlesEn.map(j => v[j])));
+      // 发送axios请求批量增加
+      // 清除数据
+      this.$refs.uploadExcel.initUpload();
+      this.modalUploadExcel = false;
     }
   }
 };

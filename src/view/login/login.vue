@@ -29,11 +29,9 @@ export default {
     ]),
     handleSubmit ({ account, password }) {
       this.handleLogin({ account, password }).then(res => {
-        this.getUserInfo().then(res => {
           this.$router.push({
             name: 'home'
           });
-        });
       });
     }
   }

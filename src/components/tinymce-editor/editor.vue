@@ -1,6 +1,9 @@
 <template>
   <div class="tinymce">
-    <editor :id="id" v-model="content" :init="defalutOps" @onInit="handleInit" @onChange="handleChange" @onKeyUp="handleKeyup" />
+    <editor :id="id" v-model="content" :init="defalutOps" @onInit="handleInit" @onChange="handleChange" @onKeyUp="handleKeyup" class="tinymce-textarea"/>
+    <div class="editor-custom-btn-container">
+      <file-upload class="editor-upload-btn" @successCBK="handleSuccessCBK"/>
+    </div>
   </div>
 </template>
 
@@ -56,9 +59,11 @@ import _ from 'lodash';
 import plugins from './plugins';
 import toolbar from './toolbar';
 import { PcLockr, enums } from '@/util/';
+import fileUpload from './components/fileUpload';
 
 export default {
   name: 'tinymce-editor',
+  components: { Editor, fileUpload },
   props: {
     id: {
       default: function() {
@@ -116,7 +121,6 @@ export default {
       default: true
     }
   },
-  components: { Editor },
   data() {
     return {
       content: '',
@@ -213,6 +217,19 @@ export default {
         .catch(res => {
           failure(res.message);
         });
+    },
+    handleSuccessCBK(file) {
+      console.log('file object:', file);
+      let sourceCode='';
+      if (file.fileType=='video') {
+        sourceCode= '<video width="' + file.width + '" height="' + file.height + '"' + (file.poster ? ' poster="' + file.poster + '"' : '') + ' controls="controls">\n'+
+                    '<source src="' + file.fileUrl + '"' + (file.source1mime ? ' type="' + file.source1mime + '"' : '') + ' />' + '</video>';
+      } else {
+        sourceCode='<audio controls>' + '\n<source src="' + file.fileUrl + '"' + (file.source1mime ? ' type="' + file.source1mime + '"' : '') + ' />\n' + '</audio>';
+      }
+      // 根据上传的文件类型来插入源码
+      console.log(`sourceCode: ${sourceCode}`);
+      this.editor.insertContent(sourceCode);
     }
   },
   beforeDestroy() {
@@ -224,3 +241,29 @@ export default {
   }
 };
 </script>
+
+<style rel='stylesheet/scss' lang='scss' scoped>
+.tinymce {
+  position: relative;
+}
+.tinymce >>> .mce-fullscreen {
+  z-index: 10000;
+}
+.tinymce-textarea {
+  visibility: hidden;
+  z-index: -1;
+}
+.editor-custom-btn-container {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  /*z-index: 2005;*/
+}
+.fullscreen .editor-custom-btn-container {
+  z-index: 10000;
+  position: fixed;
+}
+.editor-upload-btn {
+  display: inline-block;
+}
+</style>

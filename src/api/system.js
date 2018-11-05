@@ -2,11 +2,11 @@ import Vue from 'vue';
 
 /**
  * 根据父级菜单Id获取对应的子菜单列表
- * @param {*} pid 
+ * @param {*} pid
  */
 export const getRouterById = (pid) => {
   return Vue.prototype.$http.request({
-    url: '/ims-menu/list/pid', // get_route_list
+    url: '/ims-menu/list/pid', // get_route_list /ims-menu/list/pid
     params: {
       pid: pid
     },
@@ -16,14 +16,14 @@ export const getRouterById = (pid) => {
 
 export const getSystemList = () => {
   return Vue.prototype.$http.request({
-    url: '/ims-menu/list/systems', // get_system_list
+    url: '/ims-menu/list/systems', // get_system_list /ims-menu/list/systems
     method: 'get'
   });
 };
 
 export const getMenuList = () => {
   return Vue.prototype.$http.request({
-    url: '/ims-menu/list/all', // get_menu_list
+    url: '/ims-menu/list/all', // get_menu_list /ims-menu/list/all
     method: 'get'
   });
 };

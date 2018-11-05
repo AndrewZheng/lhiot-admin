@@ -8,7 +8,7 @@ export const login = ({ account, password }) => {
   };
 
   return Vue.prototype.$http.request({
-    url: '/admin/sessions', // login
+    url: '/admin/sessions', // login /admin/sessions
     data,
     method: 'post'
   });

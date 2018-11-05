@@ -1,26 +1,25 @@
 const btns = {
   view: (h, params, vm) => {
     return h('Button', {
-        props: {
-          type: 'info',
-          size: 'small'
-        },
-        style: {
-          marginRight: '5px'
-        },
-        on: {
-          click: () => {
-            vm.$emit('on-view', params);
-          }
+      props: {
+        type: 'info',
+        size: 'small'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        click: () => {
+          vm.$emit('on-view', params);
         }
-      }, [h('Icon', {
-        props: {
-          type: 'md-eye',
-          size: 16,
-          color: '#fff'
-        }
-      })
-      ]);
+      }
+    }, [h('Icon', {
+      props: {
+        type: 'md-eye',
+        size: 16,
+        color: '#fff'
+      }
+    })]);
   },
   edit: (h, params, vm) => {
     return h('Button', {
@@ -42,8 +41,7 @@ const btns = {
         size: 16,
         color: '#fff'
       }
-    })
-    ]);
+    })]);
   },
   delete: (h, params, vm) => {
     return h('Poptip', {
@@ -54,7 +52,8 @@ const btns = {
       on: {
         'on-ok': () => {
           vm.$emit('on-delete', params);
-          vm.$emit('input', params.tableData.filter((item, index) => index !== params.row.initRowIndex));
+          // 页面验证 删除成功则刷新表格内容
+          // vm.$emit('input', params.tableData.filter((item, index) => index !== params.row.initRowIndex));
         }
       }
     }, [
@@ -94,13 +93,14 @@ const btns = {
         size: 16,
         color: '#fff'
       }
-    })
-    ]);
+    })]);
   },
   permission: (h, params, vm) => {
-    const { row }= params;
+    const {
+      row
+    } = params;
     // 父级菜单不显示修改权限按钮
-    if (row.type=='PARENT') {
+    if (row.type == 'PARENT') {
       return '';
     } else {
       return h('Button', {
@@ -122,8 +122,7 @@ const btns = {
           size: 16,
           color: '#fff'
         }
-      })
-      ]);
+      })]);
     }
   }
 };

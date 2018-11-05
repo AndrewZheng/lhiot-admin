@@ -6,14 +6,20 @@
       v-model="tableData"
       :loading="loading"
       :columns="columns"
-      @on-select="handleSelect"
-      @on-select-cancel="handleSelectCancel"
-      @on-select-all="onSelectAll"
+      @on-selection-change="onSelectionChange"
       @on-delete="handleDelete"
       @on-view="handleView"
       @on-edit="handleEdit"
       @on-relation="handleMenu"
       >
+       <div slot="searchCondition">
+          <Input  placeholder="角色名称" class="search-input" v-model="searchRowData.name" style="width: auto" clearable/>
+          <Select v-model="searchRowData.status" class="search-col" placeholder="角色状态" style="width: auto" clearable>
+            <Option v-for="item in roleStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
+          </Select>
+          <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button>
+          <Button v-waves @click="handleClear" class="search-btn" type="info"><Icon type="md-refresh"/>&nbsp;清除条件</Button>
+        </div>
         <div slot="operations">
           <Button v-waves @click="handleAdd" type="success" class="mr5">
             <Icon type="md-add"/> 新增</Button>
@@ -28,7 +34,7 @@
       </div>
     </Card>
 
-    <!-- 修改模态框 -->
+    <!-- 创建/修改模态框 -->
      <Modal
         v-model="modalEdit"
         :loading="loadingBtn"
@@ -36,7 +42,7 @@
         @on-ok="handleAddOrEditOk('formValidate')"
         @on-cancel="handleCancel">
         <p slot="header">
-            <span>角色管理</span>
+            <span>{{rowData.id==''?'创建角色':'编辑角色'}}</span>
         </p>
        <div class="modal-content">
          <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
@@ -44,10 +50,9 @@
                 <Input v-model="rowData.name" placeholder="请输入角色名称"/>
             </FormItem>
             <FormItem label="角色状态" prop="status">
-                <RadioGroup v-model="rowData.status" @on-change="changeRadio">
-                    <Radio label="AVAILABLE">{{this.getDictByName('status','AVAILABLE')}}</Radio>
-                    <Radio label="UNAVAILABLE">{{this.getDictByName('status','UNAVAILABLE')}}</Radio>
-                </RadioGroup>
+               <Select v-model="rowData.status" class="search-col"  placeholder="请选择用户状态">
+                  <Option v-for="item in roleStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
+                </Select>
             </FormItem>
             <FormItem label="角色描述" prop="roleDesc">
                 <Input v-model="rowData.roleDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入角色描述" />
@@ -56,7 +61,7 @@
        </div>
     </Modal>
 
-    <!-- 添加模态框 -->
+    <!-- 多功能添加模态框 -->
      <Modal
         v-model="modalAdd"
         :loading="loadingBtn"
@@ -69,17 +74,16 @@
                       <Input v-model="rowData.name" placeholder="请输入角色名称"/>
                   </FormItem>
                   <FormItem label="角色状态" prop="status">
-                      <RadioGroup v-model="rowData.status" @on-change="changeRadio">
-                          <Radio label="AVAILABLE">{{this.getDictByName('status','AVAILABLE')}}</Radio>
-                          <Radio label="UNAVAILABLE">{{this.getDictByName('status','UNAVAILABLE')}}</Radio>
-                      </RadioGroup>
+                      <Select v-model="rowData.status" class="search-col"  placeholder="请选择用户状态">
+                        <Option v-for="item in roleStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
+                      </Select>
                   </FormItem>
                   <FormItem label="角色描述" prop="roleDesc">
                       <Input v-model="rowData.roleDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入角色描述" />
                   </FormItem>
               </Form>
             </TabPane>
-            <TabPane label="权限管理" name="menuAdd" :disabled="isDisable">
+            <TabPane label="关联菜单" name="menuAdd" :disabled="isDisable">
               <Tree :data="menuList" :render="renderContent" show-checkbox multiple ref="menuTree" @on-check-change="handleChange"></Tree>
             </TabPane>
           </Tabs>
@@ -95,7 +99,7 @@
       </div>
     </Modal>
 
-    <!-- 管理权限 -->
+    <!-- 关联菜单 -->
     <Modal
         v-model="modalMenu"
         :loading="loadingBtn"
@@ -103,7 +107,7 @@
         @on-ok="handleMenuOk"
         @on-cancel="handleCancel">
         <p slot="header">
-            <span>管理权限</span>
+            <span>关联菜单</span>
         </p>
        <div class="modal-content">
          <Tree :data="menuList" :render="renderContent" show-checkbox multiple ref="menuTree" @on-check-change="handleChange"></Tree>
@@ -118,6 +122,15 @@ import { getRoleData, getMenuList, getRelationMenu } from '@/api/system';
 import { buildMenu, convertTree, setTreeNodeChecked } from '@/libs/util';
 import { dedupe } from '@/libs/tools';
 import _ from 'lodash';
+
+const roleRowData = {
+  name: '',
+  status: '',
+  roleDesc: '',
+  createBy: '',
+  createAt: '',
+  menuids: ''
+};
 
 export default {
   name: 'role_page',
@@ -153,13 +166,13 @@ export default {
             const { row } = params;
             const str =
               row.status == 'AVAILABLE' ? (
-                <span style="color:green">
-                  {this.getDictByName('status', row.status)}
-                </span>
+                <tag color="success">
+                  {this.getDictValueByKey(this.roleStatusList, row.status)}
+                </tag>
               ) : (
-                <span style="color:red">
-                  {this.getDictByName('status', row.status)}
-                </span>
+                <tag color="error">
+                  {this.getDictValueByKey(this.roleStatusList, row.status)}
+                </tag>
               );
             return <div>{str}</div>;
           }
@@ -181,12 +194,13 @@ export default {
                 on: {
                   'on-ok': () => {
                     vm.$emit('on-delete', params);
-                    vm.$emit(
-                      'input',
-                      params.tableData.filter(
-                        (item, index) => index !== params.row.initRowIndex
-                      )
-                    );
+                    // 删除前要判断是否满足删除条件
+                    // vm.$emit(
+                    //   'input',
+                    //   params.tableData.filter(
+                    //     (item, index) => index !== params.row.initRowIndex
+                    //   )
+                    // );
                   }
                 }
               });
@@ -202,14 +216,8 @@ export default {
       modalAdd: false,
       loading: true,
       loadingBtn: true,
-      rowData: {
-        name: '',
-        status: '',
-        roleDesc: '',
-        createBy: '',
-        createAt: '',
-        menuids: ''
-      },
+      rowData: roleRowData,
+      searchRowData: roleRowData,
       modalMenu: false,
       menuList: [],
       originMenuList: [],
@@ -225,17 +233,17 @@ export default {
           { required: true, message: '角色名称不能为空', trigger: 'blur' }
           // { type: 'string', max: 64, message: '64个字以内', trigger: 'blur'}
         ],
-        status: [
-          { required: true, message: '请选择角色状态', trigger: 'change' }
-        ]
+        status: [{ required: true, message: '请选择角色状态', trigger: 'blur' }]
       },
-      ids: []
+      ids: [],
+      roleStatusList: []
     };
   },
   computed: {},
   mounted() {
     this.getTableData();
     this.getMenuList();
+    this.getStatusList();
   },
   methods: {
     renderContent(h, { root, node, data }) {
@@ -261,12 +269,12 @@ export default {
     },
     handleView(params) {
       this.$Modal.info({
-        title: '角色管理详情',
+        title: '角色详情',
         content:
           `角色名称: ${this.tableData[params.row.initRowIndex].name}<br>
           角色状态: ` +
-          this.getDictByName(
-            'status',
+          this.getDictValueByKey(
+            this.roleStatusList,
             this.tableData[params.row.initRowIndex].status
           ) +
           `<br>
@@ -285,45 +293,41 @@ export default {
           data: this.rowData
         })
         .then(res => {
-          this.loadingBtn = false;
-          this.modalEdit = false;
-          this.$Message.info('删除成功!');
-          // 刷新表格数据
-          this.getTableData();
+          // 返回结果为0则不能删除
+          if (res == 0) {
+            this.$Message.error('已关联用户 删除失败');
+          } else {
+            this.$Message.info('删除成功');
+            // 刷新表格数据
+            this.getTableData();
+          }
         });
     },
     handleDeleteBatch() {
-      // 发送axios请求
-      this.$http
-        .request({
-          url: '/ims-role/' + this.ids,
-          method: 'delete'
-        })
-        .then(res => {
-          this.loadingBtn = false;
-          this.modalEdit = false;
-          this.$Message.info('删除成功!');
-          // 刷新表格数据
-          this.getTableData();
-        });
+      if (this.ids.length != 0) {
+        // 发送axios请求
+        this.$http
+          .request({
+            url: '/ims-role/' + this.ids,
+            method: 'delete'
+          })
+          .then(res => {
+            // 返回结果为0则不能删除
+            if (res == 0) {
+              this.$Message.error('有角色已关联用户 删除失败');
+            } else {
+              this.$Message.info('删除成功');
+              // 刷新表格数据
+              this.getTableData();
+            }
+          });
+      } else {
+        this.$Message.error('请至少选择一行记录');
+      }
     },
-    handleSelect(selection, row) {
-      console.log('刚选择的项数据id' + selection);
+    onSelectionChange(selection) {
       this.ids = selection.map(item => item.id.toString());
-      console.log('选择 ids:' + this.ids);
-    },
-    handleSelectCancel(selection, row) {
-      console.log('刚取消的项数据id' + row.id);
-      this.ids = selection.map(item => item.id.toString());
-      console.log('取消选择 ids:' + this.ids);
-    },
-    onSelectAll(selection) {
-      this.ids = selection.map(item => item.id.toString());
-      console.log('全选 ids:' + this.ids);
-    },
-    onSelectAllCancel(selection) {
-      this.ids = selection.map(item => item.id.toString());
-      console.log('全选取消 ids:' + this.ids);
+      console.log('选择变化,当前页选择ids:' + this.ids);
     },
     handleEdit(params) {
       console.log(params);
@@ -335,9 +339,10 @@ export default {
       this.modalEdit = true;
     },
     handleAddOrEditOk(name) {
+      this.loadingBtn = false;
       this.$refs[name].validate(valid => {
         if (valid) {
-          if (this.rowData.id == undefined) {
+          if (this.rowData.id === undefined) {
             // 发送axios请求
             this.$http
               .request({
@@ -346,14 +351,15 @@ export default {
                 data: this.rowData
               })
               .then(res => {
-                this.loadingBtn = false;
                 this.modalEdit = false;
-                this.$Message.info('保存成功!');
+                this.$Message.info('保存成功');
                 this.step = 'menuAdd';
                 this.isDisable = false;
                 this.isCreated = true;
                 // 获取新增加的id
                 this.rowData.id = res.id;
+                // 刷新表格数据
+                this.getTableData();
               });
           } else {
             // 发送axios请求
@@ -366,7 +372,7 @@ export default {
               .then(res => {
                 this.loadingBtn = false;
                 this.modalEdit = false;
-                this.$Message.info('更新成功!');
+                this.$Message.info('更新成功');
                 // 清空rowData对象
                 this.resetRowData();
                 // 刷新表格数据
@@ -374,7 +380,7 @@ export default {
               });
           }
         } else {
-          this.$Message.error('提交失败!');
+          this.$Message.warning('请先完善信息');
         }
       });
     },
@@ -413,6 +419,26 @@ export default {
       console.log('result: ', result);
       console.log('uniq result: ', this.selectedIds);
     },
+    handleSearch(params) {
+      // 发送axios请求
+      this.$http
+        .request({
+          url: '/ims-role/pages',
+          data: this.searchRowData,
+          method: 'post'
+        })
+        .then(res => {
+          // this.tableData = res.data;
+          this.tableData = res.array;
+          this.total = res.total;
+          this.loading = false;
+        });
+    },
+    handleClear(params) {
+      // 重置数据
+      this.resetSearchRowData();
+      this.handleSearch();
+    },
     findParent(item) {
       let result = [];
       let findParentIds = node => {
@@ -427,7 +453,7 @@ export default {
       return result;
     },
     checkMenuByIds() {
-      if (this.rowData.menuids != undefined) {
+      if (this.rowData.menuids !== undefined) {
         const menuids = this.rowData.menuids.split(',');
         console.log('menuids: ', menuids);
         setTreeNodeChecked(this.menuList, menuids);
@@ -455,12 +481,10 @@ export default {
           if (this.modalMenu == true) {
             this.modalMenu = false;
             this.targetKeys = [];
-            this.$Message.info('修改成功!');
+            this.$Message.info('修改成功');
           } else if (this.modalAdd == true) {
             this.modalAdd = false;
-            this.$Message.info('保存成功!');
-            this.step = 'roleAdd';
-            this.isDisable = false;
+            this.$Message.info('保存成功');
             this.isCreated = true;
           }
         });
@@ -488,15 +512,16 @@ export default {
     },
     handleAdd() {
       this.rowData = {};
+      this.step = 'roleAdd';
+      this.isDisable = true;
+      this.isCreated = false;
       this.modalAdd = true;
     },
     handleCloseAdd() {
       this.modalAdd = false;
       this.isCreated = false;
       this.isDisable = true;
-      this.step = 'addRole';
-      // 清空rowData对象
-      this.resetRowData();
+      this.step = 'roleAdd';
       // 刷新表格数据
       this.getTableData();
     },
@@ -521,15 +546,10 @@ export default {
       this.getTableData();
     },
     resetRowData() {
-      this.rowData = {
-        id: 0,
-        name: '',
-        status: '',
-        roleDesc: '',
-        createBy: '',
-        createAt: '',
-        menuids: ''
-      };
+      this.rowData = roleRowData;
+    },
+    resetSearchRowData() {
+      this.searchRowData = roleRowData;
     },
     getTableData() {
       getRoleData({
@@ -557,6 +577,10 @@ export default {
           console.log('after convert: ', this.menuList);
         }
       });
+    },
+    // 数据字典集合
+    getStatusList() {
+      this.roleStatusList = this.getDictListByName('userStatus');
     }
   }
 };
