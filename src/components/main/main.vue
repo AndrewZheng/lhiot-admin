@@ -101,24 +101,6 @@ export default {
     ...mapActions([
       'handleLogin'
     ]),
-    turnToPage (route) {
-      let { name, params, query } = {};
-      if (typeof route === 'string') name = route;
-      else {
-        name = route.name;
-        params = route.params;
-        query = route.query;
-      }
-      if (name.indexOf('isTurnByHref_') > -1) {
-        window.open(name.split('_')[1]);
-        return;
-      }
-      this.$router.push({
-        name,
-        params,
-        query
-      });
-    },
     handleCollapsedChange (state) {
       this.collapsed = state;
     },
@@ -161,27 +143,6 @@ export default {
     this.setBreadCrumb(this.$route);
     // 设置初始语言
     this.setLocal(this.$i18n.locale);
-    // 文档提示
-    // this.$Notice.info({
-    //   title: '想快速上手，去看文档吧',
-    //   duration: 0,
-    //   render: (h) => {
-    //     return h('p', {
-    //       style: {
-    //         fontSize: '13px'
-    //       }
-    //     }, [
-    //       '点击',
-    //       h('a', {
-    //         attrs: {
-    //           href: 'https://lison16.github.io/iview-admin-doc/#/',
-    //           target: '_blank'
-    //         }
-    //       }, 'iview-admin2.0文档'),
-    //       '快速查看'
-    //     ])
-    //   }
-    // })
   }
 };
 </script>
