@@ -1,5 +1,9 @@
 <template>
 <div class="m-menu">
+  <!-- <Button v-waves type="success" class="mr5" @click="handleOpen">
+    <Icon type="md-add"/>
+    Open New Tab
+  </Button> -->
   <Row :gutter="24" type="flex" align="top" justify="space-between">
       <i-col span="4" order="1">
         <Tree :data="menuList" :render="renderContent"></Tree>
@@ -326,7 +330,8 @@
 <script type='text/ecmascript-6'>
 import { getMenuData, getOperateData } from '@/api/data';
 import { getMenuList } from '@/api/system';
-import { buildMenu, convertTree, changeObjKeyName } from '@/libs/util';
+import { buildMenu, getNewTagList, convertTree, changeObjKeyName } from '@/libs/util';
+import { mapMutations, mapActions } from 'vuex';
 import Tables from '_c/tables';
 import CommonIcon from '_c/common-icon';
 import _ from 'lodash';
@@ -526,9 +531,29 @@ export default {
   computed: {
     menuType() {
       return this.rowData.type == 'PARENT' ? '父级菜单' : '子级菜单';
+    },
+    tagNavList () {
+      return this.$store.state.app.tagNavList;
+    }
+  },
+   watch: {
+    '$route' (newRoute) {
+      const { name, query, params, meta } = newRoute;
+      this.addTag({
+        route: { name, query, params, meta },
+        type: 'push'
+      });
+      this.setTagNavList(getNewTagList(this.tagNavList, newRoute));
     }
   },
   methods: {
+    ...mapMutations([
+      'setTagNavList',
+      'addTag'
+    ]),
+    handleOpen() {
+      this.turnToPage('upload-excel');
+    },
     initMenuList() {
       getMenuList().then(res => {
         if (res && res.array.length > 0) {

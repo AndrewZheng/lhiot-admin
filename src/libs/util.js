@@ -57,6 +57,24 @@ export const getMenuByRouter = (list) => {
 };
 
 /**
+ * 递归获取静态路由表的Names
+ * @param routes constantRouterMap
+ * @param currentRoute
+ */
+export const getNamesByRouters= (routes) => {
+  let res = [];
+
+  routes.forEach(route => {
+    if (route.name) res.push(route.name);
+    if (route.children) {
+      res = res.concat(getNamesByRouters(route.children));
+    }
+  });
+
+  return res;
+};
+
+/**
  * @param {Array} list 通过返回的用户权限菜单
  * @param {Array} list 本地所有路由
  * @returns {Array}

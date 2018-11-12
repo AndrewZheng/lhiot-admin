@@ -4,8 +4,7 @@ import { constantRouterMap } from './routers';
 import store from '@/store';
 import iView from 'iview';
 
-import { getToken } from '@/libs/util';
-import { PcLockr, enums } from 'util/';
+import { getToken, getNamesByRouters } from '@/libs/util';
 Vue.use(Router);
 
 const router = new Router({
@@ -18,11 +17,15 @@ const router = new Router({
 
 const LOGIN_PAGE_NAME = 'login';
 const whiteList = ['/login', '/redirect', '/401', '/404', '/500'];
+// 如果在静态路由列表中
+const constantRouter= getNamesByRouters(constantRouterMap);
 
 // permission judge function
 function hasPermission(userPermission, currentRoute) {
   if (!userPermission) return true;
   if (whiteList.indexOf(currentRoute.path) !== -1) return true;
+  console.log('constantRouterNames: ', constantRouter);
+  if (constantRouter.indexOf(currentRoute.name) !== -1) return true;
   return userPermission.some(role => role.code === currentRoute.name);
 }
 
