@@ -1,10 +1,11 @@
 import Vue from 'vue';
 import { enums } from 'util/';
 
-export const login = ({ account, password }) => {
+export const login = ({ account, password, ip }) => {
   const data = {
     account,
-    password
+    password,
+    ip
   };
 
   return Vue.prototype.$http.request({
