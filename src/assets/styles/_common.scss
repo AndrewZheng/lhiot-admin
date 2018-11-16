@@ -41,6 +41,9 @@
 .mr10 {
   margin-right: 10px;
 }
+.mr20 {
+  margin-right: 20px;
+}
 
 .ml5 {
   margin-left: 5px;
@@ -108,14 +111,14 @@
 }
 
 /**
-  * Float Color  
+  * Float Color
 **/
 .float-right{
   float: right;
 }
 
 /**
-  * Background Color  
+  * Background Color
 **/
 .bg-white {
   background-color: $brandWhite;
@@ -149,7 +152,7 @@
 }
 
 /**
-  * Brand Color  
+  * Brand Color
 **/
 .brand-red {
   color: $brandRed;
@@ -176,7 +179,7 @@
 }
 
 /**
-  * border  
+  * border
 **/
 .border-l {
   border-left: 1px solid $brandGrey;
@@ -199,7 +202,7 @@
 }
 
 /**
-  * Button  
+  * Button
 **/
 .btn-custom {
   font-size: 1rem;
@@ -263,7 +266,7 @@
 }
 
 /**
-  * Font  
+  * Font
 **/
 .font-lg {
   font-size: 1.6rem;
@@ -278,7 +281,7 @@
 }
 
 /**
-  * Position  
+  * Position
 **/
 .fixed-box {
   position: fixed;
@@ -340,7 +343,7 @@
 }
 
 /**
-  * Modules  
+  * Modules
 **/
 .m-empty {
   padding-top: 30%;

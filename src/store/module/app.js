@@ -2,7 +2,7 @@ import {
   getBreadCrumbList,
   setTagNavListInLocalstorage,
   getTagNavListFromLocalstorage,
-  getMenuByRouter,
+
   getHomeRoute,
   getNextRoute,
   routeHasExist,
@@ -12,8 +12,8 @@ import {
 import beforeClose from '@/router/before-close';
 import router from '@/router';
 import routers from '@/router/routers';
-import { getSystemList } from '@/api/system';
-import { PcLockr, enums, gbs } from 'util/';
+import {getSystemList} from '@/api/system';
+import {PcLockr, enums, gbs} from 'util/';
 
 const closePage = (state, route) => {
   const nextRoute = getNextRoute(state.tagNavList, route);
@@ -23,7 +23,7 @@ const closePage = (state, route) => {
   router.push(nextRoute);
 };
 
-const state= {
+const state = {
   breadCrumbList: [],
   tagNavList: [],
   homeRoute: getHomeRoute(routers),
@@ -32,25 +32,21 @@ const state= {
   systemCurrent: null
 };
 
-const getters={
-  menuList: (state, getters, rootState) => {
-    let menuData=getMenuByRouter(rootState.user.actualRouter);
-    console.log('menuData generate by router: ', menuData);
-    return menuData;
-  },
+const getters = {
+
   systemCurrent: (state) => {
-     if (!state.systemCurrent) {
-      state.systemCurrent= PcLockr.get(enums.SYSTEM)? JSON.parse(PcLockr.get(enums.SYSTEM)): {};
-     }
-     return state.systemCurrent;
+    if (!state.systemCurrent) {
+      state.systemCurrent = PcLockr.get(enums.SYSTEM) ? JSON.parse(PcLockr.get(enums.SYSTEM)) : {};
+    }
+    return state.systemCurrent;
   }
 };
 
-const mutations= {
-  setBreadCrumb (state, route) {
+const mutations = {
+  setBreadCrumb(state, route) {
     state.breadCrumbList = getBreadCrumbList(route, state.homeRoute);
   },
-  setTagNavList (state, list) {
+  setTagNavList(state, list) {
     if (list) {
       state.tagNavList = [...list];
       setTagNavListInLocalstorage([...list]);
@@ -64,14 +60,14 @@ const mutations= {
   setCurrentSystem(state, list) {
     // 如果不是第一次登录则从Pclockr里取
     if (!PcLockr.get(enums.SYSTEM)) {
-      let obj= list[0] || {};
-      state.systemCurrent= obj;
+      let obj = list[0] || {};
+      state.systemCurrent = obj;
       PcLockr.set(enums.SYSTEM, JSON.stringify(obj));
     } else {
-      state.systemCurrent= PcLockr.get(enums.SYSTEM)? JSON.parse(PcLockr.get(enums.SYSTEM)): {};
+      state.systemCurrent = PcLockr.get(enums.SYSTEM) ? JSON.parse(PcLockr.get(enums.SYSTEM)) : {};
     }
   },
-  closeTag (state, route) {
+  closeTag(state, route) {
     let tag = state.tagNavList.filter(item => routeEqual(item, route));
     route = tag[0] ? tag[0] : null;
     if (!route) return;
@@ -85,7 +81,7 @@ const mutations= {
       closePage(state, route);
     }
   },
-  addTag (state, { route, type = 'unshift' }) {
+  addTag(state, {route, type = 'unshift'}) {
     let router = getRouteTitleHandled(route);
     if (!routeHasExist(state.tagNavList, router)) {
       if (type === 'push') state.tagNavList.push(router);
@@ -97,16 +93,16 @@ const mutations= {
     }
     setTagNavListInLocalstorage([...state.tagNavList]);
   },
-  setLocal (state, lang) {
+  setLocal(state, lang) {
     state.local = lang;
   }
 };
 
-const actions={
-  getSystemList({ commit }) {
+const actions = {
+  getSystemList({commit}) {
     return new Promise((resolve, reject) => {
       getSystemList().then(res => {
-        if (res && res.array.length >0) {
+        if (res && res.array.length > 0) {
           commit('setSystemList', res.array);
           commit('setCurrentSystem', res.array);
         }

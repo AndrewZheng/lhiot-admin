@@ -44,9 +44,9 @@ export const getDragList = req => {
 
 export const getMenuData = req => {
   let tableData = [];
-  const { page = 1, rows = 10, pid } = getParams(req.url);
-  
-  const one=[{
+  const {page = 1, rows = 10, pid} = getParams(req.url);
+
+  const one = [{
     'id': 6,
     'parentid': 11,
     'code': 'home',
@@ -59,86 +59,86 @@ export const getMenuData = req => {
     },
     'type': 'SON'
   },
-  {
-    'id': 12,
-    'parentid': 11,
-    'sort': 11,
-    'code': 'system',
-    'path': '/system',
-    'name': '系统管理',
-    'meta': {
-      'title': '系统管理',
-      'icon': 'ios-settings'
+    {
+      'id': 12,
+      'parentid': 11,
+      'sort': 11,
+      'code': 'system',
+      'path': '/system',
+      'name': '系统管理',
+      'meta': {
+        'title': '系统管理',
+        'icon': 'ios-settings'
+      },
+      'type': 'PARENT'
     },
-    'type': 'PARENT'
-  },
-  {
-    'id': 13,
-    'parentid': 12,
-    'sort': 12,
-    'code': 'menu',
-    'path': 'menu',
-    'name': '菜单管理',
-    'meta': {
-      'title': '菜单管理',
-      'icon': 'ios-settings'
+    {
+      'id': 13,
+      'parentid': 12,
+      'sort': 12,
+      'code': 'menu',
+      'path': 'menu',
+      'name': '菜单管理',
+      'meta': {
+        'title': '菜单管理',
+        'icon': 'ios-settings'
+      },
+      'type': 'SON'
     },
-    'type': 'SON'
-  },
-  {
-    'id': 14,
-    'parentid': 11,
-    'sort': 13,
-    'code': 'config',
-    'path': 'config',
-    'name': '参数管理',
-    'meta': {
-      'title': '参数管理',
-      'icon': 'md-settings'
+    {
+      'id': 14,
+      'parentid': 11,
+      'sort': 13,
+      'code': 'config',
+      'path': 'config',
+      'name': '参数管理',
+      'meta': {
+        'title': '参数管理',
+        'icon': 'md-settings'
+      },
+      'type': 'SON'
     },
-    'type': 'SON'
-  },
-  {
-    'id': 15,
-    'parentid': 12,
-    'sort': 14,
-    'code': 'permission',
-    'path': 'permission',
-    'name': '权限管理',
-    'meta': {
-      'title': '权限管理',
-      'icon': 'md-lock'
+    {
+      'id': 15,
+      'parentid': 12,
+      'sort': 14,
+      'code': 'permission',
+      'path': 'permission',
+      'name': '权限管理',
+      'meta': {
+        'title': '权限管理',
+        'icon': 'md-lock'
+      },
+      'type': 'SON'
     },
-    'type': 'SON'
-  },
-  {
-    'id': 16,
-    'parentid': 12,
-    'sort': 15,
-    'code': 'role',
-    'path': 'role',
-    'name': '角色管理',
-    'meta': {
-      'title': '角色管理',
-      'icon': 'ios-people'
+    {
+      'id': 16,
+      'parentid': 12,
+      'sort': 15,
+      'code': 'role',
+      'path': 'role',
+      'name': '角色管理',
+      'meta': {
+        'title': '角色管理',
+        'icon': 'ios-people'
+      },
+      'type': 'SON'
     },
-    'type': 'SON'
-  },
-  {
-    'id': 17,
-    'parentid': 12,
-    'sort': 20,
-    'code': 'user',
-    'path': 'user',
-    'name': '用户管理',
-    'meta': {
-      'title': '用户管理',
-      'icon': 'md-person'
-    },
-    'type': 'SON'
-  }];
-  
-  const two=[{
+    {
+      'id': 17,
+      'parentid': 12,
+      'sort': 20,
+      'code': 'user',
+      'path': 'user',
+      'name': '用户管理',
+      'meta': {
+        'title': '用户管理',
+        'icon': 'md-person'
+      },
+      'type': 'SON'
+    }];
+
+  const two = [{
     'id': 21,
     'parentid': 2,
     'sort': 16,
@@ -153,7 +153,7 @@ export const getMenuData = req => {
     'type': 'SON'
   }];
 
-  const three=[{
+  const three = [{
     'id': 22,
     'parentid': 3,
     'sort': 17,
@@ -167,7 +167,7 @@ export const getMenuData = req => {
     'type': 'SON'
   }];
 
-  const four=[{
+  const four = [{
     'id': 23,
     'parentid': 4,
     'sort': 18,
@@ -181,7 +181,7 @@ export const getMenuData = req => {
     'type': 'SON'
   }];
 
-  const five=[{
+  const five = [{
     'id': 24,
     'parentid': 5,
     'sort': 19,
@@ -194,8 +194,8 @@ export const getMenuData = req => {
     },
     'type': 'SON'
   }];
-  
-  const seven=[{
+
+  const seven = [{
     'id': 7,
     'parentid': 1,
     'sort': 2,
@@ -208,112 +208,112 @@ export const getMenuData = req => {
     },
     'type': 'PARENT'
   },
-  {
-    'id': 8,
-    'parentid': 7,
-    'sort': 3,
-    'code': 'count_to_page',
-    'path': 'count_to_page',
-    'name': '数字渐变',
-    'meta': {
-      'title': '数字渐变',
-      'icon': 'md-trending-up'
+    {
+      'id': 8,
+      'parentid': 7,
+      'sort': 3,
+      'code': 'count_to_page',
+      'path': 'count_to_page',
+      'name': '数字渐变',
+      'meta': {
+        'title': '数字渐变',
+        'icon': 'md-trending-up'
+      },
+      'type': 'SON'
     },
-    'type': 'SON'
-  },
-  {
-    'id': 9,
-    'parentid': 7,
-    'sort': 4,
-    'code': 'drag_list_page',
-    'path': 'drag_list_page',
-    'name': '拖拽列表',
-    'meta': {
-      'title': '拖拽列表',
-      'icon': 'ios-infinite'
+    {
+      'id': 9,
+      'parentid': 7,
+      'sort': 4,
+      'code': 'drag_list_page',
+      'path': 'drag_list_page',
+      'name': '拖拽列表',
+      'meta': {
+        'title': '拖拽列表',
+        'icon': 'ios-infinite'
+      },
+      'type': 'SON'
     },
-    'type': 'SON'
-  },
-  {
-    'id': 10,
-    'parentid': 7,
-    'sort': 5,
-    'path': 'tables_page',
-    'code': 'tables_page',
-    'name': '多功能表格',
-    'meta': {
-      'title': '多功能表格',
-      'icon': 'md-grid'
+    {
+      'id': 10,
+      'parentid': 7,
+      'sort': 5,
+      'path': 'tables_page',
+      'code': 'tables_page',
+      'name': '多功能表格',
+      'meta': {
+        'title': '多功能表格',
+        'icon': 'md-grid'
+      },
+      'type': 'SON'
     },
-    'type': 'SON'
-  },
-  {
-    'id': 11,
-    'parentid': 7,
-    'sort': 6,
-    'path': 'split_pane_page',
-    'code': 'split_pane_page',
-    'name': '分割窗口',
-    'meta': {
-      'title': '分割窗口',
-      'icon': 'md-pause'
+    {
+      'id': 11,
+      'parentid': 7,
+      'sort': 6,
+      'path': 'split_pane_page',
+      'code': 'split_pane_page',
+      'name': '分割窗口',
+      'meta': {
+        'title': '分割窗口',
+        'icon': 'md-pause'
+      },
+      'type': 'SON'
     },
-    'type': 'SON'
-  },
-  {
-    'id': 12,
-    'parentid': 7,
-    'sort': 7,
-    'path': 'markdown_page',
-    'code': 'markdown_page',
-    'name': 'Markdown编辑器',
-    'meta': {
-      'icon': 'logo-markdown',
-      'title': 'Markdown编辑器'
+    {
+      'id': 12,
+      'parentid': 7,
+      'sort': 7,
+      'path': 'markdown_page',
+      'code': 'markdown_page',
+      'name': 'Markdown编辑器',
+      'meta': {
+        'icon': 'logo-markdown',
+        'title': 'Markdown编辑器'
+      },
+      'type': 'SON'
     },
-    'type': 'SON'
-  },
-  {
-    'id': 13,
-    'parentid': 7,
-    'sort': 8,
-    'path': 'editor_page',
-    'code': 'editor_page',
-    'name': '富文本编辑器',
-    'meta': {
-      'icon': 'ios-create',
-      'title': '富文本编辑器'
+    {
+      'id': 13,
+      'parentid': 7,
+      'sort': 8,
+      'path': 'editor_page',
+      'code': 'editor_page',
+      'name': '富文本编辑器',
+      'meta': {
+        'icon': 'ios-create',
+        'title': '富文本编辑器'
+      },
+      'type': 'SON'
     },
-    'type': 'SON'
-  },
-  {
-    'id': 14,
-    'parentid': 7,
-    'sort': 9,
-    'path': 'icons_page',
-    'code': 'icons_page',
-    'name': '自定义图标',
-    'meta': {
-      'icon': '_bear',
-      'title': '自定义图标'
+    {
+      'id': 14,
+      'parentid': 7,
+      'sort': 9,
+      'path': 'icons_page',
+      'code': 'icons_page',
+      'name': '自定义图标',
+      'meta': {
+        'icon': '_bear',
+        'title': '自定义图标'
+      },
+      'type': 'SON'
     },
-    'type': 'SON'
-  },
-  {
-    'id': 15,
-    'parentid': 7,
-    'sort': 10,
-    'path': 'tinymce_editor_page',
-    'code': 'tinymce_editor_page',
-    'name': 'Tinymce编辑器',
-    'meta': {
-      'icon': 'ios-create',
-      'title': 'Tinymce编辑器'
-    },
-    'type': 'SON'
-  }];
-  
-  const sixteen=[{
+    {
+      'id': 15,
+      'parentid': 7,
+      'sort': 10,
+      'path': 'tinymce_editor_page',
+      'code': 'tinymce_editor_page',
+      'name': 'Tinymce编辑器',
+      'meta': {
+        'icon': 'ios-create',
+        'title': 'Tinymce编辑器'
+      },
+      'type': 'SON'
+    }];
+
+  const sixteen = [{
     'id': 16,
     'parentid': 1,
     'sort': 11,
@@ -326,94 +326,94 @@ export const getMenuData = req => {
     },
     'type': 'PARENT'
   },
-  {
-    'id': 17,
-    'parentid': 16,
-    'sort': 12,
-    'code': 'menu',
-    'path': 'menu',
-    'name': '菜单管理',
-    'meta': {
-      'title': '菜单管理',
-      'icon': 'ios-settings'
+    {
+      'id': 17,
+      'parentid': 16,
+      'sort': 12,
+      'code': 'menu',
+      'path': 'menu',
+      'name': '菜单管理',
+      'meta': {
+        'title': '菜单管理',
+        'icon': 'ios-settings'
+      },
+      'type': 'SON'
     },
-    'type': 'SON'
-  },
-  {
-    'id': 18,
-    'parentid': 16,
-    'sort': 13,
-    'code': 'config',
-    'path': 'config',
-    'name': '参数管理',
-    'meta': {
-      'title': '参数管理',
-      'icon': 'md-settings'
+    {
+      'id': 18,
+      'parentid': 16,
+      'sort': 13,
+      'code': 'config',
+      'path': 'config',
+      'name': '参数管理',
+      'meta': {
+        'title': '参数管理',
+        'icon': 'md-settings'
+      },
+      'type': 'SON'
     },
-    'type': 'SON'
-  },
-  {
-    'id': 19,
-    'parentid': 16,
-    'sort': 14,
-    'code': 'permission',
-    'path': 'permission',
-    'name': '权限管理',
-    'meta': {
-      'title': '权限管理',
-      'icon': 'md-lock'
+    {
+      'id': 19,
+      'parentid': 16,
+      'sort': 14,
+      'code': 'permission',
+      'path': 'permission',
+      'name': '权限管理',
+      'meta': {
+        'title': '权限管理',
+        'icon': 'md-lock'
+      },
+      'type': 'SON'
     },
-    'type': 'SON'
-  },
-  {
-    'id': 20,
-    'parentid': 16,
-    'sort': 15,
-    'code': 'role',
-    'path': 'role',
-    'name': '角色管理',
-    'meta': {
-      'title': '角色管理',
-      'icon': 'ios-people'
+    {
+      'id': 20,
+      'parentid': 16,
+      'sort': 15,
+      'code': 'role',
+      'path': 'role',
+      'name': '角色管理',
+      'meta': {
+        'title': '角色管理',
+        'icon': 'ios-people'
+      },
+      'type': 'SON'
     },
-    'type': 'SON'
-  },
-  {
-    'id': 25,
-    'parentid': 16,
-    'sort': 20,
-    'code': 'user',
-    'path': 'user',
-    'name': '用户管理',
-    'meta': {
-      'title': '用户管理',
-      'icon': 'md-person'
-    },
-    'type': 'SON'
-  }];
+    {
+      'id': 25,
+      'parentid': 16,
+      'sort': 20,
+      'code': 'user',
+      'path': 'user',
+      'name': '用户管理',
+      'meta': {
+        'title': '用户管理',
+        'icon': 'md-person'
+      },
+      'type': 'SON'
+    }];
 
   switch (pid) {
     case '11':
-    tableData.push(...one);
-    break;
+      tableData.push(...one);
+      break;
     case '2':
-    tableData.push(...two);
-    break;
+      tableData.push(...two);
+      break;
     case '3':
-    tableData.push(...three);
-    break;
+      tableData.push(...three);
+      break;
     case '4':
-    tableData.push(...four);
-    break;
+      tableData.push(...four);
+      break;
     case '5':
-    tableData.push(...five);
-    break;
+      tableData.push(...five);
+      break;
     case '7':
-    tableData.push(...seven);
-    break;
+      tableData.push(...seven);
+      break;
     case '12':
-    tableData.push(...sixteen);
-    break;
+      tableData.push(...sixteen);
+      break;
   }
 
   const pageList = tableData.filter((item, index) => index < rows * page && index >= rows * (page - 1));
@@ -475,30 +475,30 @@ export const getUserData = req => {
 
 export const getOperateData = req => {
   let tableData = [];
-  const { page = 1, rows = 10, menuId= 0 } = getParams(req.url);
-  const data=[{
+  const {page = 1, rows = 10, menuId = 0} = getParams(req.url);
+  const data = [{
     'id': 1,
     'type': 'get,post',
     'menuId': 0,
     'name': '菜单操作限制',
     'antUrl': '/**/ims-menu/**'
   },
-  {
-    'id': 2,
-    'type': 'get',
-    'menuId': 0,
-    'name': '菜单获取限制',
-    'antUrl': '/ims-menu/{id}'
-  },
-  {
-    'id': 3,
-    'type': 'post',
-    'menuId': 0,
-    'name': '菜单添加限制',
-    'antUrl': '/ims-menu/create'
-  }];
+    {
+      'id': 2,
+      'type': 'get',
+      'menuId': 0,
+      'name': '菜单获取限制',
+      'antUrl': '/ims-menu/{id}'
+    },
+    {
+      'id': 3,
+      'type': 'post',
+      'menuId': 0,
+      'name': '菜单添加限制',
+      'antUrl': '/ims-menu/create'
+    }];
 
-  const data2=[{
+  const data2 = [{
     'id': 1,
     'type': 'get',
     'menuId': 6,
@@ -506,34 +506,155 @@ export const getOperateData = req => {
     'antUrl': '/**/ims-home/**'
   }];
 
-  const data3=[{
+  const data3 = [{
     'id': 1,
     'type': 'post',
     'menuId': 17,
     'name': '操作权限创建限制',
     'antUrl': '/ims-operation/create'
   },
-  {
-    'id': 2,
-    'type': 'get',
-    'menuId': 17,
-    'name': '操作权限获取限制',
-    'antUrl': '/ims-operation/{menuId}'
-  }];
+    {
+      'id': 2,
+      'type': 'get',
+      'menuId': 17,
+      'name': '操作权限获取限制',
+      'antUrl': '/ims-operation/{menuId}'
+    }];
 
   switch (menuId) {
     case '6':
-    tableData.push(...data2);
-    break;
+      tableData.push(...data2);
+      break;
     case '17':
-    tableData.push(...data3);
-    break;
+      tableData.push(...data3);
+      break;
     default:
-    tableData.push(...data);
+      tableData.push(...data);
   }
-  
+
   const pageList = tableData.filter((item, index) => index < rows * page && index >= rows * (page - 1));
 
+  return {
+    'array': pageList,
+    'total': tableData.length
+  };
+};
+
+export const getMasterApplication = req => {
+  const {page = 1, rows = 10} = JSON.parse(req.body);
+  const tableData = [
+    {
+      id: '1',
+      name: 'Jerry1',
+      phoneNumber: 18,
+      idCard: '430345199305162223',
+      status: '审核通过',
+      remark: '通过',
+      applicationTime: '2018-10-25',
+      checkTime: '2018-10-28'
+    },
+    {
+      id: '2',
+      name: 'Jerry2',
+      phoneNumber: 18,
+      idCard: '430345199305162223',
+      status: '审核通过',
+      remark: '通过',
+      applicationTime: '2018-10-25',
+      checkTime: '2018-10-28'
+    },
+    {
+      id: '3',
+      name: 'Jerry3',
+      phoneNumber: 18,
+      idCard: '430345199305162223',
+      status: '审核通过',
+      remark: '通过',
+      applicationTime: '2018-10-25',
+      checkTime: '2018-10-28'
+    },
+    {
+      id: '4',
+      name: 'Jerry4',
+      phoneNumber: 15645366543,
+      idCard: '430345199305162223',
+      status: '审核通过',
+      remark: '通过',
+      applicationTime: '2018-10-25',
+      checkTime: '2018-10-28'
+    },
+    {
+      id: '5',
+      name: 'Jerry4',
+      phoneNumber: 15645366543,
+      idCard: '430345199305162223',
+      status: '审核通过',
+      remark: '通过',
+      applicationTime: '2018-10-25',
+      checkTime: '2018-10-28'
+    },
+    {
+      id: '6',
+      name: 'Jerry4',
+      phoneNumber: 15645366543,
+      idCard: '430345199305162223',
+      status: '审核通过',
+      remark: '通过',
+      applicationTime: '2018-10-25',
+      checkTime: '2018-10-28'
+    },
+    {
+      id: '7',
+      name: 'Jerry4',
+      phoneNumber: 15645366543,
+      idCard: '430345199305162223',
+      status: '审核通过',
+      remark: '通过',
+      applicationTime: '2018-10-25',
+      checkTime: '2018-10-28'
+    },
+    {
+      id: '8',
+      name: 'Jerry4',
+      phoneNumber: 15645366543,
+      idCard: '430345199305162223',
+      status: '审核通过',
+      remark: '通过',
+      applicationTime: '2018-10-25',
+      checkTime: '2018-10-28'
+    },
+    {
+      id: '9',
+      name: 'Jerry4',
+      phoneNumber: 15645366543,
+      idCard: '430345199305162223',
+      status: '审核通过',
+      remark: '通过',
+      applicationTime: '2018-10-25',
+      checkTime: '2018-10-28'
+    },
+    {
+      id: '10',
+      name: 'Jerry4',
+      phoneNumber: 15645366543,
+      idCard: '430345199305162223',
+      status: '审核通过',
+      remark: '通过',
+      applicationTime: '2018-10-25',
+      checkTime: '2018-10-28'
+    },
+    {
+      id: '11',
+      name: 'Jerry4',
+      phoneNumber: 18,
+      idCard: '430345199305162223',
+      status: '审核通过',
+      remark: '通过',
+      applicationTime: '2018-10-25',
+      checkTime: '2018-10-28'
+    }
+  ];
+  const pageList = tableData.filter((item, index) => index < rows * page && index >= rows * (page - 1));
   return {
     'array': pageList,
     'total': tableData.length

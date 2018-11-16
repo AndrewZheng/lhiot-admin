@@ -34,16 +34,16 @@ export const getMenuData = ({
     pid
   };
 
-  return Vue.prototype.$http.request({
-    url: 'get_menu_data',
-    params: data,
-    method: 'get'
-  });
   // return Vue.prototype.$http.request({
-  //   url: '/ims-menu/pages',
-  //   data: data,
-  //   method: 'post'
+  //   url: 'get_menu_data',
+  //   params: data,
+  //   method: 'get'
   // });
+  return Vue.prototype.$http.request({
+    url: '/ims-menu/pages',
+    data: data,
+    method: 'post'
+  });
 };
 
 export const getOperateData = ({
@@ -57,14 +57,14 @@ export const getOperateData = ({
     menuId
   };
 
-  return Vue.prototype.$http.request({
-    url: 'get_operate_data',
-    params: data,
-    method: 'get'
-  });
   // return Vue.prototype.$http.request({
-  //   url: '/ims-operation/pages',
-  //   data: data,
-  //   method: 'post'
+  //   url: 'get_operate_data',
+  //   params: data,
+  //   method: 'get'
   // });
+  return Vue.prototype.$http.request({
+    url: '/ims-operation/pages',
+    data: data,
+    method: 'post'
+  });
 };

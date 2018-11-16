@@ -1,6 +1,6 @@
 import { login, logout, getUserInfo } from '@/api/user';
 import { getRouterById } from '@/api/system';
-import { setToken, getToken, filterLocalRoute } from '@/libs/util';
+import { setToken, getToken, filterLocalRoute, getMenuByRouter } from '@/libs/util';
 import routersLocal, { constantRouterMap } from '@/router/routers';
 import { PcLockr, enums, gbs } from 'util/';
 import _ from 'lodash';
@@ -20,6 +20,12 @@ const state = {
 };
 
 const getters = {
+  menuList: (state) => {
+    let menuData = getMenuByRouter(state.actualRouter);
+    console.log('menuData generate by router: ', menuData);
+    return menuData;
+  },
+
   getUserName: (state) => {
     if (!state.userName) {
       state.userName= PcLockr.get(enums.USER.LOGIN_NAME);
@@ -73,7 +79,7 @@ const mutations = {
     state.routePermission=routePermission;
   },
   generateRoutes(state, routeList) {
-    console.log('routeList', routeList);
+    console.log('userPermission', routeList);
     state.userPermission = routeList;
     let actualRouter= filterLocalRoute(routeList, routersLocal);
     console.log('actualRouter: ', actualRouter);
@@ -92,10 +98,10 @@ const actions = {
     account = account.trim();
     return new Promise((resolve, reject) => {
       login({ account, password }).then(res => {
-        // console.log('res from backend: ', res.XSessionId);
-        // commit('setToken', res.XSessionId);
+        console.log('res from backend: ', res.XSessionId);
+        commit('setToken', res.XSessionId);
         console.log('step 1');
-        commit('setToken', res.token);
+        // commit('setToken', res.token);
         resolve();
       }).catch(err => {
         reject(err);
@@ -108,6 +114,7 @@ const actions = {
       logout(state.token).then(() => {
         commit('setToken', '');
         commit('setAccess', []);
+        commit('setHasGetInfo', false);
         resolve();
       }).catch(err => {
         reject(err);
@@ -134,7 +141,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       getRouterById(pid).then(res => {
         if (res && res.array && res.array.length > 0) {
-          console.log('res.array：', res.array);
+          console.log('generateRoutes：', res.array);
           commit('generateRoutes', res.array);
         }
         resolve();

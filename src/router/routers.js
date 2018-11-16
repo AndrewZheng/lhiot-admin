@@ -12,18 +12,18 @@ import parentView from '@/components/parent-view'
  * }
  */
 export const constantRouterMap = [{
-    path: '/redirect',
-    name: 'redirect',
-    component: Main,
-    meta:{
-      hideInMenu: true
-    },
-    children: [{
-      path: '/redirect/:path*',
-      component: () =>
-        import('@/view/redirect/index.vue')
-    }]
+  path: '/redirect',
+  name: 'redirect',
+  component: Main,
+  meta: {
+    hideInMenu: true
   },
+  children: [{
+    path: '/redirect/:path*',
+    component: () =>
+      import('@/view/redirect/index.vue')
+  }]
+},
   {
     path: '/',
     name: '_home',
@@ -123,15 +123,15 @@ export const asyncRouterMap = [
     },
     component: Main,
     children: [{
-        path: 'count_to_page',
-        name: 'count_to_page',
-        meta: {
-          icon: 'md-trending-up',
-          title: '数字渐变'
-        },
-        component: () =>
-          import('@/view/components/count-to/count-to.vue')
+      path: 'count_to_page',
+      name: 'count_to_page',
+      meta: {
+        icon: 'md-trending-up',
+        title: '数字渐变'
       },
+      component: () =>
+        import('@/view/components/count-to/count-to.vue')
+    },
       {
         path: 'drag_list_page',
         name: 'drag_list_page',
@@ -212,17 +212,17 @@ export const asyncRouterMap = [
     },
     component: Main,
     children: [{
-        path: 'params/:id',
-        name: 'params',
-        meta: {
-          icon: 'md-flower',
-          title: route => `动态路由-${route.params.id}`,
-          notCache: true,
-          beforeCloseName: 'before_close_normal'
-        },
-        component: () =>
-          import('@/view/argu-page/params.vue')
+      path: 'params/:id',
+      name: 'params',
+      meta: {
+        icon: 'md-flower',
+        title: route => `动态路由-${route.params.id}`,
+        notCache: true,
+        beforeCloseName: 'before_close_normal'
       },
+      component: () =>
+        import('@/view/argu-page/params.vue')
+    },
       {
         path: 'query',
         name: 'query',
@@ -327,7 +327,45 @@ export const asyncRouterMap = [
           title: '用户管理'
         },
         component: () => import('@/view/system/user/user.vue')
+      }
+    ]
+  },
+  {
+    path: '/fruitmastermanager',
+    name: 'fruitmastermanager',
+    meta: {
+      icon: 'md-cog',
+      title: '鲜果师管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'application',
+        name: 'application',
+        meta: {
+          icon: 'md-menu',
+          title: '鲜果师申请'
+        },
+        component: () => import('@/view/system/fruitmaster-manager/application.vue')
       },
+      {
+        path: 'salary',
+        name: 'salary',
+        meta: {
+          icon: 'md-menu',
+          title: '薪资管理'
+        },
+        component: () => import('@/view/system/fruitmaster-manager/salary.vue')
+      },
+      {
+        path: 'fruit-manager',
+        name: 'fruit-manager',
+        meta: {
+          icon: 'md-menu',
+          title: '鲜果师管理'
+        },
+        component: () => import('@/view/system/fruitmaster-manager/manager.vue')
+      }
     ]
   },
   {
