@@ -660,3 +660,49 @@ export const getMasterApplication = req => {
     'total': tableData.length
   };
 };
+
+export const getMasterManagerData = req => {
+  const {page = 1, rows = 10} = JSON.parse(req.body);
+  let list = [];
+  let randomData = Mock.mock({
+    'array|50': [{
+      'id|1-47': 1,
+      name: '@name',
+      phoneNumber: Random.integer(13100000000, 19999999999),
+      inviteCode: 'rfcg',
+      level: '培训中',
+      status: '正常',
+      headStatus: '健康管理学会副会长',
+      'cash|1-100.1-10': 1
+    }]
+  }).array;
+  list.push(...randomData);
+  const pageList = list.filter((item, index) => index < rows * page && index >= rows * (page - 1));
+  return {
+    'array': pageList,
+    'total': list.length
+  };
+};
+export const getMasterSalary = req => {
+  const {page = 1, rows = 10} = JSON.parse(req.body);
+  let list = [];
+  let randomData = Mock.mock({
+    'array|50': [{
+      'id|1-47': 1,
+      name: '@name',
+      phoneNumber: Random.integer(13100000000, 19999999999),
+      extractingAmount: Random.integer(1, 1000),
+      settlementStatus: '未处理',
+      creditCardNumbers: 6222021904001333955,
+      headStatus: '健康管理学会副会长',
+      applicationTime: '2018-10-25',
+      handlingTime: '2018-10-28'
+    }]
+  }).array;
+  list.push(...randomData);
+  const pageList = list.filter((item, index) => index < rows * page && index >= rows * (page - 1));
+  return {
+    'array': pageList,
+    'total': list.length
+  };
+};

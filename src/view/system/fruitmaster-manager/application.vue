@@ -34,7 +34,7 @@
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import {getMasterApplication} from '../../../api/fruitermaster';
+  import {getMasterApplication} from '@/api/fruitermaster';
 
   const roleRowData = {
     name: '',
@@ -56,7 +56,8 @@
             title: '编号',
             key: 'id',
             sortable: true,
-            maxWidth: 80
+            maxWidth: 80,
+            fixed: 'left'
           },
           {
             title: '姓名',
@@ -120,12 +121,10 @@
       handleSearch() {
       },
       changePage(page) {
-        console.log(page);
         this.page = page;
         this.getTableData();
       },
       changePageSize(pageSize) {
-        console.log(pageSize);
         this.page = 1;
         this.pageSize = pageSize;
         this.getTableData();
@@ -136,7 +135,6 @@
           rows: this.pageSize
         }).then(res => {
           this.tableData = res.array;
-          console.log(res.array);
           this.total = res.total;
           this.loading = false;
         });
