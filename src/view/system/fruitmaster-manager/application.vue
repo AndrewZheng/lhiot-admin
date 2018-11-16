@@ -34,7 +34,7 @@
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import {getMasterApplication} from '../../../api/fruiterMaster';
+  import {getMasterApplication} from '../../../api/fruitermaster';
 
   const roleRowData = {
     name: '',
