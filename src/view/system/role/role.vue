@@ -455,6 +455,8 @@ export default {
     checkMenuByIds() {
       if (this.rowData.menuids !== undefined) {
         const menuids = this.rowData.menuids.split(',');
+        this.selectedIds = menuids;
+        console.log('selectedIds', this.selectedIds);
         console.log('menuids: ', menuids);
         setTreeNodeChecked(this.menuList, menuids);
         console.log('this.menuList selected:', this.menuList);
@@ -465,50 +467,49 @@ export default {
     },
     handleMenuOk() {
       let menuIds = '';
-      if (this.selectedIds.length === 0) {
-        menuIds = '-1'; // 未选择
+      console.log('selectedIds:' + this.selectedIds + ',this.rowData.menuids:' + this.rowData.menuids);
+      if (this.selectedIds == this.rowData.menuids) { // 未修改
+        this.loadingBtn = false;
+        this.modalAdd = false;
       } else {
-        menuIds = this.selectedIds.join(',');
-      }
-      // 发送axios请求
-      this.$http
-        .request({
-          url: '/ims-role/relation/' + this.rowData.id + '/' + menuIds,
-          method: 'put'
-        })
-        .then(res => {
-          this.loadingBtn = false;
-          if (this.modalMenu == true) {
-            this.modalMenu = false;
-            this.targetKeys = [];
-            this.$Message.info('修改成功');
-          } else if (this.modalAdd == true) {
-            this.modalAdd = false;
-            this.$Message.info('保存成功');
-            this.isCreated = true;
-          }
+        menuIds = this.selectedIds.length === 0 ? '-1' : this.selectedIds; // menuIds = -1为没有选择任何数数据
+        // 发送axios请求
+        this.$http
+          .request({
+            url: '/ims-role/relation/' + this.rowData.id + '/' + menuIds,
+            method: 'put'
+          })
+          .then(res => {
+            this.loadingBtn = false;
+            if (this.modalMenu == true) {
+              this.modalMenu = false;
+              this.targetKeys = [];
+              this.$Message.info('修改成功');
+            } else if (this.modalAdd == true) {
+              this.modalAdd = false;
+              this.$Message.info('保存成功');
+              this.isCreated = true;
+            }
+          });
+        // TODO 清除已选择的菜单数据
+        // setTreeNodeChecked(this.menuList, '');
+        // getRelationMenu(this.rowData.id).then(res => {
+        //   if (res && res.array.length > 0) {
+        //     console.log('getRelationMenu: ', buildMenu(res.array, 'parentid', true));
+        //     this.relationMenuList = buildMenu(res.array, 'parentid', true);
+        //   }
+        // });
+        // 分发action动态修改权限 TODO:待测试
+        this.$store.dispatch('changePermission').then(res => {
+          this.$router.addRoutes(this.$store.getters.getActualRouter);
+          // 刷新当前路由
+          this.reload();
         });
-      // TODO 清除已选择的菜单数据
-      // setTreeNodeChecked(this.menuList, '');
-      // getRelationMenu(this.rowData.id).then(res => {
-      //   if (res && res.array.length > 0) {
-      //     console.log('getRelationMenu: ', buildMenu(res.array, 'parentid', true));
-      //     this.relationMenuList = buildMenu(res.array, 'parentid', true);
-      //   }
-      // });
-      // 分发action动态修改权限 TODO:待测试
-      this.$store.dispatch('changePermission').then(res => {
-        this.$router.addRoutes(this.$store.getters.getActualRouter);
-        // 刷新当前路由
-        this.reload();
-      });
+      }
     },
     handleCancel() {
-      // TODO 清除已选择的菜单数据
-      // this.selectedIds = [];
+      // 清除已选择的菜单数据
       setTreeNodeChecked(this.menuList, '');
-      // setTreeNodeChecked(this.menuList, 0);
-      // setTreeNodeChecked(this.menuList, ',');
     },
     handleAdd() {
       this.rowData = {};
