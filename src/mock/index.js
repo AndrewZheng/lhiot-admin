@@ -1,6 +1,16 @@
 import Mock from 'mockjs';
 import { login, logout, getUserInfo } from './login';
-import { getTableData, getDragList, getMenuData, getRoleData, getUserData, getOperateData, getMasterApplication } from './data';
+import {
+  getTableData,
+  getDragList,
+  getMenuData,
+  getRoleData,
+  getUserData,
+  getOperateData,
+  getMasterApplication,
+  getMasterManagerData,
+  getMasterSalary
+} from './data';
 import { getSystemList, getRouteListById, getMenuList } from './system';
 
 // 登录相关和获取用户信息
@@ -16,6 +26,7 @@ Mock.mock(/\/get_menu_data/, getMenuData);
 Mock.mock(/\/get_role_data/, getRoleData);
 Mock.mock(/\/get_user_data/, getUserData);
 Mock.mock(/\/get_operate_data/, getOperateData);
-Mock.mock(/\/admin_fruit-master_application/, getMasterApplication);
-
+Mock.mock(/\/admin_fruit_master_application/, getMasterApplication);
+Mock.mock(/\/admin_fruit_master_manager/, getMasterManagerData);
+Mock.mock(/\/admin_fruit_master_salary/, getMasterSalary);
 export default Mock;

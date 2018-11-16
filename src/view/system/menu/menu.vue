@@ -218,7 +218,7 @@
           </Button>
        </div>
     </Modal>
-    
+
   <!--创建子菜单并添加操作权限 -->
   <Modal
       v-model="modalAdd"
@@ -303,7 +303,7 @@
               :columns="oColumns"
               @on-delete="handleDeleteOperate"
               />
-          
+
           </TabPane>
       </Tabs>
       </div>
@@ -314,7 +314,7 @@
       <Button type="primary" @click="handleCloseAdd">关闭</Button>
       </div>
   </Modal>
-    
+
   <!-- 导入excel -->
   <Modal
   v-model="modalUploadExcel"
@@ -949,7 +949,7 @@ export default {
       var titleObj = this.$refs.uploadExcel.tableTitle; // 获取表格中的标题
       var tableTitlesZh = []; // 原有的中文标题数组
       titleObj.forEach((value, index) => tableTitlesZh.push(titleObj[index]['key']));
-      var tableTitlesEn = ['name', 'code', 'type', 'sort']; // 要替换成的英文标题数组    
+      var tableTitlesEn = ['name', 'code', 'type', 'sort']; // 要替换成的英文标题数组
       console.log('tableTitlesZh(中文):' + tableTitlesZh);
       console.log('tableTitlesEn(英文):' + tableTitlesEn);
       var a = changeObjKeyName(dataObj, tableTitlesZh, tableTitlesEn);
