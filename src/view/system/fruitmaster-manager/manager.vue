@@ -22,6 +22,7 @@
           <Button v-waves @click="handleSearch" class="search-btn ml5" type="primary">
             <Icon type="md-search"/>&nbsp;搜索
           </Button>
+          <Button v-waves type="primary" @click="exportExcel" style="margin-left: 200px">导出</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -374,6 +375,11 @@
         this.imagecropperKey = this.imagecropperKey + 1;
         this.image = resData.fileUrl;
         this.imageVisible = true;
+      },
+      exportExcel() {
+        this.$refs.tables.exportCsv({
+          filename: `table-${new Date().valueOf()}.csv`
+        });
       }
     }
   };
