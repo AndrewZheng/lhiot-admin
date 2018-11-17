@@ -97,7 +97,7 @@ const actions = {
   handleLogin({ commit, dispatch }, { account, password }) {
     account = account.trim();
     return new Promise((resolve, reject) => {
-      login({ account, password, ip }).then(res => {
+      login({ account, password }).then(res => {
         console.log('res from backend: ', res.XSessionId);
         commit('setToken', res.XSessionId);
         console.log('step 1');
@@ -174,71 +174,6 @@ const actions = {
     return dispatch('getRouteListById', pid);
   }
 };
-
-// 获取用户ip
-function getIps(callback) {
-  var ipDups = {};
-
-  // compatibility for firefox and chrome
-  var RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
-
-  // bypass naive webrtc blocking
-  if (!RTCPeerConnection) {
-      var iframe = document.createElement('iframe');
-      // invalidate content script
-      iframe.sandbox = 'allow-same-origin';
-      iframe.style.display = 'none';
-      document.body.appendChild(iframe);
-      var win = iframe.contentWindow;
-      window.RTCPeerConnection = win.RTCPeerConnection;
-      window.mozRTCPeerConnection = win.mozRTCPeerConnection;
-      window.webkitRTCPeerConnection = win.webkitRTCPeerConnection;
-      RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
-  }
-
-  // minimal requirements for data connection
-  var mediaConstraints = {
-    optional: [{RtpDataChannels: true}]
-  };
-
-  // firefox already has a default stun server in about:config
-  //    media.peerconnection.default_iceservers =
-  //    [{"url": "stun:stun.services.mozilla.com"}]
-  var servers;
-
-  // add same stun server for chrome
-  if (window.webkitRTCPeerConnection)servers = {iceServers: [{urls: 'stun:stun.services.mozilla.com'}]};
-
-  // construct a new RTCPeerConnection
-  var pc = new RTCPeerConnection(servers, mediaConstraints);
-
-  // listen for candidate events
-  pc.onicecandidate = function(ice) {
-    // skip non-candidate events
-    if (ice.candidate) {
-      // match just the IP address
-      var ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3})/;
-      var ipAddr = ipRegex.exec(ice.candidate.candidate)[1];
-      // remove duplicates
-      if (ipDups[ipAddr] === undefined) callback(ipAddr);
-      ipDups[ipAddr] = true;
-    }
-  };
-
-  // create a bogus data channel
-  pc.createDataChannel('');
-
-  // create an offer sdp
-  pc.createOffer(function(result) {
-      // trigger the stun server request
-      pc.setLocalDescription(result, function() {}, function() {});
-  }, function() {});
-}
-
-var ip = '';
-getIps(function(ips) {
-  ip = ips;
-});
 
 export default {
   state,
