@@ -89,6 +89,7 @@ export const filterLocalRoute = (routeList, routersLocal) => {
       //   pathKey = route.path;
       // }
       routeList.forEach(accessRoute => {
+ getParams;
         if (accessRoute.code === route.name) {
           if (Array.isArray(route.children)) {
             route.children = findLocalRoute(route.children, route.path);
