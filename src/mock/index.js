@@ -12,6 +12,7 @@ import {
   getMasterSalary
 } from './data';
 import { getSystemList, getRouteListById, getMenuList } from './system';
+import {getFruitMasterUserData} from "./fruit_master_data";
 
 // 登录相关和获取用户信息
 Mock.mock(/\/login/, login);
@@ -29,4 +30,5 @@ Mock.mock(/\/get_operate_data/, getOperateData);
 Mock.mock(/\/admin_fruit_master_application/, getMasterApplication);
 Mock.mock(/\/admin_fruit_master_manager/, getMasterManagerData);
 Mock.mock(/\/admin_fruit_master_salary/, getMasterSalary);
+Mock.mock(/\/get_fruit_master_user_data/,getFruitMasterUserData)
 export default Mock;
