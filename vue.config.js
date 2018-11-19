@@ -31,7 +31,7 @@ module.exports = {
       .set('store', resolve('src/store'))
       .set('mixins', resolve('src/mixins'))
       .set('util', resolve('src/util'))
-      .set('filters', resolve('src/filters'));   
+      .set('filters', resolve('src/filters'));
   },
   // 打包时不生成.map文件
   productionSourceMap: false,
@@ -43,7 +43,7 @@ module.exports = {
     open: true, // 配置自动启动浏览器
     proxy: {
       '/api': {
-        target: 'http://192.168.1.124:2018',// 192.168.1.110
+        target: 'http://172.16.10.203:2018',// 192.168.1.110  http://172.16.10.203:2018
         ws: true,
         logLevel: 'debug',
         changeOrigin: true,

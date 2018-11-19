@@ -32,3 +32,13 @@ export const getMasterSalary =({page, rows}) => {
     method: 'get'
   });
 };
+export const getFruitMasterUserData =({page, rows}) => {
+  const data = {
+    page, rows
+  };
+  return Vue.prototype.$http.request({
+    url: 'get_fruit_master_user_data',
+    data,
+    method: 'get'
+  });
+};

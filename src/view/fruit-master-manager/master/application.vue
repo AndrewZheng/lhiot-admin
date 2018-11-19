@@ -56,33 +56,39 @@
             title: '编号',
             key: 'id',
             sortable: true,
-            maxWidth: 80,
+            width: 80,
             fixed: 'left'
           },
           {
             title: '姓名',
+            width: 150,
             key: 'name'
           },
           {
             title: '手机号码',
+            width: 150,
             key: 'phoneNumber'
           },
           {
             title: '身份证号码',
+            width: 200,
             key: 'idCard'
           },
           {
             title: '审核状态',
+            width: 150,
             key: 'status'
           },
           {
             title: '申请时间',
             key: 'applicationTime',
+            width: 150,
             sortable: true
           },
           {
             title: '审核时间',
             key: 'checkTime',
+            width: 150,
             sortable: true
           }
         ],

@@ -1,5 +1,4 @@
 import Main from '@/components/main'
-import parentView from '@/components/parent-view'
 
 /**
  * iview-admin中meta除了原生参数外可配置的参数:
@@ -278,7 +277,7 @@ export const asyncRouterMap = [
     path: '/system',
     name: 'system',
     meta: {
-      icon: 'ios-cube',
+      icon: 'ios-settings',
       title: '系统管理'
     },
     component: Main,
@@ -296,7 +295,7 @@ export const asyncRouterMap = [
         path: 'config',
         name: 'config',
         meta: {
-          icon: 'md-settings',
+          icon: 'md-menu',
           title: '参数管理'
         },
         component: () => import('@/view/system/config/config.vue')
@@ -305,7 +304,7 @@ export const asyncRouterMap = [
         path: 'permission',
         name: 'permission',
         meta: {
-          icon: 'md-lock',
+          icon: 'md-menu',
           title: '权限管理'
         },
         component: () => import('@/view/system/permission/permission.vue')
@@ -314,7 +313,7 @@ export const asyncRouterMap = [
         path: 'role',
         name: 'role',
         meta: {
-          icon: 'ios-people',
+          icon: 'md-menu',
           title: '角色管理'
         },
         component: () => import('@/view/system/role/role.vue')
@@ -323,18 +322,38 @@ export const asyncRouterMap = [
         path: 'user',
         name: 'user',
         meta: {
-          icon: 'md-person',
+          icon: 'md-menu',
           title: '用户管理'
         },
         component: () => import('@/view/system/user/user.vue')
-      }
+      },
     ]
   },
   {
-    path: '/fruitmastermanager',
-    name: 'fruitmastermanager',
+    path: '/fruit-master-manager-user',
+    name: 'fruit-master-manager-user',
     meta: {
-      icon: 'md-cog',
+      icon: 'md-settings',
+      title: '用户管理'
+    },
+    component: Main,
+    children:[
+      {
+        path: 'fruit-master-user',
+        name: 'fruit-master-user',
+        meta: {
+          icon: 'md-menu',
+          title: '用户管理'
+        },
+        component: () => import('@/view/fruit-master-manager/user/user.vue')
+      },
+    ]
+  },
+  {
+    path: '/fruit-master-manager',
+    name: 'fruit-master-manager',
+    meta: {
+      icon: 'md-settings',
       title: '鲜果师管理'
     },
     component: Main,
@@ -346,7 +365,7 @@ export const asyncRouterMap = [
           icon: 'md-menu',
           title: '鲜果师申请'
         },
-        component: () => import('@/view/system/fruitmaster-manager/application.vue')
+        component: () => import('@/view/fruit-master-manager/master/application.vue')
       },
       {
         path: 'salary',
@@ -355,7 +374,7 @@ export const asyncRouterMap = [
           icon: 'md-menu',
           title: '薪资管理'
         },
-        component: () => import('@/view/system/fruitmaster-manager/salary.vue')
+        component: () => import('@/view/fruit-master-manager/master/salary.vue')
       },
       {
         path: 'fruit-manager',
@@ -364,9 +383,75 @@ export const asyncRouterMap = [
           icon: 'md-menu',
           title: '鲜果师管理'
         },
-        component: () => import('@/view/system/fruitmaster-manager/manager.vue')
+        component: () => import('@/view/fruit-master-manager/master/manager.vue')
       }
     ]
+  },
+  {
+    path: '/fruit-master-manager-goods',
+    name: 'fruit-master-manager-goods',
+    meta: {
+      icon: 'md-settings',
+      title: '商品管理'
+    },
+    component: Main,
+  },
+  {
+    path: '/fruit-master-manager-content',
+    name: 'fruit-master-manager-content',
+    meta: {
+      icon: 'md-settings',
+      title: '内容管理'
+    },
+    component: Main,
+  },
+  {
+    path: '/fruit-master-manager-page',
+    name: 'fruit-master-manager-page',
+    meta: {
+      icon: 'md-settings',
+      title: '页面板块管理'
+    },
+    component: Main,
+  },
+  {
+    path: '/fruit-master-manager-custom',
+    name: 'fruit-master-manager-custom',
+    meta: {
+      icon: 'md-settings',
+      title: '定制管理'
+    },
+    component: Main,
+  },
+  {
+    path: '/fruit-master-manager-order',
+    name: 'fruit-master-manager-order',
+    meta: {
+      icon: 'md-settings',
+      title: '订单管理'
+    },
+    component: Main,
+  },
+  {
+    path: '/fruit-master-manager-rule-parameters',
+    name: 'fruit-master-manager-rule-parameters',
+    meta: {
+      icon: 'md-settings',
+      title: '规则参数管理'
+    },
+    component: Main,
+  },
+  {
+    path: '/fruit-master-manager-activity',
+    name: 'fruit-master-manager-activity',
+    meta: {
+      icon: 'md-settings',
+      title: '活动管理'
+    },
+    component: Main,
+  },
+  {
+    path: '/'
   },
   {
     path: '*',
