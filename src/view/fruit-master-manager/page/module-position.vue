@@ -9,20 +9,34 @@
               :loading="loading"
               @on-view="handleView"
               @on-edit="handleEdit"
+              @on-sale="onSale"
       >
         <div slot="searchCondition">
-          <Input placeholder="姓名" class="search-input" v-model="searchRowData.name" style="width: 100px"/>
-          <Input placeholder="手机号码" class="search-input" v-model="searchRowData.phoneNumber" style="width: 100px"/>
-          <Input placeholder="身份证号码" class="search-input" v-model="searchRowData.idCard" style="width: 100px"/>
-          <Input placeholder="注册时间起" class="search-input ml20" v-model="searchRowData.timeStart" style="width: 100px"/>
-          <Input placeholder="注册时间止" class="search-input mr20" v-model="searchRowData.timeEnd" style="width: 100px"/>
-          <Select class="search-col" placeholder="审核状态" v-model="searchRowData.status" style="width:100px" clearable>
-            <Option v-for="item in userStatus" :value="item.value" :key="item.value">{{ item.value }}</Option>
-          </Select>
-          <Button v-waves @click="handleSearch" class="search-btn ml5" type="primary">
-            <Icon type="md-search"/>&nbsp;搜索
-          </Button>
-          <Button v-waves type="primary" @click="exportExcel" style="margin-left: 200px">导出</Button>
+          <Row>
+            <Col span="24">
+            <Input placeholder="文章标题" class="search-input" v-model="searchRowData.name" style="width: auto"/>
+            <Input placeholder="关键词" class="search-input mr20" v-model="searchRowData.name" style="width: auto"/>
+            <DatePicker type="datetime" placeholder="Select date and time" style="width: 180px"></DatePicker>
+            <i class="mr5 ml5">-</i>
+            <DatePicker type="datetime" placeholder="Select date and time" style="width: 180px"></DatePicker>
+            <Button v-waves @click="handleSearch" class="search-btn ml20" type="primary">
+              <Icon type="md-search"/>&nbsp;搜索
+            </Button>
+
+            <Button v-waves type="success" class="ml5 mr5" @click="addChildren">
+              <Icon type="md-add"/>
+              创建
+            </Button>
+            <Button v-waves type="error" class="ml5 mr5" @click="deleteChildren">
+              <Icon type="md-close"/>
+              删除
+            </Button>
+            <Button v-waves type="primary" class="ml5 mr5" @click="exportExcel">
+              <Icon type="md-download"/>
+              导出
+            </Button>
+            </Col>
+          </Row>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -150,7 +164,7 @@
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="8">结算状态:</i-col>
-              <Select span="16" style="width: 100px" >
+              <Select span="16" style="width: 100px">
                 <Option value="beijing">已结算</Option>
                 <Option value="shanghai">未结算</Option>
               </Select>
@@ -180,7 +194,7 @@
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import {getMasterSalary} from '@/api/fruitermaster';
+  import {getOnSaleData} from '@/api/fruitermaster';
 
   const fruitMasterDetail = {
     id: '',
@@ -211,56 +225,72 @@
     },
     data() {
       return {
+        // 'id|1-10': 1,
+        // name: '@name',
+        // onSaleName: '@name',
+        // onSaleRole: '@name',
+        // roleCode: '@name',
+        // price: '100',
+        // sort: '1',
+        // "onSale|1": true,
+        // code: Random.integer(1, 50),
         columns: [
           {
-            title: 'ID',
+            title: '上架图片',
             key: 'id',
             sortable: true,
-            width: 80,
+            width: 180,
             fixed: 'left'
           },
           {
-            title: '申请人',
+            title: '商品名称',
             key: 'name',
             width: 150
           },
           {
-            title: '手机号',
+            title: '上架名称',
             width: 150,
-            key: 'phoneNumber'
+            key: 'onSaleName'
           },
           {
-            title: '提取金额',
+            title: '上架规格',
             width: 150,
-            key: 'extractingAmount'
+            key: 'onSaleRole'
           },
           {
-            title: '结算状态',
+            title: '规格条码',
             width: 150,
-            key: 'settlementStatus'
+            key: 'roleCode'
           },
           {
-            title: '银行卡号',
+            title: '商品原价',
             width: 180,
-            key: 'creditCardNumbers',
+            key: 'price',
             sortable: true
           },
           {
-            title: '申请时间',
+            title: '商品特价',
             width: 150,
-            key: 'applicationTime',
+            key: 'sort',
             sortable: true
-          }, {
-            title: '处理时间',
+          },
+          {
+            title: '排序',
             width: 150,
-            key: 'handlingTime',
+            key: 'price',
+            sortable: true
+          },
+          {
+            title: '是否上架',
+            width: 150,
+            key: 'onSale',
             sortable: true
           },
           {
             title: '操作',
-            minWidth: 150,
+            minWidth: 200,
             key: 'handle',
-            options: ['view', 'edit']
+            options: ['delete', 'edit', 'view', 'onSale']
           }
         ],
         tableData: [],
@@ -276,7 +306,16 @@
       };
     },
     methods: {
-      handleClose(){
+      addChildren() {
+
+      },
+      deleteChildren() {
+
+      },
+      onSale() {
+
+      },
+      handleClose() {
         this.modalView = false;
       },
       handleView(params) {
@@ -300,7 +339,7 @@
         this.getTableData();
       },
       getTableData() {
-        getMasterSalary({
+        getOnSaleData({
           page: this.page,
           rows: this.pageSize
         }).then(res => {

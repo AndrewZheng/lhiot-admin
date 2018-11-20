@@ -42,3 +42,23 @@ export const getFruitMasterUserData =({page, rows}) => {
     method: 'get'
   });
 };
+export const getFruitMastGoodsCategoryData =({page, rows}) => {
+  const data = {
+    page, rows
+  };
+  return Vue.prototype.$http.request({
+    url: 'get_fruit_master_goods_category_data',
+    data,
+    method: 'get'
+  });
+};
+export const getOnSaleData =({page, rows}) => {
+  const data = {
+    page, rows
+  };
+  return Vue.prototype.$http.request({
+    url: 'get_on_sale_data',
+    data,
+    method: 'get'
+  });
+};

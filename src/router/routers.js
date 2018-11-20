@@ -109,6 +109,26 @@ export const constantRouterMap = [{
         component: () => import('@/view/excel/export-excel.vue')
       }
     ]
+  },
+  {
+    path:'/goods-manager-goods-standard',
+    name:'fruit-master-goods-manager-goods-standard',
+    meta:{
+      icon: 'md-download',
+      title: '商品规格管理'
+    },
+    component:Main,
+    children:[
+      {
+        path: 'goods-standard',
+        name: 'goods-standard',
+        meta: {
+          icon: 'md-download',
+          title: '商品规格管理'
+        },
+        component: () => import('@/view/fruit-master-manager/goods/goods-standard.vue')
+      }
+    ]
   }
 ];
 
@@ -337,7 +357,7 @@ export const asyncRouterMap = [
       title: '用户管理'
     },
     component: Main,
-    children:[
+    children: [
       {
         path: 'fruit-master-user',
         name: 'fruit-master-user',
@@ -395,6 +415,35 @@ export const asyncRouterMap = [
       title: '商品管理'
     },
     component: Main,
+    children: [
+      {
+        path: '/fruit-master-goods-category',
+        name: 'fruit-master-goods-category',
+        meta: {
+          icon: 'md-menu',
+          title: '商品分类管理'
+        },
+        component: () => import('@/view/fruit-master-manager/goods/goods-category.vue')
+      },
+      {
+        path: '/fruit-master-goods-message',
+        name: 'fruit-master-goods-message',
+        meta: {
+          icon: 'md-menu',
+          title: '商品信息管理'
+        },
+        component: () => import('@/view/fruit-master-manager/goods/goods-message.vue')
+      },
+      {
+        path: '/fruit-master-goods-on-sale',
+        name: 'fruit-master-goods-on-sale',
+        meta: {
+          icon: 'md-menu',
+          title: '商品上架管理'
+        },
+        component: () => import('@/view/fruit-master-manager/goods/goods-on-sale.vue')
+      }
+    ]
   },
   {
     path: '/fruit-master-manager-content',
@@ -404,6 +453,17 @@ export const asyncRouterMap = [
       title: '内容管理'
     },
     component: Main,
+    children:[
+      {
+        path: '/fruit-master-content-article',
+        name: 'fruit-master-content-article',
+        meta: {
+          icon: 'md-menu',
+          title: '文章管理'
+        },
+        component: () => import('@/view/fruit-master-manager/content/article.vue')
+      }
+    ]
   },
   {
     path: '/fruit-master-manager-page',
@@ -413,6 +473,44 @@ export const asyncRouterMap = [
       title: '页面板块管理'
     },
     component: Main,
+    children:[
+      {
+        path: '/fruit-master-page-module-position',
+        name: 'fruit-master-page-module-position',
+        meta: {
+          icon: 'md-menu',
+          title: '板块位置管理'
+        },
+        component: () => import('@/view/fruit-master-manager/page/module-position.vue')
+      },
+      {
+        path: '/fruit-master-page-advertisement',
+        name: 'fruit-master-page-advertisement',
+        meta: {
+          icon: 'md-menu',
+          title: '广告管理'
+        },
+        component: () => import('@/view/fruit-master-manager/page/advertisement.vue')
+      },
+      {
+        path: '/fruit-master-page-goods-module',
+        name: 'fruit-master-page-goods-module',
+        meta: {
+          icon: 'md-menu',
+          title: '商品板块管理'
+        },
+        component: () => import('@/view/fruit-master-manager/page/goods-module.vue')
+      },
+      {
+        path: '/fruit-master-page-custom-module',
+        name: 'fruit-master-page-custom-module',
+        meta: {
+          icon: 'md-menu',
+          title: '定制板块管理'
+        },
+        component: () => import('@/view/fruit-master-manager/page/custom-module.vue')
+      }
+    ]
   },
   {
     path: '/fruit-master-manager-custom',
@@ -431,6 +529,35 @@ export const asyncRouterMap = [
       title: '订单管理'
     },
     component: Main,
+    children: [
+      {
+        path: 'fruit-master-normal-order',
+        name: 'fruit-master-normal-order',
+        meta: {
+          icon: 'md-menu',
+          title: '普通订单管理'
+        },
+        component: () => import('@/view/fruit-master-manager/order/normal-order.vue')
+      },
+      {
+        path: 'fruit-master-custom-order',
+        name: 'fruit-master-custom-order',
+        meta: {
+          icon: 'md-menu',
+          title: '定制订单管理'
+        },
+        component: () => import('@/view/fruit-master-manager/order/custom-order.vue')
+      },
+      {
+        path: 'fruit-master-return-order',
+        name: 'fruit-master-return-order',
+        meta: {
+          icon: 'md-menu',
+          title: '退货订单管理'
+        },
+        component: () => import('@/view/fruit-master-manager/order/return-order.vue')
+      }
+    ]
   },
   {
     path: '/fruit-master-manager-rule-parameters',

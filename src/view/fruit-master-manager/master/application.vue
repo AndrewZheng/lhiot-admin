@@ -88,7 +88,7 @@
           {
             title: '审核时间',
             key: 'checkTime',
-            width: 150,
+            minWidth: 150,
             sortable: true
           }
         ],
