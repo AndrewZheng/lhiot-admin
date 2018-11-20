@@ -7,22 +7,35 @@
               v-model="tableData"
               :columns="columns"
               :loading="loading"
+              @on-delete="handleDelete"
               @on-view="handleView"
               @on-edit="handleEdit"
+              @on-push="handlePush"
       >
         <div slot="searchCondition">
-          <Input placeholder="姓名" class="search-input" v-model="searchRowData.name" style="width: 100px"/>
-          <Input placeholder="手机号码" class="search-input" v-model="searchRowData.phoneNumber" style="width: 100px"/>
-          <Input placeholder="身份证号码" class="search-input" v-model="searchRowData.idCard" style="width: 100px"/>
-          <Input placeholder="注册时间起" class="search-input ml20" v-model="searchRowData.timeStart" style="width: 100px"/>
-          <Input placeholder="注册时间止" class="search-input mr20" v-model="searchRowData.timeEnd" style="width: 100px"/>
-          <Select class="search-col" placeholder="审核状态" v-model="searchRowData.status" style="width:100px" clearable>
-            <Option v-for="item in userStatus" :value="item.value" :key="item.value">{{ item.value }}</Option>
-          </Select>
-          <Button v-waves @click="handleSearch" class="search-btn ml5" type="primary">
-            <Icon type="md-search"/>&nbsp;搜索
-          </Button>
-          <Button v-waves type="primary" @click="exportExcel" style="margin-left: 200px">导出</Button>
+          <Row>
+            <Col span="12">
+            <Input placeholder="商品编码" class="search-input" v-model="searchRowData.name" style="width: auto"/>
+            <Input placeholder="商品名称" class="search-input" v-model="searchRowData.name" style="width: auto"/>
+            <Button v-waves @click="handleSearch" class="search-btn ml5" type="primary">
+              <Icon type="md-search"/>&nbsp;搜索
+            </Button>
+            </Col>
+            <Col span="12">
+            <Button v-waves type="success" class="mr5" @click="addChildren">
+              <Icon type="md-add"/>
+              创建
+            </Button>
+            <Button v-waves type="error" class="mr5" @click="deleteChildren">
+              <Icon type="md-close"/>
+              删除
+            </Button>
+            <Button v-waves type="primary" class="mr5" @click="exportExcel">
+              <Icon type="md-download" />
+              导出
+            </Button>
+            </Col>
+          </Row>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -112,67 +125,7 @@
         <span>鲜果师详情</span>
       </p>
       <div class="modal-content">
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">ID:</i-col>
-              <i-col span="20">{{fruitMasterDetail.id}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请人:</i-col>
-              <i-col span="16">{{fruitMasterDetail.name}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">手机号码:</i-col>
-              <i-col span="16">{{fruitMasterDetail.phoneNumber}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">提取金额:</i-col>
-              <i-col span="16">{{fruitMasterDetail.extractingAmount}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">银行卡号:</i-col>
-              <i-col span="16">{{fruitMasterDetail.creditCardNumbers}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">结算状态:</i-col>
-              <Select span="16" style="width: 100px" >
-                <Option value="beijing">已结算</Option>
-                <Option value="shanghai">未结算</Option>
-              </Select>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.applicationTime}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">处理时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.handlingTime}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
+
       </div>
     </Modal>
   </div>
@@ -213,54 +166,38 @@
       return {
         columns: [
           {
-            title: 'ID',
+            title: '商品编码',
             key: 'id',
             sortable: true,
-            width: 80,
+            width: 150,
             fixed: 'left'
           },
           {
-            title: '申请人',
+            title: '商品名称',
             key: 'name',
             width: 150
           },
           {
-            title: '手机号',
-            width: 150,
+            title: '益处',
+            minWidth: 150,
             key: 'phoneNumber'
           },
           {
-            title: '提取金额',
+            title: '是否可用',
             width: 150,
             key: 'extractingAmount'
           },
           {
-            title: '结算状态',
+            title: '商品描述',
             width: 150,
             key: 'settlementStatus'
           },
           {
-            title: '银行卡号',
-            width: 180,
-            key: 'creditCardNumbers',
-            sortable: true
-          },
-          {
-            title: '申请时间',
-            width: 150,
-            key: 'applicationTime',
-            sortable: true
-          }, {
-            title: '处理时间',
-            width: 150,
-            key: 'handlingTime',
-            sortable: true
-          },
-          {
             title: '操作',
-            minWidth: 150,
+            minWidth: 230,
+            align: 'center',
             key: 'handle',
-            options: ['view', 'edit']
+            options: ['delete','edit','view','push']
           }
         ],
         tableData: [],
@@ -276,15 +213,22 @@
       };
     },
     methods: {
-      handleClose(){
+      addChildren() {
+
+      },
+      deleteChildren() {
+
+      },
+      handleClose() {
         this.modalView = false;
       },
+      handleDelete(){
+
+      },
       handleView(params) {
-        this.fruitMasterDetail = params.row;
         this.modalView = true;
       },
       handleEdit(params) {
-        this.fruitMasterDetail = params.row;
         this.modalEdit = true;
       },
       handleSearch() {
@@ -313,6 +257,9 @@
         this.$refs.tables.exportCsv({
           filename: `table-${new Date().valueOf()}.csv`
         });
+      },
+      handlePush() {
+        this.turnToPage('goods-standard');
       }
     }
   };

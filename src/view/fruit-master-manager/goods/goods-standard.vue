@@ -33,9 +33,10 @@
       </div>
     </Card>
 
-    <!--查看菜单 -->
     <Modal
       v-model="modalView"
+      :mask-closable="false"
+      :width="rowData.type=='SON'?'750':'540'"
     >
       <p slot="header">
         <span>鲜果师详情</span>
@@ -50,8 +51,8 @@
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">姓名:</i-col>
-              <i-col span="20">{{fruitMasterDetail.name}}</i-col>
+              <i-col span="8">申请人:</i-col>
+              <i-col span="16">{{fruitMasterDetail.name}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -64,82 +65,38 @@
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="6">邀请码:</i-col>
-              <i-col span="18">{{fruitMasterDetail.inviteCode}}</i-col>
+              <i-col span="8">提取金额:</i-col>
+              <i-col span="16">{{fruitMasterDetail.extractingAmount}}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="10">鲜果师等级:</i-col>
-              <i-col span="14">{{fruitMasterDetail.level}}</i-col>
+              <i-col span="8">银行卡号:</i-col>
+              <i-col span="16">{{fruitMasterDetail.creditCardNumbers}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">状态:</i-col>
-              <i-col span="20">{{fruitMasterDetail.status}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="24">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">个人简介:</i-col>
-              <i-col span="20">{{fruitMasterDetail.headStatus}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="24">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">头像:</i-col>
-              <Avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg" size="large"/>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="24">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">职业照:</i-col>
-              <img src="https://i.loli.net/2017/08/21/599a521472424.jpg" class="img"/>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="24">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">半身照:</i-col>
-              <img src="https://i.loli.net/2017/08/21/599a521472424.jpg" class="img"/>
+              <i-col span="8">结算状态:</i-col>
+              <i-col span="16">{{fruitMasterDetail.settlementStatus}}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="10">开户人姓名:</i-col>
-              <i-col span="14">高级鲜果师</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">开户行:</i-col>
-              <i-col span="16">中国建设银行</i-col>
+              <i-col span="8">申请时间:</i-col>
+              <i-col span="16">{{fruitMasterDetail.applicationTime}}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="10">银行卡号:</i-col>
-              <i-col span="14">62223565421541558</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">可结算薪资:</i-col>
-              <i-col span="16">1885.64</i-col>
+              <i-col span="8">处理时间:</i-col>
+              <i-col span="16">{{fruitMasterDetail.handlingTime}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -148,91 +105,103 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-
     <Modal
       v-model="modalEdit"
     >
-      <div class="modal-content" style="margin-top: 30px;">
-        <Form :label-width="80" >
-          <FormItem label="ID:">
-            <i-col>{{fruitMasterDetail.id}}</i-col>
-          </FormItem>
-          <FormItem label="姓名:">
-            <Input v-model="fruitMasterDetail.name" placeholder="请输入您的姓名" ></Input>
-          </FormItem>
-          <FormItem label="手机号码:">
-            <Input v-model="fruitMasterDetail.phoneNumber" placeholder="请输入您的手机号码" ></Input>
-          </FormItem>
-          <FormItem label="邀请码:">
-            <i-col>{{fruitMasterDetail.inviteCode}}</i-col>
-          </FormItem>
-          <FormItem label="鲜果师等级:">
-            <Select style="width: 180px">
-              <Option value="beijing">初级</Option>
-              <Option value="shanghai">中级</Option>
-              <Option value="shenzhen">高级</Option>
-            </Select>
-          </FormItem>
-          <FormItem label="状态:">
-            <Select style="width: 180px" >
-              <Option value="beijing">可用</Option>
-              <Option value="shanghai">不可用</Option>
-              <Option value="shenzhen">异常</Option>
-            </Select>
-          </FormItem>
-          <FormItem label="鲜果师头衔:">
-            <Input v-model="fruitMasterDetail.headStatus" placeholder="" ></Input>
-          </FormItem>
-          <FormItem label="用户头像:" prop="avatarUrl">
-            <Button @click="imagecropperShow=true" class="add-image">
-              <Icon type="ios-camera" size="20"></Icon>
-            </Button>
-            <img :src="image" width='80px' height='80px'/>
-          </FormItem>
-          <FormItem label="职业照:">
-            <img src="https://i.loli.net/2017/08/21/599a521472424.jpg" class="img"/>
-          </FormItem>
-          <FormItem label="半身照:">
-            <img src="https://i.loli.net/2017/08/21/599a521472424.jpg" class="img"/>
-          </FormItem>
-          <FormItem label="银行卡号:">
-            <i-col>62223565421541558</i-col>
-          </FormItem>
-          <FormItem label="可结算薪资:">
-            <i-col>1885.64</i-col>
-          </FormItem>
-        </Form>
+      <p slot="header">
+        <span>鲜果师详情</span>
+      </p>
+      <div class="modal-content">
+        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+              <i-col span="4">ID:</i-col>
+              <i-col span="20">{{fruitMasterDetail.id}}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+              <i-col span="8">申请人:</i-col>
+              <i-col span="16">{{fruitMasterDetail.name}}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+              <i-col span="8">手机号码:</i-col>
+              <i-col span="16">{{fruitMasterDetail.phoneNumber}}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+              <i-col span="8">提取金额:</i-col>
+              <i-col span="16">{{fruitMasterDetail.extractingAmount}}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+              <i-col span="8">银行卡号:</i-col>
+              <i-col span="16">{{fruitMasterDetail.creditCardNumbers}}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+              <i-col span="8">结算状态:</i-col>
+              <Select span="16" style="width: 100px" >
+                <Option value="beijing">已结算</Option>
+                <Option value="shanghai">未结算</Option>
+              </Select>
+            </Row>
+          </i-col>
+        </Row>
+        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+              <i-col span="8">申请时间:</i-col>
+              <i-col span="16">{{fruitMasterDetail.applicationTime}}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+              <i-col span="8">处理时间:</i-col>
+              <i-col span="16">{{fruitMasterDetail.handlingTime}}</i-col>
+            </Row>
+          </i-col>
+        </Row>
       </div>
     </Modal>
-
-    <!-- 头像上传组件 -->
-    <image-cropper
-      v-show="imagecropperShow"
-      :width="70"
-      :height="70"
-      :key="imagecropperKey"
-      url="https://resource.food-see.com/v1/upload/product_image"
-      lang-type="zh"
-      @close="close"
-      @crop-upload-success="cropSuccess" />
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import ImageCropper from '_c/ImageCropper';
-  import {getMasterManager} from '@/api/fruitermaster';
+  import {getMasterSalary} from '@/api/fruitermaster';
 
   const fruitMasterDetail = {
     id: '',
     name: 0,
     phoneNumber: '',
-    inviteCode: '',
-    level: '',
-    status: '',
+    extractingAmount: '',
+    settlementStatus: '',
+    creditCardNumbers: '',
     headStatus: '',
-    cash: ''
+    applicationTime: '',
+    handlingTime: '2018-10-28'
   };
+  // 'id|1-47': 1,
+  //   name: '@name',
+  //   phoneNumber: Random.integer(13100000000, 19999999999),
+  //   extractingAmount: Random.integer(1, 1000),
+  //   settlementStatus: '未处理',
+  //   creditCardNumbers: 6222021904001333955,
+  //   headStatus: '健康管理学会副会长',
+  //   applicationTime: '2018-10-25',
+  //   handlingTime: '2018-10-28'
   const roleRowData = {
     name: '',
     phoneNumber: '',
@@ -241,55 +210,59 @@
     timeEnd: '',
     status: ''
   };
+
   export default {
     components: {
-      Tables,
-      ImageCropper
+      Tables
+    },
+    created() {
+      this.getTableData();
     },
     data() {
       return {
         columns: [
           {
-            title: '编号',
+            title: 'ID',
             key: 'id',
             sortable: true,
             width: 80,
             fixed: 'left'
           },
           {
-            title: '姓名',
-            width: 150,
-            key: 'name'
+            title: '申请人',
+            key: 'name',
+            width: 150
           },
           {
-            title: '手机号码',
+            title: '手机号',
             width: 150,
             key: 'phoneNumber'
           },
           {
-            title: '邀请码',
-            width: 100,
-            key: 'inviteCode'
+            title: '提取金额',
+            width: 150,
+            key: 'extractingAmount'
           },
           {
-            title: '鲜果师等级',
-            width: 100,
-            key: 'level'
+            title: '结算状态',
+            width: 150,
+            key: 'settlementStatus'
           },
           {
-            title: '状态',
-            width: 100,
-            key: 'status'
-          },
-          {
-            title: '头衔',
-            width: 200,
-            key: 'headStatus'
-          },
-          {
-            title: '可结算薪资',
+            title: '银行卡号',
             width: 180,
-            key: 'cash',
+            key: 'creditCardNumbers',
+            sortable: true
+          },
+          {
+            title: '申请时间',
+            width: 150,
+            key: 'applicationTime',
+            sortable: true
+          }, {
+            title: '处理时间',
+            width: 150,
+            key: 'handlingTime',
             sortable: true
           },
           {
@@ -306,35 +279,10 @@
         loading: true,
         modalView: false,
         modalEdit: false,
-        // 头像上传
-        imagecropperShow: false,
-        imagecropperKey: 0,
-        image: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-        fruitMasterDetail: fruitMasterDetail,
+        rowData: roleRowData,
         searchRowData: roleRowData,
-        modalMenu: false,
-        originMenuList: [],
-        selectedIds: [],
-        relationMenuList: [],
-        // tab选项操作数据
-        step: 'roleAdd',
-        userStatus: [
-          {
-            key: 'INITIAL',
-            value: '审核通过'
-          },
-          {
-            key: 'AVAILABLE',
-            value: '审核未通过'
-          },
-          {
-            key: 'UNAVAILABLE',
-            value: '审核中'
-          }]
+        fruitMasterDetail: fruitMasterDetail
       };
-    },
-    created() {
-      this.getTableData();
     },
     methods: {
       handleClose(){
@@ -361,7 +309,7 @@
         this.getTableData();
       },
       getTableData() {
-        getMasterManager({
+        getMasterSalary({
           page: this.page,
           rows: this.pageSize
         }).then(res => {
@@ -369,17 +317,6 @@
           this.total = res.total;
           this.loading = false;
         });
-      },
-      close() {
-        this.imagecropperShow = false;
-      },
-      // 头像上传
-      cropSuccess(resData) {
-        console.log('resData: ', resData);
-        this.imagecropperShow = false;
-        this.imagecropperKey = this.imagecropperKey + 1;
-        this.image = resData.fileUrl;
-        this.imageVisible = true;
       },
       exportExcel() {
         this.$refs.tables.exportCsv({
@@ -391,13 +328,5 @@
 </script>
 
 <style lang="scss" scoped>
-  .img {
-    width: 150px;
-    height: auto !important
-  }
-  .add-image {
-    line-height: 48px;
-    vertical-align: text-bottom;
-    margin-right: 10px;
-  }
+
 </style>

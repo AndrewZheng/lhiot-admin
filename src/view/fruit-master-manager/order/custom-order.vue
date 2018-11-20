@@ -8,7 +8,6 @@
               :columns="columns"
               :loading="loading"
               @on-view="handleView"
-              @on-edit="handleEdit"
       >
         <div slot="searchCondition">
           <Input placeholder="姓名" class="search-input" v-model="searchRowData.name" style="width: 100px"/>
@@ -16,9 +15,6 @@
           <Input placeholder="身份证号码" class="search-input" v-model="searchRowData.idCard" style="width: 100px"/>
           <Input placeholder="注册时间起" class="search-input ml20" v-model="searchRowData.timeStart" style="width: 100px"/>
           <Input placeholder="注册时间止" class="search-input mr20" v-model="searchRowData.timeEnd" style="width: 100px"/>
-          <Select class="search-col" placeholder="审核状态" v-model="searchRowData.status" style="width:100px" clearable>
-            <Option v-for="item in userStatus" :value="item.value" :key="item.value">{{ item.value }}</Option>
-          </Select>
           <Button v-waves @click="handleSearch" class="search-btn ml5" type="primary">
             <Icon type="md-search"/>&nbsp;搜索
           </Button>
@@ -33,10 +29,9 @@
       </div>
     </Card>
 
+    <!--查看菜单 -->
     <Modal
       v-model="modalView"
-      :mask-closable="false"
-      :width="rowData.type=='SON'?'750':'540'"
     >
       <p slot="header">
         <span>鲜果师详情</span>
@@ -46,57 +41,69 @@
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="4">ID:</i-col>
-              <i-col span="20">{{fruitMasterDetail.id}}</i-col>
+              <i-col span="20">{{userDetail.id}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请人:</i-col>
-              <i-col span="16">{{fruitMasterDetail.name}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">手机号码:</i-col>
-              <i-col span="16">{{fruitMasterDetail.phoneNumber}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">提取金额:</i-col>
-              <i-col span="16">{{fruitMasterDetail.extractingAmount}}</i-col>
+              <i-col span="4">昵称:</i-col>
+              <i-col span="20">{{userDetail.name}}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">银行卡号:</i-col>
-              <i-col span="16">{{fruitMasterDetail.creditCardNumbers}}</i-col>
+              <i-col span="8">openid:</i-col>
+              <i-col span="16">{{userDetail.openid}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">结算状态:</i-col>
-              <i-col span="16">{{fruitMasterDetail.settlementStatus}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.applicationTime}}</i-col>
+              <i-col span="6">unionid:</i-col>
+              <i-col span="18">{{userDetail.unionid}}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">处理时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.handlingTime}}</i-col>
+              <i-col span="10">性别:</i-col>
+              <i-col span="14">{{userDetail.level}}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+              <i-col span="4">年龄:</i-col>
+              <i-col span="20">{{userDetail.status}}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+              <i-col span="4">余额:</i-col>
+              <i-col span="20">{{userDetail.headStatus}}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+              <i-col span="4">积分:</i-col>
+              <i-col span="20">{{userDetail.headStatus}}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+              <i-col span="8">账号状态:</i-col>
+              <i-col span="16">{{userDetail.headStatus}}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+              <i-col span="8">注册时间:</i-col>
+              <i-col span="16">{{userDetail.headStatus}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -105,93 +112,23 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-    <Modal
-      v-model="modalEdit"
-    >
-      <p slot="header">
-        <span>鲜果师详情</span>
-      </p>
-      <div class="modal-content">
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">ID:</i-col>
-              <i-col span="20">{{fruitMasterDetail.id}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请人:</i-col>
-              <i-col span="16">{{fruitMasterDetail.name}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">手机号码:</i-col>
-              <i-col span="16">{{fruitMasterDetail.phoneNumber}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">提取金额:</i-col>
-              <i-col span="16">{{fruitMasterDetail.extractingAmount}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">银行卡号:</i-col>
-              <i-col span="16">{{fruitMasterDetail.creditCardNumbers}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">结算状态:</i-col>
-              <Select span="16" style="width: 100px" >
-                <Option value="beijing">已结算</Option>
-                <Option value="shanghai">未结算</Option>
-              </Select>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.applicationTime}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">处理时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.handlingTime}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-      </div>
-    </Modal>
+
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import {getMasterSalary} from '@/api/fruitermaster';
+  import {getFruitMasterUserData} from '@/api/fruitermaster';
 
-  const fruitMasterDetail = {
+  const userDetail = {
     id: '',
     name: 0,
     phoneNumber: '',
-    extractingAmount: '',
-    settlementStatus: '',
-    creditCardNumbers: '',
+    inviteCode: '',
+    level: '',
+    status: '',
     headStatus: '',
-    applicationTime: '',
-    handlingTime: '2018-10-28'
+    cash: ''
   };
   const roleRowData = {
     name: '',
@@ -201,66 +138,67 @@
     timeEnd: '',
     status: ''
   };
-
   export default {
     components: {
       Tables
-    },
-    created() {
-      this.getTableData();
     },
     data() {
       return {
         columns: [
           {
-            title: 'ID',
+            title: 'id',
             key: 'id',
             sortable: true,
-            width: 80,
+            width: 150,
             fixed: 'left'
           },
           {
-            title: '申请人',
-            key: 'name',
-            width: 150
+            title: '昵称',
+            width: 150,
+            key: 'name'
           },
           {
-            title: '手机号',
-            width: 150,
+            title: '手机号码',
+            width: 120,
             key: 'phoneNumber'
           },
           {
-            title: '提取金额',
-            width: 150,
-            key: 'extractingAmount'
+            title: 'openid',
+            width: 185,
+            key: 'openid'
           },
           {
-            title: '结算状态',
-            width: 150,
-            key: 'settlementStatus'
+            title: 'unionid',
+            width: 185,
+            key: 'unionid'
           },
           {
-            title: '银行卡号',
-            width: 180,
-            key: 'creditCardNumbers',
+            title: '余额',
+            width: 100,
+            key: 'cash'
+          },
+          {
+            title: '积分',
+            width: 80,
+            key: 'bonus',
             sortable: true
           },
           {
-            title: '申请时间',
-            width: 150,
-            key: 'applicationTime',
-            sortable: true
-          }, {
-            title: '处理时间',
-            width: 150,
-            key: 'handlingTime',
+            title: '账号状态',
+            width: 90,
+            key: 'status',
+          },
+          {
+            title: '注册时间',
+            width: 120,
+            key: 'registerTime',
             sortable: true
           },
           {
             title: '操作',
-            minWidth: 150,
+            width: 150,
             key: 'handle',
-            options: ['view', 'edit']
+            options: ['view', 'relation']
           }
         ],
         tableData: [],
@@ -269,23 +207,24 @@
         pageSize: 10,
         loading: true,
         modalView: false,
-        modalEdit: false,
-        rowData: roleRowData,
+        image: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
+        userDetail: userDetail,
         searchRowData: roleRowData,
-        fruitMasterDetail: fruitMasterDetail
       };
     },
+    created() {
+      this.getTableData();
+    },
     methods: {
-      handleClose(){
+      handleClose() {
         this.modalView = false;
       },
       handleView(params) {
-        this.fruitMasterDetail = params.row;
+        this.userDetail = params.row;
         this.modalView = true;
       },
       handleEdit(params) {
-        this.fruitMasterDetail = params.row;
-        this.modalEdit = true;
+
       },
       handleSearch() {
       },
@@ -300,7 +239,7 @@
         this.getTableData();
       },
       getTableData() {
-        getMasterSalary({
+        getFruitMasterUserData({
           page: this.page,
           rows: this.pageSize
         }).then(res => {
@@ -319,5 +258,14 @@
 </script>
 
 <style lang="scss" scoped>
+  .img {
+    width: 150px;
+    height: auto !important
+  }
 
+  .add-image {
+    line-height: 48px;
+    vertical-align: text-bottom;
+    margin-right: 10px;
+  }
 </style>
