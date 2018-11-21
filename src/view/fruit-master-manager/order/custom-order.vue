@@ -10,15 +10,36 @@
               @on-view="handleView"
       >
         <div slot="searchCondition">
-          <Input placeholder="姓名" class="search-input" v-model="searchRowData.name" style="width: 100px"/>
-          <Input placeholder="手机号码" class="search-input" v-model="searchRowData.phoneNumber" style="width: 100px"/>
-          <Input placeholder="身份证号码" class="search-input" v-model="searchRowData.idCard" style="width: 100px"/>
-          <Input placeholder="注册时间起" class="search-input ml20" v-model="searchRowData.timeStart" style="width: 100px"/>
-          <Input placeholder="注册时间止" class="search-input mr20" v-model="searchRowData.timeEnd" style="width: 100px"/>
-          <Button v-waves @click="handleSearch" class="search-btn ml5" type="primary">
-            <Icon type="md-search"/>&nbsp;搜索
-          </Button>
-          <Button v-waves type="primary" @click="exportExcel" style="margin-left: 200px">导出</Button>
+          <Row>
+            <Col span="24">
+            <Input placeholder="订单编码" class="search-input" v-model="searchRowData.name"/>
+            <Input placeholder="用户手机号" class="search-input" v-model="searchRowData.phoneNumber"/>
+            <Select class="search-col ml15" placeholder="订单类型">
+              <Option v-for="item in orderType" :value="item.value" class="mb10 ml15" :key="`search-col-${item.value}`">
+                {{item.value}}
+              </Option>
+            </Select>
+            <Select class="search-col ml15" placeholder="订单状态">
+              <Option v-for="item in orderStatus" :value="item.value" class="mb10 ml15"
+                      :key="`search-col-${item.value}`">{{item.value}}
+              </Option>
+            </Select>
+            <Select class="search-col ml15" placeholder="海鼎状态">
+              <Option v-for="item in haiDingStatus" :value="item.value" class="mb10 ml15"
+                      :key="`search-col-${item.value}`">{{item.value}}
+              </Option>
+            </Select>
+            <DatePicker type="datetime" placeholder="开始时间" class="mb10 ml15"></DatePicker>
+            <i class="mr5 ml5">-</i>
+            <DatePicker type="datetime" placeholder="结束时间" class="mb10 ml15"></DatePicker>
+            </Col>
+            <Col span="24">
+            <Button v-waves @click="handleSearch" class="search-btn ml5" type="primary">
+              <Icon type="md-search"/>&nbsp;搜索
+            </Button>
+            <Button v-waves type="primary" @click="exportExcel" class="ml15">导出</Button>
+            </Col>
+          </Row>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -144,6 +165,9 @@
     },
     data() {
       return {
+        orderType: [],
+        orderStatus: [],
+        haiDingStatus: [],
         columns: [
           {
             title: 'id',
@@ -186,7 +210,7 @@
           {
             title: '账号状态',
             width: 90,
-            key: 'status',
+            key: 'status'
           },
           {
             title: '注册时间',
@@ -196,9 +220,9 @@
           },
           {
             title: '操作',
-            width: 150,
+            minWidth: 150,
             key: 'handle',
-            options: ['view', 'relation']
+            options: ['view']
           }
         ],
         tableData: [],
@@ -209,7 +233,7 @@
         modalView: false,
         image: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
         userDetail: userDetail,
-        searchRowData: roleRowData,
+        searchRowData: roleRowData
       };
     },
     created() {

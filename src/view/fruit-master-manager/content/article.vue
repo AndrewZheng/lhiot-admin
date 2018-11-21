@@ -16,9 +16,13 @@
             <Col span="24">
             <Input placeholder="文章标题" class="search-input" v-model="searchRowData.name" style="width: auto"/>
             <Input placeholder="关键词" class="search-input mr20" v-model="searchRowData.name" style="width: auto"/>
-            <DatePicker type="datetime" placeholder="Select date and time" style="width: 180px"></DatePicker>
+            <DatePicker type="datetime" placeholder="创建时间起"></DatePicker>
             <i class="mr5 ml5">-</i>
-            <DatePicker type="datetime" placeholder="Select date and time" style="width: 180px"></DatePicker>
+            <DatePicker type="datetime" placeholder="创建时间止"></DatePicker>
+
+            <DatePicker type="datetime" placeholder="发布时间起" class="mr5 ml5"></DatePicker>
+            <i class="mr5 ml5">-</i>
+            <DatePicker type="datetime" placeholder="发布时间止"></DatePicker>
             <Button v-waves @click="handleSearch" class="search-btn ml20" type="primary">
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
@@ -225,15 +229,6 @@
     },
     data() {
       return {
-        // 'id|1-10': 1,
-        // name: '@name',
-        // onSaleName: '@name',
-        // onSaleRole: '@name',
-        // roleCode: '@name',
-        // price: '100',
-        // sort: '1',
-        // "onSale|1": true,
-        // code: Random.integer(1, 50),
         columns: [
           {
             title: '上架图片',

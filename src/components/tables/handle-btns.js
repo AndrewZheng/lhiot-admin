@@ -198,5 +198,71 @@ const btns = {
       }
     })]);
   },
+  relevance: (h, params, vm) => {
+    return h('Button', {
+      props: {
+        type: 'success',
+        size: 'small'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        click: () => {
+          vm.$emit('on-relevance', params);
+        }
+      }
+    }, [h('Icon', {
+      props: {
+        type: 'md-attach',
+        size: 16,
+        color: '#fff'
+      }
+    })]);
+  },
+  settings: (h, params, vm) => {
+    return h('Button', {
+      props: {
+        type: 'success',
+        size: 'small'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        click: () => {
+          vm.$emit('on-relevance', params);
+        }
+      }
+    }, [h('Icon', {
+      props: {
+        type: 'md-settings',
+        size: 16,
+        color: '#fff'
+      }
+    })]);
+  },
+  copy: (h, params, vm) => {
+    return h('Button', {
+      props: {
+        type: 'success',
+        size: 'small'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        click: () => {
+          vm.$emit('on-copy', params);
+        }
+      }
+    }, [h('Icon', {
+      props: {
+        type: 'md-copy',
+        size: 16,
+        color: '#fff'
+      }
+    })]);
+  }
 };
 export default btns;

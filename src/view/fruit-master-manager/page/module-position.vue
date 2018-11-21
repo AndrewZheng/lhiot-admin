@@ -12,31 +12,16 @@
               @on-sale="onSale"
       >
         <div slot="searchCondition">
-          <Row>
-            <Col span="24">
-            <Input placeholder="文章标题" class="search-input" v-model="searchRowData.name" style="width: auto"/>
-            <Input placeholder="关键词" class="search-input mr20" v-model="searchRowData.name" style="width: auto"/>
-            <DatePicker type="datetime" placeholder="Select date and time" style="width: 180px"></DatePicker>
-            <i class="mr5 ml5">-</i>
-            <DatePicker type="datetime" placeholder="Select date and time" style="width: 180px"></DatePicker>
+            <Input placeholder="板块位置描述" class="search-input" v-model="searchRowData.name" style="width: auto"/>
+            <Select v-model="rowData.status" class="search-col ml15"  placeholder="位置类型">
+              <Option v-for="item in positionSelectList" :value="item.value" class="mb10 ml15" :key="`search-col-${item.value}`">{{item.value}}</Option>
+            </Select>
+          <DatePicker type="datetime" placeholder="创建时间起"></DatePicker>
+          <i class="mr5 ml5">-</i>
+          <DatePicker type="datetime" placeholder="创建时间止"></DatePicker>
             <Button v-waves @click="handleSearch" class="search-btn ml20" type="primary">
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
-
-            <Button v-waves type="success" class="ml5 mr5" @click="addChildren">
-              <Icon type="md-add"/>
-              创建
-            </Button>
-            <Button v-waves type="error" class="ml5 mr5" @click="deleteChildren">
-              <Icon type="md-close"/>
-              删除
-            </Button>
-            <Button v-waves type="primary" class="ml5 mr5" @click="exportExcel">
-              <Icon type="md-download"/>
-              导出
-            </Button>
-            </Col>
-          </Row>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -225,72 +210,40 @@
     },
     data() {
       return {
-        // 'id|1-10': 1,
-        // name: '@name',
-        // onSaleName: '@name',
-        // onSaleRole: '@name',
-        // roleCode: '@name',
-        // price: '100',
-        // sort: '1',
-        // "onSale|1": true,
-        // code: Random.integer(1, 50),
+        positionSelectList: [
+          {
+            value: 'New York',
+            label: 'New York'
+          },
+          {
+            value: 'London',
+            label: 'London'
+          }
+        ],
+        model1: '',
         columns: [
           {
-            title: '上架图片',
+            title: '板块位置ID',
             key: 'id',
             sortable: true,
-            width: 180,
+            minWidth: 180,
             fixed: 'left'
           },
           {
-            title: '商品名称',
+            title: '板块位置描述',
             key: 'name',
-            width: 150
+            minWidth: 150
           },
           {
-            title: '上架名称',
-            width: 150,
+            title: '板块位置编码',
+            minWidth: 150,
             key: 'onSaleName'
-          },
-          {
-            title: '上架规格',
-            width: 150,
-            key: 'onSaleRole'
-          },
-          {
-            title: '规格条码',
-            width: 150,
-            key: 'roleCode'
-          },
-          {
-            title: '商品原价',
-            width: 180,
-            key: 'price',
-            sortable: true
-          },
-          {
-            title: '商品特价',
-            width: 150,
-            key: 'sort',
-            sortable: true
-          },
-          {
-            title: '排序',
-            width: 150,
-            key: 'price',
-            sortable: true
-          },
-          {
-            title: '是否上架',
-            width: 150,
-            key: 'onSale',
-            sortable: true
           },
           {
             title: '操作',
             minWidth: 200,
             key: 'handle',
-            options: ['delete', 'edit', 'view', 'onSale']
+            options: ['view']
           }
         ],
         tableData: [],

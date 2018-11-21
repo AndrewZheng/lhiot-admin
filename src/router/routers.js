@@ -520,6 +520,17 @@ export const asyncRouterMap = [
       title: '定制管理'
     },
     component: Main,
+    children:[
+      {
+        path: '/fruit-master-custom-plan',
+        name: 'fruit-master-custom-plan',
+        meta: {
+          icon: 'md-menu',
+          title: '定制计划管理'
+        },
+        component: () => import('@/view/fruit-master-manager/custom/custom-plan.vue')
+      }
+    ]
   },
   {
     path: '/fruit-master-manager-order',
@@ -567,6 +578,17 @@ export const asyncRouterMap = [
       title: '规则参数管理'
     },
     component: Main,
+    children:[
+      {
+        path: '/fruit-master-postage-rule-settings',
+        name: 'fruit-master-postage-rule-settings',
+        meta: {
+          icon: 'md-menu',
+          title: '邮费规则配置'
+        },
+        component: () => import('@/view/fruit-master-manager/rule-parameters/postage-rule-settings.vue')
+      }
+    ]
   },
   {
     path: '/fruit-master-manager-activity',
@@ -576,6 +598,17 @@ export const asyncRouterMap = [
       title: '活动管理'
     },
     component: Main,
+    children:[
+      {
+        path: '/fruit-master-new-try-activity',
+        name: 'fruit-master-new-try-activity',
+        meta: {
+          icon: 'md-menu',
+          title: '新品尝鲜活动'
+        },
+        component: () => import('@/view/fruit-master-manager/activity/new-try-activity.vue')
+      }
+    ]
   },
   {
     path: '/'

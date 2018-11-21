@@ -14,22 +14,35 @@
         <div slot="searchCondition">
           <Row>
             <Col span="24">
-            <Input placeholder="广告名称" class="search-input" v-model="searchRowData.name" style="width: auto"/>
-            <Select v-model="rowData.status" class="search-col ml15"  placeholder="位置类型">
-              <Option v-for="item in advertisementList" :value="item.value" class="mb10 ml15" :key="`search-col-${item.value}`">{{item.value}}</Option>
-            </Select>
-            <Button v-waves @click="handleSearch" class="search-btn ml20" type="primary">
-              <Icon type="md-search"/>&nbsp;搜索
+              <i-col span="4">金额范围：</i-col>
+              <i-col span="8">
+                <Input placeholder="" class="search-input" v-model="searchRowData.name" style="width: auto"/>
+                <i class="mr5 ml5">-</i>
+                <Input placeholder="" class="search-input mr20" v-model="searchRowData.name" style="width: auto"/>
+              </i-col>
+              <i-col span="4">配送时间：</i-col>
+              <i-col span="8">
+                <DatePicker type="datetime" placeholder="开始时间" class="mr5 ml5"></DatePicker>
+                <i class="mr5 ml5">-</i>
+                <DatePicker type="datetime" placeholder="结束时间"></DatePicker>
+              </i-col>
+            </Col >
+            <Col span="24" class="mt10">
+              <Button v-waves @click="handleSearch" class="search-btn ml20" type="primary">
+                <Icon type="md-search"/>查询
+              </Button>
+            <Button v-waves type="warning" class="ml5 mr5" @click="deleteChildren">
+              <Icon type="md-refresh"/>
+              重置
             </Button>
-
-            <Button v-waves type="success" class="ml5 mr5" @click="addChildren">
-              <Icon type="md-add"/>
-              创建
-            </Button>
-            <Button v-waves type="error" class="ml5 mr5" @click="deleteChildren">
-              <Icon type="md-close"/>
-              删除
-            </Button>
+              <Button v-waves type="success" class="ml5 mr5" @click="addChildren">
+                <Icon type="md-add"/>
+                创建
+              </Button>
+              <Button v-waves type="error" class="ml5 mr5" @click="deleteChildren">
+                <Icon type="md-close"/>
+                删除
+              </Button>
             </Col>
           </Row>
         </div>
@@ -220,58 +233,34 @@
     },
     data() {
       return {
-        advertisementList: [],
         columns: [
           {
-            title: 'ID',
+            title: '金额范围',
             key: 'id',
             sortable: true,
             width: 180,
             fixed: 'left'
           },
           {
-            title: '广告图片',
+            title: '配送时间',
             key: 'name',
             width: 150
           },
           {
-            title: '广告位置',
-            width: 150,
-            key: 'onSaleName'
+            title: '更新时间',
+            key: 'name',
+            width: 150
           },
           {
-            title: '广告描述',
-            width: 150,
-            key: 'onSaleRole'
-          },
-          {
-            title: '广告类型',
-            width: 150,
-            key: 'roleCode'
-          },
-          {
-            title: '链接类型',
-            width: 180,
-            key: 'price',
-            sortable: true
-          },
-          {
-            title: '广告状态',
-            width: 150,
-            key: 'sort',
-            sortable: true
-          },
-          {
-            title: '有效时间',
-            width: 150,
-            key: 'price',
-            sortable: true
+            title: '创建人',
+            key: 'name',
+            width: 150
           },
           {
             title: '操作',
             minWidth: 200,
             key: 'handle',
-            options: ['delete', 'edit', 'view', 'onSale']
+            options: ['view', 'edit', 'delete', 'copy']
           }
         ],
         tableData: [],
