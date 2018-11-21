@@ -263,6 +263,72 @@ const btns = {
         color: '#fff'
       }
     })]);
+  },
+  usable: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.userStatus) {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要禁用该账号吗?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-usable', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-pause',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
+    } else {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要解除该账号的禁用吗?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-usable', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-play',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
+    }
   }
 };
 export default btns;

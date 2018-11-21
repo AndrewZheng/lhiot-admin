@@ -13,11 +13,11 @@
         <div slot="searchCondition">
           <Input placeholder="姓名" class="search-input" v-model="searchRowData.name" style="width: 100px"/>
           <Input placeholder="手机号码" class="search-input" v-model="searchRowData.phoneNumber" style="width: 100px"/>
-          <Input placeholder="身份证号码" class="search-input" v-model="searchRowData.idCard" style="width: 100px"/>
-          <Input placeholder="注册时间起" class="search-input ml20" v-model="searchRowData.timeStart" style="width: 100px"/>
-          <Input placeholder="注册时间止" class="search-input mr20" v-model="searchRowData.timeEnd" style="width: 100px"/>
+          <Input placeholder="身份证号码" class="search-input" v-model="searchRowData.idCard" style="width: 150px"/>
+          <DatePicker type="datetime" placeholder="注册时间起" class="search-input ml20" v-model="searchRowData.timeStart" style="width: 100px"/>
+          <DatePicker type="datetime" placeholder="注册时间止" class="search-input mr20" v-model="searchRowData.timeEnd" style="width: 100px"/>
           <Select class="search-col" placeholder="审核状态" v-model="searchRowData.status" style="width:100px" clearable>
-            <Option v-for="item in userStatus" :value="item.value" :key="item.value">{{ item.value }}</Option>
+            <Option class="ml15 mt10" v-for="item in userStatus" :value="item.value" :key="item.value">{{ item.value }}</Option>
           </Select>
           <Button v-waves @click="handleSearch" class="search-btn ml5" type="primary">
             <Icon type="md-search"/>&nbsp;搜索
