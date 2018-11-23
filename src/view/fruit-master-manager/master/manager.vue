@@ -153,7 +153,7 @@
       v-model="modalEdit"
     >
       <div class="modal-content" style="margin-top: 30px;">
-        <Form :label-width="80" >
+        <Form :label-width="80">
           <FormItem label="ID:">
             <i-col>{{fruitMasterDetail.id}}</i-col>
           </FormItem>
@@ -167,7 +167,7 @@
             <i-col>{{fruitMasterDetail.inviteCode}}</i-col>
           </FormItem>
           <FormItem label="鲜果师等级:">
-            <Select style="width: 180px">
+            <Select style="width: 180px" placeholder="选择分类">
               <Option value="beijing">初级</Option>
               <Option value="shanghai">中级</Option>
               <Option value="shenzhen">高级</Option>

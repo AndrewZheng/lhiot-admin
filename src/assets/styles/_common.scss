@@ -30,6 +30,10 @@
   margin-bottom: 10px;
 }
 
+.mb20 {
+  margin-bottom: 20px;
+}
+
 .mb15 {
   margin-bottom: 15px;
 }
@@ -414,4 +418,7 @@
   @include rounded-circle-value(20px);
   background-color: rgba(204, 204, 204, .8);
   -webkit-font-smoothing: antialiased;
+}
+.image-model-view{
+  z-index: 200000
 }

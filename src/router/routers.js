@@ -10,19 +10,19 @@ import Main from '@/components/main'
  *  beforeCloseName: (-) 设置该字段，则在关闭当前tab页时会去'@/router/before-close.js'里寻找该字段名对应的方法，作为关闭前的钩子函数
  * }
  */
-export const constantRouterMap = [{
-  path: '/redirect',
-  name: 'redirect',
-  component: Main,
-  meta: {
-    hideInMenu: true
+export const constantRouterMap = [
+  {
+    path: '/redirect',
+    name: 'redirect',
+    component: Main,
+    meta: {
+      hideInMenu: true
+    },
+    children: [{
+      path: '/redirect/:path*',
+      component: () => import('@/view/redirect/index.vue')
+    }]
   },
-  children: [{
-    path: '/redirect/:path*',
-    component: () =>
-      import('@/view/redirect/index.vue')
-  }]
-},
   {
     path: '/',
     name: '_home',
@@ -40,8 +40,7 @@ export const constantRouterMap = [{
         title: '首页',
         notCache: true
       },
-      component: () =>
-        import('@/view/single-page/home')
+      component: () => import('@/view/single-page/home')
     }]
   },
   {
@@ -51,8 +50,7 @@ export const constantRouterMap = [{
       title: 'Login - 登录',
       hideInMenu: true
     },
-    component: () =>
-      import('@/view/login/login.vue')
+    component: () => import('@/view/login/login.vue')
   },
   {
     path: '/401',
@@ -60,8 +58,7 @@ export const constantRouterMap = [{
     meta: {
       hideInMenu: true
     },
-    component: () =>
-      import('@/view/error-page/401.vue')
+    component: () => import('@/view/error-page/401.vue')
   },
   {
     path: '/404',
@@ -69,8 +66,7 @@ export const constantRouterMap = [{
     meta: {
       hideInMenu: true
     },
-    component: () =>
-      import('@/view/error-page/404.vue')
+    component: () => import('@/view/error-page/404.vue')
   },
   {
     path: '/500',
@@ -78,8 +74,7 @@ export const constantRouterMap = [{
     meta: {
       hideInMenu: true
     },
-    component: () =>
-      import('@/view/error-page/500.vue')
+    component: () => import('@/view/error-page/500.vue')
   },
   {
     path: '/excel',
@@ -111,22 +106,42 @@ export const constantRouterMap = [{
     ]
   },
   {
-    path:'/goods-manager-goods-standard',
-    name:'fruit-master-goods-manager-goods-standard',
-    meta:{
-      icon: 'md-download',
+    path: '/fruit-master-goods-manager-goods-standard',
+    name: 'fruit-master-goods-manager-goods-standard',
+    meta: {
+      icon: 'md-menu',
       title: '商品规格管理'
     },
-    component:Main,
-    children:[
+    component: Main,
+    children: [
       {
         path: 'goods-standard',
         name: 'goods-standard',
         meta: {
-          icon: 'md-download',
+          icon: 'md-menu',
           title: '商品规格管理'
         },
         component: () => import('@/view/fruit-master-manager/goods/goods-standard.vue')
+      }
+    ]
+  },
+  {
+    path: '/fruit-master-goods-manager-goods-detail',
+    name: 'fruit-master-goods-manager-goods-detail',
+    meta: {
+      icon: 'md-menu',
+      title: '商品规格管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'goods-detail',
+        name: 'goods-detail',
+        meta: {
+          icon: 'md-menu',
+          title: '详情组合图片'
+        },
+        component: () => import('@/view/fruit-master-manager/goods/goods-detail.vue')
       }
     ]
   }
@@ -453,7 +468,7 @@ export const asyncRouterMap = [
       title: '内容管理'
     },
     component: Main,
-    children:[
+    children: [
       {
         path: '/fruit-master-content-article',
         name: 'fruit-master-content-article',
@@ -473,7 +488,7 @@ export const asyncRouterMap = [
       title: '页面板块管理'
     },
     component: Main,
-    children:[
+    children: [
       {
         path: '/fruit-master-page-module-position',
         name: 'fruit-master-page-module-position',
@@ -520,7 +535,7 @@ export const asyncRouterMap = [
       title: '定制管理'
     },
     component: Main,
-    children:[
+    children: [
       {
         path: '/fruit-master-custom-plan',
         name: 'fruit-master-custom-plan',
@@ -578,7 +593,7 @@ export const asyncRouterMap = [
       title: '规则参数管理'
     },
     component: Main,
-    children:[
+    children: [
       {
         path: '/fruit-master-postage-rule-settings',
         name: 'fruit-master-postage-rule-settings',
@@ -598,7 +613,7 @@ export const asyncRouterMap = [
       title: '活动管理'
     },
     component: Main,
-    children:[
+    children: [
       {
         path: '/fruit-master-new-try-activity',
         name: 'fruit-master-new-try-activity',
