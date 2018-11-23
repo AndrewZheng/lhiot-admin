@@ -509,7 +509,7 @@
         this.turnToPage('goods-detail');
       },
       addChildren() {
-
+        this.modalEdit = true
       },
       deleteChildren() {
 

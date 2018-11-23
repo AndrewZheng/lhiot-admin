@@ -133,47 +133,65 @@ const btns = {
       row
     } = params;
     if (row.onSale) {
-      return h('Button', {
+      return h('Poptip', {
         props: {
-          type: 'error',
-          size: 'small'
+          confirm: true,
+          title: '确认要下架该商品吗?'
         },
         style: {
           marginRight: '5px'
         },
         on: {
-          click: () => {
+          'on-ok': () => {
             vm.$emit('on-sale', params);
           }
         }
-      }, [h('Icon', {
-        props: {
-          type: 'md-cloud-upload',
-          size: 16,
-          color: '#red'
-        }
-      })]);
+      }, [
+        h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-cloud-upload',
+              size: 16,
+              color: '#green'
+            }
+          })
+        ])
+      ]);
     } else {
-      return h('Button', {
+      return h('Poptip', {
         props: {
-          type: 'success',
-          size: 'small'
+          confirm: true,
+          title: '确认要上架该商品吗?'
         },
         style: {
           marginRight: '5px'
         },
         on: {
-          click: () => {
+          'on-ok': () => {
             vm.$emit('on-sale', params);
           }
         }
-      }, [h('Icon', {
-        props: {
-          type: 'md-cloud-download',
-          size: 16,
-          color: '#fff'
-        }
-      })]);
+      }, [
+        h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-cloud-download',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
     }
   },
   push: (h, params, vm) => {
