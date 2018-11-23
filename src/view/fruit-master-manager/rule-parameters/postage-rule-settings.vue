@@ -235,11 +235,16 @@
       return {
         columns: [
           {
+            type: 'selection',
+            key: '',
+            width: 60,
+            align: 'center'
+          },
+          {
             title: '金额范围',
             key: 'id',
             sortable: true,
             width: 180,
-            fixed: 'left'
           },
           {
             title: '配送时间',

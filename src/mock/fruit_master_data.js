@@ -16,6 +16,7 @@ export const getFruitMasterUserData = req => {
       cash: Random.integer(1, 1000),
       bonus: '0',
       status: '正常',
+      'userStatus|1':true,
       registerTime: '2018-10-28'
     }]
   }).array;

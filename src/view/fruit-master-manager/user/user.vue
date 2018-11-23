@@ -8,13 +8,14 @@
               :columns="columns"
               :loading="loading"
               @on-view="handleView"
+              @on-usable="handleUsable"
       >
         <div slot="searchCondition">
           <Input placeholder="姓名" class="search-input" v-model="searchRowData.name" style="width: 100px"/>
           <Input placeholder="手机号码" class="search-input" v-model="searchRowData.phoneNumber" style="width: 100px"/>
-          <Input placeholder="身份证号码" class="search-input" v-model="searchRowData.idCard" style="width: 100px"/>
-          <Input placeholder="注册时间起" class="search-input ml20" v-model="searchRowData.timeStart" style="width: 100px"/>
-          <Input placeholder="注册时间止" class="search-input mr20" v-model="searchRowData.timeEnd" style="width: 100px"/>
+          <Input placeholder="身份证号码" class="search-input" v-model="searchRowData.idCard" style="width: 150px"/>
+          <DatePicker type="datetime" placeholder="注册时间起" class="search-input ml20" v-model="searchRowData.timeStart" style="width: 160px"/>
+          <DatePicker type="datetime" placeholder="注册时间止" class="search-input mr20" v-model="searchRowData.timeEnd" style="width: 160px"/>
           <Button v-waves @click="handleSearch" class="search-btn ml5" type="primary">
             <Icon type="md-search"/>&nbsp;搜索
           </Button>
@@ -28,13 +29,12 @@
         </Row>
       </div>
     </Card>
-
     <!--查看菜单 -->
     <Modal
       v-model="modalView"
     >
       <p slot="header">
-        <span>鲜果师详情</span>
+        <span>用户详情</span>
       </p>
       <div class="modal-content">
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
@@ -112,7 +112,6 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-
   </div>
 </template>
 
@@ -196,9 +195,9 @@
           },
           {
             title: '操作',
-            width: 150,
+            minWidth: 150,
             key: 'handle',
-            options: ['view', 'relation']
+            options: ['view', 'usable']
           }
         ],
         tableData: [],
@@ -216,6 +215,9 @@
       this.getTableData();
     },
     methods: {
+      handleUsable(params){
+        this.tableData[params.index].userStatus = !this.tableData[params.index].userStatus
+      },
       handleClose() {
         this.modalView = false;
       },
