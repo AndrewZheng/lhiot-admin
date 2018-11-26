@@ -163,8 +163,7 @@ export const asyncRouterMap = [
         icon: 'md-trending-up',
         title: '数字渐变'
       },
-      component: () =>
-        import('@/view/components/count-to/count-to.vue')
+      component: () => import('@/view/components/count-to/count-to.vue')
     },
       {
         path: 'drag_list_page',
@@ -173,8 +172,7 @@ export const asyncRouterMap = [
           icon: 'ios-infinite',
           title: '拖拽列表'
         },
-        component: () =>
-          import('@/view/components/drag-list/drag-list.vue')
+        component: () => import('@/view/components/drag-list/drag-list.vue')
       },
       {
         path: 'tables_page',
@@ -183,8 +181,7 @@ export const asyncRouterMap = [
           icon: 'md-grid',
           title: '多功能表格'
         },
-        component: () =>
-          import('@/view/components/tables/tables.vue')
+        component: () => import('@/view/components/tables/tables.vue')
       },
       {
         path: 'split_pane_page',
@@ -193,8 +190,7 @@ export const asyncRouterMap = [
           icon: 'md-pause',
           title: '分割窗口'
         },
-        component: () =>
-          import('@/view/components/split-pane/split-pane.vue')
+        component: () => import('@/view/components/split-pane/split-pane.vue')
       },
       {
         path: 'markdown_page',
@@ -203,8 +199,7 @@ export const asyncRouterMap = [
           icon: 'logo-markdown',
           title: 'Markdown编辑器'
         },
-        component: () =>
-          import('@/view/components/markdown/markdown.vue')
+        component: () => import('@/view/components/markdown/markdown.vue')
       },
       {
         path: 'editor_page',
@@ -213,8 +208,7 @@ export const asyncRouterMap = [
           icon: 'ios-create',
           title: '富文本编辑器'
         },
-        component: () =>
-          import('@/view/components/editor/editor.vue')
+        component: () => import('@/view/components/editor/editor.vue')
       },
       {
         path: 'tinymce_editor_page',
@@ -223,8 +217,7 @@ export const asyncRouterMap = [
           icon: 'ios-create',
           title: 'Tinymce编辑器'
         },
-        component: () =>
-          import('@/view/components/tinymce-editor/tinymce-editor.vue')
+        component: () => import('@/view/components/tinymce-editor/tinymce-editor.vue')
       },
       {
         path: 'icons_page',

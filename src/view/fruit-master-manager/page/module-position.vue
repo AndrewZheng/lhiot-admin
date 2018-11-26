@@ -12,16 +12,18 @@
               @on-sale="onSale"
       >
         <div slot="searchCondition">
-            <Input placeholder="板块位置描述" class="search-input" v-model="searchRowData.name" style="width: auto"/>
-            <Select v-model="rowData.status" class="search-col ml15"  placeholder="位置类型">
-              <Option v-for="item in positionSelectList" :value="item.value" class="mb10 ml15" :key="`search-col-${item.value}`">{{item.value}}</Option>
-            </Select>
+          <Input placeholder="板块位置描述" class="search-input" v-model="searchRowData.name" style="width: auto"/>
+          <Select v-model="rowData.status" class="search-col ml15" placeholder="位置类型">
+            <Option v-for="item in positionSelectList" :value="item.value" class="mb10 ml15"
+                    :key="`search-col-${item.value}`">{{item.value}}
+            </Option>
+          </Select>
           <DatePicker type="datetime" placeholder="创建时间起"></DatePicker>
           <i class="mr5 ml5">-</i>
           <DatePicker type="datetime" placeholder="创建时间止"></DatePicker>
-            <Button v-waves @click="handleSearch" class="search-btn ml20" type="primary">
-              <Icon type="md-search"/>&nbsp;搜索
-            </Button>
+          <Button v-waves @click="handleSearch" class="search-btn ml20" type="primary">
+            <Icon type="md-search"/>&nbsp;搜索
+          </Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -35,7 +37,7 @@
     <Modal
       v-model="modalView"
       :mask-closable="false"
-      :width="rowData.type=='SON'?'750':'540'"
+      :width="750"
     >
       <p slot="header">
         <span>鲜果师详情</span>
@@ -44,13 +46,13 @@
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">ID:</i-col>
-              <i-col span="20">{{fruitMasterDetail.id}}</i-col>
+              <i-col span="7">板块位置ID:</i-col>
+              <i-col span="17">{{fruitMasterDetail.id}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请人:</i-col>
+              <i-col span="8">位置描述:</i-col>
               <i-col span="16">{{fruitMasterDetail.name}}</i-col>
             </Row>
           </i-col>
@@ -58,120 +60,21 @@
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">手机号码:</i-col>
+              <i-col span="8">板块位置编码:</i-col>
               <i-col span="16">{{fruitMasterDetail.phoneNumber}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">提取金额:</i-col>
+              <i-col span="8">位置类型:</i-col>
               <i-col span="16">{{fruitMasterDetail.extractingAmount}}</i-col>
             </Row>
           </i-col>
         </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">银行卡号:</i-col>
-              <i-col span="16">{{fruitMasterDetail.creditCardNumbers}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">结算状态:</i-col>
-              <i-col span="16">{{fruitMasterDetail.settlementStatus}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.applicationTime}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">处理时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.handlingTime}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
+        <Table border :columns="columns1" :data="data1"></Table>
       </div>
       <div slot="footer">
         <Button type="primary" @click="handleClose">关闭</Button>
-      </div>
-    </Modal>
-    <Modal
-      v-model="modalEdit"
-    >
-      <p slot="header">
-        <span>鲜果师详情</span>
-      </p>
-      <div class="modal-content">
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">ID:</i-col>
-              <i-col span="20">{{fruitMasterDetail.id}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请人:</i-col>
-              <i-col span="16">{{fruitMasterDetail.name}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">手机号码:</i-col>
-              <i-col span="16">{{fruitMasterDetail.phoneNumber}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">提取金额:</i-col>
-              <i-col span="16">{{fruitMasterDetail.extractingAmount}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">银行卡号:</i-col>
-              <i-col span="16">{{fruitMasterDetail.creditCardNumbers}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">结算状态:</i-col>
-              <Select span="16" style="width: 100px">
-                <Option value="beijing">已结算</Option>
-                <Option value="shanghai">未结算</Option>
-              </Select>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.applicationTime}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">处理时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.handlingTime}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
       </div>
     </Modal>
   </div>
@@ -210,6 +113,46 @@
     },
     data() {
       return {
+        columns1: [
+          {
+            title: 'Name',
+            key: 'name'
+          },
+          {
+            title: 'Age',
+            key: 'age'
+          },
+          {
+            title: 'Address',
+            key: 'address'
+          }
+        ],
+        data1: [
+          {
+            name: 'John Brown',
+            age: 18,
+            address: 'New York No. 1 Lake Park',
+            date: '2016-10-03'
+          },
+          {
+            name: 'Jim Green',
+            age: 24,
+            address: 'London No. 1 Lake Park',
+            date: '2016-10-01'
+          },
+          {
+            name: 'Joe Black',
+            age: 30,
+            address: 'Sydney No. 1 Lake Park',
+            date: '2016-10-02'
+          },
+          {
+            name: 'Jon Snow',
+            age: 26,
+            address: 'Ottawa No. 2 Lake Park',
+            date: '2016-10-04'
+          }
+        ],
         positionSelectList: [
           {
             value: 'New York',
@@ -226,7 +169,7 @@
             title: '板块位置ID',
             key: 'id',
             sortable: true,
-            minWidth: 180,
+            minWidth: 120,
             fixed: 'left'
           },
           {
@@ -241,7 +184,7 @@
           },
           {
             title: '操作',
-            minWidth: 200,
+            minWidth: 80,
             key: 'handle',
             options: ['view']
           }

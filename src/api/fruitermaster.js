@@ -62,3 +62,22 @@ export const getOnSaleData =({page, rows}) => {
     method: 'get'
   });
 };
+//查询商品分类树结构
+export const getProductCategoriesTree = () => {
+  return Vue.prototype.$http.request({
+    url: '/product-categories/tree',
+    method: 'get'
+  });
+};
+
+// 根据条件分页查询商品分类信息列表
+export const getProductCategoriesPages = ({page, rows}) => {
+  const data = {
+    page, rows
+  };
+  return Vue.prototype.$http.request({
+    url: '/product-categories/pages',
+    data,
+    method: 'post'
+  });
+};

@@ -11,7 +11,7 @@
       <i-col span="20" order="3">
         <Card>
           <h6>当前选中：{{currentName}}</h6>
-          <tables ref="tables" editable searchable
+          <tables ref="tables" editable searchable border
                   search-place="top" size="small"
                   v-model="tableData"
                   :loading="loading"

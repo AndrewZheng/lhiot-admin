@@ -46,15 +46,15 @@
         <span>创建商品分类</span>
       </p>
       <div class="modal-content">
-        <Form  :label-width="100">
+        <Form :label-width="100">
           <FormItem label="父级分类:">
             <i-col></i-col>
           </FormItem>
           <FormItem label="子分类名:">
-            <Input  placeholder="" ></Input>
+            <Input placeholder=""></Input>
           </FormItem>
           <FormItem label="序号:">
-            <Input placeholder="" ></Input>
+            <Input placeholder=""></Input>
           </FormItem>
         </Form>
       </div>
@@ -67,15 +67,15 @@
         <span>编辑商品分类</span>
       </p>
       <div class="modal-content">
-        <Form  :label-width="100">
+        <Form :label-width="100">
           <FormItem label="父级分类:">
             <i-col></i-col>
           </FormItem>
           <FormItem label="子分类名:">
-            <Input  placeholder="" ></Input>
+            <Input placeholder=""></Input>
           </FormItem>
           <FormItem label="序号:">
-            <Input placeholder="" ></Input>
+            <Input placeholder=""></Input>
           </FormItem>
         </Form>
       </div>
@@ -88,7 +88,7 @@
   import {getFruitMastGoodsCategoryData} from "@/api/fruitermaster";
   import {buildMenu, changeObjKeyName, convertTree, getNewTagList} from '@/libs/util';
   import CommonIcon from '_c/common-icon';
-  import {getMenuList} from '@/api/system';
+  import {getProductCategoriesTree, getProductCategoriesPages} from '@/api/fruitermaster';
 
   const userDetail = {
     id: '',
@@ -119,7 +119,7 @@
         columns: [
           {
             title: '分类名',
-            key: 'name',
+            key: 'groupName',
             sortable: true,
             align: 'center',
             fixed: 'left',
@@ -128,7 +128,7 @@
           {
             title: '序号',
             align: 'center',
-            key: 'code',
+            key: 'id',
             minWidth: 150
           },
           {
@@ -196,7 +196,7 @@
           );
         }
       },
-      handleView(){
+      handleView() {
         this.modalView = true;
       },
       handleClose() {
@@ -220,11 +220,11 @@
         this.getTableData();
       },
       getTableData() {
-        getFruitMastGoodsCategoryData({
+        getProductCategoriesPages({
           page: this.page,
           rows: this.pageSize
         }).then(res => {
-          this.tableData = res.array;
+          this.tableData = res.body.array;
           this.total = res.total;
           this.loading = false;
         });
@@ -235,7 +235,7 @@
         });
       },
       initMenuList() {
-        getMenuList().then(res => {
+        getProductCategoriesTree().then(res => {
           if (res && res.array.length > 0) {
             const menuList = buildMenu(res.array);
             const map = {
@@ -246,7 +246,40 @@
             this.getTableData();
           }
         });
+        // getProductCategoriesPages({page: 0, row: 10}).then(res => {
+        //    this.tableData = res.body.array;
+        //   }
+        // )
       },
+
+      handleClick({root, node, data}) {
+        // 展开当前节点
+        console.log('current data: ', data);
+        if (typeof data.expand === 'undefined') {
+          this.$set(data, 'expend', true);
+          if (data.children) {
+            // this.expandChildren(data.children);
+          }
+        } else {
+          data.expand = !data.expand;
+        }
+        this.currentName = data.title;
+        this.currentPid = data.id;
+        // 获取新数据
+        // this.getTableData();
+      },
+      expandChildren(array) {
+        array.forEach(item => {
+          if (typeof item.expand === 'undefined') {
+            this.$set(item, 'expend', true);
+          } else {
+            item.expand = !item.expand;
+          }
+          if (item.children) {
+            this.expandChildren(item.children);
+          }
+        });
+      }
     }
   };
 </script>
