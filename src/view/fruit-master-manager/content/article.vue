@@ -61,59 +61,49 @@
       </p>
       <div class="modal-content">
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
+          <i-col span="24">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">ID:</i-col>
+              <i-col span="4">文章标题:</i-col>
               <i-col span="20">{{fruitMasterDetail.id}}</i-col>
             </Row>
           </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请人:</i-col>
-              <i-col span="16">{{fruitMasterDetail.name}}</i-col>
-            </Row>
-          </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
+          <i-col span="24">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">手机号码:</i-col>
+              <i-col span="8">作者:</i-col>
               <i-col span="16">{{fruitMasterDetail.phoneNumber}}</i-col>
             </Row>
           </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">提取金额:</i-col>
-              <i-col span="16">{{fruitMasterDetail.extractingAmount}}</i-col>
-            </Row>
-          </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
+          <i-col span="24">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">银行卡号:</i-col>
+              <i-col span="8">创建时间:</i-col>
               <i-col span="16">{{fruitMasterDetail.creditCardNumbers}}</i-col>
             </Row>
           </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">结算状态:</i-col>
-              <i-col span="16">{{fruitMasterDetail.settlementStatus}}</i-col>
-            </Row>
-          </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
+          <i-col span="24">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请时间:</i-col>
+              <i-col span="8">发布时间:</i-col>
               <i-col span="16">{{fruitMasterDetail.applicationTime}}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
+          <i-col span="24">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">处理时间:</i-col>
+              <i-col span="8">关键词:</i-col>
+              <i-col span="16">{{fruitMasterDetail.handlingTime}}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+          <i-col span="24">
+            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+              <i-col span="8">文章内容:</i-col>
               <i-col span="16">{{fruitMasterDetail.handlingTime}}</i-col>
             </Row>
           </i-col>
@@ -127,67 +117,48 @@
       v-model="modalEdit"
     >
       <p slot="header">
-        <span>鲜果师详情</span>
+        <span>编辑文章</span>
       </p>
       <div class="modal-content">
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
+          <i-col span="24">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">ID:</i-col>
-              <i-col span="20">{{fruitMasterDetail.id}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请人:</i-col>
-              <i-col span="16">{{fruitMasterDetail.name}}</i-col>
+              <i-col span="4">文章标题:</i-col>
+              <Input span="20" style="width: 400px"/>
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
+          <i-col span="24">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">手机号码:</i-col>
-              <i-col span="16">{{fruitMasterDetail.phoneNumber}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">提取金额:</i-col>
-              <i-col span="16">{{fruitMasterDetail.extractingAmount}}</i-col>
+              <i-col span="4">文章作者:</i-col>
+              <Input span="20" style="width: 400px"/>
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
+          <i-col span="24">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">银行卡号:</i-col>
+              <i-col span="8">是否发布:</i-col>
               <i-col span="16">{{fruitMasterDetail.creditCardNumbers}}</i-col>
             </Row>
           </i-col>
-          <i-col span="12">
+        </Row>
+        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+          <i-col span="24">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">结算状态:</i-col>
-              <Select span="16" style="width: 100px">
-                <Option value="beijing">已结算</Option>
-                <Option value="shanghai">未结算</Option>
-              </Select>
+              <i-col span="4">文章作者:</i-col>
+              <Input span="6" style="width: 100px;margin-right: 10px"/>
+              <Input span="6" style="width: 100px;margin-right: 10px"/>
+              <Input span="6" style="width: 100px;margin-right: 10px"/>
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.applicationTime}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">处理时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.handlingTime}}</i-col>
+          <i-col span="24">
+            <Row class-name="mb10" :gutter="8">
+              <i-col span="8">文章内容:</i-col>
+              <i-col span="16">{{fruitMasterDetail.creditCardNumbers}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -231,54 +202,36 @@
       return {
         columns: [
           {
-            title: '上架图片',
+            title: '文章标题',
             key: 'id',
             sortable: true,
             width: 180,
             fixed: 'left'
           },
           {
-            title: '商品名称',
+            title: '关键词',
             key: 'name',
             width: 150
           },
           {
-            title: '上架名称',
+            title: '作者',
             width: 150,
             key: 'onSaleName'
           },
           {
-            title: '上架规格',
+            title: '创建时间',
             width: 150,
             key: 'onSaleRole'
           },
           {
-            title: '规格条码',
+            title: '发布状态',
             width: 150,
             key: 'roleCode'
           },
           {
-            title: '商品原价',
-            width: 180,
+            title: '发布时间',
+            width: 120,
             key: 'price',
-            sortable: true
-          },
-          {
-            title: '商品特价',
-            width: 150,
-            key: 'sort',
-            sortable: true
-          },
-          {
-            title: '排序',
-            width: 150,
-            key: 'price',
-            sortable: true
-          },
-          {
-            title: '是否上架',
-            width: 150,
-            key: 'onSale',
             sortable: true
           },
           {
@@ -302,7 +255,7 @@
     },
     methods: {
       addChildren() {
-
+        this.modalEdit = true
       },
       deleteChildren() {
 
