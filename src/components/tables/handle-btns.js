@@ -56,7 +56,7 @@ const btns = {
         'on-ok': () => {
           vm.$emit('on-delete', params);
           // 页面验证 删除成功则刷新表格内容
-          vm.$emit('input', params.tableData.filter((item, index) => index !== params.row.initRowIndex));
+          // vm.$emit('input', params.tableData.filter((item, index) => index !== params.row.initRowIndex));
         }
       }
     }, [
