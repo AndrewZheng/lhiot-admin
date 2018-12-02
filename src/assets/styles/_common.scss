@@ -45,6 +45,7 @@
 .mr10 {
   margin-right: 10px;
 }
+
 .mr20 {
   margin-right: 20px;
 }
@@ -89,12 +90,21 @@
   padding-bottom: 5rem;
 }
 
+.pt5 {
+  padding-top: 5px;
+}
+
 .pt15 {
   padding-top: 15px;
 }
 
 .pt50 {
   padding-top: 50px;
+}
+
+.ptb2-5 {
+  padding-top: 2.5px;
+  padding-bottom: 2.5px;
 }
 
 .pb9r {
@@ -117,7 +127,7 @@
 /**
   * Float Color
 **/
-.float-right{
+.float-right {
   float: right;
 }
 
@@ -419,6 +429,48 @@
   background-color: rgba(204, 204, 204, .8);
   -webkit-font-smoothing: antialiased;
 }
-.image-model-view{
+
+.image-model-view {
   z-index: 200000
+}
+
+.demo-upload-list {
+  z-index: 99;
+  display: block;
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  line-height: 60px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+  position: relative;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+  margin-bottom: 4px;
+}
+.demo-upload-list img {
+  width: 100%;
+  height: 100%;
+}
+
+.demo-upload-list-cover {
+  display: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, .6);
+}
+
+.demo-upload-list:hover .demo-upload-list-cover {
+  display: block;
+}
+
+.demo-upload-list-cover i {
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  margin: 0 2px;
 }

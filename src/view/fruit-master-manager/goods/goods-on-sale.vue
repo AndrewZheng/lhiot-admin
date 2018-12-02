@@ -291,6 +291,13 @@
         ],
         columns: [
           {
+            type: 'selection',
+            key: '',
+            width: 60,
+            align: 'center',
+            fixed: 'left'
+          },
+          {
             title: '上架图片',
             key: 'id',
             sortable: true,

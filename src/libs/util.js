@@ -61,7 +61,7 @@ export const getMenuByRouter = (list) => {
  * @param routes constantRouterMap
  * @param currentRoute
  */
-export const getNamesByRouters= (routes) => {
+export const getNamesByRouters = (routes) => {
   let res = [];
 
   routes.forEach(route => {
@@ -89,7 +89,7 @@ export const filterLocalRoute = (routeList, routersLocal) => {
       //   pathKey = route.path;
       // }
       routeList.forEach(accessRoute => {
- getParams;
+        getParams;
         if (accessRoute.code === route.name) {
           if (Array.isArray(route.children)) {
             route.children = findLocalRoute(route.children, route.path);
@@ -118,7 +118,8 @@ export const getBreadCrumbList = (route, homeRoute) => {
   let res = routeMetched.filter(item => {
     return item.meta === undefined || !item.meta.hide;
   }).map(item => {
-    let meta = { ...item.meta
+    let meta = {
+      ...item.meta
     };
     if (meta.title && typeof meta.title === 'function') meta.title = meta.title(route);
     let obj = {
@@ -137,9 +138,11 @@ export const getBreadCrumbList = (route, homeRoute) => {
 };
 
 export const getRouteTitleHandled = route => {
-  let router = { ...route
+  let router = {
+    ...route
   };
-  let meta = { ...route.meta
+  let meta = {
+    ...route.meta
   };
   if (meta.title && typeof meta.title === 'function') meta.title = meta.title(router);
   router.meta = meta;
@@ -439,7 +442,7 @@ export const deepcopy = function (source) {
 };
 
 // 菜单数据组织
-export const buildMenu = (array, ckey, isFind=true) => {
+export const buildMenu = (array, ckey, isFind = true) => {
   let menuData = [];
   let indexKeys = Array.isArray(array) ? array.map((e) => {
     return e.id;
@@ -447,7 +450,7 @@ export const buildMenu = (array, ckey, isFind=true) => {
   ckey = ckey || 'parentid';
   array.forEach((e) => {
     // 一级菜单
-    if (!e[ckey] || (e[ckey] === e.id) || e[ckey]== '0') {
+    if (!e[ckey] || (e[ckey] === e.id) || e[ckey] == '0') {
       delete e[ckey];
       menuData.push(deepcopy(e)); // 深拷贝
     } else if (Array.isArray(indexKeys)) {
@@ -474,7 +477,7 @@ export const buildMenu = (array, ckey, isFind=true) => {
           }
         });
         // 过滤掉重复的项
-        parentNode.children= _.uniqBy(parentNode.children, 'id');
+        parentNode.children = _.uniqBy(parentNode.children, 'id');
         if (parentNode.children && isFind) {
           findChildren(parentNode.children);
         }
@@ -516,36 +519,81 @@ export const getRoutes = (routeList) => {
  * @param  {Boolean} isExpand 默人是否全展开
  * @return {Array}    转换后的 tree
  */
-export const convertTree = (tree, map, isExpand=false) => {
+export const convertTree = (tree, map, isExpand = false) => {
   const result = [];
 
   // 遍历 tree
   tree.forEach((item) => {
-      // 读取 map 的键值映射
-      const title = item[ map.title ];
-      let children = item[ map.children ];
+    // 读取 map 的键值映射
+    const title = item[map.title];
+    let children = item[map.children];
 
-      // 对应iview Tree Props
-      let obj= {
-        expand: isExpand,
-        disabled: false,
-        disableCheckbox: false,
-        selected: false,
-        checked: false
-      };
-      // 如果有子节点，递归
-      if (children) {
-        children = convertTree(children, map, isExpand);
-      }
+    // 对应iview Tree Props
+    let obj = {
+      expand: isExpand,
+      disabled: false,
+      disableCheckbox: false,
+      selected: false,
+      checked: false
+    };
+    // 如果有子节点，递归
+    if (children) {
+      children = convertTree(children, map, isExpand);
+    }
 
-      result.push({
-        ...item,
-        ...obj,
-        title,
-        children
-      });
+    result.push({
+      ...item,
+      ...obj,
+      title,
+      children
+    });
   });
 
+  return result;
+};
+
+export const convertTreeCategory = (tree, map, isExpand = false) => {
+  const result = [];
+  let count = 0;
+  // 遍历 tree
+  tree.forEach((item) => {
+    // 读取 map 的键值映射
+    // value: 'beijing',
+    //   label: '北京',
+    const value = item[map.id];
+    const label = item[map.title];
+    let children = item[map.children];
+    // 如果有子节点，递归
+    if (children.length>0) {
+      count = count +1
+      children = convertTreeCategory(children, map, isExpand);
+      result.push({
+        ...item,
+        disabled: false,
+        value,
+        label,
+        children
+      });
+    } else {
+      if (count > 0) {
+        result.push({
+          ...item,
+          disabled: true,
+          value,
+          label,
+          children
+        });
+      } else {
+        result.push({
+          ...item,
+          disabled: false,
+          value,
+          label,
+          children
+        });
+      }
+    }
+  });
   return result;
 };
 
@@ -553,8 +601,8 @@ export const setTreeNodeChecked = (tree, ids) => {
   if (ids.length != 0) {
     ids.forEach(id => {
       tree.forEach(node => {
-        if (id == node.id && node.type ==='SON') {
-          node.checked= true;
+        if (id == node.id && node.type === 'SON') {
+          node.checked = true;
         }
         if (node.children.length > 0) {
           setTreeNodeChecked(node.children, ids);
@@ -563,17 +611,17 @@ export const setTreeNodeChecked = (tree, ids) => {
     });
   } else {
     tree.forEach(node => {
-      node.checked= false;
+      node.checked = false;
       node.selected = false;
       if (node.children.length > 0) {
         setTreeNodeChecked(node.children, '');
       }
-   });
+    });
   }
   return tree;
 };
 
-export const getParent= (array, childs, ids) => {
+export const getParent = (array, childs, ids) => {
   array.forEach(item => {
     if (Number(item.id) === Number(ids)) {
       childs.push(item);
@@ -586,7 +634,7 @@ export const getParent= (array, childs, ids) => {
       if (rs) {
         return rs;
       } else {
-        let index= childs.indexOf(item);
+        let index = childs.indexOf(item);
         if (index > -1) {
           childs.splice(index, 1);
         }
@@ -604,7 +652,7 @@ export const getParent= (array, childs, ids) => {
  * @description 批量修改原有对象key的名称（两个key名称数组长度必须一致,长度不一致的多余的key不替换）
  */
 export const changeObjKeyName = (obj, oldKey, newKey) => {
-  if (obj.length ===0) return [];
+  if (obj.length === 0) return [];
   else if (oldKey.length === 0 && newKey.length === 0) return obj;
   else {
     for (var i = 0; i < obj.length; i++) {
@@ -626,3 +674,20 @@ export const changeObjKeyName = (obj, oldKey, newKey) => {
     return obj;
   }
 };
+
+/**
+ * 搜索框 防止输入过快
+ * @param func
+ * @param delay
+ * @returns {Function}
+ */
+export const debounce = (func, delay = 200) => {
+  let timer = null
+
+  return function (...arg) {
+    timer && clearTimeout(timer)
+    timer = setTimeout(() => {
+      func.apply(this, arg)
+    }, delay)
+  }
+}
