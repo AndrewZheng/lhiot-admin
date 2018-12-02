@@ -584,12 +584,34 @@
         searchRowData: roleRowData,
         productDetail: productDetail,
         //选中的行
-        tableDataSelected: []
+        tableDataSelected: [],
+        jerryData: []
       };
     },
     methods: {
-      getDefaultCategoryArray(goodsCategoryData, id) {
+      getDefaultCategoryArray(goodsCategoryData) {
+        let result = []
+        for (let i = 0; i < goodsCategoryData.length; i++) {
+
+          // if (tempId === id) {
+          //   break;
+          // }
+          if (goodsCategoryData[i].children.length > 0) {
+            this.getDefaultCategoryArray(goodsCategoryData[i].children);
+          }else {
+            let tempId = goodsCategoryData[i].id
+            result.push(tempId)
+          }
+        }
+        return result
       },
+      exportExcel() {
+        console.log(this.getDefaultCategoryArray(this.goodsCategoryData));
+        // this.$refs.tables.exportCsv({
+        //   filename: `table-${new Date().valueOf()}.csv`
+        // });
+      },
+
       resetFields() {
         this.$refs.modalEdit.resetFields()
         this.$refs.innerModalEdit.resetFields()
@@ -761,11 +783,7 @@
           this.searchLoading = false
         });
       },
-      exportExcel() {
-        this.$refs.tables.exportCsv({
-          filename: `table-${new Date().valueOf()}.csv`
-        });
-      },
+
       handlePush() {
         this.turnToPage('goods-standard');
       },
