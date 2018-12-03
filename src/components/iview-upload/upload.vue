@@ -9,7 +9,6 @@
     :on-format-error="handleFormatError"
     :on-exceeded-size="handleMaxSize"
     :before-upload="handleBeforeUpload"
-    @on-remove="onRemove"
     type="drag"
     :multiple="multiple"
     action="https://resource.food-see.com/v1/upload/product_image"
@@ -53,11 +52,6 @@
       }
     },
     methods: {
-      onRemove(file, fileList) {
-        console.log('onRemove');
-        console.log(file);
-        console.log(fileList);
-      },
       deleteFile(file) {
         const fileList = this.$refs.iViewUpload.fileList;
         this.$refs.iViewUpload.fileList.splice(fileList.indexOf(file), 1);
@@ -67,8 +61,8 @@
         this.$refs.iViewUpload.clearFiles()
       },
       //设置默认文件列表
-      setDefaultImageList(array) {
-        this.$refs.iViewUpload.fileList = this.$refs.iViewUpload.fileList.concat(array)
+      setDefaultFileList(array) {
+        this.$refs.iViewUpload.fileList = array
       },
       //获取文件列表
       getFileList(){
@@ -121,10 +115,12 @@
             image.onload = function () {
               if (width && this.width != width) {
                 self.$Notice.error({title: '请上传宽为' + width + "高为" + height + "的图片"});
-                reject();
+                // reject();
+                resolve();
               } else if (height && this.height != height) {
                 self.$Notice.error({title: '请上传宽为' + width + "高为" + height + "的图片"});
-                reject();
+                // reject();
+                resolve();
               } else if (!check) {
                 self.$Notice.error({title: '请上传的图片最多不能超过' + num + "张",});
                 reject();

@@ -9,20 +9,25 @@
               :loading="loading"
               @on-view="handleView"
               @on-edit="handleEdit"
+              @on-delete="handleDelete"
+              @on-select-all="onSelectionAll"
+              @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
-          <Input placeholder="姓名" class="search-input" v-model="searchRowData.name" style="width: 100px"/>
-          <Input placeholder="手机号码" class="search-input" v-model="searchRowData.phoneNumber" style="width: 100px"/>
-          <Input placeholder="身份证号码" class="search-input" v-model="searchRowData.idCard" style="width: 100px"/>
-          <Input placeholder="注册时间起" class="search-input ml20" v-model="searchRowData.timeStart" style="width: 100px"/>
-          <Input placeholder="注册时间止" class="search-input mr20" v-model="searchRowData.timeEnd" style="width: 100px"/>
-          <Select class="search-col" placeholder="审核状态" v-model="searchRowData.status" style="width:100px" clearable>
-            <Option v-for="item in userStatus" :value="item.value" :key="item.value">{{ item.value }}</Option>
-          </Select>
-          <Button v-waves @click="handleSearch" class="search-btn ml5" type="primary">
-            <Icon type="md-search"/>&nbsp;搜索
+          <Button v-waves @click="createStandard" class="search-btn ml5 mr5" type="primary">
+            <Icon type="md-add"/>&nbsp;创建
           </Button>
-          <Button v-waves type="primary" @click="exportExcel" style="margin-left: 200px">导出</Button>
+          <Poptip confirm
+                  placement="bottom"
+                  style="width: 100px"
+                  title="您确认删除选中的内容吗?"
+                  @on-ok="poptipOk"
+          >
+            <Button type="error" class="mr5">
+              <Icon type="md-trash"/>
+              删除
+            </Button>
+          </Poptip>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -45,58 +50,42 @@
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">ID:</i-col>
-              <i-col span="20">{{fruitMasterDetail.id}}</i-col>
+              <i-col span="8">商品名称:</i-col>
+              <i-col span="16">{{productStandardDetail.productName}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请人:</i-col>
-              <i-col span="16">{{fruitMasterDetail.name}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">手机号码:</i-col>
-              <i-col span="16">{{fruitMasterDetail.phoneNumber}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">提取金额:</i-col>
-              <i-col span="16">{{fruitMasterDetail.extractingAmount}}</i-col>
+              <i-col span="8">规格条码:</i-col>
+              <i-col span="16">{{productStandardDetail.barcode}}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">银行卡号:</i-col>
-              <i-col span="16">{{fruitMasterDetail.creditCardNumbers}}</i-col>
+              <i-col span="8">规格单位:</i-col>
+              <i-col span="16">{{productStandardDetail.packagingUnit}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">结算状态:</i-col>
-              <i-col span="16">{{fruitMasterDetail.settlementStatus}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.applicationTime}}</i-col>
+              <i-col span="8">海鼎规格数量:</i-col>
+              <i-col span="16">{{productStandardDetail.specificationQty}}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">处理时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.handlingTime}}</i-col>
+              <i-col span="8">是否可用:</i-col>
+              <i-col span="16">{{productStandardDetail.availableStatus}}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+              <i-col span="8">单份商品重量:</i-col>
+              <i-col span="16">{{productStandardDetail.weight}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -112,67 +101,60 @@
         <span>鲜果师详情</span>
       </p>
       <div class="modal-content">
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">ID:</i-col>
-              <i-col span="20">{{fruitMasterDetail.id}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请人:</i-col>
-              <i-col span="16">{{fruitMasterDetail.name}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">手机号码:</i-col>
-              <i-col span="16">{{fruitMasterDetail.phoneNumber}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">提取金额:</i-col>
-              <i-col span="16">{{fruitMasterDetail.extractingAmount}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">银行卡号:</i-col>
-              <i-col span="16">{{fruitMasterDetail.creditCardNumbers}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">结算状态:</i-col>
-              <Select span="16" style="width: 100px" >
-                <Option value="beijing">已结算</Option>
-                <Option value="shanghai">未结算</Option>
+        <Form ref="modalEdit" :model="productStandardDetail" :rules="ruleInline" :label-width="100">
+          <Row>
+            <Col span="12">
+            <FormItem label="商品名称:">
+              {{productStandardDetail.productName}}
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="规格条码:" prop="barcode">
+              <Input v-model="productStandardDetail.barcode"></Input>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem label="规格单位:" prop="packagingUnit" :label-width="80">
+              <Select :value="productStandardDetail.packagingUnit" @on-change="uniteChange">
+                <Option class="ptb2-5" style="padding-left: 5px" v-for="(item,index) in unitsList" :value="item.value"
+                        :key="index">{{ item.label
+                  }}
+                </Option>
               </Select>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.applicationTime}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">处理时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.handlingTime}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="海鼎规格数量:" prop="specificationQty">
+              <Input v-model="productStandardDetail.specificationQty"></Input>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem label="是否可用:" prop="packagingUnit" :label-width="80">
+              <Select :value="productStandardDetail.availableStatus" @on-change="uniteChange" style="width: 100px">
+                <Option class="ptb2-5" style="padding-left: 5px" v-for="(item,index) in useAble" :value="item.value"
+                        :key="index">{{ item.label
+                  }}
+                </Option>
+              </Select>
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="单份商品重量:" prop="specificationQty">
+              <Input v-model="productStandardDetail.specificationQty" style="width: 100px"></Input>
+              <i-col style="display: inline-block;margin-left: 5px">kg</i-col>
+            </FormItem>
+            </Col>
+          </Row>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button @click="handleEditClose">关闭</Button>
+        <Button type="primary" :loading="modalViewLoading" @click="handleSubmit('modalEdit')">确定
+        </Button>
       </div>
     </Modal>
   </div>
@@ -180,35 +162,33 @@
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import {getMasterSalary} from '@/api/fruitermaster';
+  import {deleteProductSpecification, getProductSpecificationsPages,createProductSpecification} from '@/api/fruitermaster';
+  import deleteMixin from '@/mixins/deleteMixin.js'
 
-  const fruitMasterDetail = {
-    id: '',
-    name: 0,
-    phoneNumber: '',
-    extractingAmount: '',
-    settlementStatus: '',
-    creditCardNumbers: '',
-    headStatus: '',
-    applicationTime: '',
-    handlingTime: '2018-10-28'
+  const productStandardDetail = {
+    id: 0,
+    productName: null,
+    barcode: null,
+    packagingUnit: null,
+    weight: 0,
+    specificationQty: 0,
+    limitInventory: 0,
+    inventorySpecification: "NO",
+    availableStatus: null,
+    createAt: null,
+    specification: null
   };
-  // 'id|1-47': 1,
-  //   name: '@name',
-  //   phoneNumber: Random.integer(13100000000, 19999999999),
-  //   extractingAmount: Random.integer(1, 1000),
-  //   settlementStatus: '未处理',
-  //   creditCardNumbers: 6222021904001333955,
-  //   headStatus: '健康管理学会副会长',
-  //   applicationTime: '2018-10-25',
-  //   handlingTime: '2018-10-28'
   const roleRowData = {
-    name: '',
-    phoneNumber: '',
-    idCard: '',
-    timeStart: '',
-    timeEnd: '',
-    status: ''
+    availableStatus: "ENABLE",
+    barCodes: "",
+    inventorySpecification: "YES",
+    beginCreateAt: "",
+    endCreateAt: "",
+    code: null,
+    name: null,
+    productId: 0,
+    page: 1,
+    rows: 10
   };
 
   export default {
@@ -216,60 +196,66 @@
       Tables
     },
     created() {
+      this.unitsList = this.$route.params.unitsList
       this.getTableData();
     },
     data() {
       return {
+        mixins: [deleteMixin],
+        unitsList: [],
+        ruleInline: {},
+        useAble: [{label: '是', value: 'ENABLE'}, {label: '否', value: 'DISABLE'}],
         columns: [
           {
-            title: 'ID',
-            key: 'id',
-            sortable: true,
-            width: 80,
+            type: 'selection',
+            key: '',
+            width: 60,
+            align: 'center',
             fixed: 'left'
           },
           {
-            title: '申请人',
-            key: 'name',
+            title: '商品名称',
+            key: 'productName',
+            sortable: true,
+            minWidth: 180,
+          },
+          {
+            title: '规格条码',
+            key: 'barcode',
             width: 150
           },
           {
-            title: '手机号',
-            width: 150,
-            key: 'phoneNumber'
+            title: '规格单位',
+            width: 100,
+            key: 'packagingUnit'
           },
           {
-            title: '提取金额',
-            width: 150,
-            key: 'extractingAmount'
+            title: '是否基础规格',
+            width: 120,
+            key: 'inventorySpecification'
           },
           {
-            title: '结算状态',
-            width: 150,
-            key: 'settlementStatus'
+            title: '规格',
+            width: 80,
+            key: 'specification'
           },
           {
-            title: '银行卡号',
-            width: 180,
-            key: 'creditCardNumbers',
+            title: '重量(kg)',
+            width: 120,
+            key: 'weight',
             sortable: true
           },
           {
-            title: '申请时间',
-            width: 150,
-            key: 'applicationTime',
-            sortable: true
-          }, {
-            title: '处理时间',
-            width: 150,
-            key: 'handlingTime',
+            title: '安全库存',
+            width: 120,
+            key: 'limitInventory',
             sortable: true
           },
           {
             title: '操作',
             minWidth: 150,
             key: 'handle',
-            options: ['view', 'edit']
+            options: ['delete', 'edit', 'view']
           }
         ],
         tableData: [],
@@ -277,51 +263,95 @@
         page: 1,
         pageSize: 10,
         loading: true,
+        modalViewLoading: false,
         modalView: false,
         modalEdit: false,
         rowData: roleRowData,
         searchRowData: roleRowData,
-        fruitMasterDetail: fruitMasterDetail
+        productStandardDetail: productStandardDetail,
+        //选中的行
+        tableDataSelected: [],
       };
     },
     methods: {
-      handleClose(){
+      handleDelete(params) {
+        this.tableDataSelected = []
+        this.tableDataSelected.push(params.row)
+        this.deleteTable(params.row.id)
+      },
+      poptipOk() {
+        if (this.tableDataSelected.length < 1) {
+          this.$Message.warning('请选中要删除的行');
+          return
+        }
+        let tempDeleteList = []
+        this.tableDataSelected.filter(value => {
+          tempDeleteList.push(value.id)
+        })
+        let strTempDelete = tempDeleteList.join(',')
+        this.deleteTable(strTempDelete)
+      },
+      //删除
+      deleteTable(ids) {
+        this.loading = true
+        deleteProductSpecification({
+          ids
+        }).then(res => {
+            let totalPage = Math.ceil(this.total / this.searchRowData.pageSize)
+            if (this.tableData.length == this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
+              this.searchRowData.page -= 1
+            }
+            this.tableDataSelected = [];
+            this.getTableData();
+          }
+        ).catch(err => {
+          this.loading = false
+        })
+      },
+      uniteChange(value) {
+        this.productStandardDetail.packagingUnit = value
+      },
+      handleClose() {
         this.modalView = false;
       },
       handleView(params) {
-        this.fruitMasterDetail = params.row;
+        this.productStandardDetail = params.row;
         this.modalView = true;
       },
       handleEdit(params) {
-        this.fruitMasterDetail = params.row;
+        this.productStandardDetail = params.row;
         this.modalEdit = true;
       },
-      handleSearch() {
+      createStandard() {
+        this.modalEdit = true
+      },
+      deleteStandard() {
+
       },
       changePage(page) {
-        this.page = page;
+        this.searchRowData.page = page;
         this.getTableData();
       },
       changePageSize(pageSize) {
-        console.log(pageSize);
-        this.page = 1;
-        this.pageSize = pageSize;
+        this.searchRowData.page = 1;
+        this.searchRowData.rows = pageSize;
         this.getTableData();
       },
       getTableData() {
-        getMasterSalary({
-          page: this.page,
-          rows: this.pageSize
-        }).then(res => {
+        console.log(this.$route.params.id);
+        this.searchRowData.productId = this.$route.params.id
+        this.productStandardDetail.productName = this.$route.params.productName
+        getProductSpecificationsPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;
           this.loading = false;
         });
       },
-      exportExcel() {
-        this.$refs.tables.exportCsv({
-          filename: `table-${new Date().valueOf()}.csv`
-        });
+      onSelectionAll(selection) {
+        this.tableDataSelected = selection
+      },
+      onSelectionChange(selection) {
+        this.tableDataSelected = selection
       }
     }
   };

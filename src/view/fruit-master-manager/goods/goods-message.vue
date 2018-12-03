@@ -40,7 +40,7 @@
                 删除
               </Button>
             </Poptip>
-            <Button v-waves type="primary" class="mr5" @click="exportExcel">
+            <Button v-waves type="primary" class="mr5" @click="exportExcel" :loading="exportExcelLoading">
               <Icon type="md-download"/>
               导出
             </Button>
@@ -81,16 +81,10 @@
           </i-col>
         </Row>
         <Row class-name="mb20">
-          <i-col span="12">
-            <Row>
-              <i-col span="8">益处:</i-col>
-              <i-col span="16">{{productDetail.phoneNumber}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row>
-            </Row>
-          </i-col>
+          <Row>
+            <i-col span="3">益处:</i-col>
+            <i-col span="21">{{productDetail.benefit}}</i-col>
+          </Row>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
@@ -105,7 +99,12 @@
             <Row>
               <i-col span="3">商品主图:</i-col>
               <i-col span="21">
-                <img src="https://i.loli.net/2017/08/21/599a521472424.jpg" style="width: 200px;height: auto"/>
+                <div class="demo-upload-list">
+                  <img :src="productDetail.mainImg"/>
+                  <div class="demo-upload-list-cover">
+                    <Icon type="ios-eye-outline" @click.native="handleUploadView(productDetail.mainImg)"></Icon>
+                  </div>
+                </div>
               </i-col>
             </Row>
           </i-col>
@@ -115,7 +114,14 @@
             <Row>
               <i-col span="3">商品附图:</i-col>
               <i-col span="21">
-                <img src="https://i.loli.net/2017/08/21/599a521472424.jpg" style="width: 200px;height: auto"/>
+                <div class="demo-upload-list" v-for="item in productDetail.subImg">
+                  <div>
+                    <img :src="item">
+                    <div class="demo-upload-list-cover">
+                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                    </div>
+                  </div>
+                </div>
               </i-col>
             </Row>
           </i-col>
@@ -123,9 +129,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="3">详情图:</i-col>
-              <i-col span="21"><a style="color:#0072bc; text-decoration : underline" @click="goDetail"> 预览效果</a>----直接打开新页面，展示详情组合图片
-              </i-col>
+              <!--<i-col span="3">详情图:</i-col>-->
+              <!--<i-col span="21"><a style="color:#0072bc; text-decoration : underline" @click="goDetail"> 预览效果</a>&#45;&#45;&#45;&#45;直接打开新页面，展示详情组合图片-->
+              <!--</i-col>-->
             </Row>
           </i-col>
         </Row>
@@ -311,8 +317,7 @@
               <FormItem label="规格单位:" prop="packagingUnit" :label-width="80">
                 <Select :value="productDetail.productSpecification.packagingUnit" @on-change="uniteChange">
                   <Option class="ptb2-5" style="padding-left: 5px" v-for="(item,index) in unitsList" :value="item.value"
-                          :key="index">{{ item.label
-                    }}
+                          :key="index">{{ item.label}}
                   </Option>
                 </Select>
               </FormItem>
@@ -338,7 +343,6 @@
                        v-model="productDetail.productSpecification.weight"/>
               </FormItem>
               </Col>
-
             </Row>
           </Form>
         </Form>
@@ -369,6 +373,7 @@
   } from '@/api/fruitermaster';
   import {buildMenu, convertTreeCategory} from '@/libs/util';
   import uploadMixin from '@/mixins/uploadMixin'
+  import deleteMixin from '@/mixins/deleteMixin.js'
 
   const productDetail = {
     id: 0,
@@ -381,7 +386,7 @@
     mainImg: null,
     name: "",
     productSpecification: {
-      availableStatus: "",
+      availableStatus: "ENABLE",
       barcode: null,
       inventorySpecification: "YES",
       limitInventory: 0,
@@ -405,7 +410,7 @@
       Tables,
       IViewUpload
     },
-    mixins: [uploadMixin],
+    mixins: [uploadMixin, deleteMixin],
     mounted() {
       this.loading = true
       this.createLoading = true;
@@ -456,7 +461,7 @@
             {required: true, message: '请选择商品分类'}
           ],
           mainImg: [
-            {required: true, message: '请上传商品主图', type: 'array'}
+            {required: true, message: '请上传商品主图'}
           ],
           subImg: [
             {required: true, message: '请上传商品附图', type: 'array'}
@@ -472,7 +477,7 @@
             {
               validator(rule, value, callback, source, options) {
                 let errors = [];
-                if (!/^[1-9]\d*$/.test(value)) {
+                if (!/^[0-9]\d*$/.test(value)) {
                   callback('必须为非零整数');
                 }
                 callback(errors);
@@ -544,7 +549,7 @@
           },
           {
             title: '商品编码',
-            key: 'id',
+            key: 'code',
             sortable: true,
             minWidth: 150,
           },
@@ -556,7 +561,7 @@
           {
             title: '益处',
             minWidth: 150,
-            key: 'phoneNumber'
+            key: 'benefit'
           },
           {
             title: '商品描述',
@@ -576,15 +581,13 @@
         createLoading: false,
         searchLoading: false,
         modalViewLoading: false,
+        exportExcelLoading: false,
         modalView: false,
         modalEdit: false,
-        imagecropperKey: 0,
         image: '',
         rowData: roleRowData,
         searchRowData: roleRowData,
         productDetail: productDetail,
-        //选中的行
-        tableDataSelected: [],
         jerryData: []
       };
     },
@@ -598,20 +601,32 @@
           // }
           if (goodsCategoryData[i].children.length > 0) {
             this.getDefaultCategoryArray(goodsCategoryData[i].children);
-          }else {
+          } else {
             let tempId = goodsCategoryData[i].id
             result.push(tempId)
           }
         }
         return result
       },
+      //导出Excel
       exportExcel() {
-        console.log(this.getDefaultCategoryArray(this.goodsCategoryData));
-        // this.$refs.tables.exportCsv({
-        //   filename: `table-${new Date().valueOf()}.csv`
-        // });
+        this.exportExcelLoading = true
+        getProductPages({}).then(res => {
+          if (res.array.length > 0) {
+            let tempTableList = res.array.map(value => {
+              value.code = '=' + value.code
+              return value
+            })
+            debugger
+            this.$refs.tables.exportCsv({
+              filename: `table-${new Date().valueOf()}.csv`,
+              columns: this.columns.filter((col, index) => index !== 0),
+              data: tempTableList,
+            });
+          }
+          this.exportExcelLoading = false
+        })
       },
-
       resetFields() {
         this.$refs.modalEdit.resetFields()
         this.$refs.innerModalEdit.resetFields()
@@ -648,14 +663,19 @@
           ...this.productDetail
         }).then(res => {
           this.modalViewLoading = false
+          this.modalEdit = false
+          this.$Message.success('创建成功!');
+          this.resetFields()
           this.getTableData()
         })
       },
       editProduct() {
         this.modalViewLoading = true
-        createProduct({
+        editProduct({
           ...this.productDetail
         }).then(res => {
+          this.resetFields()
+          this.modalEdit = false
           this.modalViewLoading = false
           this.getTableData()
         })
@@ -672,12 +692,7 @@
         }
         this.defaultGoodsCategoryData = selectedData;
       },
-      onSelectionAll(selection) {
-        this.tableDataSelected = selection
-      },
-      onSelectionChange(selection) {
-        this.tableDataSelected = selection
-      },
+
       goDetail() {
         this.turnToPage('goods-detail');
       },
@@ -717,7 +732,7 @@
               this.searchRowData.page -= 1
             }
             this.tableDataSelected = [];
-            this.initMenuList();
+            this.getTableData();
           }
         ).catch(err => {
           this.loading = false
@@ -735,7 +750,40 @@
         let strTempDelete = tempDeleteList.join(',')
         this.deleteTable(strTempDelete)
       },
+      //设置编辑商品的图片列表
+      setDefaultUploadList(res) {
+        if (res.mainImg != null) {
+          const map = {status: 'finished', url: 'url'};
+          let mainImgArr = []
+          map.url = res.mainImg
+          mainImgArr.push(map)
+          this.$refs.uploadMain.setDefaultFileList(mainImgArr)
+          this.uploadListMain = mainImgArr
+        }
+        if (res.subImg != null) {
+          let subImgArr = [];
+          res.subImg.forEach(value => {
+            const innerMapSub = {status: 'finished', url: 'url'}
+            innerMapSub.url = value
+            subImgArr.push(innerMapSub)
+          })
+          this.$refs.uploadSecond.setDefaultFileList(subImgArr)
+          this.uploadListSecond = subImgArr
+        }
+        if (res.detailImg != null) {
+          let detailImgArr = [];
+          res.detailImg.forEach(value => {
+            const innerMapDetailImg = {status: 'finished', url: 'url'}
+            innerMapDetailImg.url = value
+            detailImgArr.push(innerMapDetailImg)
+          })
+          this.$refs.uploadMultiple.setDefaultFileList(detailImgArr)
+          this.uploadListMultiple = detailImgArr
+        }
+
+      },
       handleView(params) {
+        this.resetFields()
         this.tempModalType = this.modalType.view
         this.loading = true
         getProduct({
@@ -747,6 +795,7 @@
         })
       },
       handleEdit(params) {
+        this.resetFields()
         this.tempModalType = this.modalType.edit
         this.loading = true
         getProduct({
@@ -754,8 +803,13 @@
         }).then(res => {
           this.loading = false
           this.productDetail = res
+          this.setDefaultUploadList(res)
           this.modalEdit = true;
         })
+      },
+
+      handlePush(params) {
+        this.turnToPage({name: 'goods-standard', params: {id: params.row.id, unitsList: this.unitsList, productName:params.row.name}});
       },
       handleSearch() {
         if (this.searchRowData.code === null && this.searchRowData.name === null) {
@@ -783,12 +837,12 @@
           this.searchLoading = false
         });
       },
-
-      handlePush() {
-        this.turnToPage('goods-standard');
-      },
       handleUploadView(name) {
-        this.imgUploadViewItem = name.url;
+        if (typeof name === 'string') {
+          this.imgUploadViewItem = name
+        } else {
+          this.imgUploadViewItem = name.url;
+        }
         this.uploadVisible = true;
       },
       //删除附图
@@ -823,8 +877,8 @@
       //商品主图
       handleSuccessMain(response, file, fileList) {
         this.uploadListMain = fileList
-        this.productDetail.mainImg = []
-        this.productDetail.mainImg.push(fileList[0].url)
+        this.productDetail.mainImg = null
+        this.productDetail.mainImg = fileList[0].url
       },
       //商品详情
       handleSuccessMultiple(response, file, fileList) {

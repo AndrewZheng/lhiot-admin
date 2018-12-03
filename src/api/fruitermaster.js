@@ -164,3 +164,28 @@ export const createProduct = (data) => {
     method: 'post'
   });
 }
+
+//根据条件分页查询商品规格信息列表(传值productId)
+export const getProductSpecificationsPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/product-specifications/pages',
+    data,
+    method: 'post'
+  });
+}
+
+//根据商品规格Ids删除商品规格
+export const deleteProductSpecification = ({ids}) => {
+  return Vue.prototype.$http.request({
+    url: '/product-specifications/' + ids,
+    method: 'delete'
+  });
+}
+
+//添加商品规格
+export const createProductSpecification = ({ids}) => {
+  return Vue.prototype.$http.request({
+    url: '/product-specifications/' + ids,
+    method: 'post'
+  });
+}
