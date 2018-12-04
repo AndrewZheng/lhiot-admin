@@ -60,7 +60,6 @@
     <Modal
       v-model="modalView"
       :mask-closable="false"
-      :width="rowData.type=='SON'?'750':'540'"
     >
       <p slot="header">
         <span>商品基础信息</span>
@@ -374,7 +373,7 @@
   import {buildMenu, convertTreeCategory} from '@/libs/util';
   import uploadMixin from '@/mixins/uploadMixin'
   import deleteMixin from '@/mixins/deleteMixin.js'
-
+  import tableMixin from '@/mixins/tableMixin.js'
   const productDetail = {
     id: 0,
     benefit: "",
@@ -410,8 +409,9 @@
       Tables,
       IViewUpload
     },
-    mixins: [uploadMixin, deleteMixin],
+    mixins: [uploadMixin, deleteMixin,tableMixin],
     mounted() {
+      this.searchRowData = roleRowData
       this.loading = true
       this.createLoading = true;
       productSpecificationsUnits().then(res => {
@@ -512,7 +512,6 @@
         defaultListMultiple: [],
         defaultListMain: [],
         defaultListSecond: [],
-        imgUploadViewItem: '',
         uploadVisible: false,
         uploadListMain: [],
         uploadListSecond: [],
@@ -521,24 +520,6 @@
         defaultGoodsCategoryData: [41],
         tempSubImg: [],
         unitsList: [],
-        modalType: {
-          view: 'view',
-          edit: 'edit',
-          create: 'create'
-        },
-        tempModalType: 'create',
-        cityList: [
-          {
-            value: 'New York',
-            label: 'New York'
-          },
-          {
-            value: 'London',
-            label: 'London'
-          }
-        ],
-        model1: '',
-        imagecropperShow: false,
         columns: [
           {
             type: 'selection',
@@ -575,20 +556,12 @@
             options: ['delete', 'edit', 'view', 'push']
           }
         ],
-        tableData: [],
-        total: 0,
-        loading: true,
         createLoading: false,
         searchLoading: false,
         modalViewLoading: false,
         exportExcelLoading: false,
-        modalView: false,
-        modalEdit: false,
-        image: '',
-        rowData: roleRowData,
         searchRowData: roleRowData,
         productDetail: productDetail,
-        jerryData: []
       };
     },
     methods: {
@@ -613,15 +586,14 @@
         this.exportExcelLoading = true
         getProductPages({}).then(res => {
           if (res.array.length > 0) {
-            let tempTableList = res.array.map(value => {
-              value.code = '=' + value.code
-              return value
-            })
-            debugger
+            // let tempTableList = res.array.map(value => {
+            //   value.code = '=' + value.code
+            //   return value
+            // })
             this.$refs.tables.exportCsv({
               filename: `table-${new Date().valueOf()}.csv`,
               columns: this.columns.filter((col, index) => index !== 0),
-              data: tempTableList,
+              data: res.array,
             });
           }
           this.exportExcelLoading = false
@@ -692,7 +664,6 @@
         }
         this.defaultGoodsCategoryData = selectedData;
       },
-
       goDetail() {
         this.turnToPage('goods-detail');
       },
@@ -703,24 +674,7 @@
         }
         this.modalEdit = true
       },
-      deleteChildren() {
 
-      },
-      close() {
-        this.imagecropperShow = false;
-      },
-      handleEditClose() {
-        this.modalEdit = false
-      },
-      handleClose() {
-        this.modalView = false;
-      },
-      //删除单个行
-      handleDelete(params) {
-        this.tableDataSelected = []
-        this.tableDataSelected.push(params.row)
-        this.deleteTable(params.row.id)
-      },
       //删除
       deleteTable(ids) {
         this.loading = true
@@ -737,18 +691,6 @@
         ).catch(err => {
           this.loading = false
         })
-      },
-      poptipOk() {
-        if (this.tableDataSelected.length < 1) {
-          this.$Message.warning('请选中要删除的行');
-          return
-        }
-        let tempDeleteList = []
-        this.tableDataSelected.filter(value => {
-          tempDeleteList.push(value.id)
-        })
-        let strTempDelete = tempDeleteList.join(',')
-        this.deleteTable(strTempDelete)
       },
       //设置编辑商品的图片列表
       setDefaultUploadList(res) {
@@ -780,7 +722,6 @@
           this.$refs.uploadMultiple.setDefaultFileList(detailImgArr)
           this.uploadListMultiple = detailImgArr
         }
-
       },
       handleView(params) {
         this.resetFields()
@@ -807,27 +748,13 @@
           this.modalEdit = true;
         })
       },
-
       handlePush(params) {
         this.turnToPage({name: 'goods-standard', params: {id: params.row.id, unitsList: this.unitsList, productName:params.row.name}});
       },
       handleSearch() {
-        if (this.searchRowData.code === null && this.searchRowData.name === null) {
-          this.$Message.warning('亲输入商品或者商品名');
-          return
-        }
         this.searchRowData.page = 1;
         this.searchLoading = true
         this.getTableData()
-      },
-      changePage(page) {
-        this.searchRowData.page = page;
-        this.getTableData();
-      },
-      changePageSize(pageSize) {
-        this.searchRowData.page = 1;
-        this.searchRowData.rows = pageSize;
-        this.getTableData();
       },
       getTableData() {
         getProductPages(this.searchRowData).then(res => {
@@ -836,14 +763,6 @@
           this.loading = false;
           this.searchLoading = false
         });
-      },
-      handleUploadView(name) {
-        if (typeof name === 'string') {
-          this.imgUploadViewItem = name
-        } else {
-          this.imgUploadViewItem = name.url;
-        }
-        this.uploadVisible = true;
       },
       //删除附图
       handleRemoveSecond(file) {

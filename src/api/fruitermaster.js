@@ -194,7 +194,42 @@ export const createProductSpecification = (data) => {
 /// 修改商品规格
 export const editProductSpecification = (data) => {
   return Vue.prototype.$http.request({
-    url: 'product-specifications/' + data.id,
+    url: '/product-specifications/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+//根据条件分页查询商品上架信息列表
+export const getProductShelvesPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/product-shelves/pages',
+    data,
+    method: 'post'
+  });
+};
+
+//根据商品上架Ids删除商品上架
+export const deleteProductShelve = ({ids}) => {
+  return Vue.prototype.$http.request({
+    url: '/product-shelves/' + ids,
+    method: 'delete'
+  });
+};
+
+//添加商品上架
+export const createProductShelve = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/product-shelves/',
+    data,
+    method: 'post'
+  });
+};
+
+//修改商品上架
+export const editProductShelve = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/product-shelves/' + data.id,
     data,
     method: 'put'
   });

@@ -1,10 +1,19 @@
 let mixin = {
   data() {
     return {
-      imageSize: 2048
+      imageSize: 2048,
+      imgUploadViewItem:''
     }
   },
   methods: {
+    handleUploadView(name) {
+      if (typeof name === 'string') {
+        this.imgUploadViewItem = name
+      } else {
+        this.imgUploadViewItem = name.url;
+      }
+      this.uploadVisible = true;
+    },
     handleFormatError(file) {
       this.$Notice.warning({
         title: 'The file format is incorrect',
