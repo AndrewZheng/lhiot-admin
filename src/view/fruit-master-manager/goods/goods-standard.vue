@@ -14,7 +14,7 @@
               @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
-          <Button v-waves @click="createStandard" class="search-btn ml5 mr5" type="primary">
+          <Button v-waves @click="handleCreateView" class="search-btn ml5 mr5" type="primary">
             <Icon type="md-add"/>&nbsp;创建
           </Button>
           <Poptip confirm
@@ -32,7 +32,8 @@
       </tables>
       <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
-          <Page :total="total" :current="page" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer
+          <Page :total="total" :current="searchRowData.page" @on-change="changePage"
+                @on-page-size-change="changePageSize" show-sizer
                 show-total></Page>
         </Row>
       </div>
@@ -41,7 +42,6 @@
     <Modal
       v-model="modalView"
       :mask-closable="false"
-      :width="rowData.type=='SON'?'750':'540'"
     >
       <p slot="header">
         <span>鲜果师详情</span>
@@ -70,8 +70,8 @@
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">海鼎规格数量:</i-col>
-              <i-col span="16">{{productStandardDetail.specificationQty}}</i-col>
+              <i-col span="10">海鼎规格数量:</i-col>
+              <i-col span="14">{{productStandardDetail.specificationQty}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -84,8 +84,8 @@
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">单份商品重量:</i-col>
-              <i-col span="16">{{productStandardDetail.weight}}</i-col>
+              <i-col span="10">单份商品重量:</i-col>
+              <i-col span="14">{{productStandardDetail.weight}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -134,7 +134,8 @@
           <Row>
             <Col span="12">
             <FormItem label="是否可用:" prop="packagingUnit" :label-width="80">
-              <Select :value="productStandardDetail.availableStatus" @on-change="uniteChange" style="width: 100px">
+              <Select :value="productStandardDetail.availableStatus" @on-change="useAbleUniteChange"
+                      style="width: 100px">
                 <Option class="ptb2-5" style="padding-left: 5px" v-for="(item,index) in useAble" :value="item.value"
                         :key="index">{{ item.label
                   }}
@@ -143,8 +144,8 @@
             </FormItem>
             </Col>
             <Col span="12">
-            <FormItem label="单份商品重量:" prop="specificationQty">
-              <Input v-model="productStandardDetail.specificationQty" style="width: 100px"></Input>
+            <FormItem label="单份商品重量:" prop="weight">
+              <Input v-model="productStandardDetail.weight" style="width: 100px"></Input>
               <i-col style="display: inline-block;margin-left: 5px">kg</i-col>
             </FormItem>
             </Col>
@@ -162,8 +163,13 @@
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import {deleteProductSpecification, getProductSpecificationsPages,createProductSpecification} from '@/api/fruitermaster';
-  import deleteMixin from '@/mixins/deleteMixin.js'
+  import {
+    createProductSpecification,
+    deleteProductSpecification,
+    getProductSpecificationsPages,
+    editProductSpecification
+  } from '@/api/fruitermaster';
+  import deleteMixin from '@/mixins/deleteMixin.js';
 
   const productStandardDetail = {
     id: 0,
@@ -173,19 +179,13 @@
     weight: 0,
     specificationQty: 0,
     limitInventory: 0,
-    inventorySpecification: "NO",
+    productId: 0,
+    inventorySpecification: 'NO',
     availableStatus: null,
     createAt: null,
     specification: null
   };
   const roleRowData = {
-    availableStatus: "ENABLE",
-    barCodes: "",
-    inventorySpecification: "YES",
-    beginCreateAt: "",
-    endCreateAt: "",
-    code: null,
-    name: null,
     productId: 0,
     page: 1,
     rows: 10
@@ -196,14 +196,69 @@
       Tables
     },
     created() {
-      this.unitsList = this.$route.params.unitsList
+      this.unitsList = this.$route.params.unitsList;
       this.getTableData();
     },
     data() {
       return {
         mixins: [deleteMixin],
         unitsList: [],
-        ruleInline: {},
+        ruleInline: {
+          barcode: [
+            {required: true, message: '请输入商品编码'},
+            {
+              validator(rule, value, callback, source, options) {
+                let errors = [];
+                if (!/^[0-9]+$/.test(value)) {
+                  callback('必须为整数');
+                }
+                callback(errors);
+              }
+            }
+          ],
+          availableStatus: [
+            {required: true, message: '请选择商品分类'}
+          ],
+          packagingUnit: [
+            {required: true, message: '请选择规格单位'}
+          ],
+          barcode: [
+            {required: true, message: '请输入规格条码'},
+            {
+              validator(rule, value, callback, source, options) {
+                let errors = [];
+                if (!/^[0-9]\d*$/.test(value)) {
+                  callback('必须为整数');
+                }
+                callback(errors);
+              }
+            }
+          ],
+          specificationQty: [
+            {required: true, message: '请输入安全库存'},
+            {
+              validator(rule, value, callback, source, options) {
+                let errors = [];
+                if (!/^[1-9]\d*$/.test(value)) {
+                  callback('必须为非零整数');
+                }
+                callback(errors);
+              }
+            }
+          ],
+          weight: [
+            {required: true, message: '请输入重量'},
+            {
+              validator(rule, value, callback, source, options) {
+                let errors = [];
+                if (!/^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/.test(value)) {
+                  callback('必须为大于0的数字');
+                }
+                callback(errors);
+              }
+            }
+          ]
+        },
         useAble: [{label: '是', value: 'ENABLE'}, {label: '否', value: 'DISABLE'}],
         columns: [
           {
@@ -217,7 +272,7 @@
             title: '商品名称',
             key: 'productName',
             sortable: true,
-            minWidth: 180,
+            minWidth: 180
           },
           {
             title: '规格条码',
@@ -236,7 +291,7 @@
           },
           {
             title: '规格',
-            width: 80,
+            minWidth: 100,
             key: 'specification'
           },
           {
@@ -258,75 +313,125 @@
             options: ['delete', 'edit', 'view']
           }
         ],
+        modalType: {
+          view: 'view',
+          edit: 'edit',
+          create: 'create'
+        },
+        tempModalType: 'create',
         tableData: [],
         total: 0,
-        page: 1,
-        pageSize: 10,
         loading: true,
         modalViewLoading: false,
         modalView: false,
         modalEdit: false,
-        rowData: roleRowData,
         searchRowData: roleRowData,
         productStandardDetail: productStandardDetail,
-        //选中的行
-        tableDataSelected: [],
+        // 选中的行
+        tableDataSelected: []
       };
     },
     methods: {
       handleDelete(params) {
-        this.tableDataSelected = []
-        this.tableDataSelected.push(params.row)
-        this.deleteTable(params.row.id)
+        this.tableDataSelected = [];
+        this.tableDataSelected.push(params.row);
+        this.deleteTable(params.row.id);
       },
       poptipOk() {
         if (this.tableDataSelected.length < 1) {
           this.$Message.warning('请选中要删除的行');
-          return
+          return;
         }
-        let tempDeleteList = []
+        let tempDeleteList = [];
         this.tableDataSelected.filter(value => {
-          tempDeleteList.push(value.id)
-        })
-        let strTempDelete = tempDeleteList.join(',')
-        this.deleteTable(strTempDelete)
+          tempDeleteList.push(value.id);
+        });
+        let strTempDelete = tempDeleteList.join(',');
+        this.deleteTable(strTempDelete);
       },
-      //删除
+      // 删除
       deleteTable(ids) {
-        this.loading = true
+        this.loading = true;
         deleteProductSpecification({
           ids
         }).then(res => {
-            let totalPage = Math.ceil(this.total / this.searchRowData.pageSize)
+            let totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
             if (this.tableData.length == this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
-              this.searchRowData.page -= 1
+              this.searchRowData.page -= 1;
             }
             this.tableDataSelected = [];
             this.getTableData();
           }
         ).catch(err => {
-          this.loading = false
-        })
+          this.loading = false;
+        });
       },
       uniteChange(value) {
-        this.productStandardDetail.packagingUnit = value
+        this.productStandardDetail.packagingUnit = value;
+      },
+      useAbleUniteChange(value) {
+        this.productStandardDetail.availableStatus = value;
       },
       handleClose() {
         this.modalView = false;
       },
+      handleEditClose() {
+        this.productStandardDetail = productStandardDetail;
+        this.productStandardDetail.productId = this.$route.params.id;
+        this.modalEdit = false;
+      },
       handleView(params) {
+        this.tempModalType = this.modalType.view;
         this.productStandardDetail = params.row;
         this.modalView = true;
       },
       handleEdit(params) {
+        this.tempModalType = this.modalType.edit;
         this.productStandardDetail = params.row;
         this.modalEdit = true;
       },
-      createStandard() {
-        this.modalEdit = true
+      handleCreateView() {
+        this.tempModalType = this.modalType.create;
+        this.modalEdit = true;
       },
-      deleteStandard() {
-
+      createStandard() {
+        this.modalViewLoading = true;
+        createProductSpecification({
+          productId: this.$route.params.id,
+          ...this.productStandardDetail
+        }).then(res => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
+          this.$Message.success('创建成功!');
+          this.getTableData();
+        });
+      },
+      handleSubmit(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            if (this.tempModalType === this.modalType.create) {
+              // 添加状态
+              this.createStandard();
+            } else if (this.tempModalType === this.modalType.edit) {
+              // 编辑状态
+              this.editProductSpecification();
+            }
+          } else {
+            this.$Message.error('请完善商品的信息!');
+          }
+        });
+      },
+      editProductSpecification() {
+        this.modalViewLoading = true;
+        editProductSpecification({
+          ...this.productStandardDetail
+        }).then(res => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+          this.productStandardDetail = productStandardDetail;
+          this.productStandardDetail.productId = this.$route.params.id;
+          this.getTableData();
+        });
       },
       changePage(page) {
         this.searchRowData.page = page;
@@ -339,8 +444,9 @@
       },
       getTableData() {
         console.log(this.$route.params.id);
-        this.searchRowData.productId = this.$route.params.id
-        this.productStandardDetail.productName = this.$route.params.productName
+        this.searchRowData.productId = this.$route.params.id;
+        this.productStandardDetail.productId = this.$route.params.id;
+        this.productStandardDetail.productName = this.$route.params.productName;
         getProductSpecificationsPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;
@@ -348,10 +454,10 @@
         });
       },
       onSelectionAll(selection) {
-        this.tableDataSelected = selection
+        this.tableDataSelected = selection;
       },
       onSelectionChange(selection) {
-        this.tableDataSelected = selection
+        this.tableDataSelected = selection;
       }
     }
   };
