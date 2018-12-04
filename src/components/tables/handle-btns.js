@@ -132,7 +132,7 @@ const btns = {
     const {
       row
     } = params;
-    if (row.onSale) {
+    if (row.shelfStatus === 'ON') {
       return h('Poptip', {
         props: {
           confirm: true,

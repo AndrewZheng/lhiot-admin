@@ -10,12 +10,14 @@
               @on-view="handleView"
               @on-edit="handleEdit"
               @on-sale="onSale"
+              @on-select-all="onSelectionAll"
+              @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
           <Row>
             <Col span="12">
-            <Input placeholder="商品编码" class="search-input" v-model="searchRowData.name" style="width: auto"/>
-            <Input placeholder="商品名称" class="search-input" v-model="searchRowData.name" style="width: auto"/>
+            <Input placeholder="上架名称" class="search-input" v-model="searchRowData.name" style="width: auto"/>
+            <Input placeholder="商品名称" class="search-input" v-model="searchRowData.productName" style="width: auto"/>
             <Button v-waves @click="handleSearch" class="search-btn ml5" type="primary">
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
@@ -25,12 +27,19 @@
               <Icon type="md-add"/>
               创建
             </Button>
-            <Button v-waves type="error" class="mr5" @click="deleteChildren">
-              <Icon type="md-close"/>
-              删除
-            </Button>
-            <Button v-waves type="primary" class="mr5" @click="exportExcel">
-              <Icon type="md-download" />
+            <Poptip confirm
+                    placement="bottom"
+                    style="width: 100px"
+                    title="您确认删除选中的内容吗?"
+                    @on-ok="poptipOk"
+            >
+              <Button type="error" class="mr5">
+                <Icon type="md-trash"/>
+                删除
+              </Button>
+            </Poptip>
+            <Button v-waves type="primary" class="mr5" @click="exportExcel" :loading="exportExcelLoading">
+              <Icon type="md-download"/>
               导出
             </Button>
             </Col>
@@ -48,67 +57,74 @@
     <Modal
       v-model="modalView"
       :mask-closable="false"
-      :width="rowData.type=='SON'?'750':'540'"
     >
       <p slot="header">
-        <span>鲜果师详情</span>
+        <span>商品上架详情</span>
       </p>
       <div class="modal-content">
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">ID:</i-col>
-              <i-col span="20">{{fruitMasterDetail.id}}</i-col>
+              <i-col span="8">商品规格:</i-col>
+              <i-col span="16">{{productDetail.specificationId}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请人:</i-col>
-              <i-col span="16">{{fruitMasterDetail.name}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">手机号码:</i-col>
-              <i-col span="16">{{fruitMasterDetail.phoneNumber}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">提取金额:</i-col>
-              <i-col span="16">{{fruitMasterDetail.extractingAmount}}</i-col>
+              <i-col span="8">上架名称:</i-col>
+              <i-col span="16">{{productDetail.name}}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">银行卡号:</i-col>
-              <i-col span="16">{{fruitMasterDetail.creditCardNumbers}}</i-col>
+              <i-col span="8">上架份数:</i-col>
+              <i-col span="16">{{productDetail.shelfQty}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">结算状态:</i-col>
-              <i-col span="16">{{fruitMasterDetail.settlementStatus}}</i-col>
+              <i-col span="8">商品排序:</i-col>
+              <i-col span="16">{{productDetail.sorting}}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+          <i-col span="24">
+            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+              <i-col span="4">上架描述:</i-col>
+              <i-col span="18">{{productDetail.description}}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.applicationTime}}</i-col>
+              <i-col span="8">商品原价:</i-col>
+              <i-col span="16">{{productDetail.originalPrice}}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+              <i-col span="8">商品特价:</i-col>
+              <i-col span="16">{{productDetail.price}}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">处理时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.handlingTime}}</i-col>
+              <i-col span="8">是否上架:</i-col>
+              <i-col span="16">{{productDetail.shelfStatus}}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+          <i-col span="24">
+            <Row :gutter="8">
+              <i-col span="4">上架主图:</i-col>
+              <img span="18" :src="productDetail.image" style="width: 350px"/>
             </Row>
           </i-col>
         </Row>
@@ -121,112 +137,97 @@
       v-model="modalEdit"
     >
       <p slot="header">
-        <span>修改商品上架信息</span>
+        <i-col>{{tempModalType===modalType.edit?'修改商品上架信息':'创建商品上架信息'}}</i-col>
       </p>
       <div class="modal-content">
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="6">商品规格:</i-col>
-              <Input span="18" disabled style="width: 150px"/>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="6">上架名称:</i-col>
-              <Input span="18" style="width: 150px"/>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="6">上架份数:</i-col>
-              <Input span="18" style="width: 150px"/>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="6">商品排序:</i-col>
-              <Input span="18" style="width: 150px"/>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="24">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="3">上架描述:</i-col>
-              <Input span="21" style="width: 400px" type="textarea"/>
-            </Row>
-          </i-col>
-        </Row>
-        <Row :gutter="8" class-name="mb10" >
-          <i-col span="12">
-            <Row class-name="mb10"  :gutter="8" type="flex" align="middle">
-              <i-col span="6">商品原价:</i-col>
-              <Input span="18" style="width: 150px"/>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row class-name="mb10"  :gutter="8" type="flex" align="middle">
-              <i-col span="6">商品特价:</i-col>
-              <Input span="18" style="width: 150px"/>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="6">是否上架:</i-col>
-              <Select span="18" style="width:150px" value="New York">
-                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        <Form ref="modalEdit" :model="productDetail" :rules="ruleInline" :label-width="80">
+          <Row>
+            <Col span="12">
+            <FormItem label="商品规格:" prop="specificationId">
+              <Input v-model="productDetail.specificationId" placeholder="商品规格"></Input>
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="上架名称:" prop="name">
+              <Input v-model="productDetail.name" placeholder="上架名称"></Input>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem label="上架份数:" prop="shelfQty">
+              <InputNumber :min="0" v-model="productDetail.shelfQty" size="large" style="width: 160px"></InputNumber>
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="商品排序:" prop="sorting">
+              <InputNumber :min="0" v-model="productDetail.sorting" size="large" style="width: 160px"></InputNumber>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="24">
+            <FormItem label="上架描述:">
+              <Input v-model="productDetail.description" placeholder="上架描述"></Input>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem label="是否上架:" prop="shelfStatus">
+              <Select :value="productDetail.shelfStatus" @on-change="useAbleUniteChange"
+                      style="width: 100px">
+                <Option class="ptb2-5" style="padding-left: 5px" v-for="(item,index) in useAble" :value="item.value"
+                        :key="index">{{ item.label
+                  }}
+                </Option>
               </Select>
-            </Row>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="24">
-            <Row>
-              <i-col span="3">商品主图:建议尺寸 (xxx*xxx)</i-col>
-              <i-col span="21">
-                <div class="demo-upload-list" v-for="item in uploadListMain">
-                  <template v-if="item.status === 'finished'">
-                    <div>
-                      <img :src="item.url">
-                      <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
-                      </div>
-                    </div>
-                  </template>
-                  <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                  </template>
-                </div>
-                <Upload
-                  ref="uploadMain"
-                  :show-upload-list="false"
-                  :default-file-list="defaultListMain"
-                  :on-success="handleSuccessMain"
-                  :format="['jpg','jpeg','png']"
-                  :max-size="2048"
-                  :on-format-error="handleFormatError"
-                  :on-exceeded-size="handleMaxSize"
-                  :before-upload="handleBeforeUploadMain"
-                  type="drag"
-                  action="https://resource.food-see.com/v1/upload/product_image"
-                  style="display: inline-block;width:158px;">
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <FormItem label="商品主图:建议尺寸 (xxx*xxx):" prop="image" :label-width="80">
+              <div class="demo-upload-list" v-for="item in uploadListMain">
+                <template v-if="item.status === 'finished'">
                   <div>
-                    <Button type="primary" style="width:158px;">
-                      <Icon type="ios-camera" size="20"></Icon>
-                      上传图片
-                    </Button>
+                    <img :src="item.url">
+                    <div class="demo-upload-list-cover">
+                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                      <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                    </div>
                   </div>
-                </Upload>
-              </i-col>
-            </Row>
-          </i-col>
-        </Row>
+                </template>
+                <template v-else>
+                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                </template>
+              </div>
+              <IViewUpload
+                ref="uploadMain"
+                :defaultList="defaultListMain"
+                @on-success="handleSuccessMain"
+                :imageSize="imageSize"
+              >
+                <div slot="content">
+                  <Button type="primary">
+                    上传图片
+                  </Button>
+                </div>
+              </IViewUpload>
+            </FormItem>
+          </Row>
+          <Row>
+            <Col span="24">
+            <FormItem label="上架板块:">
+
+            </FormItem>
+            </Col>
+          </Row>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button @click="handleEditClose">关闭</Button>
+        <Button type="primary" :loading="modalViewLoading" @click="handleSubmit('modalEdit')">确定
+        </Button>
       </div>
     </Modal>
     <Modal title="View Image" v-model="uploadVisible">
@@ -237,113 +238,133 @@
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import {getOnSaleData} from '@/api/fruitermaster';
+  import IViewUpload from '_c/iview-upload'
+  import {
+    createProductShelve,
+    deleteProductShelve,
+    editProductShelve,
+    getProductShelvesPages
+  } from '@/api/fruitermaster';
+  import uploadMixin from '@/mixins/uploadMixin'
+  import deleteMixin from '@/mixins/deleteMixin.js'
+  import tableMixin from '@/mixins/tableMixin.js'
 
-  const fruitMasterDetail = {
-    id: '',
-    name: 0,
-    phoneNumber: '',
-    extractingAmount: '',
-    settlementStatus: '',
-    creditCardNumbers: '',
-    headStatus: '',
-    applicationTime: '',
-    handlingTime: '2018-10-28'
+  const productDetail = {
+    id: 0,
+    image: "",
+    name: "",
+    originalPrice: 0,
+    price: 0,
+    productName: "",
+    productSpecification: "",
+    sectionIds: "",
+    shelfQty: 0,
+    shelfStatus: "",
+    shelfType: "NORMAL",
+    sorting: 0,
+    specificationId: 0
   };
   const roleRowData = {
+    productName: '',
     name: '',
-    phoneNumber: '',
-    idCard: '',
-    timeStart: '',
-    timeEnd: '',
-    status: ''
+    page: 1,
+    rows: 10
   };
 
   export default {
     components: {
-      Tables
+      Tables,
+      IViewUpload
     },
+    mixins: [uploadMixin, deleteMixin, tableMixin],
     mounted() {
-      this.uploadListMain = this.$refs.uploadMain.fileList;
     },
     created() {
+      this.searchRowData = roleRowData
       this.getTableData();
     },
     data() {
       return {
-        defaultListMain: [
-          {
-            'status': 'finished',
-            'name': 'a42bdcc1178e62b4694c830f028db5c0',
-            'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
-          }
-        ],
+        ruleInline: {
+          specificationId: [{required: true, message: '请输入商品规格'}],
+          image: [{required: true, message: '请上传图片'}],
+          name: [{required: true, message: '请输入上架名称'}],
+          shelfQty: [
+            {required: true, message: '请输入上架份数'},
+            {message: '必须为非零整数', pattern: /^[1-9]\d*$/}
+          ],
+          sorting: [
+            {required: true, message: '请输入上架份数'},
+            {message: '必须为非零整数', pattern: /^[1-9]\d*$/}
+          ],
+          shelfStatus: [
+            {required: true, message: '请选择是否上架'},
+          ]
+        },
+        useAble: [{label: '是', value: 'ON'}, {label: '否', value: 'OFF'}],
+        defaultListMain: [],
         uploadListMain: [],
-        cityList: [
-          {
-            value: 'New York',
-            label: 'New York'
-          },
-          {
-            value: 'London',
-            label: 'London'
-          }
-        ],
+        modalViewLoading: false,
         columns: [
+          {
+            type: 'selection',
+            key: '',
+            width: 60,
+            align: 'center',
+            fixed: 'left'
+          },
           {
             title: '上架图片',
             key: 'id',
-            sortable: true,
-            width: 180,
+            width: 120,
             render: (h, params, vm) => {
-              const { row } = params;
-              const str = <img src='https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar' style="margin-top:5px" height="60" width="60" margin-top="10px"/>;
+              let {row} = params
+              const str = <img src={row.productImage} style="margin-top:5px" height="60" width="60" margin-top="10px"/>;
               return <div>{str}</div>;
             }
           },
           {
             title: '商品名称',
-            key: 'name',
+            key: 'productName',
             width: 150
           },
           {
             title: '上架名称',
             width: 150,
-            key: 'onSaleName'
+            key: 'name'
           },
           {
             title: '上架规格',
             width: 150,
-            key: 'onSaleRole'
+            key: 'productSpecification'
           },
           {
             title: '规格条码',
             width: 150,
-            key: 'roleCode'
+            key: 'barcode'
           },
           {
             title: '商品原价',
-            width: 180,
-            key: 'price',
+            minWidth: 120,
+            key: 'originalPrice',
             sortable: true
           },
           {
             title: '商品特价',
-            width: 150,
-            key: 'sort',
-            sortable: true
-          },
-          {
-            title: '排序',
-            width: 150,
+            minWidth: 120,
             key: 'price',
             sortable: true
           },
           {
-            title: '是否上架',
-            width: 150,
-            key: 'onSale',
+            title: '排序',
+            minWidth: 80,
+            key: 'sorting',
             sortable: true
+          },
+          {
+            title: '是否上架',
+            minWidth: 100,
+            key: 'shelfStatus',
           },
           {
             title: '操作',
@@ -352,167 +373,158 @@
             options: ['delete', 'edit', 'view', 'onSale']
           }
         ],
-        tableData: [],
-        total: 0,
-        page: 1,
-        pageSize: 10,
-        loading: true,
-        modalView: false,
-        modalEdit: false,
-        rowData: roleRowData,
         searchRowData: roleRowData,
-        fruitMasterDetail: fruitMasterDetail,
-        imgUploadViewItem: '',
-        uploadVisible: false
+        productDetail: productDetail,
+        uploadVisible: false,
+        exportExcelLoading: false
       };
     },
     methods: {
+      deleteTable(ids) {
+        this.loading = true
+        deleteProductShelve({
+          ids
+        }).then(res => {
+            let totalPage = Math.ceil(this.total / this.searchRowData.pageSize)
+            if (this.tableData.length == this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
+              this.searchRowData.page -= 1
+            }
+            this.tableDataSelected = [];
+            this.getTableData();
+          }
+        ).catch(err => {
+          this.loading = false
+        })
+      },
+      handleSubmit(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            if (this.tempModalType === this.modalType.create) {
+              //添加状态
+              this.createProductShelve()
+            } else if (this.tempModalType === this.modalType.edit) {
+              //编辑状态
+              this.editProductShelve()
+            }
+          } else {
+            this.$Message.error('请完善商品的信息!');
+          }
+        })
+      },
+      editProductShelve() {
+        this.modalViewLoading = true
+        editProductShelve({
+          ...this.productDetail
+        }).then(res => {
+          this.resetFields()
+          this.modalEdit = false
+          this.modalViewLoading = false
+          this.getTableData()
+        }).catch(err => {
+          this.resetFields()
+          this.modalEdit = false
+          this.modalViewLoading = false
+        })
+      },
+      createProductShelve() {
+        this.modalViewLoading = true
+        createProductShelve({
+          ...this.productDetail
+        }).then(res => {
+          this.modalViewLoading = false
+          this.modalEdit = false
+          this.$Message.success('创建成功!');
+          this.getTableData()
+        })
+      },
+      //商品主图
+      handleSuccessMain(response, file, fileList) {
+        this.uploadListMain = fileList
+        this.productDetail.image = null
+        this.productDetail.image = fileList[0].url
+      },
+      handleRemoveMain(file) {
+        this.$refs.uploadMain.deleteFile(file);
+        this.uploadListMain = []
+        this.productDetail.image = null
+      },
+      useAbleUniteChange(value) {
+        this.productDetail.shelfStatus = value;
+      },
       addChildren() {
+        if (this.tempModalType !== this.modalType.create) {
+          this.resetFields()
+          this.tempModalType = this.modalType.create
+        }
         this.modalEdit = true;
       },
-      deleteChildren() {
-
-      },
       onSale(params) {
-        this.tableData[params.index].onSale = !this.tableData[params.index].onSale;
-      },
-      handleClose() {
-        this.modalView = false;
+        console.log(params.row.shelfStatus);
+        // this.tableData[params.index].onSale = !this.tableData[params.index].onSale;
+        this.productDetail = params.row
+        if (params.row.shelfStatus === 'ON') {
+          this.productDetail.shelfStatus = 'OFF';
+        } else {
+          this.productDetail.shelfStatus = 'ON'
+        }
+        this.editProductShelve()
       },
       handleView(params) {
-        this.fruitMasterDetail = params.row;
+        this.tempModalType = this.modalType.view
+        this.productDetail = params.row;
         this.modalView = true;
       },
       handleEdit(params) {
-        this.fruitMasterDetail = params.row;
+        this.tempModalType = this.modalType.edit
+        this.productDetail = params.row;
+        this.setDefaultUploadList(params.row)
         this.modalEdit = true;
       },
+      resetFields() {
+        this.$refs.modalEdit.resetFields()
+        this.$refs.uploadMain.clearFileList()
+        this.uploadListMain = []
+        this.productDetail = productDetail
+      },
+      setDefaultUploadList(res) {
+        if (res.image != null) {
+          const map = {status: 'finished', url: 'url'};
+          let mainImgArr = []
+          map.url = res.image
+          mainImgArr.push(map)
+          this.$refs.uploadMain.setDefaultFileList(mainImgArr)
+          this.uploadListMain = mainImgArr
+        }
+      },
       handleSearch() {
-      },
-      changePage(page) {
-        this.page = page;
-        this.getTableData();
-      },
-      changePageSize(pageSize) {
-        console.log(pageSize);
-        this.page = 1;
-        this.pageSize = pageSize;
-        this.getTableData();
+        this.searchRowData.page = 1;
+        this.searchLoading = true
+        this.getTableData()
       },
       getTableData() {
-        getOnSaleData({
-          page: this.page,
-          rows: this.pageSize
-        }).then(res => {
+        getProductShelvesPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;
           this.loading = false;
         });
       },
       exportExcel() {
-        this.$refs.tables.exportCsv({
-          filename: `table-${new Date().valueOf()}.csv`
-        });
-      },
-      handleRemoveMain(file) {
-        const fileList = this.$refs.uploadMain.fileList;
-        this.$refs.uploadMain.fileList.splice(fileList.indexOf(file), 1);
-      },
-      handleUploadView(name) {
-        this.imgUploadViewItem = name.url;
-        this.uploadVisible = true;
-      },
-      handleSuccessMain(response, file, fileList) {
-        this.$refs.uploadMain.fileList = fileList;
-        file.url = response.fileUrl;
-        file.name = file.name;
-      },
-      handleFormatError(file) {
-        this.$Notice.warning({
-          title: 'The file format is incorrect',
-          desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
-        });
-      },
-      handleMaxSize(file) {
-        this.$Notice.warning({
-          title: 'Exceeding file size limit',
-          desc: 'File  ' + file.name + ' is too large, no more than 2M.'
-        });
-      },
-      handleBeforeUploadMain(file) {
-        return this.checkImageWHMain(file, 720, 1280);
-      },
-      checkImageWHMain(file, width, height) {
-        let self = this;
-        return new Promise(function (resolve, reject) {
-          let filereader = new FileReader();
-          filereader.onload = e => {
-            let src = e.target.result;
-            const image = new Image();
-            image.onload = function () {
-              const check = self.uploadListMain.length < 1;
-              if (!check) {
-                self.$Notice.error({title: '只能上传1张图片'});
-                reject();
-              }
-              if (width && this.width != width) {
-                self.$Notice.error({title: '请上传宽为' + width + '的图片' });
-                reject();
-              } else if (height && this.height != height) {
-                self.$Notice.error({title: '请上传高为' + height + '的图片' });
-                reject();
-              } else {
-                resolve();
-              }
-            };
-            image.onerror = reject;
-            image.src = src;
-          };
-          filereader.readAsDataURL(file);
-        });
+        this.exportExcelLoading = true
+        getProductShelvesPages({}).then(res => {
+          if (res.array.length > 0) {
+            this.$refs.tables.exportCsv({
+              filename: `table-${new Date().valueOf()}.csv`,
+              columns: this.columns.filter((col, index) => index !== 0),
+              data: res.array,
+            });
+          }
+          this.exportExcelLoading = false
+        })
       }
     }
   };
 </script>
 
 <style lang="scss" scoped>
-  .demo-upload-list {
-    width: 100px;
-    height: 100px;
-    text-align: center;
-    line-height: 60px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    overflow: hidden;
-    background: #fff;
-    position: relative;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
-    margin-bottom: 4px;
-  }
 
-  .demo-upload-list img {
-    width: 100%;
-    height: 100%;
-  }
-
-  .demo-upload-list-cover {
-    display: none;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, .6);
-  }
-
-  .demo-upload-list:hover .demo-upload-list-cover {
-    display: block;
-  }
-
-  .demo-upload-list-cover i {
-    color: #fff;
-    font-size: 20px;
-    cursor: pointer;
-    margin: 0 2px;
-  }
 </style>

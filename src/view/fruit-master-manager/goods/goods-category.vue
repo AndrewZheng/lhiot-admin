@@ -114,24 +114,6 @@
   import {buildMenu, changeObjKeyName, convertTree, getNewTagList} from '@/libs/util';
   import CommonIcon from '_c/common-icon';
 
-  const userDetail = {
-    id: '',
-    name: 0,
-    phoneNumber: '',
-    inviteCode: '',
-    level: '',
-    status: '',
-    headStatus: '',
-    cash: ''
-  };
-  const roleRowData = {
-    name: '',
-    phoneNumber: '',
-    idCard: '',
-    timeStart: '',
-    timeEnd: '',
-    status: ''
-  };
   export default {
     components: {
       Tables,
@@ -178,9 +160,6 @@
         modalEditView: false,
         modalViewLoading: false,
         modalEditLoading: false,
-        image: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
-        userDetail: userDetail,
-        searchRowData: roleRowData,
         currentParentName: '',
         currentParentId: 0,
         currentCategory: {
@@ -253,11 +232,11 @@
         }
         let tempDeleteList = []
         console.log(this.tableDataSelected[0]);
-        this.tableDataSelected.filter(value => {
+        this.tableDataSelected.forEach(value => {
           tempDeleteList.push(value.id)
         })
         let strTempDelete = tempDeleteList.join(',')
-        this.deleteTabel(strTempDelete)
+        this.deleteTable(strTempDelete)
       },
       //添加子分类
       asyncOK() {
@@ -321,22 +300,24 @@
       handleDelete(params) {
         this.tableDataSelected = []
         this.tableDataSelected.push(params.row)
-        this.deleteTabel(params.row.id)
+        this.deleteTable(params.row.id)
       },
       //删除
-      deleteTabel(ids) {
+      deleteTable(ids) {
         this.loading = true
         deleteProductCategories({
           ids
         }).then(res => {
             let totalPage = Math.ceil(this.total / this.pageSize)
-            if (this.tableData.length == this.tableDataSelected.length && this.page == totalPage && this.page != 1) {
+            if (this.tableData.length === this.tableDataSelected.length && this.page === totalPage && this.page !== 1) {
               this.page -= 1
             }
             this.tableDataSelected = [];
             this.initMenuList();
           }
-        )
+        ).catch(err=>{
+
+        })
       },
       //编辑分类
       handleEdit(params) {
