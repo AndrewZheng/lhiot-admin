@@ -564,8 +564,8 @@ export const convertTreeCategory = (tree, map, isExpand = false) => {
     const label = item[map.title];
     let children = item[map.children];
     // 如果有子节点，递归
-    if (children.length>0) {
-      count = count +1
+    if (children.length > 0) {
+      count = count + 1
       children = convertTreeCategory(children, map, isExpand);
       result.push({
         ...item,
@@ -683,7 +683,6 @@ export const changeObjKeyName = (obj, oldKey, newKey) => {
  */
 export const debounce = (func, delay = 200) => {
   let timer = null
-
   return function (...arg) {
     timer && clearTimeout(timer)
     timer = setTimeout(() => {

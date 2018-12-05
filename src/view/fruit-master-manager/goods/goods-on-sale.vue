@@ -23,7 +23,7 @@
             </Button>
             </Col>
             <Col span="12">
-            <Button v-waves type="success" class="mr5" @click="addChildren">
+            <Button v-waves type="success" class="mr5" @click="addChildren" :loading="createLoading">
               <Icon type="md-add"/>
               创建
             </Button>
@@ -135,6 +135,7 @@
     </Modal>
     <Modal
       v-model="modalEdit"
+      :width="600"
     >
       <p slot="header">
         <i-col>{{tempModalType===modalType.edit?'修改商品上架信息':'创建商品上架信息'}}</i-col>
@@ -144,7 +145,20 @@
           <Row>
             <Col span="12">
             <FormItem label="商品规格:" prop="specificationId">
-              <Input v-model="productDetail.specificationId" placeholder="商品规格"></Input>
+              <!--<AutoComplete-->
+              <!--@on-search="handleSearch"-->
+              <!--:disabled="tempModalType===modalType.edit?true:false"></AutoComplete>-->
+              <Select
+                v-model="model14"
+                filterable
+                remote
+                :remote-method="remoteMethod2"
+                :loading="loading2">
+                <Option @click.native="selectIndex(option)" class="pb5 pt5 pl15" v-for="(option, index) in options2"
+                        :value="option.id" :key="index">
+                  {{option.specificationInfo}}
+                </Option>
+              </Select>
             </FormItem>
             </Col>
             <Col span="12">
@@ -169,6 +183,19 @@
             <Col span="24">
             <FormItem label="上架描述:">
               <Input v-model="productDetail.description" placeholder="上架描述"></Input>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem label="商品原价:" prop="originalPrice">
+              <InputNumber :min="0" v-model="productDetail.originalPrice"
+                           :disabled="tempModalType===modalType.edit?true:false"></InputNumber>
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="商品特价:" prop="price">
+              <InputNumber :min="0" v-model="productDetail.price" placeholder="商品特价"></InputNumber>
             </FormItem>
             </Col>
           </Row>
@@ -215,10 +242,22 @@
               </IViewUpload>
             </FormItem>
           </Row>
-          <Row>
+          <Row v-show="tempModalType===modalType.create">
             <Col span="24">
             <FormItem label="上架板块:">
-
+              <div v-for="item in uiPositionData">
+                <div>
+                  {{item.description}}:
+                </div>
+                <CheckboxGroup @on-change="checkAllGroupChange" v-model="model">
+                  <Checkbox
+                    ref="checkBox"
+                    :label="innerItem.id"
+                    v-for="innerItem in item.productSections"
+                  >{{innerItem.sectionName}}
+                  </Checkbox>
+                </CheckboxGroup>
+              </div>
             </FormItem>
             </Col>
           </Row>
@@ -240,10 +279,12 @@
   import Tables from '_c/tables';
   import IViewUpload from '_c/iview-upload'
   import {
+    checkUiPosition,
     createProductShelve,
     deleteProductShelve,
     editProductShelve,
-    getProductShelvesPages
+    getProductShelvesPages,
+    getProductSpecificationsPages
   } from '@/api/fruitermaster';
   import uploadMixin from '@/mixins/uploadMixin'
   import deleteMixin from '@/mixins/deleteMixin.js'
@@ -256,8 +297,9 @@
     originalPrice: 0,
     price: 0,
     productName: "",
+    productImage: '',
     productSpecification: "",
-    sectionIds: "",
+    sectionIds: [],
     shelfQty: 0,
     shelfStatus: "",
     shelfType: "NORMAL",
@@ -280,12 +322,38 @@
     mounted() {
     },
     created() {
+      this.loading = true
+      this.createLoading = true
       this.searchRowData = roleRowData
-      this.getTableData();
+      checkUiPosition({
+        includeSection: "YES",
+        page: 0,
+        rows: 0
+      }).then(res => {
+        this.uiPositionData = res.array;
+        console.log(this.uiPositionData);
+        this.createLoading = false
+        this.getTableData();
+      })
     },
     data() {
       return {
+        model14: [],
+        loading2: false,
+        options2: [],
+        list: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New hampshire', 'New jersey', 'New mexico', 'New york', 'North carolina', 'North dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode island', 'South carolina', 'South dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West virginia', 'Wisconsin', 'Wyoming'],
+        createLoading: false,
+        model: [],
+        uiPositionData: [],
         ruleInline: {
+          originalPrice: [
+            {required: true, message: '请输入商品原价'},
+            {message: '必须为大于0的数字', pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/}
+          ],
+          price: [
+            {required: true, message: '请输入商品特价'},
+            {message: '必须为大于0的数字', pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/}
+          ],
           specificationId: [{required: true, message: '请输入商品规格'}],
           image: [{required: true, message: '请上传图片'}],
           name: [{required: true, message: '请输入上架名称'}],
@@ -319,7 +387,7 @@
             width: 120,
             render: (h, params, vm) => {
               let {row} = params
-              const str = <img src={row.productImage} style="margin-top:5px" height="60" width="60" margin-top="10px"/>;
+              const str = <img src={row.image} style="margin-top:5px" height="60" width="60" margin-top="10px"/>;
               return <div>{str}</div>;
             }
           },
@@ -380,6 +448,44 @@
       };
     },
     methods: {
+      selectIndex(options) {
+        console.log(options);
+        this.productDetail.specificationId = options.id
+        this.productDetail.image = options.product.productImage
+        this.productDetail.name = options.product.name
+        let tempImgObj = {}
+        tempImgObj.image = options.product.productImage
+        this.setDefaultUploadList(tempImgObj)
+      },
+      remoteMethod2(query) {
+        if (query !== '') {
+          this.handleSearchAutoComplete(query)
+        } else {
+          this.options2 = [];
+        }
+      },
+      handleSearchAutoComplete(value) {
+        this.loading2 = true;
+        getProductSpecificationsPages({
+          keyword: value + '',
+          page: '1',
+          rows: '5'
+        }).then(res => {
+          console.log(res);
+          this.options2.length = 0
+          if (res.length > 0) {
+            res.forEach(value => {
+              this.options2.push(value)
+            })
+          }
+          console.log(this.options2);
+        }).finally(() => {
+          this.loading2 = false;
+        })
+      },
+      checkAllGroupChange(data) {
+        this.productDetail.sectionIds = data.join(',')
+      },
       deleteTable(ids) {
         this.loading = true
         deleteProductShelve({
