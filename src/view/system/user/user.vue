@@ -13,9 +13,9 @@
       @on-relation="handleRole"
       >
         <div slot="searchCondition">
-          <Input  placeholder="姓名" class="search-input" v-model="searchRowData.name" style="width: auto" clearable/>
-          <Input  placeholder="电话" class="search-input" v-model="searchRowData.tel" style="width: auto" clearable/>
-          <Select v-model="searchRowData.status" class="search-col"  placeholder="用户状态" style="width: auto" clearable>
+          <Input  placeholder="姓名" class="search-input mr5" v-model="searchRowData.name" style="width: auto" clearable/>
+          <Input  placeholder="电话" class="search-input mr5" v-model="searchRowData.tel" style="width: auto" clearable/>
+          <Select v-model="searchRowData.status" class="search-col mr5"  placeholder="用户状态" style="width: auto" clearable>
             <Option v-for="item in userStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
           </Select>
           <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button>

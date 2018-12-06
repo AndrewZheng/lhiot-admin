@@ -2,23 +2,18 @@
   <div>
     <div v-if="searchable && searchPlace === 'top'" class="search-con search-con-top">
       <Row :gutter="24" type="flex" align="top" justify="space-between">
-        <i-col span="24">
-          <!-- 下拉搜索 -->
+        <i-col :span="searchAreaColumn">
+          <!-- 自带下拉搜索 -->
           <!-- <Select v-model="searchKey" class="search-col">
             <Option v-for="item in columns" v-if="item.key !== 'handle' && item.type!=='selection'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
           </Select>
           <Input @on-change="handleClear" clearable placeholder="输入关键字搜索" class="search-input" v-model="searchValue"/>
           <Button v-waves @click="handleSearch" class="search-btn" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button> -->
-
           <!-- 自定义搜索条件 -->
           <slot name="searchCondition"></slot>
         </i-col>
-        <i-col span="24">
-          <Row :gutter="24" type="flex" align="top" justify="end">
-            <i-col span="24">
-              <slot name="operations"></slot>
-            </i-col>
-          </Row>
+        <i-col :span="operateAreaColumn">
+          <slot name="operations"></slot>
         </i-col>
       </Row>
     </div>
@@ -152,6 +147,14 @@ export default {
     searchPlace: {
       type: String,
       default: 'top'
+    },
+    searchAreaColumn: {
+      type: [Number, String],
+      default: 12
+    },
+    operateAreaColumn: {
+      type: [Number, String],
+      default: 12
     },
     filename: {
       type: String,

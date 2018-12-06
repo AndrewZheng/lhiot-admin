@@ -1,9 +1,5 @@
 <template>
   <div class="m-menu">
-    <!-- <Button v-waves type="success" class="mr5" @click="handleOpen">
-      <Icon type="md-add"/>
-      Open New Tab
-    </Button> -->
     <Row :gutter="24" type="flex" align="top" justify="space-between">
       <i-col span="4" order="1">
         <Tree :data="menuList" :render="renderContent"></Tree>
@@ -35,7 +31,7 @@
                 <Icon type="md-refresh"/>&nbsp;清除条件
               </Button>
             </div>
-            <div slot="operations" class="mt15">
+            <div slot="operations">
               <Button v-waves type="success" class="mr5" @click="addChildren">
                 <Icon type="md-add"/>
                 子菜单
@@ -44,18 +40,17 @@
                 <Icon type="md-add"/>
                 父菜单
               </Button>
-              <Button v-waves type="primary" @click="exportExcel" class="ml20">导出</Button>
-              <!-- 多类型导出 -->
-              <BookTypeOption v-model="exportType" class="mr5"/>
-              <Button :loading="downloadLoading" class="search-btn mr5 ml20" type="primary" @click="handleDownload">
-                <Icon type="md-download"/>
-                多类型导出
-              </Button>
-
+              <!-- <Button v-waves type="primary" @click="exportExcel" class="ml20">导出</Button> -->
               <Button v-waves type="success" class="mr5" @click="handleUploadExcel">
                 <Icon type="md-cloud-upload"/>
                 导入Excel
               </Button>
+              <!-- 多类型导出 -->
+              <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload">
+                <Icon type="md-download"/>
+                多类型导出
+              </Button>
+              <BookTypeOption v-model="exportType" class="mr5"/>
             </div>
           </tables>
           <div style="margin: 10px;overflow: hidden">
@@ -562,9 +557,6 @@
         'setTagNavList',
         'addTag'
       ]),
-      handleOpen() {
-        this.turnToPage('upload-excel');
-      },
       initMenuList() {
         getMenuList().then(res => {
           if (res && res.array.length > 0) {

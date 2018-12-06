@@ -187,7 +187,7 @@
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import {getOnSaleData} from '@/api/fruitermaster';
+  import { getOnSaleData } from '@/api/fruitermaster';
 
   const fruitMasterDetail = {
     id: '',

@@ -1,13 +1,8 @@
 <template>
   <div style="display:inline-block;">
-    <label class="radio-label">导出类型: </label>
-    <select v-model="bookType" style="width:50px;" >
-      <option
-        v-for="item in options"
-        :key="item"
-        :label="item"
-        :value="item"/>
-    </select>
+    <Select v-model="bookType" class="form-control">
+      <Option v-for="item in options" :key="item" :value="item">{{ item }}</Option>
+    </Select>
   </div>
 </template>
 

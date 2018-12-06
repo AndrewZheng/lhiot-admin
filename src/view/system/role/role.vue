@@ -13,8 +13,8 @@
       @on-relation="handleMenu"
       >
        <div slot="searchCondition">
-          <Input  placeholder="角色名称" class="search-input" v-model="searchRowData.name" style="width: auto" clearable/>
-          <Select v-model="searchRowData.status" class="search-col" placeholder="角色状态" style="width: auto" clearable>
+          <Input  placeholder="角色名称" class="search-input mr5" v-model="searchRowData.name" style="width: auto" clearable/>
+          <Select v-model="searchRowData.status" class="search-col mr5" placeholder="角色状态" style="width: auto" clearable>
             <Option v-for="item in roleStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
           </Select>
           <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button>
