@@ -15,35 +15,33 @@
       >
         <div slot="searchCondition">
           <Row>
-            <Col span="12">
-            <Input placeholder="上架名称" class="search-input" v-model="searchRowData.name" style="width: auto"/>
-            <Input placeholder="商品名称" class="search-input" v-model="searchRowData.productName" style="width: auto"/>
+            <Input placeholder="上架名称" class="search-input mr5" v-model="searchRowData.name" style="width: auto"/>
+            <Input placeholder="商品名称" class="search-input mr5" v-model="searchRowData.productName" style="width: auto"/>
             <Button v-waves @click="handleSearch" class="search-btn ml5" type="primary">
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
-            </Col>
-            <Col span="12">
-            <Button v-waves type="success" class="mr5" @click="addChildren" :loading="createLoading">
-              <Icon type="md-add"/>
-              创建
-            </Button>
-            <Poptip confirm
-                    placement="bottom"
-                    style="width: 100px"
-                    title="您确认删除选中的内容吗?"
-                    @on-ok="poptipOk"
-            >
-              <Button type="error" class="mr5">
-                <Icon type="md-trash"/>
-                删除
-              </Button>
-            </Poptip>
-            <Button v-waves type="primary" class="mr5" @click="exportExcel" :loading="exportExcelLoading">
-              <Icon type="md-download"/>
-              导出
-            </Button>
-            </Col>
           </Row>
+        </div>
+        <div slot="operations">
+          <Button v-waves type="success" class="mr5" @click="addChildren" :loading="createLoading">
+            <Icon type="md-add"/>
+            创建
+          </Button>
+          <Poptip confirm
+                  placement="bottom"
+                  style="width: 100px"
+                  title="您确认删除选中的内容吗?"
+                  @on-ok="poptipOk"
+          >
+            <Button type="error" class="mr5">
+              <Icon type="md-trash"/>
+              删除
+            </Button>
+          </Poptip>
+          <Button align="right" v-waves type="primary" class="mr5" @click="exportExcel" :loading="exportExcelLoading">
+            <Icon type="md-download"/>
+            导出
+          </Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
