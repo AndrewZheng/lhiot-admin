@@ -17,8 +17,11 @@
           <Row>
             <Input placeholder="上架名称" class="search-input mr5" v-model="searchRowData.name" style="width: auto"/>
             <Input placeholder="商品名称" class="search-input mr5" v-model="searchRowData.productName" style="width: auto"/>
-            <Button v-waves @click="handleSearch" class="search-btn ml5" type="primary">
+            <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary">
               <Icon type="md-search"/>&nbsp;搜索
+            </Button>
+            <Button v-waves @click="handleClear" class="search-btn" type="info">
+              <Icon type="md-refresh"/>&nbsp;清除条件
             </Button>
           </Row>
         </div>
@@ -283,7 +286,6 @@
     createProductShelve,
     deleteProductShelve,
     editProductShelve,
-    getProductShelve,
     getProductShelvesPages,
     getProductSpecificationsPages
   } from '@/api/fruitermaster';
@@ -451,6 +453,13 @@
       };
     },
     methods: {
+      handleClear() {
+        // 重置数据
+        this.resetSearchRowData();
+      },
+      resetSearchRowData() {
+        this.searchRowData = roleRowData;
+      },
       selectIndex(options) {
         this.productDetail.specificationId = options.id
         this.productDetail.image = options.product.productImage

@@ -890,6 +890,8 @@
       },
       resetSearchRowData() {
         this.searchRowData = menuRowData;
+        console.log({...menuRowData});
+        console.log({...this.searchRowData});
       },
       resetOperateRowData() {
         this.operateRowData = operateRowData;

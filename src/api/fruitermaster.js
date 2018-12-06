@@ -251,3 +251,21 @@ export const getProductShelve = ({id}) => {
     method: 'get'
   });
 };
+
+// 根据条件分页查询UI位置信息列表
+export const getuiPositionsPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/ui-positions/pages',
+    data,
+    method: 'post'
+  });
+};
+
+//
+// 根据Id查找UI位置
+export const getUiPosition = ({id}) => {
+  return Vue.prototype.$http.request({
+    url: '/ui-positions/'+id,
+    method: 'get'
+  });
+};
