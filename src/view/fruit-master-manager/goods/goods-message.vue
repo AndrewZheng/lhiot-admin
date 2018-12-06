@@ -128,9 +128,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <!--<i-col span="3">详情图:</i-col>-->
-              <!--<i-col span="21"><a style="color:#0072bc; text-decoration : underline" @click="goDetail"> 预览效果</a>&#45;&#45;&#45;&#45;直接打开新页面，展示详情组合图片-->
-              <!--</i-col>-->
+              <i-col span="3">详情图:</i-col>
+              <i-col span="21"><a style="color:#0072bc; text-decoration : underline" @click="goDetail"> 预览效果</a>----直接打开新页面，展示详情组合图片
+              </i-col>
             </Row>
           </i-col>
         </Row>

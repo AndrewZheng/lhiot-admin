@@ -234,3 +234,20 @@ export const editProductShelve = (data) => {
     method: 'put'
   });
 };
+
+//查询UI位置列表集合（可包括位置的子板块）
+export const checkUiPosition = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/ui-positions/',
+    data,
+    method: 'post'
+  });
+};
+
+//根据Id查找商品上架
+export const getProductShelve = ({id}) => {
+  return Vue.prototype.$http.request({
+    url: '/product-shelves/'+id,
+    method: 'get'
+  });
+};
