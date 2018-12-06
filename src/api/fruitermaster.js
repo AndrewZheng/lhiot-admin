@@ -243,3 +243,11 @@ export const checkUiPosition = (data) => {
     method: 'post'
   });
 };
+
+//根据Id查找商品上架
+export const getProductShelve = ({id}) => {
+  return Vue.prototype.$http.request({
+    url: '/product-shelves/'+id,
+    method: 'get'
+  });
+};

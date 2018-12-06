@@ -57,19 +57,20 @@
     <Modal
       v-model="modalView"
       :mask-closable="false"
+      :width="750"
     >
       <p slot="header">
         <span>商品上架详情</span>
       </p>
       <div class="modal-content">
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
+          <i-col span="16">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">商品规格:</i-col>
-              <i-col span="16">{{productDetail.specificationId}}</i-col>
+              <i-col span="3">商品规格:</i-col>
+              <i-col span="21">{{productDetail.specificationInfo}}</i-col>
             </Row>
           </i-col>
-          <i-col span="12">
+          <i-col span="8">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="8">上架名称:</i-col>
               <i-col span="16">{{productDetail.name}}</i-col>
@@ -77,13 +78,13 @@
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
+          <i-col span="16">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">上架份数:</i-col>
-              <i-col span="16">{{productDetail.shelfQty}}</i-col>
+              <i-col span="3">上架份数:</i-col>
+              <i-col span="21">{{productDetail.shelfQty}}</i-col>
             </Row>
           </i-col>
-          <i-col span="12">
+          <i-col span="8">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="8">商品排序:</i-col>
               <i-col span="16">{{productDetail.sorting}}</i-col>
@@ -93,19 +94,19 @@
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="24">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">上架描述:</i-col>
-              <i-col span="18">{{productDetail.description}}</i-col>
+              <i-col span="2">上架描述:</i-col>
+              <i-col span="22">{{productDetail.description}}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
+          <i-col span="16">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">商品原价:</i-col>
-              <i-col span="16">{{productDetail.originalPrice}}</i-col>
+              <i-col span="3">商品原价:</i-col>
+              <i-col span="21">{{productDetail.originalPrice}}</i-col>
             </Row>
           </i-col>
-          <i-col span="12">
+          <i-col span="8">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="8">商品特价:</i-col>
               <i-col span="16">{{productDetail.price}}</i-col>
@@ -115,8 +116,8 @@
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">是否上架:</i-col>
-              <i-col span="16">{{productDetail.shelfStatus}}</i-col>
+              <i-col span="4">是否上架:</i-col>
+              <i-col span="18">{{productDetail.shelfStatus}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -135,7 +136,7 @@
     </Modal>
     <Modal
       v-model="modalEdit"
-      :width="600"
+      :width="750"
     >
       <p slot="header">
         <i-col>{{tempModalType===modalType.edit?'修改商品上架信息':'创建商品上架信息'}}</i-col>
@@ -145,20 +146,21 @@
           <Row>
             <Col span="12">
             <FormItem label="商品规格:" prop="specificationId">
-              <!--<AutoComplete-->
-              <!--@on-search="handleSearch"-->
-              <!--:disabled="tempModalType===modalType.edit?true:false"></AutoComplete>-->
               <Select
-                v-model="model14"
-                filterable
-                remote
-                :remote-method="remoteMethod2"
-                :loading="loading2">
-                <Option @click.native="selectIndex(option)" class="pb5 pt5 pl15" v-for="(option, index) in options2"
+                v-if="tempModalType===modalType.create"
+                ref="shelfSpecificationSelect"
+                :remote="true"
+                :filterable="true"
+                :remote-method="remoteMethod"
+                :disabled="tempModalType===modalType.edit?true:false"
+                :loading="shelfSpecificationLoading">
+                <Option @click.native="selectIndex(option)" class="pb5 pt5 pl15"
+                        v-for="(option, index) in optionsShelfSpecification"
                         :value="option.id" :key="index">
                   {{option.specificationInfo}}
                 </Option>
               </Select>
+              <Input v-else :value="shelfSpecificationEditDefault" disabled/>
             </FormItem>
             </Col>
             <Col span="12">
@@ -190,7 +192,7 @@
             <Col span="12">
             <FormItem label="商品原价:" prop="originalPrice">
               <InputNumber :min="0" v-model="productDetail.originalPrice"
-                           :disabled="tempModalType===modalType.edit?true:false"></InputNumber>
+              ></InputNumber>
             </FormItem>
             </Col>
             <Col span="12">
@@ -283,6 +285,7 @@
     createProductShelve,
     deleteProductShelve,
     editProductShelve,
+    getProductShelve,
     getProductShelvesPages,
     getProductSpecificationsPages
   } from '@/api/fruitermaster';
@@ -298,13 +301,14 @@
     price: 0,
     productName: "",
     productImage: '',
-    productSpecification: "",
-    sectionIds: [],
+    productSpecification: {},
+    sectionIds: "",
     shelfQty: 0,
     shelfStatus: "",
     shelfType: "NORMAL",
     sorting: 0,
-    specificationId: 0
+    specificationId: 0,
+    specificationInfo: ''
   };
   const roleRowData = {
     productName: '',
@@ -338,9 +342,9 @@
     },
     data() {
       return {
-        model14: [],
-        loading2: false,
-        options2: [],
+        shelfSpecificationEditDefault: '',
+        shelfSpecificationLoading: false,
+        optionsShelfSpecification: [],
         list: ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New hampshire', 'New jersey', 'New mexico', 'New york', 'North carolina', 'North dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode island', 'South carolina', 'South dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West virginia', 'Wisconsin', 'Wyoming'],
         createLoading: false,
         model: [],
@@ -354,7 +358,7 @@
             {required: true, message: '请输入商品特价'},
             {message: '必须为大于0的数字', pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/}
           ],
-          specificationId: [{required: true, message: '请输入商品规格'}],
+          specificationId: [{required: true, message: '请输入商品规格', pattern: /^[1-9]\d*$/}],
           image: [{required: true, message: '请上传图片'}],
           name: [{required: true, message: '请输入上架名称'}],
           shelfQty: [
@@ -404,7 +408,7 @@
           {
             title: '上架规格',
             width: 150,
-            key: 'productSpecification'
+            key: 'shelfSpecification'
           },
           {
             title: '规格条码',
@@ -438,6 +442,7 @@
             title: '操作',
             minWidth: 200,
             key: 'handle',
+            fixed: 'right',
             options: ['delete', 'edit', 'view', 'onSale']
           }
         ],
@@ -449,7 +454,6 @@
     },
     methods: {
       selectIndex(options) {
-        console.log(options);
         this.productDetail.specificationId = options.id
         this.productDetail.image = options.product.productImage
         this.productDetail.name = options.product.name
@@ -457,30 +461,30 @@
         tempImgObj.image = options.product.productImage
         this.setDefaultUploadList(tempImgObj)
       },
-      remoteMethod2(query) {
+      remoteMethod(query) {
         if (query !== '') {
           this.handleSearchAutoComplete(query)
         } else {
-          this.options2 = [];
+          this.optionsShelfSpecification = [];
         }
       },
       handleSearchAutoComplete(value) {
-        this.loading2 = true;
+        this.shelfSpecificationLoading = true;
         getProductSpecificationsPages({
           keyword: value + '',
           page: '1',
           rows: '5'
         }).then(res => {
           console.log(res);
-          this.options2.length = 0
+          this.optionsShelfSpecification.length = 0
           if (res.length > 0) {
             res.forEach(value => {
-              this.options2.push(value)
+              this.optionsShelfSpecification.push(value)
             })
           }
-          console.log(this.options2);
+          console.log(this.optionsShelfSpecification);
         }).finally(() => {
-          this.loading2 = false;
+          this.shelfSpecificationLoading = false;
         })
       },
       checkAllGroupChange(data) {
@@ -537,6 +541,7 @@
         createProductShelve({
           ...this.productDetail
         }).then(res => {
+          this.resetFields()
           this.modalViewLoading = false
           this.modalEdit = false
           this.$Message.success('创建成功!');
@@ -583,6 +588,10 @@
       handleEdit(params) {
         this.tempModalType = this.modalType.edit
         this.productDetail = params.row;
+        this.shelfSpecificationEditDefault = params.row.specificationInfo
+        // .length = 0
+        // this.shelfSpecificationModel.push(temp)
+        // this.$refs.shelfSpecificationSelect.setQuery(temp)
         this.setDefaultUploadList(params.row)
         this.modalEdit = true;
       },
