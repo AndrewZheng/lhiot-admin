@@ -5,24 +5,27 @@
               border
               search-place="top"
               v-model="tableData"
-              :columns="columns"
+              :columns="columns1"
               :loading="loading"
+              :searchAreaColumn="24"
               @on-view="handleView"
               @on-edit="handleEdit"
-              @on-sale="onSale"
       >
         <div slot="searchCondition">
-          <Input placeholder="板块位置描述" class="search-input" v-model="searchRowData.name" style="width: auto"/>
-          <Select v-model="rowData.status" class="search-col ml15" placeholder="位置类型">
-            <Option v-for="item in positionSelectList" :value="item.value" class="mb10 ml15"
-                    :key="`search-col-${item.value}`">{{item.value}}
+          <Input :clearable="true" placeholder="板块位置描述" class="search-input mr5" v-model="searchRowData.description"
+                 style="width: auto"/>
+          <Select ref="selectRef" v-model="searchRowData.positionType" class="search-col mr5" placeholder="位置类型"
+                  :clearable="true">
+            <Option v-for="item in positionSelectList" :value="item.value"
+                    class="pl15 pt5 pb5"
+                    :key="`search-col-${item.value}`">{{item.label}}
             </Option>
           </Select>
-          <DatePicker type="datetime" placeholder="创建时间起"></DatePicker>
-          <i class="mr5 ml5">-</i>
-          <DatePicker type="datetime" placeholder="创建时间止"></DatePicker>
-          <Button v-waves @click="handleSearch" class="search-btn ml20" type="primary">
+          <Button v-waves @click="handleSearch" class="search-btn mr5" :loading="searchLoading" type="primary">
             <Icon type="md-search"/>&nbsp;搜索
+          </Button>
+          <Button v-waves @click="handleClear" class="search-btn" :loading="clearSearchLoading" type="info">
+            <Icon type="md-refresh"/>&nbsp;清除条件
           </Button>
         </div>
       </tables>
@@ -37,7 +40,7 @@
     <Modal
       v-model="modalView"
       :mask-closable="false"
-      :width="750"
+      :width="800"
     >
       <p slot="header">
         <span>鲜果师详情</span>
@@ -47,13 +50,13 @@
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="7">板块位置ID:</i-col>
-              <i-col span="17">{{fruitMasterDetail.id}}</i-col>
+              <i-col span="17">{{uiPositionDetail.id}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="8">位置描述:</i-col>
-              <i-col span="16">{{fruitMasterDetail.name}}</i-col>
+              <i-col span="16">{{uiPositionDetail.description}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -61,17 +64,29 @@
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="8">板块位置编码:</i-col>
-              <i-col span="16">{{fruitMasterDetail.phoneNumber}}</i-col>
+              <i-col span="16">{{uiPositionDetail.code}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="8">位置类型:</i-col>
-              <i-col span="16">{{fruitMasterDetail.extractingAmount}}</i-col>
+              <i-col span="16">{{uiPositionDetail.positionType}}</i-col>
             </Row>
           </i-col>
         </Row>
-        <Table border :columns="columns1" :data="data1"></Table>
+        <Table
+          v-if="uiPositionDetail.positionType === 'ADVERTISEMENT'"
+          border
+          :columns="columnsAdvertisement"
+          :data="uiPositionDetail.advertisementList"
+        ></Table>
+        <Table
+          v-if="uiPositionDetail.positionType === 'PRODUCT'||typeof productSectionList===undefined"
+          class="mt30"
+          border
+          :columns="columnsModule"
+          :data="uiPositionDetail.productSectionList"
+        ></Table>
       </div>
       <div slot="footer">
         <Button type="primary" @click="handleClose">关闭</Button>
@@ -82,7 +97,8 @@
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import {getOnSaleData} from '@/api/fruitermaster';
+  import {getUiPosition, getuiPositionsPages} from '@/api/fruitermaster';
+  import tableMixin from '@/mixins/tableMixin.js'
 
   const fruitMasterDetail = {
     id: '',
@@ -95,13 +111,20 @@
     applicationTime: '',
     handlingTime: '2018-10-28'
   };
+  const uiPositionDetail = {
+    applicationType: "HEALTH_GOOD",
+    code: "carousel",
+    description: "鲜果师轮播图",
+    id: 0,
+    positionType: "ADVERTISEMENT",
+    productSectionList: [],
+    advertisementList: []
+  }
   const roleRowData = {
-    name: '',
-    phoneNumber: '',
-    idCard: '',
-    timeStart: '',
-    timeEnd: '',
-    status: ''
+    page: 1,
+    rows: 10,
+    positionType: null,
+    description: null
   };
 
   export default {
@@ -111,60 +134,76 @@
     created() {
       this.getTableData();
     },
+    mixins: [tableMixin],
     data() {
       return {
-        columns1: [
+        searchLoading: false,
+        clearSearchLoading: false,
+        columnsAdvertisement: [
           {
-            title: 'Name',
-            key: 'name'
+            title: '广告图',
+            render: (h, params, vm) => {
+              let {row} = params
+              const str = <img src={row.image} style="margin-top:5px" height="60" width="60" margin-top="10px"/>;
+              return <div>{str}</div>;
+            }
           },
           {
-            title: 'Age',
-            key: 'age'
+            title: '广告名称',
+            key: 'advertiseName'
           },
           {
-            title: 'Address',
-            key: 'address'
+            title: '广告类别',
+            key: 'advertiseType'
+          },
+          {
+            title: '广告链接',
+            key: 'advertiseRelation'
+          },
+          {
+            title: '序号',
+            key: 'sorting'
           }
         ],
-        data1: [
+        columnsModule: [
           {
-            name: 'John Brown',
-            age: 18,
-            address: 'New York No. 1 Lake Park',
-            date: '2016-10-03'
+            title: '板块名称',
+            key: 'sectionName'
           },
           {
-            name: 'Jim Green',
-            age: 24,
-            address: 'London No. 1 Lake Park',
-            date: '2016-10-01'
+            title: '关联商品',
+            key: 'productShelfList',
+            render: (h, params, vm) => {
+              let {row} = params
+              let array = []
+              if (row.productShelfList.length > 0) {
+                row.productShelfList.forEach(value => {
+                  array.push(value.name)
+                })
+              }
+              return <div>{array.join(',  ')}</div>;
+            }
           },
           {
-            name: 'Joe Black',
-            age: 30,
-            address: 'Sydney No. 1 Lake Park',
-            date: '2016-10-02'
-          },
-          {
-            name: 'Jon Snow',
-            age: 26,
-            address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
+            title: '序号',
+            key: 'sorting'
           }
         ],
         positionSelectList: [
           {
-            value: 'New York',
-            label: 'New York'
+            value: 'PRODUCT',
+            label: '商品'
           },
           {
-            value: 'London',
-            label: 'London'
+            value: 'ADVERTISEMENT',
+            label: '广告'
+          },
+          {
+            value: 'ARTICLE',
+            label: '文章'
           }
         ],
-        model1: '',
-        columns: [
+        columns1: [
           {
             title: '板块位置ID',
             key: 'id',
@@ -174,13 +213,18 @@
           },
           {
             title: '板块位置描述',
-            key: 'name',
+            key: 'description',
             minWidth: 150
           },
           {
             title: '板块位置编码',
             minWidth: 150,
-            key: 'onSaleName'
+            key: 'code'
+          },
+          {
+            title: '位置类型',
+            minWidth: 150,
+            key: 'positionType'
           },
           {
             title: '操作',
@@ -189,59 +233,58 @@
             options: ['view']
           }
         ],
-        tableData: [],
-        total: 0,
-        page: 1,
-        pageSize: 10,
-        loading: true,
-        modalView: false,
-        modalEdit: false,
-        rowData: roleRowData,
         searchRowData: roleRowData,
-        fruitMasterDetail: fruitMasterDetail
+        defaultSearchRowData: roleRowData,
+        fruitMasterDetail: fruitMasterDetail,
+        uiPositionDetail: uiPositionDetail
       };
     },
     methods: {
+      handleClear() {
+        // 重置数据
+        this.resetSearchRowData();
+        this.clearSearchLoading = true
+        this.handleSearch()
+      },
+      resetSearchRowData() {
+        this.searchRowData = roleRowData;
+      },
       addChildren() {
 
       },
       deleteChildren() {
 
       },
-      onSale() {
-
-      },
-      handleClose() {
-        this.modalView = false;
-      },
       handleView(params) {
         this.fruitMasterDetail = params.row;
-        this.modalView = true;
+        if (params.row.positionType === 'ADVERTISEMENT') {
+
+        }
+        this.loading = true;
+        getUiPosition({id: params.row.id}).then(res => {
+          console.log(res);
+          this.uiPositionDetail = res
+          this.modalView = true;
+          this.loading = false
+        })
+
       },
       handleEdit(params) {
         this.fruitMasterDetail = params.row;
-        this.modalEdit = true;
+        params.row.this.modalEdit = true;
       },
       handleSearch() {
-      },
-      changePage(page) {
-        this.page = page;
-        this.getTableData();
-      },
-      changePageSize(pageSize) {
-        console.log(pageSize);
-        this.page = 1;
-        this.pageSize = pageSize;
-        this.getTableData();
+        this.searchRowData.page = 1;
+        this.searchLoading = true
+        this.getTableData()
       },
       getTableData() {
-        getOnSaleData({
-          page: this.page,
-          rows: this.pageSize
-        }).then(res => {
+        getuiPositionsPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;
           this.loading = false;
+          this.clearSearchLoading = false
+          this.searchLoading = false
         });
       },
       exportExcel() {
