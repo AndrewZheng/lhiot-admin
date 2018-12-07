@@ -75,13 +75,13 @@
           </i-col>
         </Row>
         <Table
-          v-if="uiPositionDetail.positionType === 'ADVERTISEMENT'"
+          v-if="uiPositionDetail.positionType === 'ADVERTISEMENT'&& uiPositionDetail.advertisementList !== null"
           border
           :columns="columnsAdvertisement"
           :data="uiPositionDetail.advertisementList"
         ></Table>
         <Table
-          v-if="uiPositionDetail.positionType === 'PRODUCT'||typeof productSectionList===undefined"
+          v-if="uiPositionDetail.positionType === 'PRODUCT'&& uiPositionDetail.productSectionList.length>0"
           class="mt30"
           border
           :columns="columnsModule"
@@ -99,18 +99,9 @@
   import Tables from '_c/tables';
   import {getUiPosition, getuiPositionsPages} from '@/api/fruitermaster';
   import tableMixin from '@/mixins/tableMixin.js'
+  import searchMixin from '@/mixins/searchMixin.js'
+  import _ from 'lodash'
 
-  const fruitMasterDetail = {
-    id: '',
-    name: 0,
-    phoneNumber: '',
-    extractingAmount: '',
-    settlementStatus: '',
-    creditCardNumbers: '',
-    headStatus: '',
-    applicationTime: '',
-    handlingTime: '2018-10-28'
-  };
   const uiPositionDetail = {
     applicationType: "HEALTH_GOOD",
     code: "carousel",
@@ -132,13 +123,12 @@
       Tables
     },
     created() {
+      this.searchRowData = _.cloneDeep(roleRowData)
       this.getTableData();
     },
-    mixins: [tableMixin],
+    mixins: [tableMixin, searchMixin],
     data() {
       return {
-        searchLoading: false,
-        clearSearchLoading: false,
         columnsAdvertisement: [
           {
             title: '广告图',
@@ -233,37 +223,21 @@
             options: ['view']
           }
         ],
-        searchRowData: roleRowData,
-        defaultSearchRowData: roleRowData,
-        fruitMasterDetail: fruitMasterDetail,
+        searchRowData: _.cloneDeep(roleRowData),
         uiPositionDetail: uiPositionDetail
       };
     },
     methods: {
-      handleClear() {
-        // 重置数据
-        this.resetSearchRowData();
-        this.clearSearchLoading = true
-        this.handleSearch()
-      },
       resetSearchRowData() {
-        this.searchRowData = roleRowData;
-      },
-      addChildren() {
-
-      },
-      deleteChildren() {
-
+        this.searchRowData = _.cloneDeep(roleRowData);
       },
       handleView(params) {
-        this.fruitMasterDetail = params.row;
-        if (params.row.positionType === 'ADVERTISEMENT') {
-
-        }
         this.loading = true;
         getUiPosition({id: params.row.id}).then(res => {
           console.log(res);
           this.uiPositionDetail = res
+          console.log(uiPositionDetail.advertisementList);
+          console.log(uiPositionDetail.advertisementList === null);
           this.modalView = true;
           this.loading = false
         })
@@ -272,11 +246,6 @@
       handleEdit(params) {
         this.fruitMasterDetail = params.row;
         params.row.this.modalEdit = true;
-      },
-      handleSearch() {
-        this.searchRowData.page = 1;
-        this.searchLoading = true
-        this.getTableData()
       },
       getTableData() {
         getuiPositionsPages(this.searchRowData).then(res => {

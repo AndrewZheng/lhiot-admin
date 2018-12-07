@@ -7,6 +7,7 @@
               v-model="tableData"
               :columns="columns"
               :loading="loading"
+              @on-delete="handleDelete"
               @on-view="handleView"
               @on-edit="handleEdit"
               @on-sale="onSale"
@@ -17,10 +18,10 @@
           <Row>
             <Input placeholder="上架名称" class="search-input mr5" v-model="searchRowData.name" style="width: auto"/>
             <Input placeholder="商品名称" class="search-input mr5" v-model="searchRowData.productName" style="width: auto"/>
-            <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary">
+            <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary" :loading="searchLoading">
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
-            <Button v-waves @click="handleClear" class="search-btn" type="info">
+            <Button v-waves @click="handleClear" class="search-btn" type="info" :loading="clearSearchLoading">
               <Icon type="md-refresh"/>&nbsp;清除条件
             </Button>
           </Row>
@@ -292,6 +293,8 @@
   import uploadMixin from '@/mixins/uploadMixin'
   import deleteMixin from '@/mixins/deleteMixin.js'
   import tableMixin from '@/mixins/tableMixin.js'
+  import searchMixin from '@/mixins/searchMixin.js'
+  import _ from 'lodash'
 
   const productDetail = {
     id: 0,
@@ -322,13 +325,13 @@
       Tables,
       IViewUpload
     },
-    mixins: [uploadMixin, deleteMixin, tableMixin],
+    mixins: [uploadMixin, deleteMixin, tableMixin,searchMixin],
     mounted() {
     },
     created() {
       this.loading = true
       this.createLoading = true
-      this.searchRowData = roleRowData
+      this.searchRowData = _.cloneDeep(roleRowData)
       checkUiPosition({
         includeSection: "YES",
         page: 0,
@@ -446,19 +449,16 @@
             options: ['delete', 'edit', 'view', 'onSale']
           }
         ],
-        searchRowData: roleRowData,
+        searchRowData: _.cloneDeep(roleRowData),
         productDetail: productDetail,
-        uploadVisible: false,
         exportExcelLoading: false
       };
     },
     methods: {
-      handleClear() {
-        // 重置数据
-        this.resetSearchRowData();
-      },
       resetSearchRowData() {
-        this.searchRowData = roleRowData;
+        this.clearSearchLoading = true
+        this.searchRowData = _.cloneDeep(roleRowData);
+        this.getTableData()
       },
       selectIndex(options) {
         this.productDetail.specificationId = options.id
@@ -606,7 +606,7 @@
         this.$refs.modalEdit.resetFields()
         this.$refs.uploadMain.clearFileList()
         this.uploadListMain = []
-        this.productDetail = productDetail
+        this.productDetail = _.cloneDeep(productDetail)
       },
       setDefaultUploadList(res) {
         if (res.image != null) {
@@ -618,16 +618,13 @@
           this.uploadListMain = mainImgArr
         }
       },
-      handleSearch() {
-        this.searchRowData.page = 1;
-        this.searchLoading = true
-        this.getTableData()
-      },
       getTableData() {
         getProductShelvesPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;
           this.loading = false;
+          this.clearSearchLoading = false
+          this.searchLoading = false
         });
       },
       exportExcel() {

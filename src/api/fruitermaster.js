@@ -261,11 +261,36 @@ export const getuiPositionsPages = (data) => {
   });
 };
 
-//
 // 根据Id查找UI位置
 export const getUiPosition = ({id}) => {
   return Vue.prototype.$http.request({
     url: '/ui-positions/'+id,
     method: 'get'
+  });
+};
+
+//根据条件分页查询广告信息列表
+export const getAdvertisementsPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/advertisements/pages',
+    data,
+    method: 'post'
+  });
+};
+
+//根据条件分页查询商品版块信息列表
+export const getProductSectionsPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/product-sections/pages',
+    data,
+    method: 'post'
+  });
+};
+
+//根据商品Ids删除商品版块
+export const deleteProductSection = ({ids}) => {
+  return Vue.prototype.$http.request({
+    url: '/product-sections/'+ids,
+    method: 'delete'
   });
 };
