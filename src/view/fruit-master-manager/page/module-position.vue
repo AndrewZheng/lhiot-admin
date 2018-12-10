@@ -81,7 +81,7 @@
           :data="uiPositionDetail.advertisementList"
         ></Table>
         <Table
-          v-if="uiPositionDetail.positionType === 'PRODUCT'&& uiPositionDetail.productSectionList.length>0"
+          v-if="uiPositionDetail.positionType === 'PRODUCT'&& uiPositionDetail.productSectionList !== null"
           class="mt30"
           border
           :columns="columnsModule"
@@ -234,14 +234,10 @@
       handleView(params) {
         this.loading = true;
         getUiPosition({id: params.row.id}).then(res => {
-          console.log(res);
           this.uiPositionDetail = res
-          console.log(uiPositionDetail.advertisementList);
-          console.log(uiPositionDetail.advertisementList === null);
           this.modalView = true;
           this.loading = false
         })
-
       },
       handleEdit(params) {
         this.fruitMasterDetail = params.row;

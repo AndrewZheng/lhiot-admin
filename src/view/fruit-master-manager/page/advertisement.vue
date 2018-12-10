@@ -126,6 +126,7 @@
     </Modal>
     <Modal
       v-model="modalEdit"
+      :width="750"
     >
       <p slot="header">
         <span>{{tempModalType===modalType.edit?'修改广告':'创建广告'}}</span>
@@ -133,8 +134,8 @@
       <div class="modal-content">
         <Form ref="modalEdit" :model="advertisementDetail" :rules="ruleInline" :label-width="80">
           <Row>
-            <FormItem label="广告位置:" prop="positionId">
-              <Select v-model="advertisementDetail.positionId" @on-change="advertisementChange"
+            <FormItem label="广告位置:" prop="advertiseName">
+              <Select v-model="advertisementDetail.advertiseName" @on-change="advertisementChange"
                       style="width: 200px">
                 <Option v-for="item in advertisementList" :value="item.id" class="pt5 pb5 pl15"
                         :key="`search-col-${item.id}`">{{item.description}}
@@ -151,64 +152,69 @@
           <Row>
             <Col span="12">
             <FormItem label="广告类型:" prop="advertiseType">
-              <Select :value="advertisementDetail.advertiseType" @on-change="advertiseTypeChange"
+              <Select v-model="advertisementDetail.advertiseType" @on-change="advertiseTypeChange"
                       style="width: auto">
                 <Option class="ptb2-5" style="padding-left: 5px" v-for="(item,index) in advertiseType"
                         :value="item.value"
-                        :key="index">{{ item.label
-                  }}
+                        :key="index">{{ item.label}}
                 </Option>
               </Select>
             </FormItem>
             </Col>
             <Col span="12">
-            <FormItem label="广告状态:" prop="shelfStatus">
-              <Select :value="advertisementDetail.advertiseStatus" @on-change="advertisementDetailStatusChange"
+            <FormItem label="广告状态:" prop="advertiseStatus">
+              <Select v-model="advertisementDetail.advertiseStatus" @on-change="advertisementDetailStatusChange"
                       style="width: auto">
                 <Option class="ptb2-5" style="padding-left: 5px" v-for="(item,index) in useAble" :value="item.value"
-                        :key="index">{{ item.label
-                  }}
+                        :key="index">{{ item.label }}
                 </Option>
               </Select>
             </FormItem>
             </Col>
           </Row>
           <Row>
-            <FormItem label="商品主图:建议尺寸 (xxx*xxx):" prop="image" :label-width="80">
-              <div class="demo-upload-list" v-for="item in uploadListMain">
-                <template v-if="item.status === 'finished'">
-                  <div>
-                    <img :src="item.url">
-                    <div class="demo-upload-list-cover">
-                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                      <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+            <FormItem :label='advertisementDetail.advertiseType ==="IMAGE"?"商品主图:建议尺寸 (xxx*xxx):":"广告文字:"'
+                      prop="content"
+                      :label-width="80">
+              <div v-if="advertisementDetail.advertiseType ==='IMAGE'">
+                <div class="demo-upload-list" v-for="item in uploadListMain">
+                  <template v-if="item.status === 'finished'">
+                    <div>
+                      <img :src="item.url">
+                      <div class="demo-upload-list-cover">
+                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                      </div>
                     </div>
-                  </div>
-                </template>
-                <template v-else>
-                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                </template>
-              </div>
-              <IViewUpload
-                ref="uploadMain"
-                :defaultList="defaultListMain"
-                @on-success="handleSuccessMain"
-                :imageSize="imageSize"
-              >
-                <div slot="content">
-                  <Button type="primary">
-                    上传图片
-                  </Button>
+                  </template>
+                  <template v-else>
+                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                  </template>
                 </div>
-              </IViewUpload>
+                <IViewUpload
+                  ref="uploadMain"
+                  :defaultList="defaultListMain"
+                  @on-success="handleSuccessMain"
+                  :imageSize="imageSize"
+                >
+                  <div slot="content">
+                    <Button type="primary">
+                      上传图片
+                    </Button>
+                  </div>
+                </IViewUpload>
+              </div>
+              <div v-else>
+                <Input v-model="advertisementDetail.content" placeholder="广告文字内容"/>
+              </div>
             </FormItem>
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="链接类型:" prop="advertiseType">
-              <Select :value="advertisementDetail.advertiseType" @on-change="advertiseTypeChange"
-                      style="width: auto">
-                <Option class="ptb2-5" style="padding-left: 5px" v-for="(item,index) in advertiseType"
+            <FormItem label="链接类型:" prop="relationType">
+              <Select v-model="advertisementDetail.relationType" @on-change="advertiseRelationTypeChange"
+              >
+                <Option class="ptb2-5" style="padding-left: 5px" v-for="(item,index) in relationType"
                         :value="item.value"
                         :key="index">{{ item.label}}
                 </Option>
@@ -219,84 +225,51 @@
             <Row span="24" align="middle" type="flex">
               <Col span="18">
               <FormItem label="链接目标:" prop="shelfStatus">
-                <Input/>
+                <Input :disabled="advertisementDetail.relationType !== 'EXTERNAL_LINKS'"/>
               </FormItem>
               </Col>
               <i-col span="6">
-                <Button v-waves @click="searchAdvertisementRelation" class="search-btn mt-25" type="primary">
+                <Button v-waves @click="searchAdvertisementRelation" class="search-btn mt-25" style="margin-left: 15px"
+                        type="primary">
                   <Icon type="md-search"/>&nbsp;搜索
                 </Button>
               </i-col>
             </Row>
             </Col>
           </Row>
-        </Form>
-
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">ID:</i-col>
-              <i-col span="20">{{fruitMasterDetail.id}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请人:</i-col>
-              <i-col span="16">{{fruitMasterDetail.name}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">手机号码:</i-col>
-              <i-col span="16">{{fruitMasterDetail.phoneNumber}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">提取金额:</i-col>
-              <i-col span="16">{{fruitMasterDetail.extractingAmount}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">银行卡号:</i-col>
-              <i-col span="16">{{fruitMasterDetail.creditCardNumbers}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">结算状态:</i-col>
-              <Select span="16" style="width: 100px">
-                <Option value="beijing">已结算</Option>
-                <Option value="shanghai">未结算</Option>
+          <Row>
+            <Col span="24">
+            <FormItem label="有效时间:">
+              <Select v-model="advertisementDetail.isPermanent" @on-change="advertiseRelationTypeChange"
+                      style="width: 200px"
+              >
+                <Option class="ptb2-5" style="padding-left: 5px" v-for="(item,index) in validityTimeList"
+                        :value="item.value"
+                        :key="index">{{ item.label}}
+                </Option>
               </Select>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.applicationTime}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">处理时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.handlingTime}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
+              <Row span="24" v-if="advertisementDetail.isPermanent ==='OFF'" class="mt15">
+                <DatePicker v-model="advertisementDetail.createAt" type="datetime" placeholder="开始时间"
+                            @on-change="startTimeChange"/>
+                <i class="mr5 ml5">-</i>
+                <DatePicker v-model="advertisementDetail.endAt" type="datetime" placeholder="结束时间"/>
+              </Row>
+            </FormItem>
+            </Col>
+          </Row>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button @click="handleEditClose">关闭</Button>
+        <Button type="primary" :loading="modalViewLoading" @click="handleSubmit('modalEdit')">确定
+        </Button>
       </div>
     </Modal>
     <Modal title="View Image" v-model="uploadVisible">
       <img :src="imgUploadViewItem" style="width: 100%">
+    </Modal>
+    <Modal title="View Image" v-model="relationTargetShow">
+      <div>search</div>
     </Modal>
   </div>
 </template>
@@ -328,12 +301,14 @@
     image: "",
     advertiseName: "",
     advertiseRelation: "",
-    advertiseType: "",
+    advertiseType: "IMAGE",
     advertiseStatus: "",
+    relationType: '',
     sorting: 0,
     beginAt: "",
     endAt: "",
-    createAt: ""
+    createAt: "",
+    isPermanent: 'OFF'
   }
   const roleRowData = {
     advertiseName: '',
@@ -361,14 +336,33 @@
     },
     data() {
       return {
+        modalViewLoading: false,
+        relationTargetShow: false,
         selectDisable: true,
         advertisementList: [],
-        ruleInline: {},
+        ruleInline: {
+          advertiseName: [{required: true, message: '请选择广告位置'}],
+          description: [{required: true, message: '请填写广告描述'}],
+          advertiseType: [{required: true, message: '请选择广告类型'}],
+          advertiseStatus: [{required: true, message: '请选择广告状态'}],
+          content: [{required: true, message: '请填写广告文字内容或者上传图片'}],
+          relationType: [{required: true, message: '请选择链接类型'}]
+        },
         advertiseType: [
           {value: 'IMAGE', label: '图片广告'},
           {value: 'WORD', label: '文字广告'}
         ],
-        useAble: [{label: '是', value: 'ON'}, {label: '否', value: 'OFF'}],
+        relationType: [
+          {value: 'PRODUCT_DETAILS', label: '商品详情'},
+          {value: 'STORE_LIVE_TELECAST', label: '门店直播'},
+          {value: 'MORE_AMUSEMENT', label: '多娱'},
+          {value: 'EXTERNAL_LINKS', label: '外部链接'},
+        ],
+        useAble: [{label: '开启', value: 'ON'}, {label: '关闭', value: 'OFF'}],
+        validityTimeList: [
+          {label: '永久有效', value: 'ON'},
+          {label: '定时生效', value: 'OFF'}
+        ],
         columns: [
           {
             type: 'selection',
@@ -386,8 +380,16 @@
           },
           {
             title: '广告内容',
-            key: 'content',
-            width: 150
+            width: 150,
+            render: (h, params, vm) => {
+              const {row} = params;
+              if (row.advertiseType === 'IMAGE') {
+                const str = <img src={row.content} style="margin-top:5px" height="60" width="60" margin-top="10px"/>;
+                return <div>{str}</div>;
+              } else {
+                return <div>{row.content}</div>;
+              }
+            }
           },
           {
             title: '广告描述',
@@ -402,19 +404,17 @@
           {
             title: '链接类型',
             width: 180,
-            key: 'relationType',
-            sortable: true
+            key: 'relationType'
           },
           {
             title: '广告状态',
             minWidth: 110,
-            key: 'advertiseStatus',
-            sortable: true
+            key: 'advertiseStatus'
           },
           {
             title: '有效时间',
             minWidth: 300,
-            key:'validityPeriod'
+            key: 'validityPeriod'
           },
           {
             title: '操作',
@@ -431,13 +431,36 @@
       };
     },
     methods: {
-      searchAdvertisementRelation(){
+      startTimeChange(value, date) {
+        console.log(value);
+        console.log(date);
+      },
+      handleSubmit(name) {
+        console.log(this.advertisementDetail);
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            if (this.tempModalType === this.modalType.create) {
+              //添加状态
+              // this.createProduct()
+            } else if (this.tempModalType === this.modalType.edit) {
+              //编辑状态
+              // this.editProduct()
+            }
+          } else {
+            this.$Message.error('请完善商品的信息!');
+          }
+        })
+      },
+      searchAdvertisementRelation() {
+        if (this.advertisementDetail.relationType === null || this.advertisementDetail.relationType === '') {
+          this.$Message.warning('请填写链接类型');
+        }
 
       },
       handleRemoveMain(file) {
         this.$refs.uploadMain.deleteFile(file);
         this.uploadListMain = []
-        this.advertisementDetail.image = null
+        this.advertisementDetail.content = null
       },
       resetFields() {
         this.$refs.modalEdit.resetFields()
@@ -447,8 +470,8 @@
       },
       handleSuccessMain(response, file, fileList) {
         this.uploadListMain = fileList
-        this.advertisementDetail.image = null
-        this.advertisementDetail.image = fileList[0].url
+        this.advertisementDetail.content = null
+        this.advertisementDetail.content = fileList[0].url
       },
       addChildren() {
         if (this.tempModalType !== this.modalType.cfreate) {
@@ -478,7 +501,16 @@
         this.advertisementDetail.positionId = value
       },
       advertiseTypeChange(value) {
+        // let i = 1
+        // this.$refs.modalEdit.resetFields()
+        if (value === 'WORD') {
+          this.$refs.uploadMain.clearFileList()
+          this.uploadListMain = []
+        }
+        this.advertisementDetail.content = ''
 
+      },
+      advertiseRelationTypeChange(value) {
       },
       advertisementDetailStatusChange(value) {
 
