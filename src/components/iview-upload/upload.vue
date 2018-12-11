@@ -40,7 +40,9 @@
       },
       defaultList: {
         type: Array,
-        default: []
+        default: function () {
+          return []
+        }
       },
       showUploadList: {
         type: Boolean,
@@ -58,7 +60,7 @@
       },
       //清空已上传的文件列表
       clearFileList() {
-        this.$refs.iViewUpload.clearFiles()
+        this.$refs.iViewUpload.clearFiles();
       },
       //设置默认文件列表
       setDefaultFileList(array) {
@@ -114,7 +116,7 @@
             const image = new Image();
             image.onload = function () {
               if (width && this.width != width) {
-                self.$Notice.error({title: '请上传宽为' + width + "高为" + height + "的图片"});
+                self.$Notice.error({title: '请上传宽为' + width + '高为' + height + '的图片'});
                 // reject();
                 resolve();
               } else if (height && this.height != height) {
