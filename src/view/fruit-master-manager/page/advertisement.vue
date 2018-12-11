@@ -9,6 +9,7 @@
               :loading="loading"
               @on-view="handleView"
               @on-edit="handleEdit"
+              @on-delete="handleDelete"
               @on-sale="onSale"
       >
         <div slot="searchCondition">
@@ -34,7 +35,7 @@
           </Button>
           <Poptip confirm
                   placement="bottom"
-                  style="width: 100px;z-index: 99"
+                  style="width: 100px"
                   title="您确认删除选中的内容吗?"
                   @on-ok="poptipOk"
           >
@@ -135,8 +136,8 @@
       <div class="modal-content">
         <Form ref="modalEdit" :model="advertisementDetail" :rules="ruleInline" :label-width="80">
           <Row>
-            <FormItem label="广告位置:" prop="advertiseName">
-              <Select v-model="advertisementDetail.advertiseName" @on-change="advertisementChange"
+            <FormItem label="广告位置:" prop="positionId">
+              <Select v-model="advertisementDetail.positionId" @on-change="advertisementChange"
                       style="width: 200px">
                 <Option v-for="item in advertisementList" :value="item.id" class="pt5 pb5 pl15"
                         :key="`search-col-${item.id}`">{{item.description}}
@@ -145,8 +146,8 @@
             </FormItem>
           </Row>
           <Row>
-            <FormItem label="广告描述:" prop="description">
-              <Input v-model="advertisementDetail.description" placeholder="广告描述"/>
+            <FormItem label="广告名:" prop="advertiseName">
+              <Input v-model="advertisementDetail.advertiseName" placeholder="广告名"/>
             </FormItem>
           </Row>
 
@@ -215,7 +216,7 @@
             <FormItem label="链接类型:" prop="relationType">
               <Select v-model="advertisementDetail.relationType" @on-change="advertiseRelationTypeChange"
               >
-                <Option class="ptb2-5"  v-for="(item,index) in relationType"
+                <Option class="ptb2-5" v-for="(item,index) in relationType"
                         :value="item.value"
                         :key="index">{{item.label}}
                 </Option>
@@ -225,12 +226,14 @@
             <Col span="12">
             <Row span="24" align="middle" type="flex">
               <Col span="18">
-              <FormItem label="链接目标:" prop="shelfStatus">
-                <Input :disabled="advertisementDetail.relationType !== 'EXTERNAL_LINKS'"/>
+              <FormItem label="链接目标:" prop="advertiseRelation">
+                <Input v-model="advertisementDetail.advertiseRelation"
+                       :disabled="advertisementDetail.relationType !== 'EXTERNAL_LINKS'"/>
               </FormItem>
               </Col>
               <i-col span="6">
-                <Button v-waves @click="searchAdvertisementRelation" class="search-btn mt-25" style="margin-left: 15px"
+                <Button v-waves @click="searchAdvertisementRelation" :loading="searchModalTableLoading"
+                        class="search-btn mt-25" style="margin-left: 15px"
                         type="primary">
                   <Icon type="md-search"/>&nbsp;搜索
                 </Button>
@@ -250,10 +253,13 @@
                 </Option>
               </Select>
               <Row span="24" v-if="advertisementDetail.isPermanent ==='OFF'" class="mt15">
-                <DatePicker v-model="advertisementDetail.createAt" type="datetime" placeholder="开始时间"
+                <DatePicker format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="开始时间"
+                            :value="advertisementDetail.beginAt"
                             @on-change="startTimeChange"/>
                 <i class="mr5 ml5">-</i>
-                <DatePicker v-model="advertisementDetail.endAt" type="datetime" placeholder="结束时间"/>
+                <DatePicker format="yyyy-MM-dd HH:mm:ss" type="datetime" :value="advertisementDetail.endAt"
+                            placeholder="结束时间"
+                            @on-change="endTimeChange"/>
               </Row>
             </FormItem>
             </Col>
@@ -271,8 +277,16 @@
     </Modal>
     <Modal title="View Image"
            :mask-closable="false"
+           :width="1200"
            v-model="relationTargetShow">
-      <div>search</div>
+      <div class="modal-content">
+        <Table
+          border
+          :columns="tempColumns"
+          :data="tempModalTableData"
+          @on-row-click="onRowClick"
+        ></Table>
+      </div>
     </Modal>
   </div>
 </template>
@@ -281,16 +295,18 @@
   import Tables from '_c/tables';
   import {
     checkUiPosition,
+    createAdvertisement,
     getAdvertisementsPages,
-    getOnSaleData,
     getProductShelvesPages
   } from '@/api/fruitermaster';
+  import {goods_on_sales_columns} from "@//libs/columns";
   import deleteMixin from '@/mixins/deleteMixin.js';
   import tableMixin from '@/mixins/tableMixin.js'
   import searchMixin from '@/mixins/searchMixin.js'
   import uploadMixin from '@/mixins/uploadMixin'
   import IViewUpload from '_c/iview-upload'
   import _ from 'lodash'
+  import {compareData} from "@/libs/util";
 
   const fruitMasterDetail = {
     id: '',
@@ -345,6 +361,7 @@
     data() {
       return {
         modalViewLoading: false,
+        searchModalTableLoading: false,
         relationTargetShow: false,
         selectDisable: true,
         advertisementList: [],
@@ -354,26 +371,26 @@
           advertiseType: [{required: true, message: '请选择广告类型'}],
           advertiseStatus: [{required: true, message: '请选择广告状态'}],
           content: [{required: true, message: '请填写广告文字内容或者上传图片'}],
-          relationType: [{required: true, message: '请选择链接类型'}]
+          relationType: [{required: true, message: '请选择链接类型'}],
+          advertiseRelation: [{required: true, message: '请填写链接目标'}],
+          positionId: [{required: true, message: '请选择广告位置'}]
         },
         advertiseType: [
           {value: 'IMAGE', label: '图片广告'},
-          {value: 'WORD', label: '文字广告'}
+          {value: 'TEXT', label: '文字广告'}
         ],
-        // 鲜果师关联类型 -- PRODUCT_DETAILS("商品详情"),
-        // PRODUCT_SECTION("商品版块"),
-        // CUSTOM_PLAN("定制计划"),
-        // CUSTOM_PLAN_SECTION("定制版块"),
-        // ARTICLE_DETAILS("文章详情")
         relationType: [
-          {value: 'PRODUCT_DETAILS', label: '商品详情',api:getProductShelvesPages},
-          {value: 'PRODUCT_SECTION', label: '定制计划',},
-          {value: 'CUSTOM_PLAN', label: '商品版块'},
-          {value: 'STORE_LIVE_TELECAST', label: '门店直播'},
-          {value: 'CUSTOM_PLAN_SECTION', label: '定制版块'},
-          {value: 'ARTICLE_DETAILS', label: '文章详情'},
-          {value: 'EXTERNAL_LINKS', label: '外部链接'},
+          {value: 'PRODUCT_DETAILS', label: '商品详情', api: getProductShelvesPages, columns: goods_on_sales_columns},
+          {value: 'PRODUCT_SECTION', label: '定制计划', api: getProductShelvesPages},
+          {value: 'CUSTOM_PLAN', label: '商品版块', api: getProductShelvesPages},
+          {value: 'STORE_LIVE_TELECAST', label: '门店直播', api: getProductShelvesPages},
+          {value: 'CUSTOM_PLAN_SECTION', label: '定制版块', api: getProductShelvesPages},
+          {value: 'ARTICLE_DETAILS', label: '文章详情', api: getProductShelvesPages},
+          {value: 'EXTERNAL_LINKS', label: '外部链接', api: getProductShelvesPages}
         ],
+        tempColumns: [],
+        tempModalTableData: [],
+        relationTypeKeys: [],
         useAble: [{label: '开启', value: 'ON'}, {label: '关闭', value: 'OFF'}],
         validityTimeList: [
           {label: '永久有效', value: 'ON'},
@@ -389,7 +406,7 @@
           },
           {
             title: 'ID',
-            key: 'positionId',
+            key: 'id',
             sortable: true,
             minWidth: 80,
             fixed: 'left'
@@ -408,24 +425,74 @@
             }
           },
           {
-            title: '广告描述',
+            title: '广告名称',
             width: 150,
             key: 'advertiseName'
           },
           {
             title: '广告类型',
             width: 150,
-            key: 'advertiseType'
+            key: 'advertiseType',
+            render: (h, params, vm) => {
+              const {row} = params;
+              if (row.advertiseType === 'IMAGE') {
+                return <div>{"图片"}</div>;
+              } else {
+                return <div>{"文字"}</div>;
+              }
+            }
           },
           {
             title: '链接类型',
             width: 180,
-            key: 'relationType'
+            render: (h, params, vm) => {
+              const {row} = params;
+              switch (row.relationType) {
+                case 'PRODUCT_DETAILS':
+                  return <div>{"商品详情"}</div>;
+                  break;
+                case 'PRODUCT_SECTION':
+                  return <div>{"定制计划"}</div>;
+                  break;
+                case 'CUSTOM_PLAN':
+                  return <div>{"商品版块"}</div>;
+                  break;
+                case 'STORE_LIVE_TELECAST':
+                  return <div>{"门店直播"}</div>;
+                  break;
+                case 'CUSTOM_PLAN_SECTION':
+                  return <div>{"定制版块"}</div>;
+                  break;
+                case 'ARTICLE_DETAILS':
+                  return <div>{"文章详情"}</div>;
+                  break;
+                case 'EXTERNAL_LINKS':
+                  return <div>{"外部链接"}</div>;
+                  break;
+                default :
+                  return <div>{row.relationType}</div>;
+                  break;
+              }
+            }
           },
           {
             title: '广告状态',
             minWidth: 110,
-            key: 'advertiseStatus'
+            key: 'advertiseStatus',
+            render: (h, params, vm) => {
+              const {row} = params;
+              switch (row.advertiseStatus) {
+                case 'ON':
+                  return <div>{"开启"}</div>;
+                  break;
+                case 'OFF':
+                  return <div>{"关闭"}</div>;
+                  break;
+                default :
+                  return <div>{row.advertiseStatus}</div>;
+                  break;
+              }
+            }
           },
           {
             title: '有效时间',
@@ -443,21 +510,43 @@
         uploadListMain: [],
         searchRowData: _.cloneDeep(roleRowData),
         fruitMasterDetail: fruitMasterDetail,
-        advertisementDetail: _.cloneDeep(advertisementDetail)
+        advertisementDetail: _.cloneDeep(advertisementDetail),
       };
     },
     methods: {
+      onRowClick(row, index) {
+        this.advertisementDetail.advertiseRelation = row.id
+        // this.advertisementDetail.advertiseRelation = row.name
+        console.log(row);
+        console.log(index);
+        this.relationTargetShow = false
+      },
       startTimeChange(value, date) {
-        console.log(value);
-        console.log(date);
+        this.advertisementDetail.beginAt = value
+      },
+      endTimeChange(value, date) {
+        this.advertisementDetail.endAt = value
       },
       handleSubmit(name) {
-        console.log(this.advertisementDetail);
         this.$refs[name].validate((valid) => {
+          if (this.advertisementDetail.isPermanent === 'OFF') {
+            if (this.advertisementDetail.beginAt === '') {
+              this.$Message.error('请填写开始时间!');
+              return
+            }
+            if (this.advertisementDetail.endAt === '') {
+              this.$Message.error('请填写结束时间!');
+              return
+            }
+            if (compareData(this.advertisementDetail.beginAt, this.advertisementDetail.endAt)) {
+              this.$Message.error('结束时间必须大于开始时间!');
+              return
+            }
+          }
           if (valid) {
             if (this.tempModalType === this.modalType.create) {
               //添加状态
-              // this.createProduct()
+              this.createAdvertisement()
             } else if (this.tempModalType === this.modalType.edit) {
               //编辑状态
               // this.editProduct()
@@ -467,18 +556,37 @@
           }
         })
       },
+      createAdvertisement() {
+        this.modalViewLoading = true
+        createAdvertisement({...this.advertisementDetail}).then(res => {
+          this.modalViewLoading = false
+          this.modalEdit = false
+          this.$Message.success('创建成功!');
+          this.resetFields()
+          this.getTableData()
+        })
+      },
       searchAdvertisementRelation() {
         if (this.advertisementDetail.relationType === null || this.advertisementDetail.relationType === '') {
           this.$Message.warning('请填写链接类型');
           return
         }
-        this.relationTargetShow = true
-        // {value: 'PRODUCT_DETAILS', label: '商品详情'},
-        // {value: 'STORE_LIVE_TELECAST', label: '门店直播'},
-        // {value: 'MORE_AMUSEMENT', label: '多娱'},
-        // {value: 'EXTERNAL_LINKS', label: '外部链接'}
-        if (this.advertisementDetail.relationType === 'PRODUCT_DETAILS') {
-
+        this.searchModalTableLoading = true
+        let tempObj = this.relationType.find(item => {
+          return item.value === this.advertisementDetail.relationType;
+        });
+        console.log(tempObj);
+        if (tempObj) {
+          this.tempColumns = tempObj.columns
+          console.log(this.tempColumns);
+          tempObj.api({
+            page: 1,
+            rows: 10
+          }).then(res => {
+            this.searchModalTableLoading = false
+            this.relationTargetShow = true
+            this.tempModalTableData = res.array
+          });
         }
       },
       handleRemoveMain(file) {
@@ -488,7 +596,9 @@
       },
       resetFields() {
         this.$refs.modalEdit.resetFields()
-        this.$refs.uploadMain.clearFileList()
+        if (this.$refs.uploadMain) {
+          this.$refs.uploadMain.clearFileList();
+        }
         this.uploadListMain = []
         this.advertisementDetail = _.cloneDeep(advertisementDetail)
       },
@@ -498,14 +608,11 @@
         this.advertisementDetail.content = fileList[0].url
       },
       addChildren() {
-        if (this.tempModalType !== this.modalType.cfreate) {
+        if (this.tempModalType !== this.modalType.create) {
           this.resetFields()
           this.tempModalType = this.modalType.create
         }
-        this.modalEdit = true;
-      },
-      poptipOk() {
-
+        this.modalEdit = true
       },
       onSale() {
 
@@ -525,8 +632,6 @@
         this.advertisementDetail.positionId = value
       },
       advertiseTypeChange(value) {
-        // let i = 1
-        // this.$refs.modalEdit.resetFields()
         if (value === 'WORD') {
           this.$refs.uploadMain.clearFileList()
           this.uploadListMain = []

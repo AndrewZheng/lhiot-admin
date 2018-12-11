@@ -671,6 +671,17 @@ export const changeObjKeyName = (obj, oldKey, newKey) => {
   }
 };
 
+/**
+ * 比较两个时间的大小
+ * @param data1
+ * @param data2
+ */
+export const compareData = (date1, date2) => {
+  let oDate1 = new Date(date1);
+  let oDate2 = new Date(date2);
+  return oDate1.getTime() > oDate2.getTime()
+}
+
 
 
 

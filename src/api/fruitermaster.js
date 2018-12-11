@@ -278,6 +278,15 @@ export const getAdvertisementsPages = (data) => {
   });
 };
 
+//添加广告
+export const createAdvertisement = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/advertisements/',
+    data,
+    method: 'post'
+  });
+};
+
 //根据条件分页查询商品版块信息列表
 export const getProductSectionsPages = (data) => {
   return Vue.prototype.$http.request({
@@ -294,3 +303,5 @@ export const deleteProductSection = ({ids}) => {
     method: 'delete'
   });
 };
+
+
