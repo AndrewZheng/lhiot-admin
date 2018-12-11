@@ -11,6 +11,8 @@
               @on-edit="handleEdit"
               @on-delete="handleDelete"
               @on-sale="onSale"
+              @on-select-all="onSelectionAll"
+              @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
           <Input placeholder="广告名称" class="search-input mr5" v-model="searchRowData.advertiseName"
@@ -296,6 +298,7 @@
   import {
     checkUiPosition,
     createAdvertisement,
+    deleteAdvertisement,
     getAdvertisementsPages,
     getProductShelvesPages
   } from '@/api/fruitermaster';
@@ -514,6 +517,22 @@
       };
     },
     methods: {
+      deleteTable(ids) {
+        this.loading = true
+        deleteAdvertisement({
+          ids
+        }).then(res => {
+            let totalPage = Math.ceil(this.total / this.searchRowData.pageSize)
+            if (this.tableData.length == this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
+              this.searchRowData.page -= 1
+            }
+            this.tableDataSelected = [];
+            this.getTableData();
+          }
+        ).catch(err => {
+          this.loading = false
+        })
+      },
       onRowClick(row, index) {
         this.advertisementDetail.advertiseRelation = row.id
         // this.advertisementDetail.advertiseRelation = row.name

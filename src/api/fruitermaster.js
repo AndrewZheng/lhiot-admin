@@ -247,7 +247,7 @@ export const checkUiPosition = (data) => {
 //根据Id查找商品上架
 export const getProductShelve = ({id}) => {
   return Vue.prototype.$http.request({
-    url: '/product-shelves/'+id,
+    url: '/product-shelves/' + id,
     method: 'get'
   });
 };
@@ -264,7 +264,7 @@ export const getuiPositionsPages = (data) => {
 // 根据Id查找UI位置
 export const getUiPosition = ({id}) => {
   return Vue.prototype.$http.request({
-    url: '/ui-positions/'+id,
+    url: '/ui-positions/' + id,
     method: 'get'
   });
 };
@@ -287,6 +287,14 @@ export const createAdvertisement = (data) => {
   });
 };
 
+//根据广告Ids删除广告
+export const deleteAdvertisement = ({ids}) => {
+  return Vue.prototype.$http.request({
+    url: '/advertisements/' + ids,
+    method: 'delete'
+  });
+};
+
 //根据条件分页查询商品版块信息列表
 export const getProductSectionsPages = (data) => {
   return Vue.prototype.$http.request({
@@ -299,7 +307,7 @@ export const getProductSectionsPages = (data) => {
 //根据商品Ids删除商品版块
 export const deleteProductSection = ({ids}) => {
   return Vue.prototype.$http.request({
-    url: '/product-sections/'+ids,
+    url: '/product-sections/' + ids,
     method: 'delete'
   });
 };
