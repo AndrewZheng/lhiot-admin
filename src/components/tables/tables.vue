@@ -244,8 +244,14 @@ export default {
     handleClear (e) {
       if (e.target.value === '') this.insideTableData = this.value;
     },
-    handleSearch () {
-      this.insideTableData = this.value.filter(item => item[this.searchKey].indexOf(this.searchValue) > -1);
+    handleSearch() {
+      this.insideTableData = this.value.filter(item => {
+        if (typeof item[this.searchKey] === 'string') {
+          return item[this.searchKey].indexOf(this.searchValue) > -1
+        }else {
+          return true
+        }
+      });
     },
     handleTableData () {
       this.insideTableData = this.value.map((item, index) => {

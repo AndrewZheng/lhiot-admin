@@ -1,11 +1,7 @@
 import Cookies from 'js-cookie';
 // cookie保存的天数
 import config from '@/config';
-import {
-  forEach,
-  hasOneOf,
-  objEqual
-} from '@/libs/tools';
+import {forEach, hasOneOf, objEqual} from '@/libs/tools';
 import _ from 'lodash';
 
 export const TOKEN_KEY = 'token';
@@ -676,17 +672,16 @@ export const changeObjKeyName = (obj, oldKey, newKey) => {
 };
 
 /**
- * 搜索框 防止输入过快
- * @param func
- * @param delay
- * @returns {Function}
+ * 比较两个时间的大小
+ * @param data1
+ * @param data2
  */
-export const debounce = (func, delay = 200) => {
-  let timer = null
-  return function (...arg) {
-    timer && clearTimeout(timer)
-    timer = setTimeout(() => {
-      func.apply(this, arg)
-    }, delay)
-  }
+export const compareData = (date1, date2) => {
+  let oDate1 = new Date(date1);
+  let oDate2 = new Date(date2);
+  return oDate1.getTime() > oDate2.getTime()
 }
+
+
+
+

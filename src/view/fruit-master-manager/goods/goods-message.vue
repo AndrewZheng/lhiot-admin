@@ -17,12 +17,12 @@
         <div slot="searchCondition">
           <Row>
             <Input placeholder="商品编码" class="search-input mr5" v-model="searchRowData.code" style="width: auto"
-                   onkeyup="value=value.replace(/[^\d]/g,'')"/>
+                   />
             <Input placeholder="商品名称" class="search-input mr5" v-model="searchRowData.name" style="width: auto"/>
             <Button @click="handleSearch" :loading="searchLoading" class="search-btn mr5" type="primary">
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
-            <Button v-waves @click="handleClear" class="search-btn" type="info">
+            <Button v-waves @click="handleClear" class="search-btn" type="info" :loading="clearSearchLoading">
               <Icon type="md-refresh"/>&nbsp;清除条件
             </Button>
           </Row>
@@ -375,6 +375,8 @@
   import uploadMixin from '@/mixins/uploadMixin'
   import deleteMixin from '@/mixins/deleteMixin.js'
   import tableMixin from '@/mixins/tableMixin.js'
+  import searchMixin from '@/mixins/searchMixin.js'
+  import _ from 'lodash'
 
   const productDetail = {
     id: 0,
@@ -411,9 +413,9 @@
       Tables,
       IViewUpload
     },
-    mixins: [uploadMixin, deleteMixin, tableMixin],
+    mixins: [uploadMixin, deleteMixin, tableMixin,searchMixin],
     mounted() {
-      this.searchRowData = roleRowData
+      this.searchRowData = _.cloneDeep(roleRowData)
       this.loading = true
       this.createLoading = true;
       productSpecificationsUnits().then(res => {
@@ -514,7 +516,6 @@
         defaultListMultiple: [],
         defaultListMain: [],
         defaultListSecond: [],
-        uploadVisible: false,
         uploadListMain: [],
         uploadListSecond: [],
         uploadListMultiple: [],
@@ -559,20 +560,16 @@
           }
         ],
         createLoading: false,
-        searchLoading: false,
         modalViewLoading: false,
         exportExcelLoading: false,
-        searchRowData: roleRowData,
+        searchRowData: _.cloneDeep(roleRowData),
         productDetail: productDetail,
       };
     },
     methods: {
-      handleClear() {
-        // 重置数据
-        this.resetSearchRowData();
-      },
       resetSearchRowData() {
-        this.searchRowData = roleRowData;
+        this.searchRowData = _.cloneDeep(roleRowData);
+        this.getTableData()
       },
       getDefaultCategoryArray(goodsCategoryData) {
         let result = []
@@ -763,17 +760,13 @@
           params: {id: params.row.id, unitsList: this.unitsList, productName: params.row.name}
         });
       },
-      handleSearch() {
-        this.searchRowData.page = 1;
-        this.searchLoading = true
-        this.getTableData()
-      },
       getTableData() {
         getProductPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false
+          this.clearSearchLoading = false
         });
       },
       //删除附图

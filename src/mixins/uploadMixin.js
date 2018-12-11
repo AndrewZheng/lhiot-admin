@@ -2,7 +2,8 @@ let mixin = {
   data() {
     return {
       imageSize: 2048,
-      imgUploadViewItem:''
+      imgUploadViewItem:'',
+      uploadVisible: false,
     }
   },
   methods: {
