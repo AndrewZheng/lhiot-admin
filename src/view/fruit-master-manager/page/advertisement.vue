@@ -127,6 +127,7 @@
     <Modal
       v-model="modalEdit"
       :width="750"
+      :mask-closable="false"
     >
       <p slot="header">
         <span>{{tempModalType===modalType.edit?'修改广告':'创建广告'}}</span>
@@ -214,9 +215,9 @@
             <FormItem label="链接类型:" prop="relationType">
               <Select v-model="advertisementDetail.relationType" @on-change="advertiseRelationTypeChange"
               >
-                <Option class="ptb2-5" style="padding-left: 5px" v-for="(item,index) in relationType"
+                <Option class="ptb2-5"  v-for="(item,index) in relationType"
                         :value="item.value"
-                        :key="index">{{ item.label}}
+                        :key="index">{{item.label}}
                 </Option>
               </Select>
             </FormItem>
@@ -243,9 +244,9 @@
               <Select v-model="advertisementDetail.isPermanent" @on-change="advertiseRelationTypeChange"
                       style="width: 200px"
               >
-                <Option class="ptb2-5" style="padding-left: 5px" v-for="(item,index) in validityTimeList"
+                <Option class="ptb2-5" v-for="(item,index) in validityTimeList"
                         :value="item.value"
-                        :key="index">{{ item.label}}
+                        :key="index">{{item.label}}
                 </Option>
               </Select>
               <Row span="24" v-if="advertisementDetail.isPermanent ==='OFF'" class="mt15">
@@ -268,7 +269,9 @@
     <Modal title="View Image" v-model="uploadVisible">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
-    <Modal title="View Image" v-model="relationTargetShow">
+    <Modal title="View Image"
+           :mask-closable="false"
+           v-model="relationTargetShow">
       <div>search</div>
     </Modal>
   </div>
@@ -276,7 +279,12 @@
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import {checkUiPosition, getAdvertisementsPages, getOnSaleData} from '@/api/fruitermaster';
+  import {
+    checkUiPosition,
+    getAdvertisementsPages,
+    getOnSaleData,
+    getProductShelvesPages
+  } from '@/api/fruitermaster';
   import deleteMixin from '@/mixins/deleteMixin.js';
   import tableMixin from '@/mixins/tableMixin.js'
   import searchMixin from '@/mixins/searchMixin.js'
@@ -352,10 +360,18 @@
           {value: 'IMAGE', label: '图片广告'},
           {value: 'WORD', label: '文字广告'}
         ],
+        // 鲜果师关联类型 -- PRODUCT_DETAILS("商品详情"),
+        // PRODUCT_SECTION("商品版块"),
+        // CUSTOM_PLAN("定制计划"),
+        // CUSTOM_PLAN_SECTION("定制版块"),
+        // ARTICLE_DETAILS("文章详情")
         relationType: [
-          {value: 'PRODUCT_DETAILS', label: '商品详情'},
+          {value: 'PRODUCT_DETAILS', label: '商品详情',api:getProductShelvesPages},
+          {value: 'PRODUCT_SECTION', label: '定制计划',},
+          {value: 'CUSTOM_PLAN', label: '商品版块'},
           {value: 'STORE_LIVE_TELECAST', label: '门店直播'},
-          {value: 'MORE_AMUSEMENT', label: '多娱'},
+          {value: 'CUSTOM_PLAN_SECTION', label: '定制版块'},
+          {value: 'ARTICLE_DETAILS', label: '文章详情'},
           {value: 'EXTERNAL_LINKS', label: '外部链接'},
         ],
         useAble: [{label: '开启', value: 'ON'}, {label: '关闭', value: 'OFF'}],
@@ -454,8 +470,16 @@
       searchAdvertisementRelation() {
         if (this.advertisementDetail.relationType === null || this.advertisementDetail.relationType === '') {
           this.$Message.warning('请填写链接类型');
+          return
         }
+        this.relationTargetShow = true
+        // {value: 'PRODUCT_DETAILS', label: '商品详情'},
+        // {value: 'STORE_LIVE_TELECAST', label: '门店直播'},
+        // {value: 'MORE_AMUSEMENT', label: '多娱'},
+        // {value: 'EXTERNAL_LINKS', label: '外部链接'}
+        if (this.advertisementDetail.relationType === 'PRODUCT_DETAILS') {
 
+        }
       },
       handleRemoveMain(file) {
         this.$refs.uploadMain.deleteFile(file);
