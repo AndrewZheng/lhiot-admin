@@ -283,7 +283,7 @@
   import Tables from '_c/tables';
   import IViewUpload from '_c/iview-upload'
   import {
-    checkUiPosition,
+    getuiPositionsPages,
     createProductShelve,
     deleteProductShelve,
     editProductShelve,
@@ -295,7 +295,7 @@
   import tableMixin from '@/mixins/tableMixin.js'
   import searchMixin from '@/mixins/searchMixin.js'
   import _ from 'lodash'
-
+  import {positionType, YN} from '@/libs/enumerate';
   const productDetail = {
     id: 0,
     image: "",
@@ -332,8 +332,10 @@
       this.loading = true
       this.createLoading = true
       this.searchRowData = _.cloneDeep(roleRowData)
-      checkUiPosition({
-        includeSection: "YES",
+      getuiPositionsPages({
+        applicationType:'HEALTH_GOOD',
+        includeSection: YN.YES,
+        positionType: null,
         page: 0,
         rows: 0
       }).then(res => {

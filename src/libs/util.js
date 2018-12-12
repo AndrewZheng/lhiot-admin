@@ -561,7 +561,7 @@ export const convertTreeCategory = (tree, map, isExpand = false) => {
     let children = item[map.children];
     // 如果有子节点，递归
     if (children.length > 0) {
-      count = count + 1
+      count = count + 1;
       children = convertTreeCategory(children, map, isExpand);
       result.push({
         ...item,
@@ -679,9 +679,5 @@ export const changeObjKeyName = (obj, oldKey, newKey) => {
 export const compareData = (date1, date2) => {
   let oDate1 = new Date(date1);
   let oDate2 = new Date(date2);
-  return oDate1.getTime() > oDate2.getTime()
-}
-
-
-
-
+  return oDate1.getTime() > oDate2.getTime();
+};

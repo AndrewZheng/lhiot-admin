@@ -2,14 +2,14 @@ let mixin = {
   data() {
     return {
       imageSize: 2048,
-      imgUploadViewItem:'',
-      uploadVisible: false,
-    }
+      imgUploadViewItem: '',
+      uploadVisible: false
+    };
   },
   methods: {
     handleUploadView(name) {
       if (typeof name === 'string') {
-        this.imgUploadViewItem = name
+        this.imgUploadViewItem = name;
       } else {
         this.imgUploadViewItem = name.url;
       }
@@ -26,7 +26,7 @@ let mixin = {
         title: 'Exceeding file size limit',
         desc: 'File  ' + file.name + ' is too large, no more than 2M.'
       });
-    },
+    }
   }
-}
-export default mixin
+};
+export default mixin;

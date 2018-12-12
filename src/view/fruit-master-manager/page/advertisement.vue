@@ -10,14 +10,13 @@
               @on-view="handleView"
               @on-edit="handleEdit"
               @on-delete="handleDelete"
-              @on-sale="onSale"
               @on-select-all="onSelectionAll"
               @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
           <Input placeholder="广告名称" class="search-input mr5" v-model="searchRowData.advertiseName"
                  style="width: 150px"/>
-          <Select :disable="selectDisable" v-model="searchRowData.id" class="search-col mr5" placeholder="广告位置"
+          <Select :disable="selectDisable" v-model="searchRowData.positionId" class="search-col mr5" placeholder="广告位置"
                   style="width: 150px">
             <Option v-for="item in advertisementList" :value="item.id" class="pt5 pb5 pl15"
                     :key="`search-col-${item.id}`">{{item.description}}
@@ -59,68 +58,53 @@
     <Modal
       v-model="modalView"
       :mask-closable="false"
+      :width="600"
     >
       <p slot="header">
-        <span>鲜果师详情</span>
+        <span>广告详情</span>
       </p>
       <div class="modal-content">
+        <Row>
+          <i-col span="3">广告内容:</i-col>
+          <i-col v-if="advertisementDetail.advertiseType === 'IMAGE'" span="21" class-name="mb10">
+            <img :src="advertisementDetail.content" style="width: 300px;height: auto"/></i-col>
+          <i-col span="21" v-else class-name="mb10">{{advertisementDetail.content}}</i-col>
+        </Row>
+        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+          <i-col span="3">广告位置:</i-col>
+          <i-col span="21">{{advertisementPositionComputed}}</i-col>
+        </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">ID:</i-col>
-              <i-col span="20">{{fruitMasterDetail.id}}</i-col>
+              <i-col span="8">广告名称:</i-col>
+              <i-col span="16">{{advertisementDetail.advertiseName}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请人:</i-col>
-              <i-col span="16">{{fruitMasterDetail.name}}</i-col>
+              <i-col span="8">广告类型:</i-col>
+              <i-col span="16">{{advertisementTypeComputed}}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">手机号码:</i-col>
-              <i-col span="16">{{fruitMasterDetail.phoneNumber}}</i-col>
+              <i-col span="8">链接类型:</i-col>
+              <i-col span="16">{{relationTypeComputed}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">提取金额:</i-col>
-              <i-col span="16">{{fruitMasterDetail.extractingAmount}}</i-col>
+              <i-col span="8">链接关联:</i-col>
+              <i-col span="16">{{advertisementDetail.advertiseRelation}}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">银行卡号:</i-col>
-              <i-col span="16">{{fruitMasterDetail.creditCardNumbers}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">结算状态:</i-col>
-              <i-col span="16">{{fruitMasterDetail.settlementStatus}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.applicationTime}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">处理时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.handlingTime}}</i-col>
-            </Row>
-          </i-col>
+          <i-col span="3">有效时间:</i-col>
+          <i-col span="21">{{validityPeriodComputed}}</i-col>
         </Row>
       </div>
       <div slot="footer">
@@ -152,7 +136,6 @@
               <Input v-model="advertisementDetail.advertiseName" placeholder="广告名"/>
             </FormItem>
           </Row>
-
           <Row>
             <Col span="12">
             <FormItem label="广告类型:" prop="advertiseType">
@@ -229,7 +212,7 @@
             <Row span="24" align="middle" type="flex">
               <Col span="18">
               <FormItem label="链接目标:" prop="advertiseRelation">
-                <Input v-model="advertisementDetail.advertiseRelation"
+                <Input v-model="advertisementDetail.advertiseRelationText"
                        :disabled="advertisementDetail.relationType !== 'EXTERNAL_LINKS'"/>
               </FormItem>
               </Col>
@@ -296,20 +279,23 @@
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
   import {
-    checkUiPosition,
+    getuiPositionsPages,
     createAdvertisement,
     deleteAdvertisement,
+    editAdvertisement,
     getAdvertisementsPages,
-    getProductShelvesPages
+    getProductShelvesPages,
+    getAdvertisement
   } from '@/api/fruitermaster';
-  import {goods_on_sales_columns} from "@//libs/columns";
+  import {goods_on_sales_columns} from '@//libs/columns';
   import deleteMixin from '@/mixins/deleteMixin.js';
-  import tableMixin from '@/mixins/tableMixin.js'
-  import searchMixin from '@/mixins/searchMixin.js'
-  import uploadMixin from '@/mixins/uploadMixin'
-  import IViewUpload from '_c/iview-upload'
-  import _ from 'lodash'
-  import {compareData} from "@/libs/util";
+  import tableMixin from '@/mixins/tableMixin.js';
+  import searchMixin from '@/mixins/searchMixin.js';
+  import uploadMixin from '@/mixins/uploadMixin';
+  import IViewUpload from '_c/iview-upload';
+  import _ from 'lodash';
+  import {compareData} from '@/libs/util';
+  import {positionType, YN} from '@/libs/enumerate';
 
   const fruitMasterDetail = {
     id: '',
@@ -325,21 +311,23 @@
   const advertisementDetail = {
     id: 0,
     positionId: 0,
-    image: "",
-    advertiseName: "",
-    advertiseRelation: "",
-    advertiseType: "IMAGE",
-    advertiseStatus: "",
+    image: '',
+    advertiseName: '',
+    advertiseRelation: '',
+    advertiseType: 'IMAGE',
+    advertiseStatus: '',
     relationType: '',
     sorting: 0,
-    beginAt: "",
-    endAt: "",
-    createAt: "",
-    isPermanent: 'OFF'
-  }
+    beginAt: '',
+    endAt: '',
+    createAt: '',
+    isPermanent: 'OFF',
+    validityPeriod: '',
+    advertiseRelationText:''
+  };
   const roleRowData = {
     advertiseName: '',
-    id: '',
+    positionId: '',
     page: 1,
     rows: 10
   };
@@ -351,15 +339,17 @@
     },
     mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
     created() {
-      checkUiPosition({
-        includeSection: "NO",
+      getuiPositionsPages({
+        applicationType: 'HEALTH_GOOD',
+        includeSection: YN.NO,
+        positionType: positionType.ADVERTISEMENT,
         page: 0,
         rows: 0
       }).then(res => {
-        this.selectDisable = false
-        this.advertisementList = res.array
+        this.selectDisable = false;
+        this.advertisementList = res.array;
         this.getTableData();
-      })
+      });
     },
     data() {
       return {
@@ -439,9 +429,9 @@
             render: (h, params, vm) => {
               const {row} = params;
               if (row.advertiseType === 'IMAGE') {
-                return <div>{"图片"}</div>;
+                return <div>{'图片'}</div>;
               } else {
-                return <div>{"文字"}</div>;
+                return <div>{'文字'}</div>;
               }
             }
           },
@@ -452,25 +442,25 @@
               const {row} = params;
               switch (row.relationType) {
                 case 'PRODUCT_DETAILS':
-                  return <div>{"商品详情"}</div>;
+                  return <div>{'商品详情'}</div>;
                   break;
                 case 'PRODUCT_SECTION':
-                  return <div>{"定制计划"}</div>;
+                  return <div>{'定制计划'}</div>;
                   break;
                 case 'CUSTOM_PLAN':
-                  return <div>{"商品版块"}</div>;
+                  return <div>{'商品版块'}</div>;
                   break;
                 case 'STORE_LIVE_TELECAST':
-                  return <div>{"门店直播"}</div>;
+                  return <div>{'门店直播'}</div>;
                   break;
                 case 'CUSTOM_PLAN_SECTION':
-                  return <div>{"定制版块"}</div>;
+                  return <div>{'定制版块'}</div>;
                   break;
                 case 'ARTICLE_DETAILS':
-                  return <div>{"文章详情"}</div>;
+                  return <div>{'文章详情'}</div>;
                   break;
                 case 'EXTERNAL_LINKS':
-                  return <div>{"外部链接"}</div>;
+                  return <div>{'外部链接'}</div>;
                   break;
                 default :
                   return <div>{row.relationType}</div>;
@@ -486,10 +476,10 @@
               const {row} = params;
               switch (row.advertiseStatus) {
                 case 'ON':
-                  return <div>{"开启"}</div>;
+                  return <div>{'开启'}</div>;
                   break;
                 case 'OFF':
-                  return <div>{"关闭"}</div>;
+                  return <div>{'关闭'}</div>;
                   break;
                 default :
                   return <div>{row.advertiseStatus}</div>;
@@ -506,7 +496,7 @@
             title: '操作',
             minWidth: 200,
             key: 'handle',
-            options: ['delete', 'edit', 'view', 'onSale']
+            options: ['delete', 'edit', 'view']
           }
         ],
         defaultListMain: [],
@@ -516,147 +506,214 @@
         advertisementDetail: _.cloneDeep(advertisementDetail),
       };
     },
+    computed: {
+      advertisementPositionComputed() {
+        let tempObj = this.advertisementList.find(item => item.id === this.advertisementDetail.positionId);
+        if (tempObj) {
+          return tempObj.description;
+        }
+        return '';
+      },
+      advertisementTypeComputed() {
+        if (this.advertisementDetail.advertiseType === 'IMAGE') {
+          return '图片广告';
+        } else {
+          return '文字广告';
+        }
+      },
+      relationTypeComputed() {
+        let tempObj = this.relationType.find(item => item.value === this.advertisementDetail.relationType);
+        if (tempObj) {
+          return tempObj.label;
+        } else {
+          return advertisementDetail.relationType;
+        }
+      },
+      validityPeriodComputed() {
+        if (!this.advertisementDetail.endAt && !this.advertisementDetail.beginAt) {
+          return '永久有效';
+        } else {
+          return this.advertisementDetail.beginAt + this.advertisementDetail.endAt;
+        }
+        ;
+      }
+    },
     methods: {
       deleteTable(ids) {
-        this.loading = true
+        this.loading = true;
         deleteAdvertisement({
           ids
         }).then(res => {
-            let totalPage = Math.ceil(this.total / this.searchRowData.pageSize)
+            let totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
             if (this.tableData.length == this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
-              this.searchRowData.page -= 1
+              this.searchRowData.page -= 1;
             }
             this.tableDataSelected = [];
             this.getTableData();
           }
         ).catch(err => {
-          this.loading = false
-        })
+          this.loading = false;
+        });
       },
       onRowClick(row, index) {
-        this.advertisementDetail.advertiseRelation = row.id
-        // this.advertisementDetail.advertiseRelation = row.name
+        this.advertisementDetail.advertiseRelation = row.id;
         console.log(row);
         console.log(index);
-        this.relationTargetShow = false
+        this.relationTargetShow = false;
       },
       startTimeChange(value, date) {
-        this.advertisementDetail.beginAt = value
+        this.advertisementDetail.beginAt = value;
       },
       endTimeChange(value, date) {
-        this.advertisementDetail.endAt = value
+        this.advertisementDetail.endAt = value;
       },
       handleSubmit(name) {
         this.$refs[name].validate((valid) => {
           if (this.advertisementDetail.isPermanent === 'OFF') {
             if (this.advertisementDetail.beginAt === '') {
               this.$Message.error('请填写开始时间!');
-              return
+              return;
             }
             if (this.advertisementDetail.endAt === '') {
               this.$Message.error('请填写结束时间!');
-              return
+              return;
             }
             if (compareData(this.advertisementDetail.beginAt, this.advertisementDetail.endAt)) {
               this.$Message.error('结束时间必须大于开始时间!');
-              return
+              return;
             }
           }
           if (valid) {
             if (this.tempModalType === this.modalType.create) {
               //添加状态
-              this.createAdvertisement()
+              this.createTableRow();
             } else if (this.tempModalType === this.modalType.edit) {
               //编辑状态
-              // this.editProduct()
+              this.editTableRow();
             }
           } else {
             this.$Message.error('请完善商品的信息!');
           }
-        })
+        });
       },
-      createAdvertisement() {
-        this.modalViewLoading = true
+      editTableRow() {
+        this.modalViewLoading = true;
+        editAdvertisement({
+          ...this.advertisementDetail
+        }).then(res => {
+          this.resetFields();
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+          this.getTableData();
+        });
+      },
+      createTableRow() {
+        this.modalViewLoading = true;
         createAdvertisement({...this.advertisementDetail}).then(res => {
-          this.modalViewLoading = false
-          this.modalEdit = false
+          this.modalViewLoading = false;
+          this.modalEdit = false;
           this.$Message.success('创建成功!');
-          this.resetFields()
-          this.getTableData()
-        })
+          this.resetFields();
+          this.getTableData();
+        });
       },
       searchAdvertisementRelation() {
         if (this.advertisementDetail.relationType === null || this.advertisementDetail.relationType === '') {
           this.$Message.warning('请填写链接类型');
-          return
+          return;
         }
-        this.searchModalTableLoading = true
+        this.searchModalTableLoading = true;
         let tempObj = this.relationType.find(item => {
           return item.value === this.advertisementDetail.relationType;
         });
         console.log(tempObj);
         if (tempObj) {
-          this.tempColumns = tempObj.columns
+          this.tempColumns = tempObj.columns;
           console.log(this.tempColumns);
           tempObj.api({
             page: 1,
-            rows: 10
+            rows: 10,
+            shelfStatus: 'ON'
           }).then(res => {
-            this.searchModalTableLoading = false
-            this.relationTargetShow = true
-            this.tempModalTableData = res.array
+            this.searchModalTableLoading = false;
+            this.relationTargetShow = true;
+            this.tempModalTableData = res.array;
           });
         }
       },
       handleRemoveMain(file) {
         this.$refs.uploadMain.deleteFile(file);
-        this.uploadListMain = []
-        this.advertisementDetail.content = null
+        this.uploadListMain = [];
+        this.advertisementDetail.content = null;
       },
       resetFields() {
-        this.$refs.modalEdit.resetFields()
+        this.$refs.modalEdit.resetFields();
         if (this.$refs.uploadMain) {
           this.$refs.uploadMain.clearFileList();
         }
-        this.uploadListMain = []
-        this.advertisementDetail = _.cloneDeep(advertisementDetail)
+        this.uploadListMain = [];
+        this.advertisementDetail = _.cloneDeep(advertisementDetail);
       },
       handleSuccessMain(response, file, fileList) {
-        this.uploadListMain = fileList
-        this.advertisementDetail.content = null
-        this.advertisementDetail.content = fileList[0].url
+        this.uploadListMain = fileList;
+        this.advertisementDetail.content = null;
+        this.advertisementDetail.content = fileList[0].url;
       },
       addChildren() {
         if (this.tempModalType !== this.modalType.create) {
-          this.resetFields()
-          this.tempModalType = this.modalType.create
+          this.resetFields();
+          this.tempModalType = this.modalType.create;
         }
-        this.modalEdit = true
-      },
-      onSale() {
-
+        this.tempModalType = this.modalType.create;
+        this.modalEdit = true;
       },
       resetSearchRowData() {
         this.searchRowData = _.cloneDeep(roleRowData);
       },
       handleView(params) {
-        this.fruitMasterDetail = params.row;
+        this.tempModalType = this.modalType.view;
+        this.advertisementDetail = params.row;
         this.modalView = true;
       },
       handleEdit(params) {
-        this.fruitMasterDetail = params.row;
-        this.modalEdit = true;
+        this.tempModalType = this.modalType.edit;
+
+        this.loading = true;
+        getAdvertisement({id: params.row.id}).then(res => {
+          this.advertisementDetail = res;
+          if (this.advertisementDetail.advertiseType === 'IMAGE') {
+            this.setDefaultUploadList(params.row);
+          }
+          ;
+          if (!this.advertisementDetail.endAt && !this.advertisementDetail.beginAt) {
+            this.advertisementDetail.isPermanent = 'ON';
+          } else {
+            this.advertisementDetail.isPermanent = 'OFF';
+          }
+          this.loading = false;
+          this.modalEdit = true;
+        });
+
+      },
+      setDefaultUploadList(res) {
+        if (res.content != null) {
+          const map = {status: 'finished', url: 'url'};
+          let mainImgArr = [];
+          map.url = res.content;
+          mainImgArr.push(map);
+          this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+          this.uploadListMain = mainImgArr;
+        }
       },
       advertisementChange(value) {
-        this.advertisementDetail.positionId = value
+        this.advertisementDetail.positionId = value;
       },
       advertiseTypeChange(value) {
-        if (value === 'WORD') {
-          this.$refs.uploadMain.clearFileList()
-          this.uploadListMain = []
-        }
-        this.advertisementDetail.content = ''
-
+        // if (value === 'WORD') {
+        //   this.$refs.uploadMain.clearFileList();
+        //   this.uploadListMain = [];
+        // }
+        // this.advertisementDetail.content = '';
       },
       advertiseRelationTypeChange(value) {
       },
@@ -668,8 +725,8 @@
           this.tableData = res.array;
           this.total = res.total;
           this.loading = false;
-          this.searchLoading = false
-          this.clearSearchLoading = false
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         });
       },
       exportExcel() {
