@@ -200,7 +200,7 @@ export const editProductSpecification = (data) => {
   });
 };
 
-//根据条件分页查询商品上架信息列表
+// 根据条件分页查询商品上架信息列表
 export const getProductShelvesPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/product-shelves/pages',
@@ -209,7 +209,7 @@ export const getProductShelvesPages = (data) => {
   });
 };
 
-//根据商品上架Ids删除商品上架
+// 根据商品上架Ids删除商品上架
 export const deleteProductShelve = ({ids}) => {
   return Vue.prototype.$http.request({
     url: '/product-shelves/' + ids,
@@ -217,7 +217,7 @@ export const deleteProductShelve = ({ids}) => {
   });
 };
 
-//添加商品上架
+// 添加商品上架
 export const createProductShelve = (data) => {
   return Vue.prototype.$http.request({
     url: '/product-shelves/',
@@ -226,7 +226,7 @@ export const createProductShelve = (data) => {
   });
 };
 
-//修改商品上架
+// 修改商品上架
 export const editProductShelve = (data) => {
   return Vue.prototype.$http.request({
     url: '/product-shelves/' + data.id,
@@ -235,16 +235,7 @@ export const editProductShelve = (data) => {
   });
 };
 
-//查询UI位置列表集合（可包括位置的子板块）
-export const checkUiPosition = (data) => {
-  return Vue.prototype.$http.request({
-    url: '/ui-positions/',
-    data,
-    method: 'post'
-  });
-};
-
-//根据Id查找商品上架
+// 根据Id查找商品上架
 export const getProductShelve = ({id}) => {
   return Vue.prototype.$http.request({
     url: '/product-shelves/' + id,
@@ -269,7 +260,7 @@ export const getUiPosition = ({id}) => {
   });
 };
 
-//根据条件分页查询广告信息列表
+// 根据条件分页查询广告信息列表
 export const getAdvertisementsPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/advertisements/pages',
@@ -278,7 +269,7 @@ export const getAdvertisementsPages = (data) => {
   });
 };
 
-//添加广告
+// 添加广告
 export const createAdvertisement = (data) => {
   return Vue.prototype.$http.request({
     url: '/advertisements/',
@@ -287,7 +278,7 @@ export const createAdvertisement = (data) => {
   });
 };
 
-//根据广告Ids删除广告
+// 根据广告Ids删除广告
 export const deleteAdvertisement = ({ids}) => {
   return Vue.prototype.$http.request({
     url: '/advertisements/' + ids,
@@ -295,7 +286,24 @@ export const deleteAdvertisement = ({ids}) => {
   });
 };
 
-//根据条件分页查询商品版块信息列表
+// 修改广告
+export const editAdvertisement = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/advertisements/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据Id查找广告
+export const getAdvertisement = ({id}) => {
+  return Vue.prototype.$http.request({
+    url: '/advertisements/' + id,
+    method: 'get'
+  });
+};
+
+// 根据条件分页查询商品版块信息列表
 export const getProductSectionsPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/product-sections/pages',
@@ -304,7 +312,7 @@ export const getProductSectionsPages = (data) => {
   });
 };
 
-//根据商品Ids删除商品版块
+// 根据商品Ids删除商品版块
 export const deleteProductSection = ({ids}) => {
   return Vue.prototype.$http.request({
     url: '/product-sections/' + ids,
@@ -312,4 +320,11 @@ export const deleteProductSection = ({ids}) => {
   });
 };
 
-
+// 添加商品版块(包括添加商品关联关系)
+export const createProductSection = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/product-sections/',
+    data,
+    method: 'post'
+  });
+};
