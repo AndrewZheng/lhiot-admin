@@ -328,3 +328,90 @@ export const createProductSection = (data) => {
     method: 'post'
   });
 };
+
+// 修改商品版块
+export const editProductSection = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/product-sections/'+data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 新增商品和板块的关联
+export const addProductSectionRelationBatch = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/product-sections/relation',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据关联id删除商品和板块关联
+export const deleteProductSectionRelationBatch = ({sectionId, shelfIds}) => {
+  return Vue.prototype.$http.request({
+    url: '/product-sections/relation/batches?sectionId='+sectionId+'&shelfIds='+shelfIds,
+    method: 'delete'
+  });
+};
+
+// 根据条件分页查询定制板块信息列表
+export const getCustomPlanSectionsPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-sections/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据条件分页查询定制计划信息列表
+export const getCustomPlanPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plans/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 添加定制板块
+export const createCustomPlanSection = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-sections',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改定制板块
+export const editCustomPlanSection = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-sections/'+data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据ids删除定制板块
+export const deletetCustomPlanSection = ({ids}) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-sections/'+ids,
+    method: 'put'
+  });
+};
+
+// 添加定制版块与定制计划关系
+export const addCustomPlanSectionRelationBatch = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-sections/relation',
+    data,
+    method: 'post'
+  });
+};
+
+// 批量删除定制版块与定制计划架关系
+export const deletetCustomPlanSectionRelationBatch = ({sectionId, planIds}) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-sections/relation/batches?sectionId='+sectionId+'&planIds='+planIds,
+    method: 'delete'
+  });
+};
