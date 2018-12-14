@@ -417,7 +417,7 @@
               sectionId:this.goodsModuleDetail.id,
               shelfId: this.tempOptionsShelfSpecification.id
             }).then(res =>{
-              this.goodsModuleDetail.customPlanList.push(this.tempOptionsShelfSpecification);
+              this.goodsModuleDetail.customPlanList.push({...this.tempOptionsShelfSpecification,relationSort:this.sort});
               this.addTempDataLoading = false;
               this.tempTableLoading =false;
               this.loading = false
@@ -524,7 +524,7 @@
       },
       handleEdit(params) {
         this.tempModalType = this.modalType.edit;
-        this.goodsModuleDetail = params.row;
+        this.goodsModuleDetail = _.cloneDeep(params.row);
         this.setDefaultUploadList(params.row);
         this.modalEdit = true;
       },

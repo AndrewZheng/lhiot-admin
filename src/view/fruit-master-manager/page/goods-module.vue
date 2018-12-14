@@ -465,7 +465,7 @@
             this.loading = true;
             addProductSectionRelationBatch({
               sectionId:this.goodsModuleDetail.id,
-              shelfId:this.optionsShelfSpecification[0].id
+              shelfId:this.tempOptionsShelfSpecification.id
             }).then(res =>{
               this.goodsModuleDetail.productShelfList.push({...this.tempOptionsShelfSpecification});
               this.addTempDataLoading = false;
@@ -577,7 +577,7 @@
       },
       handleEdit(params) {
         this.tempModalType = this.modalType.edit;
-        this.goodsModuleDetail = params.row;
+        this.goodsModuleDetail = _.cloneDeep(params.row);
         this.setDefaultUploadList(params.row);
         this.modalEdit = true;
       },

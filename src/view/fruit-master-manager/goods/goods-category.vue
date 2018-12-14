@@ -113,7 +113,6 @@
   } from "@/api/fruitermaster";
   import {buildMenu, changeObjKeyName, convertTree, getNewTagList} from '@/libs/util';
   import CommonIcon from '_c/common-icon';
-
   export default {
     components: {
       Tables,
@@ -321,9 +320,7 @@
       },
       //编辑分类
       handleEdit(params) {
-        this.editCategory.currentId = params.row.id;
-        this.editCategory.currentName = params.row.groupName;
-        this.editCategory.rank = params.row.rank;
+        this.editCategory = _.cloneDeep(params.row)
         this.modalEditView = true;
       },
       //翻页

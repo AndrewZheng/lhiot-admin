@@ -293,21 +293,9 @@
   import searchMixin from '@/mixins/searchMixin.js';
   import uploadMixin from '@/mixins/uploadMixin';
   import IViewUpload from '_c/iview-upload';
-  import _ from 'lodash';
   import {compareData} from '@/libs/util';
   import {positionType, YN} from '@/libs/enumerate';
 
-  const fruitMasterDetail = {
-    id: '',
-    name: 0,
-    phoneNumber: '',
-    extractingAmount: '',
-    settlementStatus: '',
-    creditCardNumbers: '',
-    headStatus: '',
-    applicationTime: '',
-    handlingTime: '2018-10-28'
-  };
   const advertisementDetail = {
     id: 0,
     positionId: 0,
@@ -502,7 +490,6 @@
         defaultListMain: [],
         uploadListMain: [],
         searchRowData: _.cloneDeep(roleRowData),
-        fruitMasterDetail: fruitMasterDetail,
         advertisementDetail: _.cloneDeep(advertisementDetail),
       };
     },
@@ -534,8 +521,7 @@
           return '永久有效';
         } else {
           return this.advertisementDetail.beginAt + this.advertisementDetail.endAt;
-        }
-        ;
+        };
       }
     },
     methods: {
@@ -609,7 +595,7 @@
       },
       createTableRow() {
         this.modalViewLoading = true;
-        createAdvertisement({...this.advertisementDetail}).then(res => {
+        createAdvertisement({...this.advertisementDetail}).then( res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
@@ -683,8 +669,7 @@
           this.advertisementDetail = res;
           if (this.advertisementDetail.advertiseType === 'IMAGE') {
             this.setDefaultUploadList(params.row);
-          }
-          ;
+          };
           if (!this.advertisementDetail.endAt && !this.advertisementDetail.beginAt) {
             this.advertisementDetail.isPermanent = 'ON';
           } else {

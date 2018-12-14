@@ -325,8 +325,8 @@
         modalViewLoading: false,
         modalView: false,
         modalEdit: false,
-        searchRowData: roleRowData,
-        productStandardDetail: productStandardDetail,
+        searchRowData: _.cloneDeep(roleRowData),
+        productStandardDetail: _.cloneDeep(productStandardDetail),
         // 选中的行
         tableDataSelected: []
       };
@@ -387,7 +387,7 @@
       },
       handleEdit(params) {
         this.tempModalType = this.modalType.edit;
-        this.productStandardDetail = params.row;
+        this.productStandardDetail = _.cloneDeep(params.row);
         this.modalEdit = true;
       },
       handleCreateView() {
