@@ -129,7 +129,7 @@
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="8">积分:</i-col>
-              <i-col span="16">{{userDetail.memberPoints}}</i-col>
+              <i-col span="16">{{userDetail.point}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -181,8 +181,7 @@ const userDetail = {
   baseUserId: null,
   locked: "",
   applicationType: "",
-  paymentPermissions: "",
-  memberPoints:''
+  paymentPermissions: ""
 };
 const roleRowData = {
   applicationType: "",
@@ -249,7 +248,7 @@ export default {
         {
           title: '积分',
           width: 80,
-          key: 'memberPoints',
+          key: 'point',
           sortable: true
         },
         {

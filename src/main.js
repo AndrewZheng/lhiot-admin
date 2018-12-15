@@ -19,7 +19,6 @@ import 'assets/icons/iconfont.css';
 import 'assets/styles/style.scss';
 import moment from 'moment';
 import lodashLib from 'lodash'
-
 // if (process.env.NODE_ENV !== 'production') require('@/mock');
 
 Vue.mixin(Mixin);

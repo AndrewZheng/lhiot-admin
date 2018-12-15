@@ -15,11 +15,25 @@
           <Input placeholder="姓名" class="search-input" v-model="searchRowData.realName" style="width: 100px"/>
           <Input placeholder="手机号码" class="search-input" v-model="searchRowData.phone" style="width: 100px"/>
           <Input placeholder="身份证号码" class="search-input" v-model="searchRowData.idcardNo" style="width: 150px"/>
-          <DatePicker type="datetime" placeholder="注册时间起" class="search-input ml20" v-model="searchRowData.beginCreateAt" style="width: 160px"/>
+          <DatePicker
+            format="yyyy-MM-dd HH:mm:ss"
+            @on-change="startTimeChange"
+            type="datetime"
+            placeholder="注册时间起"
+            class="search-input ml20"
+            v-model="searchRowData.beginCreateAt"
+            style="width: 160px"/>
           <i>-</i>
-          <DatePicker type="datetime" placeholder="注册时间止" class="search-input mr20" v-model="searchRowData.endCreateAt" style="width: 160px"/>
+          <DatePicker
+            format="yyyy-MM-dd HH:mm:ss"
+            @on-change="endTimeChange"
+            type="datetime"
+            placeholder="注册时间止"
+            class="search-input mr20"
+            v-model="searchRowData.endCreateAt"
+            style="width: 160px"/>
           <Select class="search-col" placeholder="审核状态" v-model="searchRowData.auditStatus" style="width:100px" clearable>
-            <Option class="ml15 mt10" v-for="item in userStatus" :value="item.value" :key="item.value" @click="selectOption(item.label)">{{ item.label }}</Option>
+            <Option class="ml15 mt10" v-for="item in userStatus" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
           <Button v-waves @click="handleSearch" class="search-btn ml5" type="primary">
             <Icon type="md-search"/>&nbsp;搜索
@@ -298,8 +312,11 @@
       this.getTableData();
     },
     methods: {
-      selectOption(option){
-
+      startTimeChange(value, date) {
+        this.searchRowData.beginCreateAt = value;
+      },
+      endTimeChange(value, date) {
+        this.searchRowData.endCreateAt = value;
       },
       handleAuditUser(name){
         // if (this.masterDetail.auditStatus !== 'AGREE') {

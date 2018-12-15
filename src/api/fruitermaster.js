@@ -451,3 +451,39 @@ export const editFruitDoctorsQualification = (data) => {
     method: 'put'
   });
 };
+
+// 查询鲜果师成员分页列表
+export const getFruitDoctorsSettlementPagesPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/fruit-doctors/settlement/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 结算申请修改
+export const editFruitDoctorsSettlement = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/fruit-doctors/settlement/'+data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 查询鲜果师成员分页列表
+export const getFruitDoctorsPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/fruit-doctors/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改鲜果师成员信息
+export const editFruitDoctor = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/fruit-doctors/'+data.id,
+    data,
+    method: 'put'
+  });
+};
