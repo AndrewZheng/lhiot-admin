@@ -294,8 +294,8 @@
   import deleteMixin from '@/mixins/deleteMixin.js'
   import tableMixin from '@/mixins/tableMixin.js'
   import searchMixin from '@/mixins/searchMixin.js'
-  import _ from 'lodash'
   import {positionType, YN} from '@/libs/enumerate';
+
   const productDetail = {
     id: 0,
     image: "",
@@ -596,7 +596,7 @@
       },
       handleEdit(params) {
         this.tempModalType = this.modalType.edit
-        this.productDetail = params.row;
+        this.productDetail = _.cloneDeep(params.row);
         this.shelfSpecificationEditDefault = params.row.specificationInfo
         // .length = 0
         // this.shelfSpecificationModel.push(temp)

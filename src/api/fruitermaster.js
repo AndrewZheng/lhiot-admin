@@ -395,7 +395,7 @@ export const editCustomPlanSection = (data) => {
 export const deletetCustomPlanSection = ({ids}) => {
   return Vue.prototype.$http.request({
     url: '/custom-plan-sections/'+ids,
-    method: 'put'
+    method: 'delete'
   });
 };
 
@@ -413,5 +413,77 @@ export const deletetCustomPlanSectionRelationBatch = ({sectionId, planIds}) => {
   return Vue.prototype.$http.request({
     url: '/custom-plan-sections/relation/batches?sectionId='+sectionId+'&planIds='+planIds,
     method: 'delete'
+  });
+};
+
+// 查询用户分页列表
+export const getUserPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/users/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改用户锁状态
+export const editUser = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/users/'+data.id+'/locked-status?lockStatus='+data.lockStatus,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询鲜果师申请记录列表
+export const getFruitDoctorsQualificationsPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/fruit-doctors/qualifications/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据id更新鲜果师申请记录
+export const editFruitDoctorsQualification = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/fruit-doctors/qualifications/'+data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 查询鲜果师成员分页列表
+export const getFruitDoctorsSettlementPagesPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/fruit-doctors/settlement/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 结算申请修改
+export const editFruitDoctorsSettlement = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/fruit-doctors/settlement/'+data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 查询鲜果师成员分页列表
+export const getFruitDoctorsPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/fruit-doctors/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改鲜果师成员信息
+export const editFruitDoctor = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/fruit-doctors/'+data.id,
+    data,
+    method: 'put'
   });
 };

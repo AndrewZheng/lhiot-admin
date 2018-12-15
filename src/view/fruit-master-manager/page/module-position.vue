@@ -9,7 +9,6 @@
               :loading="loading"
               :searchAreaColumn="24"
               @on-view="handleView"
-              @on-edit="handleEdit"
       >
         <div slot="searchCondition">
           <Input :clearable="true" placeholder="板块位置描述" class="search-input mr5" v-model="searchRowData.description"
@@ -100,7 +99,6 @@
   import {getUiPosition, getuiPositionsPages} from '@/api/fruitermaster';
   import tableMixin from '@/mixins/tableMixin.js'
   import searchMixin from '@/mixins/searchMixin.js'
-  import _ from 'lodash'
 
   const uiPositionDetail = {
     applicationType: "HEALTH_GOOD",
@@ -224,7 +222,7 @@
           }
         ],
         searchRowData: _.cloneDeep(roleRowData),
-        uiPositionDetail: uiPositionDetail
+        uiPositionDetail: _.cloneDeep(uiPositionDetail)
       };
     },
     methods: {
@@ -238,10 +236,6 @@
           this.modalView = true;
           this.loading = false
         })
-      },
-      handleEdit(params) {
-        this.fruitMasterDetail = params.row;
-        params.row.this.modalEdit = true;
       },
       getTableData() {
         getuiPositionsPages(this.searchRowData).then(res => {

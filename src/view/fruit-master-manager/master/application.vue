@@ -8,18 +8,38 @@
               :columns="columns"
               :loading="loading"
               @on-view="handleView"
+              :searchAreaColumn="24"
+              @on-auditor="onAuditor"
       >
         <div slot="searchCondition">
-          <Input placeholder="姓名" class="search-input" v-model="searchRowData.name" style="width: 100px"/>
-          <Input placeholder="手机号码" class="search-input" v-model="searchRowData.phoneNumber" style="width: 100px"/>
-          <Input placeholder="身份证号码" class="search-input" v-model="searchRowData.idCard" style="width: 150px"/>
-          <DatePicker type="datetime" placeholder="注册时间起" class="search-input ml20" v-model="searchRowData.timeStart" style="width: 160px"/>
-          <DatePicker type="datetime" placeholder="注册时间止" class="search-input mr20" v-model="searchRowData.timeEnd" style="width: 160px"/>
-          <Select class="search-col" placeholder="审核状态" v-model="searchRowData.status" style="width:100px" clearable>
-            <Option class="ml15 mt10" v-for="item in userStatus" :value="item.value" :key="item.value">{{ item.value }}</Option>
+          <Input placeholder="姓名" class="search-input" v-model="searchRowData.realName" style="width: 100px"/>
+          <Input placeholder="手机号码" class="search-input" v-model="searchRowData.phone" style="width: 100px"/>
+          <Input placeholder="身份证号码" class="search-input" v-model="searchRowData.idcardNo" style="width: 150px"/>
+          <DatePicker
+            format="yyyy-MM-dd HH:mm:ss"
+            @on-change="startTimeChange"
+            type="datetime"
+            placeholder="注册时间起"
+            class="search-input ml20"
+            v-model="searchRowData.beginCreateAt"
+            style="width: 160px"/>
+          <i>-</i>
+          <DatePicker
+            format="yyyy-MM-dd HH:mm:ss"
+            @on-change="endTimeChange"
+            type="datetime"
+            placeholder="注册时间止"
+            class="search-input mr20"
+            v-model="searchRowData.endCreateAt"
+            style="width: 160px"/>
+          <Select class="search-col" placeholder="审核状态" v-model="searchRowData.auditStatus" style="width:100px" clearable>
+            <Option class="ml15 mt10" v-for="item in userStatus" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
           <Button v-waves @click="handleSearch" class="search-btn ml5" type="primary">
             <Icon type="md-search"/>&nbsp;搜索
+          </Button>
+          <Button v-waves @click="handleClear" class="search-btn" type="info" :loading="clearSearchLoading">
+            <Icon type="md-refresh"/>&nbsp;清除条件
           </Button>
         </div>
       </tables>
@@ -49,7 +69,7 @@
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle">
               <i-col span="4">姓名:</i-col>
-              <i-col span="20">{{masterDetail.name}}</i-col>
+              <i-col span="20">{{masterDetail.realName}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -57,13 +77,13 @@
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle">
               <i-col span="8">手机号码:</i-col>
-              <i-col span="16">{{masterDetail.phoneNumber}}</i-col>
+              <i-col span="16">{{masterDetail.phone}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle">
               <i-col span="8">身份证号码:</i-col>
-              <i-col span="16">{{masterDetail.unionid}}</i-col>
+              <i-col span="16">{{masterDetail.idcardNo}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -71,7 +91,7 @@
           <i-col span="24">
             <Row type="flex" :gutter="8" align="middle" >
               <i-col span="10">申请时间:</i-col>
-              <i-col span="14">{{masterDetail.level}}</i-col>
+              <i-col span="14">{{masterDetail.createTime}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -79,7 +99,7 @@
           <i-col span="24">
               <i-col span="4">身份证正面照:</i-col>
               <i-col span="20">
-                <img src="https://i.loli.net/2017/08/21/599a521472424.jpg" style="width: 200px;height: auto"/>
+                <img :src="masterDetail.idcardFront" style="width: 200px;height: auto"/>
               </i-col>
           </i-col>
         </Row>
@@ -87,50 +107,65 @@
           <i-col span="24">
             <i-col span="4">身份证反面照:</i-col>
             <i-col span="20">
-              <img src="https://i.loli.net/2017/08/21/599a521472424.jpg" style="width: 200px;height: auto"/>
+              <img :src="masterDetail.idcardReverse" style="width: 200px;height: auto"/>
             </i-col>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="24">
-            <i-col span="4">   资质证明:</i-col>
+            <i-col span="4">资质证明:</i-col>
             <i-col span="20">
-              <img src="https://i.loli.net/2017/08/21/599a521472424.jpg" style="width: 200px;height: auto"/>
+              <img :src="masterDetail.credentials" style="width: 200px;height: auto"/>
             </i-col>
           </i-col>
         </Row>
         <Divider orientation="center">审核信息</Divider>
-        <Row type="flex" :gutter="8" align="middle" class="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle">
-              <i-col span="8">审核状态:</i-col>
-              <i-col span="16">审核未通过</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle">
-              <i-col span="8">审核时间:</i-col>
-              <i-col span="16">2018-10-28</i-col>
-            </Row>
-          </i-col>
+        <Row v-if="tempModalType === modalType.view">
+          <Row type="flex" :gutter="8" align="middle" class="mb10">
+            <i-col span="12">
+              <Row type="flex" :gutter="8" align="middle">
+                <i-col span="8">审核状态:</i-col>
+                <i-col span="16">{{auditStatusComputed}}</i-col>
+              </Row>
+            </i-col>
+            <i-col span="12">
+              <Row type="flex" :gutter="8" align="middle">
+                <i-col span="8">审核时间:</i-col>
+                <i-col span="16">{{masterDetail.auditTime}}</i-col>
+              </Row>
+            </i-col>
+          </Row>
+          <Row type="flex" :gutter="8" align="middle" class="mb10">
+            <i-col span="12">
+              <Row type="flex" :gutter="8" align="middle">
+                <i-col span="8">审核人:</i-col>
+                <i-col span="16">{{masterDetail.auditUser}}</i-col>
+              </Row>
+            </i-col>
+            <i-col span="12">
+              <Row type="flex" :gutter="8" align="middle">
+                <i-col span="8">审核备注:</i-col>
+                <i-col span="16">{{masterDetail.failureReason}}</i-col>
+              </Row>
+            </i-col>
+          </Row>
         </Row>
-        <Row type="flex" :gutter="8" align="middle" class="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle">
-              <i-col span="8">审核人:</i-col>
-              <i-col span="16">李红</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle">
-              <i-col span="8">审核备注:</i-col>
-              <i-col span="16">身份证正面信息模糊</i-col>
-            </Row>
-          </i-col>
-        </Row>
+        <Form ref="modalEdit" :model="masterDetail" :rules="ruleInline" :label-width="80" v-if="tempModalType === modalType.edit">
+          <FormItem label="审核状态:" prop="">
+            <Select class="search-col" placeholder="审核状态" v-model="masterDetail.auditStatus" style="width:100px" clearable>
+              <Option class="ml15 mt10" v-for="item in userStatus" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="审核人:">
+            <i-col>{{masterDetail.auditUser}}</i-col>
+          </FormItem>
+          <FormItem label="审核备注:" prop="failureReason">
+            <Input type="textarea" v-model="masterDetail.failureReason"/>
+          </FormItem>
+        </Form>
       </div>
-      <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+      <div slot="footer" v-if="tempModalType === modalType.edit">
+        <Button type="primary" @click="handleAuditUser('modalEdit')" :loading="auditUserLoading">审核</Button>
       </div>
     </Modal>
   </div>
@@ -138,37 +173,65 @@
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import {getMasterApplication} from '@/api/fruitermaster';
+  import {getFruitDoctorsQualificationsPages,editFruitDoctorsQualification} from '@/api/fruitermaster';
+  import tableMixin from '@/mixins/tableMixin.js';
+  import searchMixin from '@/mixins/searchMixin.js';
 
   const masterDetail = {
-    id: '',
-    name: 0,
-    phoneNumber: '',
-    inviteCode: '',
-    level: '',
-    status: '',
-    headStatus: '',
-    cash: ''
+    id:1,
+    idcardNo:"",
+    phone:"",
+    verificationCode:null,
+    idcardFront:"",
+    idcardReverse:"",
+    credentials:"",
+    failureReason:null,
+    auditStatus:"",
+    createAt:null,
+    realName:"",
+    auditAt:null,
+    auditUser:null,
+    userId:null,
+    beginCreateAt:null,
+    endCreateAt:null,
+    auditTime:null
   };
 
   const roleRowData = {
-    name: '',
-    phoneNumber: '',
-    idCard: '',
-    timeStart: '',
-    timeEnd: '',
-    status: ''
+    auditStatus: null,
+    beginCreateAt: "",
+    endCreateAt: "",
+    idcardNo: "",
+    page: 1,
+    phone: "",
+    realName: "",
+    rows: 10
   };
 
   export default {
     components: {
       Tables
     },
+    mixins:[tableMixin,searchMixin],
+    computed:{
+      auditStatusComputed(){
+        if (this.masterDetail.auditStatus === 'UNAUDITED') {
+          return '待审核';
+        } else if (this.masterDetail.auditStatus === 'AGREE') {
+          return '审核通过';
+        }else if (this.masterDetail.auditStatus === 'REJECT') {
+          return '审核不通过';
+        }else {
+          return this.masterDetail.auditStatus;
+        };
+      }
+    },
     data() {
       return {
+        ruleInline:{},
         columns: [
           {
-            title: '编号',
+            title: 'ID',
             key: 'id',
             sortable: true,
             width: 80,
@@ -177,32 +240,44 @@
           {
             title: '姓名',
             width: 150,
-            key: 'name'
+            key: 'realName'
           },
           {
             title: '手机号码',
             width: 150,
-            key: 'phoneNumber'
+            key: 'phone'
           },
           {
             title: '身份证号码',
             width: 200,
-            key: 'idCard'
+            key: 'idcardNo'
           },
           {
             title: '审核状态',
             width: 150,
-            key: 'status'
+            key: 'auditStatus',
+            render: (h, params, vm) => {
+              const {row} = params;
+              if (row.auditStatus === 'UNAUDITED') {
+                return <div>{'待审核'}</div>;
+              } else if (row.auditStatus === 'AGREE') {
+                return <div>{'审核通过'}</div>;
+              }else if (row.auditStatus === 'REJECT') {
+                return <div>{'审核不通过'}</div>;
+              }else {
+                return <div>{row.auditStatus}</div>;
+              };
+            }
           },
           {
             title: '申请时间',
-            key: 'applicationTime',
+            key: 'createTime',
             width: 150,
             sortable: true
           },
           {
             title: '审核时间',
-            key: 'checkTime',
+            key: 'auditTime',
             minWidth: 150,
             sortable: true
           },
@@ -210,30 +285,26 @@
             title: '操作',
             minWidth: 150,
             key: 'handle',
-            options: ['view']
+            fixed: 'right',
+            options: ['view','auditor']
           }
         ],
-        modalView:false,
-        tableData: [],
-        total: 0,
-        page: 1,
-        pageSize: 10,
-        loading: true,
-        rowData: roleRowData,
-        masterDetail,
-        searchRowData: roleRowData,
+        auditUserLoading:false,
+        masterDetail: this._.cloneDeep(masterDetail),
+        searchRowData: _.cloneDeep(roleRowData),
+        // 审核状态（UNAUDITED 待审核 AGREE 审核通过 REJECT 审核不通过）
         userStatus: [
           {
-            key: 'INITIAL',
-            value: '审核通过'
+            label: '待审核',
+            value: 'UNAUDITED'
           },
           {
-            key: 'AVAILABLE',
-            value: '审核未通过'
+            label: '审核通过',
+            value: 'AGREE'
           },
           {
-            key: 'UNAVAILABLE',
-            value: '审核中'
+            label: '审核不通过',
+            value: 'REJECT'
           }]
       };
     },
@@ -241,32 +312,51 @@
       this.getTableData();
     },
     methods: {
-      handleView(params){
+      startTimeChange(value, date) {
+        this.searchRowData.beginCreateAt = value;
+      },
+      endTimeChange(value, date) {
+        this.searchRowData.endCreateAt = value;
+      },
+      handleAuditUser(name){
+        // if (this.masterDetail.auditStatus !== 'AGREE') {
+        //   if (!this.masterDetail.failureReason ||this.masterDetail.failureReason === '') {
+        //     this.$Message.warning("请填写审核备注")
+        //     return
+        //   };
+        // };
+        this.auditUserLoading = true
+        editFruitDoctorsQualification({
+          userId:this.masterDetail.userId,
+          id:this.masterDetail.id,
+          auditStatus:this.masterDetail.auditStatus,
+          failureReason:this.masterDetail.failureReason
+        }).then(res => {
+          this.getTableData()
+        }).finally(res => {
+          this.modalView = false
+          this.auditUserLoading = false
+        })
+      },
+      onAuditor(params) {
+        this.tempModalType = this.modalType.edit
+        this.masterDetail = _.cloneDeep(params.row)
+        this.modalView = true
+      },
+      resetSearchRowData() {
+        this.searchRowData = _.cloneDeep(roleRowData);
+      },
+      handleView(params) {
+        this.tempModalType = this.modalType.view
         this.masterDetail = params.row
         this.modalView = true
       },
-      handleClose(){
-        this.modalView = false
-      },
-      handleSearch() {
-      },
-      changePage(page) {
-        this.page = page;
-        this.getTableData();
-      },
-      changePageSize(pageSize) {
-        this.page = 1;
-        this.pageSize = pageSize;
-        this.getTableData();
-      },
       getTableData() {
-        getMasterApplication({
-          page: this.page,
-          rows: this.pageSize
-        }).then(res => {
+        getFruitDoctorsQualificationsPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;
           this.loading = false;
+          this.clearSearchLoading = false
         });
       }
     }

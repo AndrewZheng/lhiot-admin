@@ -376,7 +376,6 @@
   import deleteMixin from '@/mixins/deleteMixin.js'
   import tableMixin from '@/mixins/tableMixin.js'
   import searchMixin from '@/mixins/searchMixin.js'
-  import _ from 'lodash'
 
   const productDetail = {
     id: 0,
@@ -563,7 +562,7 @@
         modalViewLoading: false,
         exportExcelLoading: false,
         searchRowData: _.cloneDeep(roleRowData),
-        productDetail: productDetail,
+        productDetail: _.cloneDeep(productDetail),
       };
     },
     methods: {

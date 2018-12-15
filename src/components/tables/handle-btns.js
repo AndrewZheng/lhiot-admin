@@ -282,15 +282,16 @@ const btns = {
       }
     })]);
   },
+  // 用户锁定状态按钮
   usable: (h, params, vm) => {
     const {
       row
     } = params;
-    if (row.userStatus) {
+    if (row.locked === 'LOCK') {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要禁用该账号吗?'
+          title: '确认要解除该账号的禁用吗?'
         },
         style: {
           marginRight: '5px'
@@ -320,7 +321,7 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要解除该账号的禁用吗?'
+          title: '确认要禁用该账号吗?'
         },
         style: {
           marginRight: '5px'
@@ -346,6 +347,34 @@ const btns = {
           })
         ])
       ]);
+    }
+  },
+  // 鲜果师审核
+  auditor: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.auditStatus !== 'AGREE') {
+      return h('Button', {
+        props: {
+          type: 'success',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-auditor', params);
+          }
+        }
+      }, [h('Icon', {
+        props: {
+          type: 'ios-eye-outline',
+          size: 16,
+          color: '#fff'
+        }
+      })]);
     }
   }
 };

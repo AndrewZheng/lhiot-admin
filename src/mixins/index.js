@@ -29,6 +29,45 @@ let mixin = {
       ]
     };
   },
+  filters: {
+    // 结算状态(UNSETTLED-未处理 SUCCESS-已成功 EXPIRED-已过期)
+    settlementStatusFilters(name) {
+      switch (name) {
+        case 'UNSETTLED':
+          return '未结算';
+        case 'SUCCESS':
+          return '已结算';
+        case 'EXPIRED':
+          return '已过期';
+        default: '';
+          break;
+      }
+    },
+    // 鲜果师等级 培训中:TRAINING、初级:PRIMARY、中高级:SENIOR
+    doctorLevelFilters(name) {
+      switch (name) {
+        case 'TRAINING':
+          return '培训中';
+        case 'PRIMARY':
+          return '初级';
+        case 'SENIOR':
+          return '中高级';
+        default: '';
+          break;
+      }
+    },
+    // 鲜果师状态 VALID:正常 INVALID:已停用
+    doctorStatusFilters(name) {
+      switch (name) {
+        case 'VALID':
+          return '正常';
+        case 'INVALID':
+          return '已停用';
+        default: '';
+          break;
+      }
+    }
+  },
   computed: {
     userInfo() {
       return this.$store.getters.getUserInfo;
