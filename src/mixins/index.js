@@ -30,6 +30,13 @@ let mixin = {
     };
   },
   filters: {
+    // 计算分转元 保留两位小数
+    fenToYuanDot2Filters(number){
+      if (typeof number === 'number') {
+        return '¥' + (number/100.00).toFixed(2);
+      }
+      return number;
+    },
     // 结算状态(UNSETTLED-未处理 SUCCESS-已成功 EXPIRED-已过期)
     settlementStatusFilters(name) {
       switch (name) {
@@ -39,8 +46,8 @@ let mixin = {
           return '已结算';
         case 'EXPIRED':
           return '已过期';
-        default: '';
-          break;
+        default:
+          return name;
       }
     },
     // 鲜果师等级 培训中:TRAINING、初级:PRIMARY、中高级:SENIOR
@@ -52,8 +59,8 @@ let mixin = {
           return '初级';
         case 'SENIOR':
           return '中高级';
-        default: '';
-          break;
+        default: ;
+          return name;
       }
     },
     // 鲜果师状态 VALID:正常 INVALID:已停用
@@ -63,8 +70,72 @@ let mixin = {
           return '正常';
         case 'INVALID':
           return '已停用';
-        default: '';
-          break;
+        default: ;
+          return name;
+      }
+    },
+    // 订单状态
+    // WAIT_PAYMENT-待支付
+    // WAIT_SEND_OUT-待出库
+    // SEND_OUTING,出库中
+    // WAIT_DISPATCHING-待配送,
+    // DISPATCHING-配送中,
+    // RECEIVED-已收货,
+    // RETURNING-退货中,
+    // RETURN_FAILURE-退款失败,
+    // ALREADY_RETURN-退货完成
+    // FAILURE-已失效,
+    // FINISHED-完成
+    orderStatusFilters (status) {
+      switch (status) {
+        case 'WAIT_PAYMENT':
+          return '待支付';
+        case 'WAIT_SEND_OUT':
+          return '待出库';
+        case 'SEND_OUTING':
+          return '出库中';
+        case 'WAIT_DISPATCHING':
+          return '待配送';
+        case 'DISPATCHING':
+          return '配送中';
+        case 'RECEIVED':
+          return '已收货';
+        case 'RETURNING':
+          return '退货中';
+        case 'RETURN_FAILURE':
+          return '退款失败';
+        case 'ALREADY_RETURN':
+          return '退货完成';
+        case 'FAILURE':
+          return '已失效';
+        case 'FINISHED':
+          return '完成';
+        default :
+          return status
+      }
+    },
+    // 提货方式 TO_THE_STORE-门店自提,TO_THE_HOME-送货上门
+    receivingWayFilters(status){
+      switch (status) {
+        case 'TO_THE_STORE':
+          return '门店自提';
+        case 'TO_THE_HOME':
+          return '送货上门';
+        default :
+          return status
+      }
+    },
+    // 订单类型：NORMAL-普通订单,CUSTOM-定制订单,TEAM_BUY-团购订单
+    orderTypeFilters(status) {
+      switch (status) {
+        case 'NORMAL':
+          return '普通订单';
+        case 'CUSTOM':
+          return '定制订单';
+        case 'TEAM_BUY':
+          return '团购订单';
+        default :
+          return status
       }
     }
   },

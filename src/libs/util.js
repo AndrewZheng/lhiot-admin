@@ -681,3 +681,13 @@ export const compareData = (date1, date2) => {
   let oDate2 = new Date(date2);
   return oDate1.getTime() > oDate2.getTime();
 };
+
+/**
+ * 计算分转元 保留两位小数
+ */
+export const fenToYuanDot2 = (number) => {
+  if (typeof number === 'number') {
+    return '¥' + (number/100.00).toFixed(2);
+  }
+  return number;
+};

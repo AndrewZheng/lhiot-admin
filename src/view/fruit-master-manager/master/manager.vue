@@ -207,7 +207,7 @@
               </FormItem>
             </Col>
             <Col span="12">
-              <FormItem label="鲜果师状态:">
+              <FormItem label="鲜果师状态:" prop="doctorStatus">
                 <Select class="search-col mr5" placeholder="鲜果师状态" v-model="managerDetail.doctorStatus" style="width:100px" clearable>
                   <Option class="ptb2-5" v-for="item in doctorStatus" :value="item.value" :key="item.value">{{ item.label}}</Option>
                 </Select>
@@ -373,7 +373,14 @@
         defaultListSecond:[],
         uploadListSecond:[],
         ruleInline:{
-          upperbodyPhoto:{required: true, message: '请上传图片'}
+          realName:{required: true, message: '请填写姓名'},
+          phone:{required: true, message: '请填写电话号码'},
+          upperbodyPhoto:{required: true, message: '请上传图片'},
+          photo:{required: true, message: '请上传图片'},
+          doctorStatus:{required: true, message: '请选择鲜果师状态'},
+          doctorLevel:{required: true, message: '请选择鲜果师等级'},
+          jobTitle:{required: true, message: '请填写鲜果师头衔'},
+          profile:{required: true, message: '请填写鲜果师个人简历'}
         },
         columns: [
           {
