@@ -376,6 +376,73 @@ const btns = {
         }
       })]);
     }
-  }
+  },
+  // articleStatus发布状态（PUBLISH-发布 UN_PUBLISH-未发布）
+  onArticleStatus: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.articleStatus === 'PUBLISH') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要把该文章改为未发布吗?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-publish', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-cloud-upload',
+              size: 16,
+              color: '#green'
+            }
+          })
+        ])
+      ]);
+    } else {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要把该文章改未发布吗?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-publish', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-cloud-download',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
+    }
+  },
 };
 export default btns;

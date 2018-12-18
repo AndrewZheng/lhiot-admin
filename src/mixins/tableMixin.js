@@ -13,7 +13,7 @@ let mixin = {
         edit: 'edit',
         create: 'create'
       },
-      tempModalType: 'create',
+      tempModalType: 'create'
     }
   },
   methods: {
@@ -31,7 +31,7 @@ let mixin = {
     },
     handleClose() {
       this.modalView = false;
-    },
+    }
   }
 }
 export default mixin

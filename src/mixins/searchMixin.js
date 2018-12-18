@@ -14,6 +14,8 @@ let minxin = {
     handleClear() {
       // 重置数据
       this.resetSearchRowData();
+      this.page = 1;
+      this.pageSize = 10;
       this.clearSearchLoading = true;
       this.handleSearch();
     }

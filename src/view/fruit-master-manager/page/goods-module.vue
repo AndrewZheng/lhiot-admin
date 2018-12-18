@@ -221,7 +221,7 @@
   import searchMixin from '@/mixins/searchMixin.js';
   import uploadMixin from '@/mixins/uploadMixin';
   import IViewUpload from '_c/iview-upload';
-  import {positionType, YN} from '@/libs/enumerate';
+  import {positionTypeEnum, YNEnum} from '@/libs/enumerate';
 
   const goodsModuleDetail = {
     id: 0,
@@ -293,8 +293,8 @@
     created() {
       getuiPositionsPages({
         applicationType: 'HEALTH_GOOD',
-        includeSection: YN.NO,
-        positionType: positionType.PRODUCT,
+        includeSection: YNEnum.NO,
+        positionType: positionTypeEnum.PRODUCT,
         page: 0,
         rows: 0
       }).then(res => {

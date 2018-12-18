@@ -487,3 +487,98 @@ export const editFruitDoctor = (data) => {
     method: 'put'
   });
 };
+
+// 根据条件分页查询文章信息列表
+export const getArticlesPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/articles/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 添加文章
+export const createArticle = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/articles',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Id删除文章
+export const deleteArticle = ({ids}) => {
+  return Vue.prototype.$http.request({
+    url: '/articles/'+ids,
+    method: 'delete'
+  });
+};
+
+// 修改文章
+export const editArticle = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/articles/'+data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页获取订单列表
+export const getOrdersPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/orders/pages/',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据订单code查询订单详情
+export const getOrderDetail = ({code}) => {
+  return Vue.prototype.$http.request({
+    url: '/orders/'+code,
+    method: 'get'
+  });
+};
+
+// 海鼎订单调货
+export const transferHdOrder = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/orders/'+data.code+'/store?storeId='+data.storeId,
+    method: 'put'
+  });
+};
+
+// 根据位置查询门店所有列表根据距离排序
+export const getStore = () => {
+  return Vue.prototype.$http.request({
+    url: '/stores/pages',
+    data: {applicationType: 'HEALTH_GOOD'},
+    method: 'post'
+  });
+};
+
+// 根据条件分页查询定制订单信息列表
+export const getCustomOrdersPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-orders/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 查询定制计划规格基础数据分页列表
+export const getcustomPlanSpecificationStandardsPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-specification-standards/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据orderCode查询定制订单信息
+export const getcustomOrders = ({id}) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-orders/'+id,
+    method: 'get'
+  });
+};

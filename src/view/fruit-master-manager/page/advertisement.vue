@@ -294,7 +294,7 @@
   import uploadMixin from '@/mixins/uploadMixin';
   import IViewUpload from '_c/iview-upload';
   import {compareData} from '@/libs/util';
-  import {positionType, YN} from '@/libs/enumerate';
+  import {positionTypeEnum, YNEnum} from '@/libs/enumerate';
 
   const advertisementDetail = {
     id: 0,
@@ -329,8 +329,8 @@
     created() {
       getuiPositionsPages({
         applicationType: 'HEALTH_GOOD',
-        includeSection: YN.NO,
-        positionType: positionType.ADVERTISEMENT,
+        includeSection: YNEnum.NO,
+        positionType: positionTypeEnum.ADVERTISEMENT,
         page: 0,
         rows: 0
       }).then(res => {

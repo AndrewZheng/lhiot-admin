@@ -294,7 +294,7 @@
   import deleteMixin from '@/mixins/deleteMixin.js'
   import tableMixin from '@/mixins/tableMixin.js'
   import searchMixin from '@/mixins/searchMixin.js'
-  import {positionType, YN} from '@/libs/enumerate';
+  import {positionTypeEnum, YNEnum} from '@/libs/enumerate';
 
   const productDetail = {
     id: 0,
@@ -334,7 +334,7 @@
       this.searchRowData = _.cloneDeep(roleRowData)
       getuiPositionsPages({
         applicationType:'HEALTH_GOOD',
-        includeSection: YN.YES,
+        includeSection: YNEnum.YES,
         positionType: null,
         page: 0,
         rows: 0

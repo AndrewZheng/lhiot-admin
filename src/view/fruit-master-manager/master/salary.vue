@@ -231,6 +231,8 @@
   import {getFruitDoctorsSettlementPagesPages,editFruitDoctorsSettlement} from '@/api/fruitermaster';
   import tableMixin from '@/mixins/tableMixin.js';
   import searchMixin from '@/mixins/searchMixin.js';
+  import {settlementStatusConvert} from '@/libs/converStatus';
+  import {settlementStatusEnum,settlementStatus} from '@/libs/enumerate';
 
   const salaryDetail = {
     doctorId:0,
@@ -296,18 +298,9 @@
           {
             title: '结算状态',
             width: 150,
-            key: 'settlementStatus',
             render: (h, params, vm) => {
               const {row} = params;
-              if (row.settlementStatus === 'UNSETTLED'){
-                return <div>{'未结算'}</div>
-              }else if (row.settlementStatus === 'SUCCESS') {
-                return <div>{'已结算'}</div>
-              }else if (row.settlementStatus === 'EXPIRED') {
-                return <div>{'已过期'}</div>;
-              } else {
-                return <div>{row.settlementStatus}</div>;
-              };
+              return <div>{settlementStatusConvert(row.settlementStatus).label}</div>
             }
           },
           {
@@ -335,11 +328,7 @@
             options: ['view', 'edit']
           }
         ],
-        userStatus:[
-          {value:'UNSETTLED',label:'未结算'},
-          {value:'SUCCESS',label:'已结算'},
-          {value:'EXPIRED',label:'已过期'},
-        ],
+        userStatus:settlementStatusEnum,
         editStatus:[
           {value:'UNSETTLED',label:'未结算'},
           {value:'SUCCESS',label:'已结算'}
@@ -382,7 +371,7 @@
       },
       handleEdit(params) {
         this.tempModalType = this.modalType.edit
-        if (params.row.settlementStatus === 'EXPIRED') {
+        if (params.row.settlementStatus === settlementStatus.EXPIRED) {
           this.$Message.warning('已过期不能修改状态')
           return
         };

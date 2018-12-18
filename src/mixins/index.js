@@ -1,3 +1,10 @@
+import {
+  customOrderStatusConvert,
+  customPeriodConvert,
+  deliveryTypeCustomConvert, doctorLevelConvert, doctorStatusConvert,
+  orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert
+} from '../libs/converStatus';
+
 let mixin = {
   data() {
     return {
@@ -30,42 +37,48 @@ let mixin = {
     };
   },
   filters: {
-    // 结算状态(UNSETTLED-未处理 SUCCESS-已成功 EXPIRED-已过期)
+    // 计算分转元 保留两位小数
+    fenToYuanDot2Filters(number){
+      if (typeof number === 'number') {
+        return '¥' + (number/100.00).toFixed(2);
+      }
+      return number;
+    },
+    // 结算状态
     settlementStatusFilters(name) {
-      switch (name) {
-        case 'UNSETTLED':
-          return '未结算';
-        case 'SUCCESS':
-          return '已结算';
-        case 'EXPIRED':
-          return '已过期';
-        default: '';
-          break;
-      }
+      return settlementStatusConvert(name).label
     },
-    // 鲜果师等级 培训中:TRAINING、初级:PRIMARY、中高级:SENIOR
+    // 鲜果师等级
     doctorLevelFilters(name) {
-      switch (name) {
-        case 'TRAINING':
-          return '培训中';
-        case 'PRIMARY':
-          return '初级';
-        case 'SENIOR':
-          return '中高级';
-        default: '';
-          break;
-      }
+      return doctorLevelConvert(name).label
     },
-    // 鲜果师状态 VALID:正常 INVALID:已停用
+    // 鲜果师状态
     doctorStatusFilters(name) {
-      switch (name) {
-        case 'VALID':
-          return '正常';
-        case 'INVALID':
-          return '已停用';
-        default: '';
-          break;
-      }
+      return doctorStatusConvert(name).label
+    },
+    // 订单状态
+    orderStatusFilters (status) {
+     return orderStatusConvert(status).label
+    },
+    // 提货方式
+    receivingWayFilters(status){
+      return receivingWayConvert(status).label
+    },
+    // 订单类型
+    orderTypeFilters(status) {
+      return orderTypeConvert(status).label
+    },
+    // 定制周期
+    customPeriodFilters(status){
+      return customPeriodConvert(status).label
+    },
+    // 定制状态
+    customOrderStatusFilters(status){
+      return customOrderStatusConvert(status).label
+    },
+    // 定制配送方式
+    deliveryTypeCustomFilters(status){
+      return deliveryTypeCustomConvert(status).label
     }
   },
   computed: {
