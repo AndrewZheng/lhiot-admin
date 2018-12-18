@@ -324,6 +324,7 @@
   import searchMixin from '@/mixins/searchMixin.js';
   import uploadMixin from '@/mixins/uploadMixin';
   import IViewUpload from '_c/iview-upload';
+  import {doctorLevelConvert,doctorStatusConvert} from '@/libs/converStatus';
 
   const managerDetail = {
     id:2,
@@ -410,15 +411,7 @@
             width: 100,
             render: (h, params, vm) => {
               const {row} = params;
-              if (row.doctorLevel === 'TRAINING'){
-                return <div>{'培训中'}</div>
-              }else if(row.doctorLevel === 'PRIMARY'){
-                return <div>{'初级'}</div>
-              }else if(row.doctorLevel === 'SENIOR'){
-                return <div>{'中高级'}</div>
-              }else {
-                return <div>{row.doctorLevel}</div>
-              };
+              return <div>{doctorLevelConvert(row.doctorLevel).label}</div>
             }
           },
           {
@@ -426,13 +419,7 @@
             width: 100,
             render: (h, params, vm) => {
               const {row} = params;
-              if (row.doctorStatus === 'VALID') {
-                return <div>{'正常'}</div>
-              } else if (row.doctorStatus === 'INVALID') {
-                return <div>{'已停用'}</div>
-              } else {
-                return <div>{row.doctorStatus}</div>
-              }
+              return <div>{doctorStatusConvert(row.doctorStatus).label}</div>
             }
           },
           {

@@ -1,3 +1,10 @@
+import {
+  customOrderStatusConvert,
+  customPeriodConvert,
+  deliveryTypeCustomConvert, doctorLevelConvert, doctorStatusConvert,
+  orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert
+} from '../libs/converStatus';
+
 let mixin = {
   data() {
     return {
@@ -37,106 +44,41 @@ let mixin = {
       }
       return number;
     },
-    // 结算状态(UNSETTLED-未处理 SUCCESS-已成功 EXPIRED-已过期)
+    // 结算状态
     settlementStatusFilters(name) {
-      switch (name) {
-        case 'UNSETTLED':
-          return '未结算';
-        case 'SUCCESS':
-          return '已结算';
-        case 'EXPIRED':
-          return '已过期';
-        default:
-          return name;
-      }
+      return settlementStatusConvert(name).label
     },
-    // 鲜果师等级 培训中:TRAINING、初级:PRIMARY、中高级:SENIOR
+    // 鲜果师等级
     doctorLevelFilters(name) {
-      switch (name) {
-        case 'TRAINING':
-          return '培训中';
-        case 'PRIMARY':
-          return '初级';
-        case 'SENIOR':
-          return '中高级';
-        default: ;
-          return name;
-      }
+      return doctorLevelConvert(name).label
     },
-    // 鲜果师状态 VALID:正常 INVALID:已停用
+    // 鲜果师状态
     doctorStatusFilters(name) {
-      switch (name) {
-        case 'VALID':
-          return '正常';
-        case 'INVALID':
-          return '已停用';
-        default: ;
-          return name;
-      }
+      return doctorStatusConvert(name).label
     },
     // 订单状态
-    // WAIT_PAYMENT-待支付
-    // WAIT_SEND_OUT-待出库
-    // SEND_OUTING,出库中
-    // WAIT_DISPATCHING-待配送,
-    // DISPATCHING-配送中,
-    // RECEIVED-已收货,
-    // RETURNING-退货中,
-    // RETURN_FAILURE-退款失败,
-    // ALREADY_RETURN-退货完成
-    // FAILURE-已失效,
-    // FINISHED-完成
     orderStatusFilters (status) {
-      switch (status) {
-        case 'WAIT_PAYMENT':
-          return '待支付';
-        case 'WAIT_SEND_OUT':
-          return '待出库';
-        case 'SEND_OUTING':
-          return '出库中';
-        case 'WAIT_DISPATCHING':
-          return '待配送';
-        case 'DISPATCHING':
-          return '配送中';
-        case 'RECEIVED':
-          return '已收货';
-        case 'RETURNING':
-          return '退货中';
-        case 'RETURN_FAILURE':
-          return '退款失败';
-        case 'ALREADY_RETURN':
-          return '退货完成';
-        case 'FAILURE':
-          return '已失效';
-        case 'FINISHED':
-          return '完成';
-        default :
-          return status
-      }
+     return orderStatusConvert(status).label
     },
-    // 提货方式 TO_THE_STORE-门店自提,TO_THE_HOME-送货上门
+    // 提货方式
     receivingWayFilters(status){
-      switch (status) {
-        case 'TO_THE_STORE':
-          return '门店自提';
-        case 'TO_THE_HOME':
-          return '送货上门';
-        default :
-          return status
-      }
+      return receivingWayConvert(status).label
     },
-    // 订单类型：NORMAL-普通订单,CUSTOM-定制订单,TEAM_BUY-团购订单
+    // 订单类型
     orderTypeFilters(status) {
-      switch (status) {
-        case 'NORMAL':
-          return '普通订单';
-        case 'CUSTOM':
-          return '定制订单';
-        case 'TEAM_BUY':
-          return '团购订单';
-        default :
-          return status
-      }
+      return orderTypeConvert(status).label
+    },
+    // 定制周期
+    customPeriodFilters(status){
+      return customPeriodConvert(status).label
+    },
+    // 定制状态
+    customOrderStatusFilters(status){
+      return customOrderStatusConvert(status).label
+    },
+    // 定制配送方式
+    deliveryTypeCustomFilters(status){
+      return deliveryTypeCustomConvert(status).label
     }
   },
   computed: {
