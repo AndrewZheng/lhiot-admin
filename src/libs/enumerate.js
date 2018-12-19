@@ -342,3 +342,45 @@ export const doctorStatusEnum = [
     value: doctorStatus.INVALID
   }
 ];
+
+// 配送时间段类型
+// DAYTIME(8:00,18:00),
+// EVENING(18:00,22:00),
+// ALL_DAY(8:00,22:00)
+export const deliveryAtType = {
+  DAYTIME: 'DAYTIME',
+  EVENING: 'EVENING',
+  ALL_DAY: 'ALL_DAY'
+};
+
+export const deliveryAtTypeEnum = [
+  {
+    label: '(8:00,18:00)',
+    value: deliveryAtType.DAYTIME
+  },
+  {
+    label: '(18:00,22:00)',
+    value: deliveryAtType.EVENING
+  },
+  {
+    label: '(8:00,22:00)',
+    value: deliveryAtType.ALL_DAY
+  }
+];
+
+// 操作方式 INSERT(新增),UPDATE(修改)
+export const updateWay = {
+  INSERT: 'INSERT',
+  UPDATE: 'UPDATE'
+};
+
+export const updateWayEnum = [
+  {
+    label: '新增',
+    value: updateWay.INSERT
+  },
+  {
+    label: '修改',
+    value: updateWay.UPDATE
+  }
+];

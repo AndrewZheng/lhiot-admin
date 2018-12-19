@@ -582,3 +582,47 @@ export const getcustomOrders = ({id}) => {
     method: 'get'
   });
 };
+
+// 根据条件分页查询新品尝鲜活动商品信息列表
+export const getActivityProductsPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/activity-products/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据ids删除新品尝鲜活动商品
+export const deleteActivityProduct = ({ids}) => {
+  return Vue.prototype.$http.request({
+    url: '/activity-products/'+ids,
+    method: 'delete'
+  });
+};
+
+// 添加新品尝鲜活动商品
+export const addActivityProduct = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/activity-products/',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改新品尝鲜活动商品
+export const editActivityProduct = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/activity-products/'+data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 后台管理查询配送费规则列表
+export const getDeliveryFeeRulePages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/delivery-fee-rule/pages/',
+    data,
+    method: 'post'
+  });
+};
