@@ -1,7 +1,7 @@
 import {
   customOrderStatusConvert,
   customPeriodConvert,
-  deliveryTypeCustomConvert, doctorLevelConvert, doctorStatusConvert,
+  deliveryTypeCustomConvert, doctorLevelConvert, doctorStatusConvert, hotConvert,
   orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert
 } from '../libs/converStatus';
 
@@ -38,7 +38,7 @@ let mixin = {
   },
   filters: {
     // 计算分转元 保留两位小数
-    fenToYuanDot2Filters(number){
+    fenToYuanDot2Filters(number) {
       if (typeof number === 'number') {
         return '¥' + (number/100.00).toFixed(2);
       }
@@ -46,39 +46,43 @@ let mixin = {
     },
     // 结算状态
     settlementStatusFilters(name) {
-      return settlementStatusConvert(name).label
+      return settlementStatusConvert(name).label;
     },
     // 鲜果师等级
     doctorLevelFilters(name) {
-      return doctorLevelConvert(name).label
+      return doctorLevelConvert(name).label;
     },
     // 鲜果师状态
     doctorStatusFilters(name) {
-      return doctorStatusConvert(name).label
+      return doctorStatusConvert(name).label;
+    },
+     // 明星鲜果师
+     hotFilters(name) {
+      return hotConvert(name).label;
     },
     // 订单状态
     orderStatusFilters (status) {
-     return orderStatusConvert(status).label
+     return orderStatusConvert(status).label;
     },
     // 提货方式
-    receivingWayFilters(status){
-      return receivingWayConvert(status).label
+    receivingWayFilters(status) {
+      return receivingWayConvert(status).label;
     },
     // 订单类型
     orderTypeFilters(status) {
-      return orderTypeConvert(status).label
+      return orderTypeConvert(status).label;
     },
     // 定制周期
-    customPeriodFilters(status){
-      return customPeriodConvert(status).label
+    customPeriodFilters(status) {
+      return customPeriodConvert(status).label;
     },
     // 定制状态
-    customOrderStatusFilters(status){
-      return customOrderStatusConvert(status).label
+    customOrderStatusFilters(status) {
+      return customOrderStatusConvert(status).label;
     },
     // 定制配送方式
-    deliveryTypeCustomFilters(status){
-      return deliveryTypeCustomConvert(status).label
+    deliveryTypeCustomFilters(status) {
+      return deliveryTypeCustomConvert(status).label;
     }
   },
   computed: {
