@@ -1,13 +1,13 @@
 import {
   customDeliverStatusEnum,
   customOrderStatusEnum,
-  customPeriodEnum,
+  customPeriodEnum, deliveryAtTypeEnum,
   deliveryTypeCustomEnum, doctorLevelEnum, doctorStatusEnum,
   orderStatusEnum,
   orderTypeEnum,
   receivingWayEnum,
   settlementStatusEnum,
-  thirdDelieverStatusEnum
+  thirdDelieverStatusEnum, updateWayEnum
 } from './enumerate';
 
 const convertFunction = (value, list) => {
@@ -50,17 +50,25 @@ export const receivingWayConvert = (value) => {
 };
 
 export const orderStatusConvert = (value) => {
-  return convertFunction(value, orderStatusEnum)
-}
+  return convertFunction(value, orderStatusEnum);
+};
 
 export const settlementStatusConvert = (value) => {
-  return convertFunction(value, settlementStatusEnum)
-}
+  return convertFunction(value, settlementStatusEnum);
+};
 
 export const doctorLevelConvert = (value) => {
-  return convertFunction(value, doctorLevelEnum)
-}
+  return convertFunction(value, doctorLevelEnum);
+};
 
 export const doctorStatusConvert = (value) => {
-  return convertFunction(value, doctorStatusEnum)
-}
+  return convertFunction(value, doctorStatusEnum);
+};
+
+export const deliveryAtTypeConvert = (value) => {
+  return convertFunction(value, deliveryAtTypeEnum);
+};
+
+export const updateWayConvert = (value) => {
+  return convertFunction(value, updateWayEnum);
+};
