@@ -209,8 +209,16 @@
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">可结算薪资:</i-col>
-              <i-col span="16">{{managerDetail.balance}}</i-col>
+              <i-col span="8">红利余额:</i-col>
+              <i-col span="16">{{managerDetail.bonus}}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+              <i-col span="8">可结算余额:</i-col>
+              <i-col span="16">{{managerDetail.settlement}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -385,8 +393,15 @@
               </FormItem>
             </Col>
             <Col span="12">
-              <FormItem label="可结算薪资:">
-                <i-col>{{managerDetail.balance}}</i-col>
+              <FormItem label="红利余额:">
+                <i-col>{{managerDetail.bonus}}</i-col>
+              </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+              <FormItem label="可结算余额:">
+                <i-col>{{managerDetail.settlement}}</i-col>
               </FormItem>
             </Col>
           </Row>
@@ -433,12 +448,13 @@ const managerDetail = {
   bankDeposit: '',
   cardUsername: '',
   hot: '',
-  balance: 0,
+  bonus: 0,
   amountOfMonth: null,
   avatar: '',
   upperbodyPhoto: '',
   phone: '',
-  applicationId: 0
+  applicationId: 0,
+  settlement: 0
 };
 
 const roleRowData = {
@@ -527,9 +543,15 @@ export default {
           key: 'jobTitle'
         },
         {
-          title: '可结算薪资',
+          title: '红利余额',
           width: 180,
-          key: 'balance',
+          key: 'bonus',
+          sortable: true
+        },
+         {
+          title: '可结算余额',
+          width: 180,
+          key: 'settlement',
           sortable: true
         },
         {
