@@ -10,6 +10,7 @@
               @on-view="handleView"
               @on-edit="handleEdit"
               @on-delete="handleDelete"
+              @on-copy="onCopy"
               :searchAreaColumn="18"
               :operateAreaColumn="6"
       >
@@ -60,77 +61,6 @@
     </Card>
 
     <Modal
-      v-model="modalView"
-      :mask-closable="false"
-    >
-      <p slot="header">
-        <span>鲜果师详情</span>
-      </p>
-      <div class="modal-content">
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">ID:</i-col>
-              <i-col span="20">{{fruitMasterDetail.id}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请人:</i-col>
-              <i-col span="16">{{fruitMasterDetail.name}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">手机号码:</i-col>
-              <i-col span="16">{{fruitMasterDetail.phoneNumber}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">提取金额:</i-col>
-              <i-col span="16">{{fruitMasterDetail.extractingAmount}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">银行卡号:</i-col>
-              <i-col span="16">{{fruitMasterDetail.creditCardNumbers}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">结算状态:</i-col>
-              <i-col span="16">{{fruitMasterDetail.settlementStatus}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.applicationTime}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">处理时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.handlingTime}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-      </div>
-      <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
-      </div>
-    </Modal>
-    <Modal
       v-model="modalEdit"
       :width="900"
     >
@@ -142,19 +72,19 @@
           <Row span="24">
             <Col span="6">
               <FormItem label="金额范围:" :label-width="100" prop="minOrderAmount">
-                <InputNumber :min="0" placeholder="最小金额" class="search-input" v-model="postageDetail.minOrderAmount" style="width: 100px"/>
+                <InputNumber :disabled="modalTypeComputed" :min="0" placeholder="最小金额" class="search-input" v-model="postageDetail.minOrderAmount" style="width: 100px"/>
               </FormItem>
             </Col>
             <Col span="16">
               <FormItem label="——" prop="maxOrderAmount">
-                <InputNumber :min="0" placeholder="最大金额" class="search-input" v-model="postageDetail.maxOrderAmount" style="width: 100px"/>
+                <InputNumber :disabled="modalTypeComputed" :min="0" placeholder="最大金额" class="search-input" v-model="postageDetail.maxOrderAmount" style="width: 100px"/>
               </FormItem>
             </Col>
           </Row>
           <Row>
             <FormItem label="配送时间段:" :label-width="100" prop="deliveryAtType">
-              <RadioGroup v-model="postageDetail.deliveryAtType">
-                <Radio :label="item.value" v-for="item in deliveryAtTypeEnum">
+              <RadioGroup v-model="postageDetail.deliveryAtType" :disabled="modalTypeComputed">
+                <Radio :label="item.value" v-for="item in deliveryAtTypeEnum" :disabled="modalTypeComputed">
                   <span>{{item.label}}</span>
                 </Radio>
               </RadioGroup>
@@ -164,7 +94,7 @@
             <FormItem prop="detailList">
               <tables
                 border
-                :columns="postageRuleTableColumns"
+                :columns="tableColumnComputed"
                 v-model="postageDetail.detailList"
                 @on-delete="postageRuleTableHandleDelete"
               ></tables>
@@ -189,12 +119,12 @@
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import {getDeliveryFeeRulePages,createDeliveryFeeRule,deleteDeliveryFeeRule} from '@/api/fruitermaster';
+  import {getDeliveryFeeRulePages,createDeliveryFeeRule,deleteDeliveryFeeRule,editDeliveryFeeRule} from '@/api/fruitermaster';
   import tableMixin from '@/mixins/tableMixin.js';
   import searchMixin from '@/mixins/searchMixin.js';
   import deleteMixin from '@/mixins/deleteMixin.js';
-  import {deliveryAtTypeConvert} from '../../../libs/converStatus';
-  import {deliveryAtTypeEnum} from '../../../libs/enumerate';
+  import {deliveryAtTypeConvert} from '@/libs/converStatus';
+  import {deliveryAtTypeEnum, updateWay} from '@/libs/enumerate';
 
   const fruitMasterDetail = {
     id: '',
@@ -212,7 +142,7 @@
     maxOrderAmount: null,
     deliveryAtType: null,
     createBy: '',
-    deleteIds: null,
+    deleteIds: [],
     detailList: []
   };
   const detailList = {
@@ -222,7 +152,7 @@
     firstFee: 500,
     additionalWeight: 5,
     additionalFee: 5,
-    updateWay: 'UPDATE'
+    updateWay: updateWay.INSERT
   };
   const roleRowData = {
     minOrderAmount: null,
@@ -264,21 +194,23 @@
         postageRuleTableColumns: [
           {
             title: '距离范围（Km）',
-            width: 150,
-            render: (h, params) => {
+            minWidth: 150,
+            render: (h, params,vm) => {
               return h('div', [
                 h('Select', {
                   props: {
-                    value: params.row.minDistance == 0 ? '0-3':'3-5'
+                    value: params.row.minDistance == 0 ? '0-3':'3-5',
+                    disabled:this.modalTypeComputed
                   },
                   on: {
                     'on-change': e => {
+                      console.log(vm);
                       if (e == '0-3') {
-                        this.postageDetail.detailList[params.row.initRowIndex].minDistance = e;
-                        this.postageDetail.detailList[params.row.initRowIndex].maxDistance = e;
+                        this.postageDetail.detailList[params.row.initRowIndex].minDistance = 0;
+                        this.postageDetail.detailList[params.row.initRowIndex].maxDistance = 3;
                       } else if (e == '3-5') {
-                        this.postageDetail.detailList[params.row.initRowIndex].minDistance = e;
-                        this.postageDetail.detailList[params.row.initRowIndex].maxDistance = e;
+                        this.postageDetail.detailList[params.row.initRowIndex].minDistance = 3;
+                        this.postageDetail.detailList[params.row.initRowIndex].maxDistance = 5;
                       };
                     }
                   }
@@ -302,12 +234,13 @@
           {
             title: '首重（Kg）',
             key: 'updateAt',
-            width: 150,
+            minWidth: 150,
             render: (h, params) => {
               return h('div', [
                 h('InputNumber', {
                   props: {
                     value: params.row.firstWeight,
+                    disabled:this.modalTypeComputed,
                     min: 0
                   },
                   on: {
@@ -324,12 +257,14 @@
           },
           {
             title: '费用（元）',
-            width: 150,
+            minWidth: 150,
             render: (h, params) => {
               return h('div', [
                 h('InputNumber', {
                   props: {
-                    value: params.row.firstFee
+                    value: params.row.firstFee,
+                    disabled:this.modalTypeComputed,
+                    min: 0
                   },
                   on: {
                     'on-change': e => {
@@ -345,12 +280,14 @@
           },
           {
             title: '续重（Kg）',
-            width: 150,
+            minWidth: 150,
             render: (h, params) => {
               return h('div', [
                 h('InputNumber', {
                   props: {
-                    value: params.row.additionalWeight
+                    value: params.row.additionalWeight,
+                    disabled:this.modalTypeComputed,
+                    min: 0
                   },
                   on: {
                     'on-change': e => {
@@ -366,12 +303,14 @@
           },
           {
             title: '续费（元）',
-            width: 150,
+            minWidth: 150,
             render: (h, params) => {
               return h('div', [
                 h('InputNumber', {
                   props: {
-                    value: params.row.additionalFee
+                    value: params.row.additionalFee,
+                    disabled:this.modalTypeComputed,
+                    min: 0
                   },
                   on: {
                     'on-change': e => {
@@ -384,12 +323,6 @@
                 })
               ]);
             }
-          },
-          {
-            title: '操作',
-            minWidth: 80,
-            key: 'handle',
-            options: ['delete']
           }
         ],
         columns: [
@@ -432,13 +365,43 @@
             options: ['view', 'edit', 'delete', 'copy']
           }
         ],
+        options:[
+          {
+          title: '操作',
+          minWidth: 80,
+          key: 'handle',
+          options: ['delete']
+          }
+        ],
         modalViewLoading:false,
+        tempDetailList: [],
         searchRowData: this._.cloneDeep(roleRowData),
         fruitMasterDetail: fruitMasterDetail,
         postageDetail: this._.cloneDeep(postageDetail)
       };
     },
+    computed:{
+      modalTypeComputed(){
+        return this.tempModalType === this.modalType.view
+      },
+      tableColumnComputed(){
+        if (this.modalTypeComputed){
+         return  this.postageRuleTableColumns
+        }else {
+          console.log(this.postageRuleTableColumns.concat(this.options));;
+          return this.postageRuleTableColumns.concat(this.options);
+        };
+      }
+    },
     methods: {
+      onCopy(params){
+        console.log(params);
+        params.row.detailList.forEach( item => {
+          item.updateWay = updateWay.INSERT
+        })
+        this.postageDetail = params.row;
+        this.createTableRow();
+      },
       deleteTable(ids) {
         this.loading = true;
         deleteDeliveryFeeRule({
@@ -481,13 +444,35 @@
         });
       },
       editTableRow(){
-
+        this.modalViewLoading = true;
+        this.loading =true
+        editDeliveryFeeRule(this.postageDetail).then(res => {
+          this.getTableData();
+        }).finally(res => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+        });
       },
       addPostageRuleTableColumns() {
-        this.postageDetail.detailList.push(this._.cloneDeep(detailList));
+        let obj = this._.cloneDeep(detailList);
+        obj.deliveryFeeRuleId = this.postageDetail.id;
+        this.postageDetail.detailList.push(obj);
       },
       postageRuleTableHandleDelete(params) {
-        this.postageDetail.detailList = params.tableData.filter((item, index) => index !== params.row.initRowIndex);
+        if (this.tempModalType === this.modalType.create){
+          this.postageDetail.detailList = params.tableData.filter((item, index) => index !== params.row.initRowIndex);
+        }else {
+         let index = this.tempDetailList.findIndex( item => {
+          return item.id === params.row.id
+         });
+         if(index>-1){
+           if (!this.postageDetail.deleteIds){
+              this.postageDetail.deleteIds = []
+            };
+            this.postageDetail.deleteIds.push(params.row.id)
+          }
+          this.postageDetail.detailList = params.tableData.filter((item, index) => index !== params.row.initRowIndex);
+        };
       },
       addChildren() {
         this.tempModalType = this.modalType.create;
@@ -502,11 +487,14 @@
       },
       handleView(params) {
         this.tempModalType = this.modalType.view;
-        this.postageDetail = params.row;
-        this.modalView = true;
+        this.postageDetail =this._.cloneDeep(params.row);
+        this.modalEdit = true;
       },
       handleEdit(params) {
+        this.tempModalType = this.modalType.edit;
         this.postageDetail = this._.cloneDeep(params.row);
+        this.tempDetailList.length = 0;
+        this.tempDetailList = this.postageDetail.detailList;
         this.modalEdit = true;
       },
       getTableData() {

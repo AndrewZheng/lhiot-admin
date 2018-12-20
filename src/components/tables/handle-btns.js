@@ -1,3 +1,5 @@
+import {onSaleStatus} from '../../libs/enumerate';
+
 const btns = {
   view: (h, params, vm) => {
     return h('Button', {
@@ -128,6 +130,7 @@ const btns = {
       })]);
     }
   },
+  // 商品上下架操作
   onSale: (h, params, vm) => {
     const {
       row
@@ -174,6 +177,73 @@ const btns = {
         on: {
           'on-ok': () => {
             vm.$emit('on-sale', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-cloud-download',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
+    }
+  },
+  // 定制计划商品上下架操作
+  customOnSale: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.status === onSaleStatus.VALID) {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要下架该商品吗?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('custom-on-sale', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-cloud-upload',
+              size: 16,
+              color: '#green'
+            }
+          })
+        ])
+      ]);
+    } else {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要上架该商品吗?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('custom-on-sale', params);
           }
         }
       }, [
@@ -260,6 +330,7 @@ const btns = {
       }
     })]);
   },
+  // 邮费复制操作
   copy: (h, params, vm) => {
     return h('Button', {
       props: {
@@ -443,6 +514,6 @@ const btns = {
         ])
       ]);
     }
-  },
+  }
 };
 export default btns;

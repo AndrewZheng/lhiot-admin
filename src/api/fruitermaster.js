@@ -643,3 +643,29 @@ export const deleteDeliveryFeeRule = ({ids}) => {
     method: 'delete'
   });
 };
+
+// 修改配送费计算规则
+export const editDeliveryFeeRule = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/delivery-fee-rule/'+data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询定制计划信息列表
+export const getCustomPlansPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plans/pages/',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据ids删除定制计划
+export const deleteCustomPlan = ({ids}) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plans/'+ids,
+    method: 'delete'
+  });
+};

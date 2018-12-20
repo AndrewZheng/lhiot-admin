@@ -1,9 +1,3 @@
-export const positionTypeEnum = {
-  PRODUCT: 'PRODUCT',
-  ADVERTISEMENT: 'ADVERTISEMENT',
-  ARTICLE: 'ARTICLE'
-};
-
 export const YNEnum = {
   YES: 'YES',
   NO: 'NO'
@@ -342,6 +336,22 @@ export const doctorStatusEnum = [
     value: doctorStatus.INVALID
   }
 ];
+// 上架商品 有效-VALID 无效-INVALID
+export const onSaleStatus = {
+  VALID: 'VALID',
+  INVALID: 'INVALID'
+};
+
+export const onSaleStatusEnum = [
+  {
+    label: '上架',
+    value: onSaleStatus.VALID
+  },
+  {
+    label: '下架',
+    value: onSaleStatus.INVALID
+  }
+];
 
 // 配送时间段类型
 // DAYTIME(8:00,18:00),
@@ -382,5 +392,30 @@ export const updateWayEnum = [
   {
     label: '修改',
     value: updateWay.UPDATE
+  }
+];
+
+// 位置类别
+// PRODUCT-商品，
+// ADVERTISEMENT-广告，
+// ARTICLE-文章
+export const positionType = {
+  PRODUCT: 'PRODUCT',
+  ADVERTISEMENT: 'ADVERTISEMENT',
+  ARTICLE: 'ARTICLE'
+};
+
+export const positionTypeEnum = [
+  {
+    label: '商品',
+    value: positionType.PRODUCT
+  },
+  {
+    label: '广告',
+    value: positionType.ADVERTISEMENT
+  },
+  {
+    label: '文章',
+    value: positionType.ARTICLE
   }
 ];
