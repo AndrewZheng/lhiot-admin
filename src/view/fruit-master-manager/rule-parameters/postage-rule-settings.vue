@@ -9,7 +9,7 @@
               :loading="loading"
               @on-view="handleView"
               @on-edit="handleEdit"
-              @on-sale="onSale"
+              @on-delete="handleDelete"
               :searchAreaColumn="18"
               :operateAreaColumn="6"
       >
@@ -20,7 +20,7 @@
             <InputNumber :min="0" placeholder="最大金额" class="search-input mr20" v-model="searchRowData.maxOrderAmount" style="width: 100px"/>
             <Select
               v-model="searchRowData.deliveryAtType"
-              class="search-col mr5" placeholder="配送时间段" style="width: 100px" >
+              class="search-col mr5" placeholder="配送时间段" style="width: 150px" >
               <Option v-for="item in deliveryAtTypeList" :value="item.value" class="ptb2-5" :key="`search-col-${item.value}`">
                 {{item.label}}
               </Option>
@@ -138,17 +138,22 @@
         <span>运费模板</span>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :label-width="100">
-          <Row>
-            <FormItem label="金额范围:">
-              <InputNumber :min="0" placeholder="最小金额" class="search-input" v-model="searchRowData.minOrderAmount" style="width: 100px"/>
-              <i class="">-</i>
-              <InputNumber :min="0" placeholder="最大金额" class="search-input mr20" v-model="searchRowData.maxOrderAmount" style="width: 100px"/>
-            </FormItem>
+        <Form ref="modalEdit" :model="postageDetail" :rules="ruleInline">
+          <Row span="24">
+            <Col span="6">
+              <FormItem label="金额范围:" :label-width="100" prop="minOrderAmount">
+                <InputNumber :min="0" placeholder="最小金额" class="search-input" v-model="postageDetail.minOrderAmount" style="width: 100px"/>
+              </FormItem>
+            </Col>
+            <Col span="16">
+              <FormItem label="——" prop="maxOrderAmount">
+                <InputNumber :min="0" placeholder="最大金额" class="search-input" v-model="postageDetail.maxOrderAmount" style="width: 100px"/>
+              </FormItem>
+            </Col>
           </Row>
           <Row>
-            <FormItem label="配送时间段:">
-              <RadioGroup v-model="searchRowData.deliveryAtType">
+            <FormItem label="配送时间段:" :label-width="100" prop="deliveryAtType">
+              <RadioGroup v-model="postageDetail.deliveryAtType">
                 <Radio :label="item.value" v-for="item in deliveryAtTypeEnum">
                   <span>{{item.label}}</span>
                 </Radio>
@@ -156,12 +161,14 @@
             </FormItem>
           </Row>
           <Row>
-            <tables
-              border
-              :columns="postageRuleTableColumns"
-              v-model="postageDetail.detailList"
-              @on-delete="postageRuleTableHandleDelete"
-            ></tables>
+            <FormItem prop="detailList">
+              <tables
+                border
+                :columns="postageRuleTableColumns"
+                v-model="postageDetail.detailList"
+                @on-delete="postageRuleTableHandleDelete"
+              ></tables>
+            </FormItem>
           </Row>
           <Row class="mt15">
             <Button v-waves type="success" class="mr5" @click="addPostageRuleTableColumns">
@@ -171,13 +178,18 @@
           </Row>
         </Form>
       </div>
+      <div slot="footer" v-if="tempModalType === modalType.create || tempModalType === modalType.edit">
+        <Button @click="handleEditClose">关闭</Button>
+        <Button type="primary" :loading="modalViewLoading" @click="handleSubmit('modalEdit')">确定
+        </Button>
+      </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import {getDeliveryFeeRulePages} from '@/api/fruitermaster';
+  import {getDeliveryFeeRulePages,createDeliveryFeeRule,deleteDeliveryFeeRule} from '@/api/fruitermaster';
   import tableMixin from '@/mixins/tableMixin.js';
   import searchMixin from '@/mixins/searchMixin.js';
   import deleteMixin from '@/mixins/deleteMixin.js';
@@ -196,8 +208,8 @@
     handlingTime: '2018-10-28'
   };
   const postageDetail = {
-    minOrderAmount: 0,
-    maxOrderAmount: 0,
+    minOrderAmount: null,
+    maxOrderAmount: null,
     deliveryAtType: null,
     createBy: '',
     deleteIds: null,
@@ -230,6 +242,23 @@
     mixins: [tableMixin, searchMixin, deleteMixin],
     data() {
       return {
+        ruleInline:{
+          minOrderAmount:[{required: true, message: '请填写最小金额',type:'number'}],
+          maxOrderAmount:[{required: true, message: '请填写最大金额',type:'number'}],
+          deliveryAtType:[{required: true, message: '请选择时间段'}],
+          detailList:[{required: true, message: '请添加运费信息'},
+            {
+              validator(rule, value, callback, source, options) {
+                console.log(value);
+                let errors = [];
+                if (!value||value.length === 0) {
+                  callback('请至少添加一条运费信息');
+                }
+                callback(errors);
+              }
+            }
+          ]
+        },
         deliveryAtTypeList: deliveryAtTypeEnum,
         deliveryAtTypeEnum,
         postageRuleTableColumns: [
@@ -283,6 +312,9 @@
                   },
                   on: {
                     'on-change': e => {
+                      if (!e) {
+                        e = 0
+                      };
                       this.postageDetail.detailList[params.row.initRowIndex].firstWeight = e;
                     }
                   }
@@ -301,7 +333,9 @@
                   },
                   on: {
                     'on-change': e => {
-                      params.row.firstFee = e;
+                      if (!e) {
+                        e = 0
+                      };
                       this.postageDetail.detailList[params.row.initRowIndex].firstFee = e;
                     }
                   }
@@ -320,6 +354,9 @@
                   },
                   on: {
                     'on-change': e => {
+                      if (!e) {
+                        e = 0
+                      };
                       this.postageDetail.detailList[params.row.initRowIndex].additionalWeight = e;
                     }
                   }
@@ -338,6 +375,9 @@
                   },
                   on: {
                     'on-change': e => {
+                      if (!e) {
+                        e = 0
+                      };
                       this.postageDetail.detailList[params.row.initRowIndex].additionalFee = e;
                     }
                   }
@@ -356,13 +396,13 @@
           {
             type: 'selection',
             key: '',
-            width: 60,
+            minWidth: 60,
             align: 'center'
           },
           {
             title: '金额范围',
             key: 'id',
-            width: 180,
+            minWidth: 180,
             render(h, params) {
               return <div>{params.row.minOrderAmount+' - '+params.row.maxOrderAmount}</div>;
             }
@@ -370,7 +410,7 @@
           {
             title: '配送时间',
             key: 'deliveryAtType',
-            width: 150,
+            minWidth: 150,
             render(h, params) {
               return <div>{deliveryAtTypeConvert(params.row.deliveryAtType).label}</div>;
             }
@@ -378,12 +418,12 @@
           {
             title: '更新时间',
             key: 'updateAt',
-            width: 150
+            minWidth: 150
           },
           {
             title: '创建人',
             key: 'createBy',
-            width: 150
+            minWidth: 150
           },
           {
             title: '操作',
@@ -392,13 +432,57 @@
             options: ['view', 'edit', 'delete', 'copy']
           }
         ],
-        rowData: roleRowData,
+        modalViewLoading:false,
         searchRowData: this._.cloneDeep(roleRowData),
         fruitMasterDetail: fruitMasterDetail,
         postageDetail: this._.cloneDeep(postageDetail)
       };
     },
     methods: {
+      deleteTable(ids) {
+        this.loading = true;
+        deleteDeliveryFeeRule({
+          ids
+        }).then(res => {
+            let totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+            if (this.tableData.length == this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
+              this.searchRowData.page -= 1;
+            }
+            this.tableDataSelected = [];
+            this.getTableData();
+          }
+        ).catch(err => {
+          this.loading = false;
+        });
+      },
+      handleSubmit(name){
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            if (this.tempModalType === this.modalType.create) {
+              // 添加状态
+              this.createTableRow();
+            } else if (this.tempModalType === this.modalType.edit) {
+              // 编辑状态
+              this.editTableRow();
+            }
+          } else {
+            this.$Message.error('请完善商品的信息!');
+          }
+        });
+      },
+      createTableRow(){
+        this.modalViewLoading = true;
+        this.loading=true;
+        createDeliveryFeeRule(this.postageDetail).then(res => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
+          this.$Message.success('创建成功!');
+          this.getTableData();
+        });
+      },
+      editTableRow(){
+
+      },
       addPostageRuleTableColumns() {
         this.postageDetail.detailList.push(this._.cloneDeep(detailList));
       },
@@ -411,23 +495,18 @@
         this.postageDetail.detailList.push(this._.cloneDeep(detailList));
         this.modalEdit = true;
       },
-      deleteChildren() {
-
-      },
-      onSale() {
-
-      },
       resetSearchRowData() {
         this.clearSearchLoading = true;
         this.searchRowData = this._.cloneDeep(roleRowData);
         this.getTableData();
       },
       handleView(params) {
-        this.fruitMasterDetail = params.row;
+        this.tempModalType = this.modalType.view;
+        this.postageDetail = params.row;
         this.modalView = true;
       },
       handleEdit(params) {
-        this.fruitMasterDetail = params.row;
+        this.postageDetail = this._.cloneDeep(params.row);
         this.modalEdit = true;
       },
       getTableData() {

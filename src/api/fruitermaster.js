@@ -626,3 +626,20 @@ export const getDeliveryFeeRulePages = (data) => {
     method: 'post'
   });
 };
+
+// 添加配送费计算规则
+export const createDeliveryFeeRule = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/delivery-fee-rule',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据配送费规则模板Id删除
+export const deleteDeliveryFeeRule = ({ids}) => {
+  return Vue.prototype.$http.request({
+    url: '/delivery-fee-rule/'+ids,
+    method: 'delete'
+  });
+};
