@@ -353,6 +353,25 @@ export const onSaleStatusEnum = [
   }
 ];
 
+// 是否明星鲜果师
+// YES:明星鲜果师
+// NO:普通鲜果师
+export const hotStatus = {
+  YES: 'YES',
+  NO: 'NO'
+};
+
+export const hotEnum = [
+  {
+    label: '明星鲜果师',
+    value: hotStatus.YES
+  },
+  {
+    label: '普通鲜果师',
+    value: hotStatus.NO
+  }
+];
+
 // 配送时间段类型
 // DAYTIME(8:00,18:00),
 // EVENING(18:00,22:00),
