@@ -294,7 +294,7 @@
   import deleteMixin from '@/mixins/deleteMixin.js'
   import tableMixin from '@/mixins/tableMixin.js'
   import searchMixin from '@/mixins/searchMixin.js'
-  import {positionTypeEnum, YNEnum} from '@/libs/enumerate';
+  import {positionType, YNEnum} from '@/libs/enumerate';
 
   const productDetail = {
     id: 0,
@@ -335,7 +335,7 @@
       getuiPositionsPages({
         applicationType:'HEALTH_GOOD',
         includeSection: YNEnum.YES,
-        positionType: null,
+          positionType: positionType.PRODUCT,
         page: 0,
         rows: 0
       }).then(res => {
@@ -385,7 +385,6 @@
         columns: [
           {
             type: 'selection',
-            key: '',
             width: 60,
             align: 'center',
             fixed: 'left'
