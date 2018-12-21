@@ -669,3 +669,20 @@ export const deleteCustomPlan = ({ids}) => {
     method: 'delete'
   });
 };
+
+// 添加定制计划
+export const createCustomPlan = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plans',
+    data,
+    method: 'post'
+  });
+}
+
+// 定制计划详细信息
+export const getCustomPlan = ({id}) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plans/'+id,
+    method: 'get'
+  });
+}

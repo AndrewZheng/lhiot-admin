@@ -136,7 +136,7 @@
       <div class="modal-content">
         <Form ref="modalEdit" :model="customPlanDetail" :rules="ruleInline" :label-width="110">
           <FormItem label="定制计划名称:" prop="name">
-            <Input placeholder="上架名称" class="search-input mr5" v-model="searchRowData.name" style="width: auto"/>
+            <Input placeholder="上架名称" class="search-input mr5" v-model="customPlanDetail.name" style="width: auto"/>
           </FormItem>
           <FormItem label="定制计划主图:" prop="image">
             <div class="demo-upload-list" v-for="item in uploadListMain">
@@ -168,14 +168,11 @@
           </FormItem>
           <FormItem label="是否上架:" prop="status">
             <Select
-              class="search-col mr5" placeholder="" style="width: 100px" >
+              class="search-col mr5" v-model="customPlanDetail.status" style="width: 100px" >
               <Option v-for="item in onSaleStatusEnum" :value="item.value" class="ptb2-5" :key="`search-col-${item.value}`">
                 {{item.label}}
               </Option>
             </Select>
-          </FormItem>
-          <FormItem label="排序:" prop="sorts">
-            <InputNumber :min="0" placeholder="上架名称" class="search-input mr5" v-model="customPlanDetail.sorts" style="width: auto"/>
           </FormItem>
           <FormItem label="上架板块:" prop="customPlanSectionIds">
             <div v-for="item in uiPositionData">
@@ -194,26 +191,40 @@
           </FormItem>
         </Form>
         <Tabs value="name1" type="card">
-          <TabPane label="周" name="name1">
-            <Form ref="modalEdit" :model="customPlanDetail" :rules="ruleInline" :label-width="80">
+          <TabPane label="周" name="name1" style="margin-bottom: 100px">
+            <Form ref="weekForm" :model="customPlanDetail" :label-width="80">
               <Col span="8">
-                <FormItem label="单人套餐价:" prop="customPlanSpecifications">
-                  <Input class="search-input mr5" v-model="searchRowData.name" style="width: 100px"/>
+                <FormItem label="单人套餐价:">
+                  <Input class="search-input mr5" v-model="customPlanDetail.periodWeek1"  style="width: 100px"/>
                 </FormItem>
               </Col>
               <Col span="8">
-                <FormItem label="双人套餐价:">
-                  <Input class="search-input mr5" v-model="searchRowData.name" style="width: 100px"/>
+                <FormItem label="双人套餐价:" prop="name">
+                  <Input class="search-input mr5"  v-model="customPlanDetail.periodWeek2" style="width: 100px"/>
                 </FormItem>
               </Col>
               <Col span="8">
                 <FormItem label="三人套餐价:">
-                  <Input class="search-input mr5" v-model="searchRowData.name" style="width: 100px"/>
+                  <Input class="search-input mr5"  v-model="customPlanDetail.periodWeek3" style="width: 100px"/>
                 </FormItem>
               </Col>
               <Col span="12">
                 <FormItem label="第1天:">
-                  <Input class="search-input mr5" v-model="searchRowData.name" style="width: 150px"/>
+                  <Select
+                    ref="shelfSpecificationSelect"
+                    :remote="true"
+                    :filterable="true"
+                    :remote-method="remoteMethod"
+                    :loading="shelfSpecificationLoadingDay1"
+                    style="width: 200px"
+                    v-model="customPlanDetail.selectWeek1"
+                  >
+                    <Option @click.native="selectIndex(option)" class="pb5 pt5 pl15"
+                            v-for="(option, index) in optionsShelfSpecification"
+                            :value="option.id" :key="index">
+                      {{option.name}}
+                    </Option>
+                  </Select>
                 </FormItem>
               </Col>
             </Form>
@@ -222,27 +233,32 @@
             <Form>
               <Col span="8">
                 <FormItem label="单人套餐价:">
-                  <Input class="search-input mr5" v-model="searchRowData.name" style="width: 100px"/>
+                  <Input class="search-input mr5" v-model="customPlanDetail.periodMonth1" style="width: 100px"/>
                 </FormItem>
               </Col>
               <Col span="8">
                 <FormItem label="双人套餐价:">
-                  <Input class="search-input mr5" v-model="searchRowData.name" style="width: 100px"/>
+                  <Input class="search-input mr5" v-model="customPlanDetail.periodMonth2" style="width: 100px"/>
                 </FormItem>
               </Col>
               <Col span="8">
                 <FormItem label="三人套餐价:">
-                  <Input class="search-input mr5" v-model="searchRowData.name" style="width: 100px"/>
+                  <Input class="search-input mr5" v-model="customPlanDetail.periodMonth3" style="width: 100px"/>
                 </FormItem>
               </Col>
               <Col span="12">
                 <FormItem label="第1天:">
-                  <Input class="search-input mr5" v-model="searchRowData.name" style="width: 150px"/>
+
                 </FormItem>
               </Col>
             </Form>
           </TabPane>
         </Tabs>
+      </div>
+      <div slot="footer">
+        <Button @click="handleEditClose">关闭</Button>
+        <Button type="primary" :loading="modalViewLoading" @click="handleSubmit('modalEdit')">确定
+        </Button>
       </div>
     </Modal>
   </div>
@@ -250,7 +266,11 @@
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import {getCustomPlansPages,deleteCustomPlan,getuiPositionsPages} from '@/api/fruitermaster';
+  import {getCustomPlansPages,
+    deleteCustomPlan,
+    getuiPositionsPages,
+    createCustomPlan,
+    getProductShelvesPages,getCustomPlan} from '@/api/fruitermaster';
   import IViewUpload from '_c/iview-upload'
   import deleteMixin from '@/mixins/deleteMixin.js'
   import tableMixin from '@/mixins/tableMixin.js'
@@ -271,14 +291,58 @@
     applicationTime: '',
     handlingTime: '2018-10-28'
   };
+
   const customPlanDetail = {
-    image: null,
-    name: "",
-    sorts: 0,
-    status: null,
+    id:0,
+    status:null,
+    createAt:null,
+    overRule:"",
+    createUser:"",
+    image:null,
+    name:"",
+    description:"",
+    price:null,
+    periodList:null,
+    sorts:null,
     customPlanSectionIds:null,
-    customPlanSpecifications:[]
+    periodWeek1:null,
+    periodWeek2:null,
+    periodWeek3:null,
+    periodMonth1:null,
+    periodMonth2:null,
+    periodMonth3:null,
+    selectWeek1:null
   };
+
+  const periodWeekDay = {
+    planPeriod: null,
+    quantity: null,
+    price: null
+  };
+
+  const periodDetail = {
+    planPeriod:0,
+    specificationList:null,
+    products:null
+  };
+
+  const productDetail = {
+    dayOfPeriod: 0,
+    shelfId: 0
+  };
+
+  const specificationDetail = {
+    id:0,
+    planId:0,
+    price:0,
+    quantity:0,
+    description:"",
+    planPeriod:0,
+    image:null,
+    standardId:0,
+
+  };
+
   const roleRowData = {
     name: "",
     page: 1,
@@ -299,7 +363,6 @@
         rows: 0
       }).then(res => {
         this.uiPositionData = res.array;
-        console.log(this.uiPositionData);
         this.createLoading = false
         this.getTableData();
       })
@@ -307,15 +370,17 @@
     mixins: [ deleteMixin, tableMixin,searchMixin,uploadMixin],
     data() {
       return {
+        shelfSpecificationLoadingDay1:false,
+        modalViewLoading:false,
         model: [],
         uiPositionData:[],
         onSaleStatusEnum,
+        topRuleInline:false,
         ruleInline:{
-          name: [{required: true, message: '请填写定制名称'}],
-          image: [{required: true, message: '请上传图片'}],
-          status: [{required: true, message: '请选择状态'}],
-          sorts: [{required: true, message: '请选择状态',type:'number'}],
-          customPlanSectionIds:[{required: true, message: '请选择上架板块',type:'number'}]
+          name: [{required: false, message: '请填写定制名称'}],
+          image: [{required: false, message: '请上传图片'}],
+          status: [{required: false, message: '请选择状态'}],
+          customPlanSectionIds:[{required: false, message: '请选择上架板块'}]
         },
         columns: [
           {
@@ -344,14 +409,25 @@
             width: 150,
             render: (h, params, vm) => {
               let {row} = params
-              let obj = row.customPlanSpecifications.find( item => {
-                return item.quantity === 1 && item.planPeriod === 7
+              if (!row.periodList){
+                return <div></div>;
+              } ;
+              let obj = row.periodList.find( item => {
+                return item.planPeriod === 7
               });
-              if (obj) {
-                return <div>{fenToYuanDot2(obj.price)}</div>;
-              }else {
+              if (!obj){
                 return <div></div>;
               };
+              if (!obj.specificationList){
+                return <div></div>;
+              };
+              let innerObj = obj.specificationList.find( item => {
+                return item.quantity === 1
+              });
+              if (!innerObj) {
+                return <div></div>;
+              }
+              return <div>{fenToYuanDot2(innerObj.price)}</div>;
             }
           },
           {
@@ -359,14 +435,25 @@
             width: 150,
             render: (h, params, vm) => {
               let {row} = params
-              let obj = row.customPlanSpecifications.find( item => {
-                return item.quantity === 2 && item.planPeriod === 7
+              if (!row.periodList){
+                return <div></div>;
+              } ;
+              let obj = row.periodList.find( item => {
+                return item.planPeriod === 7
               });
-              if (obj) {
-                return <div>{fenToYuanDot2(obj.price)}</div>;
-              }else {
+              if (!obj){
                 return <div></div>;
               };
+              if (!obj.specificationList){
+                return <div></div>;
+              };
+              let innerObj = obj.specificationList.find( item => {
+                return item.quantity === 2
+              });
+              if (!innerObj) {
+                return <div></div>;
+              }
+              return <div>{fenToYuanDot2(innerObj.price)}</div>;
             }
           },
           {
@@ -374,14 +461,25 @@
             width: 150,
             render: (h, params, vm) => {
               let {row} = params
-              let obj = row.customPlanSpecifications.find( item => {
-                return item.quantity === 3 && item.planPeriod === 7
+              if (!row.periodList){
+                return <div></div>;
+              } ;
+              let obj = row.periodList.find( item => {
+                return item.planPeriod === 7
               });
-              if (obj) {
-                return <div>{fenToYuanDot2(obj.price)}</div>;
-              }else {
+              if (!obj){
                 return <div></div>;
               };
+              if (!obj.specificationList){
+                return <div></div>;
+              };
+              let innerObj = obj.specificationList.find( item => {
+                return item.quantity === 3
+              });
+              if (!innerObj) {
+                return <div></div>;
+              }
+              return <div>{fenToYuanDot2(innerObj.price)}</div>;
             }
           },
           {
@@ -389,14 +487,25 @@
             width: 180,
             render: (h, params, vm) => {
               let {row} = params
-              let obj = row.customPlanSpecifications.find( item => {
-                return item.quantity === 1 && item.planPeriod === 30
-              });
-              if (obj) {
-                return <div>{fenToYuanDot2(obj.price)}</div>;
-              }else {
+              if (!row.periodList){
                 return <div></div>;
               };
+              let obj = row.periodList.find( item => {
+                return item.planPeriod === 30
+              });
+              if (!obj){
+                return <div></div>;
+              };
+              if (!obj.specificationList){
+                return <div></div>;
+              };
+              let innerObj = obj.specificationList.find( item => {
+                return item.quantity === 1
+              });
+              if (!innerObj) {
+                return <div></div>;
+              }
+              return <div>{fenToYuanDot2(innerObj.price)}</div>;
             }
           },
           {
@@ -404,14 +513,25 @@
             width: 150,
             render: (h, params, vm) => {
               let {row} = params
-              let obj = row.customPlanSpecifications.find( item => {
-                return item.quantity === 2 && item.planPeriod === 30
+              if (!row.periodList){
+                return <div></div>;
+              } ;
+              let obj = row.periodList.find( item => {
+                return item.planPeriod === 30
               });
-              if (obj) {
-                return <div>{fenToYuanDot2(obj.price)}</div>;
-              }else {
+              if (!obj){
                 return <div></div>;
               };
+              if (!obj.specificationList){
+                return <div></div>;
+              };
+              let innerObj = obj.specificationList.find( item => {
+                return item.quantity === 2
+              });
+              if (!innerObj) {
+                return <div></div>;
+              }
+              return <div>{fenToYuanDot2(innerObj.price)}</div>;
             }
           },
           {
@@ -419,20 +539,26 @@
             width: 150,
             render: (h, params, vm) => {
               let {row} = params
-              let obj = row.customPlanSpecifications.find( item => {
-                return item.quantity === 3 && item.planPeriod === 30
+              if (!row.periodList){
+                return <div></div>;
+              } ;
+              let obj = row.periodList.find( item => {
+                return item.planPeriod === 30
               });
-              if (obj) {
-                return <div>{fenToYuanDot2(obj.price)}</div>;
-              }else {
+              if (!obj){
                 return <div></div>;
               };
+              if (!obj.specificationList){
+                return <div></div>;
+              };
+              let innerObj = obj.specificationList.find( item => {
+                return item.quantity === 3
+              });
+              if (!innerObj) {
+                return <div></div>;
+              }
+              return <div>{fenToYuanDot2(innerObj.price)}</div>;
             }
-          },
-          {
-            title: '排序',
-            width: 150,
-            key: 'sorts',
           },
           {
             title: '是否上架',
@@ -451,14 +577,152 @@
         ],
         uploadListMain:[],
         defaultListMain: [],
+        optionsShelfSpecification:[],
         searchRowData: this._.cloneDeep(roleRowData),
         customPlanDetail: this._.cloneDeep(customPlanDetail),
-        fruitMasterDetail: fruitMasterDetail
+        fruitMasterDetail: fruitMasterDetail,
+        periodList:[],
+        periodDetail : this._.cloneDeep(periodDetail),
+        products: [],
+        productDetail : this._.cloneDeep(productDetail),
+        specificationList:[],
+        specificationDetail : this._.cloneDeep(specificationDetail)
       };
     },
     methods: {
+      selectIndex(options) {
+        if (!this.customPlanDetail.periodList){
+          this.customPlanDetail.periodList = [];
+        };
+        let obj = this.customPlanDetail.periodList.find( item =>  item.planPeriod === 7);
+        if (!obj){
+          this.productDetail = this._.cloneDeep(productDetail);
+          this.productDetail.shelfId = options.id;
+          this.productDetail.dayOfPeriod = 1;
+
+          this.periodDetail = this._.cloneDeep(periodDetail);
+          this.periodDetail.planPeriod = 7;
+          this.periodDetail.products = [];
+          this.periodDetail.products.push(this.productDetail);
+          this.customPlanDetail.periodList.push(this.periodDetail);
+        }else {
+          let innerObj = obj.products.find( item => item.dayOfPeriod === 1);
+          if (innerObj){
+            innerObj.shelfId = options.id;
+          } else {
+            this.productDetail = this._.cloneDeep(productDetail);
+            this.productDetail.shelfId = options.id;
+            this.productDetail.dayOfPeriod = 1;
+            obj.products.push(this.productDetail)
+          };
+        };
+      },
+      remoteMethod(query) {
+        if (query !== '') {
+          this.handleSearchAutoComplete(query);
+        } else {
+          this.optionsShelfSpecification = [];
+        }
+      },
+      handleSearchAutoComplete(value) {
+        this.shelfSpecificationLoading = true;
+        getProductShelvesPages({
+          keyword: value + '',
+          page: '1',
+          rows: '5',
+          shelfStatus: 'ON'
+        }).then(res => {
+          if (res.array.length > 0) {
+            this.optionsShelfSpecification.length = 0;
+            this.optionsShelfSpecification = this.optionsShelfSpecification.concat(res.array);
+          };
+          this.shelfSpecificationLoading = false;
+        });
+      },
+      formItemChangeDay1(){
+
+      },
+      handleSubmit(name){
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            if (this.tempModalType === this.modalType.create) {
+              this.convertPeriod(this.customPlanDetail.periodWeek1,7,1);
+              this.convertPeriod(this.customPlanDetail.periodWeek2,7,2);
+              this.convertPeriod(this.customPlanDetail.periodWeek3,7,3);
+              console.log(this.customPlanDetail.periodList);
+              return;
+
+              //添加状态
+              this.createTableRow()
+            } else if (this.tempModalType === this.modalType.edit) {
+              //编辑状态
+              this.editTableRow()
+            }
+          } else {
+            this.$Message.error('请完善商品的信息!');
+          }
+        })
+      },
+      convertPeriod(value,planPeriod,quantity,){
+        if (value){
+          if (!this.customPlanDetail.periodList){
+            this.customPlanDetail.periodList=[];
+            this.specificationDetail = this._.cloneDeep(specificationDetail);
+            this.specificationDetail.price = value;
+            this.specificationDetail.quantity = quantity;
+            this.specificationList.push(this.specificationDetail);
+            this.periodDetail.planPeriod = planPeriod;
+            this.periodDetail.specificationList = this.specificationList;
+            this.customPlanDetail.periodList.push(this.periodDetail);
+          }else {
+            let obj = this.customPlanDetail.periodList.find( item => {
+              return item.planPeriod === planPeriod;
+            });
+            let innerObj = obj.specificationList.find( item => {
+              return item.quantity === quantity;
+            });
+            if (!innerObj){
+              this.specificationDetail = this._.cloneDeep(specificationDetail);
+              this.specificationDetail.price = value;
+              this.specificationDetail.quantity = quantity;
+              obj.specificationList.push(this.specificationDetail);
+            }else {
+              innerObj.price = value;
+            };
+          };
+        }else {
+          if (this.customPlanDetail.periodList){
+            let obj = this.customPlanDetail.periodList.find( item => {
+              return item.planPeriod === planPeriod
+            });
+            if (obj){
+              if(obj.specificationList)
+                obj.specificationList = obj.specificationList.filter( item => item.quantity !== quantity);
+            };
+          };
+        };
+      },
+      createTableRow(){
+        this.modalViewLoading = true;
+        this.loading=true;
+        createCustomPlan(this.customPlanDetail).then(res => {
+          this.$Message.success('创建成功!');
+        }).finally( res => {
+          this.getTableData();
+          this.modalViewLoading = false;
+          this.modalEdit = false;
+        });
+      },
+      editTableRow(){
+
+      },
       checkAllGroupChange(value){
-        this.customPlanDetail.customPlanSectionIds = value.join(',')
+        if (value){
+          this.customPlanDetail.customPlanSectionIds = value.join(',')
+        } else {
+          this.customPlanDetail.customPlanSectionIds = null
+        };
+        console.log(this.customPlanDetail.customPlanSectionIds);
       },
       handleSuccessMain(response, file, fileList) {
         this.uploadListMain = fileList
@@ -470,7 +734,16 @@
         this.uploadListMain = []
         this.customPlanDetail.image = null
       },
+      handleView(params) {
+        this.tempModalType = this.modalType.view
+        this.loading = true;
+        getCustomPlan({id:params.row.id}).then( res => {
+          this.loading = false;
+          this.modalView = true;
+        })
+      },
       addChildren() {
+        this.tempModalType = this.modalType.create;
         this.modalEdit = true
       },
       resetSearchRowData() {
@@ -481,11 +754,8 @@
       customOnSale(params) {
         console.log(params);
       },
-      handleView(params) {
-        this.fruitMasterDetail = params.row;
-        this.modalView = true;
-      },
       handleEdit(params) {
+        this.tempModalType = this.modalType.edit;
         this.fruitMasterDetail = params.row;
         this.modalEdit = true;
       },
@@ -493,6 +763,7 @@
         getCustomPlansPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;
+        }).finally( res => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
