@@ -514,6 +514,28 @@ const btns = {
         ])
       ]);
     }
+  },
+  customPlanProduct: (h, params, vm) => {
+    return h('Button', {
+      props: {
+        type: 'info',
+        size: 'small'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        click: () => {
+          vm.$emit('on-custom-plan-product', params);
+        }
+      }
+    }, [h('Icon', {
+      props: {
+        type: 'md-settings',
+        size: 16,
+        color: '#fff'
+      }
+    })]);
   }
 };
 export default btns;

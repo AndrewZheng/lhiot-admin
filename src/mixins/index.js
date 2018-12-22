@@ -1,7 +1,7 @@
 import {
   customOrderStatusConvert,
   customPeriodConvert,
-  deliveryTypeCustomConvert, doctorLevelConvert, doctorStatusConvert, hotConvert,
+  deliveryTypeCustomConvert, doctorLevelConvert, doctorStatusConvert, hotConvert, onSaleStatusConvert,
   orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert
 } from '../libs/converStatus';
 
@@ -83,6 +83,10 @@ let mixin = {
     // 定制配送方式
     deliveryTypeCustomFilters(status) {
       return deliveryTypeCustomConvert(status).label;
+    },
+    // 定制配送方式
+    onSaleStatusFilters(status) {
+      return onSaleStatusConvert(status).label;
     }
   },
   computed: {
