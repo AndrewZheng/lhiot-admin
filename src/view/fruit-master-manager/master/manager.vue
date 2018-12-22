@@ -21,12 +21,14 @@
             class="search-input mr5"
             v-model="searchRowData.realName"
             style="width: 100px"
+            clearable
           />
           <Input
             placeholder="手机号码"
             class="search-input mr5"
             v-model="searchRowData.phone"
             style="width: 100px"
+            clearable
           />
           <DatePicker
             @on-change="startTimeChange"
@@ -548,7 +550,7 @@ export default {
           key: 'bonus',
           sortable: true
         },
-         {
+        {
           title: '可结算余额',
           width: 180,
           key: 'settlement',

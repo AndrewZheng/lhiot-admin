@@ -1,80 +1,132 @@
 <template>
   <div class="m-role">
     <Card>
-      <tables ref="tables" editable searchable
-              border
-              highlight-row
-              search-place="top"
-              v-model="tableData"
-              :columns="columns"
-              :loading="loading"
-              @on-view="handleView"
-              :searchAreaColumn="20"
-              :operateAreaColumn="4"
-              @on-current-change="onCurrentChange"
+      <tables
+        ref="tables"
+        editable
+        searchable
+        border
+        highlight-row
+        search-place="top"
+        v-model="tableData"
+        :columns="columns"
+        :loading="loading"
+        @on-view="handleView"
+        :searchAreaColumn="20"
+        :operateAreaColumn="4"
+        @on-current-change="onCurrentChange"
       >
         <div slot="searchCondition">
           <Row>
             <Col span="24">
-            <Input placeholder="订单编码" class="search-input mr5" v-model="searchRowData.code" style="width: 120px"/>
-            <Input placeholder="用户手机号" class="search-input mr5" v-model="searchRowData.phone"
-                   style="width: 100px"/>
-            <Select
-              class="search-col mr5" placeholder="订单类型" style="width: 100px" v-model="searchRowData.orderType">
-              <Option v-for="item in orderType" :value="item.value" class="ptb2-5" :key="`search-col-${item.value}`">
-                {{item.label}}
-              </Option>
-            </Select>
-            <Select class="search-col mr5" placeholder="订单状态" style="width: 100px" v-model="searchRowData.orderStatus">
-              <Option v-for="item in orderStatus" :value="item.value" class="mb10 ml15"
-                      :key="`search-col-${item.value}`">{{item.label}}
-              </Option>
-            </Select>
-            <DatePicker
-              v-model="searchRowData.beginCreateAt"
-              @on-change="startTimeChange"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetime"
-              placeholder="开始时间"
-              class="mr5"
-              style="width: 160px"/>
-            <i>-</i>
-            <DatePicker
-              v-model="searchRowData.endCreateAt"
-              @on-change="endTimeChange"
-              format="yyyy-MM-dd HH:mm:ss"
-              placeholder="结束时间"
-              class="mr5"
-              style="width: 160px"/>
+              <Input
+                placeholder="订单编码"
+                class="search-input mr5"
+                v-model="searchRowData.code"
+                style="width: 120px"
+                clearable
+              />
+              <Input
+                placeholder="用户手机号"
+                class="search-input mr5"
+                v-model="searchRowData.userPhone"
+                style="width: 100px"
+                clearable
+              />
+              <Select
+                class="search-col mr5"
+                placeholder="订单类型"
+                style="width: 100px"
+                v-model="searchRowData.orderType"
+                clearable
+              >
+                <Option
+                  v-for="item in orderType"
+                  :value="item.value"
+                  class="ptb2-5"
+                  :key="`search-col-${item.value}`"
+                >{{item.label}}</Option>
+              </Select>
+              <Select
+                class="search-col mr5"
+                placeholder="订单状态"
+                style="width: 100px"
+                v-model="searchRowData.orderStatus"
+                clearable
+              >
+                <Option
+                  v-for="item in orderStatus"
+                  :value="item.value"
+                  class="mb10 ml15"
+                  :key="`search-col-${item.value}`"
+                >{{item.label}}</Option>
+              </Select>
+              <DatePicker
+                v-model="searchRowData.beginCreateAt"
+                @on-change="startTimeChange"
+                format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="开始时间"
+                class="mr5"
+                style="width: 160px"
+              />
+              <i>-</i>
+              <DatePicker
+                v-model="searchRowData.endCreateAt"
+                @on-change="endTimeChange"
+                format="yyyy-MM-dd HH:mm:ss"
+                placeholder="结束时间"
+                class="mr5"
+                style="width: 160px"
+              />
             </Col>
-            <Button v-waves @click="handleSearch" class="search-btn ml5" type="primary" :loading="searchLoading">
+            <Button
+              v-waves
+              @click="handleSearch"
+              class="search-btn ml5"
+              type="primary"
+              :loading="searchLoading"
+            >
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
-            <Button v-waves @click="handleClear" class="search-btn" type="info" :loading="clearSearchLoading">
+            <Button
+              v-waves
+              @click="handleClear"
+              class="search-btn"
+              type="info"
+              :loading="clearSearchLoading"
+            >
               <Icon type="md-refresh"/>&nbsp;清除条件
             </Button>
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves @click="deliverOrder" class="search-btn mr5" :loading="deliverOrderLoading" type="warning">
-            门店调货
-          </Button>
+          <Button
+            v-waves
+            @click="deliverOrder"
+            class="search-btn mr5"
+            :loading="deliverOrderLoading"
+            type="warning"
+          >门店调货</Button>
           <Button v-waves type="primary" @click="exportExcel" class="ml15">导出</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
-          <Page :total="total" :current.sync="page" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer
-                show-total></Page>
+          <Page
+            :total="total"
+            :current.sync="page"
+            @on-change="changePage"
+            @on-page-size-change="changePageSize"
+            show-sizer
+            show-total
+          ></Page>
         </Row>
       </div>
     </Card>
 
     <!--查看订单详情-->
-    <Modal
-      v-model="modalView"
-      :width="700"
-    >
+    <Modal v-model="modalView" :width="700">
       <p slot="header">
         <span>查看订单详情</span>
       </p>
@@ -89,7 +141,7 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">用户手机号:</i-col>
-              <i-col span="16">{{orderDetail.phone}}</i-col>
+              <i-col span="16">{{orderDetail.userPhone}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -126,8 +178,9 @@
             <i-col span="24">
               <Row class="mb10 pl10 pt5">
                 <i-col span="8">收货地址:</i-col>
-                <i-col span="16">{{orderDetail.address +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+ orderDetail.nickname +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+
-                  orderDetail.phone}}
+                <i-col span="16">
+                  {{orderDetail.address +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+ orderDetail.nickname +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+
+                  orderDetail.userPhone}}
                 </i-col>
               </Row>
             </i-col>
@@ -140,11 +193,7 @@
               </Row>
             </i-col>
           </Row>
-          <tables
-            border
-            :columns="tempColumnsView"
-            v-model="deliverNoteList"
-          ></tables>
+          <tables border :columns="tempColumnsView" v-model="deliverNoteList"></tables>
         </Row>
         <Row>
           <i-col span="12">
@@ -205,20 +254,14 @@
           </i-col>
         </Row>
         <Row>
-          <tables
-            border
-            :columns="orderViewRelationsColumn"
-            v-model="orderDetail.orderProductList"
-          ></tables>
+          <tables border :columns="orderViewRelationsColumn" v-model="orderDetail.orderProductList"></tables>
         </Row>
       </div>
       <div slot="footer">
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-    <Modal
-      v-model="transferModalView"
-    >
+    <Modal v-model="transferModalView">
       <p slot="header">
         <span>订单调货</span>
       </p>
@@ -254,363 +297,392 @@
         <i-col span="15">
           <Row type="flex" :gutter="8" align="middle" class-name="mb10">
             <i-col span="8">调货门店:</i-col>
-            <Select v-model="currentTableRowSelected.orderStore.storeId" class="search-col mr5" placeholder="调货门店" style="width: 200px" clearable>
-              <Option class="ptb2-5" v-for="item in storeList" :value="item.id" :key="`search-col-${item.id}`">
-                {{item.name}}
-              </Option>
+            <Select
+              v-model="currentTableRowSelected.orderStore.storeId"
+              class="search-col mr5"
+              placeholder="调货门店"
+              style="width: 200px"
+              clearable
+            >
+              <Option
+                class="ptb2-5"
+                v-for="item in storeList"
+                :value="item.id"
+                :key="`search-col-${item.id}`"
+              >{{item.name}}</Option>
             </Select>
           </Row>
         </i-col>
       </Row>
       <Row style="background: lightgray">
-        <i-col span="24" style="padding-left: 15px">
-          满足以下几个条件的订单才允许调货：<br/>
-          1.仅门店自提订单；<br/>
-          2.订单状态为待收货；<br/>
-          3.海鼎状态为发送成功<br/>
+        <i-col span="24" style="padding-left: 15px">满足以下几个条件的订单才允许调货：
+          <br>1.仅门店自提订单；
+          <br>2.订单状态为待收货；
+          <br>3.海鼎状态为发送成功
+          <br>
         </i-col>
       </Row>
       <div slot="footer">
         <Button @click="handleEditCloseTransferModalView">关闭</Button>
-        <Button type="primary" :loading="modalViewLoading" @click="handleSubmit">调货
-        </Button>
+        <Button type="primary" :loading="modalViewLoading" @click="handleSubmit">调货</Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import Tables from '_c/tables';
-  import {getOrdersPages, getOrderDetail, transferHdOrder, getStore} from '@/api/fruitermaster';
-  import tableMixin from '@/mixins/tableMixin.js';
-  import searchMixin from '@/mixins/searchMixin.js';
-  import {fenToYuanDot2} from '@/libs/util';
-  import {receivingWayEnum,orderStatusEnum,orderTypeEnum} from '@/libs/enumerate';
-  import {orderTypeConvert} from '@/libs/converStatus';
-  import {thirdDeliverStatusConvert} from '@/libs/converStatus';
-  import {orderStatusConvert, receivingWayConvert} from '../../../libs/converStatus';
+import Tables from '_c/tables';
+import {
+  getOrdersPages,
+  getOrderDetail,
+  transferHdOrder,
+  getStore
+} from '@/api/fruitermaster';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import { fenToYuanDot2 } from '@/libs/util';
+import {
+  receivingWayEnum,
+  orderStatusEnum,
+  orderTypeEnum
+} from '@/libs/enumerate';
+import {
+  orderTypeConvert,
+  thirdDeliverStatusConvert
+} from '@/libs/converStatus';
+import {
+  orderStatusConvert,
+  receivingWayConvert
+} from '../../../libs/converStatus';
 
-  const orderDetail = {
-    id: 0,
-    code: '',
-    userId: '',
-    phone: '',
-    applicationType: '',
-    orderType: '',
-    receivingWay: '',
-    totalAmount: 0,
-    amountPayable: 0,
-    deliveryAmount: 0,
-    couponAmount: 0,
-    hdStockAt: '',
-    status: '',
-    receiveUser: '',
-    contactPhone: '',
-    address: '',
-    remark: '',
-    deliveryEndAt: '',
-    hdOrderCode: '',
-    nickname: null,
-    deliverAt: null,
-    allowRefund: null,
-    createAt: '',
-    payId: null,
-    orderProductList: [],
-    orderStore: {},
-    orderFlowList: [],
-    deliverNote: {},
-    discountPrice: 0
-  };
-  const roleRowData = {
-    beginCreateAt:null,
-    endCreateAt:null,
-    code:null,
-    phone:null,
-    orderStatus:null,
-    orderType:null,
-    page: 1,
-    rows: 10
-  };
-  export default {
-    components: {
-      Tables
+const orderDetail = {
+  id: 0,
+  code: '',
+  userId: '',
+  userPhone: '',
+  applicationType: '',
+  orderType: '',
+  receivingWay: '',
+  totalAmount: 0,
+  amountPayable: 0,
+  deliveryAmount: 0,
+  couponAmount: 0,
+  hdStockAt: '',
+  status: '',
+  receiveUser: '',
+  contactPhone: '',
+  address: '',
+  remark: '',
+  deliveryEndAt: '',
+  hdOrderCode: '',
+  nickname: null,
+  deliverAt: null,
+  allowRefund: null,
+  createAt: '',
+  payId: null,
+  orderProductList: [],
+  orderStore: {},
+  orderFlowList: [],
+  deliverNote: {},
+  discountPrice: 0
+};
+const roleRowData = {
+  beginCreateAt: null,
+  endCreateAt: null,
+  code: null,
+  userPhone: null,
+  orderStatus: null,
+  orderType: null,
+  page: 1,
+  rows: 10
+};
+export default {
+  components: {
+    Tables
+  },
+  mixins: [tableMixin, searchMixin],
+  data() {
+    return {
+      orderType: orderTypeEnum,
+      orderStatus: orderStatusEnum,
+      deliverNoteList: [],
+      haiDingStatus: [],
+      transferModalView: false,
+      modalViewLoading: false,
+      deliverOrderLoading: false,
+      storeList: [],
+      tempColumnsView: [
+        {
+          title: '配送方',
+          minWidth: 100,
+          key: 'deliverType'
+        },
+        {
+          title: '配送距离',
+          minWidth: 100,
+          key: 'distance'
+        },
+        {
+          title: '配送费',
+          minWidth: 100,
+          render(h, params, vm) {
+            let amount = fenToYuanDot2(params.row.fee);
+            return <div>{amount}</div>;
+          }
+        },
+        {
+          title: '配送状态',
+          minWidth: 100,
+          render: (h, params, vm) => {
+            const { row } = params;
+            return (
+              <div>{thirdDeliverStatusConvert(row.deliverStatus).label}</div>
+            );
+          }
+        },
+        {
+          title: '接单时间',
+          minWidth: 100,
+          key: 'receiveTime'
+        },
+        {
+          title: '配送员手机号',
+          minWidth: 110,
+          key: 'deliverPhone'
+        }
+      ],
+      orderViewRelationsColumn: [
+        {
+          title: '商品名称',
+          minWidth: 100,
+          key: 'productName'
+        },
+        {
+          title: '商品条码',
+          minWidth: 100,
+          key: 'barcode'
+        },
+        {
+          title: '规格',
+          minWidth: 100,
+          key: 'shelfSpecification'
+        },
+        {
+          title: '购买份数',
+          minWidth: 100,
+          key: 'productQty'
+        },
+        {
+          title: '商品总金额',
+          minWidth: 100,
+          render(h, params, vm) {
+            let amount = fenToYuanDot2(params.row.totalPrice);
+            return <div>{amount}</div>;
+          }
+        },
+        {
+          title: '折后总金额',
+          minWidth: 100,
+          render(h, params, vm) {
+            let amount = fenToYuanDot2(params.row.discountPrice);
+            return <div>{amount}</div>;
+          }
+        }
+      ],
+      columns: [
+        {
+          title: '订单编码',
+          key: 'code',
+          sortable: true,
+          width: 170,
+          fixed: 'left'
+        },
+        {
+          title: '用户手机号',
+          width: 150,
+          key: 'userPhone'
+        },
+        {
+          title: '订单类型',
+          width: 120,
+          render: (h, params, vm) => {
+            const { row } = params;
+            return <div>{orderTypeConvert(row.orderType).label}</div>;
+          }
+        },
+        {
+          title: '订单总金额',
+          width: 100,
+          render(h, params, vm) {
+            let amount = fenToYuanDot2(params.row.totalAmount);
+            return <div>{amount}</div>;
+          }
+        },
+        {
+          title: '优惠金额',
+          width: 100,
+          render(h, params, vm) {
+            let amount = fenToYuanDot2(params.row.couponAmount);
+            return <div>{amount}</div>;
+          }
+        },
+        {
+          title: '应付金额',
+          width: 100,
+          render(h, params, vm) {
+            let amount = fenToYuanDot2(params.row.amountPayable);
+            return <div>{amount}</div>;
+          }
+        },
+        {
+          title: '收货方式',
+          width: 100,
+          render: (h, params, vm) => {
+            const { row } = params;
+            return <div>{receivingWayConvert(row.receivingWay).label}</div>;
+          }
+        },
+        {
+          title: '订单状态',
+          width: 90,
+          key: 'status',
+          render: (h, params, vm) => {
+            const { row } = params;
+            return <div>{orderStatusConvert(row.status).label}</div>;
+          }
+        },
+        {
+          title: '创建时间',
+          width: 110,
+          key: 'createAt',
+          sortable: true
+        },
+        {
+          title: '操作',
+          minWidth: 150,
+          key: 'handle',
+          fixed: 'right',
+          options: ['view']
+        }
+      ],
+      currentTableRowSelected: null,
+      searchRowData: this._.cloneDeep(roleRowData),
+      orderDetail: this._.cloneDeep(orderDetail)
+    };
+  },
+  created() {
+    this.deliverOrderLoading = true;
+    getStore().then(res => {
+      this.storeList = res.array;
+      this.deliverOrderLoading = false;
+      this.getTableData();
+    });
+  },
+  methods: {
+    startTimeChange(value, date) {
+      this.searchRowData.beginCreateAt = value;
     },
-    mixins: [tableMixin, searchMixin],
-    data() {
-      return {
-        orderType: orderTypeEnum,
-        orderStatus: orderStatusEnum,
-        deliverNoteList: [],
-        haiDingStatus: [],
-        transferModalView: false,
-        modalViewLoading: false,
-        deliverOrderLoading: false,
-        storeList: [],
-        tempColumnsView: [
-          {
-            title: '配送方',
-            minWidth: 100,
-            key: 'deliverType'
-          },
-          {
-            title: '配送距离',
-            minWidth: 100,
-            key: 'distance'
-          },
-          {
-            title: '配送费',
-            minWidth: 100,
-            render(h, params, vm) {
-              let amount = fenToYuanDot2(params.row.fee);
-              return <div>{amount}</div>;
-            }
-          },
-          {
-            title: '配送状态',
-            minWidth: 100,
-            render: (h, params, vm) => {
-              const {row} = params;
-              return <div>{thirdDeliverStatusConvert(row.deliverStatus).label}</div>
-            }
-          },
-          {
-            title: '接单时间',
-            minWidth: 100,
-            key: 'receiveTime'
-          },
-          {
-            title: '配送员手机号',
-            minWidth: 110,
-            key: 'deliverPhone'
-          }
-        ],
-        orderViewRelationsColumn: [
-          {
-            title: '商品名称',
-            minWidth: 100,
-            key: 'productName'
-          },
-          {
-            title: '商品条码',
-            minWidth: 100,
-            key: 'barcode'
-          },
-          {
-            title: '规格',
-            minWidth: 100,
-            key: 'shelfSpecification'
-          },
-          {
-            title: '购买份数',
-            minWidth: 100,
-            key: 'productQty'
-          },
-          {
-            title: '商品总金额',
-            minWidth: 100,
-            render(h, params, vm) {
-              let amount = fenToYuanDot2(params.row.totalPrice);
-              return <div>{amount}</div>;
-            }
-          },
-          {
-            title: '折后总金额',
-            minWidth: 100,
-            render(h, params, vm) {
-              let amount = fenToYuanDot2(params.row.discountPrice);
-              return <div>{amount}</div>;
-            }
-          }
-        ],
-        columns: [
-          {
-            title: '订单编码',
-            key: 'code',
-            sortable: true,
-            width: 170,
-            fixed: 'left'
-          },
-          {
-            title: '用户手机号',
-            width: 150,
-            key: 'phone'
-          },
-          {
-            title: '订单类型',
-            width: 120,
-            render: (h, params, vm) => {
-              const {row} = params;
-             return <div>{orderTypeConvert(row.orderType).label}</div>
-            }
-          },
-          {
-            title: '订单总金额',
-            width: 100,
-            render(h, params, vm) {
-              let amount = fenToYuanDot2(params.row.totalAmount);
-              return <div>{amount}</div>;
-            }
-          },
-          {
-            title: '优惠金额',
-            width: 100,
-            render(h, params, vm) {
-              let amount = fenToYuanDot2(params.row.couponAmount);
-              return <div>{amount}</div>;
-            }
-          },
-          {
-            title: '应付金额',
-            width: 100,
-            render(h, params, vm) {
-              let amount = fenToYuanDot2(params.row.amountPayable);
-              return <div>{amount}</div>;
-            }
-          },
-          {
-            title: '收货方式',
-            width: 100,
-            render: (h, params, vm) => {
-              const {row} = params;
-              return <div>{receivingWayConvert(row.receivingWay).label}</div>;
-            }
-          },
-          {
-            title: '订单状态',
-            width: 90,
-            key: 'status',
-            render: (h, params, vm) => {
-              const {row} = params;
-              return <div>{orderStatusConvert(row.status).label}</div>;
-            }
-          },
-          {
-            title: '创建时间',
-            width: 110,
-            key: 'createAt',
-            sortable: true
-          },
-          {
-            title: '操作',
-            minWidth: 150,
-            key: 'handle',
-            fixed: 'right',
-            options: ['view']
-          }
-        ],
-        currentTableRowSelected: null,
-        searchRowData: this._.cloneDeep(roleRowData),
-        orderDetail: this._.cloneDeep(orderDetail)
-      };
+    endTimeChange(value, date) {
+      this.searchRowData.endCreateAt = value;
     },
-    created() {
+    handleEditCloseTransferModalView() {
+      this.transferModalView = false;
+    },
+    handleEditClose() {
+      this.modalViewLoading = false;
+    },
+    handleSubmit() {
+      if (!this.currentTableRowSelected) {
+        this.$Message.error(
+          '请用鼠标左键点击选择下方表格一行订单数据,才能进行调货处理'
+        );
+        return;
+      }
+      if (!this.currentTableRowSelected.orderStore.storeId) {
+        this.$Message.error('该订单门店id为空');
+        return;
+      }
+      if (
+        this.currentTableRowSelected.receivingWay !==
+        receivingWayEnum.TO_THE_STORE
+      ) {
+        this.$Message.error('该订单提货方式不是门店自提！');
+        return;
+      }
+      if (this.currentTableRowSelected.status !== orderStatusEnum.SEND_OUTING) {
+        this.$Message.error('该订单不为待收货或者海鼎发送没有成功！');
+        return;
+      }
       this.deliverOrderLoading = true;
-      getStore().then(res => {
-        this.storeList = res.array;
+      transferHdOrder({
+        code: this.currentTableRowSelected.code,
+        storeId: this.currentTableRowSelected.orderStore.storeId
+      }).then(res => {
         this.deliverOrderLoading = false;
         this.getTableData();
       });
     },
-    methods: {
-      startTimeChange(value, date) {
-        this.searchRowData.beginCreateAt = value;
-      },
-      endTimeChange(value, date) {
-        this.searchRowData.endCreateAt = value;
-      },
-      handleEditCloseTransferModalView(){
-        this.transferModalView = false;
-      },
-      handleEditClose() {
-        this.modalViewLoading = false;
-      },
-      handleSubmit() {
-        if (!this.currentTableRowSelected) {
-          this.$Message.error('请用鼠标左键点击选择下方表格一行订单数据,才能进行调货处理');
-          return;
-        };
-        if (!this.currentTableRowSelected.orderStore.storeId) {
-          this.$Message.error('该订单门店id为空');
-          return;
-        };
-        if (this.currentTableRowSelected.receivingWay !== receivingWayEnum.TO_THE_STORE){
-          this.$Message.error('该订单提货方式不是门店自提！');
-          return
-        };
-        if (this.currentTableRowSelected.status !== orderStatusEnum.SEND_OUTING) {
-          this.$Message.error('该订单不为待收货或者海鼎发送没有成功！');
-          return
-        };
-        this.deliverOrderLoading = true
-        transferHdOrder(
-          {
-            code: this.currentTableRowSelected.code,
-            storeId: this.currentTableRowSelected.orderStore.storeId
-          }
-        ).then( res => {
-          this.deliverOrderLoading = false
-          this.getTableData()
-        })
-      },
-      deliverOrder() {
-        if (!this.currentTableRowSelected) {
-          this.$Message.error('请用鼠标左键点击选择下方表格一行订单数据,才能进行调货处理');
-          return;
-        };
-        this.transferModalView = true;
-      },
-      onCurrentChange(currentRow, oldCurrentRow) {
-        this.currentTableRowSelected = currentRow;
-      },
-      resetSearchRowData() {
-        this.clearSearchLoading = true;
-        this.searchRowData = this._.cloneDeep(roleRowData);
-        this.getTableData();
-      },
-      handleView(params) {
-        this.loading = true;
-        getOrderDetail({code: params.row.code}).then(res => {
+    deliverOrder() {
+      if (!this.currentTableRowSelected) {
+        this.$Message.error(
+          '请用鼠标左键点击选择下方表格一行订单数据,才能进行调货处理'
+        );
+        return;
+      }
+      this.transferModalView = true;
+    },
+    onCurrentChange(currentRow, oldCurrentRow) {
+      this.currentTableRowSelected = currentRow;
+    },
+    resetSearchRowData() {
+      this.clearSearchLoading = true;
+      this.searchRowData = this._.cloneDeep(roleRowData);
+      this.getTableData();
+    },
+    handleView(params) {
+      this.loading = true;
+      getOrderDetail({ code: params.row.code })
+        .then(res => {
           this.orderDetail = res;
           if (res.deliverNote) {
             this.deliverNoteList.length = 0;
             this.deliverNoteList.push(res.deliverNote);
-          };
+          }
           this.modalView = true;
-        }).finally(res => {
+        })
+        .finally(res => {
           this.loading = false;
         });
-      },
-      handleEdit(params) {
-
-      },
-      getTableData() {
-        this.loading = true
-        getOrdersPages(this.searchRowData).then(res => {
-          this.tableData = res.array;
-          this.total = res.total;
-          this.loading = false;
-          this.clearSearchLoading = false
-          this.searchLoading = false
-        });
-      },
-      exportExcel() {
-        this.$refs.tables.exportCsv({
-          filename: `table-${new Date().valueOf()}.csv`
-        });
-      }
+    },
+    handleEdit(params) { },
+    getTableData() {
+      this.loading = true;
+      getOrdersPages(this.searchRowData).then(res => {
+        this.tableData = res.array;
+        this.total = res.total;
+        this.loading = false;
+        this.clearSearchLoading = false;
+        this.searchLoading = false;
+      });
+    },
+    exportExcel() {
+      this.$refs.tables.exportCsv({
+        filename: `table-${new Date().valueOf()}.csv`
+      });
     }
-  };
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-  .img {
-    width: 150px;
-    height: auto !important
-  }
+.img {
+  width: 150px;
+  height: auto !important;
+}
 
-  .add-image {
-    line-height: 48px;
-    vertical-align: text-bottom;
-    margin-right: 10px;
-  }
+.add-image {
+  line-height: 48px;
+  vertical-align: text-bottom;
+  margin-right: 10px;
+}
 </style>
