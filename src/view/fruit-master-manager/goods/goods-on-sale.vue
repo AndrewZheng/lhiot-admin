@@ -161,7 +161,7 @@
           <i-col span="24">
             <Row :gutter="8">
               <i-col span="4">上架主图:</i-col>
-              <img span="18" :src="productDetail.image" style="width: 350px">
+              <img span="18" :src="productDetail.image" style="width: 350px"/>
             </Row>
           </i-col>
         </Row>

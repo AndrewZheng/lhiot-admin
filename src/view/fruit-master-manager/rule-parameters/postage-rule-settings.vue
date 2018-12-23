@@ -16,6 +16,8 @@
         @on-copy="onCopy"
         :searchAreaColumn="18"
         :operateAreaColumn="6"
+        @on-select-all="onSelectionAll"
+        @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
           <Row>

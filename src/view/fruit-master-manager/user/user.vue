@@ -139,7 +139,7 @@
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="8">余额:</i-col>
-              <i-col span="16">{{userDetail.balance}}</i-col>
+              <i-col span="16">{{userDetail.balance|fenToYuanDot2Filters}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -176,7 +176,7 @@ import Tables from '_c/tables';
 import { getUserPages, editUser } from '@/api/fruitermaster';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
-
+import {fenToYuanDot2} from '@/libs/util';
 const userDetail = {
   id: '',
   birthday: '',
@@ -259,7 +259,10 @@ export default {
         {
           title: '余额',
           width: 100,
-          key: 'balance'
+          key: 'balance',
+          render(h, params) {
+            return <div>{fenToYuanDot2(params.row.balance)}</div>;
+          }
         },
         {
           title: '积分',

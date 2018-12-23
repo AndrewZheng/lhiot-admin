@@ -438,3 +438,59 @@ export const positionTypeEnum = [
     value: positionType.ARTICLE
   }
 ];
+
+// 广告关联类别
+// （PRODUCT_DETAILS- 商品详情
+// PRODUCT_SECTION-商品版块
+// CUSTOM_PLAN-定制计划
+// CUSTOM_PLAN_SECTION-定制版块
+// ARTICLE_DETAILS-文章详情
+// STORE_LIVE_TELECAST- 门店直播
+//  MORE_AMUSEMENT- 多娱
+// EXTERNAL_LINKS- 外部链接）
+export const relationType = {
+  PRODUCT_DETAILS: 'PRODUCT_DETAILS',
+  PRODUCT_SECTION: 'PRODUCT_SECTION',
+  CUSTOM_PLAN: 'CUSTOM_PLAN',
+  CUSTOM_PLAN_SECTION: 'CUSTOM_PLAN_SECTION',
+  ARTICLE_DETAILS: 'ARTICLE_DETAILS',
+  STORE_LIVE_TELECAST: 'STORE_LIVE_TELECAST',
+  MORE_AMUSEMENT: 'MORE_AMUSEMENT',
+  EXTERNAL_LINKS: 'EXTERNAL_LINKS'
+
+};
+
+export const relationTypeEnum = [
+  {
+    label: '商品详情',
+    value: relationType.PRODUCT_DETAILS
+  },
+  {
+    label: '商品版块',
+    value: relationType.PRODUCT_SECTION
+  },
+  {
+    label: '定制计划',
+    value: relationType.CUSTOM_PLAN
+  },
+  {
+    label: '定制版块',
+    value: relationType.CUSTOM_PLAN_SECTION
+  },
+  {
+    label: '文章详情',
+    value: relationType.ARTICLE_DETAILS
+  },
+  {
+    label: '门店直播',
+    value: relationType.STORE_LIVE_TELECAST
+  },
+  {
+    label: '多娱',
+    value: relationType.MORE_AMUSEMENT
+  },
+  {
+    label: '外部链接',
+    value: relationType.EXTERNAL_LINKS
+  }
+];
