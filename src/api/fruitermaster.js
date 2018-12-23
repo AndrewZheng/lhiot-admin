@@ -699,3 +699,12 @@ export const editCustomPlanProducts = (data) => {
     method: 'put'
   });
 };
+
+// {id}修改定制计划规格
+export const editCustomPlanSpecifications = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-specification/'+data.id,
+    data,
+    method: 'put'
+  });
+};

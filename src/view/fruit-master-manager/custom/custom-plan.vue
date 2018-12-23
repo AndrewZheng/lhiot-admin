@@ -61,73 +61,76 @@
       :mask-closable="false"
     >
       <p slot="header">
-        <span>鲜果师详情</span>
+        <span>定制计划详情</span>
       </p>
-      <div class="modal-content">
+      <div class="modal-content" :model="rowData">
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="4">ID:</i-col>
-              <i-col span="20">{{fruitMasterDetail.id}}</i-col>
+              <i-col span="10">定制计划名称:</i-col>
+              <i-col span="14">{{rowData.name}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请人:</i-col>
-              <i-col span="16">{{fruitMasterDetail.name}}</i-col>
+              <i-col span="10">定制计划描述:</i-col>
+              <i-col span="14">{{rowData.description}}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+          <i-col span="24">
+            <Row :gutter="8" class-name="mb10">
+              <i-col span="6">定制计划主图:</i-col>
+              <img style="width: 150px" :src="rowData.image" span="16">
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">手机号码:</i-col>
-              <i-col span="16">{{fruitMasterDetail.phoneNumber}}</i-col>
+              <i-col span="10">是否上架:</i-col>
+              <i-col span="14">{{rowData.status|onSaleStatusFilters}}</i-col>
             </Row>
           </i-col>
-          <i-col span="12">
+           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">提取金额:</i-col>
-              <i-col span="16">{{fruitMasterDetail.extractingAmount}}</i-col>
+              <i-col span="10">上架板块:</i-col>
+              <i-col span="14">{{rowData.customPlanSectionIds}}</i-col>
             </Row>
           </i-col>
         </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">银行卡号:</i-col>
-              <i-col span="16">{{fruitMasterDetail.creditCardNumbers}}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">结算状态:</i-col>
-              <i-col span="16">{{fruitMasterDetail.settlementStatus}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">申请时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.applicationTime}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-              <i-col span="8">处理时间:</i-col>
-              <i-col span="16">{{fruitMasterDetail.handlingTime}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
+
+        <Tabs value="name1" type="card">
+            <TabPane v-for="(period, key) in rowData.periodList" :key="'addOrEdit' + period.index" :label="period.planPeriod == '7' ? '周' : '月'" :name="'name'+(key+1)">
+                <Form>
+                  <Row type="flex" :gutter="24" align="middle" class-name="mb10">
+                    <i-col span="8" v-for="specification in period.specificationList" :key="'addOrEdit' + period.index +  '--' + specification.index">
+                      {{specification.description}}价: {{specification.price}}
+                    </i-col>
+                  </Row>
+                </Form>
+                <!-- FIXME -->
+                <table>
+                    <th>
+                      <td>时间</td>
+                      <td>套餐名</td>
+                    </th>
+                    <tr v-for="product in period.products" :key="'addOrEdit' + period.index +  '-' + product.index">
+                      <td>第{{product.dayOfPeriod}}天</td>
+                      <td>{{product.productName}}</td>
+                    </tr>
+                  </table>
+            </TabPane>
+        </Tabs>
+        
       </div>
       <div slot="footer">
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
 
+    <!-- 定制计划新增和修改 -->
     <Modal
       v-model="modalEdit"
       :width="600"
@@ -136,9 +139,12 @@
         <span>{{rowData.id==''?'创建定制计划':'编辑定制计划'}}</span>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="customPlanDetail" :rules="ruleInline" :label-width="110">
+        <Form ref="modalEdit" :model="rowData" :rules="ruleInline" :label-width="110" v-if="showHeader">
           <FormItem label="定制计划名称:" prop="name">
-            <Input placeholder="上架名称" class="search-input mr5" v-model="customPlanDetail.name" style="width: auto"/>
+            <Input placeholder="上架名称" class="search-input mr5" v-model="rowData.name" style="width: auto"/>
+          </FormItem>
+          <FormItem label="定制计划描述:" prop="description">
+            <Input placeholder="定制计划描述" class="search-input mr5" v-model="rowData.description" style="width: auto"/>
           </FormItem>
           <FormItem label="定制计划主图:" prop="image">
             <div class="demo-upload-list" v-for="item in uploadListMain">
@@ -170,7 +176,7 @@
           </FormItem>
           <FormItem label="是否上架:" prop="status">
             <Select
-              class="search-col mr5" v-model="customPlanDetail.status" style="width: 100px" >
+              class="search-col mr5" v-model="rowData.status" style="width: 100px" >
               <Option v-for="item in onSaleStatusEnum" :value="item.value" class="ptb2-5" :key="`search-col-${item.value}`">
                 {{item.label}}
               </Option>
@@ -181,11 +187,12 @@
               <div>
                 {{item.description}}:
               </div>
-              <CheckboxGroup @on-change="checkAllGroupChange" v-model="model">
+              <CheckboxGroup v-model="rowData.customPlanSectionIds">
                 <Checkbox
                   ref="checkBox"
                   :label="innerItem.id"
                   v-for="innerItem in item.productSections"
+                  :key="innerItem.sectionName"
                 >{{innerItem.sectionName}}
                 </Checkbox>
               </CheckboxGroup>
@@ -193,37 +200,35 @@
           </FormItem>
         </Form>
 
-        <template v-for="(customPlan, index) in customPlanDetail2" v-if="index == 'periodList'">
-          <Tabs value="name1" type="card">
-            <TabPane v-for="(period, key) in customPlan" :key="'period' + key" :label="period.planPeriod == '7' ? '周' : '月'" :name="'name'+(key+1)">
-              <Form>
-                <Col span="8" v-for="(specification, sIndex) in period.specificationList" :key="specification.id">
-                <FormItem :label="specification.description + '价:'">
-                  <Input type="text" class="search-input mr5" v-model="specification.price" style="width: 100px" required="required"/>
-                </FormItem>
-                </Col>
-                <Col span="12" v-for="(product,pIndex) in period.products" :key="'product' + pIndex">
-                <FormItem :label="'第'+ product.dayOfPeriod +'天:'" :prop="product.productName">
-                  <Select
-                    :filterable="true"
-                    style="width: 200px"
-                    v-model="product.productName"
-                    :remote="true"
-                    :remote-method ="remoteMethod"
-                    :loading="shelfSpecificationLoading">
-                    <Option
-                      v-for="(option, index) in optionsShelfSpecification"
-                      :value="option.name" :key="index" class="pb5 pt5 pl15"
-                      @click.native="updateProduct(product.id, option.id)"
-                    >
-                      {{option.name}}</Option>
-                  </Select>
-                </FormItem>
-                </Col>
-              </Form>
+        <Tabs value="name1" type="card" v-if="showTab">
+            <TabPane v-for="(period, key) in rowData.periodList" :key="'addOrEdit' + period.index" :label="period.planPeriod == '7' ? '周' : '月'" :name="'name'+(key+1)">
+                <Form>
+                  <Col span="8" v-for="specification in period.specificationList" :key="'addOrEdit' + period.index +  '--' + specification.index">
+                    <FormItem :label="specification.description + '价:'">
+                      <Input type="text" class="search-input mr5" v-model="specification.price" style="width: 100px" required="required"/>
+                    </FormItem>
+                  </Col>
+                  <Col span="12" v-for="product in period.products" :key="'addOrEdit' + period.index +  '-' + product.index">
+                    <FormItem :label="'第'+ product.dayOfPeriod +'天:'" :prop="product.productName">
+                      <Select
+                      :filterable="true"
+                      style="width: 200px"
+                      v-model="product.productName"
+                      :remote="true"
+                      :remote-method ="remoteMethod"
+                      :loading="shelfSpecificationLoading">
+                          <Option
+                            v-for="(option, index) in optionsShelfSpecification"
+                            :value="option.name" :key="'addOrEdit' + period.index +  '-' + product.index + '-' + index" class="pb5 pt5 pl15"
+                             @click.native="addProduct(period.index, product.index, option.id)"
+                          >
+                          {{option.name}}</Option>
+                      </Select>
+                    </FormItem>
+                  </Col>
+                </Form>
             </TabPane>
-          </Tabs>
-        </template>
+        </Tabs>
 
       </div>
       <div slot="footer">
@@ -234,7 +239,7 @@
     </Modal>
 
     <!-- 定制周期管理 -->
-    <Modal
+     <Modal
       v-model="modalSetting"
       :width="600"
     >
@@ -242,36 +247,37 @@
         <span>定制计划周期管理</span>
       </p>
       <div class="modal-content">
-        <template v-for="(customPlan, index) in customPlanDetail2" v-if="index == 'periodList'">
-          <Tabs value="name1" type="card">
-            <TabPane v-for="(period, key) in customPlan" :key="'period' + key" :label="period.planPeriod == '7' ? '周' : '月'" :name="'name'+(key+1)">
-              <Form>
-                <Col span="8" v-for="(specification, sIndex) in period.specificationList" :key="specification.id">
-                <FormItem :label="specification.description + '价:'">
-                  <Input type="text" class="search-input mr5" v-model="specification.price" style="width: 100px" required="required"/>
-                </FormItem>
-                </Col>
-                <Col span="12" v-for="(product,pIndex) in period.products" :key="'product' + pIndex">
-                <FormItem :label="'第'+ product.dayOfPeriod +'天:'" :prop="product.productName">
-                  <Select
-                    :filterable="true"
-                    style="width: 200px"
-                    v-model="product.productName"
-                    :remote="true"
-                    :remote-method ="remoteMethod"
-                    :loading="shelfSpecificationLoading">
-                    <Option
-                      v-for="(option, index) in optionsShelfSpecification"
-                      :value="option.name" :key="index" class="pb5 pt5 pl15"
-                      @click.native="updateProduct(product.id, option.id)"
-                    >
-                      {{option.name}}</Option>
-                  </Select>
-                </FormItem>
-                </Col>
-              </Form>
-            </TabPane>
-          </Tabs>
+        <template v-for="(customPlan, index) in rowData" v-if="index == 'periodList'" >
+            <Tabs value="productUpdate1" type="card" :key="'productUpdate' + customPlan.id">
+                <TabPane v-for="(period, key) in customPlan" :key="'update' + period.index" :label="period.planPeriod == '7' ? '周' : '月'" :name="'productUpdate'+(key+1)">
+                   <Form>
+                      <Col span="8" v-for="specification in period.specificationList" :key="'update' + period.index +  '--' + specification.index">
+                        <FormItem :label="specification.description + '价:'">
+                          <Input type="text" class="search-input mr5" v-model="specification.price" style="width: 100px" required="required"/>
+                        </FormItem>
+                      </Col>
+                      <Col span="12" v-for="product in period.products" :key="'update' + period.index +  '-' + product.index">
+                        <FormItem :label="'第'+ product.dayOfPeriod +'天:'" :prop="product.productName">
+                          <Select
+                          :filterable="true"
+                          style="width: 200px"
+                          v-model="product.productName"
+                          :remote="true"
+                          :remote-method ="remoteMethod"
+                          :loading="shelfSpecificationLoading">
+                             <Option
+                                v-for="(option, index) in optionsShelfSpecification"
+                                :value="option.name" class="pb5 pt5 pl15"
+                                :key="'update' + period.index +  '-' + product.index + '-' + index"
+                                @click.native="updateProduct(product.id, option.id)"
+                              >
+                              {{option.name}}</Option>
+                          </Select>
+                        </FormItem>
+                      </Col>
+                    </Form>
+                </TabPane>
+            </Tabs>
         </template>
       </div>
       <div slot="footer">
@@ -290,7 +296,7 @@
     deleteCustomPlan,
     getuiPositionsPages,
     createCustomPlan,
-    getProductShelvesPages, getCustomPlan, editCustomPlanProducts, editCustomPlanSpecifications} from '@/api/fruitermaster';
+    getProductShelvesPages, getCustomPlan, editCustomPlan, editCustomPlanProducts, editCustomPlanSpecifications} from '@/api/fruitermaster';
   import IViewUpload from '_c/iview-upload';
   import deleteMixin from '@/mixins/deleteMixin.js';
   import tableMixin from '@/mixins/tableMixin.js';
@@ -300,21 +306,9 @@
   import {onSaleStatusConvert} from '@/libs/converStatus';
   import {onSaleStatusEnum, YNEnum, positionType} from '@/libs/enumerate';
 
-  const fruitMasterDetail = {
-    id: '',
-    name: 0,
-    phoneNumber: '',
-    extractingAmount: '',
-    settlementStatus: '',
-    creditCardNumbers: '',
-    headStatus: '',
-    applicationTime: '',
-    handlingTime: '2018-10-28'
-  };
-
-  const customPlanDetail2 = {
+  const customPlanDetail = {
     id: 0,
-    customPlanSectionIds: '',
+    customPlanSectionIds: [],
     description: '',
     image: '',
     name: '',
@@ -350,69 +344,6 @@
     ],
     price: 0,
     status: null
-  };
-
-  const customPlanAdd = {
-    id: 0,
-    customPlanSectionIds: '',
-    description: '',
-    image: '',
-    name: '',
-    overRule: '',
-    periodList: [],
-    price: 0,
-    status: null
-  };
-
-  const customPlanDetail = {
-    id: 0,
-    status: null,
-    createAt: null,
-    overRule: '',
-    createUser: '',
-    image: null,
-    name: '',
-    description: '',
-    price: null,
-    periodList: null,
-    sorts: null,
-    customPlanSectionIds: null,
-    periodWeek1: null,
-    periodWeek2: null,
-    periodWeek3: null,
-    periodMonth1: null,
-    periodMonth2: null,
-    periodMonth3: null,
-    selectWeek1: null
-  };
-
-  const periodWeekDay = {
-    planPeriod: null,
-    quantity: null,
-    price: null
-  };
-
-  const periodDetail = {
-    planPeriod: 0,
-    specificationList: null,
-    products: null
-  };
-
-  const productDetail = {
-    dayOfPeriod: 0,
-    shelfId: 0
-  };
-
-  const specificationDetail = {
-    id: 0,
-    planId: 0,
-    price: 0,
-    quantity: 0,
-    description: '',
-    planPeriod: 0,
-    image: null,
-    standardId: 0
-
   };
 
   const roleRowData = {
@@ -653,44 +584,19 @@
         optionsShelfSpecification: [],
         searchRowData: this._.cloneDeep(roleRowData),
         customPlanDetail: this._.cloneDeep(customPlanDetail),
-        fruitMasterDetail: fruitMasterDetail,
         periodList: [],
-        periodDetail: this._.cloneDeep(periodDetail),
         products: [],
-        productDetail: this._.cloneDeep(productDetail),
         specificationList: [],
-        specificationDetail: this._.cloneDeep(specificationDetail),
-        rowData: customPlanDetail2
+        rowData: customPlanDetail,
+        periodIndex: -1,
+        productIndex: -1,
+        modalSetting: false,
+        modalEdit: false,
+        showTab: false,
+        showHeader: false
       };
     },
-    methods: {
-      selectIndex(options) {
-        if (!this.customPlanDetail.periodList) {
-          this.customPlanDetail.periodList = [];
-        };
-        let obj = this.customPlanDetail.periodList.find(item => item.planPeriod === 7);
-        if (!obj) {
-          this.productDetail = this._.cloneDeep(productDetail);
-          this.productDetail.shelfId = options.id;
-          this.productDetail.dayOfPeriod = 1;
-
-          this.periodDetail = this._.cloneDeep(periodDetail);
-          this.periodDetail.planPeriod = 7;
-          this.periodDetail.products = [];
-          this.periodDetail.products.push(this.productDetail);
-          this.customPlanDetail.periodList.push(this.periodDetail);
-        } else {
-          let innerObj = obj.products.find(item => item.dayOfPeriod === 1);
-          if (innerObj) {
-            innerObj.shelfId = options.id;
-          } else {
-            this.productDetail = this._.cloneDeep(productDetail);
-            this.productDetail.shelfId = options.id;
-            this.productDetail.dayOfPeriod = 1;
-            obj.products.push(this.productDetail);
-          };
-        };
-      },
+    methods: {      
       remoteMethod(query) {
         if (query !== '') {
           this.handleSearchAutoComplete(query);
@@ -713,105 +619,52 @@
           this.shelfSpecificationLoading = false;
         });
       },
-      formItemChangeDay1() {
-
-      },
       handleSubmit(name) {
         this.$refs[name].validate((valid) => {
-          if (valid) {
-            if (this.tempModalType === this.modalType.create) {
-              this.convertPeriod(this.customPlanDetail.periodWeek1, 7, 1);
-              this.convertPeriod(this.customPlanDetail.periodWeek2, 7, 2);
-              this.convertPeriod(this.customPlanDetail.periodWeek3, 7, 3);
-              console.log(this.customPlanDetail.periodList);
-              return;
-
-              // 添加状态
-              this.createTableRow();
-            } else if (this.tempModalType === this.modalType.edit) {
-              // 编辑状态
-              this.editTableRow();
+          // console.log(JSON.stringify(this.rowData));   
+          // FIXME 验证    
+          if (valid) {   
+                if (this.rowData.id == 0) {
+                  this.modalViewLoading = true;
+                  this.loading=true;
+                  createCustomPlan(this.rowData).then(res => {
+                    this.$Message.success('创建成功!');
+                  }).finally(res => {
+                    this.getTableData();
+                    this.modalViewLoading = false;
+                    this.modalEdit = false;
+                  });
+              } else {
+                  this.modalViewLoading = true;
+                  this.loading=true;
+                  editCustomPlan(this.rowData).then(res => {
+                    this.$Message.success('修改成功!');
+                  }).finally(res => {
+                    this.getTableData();
+                    this.modalViewLoading = false;
+                    this.modalEdit = false;
+                  });
+              }
             }
-          } else {
-            this.$Message.error('请完善商品的信息!');
-          }
         });
-      },
-      convertPeriod(value, planPeriod, quantity) {
-        if (value) {
-          if (!this.customPlanDetail.periodList) {
-            this.customPlanDetail.periodList=[];
-            this.specificationDetail = this._.cloneDeep(specificationDetail);
-            this.specificationDetail.price = value;
-            this.specificationDetail.quantity = quantity;
-            this.specificationList.push(this.specificationDetail);
-            this.periodDetail.planPeriod = planPeriod;
-            this.periodDetail.specificationList = this.specificationList;
-            this.customPlanDetail.periodList.push(this.periodDetail);
-          } else {
-            let obj = this.customPlanDetail.periodList.find(item => {
-              return item.planPeriod === planPeriod;
-            });
-            let innerObj = obj.specificationList.find(item => {
-              return item.quantity === quantity;
-            });
-            if (!innerObj) {
-              this.specificationDetail = this._.cloneDeep(specificationDetail);
-              this.specificationDetail.price = value;
-              this.specificationDetail.quantity = quantity;
-              obj.specificationList.push(this.specificationDetail);
-            } else {
-              innerObj.price = value;
-            };
-          };
-        } else {
-          if (this.customPlanDetail.periodList) {
-            let obj = this.customPlanDetail.periodList.find(item => {
-              return item.planPeriod === planPeriod;
-            });
-            if (obj) {
-              if (obj.specificationList) { obj.specificationList = obj.specificationList.filter(item => item.quantity !== quantity); }
-            };
-          };
-        };
-      },
-      createTableRow() {
-        this.modalViewLoading = true;
-        this.loading=true;
-        createCustomPlan(this.customPlanDetail).then(res => {
-          this.$Message.success('创建成功!');
-        }).finally(res => {
-          this.getTableData();
-          this.modalViewLoading = false;
-          this.modalEdit = false;
-        });
-      },
-      editTableRow() {
-
-      },
-      checkAllGroupChange(value) {
-        if (value) {
-          this.customPlanDetail.customPlanSectionIds = value.join(',');
-        } else {
-          this.customPlanDetail.customPlanSectionIds = null;
-        };
-        console.log(this.customPlanDetail.customPlanSectionIds);
       },
       handleSuccessMain(response, file, fileList) {
         this.uploadListMain = fileList;
-        this.customPlanDetail.image = null;
-        this.customPlanDetail.image = fileList[0].url;
+        this.rowData.image = null;
+        this.rowData.image = fileList[0].url;
       },
       handleRemoveMain(file) {
         this.$refs.uploadMain.deleteFile(file);
         this.uploadListMain = [];
-        this.customPlanDetail.image = null;
+        this.rowData.image = null;
       },
       handleView(params) {
         this.tempModalType = this.modalType.view;
         this.loading = true;
         getCustomPlan({id: params.row.id}).then(res => {
           this.loading = false;
+          this.rowData = {};
+          this.rowData = res;
           this.modalView = true;
         });
       },
@@ -820,21 +673,31 @@
         this.loading = true;
         getCustomPlan({id: params.row.id}).then(res => {
           this.loading = false;
-          this.customPlanDetail2 = res;
+          this.rowData = {};
+          this.rowData = res;
           this.modalSetting = true;
         });
       },
       handleAdd() {
         // 对象初始化
-        this.rowData = customPlanAdd;
-        console.log(JSON.stringify(this.rowData));
+        this.rowData = {};
+        this.rowData = {'id': 0, 'customPlanSectionIds': [], 'description': '', 'image': '', 'name': '', 'overRule': '', 'periodList': [], 'price': 0, 'status': null};
+        // console.log(JSON.stringify(this.rowData));
+        // 数据循环初始化
         for (var period = 0; period < 2; period++) {
-          this.rowData.periodList.push({'planPeriod': 0, 'products': [], 'specificationList': []});
-          for (var products = 0; products < 7; products++) {
-            this.rowData.periodList.products.push({'benefit': '', 'dayOfPeriod': 0, 'description': '', 'id': 0, 'image': '', 'planId': 0, 'productName': '', 'shelfId': 0});
+          let planPeriod = period == 0 ? 7 : 30;
+          this.rowData.periodList.push({'index': period, 'planPeriod': planPeriod, 'products': [], 'specificationList': []});
+          for (var product = 0; product < planPeriod; product++) {
+              this.rowData.periodList[period].products.push({'index': product, 'benefit': '', 'dayOfPeriod': (product+1), 'description': '', 'id': 0, 'image': '', 'planId': 0, 'productName': '', 'shelfId': 0});
+          }
+          for (var specification = 0; specification < 3; specification++) {
+              let description = specification == 0 ? '单人套餐' : (specification == 1 ? '双人套餐' : '三人套餐');
+              this.rowData.periodList[period].specificationList.push({'index': specification, 'description': description, 'id': 0, 'image': '', 'planId': 0, 'planPeriod': planPeriod, 'price': 0, 'quantity': (specification+1), 'standardId': 0});
           }
         }
-        console.log(JSON.stringify(this.rowData));
+        // console.log(JSON.stringify(this.rowData));
+        this.showHeader = true;
+        this.showTab = true;
         this.modalEdit = true;
       },
       resetSearchRowData() {
@@ -843,12 +706,18 @@
         this.getTableData();
       },
       customOnSale(params) {
+        // FIXME 代码被删除
         console.log(params);
       },
       handleEdit(params) {
-        this.tempModalType = this.modalType.edit;
-        this.fruitMasterDetail = params.row;
-        this.modalEdit = true;
+        this.loading = true;
+        getCustomPlan({id: params.row.id}).then(res => {
+          this.loading = false;
+          this.rowData = res;
+          this.showHeader = true;
+          this.showTab = false;
+          this.modalEdit = true;
+        });
       },
       getTableData() {
         getCustomPlansPages(this.searchRowData).then(res => {
@@ -888,14 +757,36 @@
         };
         console.log('修改定制计划商品:' + JSON.stringify(params));
         editCustomPlanProducts(params).then(res => {
-          this.$Message.info('修改成功');
+              this.$Message.info('修改成功');
         });
       },
       updateSpecification() {
-        console.log(JSON.stringify(this.customPlanDetail2.periodList));
-        editCustomPlanSpecifications(this.customPlanDetail2).then(res => {
-          this.$Message.info('修改成功');
+        console.log(JSON.stringify(this.rowData.periodList));
+        editCustomPlanSpecifications(this.rowData).then(res => {
+             this.$Message.info('修改成功');
+             this.modalSetting = false;
         });
+      },
+      addProduct(periodIndex, productIndex, shelfId) {
+        console.log('addProduct:' + periodIndex + ',' + productIndex + ',' + shelfId);
+        this.rowData.periodList[periodIndex].products[productIndex].shelfId = shelfId;
+        // console.log('rowData:' + JSON.stringify(this.rowData));
+        editCustomPlanSpecifications(this.rowData).then(res => {
+             this.$Message.info('修改成功');
+        });
+      },
+      handleEditClose() {
+        this.modalEdit = false;
+        this.isCreated = false;
+        this.isDisable = true;
+        this.step = 'name1';
+      },
+      handleSettingClose() {
+        this.modalSetting = false;
+        this.step = 'name1';
+      },
+      handleClose() {
+        this.modalView = false;
       }
     }
   };
