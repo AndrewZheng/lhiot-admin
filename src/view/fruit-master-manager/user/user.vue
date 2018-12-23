@@ -12,7 +12,6 @@
         :loading="loading"
         :searchAreaColumn="22"
         :operateAreaColumn="2"
-
         @on-view="handleView"
         @on-usable="handleUsable"
       >
@@ -22,24 +21,27 @@
             class="search-input mr5"
             v-model="searchRowData.id"
             style="width: 150px"
+            clearable
           />
           <Input
             placeholder="昵称"
             class="search-input mr5"
             v-model="searchRowData.nickname"
             style="width: 100px"
+            clearable
           />
           <Input
             placeholder="手机号码"
             class="search-input"
             v-model="searchRowData.phone"
             style="width: 100px"
+            clearable
           />
           <DatePicker
             type="datetime"
             placeholder="注册时间起"
             format="yyyy-MM-dd HH:mm:ss"
-            class="search-input ml20 "
+            class="search-input ml20"
             v-model="searchRowData.createAtStart"
             @on-change="startTimeChange"
             style="width: 160px"
@@ -53,15 +55,29 @@
             v-model="searchRowData.createAtEnd"
             style="width: 160px"
           />
-          <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary" :loading="searchLoading">
+          <Button
+            v-waves
+            @click="handleSearch"
+            class="search-btn mr5"
+            type="primary"
+            :loading="searchLoading"
+          >
             <Icon type="md-search"/>&nbsp;搜索
           </Button>
-          <Button v-waves @click="handleClear" class="search-btn" type="info" :loading="clearSearchLoading">
+          <Button
+            v-waves
+            @click="handleClear"
+            class="search-btn"
+            type="info"
+            :loading="clearSearchLoading"
+          >
             <Icon type="md-refresh"/>&nbsp;清除条件
           </Button>
         </div>
         <div slot="operations">
-          <Button v-waves type="success" @click="exportExcel"><Icon type="md-cloud-upload"/> 导出</Button>
+          <Button v-waves type="success" @click="exportExcel">
+            <Icon type="md-cloud-upload"/>导出
+          </Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -157,57 +173,57 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import {getUserPages,editUser} from '@/api/fruitermaster';
+import { getUserPages, editUser } from '@/api/fruitermaster';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import {fenToYuanDot2} from '@/libs/util';
 const userDetail = {
-  id: "",
-  birthday: "",
-  sex: "",
-  phone: "",
+  id: '',
+  birthday: '',
+  sex: '',
+  phone: '',
   realName: null,
-  nickname: "",
-  email: "",
-  qq: "",
-  avatar: "",
-  address: "",
-  description: "",
-  registerAt: "",
+  nickname: '',
+  email: '',
+  qq: '',
+  avatar: '',
+  address: '',
+  description: '',
+  registerAt: '',
   point: 0,
   balance: null,
-  openId: "",
-  unionId: "",
+  openId: '',
+  unionId: '',
   baseUserId: null,
-  locked: "",
-  applicationType: "",
-  paymentPermissions: ""
+  locked: '',
+  applicationType: '',
+  paymentPermissions: ''
 };
 const roleRowData = {
-  applicationType: "",
-  createAtEnd: "",
-  createAtStart: "",
-  nickname: "",
+  applicationType: '',
+  createAtEnd: '',
+  createAtStart: '',
+  nickname: '',
   page: 1,
-  phone: "",
-  rows: 10,
+  phone: '',
+  rows: 10
 };
 export default {
   components: {
     Tables
   },
-  computed:{
-    sexComputed(){
+  computed: {
+    sexComputed() {
       if (this.sex === 'MAN') {
         return '男';
-      }else if (this.sex === 'WOMAN') {
+      } else if (this.sex === 'WOMAN') {
         return '女';
       } else {
-        return '保密'
+        return '保密';
       };
     },
-    accountStatusComputed(){
-      return this.locked ==='LOCK' ? '禁用' : '正常'
+    accountStatusComputed() {
+      return this.locked === 'LOCK' ? '禁用' : '正常';
     }
   },
   data() {
@@ -258,7 +274,7 @@ export default {
           title: '账号状态',
           width: 90,
           render: (h, params, vm) => {
-            const {row} = params;
+            const { row } = params;
             const str = row.locked === 'LOCK' ? '禁用' : '正常';
             return <span>{str}</span>;
           }
@@ -280,7 +296,7 @@ export default {
       searchRowData: _.cloneDeep(roleRowData)
     };
   },
-  mixins:[tableMixin,searchMixin],
+  mixins: [tableMixin, searchMixin],
   created() {
     this.getTableData();
   },
@@ -295,14 +311,14 @@ export default {
       this.searchRowData = _.cloneDeep(roleRowData);
     },
     handleUsable(params) {
-      let lockStatus = params.row.locked === 'LOCK'?'UNLOCKED':'LOCK'
-      this.loading = true
+      let lockStatus = params.row.locked === 'LOCK' ? 'UNLOCKED' : 'LOCK';
+      this.loading = true;
       editUser({
-        id:params.row.id,
+        id: params.row.id,
         lockStatus
-      }).then(res=>{
-        this.getTableData()
-      })
+      }).then(res => {
+        this.getTableData();
+      });
     },
     handleView(params) {
       this.userDetail = params.row;
@@ -312,7 +328,7 @@ export default {
       getUserPages(this.searchRowData).then(res => {
         this.tableData = res.array;
         this.total = res.total;
-      }).finally( res => {
+      }).finally(res => {
         this.loading = false;
         this.searchLoading = false;
         this.clearSearchLoading = false;

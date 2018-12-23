@@ -323,7 +323,7 @@ export const asyncRouterMap = [
         path: 'config',
         name: 'config',
         meta: {
-          icon: 'md-menu',
+          icon: 'md-barcode',
           title: '参数管理'
         },
         component: () => import('@/view/system/config/config.vue')
@@ -332,7 +332,7 @@ export const asyncRouterMap = [
         path: 'permission',
         name: 'permission',
         meta: {
-          icon: 'md-menu',
+          icon: 'md-build',
           title: '权限管理'
         },
         component: () => import('@/view/system/permission/permission.vue')
@@ -341,7 +341,7 @@ export const asyncRouterMap = [
         path: 'role',
         name: 'role',
         meta: {
-          icon: 'md-menu',
+          icon: 'md-people',
           title: '角色管理'
         },
         component: () => import('@/view/system/role/role.vue')
@@ -350,7 +350,7 @@ export const asyncRouterMap = [
         path: 'user',
         name: 'user',
         meta: {
-          icon: 'md-menu',
+          icon: 'md-person',
           title: '用户管理'
         },
         component: () => import('@/view/system/user/user.vue')
@@ -361,7 +361,7 @@ export const asyncRouterMap = [
     path: '/fruit-master-manager-user',
     name: 'fruit-master-manager-user',
     meta: {
-      icon: 'md-settings',
+      icon: 'md-contacts',
       title: '用户管理'
     },
     component: Main,
@@ -370,7 +370,7 @@ export const asyncRouterMap = [
         path: 'fruit-master-user',
         name: 'fruit-master-user',
         meta: {
-          icon: 'md-menu',
+          icon: 'md-person',
           title: '用户管理'
         },
         component: () => import('@/view/fruit-master-manager/user/user.vue')
@@ -381,7 +381,7 @@ export const asyncRouterMap = [
     path: '/fruit-master-manager',
     name: 'fruit-master-manager',
     meta: {
-      icon: 'md-settings',
+      icon: 'ios-contacts', 
       title: '鲜果师管理'
     },
     component: Main,
@@ -390,7 +390,7 @@ export const asyncRouterMap = [
         path: 'application',
         name: 'application',
         meta: {
-          icon: 'md-menu',
+          icon: 'md-clipboard',
           title: '鲜果师申请'
         },
         component: () => import('@/view/fruit-master-manager/master/application.vue')
@@ -399,7 +399,7 @@ export const asyncRouterMap = [
         path: 'salary',
         name: 'salary',
         meta: {
-          icon: 'md-menu',
+          icon: 'logo-yen',
           title: '薪资管理'
         },
         component: () => import('@/view/fruit-master-manager/master/salary.vue')
@@ -408,7 +408,7 @@ export const asyncRouterMap = [
         path: 'fruit-manager',
         name: 'fruit-manager',
         meta: {
-          icon: 'md-menu',
+          icon: 'ios-contacts',
           title: '鲜果师管理'
         },
         component: () => import('@/view/fruit-master-manager/master/manager.vue')
@@ -419,7 +419,7 @@ export const asyncRouterMap = [
     path: '/fruit-master-manager-goods',
     name: 'fruit-master-manager-goods',
     meta: {
-      icon: 'md-settings',
+      icon: 'md-nutrition',
       title: '商品管理'
     },
     component: Main,
@@ -428,7 +428,7 @@ export const asyncRouterMap = [
         path: '/fruit-master-goods-category',
         name: 'fruit-master-goods-category',
         meta: {
-          icon: 'md-menu',
+          icon: 'md-pricetag',
           title: '商品分类管理'
         },
         component: () => import('@/view/fruit-master-manager/goods/goods-category.vue')
@@ -446,7 +446,7 @@ export const asyncRouterMap = [
         path: '/fruit-master-goods-on-sale',
         name: 'fruit-master-goods-on-sale',
         meta: {
-          icon: 'md-menu',
+          icon: 'ios-share',
           title: '商品上架管理'
         },
         component: () => import('@/view/fruit-master-manager/goods/goods-on-sale.vue')
@@ -457,7 +457,7 @@ export const asyncRouterMap = [
     path: '/fruit-master-manager-content',
     name: 'fruit-master-manager-content',
     meta: {
-      icon: 'md-settings',
+      icon: 'ios-create',
       title: '内容管理'
     },
     component: Main,
@@ -466,7 +466,7 @@ export const asyncRouterMap = [
         path: '/fruit-master-content-article',
         name: 'fruit-master-content-article',
         meta: {
-          icon: 'md-menu',
+          icon: 'ios-list-box',
           title: '文章管理'
         },
         component: () => import('@/view/fruit-master-manager/content/article.vue')
@@ -477,8 +477,8 @@ export const asyncRouterMap = [
     path: '/fruit-master-manager-page',
     name: 'fruit-master-manager-page',
     meta: {
-      icon: 'md-settings',
-      title: '页面板块管理'
+      icon: 'md-grid',
+      title: '页面板块管理' 
     },
     component: Main,
     children: [
@@ -486,7 +486,7 @@ export const asyncRouterMap = [
         path: '/fruit-master-page-module-position',
         name: 'fruit-master-page-module-position',
         meta: {
-          icon: 'md-menu',
+          icon: 'md-flag',
           title: '板块位置管理'
         },
         component: () => import('@/view/fruit-master-manager/page/module-position.vue')
@@ -495,7 +495,7 @@ export const asyncRouterMap = [
         path: '/fruit-master-page-advertisement',
         name: 'fruit-master-page-advertisement',
         meta: {
-          icon: 'md-menu',
+          icon: 'ios-megaphone',
           title: '广告管理'
         },
         component: () => import('@/view/fruit-master-manager/page/advertisement.vue')
@@ -504,7 +504,7 @@ export const asyncRouterMap = [
         path: '/fruit-master-page-goods-module',
         name: 'fruit-master-page-goods-module',
         meta: {
-          icon: 'md-menu',
+          icon: 'ios-basket',
           title: '商品板块管理'
         },
         component: () => import('@/view/fruit-master-manager/page/goods-module.vue')
@@ -513,7 +513,7 @@ export const asyncRouterMap = [
         path: '/fruit-master-page-custom-module',
         name: 'fruit-master-page-custom-module',
         meta: {
-          icon: 'md-menu',
+          icon: 'md-basket',
           title: '定制板块管理'
         },
         component: () => import('@/view/fruit-master-manager/page/custom-module.vue')
@@ -524,7 +524,7 @@ export const asyncRouterMap = [
     path: '/fruit-master-manager-custom',
     name: 'fruit-master-manager-custom',
     meta: {
-      icon: 'md-settings',
+      icon: 'md-basket',
       title: '定制管理'
     },
     component: Main,
@@ -533,7 +533,7 @@ export const asyncRouterMap = [
         path: '/fruit-master-custom-plan',
         name: 'fruit-master-custom-plan',
         meta: {
-          icon: 'md-menu',
+          icon: 'md-albums',
           title: '定制计划管理'
         },
         component: () => import('@/view/fruit-master-manager/custom/custom-plan.vue')
@@ -544,7 +544,7 @@ export const asyncRouterMap = [
     path: '/fruit-master-manager-order',
     name: 'fruit-master-manager-order',
     meta: {
-      icon: 'md-settings',
+      icon: 'md-cart',
       title: '订单管理'
     },
     component: Main,
@@ -553,7 +553,7 @@ export const asyncRouterMap = [
         path: 'fruit-master-normal-order',
         name: 'fruit-master-normal-order',
         meta: {
-          icon: 'md-menu',
+          icon: 'ios-cart',
           title: '普通订单管理'
         },
         component: () => import('@/view/fruit-master-manager/order/normal-order.vue')
@@ -562,7 +562,7 @@ export const asyncRouterMap = [
         path: 'fruit-master-custom-order',
         name: 'fruit-master-custom-order',
         meta: {
-          icon: 'md-menu',
+          icon: 'ios-cart-outline',
           title: '定制订单管理'
         },
         component: () => import('@/view/fruit-master-manager/order/custom-order.vue')
@@ -571,7 +571,7 @@ export const asyncRouterMap = [
         path: 'fruit-master-return-order',
         name: 'fruit-master-return-order',
         meta: {
-          icon: 'md-menu',
+          icon: 'ios-cart-outline',
           title: '退货订单管理'
         },
         component: () => import('@/view/fruit-master-manager/order/return-order.vue')
@@ -582,7 +582,7 @@ export const asyncRouterMap = [
     path: '/fruit-master-manager-rule-parameters',
     name: 'fruit-master-manager-rule-parameters',
     meta: {
-      icon: 'md-settings',
+      icon: 'md-nuclear',
       title: '规则参数管理'
     },
     component: Main,
@@ -591,7 +591,7 @@ export const asyncRouterMap = [
         path: '/fruit-master-postage-rule-settings',
         name: 'fruit-master-postage-rule-settings',
         meta: {
-          icon: 'md-menu',
+          icon: 'md-bicycle',
           title: '邮费规则配置'
         },
         component: () => import('@/view/fruit-master-manager/rule-parameters/postage-rule-settings.vue')
@@ -602,7 +602,7 @@ export const asyncRouterMap = [
     path: '/fruit-master-manager-activity',
     name: 'fruit-master-manager-activity',
     meta: {
-      icon: 'md-settings',
+      icon: 'ios-analytics',
       title: '活动管理'
     },
     component: Main,
@@ -611,7 +611,7 @@ export const asyncRouterMap = [
         path: '/fruit-master-new-try-activity',
         name: 'fruit-master-new-try-activity',
         meta: {
-          icon: 'md-menu',
+          icon: 'md-beer',
           title: '新品尝鲜活动'
         },
         component: () => import('@/view/fruit-master-manager/activity/new-try-activity.vue')

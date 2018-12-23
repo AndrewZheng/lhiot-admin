@@ -1,38 +1,59 @@
 <template>
   <div class="m-role">
     <Card>
-      <tables ref="tables" editable searchable
-              border
-              highlight-row
-              search-place="top"
-              v-model="tableData"
-              :columns="columns"
-              :loading="loading"
-              @on-view="handleView"
-              :searchAreaColumn="22"
-              :operateAreaColumn="2"
+      <tables
+        ref="tables"
+        editable
+        searchable
+        border
+        highlight-row
+        search-place="top"
+        v-model="tableData"
+        :columns="columns"
+        :loading="loading"
+        @on-view="handleView"
+        :searchAreaColumn="22"
+        :operateAreaColumn="2"
       >
         <div slot="searchCondition">
           <Row>
-            <Input placeholder="定制编码" class="search-input mr5" v-model="searchRowData.customOrderCode" style="width: 120px"/>
-            <Input placeholder="用户手机号" class="search-input mr5" v-model="searchRowData.phone"
-                   style="width: 100px"/>
-            <Select
-              class="search-col mr5" placeholder="定制类型" style="width: 100px" >
-              <Option v-for="item in totalQtyList" :value="item.value" class="ptb2-5" :key="`search-col-${item.value}`">
-                {{item.label}}
-              </Option>
+            <Input
+              placeholder="定制编码"
+              class="search-input mr5"
+              v-model="searchRowData.customOrderCode"
+              style="width: 120px"
+              clearable
+            />
+            <Input
+              placeholder="用户手机号"
+              class="search-input mr5"
+              v-model="searchRowData.phone"
+              style="width: 100px"
+              clearable
+            />
+            <Select class="search-col mr5" placeholder="定制类型" style="width: 100px" clearable>
+              <Option
+                v-for="item in totalQtyList"
+                :value="item.value"
+                class="ptb2-5"
+                :key="`search-col-${item.value}`"
+              >{{item.label}}</Option>
             </Select>
-            <Select
-              class="search-col mr5" placeholder="定制份数" style="width: 100px" >
-              <Option v-for="item in customCopiesList" :value="item.quantity" class="ptb2-5" :key="`search-col-${item.quantity}`">
-                {{item.description}}
-              </Option>
+            <Select class="search-col mr5" placeholder="定制份数" style="width: 100px" clearable>
+              <Option
+                v-for="item in customCopiesList"
+                :value="item.quantity"
+                class="ptb2-5"
+                :key="`search-col-${item.quantity}`"
+              >{{item.description}}</Option>
             </Select>
-            <Select class="search-col mr5" placeholder="订单状态" style="width: 100px" >
-              <Option v-for="item in orderStatus" :value="item.value" class="mb10 ml15"
-                      :key="`search-col-${item.value}`">{{item.label}}
-              </Option>
+            <Select class="search-col mr5" placeholder="订单状态" style="width: 100px" clearable>
+              <Option
+                v-for="item in orderStatus"
+                :value="item.value"
+                class="mb10 ml15"
+                :key="`search-col-${item.value}`"
+              >{{item.label}}</Option>
             </Select>
             <DatePicker
               v-model="searchRowData.beginCreateAt"
@@ -41,7 +62,8 @@
               type="datetime"
               placeholder="开始时间"
               class="mr5"
-              style="width: 160px"/>
+              style="width: 160px"
+            />
             <i>-</i>
             <DatePicker
               v-model="searchRowData.endCreateAt"
@@ -49,11 +71,24 @@
               format="yyyy-MM-dd HH:mm:ss"
               placeholder="结束时间"
               class="mr5"
-              style="width: 160px"/>
-            <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary" :loading="searchLoading">
+              style="width: 160px"
+            />
+            <Button
+              v-waves
+              @click="handleSearch"
+              class="search-btn mr5"
+              type="primary"
+              :loading="searchLoading"
+            >
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
-            <Button v-waves @click="handleClear" class="search-btn" type="info" :loading="clearSearchLoading">
+            <Button
+              v-waves
+              @click="handleClear"
+              class="search-btn"
+              type="info"
+              :loading="clearSearchLoading"
+            >
               <Icon type="md-refresh"/>&nbsp;清除条件
             </Button>
           </Row>
@@ -64,16 +99,19 @@
       </tables>
       <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
-          <Page :total="total" :current.sync="page" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer
-                show-total></Page>
+          <Page
+            :total="total"
+            :current.sync="page"
+            @on-change="changePage"
+            @on-page-size-change="changePageSize"
+            show-sizer
+            show-total
+          ></Page>
         </Row>
       </div>
     </Card>
     <!--查看订单详情-->
-    <Modal
-      v-model="modalView"
-      :width="700"
-    >
+    <Modal v-model="modalView" :width="700">
       <p slot="header">
         <span>查看订单详情</span>
       </p>
@@ -134,12 +172,16 @@
             </Row>
           </i-col>
         </Row>
-        <Row style="background: lightgray;margin-bottom: 10px" v-if="orderDetail.deliveryType === deliveryTypeCustom.AUTO">
+        <Row
+          style="background: lightgray;margin-bottom: 10px"
+          v-if="orderDetail.deliveryType === deliveryTypeCustom.AUTO"
+        >
           <Row>
             <i-col span="24">
               <Row class="mb10 pl10 pt5">
                 <i-col span="8">收货地址:</i-col>
-                <i-col span="16">{{orderDetail.deliveryAddress +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+ orderDetail.nickname +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+
+                <i-col span="16">
+                  {{orderDetail.deliveryAddress +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+ orderDetail.nickname +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+
                   orderDetail.phone}}
                 </i-col>
               </Row>
@@ -192,227 +234,227 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import Tables from '_c/tables';
-  import {getCustomOrdersPages, getcustomPlanSpecificationStandardsPages,getcustomOrders,transferHdOrder, getStore} from '@/api/fruitermaster';
-  import tableMixin from '@/mixins/tableMixin.js';
-  import searchMixin from '@/mixins/searchMixin.js';
-  import {fenToYuanDot2} from '@/libs/util';
-  import {receivingWayEnum,orderStatusEnum,orderTypeEnum,deliveryTypeCustom} from '@/libs/enumerate';
-  import {customOrderStatusEnum} from '@/libs/enumerate';
-  import {customOrderStatusConvert,customPeriodConvert,deliveryTypeCustomConvert,customDeliverStatusConvert} from '@/libs/converStatus';
-  const orderDetail = {
-    id:54,
-    customOrderCode:"",
-    userId:"",
-    userIds:null,
-    status:"",
-    statusIn:null,
-    remainingQty: 0,
-    deliveryType: "",
-    totalQty: 0,
-    planId: 0,
-    price: 0,
-    createAt:"",
-    quantity:1,
-    specificationId:58,
-    receiveUser:"",
-    contactPhone:"",
-    deliveryTime:null,
-    deliveryAddress:"",
-    storeCode:"",
-    customPlan:null,
-    customOrderDeliveryList:[],
-    nickname:"",
-    phone:"",
-    beginCreateAt:null,
-    endCreateAt:null,
-    payId:"",
-    description:"",
-    endExtractionAt:null,
-    alreadyPauseDay:null
-  };
-  const roleRowData = {
-    totalQty:null,
-    quantity:null,
-    endCreateAt:null,
-    customOrderCode:null,
-    phone:null,
-    orderStatus:null,
-    orderType:null,
-    page: 1,
-    rows: 10
-  };
-  export default {
-    components: {
-      Tables
-    },
-    mixins: [tableMixin, searchMixin],
-    data() {
-      return {
-        totalQtyList: [
-          {
-            label:'周',
-            value: 7
-          },
-          {
-            label:'月',
-            value: 30
-          },
-        ],
-        customCopiesList:[],
-        orderStatus: customOrderStatusEnum,
-        deliveryTypeCustom:deliveryTypeCustom,
-        orderViewRelationsColumn: [
-          {
-            title: '配送时间',
-            minWidth: 100,
-            key: 'dayOfPeriod'
-          },
-          {
-            title: '配送套餐',
-            minWidth: 100,
-            key: 'productName'
-          },
-          {
-            title: '配送状态',
-            minWidth: 100,
-            key: 'deliveryStatus',
-            render(h, params, vm){
-              if (params.row.deliveryStatus) {
-                return <div>{customDeliverStatusConvert(params.row.deliveryStatus).label}</div>
-              } else {
-                return <div>{'未配送'}</div>
-              };
-            }
-          },
-          {
-            title: '收货时间',
-            minWidth: 100,
-            key: 'recevingTime'
+import Tables from '_c/tables';
+import { getCustomOrdersPages, getcustomPlanSpecificationStandardsPages, getcustomOrders, transferHdOrder, getStore } from '@/api/fruitermaster';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import { fenToYuanDot2 } from '@/libs/util';
+import { receivingWayEnum, orderStatusEnum, orderTypeEnum, deliveryTypeCustom } from '@/libs/enumerate';
+import { customOrderStatusEnum } from '@/libs/enumerate';
+import { customOrderStatusConvert, customPeriodConvert, deliveryTypeCustomConvert, customDeliverStatusConvert } from '@/libs/converStatus';
+const orderDetail = {
+  id: 54,
+  customOrderCode: '',
+  userId: '',
+  userIds: null,
+  status: '',
+  statusIn: null,
+  remainingQty: 0,
+  deliveryType: '',
+  totalQty: 0,
+  planId: 0,
+  price: 0,
+  createAt: '',
+  quantity: 1,
+  specificationId: 58,
+  receiveUser: '',
+  contactPhone: '',
+  deliveryTime: null,
+  deliveryAddress: '',
+  storeCode: '',
+  customPlan: null,
+  customOrderDeliveryList: [],
+  nickname: '',
+  phone: '',
+  beginCreateAt: null,
+  endCreateAt: null,
+  payId: '',
+  description: '',
+  endExtractionAt: null,
+  alreadyPauseDay: null
+};
+const roleRowData = {
+  totalQty: null,
+  quantity: null,
+  endCreateAt: null,
+  customOrderCode: null,
+  phone: null,
+  orderStatus: null,
+  orderType: null,
+  page: 1,
+  rows: 10
+};
+export default {
+  components: {
+    Tables
+  },
+  mixins: [tableMixin, searchMixin],
+  data() {
+    return {
+      totalQtyList: [
+        {
+          label: '周',
+          value: 7
+        },
+        {
+          label: '月',
+          value: 30
+        }
+      ],
+      customCopiesList: [],
+      orderStatus: customOrderStatusEnum,
+      deliveryTypeCustom: deliveryTypeCustom,
+      orderViewRelationsColumn: [
+        {
+          title: '配送时间',
+          minWidth: 100,
+          key: 'dayOfPeriod'
+        },
+        {
+          title: '配送套餐',
+          minWidth: 100,
+          key: 'productName'
+        },
+        {
+          title: '配送状态',
+          minWidth: 100,
+          key: 'deliveryStatus',
+          render(h, params, vm) {
+            if (params.row.deliveryStatus) {
+              return <div>{customDeliverStatusConvert(params.row.deliveryStatus).label}</div>;
+            } else {
+              return <div>{'未配送'}</div>;
+            };
           }
-        ],
-        columns: [
-          {
-            title: '定制编码',
-            key: 'customOrderCode',
-            width: 170,
-            fixed: 'left'
-          },
-          {
-            title: '用户手机号',
-            width: 150,
-            key: 'phone'
-          },
-          {
-            title: '定制计划',
-            width: 120,
-            render: (h, params, vm) => {
-              const {row} = params;
-              return <div>{row.customPlan.name}</div>
-            }
-          },
-          {
-            title: '定制周期',
-            width: 100,
-            render(h, params, vm) {
-              return <div>{customPeriodConvert(params.row.totalQty).label}</div>;
-            }
-          },
-          {
-            title: '定制份数',
-            width: 100,
-            key: 'description'
-          },
-          {
-            title: '定制金额',
-            width: 100,
-            render(h, params, vm) {
-              let amount = fenToYuanDot2(params.row.price);
-              return <div>{amount}</div>;
-            }
-          },
-          {
-            title: '定制状态',
-            width: 100,
-            render(h, params, vm) {
-              return <div>{customOrderStatusConvert(params.row.status).label}</div>;
-            }
-          },
-          {
-            title: '配送方式',
-            width: 100,
-            render: (h, params, vm) => {
-              return <div>{deliveryTypeCustomConvert(params.row.deliveryType).label}</div>
-            }
-          },
-          {
-            title: '剩余次数',
-            width: 90,
-            key: 'remainingQty'
-          },
-          {
-            title: '创建时间',
-            width: 110,
-            key: 'createAt',
-          },
-          {
-            title: '操作',
-            minWidth: 80,
-            key: 'handle',
-            fixed: 'right',
-            options: ['view']
+        },
+        {
+          title: '收货时间',
+          minWidth: 100,
+          key: 'recevingTime'
+        }
+      ],
+      columns: [
+        {
+          title: '定制编码',
+          key: 'customOrderCode',
+          width: 170,
+          fixed: 'left'
+        },
+        {
+          title: '用户手机号',
+          width: 150,
+          key: 'phone'
+        },
+        {
+          title: '定制计划',
+          width: 120,
+          render: (h, params, vm) => {
+            const { row } = params;
+            return <div>{row.customPlan.name}</div>;
           }
-        ],
-        searchRowData: this._.cloneDeep(roleRowData),
-        orderDetail: this._.cloneDeep(orderDetail)
-      };
+        },
+        {
+          title: '定制周期',
+          width: 100,
+          render(h, params, vm) {
+            return <div>{customPeriodConvert(params.row.totalQty).label}</div>;
+          }
+        },
+        {
+          title: '定制份数',
+          width: 100,
+          key: 'description'
+        },
+        {
+          title: '定制金额',
+          width: 100,
+          render(h, params, vm) {
+            let amount = fenToYuanDot2(params.row.price);
+            return <div>{amount}</div>;
+          }
+        },
+        {
+          title: '定制状态',
+          width: 100,
+          render(h, params, vm) {
+            return <div>{customOrderStatusConvert(params.row.status).label}</div>;
+          }
+        },
+        {
+          title: '配送方式',
+          width: 100,
+          render: (h, params, vm) => {
+            return <div>{deliveryTypeCustomConvert(params.row.deliveryType).label}</div>;
+          }
+        },
+        {
+          title: '剩余次数',
+          width: 90,
+          key: 'remainingQty'
+        },
+        {
+          title: '创建时间',
+          width: 110,
+          key: 'createAt'
+        },
+        {
+          title: '操作',
+          minWidth: 80,
+          key: 'handle',
+          fixed: 'right',
+          options: ['view']
+        }
+      ],
+      searchRowData: this._.cloneDeep(roleRowData),
+      orderDetail: this._.cloneDeep(orderDetail)
+    };
+  },
+  created() {
+    this.searchLoading = true;
+    this.clearSearchLoading = true;
+    getcustomPlanSpecificationStandardsPages({}).then(res => {
+      this.customCopiesList = res.array;
+      this.getTableData();
+    });
+  },
+  methods: {
+    startTimeChange(value, date) {
+      this.searchRowData.beginCreateAt = value;
     },
-    created() {
-      this.searchLoading = true;
+    endTimeChange(value, date) {
+      this.searchRowData.endCreateAt = value;
+    },
+    resetSearchRowData() {
       this.clearSearchLoading = true;
-      getcustomPlanSpecificationStandardsPages({}).then(res => {
-        this.customCopiesList = res.array;
-        this.getTableData();
+      this.searchRowData = this._.cloneDeep(roleRowData);
+      this.getTableData();
+    },
+    handleView(params) {
+      this.loading = true;
+      getcustomOrders({ id: params.row.customOrderCode }).then(res => {
+        this.orderDetail = res;
+        this.modalView = true;
+      }).finally(res => {
+        this.loading = false;
       });
     },
-    methods: {
-      startTimeChange(value, date) {
-        this.searchRowData.beginCreateAt = value;
-      },
-      endTimeChange(value, date) {
-        this.searchRowData.endCreateAt = value;
-      },
-      resetSearchRowData() {
-        this.clearSearchLoading = true;
-        this.searchRowData = this._.cloneDeep(roleRowData);
-        this.getTableData();
-      },
-      handleView(params) {
-        this.loading = true;
-        getcustomOrders({id: params.row.customOrderCode}).then(res => {
-          this.orderDetail = res;
-          this.modalView = true;
-        }).finally(res => {
-          this.loading = false;
-        });
-      },
-      getTableData() {
-        this.loading = true
-        getCustomOrdersPages(this.searchRowData).then(res => {
-          this.tableData = res.array;
-          this.total = res.total;
-          this.loading = false;
-          this.clearSearchLoading = false
-          this.searchLoading = false
-        });
-      },
-      exportExcel() {
-        this.$refs.tables.exportCsv({
-          filename: `table-${new Date().valueOf()}.csv`
-        });
-      }
+    getTableData() {
+      this.loading = true;
+      getCustomOrdersPages(this.searchRowData).then(res => {
+        this.tableData = res.array;
+        this.total = res.total;
+        this.loading = false;
+        this.clearSearchLoading = false;
+        this.searchLoading = false;
+      });
+    },
+    exportExcel() {
+      this.$refs.tables.exportCsv({
+        filename: `table-${new Date().valueOf()}.csv`
+      });
     }
-  };
+  }
+};
 </script>
 
 <style lang="scss" scoped>
