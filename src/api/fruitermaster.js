@@ -677,7 +677,7 @@ export const createCustomPlan = (data) => {
     data,
     method: 'post'
   });
-}
+};
 
 // 定制计划详细信息
 export const getCustomPlan = ({id}) => {
@@ -685,7 +685,7 @@ export const getCustomPlan = ({id}) => {
     url: '/custom-plans/'+id,
     method: 'get'
   });
-}
+};
 
 // 修改定制计划
 export const editCustomPlan = (data) => {
@@ -694,7 +694,7 @@ export const editCustomPlan = (data) => {
     data,
     method: 'put'
   });
-}
+};
 
 // {id}修改定制计划商品
 export const editCustomPlanProducts = (data) => {
@@ -703,4 +703,13 @@ export const editCustomPlanProducts = (data) => {
     data,
     method: 'put'
   });
-}
+};
+
+// {id}修改定制计划规格
+export const editCustomPlanSpecifications = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-specification/'+data.id,
+    data,
+    method: 'put'
+  });
+};
