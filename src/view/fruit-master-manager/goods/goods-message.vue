@@ -376,6 +376,7 @@
   import deleteMixin from '@/mixins/deleteMixin.js'
   import tableMixin from '@/mixins/tableMixin.js'
   import searchMixin from '@/mixins/searchMixin.js'
+  import {getParent} from '../../../libs/util';
 
   const productDetail = {
     id: 0,
@@ -736,7 +737,17 @@
           id: params.row.id
         }).then(res => {
           this.loading = false
-          this.productDetail = res
+          this.productDetail = res;
+          const map = {
+            id: 'id',
+            title: 'title',
+            children: 'children'
+          };
+          // this.goodsCategoryData = convertTreeCategory(menuList, map, true);
+          let arr = getParent(this.goodsCategoryData,map,this.productDetail.categoryId);
+          console.log('--');
+          console.log(arr);
+          console.log('--');
           this.modalView = true;
         })
       },

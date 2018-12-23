@@ -67,7 +67,7 @@
         <Row>
           <i-col span="3">广告内容:</i-col>
           <i-col v-if="advertisementDetail.advertiseType === 'IMAGE'" span="21" class-name="mb10">
-            <img :src="advertisementDetail.content" style="width: 300px;height: auto"/></i-col>
+            <img :src="advertisementDetail.content" style="width: 150px;height: auto"/></i-col>
           <i-col span="21" v-else class-name="mb10">{{advertisementDetail.content}}</i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
@@ -229,7 +229,7 @@
           <Row>
             <Col span="24">
             <FormItem label="有效时间:">
-              <Select v-model="advertisementDetail.isPermanent" @on-change="advertiseRelationTypeChange"
+              <Select v-model="advertisementDetail.isPermanent" @on-change="advertiseTimeChange"
                       style="width: 200px"
               >
                 <Option class="ptb2-5" v-for="(item,index) in validityTimeList"
@@ -285,9 +285,13 @@
     editAdvertisement,
     getAdvertisementsPages,
     getProductShelvesPages,
+    getCustomPlansPages,
+    getProductSectionsPages,
+    getCustomPlanSectionsPages,
+    getArticlesPages,
     getAdvertisement
   } from '@/api/fruitermaster';
-  import {goods_on_sales_columns} from '@//libs/columns';
+  import {goodsOnSalesColumns,customPlanColumns,goodsModulsColumns,customPlanSectionColumns,articleColumns} from '@/libs/columns';
   import deleteMixin from '@/mixins/deleteMixin.js';
   import tableMixin from '@/mixins/tableMixin.js';
   import searchMixin from '@/mixins/searchMixin.js';
@@ -295,6 +299,7 @@
   import IViewUpload from '_c/iview-upload';
   import {compareData} from '@/libs/util';
   import {positionType, YNEnum} from '@/libs/enumerate';
+  import {relationType} from '../../../libs/enumerate';
 
   const advertisementDetail = {
     id: 0,
@@ -360,14 +365,24 @@
           {value: 'IMAGE', label: '图片广告'},
           {value: 'TEXT', label: '文字广告'}
         ],
+        // 广告关联类别
+        // （PRODUCT_DETAILS- 商品详情
+        // PRODUCT_SECTION-商品版块
+        // CUSTOM_PLAN-定制计划
+        // CUSTOM_PLAN_SECTION-定制版块
+        // ARTICLE_DETAILS-文章详情
+        // STORE_LIVE_TELECAST- 门店直播
+        //  MORE_AMUSEMENT- 多娱
+        // EXTERNAL_LINKS- 外部链接）
         relationType: [
-          {value: 'PRODUCT_DETAILS', label: '商品详情', api: getProductShelvesPages, columns: goods_on_sales_columns},
-          {value: 'PRODUCT_SECTION', label: '定制计划', api: getProductShelvesPages},
-          {value: 'CUSTOM_PLAN', label: '商品版块', api: getProductShelvesPages},
-          {value: 'STORE_LIVE_TELECAST', label: '门店直播', api: getProductShelvesPages},
-          {value: 'CUSTOM_PLAN_SECTION', label: '定制版块', api: getProductShelvesPages},
-          {value: 'ARTICLE_DETAILS', label: '文章详情', api: getProductShelvesPages},
-          {value: 'EXTERNAL_LINKS', label: '外部链接', api: getProductShelvesPages}
+          {value: relationType.PRODUCT_DETAILS, label: '商品详情', api: getProductShelvesPages, columns: goodsOnSalesColumns},
+          {value: relationType.PRODUCT_SECTION, label: '商品版块', api: getProductSectionsPages,columns: goodsModulsColumns},
+          {value: relationType.CUSTOM_PLAN, label: '定制计划', api: getCustomPlansPages,columns:customPlanColumns},
+          {value: relationType.CUSTOM_PLAN_SECTION, label: '定制版块', api: getCustomPlanSectionsPages,columns:customPlanSectionColumns},
+          {value: relationType.ARTICLE_DETAILS, label: '文章详情', api: getArticlesPages,columns:articleColumns},
+          // {value: relationType.STORE_LIVE_TELECAST, label: '门店直播', api: getProductShelvesPages},
+          // {value: relationType.MORE_AMUSEMENT, label: '多娱', api: getProductShelvesPages},
+          {value: relationType.EXTERNAL_LINKS, label: '外部链接', api: getProductShelvesPages}
         ],
         tempColumns: [],
         tempModalTableData: [],
@@ -394,7 +409,7 @@
           },
           {
             title: '广告内容',
-            width: 150,
+            width: 120,
             render: (h, params, vm) => {
               const {row} = params;
               if (row.advertiseType === 'IMAGE') {
@@ -407,12 +422,12 @@
           },
           {
             title: '广告名称',
-            width: 150,
+            minWidth: 150,
             key: 'advertiseName'
           },
           {
             title: '广告类型',
-            width: 150,
+            minWidth: 100,
             key: 'advertiseType',
             render: (h, params, vm) => {
               const {row} = params;
@@ -425,7 +440,7 @@
           },
           {
             title: '链接类型',
-            width: 180,
+            minWidth: 120,
             render: (h, params, vm) => {
               const {row} = params;
               switch (row.relationType) {
@@ -477,7 +492,7 @@
           },
           {
             title: '有效时间',
-            minWidth: 300,
+            minWidth: 110,
             key: 'validityPeriod'
           },
           {
@@ -542,6 +557,14 @@
         });
       },
       onRowClick(row, index) {
+        if (this.advertisementDetail.relationType === relationType.PRODUCT_SECTION||
+          this.advertisementDetail.relationType === relationType.CUSTOM_PLAN_SECTION) {
+          this.advertisementDetail.advertiseRelationText = row.sectionName;
+        } else if(this.advertisementDetail.relationType === relationType.ARTICLE_DETAILS){
+          this.advertisementDetail.advertiseRelationText = row.title;
+        }else {
+          this.advertisementDetail.advertiseRelationText = row.name
+        };
         this.advertisementDetail.advertiseRelation = row.id;
         console.log(row);
         console.log(index);
@@ -595,7 +618,7 @@
       },
       createTableRow() {
         this.modalViewLoading = true;
-        createAdvertisement({...this.advertisementDetail}).then( res => {
+        createAdvertisement(this.advertisementDetail).then( res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
@@ -619,7 +642,9 @@
           tempObj.api({
             page: 1,
             rows: 10,
-            shelfStatus: 'ON'
+            shelfStatus: 'ON',
+            status:"VALID",
+            articleStatus:'PUBLISH'
           }).then(res => {
             this.searchModalTableLoading = false;
             this.relationTargetShow = true;
@@ -694,15 +719,16 @@
         this.advertisementDetail.positionId = value;
       },
       advertiseTypeChange(value) {
-        // if (value === 'WORD') {
-        //   this.$refs.uploadMain.clearFileList();
-        //   this.uploadListMain = [];
-        // }
-        // this.advertisementDetail.content = '';
+
       },
       advertiseRelationTypeChange(value) {
+        this.advertisementDetail.relationType = value
+        console.log(value);
       },
       advertisementDetailStatusChange(value) {
+
+      },
+      advertiseTimeChange(){
 
       },
       getTableData() {

@@ -542,7 +542,7 @@
           },
           {
             title: '价格(周/单人)',
-            width: 150,
+            width: 120,
             render: (h, params, vm) => {
               let {row} = params
               if (!row.periodList){
@@ -568,7 +568,7 @@
           },
           {
             title: '价格(周/双人)',
-            width: 150,
+            width: 120,
             render: (h, params, vm) => {
               let {row} = params
               if (!row.periodList){
@@ -594,7 +594,7 @@
           },
           {
             title: '价格(周/三人)',
-            width: 150,
+            width: 120,
             render: (h, params, vm) => {
               let {row} = params
               if (!row.periodList){
@@ -620,7 +620,7 @@
           },
           {
             title: '价格(月/单人)',
-            width: 180,
+            width: 120,
             render: (h, params, vm) => {
               let {row} = params
               if (!row.periodList){
@@ -646,7 +646,7 @@
           },
           {
             title: '价格(月/双人)',
-            width: 150,
+            width: 120,
             render: (h, params, vm) => {
               let {row} = params
               if (!row.periodList){
@@ -672,7 +672,7 @@
           },
           {
             title: '价格(月/三人)',
-            width: 150,
+            width: 120,
             render: (h, params, vm) => {
               let {row} = params
               if (!row.periodList){
@@ -698,7 +698,7 @@
           },
           {
             title: '是否上架',
-            width: 150,
+            width: 100,
             render: (h, params, vm) => {
               let {row} = params
               return <div>{onSaleStatusConvert(row.status).label}</div>;
@@ -1043,7 +1043,20 @@
         });
       },
       copyConvertData(res){
-        this.optionsShelfSpecification = [];
+        this.optionsShelfSpecification = [
+          {
+            id:1,
+            productName:"果目不忘"
+          },
+          {
+            id:28,
+            productName:"火龙果奶昔"
+          },
+          {
+            id:18,
+            productName:"七色彩虹"
+          }
+        ];
         if (res.periodList){
           let obj =  res.periodList.find( item => item.planPeriod === 7);
           if (obj){
@@ -1094,9 +1107,9 @@
           let has = this.optionsShelfSpecification.find( item =>{
             return item.shelfId === innerObjMonth.shelfId
         });
-          if (!has){
-            this.optionsShelfSpecification.push(innerObjMonth);
-          };
+          // if (!has){
+          //   this.optionsShelfSpecification.push(innerObjMonth);
+          // };
         }
       },
       deleteTable(ids) {

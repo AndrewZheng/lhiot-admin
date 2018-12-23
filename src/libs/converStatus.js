@@ -5,7 +5,7 @@ import {
   deliveryTypeCustomEnum, doctorLevelEnum, doctorStatusEnum, hotEnum, onSaleStatusEnum,
   orderStatusEnum,
   orderTypeEnum, positionTypeEnum,
-  receivingWayEnum,
+  receivingWayEnum, relationTypeEnum,
   settlementStatusEnum,
   thirdDelieverStatusEnum, updateWayEnum
 } from './enumerate';
@@ -83,4 +83,8 @@ export const onSaleStatusConvert = (value) => {
 
 export const positionTypeConvert = (value) => {
   return convertFunction(value, positionTypeEnum)
+}
+
+export const relationTypeConvert = (value) => {
+  return convertFunction(value, relationTypeEnum)
 }

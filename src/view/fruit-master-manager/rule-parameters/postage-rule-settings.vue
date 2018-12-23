@@ -13,6 +13,8 @@
               @on-copy="onCopy"
               :searchAreaColumn="18"
               :operateAreaColumn="6"
+              @on-select-all="onSelectionAll"
+              @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
           <Row>
@@ -72,12 +74,12 @@
           <Row span="24">
             <Col span="6">
               <FormItem label="金额范围:" :label-width="100" prop="minOrderAmount">
-                <InputNumber :disabled="modalTypeComputed" :min="0" placeholder="最小金额" class="search-input" v-model="postageDetail.minOrderAmount" style="width: 100px"/>
+                <InputNumber :readonly="modalTypeComputed" :min="0" placeholder="最小金额" class="search-input" v-model="postageDetail.minOrderAmount" style="width: 100px"/>
               </FormItem>
             </Col>
             <Col span="16">
               <FormItem label="——" prop="maxOrderAmount">
-                <InputNumber :disabled="modalTypeComputed" :min="0" placeholder="最大金额" class="search-input" v-model="postageDetail.maxOrderAmount" style="width: 100px"/>
+                <InputNumber :readonly="modalTypeComputed" :min="0" placeholder="最大金额" class="search-input" v-model="postageDetail.maxOrderAmount" style="width: 100px"/>
               </FormItem>
             </Col>
           </Row>
@@ -125,6 +127,7 @@
   import deleteMixin from '@/mixins/deleteMixin.js';
   import {deliveryAtTypeConvert} from '@/libs/converStatus';
   import {deliveryAtTypeEnum, updateWay} from '@/libs/enumerate';
+  import {fenToYuan} from '../../../libs/util';
 
   const fruitMasterDetail = {
     id: '',
@@ -176,18 +179,7 @@
           minOrderAmount:[{required: true, message: '请填写最小金额',type:'number'}],
           maxOrderAmount:[{required: true, message: '请填写最大金额',type:'number'}],
           deliveryAtType:[{required: true, message: '请选择时间段'}],
-          detailList:[{required: true, message: '请添加运费信息'},
-            {
-              validator(rule, value, callback, source, options) {
-                console.log(value);
-                let errors = [];
-                if (!value||value.length === 0) {
-                  callback('请至少添加一条运费信息');
-                }
-                callback(errors);
-              }
-            }
-          ]
+          detailList:[{required: true, message: '请添加运费信息'},]
         },
         deliveryAtTypeList: deliveryAtTypeEnum,
         deliveryAtTypeEnum,
@@ -240,7 +232,7 @@
                 h('InputNumber', {
                   props: {
                     value: params.row.firstWeight,
-                    disabled:this.modalTypeComputed,
+                    readonly:this.modalTypeComputed,
                     min: 0
                   },
                   on: {
@@ -262,8 +254,8 @@
               return h('div', [
                 h('InputNumber', {
                   props: {
-                    value: params.row.firstFee,
-                    disabled:this.modalTypeComputed,
+                    value: fenToYuan(params.row.firstFee),
+                    readonly:this.modalTypeComputed,
                     min: 0
                   },
                   on: {
@@ -286,7 +278,7 @@
                 h('InputNumber', {
                   props: {
                     value: params.row.additionalWeight,
-                    disabled:this.modalTypeComputed,
+                    readonly:this.modalTypeComputed,
                     min: 0
                   },
                   on: {
@@ -309,8 +301,10 @@
                 h('InputNumber', {
                   props: {
                     value: params.row.additionalFee,
-                    disabled:this.modalTypeComputed,
-                    min: 0
+                    readonly:this.modalTypeComputed,
+                    min: 0.01,
+                    // formatter: value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+                    // parser: value => `${value}`.replace(/$s?|(,*)/g, '')
                   },
                   on: {
                     'on-change': e => {

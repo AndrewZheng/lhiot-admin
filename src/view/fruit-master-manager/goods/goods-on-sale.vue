@@ -304,7 +304,7 @@
     price: 0,
     productName: "",
     productImage: '',
-    productSpecification: {},
+    productSpecification: null,
     sectionIds: "",
     shelfQty: 0,
     shelfStatus: "",
@@ -483,12 +483,12 @@
           page: '1',
           rows: '5'
         }).then(res => {
-          console.log(res);
-          this.optionsShelfSpecification.length = 0
-          if (res.length > 0) {
-            res.forEach(value => {
-              this.optionsShelfSpecification.push(value)
-            })
+          console.log(res.array.length);
+          console.log(this.optionsShelfSpecification);
+
+          if (res.array.length > 0) {
+            this.optionsShelfSpecification.length = 0;
+            this.optionsShelfSpecification = this.optionsShelfSpecification.concat(res.array);
           }
           console.log(this.optionsShelfSpecification);
         }).finally(() => {

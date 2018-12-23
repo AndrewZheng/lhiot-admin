@@ -6,7 +6,7 @@
       </i-col>
       <i-col span="18" order="3">
         <Card>
-          <h6>当前选中：{{currentParentName}}</h6>
+          <h6>当前选中：{{parentCategory.groupName}}</h6>
           <tables ref="tables" editable searchable
                   border
                   search-place="top"
@@ -20,7 +20,7 @@
           >
             <div slot="searchCondition">
               <div slot="operations">
-                <Button v-waves type="success" class="mr5" @click="handleView">
+                <Button v-waves type="success" class="mr5" @click="createTableRow">
                   <Icon type="md-add"/>
                   子分类
                 </Button>
@@ -48,31 +48,7 @@
         </Card>
       </i-col>
     </Row>
-    <!--查看菜单 -->
-    <Modal
-      v-model="modalView"
-    >
-      <p slot="header">
-        <span>创建商品分类</span>
-      </p>
-      <div class="modal-content">
-        <Form :label-width="100">
-          <FormItem label="父级分类:">
-            <i-col>{{currentParentName}}</i-col>
-          </FormItem>
-          <FormItem label="子分类名:">
-            <Input placeholder="请输入子分类名" v-model="currentCategory.currentName"/>
-          </FormItem>
-          <FormItem label="序号:">
-            <Input placeholder="请输入序号" :number="true" v-model="currentCategory.rank"/>
-          </FormItem>
-        </Form>
-      </div>
-      <div slot="footer">
-        <Button @click="handleClose">关闭</Button>
-        <Button type="primary" :loading="modalViewLoading" @click="asyncOK">确定</Button>
-      </div>
-    </Modal>
+
     <!--编辑菜单 -->
     <Modal
       v-model="modalEditView"
@@ -83,13 +59,13 @@
       <div class="modal-content">
         <Form :label-width="100">
           <FormItem label="父级分类:">
-            <i-col>{{currentParentName}}</i-col>
+            <i-col>{{parentCategory.groupName}}</i-col>
           </FormItem>
           <FormItem label="子分类名:">
-            <Input placeholder="" v-model="editCategory.currentName"/>
+            <Input placeholder="子分类名" v-model="currentCategory.groupName"/>
           </FormItem>
           <FormItem label="序号:">
-            <Input placeholder="" v-model="editCategory.rank"/>
+            <InputNumber :min="0" placeholder="序号" v-model="currentCategory.rank"/>
           </FormItem>
         </Form>
       </div>
@@ -113,11 +89,28 @@
   } from "@/api/fruitermaster";
   import {buildMenu, changeObjKeyName, convertTree, getNewTagList} from '@/libs/util';
   import CommonIcon from '_c/common-icon';
+  import tableMixin from '@/mixins/tableMixin.js';
+  import searchMixin from '@/mixins/searchMixin.js';
+  import deleteMixin from '@/mixins/deleteMixin.js';
+
+  const currentCategory = {
+    parentId:0,
+    groupName: '',
+    rank: null
+  };
+  const roleRowData = {
+    parentId:0,
+    page: 1,
+    rows: 10
+  };
+
+
   export default {
     components: {
       Tables,
       CommonIcon
     },
+    mixins: [tableMixin, searchMixin, deleteMixin],
     data() {
       return {
         menuData: [],
@@ -150,29 +143,14 @@
             options: ['edit', 'delete'],
           }
         ],
-        tableData: [],
-        total: 0,
-        page: 1,
-        pageSize: 10,
-        loading: true,
-        modalView: false,
         modalEditView: false,
         modalViewLoading: false,
         modalEditLoading: false,
         currentParentName: '',
         currentParentId: 0,
-        currentCategory: {
-          currentId: 0,
-          currentName: '',
-          rank: null
-        },
-        editCategory: {
-          currentId: 0,
-          currentName: '',
-          rank: null
-        },
-        //选中的行
-        tableDataSelected: []
+        currentCategory: this._.cloneDeep(currentCategory),
+        parentCategory:this._.cloneDeep(currentCategory),
+        searchRowData: this._.cloneDeep(roleRowData)
       };
     },
     created() {
@@ -211,35 +189,23 @@
             <span>
               <CommonIcon type="ios-paper" class="mr10"/>
             </span>
-              <span onClick={() => this.handleClick({root, node, data})}>
+              <span >
               {data.title}
             </span>
             </div>
           );
         }
       },
-      onSelectionAll(selection) {
-        this.tableDataSelected = selection
+      createTableRow(){
+        if (this.tempModalType !== this.modalType.create){
+          this.currentCategory = this._.cloneDeep(currentCategory)
+        };
+        this.currentCategory.currentParentId = this.currentParentId;
+        this.tempModalType = this.modalType.create
+        this.modalEditView = true;
       },
-      onSelectionChange(selection) {
-        this.tableDataSelected = selection
-      },
-      poptipOk() {
-        if (this.tableDataSelected.length < 1) {
-          this.$Message.warning('请选中要删除的行');
-          return
-        }
-        let tempDeleteList = []
-        console.log(this.tableDataSelected[0]);
-        this.tableDataSelected.forEach(value => {
-          tempDeleteList.push(value.id)
-        })
-        let strTempDelete = tempDeleteList.join(',')
-        this.deleteTable(strTempDelete)
-      },
-      //添加子分类
-      asyncOK() {
-        if (!this.currentCategory.currentName) {
+      asyncEditOK() {
+        if (!this.currentCategory.groupName) {
           this.$Message.warning('请输入子分类');
           return
         }
@@ -247,59 +213,33 @@
           this.$Message.warning('亲输入序号');
           return
         }
-        this.modalViewLoading = true
-        addProductCategories(
-          {
-            groupName: this.currentCategory.currentName,
-            parentId: this.currentParentId,
-            rank: this.currentCategory.rank
-          }
-        ).then(res => {
-          this.modalViewLoading = false
-          this.modalView = false
-          this.currentCategory.currentName = ''
-          this.currentCategory.rank = null
-          this.initMenuList()
-        })
-      },
-      //编辑
-      asyncEditOK() {
-        if (!this.editCategory.currentName) {
-          this.$Message.warning('请输入子分类');
-          return
-        }
-        if (!this.editCategory.rank) {
-          this.$Message.warning('亲输入序号');
-          return
-        }
         this.modalEditLoading = true
-        putProductCategories({
-          parentId: this.currentParentId,
-          id: this.editCategory.currentId,
-          groupName: this.editCategory.currentName,
-          rank: this.editCategory.rank
-        }).then(res => {
-          this.modalEditLoading = false
-          this.modalEditView = false
-          this.editCategory.currentName = '';
-          this.editCategory.rank = null;
-          this.getTableData()
-        })
-      },
-      handleView() {
-        this.modalView = true;
-      },
-      handleClose() {
-        this.modalView = false;
+        this.modalViewLoading = true
+        if (!this.parentCategory.id){
+          this.currentCategory.parentId = 0;
+        }else {
+          this.currentCategory.parentId = this.parentCategory.id
+        };
+        if (this.tempModalType === this.modalType.create){
+          addProductCategories(this.currentCategory
+          ).then(res => {
+
+          }).finally( res => {
+            this.initMenuList()
+            this.modalEditLoading = false
+            this.modalEditView = false
+          })
+        }else if (this.tempModalType === this.modalType.edit){
+          putProductCategories(this.currentCategory).then(res => {
+          }).finally( res => {
+            this.initMenuList()
+            this.modalEditLoading = false
+            this.modalEditView = false
+          })
+        };
       },
       handleEditClose() {
         this.modalEditView = false
-      },
-      //删除单个行
-      handleDelete(params) {
-        this.tableDataSelected = []
-        this.tableDataSelected.push(params.row)
-        this.deleteTable(params.row.id)
       },
       //删除
       deleteTable(ids) {
@@ -320,27 +260,13 @@
       },
       //编辑分类
       handleEdit(params) {
-        this.editCategory = _.cloneDeep(params.row)
+        this.tempModalType = this.modalType.edit
+        this.currentCategory = _.cloneDeep(params.row)
         this.modalEditView = true;
-      },
-      //翻页
-      changePage(page) {
-        this.page = page;
-        this.getTableData();
-      },
-      //改变一页的数据数量
-      changePageSize(pageSize) {
-        this.page = 1;
-        this.pageSize = pageSize;
-        this.getTableData();
       },
       getTableData() {
         this.loading = true;
-        getProductCategoriesPages({
-          page: this.page,
-          rows: this.pageSize,
-          parentId: this.currentParentId
-        }).then(res => {
+        getProductCategoriesPages(this.searchRowData).then(res => {
           if (this.menuData.length > 0) {
             this.tableData = res.array;
             this.total = res.total;
@@ -381,10 +307,10 @@
         } else {
           // data.expand = !data.expand;
         }
-        this.currentParentName = data.title;
+        this.parentCategory.id = data.id;
+        this.parentCategory.groupName = data.title;
         this.currentParentId = data.id;
-        this.page = 1;
-        this.row = 10;
+        this.searchRowData.parentId = data.id
         // 获取新数据
         this.getTableData();
       },
