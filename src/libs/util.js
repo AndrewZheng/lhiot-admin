@@ -617,28 +617,40 @@ export const setTreeNodeChecked = (tree, ids) => {
   return tree;
 };
 
-export const getParent = (array, childs, ids) => {
-  array.forEach(item => {
-    if (Number(item.id) === Number(ids)) {
-      childs.push(item);
-      return childs;
-    }
-
-    if (item.children && item.children.length > 0) {
-      childs.push(item);
-      let rs = getParent(item.children, childs, ids);
-      if (rs) {
-        return rs;
-      } else {
-        let index = childs.indexOf(item);
-        if (index > -1) {
-          childs.splice(index, 1);
-        }
-      }
+export const getParent = (tree, map, id) => {
+  // let count = 0;
+  let parentIds = [];
+  // let find = false
+  // 遍历 tree
+  tree.forEach((item) => {
+    let children = item[map.children];
+    let itemId = item[map.id];
+    console.log('一');
+    // 如果有子节点，递归
+    if (children.length>0) {
+      // count = count + 1;
+      console.log('二');
+      getParent(children, map, id);
+      console.log('三');
+    } else {
+      console.log('四');
+      // if (count > 0) {
+      //   // disabled: true,
+      //   if (!find) {
+      //     parentIds[0] = itemId;
+      //   }
+      // } else {
+      //   // disabled: false,
+      //   if (itemId === id) {
+      //     console.log(itemId);
+      //     parentIds[1] = itemId;
+      //     find = true
+      //   }
+      // }
     }
   });
-
-  return false;
+  console.log('五');
+  return parentIds;
 };
 
 /**
@@ -688,6 +700,18 @@ export const compareData = (date1, date2) => {
 export const fenToYuanDot2 = (number) => {
   if (typeof number === 'number') {
     return '¥' + (number/100.00).toFixed(2);
+  }
+  return number;
+};
+
+/**
+ *
+ * @param number
+ * @returns {*}
+ */
+export const fenToYuan = (number) => {
+  if (typeof number === 'number') {
+    return Math.floor(number) / 100;
   }
   return number;
 };

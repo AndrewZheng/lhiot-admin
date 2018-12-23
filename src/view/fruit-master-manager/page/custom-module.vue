@@ -318,7 +318,7 @@
           },
           {
             title: '板块名称',
-            width: 150,
+            minWidth: 200,
             key: 'sectionName'
           },
           {

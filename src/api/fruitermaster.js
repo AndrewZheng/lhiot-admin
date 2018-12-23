@@ -101,14 +101,9 @@ export const deleteProductCategories = ({ids}) => {
 };
 
 // 修改商品分类
-export const putProductCategories = ({parentId, id, groupName, rank}) => {
-  const data = {
-    parentId,
-    groupName,
-    rank
-  };
+export const putProductCategories = (data) => {
   return Vue.prototype.$http.request({
-    url: '/product-categories/' + id,
+    url: '/product-categories/' + data.id,
     data,
     method: 'put'
   });
