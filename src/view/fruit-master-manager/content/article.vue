@@ -39,9 +39,22 @@
               v-model="searchRowData.endCreateAt"
               style="width: 150px"/>
 
-            <DatePicker type="datetime" placeholder="发布时间起"></DatePicker>
+            <DatePicker
+              @on-change="startPublishChange"
+              format="yyyy-MM-dd HH:mm:ss"
+              type="datetime"
+              class="search-input  mr5"
+              v-model="searchRowData.beginPublishAt"
+              style="width: 150px"
+              placeholder="发布时间起"/>
             <i>-</i>
-            <DatePicker type="datetime" placeholder="发布时间止" class="mr5"></DatePicker>
+            <DatePicker
+              type="datetime"
+              placeholder="发布时间止"
+              style="width: 150px"
+              v-model="searchRowData.endPublishAt"
+              @on-change="endPublishChange"
+              class="mr5"/>
             <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary">
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
@@ -258,6 +271,8 @@
   const roleRowData = {
     title: '',
     keywords:'',
+    beginPublishAt:'',
+    endPublishAt:'',
     beginCreateAt:'',
     endCreateAt:'',
     page:1,
@@ -400,6 +415,12 @@
       },
       endTimeChange(value, date) {
         this.searchRowData.endCreateAt = value;
+      },
+      startPublishChange(value){
+        this.searchRowData.beginPublishAt = value;
+      },
+      endPublishChange(value){
+        this.searchRowData.endPublishAt = value;
       },
       resetFields() {
         this.$refs.modalEdit.resetFields()

@@ -51,6 +51,7 @@
             format="yyyy-MM-dd HH:mm:ss"
             class="search-input mr5"
             v-model="searchRowData.createAtEnd"
+            @on-change="endTimeChange"
             style="width: 160px"
           />
           <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary" :loading="searchLoading">
