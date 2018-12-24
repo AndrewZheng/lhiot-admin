@@ -707,16 +707,14 @@
       },
       customOnSale(params) {
         // FIXME 代码被删除
-        // VALID: 'VALID',
-        //   INVALID: 'INVALID'
-        this.rowData = this._.cloneDeep(params.row) ;
+        const rowData = this._.cloneDeep(params.row) ;
         if (params.row.status === 'VALID') {
-          this.rowData.status = 'INVALID';
+          rowData.status = 'INVALID';
         } else {
-          this.rowData.status = 'VALID';
+          rowData.status = 'VALID';
         }
         this.loading = true;
-        editCustomPlan(this.rowData).then(res => {
+        editCustomPlan(rowData).then(res => {
           this.$Message.success('修改成功!');
         }).finally(res => {
           this.modalViewLoading = false;
