@@ -31,7 +31,12 @@
               style="width: 100px"
               clearable
             />
-            <Select class="search-col mr5" placeholder="定制类型" style="width: 100px" clearable>
+            <Select
+              v-model="searchRowData.totalQty"
+              class="search-col mr5"
+              placeholder="定制周期"
+              style="width: 100px"
+              clearable>
               <Option
                 v-for="item in totalQtyList"
                 :value="item.value"
@@ -39,7 +44,11 @@
                 :key="`search-col-${item.value}`"
               >{{item.label}}</Option>
             </Select>
-            <Select class="search-col mr5" placeholder="定制份数" style="width: 100px" clearable>
+            <Select
+              class="search-col mr5"
+              placeholder="定制份数"
+              v-model="searchRowData.quantity"
+              style="width: 100px" clearable>
               <Option
                 v-for="item in customCopiesList"
                 :value="item.quantity"
@@ -47,7 +56,13 @@
                 :key="`search-col-${item.quantity}`"
               >{{item.description}}</Option>
             </Select>
-            <Select class="search-col mr5" placeholder="订单状态" style="width: 100px" clearable>
+            <Select
+              multiple
+              class="search-col mr5"
+              placeholder="订单状态"
+              style="width: 150px"
+              v-model="searchRowData.statusIn"
+              clearable>
               <Option
                 v-for="item in orderStatus"
                 :value="item.value"
@@ -279,8 +294,10 @@ const roleRowData = {
   endCreateAt: null,
   customOrderCode: null,
   phone: null,
-  orderStatus: null,
+  orderStatuses: null,
   orderType: null,
+  status:null,
+  statusIn:null,
   page: 1,
   rows: 10
 };

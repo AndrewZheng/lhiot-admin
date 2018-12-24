@@ -361,7 +361,7 @@
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import IViewUpload from '_c/iview-upload'
+  import IViewUpload from '_c/iview-upload';
   import {
     createProduct,
     deleteProduct,
@@ -372,33 +372,32 @@
     productSpecificationsUnits
   } from '@/api/fruitermaster';
   import {buildMenu, convertTreeCategory} from '@/libs/util';
-  import uploadMixin from '@/mixins/uploadMixin'
-  import deleteMixin from '@/mixins/deleteMixin.js'
-  import tableMixin from '@/mixins/tableMixin.js'
-  import searchMixin from '@/mixins/searchMixin.js'
-  import {getParent} from '../../../libs/util';
+  import uploadMixin from '@/mixins/uploadMixin';
+  import deleteMixin from '@/mixins/deleteMixin.js';
+  import tableMixin from '@/mixins/tableMixin.js';
+  import searchMixin from '@/mixins/searchMixin.js';
 
   const productDetail = {
     id: 0,
-    benefit: "",
+    benefit: '',
     categoryId: null,
     code: null,
-    description: "",
+    description: '',
     detailImg: null,
-    icon: "",
+    icon: '',
     mainImg: null,
-    name: "",
+    name: '',
     productSpecification: {
-      availableStatus: "ENABLE",
+      availableStatus: 'ENABLE',
       barcode: null,
-      inventorySpecification: "YES",
+      inventorySpecification: 'YES',
       limitInventory: 0,
       packagingUnit: null,
       productId: 0,
       specificationQty: 0,
       weight: 0
     },
-    sourceCode: "",
+    sourceCode: '',
     subImg: null
   };
   const roleRowData = {
@@ -413,35 +412,33 @@
       Tables,
       IViewUpload
     },
-    mixins: [uploadMixin, deleteMixin, tableMixin,searchMixin],
+    mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
     mounted() {
-      this.searchRowData = _.cloneDeep(roleRowData)
-      this.loading = true
+      this.searchRowData = _.cloneDeep(roleRowData);
+      this.loading = true;
       this.createLoading = true;
       productSpecificationsUnits().then(res => {
         res.forEach(value => {
-          const map = {label: 'label', value: 'value'}
-          map.value = value
-          map.label = value
-          this.unitsList.push(map)
+          const map = {label: 'label', value: 'value'};
+          map.value = value;
+          map.label = value;
+          this.unitsList.push(map);
           this.createLoading = false;
-        })
+        });
         getProductCategoriesTree().then(res => {
           if (res && res.array.length > 0) {
+            this.productCategoriesTreeList = res.array;
             const menuList = buildMenu(res.array);
-            console.log(menuList);
             const map = {
               id: 'id',
               title: 'title',
               children: 'children'
             };
             this.goodsCategoryData = convertTreeCategory(menuList, map, true);
-            console.log(this.goodsCategoryData);
             this.getTableData();
           }
-        })
-      })
-
+        });
+      });
     },
     data() {
       return {
@@ -521,6 +518,7 @@
         uploadListMultiple: [],
         goodsCategoryData: [],
         defaultGoodsCategoryData: [41],
+        productCategoriesTreeList: [],
         tempSubImg: [],
         unitsList: [],
         columns: [
@@ -535,7 +533,7 @@
             title: '商品编码',
             key: 'code',
             sortable: true,
-            minWidth: 150,
+            minWidth: 150
           },
           {
             title: '商品名称',
@@ -563,33 +561,17 @@
         modalViewLoading: false,
         exportExcelLoading: false,
         searchRowData: _.cloneDeep(roleRowData),
-        productDetail: _.cloneDeep(productDetail),
+        productDetail: _.cloneDeep(productDetail)
       };
     },
     methods: {
       resetSearchRowData() {
         this.searchRowData = _.cloneDeep(roleRowData);
-        this.getTableData()
+        this.getTableData();
       },
-      getDefaultCategoryArray(goodsCategoryData) {
-        let result = []
-        for (let i = 0; i < goodsCategoryData.length; i++) {
-
-          // if (tempId === id) {
-          //   break;
-          // }
-          if (goodsCategoryData[i].children.length > 0) {
-            this.getDefaultCategoryArray(goodsCategoryData[i].children);
-          } else {
-            let tempId = goodsCategoryData[i].id
-            result.push(tempId)
-          }
-        }
-        return result
-      },
-      //导出Excel
+      // 导出Excel
       exportExcel() {
-        this.exportExcelLoading = true
+        this.exportExcelLoading = true;
         getProductPages({}).then(res => {
           if (res.array.length > 0) {
             // let tempTableList = res.array.map(value => {
@@ -599,74 +581,74 @@
             this.$refs.tables.exportCsv({
               filename: `table-${new Date().valueOf()}.csv`,
               columns: this.columns.filter((col, index) => index !== 0),
-              data: res.array,
+              data: res.array
             });
           }
-          this.exportExcelLoading = false
-        })
+          this.exportExcelLoading = false;
+        });
       },
       resetFields() {
-        this.$refs.modalEdit.resetFields()
-        this.$refs.innerModalEdit.resetFields()
-        this.$refs.uploadMain.clearFileList()
-        this.$refs.uploadSecond.clearFileList()
-        this.$refs.uploadMultiple.clearFileList()
-        this.uploadListMain = []
-        this.uploadListSecond = []
-        this.uploadListMultiple = []
-        this.productDetail.mainImg = null
-        this.productDetail.subImg = null
-        this.productDetail.detailImg = null
+        this.$refs.modalEdit.resetFields();
+        this.$refs.innerModalEdit.resetFields();
+        this.$refs.uploadMain.clearFileList();
+        this.$refs.uploadSecond.clearFileList();
+        this.$refs.uploadMultiple.clearFileList();
+        this.uploadListMain = [];
+        this.uploadListSecond = [];
+        this.uploadListMultiple = [];
+        this.productDetail.mainImg = null;
+        this.productDetail.subImg = null;
+        this.productDetail.detailImg = null;
       },
       handleSubmit(name1, name2) {
         this.$refs[name2].validate((innerValid) => {
           this.$refs[name1].validate((valid) => {
             if (valid && innerValid) {
               if (this.tempModalType === this.modalType.create) {
-                //添加状态
-                this.createProduct()
+                // 添加状态
+                this.createProduct();
               } else if (this.tempModalType === this.modalType.edit) {
-                //编辑状态
-                this.editProduct()
+                // 编辑状态
+                this.editProduct();
               }
             } else {
               this.$Message.error('请完善商品的信息!');
             }
-          })
+          });
         });
       },
       createProduct() {
-        this.modalViewLoading = true
+        this.modalViewLoading = true;
         createProduct({
           ...this.productDetail
         }).then(res => {
-          this.modalViewLoading = false
-          this.modalEdit = false
+          this.modalViewLoading = false;
+          this.modalEdit = false;
           this.$Message.success('创建成功!');
-          this.resetFields()
-          this.getTableData()
-        })
+          this.resetFields();
+          this.getTableData();
+        });
       },
       editProduct() {
-        this.modalViewLoading = true
+        this.modalViewLoading = true;
         editProduct({
           ...this.productDetail
         }).then(res => {
-          this.resetFields()
-          this.modalEdit = false
-          this.modalViewLoading = false
-          this.getTableData()
-        })
+          this.resetFields();
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+          this.getTableData();
+        });
       },
       uniteChange(value) {
-        this.productDetail.productSpecification.packagingUnit = value
+        this.productDetail.productSpecification.packagingUnit = value;
       },
-      //选择分类
+      // 选择分类
       goodsCategoryChange(value, selectedData) {
         if (selectedData.length > 0) {
           this.productDetail.categoryId = selectedData[selectedData.length - 1].id;
         } else {
-          this.productDetail.categoryId = null
+          this.productDetail.categoryId = null;
         }
         this.defaultGoodsCategoryData = selectedData;
       },
@@ -675,94 +657,95 @@
       },
       addProduct() {
         if (this.tempModalType !== this.modalType.create) {
-          this.resetFields()
-          this.tempModalType = this.modalType.create
+          this.resetFields();
+          this.tempModalType = this.modalType.create;
         }
-        this.modalEdit = true
+        this.modalEdit = true;
       },
-
-      //删除
+      // 删除
       deleteTable(ids) {
-        this.loading = true
+        this.loading = true;
         deleteProduct({
           ids
         }).then(res => {
-            let totalPage = Math.ceil(this.total / this.searchRowData.pageSize)
+            let totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
             if (this.tableData.length == this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
-              this.searchRowData.page -= 1
+              this.searchRowData.page -= 1;
             }
             this.tableDataSelected = [];
             this.getTableData();
           }
         ).catch(err => {
-          this.loading = false
-        })
+          this.loading = false;
+        });
       },
-      //设置编辑商品的图片列表
+      // 设置编辑商品的图片列表
       setDefaultUploadList(res) {
         if (res.mainImg != null) {
           const map = {status: 'finished', url: 'url'};
-          let mainImgArr = []
-          map.url = res.mainImg
-          mainImgArr.push(map)
-          this.$refs.uploadMain.setDefaultFileList(mainImgArr)
-          this.uploadListMain = mainImgArr
+          let mainImgArr = [];
+          map.url = res.mainImg;
+          mainImgArr.push(map);
+          this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+          this.uploadListMain = mainImgArr;
         }
         if (res.subImg != null) {
           let subImgArr = [];
           res.subImg.forEach(value => {
-            const innerMapSub = {status: 'finished', url: 'url'}
-            innerMapSub.url = value
-            subImgArr.push(innerMapSub)
-          })
-          this.$refs.uploadSecond.setDefaultFileList(subImgArr)
-          this.uploadListSecond = subImgArr
+            const innerMapSub = {status: 'finished', url: 'url'};
+            innerMapSub.url = value;
+            subImgArr.push(innerMapSub);
+          });
+          this.$refs.uploadSecond.setDefaultFileList(subImgArr);
+          this.uploadListSecond = subImgArr;
         }
         if (res.detailImg != null) {
           let detailImgArr = [];
           res.detailImg.forEach(value => {
-            const innerMapDetailImg = {status: 'finished', url: 'url'}
-            innerMapDetailImg.url = value
-            detailImgArr.push(innerMapDetailImg)
-          })
-          this.$refs.uploadMultiple.setDefaultFileList(detailImgArr)
-          this.uploadListMultiple = detailImgArr
+            const innerMapDetailImg = {status: 'finished', url: 'url'};
+            innerMapDetailImg.url = value;
+            detailImgArr.push(innerMapDetailImg);
+          });
+          this.$refs.uploadMultiple.setDefaultFileList(detailImgArr);
+          this.uploadListMultiple = detailImgArr;
         }
       },
       handleView(params) {
-        this.resetFields()
-        this.tempModalType = this.modalType.view
-        this.loading = true
+        this.resetFields();
+        this.tempModalType = this.modalType.view;
+        this.loading = true;
         getProduct({
           id: params.row.id
         }).then(res => {
-          this.loading = false
+          this.loading = false;
           this.productDetail = res;
-          const map = {
-            id: 'id',
-            title: 'title',
-            children: 'children'
-          };
-          // this.goodsCategoryData = convertTreeCategory(menuList, map, true);
-          let arr = getParent(this.goodsCategoryData,map,this.productDetail.categoryId);
-          console.log('--');
-          console.log(arr);
-          console.log('--');
           this.modalView = true;
-        })
+        });
       },
       handleEdit(params) {
-        this.resetFields()
-        this.tempModalType = this.modalType.edit
-        this.loading = true
+        this.resetFields();
+        this.tempModalType = this.modalType.edit;
+        this.loading = true;
         getProduct({
           id: params.row.id
         }).then(res => {
-          this.loading = false
-          this.productDetail = res
-          this.setDefaultUploadList(res)
+          this.loading = false;
+          this.productDetail = res;
+          this.setDefaultUploadList(res);
+          this.defaultGoodsCategoryData = [];
+          this.findParentId(this.productDetail.categoryId);
+          this.defaultGoodsCategoryData.reverse();
           this.modalEdit = true;
-        })
+        });
+      },
+      findParentId(id) {
+        let obj = this.productCategoriesTreeList.find(item => {
+          return item.id === id;
+        });
+        this.defaultGoodsCategoryData.push(id);
+        if (obj && obj.parentid !== 0) {
+          this.findParentId(obj.parentid);
+        }
       },
       handlePush(params) {
         this.turnToPage({
@@ -775,68 +758,68 @@
           this.tableData = res.array;
           this.total = res.total;
           this.loading = false;
-          this.searchLoading = false
-          this.clearSearchLoading = false
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         });
       },
-      //删除附图
+      // 删除附图
       handleRemoveSecond(file) {
-        this.$refs.uploadSecond.deleteFile(file)
-        let index = this.productDetail.subImg.indexOf(file.url)
+        this.$refs.uploadSecond.deleteFile(file);
+        let index = this.productDetail.subImg.indexOf(file.url);
         if (index > -1) {
-          this.productDetail.subImg.splice(index, 1)
+          this.productDetail.subImg.splice(index, 1);
         }
         if (this.productDetail.subImg.length === 0) {
-          this.$refs.uploadSecond.clearFileList()
-          this.productDetail.subImg = null
+          this.$refs.uploadSecond.clearFileList();
+          this.productDetail.subImg = null;
         }
       },
       handleRemoveMain(file) {
         this.$refs.uploadMain.deleteFile(file);
         // this.uploadListMain = []
-        this.productDetail.mainImg = null
+        this.productDetail.mainImg = null;
       },
 
       handleRemoveMultiple(file) {
-        this.$refs.uploadMultiple.deleteFile(file)
-        let index = this.productDetail.detailImg.indexOf(file.url)
+        this.$refs.uploadMultiple.deleteFile(file);
+        let index = this.productDetail.detailImg.indexOf(file.url);
         if (index > -1) {
-          this.productDetail.detailImg.splice(index, 1)
+          this.productDetail.detailImg.splice(index, 1);
         }
         if (this.productDetail.detailImg.length === 0) {
-          this.$refs.uploadMultiple.clearFileList()
-          this.productDetail.detailImg = null
+          this.$refs.uploadMultiple.clearFileList();
+          this.productDetail.detailImg = null;
         }
       },
-      //商品主图
+      // 商品主图
       handleSuccessMain(response, file, fileList) {
-        this.uploadListMain = fileList
-        this.productDetail.mainImg = null
-        this.productDetail.mainImg = fileList[0].url
+        this.uploadListMain = fileList;
+        this.productDetail.mainImg = null;
+        this.productDetail.mainImg = fileList[0].url;
       },
-      //商品详情
+      // 商品详情
       handleSuccessMultiple(response, file, fileList) {
-        this.uploadListMultiple = fileList
-        this.productDetail.detailImg = []
+        this.uploadListMultiple = fileList;
+        this.productDetail.detailImg = [];
         fileList.forEach(value => {
           if (value.url) {
             this.productDetail.detailImg.push(value.url);
           }
-        })
+        });
       },
-      //商品附图
+      // 商品附图
       handleSuccessSecond(response, file, fileList) {
-        this.uploadListSecond = fileList
-        this.productDetail.subImg = []
+        this.uploadListSecond = fileList;
+        this.productDetail.subImg = [];
         fileList.forEach(value => {
           if (value.url) {
             this.productDetail.subImg.push(value.url);
           }
-        })
+        });
         if (this.tempSubImg.indexOf(response.fileUrl) < 0) {
-          this.tempSubImg.push(response.fileUrl)
+          this.tempSubImg.push(response.fileUrl);
         }
-      },
+      }
     }
   };
 </script>

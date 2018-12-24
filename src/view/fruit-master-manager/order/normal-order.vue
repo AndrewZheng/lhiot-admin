@@ -48,10 +48,11 @@
                 >{{item.label}}</Option>
               </Select>
               <Select
+                multiple
                 class="search-col mr5"
                 placeholder="订单状态"
                 style="width: 100px"
-                v-model="searchRowData.orderStatus"
+                v-model="searchRowData.orderStatuses"
                 clearable
               >
                 <Option
@@ -391,7 +392,7 @@ const roleRowData = {
   endCreateAt: null,
   code: null,
   userPhone: null,
-  orderStatus: null,
+  orderStatuses: null,
   orderType: null,
   page: 1,
   rows: 10
