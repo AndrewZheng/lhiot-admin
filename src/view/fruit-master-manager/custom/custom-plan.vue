@@ -123,7 +123,7 @@
                   </table>
             </TabPane>
         </Tabs>
-        
+
       </div>
       <div slot="footer">
         <Button type="primary" @click="handleClose">关闭</Button>
@@ -596,7 +596,7 @@
         showHeader: false
       };
     },
-    methods: {      
+    methods: {
       remoteMethod(query) {
         if (query !== '') {
           this.handleSearchAutoComplete(query);
@@ -621,9 +621,9 @@
       },
       handleSubmit(name) {
         this.$refs[name].validate((valid) => {
-          // console.log(JSON.stringify(this.rowData));   
-          // FIXME 验证    
-          if (valid) {   
+          // console.log(JSON.stringify(this.rowData));
+          // FIXME 验证
+          if (valid) {
                 if (this.rowData.id == 0) {
                   this.modalViewLoading = true;
                   this.loading=true;
@@ -707,7 +707,22 @@
       },
       customOnSale(params) {
         // FIXME 代码被删除
-        console.log(params);
+        // VALID: 'VALID',
+        //   INVALID: 'INVALID'
+        this.rowData = this._.cloneDeep(params.row) ;
+        if (params.row.status === 'VALID') {
+          this.rowData.status = 'INVALID';
+        } else {
+          this.rowData.status = 'VALID';
+        }
+        this.loading = true;
+        editCustomPlan(this.rowData).then(res => {
+          this.$Message.success('修改成功!');
+        }).finally(res => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
+          this.getTableData();
+        });
       },
       handleEdit(params) {
         this.loading = true;

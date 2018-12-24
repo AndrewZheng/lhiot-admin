@@ -105,13 +105,13 @@
           <i-col span="16">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="3">商品原价:</i-col>
-              <i-col span="21">{{productDetail.originalPrice}}</i-col>
+              <i-col span="21">{{productDetail.originalPrice|fenToYuanDot2Filters}}</i-col>
             </Row>
           </i-col>
           <i-col span="8">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="8">商品特价:</i-col>
-              <i-col span="16">{{productDetail.price}}</i-col>
+              <i-col span="16">{{productDetail.price|fenToYuanDot2Filters}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -295,6 +295,7 @@
   import tableMixin from '@/mixins/tableMixin.js';
   import searchMixin from '@/mixins/searchMixin.js';
   import {positionType, YNEnum} from '@/libs/enumerate';
+  import {fenToYuanDot2} from '../../../libs/util';
 
   const productDetail = {
     id: 0,
@@ -423,13 +424,16 @@
             title: '商品原价',
             minWidth: 120,
             key: 'originalPrice',
-            sortable: true
+            render(h,params){
+              return <div>{fenToYuanDot2(params.row.originalPrice)}</div>
+            }
           },
           {
             title: '商品特价',
             minWidth: 120,
-            key: 'price',
-            sortable: true
+            render(h,params){
+              return <div>{fenToYuanDot2(params.row.price)}</div>
+            }
           },
           {
             title: '排序',
@@ -580,12 +584,13 @@
       onSale(params) {
         console.log(params.row.shelfStatus);
         // this.tableData[params.index].onSale = !this.tableData[params.index].onSale;
-        this.productDetail = params.row;
+        this.productDetail = this._.cloneDeep(params.row) ;
         if (params.row.shelfStatus === 'ON') {
           this.productDetail.shelfStatus = 'OFF';
         } else {
           this.productDetail.shelfStatus = 'ON';
         }
+        this.loading = true;
         this.editProductShelve();
       },
       handleView(params) {
