@@ -40,6 +40,9 @@ export default {
     imgList(val, oldVal) {
       console.log(`new: ${val}, old: ${oldVal}`);
     }
+  },
+  methods: {
+
   }
 };
 </script>
