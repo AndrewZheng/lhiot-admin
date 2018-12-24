@@ -212,7 +212,7 @@
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="8">红利余额:</i-col>
-              <i-col span="16">{{managerDetail.bonus}}</i-col>
+              <i-col span="16">{{managerDetail.bonus|fenToYuanDot2Filters}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -220,7 +220,7 @@
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="8">可结算余额:</i-col>
-              <i-col span="16">{{managerDetail.settlement}}</i-col>
+              <i-col span="16">{{managerDetail.settlement|fenToYuanDot2Filters}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -232,7 +232,7 @@
 
     <Modal v-model="modalEdit">
       <div class="modal-content" style="margin-top: 20px">
-        <Form :label-width="80" ref="modalEdit" :model="managerDetail" :rules="ruleInline">
+        <Form :label-width="100" ref="modalEdit" :model="managerDetail" :rules="ruleInline">
           <Row>
             <Col span="12">
               <FormItem label="ID:">
@@ -396,14 +396,14 @@
             </Col>
             <Col span="12">
               <FormItem label="红利余额:">
-                <i-col>{{managerDetail.bonus}}</i-col>
+                <i-col>{{managerDetail.bonus|fenToYuanDot2Filters}}</i-col>
               </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
               <FormItem label="可结算余额:">
-                <i-col>{{managerDetail.settlement}}</i-col>
+                <i-col>{{managerDetail.settlement|fenToYuanDot2Filters}}</i-col>
               </FormItem>
             </Col>
           </Row>
@@ -432,6 +432,7 @@ import {
   doctorStatusConvert,
   hotConvert
 } from '@/libs/converStatus';
+import {fenToYuanDot2} from '../../../libs/util';
 
 const managerDetail = {
   id: 2,
@@ -547,14 +548,18 @@ export default {
         {
           title: '红利余额',
           width: 180,
-          key: 'bonus',
-          sortable: true
+          render: (h, params, vm) => {
+            const { row } = params;
+            return <div>{fenToYuanDot2(row.bonus)}</div>;
+          }
         },
         {
           title: '可结算余额',
           width: 180,
-          key: 'settlement',
-          sortable: true
+          render: (h, params, vm) => {
+            const { row } = params;
+            return <div>{fenToYuanDot2(row.settlement)}</div>;
+          }
         },
         {
           title: '操作',

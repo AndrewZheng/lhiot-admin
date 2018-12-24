@@ -52,6 +52,7 @@
             >{{ item.label }}</Option>
           </Select>
           <DatePicker
+            v-model="searchRowData.createAt"
             format="yyyy-MM-dd HH:mm:ss"
             @on-change="startTimeChange"
             type="datetime"
@@ -135,7 +136,7 @@
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="8">提取金额:</i-col>
-              <i-col span="16">{{salaryDetail.amount}}</i-col>
+              <i-col span="16">{{salaryDetail.amount|fenToYuanDot2Filters}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -215,7 +216,7 @@
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="8">提取金额:</i-col>
-              <i-col span="16">{{salaryDetail.amount}}</i-col>
+              <i-col span="16">{{salaryDetail.amount|fenToYuanDot2Filters}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -290,6 +291,7 @@ import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import { settlementStatusConvert } from '@/libs/converStatus';
 import { settlementStatusEnum, settlementStatus } from '@/libs/enumerate';
+import {fenToYuanDot2} from '../../../libs/util';
 
 const salaryDetail = {
   doctorId: 0,
@@ -310,9 +312,9 @@ const salaryDetail = {
 const roleRowData = {
   amount: null,
   beginCreateAt: '',
+  endCreateAt: '',
   createAt: '',
   dealAt: '',
-  endCreateAt: '',
   page: 1,
   realName: '',
   rows: 10,
@@ -350,7 +352,10 @@ export default {
         {
           title: '提取金额',
           width: 150,
-          key: 'amount'
+          render: (h, params, vm) => {
+            const { row } = params;
+            return <div>{fenToYuanDot2(row.amount)}</div>;
+          }
         },
         {
           title: '结算状态',
@@ -397,7 +402,7 @@ export default {
   },
   methods: {
     startTimeChange(value, date) {
-      this.searchRowData.beginCreateAt = value;
+      this.searchRowData.createAt = value;
     },
     endTimeChange(value, date) {
       this.searchRowData.endCreateAt = value;
