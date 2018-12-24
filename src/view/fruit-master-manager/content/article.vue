@@ -9,6 +9,7 @@
               :loading="loading"
               @on-view="handleView"
               @on-edit="handleEdit"
+              @on-delete="handleDelete"
               :searchAreaColumn="18"
               :operateAreaColumn="6"
               @on-select-all="onSelectionAll"
