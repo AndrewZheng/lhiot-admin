@@ -133,7 +133,7 @@
           <i-col span="24">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="8">文章内容:</i-col>
-              <i-col span="16">{{articleDetail.content}}</i-col>
+              <i-col span="16" v-html="articleDetail.content">{{articleDetail.content}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -166,8 +166,7 @@
               <Select :value="articleDetail.articleStatus" @on-change="useAbleUniteChange"
                       style="width: 100px">
                 <Option class="ptb2-5" style="padding-left: 5px" v-for="(item,index) in useAble" :value="item.value"
-                        :key="index">{{ item.label
-                  }}
+                        :key="index">{{ item.label}}
                 </Option>
               </Select>
             </FormItem>
@@ -177,6 +176,36 @@
               <Input ref="keyword1" v-model="keyword1" span="6" style="width: 100px;margin-right: 10px" @on-change="inputChange1"/>
               <Input ref="keyword2" v-model="keyword2" span="6" style="width: 100px;margin-right: 10px" @on-change="inputChange2"/>
               <Input ref="keyword3" v-model="keyword3" span="6" style="width: 100px;margin-right: 10px" @on-change="inputChange3"/>
+            </FormItem>
+          </Row>
+          <Row>
+            <FormItem label="定制计划主图:" prop="headImage">
+              <div class="demo-upload-list" v-for="item in uploadListMain">
+                <template v-if="item.status === 'finished'">
+                  <div>
+                    <img :src="item.url">
+                    <div class="demo-upload-list-cover">
+                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                      <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                    </div>
+                  </div>
+                </template>
+                <template v-else>
+                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                </template>
+              </div>
+              <IViewUpload
+                ref="uploadMain"
+                :defaultList="defaultListMain"
+                @on-success="handleSuccessMain"
+                :imageSize="imageSize"
+              >
+                <div slot="content">
+                  <Button type="primary">
+                    上传图片
+                  </Button>
+                </div>
+              </IViewUpload>
             </FormItem>
           </Row>
           <Row>
@@ -201,6 +230,8 @@
   import deleteMixin from '@/mixins/deleteMixin.js'
   import tableMixin from '@/mixins/tableMixin.js'
   import searchMixin from '@/mixins/searchMixin.js'
+  import uploadMixin from '@/mixins/uploadMixin';
+  import IViewUpload from '_c/iview-upload';
   import tinymceEditor from '_c/tinymce-editor';
   import Editor from '_c/editor';
 
@@ -236,9 +267,13 @@
     components: {
       Tables,
       tinymceEditor,
-      Editor
+      Editor,
+      IViewUpload
     },
-    mixins: [deleteMixin, tableMixin,searchMixin],
+    mixins: [deleteMixin, tableMixin,searchMixin,uploadMixin],
+    mounted(){
+      this.$refs.editor.initTinymce();
+    },
     created() {
       this.getTableData();
     },
@@ -252,7 +287,9 @@
           title:{required: true, message: '请输入文章标题'},
           author:{required: true, message: '请输入作者'},
           articleStatus:{required: true, message: '请选择文章状态'},
-          keywords:{required: true, message: '请输入文章关键词'}
+          keywords:{required: true, message: '请输入文章关键词'},
+          headImage:{required: true, message: '请上传图片'},
+          content:{required: true, message: '请填写内容'}
         },
         useAble: [
           {label: '发布', value: 'PUBLISH'},
@@ -316,6 +353,9 @@
             options: ['delete', 'edit', 'view', 'onArticleStatus']
           }
         ],
+        defaultListMain:[],
+        uploadListMain:[],
+        content:'',
         rowData: roleRowData,
         searchRowData: this._.cloneDeep(roleRowData),
         articleDetail:this._.cloneDeep(articleDetail)
@@ -360,12 +400,29 @@
       endTimeChange(value, date) {
         this.searchRowData.endCreateAt = value;
       },
+      resetFields() {
+        this.$refs.modalEdit.resetFields()
+        this.$refs.uploadMain.clearFileList()
+        this.uploadListMain = []
+        this.articleDetail = _.cloneDeep(articleDetail)
+      },
       resetSearchRowData() {
         this.clearSearchLoading = true
         this.searchRowData = _.cloneDeep(roleRowData);
         this.getTableData()
       },
+      handleSuccessMain(response, file, fileList) {
+        this.uploadListMain = fileList;
+        this.articleDetail.headImage = null;
+        this.articleDetail.headImage = fileList[0].url;
+      },
+      handleRemoveMain(file) {
+        this.$refs.uploadMain.deleteFile(file);
+        this.uploadListMain = []
+        this.articleDetail.headImage = null
+      },
       handleSubmit(name){
+        this.articleDetail.content = this.$refs.editor.content
         this.$refs[name].validate((valid) => {
           if (valid) {
             if (this.tempModalType === this.modalType.create) {
@@ -398,7 +455,8 @@
       },
       addChildren() {
         if (this.tempModalType !== this.modalType.create) {
-          this.resetKeyWord()
+          this.resetKeyWord();
+          this.resetFields();
           this.articleDetail = this._.cloneDeep(articleDetail);
         }
         this.tempModalType = this.modalType.create;
@@ -413,6 +471,7 @@
           this.$Message.success('创建成功!');
           this.getTableData();
           this.resetKeyWord();
+          this.$refs.editor.content = null;
         });
       },
       editTableRow(){
@@ -423,6 +482,7 @@
         }).finally(res => {
           this.modalEdit = false;
           this.modalViewLoading = false;
+          this.$refs.editor.content = null;
         });
       },
       onArticleStatus(params) {
@@ -438,13 +498,14 @@
       },
       handleView(params) {
         this.tempModalType = this.modalType.view
-        this.articleDetail = params.row;
+        this.articleDetail = this._.clone(params.row);
         this.modalView = true;
       },
       handleEdit(params) {
         this.tempModalType = this.modalType.edit
         this.articleDetail = this._.cloneDeep(params.row);
         let keyWordsArr = this.articleDetail.keywords.split(',')
+        this.$refs.editor.content = this.articleDetail.content
         if (keyWordsArr[0]) {
           this.keyword1 = keyWordsArr[0];
         };
@@ -454,7 +515,18 @@
         if (keyWordsArr[2]) {
           this.keyword3 = keyWordsArr[2];
         };
+        this.setDefaultUploadList(params.row)
         this.modalEdit = true;
+      },
+      setDefaultUploadList(res) {
+        if (res.headImage != null) {
+          const map = {status: 'finished', url: 'url'};
+          let mainImgArr = []
+          map.url = res.headImage
+          mainImgArr.push(map)
+          this.$refs.uploadMain.setDefaultFileList(mainImgArr)
+          this.uploadListMain = mainImgArr
+        }
       },
       getTableData() {
         this.loading = true
