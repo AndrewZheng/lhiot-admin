@@ -17,7 +17,7 @@
         <div slot="searchCondition">
           <Row>
             <Input placeholder="上架名称" class="search-input mr5" v-model="searchRowData.name" style="width: auto"/>
-            <Input placeholder="商品名称" class="search-input mr5" v-model="searchRowData.productName" style="width: auto"/>
+            <Input placeholder="规格条码" class="search-input mr5" v-model="searchRowData.keyword" style="width: auto"/>
             <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary" :loading="searchLoading">
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
@@ -281,7 +281,7 @@
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import IViewUpload from '_c/iview-upload'
+  import IViewUpload from '_c/iview-upload';
   import {
     getuiPositionsPages,
     createProductShelve,
@@ -290,25 +290,25 @@
     getProductShelvesPages,
     getProductSpecificationsPages
   } from '@/api/fruitermaster';
-  import uploadMixin from '@/mixins/uploadMixin'
-  import deleteMixin from '@/mixins/deleteMixin.js'
-  import tableMixin from '@/mixins/tableMixin.js'
-  import searchMixin from '@/mixins/searchMixin.js'
+  import uploadMixin from '@/mixins/uploadMixin';
+  import deleteMixin from '@/mixins/deleteMixin.js';
+  import tableMixin from '@/mixins/tableMixin.js';
+  import searchMixin from '@/mixins/searchMixin.js';
   import {positionType, YNEnum} from '@/libs/enumerate';
 
   const productDetail = {
     id: 0,
-    image: "",
-    name: "",
+    image: '',
+    name: '',
     originalPrice: 0,
     price: 0,
-    productName: "",
+    productName: '',
     productImage: '',
     productSpecification: null,
-    sectionIds: "",
+    sectionIds: '',
     shelfQty: 0,
-    shelfStatus: "",
-    shelfType: "NORMAL",
+    shelfStatus: '',
+    shelfType: 'NORMAL',
     sorting: 0,
     specificationId: 0,
     specificationInfo: ''
@@ -325,15 +325,15 @@
       Tables,
       IViewUpload
     },
-    mixins: [uploadMixin, deleteMixin, tableMixin,searchMixin],
+    mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
     mounted() {
     },
     created() {
-      this.loading = true
-      this.createLoading = true
-      this.searchRowData = _.cloneDeep(roleRowData)
+      this.loading = true;
+      this.createLoading = true;
+      this.searchRowData = _.cloneDeep(roleRowData);
       getuiPositionsPages({
-        applicationType:'HEALTH_GOOD',
+        applicationType: 'HEALTH_GOOD',
         includeSection: YNEnum.YES,
         positionType: positionType.PRODUCT,
         page: 0,
@@ -341,9 +341,9 @@
       }).then(res => {
         this.uiPositionData = res.array;
         console.log(this.uiPositionData);
-        this.createLoading = false
+        this.createLoading = false;
         this.getTableData();
-      })
+      });
     },
     data() {
       return {
@@ -375,7 +375,7 @@
             {message: '必须为非零整数', pattern: /^[1-9]\d*$/}
           ],
           shelfStatus: [
-            {required: true, message: '请选择是否上架'},
+            {required: true, message: '请选择是否上架'}
           ]
         },
         useAble: [{label: '是', value: 'ON'}, {label: '否', value: 'OFF'}],
@@ -394,7 +394,7 @@
             key: 'id',
             width: 120,
             render: (h, params, vm) => {
-              let {row} = params
+              let {row} = params;
               const str = <img src={row.image} style="margin-top:5px" height="60" width="60" margin-top="10px"/>;
               return <div>{str}</div>;
             }
@@ -440,7 +440,7 @@
           {
             title: '是否上架',
             minWidth: 100,
-            key: 'shelfStatus',
+            key: 'shelfStatus'
           },
           {
             title: '操作',
@@ -457,21 +457,21 @@
     },
     methods: {
       resetSearchRowData() {
-        this.clearSearchLoading = true
+        this.clearSearchLoading = true;
         this.searchRowData = _.cloneDeep(roleRowData);
-        this.getTableData()
+        this.getTableData();
       },
       selectIndex(options) {
-        this.productDetail.specificationId = options.id
-        this.productDetail.image = options.product.productImage
-        this.productDetail.name = options.product.name
-        let tempImgObj = {}
-        tempImgObj.image = options.product.productImage
-        this.setDefaultUploadList(tempImgObj)
+        this.productDetail.specificationId = options.id;
+        this.productDetail.image = options.product.productImage;
+        this.productDetail.name = options.product.name;
+        let tempImgObj = {};
+        tempImgObj.image = options.product.productImage;
+        this.setDefaultUploadList(tempImgObj);
       },
       remoteMethod(query) {
         if (query !== '') {
-          this.handleSearchAutoComplete(query)
+          this.handleSearchAutoComplete(query);
         } else {
           this.optionsShelfSpecification = [];
         }
@@ -493,130 +493,130 @@
           console.log(this.optionsShelfSpecification);
         }).finally(() => {
           this.shelfSpecificationLoading = false;
-        })
+        });
       },
       checkAllGroupChange(data) {
-        this.productDetail.sectionIds = data.join(',')
+        this.productDetail.sectionIds = data.join(',');
       },
       deleteTable(ids) {
-        this.loading = true
+        this.loading = true;
         deleteProductShelve({
           ids
         }).then(res => {
-            let totalPage = Math.ceil(this.total / this.searchRowData.pageSize)
+            let totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
             if (this.tableData.length == this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
-              this.searchRowData.page -= 1
+              this.searchRowData.page -= 1;
             }
             this.tableDataSelected = [];
             this.getTableData();
           }
         ).catch(err => {
-          this.loading = false
-        })
+          this.loading = false;
+        });
       },
       handleSubmit(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
             if (this.tempModalType === this.modalType.create) {
-              //添加状态
-              this.createProductShelve()
+              // 添加状态
+              this.createProductShelve();
             } else if (this.tempModalType === this.modalType.edit) {
-              //编辑状态
-              this.editProductShelve()
+              // 编辑状态
+              this.editProductShelve();
             }
           } else {
             this.$Message.error('请完善商品的信息!');
           }
-        })
+        });
       },
       editProductShelve() {
-        this.modalViewLoading = true
+        this.modalViewLoading = true;
         editProductShelve({
           ...this.productDetail
         }).then(res => {
-          this.resetFields()
-          this.modalEdit = false
-          this.modalViewLoading = false
-          this.getTableData()
+          this.resetFields();
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+          this.getTableData();
         }).catch(err => {
-          this.resetFields()
-          this.modalEdit = false
-          this.modalViewLoading = false
-        })
+          this.resetFields();
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+        });
       },
       createProductShelve() {
-        this.modalViewLoading = true
+        this.modalViewLoading = true;
         createProductShelve({
           ...this.productDetail
         }).then(res => {
-          this.resetFields()
-          this.modalViewLoading = false
-          this.modalEdit = false
+          this.resetFields();
+          this.modalViewLoading = false;
+          this.modalEdit = false;
           this.$Message.success('创建成功!');
-          this.getTableData()
-        })
+          this.getTableData();
+        });
       },
-      //商品主图
+      // 商品主图
       handleSuccessMain(response, file, fileList) {
-        this.uploadListMain = fileList
-        this.productDetail.image = null
-        this.productDetail.image = fileList[0].url
+        this.uploadListMain = fileList;
+        this.productDetail.image = null;
+        this.productDetail.image = fileList[0].url;
       },
       handleRemoveMain(file) {
         this.$refs.uploadMain.deleteFile(file);
-        this.uploadListMain = []
-        this.productDetail.image = null
+        this.uploadListMain = [];
+        this.productDetail.image = null;
       },
       useAbleUniteChange(value) {
         this.productDetail.shelfStatus = value;
       },
       addChildren() {
         if (this.tempModalType !== this.modalType.create) {
-          this.resetFields()
-          this.tempModalType = this.modalType.create
+          this.resetFields();
+          this.tempModalType = this.modalType.create;
         }
         this.modalEdit = true;
       },
       onSale(params) {
         console.log(params.row.shelfStatus);
         // this.tableData[params.index].onSale = !this.tableData[params.index].onSale;
-        this.productDetail = params.row
+        this.productDetail = params.row;
         if (params.row.shelfStatus === 'ON') {
           this.productDetail.shelfStatus = 'OFF';
         } else {
-          this.productDetail.shelfStatus = 'ON'
+          this.productDetail.shelfStatus = 'ON';
         }
-        this.editProductShelve()
+        this.editProductShelve();
       },
       handleView(params) {
-        this.tempModalType = this.modalType.view
+        this.tempModalType = this.modalType.view;
         this.productDetail = params.row;
         this.modalView = true;
       },
       handleEdit(params) {
-        this.tempModalType = this.modalType.edit
+        this.tempModalType = this.modalType.edit;
         this.productDetail = _.cloneDeep(params.row);
-        this.shelfSpecificationEditDefault = params.row.specificationInfo
+        this.shelfSpecificationEditDefault = params.row.specificationInfo;
         // .length = 0
         // this.shelfSpecificationModel.push(temp)
         // this.$refs.shelfSpecificationSelect.setQuery(temp)
-        this.setDefaultUploadList(params.row)
+        this.setDefaultUploadList(params.row);
         this.modalEdit = true;
       },
       resetFields() {
-        this.$refs.modalEdit.resetFields()
-        this.$refs.uploadMain.clearFileList()
-        this.uploadListMain = []
-        this.productDetail = _.cloneDeep(productDetail)
+        this.$refs.modalEdit.resetFields();
+        this.$refs.uploadMain.clearFileList();
+        this.uploadListMain = [];
+        this.productDetail = _.cloneDeep(productDetail);
       },
       setDefaultUploadList(res) {
         if (res.image != null) {
           const map = {status: 'finished', url: 'url'};
-          let mainImgArr = []
-          map.url = res.image
-          mainImgArr.push(map)
-          this.$refs.uploadMain.setDefaultFileList(mainImgArr)
-          this.uploadListMain = mainImgArr
+          let mainImgArr = [];
+          map.url = res.image;
+          mainImgArr.push(map);
+          this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+          this.uploadListMain = mainImgArr;
         }
       },
       getTableData() {
@@ -624,22 +624,22 @@
           this.tableData = res.array;
           this.total = res.total;
           this.loading = false;
-          this.clearSearchLoading = false
-          this.searchLoading = false
+          this.clearSearchLoading = false;
+          this.searchLoading = false;
         });
       },
       exportExcel() {
-        this.exportExcelLoading = true
+        this.exportExcelLoading = true;
         getProductShelvesPages({}).then(res => {
           if (res.array.length > 0) {
             this.$refs.tables.exportCsv({
               filename: `table-${new Date().valueOf()}.csv`,
               columns: this.columns.filter((col, index) => index !== 0),
-              data: res.array,
+              data: res.array
             });
           }
-          this.exportExcelLoading = false
-        })
+          this.exportExcelLoading = false;
+        });
       }
     }
   };
