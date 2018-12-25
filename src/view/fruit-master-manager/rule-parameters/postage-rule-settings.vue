@@ -18,9 +18,10 @@
       >
         <div slot="searchCondition">
           <Row>
-            <InputNumber :min="0" placeholder="最小金额" class="search-input" v-model="searchRowData.minOrderAmount" style="width: 100px"/>
-            <i class="">-</i>
-            <InputNumber :min="0" placeholder="最大金额" class="search-input mr20" v-model="searchRowData.maxOrderAmount" style="width: 100px"/>
+            <i-col style="display: inline-block">¥</i-col>
+            <InputNumber :min="0" placeholder="最小金额" class="search-input" @on-change="minOrderAmountChange" :value="minOrderAmountComputed" style="width: 100px"/>
+            <i-col style="display: inline-block" class="">-¥</i-col>
+            <InputNumber :min="0" placeholder="最大金额" class="search-input mr5" @on-change="maxOrderAmountChange" :value="maxOrderAmountComputed" style="width: 100px"/>
             <Select
               v-model="searchRowData.deliveryAtType"
               class="search-col mr5" placeholder="配送时间段" style="width: 150px" >
@@ -73,13 +74,26 @@
         <Form ref="modalEdit" :model="postageDetail" :rules="ruleInline">
           <Row span="24">
             <Col span="6">
-            <FormItem label="金额范围:" :label-width="100" prop="minOrderAmount">
-              <InputNumber :readonly="modalTypeComputed" :min="0" placeholder="最小金额" class="search-input" v-model="postageDetail.minOrderAmount" style="width: 100px"/>
+            <FormItem label="金额范围:¥" :label-width="100" prop="minOrderAmount">
+              <InputNumber
+                :readonly="modalTypeComputed"
+                :min="0" placeholder="最小金额"
+                class="search-input"
+                @on-change="postageDetailMinOrderAmountChange"
+                :value="postageDetailMinOrderAmount"
+                style="width: 100px"/>
             </FormItem>
             </Col>
             <Col span="16">
-            <FormItem label="——" prop="maxOrderAmount">
-              <InputNumber :readonly="modalTypeComputed" :min="0" placeholder="最大金额" class="search-input" v-model="postageDetail.maxOrderAmount" style="width: 100px"/>
+            <FormItem label="—¥" prop="maxOrderAmount">
+              <InputNumber
+                :readonly="modalTypeComputed"
+                @on-change="postageDetailMaxOrderAmountChange"
+                :min="0"
+                placeholder="最大金额"
+                class="search-input"
+                :value="postageDetailMaxOrderAmount"
+                style="width: 100px"/>
             </FormItem>
             </Col>
           </Row>
@@ -127,7 +141,7 @@
   import deleteMixin from '@/mixins/deleteMixin.js';
   import {deliveryAtTypeConvert} from '@/libs/converStatus';
   import {deliveryAtTypeEnum, updateWay} from '@/libs/enumerate';
-  import {fenToYuan} from '../../../libs/util';
+  import {fenToYuanDot2Number,fenToYuanDot2,yuanToFenNumber} from '@/libs/util';
 
   const fruitMasterDetail = {
     id: '',
@@ -154,7 +168,7 @@
     firstWeight: 3,
     firstFee: 500,
     additionalWeight: 5,
-    additionalFee: 5,
+    additionalFee: 500,
     updateWay: updateWay.INSERT
   };
   const roleRowData = {
@@ -254,7 +268,7 @@
               return h('div', [
                 h('InputNumber', {
                   props: {
-                    value: fenToYuan(params.row.firstFee),
+                    value: fenToYuanDot2Number(params.row.firstFee),
                     readonly:this.modalTypeComputed,
                     min: 0
                   },
@@ -263,7 +277,7 @@
                       if (!e) {
                         e = 0
                       };
-                      this.postageDetail.detailList[params.row.initRowIndex].firstFee = e;
+                      this.postageDetail.detailList[params.row.initRowIndex].firstFee = yuanToFenNumber(e);
                     }
                   }
                 })
@@ -300,18 +314,16 @@
               return h('div', [
                 h('InputNumber', {
                   props: {
-                    value: params.row.additionalFee,
+                    value: fenToYuanDot2Number(params.row.additionalFee),
                     readonly:this.modalTypeComputed,
-                    min: 0.01,
-                    // formatter: value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-                    // parser: value => `${value}`.replace(/$s?|(,*)/g, '')
+                    min: 0,
                   },
                   on: {
                     'on-change': e => {
                       if (!e) {
                         e = 0
                       };
-                      this.postageDetail.detailList[params.row.initRowIndex].additionalFee = e;
+                      this.postageDetail.detailList[params.row.initRowIndex].additionalFee = yuanToFenNumber(e);
                     }
                   }
                 })
@@ -331,7 +343,7 @@
             key: 'id',
             minWidth: 180,
             render(h, params) {
-              return <div>{params.row.minOrderAmount+' - '+params.row.maxOrderAmount}</div>;
+              return <div>{fenToYuanDot2(params.row.minOrderAmount)+' - '+fenToYuanDot2(params.row.maxOrderAmount)}</div>;
             }
           },
           {
@@ -385,9 +397,33 @@
           console.log(this.postageRuleTableColumns.concat(this.options));;
           return this.postageRuleTableColumns.concat(this.options);
         };
+      },
+      postageDetailMinOrderAmount(){
+        return fenToYuanDot2Number(this.postageDetail.minOrderAmount);
+      },
+      postageDetailMaxOrderAmount(){
+        return fenToYuanDot2Number(this.postageDetail.maxOrderAmount);
+      },
+      minOrderAmountComputed(){
+        return fenToYuanDot2Number(this.searchRowData.minOrderAmount);
+      },
+      maxOrderAmountComputed(){
+        return fenToYuanDot2Number(this.searchRowData.maxOrderAmount);
       }
     },
     methods: {
+      minOrderAmountChange(value){
+        this.searchRowData.minOrderAmount = yuanToFenNumber(value)
+      },
+      maxOrderAmountChange(value){
+        this.searchRowData.maxOrderAmount = yuanToFenNumber(value)
+      },
+      postageDetailMinOrderAmountChange(value){
+        this.postageDetail.minOrderAmount = yuanToFenNumber(value)
+      },
+      postageDetailMaxOrderAmountChange(value){
+        this.postageDetail.maxOrderAmount = yuanToFenNumber(value)
+      },
       onCopy(params){
         console.log(params);
         params.row.detailList.forEach( item => {
@@ -413,6 +449,8 @@
         });
       },
       handleSubmit(name){
+        console.log(this.postageDetail);
+        // return;
         this.$refs[name].validate((valid) => {
           if (valid) {
             if (this.tempModalType === this.modalType.create) {

@@ -89,10 +89,10 @@
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="尝鲜价格:" prop="activityPrice">
+            <FormItem label="尝鲜价格:¥" prop="activityPrice">
               <InputNumber
                 :min="0"
-                v-model="goodsDetail.activityPrice"
+                :value="activityPriceComputed"
                 @on-change="activityPriceOnchange"
                 style="width: 150px"
               ></InputNumber>
@@ -135,9 +135,8 @@
   import tableMixin from '@/mixins/tableMixin.js';
   import searchMixin from '@/mixins/searchMixin.js';
   import deleteMixin from '@/mixins/deleteMixin.js';
-  import {fenToYuanDot2} from '@/libs/util';
+  import {fenToYuanDot2,fenToYuanDot2Number,yuanToFenNumber} from '@/libs/util';
   import {YNEnum} from '@/libs/enumerate';
-
   const fruitMasterDetail = {
     id: '',
     name: 0,
@@ -256,9 +255,14 @@
       };
     },
     mixins: [tableMixin, searchMixin, deleteMixin],
+    computed:{
+      activityPriceComputed(){
+        return fenToYuanDot2Number(this.goodsDetail.activityPrice)
+      }
+    },
     methods: {
       activityPriceOnchange(value) {
-
+        this.goodsDetail.activityPrice = yuanToFenNumber(value)
       },
       selectIndex(options) {
         this.goodsDetail.shelfId = options.id;

@@ -168,7 +168,7 @@
             </Col>
             <Col span="12">
             <FormItem label="上架名称:" prop="name">
-              <Input v-model="productDetail.name" placeholder="上架名称"></Input>
+              <Input v-model="productDetail.name" placeholder="上架名称"/>
             </FormItem>
             </Col>
           </Row>
@@ -187,20 +187,27 @@
           <Row>
             <Col span="24">
             <FormItem label="上架描述:">
-              <Input v-model="productDetail.description" placeholder="上架描述"></Input>
+              <Input v-model="productDetail.description" placeholder="上架描述"/>
             </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="商品原价:" prop="originalPrice">
-              <InputNumber :min="0" v-model="productDetail.originalPrice"
-              ></InputNumber>
+            <FormItem label="商品原价:¥" prop="originalPrice">
+              <InputNumber
+                :min="0"
+                placeholder="商品原价"
+                :value="originalPriceComputed"
+                @on-change="originalPriceInputNumberOnchange"/>
             </FormItem>
             </Col>
             <Col span="12">
-            <FormItem label="商品特价:" prop="price">
-              <InputNumber :min="0" v-model="productDetail.price" placeholder="商品特价"></InputNumber>
+            <FormItem label="商品特价:¥" prop="price">
+              <InputNumber
+                :min="0"
+                :value="priceComputed"
+                @on-change="priceInputNumberOnchange"
+                placeholder="商品特价"/>
             </FormItem>
             </Col>
           </Row>
@@ -296,16 +303,16 @@
   import tableMixin from '@/mixins/tableMixin.js';
   import searchMixin from '@/mixins/searchMixin.js';
   import {positionType, YNEnum} from '@/libs/enumerate';
-  import {fenToYuanDot2} from '../../../libs/util';
+  import {fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber} from '@/libs/util';
   import BookTypeOption from '_c/book-type-option';
   import { onSaleStatusConvert } from '@/libs/converStatus';
-  
+
   const productDetail = {
     id: 0,
     image: '',
     name: '',
-    originalPrice: 0,
-    price: 0,
+    originalPrice: null,
+    price: null,
     productName: '',
     productImage: '',
     productSpecification: null,
@@ -333,6 +340,7 @@
     mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
     mounted() {
     },
+
     created() {
       this.loading = true;
       this.createLoading = true;
@@ -345,10 +353,17 @@
         rows: 0
       }).then(res => {
         this.uiPositionData = res.array;
-        console.log(this.uiPositionData);
         this.createLoading = false;
         this.getTableData();
       });
+    },
+    computed: {
+      originalPriceComputed() {
+        return fenToYuanDot2Number(this.productDetail.originalPrice);
+      },
+      priceComputed() {
+        return fenToYuanDot2Number(this.productDetail.price);
+      }
     },
     data() {
       return {
@@ -361,8 +376,7 @@
         uiPositionData: [],
         ruleInline: {
           originalPrice: [
-            {required: true, message: '请输入商品原价'},
-            {message: '必须为大于0的数字', pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/}
+            {required: true, message: '请输入商品原价'}
           ],
           price: [
             {required: true, message: '请输入商品特价'},
@@ -471,6 +485,12 @@
       };
     },
     methods: {
+      originalPriceInputNumberOnchange(value) {
+        this.productDetail.originalPrice = yuanToFenNumber(value);
+      },
+      priceInputNumberOnchange(value) {
+        this.productDetail.price = yuanToFenNumber(value);
+      },
       resetSearchRowData() {
         this.clearSearchLoading = true;
         this.searchRowData = _.cloneDeep(roleRowData);
@@ -530,6 +550,7 @@
         });
       },
       handleSubmit(name) {
+        console.log(this.productDetail.originalPrice);
         this.$refs[name].validate((valid) => {
           if (valid) {
             if (this.tempModalType === this.modalType.create) {
@@ -588,8 +609,8 @@
       addChildren() {
         if (this.tempModalType !== this.modalType.create) {
           this.resetFields();
-          this.tempModalType = this.modalType.create;
         }
+        this.tempModalType = this.modalType.create;
         this.modalEdit = true;
       },
       onSale(params) {
@@ -623,7 +644,7 @@
         this.$refs.modalEdit.resetFields();
         this.$refs.uploadMain.clearFileList();
         this.uploadListMain = [];
-        this.productDetail = _.cloneDeep(productDetail);
+        this.productDetail = this._.cloneDeep(productDetail);
       },
       setDefaultUploadList(res) {
         if (res.image != null) {

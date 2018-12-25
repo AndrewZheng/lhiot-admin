@@ -420,7 +420,7 @@ const btns = {
       ]);
     }
   },
-  // 鲜果师审核
+  // 鲜果师审核<Icon custom="iconfont icon-bumenzhinenggongzuoshenhe"/>
   auditor: (h, params, vm) => {
     const {
       row
@@ -441,7 +441,7 @@ const btns = {
         }
       }, [h('Icon', {
         props: {
-          type: 'ios-eye-outline',
+          custom: 'iconfont icon-shenhe',
           size: 16,
           color: '#fff'
         }

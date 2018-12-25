@@ -270,8 +270,11 @@
             key: 'locked',
             render: (h, params, vm) => {
               const {row} = params;
-              const str = row.locked === 'LOCK' ? '禁用' : '正常';
-              return <span>{str}</span>;
+              if (row.locked === 'LOCK') {
+                return <span style="color:red">{'禁用'}</span>;
+              } else {
+                return <span style="color:green">{'正常'}</span>;
+              };
             }
           },
           {
