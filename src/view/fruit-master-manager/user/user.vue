@@ -62,7 +62,9 @@
           </Button>
         </div>
         <div slot="operations">
-          <Button v-waves type="success" @click="exportExcel"><Icon type="md-cloud-upload"/> 导出</Button>
+           <!-- 多类型导出 -->
+            <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
+          <Button v-waves type="success" @click="handleExport('用户信息')"><Icon type="md-cloud-upload"/> 导出（用上面的导出）</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -158,57 +160,57 @@
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import {getUserPages,editUser} from '@/api/fruitermaster';
+  import {getUserPages, editUser} from '@/api/fruitermaster';
   import tableMixin from '@/mixins/tableMixin.js';
   import searchMixin from '@/mixins/searchMixin.js';
   import {fenToYuanDot2} from '@/libs/util';
   const userDetail = {
-    id: "",
-    birthday: "",
-    sex: "",
-    phone: "",
+    id: '',
+    birthday: '',
+    sex: '',
+    phone: '',
     realName: null,
-    nickname: "",
-    email: "",
-    qq: "",
-    avatar: "",
-    address: "",
-    description: "",
-    registerAt: "",
+    nickname: '',
+    email: '',
+    qq: '',
+    avatar: '',
+    address: '',
+    description: '',
+    registerAt: '',
     point: 0,
     balance: null,
-    openId: "",
-    unionId: "",
+    openId: '',
+    unionId: '',
     baseUserId: null,
-    locked: "",
-    applicationType: "",
-    paymentPermissions: ""
+    locked: '',
+    applicationType: '',
+    paymentPermissions: ''
   };
   const roleRowData = {
-    applicationType: "",
-    createAtEnd: "",
-    createAtStart: "",
-    nickname: "",
+    applicationType: '',
+    createAtEnd: '',
+    createAtStart: '',
+    nickname: '',
     page: 1,
-    phone: "",
-    rows: 10,
+    phone: '',
+    rows: 10
   };
   export default {
     components: {
       Tables
     },
-    computed:{
-      sexComputed(){
+    computed: {
+      sexComputed() {
         if (this.sex === 'MAN') {
           return '男';
-        }else if (this.sex === 'WOMAN') {
+        } else if (this.sex === 'WOMAN') {
           return '女';
         } else {
-          return '保密'
+          return '保密';
         };
       },
-      accountStatusComputed(){
-        return this.locked ==='LOCK' ? '禁用' : '正常'
+      accountStatusComputed() {
+        return this.locked ==='LOCK' ? '禁用' : '正常';
       }
     },
     data() {
@@ -258,6 +260,7 @@
           {
             title: '账号状态',
             width: 90,
+            key: 'locked',
             render: (h, params, vm) => {
               const {row} = params;
               const str = row.locked === 'LOCK' ? '禁用' : '正常';
@@ -281,7 +284,7 @@
         searchRowData: _.cloneDeep(roleRowData)
       };
     },
-    mixins:[tableMixin,searchMixin],
+    mixins: [tableMixin, searchMixin],
     created() {
       this.getTableData();
     },
@@ -296,14 +299,14 @@
         this.searchRowData = _.cloneDeep(roleRowData);
       },
       handleUsable(params) {
-        let lockStatus = params.row.locked === 'LOCK'?'UNLOCKED':'LOCK'
-        this.loading = true
+        let lockStatus = params.row.locked === 'LOCK'?'UNLOCKED':'LOCK';
+        this.loading = true;
         editUser({
-          id:params.row.id,
+          id: params.row.id,
           lockStatus
-        }).then(res=>{
-          this.getTableData()
-        })
+        }).then(res => {
+          this.getTableData();
+        });
       },
       handleView(params) {
         this.userDetail = params.row;
@@ -313,15 +316,23 @@
         getUserPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;
-        }).finally( res => {
+        }).finally(res => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
       },
-      exportExcel() {
-        this.$refs.tables.exportCsv({
-          filename: `table-${new Date().valueOf()}.csv`
+      handleDownload() {
+        // 表格数据导出字段翻译
+        this.tableData.forEach(item => {
+          item['id'] = item['id'] + '';
+          item['balance'] = (item['id'] /100.00).toFixed(2);
+          item['locked'] === 'LOCK' ? item['locked'] = '禁用' : item['locked'] = '正常';
+          // item['type'] == 'PARENT' ? item['type'] = '父级菜单' : item['type'] = '子级菜单';
+        });
+        this.$refs.tables.handleDownload({
+          filename: `用户-${new Date().valueOf()}`,
+          data: this.tableData
         });
       }
     }
