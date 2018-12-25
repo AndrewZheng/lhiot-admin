@@ -16,6 +16,7 @@ import { enums, PcEncrypt } from '@/util/';
 import 'iview/dist/styles/iview.css';
 import './index.less';
 import 'assets/icons/iconfont.css';
+import './assets/iconfont/iconfont.css'
 import 'assets/styles/style.scss';
 import moment from 'moment';
 import lodashLib from 'lodash'
