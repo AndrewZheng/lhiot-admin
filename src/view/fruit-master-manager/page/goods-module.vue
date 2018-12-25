@@ -209,7 +209,7 @@
   import {
     createProductSection,
     deleteProductSection,
-    editCustomPlanSection,
+    editProductSection,
     getProductSectionsPages,
     getProductShelvesPages,
     getuiPositionsPages,
@@ -222,6 +222,7 @@
   import uploadMixin from '@/mixins/uploadMixin';
   import IViewUpload from '_c/iview-upload';
   import {positionType, YNEnum} from '@/libs/enumerate';
+  import {fenToYuanDot2} from '@/libs/util';
 
   const goodsModuleDetail = {
     id: 0,
@@ -246,7 +247,7 @@
     {
       title: '商品名称',
       key: 'name',
-      minWidth: 100,
+      minWidth: 100
     },
     {
       title: '商品条码',
@@ -261,20 +262,28 @@
       minWidth: 100,
       render: (h, params, vm) => {
         const {row} = params;
-        return <div>{row.productSpecification.weight+"*"+row.productSpecification.specificationQty+row.productSpecification.packagingUnit}</div>;
+        return <div>{row.productSpecification.weight+'*'+row.productSpecification.specificationQty+row.productSpecification.packagingUnit}</div>;
       }
     },
     {
       title: '商品原价',
       key: 'originalPrice',
       minWidth: 100,
+      render: (h, params, vm) => {
+        let {row} = params;
+        return <div>{fenToYuanDot2(row.originalPrice)}</div>;
+      }
     },
     {
       title: '商品特价',
       key: 'price',
       minWidth: 100,
+      render: (h, params, vm) => {
+        let {row} = params;
+        return <div>{fenToYuanDot2(row.price)}</div>;
+      }
     }
-  ]
+  ];
   export default {
     components: {
       Tables,
@@ -288,7 +297,7 @@
           return tempObj.description;
         }
         return '';
-      },
+      }
     },
     created() {
       getuiPositionsPages({
@@ -391,15 +400,15 @@
           }
         ],
         shelfSpecificationLoading: false,
-        addTempDataLoading:false,
-        tempTableLoading:false,
+        addTempDataLoading: false,
+        tempTableLoading: false,
         modalViewLoading: false,
         optionsShelfSpecification: [],
         defaultListMain: [],
         uploadListMain: [],
         searchRowData: _.cloneDeep(roleRowData),
         goodsModuleDetail: _.cloneDeep(goodsModuleDetail),
-        tempOptionsShelfSpecification:null
+        tempOptionsShelfSpecification: null
       };
     },
     methods: {
@@ -430,48 +439,48 @@
           this.goodsModuleDetail.productShelfList = this.goodsModuleDetail.productShelfList.filter((item, index) =>
             index !== params.row.initRowIndex
           );
-        }else{
-          this.tempTableLoading = true
+        } else {
+          this.tempTableLoading = true;
           deleteProductSectionRelationBatch({
-            sectionId:this.goodsModuleDetail.id,
+            sectionId: this.goodsModuleDetail.id,
             shelfIds: params.row.id
-          }).then(res=>{
+          }).then(res => {
             this.goodsModuleDetail.productShelfList = this.goodsModuleDetail.productShelfList.filter((item, index) =>
               index !== params.row.initRowIndex
             );
             this.getTableData();
-          }).finally(res=>{
-            this.tempTableLoading = false
-          })
+          }).finally(res => {
+            this.tempTableLoading = false;
+          });
         }
       },
       addTempData() {
         if (!this.tempOptionsShelfSpecification) {
-          this.$Message.warning('请选择定制计划')
-          return
+          this.$Message.warning('请选择定制计划');
+          return;
         };
         if (!this.goodsModuleDetail.productShelfList) {
-          this.goodsModuleDetail.productShelfList = []
+          this.goodsModuleDetail.productShelfList = [];
         }
-        let obj = this.goodsModuleDetail.productShelfList.some( item => {
-          return item.id === this.tempOptionsShelfSpecification.id
-        })
+        let obj = this.goodsModuleDetail.productShelfList.some(item => {
+          return item.id === this.tempOptionsShelfSpecification.id;
+        });
         if (!obj) {
           if (this.tempModalType === this.modalType.create) {
             this.goodsModuleDetail.productShelfList.push({...this.tempOptionsShelfSpecification});
-          }else {
+          } else {
             this.addTempDataLoading = true;
             this.tempTableLoading =true;
             this.loading = true;
             addProductSectionRelationBatch({
-              sectionId:this.goodsModuleDetail.id,
-              shelfId:this.tempOptionsShelfSpecification.id
-            }).then(res =>{
+              sectionId: this.goodsModuleDetail.id,
+              shelfId: this.tempOptionsShelfSpecification.id
+            }).then(res => {
               this.goodsModuleDetail.productShelfList.push({...this.tempOptionsShelfSpecification});
               this.addTempDataLoading = false;
               this.tempTableLoading =false;
-              this.loading = false
-            })
+              this.loading = false;
+            });
           };
         } else {
           this.$Message.warning('已经添加该商品！');
@@ -481,11 +490,11 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             if (this.tempModalType === this.modalType.create) {
-              //添加状态
+              // 添加状态
               this.createTableRow();
             } else if (this.tempModalType === this.modalType.edit) {
-              //编辑状态
-              this.editTableRow()
+              // 编辑状态
+              this.editTableRow();
             }
           } else {
             this.$Message.error('请完善商品的信息!');
@@ -493,7 +502,7 @@
         });
       },
       selectIndex(options) {
-        this.tempOptionsShelfSpecification = options
+        this.tempOptionsShelfSpecification = options;
       },
       remoteMethod(query) {
         if (query !== '') {
@@ -544,7 +553,7 @@
       },
       editTableRow() {
         this.modalViewLoading = true;
-        editCustomPlanSection({
+        editProductSection({
           ...this.goodsModuleDetail
         }).then(res => {
           this.resetFields();

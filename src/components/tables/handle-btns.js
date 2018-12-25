@@ -425,7 +425,7 @@ const btns = {
     const {
       row
     } = params;
-    if (row.auditStatus !== 'AGREE') {
+    if (row.auditStatus === 'UNAUDITED') {
       return h('Button', {
         props: {
           type: 'success',
