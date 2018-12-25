@@ -323,6 +323,10 @@
         });
       },
       handleDownload() {
+        // 导出不分页
+        this.searchRowData.rows = null;
+        this.searchLoading = true;
+        this.getTableData();
         // 表格数据导出字段翻译
         this.tableData.forEach(item => {
           item['id'] = item['id'] + '';
