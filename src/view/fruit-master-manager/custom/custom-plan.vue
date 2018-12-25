@@ -7,6 +7,8 @@
               v-model="tableData"
               :columns="columns"
               :loading="loading"
+              :searchAreaColumn="18"
+              :operateAreaColumn="6"
               @on-view="handleView"
               @on-edit="handleEdit"
               @on-relevance="handlePeriod"
@@ -17,7 +19,7 @@
       >
         <div slot="searchCondition">
           <Row>
-            <Input placeholder="定制计划名称" class="search-input mr5" v-model="searchRowData.name" style="width: auto"/>
+            <Input placeholder="定制计划名称" class="search-input mr5" v-model="searchRowData.name" style="width: auto" clearable/>
             <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary" :loading="searchLoading">
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
@@ -42,10 +44,9 @@
               删除
             </Button>
           </Poptip>
-          <Button v-waves type="primary" class="mr5" @click="exportExcel">
-            <Icon type="md-download"/>
-            导出
-          </Button>
+          <!-- 多类型导出 -->
+           <BookTypeOption v-model="exportType" class="mr5"/>
+           <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -305,6 +306,7 @@
   import {fenToYuanDot2} from '@/libs/util';
   import {onSaleStatusConvert} from '@/libs/converStatus';
   import {onSaleStatusEnum, YNEnum, positionType} from '@/libs/enumerate';
+  import BookTypeOption from '_c/book-type-option';
 
   const customPlanDetail = {
     id: 0,
@@ -355,7 +357,8 @@
   export default {
     components: {
       Tables,
-      IViewUpload
+      IViewUpload,
+      BookTypeOption
     },
     created() {
       getuiPositionsPages({
@@ -411,6 +414,7 @@
           {
             title: '价格(周/单人)',
             width: 150,
+            key: 'weekPrice1',
             render: (h, params, vm) => {
               let {row} = params;
               if (!row.periodList) {
@@ -437,6 +441,7 @@
           {
             title: '价格(周/双人)',
             width: 150,
+            key: 'weekPrice2',
             render: (h, params, vm) => {
               let {row} = params;
               if (!row.periodList) {
@@ -463,6 +468,7 @@
           {
             title: '价格(周/三人)',
             width: 150,
+            key: 'weekPrice3',
             render: (h, params, vm) => {
               let {row} = params;
               if (!row.periodList) {
@@ -489,6 +495,7 @@
           {
             title: '价格(月/单人)',
             width: 180,
+            key: 'monthPrice1',
             render: (h, params, vm) => {
               let {row} = params;
               if (!row.periodList) {
@@ -515,6 +522,7 @@
           {
             title: '价格(月/双人)',
             width: 150,
+            key: 'monthPrice2',
             render: (h, params, vm) => {
               let {row} = params;
               if (!row.periodList) {
@@ -541,6 +549,7 @@
           {
             title: '价格(月/三人)',
             width: 150,
+            key: 'monthPrice3',
             render: (h, params, vm) => {
               let {row} = params;
               if (!row.periodList) {
@@ -567,6 +576,7 @@
           {
             title: '是否上架',
             width: 150,
+            key: 'status',
             render: (h, params, vm) => {
               let {row} = params;
               return <div>{onSaleStatusConvert(row.status).label}</div>;
@@ -593,7 +603,9 @@
         modalSetting: false,
         modalEdit: false,
         showTab: false,
-        showHeader: false
+        showHeader: false,
+        exportType: 'xlsx',
+        downloadLoading: false
       };
     },
     methods: {
@@ -707,7 +719,7 @@
       },
       customOnSale(params) {
         // FIXME 代码被删除
-        const rowData = this._.cloneDeep(params.row) ;
+        const rowData = this._.cloneDeep(params.row);
         if (params.row.status === 'VALID') {
           rowData.status = 'INVALID';
         } else {
@@ -758,9 +770,36 @@
           this.loading = false;
         });
       },
-      exportExcel() {
-        this.$refs.tables.exportCsv({
-          filename: `table-${new Date().valueOf()}.csv`
+      // exportExcel() {
+      //   this.$refs.tables.exportCsv({
+      //     filename: `table-${new Date().valueOf()}.csv`
+      //   });
+      // },
+      handleDownload() {
+        // 导出不分页
+        this.searchRowData.rows = null;
+        getCustomPlansPages(this.searchRowData).then(res => {
+          let tableData = res.array;
+          // 表格数据导出字段翻译
+          tableData.forEach(item => {
+            item['weekPrice1'] = 1;
+            // item['planPeriod'][1]['specificationList'].find(item => {
+            //     if(item.quantity === 1){
+            //       return item['weekPrice1'] = item.price;
+            //     }
+            // });
+            // item['price1'] = (item['7-1-price'] /100.00).toFixed(2);
+            // item['7-2-price'] = (item['7-2-price'] /100.00).toFixed(2);
+            // item['7-3-price'] = (item['7-3-price'] /100.00).toFixed(2);
+            // item['30-1-price'] = (item['30-1-price'] /100.00).toFixed(2);
+            // item['30-2-price'] = (item['30-2-price'] /100.00).toFixed(2);
+            // item['30-3-price'] = (item['30-3-price'] /100.00).toFixed(2);
+            item['status'] = onSaleStatusConvert(item['status']).label;
+          });
+          this.$refs.tables.handleDownload({
+            filename: `定制计划-${new Date().valueOf()}`,
+            data: tableData
+          });
         });
       },
       updateProduct(id, shelfId) {

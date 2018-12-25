@@ -10,9 +10,9 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :searchAreaColumn="22"
-        :operateAreaColumn="2"
-
+        :searchAreaColumn="20"
+        :operateAreaColumn="4"
+        :exportType="exportType"
         @on-view="handleView"
         @on-usable="handleUsable"
       >
@@ -22,18 +22,21 @@
             class="search-input mr5"
             v-model="searchRowData.id"
             style="width: 150px"
+            clearable
           />
           <Input
             placeholder="昵称"
             class="search-input mr5"
             v-model="searchRowData.nickname"
             style="width: 100px"
+            clearable
           />
           <Input
             placeholder="手机号码"
             class="search-input"
             v-model="searchRowData.phone"
             style="width: 100px"
+            clearable
           />
           <DatePicker
             type="datetime"
@@ -63,8 +66,9 @@
         </div>
         <div slot="operations">
            <!-- 多类型导出 -->
-            <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
-          <Button v-waves type="success" @click="handleExport('用户信息')"><Icon type="md-cloud-upload"/> 导出（用上面的导出）</Button>
+           <BookTypeOption v-model="exportType" class="mr5"/>
+           <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
+          <!-- <Button v-wavestype="success" @click="handleExport('用户信息')"><Icon type="md-cloud-upload"/> 导出（用上面的导出）</Button> -->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -164,6 +168,8 @@
   import tableMixin from '@/mixins/tableMixin.js';
   import searchMixin from '@/mixins/searchMixin.js';
   import {fenToYuanDot2} from '@/libs/util';
+  import BookTypeOption from '_c/book-type-option';
+
   const userDetail = {
     id: '',
     birthday: '',
@@ -197,7 +203,8 @@
   };
   export default {
     components: {
-      Tables
+      Tables,
+      BookTypeOption
     },
     computed: {
       sexComputed() {
@@ -207,7 +214,7 @@
           return '女';
         } else {
           return '保密';
-        };
+        }
       },
       accountStatusComputed() {
         return this.locked ==='LOCK' ? '禁用' : '正常';
@@ -281,7 +288,9 @@
           }
         ],
         userDetail: _.cloneDeep(userDetail),
-        searchRowData: _.cloneDeep(roleRowData)
+        searchRowData: _.cloneDeep(roleRowData),
+        exportType: 'xlsx',
+        downloadLoading: false
       };
     },
     mixins: [tableMixin, searchMixin],
@@ -325,18 +334,19 @@
       handleDownload() {
         // 导出不分页
         this.searchRowData.rows = null;
-        this.searchLoading = true;
-        this.getTableData();
-        // 表格数据导出字段翻译
-        this.tableData.forEach(item => {
-          item['id'] = item['id'] + '';
-          item['balance'] = (item['id'] /100.00).toFixed(2);
-          item['locked'] === 'LOCK' ? item['locked'] = '禁用' : item['locked'] = '正常';
-          // item['type'] == 'PARENT' ? item['type'] = '父级菜单' : item['type'] = '子级菜单';
-        });
-        this.$refs.tables.handleDownload({
-          filename: `用户-${new Date().valueOf()}`,
-          data: this.tableData
+        getUserPages(this.searchRowData).then(res => {
+          let tableData = res.array;
+          // 表格数据导出字段翻译
+          tableData.forEach(item => {
+            item['id'] = item['id'] + '';
+            item['balance'] = (item['balance'] /100.00).toFixed(2);
+            item['locked'] === 'LOCK' ? item['locked'] = '禁用' : item['locked'] = '正常';
+            // item['type'] == 'PARENT' ? item['type'] = '父级菜单' : item['type'] = '子级菜单';
+          });
+          this.$refs.tables.handleDownload({
+            filename: `用户信息-${new Date().valueOf()}`,
+            data: tableData
+          });
         });
       }
     }

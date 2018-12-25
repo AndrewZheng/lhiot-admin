@@ -78,13 +78,13 @@ export const updateWayConvert = (value) => {
 };
 
 export const onSaleStatusConvert = (value) => {
-  return convertFunction(value, onSaleStatusEnum)
-}
+  return convertFunction(value, onSaleStatusEnum);
+};
 
 export const positionTypeConvert = (value) => {
-  return convertFunction(value, positionTypeEnum)
-}
+  return convertFunction(value, positionTypeEnum);
+};
 
 export const relationTypeConvert = (value) => {
-  return convertFunction(value, relationTypeEnum)
-}
+  return convertFunction(value, relationTypeEnum);
+};

@@ -10,10 +10,9 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
+        :searchAreaColumn="20"
+        :operateAreaColumn="4"
         @on-view="handleView"
-        :searchAreaColumn="22"
-        :operateAreaColumn="2"
-        @on-edit="handleEdit"
       >
         <div slot="searchCondition">
           <Input
@@ -90,7 +89,9 @@
           </Button>
         </div>
         <div slot="operations">
-          <Button v-waves type="primary" @click="exportExcel">导出</Button>
+           <!-- 多类型导出 -->
+           <BookTypeOption v-model="exportType" class="mr5"/>
+           <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -292,6 +293,7 @@ import searchMixin from '@/mixins/searchMixin.js';
 import { settlementStatusConvert } from '@/libs/converStatus';
 import { settlementStatusEnum, settlementStatus } from '@/libs/enumerate';
 import {fenToYuanDot2} from '../../../libs/util';
+import BookTypeOption from '_c/book-type-option';
 
 const salaryDetail = {
   doctorId: 0,
@@ -323,7 +325,8 @@ const roleRowData = {
 
 export default {
   components: {
-    Tables
+    Tables,
+    BookTypeOption
   },
   mixins: [tableMixin, searchMixin],
   created() {
@@ -352,6 +355,7 @@ export default {
         {
           title: '提取金额',
           width: 150,
+          key: 'amount',
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{fenToYuanDot2(row.amount)}</div>;
@@ -360,6 +364,7 @@ export default {
         {
           title: '结算状态',
           width: 150,
+          key: 'settlementStatus',
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{settlementStatusConvert(row.settlementStatus).label}</div>;
@@ -397,7 +402,9 @@ export default {
       ],
       modalViewLoading: false,
       searchRowData: this._.cloneDeep(roleRowData),
-      salaryDetail: this._.cloneDeep(salaryDetail)
+      salaryDetail: this._.cloneDeep(salaryDetail),
+      exportType: 'xlsx',
+      downloadLoading: false
     };
   },
   methods: {
@@ -449,9 +456,29 @@ export default {
         this.clearSearchLoading = false;
       });
     },
-    exportExcel() {
-      this.$refs.tables.exportCsv({
-        filename: `table-${new Date().valueOf()}.csv`
+    // exportExcel() {
+    //   this.$refs.tables.exportCsv({
+    //     filename: `table-${new Date().valueOf()}.csv`
+    //   });
+    // },
+    handleDownload() {
+      // 导出不分页
+      this.searchRowData.rows = null;
+      this.searchLoading = false;
+      this.clearSearchLoading = false;
+      getFruitDoctorsSettlementPagesPages(this.searchRowData).then(res => {
+        let tableData = res.array;
+        // 表格数据导出字段翻译
+        tableData.forEach(item => {
+          item['id'] = item['id'] + '';
+          item['amount'] = (item['amount'] /100.00).toFixed(2);
+          item['settlementStatus'] = settlementStatusConvert(item['settlementStatus']).label;
+          item['cardNo'] = item['cardNo'] + '';
+        });
+        this.$refs.tables.handleDownload({
+          filename: `薪资信息-${new Date().valueOf()}`,
+          data: tableData
+        });
       });
     }
   }

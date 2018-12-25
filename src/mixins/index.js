@@ -56,8 +56,8 @@ let mixin = {
     doctorStatusFilters(name) {
       return doctorStatusConvert(name).label;
     },
-     // 明星鲜果师
-     hotFilters(name) {
+    // 明星鲜果师
+    hotFilters(name) {
       return hotConvert(name).label;
     },
     // 订单状态
@@ -84,7 +84,7 @@ let mixin = {
     deliveryTypeCustomFilters(status) {
       return deliveryTypeCustomConvert(status).label;
     },
-    // 定制配送方式
+    // 商品上架
     onSaleStatusFilters(status) {
       return onSaleStatusConvert(status).label;
     }
