@@ -63,7 +63,7 @@
         </div>
         <div slot="operations">
            <!-- 多类型导出 -->
-            <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
+            <Button class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
           <Button v-waves type="success" @click="handleExport('用户信息')"><Icon type="md-cloud-upload"/> 导出（用上面的导出）</Button>
         </div>
       </tables>
@@ -263,8 +263,11 @@
             key: 'locked',
             render: (h, params, vm) => {
               const {row} = params;
-              const str = row.locked === 'LOCK' ? '禁用' : '正常';
-              return <span>{str}</span>;
+              if (row.locked === 'LOCK'){
+                return <span style="color:red">{'禁用'}</span>;
+              }else {
+                return <span style="color:green">{'正常'}</span>;
+              };
             }
           },
           {

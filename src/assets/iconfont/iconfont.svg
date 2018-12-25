@@ -1,0 +1,29 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<!--
+2013-9-30: Created.
+-->
+<svg>
+<metadata>
+Created by iconfont
+</metadata>
+<defs>
+
+<font id="iconfont" horiz-adv-x="1024" >
+  <font-face
+    font-family="iconfont"
+    font-weight="500"
+    font-stretch="normal"
+    units-per-em="1024"
+    ascent="896"
+    descent="-128"
+  />
+    <missing-glyph />
+    
+    <glyph glyph-name="shenhe" unicode="&#59038;" d="M370.090667 346.368v-50.176h114.688v50.176H370.090667z m114.688-106.922667H370.090667v-31.061333H309.162667V509.44h175.616V558.421333h62.122666V509.44h177.408v-299.264h-60.928v29.269333h-116.48v-117.674666h-62.122666v117.674666z m62.122666 56.746667h116.48v50.176h-116.48v-50.176z m116.48 104.533333v51.370667h-116.48v-51.370667h116.48z m-178.602666 51.370667H370.090667v-51.370667h114.688v51.370667zM769.706667 637.866667v-115.882667h-60.928V581.12H316.928v-62.122667H256V637.866667h221.610667a449.28 449.28 0 0 1-15.530667 34.048L528.384 682.666667c4.778667-13.141333 9.557333-28.074667 14.336-44.8h226.986667z"  horiz-adv-x="1024" />
+
+    
+
+
+  </font>
+</defs></svg>
