@@ -50,14 +50,15 @@
                 multiple
                 class="search-col mr5"
                 placeholder="订单状态"
-                style="width: 100px"
+                style="width: 150px"
+                @on-change="orderStatusesOnChange"
                 v-model="searchRowData.orderStatuses"
                 clearable
               >
                 <Option
                   v-for="item in orderStatus"
                   :value="item.value"
-                  class="mb10 ml15"
+                  class="ptb2-5"
                   :key="`search-col-${item.value}`"
                 >{{item.label}}</Option>
               </Select>
@@ -594,6 +595,12 @@ export default {
     });
   },
   methods: {
+    orderStatusesOnChange(value){
+      console.log(value);
+      if(value.length===0){
+        this.searchRowData.orderStatuses = null
+      }
+    },
     startTimeChange(value, date) {
       this.searchRowData.beginCreateAt = value;
     },

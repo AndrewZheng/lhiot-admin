@@ -386,10 +386,11 @@
         onSaleStatusEnum,
         topRuleInline: false,
         ruleInline: {
-          name: [{required: false, message: '请填写定制名称'}],
-          image: [{required: false, message: '请上传图片'}],
-          status: [{required: false, message: '请选择状态'}],
-          customPlanSectionIds: [{required: false, message: '请选择上架板块'}]
+          name: [{required: true, message: '请填写定制名称'}],
+          image: [{required: true, message: '请上传图片'}],
+          status: [{required: true, message: '请选择状态'}],
+          description: [{required: true, message: '请选择状态'}],
+          customPlanSectionIds: [{required: true, message: '请选择上架板块'}]
         },
         columns: [
           {

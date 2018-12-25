@@ -140,7 +140,7 @@
   import searchMixin from '@/mixins/searchMixin.js';
   import deleteMixin from '@/mixins/deleteMixin.js';
   import {deliveryAtTypeConvert} from '@/libs/converStatus';
-  import {deliveryAtTypeEnum, updateWay} from '@/libs/enumerate';
+  import {deliveryAtTypeEnum, updateWay,deliveryAtType} from '@/libs/enumerate';
   import {fenToYuanDot2Number,fenToYuanDot2,yuanToFenNumber} from '@/libs/util';
 
   const fruitMasterDetail = {
@@ -510,6 +510,7 @@
         this.tempModalType = this.modalType.create;
         this.postageDetail.detailList.length = 0;
         this.postageDetail.detailList.push(this._.cloneDeep(detailList));
+        this.postageDetail.deliveryAtType = deliveryAtType.ALL_DAY
         this.modalEdit = true;
       },
       resetSearchRowData() {

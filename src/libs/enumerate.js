@@ -353,14 +353,14 @@ export const onSaleStatusEnum = [
     label: '下架',
     value: onSaleStatus.INVALID
   },
-  {
-    label: '上架',
-    value: onSaleStatus.ON
-  },
-  {
-    label: '下架',
-    value: onSaleStatus.OFF
-  }
+  // {
+  //   label: '上架',
+  //   value: onSaleStatus.ON
+  // },
+  // {
+  //   label: '下架',
+  //   value: onSaleStatus.OFF
+  // }
 ];
 
 // 是否明星鲜果师

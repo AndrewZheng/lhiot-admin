@@ -12,6 +12,7 @@
         :loading="loading"
         :searchAreaColumn="20"
         :operateAreaColumn="4"
+        @on-edit="handleEdit"
         @on-view="handleView"
       >
         <div slot="searchCondition">
