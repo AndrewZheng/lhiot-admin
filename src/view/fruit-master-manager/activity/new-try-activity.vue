@@ -135,7 +135,7 @@
   import tableMixin from '@/mixins/tableMixin.js';
   import searchMixin from '@/mixins/searchMixin.js';
   import deleteMixin from '@/mixins/deleteMixin.js';
-  import {fenToYuanDot2,fenToYuanDot2Number,yuanToFenNumber} from '@/libs/util';
+  import {fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber} from '@/libs/util';
   import {YNEnum} from '@/libs/enumerate';
   const fruitMasterDetail = {
     id: '',
@@ -255,14 +255,14 @@
       };
     },
     mixins: [tableMixin, searchMixin, deleteMixin],
-    computed:{
-      activityPriceComputed(){
-        return fenToYuanDot2Number(this.goodsDetail.activityPrice)
+    computed: {
+      activityPriceComputed() {
+        return fenToYuanDot2Number(this.goodsDetail.activityPrice);
       }
     },
     methods: {
       activityPriceOnchange(value) {
-        this.goodsDetail.activityPrice = yuanToFenNumber(value)
+        this.goodsDetail.activityPrice = yuanToFenNumber(value);
       },
       selectIndex(options) {
         this.goodsDetail.shelfId = options.id;
@@ -314,6 +314,7 @@
           this.getTableData();
           this.resetKeyWord();
         }).finally(res => {
+          this.loading =false;
           this.modalViewLoading = false;
           this.modalEdit = false;
         });

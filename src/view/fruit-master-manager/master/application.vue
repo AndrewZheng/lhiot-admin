@@ -248,14 +248,13 @@ const masterDetail = {
   credentials: '',
   failureReason: null,
   auditStatus: '',
-  createAt: null,
+  createTime: null,
   realName: '',
-  auditAt: null,
+  auditTime: null,
   auditUser: null,
   userId: null,
   beginCreateAt: null,
-  endCreateAt: null,
-  auditTime: null
+  endCreateAt: null
 };
 
 const roleRowData = {

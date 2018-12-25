@@ -131,7 +131,7 @@
             <Row>
               <i-col span="3">详情图:</i-col>
               <i-col span="21">
-                <div class="demo-upload-list">
+                <div class="demo-upload-list"  v-for="item in uploadListMultiple">
                   <img :src="productDetail.detailImg"/>
                   <div class="demo-upload-list-cover">
                     <Icon type="ios-eye-outline" @click.native="handleUploadView(productDetail.detailImg)"></Icon>
@@ -146,13 +146,13 @@
           <i-col span="12">
             <Row>
               <i-col span="7">规格单位:</i-col>
-              <i-col span="17">盒</i-col>
+              <i-col span="17">{{productDetail.productSpecification.packagingUnit}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
               <i-col span="7">规格条码:</i-col>
-              <i-col span="17">00815</i-col>
+              <i-col span="17">{{productDetail.productSpecification.barcode}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -160,13 +160,21 @@
           <i-col span="12">
             <Row>
               <i-col span="7">安全库存:</i-col>
-              <i-col span="17">0</i-col>
+              <i-col span="17">{{productDetail.productSpecification.limitInventory}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
               <i-col span="7">重量(kg):</i-col>
-              <i-col span="17">0.5</i-col>
+              <i-col span="17">{{productDetail.productSpecification.weight}}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+         <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="7">海鼎规格数量:</i-col>
+              <i-col span="17">{{productDetail.productSpecification.specificationQty}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -350,6 +358,14 @@
               </FormItem>
               </Col>
             </Row>
+            <Row>
+              <Col span="12">
+              <FormItem label="海鼎规格数量:" prop="specificationQty" :label-width="80">
+                <Input v-if="productDetail.productSpecification"
+                       v-model="productDetail.productSpecification.specificationQty"/>
+              </FormItem>
+              </Col>
+            </Row>
           </Form>
         </Form>
       </div>
@@ -510,6 +526,18 @@
                 let errors = [];
                 if (!/^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/.test(value)) {
                   callback('必须为大于0的数字');
+                }
+                callback(errors);
+              }
+            }
+          ],
+          specificationQty: [
+            {required: true, message: '请输入海鼎规格数量'},
+            {
+              validator(rule, value, callback, source, options) {
+                let errors = [];
+                if (!/^[1-9]\d*$/.test(value)) {
+                  callback('必须为非零整数');
                 }
                 callback(errors);
               }
