@@ -192,7 +192,7 @@
             </FormItem>
           </Row>
           <Row>
-            <FormItem label="定制计划主图:" prop="headImage">
+            <FormItem label="文章主图:" prop="headImage">
               <div class="demo-upload-list" v-for="item in uploadListMain">
                 <template v-if="item.status === 'finished'">
                   <div>
@@ -233,6 +233,9 @@
         <Button type="primary" :loading="modalViewLoading" @click="handleSubmit('modalEdit')">确定
         </Button>
       </div>
+    </Modal>
+    <Modal title="View Image" v-model="uploadVisible">
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>

@@ -7,8 +7,6 @@
               v-model="tableData"
               :columns="columns"
               :loading="loading"
-              :searchAreaColumn="18"
-              :operateAreaColumn="6"
               @on-delete="handleDelete"
               @on-view="handleView"
               @on-edit="handleEdit"
@@ -45,9 +43,10 @@
               删除
             </Button>
           </Poptip>
-           <!-- 多类型导出 -->
-           <BookTypeOption v-model="exportType" class="mr5"/>
-           <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
+          <Button v-waves type="primary" class="mr5" @click="exportExcel" :loading="exportExcelLoading">
+            <Icon type="md-download"/>
+            导出
+          </Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -131,7 +130,13 @@
           <i-col span="24">
             <Row>
               <i-col span="3">详情图:</i-col>
-              <i-col span="21"><a style="color:#0072bc; text-decoration : underline" @click="goDetail"> 预览效果</a>----直接打开新页面，展示详情组合图片
+              <i-col span="21">
+                <div class="demo-upload-list">
+                  <img :src="productDetail.detailImg"/>
+                  <div class="demo-upload-list-cover">
+                    <Icon type="ios-eye-outline" @click.native="handleUploadView(productDetail.detailImg)"></Icon>
+                  </div>
+                </div>
               </i-col>
             </Row>
           </i-col>
@@ -218,7 +223,7 @@
             </i-col>
           </Row>
           <Row>
-            <FormItem label="商品主图:建议尺寸 (xxx*xxx):" prop="mainImg" :label-width="80">
+            <FormItem label="商品主图:建议尺寸;400x400(单位:px):" prop="mainImg" >
               <div class="demo-upload-list" v-for="item in uploadListMain">
                 <template v-if="item.status === 'finished'">
                   <div>
@@ -248,7 +253,7 @@
             </FormItem>
           </Row>
           <Row>
-            <FormItem label="商品附图:建议尺寸 (xxx*xxx)" prop="subImg">
+            <FormItem label="商品附图:建议尺寸600x338(单位:px)" prop="subImg">
               <div class="demo-upload-list" v-for="item in uploadListSecond">
                 <template v-if="item.status === 'finished'">
                   <div>
@@ -280,7 +285,7 @@
             </FormItem>
           </Row>
           <Row>
-            <FormItem label="商品详情:建议尺寸 (xxx*xxx):" prop="detailImg" :label-width="80">
+            <FormItem label="商品详情:" prop="detailImg" :label-width="80">
               <div class="demo-upload-list" v-for="item in uploadListMultiple">
                 <template v-if="item.status === 'finished'">
                   <div>
@@ -377,7 +382,6 @@
   import deleteMixin from '@/mixins/deleteMixin.js';
   import tableMixin from '@/mixins/tableMixin.js';
   import searchMixin from '@/mixins/searchMixin.js';
-  import BookTypeOption from '_c/book-type-option';
 
   const productDetail = {
     id: 0,
@@ -412,8 +416,7 @@
   export default {
     components: {
       Tables,
-      IViewUpload,
-      BookTypeOption
+      IViewUpload
     },
     mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
     mounted() {
@@ -763,17 +766,6 @@
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
-        });
-      },
-      handleDownload() {
-        // 导出不分页
-        this.searchRowData.rows = null;
-        getProductPages(this.searchRowData).then(res => {
-          let tableData = res.array;
-          this.$refs.tables.handleDownload({
-            filename: `商品信息-${new Date().valueOf()}`,
-            data: tableData
-          });
         });
       },
       // 删除附图
