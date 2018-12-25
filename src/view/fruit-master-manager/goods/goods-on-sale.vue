@@ -7,6 +7,8 @@
               v-model="tableData"
               :columns="columns"
               :loading="loading"
+              :searchAreaColumn="18"
+              :operateAreaColumn="6"
               @on-delete="handleDelete"
               @on-view="handleView"
               @on-edit="handleEdit"
@@ -42,10 +44,9 @@
               删除
             </Button>
           </Poptip>
-          <Button align="right" v-waves type="primary" class="mr5" @click="exportExcel" :loading="exportExcelLoading">
-            <Icon type="md-download"/>
-            导出
-          </Button>
+           <!-- 多类型导出 -->
+           <BookTypeOption v-model="exportType" class="mr5"/>
+           <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -119,7 +120,7 @@
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="4">是否上架:</i-col>
-              <i-col span="18">{{productDetail.shelfStatus}}</i-col>
+              <i-col span="18">{{productDetail.shelfStatus|onSaleStatusFilters}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -302,7 +303,9 @@
   import tableMixin from '@/mixins/tableMixin.js';
   import searchMixin from '@/mixins/searchMixin.js';
   import {positionType, YNEnum} from '@/libs/enumerate';
-  import {fenToYuanDot2,fenToYuanDot2Number,yuanToFenNumber} from '@/libs/util';
+  import {fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber} from '@/libs/util';
+  import BookTypeOption from '_c/book-type-option';
+  import { onSaleStatusConvert } from '@/libs/converStatus';
 
   const productDetail = {
     id: 0,
@@ -331,7 +334,8 @@
   export default {
     components: {
       Tables,
-      IViewUpload
+      IViewUpload,
+      BookTypeOption
     },
     mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
     mounted() {
@@ -353,12 +357,12 @@
         this.getTableData();
       });
     },
-    computed:{
-      originalPriceComputed(){
-        return fenToYuanDot2Number(this.productDetail.originalPrice)
+    computed: {
+      originalPriceComputed() {
+        return fenToYuanDot2Number(this.productDetail.originalPrice);
       },
-      priceComputed(){
-        return fenToYuanDot2Number(this.productDetail.price)
+      priceComputed() {
+        return fenToYuanDot2Number(this.productDetail.price);
       }
     },
     data() {
@@ -372,7 +376,7 @@
         uiPositionData: [],
         ruleInline: {
           originalPrice: [
-            {required: true, message: '请输入商品原价'},
+            {required: true, message: '请输入商品原价'}
           ],
           price: [
             {required: true, message: '请输入商品特价'},
@@ -406,7 +410,7 @@
           },
           {
             title: '上架图片',
-            key: 'id',
+            key: 'image',
             width: 120,
             render: (h, params, vm) => {
               let {row} = params;
@@ -438,15 +442,16 @@
             title: '商品原价',
             minWidth: 120,
             key: 'originalPrice',
-            render(h,params){
-              return <div>{fenToYuanDot2(params.row.originalPrice)}</div>
+            render(h, params) {
+              return <div>{fenToYuanDot2(params.row.originalPrice)}</div>;
             }
           },
           {
             title: '商品特价',
             minWidth: 120,
-            render(h,params){
-              return <div>{fenToYuanDot2(params.row.price)}</div>
+            key: 'price',
+            render(h, params) {
+              return <div>{fenToYuanDot2(params.row.price)}</div>;
             }
           },
           {
@@ -458,7 +463,11 @@
           {
             title: '是否上架',
             minWidth: 100,
-            key: 'shelfStatus'
+            key: 'shelfStatus',
+            render: (h, params, vm) => {
+              const { row } = params;
+              return <div>{onSaleStatusConvert(row.shelfStatus).label}</div>;
+            }
           },
           {
             title: '操作',
@@ -470,14 +479,16 @@
         ],
         searchRowData: _.cloneDeep(roleRowData),
         productDetail: productDetail,
-        exportExcelLoading: false
+        exportExcelLoading: false,
+        exportType: 'xlsx',
+        downloadLoading: false
       };
     },
     methods: {
-      originalPriceInputNumberOnchange(value){
+      originalPriceInputNumberOnchange(value) {
         this.productDetail.originalPrice = yuanToFenNumber(value);
       },
-      priceInputNumberOnchange(value){
+      priceInputNumberOnchange(value) {
         this.productDetail.price = yuanToFenNumber(value);
       },
       resetSearchRowData() {
@@ -605,7 +616,7 @@
       onSale(params) {
         console.log(params.row.shelfStatus);
         // this.tableData[params.index].onSale = !this.tableData[params.index].onSale;
-        this.productDetail = this._.cloneDeep(params.row) ;
+        this.productDetail = this._.cloneDeep(params.row);
         if (params.row.shelfStatus === 'ON') {
           this.productDetail.shelfStatus = 'OFF';
         } else {
@@ -654,17 +665,35 @@
           this.searchLoading = false;
         });
       },
-      exportExcel() {
-        this.exportExcelLoading = true;
-        getProductShelvesPages({}).then(res => {
-          if (res.array.length > 0) {
-            this.$refs.tables.exportCsv({
-              filename: `table-${new Date().valueOf()}.csv`,
-              columns: this.columns.filter((col, index) => index !== 0),
-              data: res.array
-            });
-          }
-          this.exportExcelLoading = false;
+      // exportExcel() {
+      //   this.exportExcelLoading = true;
+      //   getProductShelvesPages({}).then(res => {
+      //     if (res.array.length > 0) {
+      //       this.$refs.tables.exportCsv({
+      //         filename: `table-${new Date().valueOf()}.csv`,
+      //         columns: this.columns.filter((col, index) => index !== 0),
+      //         data: res.array
+      //       });
+      //     }
+      //     this.exportExcelLoading = false;
+      //   });
+      // },
+      handleDownload() {
+        // 导出不分页
+        this.searchRowData.rows = null;
+        getProductShelvesPages(this.searchRowData).then(res => {
+          let tableData = res.array;
+          // 表格数据导出字段翻译
+          tableData.forEach(item => {
+            item['id'] = item['id'] + '';
+            item['originalPrice'] = (item['originalPrice'] /100.00).toFixed(2);
+            item['price'] = (item['price'] /100.00).toFixed(2);
+            item['shelfStatus'] = onSaleStatusConvert(item['shelfStatus']).label;
+          });
+          this.$refs.tables.handleDownload({
+            filename: `商品上架信息-${new Date().valueOf()}`,
+            data: tableData
+          });
         });
       }
     }

@@ -336,10 +336,12 @@ export const doctorStatusEnum = [
     value: doctorStatus.INVALID
   }
 ];
-// 上架商品 有效-VALID 无效-INVALID
+// 上架商品 有效-VALID 无效-INVALID 或者 上架-ON 下架-OFF
 export const onSaleStatus = {
   VALID: 'VALID',
-  INVALID: 'INVALID'
+  INVALID: 'INVALID',
+  ON: 'ON',
+  OFF: 'OFF'
 };
 
 export const onSaleStatusEnum = [
@@ -350,6 +352,14 @@ export const onSaleStatusEnum = [
   {
     label: '下架',
     value: onSaleStatus.INVALID
+  },
+  {
+    label: '上架',
+    value: onSaleStatus.ON
+  },
+  {
+    label: '下架',
+    value: onSaleStatus.OFF
   }
 ];
 

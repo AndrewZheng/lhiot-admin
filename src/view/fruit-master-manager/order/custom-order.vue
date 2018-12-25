@@ -12,8 +12,8 @@
         :columns="columns"
         :loading="loading"
         @on-view="handleView"
-        :searchAreaColumn="22"
-        :operateAreaColumn="2"
+        :searchAreaColumn="20"
+        :operateAreaColumn="4"
       >
         <div slot="searchCondition">
           <Row>
@@ -109,7 +109,9 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves type="primary" @click="exportExcel">导出</Button>
+           <!-- 多类型导出 -->
+           <BookTypeOption v-model="exportType" class="mr5"/>
+           <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -254,9 +256,10 @@ import { getCustomOrdersPages, getcustomPlanSpecificationStandardsPages, getcust
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import { fenToYuanDot2 } from '@/libs/util';
-import { receivingWayEnum, orderStatusEnum, orderTypeEnum, deliveryTypeCustom } from '@/libs/enumerate';
-import { customOrderStatusEnum } from '@/libs/enumerate';
+import { receivingWayEnum, orderStatusEnum, orderTypeEnum, deliveryTypeCustom, customOrderStatusEnum } from '@/libs/enumerate';
 import { customOrderStatusConvert, customPeriodConvert, deliveryTypeCustomConvert, customDeliverStatusConvert } from '@/libs/converStatus';
+import BookTypeOption from '_c/book-type-option';
+
 const orderDetail = {
   id: 54,
   customOrderCode: '',
@@ -296,14 +299,15 @@ const roleRowData = {
   phone: null,
   orderStatuses: null,
   orderType: null,
-  status:null,
-  statusIn:null,
+  status: null,
+  statusIn: null,
   page: 1,
   rows: 10
 };
 export default {
   components: {
-    Tables
+    Tables,
+    BookTypeOption
   },
   mixins: [tableMixin, searchMixin],
   data() {
@@ -365,6 +369,7 @@ export default {
         {
           title: '定制计划',
           width: 120,
+          key: 'name',
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{row.customPlan.name}</div>;
@@ -373,6 +378,7 @@ export default {
         {
           title: '定制周期',
           width: 100,
+          key: 'totalQty',
           render(h, params, vm) {
             return <div>{customPeriodConvert(params.row.totalQty).label}</div>;
           }
@@ -385,6 +391,7 @@ export default {
         {
           title: '定制金额',
           width: 100,
+          key: 'price',
           render(h, params, vm) {
             let amount = fenToYuanDot2(params.row.price);
             return <div>{amount}</div>;
@@ -393,6 +400,7 @@ export default {
         {
           title: '定制状态',
           width: 100,
+          key: 'status',
           render(h, params, vm) {
             return <div>{customOrderStatusConvert(params.row.status).label}</div>;
           }
@@ -400,6 +408,7 @@ export default {
         {
           title: '配送方式',
           width: 100,
+          key: 'deliveryType',
           render: (h, params, vm) => {
             return <div>{deliveryTypeCustomConvert(params.row.deliveryType).label}</div>;
           }
@@ -423,7 +432,9 @@ export default {
         }
       ],
       searchRowData: this._.cloneDeep(roleRowData),
-      orderDetail: this._.cloneDeep(orderDetail)
+      orderDetail: this._.cloneDeep(orderDetail),
+      exportType: 'xlsx',
+      downloadLoading: false
     };
   },
   created() {
@@ -465,9 +476,28 @@ export default {
         this.searchLoading = false;
       });
     },
-    exportExcel() {
-      this.$refs.tables.exportCsv({
-        filename: `table-${new Date().valueOf()}.csv`
+    // exportExcel() {
+    //   this.$refs.tables.exportCsv({
+    //     filename: `table-${new Date().valueOf()}.csv`
+    //   });
+    // },
+    handleDownload() {
+      // 导出不分页
+      this.searchRowData.rows = null;
+      getCustomOrdersPages(this.searchRowData).then(res => {
+        let tableData = res.array;
+        // 表格数据导出字段翻译
+        tableData.forEach(item => {
+          item['customOrderCode'] = item['customOrderCode'] + '';
+          item['name'] = item['customPlan']['name'];
+          item['price'] = (item['price'] /100.00).toFixed(2);
+          item['status'] = customOrderStatusConvert(item['status']).label;
+          item['deliveryType'] = deliveryTypeCustomConvert(item['deliveryType']).label;
+        });
+        this.$refs.tables.handleDownload({
+          filename: `定制订单信息-${new Date().valueOf()}`,
+          data: tableData
+        });
       });
     }
   }

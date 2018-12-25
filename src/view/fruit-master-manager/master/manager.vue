@@ -10,10 +10,10 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        @on-view="handleView"
-        @on-edit="handleEdit"
         :searchAreaColumn="20"
         :operateAreaColumn="4"
+        @on-view="handleView"
+        @on-edit="handleEdit"
       >
         <div slot="searchCondition">
           <Input
@@ -30,25 +30,6 @@
             style="width: 100px"
             clearable
           />
-          <DatePicker
-            @on-change="startTimeChange"
-            format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
-            placeholder="注册时间起"
-            class="search-input"
-            v-model="searchRowData.beginCreateAt"
-            style="width: 150px"
-          />
-          <i>-</i>
-          <DatePicker
-            @on-change="endTimeChange"
-            format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
-            placeholder="注册时间止"
-            class="search-input mr5"
-            v-model="searchRowData.endCreateAt"
-            style="width: 150px"
-          />
           <Select
             class="search-col mr5"
             placeholder="鲜果师等级"
@@ -56,9 +37,37 @@
             style="width:100px"
             clearable
           >
-            <Option
+          <Option
               class="ptb2-5"
               v-for="item in userStatus"
+              :value="item.value"
+              :key="item.value"
+            >{{ item.label }}</Option>
+          </Select>
+          <Select
+            class="search-col mr5"
+            placeholder="鲜果师状态"
+            v-model="searchRowData.doctorStatus"
+            style="width:100px"
+            clearable
+          >
+           <Option
+              class="ptb2-5"
+              v-for="item in doctorStatus"
+              :value="item.value"
+              :key="item.value"
+            >{{ item.label }}</Option>
+          </Select>
+          <Select
+            class="search-col mr5"
+            placeholder="明星鲜果师"
+            v-model="searchRowData.hot"
+            style="width:100px"
+            clearable
+          >
+          <Option
+              class="ptb2-5"
+              v-for="item in hotStatus"
               :value="item.value"
               :key="item.value"
             >{{ item.label }}</Option>
@@ -83,7 +92,9 @@
           </Button>
         </div>
         <div slot="operations">
-          <Button v-waves type="primary" @click="exportExcel">导出</Button>
+           <!-- 多类型导出 -->
+           <BookTypeOption v-model="exportType" class="mr5"/>
+           <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -433,6 +444,7 @@ import {
   hotConvert
 } from '@/libs/converStatus';
 import {fenToYuanDot2} from '../../../libs/util';
+import BookTypeOption from '_c/book-type-option';
 
 const managerDetail = {
   id: 2,
@@ -465,15 +477,14 @@ const roleRowData = {
   phone: '',
   inviteCode: '',
   doctorLevel: null,
-  beginCreateAt: '',
-  endCreateAt: '',
   page: 1,
   rows: 10
 };
 export default {
   components: {
     Tables,
-    IViewUpload
+    IViewUpload,
+    BookTypeOption
   },
   mixins: [tableMixin, searchMixin, uploadMixin],
   data() {
@@ -519,6 +530,7 @@ export default {
         {
           title: '鲜果师等级',
           width: 100,
+          key: 'doctorLevel',
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{doctorLevelConvert(row.doctorLevel).label}</div>;
@@ -527,6 +539,7 @@ export default {
         {
           title: '明星鲜果师',
           width: 100,
+          key: 'hot',
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{hotConvert(row.hot).label}</div>;
@@ -535,6 +548,7 @@ export default {
         {
           title: '状态',
           width: 100,
+          key: 'doctorStatus',
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{doctorStatusConvert(row.doctorStatus).label}</div>;
@@ -548,6 +562,7 @@ export default {
         {
           title: '红利余额',
           width: 180,
+          key: 'bonus',
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{fenToYuanDot2(row.bonus)}</div>;
@@ -556,6 +571,7 @@ export default {
         {
           title: '可结算余额',
           width: 180,
+          key: 'settlement',
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{fenToYuanDot2(row.settlement)}</div>;
@@ -606,7 +622,9 @@ export default {
         }
       ],
       searchRowData: this._.cloneDeep(roleRowData),
-      managerDetail: this._.cloneDeep(managerDetail)
+      managerDetail: this._.cloneDeep(managerDetail),
+      exportType: 'xlsx',
+      downloadLoading: false
     };
   },
   created() {
@@ -658,12 +676,6 @@ export default {
       this.managerDetail.photo = null;
       this.managerDetail.photo = fileList[0].url;
     },
-    startTimeChange(value, date) {
-      this.searchRowData.beginCreateAt = value;
-    },
-    endTimeChange(value, date) {
-      this.searchRowData.endCreateAt = value;
-    },
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
@@ -705,9 +717,29 @@ export default {
         this.clearSearchLoading = false;
       });
     },
-    exportExcel() {
-      this.$refs.tables.exportCsv({
-        filename: `table-${new Date().valueOf()}.csv`
+    // exportExcel() {
+    //   this.$refs.tables.exportCsv({
+    //     filename: `table-${new Date().valueOf()}.csv`
+    //   });
+    // },    
+    handleDownload() {
+      // 导出不分页
+      this.searchRowData.rows = null;
+      getFruitDoctorsPages(this.searchRowData).then(res => {
+        let tableData = res.array;
+        // 表格数据导出字段翻译
+        tableData.forEach(item => {
+          item['id'] = item['id'] + '';
+          item['bonus'] = (item['bonus'] /100.00).toFixed(2);
+          item['settlement'] = (item['settlement'] /100.00).toFixed(2);
+          item['doctorLevel'] = doctorLevelConvert(item['doctorLevel']).label;
+          item['hot'] = hotConvert(item['hot']).label;
+          item['doctorStatus'] = doctorStatusConvert(item['doctorStatus']).label;
+        });
+        this.$refs.tables.handleDownload({
+          filename: `鲜果师信息-${new Date().valueOf()}`,
+          data: tableData
+        });
       });
     }
   }

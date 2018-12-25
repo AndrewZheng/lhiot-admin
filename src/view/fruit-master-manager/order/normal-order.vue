@@ -18,7 +18,6 @@
       >
         <div slot="searchCondition">
           <Row>
-            <Col span="24">
               <Input
                 placeholder="订单编码"
                 class="search-input mr5"
@@ -80,7 +79,6 @@
                 class="mr5"
                 style="width: 160px"
               />
-            </Col>
             <Button
               v-waves
               @click="handleSearch"
@@ -109,7 +107,9 @@
             :loading="deliverOrderLoading"
             type="warning"
           >门店调货</Button>
-          <Button v-waves type="primary" @click="exportExcel" class="ml15">导出</Button>
+          <!-- 多类型导出 -->
+           <BookTypeOption v-model="exportType" class="mr5"/>
+           <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -356,6 +356,8 @@ import {
   receivingWayConvert
 } from '../../../libs/converStatus';
 
+import BookTypeOption from '_c/book-type-option';
+
 const orderDetail = {
   id: 0,
   code: '',
@@ -399,7 +401,8 @@ const roleRowData = {
 };
 export default {
   components: {
-    Tables
+    Tables,
+    BookTypeOption
   },
   mixins: [tableMixin, searchMixin],
   data() {
@@ -426,6 +429,7 @@ export default {
         {
           title: '配送费',
           minWidth: 100,
+          key: 'fee',
           render(h, params, vm) {
             let amount = fenToYuanDot2(params.row.fee);
             return <div>{amount}</div>;
@@ -434,6 +438,7 @@ export default {
         {
           title: '配送状态',
           minWidth: 100,
+          key: 'deliverStatus',
           render: (h, params, vm) => {
             const { row } = params;
             return (
@@ -476,6 +481,7 @@ export default {
         {
           title: '商品总金额',
           minWidth: 100,
+          key: 'totalPrice',
           render(h, params, vm) {
             let amount = fenToYuanDot2(params.row.totalPrice);
             return <div>{amount}</div>;
@@ -484,6 +490,7 @@ export default {
         {
           title: '折后总金额',
           minWidth: 100,
+          key: 'discountPrice',
           render(h, params, vm) {
             let amount = fenToYuanDot2(params.row.discountPrice);
             return <div>{amount}</div>;
@@ -506,6 +513,7 @@ export default {
         {
           title: '订单类型',
           width: 120,
+          key: 'orderType',
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{orderTypeConvert(row.orderType).label}</div>;
@@ -514,6 +522,7 @@ export default {
         {
           title: '订单总金额',
           width: 100,
+          key: 'totalAmount',
           render(h, params, vm) {
             let amount = fenToYuanDot2(params.row.totalAmount);
             return <div>{amount}</div>;
@@ -522,6 +531,7 @@ export default {
         {
           title: '优惠金额',
           width: 100,
+          key: 'couponAmount',
           render(h, params, vm) {
             let amount = fenToYuanDot2(params.row.couponAmount);
             return <div>{amount}</div>;
@@ -530,6 +540,7 @@ export default {
         {
           title: '应付金额',
           width: 100,
+          key: 'amountPayable',
           render(h, params, vm) {
             let amount = fenToYuanDot2(params.row.amountPayable);
             return <div>{amount}</div>;
@@ -538,6 +549,7 @@ export default {
         {
           title: '收货方式',
           width: 100,
+          key: 'receivingWay',
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{receivingWayConvert(row.receivingWay).label}</div>;
@@ -568,7 +580,9 @@ export default {
       ],
       currentTableRowSelected: null,
       searchRowData: this._.cloneDeep(roleRowData),
-      orderDetail: this._.cloneDeep(orderDetail)
+      orderDetail: this._.cloneDeep(orderDetail),
+      exportType: 'xlsx',
+      downloadLoading: false
     };
   },
   created() {
@@ -666,9 +680,31 @@ export default {
         this.searchLoading = false;
       });
     },
-    exportExcel() {
-      this.$refs.tables.exportCsv({
-        filename: `table-${new Date().valueOf()}.csv`
+    // exportExcel() {
+    //   this.$refs.tables.exportCsv({
+    //     filename: `table-${new Date().valueOf()}.csv`
+    //   });
+    // },
+    handleDownload() {
+      // 导出不分页
+      this.searchRowData.rows = null;
+      getOrdersPages(this.searchRowData).then(res => {
+        let tableData = res.array;
+        // 表格数据导出字段翻译
+        tableData.forEach(item => {
+          item['code'] = item['code'] + '';
+          item['totalAmount'] = (item['totalAmount'] /100.00).toFixed(2);
+          item['couponAmount'] = (item['couponAmount'] /100.00).toFixed(2);
+          item['amountPayable'] = (item['amountPayable'] /100.00).toFixed(2);
+          item['orderType'] = orderTypeConvert(item['orderType']).label;
+          item['deliverStatus'] = thirdDeliverStatusConvert(item['deliverStatus']).label;
+          item['receivingWay'] = receivingWayConvert(item['receivingWay']).label;
+          item['status'] = orderStatusConvert(item['status']).label;
+        });
+        this.$refs.tables.handleDownload({
+          filename: `普通订单信息-${new Date().valueOf()}`,
+          data: tableData
+        });
       });
     }
   }
