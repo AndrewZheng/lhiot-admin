@@ -247,9 +247,9 @@ export default {
     handleSearch() {
       this.insideTableData = this.value.filter(item => {
         if (typeof item[this.searchKey] === 'string') {
-          return item[this.searchKey].indexOf(this.searchValue) > -1
-        }else {
-          return true
+          return item[this.searchKey].indexOf(this.searchValue) > -1;
+        } else {
+          return true;
         }
       });
     },
@@ -324,6 +324,9 @@ export default {
         case 'zip':
           // this.$Message.info('开发中...');
           this.exportZip(params);
+          break;
+        default:
+          this.exportExcel(params);
           break;
       }
     },

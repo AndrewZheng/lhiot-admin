@@ -18,6 +18,15 @@ let minxin = {
       this.pageSize = 10;
       this.clearSearchLoading = true;
       this.handleSearch();
+    },
+    handleExport(filename) {
+      this.searchRowData.page = 1;
+      this.searchLoading = true;
+      this.getTableData();
+      this.$refs.tables.exportCsv({
+        // filename: `table-${new Date().valueOf()}.csv`
+        filename: filename + '-' + new Date().valueOf() + '.csv'
+      });
     }
   }
 };
