@@ -704,14 +704,20 @@ export const fenToYuanDot2 = (number) => {
   return number;
 };
 
-/**
- *
- * @param number
- * @returns {*}
- */
-export const fenToYuan = (number) => {
-  if (typeof number === 'number') {
-    return Math.floor(number) / 100;
+export const yuanToFenNumber = (value) => {
+  if (typeof value === 'number') {
+    return Math.round((value * 100));
+  } else if (typeof value === 'string') {
+    return Math.round((parseInt(value) * 100));
   }
-  return number;
+};
+
+export const fenToYuanDot2Number = (value) => {
+  if (typeof value === 'number') {
+    return Math.round(value) / 100.00;
+  } else if (typeof value === 'string') {
+    return Math.round(parseInt(value) / 100.00);
+  } else {
+    return null;
+  }
 };

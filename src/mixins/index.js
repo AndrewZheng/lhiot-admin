@@ -92,6 +92,20 @@ let mixin = {
   computed: {
     userInfo() {
       return this.$store.getters.getUserInfo;
+    },
+    yuanToFenNumber(value){
+      if(typeof value === 'number'){
+        return value * 100;
+      }else if (typeof value === 'string') {
+        return parseInt(value) * 100;
+      }
+    },
+    fenToYuanDot2Number(){
+      if(typeof value === 'number'){
+        return Math.round(value) / 100.00
+      }else if (typeof value === 'string') {
+        return Math.round(parseInt(value) / 100.00);
+      }
     }
   },
   methods: {
