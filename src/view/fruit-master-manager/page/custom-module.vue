@@ -70,6 +70,10 @@
           <i-col span="16">{{goodsModuleDetail.sectionName}}</i-col>
         </Row>
         <Row span="24" class-name="mb10">
+          <i-col span="8">链接url:</i-col>
+          <i-col span="16">{{goodsModuleDetail.url}}</i-col>
+        </Row>
+        <Row span="24" class-name="mb10">
           <i-col span="8">板块序号:</i-col>
           <i-col span="16">{{goodsModuleDetail.sort}}</i-col>
         </Row>
@@ -104,6 +108,11 @@
             <Row>
               <FormItem label="板块名称:" prop="sectionName">
                 <Input v-model="goodsModuleDetail.sectionName" placeholder="板块名称"/>
+              </FormItem>
+            </Row>
+             <Row>
+              <FormItem label="链接url:" prop="url">
+                <Input v-model="goodsModuleDetail.url" placeholder="链接url"/>
               </FormItem>
             </Row>
             <Row>
@@ -231,19 +240,19 @@
     {
       title: '定制名称',
       key: 'name',
-      minWidth: 100,
+      minWidth: 100
     },
     {
       title: '定制描述',
       key: 'description',
-      minWidth: 100,
+      minWidth: 100
     },
     {
       title: '排序',
       key: 'relationSort',
-      minWidth: 100,
+      minWidth: 100
     }
-  ]
+  ];
   export default {
     components: {
       Tables,
@@ -255,14 +264,14 @@
     },
     data() {
       return {
-        sort:1,
+        sort: 1,
         selectDisable: true,
         goodsModuleList: [],
         ruleInline: {
-          sectionCode:[{required: true, message: '请填写编码'}],
+          sectionCode: [{required: true, message: '请填写编码'}],
           sectionName: [{required: true, message: '请填写板块名称'}],
           sectionImage: [{required: true, message: '请上传板块主图'}],
-          sorting:[
+          sorting: [
             {required: true, message: '请输入序号'},
             {validator(rule, value, callback, source, options) {
                 let errors = [];
@@ -318,8 +327,13 @@
           },
           {
             title: '板块名称',
-            minWidth: 200,
+            minWidth: 150,
             key: 'sectionName'
+          },
+          {
+            title: '链接url',
+            minWidth: 150,
+            key: 'url'
           },
           {
             title: '创建时间',
@@ -339,15 +353,15 @@
           }
         ],
         shelfSpecificationLoading: false,
-        addTempDataLoading:false,
-        tempTableLoading:false,
+        addTempDataLoading: false,
+        tempTableLoading: false,
         modalViewLoading: false,
         optionsShelfSpecification: [],
         defaultListMain: [],
         uploadListMain: [],
         searchRowData: _.cloneDeep(roleRowData),
         goodsModuleDetail: _.cloneDeep(goodsModuleDetail),
-        tempOptionsShelfSpecification:null
+        tempOptionsShelfSpecification: null
       };
     },
     methods: {
@@ -378,51 +392,52 @@
           this.goodsModuleDetail.customPlanList = this.goodsModuleDetail.customPlanList.filter((item, index) =>
             index !== params.row.initRowIndex
           );
-        }else{
-          this.tempTableLoading = true
+        } else {
+          this.tempTableLoading = true;
           deletetCustomPlanSectionRelationBatch({
-            sectionId:this.goodsModuleDetail.id,
+            sectionId: this.goodsModuleDetail.id,
             planIds: params.row.id,
-            sort:this.sort
-          }).then(res=>{
+            sort: this.sort
+          }).then(res => {
             this.goodsModuleDetail.customPlanList = this.goodsModuleDetail.customPlanList.filter((item, index) =>
               index !== params.row.initRowIndex
             );
             this.getTableData();
-          }).finally(res=>{
-            this.tempTableLoading = false
-          })
+          }).finally(res => {
+            this.tempTableLoading = false;
+          });
         }
       },
       addTempData() {
         console.log(this.optionsShelfSpecification);
         if (!this.tempOptionsShelfSpecification) {
-          this.$Message.warning('请选择定制计划')
-          return
+          this.$Message.warning('请选择定制计划');
+          return;
         };
         if (!this.goodsModuleDetail.customPlanList) {
-          this.goodsModuleDetail.customPlanList = []
+          this.goodsModuleDetail.customPlanList = [];
         }
-        let obj = this.goodsModuleDetail.customPlanList.some( item => {
-         return item.id === this.tempOptionsShelfSpecification.id
-        })
+        let obj = this.goodsModuleDetail.customPlanList.some(item => {
+         return item.id === this.tempOptionsShelfSpecification.id;
+        });
         if (!obj) {
           if (this.tempModalType === this.modalType.create) {
-            this.goodsModuleDetail.customPlanList.push({...this.tempOptionsShelfSpecification,relationSort:this.sort});
-          }else {
+            this.goodsModuleDetail.customPlanList.push({...this.tempOptionsShelfSpecification, relationSort: this.sort});
+          } else {
             this.addTempDataLoading = true;
             this.tempTableLoading =true;
             this.loading = true;
             addCustomPlanSectionRelationBatch({
-              sectionId:this.goodsModuleDetail.id,
-              shelfId: this.tempOptionsShelfSpecification.id
-            }).then(res =>{
-              this.goodsModuleDetail.customPlanList.push({...this.tempOptionsShelfSpecification,relationSort:this.sort});
+              sectionId: this.goodsModuleDetail.id,
+              planId: this.tempOptionsShelfSpecification.id,
+              sort: this.sort
+            }).then(res => {
+              this.goodsModuleDetail.customPlanList.push({...this.tempOptionsShelfSpecification, relationSort: this.sort});
               this.addTempDataLoading = false;
               this.tempTableLoading =false;
               this.loading = false;
               this.getTableData();
-            })
+            });
           };
         } else {
           this.$Message.warning('已经添加该商品！');
@@ -432,11 +447,11 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             if (this.tempModalType === this.modalType.create) {
-              //添加状态
+              // 添加状态
               this.createTableRow();
             } else if (this.tempModalType === this.modalType.edit) {
-              //编辑状态
-              this.editTableRow()
+              // 编辑状态
+              this.editTableRow();
             }
           } else {
             this.$Message.error('请完善商品的信息!');
@@ -444,7 +459,7 @@
         });
       },
       selectIndex(options) {
-        this.tempOptionsShelfSpecification = options
+        this.tempOptionsShelfSpecification = options;
       },
       remoteMethod(query) {
         if (query !== '') {
