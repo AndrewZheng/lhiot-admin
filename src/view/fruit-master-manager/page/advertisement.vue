@@ -291,7 +291,7 @@
     getArticlesPages,
     getAdvertisement
   } from '@/api/fruitermaster';
-  import {goodsOnSalesColumns,customPlanColumns,goodsModulsColumns,customPlanSectionColumns,articleColumns} from '@/libs/columns';
+  import {goodsOnSalesColumns, customPlanColumns, goodsModulsColumns, customPlanSectionColumns, articleColumns} from '@/libs/columns';
   import deleteMixin from '@/mixins/deleteMixin.js';
   import tableMixin from '@/mixins/tableMixin.js';
   import searchMixin from '@/mixins/searchMixin.js';
@@ -316,7 +316,7 @@
     createAt: '',
     isPermanent: 'OFF',
     validityPeriod: '',
-    advertiseRelationText:''
+    advertiseRelationText: ''
   };
   const roleRowData = {
     advertiseName: '',
@@ -376,10 +376,10 @@
         // EXTERNAL_LINKS- 外部链接）
         relationType: [
           {value: relationType.PRODUCT_DETAILS, label: '商品详情', api: getProductShelvesPages, columns: goodsOnSalesColumns},
-          {value: relationType.PRODUCT_SECTION, label: '商品版块', api: getProductSectionsPages,columns: goodsModulsColumns},
-          {value: relationType.CUSTOM_PLAN, label: '定制计划', api: getCustomPlansPages,columns:customPlanColumns},
-          {value: relationType.CUSTOM_PLAN_SECTION, label: '定制版块', api: getCustomPlanSectionsPages,columns:customPlanSectionColumns},
-          {value: relationType.ARTICLE_DETAILS, label: '文章详情', api: getArticlesPages,columns:articleColumns},
+          {value: relationType.PRODUCT_SECTION, label: '商品版块', api: getProductSectionsPages, columns: goodsModulsColumns},
+          {value: relationType.CUSTOM_PLAN, label: '定制计划', api: getCustomPlansPages, columns: customPlanColumns},
+          {value: relationType.CUSTOM_PLAN_SECTION, label: '定制版块', api: getCustomPlanSectionsPages, columns: customPlanSectionColumns},
+          {value: relationType.ARTICLE_DETAILS, label: '文章详情', api: getArticlesPages, columns: articleColumns},
           // {value: relationType.STORE_LIVE_TELECAST, label: '门店直播', api: getProductShelvesPages},
           // {value: relationType.MORE_AMUSEMENT, label: '多娱', api: getProductShelvesPages},
           {value: relationType.EXTERNAL_LINKS, label: '外部链接', api: getProductShelvesPages}
@@ -505,7 +505,7 @@
         defaultListMain: [],
         uploadListMain: [],
         searchRowData: _.cloneDeep(roleRowData),
-        advertisementDetail: _.cloneDeep(advertisementDetail),
+        advertisementDetail: _.cloneDeep(advertisementDetail)
       };
     },
     computed: {
@@ -560,10 +560,10 @@
         if (this.advertisementDetail.relationType === relationType.PRODUCT_SECTION||
           this.advertisementDetail.relationType === relationType.CUSTOM_PLAN_SECTION) {
           this.advertisementDetail.advertiseRelationText = row.sectionName;
-        } else if(this.advertisementDetail.relationType === relationType.ARTICLE_DETAILS){
+        } else if (this.advertisementDetail.relationType === relationType.ARTICLE_DETAILS) {
           this.advertisementDetail.advertiseRelationText = row.title;
-        }else {
-          this.advertisementDetail.advertiseRelationText = row.name
+        } else {
+          this.advertisementDetail.advertiseRelationText = row.name;
         };
         this.advertisementDetail.advertiseRelation = row.id;
         console.log(row);
@@ -594,10 +594,10 @@
           }
           if (valid) {
             if (this.tempModalType === this.modalType.create) {
-              //添加状态
+              // 添加状态
               this.createTableRow();
             } else if (this.tempModalType === this.modalType.edit) {
-              //编辑状态
+              // 编辑状态
               this.editTableRow();
             }
           } else {
@@ -618,7 +618,7 @@
       },
       createTableRow() {
         this.modalViewLoading = true;
-        createAdvertisement(this.advertisementDetail).then( res => {
+        createAdvertisement(this.advertisementDetail).then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
@@ -643,8 +643,8 @@
             page: 1,
             rows: 10,
             shelfStatus: 'ON',
-            status:"VALID",
-            articleStatus:'PUBLISH'
+            status: 'VALID',
+            articleStatus: 'PUBLISH'
           }).then(res => {
             this.searchModalTableLoading = false;
             this.relationTargetShow = true;
@@ -703,7 +703,6 @@
           this.loading = false;
           this.modalEdit = true;
         });
-
       },
       setDefaultUploadList(res) {
         if (res.content != null) {
@@ -722,13 +721,13 @@
 
       },
       advertiseRelationTypeChange(value) {
-        this.advertisementDetail.relationType = value
+        this.advertisementDetail.relationType = value;
         console.log(value);
       },
       advertisementDetailStatusChange(value) {
 
       },
-      advertiseTimeChange(){
+      advertiseTimeChange() {
 
       },
       getTableData() {

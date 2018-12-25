@@ -75,7 +75,7 @@
         <Row type="flex" justify="end">
           <Page
             :total="total"
-            :current="page"
+            :current.sync="page"
             @on-change="changePage"
             @on-page-size-change="changePageSize"
             show-sizer

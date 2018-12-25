@@ -341,6 +341,7 @@
             this.getTableData();
           }
         ).catch(err => {
+          this.tableDataSelected = [];
           this.loading = false;
         });
       },

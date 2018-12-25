@@ -62,11 +62,12 @@
               placeholder="订单状态"
               style="width: 150px"
               v-model="searchRowData.statusIn"
+              @on-change="orderStatusesOnChange"
               clearable>
               <Option
                 v-for="item in orderStatus"
                 :value="item.value"
-                class="mb10 ml15"
+                class="ptb2-5"
                 :key="`search-col-${item.value}`"
               >{{item.label}}</Option>
             </Select>
@@ -446,6 +447,12 @@ export default {
     });
   },
   methods: {
+    orderStatusesOnChange(value){
+      console.log(value);
+      if(value.length === 0){
+        this.searchRowData.statusIn = null
+      }
+    },
     startTimeChange(value, date) {
       this.searchRowData.beginCreateAt = value;
     },

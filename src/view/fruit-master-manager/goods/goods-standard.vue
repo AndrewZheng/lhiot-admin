@@ -271,8 +271,10 @@
           {
             title: '商品名称',
             key: 'productName',
-            sortable: true,
-            minWidth: 180
+            minWidth: 180,
+            render(h, params){
+              return <div>{params.row.product.name}</div>
+            }
           },
           {
             title: '规格条码',
@@ -292,7 +294,7 @@
           {
             title: '规格',
             minWidth: 100,
-            key: 'specification'
+            key: 'specificationInfo'
           },
           {
             title: '重量(kg)',

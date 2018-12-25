@@ -473,7 +473,6 @@
             title: '操作',
             minWidth: 200,
             key: 'handle',
-            fixed: 'right',
             options: ['delete', 'edit', 'view', 'onSale']
           }
         ],

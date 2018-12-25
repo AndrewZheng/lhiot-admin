@@ -420,7 +420,8 @@
               this.goodsModuleDetail.customPlanList.push({...this.tempOptionsShelfSpecification,relationSort:this.sort});
               this.addTempDataLoading = false;
               this.tempTableLoading =false;
-              this.loading = false
+              this.loading = false;
+              this.getTableData();
             })
           };
         } else {
