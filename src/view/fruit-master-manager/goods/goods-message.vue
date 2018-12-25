@@ -7,6 +7,8 @@
               v-model="tableData"
               :columns="columns"
               :loading="loading"
+              :searchAreaColumn="18"
+              :operateAreaColumn="6"
               @on-delete="handleDelete"
               @on-view="handleView"
               @on-edit="handleEdit"
@@ -43,10 +45,9 @@
               删除
             </Button>
           </Poptip>
-          <Button v-waves type="primary" class="mr5" @click="exportExcel" :loading="exportExcelLoading">
-            <Icon type="md-download"/>
-            导出
-          </Button>
+           <!-- 多类型导出 -->
+           <BookTypeOption v-model="exportType" class="mr5"/>
+           <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -382,6 +383,7 @@
   import deleteMixin from '@/mixins/deleteMixin.js';
   import tableMixin from '@/mixins/tableMixin.js';
   import searchMixin from '@/mixins/searchMixin.js';
+  import BookTypeOption from '_c/book-type-option';
 
   const productDetail = {
     id: 0,
@@ -416,7 +418,8 @@
   export default {
     components: {
       Tables,
-      IViewUpload
+      IViewUpload,
+      BookTypeOption
     },
     mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
     mounted() {
@@ -766,6 +769,17 @@
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
+        });
+      },
+      handleDownload() {
+        // 导出不分页
+        this.searchRowData.rows = null;
+        getProductPages(this.searchRowData).then(res => {
+          let tableData = res.array;
+          this.$refs.tables.handleDownload({
+            filename: `商品信息-${new Date().valueOf()}`,
+            data: tableData
+          });
         });
       },
       // 删除附图

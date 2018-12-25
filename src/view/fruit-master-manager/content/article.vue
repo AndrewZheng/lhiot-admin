@@ -80,10 +80,9 @@
               删除
             </Button>
           </Poptip>
-          <Button v-waves type="primary" class="mr5" @click="exportExcel">
-            <Icon type="md-download"/>
-            导出
-          </Button>
+           <!-- 多类型导出 -->
+           <BookTypeOption v-model="exportType" class="mr5"/>
+           <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -240,43 +239,44 @@
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import {getArticlesPages,createArticle,deleteArticle,editArticle} from '@/api/fruitermaster';
-  import deleteMixin from '@/mixins/deleteMixin.js'
-  import tableMixin from '@/mixins/tableMixin.js'
-  import searchMixin from '@/mixins/searchMixin.js'
+  import {getArticlesPages, createArticle, deleteArticle, editArticle} from '@/api/fruitermaster';
+  import deleteMixin from '@/mixins/deleteMixin.js';
+  import tableMixin from '@/mixins/tableMixin.js';
+  import searchMixin from '@/mixins/searchMixin.js';
   import uploadMixin from '@/mixins/uploadMixin';
   import IViewUpload from '_c/iview-upload';
   import tinymceEditor from '_c/tinymce-editor';
   import Editor from '_c/editor';
+  import BookTypeOption from '_c/book-type-option';
 
   const articleDetail = {
     id: 0,
-    author: "",
-    editor: "",
-    createAt: "",
-    articleStatus: "",
-    content: "",
-    title: "",
-    contentImage: "",
-    headImage: "",
-    url: "",
-    introduce: "",
-    auditor: "",
-    editAt: "",
-    publishAt: "",
-    keywords: "",
-    readAmount: "",
-    jobTitle: ""
+    author: '',
+    editor: '',
+    createAt: '',
+    articleStatus: '',
+    content: '',
+    title: '',
+    contentImage: '',
+    headImage: '',
+    url: '',
+    introduce: '',
+    auditor: '',
+    editAt: '',
+    publishAt: '',
+    keywords: '',
+    readAmount: '',
+    jobTitle: ''
   };
   const roleRowData = {
     title: '',
-    keywords:'',
-    beginPublishAt:'',
-    endPublishAt:'',
-    beginCreateAt:'',
-    endCreateAt:'',
-    page:1,
-    rows:10
+    keywords: '',
+    beginPublishAt: '',
+    endPublishAt: '',
+    beginCreateAt: '',
+    endCreateAt: '',
+    page: 1,
+    rows: 10
   };
 
   export default {
@@ -284,10 +284,11 @@
       Tables,
       tinymceEditor,
       Editor,
-      IViewUpload
+      IViewUpload,
+      BookTypeOption
     },
-    mixins: [deleteMixin, tableMixin,searchMixin,uploadMixin],
-    mounted(){
+    mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+    mounted() {
       this.$refs.editor.initTinymce();
     },
     created() {
@@ -295,17 +296,17 @@
     },
     data() {
       return {
-        keyword1:'',
-        keyword2:'',
-        keyword3:'',
-        modalViewLoading:false,
-        ruleInline:{
-          title:{required: true, message: '请输入文章标题'},
-          author:{required: true, message: '请输入作者'},
-          articleStatus:{required: true, message: '请选择文章状态'},
-          keywords:{required: true, message: '请输入文章关键词'},
-          headImage:{required: true, message: '请上传图片'},
-          content:{required: true, message: '请填写内容'}
+        keyword1: '',
+        keyword2: '',
+        keyword3: '',
+        modalViewLoading: false,
+        ruleInline: {
+          title: {required: true, message: '请输入文章标题'},
+          author: {required: true, message: '请输入作者'},
+          articleStatus: {required: true, message: '请选择文章状态'},
+          keywords: {required: true, message: '请输入文章关键词'},
+          headImage: {required: true, message: '请上传图片'},
+          content: {required: true, message: '请填写内容'}
         },
         useAble: [
           {label: '发布', value: 'PUBLISH'},
@@ -327,6 +328,13 @@
             fixed: 'left'
           },
           {
+            title: '文章内容',
+            key: 'content',
+            sortable: false,
+            width: 180,
+            tooltip: true
+          },
+          {
             title: '关键词',
             key: 'keywords',
             width: 150
@@ -345,14 +353,14 @@
             title: '发布状态',
             width: 100,
             key: 'articleStatus',
-            render:(h, params, vm) => {
-              const {row} = params
-              if (row.articleStatus === 'PUBLISH'){
-                return <div>{'发布'}</div>
-              }else if(row.articleStatus === 'UN_PUBLISH'){
-                return <div>{'未发布'}</div>
-              }else {
-                return <div>{row.articleStatus}</div>
+            render: (h, params, vm) => {
+              const {row} = params;
+              if (row.articleStatus === 'PUBLISH') {
+                return <div>{'发布'}</div>;
+              } else if (row.articleStatus === 'UN_PUBLISH') {
+                return <div>{'未发布'}</div>;
+              } else {
+                return <div>{row.articleStatus}</div>;
               }
             }
           },
@@ -369,28 +377,30 @@
             options: ['delete', 'edit', 'view', 'onArticleStatus']
           }
         ],
-        defaultListMain:[],
-        uploadListMain:[],
-        content:'',
+        defaultListMain: [],
+        uploadListMain: [],
+        content: '',
         rowData: roleRowData,
         searchRowData: this._.cloneDeep(roleRowData),
-        articleDetail:this._.cloneDeep(articleDetail)
+        articleDetail: this._.cloneDeep(articleDetail),
+        exportType: 'xlsx',
+        downloadLoading: false
       };
     },
     methods: {
-      resetKeyWord(){
+      resetKeyWord() {
         this.keyword1 = '';
         this.keyword2 = '';
         this.keyword3 = '';
       },
-      setArticleKeyWords(){
-        let keyWordsArray = [this.keyword1,this.keyword2,this.keyword3];
+      setArticleKeyWords() {
+        let keyWordsArray = [this.keyword1, this.keyword2, this.keyword3];
         let tempArr = [];
         keyWordsArray.forEach(item => {
-          if (item !== null && item != "") {
-            tempArr.push(item)
+          if (item !== null && item != '') {
+            tempArr.push(item);
           };
-        })
+        });
         if (tempArr.length > 0) {
           this.articleDetail.keywords = tempArr.join(',');
         } else {
@@ -398,13 +408,13 @@
         };
         console.log(this.articleDetail.keywords);
       },
-      inputChange1(event){
+      inputChange1(event) {
         this.setArticleKeyWords();
       },
-      inputChange2(event){
+      inputChange2(event) {
         this.setArticleKeyWords();
       },
-      inputChange3(event){
+      inputChange3(event) {
         this.setArticleKeyWords();
       },
       useAbleUniteChange(value) {
@@ -416,22 +426,22 @@
       endTimeChange(value, date) {
         this.searchRowData.endCreateAt = value;
       },
-      startPublishChange(value){
+      startPublishChange(value) {
         this.searchRowData.beginPublishAt = value;
       },
-      endPublishChange(value){
+      endPublishChange(value) {
         this.searchRowData.endPublishAt = value;
       },
       resetFields() {
-        this.$refs.modalEdit.resetFields()
-        this.$refs.uploadMain.clearFileList()
-        this.uploadListMain = []
-        this.articleDetail = _.cloneDeep(articleDetail)
+        this.$refs.modalEdit.resetFields();
+        this.$refs.uploadMain.clearFileList();
+        this.uploadListMain = [];
+        this.articleDetail = _.cloneDeep(articleDetail);
       },
       resetSearchRowData() {
-        this.clearSearchLoading = true
+        this.clearSearchLoading = true;
         this.searchRowData = _.cloneDeep(roleRowData);
-        this.getTableData()
+        this.getTableData();
       },
       handleSuccessMain(response, file, fileList) {
         this.uploadListMain = fileList;
@@ -440,40 +450,40 @@
       },
       handleRemoveMain(file) {
         this.$refs.uploadMain.deleteFile(file);
-        this.uploadListMain = []
-        this.articleDetail.headImage = null
+        this.uploadListMain = [];
+        this.articleDetail.headImage = null;
       },
-      handleSubmit(name){
-        this.articleDetail.content = this.$refs.editor.content
+      handleSubmit(name) {
+        this.articleDetail.content = this.$refs.editor.content;
         this.$refs[name].validate((valid) => {
           if (valid) {
             if (this.tempModalType === this.modalType.create) {
-              //添加状态
-              this.createTableRow()
+              // 添加状态
+              this.createTableRow();
             } else if (this.tempModalType === this.modalType.edit) {
-              //编辑状态
-              this.editTableRow()
+              // 编辑状态
+              this.editTableRow();
             }
           } else {
             this.$Message.error('请完善商品的信息!');
           }
-        })
+        });
       },
-      deleteTable(ids){
-        this.loading = true
+      deleteTable(ids) {
+        this.loading = true;
         deleteArticle({
           ids
         }).then(res => {
-            let totalPage = Math.ceil(this.total / this.searchRowData.pageSize)
+            let totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
             if (this.tableData.length == this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
-              this.searchRowData.page -= 1
+              this.searchRowData.page -= 1;
             }
             this.tableDataSelected = [];
             this.getTableData();
           }
         ).catch(err => {
-          this.loading = false
-        })
+          this.loading = false;
+        });
       },
       addChildren() {
         if (this.tempModalType !== this.modalType.create) {
@@ -482,11 +492,11 @@
           this.articleDetail = this._.cloneDeep(articleDetail);
         }
         this.tempModalType = this.modalType.create;
-        this.modalEdit = true
+        this.modalEdit = true;
       },
-      createTableRow(){
+      createTableRow() {
         this.modalViewLoading = true;
-        this.loading =true
+        this.loading =true;
         createArticle(this.articleDetail).then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
@@ -496,9 +506,9 @@
           this.$refs.editor.content = null;
         });
       },
-      editTableRow(){
+      editTableRow() {
         this.modalViewLoading = true;
-        this.loading =true
+        this.loading =true;
         editArticle(this.articleDetail).then(res => {
           this.getTableData();
         }).finally(res => {
@@ -510,24 +520,24 @@
       onArticleStatus(params) {
         console.log(params.row.articleStatus);
         // this.tableData[params.index].onSale = !this.tableData[params.index].onSale;
-        this.articleDetail = this._.cloneDeep(params.row)
+        this.articleDetail = this._.cloneDeep(params.row);
         if (this.articleDetail.articleStatus == 'PUBLISH') {
           this.articleDetail.articleStatus = 'UN_PUBLISH';
         } else {
-          this.articleDetail.articleStatus = 'PUBLISH'
+          this.articleDetail.articleStatus = 'PUBLISH';
         }
-        this.editTableRow()
+        this.editTableRow();
       },
       handleView(params) {
-        this.tempModalType = this.modalType.view
+        this.tempModalType = this.modalType.view;
         this.articleDetail = this._.clone(params.row);
         this.modalView = true;
       },
       handleEdit(params) {
-        this.tempModalType = this.modalType.edit
+        this.tempModalType = this.modalType.edit;
         this.articleDetail = this._.cloneDeep(params.row);
-        let keyWordsArr = this.articleDetail.keywords.split(',')
-        this.$refs.editor.content = this.articleDetail.content
+        let keyWordsArr = this.articleDetail.keywords.split(',');
+        this.$refs.editor.content = this.articleDetail.content;
         if (keyWordsArr[0]) {
           this.keyword1 = keyWordsArr[0];
         };
@@ -537,34 +547,49 @@
         if (keyWordsArr[2]) {
           this.keyword3 = keyWordsArr[2];
         };
-        this.setDefaultUploadList(params.row)
+        this.setDefaultUploadList(params.row);
         this.modalEdit = true;
       },
       setDefaultUploadList(res) {
         if (res.headImage != null) {
           const map = {status: 'finished', url: 'url'};
-          let mainImgArr = []
-          map.url = res.headImage
-          mainImgArr.push(map)
-          this.$refs.uploadMain.setDefaultFileList(mainImgArr)
-          this.uploadListMain = mainImgArr
+          let mainImgArr = [];
+          map.url = res.headImage;
+          mainImgArr.push(map);
+          this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+          this.uploadListMain = mainImgArr;
         }
       },
       getTableData() {
-        this.loading = true
+        this.loading = true;
         getArticlesPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;
           this.loading = false;
-          this.clearSearchLoading = false
-          this.searchLoading = false
+          this.clearSearchLoading = false;
+          this.searchLoading = false;
         });
       },
-      exportExcel() {
-        this.$refs.tables.exportCsv({
-          filename: `table-${new Date().valueOf()}.csv`
+      // exportExcel() {
+      //   this.$refs.tables.exportCsv({
+      //     filename: `table-${new Date().valueOf()}.csv`
+      //   });
+      // },
+      handleDownload() {
+      // 导出不分页
+      this.searchRowData.rows = null;
+      getArticlesPages(this.searchRowData).then(res => {
+        let tableData = res.array;
+        // 表格数据导出字段翻译
+        tableData.forEach(item => {
+            item['articleStatus'] === 'PUBLISH ' ? item['articleStatus'] = '发布' : item['articleStatus'] = '未发布';
         });
-      }
+        this.$refs.tables.handleDownload({
+          filename: `文章信息-${new Date().valueOf()}`,
+          data: tableData
+        });
+      });
+    }
     }
   };
 </script>
