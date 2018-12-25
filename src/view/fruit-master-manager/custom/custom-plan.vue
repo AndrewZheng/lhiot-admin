@@ -83,7 +83,7 @@
           <i-col span="24">
             <Row :gutter="8" class-name="mb10">
               <i-col span="6">定制计划主图:</i-col>
-              <img style="width: 150px" :src="rowData.image" span="16">
+              <img style="width: 80px" :src="rowData.image" span="16">
             </Row>
           </i-col>
         </Row>
@@ -183,7 +183,7 @@
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="上架板块:" prop="customPlanSectionIds">
+          <FormItem label="上架板块:" prop="customPlanSectionIds" v-if="tempModalType === modalType.create">
             <div v-for="item in uiPositionData">
               <div>
                 {{item.description}}:
@@ -287,7 +287,9 @@
         </Button>
       </div>
     </Modal>
-
+    <Modal title="View Image" v-model="uploadVisible">
+      <img :src="imgUploadViewItem" style="width: 100%">
+    </Modal>
   </div>
 </template>
 
@@ -603,7 +605,7 @@
         modalSetting: false,
         modalEdit: false,
         showTab: false,
-        showHeader: false,
+        showHeader: true,
         exportType: 'xlsx',
         downloadLoading: false
       };
@@ -633,7 +635,6 @@
       },
       handleSubmit(name) {
         this.$refs[name].validate((valid) => {
-          // console.log(JSON.stringify(this.rowData));
           // FIXME 验证
           if (valid) {
                 if (this.rowData.id == 0) {
@@ -691,6 +692,10 @@
         });
       },
       handleAdd() {
+        if (this.tempModalType != this.modalType.create){
+          this.resetFields()
+        };
+          this.tempModalType = this.modalType.create
         // 对象初始化
         this.rowData = {};
         this.rowData = {'id': 0, 'customPlanSectionIds': [], 'description': '', 'image': '', 'name': '', 'overRule': '', 'periodList': [], 'price': 0, 'status': null};
@@ -711,6 +716,11 @@
         this.showHeader = true;
         this.showTab = true;
         this.modalEdit = true;
+      },
+      resetFields() {
+        this.$refs.modalEdit.resetFields();
+        this.$refs.uploadMain.clearFileList();
+        this.uploadListMain = [];
       },
       resetSearchRowData() {
         this.clearSearchLoading = true;
@@ -735,14 +745,29 @@
         });
       },
       handleEdit(params) {
+        this.tempModalType = this.modalType.edit
         this.loading = true;
+        this.showHeader = true;
         getCustomPlan({id: params.row.id}).then(res => {
           this.loading = false;
           this.rowData = res;
           this.showHeader = true;
           this.showTab = false;
+          this.setDefaultUploadList(res);
           this.modalEdit = true;
         });
+      },
+      setDefaultUploadList(res) {
+        if (res.image != null) {
+          const map = {status: 'finished', url: 'url'};
+          let mainImgArr = [];
+          map.url = res.image;
+          mainImgArr.push(map);
+          if (this.$refs.uploadMain){
+            this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+          };
+          this.uploadListMain = mainImgArr;
+        }
       },
       getTableData() {
         getCustomPlansPages(this.searchRowData).then(res => {

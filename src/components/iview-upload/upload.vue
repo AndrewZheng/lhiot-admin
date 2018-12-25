@@ -114,11 +114,11 @@
             const image = new Image();
             image.onload = function () {
               if (width && this.width != width) {
-                self.$Notice.error({title: '请上传宽为' + width + "高为" + height + "的图片"});
+                // self.$Notice.error({title: '请上传宽为' + width + "高为" + height + "的图片"});
                 // reject();
                 resolve();
               } else if (height && this.height != height) {
-                self.$Notice.error({title: '请上传宽为' + width + "高为" + height + "的图片"});
+                // self.$Notice.error({title: '请上传宽为' + width + "高为" + height + "的图片"});
                 // reject();
                 resolve();
               } else if (!check) {

@@ -225,7 +225,7 @@
             </Col>
           </Row>
           <Row>
-            <FormItem label="商品主图:建议尺寸 (xxx*xxx):" prop="image" :label-width="80">
+            <FormItem label="商品主图:建议尺寸;400x400(单位:px)" prop="image" :label-width="80">
               <div class="demo-upload-list" v-for="item in uploadListMain">
                 <template v-if="item.status === 'finished'">
                   <div>
