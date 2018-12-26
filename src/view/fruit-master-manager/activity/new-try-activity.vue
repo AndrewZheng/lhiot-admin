@@ -182,7 +182,7 @@
         ruleInline: {
           shelfId: [{required: true, message: '请填写上架商品ID'}],
           activityPrice: [{required: true, message: '请填写尝鲜价'}],
-          sort: [{required: true, message: '请填写排序'}]
+          sort: [{required: true, message: '请填写整数排序',pattern:/^-?\d+$/}]
         },
         columns: [
           {
@@ -287,11 +287,14 @@
             this.optionsShelfSpecification.length = 0;
             this.optionsShelfSpecification = this.optionsShelfSpecification.concat(res.array);
           };
-          console.log(this.optionsShelfSpecification);
           this.shelfSpecificationLoading = false;
         });
       },
       handleSubmit(name) {
+        if (this.goodsDetail.originalPrice<this.goodsDetail.activityPrice){
+          this.$Message.error('尝鲜价格不能高于套餐原价');
+          return;
+        };
         this.$refs[name].validate((valid) => {
           if (valid) {
             if (this.tempModalType === this.modalType.create) {
@@ -311,9 +314,12 @@
         this.loading =true;
         addActivityProduct(this.goodsDetail).then(res => {
           this.$Message.success('创建成功!');
+          this.loading =false;
+          this.modalViewLoading = false;
+          this.modalEdit = false;
           this.getTableData();
           this.resetKeyWord();
-        }).finally(res => {
+        }).catch(res => {
           this.loading =false;
           this.modalViewLoading = false;
           this.modalEdit = false;
@@ -322,8 +328,10 @@
       editTableRow() {
         this.modalViewLoading = true;
         editActivityProduct(this.goodsDetail).then(res => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
           this.getTableData();
-        }).finally(res => {
+        }).catch(res => {
           this.modalEdit = false;
           this.modalViewLoading = false;
         });
@@ -366,6 +374,10 @@
         getActivityProductsPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        }).catch(error => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

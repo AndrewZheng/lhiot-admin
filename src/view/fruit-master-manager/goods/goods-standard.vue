@@ -393,6 +393,9 @@
         this.modalEdit = true;
       },
       handleCreateView() {
+        if (this.tempModalType !== this.modalType.create) {
+          this.productStandardDetail = this._.cloneDeep(productStandardDetail)
+        };
         this.tempModalType = this.modalType.create;
         this.modalEdit = true;
       },
@@ -406,6 +409,9 @@
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
+        }).catch(error => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
         });
       },
       handleSubmit(name) {
@@ -433,6 +439,9 @@
           this.productStandardDetail = productStandardDetail;
           this.productStandardDetail.productId = this.$route.params.id;
           this.getTableData();
+        }).catch( error => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
         });
       },
       changePage(page) {
@@ -452,6 +461,8 @@
         getProductSpecificationsPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;
+          this.loading = false;
+        }).catch( error => {
           this.loading = false;
         });
       },

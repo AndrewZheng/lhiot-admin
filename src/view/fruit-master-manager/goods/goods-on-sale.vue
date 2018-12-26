@@ -355,6 +355,8 @@
         this.uiPositionData = res.array;
         this.createLoading = false;
         this.getTableData();
+      }).catch( error => {
+        this.createLoading = false;
       });
     },
     computed: {
@@ -524,8 +526,8 @@
             this.optionsShelfSpecification.length = 0;
             this.optionsShelfSpecification = this.optionsShelfSpecification.concat(res.array);
           }
-          console.log(this.optionsShelfSpecification);
-        }).finally(() => {
+          this.shelfSpecificationLoading = false;
+        }).catch(() => {
           this.shelfSpecificationLoading = false;
         });
       },
