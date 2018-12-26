@@ -1,136 +1,194 @@
 <template>
   <div class="m-user">
-      <Card>
-      <tables ref="tables" editable searchable
-      search-place="top" size="small"
-      v-model="tableData"
-      :loading="loading"
-      :columns="columns"
-      @on-selection-change="onSelectionChange"
-      @on-delete="handleDelete"
-      @on-view="handleView"
-      @on-edit="handleEdit"
-      @on-relation="handleRole"
+    <Card>
+      <tables
+        ref="tables"
+        editable
+        searchable
+        search-place="top"
+        size="small"
+        v-model="tableData"
+        :loading="loading"
+        :columns="columns"
+        @on-selection-change="onSelectionChange"
+        @on-delete="handleDelete"
+        @on-view="handleView"
+        @on-edit="handleEdit"
+        @on-relation="handleRole"
       >
         <div slot="searchCondition">
-          <Input  placeholder="姓名" class="search-input mr5" v-model="searchRowData.name" style="width: auto" clearable/>
-          <Input  placeholder="电话" class="search-input mr5" v-model="searchRowData.tel" style="width: auto" clearable/>
-          <Select v-model="searchRowData.status" class="search-col mr5"  placeholder="用户状态" style="width: auto" clearable>
-            <Option v-for="item in userStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
+          <Input
+            placeholder="姓名"
+            class="search-input mr5"
+            v-model="searchRowData.name"
+            style="width: auto"
+            clearable
+          />
+          <Input
+            placeholder="电话"
+            class="search-input mr5"
+            v-model="searchRowData.tel"
+            style="width: auto"
+            clearable
+          />
+          <Select
+            v-model="searchRowData.status"
+            class="search-col mr5"
+            placeholder="用户状态"
+            style="width: auto"
+            clearable
+          >
+            <Option
+              v-for="item in userStatusList"
+              :value="item.key"
+              :key="`search-col-${item.key}`"
+            >{{item.value}}</Option>
           </Select>
-          <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button>
-          <Button v-waves @click="handleClear" class="search-btn" type="info"><Icon type="md-refresh"/>&nbsp;清除条件</Button>
+          <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary">
+            <Icon type="md-search"/>&nbsp;搜索
+          </Button>
+          <Button v-waves @click="handleClear" class="search-btn" type="info">
+            <Icon type="md-refresh"/>&nbsp;清除条件
+          </Button>
         </div>
         <div slot="operations">
           <Button @click="handleAdd" type="success" class="mr5">
-            <Icon type="md-add"/> 新增</Button>
+            <Icon type="md-add"/>新增
+          </Button>
           <Button @click="handleDeleteBatch" type="error" class="mr5">
-            <Icon type="md-trash"/> 删除</Button>
+            <Icon type="md-trash"/>删除
+          </Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
-            <Page :total="total" :current="page" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer show-total></Page>
+          <Page
+            :total="total"
+            :current="page"
+            @on-change="changePage"
+            @on-page-size-change="changePageSize"
+            show-sizer
+            show-total
+          ></Page>
         </Row>
       </div>
     </Card>
 
     <!-- 创建/修改模态框 -->
-     <Modal
-        v-model="modalEdit"
-        :loading="loadingBtn"
-        :mask-closable="false"
-        @on-ok="handleAddOrEditOk('formValidate')"
-        @on-cancel="handleCancel"
-        ref="formValidate" :model="rowData" :rules="ruleValidate">
-        <p slot="header">
-            <span>{{rowData.id==''?'创建用户':'编辑用户'}}</span>
-        </p>
-       <div class="modal-content">
-         <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
-              <FormItem label="姓名" prop="name">
-                  <Input v-model="rowData.name" placeholder="请输入姓名"/>
-              </FormItem>
-              <FormItem label="账号" prop="account">
-                  <Input v-model="rowData.account" placeholder="请输入账号"/>
-              </FormItem>
-              <FormItem label="密码" prop="password">
-                  <Input v-model="rowData.password" type="password"/>
-              </FormItem>
-              <FormItem label="确认密码" prop="passwdCheck">
-                  <Input v-model="rowData.passwdCheck" type="password"/>
-              </FormItem>
-              <FormItem label="电话" prop="tel">
-                  <Input v-model="rowData.tel" placeholder="请输入电话号码"/>
-              </FormItem>
-              <FormItem label="用户头像" prop="avatarUrl">
-                  <Button @click="imagecropperShow=true" class="add-image">
-                        <Icon type="ios-camera" size="20"></Icon>
-                  </Button>
-                  <img :src="image" width='80px' height='80px'/>
-              </FormItem>
-              <FormItem label="用户状态" prop="status">
-                <Select v-model="rowData.status" class="search-col"  placeholder="请选择用户状态">
-                  <Option v-for="item in userStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
-                </Select>
-              </FormItem>
-              <FormItem label="备注" prop="remark">
-                  <Input v-model="rowData.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入备注"/>
-              </FormItem>
-            </Form>
-       </div>
+    <Modal
+      v-model="modalEdit"
+      :loading="loadingBtn"
+      :mask-closable="false"
+      @on-ok="handleAddOrEditOk('formValidate')"
+      @on-cancel="handleCancel"
+      ref="formValidate"
+      :model="rowData"
+      :rules="ruleValidate"
+    >
+      <p slot="header">
+        <span>{{rowData.id==''?'创建用户':'编辑用户'}}</span>
+      </p>
+      <div class="modal-content">
+        <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
+          <FormItem label="姓名" prop="name">
+            <Input v-model="rowData.name" placeholder="请输入姓名"/>
+          </FormItem>
+          <FormItem label="账号" prop="account">
+            <Input v-model="rowData.account" placeholder="请输入账号"/>
+          </FormItem>
+          <FormItem label="密码" prop="password">
+            <Input v-model="rowData.password" type="password"/>
+          </FormItem>
+          <FormItem label="确认密码" prop="passwdCheck">
+            <Input v-model="rowData.passwdCheck" type="password" placeholder="请确认密码"/>
+          </FormItem>
+          <FormItem label="电话" prop="tel">
+            <Input v-model="rowData.tel" placeholder="请输入电话号码"/>
+          </FormItem>
+          <FormItem label="用户头像" prop="avatarUrl">
+            <Button @click="imagecropperShow=true" class="add-image">
+              <Icon type="ios-camera" size="20"></Icon>
+            </Button>
+            <img :src="image" width="80px" height="80px">
+          </FormItem>
+          <FormItem label="用户状态" prop="status">
+            <Select v-model="rowData.status" class="search-col" placeholder="请选择用户状态">
+              <Option
+                v-for="item in userStatusList"
+                :value="item.key"
+                :key="`search-col-${item.key}`"
+              >{{item.value}}</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="备注" prop="remark">
+            <Input
+              v-model="rowData.remark"
+              type="textarea"
+              :autosize="{minRows: 2,maxRows: 5}"
+              placeholder="请输入备注"
+            />
+          </FormItem>
+        </Form>
+      </div>
     </Modal>
 
     <!-- 多功能添加模态框(创建用户/关联角色) -->
-    <Modal
-      v-model="modalAdd"
-      :loading="loadingBtn"
-      :mask-closable="false">
+    <Modal v-model="modalAdd" :loading="loadingBtn" :mask-closable="false">
       <div class="modal-content">
         <Tabs size="small" v-model="step">
           <!-- :value="tabOperation.tabSelected" -->
           <TabPane label="创建用户" name="userAdd">
             <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
               <FormItem label="姓名" prop="name">
-                  <Input v-model="rowData.name" placeholder="请输入姓名"/>
+                <Input v-model="rowData.name" placeholder="请输入姓名"/>
               </FormItem>
               <FormItem label="账号" prop="account">
-                  <Input v-model="rowData.account" placeholder="请输入账号"/>
+                <Input v-model="rowData.account" placeholder="请输入账号"/>
               </FormItem>
               <FormItem label="密码" prop="password">
-                  <Input v-model="rowData.password" type="password" placeholder="请输入密码"/>
+                <Input v-model="rowData.password" type="password" placeholder="请输入密码"/>
               </FormItem>
               <FormItem label="确认密码" prop="passwdCheck">
-                  <Input v-model="rowData.passwdCheck" type="password"/>
+                <Input v-model="rowData.passwdCheck" type="password"/>
               </FormItem>
               <FormItem label="电话" prop="tel">
-                  <Input v-model="rowData.tel" placeholder="请输入电话号码"/>
+                <Input v-model="rowData.tel" placeholder="请输入电话号码"/>
               </FormItem>
               <FormItem label="用户头像" prop="avatarUrl">
-                  <Button  @click="imagecropperShow=true" class="add-image">
-                        <Icon type="ios-camera" size="20"></Icon>
-                  </Button>
-                  <div v-if="imageVisible" style="display: inline-block">
-                      <img :src="image" width='80px' height='80px'/>
-                  </div>
+                <Button @click="imagecropperShow=true" class="add-image">
+                  <Icon type="ios-camera" size="20"></Icon>
+                </Button>
+                <div v-if="imageVisible" style="display: inline-block">
+                  <img :src="image" width="80px" height="80px">
+                </div>
               </FormItem>
               <FormItem label="用户状态" prop="status">
-                <Select v-model="rowData.status" class="search-col"  placeholder="请选择用户状态">
-                  <Option v-for="item in userStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
+                <Select v-model="rowData.status" class="search-col" placeholder="请选择用户状态">
+                  <Option
+                    v-for="item in userStatusList"
+                    :value="item.key"
+                    :key="`search-col-${item.key}`"
+                  >{{item.value}}</Option>
                 </Select>
               </FormItem>
               <FormItem label="备注" prop="remark">
-                  <Input v-model="rowData.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入备注"/>
+                <Input
+                  v-model="rowData.remark"
+                  type="textarea"
+                  :autosize="{minRows: 2,maxRows: 5}"
+                  placeholder="请输入备注"
+                />
               </FormItem>
             </Form>
           </TabPane>
           <TabPane label="关联角色" name="roleAdd" :disabled="isDisable">
             <Transfer
-            :data="roleData"
-            :target-keys="targetKeys"
-            :render-format="render1"
-            :titles="titles"
-            @on-change="handleChange"></Transfer>
+              :data="roleData"
+              :target-keys="targetKeys"
+              :render-format="render1"
+              :titles="titles"
+              @on-change="handleChange"
+            ></Transfer>
           </TabPane>
         </Tabs>
       </div>
@@ -139,30 +197,31 @@
       </div>
       <div slot="footer" v-else-if="step=='roleAdd'">
         <Button type="primary" @click="handleRoleOk">保存</Button>
-       </div>
+      </div>
       <div slot="footer" v-else>
         <Button type="primary" @click="handleCloseAdd">关闭</Button>
-       </div>
+      </div>
     </Modal>
 
-     <!-- 关联角色 -->
+    <!-- 关联角色 -->
     <Modal
-        v-model="modalRole"
-        :loading="loadingBtn"
-        :mask-closable="false"
-        @on-ok="handleRoleOk"
-        @on-cancel="handleCancel">
-        <p slot="header">
-            <span>关联角色</span>
-        </p>
-       <div class="modal-content">
-         <Transfer
-            :data="roleData"
-            :target-keys="targetKeys"
-            :render-format="render1"
-            :titles="titles"
-            @on-change="handleChange">
-          </Transfer>
+      v-model="modalRole"
+      :loading="loadingBtn"
+      :mask-closable="false"
+      @on-ok="handleRoleOk"
+      @on-cancel="handleCancel"
+    >
+      <p slot="header">
+        <span>关联角色</span>
+      </p>
+      <div class="modal-content">
+        <Transfer
+          :data="roleData"
+          :target-keys="targetKeys"
+          :render-format="render1"
+          :titles="titles"
+          @on-change="handleChange"
+        ></Transfer>
       </div>
     </Modal>
 
@@ -175,8 +234,8 @@
       url="https://resource.food-see.com/v1/upload/product_image"
       lang-type="zh"
       @close="close"
-      @crop-upload-success="cropSuccess" />
-
+      @crop-upload-success="cropSuccess"
+    />
   </div>
 </template>
 
@@ -200,16 +259,6 @@ const userRowData = {
   remark: ''
 };
 
-const validatePassCheck = (rule, value, callback) => {
-  if (value === '') {
-    callback(new Error('请再次输入您的密码'));
-  } else if (value !== this.rowData.password) {
-    callback(new Error('两次输入密码不匹配'));
-  } else {
-    callback();
-  }
-};
-
 export default {
   name: 'user_page',
   components: {
@@ -217,7 +266,18 @@ export default {
     ImageCropper
   },
   data() {
+    const validatePassCheck = (rule, value, callback) => {
+      console.log(this.rowData.password);
+      if (value === '') {
+        callback(new Error('请再次输入您的密码'));
+      } else if (value !== this.rowData.password) {
+        callback(new Error('两次输入密码不匹配'));
+      } else {
+        callback();
+      }
+    };
     return {
+      
       columns: [
         {
           type: 'selection',
@@ -264,10 +324,10 @@ export default {
                   {this.getDictValueByKey(this.userStatus, row.status)}
                 </tag>
               ) : (
-                <tag color="error">
-                  {this.getDictValueByKey(this.userStatus, row.status)}
-                </tag>
-              );
+                  <tag color="error">
+                    {this.getDictValueByKey(this.userStatus, row.status)}
+                  </tag>
+                );
             return <div>{str}</div>;
           }
         },
@@ -331,9 +391,7 @@ export default {
       ruleValidate: {
         name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
         account: [{ required: true, message: '账号不能为空', trigger: 'blur' }],
-        password: [
-          { required: true, message: '密码不能为空', trigger: 'blur' }
-        ],
+        password: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
         passwdCheck: [
           { required: true, validator: validatePassCheck, trigger: 'blur' }
         ],
@@ -358,7 +416,7 @@ export default {
       userStatusList: []
     };
   },
-  created() {},
+  created() { },
   mounted() {
     this.getTableData();
     this.getStatusList();
@@ -405,7 +463,7 @@ export default {
           `<br>
           创建时间: ${this.tableData[params.row.initRowIndex].createAt}<br>
           最后登录时间: ${
-            this.tableData[params.row.initRowIndex].lastLoginAt
+          this.tableData[params.row.initRowIndex].lastLoginAt
           }<br>
           备注: ${this.tableData[params.row.initRowIndex].remark}<br>
           关联角色：<tag type="border">角色1</tag><tag type="border">角色2</tag><tag type="border">角色3</tag>`
@@ -623,13 +681,13 @@ export default {
     getRoleData() {
       let role = [];
       getRoleList().then(res => {
-        if (res && res.length > 0) {
-          for (let i = 0; i < res.length; i++) {
+        if (res && res.array.length > 0) {
+          for (let i = 0; i < res.array.length; i++) {
             role.push({
-              key: res[i].id.toString(),
-              label: res[i].name,
-              description: res[i].roleDesc,
-              disabled: res[i].status !== 'AVAILABLE'
+              key: res.array[i].id.toString(),
+              label: res.array[i].name,
+              description: res.array[i].roleDesc,
+              disabled: res.array[i].status !== 'AVAILABLE'
               // disabled: Math.random() * 3 < 1
             });
           }

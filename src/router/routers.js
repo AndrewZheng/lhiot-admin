@@ -319,24 +319,24 @@ export const asyncRouterMap = [
         },
         component: () => import('@/view/system/menu/menu.vue')
       },
-      {
-        path: 'config',
-        name: 'config',
-        meta: {
-          icon: 'md-barcode',
-          title: '参数管理'
-        },
-        component: () => import('@/view/system/config/config.vue')
-      },
-      {
-        path: 'permission',
-        name: 'permission',
-        meta: {
-          icon: 'md-build',
-          title: '权限管理'
-        },
-        component: () => import('@/view/system/permission/permission.vue')
-      },
+      // {
+      //   path: 'config',
+      //   name: 'config',
+      //   meta: {
+      //     icon: 'md-barcode',
+      //     title: '参数管理'
+      //   },
+      //   component: () => import('@/view/system/config/config.vue')
+      // },
+      // {
+      //   path: 'permission',
+      //   name: 'permission',
+      //   meta: {
+      //     icon: 'md-build',
+      //     title: '权限管理'
+      //   },
+      //   component: () => import('@/view/system/permission/permission.vue')
+      // },
       {
         path: 'role',
         name: 'role',
