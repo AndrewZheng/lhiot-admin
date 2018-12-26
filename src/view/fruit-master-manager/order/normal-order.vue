@@ -63,7 +63,7 @@
                 >{{item.label}}</Option>
               </Select>
               <DatePicker
-                v-model="searchRowData.beginCreateAt"
+                v-model="searchRowData.startAt"
                 @on-change="startTimeChange"
                 format="yyyy-MM-dd HH:mm:ss"
                 type="datetime"
@@ -73,7 +73,7 @@
               />
               <i>-</i>
               <DatePicker
-                v-model="searchRowData.endCreateAt"
+                v-model="searchRowData.endAt"
                 @on-change="endTimeChange"
                 format="yyyy-MM-dd HH:mm:ss"
                 placeholder="结束时间"
@@ -391,8 +391,8 @@ const orderDetail = {
   discountPrice: 0
 };
 const roleRowData = {
-  beginCreateAt: null,
-  endCreateAt: null,
+  startAt: null,
+  endAt: null,
   code: null,
   userPhone: null,
   orderStatuses: null,
@@ -604,10 +604,10 @@ export default {
       }
     },
     startTimeChange(value, date) {
-      this.searchRowData.beginCreateAt = value;
+      this.searchRowData.startAt = value;
     },
     endTimeChange(value, date) {
-      this.searchRowData.endCreateAt = value;
+      this.searchRowData.endAt = value;
     },
     handleEditCloseTransferModalView() {
       this.transferModalView = false;
