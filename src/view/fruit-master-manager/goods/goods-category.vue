@@ -213,6 +213,11 @@
           this.$Message.warning('亲输入序号');
           return
         }
+        let reg = /^-?\d+$/;
+        if (!reg.test(this.currentCategory.rank)) {
+          this.$Message.warning('排序必须是整数');
+          return;
+        }
         this.modalEditLoading = true
         this.modalViewLoading = true
         if (!this.parentCategory.id){
@@ -255,7 +260,7 @@
             this.initMenuList();
           }
         ).catch(err=>{
-
+          this.loading = false
         })
       },
       //编辑分类

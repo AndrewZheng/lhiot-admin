@@ -318,6 +318,9 @@
           lockStatus
         }).then(res => {
           this.getTableData();
+          this.loading = false;
+        }).catch( err => {
+          this.loading = false;
         });
       },
       handleView(params) {
@@ -328,7 +331,10 @@
         getUserPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;
-        }).finally(res => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        }).catch(error => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

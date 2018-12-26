@@ -460,6 +460,8 @@
             this.getTableData();
           }
         });
+      }).catch( error => {
+        this.createLoading = false;
       });
     },
     data() {
@@ -661,6 +663,9 @@
           this.$Message.success('创建成功!');
           this.resetFields();
           this.getTableData();
+        }).catch( error => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
         });
       },
       editProduct() {
@@ -672,6 +677,9 @@
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
+        }).catch( error => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
         });
       },
       uniteChange(value) {
@@ -751,8 +759,11 @@
         getProduct({
           id: params.row.id
         }).then(res => {
-          this.loading = false;
           this.productDetail = res;
+          this.loading = false;
+          this.modalView = true;
+        }).catch( error => {
+          this.loading = false;
           this.modalView = true;
         });
       },
@@ -769,6 +780,9 @@
           this.defaultGoodsCategoryData = [];
           this.findParentId(this.productDetail.categoryId);
           this.defaultGoodsCategoryData.reverse();
+          this.modalEdit = true;
+        }).catch( error => {
+          this.loading = false;
           this.modalEdit = true;
         });
       },
@@ -791,6 +805,10 @@
         getProductPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        }).catch( error => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

@@ -246,6 +246,8 @@
           this.tableData = res.array;
           this.total = res.total;
           this.loading = false;
+        }).catch( error => {
+          this.loading = false;
         });
       },
       exportExcel() {
