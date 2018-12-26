@@ -691,7 +691,6 @@ export default {
         this.resetFields();
         this.modalViewLoading = false;
         this.modalEdit = false;
-        this.$Message.success('创建成功!');
         this.getTableData();
       });
     },
@@ -721,7 +720,7 @@ export default {
     //   this.$refs.tables.exportCsv({
     //     filename: `table-${new Date().valueOf()}.csv`
     //   });
-    // },    
+    // },
     handleDownload() {
       // 导出不分页
       this.searchRowData.rows = null;

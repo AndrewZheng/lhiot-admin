@@ -234,7 +234,10 @@
         getUiPosition({id: params.row.id}).then(res => {
           this.uiPositionDetail = res
           this.modalView = true;
-          this.loading = false
+          this.loading = false;
+        }).catch( error => {
+          this.modalView = true;
+          this.loading = false;
         })
       },
       getTableData() {
@@ -242,8 +245,12 @@
           this.tableData = res.array;
           this.total = res.total;
           this.loading = false;
-          this.clearSearchLoading = false
-          this.searchLoading = false
+          this.clearSearchLoading = false;
+          this.searchLoading = false;
+        }).catch( error => {
+          this.loading = false;
+          this.clearSearchLoading = false;
+          this.searchLoading = false;
         });
       },
       exportExcel() {

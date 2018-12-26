@@ -592,6 +592,8 @@ export default {
       this.storeList = res.array;
       this.deliverOrderLoading = false;
       this.getTableData();
+    }).catch( error => {
+      this.deliverOrderLoading = false;
     });
   },
   methods: {
@@ -642,6 +644,8 @@ export default {
       }).then(res => {
         this.deliverOrderLoading = false;
         this.getTableData();
+      }).catch( error => {
+        this.deliverOrderLoading = false;
       });
     },
     deliverOrder() {
@@ -671,8 +675,7 @@ export default {
             this.deliverNoteList.push(res.deliverNote);
           }
           this.modalView = true;
-        })
-        .finally(res => {
+        }).catch(res => {
           this.loading = false;
         });
     },
@@ -682,6 +685,10 @@ export default {
       getOrdersPages(this.searchRowData).then(res => {
         this.tableData = res.array;
         this.total = res.total;
+        this.loading = false;
+        this.clearSearchLoading = false;
+        this.searchLoading = false;
+      }).catch( error => {
         this.loading = false;
         this.clearSearchLoading = false;
         this.searchLoading = false;

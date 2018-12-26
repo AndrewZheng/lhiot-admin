@@ -425,8 +425,10 @@ export default {
     editTableRow() {
       this.modalViewLoading = true;
       editFruitDoctorsSettlement(this.salaryDetail).then(res => {
+        this.modalEdit = false;
+        this.modalViewLoading = false;
         this.getTableData();
-      }).finally(res => {
+      }).catch(res => {
         this.modalEdit = false;
         this.modalViewLoading = false;
       });
@@ -452,6 +454,10 @@ export default {
       getFruitDoctorsSettlementPagesPages(this.searchRowData).then(res => {
         this.tableData = res.array;
         this.total = res.total;
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
+      }).catch( error => {
         this.loading = false;
         this.searchLoading = false;
         this.clearSearchLoading = false;

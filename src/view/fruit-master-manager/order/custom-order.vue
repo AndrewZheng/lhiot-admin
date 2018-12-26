@@ -444,6 +444,9 @@ export default {
     getcustomPlanSpecificationStandardsPages({}).then(res => {
       this.customCopiesList = res.array;
       this.getTableData();
+    }).catch( error => {
+      this.searchLoading = true;
+      this.clearSearchLoading = true;
     });
   },
   methods: {
@@ -481,7 +484,11 @@ export default {
         this.loading = false;
         this.clearSearchLoading = false;
         this.searchLoading = false;
-      });
+      }).catch( error => {
+        this.loading = false;
+        this.clearSearchLoading = false;
+        this.searchLoading = false;
+      });;
     },
     // exportExcel() {
     //   this.$refs.tables.exportCsv({

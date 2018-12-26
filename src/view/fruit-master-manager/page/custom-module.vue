@@ -385,6 +385,9 @@
           this.$Message.success('创建成功!');
           this.resetFields();
           this.getTableData();
+        }).catch( error => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
         });
       },
       modalHandleDelete(params) {
@@ -437,6 +440,10 @@
               this.tempTableLoading =false;
               this.loading = false;
               this.getTableData();
+            }).catch( error => {
+              this.addTempDataLoading = false;
+              this.tempTableLoading =false;
+              this.loading = false;
             });
           };
         } else {
@@ -482,6 +489,8 @@
           };
           console.log(this.optionsShelfSpecification);
           this.shelfSpecificationLoading = false;
+        }).catch( error => {
+          this.shelfSpecificationLoading = false;
         });
       },
       handleSuccessMain(response, file, fileList) {
@@ -514,6 +523,9 @@
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
+        }).catch( error => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
         });
       },
       addChildren() {
@@ -564,6 +576,10 @@
         getCustomPlanSectionsPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;
+          this.loading = false;
+          this.clearSearchLoading = false;
+          this.searchLoading = false;
+        }).catch( error => {
           this.loading = false;
           this.clearSearchLoading = false;
           this.searchLoading = false;

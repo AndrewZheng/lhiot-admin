@@ -197,6 +197,7 @@
         },
         deliveryAtTypeList: deliveryAtTypeEnum,
         deliveryAtTypeEnum,
+        distanceList: ['0-3','3-5'],
         postageRuleTableColumns: [
           {
             title: '距离范围（Km）',
@@ -473,22 +474,64 @@
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
+        }).catch(error => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
         });
       },
       editTableRow(){
         this.modalViewLoading = true;
         this.loading =true
         editDeliveryFeeRule(this.postageDetail).then(res => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
           this.getTableData();
-        }).finally(res => {
+        }).catch(res => {
           this.modalEdit = false;
           this.modalViewLoading = false;
         });
       },
       addPostageRuleTableColumns() {
-        let obj = this._.cloneDeep(detailList);
-        obj.deliveryFeeRuleId = this.postageDetail.id;
-        this.postageDetail.detailList.push(obj);
+        if (this.postageDetail.detailList.length > 0) {
+          let array = [];
+          this.postageDetail.detailList.forEach( item => {
+            array.push(item.minDistance +'-'+ item.maxDistance)
+          })
+          console.log(array);
+          console.log(this.array_diff(this.distanceList,array));
+          let tempArray = this.array_diff(this.distanceList,array);
+          if (tempArray.length===0){
+            this.$Message.error('不能添加相同距离范围的运费模板！');
+            return
+          }else {
+            let str = tempArray[0];
+            let strArray = str.split('-');
+            let obj = this._.cloneDeep(detailList);
+            obj.minDistance = strArray[0];
+            obj.maxDistance = strArray[1];
+            obj.deliveryFeeRuleId = this.postageDetail.id;
+            this.postageDetail.detailList.push(obj);
+          };
+        }else {
+          let obj = this._.cloneDeep(detailList);
+          obj.deliveryFeeRuleId = this.postageDetail.id;
+          this.postageDetail.detailList.push(obj);
+        };
+      },
+      array_diff(a, b) {
+        let A = this._.cloneDeep(a);
+        let B =  this._.cloneDeep(b);
+        for(let i=0;i<B.length;i++)
+        {
+          for(let j=0;j<A.length;j++)
+          {
+            if(A[j]==B[i]){
+              A.splice(j,1);
+              j=j-1;
+            }
+          }
+        }
+        return A;
       },
       postageRuleTableHandleDelete(params) {
         if (this.tempModalType === this.modalType.create){
@@ -537,7 +580,11 @@
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
-        });
+        }).catch( error => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        })
       },
       exportExcel() {
         this.$refs.tables.exportCsv({
