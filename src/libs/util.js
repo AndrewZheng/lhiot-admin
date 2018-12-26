@@ -9,13 +9,14 @@ export const TOKEN_KEY = 'token';
 export const GOODS_STANDARD = 'goodsStandard';
 
 export const setGoodsStandard = (goodsStandard) => {
-  Cookies.set(GOODS_STANDARD, goodsStandard, {
+  let string = JSON.stringify(goodsStandard)
+  Cookies.set(GOODS_STANDARD, string, {
     expires: config.cookieExpires || 1
   });
 }
 
 export const getGoodsStandard = () => {
-  return Cookies.get(GOODS_STANDARD);
+  return JSON.parse(Cookies.get(GOODS_STANDARD));
 }
 
 export const setToken = (token) => {

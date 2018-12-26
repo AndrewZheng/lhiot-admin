@@ -797,8 +797,8 @@
         }
       },
       handlePush(params) {
-        console.log('setGoodsStandard:'+params.row.id);
-        setGoodsStandard(params.row.id);
+        console.log('setGoodsStandard:'+params.row);
+        setGoodsStandard(params.row);
         this.turnToPage({
           name: 'goods-standard',
           params: {id: params.row.id, unitsList: this.unitsList, productName: params.row.name}
