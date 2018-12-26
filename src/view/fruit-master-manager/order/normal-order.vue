@@ -522,7 +522,7 @@ export default {
         },
         {
           title: '订单总金额',
-          width: 100,
+          width: 120,
           key: 'totalAmount',
           render(h, params, vm) {
             let amount = fenToYuanDot2(params.row.totalAmount);
@@ -531,7 +531,7 @@ export default {
         },
         {
           title: '优惠金额',
-          width: 100,
+          width: 120,
           key: 'couponAmount',
           render(h, params, vm) {
             let amount = fenToYuanDot2(params.row.couponAmount);
@@ -540,7 +540,7 @@ export default {
         },
         {
           title: '应付金额',
-          width: 100,
+          width: 120,
           key: 'amountPayable',
           render(h, params, vm) {
             let amount = fenToYuanDot2(params.row.amountPayable);
@@ -549,7 +549,7 @@ export default {
         },
         {
           title: '收货方式',
-          width: 100,
+          width: 120,
           key: 'receivingWay',
           render: (h, params, vm) => {
             const { row } = params;
@@ -558,7 +558,7 @@ export default {
         },
         {
           title: '订单状态',
-          width: 90,
+          width: 120,
           key: 'status',
           render: (h, params, vm) => {
             const { row } = params;
@@ -567,7 +567,7 @@ export default {
         },
         {
           title: '创建时间',
-          width: 110,
+          width: 160,
           key: 'createAt',
           sortable: true
         },
@@ -592,15 +592,15 @@ export default {
       this.storeList = res.array;
       this.deliverOrderLoading = false;
       this.getTableData();
-    }).catch( error => {
+    }).catch(error => {
       this.deliverOrderLoading = false;
     });
   },
   methods: {
-    orderStatusesOnChange(value){
+    orderStatusesOnChange(value) {
       console.log(value);
-      if(value.length===0){
-        this.searchRowData.orderStatuses = null
+      if (value.length===0) {
+        this.searchRowData.orderStatuses = null;
       }
     },
     startTimeChange(value, date) {
@@ -644,7 +644,7 @@ export default {
       }).then(res => {
         this.deliverOrderLoading = false;
         this.getTableData();
-      }).catch( error => {
+      }).catch(error => {
         this.deliverOrderLoading = false;
       });
     },
@@ -688,7 +688,7 @@ export default {
         this.loading = false;
         this.clearSearchLoading = false;
         this.searchLoading = false;
-      }).catch( error => {
+      }).catch(error => {
         this.loading = false;
         this.clearSearchLoading = false;
         this.searchLoading = false;

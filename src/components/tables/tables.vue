@@ -150,11 +150,11 @@ export default {
     },
     searchAreaColumn: {
       type: [Number, String],
-      default: 12
+      default: 20
     },
     operateAreaColumn: {
       type: [Number, String],
-      default: 12
+      default: 4
     },
     filename: {
       type: String,

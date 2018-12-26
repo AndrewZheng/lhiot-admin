@@ -7,11 +7,11 @@
               v-model="tableData"
               :columns="columns"
               :loading="loading"
+              :searchAreaColumn="18"
+              :operateAreaColumn="6"
               @on-view="handleView"
               @on-edit="handleEdit"
               @on-delete="handleDelete"
-              :searchAreaColumn="18"
-              :operateAreaColumn="6"
               @on-select-all="onSelectionAll"
               @on-selection-change="onSelectionChange"
               @on-publish="onArticleStatus"
@@ -334,7 +334,7 @@
             title: '文章内容',
             key: 'content',
             sortable: false,
-            width: 180,
+            width: 200,
             tooltip: true
           },
           {
@@ -349,7 +349,7 @@
           },
           {
             title: '创建时间',
-            width: 110,
+            width: 160,
             key: 'createAt'
           },
           {
@@ -369,7 +369,7 @@
           },
           {
             title: '发布时间',
-            width: 110,
+            width: 160,
             key: 'publishAt',
             sortable: true
           },

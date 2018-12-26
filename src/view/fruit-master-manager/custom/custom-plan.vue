@@ -579,7 +579,7 @@
           },
           {
             title: '是否上架',
-            width: 150,
+            width: 120,
             key: 'status',
             render: (h, params, vm) => {
               let {row} = params;
