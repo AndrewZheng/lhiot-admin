@@ -393,6 +393,9 @@
         this.modalEdit = true;
       },
       handleCreateView() {
+        if (this.tempModalType !== this.modalType.create) {
+          this.productStandardDetail = this._.cloneDeep(productStandardDetail)
+        };
         this.tempModalType = this.modalType.create;
         this.modalEdit = true;
       },

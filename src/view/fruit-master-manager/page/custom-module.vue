@@ -417,6 +417,11 @@
           this.$Message.warning('请选择定制计划');
           return;
         };
+        let reg = /^-?\d+$/;
+        if (!reg.test(this.sort)) {
+          this.$Message.error('排序必须是整数');
+          return;
+        }
         if (!this.goodsModuleDetail.customPlanList) {
           this.goodsModuleDetail.customPlanList = [];
         }
