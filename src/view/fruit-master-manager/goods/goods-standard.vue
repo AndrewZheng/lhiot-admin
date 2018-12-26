@@ -51,7 +51,7 @@
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="8">商品名称:</i-col>
-              <i-col span="16">{{productStandardDetail.productName}}</i-col>
+              <i-col span="16" v-if="productStandardDetail.product">{{productStandardDetail.product.name}}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -104,8 +104,8 @@
         <Form ref="modalEdit" :model="productStandardDetail" :rules="ruleInline" :label-width="100">
           <Row>
             <Col span="12">
-            <FormItem label="商品名称:">
-              {{productStandardDetail.productName}}
+            <FormItem label="商品名称:"  v-if="productStandardDetail.product">
+              {{productStandardDetail.product.name}}
             </FormItem>
             </Col>
             <Col span="12">
@@ -117,7 +117,7 @@
           <Row>
             <Col span="12">
             <FormItem label="规格单位:" prop="packagingUnit" :label-width="80">
-              <Select :value="productStandardDetail.packagingUnit" @on-change="uniteChange">
+              <Select v-model="productStandardDetail.packagingUnit" @on-change="uniteChange">
                 <Option class="ptb2-5" style="padding-left: 5px" v-for="(item,index) in unitsList" :value="item.value"
                         :key="index">{{ item.label
                   }}
@@ -167,9 +167,11 @@
     createProductSpecification,
     deleteProductSpecification,
     getProductSpecificationsPages,
-    editProductSpecification
+    editProductSpecification,
+    productSpecificationsUnits
   } from '@/api/fruitermaster';
   import deleteMixin from '@/mixins/deleteMixin.js';
+  import {getGoodsStandard} from '../../../libs/util';
 
   const productStandardDetail = {
     id: 0,
@@ -196,8 +198,17 @@
       Tables
     },
     created() {
-      this.unitsList = this.$route.params.unitsList;
-      this.getTableData();
+      // this.unitsList = this.$route.params.unitsList;
+      productSpecificationsUnits().then(res => {
+        res.forEach(value => {
+          const map = {label: 'label', value: 'value'};
+          map.value = value;
+          map.label = value;
+          this.unitsList.push(map);
+          this.createLoading = false;
+        });
+        this.getTableData();
+      })
     },
     data() {
       return {
@@ -279,7 +290,7 @@
           {
             title: '规格条码',
             key: 'barcode',
-            width: 150
+            minWidth: 100
           },
           {
             title: '规格单位',
@@ -293,20 +304,18 @@
           },
           {
             title: '规格',
-            minWidth: 100,
+            minWidth: 130,
             key: 'specificationInfo'
           },
           {
             title: '重量(kg)',
             width: 120,
             key: 'weight',
-            sortable: true
           },
           {
             title: '安全库存',
             width: 120,
             key: 'limitInventory',
-            sortable: true
           },
           {
             title: '操作',
@@ -454,10 +463,10 @@
         this.getTableData();
       },
       getTableData() {
-        console.log(this.$route.params.id);
-        this.searchRowData.productId = this.$route.params.id;
-        this.productStandardDetail.productId = this.$route.params.id;
-        this.productStandardDetail.productName = this.$route.params.productName;
+        const goodsStandard = getGoodsStandard();
+        this.searchRowData.productId = goodsStandard.id;
+        this.productStandardDetail.productId = goodsStandard.id;
+        this.productStandardDetail.productName = goodsStandard.name;
         getProductSpecificationsPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;

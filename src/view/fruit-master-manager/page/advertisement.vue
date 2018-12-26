@@ -67,7 +67,7 @@
         <Row>
           <i-col span="3">广告内容:</i-col>
           <i-col v-if="advertisementDetail.advertiseType === 'IMAGE'" span="21" class-name="mb10">
-            <img :src="advertisementDetail.content" style="width: 150px;height: auto"/></i-col>
+            <img :src="advertisementDetail.content" style="width: 100px;height: auto"/></i-col>
           <i-col span="21" v-else class-name="mb10">{{advertisementDetail.content}}</i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
@@ -192,7 +192,7 @@
                 </IViewUpload>
               </div>
               <div v-else>
-                <Input v-model="advertisementDetail.content" placeholder="广告文字内容"/>
+                <Input v-model="tempContent" placeholder="广告文字内容"  @on-change="advertiseNameChange"/>
               </div>
             </FormItem>
           </Row>
@@ -365,15 +365,6 @@
           {value: 'IMAGE', label: '图片广告'},
           {value: 'TEXT', label: '文字广告'}
         ],
-        // 广告关联类别
-        // （PRODUCT_DETAILS- 商品详情
-        // PRODUCT_SECTION-商品版块
-        // CUSTOM_PLAN-定制计划
-        // CUSTOM_PLAN_SECTION-定制版块
-        // ARTICLE_DETAILS-文章详情
-        // STORE_LIVE_TELECAST- 门店直播
-        //  MORE_AMUSEMENT- 多娱
-        // EXTERNAL_LINKS- 外部链接）
         relationType: [
           {value: relationType.PRODUCT_DETAILS, label: '商品详情', api: getProductShelvesPages, columns: goodsOnSalesColumns},
           {value: relationType.PRODUCT_SECTION, label: '商品版块', api: getProductSectionsPages, columns: goodsModulsColumns},
@@ -505,7 +496,9 @@
         defaultListMain: [],
         uploadListMain: [],
         searchRowData: _.cloneDeep(roleRowData),
-        advertisementDetail: _.cloneDeep(advertisementDetail)
+        advertisementDetail: _.cloneDeep(advertisementDetail),
+        tempContent: null,
+        tempImage: null,
       };
     },
     computed: {
@@ -540,6 +533,41 @@
       }
     },
     methods: {
+      advertiseNameChange(){
+        this.advertisementDetail.content = this.tempContent
+        console.log(this.advertisementDetail.content);
+      },
+      advertiseTypeChange(value) {
+        console.log(value);
+        if (value==='TEXT'){
+          if (this.$refs.uploadMain) {
+            this.$refs.uploadMain.clearFileList();
+          }
+          this.uploadListMain = [];
+          this.advertisementDetail.content = this.tempContent;
+        }else if (value === 'IMAGE'){
+          if (this.tempImage!= null) {
+            const map = {status: 'finished', url: 'url'};
+            let mainImgArr = [];
+            map.url = this.tempImage;
+            mainImgArr.push(map);
+            if (this.$refs.uploadMain){
+              this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+            };
+            this.uploadListMain = mainImgArr;
+          } else {
+            if (this.$refs.uploadMain) {
+              this.$refs.uploadMain.clearFileList();
+            }
+            this.uploadListMain = [];
+          }
+          this.advertisementDetail.content = this.tempImage;
+        };
+        //切换成图片
+
+        //切换成文字
+        // if (value) ;
+      },
       deleteTable(ids) {
         this.loading = true;
         deleteAdvertisement({
@@ -658,6 +686,8 @@
         this.advertisementDetail.content = null;
       },
       resetFields() {
+        this.tempImage = null;
+        this.tempContent = null;
         this.$refs.modalEdit.resetFields();
         if (this.$refs.uploadMain) {
           this.$refs.uploadMain.clearFileList();
@@ -669,6 +699,7 @@
         this.uploadListMain = fileList;
         this.advertisementDetail.content = null;
         this.advertisementDetail.content = fileList[0].url;
+        this.tempImage = fileList[0].url;
       },
       addChildren() {
         if (this.tempModalType !== this.modalType.create) {
@@ -687,13 +718,18 @@
         this.modalView = true;
       },
       handleEdit(params) {
+        this.tempImage = null;
+        this.tempContent = null;
         this.tempModalType = this.modalType.edit;
 
         this.loading = true;
         getAdvertisement({id: params.row.id}).then(res => {
           this.advertisementDetail = res;
           if (this.advertisementDetail.advertiseType === 'IMAGE') {
+            this.tempImage = this.advertisementDetail.content;
             this.setDefaultUploadList(params.row);
+          }else {
+            this.tempContent = this.advertisementDetail.content;
           };
           if (!this.advertisementDetail.endAt && !this.advertisementDetail.beginAt) {
             this.advertisementDetail.isPermanent = 'ON';
@@ -702,6 +738,8 @@
           }
           this.loading = false;
           this.modalEdit = true;
+        }).catch( error => {
+          this.loading = false;
         });
       },
       setDefaultUploadList(res) {
@@ -716,9 +754,6 @@
       },
       advertisementChange(value) {
         this.advertisementDetail.positionId = value;
-      },
-      advertiseTypeChange(value) {
-
       },
       advertiseRelationTypeChange(value) {
         this.advertisementDetail.relationType = value;

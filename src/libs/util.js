@@ -6,6 +6,19 @@ import _ from 'lodash';
 
 export const TOKEN_KEY = 'token';
 
+export const GOODS_STANDARD = 'goodsStandard';
+
+export const setGoodsStandard = (goodsStandard) => {
+  let string = JSON.stringify(goodsStandard)
+  Cookies.set(GOODS_STANDARD, string, {
+    expires: config.cookieExpires || 1
+  });
+}
+
+export const getGoodsStandard = () => {
+  return JSON.parse(Cookies.get(GOODS_STANDARD));
+}
+
 export const setToken = (token) => {
   Cookies.set(TOKEN_KEY, token, {
     expires: config.cookieExpires || 1

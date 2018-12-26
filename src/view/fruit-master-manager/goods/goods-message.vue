@@ -398,6 +398,7 @@
   import deleteMixin from '@/mixins/deleteMixin.js';
   import tableMixin from '@/mixins/tableMixin.js';
   import searchMixin from '@/mixins/searchMixin.js';
+  import {setGoodsStandard} from '../../../libs/util';
 
   const productDetail = {
     id: 0,
@@ -796,6 +797,8 @@
         }
       },
       handlePush(params) {
+        console.log('setGoodsStandard:'+params.row);
+        setGoodsStandard(params.row);
         this.turnToPage({
           name: 'goods-standard',
           params: {id: params.row.id, unitsList: this.unitsList, productName: params.row.name}
