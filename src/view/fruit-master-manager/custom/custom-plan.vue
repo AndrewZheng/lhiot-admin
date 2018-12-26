@@ -403,6 +403,7 @@
             title: '定制计划主图',
             width: 120,
             align: 'center',
+            key: 'image',
             render: (h, params, vm) => {
               let {row} = params;
               const str = <img src={row.image} style="margin-top:5px" height="60" width="60" margin-top="10px"/>;
@@ -693,10 +694,10 @@
         });
       },
       handleAdd() {
-        if (this.tempModalType != this.modalType.create){
-          this.resetFields()
+        if (this.tempModalType != this.modalType.create) {
+          this.resetFields();
         };
-          this.tempModalType = this.modalType.create
+          this.tempModalType = this.modalType.create;
         // 对象初始化
         this.rowData = {};
         this.rowData = {'id': 0, 'customPlanSectionIds': [], 'description': '', 'image': '', 'name': '', 'overRule': '', 'periodList': [], 'price': 0, 'status': null};
@@ -746,7 +747,7 @@
         });
       },
       handleEdit(params) {
-        this.tempModalType = this.modalType.edit
+        this.tempModalType = this.modalType.edit;
         this.loading = true;
         this.showHeader = true;
         getCustomPlan({id: params.row.id}).then(res => {
@@ -764,7 +765,7 @@
           let mainImgArr = [];
           map.url = res.image;
           mainImgArr.push(map);
-          if (this.$refs.uploadMain){
+          if (this.$refs.uploadMain) {
             this.$refs.uploadMain.setDefaultFileList(mainImgArr);
           };
           this.uploadListMain = mainImgArr;
@@ -808,18 +809,44 @@
           let tableData = res.array;
           // 表格数据导出字段翻译
           tableData.forEach(item => {
-            item['weekPrice1'] = 1;
-            // item['planPeriod'][1]['specificationList'].find(item => {
-            //     if(item.quantity === 1){
-            //       return item['weekPrice1'] = item.price;
-            //     }
-            // });
-            // item['price1'] = (item['7-1-price'] /100.00).toFixed(2);
-            // item['7-2-price'] = (item['7-2-price'] /100.00).toFixed(2);
-            // item['7-3-price'] = (item['7-3-price'] /100.00).toFixed(2);
-            // item['30-1-price'] = (item['30-1-price'] /100.00).toFixed(2);
-            // item['30-2-price'] = (item['30-2-price'] /100.00).toFixed(2);
-            // item['30-3-price'] = (item['30-3-price'] /100.00).toFixed(2);
+            if (item['periodList'] !== null) {
+              item['periodList'].forEach(element => {
+                if (element.planPeriod === 7 && element['specificationList'] !== null) {
+                  element['specificationList'].find(specification => {
+                    switch (specification.quantity) {
+                      case 1:
+                        item['weekPrice1'] = (specification['price'] /100.00).toFixed(2);
+                        break;
+                      case 2:
+                        item['weekPrice2'] = (specification['price'] /100.00).toFixed(2);
+                        break;
+                      case 3:
+                        item['weekPrice3'] = (specification['price'] /100.00).toFixed(2);
+                        break;
+                      default:
+                        break;
+                    }
+                  });
+                }
+                if (element.planPeriod === 30 && element['specificationList'] !== null) {
+                  element['specificationList'].find(specification => {
+                    switch (specification.quantity) {
+                      case 1:
+                        item['monthPrice1'] = (specification['price'] /100.00).toFixed(2);
+                        break;
+                      case 2:
+                        item['monthPrice2'] = (specification['price'] /100.00).toFixed(2);
+                        break;
+                      case 3:
+                        item['monthPrice3'] = (specification['price'] /100.00).toFixed(2);
+                        break;
+                      default:
+                        break;
+                    }
+                  });
+                }
+            });
+            }
             item['status'] = onSaleStatusConvert(item['status']).label;
           });
           this.$refs.tables.handleDownload({

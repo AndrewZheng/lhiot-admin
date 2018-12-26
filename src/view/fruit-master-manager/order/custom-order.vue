@@ -330,7 +330,10 @@ export default {
         {
           title: '配送时间',
           minWidth: 100,
-          key: 'dayOfPeriod'
+          key: 'dayOfPeriod',
+          render(h, params, vm) {
+            return <div>{'第'+ params.row.dayOfPeriod + '天'}</div>;
+          }
         },
         {
           title: '配送套餐',
@@ -346,7 +349,7 @@ export default {
               return <div>{customDeliverStatusConvert(params.row.deliveryStatus).label}</div>;
             } else {
               return <div>{'未配送'}</div>;
-            };
+            }
           }
         },
         {
@@ -444,16 +447,16 @@ export default {
     getcustomPlanSpecificationStandardsPages({}).then(res => {
       this.customCopiesList = res.array;
       this.getTableData();
-    }).catch( error => {
+    }).catch(error => {
       this.searchLoading = true;
       this.clearSearchLoading = true;
     });
   },
   methods: {
-    orderStatusesOnChange(value){
+    orderStatusesOnChange(value) {
       console.log(value);
-      if(value.length === 0){
-        this.searchRowData.statusIn = null
+      if (value.length === 0) {
+        this.searchRowData.statusIn = null;
       }
     },
     startTimeChange(value, date) {
@@ -484,11 +487,11 @@ export default {
         this.loading = false;
         this.clearSearchLoading = false;
         this.searchLoading = false;
-      }).catch( error => {
+      }).catch(error => {
         this.loading = false;
         this.clearSearchLoading = false;
         this.searchLoading = false;
-      });;
+      }); ;
     },
     // exportExcel() {
     //   this.$refs.tables.exportCsv({
