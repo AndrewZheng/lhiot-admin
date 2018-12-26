@@ -170,6 +170,7 @@
     editProductSpecification
   } from '@/api/fruitermaster';
   import deleteMixin from '@/mixins/deleteMixin.js';
+  import {getGoodsStandard} from '../../../libs/util';
 
   const productStandardDetail = {
     id: 0,
@@ -454,8 +455,9 @@
         this.getTableData();
       },
       getTableData() {
-        console.log(this.$route.params.id);
-        this.searchRowData.productId = this.$route.params.id;
+        let goodsStandardId = getGoodsStandard();
+        console.log("goodsStandardId:"+goodsStandardId);
+        this.searchRowData.productId = goodsStandardId;
         this.productStandardDetail.productId = this.$route.params.id;
         this.productStandardDetail.productName = this.$route.params.productName;
         getProductSpecificationsPages(this.searchRowData).then(res => {
