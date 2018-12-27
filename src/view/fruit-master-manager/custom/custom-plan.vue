@@ -1,4 +1,4 @@
-<template>
+z<template>
   <div class="m-role">
     <Card>
       <tables ref="tables" editable searchable
@@ -94,34 +94,41 @@
               <i-col span="14">{{rowData.status|onSaleStatusFilters}}</i-col>
             </Row>
           </i-col>
+        </Row>
+        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
            <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="10">上架板块:</i-col>
-              <i-col span="14">{{rowData.customPlanSectionIds}}</i-col>
+              <i-col span="14">
+                <div v-for="item in customPlanSectionData">
+                  <CheckboxGroup v-model="rowData.customPlanSectionIds">
+                    <Checkbox
+                      ref="checkBox"
+                      :label="item.id"
+                      :key="item.sectionName"
+                    >{{item.sectionName}}
+                    </Checkbox>
+                  </CheckboxGroup>
+                </div>
+              </i-col>
             </Row>
           </i-col>
         </Row>
 
         <Tabs value="name1" type="card">
             <TabPane v-for="(period, key) in rowData.periodList" :key="'addOrEdit' + period.index" :label="period.planPeriod == '7' ? '周' : '月'" :name="'name'+(key+1)">
-                <Form>
-                  <Row type="flex" :gutter="24" align="middle" class-name="mb10">
-                    <i-col span="8" v-for="specification in period.specificationList" :key="'addOrEdit' + period.index +  '--' + specification.index">
-                      {{specification.description}}价: {{specification.price}}
-                    </i-col>
-                  </Row>
-                </Form>
-                <!-- FIXME -->
-                <table>
-                    <th>
-                      <td>时间</td>
-                      <td>套餐名</td>
-                    </th>
-                    <tr v-for="product in period.products" :key="'addOrEdit' + period.index +  '-' + product.index">
-                      <td>第{{product.dayOfPeriod}}天</td>
-                      <td>{{product.productName}}</td>
-                    </tr>
-                  </table>
+                <Row type="flex" :gutter="24" align="middle" class-name="mb10">
+                  <i-col span="8" v-for="specification in period.specificationList" :key="'addOrEdit' + period.index +  '--' + specification.index">
+                    {{specification.description}}价: {{(specification.price/100.00).toFixed(2)}}
+                  </i-col>
+                </Row>
+                <Row v-if="period.products" class-name="mb10">
+                  <tables
+                    border
+                    :columns="tempColumnsView"
+                    v-model="period.products"
+                  ></tables>
+                </Row>
             </TabPane>
         </Tabs>
 
@@ -133,7 +140,7 @@
 
     <!-- 定制计划新增和修改 -->
     <Modal
-      v-model="modalEdit"
+     v-model="modalEdit"
       :width="600"
     >
       <p slot="header">
@@ -148,6 +155,7 @@
             <Input placeholder="定制计划描述" class="search-input mr5" v-model="rowData.description" style="width: auto"/>
           </FormItem>
           <FormItem label="定制计划主图:" prop="image">
+            <Input v-model="rowData.image" style="width: auto" v-show="false"/>
             <div class="demo-upload-list" v-for="item in uploadListMain">
               <template v-if="item.status === 'finished'">
                 <div>
@@ -184,56 +192,55 @@
             </Select>
           </FormItem>
           <FormItem label="上架板块:" prop="customPlanSectionIds" v-if="tempModalType === modalType.create">
-            <div v-for="item in uiPositionData">
-              <div>
-                {{item.description}}:
-              </div>
+            <div v-for="item in customPlanSectionData">
               <CheckboxGroup v-model="rowData.customPlanSectionIds">
                 <Checkbox
                   ref="checkBox"
-                  :label="innerItem.id"
-                  v-for="innerItem in item.productSections"
-                  :key="innerItem.sectionName"
-                >{{innerItem.sectionName}}
+                  :label="item.id"
+                  :key="item.sectionName"
+                >{{item.sectionName}}
                 </Checkbox>
               </CheckboxGroup>
             </div>
           </FormItem>
-        </Form>
-
-        <Tabs value="name1" type="card" v-if="showTab">
+          <Tabs value="name1" type="card" v-if="showTab">
             <TabPane v-for="(period, key) in rowData.periodList" :key="'addOrEdit' + period.index" :label="period.planPeriod == '7' ? '周' : '月'" :name="'name'+(key+1)">
-                <Form>
-                  <Col span="8" v-for="specification in period.specificationList" :key="'addOrEdit' + period.index +  '--' + specification.index">
-                    <FormItem :label="specification.description + '价:'">
-                      <Input type="text" class="search-input mr5" v-model="specification.price" style="width: 100px" required="required"/>
+                  <Col span="8" v-for="(specification, index) in period.specificationList" :key="'addOrEdit' + period.index +  '--' + specification.index">
+                    <FormItem :label="specification.description + '价:'"
+                      :prop="'periodList.' + period.index + '.specificationList.' + specification.index + '.price'"
+                      :rules="{required: true, message: '套餐价格不能为空', trigger: 'blur'}">
+                      <Input type="number" min="1" class="search-input mr5" :value="priceComputed(specification.price)"
+                       @on-change="priceOnChange($event, period.index, specification.index)"
+                        style="width: 80px"/>
                     </FormItem>
                   </Col>
-                  <Col span="12" v-for="product in period.products" :key="'addOrEdit' + period.index +  '-' + product.index">
-                    <FormItem :label="'第'+ product.dayOfPeriod +'天:'" :prop="product.productName">
+                  <Col span="11" v-for="product in period.products" :key="'addOrEdit' + period.index +  '-' + product.index">
+                    <FormItem :label="'第'+ product.dayOfPeriod +'天:'">
                       <Select
                       :filterable="true"
-                      style="width: 200px"
+                      style="width: 150px"
                       v-model="product.productName"
                       :remote="true"
                       :remote-method ="remoteMethod"
-                      :loading="shelfSpecificationLoading">
+                      :loading="shelfSpecificationLoading"
+                      placeholder="输入上架商品名称"
+                      :prop="'periodList.' + period.index + '.products.' + products.index + '.shelfId'"
+                      :rules="{required: true, message: '套餐名称不能为空', trigger: 'blur'}">
                           <Option
                             v-for="(option, index) in optionsShelfSpecification"
                             :value="option.name" :key="'addOrEdit' + period.index +  '-' + product.index + '-' + index" class="pb5 pt5 pl15"
-                             @click.native="addProduct(period.index, product.index, option.id)"
+                             @click.native="editProduct(period.index, product.index, option.id)"
                           >
                           {{option.name}}</Option>
                       </Select>
                     </FormItem>
                   </Col>
-                </Form>
             </TabPane>
         </Tabs>
-
+        </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
+        <Button @click="handleEditClose('modalEdit')">关闭</Button>
         <Button type="primary" :loading="modalViewLoading" @click="handleSubmit('modalEdit')">确定
         </Button>
       </div>
@@ -248,42 +255,49 @@
         <span>定制计划周期管理</span>
       </p>
       <div class="modal-content">
-        <template v-for="(customPlan, index) in rowData" v-if="index == 'periodList'" >
-            <Tabs value="productUpdate1" type="card" :key="'productUpdate' + customPlan.id">
-                <TabPane v-for="(period, key) in customPlan" :key="'update' + period.index" :label="period.planPeriod == '7' ? '周' : '月'" :name="'productUpdate'+(key+1)">
-                   <Form>
-                      <Col span="8" v-for="specification in period.specificationList" :key="'update' + period.index +  '--' + specification.index">
-                        <FormItem :label="specification.description + '价:'">
-                          <Input type="text" class="search-input mr5" v-model="specification.price" style="width: 100px" required="required"/>
-                        </FormItem>
-                      </Col>
-                      <Col span="12" v-for="product in period.products" :key="'update' + period.index +  '-' + product.index">
-                        <FormItem :label="'第'+ product.dayOfPeriod +'天:'" :prop="product.productName">
-                          <Select
-                          :filterable="true"
-                          style="width: 200px"
-                          v-model="product.productName"
-                          :remote="true"
-                          :remote-method ="remoteMethod"
-                          :loading="shelfSpecificationLoading">
-                             <Option
-                                v-for="(option, index) in optionsShelfSpecification"
-                                :value="option.name" class="pb5 pt5 pl15"
-                                :key="'update' + period.index +  '-' + product.index + '-' + index"
-                                @click.native="updateProduct(product.id, option.id)"
-                              >
-                              {{option.name}}</Option>
-                          </Select>
-                        </FormItem>
-                      </Col>
-                    </Form>
-                </TabPane>
-            </Tabs>
-        </template>
+         <Form ref="modalSetting" :model="rowData">
+          <template v-for="(customPlan, index) in rowData" v-if="index == 'periodList'" >
+              <Tabs value="productUpdate1" type="card" :key="'productUpdate' + customPlan.id">
+                  <TabPane v-for="(period, key) in customPlan" :key="'update' + period.index" :label="period.planPeriod == '7' ? '周' : '月'" :name="'productUpdate'+(key+1)">
+                        <Col span="8" v-for="specification in period.specificationList" :key="'update' + period.index +  '--' + specification.index">
+                          <FormItem :label="specification.description + '价:'"
+                          :prop="'periodList.' + period.index + '.specificationList.' + specification.index + '.price'"
+                          :rules="{required: true, message: '套餐价格不能为空', trigger: 'blur'}">
+                          <Input type="text" class="search-input mr5" :value="priceComputed(specification.price)"
+                        @on-change="priceOnChange($event, period.index, specification.index)"
+                          style="width: 80px"/>
+                          </FormItem>
+                        </Col>
+                        <Col span="12" v-for="product in period.products" :key="'update' + period.index +  '-' + product.index">
+                          <FormItem :label="'第'+ product.dayOfPeriod +'天:'" :prop="product.productName">
+                            <Select
+                            :filterable="true"
+                            style="width: 200px"
+                            v-model="product.productName"
+                            :remote="true"
+                            :remote-method ="remoteMethod"
+                            :loading="shelfSpecificationLoading"
+                            placeholder="输入上架商品名称"
+                            :prop="'periodList.' + period.index + '.products.' + products.index + '.productName'"
+                            :rules="{required: true, message: '套餐名称不能为空', trigger: 'blur'}">
+                              <Option
+                                  v-for="(option, index) in optionsShelfSpecification"
+                                  :value="option.name" class="pb5 pt5 pl15"
+                                  :key="'update' + period.index +  '-' + product.index + '-' + index"
+                                  @click.native="updateProduct(product.id, option.id)"
+                                >
+                                {{option.name}}</Option>
+                            </Select>
+                          </FormItem>
+                        </Col>
+                  </TabPane>
+              </Tabs>
+          </template>
+        </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button type="primary" :loading="modalViewLoading" @click="updateSpecification">确定
+        <Button @click="handleSettingClose('modalSetting')">关闭</Button>
+        <Button type="primary" :loading="modalViewLoading" @click="updateSpecification('modalSetting')">确定
         </Button>
       </div>
     </Modal>
@@ -297,7 +311,7 @@
   import Tables from '_c/tables';
   import {getCustomPlansPages,
     deleteCustomPlan,
-    getuiPositionsPages,
+    getCustomPlanSectionsPages,
     createCustomPlan,
     getProductShelvesPages, getCustomPlan, editCustomPlan, editCustomPlanProducts, editCustomPlanSpecifications} from '@/api/fruitermaster';
   import IViewUpload from '_c/iview-upload';
@@ -305,7 +319,7 @@
   import tableMixin from '@/mixins/tableMixin.js';
   import searchMixin from '@/mixins/searchMixin.js';
   import uploadMixin from '@/mixins/uploadMixin';
-  import {fenToYuanDot2} from '@/libs/util';
+  import {fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber} from '@/libs/util';
   import {onSaleStatusConvert} from '@/libs/converStatus';
   import {onSaleStatusEnum, YNEnum, positionType} from '@/libs/enumerate';
   import BookTypeOption from '_c/book-type-option';
@@ -356,6 +370,24 @@
     rows: 10
   };
 
+  const commonTempColumns =[
+    {
+      title: '时间',
+      key: 'dayOfPeriod',
+      minWidth: 150,
+      align: 'center',
+      render: (h, params, vm) => {
+        return <div>{'第' + params.row.dayOfPeriod + '天'}</div>;
+      }
+    },
+    {
+      title: '套餐名称',
+      key: 'productName',
+      minWidth: 150,
+      align: 'center'
+    }
+  ];
+
   export default {
     components: {
       Tables,
@@ -363,14 +395,11 @@
       BookTypeOption
     },
     created() {
-      getuiPositionsPages({
-        applicationType: 'HEALTH_GOOD',
-        includeSection: YNEnum.YES,
-        positionType: positionType.PRODUCT,
+      getCustomPlanSectionsPages({
         page: 0,
         rows: 0
       }).then(res => {
-        this.uiPositionData = res.array;
+        this.customPlanSectionData = res.array;
         this.createLoading = false;
         this.getTableData();
       });
@@ -382,7 +411,7 @@
         modalViewLoading: false,
         shelfSpecificationLoading: false,
         model: [],
-        uiPositionData: [],
+        customPlanSectionData: [],
         onSaleStatusEnum,
         topRuleInline: false,
         ruleInline: {
@@ -401,12 +430,12 @@
           },
           {
             title: '定制计划主图',
-            width: 120,
+            width: 150,
             align: 'center',
             key: 'image',
             render: (h, params, vm) => {
               let {row} = params;
-              const str = <img src={row.image} style="margin-top:5px" height="60" width="60" margin-top="10px"/>;
+              const str = <img src={row.image} style="margin-top:5px" height="60" width="100" margin-top="10px"/>;
               return <div>{str}</div>;
             }
           },
@@ -579,7 +608,7 @@
           },
           {
             title: '是否上架',
-            width: 120,
+            width: 100,
             key: 'status',
             render: (h, params, vm) => {
               let {row} = params;
@@ -597,7 +626,6 @@
         defaultListMain: [],
         optionsShelfSpecification: [],
         searchRowData: this._.cloneDeep(roleRowData),
-        customPlanDetail: this._.cloneDeep(customPlanDetail),
         periodList: [],
         products: [],
         specificationList: [],
@@ -609,7 +637,10 @@
         showTab: false,
         showHeader: true,
         exportType: 'xlsx',
-        downloadLoading: false
+        downloadLoading: false,
+        tempColumnsView: [
+          ...commonTempColumns
+        ]
       };
     },
     methods: {
@@ -637,30 +668,11 @@
       },
       handleSubmit(name) {
         this.$refs[name].validate((valid) => {
-          // FIXME 验证
           if (valid) {
-                if (this.rowData.id == 0) {
-                  this.modalViewLoading = true;
-                  this.loading=true;
-                  createCustomPlan(this.rowData).then(res => {
-                    this.$Message.success('创建成功!');
-                  }).finally(res => {
-                    this.getTableData();
-                    this.modalViewLoading = false;
-                    this.modalEdit = false;
-                  });
-              } else {
-                  this.modalViewLoading = true;
-                  this.loading=true;
-                  editCustomPlan(this.rowData).then(res => {
-                    this.$Message.success('修改成功!');
-                  }).finally(res => {
-                    this.getTableData();
-                    this.modalViewLoading = false;
-                    this.modalEdit = false;
-                  });
-              }
-            }
+              console.log('添加/修改');
+          } else {
+             this.$Message.warn('请完善周套餐/月套餐信息');
+          }
         });
       },
       handleSuccessMain(response, file, fileList) {
@@ -697,7 +709,7 @@
         if (this.tempModalType != this.modalType.create) {
           this.resetFields();
         };
-          this.tempModalType = this.modalType.create;
+        this.tempModalType = this.modalType.create;
         // 对象初始化
         this.rowData = {};
         this.rowData = {'id': 0, 'customPlanSectionIds': [], 'description': '', 'image': '', 'name': '', 'overRule': '', 'periodList': [], 'price': 0, 'status': null};
@@ -730,7 +742,6 @@
         this.getTableData();
       },
       customOnSale(params) {
-        // FIXME 代码被删除
         const rowData = this._.cloneDeep(params.row);
         if (params.row.status === 'VALID') {
           rowData.status = 'INVALID';
@@ -764,7 +775,6 @@
           const map = {status: 'finished', url: 'url'};
           let mainImgArr = [];
           map.url = res.image;
-          mainImgArr.push(map);
           if (this.$refs.uploadMain) {
             this.$refs.uploadMain.setDefaultFileList(mainImgArr);
           };
@@ -865,12 +875,17 @@
               this.$Message.info('修改成功');
         });
       },
-      updateSpecification() {
-        console.log(JSON.stringify(this.rowData.periodList));
-        editCustomPlanSpecifications(this.rowData).then(res => {
-             this.$Message.info('修改成功');
-             this.modalSetting = false;
+      updateSpecification(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            console.log(JSON.stringify(this.rowData.periodList));
+            editCustomPlanSpecifications(this.rowData).then(res => {
+                this.$Message.info('修改成功');
+                this.modalSetting = false;
+            });
+          }
         });
+        this.$refs[name].resetFields();
       },
       addProduct(periodIndex, productIndex, shelfId) {
         console.log('addProduct:' + periodIndex + ',' + productIndex + ',' + shelfId);
@@ -880,18 +895,36 @@
              this.$Message.info('修改成功');
         });
       },
-      handleEditClose() {
+      editProduct(periodIndex, productIndex, shelfId) {
+        this.rowData.periodList[periodIndex].products[productIndex].shelfId = shelfId;
+      },
+      handleEditClose(name) {
         this.modalEdit = false;
         this.isCreated = false;
         this.isDisable = true;
+        this.rowData = {};
+        this.$refs[name].resetFields();
         this.step = 'name1';
       },
-      handleSettingClose() {
+      handleSettingClose(name) {
         this.modalSetting = false;
+        this.rowData = {};
+        this.$refs[name].resetFields();
         this.step = 'name1';
       },
       handleClose() {
+        this.rowData = {};
         this.modalView = false;
+      },
+      priceComputed(price) {
+        return fenToYuanDot2Number(price);
+      },
+      priceOnChange(value, periodIndex, specificationIndex) {
+        console.log(value);
+        if (value !== null) {
+          this.rowData.periodList[periodIndex].specificationList[specificationIndex].price = fenToYuanDot2(value.data);
+        }
+        console.log(this.rowData.periodList[periodIndex].specificationList[specificationIndex].price);
       }
     }
   };

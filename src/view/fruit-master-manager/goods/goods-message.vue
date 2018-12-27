@@ -170,14 +170,6 @@
             </Row>
           </i-col>
         </Row>
-         <Row class-name="mb20">
-          <i-col span="12">
-            <Row>
-              <i-col span="7">海鼎规格数量:</i-col>
-              <i-col span="17">{{productDetail.productSpecification.specificationQty}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
       </div>
       <div slot="footer">
         <Button type="primary" @click="handleClose">关闭</Button>
@@ -235,6 +227,7 @@
               <div class="demo-upload-list" v-for="item in uploadListMain">
                 <template v-if="item.status === 'finished'">
                   <div>
+                    <Input v-model="productDetail.mainImg" style="width: auto" v-show="false"/>
                     <img :src="item.url">
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
@@ -265,6 +258,7 @@
               <div class="demo-upload-list" v-for="item in uploadListSecond">
                 <template v-if="item.status === 'finished'">
                   <div>
+                    <Input v-model="productDetail.subImg" style="width: auto" v-show="false"/>
                     <img :src="item.url">
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
@@ -297,6 +291,7 @@
               <div class="demo-upload-list" v-for="item in uploadListMultiple">
                 <template v-if="item.status === 'finished'">
                   <div>
+                    <Input v-model="productDetail.detailImg" style="width: auto" v-show="false"/>
                     <img :src="item.url">
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
@@ -355,14 +350,6 @@
               <FormItem label="重量(kg):" prop="weight" :label-width="80">
                 <Input v-if="productDetail.productSpecification"
                        v-model="productDetail.productSpecification.weight"/>
-              </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span="12">
-              <FormItem label="海鼎规格数量:" prop="specificationQty" :label-width="80">
-                <Input v-if="productDetail.productSpecification"
-                       v-model="productDetail.productSpecification.specificationQty"/>
               </FormItem>
               </Col>
             </Row>
@@ -533,18 +520,6 @@
                 callback(errors);
               }
             }
-          ],
-          specificationQty: [
-            {required: true, message: '请输入海鼎规格数量'},
-            {
-              validator(rule, value, callback, source, options) {
-                let errors = [];
-                if (!/^[1-9]\d*$/.test(value)) {
-                  callback('必须为非零整数');
-                }
-                callback(errors);
-              }
-            }
           ]
         },
         defaultListMultiple: [],
@@ -642,7 +617,7 @@
           this.$refs[name1].validate((valid) => {
             if (valid && innerValid) {
               if (this.tempModalType === this.modalType.create) {
-                // 添加状态
+                // 添加状态                
                 this.createProduct();
               } else if (this.tempModalType === this.modalType.edit) {
                 // 编辑状态
@@ -656,6 +631,7 @@
       },
       createProduct() {
         this.modalViewLoading = true;
+        this.productDetail.productSpecification.specificationQty = 1;
         createProduct({
           ...this.productDetail
         }).then(res => {

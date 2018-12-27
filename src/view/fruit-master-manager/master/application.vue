@@ -389,7 +389,9 @@ export default {
         userId: this.masterDetail.userId,
         id: this.masterDetail.id,
         auditStatus: this.masterDetail.auditStatus,
-        failureReason: this.masterDetail.failureReason
+        failureReason: this.masterDetail.failureReason,
+        realName: this.masterDetail.realName,
+        phone: this.masterDetail.phone
       }).then(res => {
         this.getTableData();
       }).finally(res => {
