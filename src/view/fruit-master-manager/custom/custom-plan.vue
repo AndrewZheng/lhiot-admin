@@ -206,16 +206,19 @@ z<template>
           <Tabs value="name1" type="card" v-if="showTab">
             <TabPane v-for="(period, key) in rowData.periodList" :key="'addOrEdit' + period.index" :label="period.planPeriod == '7' ? '周' : '月'" :name="'name'+(key+1)">
                   <Col span="8" v-for="specification in period.specificationList" :key="'addOrEdit' + period.index +  '--' + specification.index">
-                    <FormItem :label="specification.description + '价:'"
+                    <FormItem :label="specification.description + '价(分):'"
                       :prop="'periodList.' + period.index + '.specificationList.' + specification.index + '.price'"
                       :rules="{required: true, message: '套餐价格不能为空', trigger: 'blur'}">
-                      <Input type="number" min="1" class="search-input mr5" :value="priceComputed(specification.price)"
+                       <Input type="number" min="1" class="search-input mr5" v-model="specification.price" style="width: 80px"/>
+                      <!-- <Input type="number" min="1" class="search-input mr5" :value="priceComputed(specification.price)"
                        @on-change="priceOnChange($event, period.index, specification.index)"
-                        style="width: 80px"/>
+                        style="width: 80px"/> -->
                     </FormItem>
                   </Col>
                   <Col span="11" v-for="product in period.products" :key="'addOrEdit' + period.index +  '-' + product.index">
-                    <FormItem :label="'第'+ product.dayOfPeriod +'天:'">
+                    <FormItem :label="'第'+ product.dayOfPeriod +'天:'"
+                    :prop="'periodList.' + period.index + '.products.' + product.index + '.productName'"
+                    :rules="{required: true, message: '套餐名称不能为空', trigger: 'blur'}">
                       <Select
                       :filterable="true"
                       style="width: 150px"
@@ -223,9 +226,7 @@ z<template>
                       placeholder="输入上架商品名称"
                       :remote="true"
                       :remote-method ="remoteMethod"
-                      :loading="shelfSpecificationLoading"
-                      :prop="'periodList.' + period.index + '.products.' + products.index + '.shelfId'"
-                      :rules="{required: true, message: '套餐名称不能为空', trigger: 'blur'}">
+                      :loading="shelfSpecificationLoading">
                           <Option
                             v-for="(option, index) in optionsShelfSpecification"
                             :value="option.name" :key="'addOrEdit' + period.index +  '-' + product.index + '-' + index" class="pb5 pt5 pl15"
@@ -259,17 +260,20 @@ z<template>
           <template v-for="(customPlan, index) in rowData" v-if="index == 'periodList'" >
               <Tabs value="productUpdate1" type="card" :key="'productUpdate' + customPlan.id">
                   <TabPane v-for="(period, key) in customPlan" :key="'update' + period.index" :label="period.planPeriod == '7' ? '周' : '月'" :name="'productUpdate'+(key+1)">
-                        <Col span="8" v-for="specification in period.specificationList" :key="'update' + period.index +  '--' + specification.index">
-                          <FormItem :label="specification.description + '价:'"
+                        <Col span="7" v-for="specification in period.specificationList" :key="'update' + period.index +  '--' + specification.index">
+                          <FormItem :label="specification.description + '价(分):'"
                           :prop="'periodList.' + period.index + '.specificationList.' + specification.index + '.price'"
                           :rules="{required: true, message: '套餐价格不能为空', trigger: 'blur'}">
-                          <Input type="text" class="search-input mr5" :value="priceComputed(specification.price)"
+                          <Input type="number" min="1" class="search-input mr5" v-model="specification.price" style="width: 80px"/>
+                          <!-- <Input type="text" class="search-input mr5" :value="priceComputed(specification.price)"
                         @on-change="priceOnChange($event, period.index, specification.index)"
-                          style="width: 80px"/>
+                          style="width: 80px"/> -->
                           </FormItem>
                         </Col>
-                        <Col span="12" v-for="product in period.products" :key="'update' + period.index +  '-' + product.index">
-                          <FormItem :label="'第'+ product.dayOfPeriod +'天:'" :prop="product.productName">
+                        <Col span="11" v-for="product in period.products" :key="'update' + period.index +  '-' + product.index">
+                          <FormItem :label="'第'+ product.dayOfPeriod +'天:'"
+                            :prop="'periodList.' + period.index + '.products.' + product.index + '.productName'"
+                            :rules="{required: true, message: '套餐名称不能为空', trigger: 'blur'}">
                             <Select
                             :filterable="true"
                             style="width: 200px"
@@ -277,9 +281,7 @@ z<template>
                             :remote="true"
                             :remote-method ="remoteMethod"
                             :loading="shelfSpecificationLoading"
-                            placeholder="输入上架商品名称"
-                            :prop="'periodList.' + period.index + '.products.' + products.index + '.productName'"
-                            :rules="{required: true, message: '套餐名称不能为空', trigger: 'blur'}">
+                            placeholder="输入上架商品名称">
                               <Option
                                   v-for="(option, index) in optionsShelfSpecification"
                                   :value="option.name" class="pb5 pt5 pl15"
@@ -297,7 +299,7 @@ z<template>
       </div>
       <div slot="footer">
         <Button @click="handleSettingClose('modalSetting')">关闭</Button>
-        <Button type="primary" :loading="modalViewLoading" @click="updateSpecification('modalSetting')">确定
+        <Button type="primary" :loading="modalViewLoading" @click="updateSpecification()">确定
         </Button>
       </div>
     </Modal>
@@ -343,7 +345,7 @@ z<template>
             image: '',
             planId: 0,
             productName: '',
-            shelfId: 0
+            shelfId: null
           }
         ],
         specificationList: [
@@ -670,6 +672,27 @@ z<template>
         this.$refs[name].validate((valid) => {
           if (valid) {
               console.log('添加/修改');
+              if (this.rowData.id == 0) {
+                  this.modalViewLoading = true;
+                  this.loading=true;
+                  createCustomPlan(this.rowData).then(res => {
+                    this.$Message.success('创建成功!');
+                  }).finally(res => {
+                    this.getTableData();
+                    this.modalViewLoading = false;
+                    this.modalEdit = false;
+                  });
+              } else {
+                  this.modalViewLoading = true;
+                  this.loading=true;
+                  editCustomPlan(this.rowData).then(res => {
+                    this.$Message.success('修改成功!');
+                  }).finally(res => {
+                    this.getTableData();
+                    this.modalViewLoading = false;
+                    this.modalEdit = false;
+                  });
+              }
           } else {
              this.$Message.warn('请完善周套餐/月套餐信息');
           }
@@ -719,7 +742,7 @@ z<template>
           let planPeriod = period == 0 ? 7 : 30;
           this.rowData.periodList.push({'index': period, 'planPeriod': planPeriod, 'products': [], 'specificationList': []});
           for (var product = 0; product < planPeriod; product++) {
-              this.rowData.periodList[period].products.push({'index': product, 'benefit': '', 'dayOfPeriod': (product+1), 'description': '', 'id': 0, 'image': '', 'planId': 0, 'productName': '', 'shelfId': 0});
+              this.rowData.periodList[period].products.push({'index': product, 'benefit': '', 'dayOfPeriod': (product+1), 'description': '', 'id': 0, 'image': '', 'planId': 0, 'productName': '', 'shelfId': null});
           }
           for (var specification = 0; specification < 3; specification++) {
               let description = specification == 0 ? '单人套餐' : (specification == 1 ? '双人套餐' : '三人套餐');
@@ -875,17 +898,17 @@ z<template>
               this.$Message.info('修改成功');
         });
       },
-      updateSpecification(name) {
-        this.$refs[name].validate((valid) => {
-          if (valid) {
-            console.log(JSON.stringify(this.rowData.periodList));
+      updateSpecification() {
+        // this.$refs[name].validate((valid) => {
+        //   if (valid) {
             editCustomPlanSpecifications(this.rowData).then(res => {
                 this.$Message.info('修改成功');
                 this.modalSetting = false;
+                 this.getTableData();
             });
-          }
-        });
-        this.$refs[name].resetFields();
+        //   }
+        // });
+        // this.$refs[name].resetFields();
       },
       addProduct(periodIndex, productIndex, shelfId) {
         console.log('addProduct:' + periodIndex + ',' + productIndex + ',' + shelfId);
@@ -893,10 +916,13 @@ z<template>
         // console.log('rowData:' + JSON.stringify(this.rowData));
         editCustomPlanSpecifications(this.rowData).then(res => {
              this.$Message.info('修改成功');
+              this.getTableData();
         });
       },
       editProduct(periodIndex, productIndex, shelfId) {
+        console.log('editProduct:' + periodIndex + ',' + productIndex + ',' + shelfId);
         this.rowData.periodList[periodIndex].products[productIndex].shelfId = shelfId;
+        console.log(this.rowData.periodList[periodIndex].products[productIndex].shelfId);
       },
       handleEditClose(name) {
         this.modalEdit = false;
