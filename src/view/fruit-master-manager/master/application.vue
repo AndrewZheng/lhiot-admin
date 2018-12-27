@@ -252,6 +252,7 @@ const masterDetail = {
   auditTime: null,
   auditUser: null,
   userId: null,
+  refereeId: null,
   beginCreateAt: null,
   endCreateAt: null
 };
@@ -391,7 +392,8 @@ export default {
         auditStatus: this.masterDetail.auditStatus,
         failureReason: this.masterDetail.failureReason,
         realName: this.masterDetail.realName,
-        phone: this.masterDetail.phone
+        phone: this.masterDetail.phone,
+        refereeId: this.masterDetail.refereeId
       }).then(res => {
         this.getTableData();
       }).finally(res => {

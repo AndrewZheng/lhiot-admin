@@ -205,7 +205,7 @@ z<template>
           </FormItem>
           <Tabs value="name1" type="card" v-if="showTab">
             <TabPane v-for="(period, key) in rowData.periodList" :key="'addOrEdit' + period.index" :label="period.planPeriod == '7' ? '周' : '月'" :name="'name'+(key+1)">
-                  <Col span="8" v-for="(specification, index) in period.specificationList" :key="'addOrEdit' + period.index +  '--' + specification.index">
+                  <Col span="8" v-for="specification in period.specificationList" :key="'addOrEdit' + period.index +  '--' + specification.index">
                     <FormItem :label="specification.description + '价:'"
                       :prop="'periodList.' + period.index + '.specificationList.' + specification.index + '.price'"
                       :rules="{required: true, message: '套餐价格不能为空', trigger: 'blur'}">
@@ -220,10 +220,10 @@ z<template>
                       :filterable="true"
                       style="width: 150px"
                       v-model="product.productName"
+                      placeholder="输入上架商品名称"
                       :remote="true"
                       :remote-method ="remoteMethod"
                       :loading="shelfSpecificationLoading"
-                      placeholder="输入上架商品名称"
                       :prop="'periodList.' + period.index + '.products.' + products.index + '.shelfId'"
                       :rules="{required: true, message: '套餐名称不能为空', trigger: 'blur'}">
                           <Option

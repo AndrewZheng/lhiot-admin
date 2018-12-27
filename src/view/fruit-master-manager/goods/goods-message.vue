@@ -7,6 +7,8 @@
               v-model="tableData"
               :columns="columns"
               :loading="loading"
+              :searchAreaColumn="18"
+              :operateAreaColumn="6"
               @on-delete="handleDelete"
               @on-view="handleView"
               @on-edit="handleEdit"
@@ -224,10 +226,10 @@
           </Row>
           <Row>
             <FormItem label="商品主图:建议尺寸;400x400(单位:px):" prop="mainImg" >
+              <Input v-model="productDetail.mainImg" style="width: auto" v-show="false"/>
               <div class="demo-upload-list" v-for="item in uploadListMain">
                 <template v-if="item.status === 'finished'">
                   <div>
-                    <Input v-model="productDetail.mainImg" style="width: auto" v-show="false"/>
                     <img :src="item.url">
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
@@ -256,9 +258,9 @@
           <Row>
             <FormItem label="商品附图:建议尺寸600x338(单位:px)" prop="subImg">
               <div class="demo-upload-list" v-for="item in uploadListSecond">
+              <Input v-model="productDetail.subImg" style="width: auto" v-show="false"/>
                 <template v-if="item.status === 'finished'">
                   <div>
-                    <Input v-model="productDetail.subImg" style="width: auto" v-show="false"/>
                     <img :src="item.url">
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
@@ -288,10 +290,10 @@
           </Row>
           <Row>
             <FormItem label="商品详情:" prop="detailImg" :label-width="80">
+              <Input v-model="productDetail.detailImg" style="width: auto" v-show="false"/>
               <div class="demo-upload-list" v-for="item in uploadListMultiple">
                 <template v-if="item.status === 'finished'">
                   <div>
-                    <Input v-model="productDetail.detailImg" style="width: auto" v-show="false"/>
                     <img :src="item.url">
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
@@ -448,7 +450,7 @@
             this.getTableData();
           }
         });
-      }).catch( error => {
+      }).catch(error => {
         this.createLoading = false;
       });
     },
@@ -640,7 +642,7 @@
           this.$Message.success('创建成功!');
           this.resetFields();
           this.getTableData();
-        }).catch( error => {
+        }).catch(error => {
           this.modalViewLoading = false;
           this.modalEdit = false;
         });
@@ -654,7 +656,7 @@
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
-        }).catch( error => {
+        }).catch(error => {
           this.modalEdit = false;
           this.modalViewLoading = false;
         });
@@ -739,7 +741,7 @@
           this.productDetail = res;
           this.loading = false;
           this.modalView = true;
-        }).catch( error => {
+        }).catch(error => {
           this.loading = false;
           this.modalView = true;
         });
@@ -758,7 +760,7 @@
           this.findParentId(this.productDetail.categoryId);
           this.defaultGoodsCategoryData.reverse();
           this.modalEdit = true;
-        }).catch( error => {
+        }).catch(error => {
           this.loading = false;
           this.modalEdit = true;
         });
@@ -787,7 +789,7 @@
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
-        }).catch( error => {
+        }).catch(error => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

@@ -193,6 +193,7 @@
           </Row>
           <Row>
             <FormItem label="文章主图:" prop="headImage">
+               <Input v-model="articleDetail.headImage" style="width: auto" v-show="false"/>
               <div class="demo-upload-list" v-for="item in uploadListMain">
                 <template v-if="item.status === 'finished'">
                   <div>

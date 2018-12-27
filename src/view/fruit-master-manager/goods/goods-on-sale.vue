@@ -226,6 +226,7 @@
           </Row>
           <Row>
             <FormItem label="商品主图:建议尺寸;400x400(单位:px)" prop="image" :label-width="80">
+              <Input v-model="productDetail.image" style="width: auto" v-show="false"/>
               <div class="demo-upload-list" v-for="item in uploadListMain">
                 <template v-if="item.status === 'finished'">
                   <div>
@@ -355,7 +356,7 @@
         this.uiPositionData = res.array;
         this.createLoading = false;
         this.getTableData();
-      }).catch( error => {
+      }).catch(error => {
         this.createLoading = false;
       });
     },
