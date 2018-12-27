@@ -271,15 +271,15 @@
             render: (h, params, vm) => {
               const {row} = params;
               if (row.locked === 'LOCK') {
-                return <span style="color:red">{'禁用'}</span>;
+                return <tag color="error">{'禁用'}</tag>;
               } else {
-                return <span style="color:green">{'正常'}</span>;
+                return <tag color="success">{'正常'}</tag>;
               };
             }
           },
           {
             title: '注册时间',
-            width: 110,
+            width: 160,
             key: 'registerAt',
             sortable: true
           },
@@ -319,7 +319,7 @@
         }).then(res => {
           this.getTableData();
           this.loading = false;
-        }).catch( err => {
+        }).catch(err => {
           this.loading = false;
         });
       },

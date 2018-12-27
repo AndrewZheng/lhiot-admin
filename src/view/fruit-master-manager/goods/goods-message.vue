@@ -7,6 +7,8 @@
               v-model="tableData"
               :columns="columns"
               :loading="loading"
+              :searchAreaColumn="18"
+              :operateAreaColumn="6"
               @on-delete="handleDelete"
               @on-view="handleView"
               @on-edit="handleEdit"
@@ -170,14 +172,6 @@
             </Row>
           </i-col>
         </Row>
-         <Row class-name="mb20">
-          <i-col span="12">
-            <Row>
-              <i-col span="7">海鼎规格数量:</i-col>
-              <i-col span="17">{{productDetail.productSpecification.specificationQty}}</i-col>
-            </Row>
-          </i-col>
-        </Row>
       </div>
       <div slot="footer">
         <Button type="primary" @click="handleClose">关闭</Button>
@@ -232,6 +226,7 @@
           </Row>
           <Row>
             <FormItem label="商品主图:建议尺寸;400x400(单位:px):" prop="mainImg" >
+              <Input v-model="productDetail.mainImg" style="width: auto" v-show="false"/>
               <div class="demo-upload-list" v-for="item in uploadListMain">
                 <template v-if="item.status === 'finished'">
                   <div>
@@ -263,6 +258,7 @@
           <Row>
             <FormItem label="商品附图:建议尺寸600x338(单位:px)" prop="subImg">
               <div class="demo-upload-list" v-for="item in uploadListSecond">
+              <Input v-model="productDetail.subImg" style="width: auto" v-show="false"/>
                 <template v-if="item.status === 'finished'">
                   <div>
                     <img :src="item.url">
@@ -294,6 +290,7 @@
           </Row>
           <Row>
             <FormItem label="商品详情:" prop="detailImg" :label-width="80">
+              <Input v-model="productDetail.detailImg" style="width: auto" v-show="false"/>
               <div class="demo-upload-list" v-for="item in uploadListMultiple">
                 <template v-if="item.status === 'finished'">
                   <div>
@@ -355,14 +352,6 @@
               <FormItem label="重量(kg):" prop="weight" :label-width="80">
                 <Input v-if="productDetail.productSpecification"
                        v-model="productDetail.productSpecification.weight"/>
-              </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col span="12">
-              <FormItem label="海鼎规格数量:" prop="specificationQty" :label-width="80">
-                <Input v-if="productDetail.productSpecification"
-                       v-model="productDetail.productSpecification.specificationQty"/>
               </FormItem>
               </Col>
             </Row>
@@ -461,7 +450,7 @@
             this.getTableData();
           }
         });
-      }).catch( error => {
+      }).catch(error => {
         this.createLoading = false;
       });
     },
@@ -529,18 +518,6 @@
                 let errors = [];
                 if (!/^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/.test(value)) {
                   callback('必须为大于0的数字');
-                }
-                callback(errors);
-              }
-            }
-          ],
-          specificationQty: [
-            {required: true, message: '请输入海鼎规格数量'},
-            {
-              validator(rule, value, callback, source, options) {
-                let errors = [];
-                if (!/^[1-9]\d*$/.test(value)) {
-                  callback('必须为非零整数');
                 }
                 callback(errors);
               }
@@ -642,7 +619,7 @@
           this.$refs[name1].validate((valid) => {
             if (valid && innerValid) {
               if (this.tempModalType === this.modalType.create) {
-                // 添加状态
+                // 添加状态                
                 this.createProduct();
               } else if (this.tempModalType === this.modalType.edit) {
                 // 编辑状态
@@ -656,6 +633,7 @@
       },
       createProduct() {
         this.modalViewLoading = true;
+        this.productDetail.productSpecification.specificationQty = 1;
         createProduct({
           ...this.productDetail
         }).then(res => {
@@ -664,7 +642,7 @@
           this.$Message.success('创建成功!');
           this.resetFields();
           this.getTableData();
-        }).catch( error => {
+        }).catch(error => {
           this.modalViewLoading = false;
           this.modalEdit = false;
         });
@@ -678,7 +656,7 @@
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
-        }).catch( error => {
+        }).catch(error => {
           this.modalEdit = false;
           this.modalViewLoading = false;
         });
@@ -763,7 +741,7 @@
           this.productDetail = res;
           this.loading = false;
           this.modalView = true;
-        }).catch( error => {
+        }).catch(error => {
           this.loading = false;
           this.modalView = true;
         });
@@ -782,7 +760,7 @@
           this.findParentId(this.productDetail.categoryId);
           this.defaultGoodsCategoryData.reverse();
           this.modalEdit = true;
-        }).catch( error => {
+        }).catch(error => {
           this.loading = false;
           this.modalEdit = true;
         });
@@ -811,7 +789,7 @@
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
-        }).catch( error => {
+        }).catch(error => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

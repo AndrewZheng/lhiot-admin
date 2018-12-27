@@ -71,6 +71,7 @@
                 :remote-method="remoteMethod"
                 :loading="shelfSpecificationLoading"
                 style="width: 250px"
+                placeholder="输入上架商品名称"
               >
                 <Option @click.native="selectIndex(option)" class="pb5 pt5 pl15"
                         v-for="(option, index) in optionsShelfSpecification"
@@ -83,7 +84,7 @@
             </Col>
             <Col span="12">
             <FormItem label="商品价格:" >
-              <i-col>{{goodsDetail.originalPrice|fenToYuanDot2Filters}}</i-col>
+              <i-col>{{goodsDetail.price|fenToYuanDot2Filters}}</i-col>
             </FormItem>
             </Col>
           </Row>
@@ -218,10 +219,10 @@
             key: 'barcode'
           },
           {
-            title: '商品原价',
+            title: '商品价格',
             width: 150,
             render(h, params, vm) {
-              let amount = fenToYuanDot2(params.row.originalPrice);
+              let amount = fenToYuanDot2(params.row.price);
               return <div>{amount}</div>;
             }
           },
@@ -266,7 +267,7 @@
       },
       selectIndex(options) {
         this.goodsDetail.shelfId = options.id;
-        this.goodsDetail.originalPrice = options.originalPrice;
+        this.goodsDetail.price = options.price;
       },
       remoteMethod(query) {
         if (query !== '') {
@@ -291,8 +292,8 @@
         });
       },
       handleSubmit(name) {
-        if (this.goodsDetail.originalPrice<this.goodsDetail.activityPrice){
-          this.$Message.error('尝鲜价格不能高于套餐原价');
+        if (this.goodsDetail.price < this.goodsDetail.activityPrice) {
+          this.$Message.error('尝鲜价格不能高于商品价格');
           return;
         };
         this.$refs[name].validate((valid) => {
@@ -387,6 +388,10 @@
         this.$refs.tables.exportCsv({
           filename: `table-${new Date().valueOf()}.csv`
         });
+      },
+      handleEditClose() {
+        this.modalEdit = false;
+        this.rowData = {};
       }
     }
   };

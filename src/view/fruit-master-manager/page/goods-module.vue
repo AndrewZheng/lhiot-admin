@@ -129,6 +129,7 @@
               <FormItem label="板块主图:建议尺寸 (xxx*xxx):"
                         prop="sectionImg"
                         :label-width="80">
+                <Input v-model="goodsModuleDetail.sectionImg" style="width: auto" v-show="false"/>
                 <div class="demo-upload-list" v-for="item in uploadListMain">
                   <template v-if="item.status === 'finished'">
                     <div>
@@ -310,7 +311,7 @@
         this.selectDisable = false;
         this.goodsModuleList = res.array;
         this.getTableData();
-      }).catch( error => {
+      }).catch(error => {
         this.selectDisable = false;
       });
     },
@@ -434,7 +435,7 @@
           this.$Message.success('创建成功!');
           this.resetFields();
           this.getTableData();
-        }).catch( error => {
+        }).catch(error => {
           this.modalViewLoading = false;
           this.modalEdit = false;
         });
@@ -485,7 +486,7 @@
               this.addTempDataLoading = false;
               this.tempTableLoading =false;
               this.loading = false;
-            }).catch( error => {
+            }).catch(error => {
               this.addTempDataLoading = false;
               this.tempTableLoading =false;
               this.loading = false;
@@ -534,7 +535,7 @@
           };
           console.log(this.optionsShelfSpecification);
           this.shelfSpecificationLoading = false;
-        }).catch( error => {
+        }).catch(error => {
           this.shelfSpecificationLoading = false;
         });
       },
@@ -571,7 +572,7 @@
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
-        }).catch( error => {
+        }).catch(error => {
           this.modalEdit = false;
           this.modalViewLoading = false;
         });
@@ -627,7 +628,7 @@
           this.loading = false;
           this.clearSearchLoading = false;
           this.searchLoading = false;
-        }).catch( error => {
+        }).catch(error => {
           this.loading = false;
           this.clearSearchLoading = false;
           this.searchLoading = false;

@@ -11,10 +11,9 @@
         :columns="columns"
         :loading="loading"
         @on-view="handleView"
-        :searchAreaColumn="24"
         @on-auditor="onAuditor"
       >
-        <div slot="searchCondition">
+        <div slot="searchCondition" :searchAreaColumn="24">
           <Input
             placeholder="姓名"
             class="search-input"
@@ -253,6 +252,7 @@ const masterDetail = {
   auditTime: null,
   auditUser: null,
   userId: null,
+  refereeId: null,
   beginCreateAt: null,
   endCreateAt: null
 };
@@ -319,11 +319,11 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             if (row.auditStatus === 'UNAUDITED') {
-              return <div>{'待审核'}</div>;
+              return <div><tag color="primary">{'待审核'}</tag></div>;
             } else if (row.auditStatus === 'AGREE') {
-              return <div>{'审核通过'}</div>;
+              return <div><tag color="success">{'审核通过'}</tag></div>;
             } else if (row.auditStatus === 'REJECT') {
-              return <div>{'审核不通过'}</div>;
+              return <div><tag color="error">{'审核不通过'}</tag></div>;
             } else {
               return <div>{row.auditStatus}</div>;
             };
@@ -332,13 +332,13 @@ export default {
         {
           title: '申请时间',
           key: 'createTime',
-          width: 150,
+          width: 160,
           sortable: true
         },
         {
           title: '审核时间',
           key: 'auditTime',
-          minWidth: 150,
+          minWidth: 160,
           sortable: true
         },
         {
@@ -390,7 +390,10 @@ export default {
         userId: this.masterDetail.userId,
         id: this.masterDetail.id,
         auditStatus: this.masterDetail.auditStatus,
-        failureReason: this.masterDetail.failureReason
+        failureReason: this.masterDetail.failureReason,
+        realName: this.masterDetail.realName,
+        phone: this.masterDetail.phone,
+        refereeId: this.masterDetail.refereeId
       }).then(res => {
         this.getTableData();
       }).finally(res => {

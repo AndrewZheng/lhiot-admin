@@ -164,6 +164,7 @@
                       prop="content"
                       :label-width="80">
               <div v-if="advertisementDetail.advertiseType ==='IMAGE'">
+                <Input v-model="advertisementDetail.content" style="width: auto" v-show="false"/>
                 <div class="demo-upload-list" v-for="item in uploadListMain">
                   <template v-if="item.status === 'finished'">
                     <div>
@@ -498,7 +499,7 @@
         searchRowData: _.cloneDeep(roleRowData),
         advertisementDetail: _.cloneDeep(advertisementDetail),
         tempContent: null,
-        tempImage: null,
+        tempImage: null
       };
     },
     computed: {
@@ -533,25 +534,25 @@
       }
     },
     methods: {
-      advertiseNameChange(){
-        this.advertisementDetail.content = this.tempContent
+      advertiseNameChange() {
+        this.advertisementDetail.content = this.tempContent;
         console.log(this.advertisementDetail.content);
       },
       advertiseTypeChange(value) {
         console.log(value);
-        if (value==='TEXT'){
+        if (value==='TEXT') {
           if (this.$refs.uploadMain) {
             this.$refs.uploadMain.clearFileList();
           }
           this.uploadListMain = [];
           this.advertisementDetail.content = this.tempContent;
-        }else if (value === 'IMAGE'){
+        } else if (value === 'IMAGE') {
           if (this.tempImage!= null) {
             const map = {status: 'finished', url: 'url'};
             let mainImgArr = [];
             map.url = this.tempImage;
             mainImgArr.push(map);
-            if (this.$refs.uploadMain){
+            if (this.$refs.uploadMain) {
               this.$refs.uploadMain.setDefaultFileList(mainImgArr);
             };
             this.uploadListMain = mainImgArr;
@@ -563,9 +564,9 @@
           }
           this.advertisementDetail.content = this.tempImage;
         };
-        //切换成图片
+        // 切换成图片
 
-        //切换成文字
+        // 切换成文字
         // if (value) ;
       },
       deleteTable(ids) {
@@ -728,7 +729,7 @@
           if (this.advertisementDetail.advertiseType === 'IMAGE') {
             this.tempImage = this.advertisementDetail.content;
             this.setDefaultUploadList(params.row);
-          }else {
+          } else {
             this.tempContent = this.advertisementDetail.content;
           };
           if (!this.advertisementDetail.endAt && !this.advertisementDetail.beginAt) {
@@ -738,7 +739,7 @@
           }
           this.loading = false;
           this.modalEdit = true;
-        }).catch( error => {
+        }).catch(error => {
           this.loading = false;
         });
       },

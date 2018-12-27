@@ -330,7 +330,10 @@ export default {
         {
           title: '配送时间',
           minWidth: 100,
-          key: 'dayOfPeriod'
+          key: 'dayOfPeriod',
+          render(h, params, vm) {
+            return <div>{'第'+ params.row.dayOfPeriod + '天'}</div>;
+          }
         },
         {
           title: '配送套餐',
@@ -346,7 +349,7 @@ export default {
               return <div>{customDeliverStatusConvert(params.row.deliveryStatus).label}</div>;
             } else {
               return <div>{'未配送'}</div>;
-            };
+            }
           }
         },
         {
@@ -378,7 +381,7 @@ export default {
         },
         {
           title: '定制周期',
-          width: 100,
+          width: 120,
           key: 'totalQty',
           render(h, params, vm) {
             return <div>{customPeriodConvert(params.row.totalQty).label}</div>;
@@ -386,12 +389,12 @@ export default {
         },
         {
           title: '定制份数',
-          width: 100,
+          width: 120,
           key: 'description'
         },
         {
           title: '定制金额',
-          width: 100,
+          width: 120,
           key: 'price',
           render(h, params, vm) {
             let amount = fenToYuanDot2(params.row.price);
@@ -400,7 +403,7 @@ export default {
         },
         {
           title: '定制状态',
-          width: 100,
+          width: 120,
           key: 'status',
           render(h, params, vm) {
             return <div>{customOrderStatusConvert(params.row.status).label}</div>;
@@ -408,7 +411,7 @@ export default {
         },
         {
           title: '配送方式',
-          width: 100,
+          width: 120,
           key: 'deliveryType',
           render: (h, params, vm) => {
             return <div>{deliveryTypeCustomConvert(params.row.deliveryType).label}</div>;
@@ -416,12 +419,12 @@ export default {
         },
         {
           title: '剩余次数',
-          width: 90,
+          width: 100,
           key: 'remainingQty'
         },
         {
           title: '创建时间',
-          width: 110,
+          width: 160,
           key: 'createAt'
         },
         {
@@ -444,16 +447,16 @@ export default {
     getcustomPlanSpecificationStandardsPages({}).then(res => {
       this.customCopiesList = res.array;
       this.getTableData();
-    }).catch( error => {
+    }).catch(error => {
       this.searchLoading = true;
       this.clearSearchLoading = true;
     });
   },
   methods: {
-    orderStatusesOnChange(value){
+    orderStatusesOnChange(value) {
       console.log(value);
-      if(value.length === 0){
-        this.searchRowData.statusIn = null
+      if (value.length === 0) {
+        this.searchRowData.statusIn = null;
       }
     },
     startTimeChange(value, date) {
@@ -484,11 +487,11 @@ export default {
         this.loading = false;
         this.clearSearchLoading = false;
         this.searchLoading = false;
-      }).catch( error => {
+      }).catch(error => {
         this.loading = false;
         this.clearSearchLoading = false;
         this.searchLoading = false;
-      });;
+      }); ;
     },
     // exportExcel() {
     //   this.$refs.tables.exportCsv({

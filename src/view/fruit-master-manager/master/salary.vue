@@ -10,8 +10,6 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :searchAreaColumn="20"
-        :operateAreaColumn="4"
         @on-edit="handleEdit"
         @on-view="handleView"
       >
@@ -379,12 +377,12 @@ export default {
         },
         {
           title: '申请时间',
-          width: 110,
+          width: 160,
           key: 'createAt',
           sortable: true
         }, {
           title: '处理时间',
-          width: 110,
+          width: 160,
           key: 'dealAt',
           sortable: true
         },
@@ -457,7 +455,7 @@ export default {
         this.loading = false;
         this.searchLoading = false;
         this.clearSearchLoading = false;
-      }).catch( error => {
+      }).catch(error => {
         this.loading = false;
         this.searchLoading = false;
         this.clearSearchLoading = false;
