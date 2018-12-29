@@ -254,8 +254,8 @@ z<template>
       <div class="modal-content">
          <Form ref="modalSetting" :model="rowData">
           <template v-for="(customPlan, index) in rowData" v-if="index == 'periodList'" >
-              <Tabs value="productUpdate1" type="card" :key="'productUpdate' + customPlan.id">
-                  <TabPane v-for="(period, key) in customPlan" :key="'update' + period.index" :label="period.planPeriod == '7' ? '周' : '月'" :name="'productUpdate'+(key+1)">
+              <Tabs value="name1" type="card" :key="'productUpdate' + customPlan.id">
+                  <TabPane v-for="(period, key) in customPlan" :key="'update' + period.index" :label="period.planPeriod == '7' ? '周' : '月'" :name="'name'+(key+1)">
                         <Col span="7" v-for="specification in period.specificationList" :key="'update' + period.index +  '--' + specification.index">
                           <FormItem :label="specification.description + '价:'">
                           <InputNumber :min="0" class="search-input mr5" :value="priceComputed(specification.price)"
@@ -606,7 +606,12 @@ z<template>
             key: 'status',
             render: (h, params, vm) => {
               let {row} = params;
-              return <div>{onSaleStatusConvert(row.status).label}</div>;
+              if (row.status == 'VALID') {
+                return <div><tag color="success">{onSaleStatusConvert(row.status).label}</tag></div>;
+              } else if (row.status == 'INVALID') {
+                return <div><tag color="error">{onSaleStatusConvert(row.status).label}</tag></div>;
+              }
+              return <div><tag color="primary">{onSaleStatusConvert(row.status).label}</tag></div>;
             }
           },
           {
@@ -704,15 +709,25 @@ z<template>
         this.tempModalType = this.modalType.view;
         this.loading = true;
         getCustomPlan({id: params.row.id}).then(res => {
+          this.step = 'name1';
           this.loading = false;
           this.rowData = {};
           this.rowData = res;
+          // 如果只有一个周期的套餐，则另一个套餐数据补齐
+          if (res.periodList.length !== 2) {
+            let planPeriod = this.rowData.periodList[0].planPeriod;
+            let newPlanPeriod = planPeriod == 7 ? 30 : 7;
+            let newIndex = this.rowData.periodList[0].index == 0 ? 1 : 0;
+            this.rowData.periodList.push({'index': newIndex, 'planPeriod': newPlanPeriod, 'products': [], 'specificationList': []});
+            // console.log(JSON.stringify(this.rowData));
+          }
           this.modalView = true;
         });
       },
       handlePeriod(params) {
         this.tempModalType = this.modalType.setting;
         this.loading = true;
+        this.step = 'name1';
         getCustomPlan({id: params.row.id}).then(res => {
           this.loading = false;
           this.rowData = {};
@@ -721,16 +736,20 @@ z<template>
           if (res.periodList.length !== 2) {
             let planPeriod = this.rowData.periodList[0].planPeriod;
             let newPlanPeriod = planPeriod == 7 ? 30 : 7;
-            // this.rowData.periodList.push({'index': 1, 'planPeriod': newPlanPeriod, 'products': [], 'specificationList': []});
+            let newIndex = this.rowData.periodList[0].index == 0 ? 1 : 0;
+            this.rowData.periodList.push({'index': newIndex, 'planPeriod': newPlanPeriod, 'products': [], 'specificationList': []});
+            // 升序排序
+            res.periodList.sort((a, b) => a.index - b.index);
             for (var product = 0; product < newPlanPeriod; product++) {
-                this.rowData.periodList[1].products.push({'index': product, 'benefit': '', 'dayOfPeriod': (product+1), 'description': '', 'id': 0, 'image': '', 'planId': 0, 'productName': '', 'shelfId': 0});
+                this.rowData.periodList[newIndex].products.push({'index': product, 'benefit': '', 'dayOfPeriod': (product+1), 'description': '', 'id': 0, 'image': '', 'planId': 0, 'productName': '', 'shelfId': 0});
             }
             for (var specification = 0; specification < 3; specification++) {
                 let description = specification == 0 ? '单人套餐' : (specification == 1 ? '双人套餐' : '三人套餐');
-                this.rowData.periodList[1].specificationList.push({'index': specification, 'description': description, 'id': 0, 'image': '', 'planId': 0, 'planPeriod': newPlanPeriod, 'price': 0, 'quantity': (specification+1), 'standardId': 0});
+                this.rowData.periodList[newIndex].specificationList.push({'index': specification, 'description': description, 'id': 0, 'image': '', 'planId': 0, 'planPeriod': newPlanPeriod, 'price': 0, 'quantity': (specification+1), 'standardId': 0});
             }
-            console.log(JSON.stringify(this.rowData));
+            // console.log(JSON.stringify(this.rowData));
           }
+          this.step = 'name1';
           this.modalSetting = true;
         });
       },
@@ -792,6 +811,7 @@ z<template>
         this.loading = true;
         this.showHeader = true;
         getCustomPlan({id: params.row.id}).then(res => {
+           this.step = 'name1';
           this.loading = false;
           this.rowData = res;
           this.showHeader = true;
@@ -911,8 +931,9 @@ z<template>
       updateSpecification() {
         editCustomPlanSpecifications(this.rowData).then(res => {
             this.$Message.info('修改成功');
+            this.step = 'name1';
             this.modalSetting = false;
-              this.getTableData();
+            this.getTableData();
         });
       },
       addProduct(periodIndex, productIndex, shelfId) {
@@ -920,8 +941,8 @@ z<template>
         this.rowData.periodList[periodIndex].products[productIndex].shelfId = shelfId;
         // console.log('rowData:' + JSON.stringify(this.rowData));
         editCustomPlanSpecifications(this.rowData).then(res => {
-             this.$Message.info('修改成功');
-              this.getTableData();
+            this.$Message.info('修改成功');
+            this.getTableData();
         });
       },
       editProduct(periodIndex, productIndex, shelfId) {
@@ -946,6 +967,7 @@ z<template>
       handleClose() {
         this.rowData = {};
         this.modalView = false;
+         this.step = 'name1';
       },
       priceComputed(price) {
         return fenToYuanDot2Number(price);
