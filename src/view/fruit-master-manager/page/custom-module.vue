@@ -277,11 +277,6 @@
           return h('div', params.row.relationSort);
         }
       }
-    },
-    {
-      title: '是否可编辑',
-      key: 'isEdit',
-      minWidth: 100
     }
   ];
 
