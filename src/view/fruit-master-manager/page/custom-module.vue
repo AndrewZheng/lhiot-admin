@@ -89,6 +89,7 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
+
     <Modal
       v-model="modalEdit"
       :width="900"
@@ -186,6 +187,8 @@
               :columns="tempColumns"
               v-model="goodsModuleDetail.customPlanList"
               @on-delete="modalHandleDelete"
+              @on-inline-edit="modalHandleEdit"
+              @on-inline-save="modalHandleSave"
               :loading="tempTableLoading"
             ></tables>
           </Row>
@@ -212,7 +215,8 @@
     getCustomPlanSectionsPages,
     getCustomPlanPages,
     addCustomPlanSectionRelationBatch,
-    deletetCustomPlanSectionRelationBatch
+    deletetCustomPlanSectionRelationBatch,
+    editCustomPlanSectionRelation
   } from '@/api/fruitermaster';
   import deleteMixin from '@/mixins/deleteMixin.js';
   import tableMixin from '@/mixins/tableMixin.js';
@@ -237,6 +241,7 @@
     page: 1,
     rows: 10
   };
+
   const commonTempColumns =[
     {
       title: '定制名称',
@@ -251,9 +256,35 @@
     {
       title: '排序',
       key: 'relationSort',
+      minWidth: 100,
+      render: (h, params) => {
+        if (params.row.isEdit) {
+          return h('div', [
+            h('InputNumber', {
+              domProps: {
+                value: params.row.relationSort
+              },
+              on: {
+                input: function (event) {
+                  if (event>0) {
+                    params.row.relationSort = event;
+                  }
+                }
+              }
+            })
+          ]);
+        } else {
+          return h('div', params.row.relationSort);
+        }
+      }
+    },
+    {
+      title: '是否可编辑',
+      key: 'isEdit',
       minWidth: 100
     }
   ];
+
   export default {
     components: {
       Tables,
@@ -305,7 +336,7 @@
             title: '操作',
             minWidth: 100,
             key: 'handle',
-            options: ['delete']
+            options: ['inlineEdit', 'delete']
           }
         ],
         tempColumnsView: [
@@ -431,7 +462,7 @@
         });
         if (!obj) {
           if (this.tempModalType === this.modalType.create) {
-            this.goodsModuleDetail.customPlanList.push({...this.tempOptionsShelfSpecification, relationSort: this.sort});
+            this.goodsModuleDetail.customPlanList.push({...this.tempOptionsShelfSpecification, relationSort: this.sort, isEdit: false});
           } else {
             this.addTempDataLoading = true;
             this.tempTableLoading =true;
@@ -441,7 +472,7 @@
               planId: this.tempOptionsShelfSpecification.id,
               sort: this.sort
             }).then(res => {
-              this.goodsModuleDetail.customPlanList.push({...this.tempOptionsShelfSpecification, relationSort: this.sort});
+              this.goodsModuleDetail.customPlanList.push({...this.tempOptionsShelfSpecification, relationSort: this.sort, isEdit: false});
               this.addTempDataLoading = false;
               this.tempTableLoading =false;
               this.loading = false;
@@ -545,6 +576,9 @@
       onRelevance(params) {
         this.tempModalType = null;
         this.goodsModuleDetail = params.row;
+        this.goodsModuleDetail.customPlanList.forEach(element => {
+          element.isEdit = false;
+        });
         this.setDefaultUploadList(params.row);
         if (!this.goodsModuleDetail.customPlanList) {
           this.goodsModuleDetail.customPlanList = [];
@@ -559,6 +593,10 @@
       handleEdit(params) {
         this.tempModalType = this.modalType.edit;
         this.goodsModuleDetail = _.cloneDeep(params.row);
+        this.goodsModuleDetail.customPlanList.forEach(element => {
+          element.isEdit = false;
+        });
+        console.log('handleEdit' + JSON.stringify(this.goodsModuleDetail.customPlanList));
         this.setDefaultUploadList(params.row);
         this.modalEdit = true;
       },
@@ -595,6 +633,31 @@
         this.$refs.tables.exportCsv({
           filename: `table-${new Date().valueOf()}.csv`
         });
+      },
+      modalHandleEdit(params) {
+        this.$set(params.row, 'isEdit', true);
+        // console.log('modalHandleEidt' + JSON.stringify(params.row));
+      },
+      modalHandleSave(params) {
+        // console.log('modalHandleSave' + JSON.stringify(params.row));
+        this.tempTableLoading = true;
+        const data = {
+          id: params.row.relationId,
+          sectionId: this.goodsModuleDetail.id,
+          planId: params.row.id,
+          sort: params.row.relationSort
+        };
+        // console.log('data' + JSON.stringify(data));
+        if (data.id !== null && data.sort > 0) {
+          editCustomPlanSectionRelation(data).then(res => {
+            this.getTableData();
+          }).finally(res => {
+            this.tempTableLoading = false;
+          });
+        }
+       this.tempTableLoading = false;
+        this.$set(params.row, 'isEdit', false);
+        // console.log('modalHandleSave' + JSON.stringify(params.row));
       }
     }
   };

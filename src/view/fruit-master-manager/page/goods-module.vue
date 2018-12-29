@@ -188,6 +188,8 @@
               :columns="tempColumns"
               v-model="goodsModuleDetail.productShelfList"
               @on-delete="modalHandleDelete"
+              @on-inline-edit="modalHandleEdit"
+              @on-inline-save="modalHandleSave"
               :loading="tempTableLoading"
             ></tables>
           </Row>
@@ -638,6 +640,9 @@
         this.$refs.tables.exportCsv({
           filename: `table-${new Date().valueOf()}.csv`
         });
+      },
+      modalHandleEdit(params) {
+        console.log('modalHandleEdit' + params.rows);
       }
     }
   };

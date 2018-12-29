@@ -219,15 +219,15 @@ const btns = {
       }, [
         h('Button', {
           props: {
-            type: 'success',
+            type: 'error',
             size: 'small'
           }
         }, [
           h('Icon', {
             props: {
-              type: 'md-cloud-upload',
+              type: 'md-cloud-download',
               size: 16,
-              color: '#green'
+              color: '#fff'
             }
           })
         ])
@@ -249,15 +249,15 @@ const btns = {
       }, [
         h('Button', {
           props: {
-            type: 'error',
+            type: 'success',
             size: 'small'
           }
         }, [
           h('Icon', {
             props: {
-              type: 'md-cloud-download',
+              type: 'md-cloud-upload',
               size: 16,
-              color: '#fff'
+              color: '#green'
             }
           })
         ])
@@ -536,6 +536,54 @@ const btns = {
         color: '#fff'
       }
     })]);
+  },
+  inlineEdit: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.isEdit === false) {
+      return h('Button', {
+        props: {
+          type: 'warning',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-inline-edit', params);
+          }
+        }
+      }, [h('Icon', {
+        props: {
+          type: 'md-create',
+          size: 16,
+          color: '#fff'
+        }
+      })]);
+    } else {
+      return h('Button', {
+        props: {
+          type: 'success',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-inline-save', params);
+          }
+        }
+      }, [h('Icon', {
+        props: {
+          type: 'md-checkmark',
+          size: 16,
+          color: '#green'
+        }
+      })]);
+    }
   }
 };
 export default btns;

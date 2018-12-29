@@ -403,6 +403,15 @@ export const addCustomPlanSectionRelationBatch = (data) => {
   });
 };
 
+// 修改定制板块关系
+export const editCustomPlanSectionRelation = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-sections/relation/'+ data.id,
+    data,
+    method: 'put'
+  });
+};
+
 // 批量删除定制版块与定制计划架关系
 export const deletetCustomPlanSectionRelationBatch = ({sectionId, planIds}) => {
   return Vue.prototype.$http.request({
@@ -687,6 +696,14 @@ export const editCustomPlan = (data) => {
   return Vue.prototype.$http.request({
     url: '/custom-plans/'+data.id,
     data,
+    method: 'put'
+  });
+};
+
+// 定制计划上下架
+export const editCustomPlanStatus = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plans/'+ data.id + '/status?status=' + data.status,
     method: 'put'
   });
 };
