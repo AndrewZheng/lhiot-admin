@@ -691,6 +691,14 @@ export const editCustomPlan = (data) => {
   });
 };
 
+// 定制计划上下架
+export const editCustomPlanStatus = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plans/'+ data.id + '/status?status=' + data.status,
+    method: 'put'
+  });
+};
+
 // {id}修改定制计划商品
 export const editCustomPlanProducts = (data) => {
   return Vue.prototype.$http.request({

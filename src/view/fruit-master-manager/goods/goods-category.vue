@@ -86,7 +86,7 @@
     getProductCategoriesPages,
     getProductCategoriesTree,
     putProductCategories
-  } from "@/api/fruitermaster";
+  } from '@/api/fruitermaster';
   import {buildMenu, changeObjKeyName, convertTree, getNewTagList} from '@/libs/util';
   import CommonIcon from '_c/common-icon';
   import tableMixin from '@/mixins/tableMixin.js';
@@ -94,16 +94,15 @@
   import deleteMixin from '@/mixins/deleteMixin.js';
 
   const currentCategory = {
-    parentId:0,
+    parentId: 0,
     groupName: '',
     rank: null
   };
   const roleRowData = {
-    parentId:0,
+    parentId: 0,
     page: 1,
     rows: 10
   };
-
 
   export default {
     components: {
@@ -140,7 +139,7 @@
             title: '操作',
             key: 'handle',
             minWidth: 150,
-            options: ['edit', 'delete'],
+            options: ['edit', 'delete']
           }
         ],
         modalEditView: false,
@@ -149,7 +148,7 @@
         currentParentName: '',
         currentParentId: 0,
         currentCategory: this._.cloneDeep(currentCategory),
-        parentCategory:this._.cloneDeep(currentCategory),
+        parentCategory: this._.cloneDeep(currentCategory),
         searchRowData: this._.cloneDeep(roleRowData)
       };
     },
@@ -196,77 +195,77 @@
           );
         }
       },
-      createTableRow(){
-        if (this.tempModalType !== this.modalType.create){
-          this.currentCategory = this._.cloneDeep(currentCategory)
+      createTableRow() {
+        if (this.tempModalType !== this.modalType.create) {
+          this.currentCategory = this._.cloneDeep(currentCategory);
         };
         this.currentCategory.currentParentId = this.currentParentId;
-        this.tempModalType = this.modalType.create
+        this.tempModalType = this.modalType.create;
         this.modalEditView = true;
       },
       asyncEditOK() {
         if (!this.currentCategory.groupName) {
           this.$Message.warning('请输入子分类');
-          return
+          return;
         }
         if (!this.currentCategory.rank) {
-          this.$Message.warning('亲输入序号');
-          return
+          this.$Message.warning('请输入序号');
+          return;
         }
         let reg = /^-?\d+$/;
         if (!reg.test(this.currentCategory.rank)) {
           this.$Message.warning('排序必须是整数');
           return;
         }
-        this.modalEditLoading = true
-        this.modalViewLoading = true
-        if (!this.parentCategory.id){
+        this.modalEditLoading = true;
+        this.modalViewLoading = true;
+        if (!this.parentCategory.id) {
           this.currentCategory.parentId = 0;
-        }else {
-          this.currentCategory.parentId = this.parentCategory.id
+        } else {
+          this.currentCategory.parentId = this.parentCategory.id;
         };
-        if (this.tempModalType === this.modalType.create){
+        if (this.tempModalType === this.modalType.create) {
           addProductCategories(this.currentCategory
           ).then(res => {
 
-          }).finally( res => {
-            this.initMenuList()
-            this.modalEditLoading = false
-            this.modalEditView = false
-          })
-        }else if (this.tempModalType === this.modalType.edit){
+          }).finally(res => {
+            this.initMenuList();
+            this.modalEditLoading = false;
+            this.modalEditView = false;
+          });
+        } else if (this.tempModalType === this.modalType.edit) {
           putProductCategories(this.currentCategory).then(res => {
-          }).finally( res => {
-            this.initMenuList()
-            this.modalEditLoading = false
-            this.modalEditView = false
-          })
+          }).finally(res => {
+            this.initMenuList();
+            this.modalEditLoading = false;
+            this.modalEditView = false;
+          });
         };
       },
       handleEditClose() {
-        this.modalEditView = false
+        this.modalEditView = false;
       },
-      //删除
+      // 删除
       deleteTable(ids) {
-        this.loading = true
+        this.loading = true;
         deleteProductCategories({
           ids
         }).then(res => {
-            let totalPage = Math.ceil(this.total / this.pageSize)
+            let totalPage = Math.ceil(this.total / this.pageSize);
             if (this.tableData.length === this.tableDataSelected.length && this.page === totalPage && this.page !== 1) {
-              this.page -= 1
+              this.page -= 1;
             }
             this.tableDataSelected = [];
             this.initMenuList();
           }
-        ).catch(err=>{
-          this.loading = false
-        })
+        ).catch(err => {
+          this.loading = false;
+        });
       },
-      //编辑分类
+      // 编辑分类
       handleEdit(params) {
-        this.tempModalType = this.modalType.edit
-        this.currentCategory = _.cloneDeep(params.row)
+        this.tempModalType = this.modalType.edit;
+        this.currentCategory = _.cloneDeep(params.row);
         this.modalEditView = true;
       },
       getTableData() {
@@ -284,7 +283,7 @@
           filename: `table-${new Date().valueOf()}.csv`
         });
       },
-      //初始化商品菜单列表
+      // 初始化商品菜单列表
       initMenuList() {
         getProductCategoriesTree().then(res => {
           if (res && res.array.length > 0) {
@@ -302,7 +301,7 @@
       },
 
       handleClick({root, node, data}) {
-        this.loading = true
+        this.loading = true;
         // 展开当前节点
         if (typeof data.expand === 'undefined') {
           this.$set(data, 'expend', true);
@@ -315,7 +314,7 @@
         this.parentCategory.id = data.id;
         this.parentCategory.groupName = data.title;
         this.currentParentId = data.id;
-        this.searchRowData.parentId = data.id
+        this.searchRowData.parentId = data.id;
         // 获取新数据
         this.getTableData();
       },

@@ -141,7 +141,7 @@ z<template>
     <!-- 定制计划新增和修改 -->
     <Modal
      v-model="modalEdit"
-      :width="600"
+      :width="650"
     >
       <p slot="header">
         <span>{{rowData.id==''?'创建定制计划':'编辑定制计划'}}</span>
@@ -206,19 +206,15 @@ z<template>
           <Tabs value="name1" type="card" v-if="showTab">
             <TabPane v-for="(period, key) in rowData.periodList" :key="'addOrEdit' + period.index" :label="period.planPeriod == '7' ? '周' : '月'" :name="'name'+(key+1)">
                   <Col span="8" v-for="specification in period.specificationList" :key="'addOrEdit' + period.index +  '--' + specification.index">
-                    <FormItem :label="specification.description + '价(分):'"
-                      :prop="'periodList.' + period.index + '.specificationList.' + specification.index + '.price'"
-                      :rules="{required: true, message: '套餐价格不能为空', trigger: 'blur'}">
-                       <Input type="number" min="1" class="search-input mr5" v-model="specification.price" style="width: 80px"/>
-                      <!-- <Input type="number" min="1" class="search-input mr5" :value="priceComputed(specification.price)"
+                    <FormItem :label="specification.description + '价:'">
+                      <InputNumber :min="0" class="search-input mr5" :value="priceComputed(specification.price)"
+                      placeholder="最多两位小数"
                        @on-change="priceOnChange($event, period.index, specification.index)"
-                        style="width: 80px"/> -->
+                        style="width: 90px"/>
                     </FormItem>
                   </Col>
                   <Col span="11" v-for="product in period.products" :key="'addOrEdit' + period.index +  '-' + product.index">
-                    <FormItem :label="'第'+ product.dayOfPeriod +'天:'"
-                    :prop="'periodList.' + period.index + '.products.' + product.index + '.productName'"
-                    :rules="{required: true, message: '套餐名称不能为空', trigger: 'blur'}">
+                    <FormItem :label="'第'+ product.dayOfPeriod +'天:'">
                       <Select
                       :filterable="true"
                       style="width: 150px"
@@ -250,7 +246,7 @@ z<template>
     <!-- 定制周期管理 -->
      <Modal
       v-model="modalSetting"
-      :width="600"
+      :width="650"
     >
       <p slot="header">
         <span>定制计划周期管理</span>
@@ -261,19 +257,15 @@ z<template>
               <Tabs value="productUpdate1" type="card" :key="'productUpdate' + customPlan.id">
                   <TabPane v-for="(period, key) in customPlan" :key="'update' + period.index" :label="period.planPeriod == '7' ? '周' : '月'" :name="'productUpdate'+(key+1)">
                         <Col span="7" v-for="specification in period.specificationList" :key="'update' + period.index +  '--' + specification.index">
-                          <FormItem :label="specification.description + '价(分):'"
-                          :prop="'periodList.' + period.index + '.specificationList.' + specification.index + '.price'"
-                          :rules="{required: true, message: '套餐价格不能为空', trigger: 'blur'}">
-                          <Input type="number" min="1" class="search-input mr5" v-model="specification.price" style="width: 80px"/>
-                          <!-- <Input type="text" class="search-input mr5" :value="priceComputed(specification.price)"
-                        @on-change="priceOnChange($event, period.index, specification.index)"
-                          style="width: 80px"/> -->
+                          <FormItem :label="specification.description + '价:'">
+                          <InputNumber :min="0" class="search-input mr5" :value="priceComputed(specification.price)"
+                          placeholder="最多两位小数"
+                       @on-change="priceOnChange($event, period.index, specification.index)"
+                        style="width: 90px"/>
                           </FormItem>
                         </Col>
                         <Col span="11" v-for="product in period.products" :key="'update' + period.index +  '-' + product.index">
-                          <FormItem :label="'第'+ product.dayOfPeriod +'天:'"
-                            :prop="'periodList.' + period.index + '.products.' + product.index + '.productName'"
-                            :rules="{required: true, message: '套餐名称不能为空', trigger: 'blur'}">
+                          <FormItem :label="'第'+ product.dayOfPeriod +'天:'">
                             <Select
                             :filterable="true"
                             style="width: 200px"
@@ -315,7 +307,7 @@ z<template>
     deleteCustomPlan,
     getCustomPlanSectionsPages,
     createCustomPlan,
-    getProductShelvesPages, getCustomPlan, editCustomPlan, editCustomPlanProducts, editCustomPlanSpecifications} from '@/api/fruitermaster';
+    getProductShelvesPages, getCustomPlan, editCustomPlan, editCustomPlanStatus, editCustomPlanProducts, editCustomPlanSpecifications} from '@/api/fruitermaster';
   import IViewUpload from '_c/iview-upload';
   import deleteMixin from '@/mixins/deleteMixin.js';
   import tableMixin from '@/mixins/tableMixin.js';
@@ -345,7 +337,7 @@ z<template>
             image: '',
             planId: 0,
             productName: '',
-            shelfId: null
+            shelfId: 0
           }
         ],
         specificationList: [
@@ -677,20 +669,20 @@ z<template>
                   this.loading=true;
                   createCustomPlan(this.rowData).then(res => {
                     this.$Message.success('创建成功!');
-                  }).finally(res => {
                     this.getTableData();
-                    this.modalViewLoading = false;
                     this.modalEdit = false;
+                  }).finally(res => {
+                    this.modalViewLoading = false;
                   });
               } else {
                   this.modalViewLoading = true;
                   this.loading=true;
                   editCustomPlan(this.rowData).then(res => {
                     this.$Message.success('修改成功!');
-                  }).finally(res => {
                     this.getTableData();
-                    this.modalViewLoading = false;
                     this.modalEdit = false;
+                  }).finally(res => {
+                    this.modalViewLoading = false;
                   });
               }
           } else {
@@ -725,6 +717,20 @@ z<template>
           this.loading = false;
           this.rowData = {};
           this.rowData = res;
+          // 如果只有一个周期的套餐，则另一个套餐数据补齐
+          if (res.periodList.length !== 2) {
+            let planPeriod = this.rowData.periodList[0].planPeriod;
+            let newPlanPeriod = planPeriod == 7 ? 30 : 7;
+            // this.rowData.periodList.push({'index': 1, 'planPeriod': newPlanPeriod, 'products': [], 'specificationList': []});
+            for (var product = 0; product < newPlanPeriod; product++) {
+                this.rowData.periodList[1].products.push({'index': product, 'benefit': '', 'dayOfPeriod': (product+1), 'description': '', 'id': 0, 'image': '', 'planId': 0, 'productName': '', 'shelfId': 0});
+            }
+            for (var specification = 0; specification < 3; specification++) {
+                let description = specification == 0 ? '单人套餐' : (specification == 1 ? '双人套餐' : '三人套餐');
+                this.rowData.periodList[1].specificationList.push({'index': specification, 'description': description, 'id': 0, 'image': '', 'planId': 0, 'planPeriod': newPlanPeriod, 'price': 0, 'quantity': (specification+1), 'standardId': 0});
+            }
+            console.log(JSON.stringify(this.rowData));
+          }
           this.modalSetting = true;
         });
       },
@@ -742,7 +748,7 @@ z<template>
           let planPeriod = period == 0 ? 7 : 30;
           this.rowData.periodList.push({'index': period, 'planPeriod': planPeriod, 'products': [], 'specificationList': []});
           for (var product = 0; product < planPeriod; product++) {
-              this.rowData.periodList[period].products.push({'index': product, 'benefit': '', 'dayOfPeriod': (product+1), 'description': '', 'id': 0, 'image': '', 'planId': 0, 'productName': '', 'shelfId': null});
+              this.rowData.periodList[period].products.push({'index': product, 'benefit': '', 'dayOfPeriod': (product+1), 'description': '', 'id': 0, 'image': '', 'planId': 0, 'productName': '', 'shelfId': 0});
           }
           for (var specification = 0; specification < 3; specification++) {
               let description = specification == 0 ? '单人套餐' : (specification == 1 ? '双人套餐' : '三人套餐');
@@ -772,9 +778,10 @@ z<template>
           rowData.status = 'VALID';
         }
         this.loading = true;
-        editCustomPlan(rowData).then(res => {
+        editCustomPlanStatus(rowData).then(res => {
           this.$Message.success('修改成功!');
         }).finally(res => {
+          this.loading = false;
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.getTableData();
@@ -889,26 +896,24 @@ z<template>
         });
       },
       updateProduct(id, shelfId) {
-        const params = {
-          id: id,
-          shelfId: shelfId
-        };
-        console.log('修改定制计划商品:' + JSON.stringify(params));
-        editCustomPlanProducts(params).then(res => {
-              this.$Message.info('修改成功');
-        });
+        console.log('updateProduct:' + id + ',' + shelfId);
+        if ((id !== null && shelfId !== null) || (id !== 0 && shelfId !== 0)) {
+          const params = {
+            id: id,
+            shelfId: shelfId
+          };
+          console.log('修改定制计划商品:' + JSON.stringify(params));
+          editCustomPlanProducts(params).then(res => {
+                this.$Message.info('修改成功');
+          });
+        }
       },
       updateSpecification() {
-        // this.$refs[name].validate((valid) => {
-        //   if (valid) {
-            editCustomPlanSpecifications(this.rowData).then(res => {
-                this.$Message.info('修改成功');
-                this.modalSetting = false;
-                 this.getTableData();
-            });
-        //   }
-        // });
-        // this.$refs[name].resetFields();
+        editCustomPlanSpecifications(this.rowData).then(res => {
+            this.$Message.info('修改成功');
+            this.modalSetting = false;
+              this.getTableData();
+        });
       },
       addProduct(periodIndex, productIndex, shelfId) {
         console.log('addProduct:' + periodIndex + ',' + productIndex + ',' + shelfId);
@@ -948,7 +953,7 @@ z<template>
       priceOnChange(value, periodIndex, specificationIndex) {
         console.log(value);
         if (value !== null) {
-          this.rowData.periodList[periodIndex].specificationList[specificationIndex].price = fenToYuanDot2(value.data);
+          this.rowData.periodList[periodIndex].specificationList[specificationIndex].price = yuanToFenNumber(value);
         }
         console.log(this.rowData.periodList[periodIndex].specificationList[specificationIndex].price);
       }
