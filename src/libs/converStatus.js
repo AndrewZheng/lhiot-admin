@@ -1,7 +1,7 @@
 import {
   customDeliverStatusEnum,
   customOrderStatusEnum,
-  customPeriodEnum, deliveryAtTypeEnum,
+  customPeriodEnum, deliveryAtTypeEnum, customPlanStatusEnum,
   deliveryTypeCustomEnum, doctorLevelEnum, doctorStatusEnum, hotEnum, onSaleStatusEnum,
   orderStatusEnum,
   orderTypeEnum, positionTypeEnum,
@@ -87,4 +87,8 @@ export const positionTypeConvert = (value) => {
 
 export const relationTypeConvert = (value) => {
   return convertFunction(value, relationTypeEnum);
+};
+
+export const customPlanStatusConvert = (value) => {
+  return convertFunction(value, customPlanStatusEnum);
 };

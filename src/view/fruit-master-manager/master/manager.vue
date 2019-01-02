@@ -551,7 +551,13 @@ export default {
           key: 'doctorStatus',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{doctorStatusConvert(row.doctorStatus).label}</div>;
+            if (row.doctorStatus === 'VALID') {
+              return <div><tag color="success">{doctorStatusConvert(row.doctorStatus).label}</tag></div>;
+            } else if (row.doctorStatus === 'INVALID') {
+              return <div><tag color="error">{doctorStatusConvert(row.doctorStatus).label}</tag></div>;
+            } else {
+              return <div>{row.doctorStatus}</div>;
+            }
           }
         },
         {

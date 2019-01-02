@@ -144,7 +144,27 @@ export const constantRouterMap = [
         component: () => import('@/view/fruit-master-manager/goods/goods-detail.vue')
       }
     ]
-  }
+  },
+  {
+    path: '/fruit-master-content-article-edit',
+    name: 'fruit-master-content-article-edit',
+    meta: {
+      icon: 'md-menu',
+      title: '文章新增/编辑'
+    },
+    component: Main,
+    children: [      
+      {
+        path: 'article-edit',
+        name: 'article-edit',
+        meta: {
+          icon: 'ios-list-box',
+          title: '文章新增/编辑'
+        },
+        component: () => import('@/view/fruit-master-manager/content/edit-article.vue')
+      }
+    ]
+  },
 ];
 
 export const asyncRouterMap = [

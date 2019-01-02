@@ -20,7 +20,7 @@
           <Row>
             <i-col style="display: inline-block">¥</i-col>
             <InputNumber :min="0" placeholder="最小金额" class="search-input" @on-change="minOrderAmountChange" :value="minOrderAmountComputed" style="width: 100px"/>
-            <i-col style="display: inline-block" class="">-¥</i-col>
+            <i-col style="display: inline-block" class="">- ¥</i-col>
             <InputNumber :min="0" placeholder="最大金额" class="search-input mr5" @on-change="maxOrderAmountChange" :value="maxOrderAmountComputed" style="width: 100px"/>
             <Select
               v-model="searchRowData.deliveryAtType"
@@ -85,7 +85,7 @@
             </FormItem>
             </Col>
             <Col span="16">
-            <FormItem label="—¥" prop="maxOrderAmount">
+            <FormItem label="— ¥" prop="maxOrderAmount">
               <InputNumber
                 :readonly="modalTypeComputed"
                 @on-change="postageDetailMaxOrderAmountChange"
@@ -99,8 +99,8 @@
           </Row>
           <Row>
             <FormItem label="配送时间段:" :label-width="100" prop="deliveryAtType">
-              <RadioGroup v-model="postageDetail.deliveryAtType" :disabled="modalTypeComputed">
-                <Radio :label="item.value" v-for="item in deliveryAtTypeEnum" :disabled="modalTypeComputed">
+              <RadioGroup v-model="postageDetail.deliveryAtType" :readonly="modalTypeComputed">
+                <Radio :label="item.value" v-for="item in deliveryAtTypeEnum" :readonly="modalTypeComputed">
                   <span>{{item.label}}</span>
                 </Radio>
               </RadioGroup>
@@ -116,7 +116,7 @@
               ></tables>
             </FormItem>
           </Row>
-          <Row class="mt15">
+          <Row class="mt15"  v-if="tempModalType === modalType.create || tempModalType === modalType.edit">
             <Button v-waves type="success" class="mr5" @click="addPostageRuleTableColumns">
               <Icon type="md-add"/>
               添加
@@ -124,9 +124,9 @@
           </Row>
         </Form>
       </div>
-      <div slot="footer" v-if="tempModalType === modalType.create || tempModalType === modalType.edit">
+      <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button type="primary" :loading="modalViewLoading" @click="handleSubmit('modalEdit')">确定
+        <Button type="primary" :loading="modalViewLoading" @click="handleSubmit('modalEdit')" v-if="tempModalType === modalType.create || tempModalType === modalType.edit">确定
         </Button>
       </div>
     </Modal>
@@ -135,13 +135,13 @@
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import {getDeliveryFeeRulePages,createDeliveryFeeRule,deleteDeliveryFeeRule,editDeliveryFeeRule} from '@/api/fruitermaster';
+  import {getDeliveryFeeRulePages, createDeliveryFeeRule, deleteDeliveryFeeRule, editDeliveryFeeRule} from '@/api/fruitermaster';
   import tableMixin from '@/mixins/tableMixin.js';
   import searchMixin from '@/mixins/searchMixin.js';
   import deleteMixin from '@/mixins/deleteMixin.js';
   import {deliveryAtTypeConvert} from '@/libs/converStatus';
-  import {deliveryAtTypeEnum, updateWay,deliveryAtType} from '@/libs/enumerate';
-  import {fenToYuanDot2Number,fenToYuanDot2,yuanToFenNumber} from '@/libs/util';
+  import {deliveryAtTypeEnum, updateWay, deliveryAtType} from '@/libs/enumerate';
+  import {fenToYuanDot2Number, fenToYuanDot2, yuanToFenNumber} from '@/libs/util';
 
   const fruitMasterDetail = {
     id: '',
@@ -189,25 +189,25 @@
     mixins: [tableMixin, searchMixin, deleteMixin],
     data() {
       return {
-        ruleInline:{
-          minOrderAmount:[{required: true, message: '请填写最小金额',type:'number'}],
-          maxOrderAmount:[{required: true, message: '请填写最大金额',type:'number'}],
-          deliveryAtType:[{required: true, message: '请选择时间段'}],
-          detailList:[{required: true, message: '请添加运费信息'},]
+        ruleInline: {
+          minOrderAmount: [{required: true, message: '请填写最小金额', type: 'number'}],
+          maxOrderAmount: [{required: true, message: '请填写最大金额', type: 'number'}],
+          deliveryAtType: [{required: true, message: '请选择时间段'}],
+          detailList: [{required: true, message: '请添加运费信息'}]
         },
         deliveryAtTypeList: deliveryAtTypeEnum,
         deliveryAtTypeEnum,
-        distanceList: ['0-3','3-5'],
+        distanceList: ['0-3', '3-5'],
         postageRuleTableColumns: [
           {
             title: '距离范围（Km）',
             minWidth: 150,
-            render: (h, params,vm) => {
+            render: (h, params, vm) => {
               return h('div', [
                 h('Select', {
                     props: {
                       value: params.row.minDistance == 0 ? '0-3':'3-5',
-                      disabled:this.modalTypeComputed
+                      readonly: this.modalTypeComputed
                     },
                     on: {
                       'on-change': e => {
@@ -247,13 +247,13 @@
                 h('InputNumber', {
                   props: {
                     value: params.row.firstWeight,
-                    readonly:this.modalTypeComputed,
+                    readonly: this.modalTypeComputed,
                     min: 0
                   },
                   on: {
                     'on-change': e => {
                       if (!e) {
-                        e = 0
+                        e = 0;
                       };
                       this.postageDetail.detailList[params.row.initRowIndex].firstWeight = e;
                     }
@@ -270,13 +270,13 @@
                 h('InputNumber', {
                   props: {
                     value: fenToYuanDot2Number(params.row.firstFee),
-                    readonly:this.modalTypeComputed,
+                    readonly: this.modalTypeComputed,
                     min: 0
                   },
                   on: {
                     'on-change': e => {
                       if (!e) {
-                        e = 0
+                        e = 0;
                       };
                       this.postageDetail.detailList[params.row.initRowIndex].firstFee = yuanToFenNumber(e);
                     }
@@ -293,13 +293,13 @@
                 h('InputNumber', {
                   props: {
                     value: params.row.additionalWeight,
-                    readonly:this.modalTypeComputed,
+                    readonly: this.modalTypeComputed,
                     min: 0
                   },
                   on: {
                     'on-change': e => {
                       if (!e) {
-                        e = 0
+                        e = 0;
                       };
                       this.postageDetail.detailList[params.row.initRowIndex].additionalWeight = e;
                     }
@@ -316,13 +316,13 @@
                 h('InputNumber', {
                   props: {
                     value: fenToYuanDot2Number(params.row.additionalFee),
-                    readonly:this.modalTypeComputed,
-                    min: 0,
+                    readonly: this.modalTypeComputed,
+                    min: 0
                   },
                   on: {
                     'on-change': e => {
                       if (!e) {
-                        e = 0
+                        e = 0;
                       };
                       this.postageDetail.detailList[params.row.initRowIndex].additionalFee = yuanToFenNumber(e);
                     }
@@ -372,7 +372,7 @@
             options: ['view', 'edit', 'delete', 'copy']
           }
         ],
-        options:[
+        options: [
           {
             title: '操作',
             minWidth: 80,
@@ -380,56 +380,56 @@
             options: ['delete']
           }
         ],
-        modalViewLoading:false,
+        modalViewLoading: false,
         tempDetailList: [],
         searchRowData: this._.cloneDeep(roleRowData),
         fruitMasterDetail: fruitMasterDetail,
         postageDetail: this._.cloneDeep(postageDetail)
       };
     },
-    computed:{
-      modalTypeComputed(){
-        return this.tempModalType === this.modalType.view
+    computed: {
+      modalTypeComputed() {
+        return this.tempModalType === this.modalType.view;
       },
-      tableColumnComputed(){
-        if (this.modalTypeComputed){
-          return  this.postageRuleTableColumns
-        }else {
-          console.log(this.postageRuleTableColumns.concat(this.options));;
+      tableColumnComputed() {
+        if (this.modalTypeComputed) {
+          return this.postageRuleTableColumns;
+        } else {
+          console.log(this.postageRuleTableColumns.concat(this.options)); ;
           return this.postageRuleTableColumns.concat(this.options);
         };
       },
-      postageDetailMinOrderAmount(){
+      postageDetailMinOrderAmount() {
         return fenToYuanDot2Number(this.postageDetail.minOrderAmount);
       },
-      postageDetailMaxOrderAmount(){
+      postageDetailMaxOrderAmount() {
         return fenToYuanDot2Number(this.postageDetail.maxOrderAmount);
       },
-      minOrderAmountComputed(){
+      minOrderAmountComputed() {
         return fenToYuanDot2Number(this.searchRowData.minOrderAmount);
       },
-      maxOrderAmountComputed(){
+      maxOrderAmountComputed() {
         return fenToYuanDot2Number(this.searchRowData.maxOrderAmount);
       }
     },
     methods: {
-      minOrderAmountChange(value){
-        this.searchRowData.minOrderAmount = yuanToFenNumber(value)
+      minOrderAmountChange(value) {
+        this.searchRowData.minOrderAmount = yuanToFenNumber(value);
       },
-      maxOrderAmountChange(value){
-        this.searchRowData.maxOrderAmount = yuanToFenNumber(value)
+      maxOrderAmountChange(value) {
+        this.searchRowData.maxOrderAmount = yuanToFenNumber(value);
       },
-      postageDetailMinOrderAmountChange(value){
-        this.postageDetail.minOrderAmount = yuanToFenNumber(value)
+      postageDetailMinOrderAmountChange(value) {
+        this.postageDetail.minOrderAmount = yuanToFenNumber(value);
       },
-      postageDetailMaxOrderAmountChange(value){
-        this.postageDetail.maxOrderAmount = yuanToFenNumber(value)
+      postageDetailMaxOrderAmountChange(value) {
+        this.postageDetail.maxOrderAmount = yuanToFenNumber(value);
       },
-      onCopy(params){
+      onCopy(params) {
         console.log(params);
-        params.row.detailList.forEach( item => {
-          item.updateWay = updateWay.INSERT
-        })
+        params.row.detailList.forEach(item => {
+          item.updateWay = updateWay.INSERT;
+        });
         this.postageDetail = params.row;
         this.createTableRow();
       },
@@ -449,7 +449,7 @@
           this.loading = false;
         });
       },
-      handleSubmit(name){
+      handleSubmit(name) {
         console.log(this.postageDetail);
         // return;
         this.$refs[name].validate((valid) => {
@@ -466,7 +466,7 @@
           }
         });
       },
-      createTableRow(){
+      createTableRow() {
         this.modalViewLoading = true;
         this.loading=true;
         createDeliveryFeeRule(this.postageDetail).then(res => {
@@ -479,9 +479,9 @@
           this.modalEdit = false;
         });
       },
-      editTableRow(){
+      editTableRow() {
         this.modalViewLoading = true;
-        this.loading =true
+        this.loading =true;
         editDeliveryFeeRule(this.postageDetail).then(res => {
           this.modalEdit = false;
           this.modalViewLoading = false;
@@ -494,16 +494,16 @@
       addPostageRuleTableColumns() {
         if (this.postageDetail.detailList.length > 0) {
           let array = [];
-          this.postageDetail.detailList.forEach( item => {
-            array.push(item.minDistance +'-'+ item.maxDistance)
-          })
+          this.postageDetail.detailList.forEach(item => {
+            array.push(item.minDistance +'-'+ item.maxDistance);
+          });
           console.log(array);
-          console.log(this.array_diff(this.distanceList,array));
-          let tempArray = this.array_diff(this.distanceList,array);
-          if (tempArray.length===0){
+          console.log(this.array_diff(this.distanceList, array));
+          let tempArray = this.array_diff(this.distanceList, array);
+          if (tempArray.length===0) {
             this.$Message.error('不能添加相同距离范围的运费模板！');
-            return
-          }else {
+            return;
+          } else {
             let str = tempArray[0];
             let strArray = str.split('-');
             let obj = this._.cloneDeep(detailList);
@@ -512,7 +512,7 @@
             obj.deliveryFeeRuleId = this.postageDetail.id;
             this.postageDetail.detailList.push(obj);
           };
-        }else {
+        } else {
           let obj = this._.cloneDeep(detailList);
           obj.deliveryFeeRuleId = this.postageDetail.id;
           this.postageDetail.detailList.push(obj);
@@ -520,13 +520,11 @@
       },
       array_diff(a, b) {
         let A = this._.cloneDeep(a);
-        let B =  this._.cloneDeep(b);
-        for(let i=0;i<B.length;i++)
-        {
-          for(let j=0;j<A.length;j++)
-          {
-            if(A[j]==B[i]){
-              A.splice(j,1);
+        let B = this._.cloneDeep(b);
+        for (let i=0; i<B.length; i++) {
+          for (let j=0; j<A.length; j++) {
+            if (A[j]==B[i]) {
+              A.splice(j, 1);
               j=j-1;
             }
           }
@@ -534,17 +532,17 @@
         return A;
       },
       postageRuleTableHandleDelete(params) {
-        if (this.tempModalType === this.modalType.create){
+        if (this.tempModalType === this.modalType.create) {
           this.postageDetail.detailList = params.tableData.filter((item, index) => index !== params.row.initRowIndex);
-        }else {
-          let index = this.tempDetailList.findIndex( item => {
-            return item.id === params.row.id
+        } else {
+          let index = this.tempDetailList.findIndex(item => {
+            return item.id === params.row.id;
           });
-          if(index>-1){
-            if (!this.postageDetail.deleteIds){
-              this.postageDetail.deleteIds = []
+          if (index>-1) {
+            if (!this.postageDetail.deleteIds) {
+              this.postageDetail.deleteIds = [];
             };
-            this.postageDetail.deleteIds.push(params.row.id)
+            this.postageDetail.deleteIds.push(params.row.id);
           }
           this.postageDetail.detailList = params.tableData.filter((item, index) => index !== params.row.initRowIndex);
         };
@@ -553,7 +551,7 @@
         this.tempModalType = this.modalType.create;
         this.postageDetail.detailList.length = 0;
         this.postageDetail.detailList.push(this._.cloneDeep(detailList));
-        this.postageDetail.deliveryAtType = deliveryAtType.ALL_DAY
+        this.postageDetail.deliveryAtType = deliveryAtType.ALL_DAY;
         this.modalEdit = true;
       },
       resetSearchRowData() {
@@ -580,11 +578,11 @@
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
-        }).catch( error => {
+        }).catch(error => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
-        })
+        });
       },
       exportExcel() {
         this.$refs.tables.exportCsv({

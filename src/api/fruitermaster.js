@@ -527,6 +527,14 @@ export const editArticle = (data) => {
   });
 };
 
+// 查询文章详情
+export const getArticle = ({id}) => {
+  return Vue.prototype.$http.request({
+    url: '/articles/'+id,
+    method: 'get'
+  });
+};
+
 // 根据条件分页获取订单列表
 export const getOrdersPages = (data) => {
   return Vue.prototype.$http.request({

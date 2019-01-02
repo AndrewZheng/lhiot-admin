@@ -91,7 +91,7 @@ z<template>
           <i-col span="12">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="10">是否上架:</i-col>
-              <i-col span="14">{{rowData.status|onSaleStatusFilters}}</i-col>
+              <i-col span="14">{{rowData.status|customPlanStatusFilters}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -100,7 +100,7 @@ z<template>
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="10">上架板块:</i-col>
               <i-col span="14">
-                <div v-for="item in customPlanSectionData">
+                <div v-for="(item,key) in customPlanSectionData" :key="'modalView' + key">
                   <CheckboxGroup v-model="rowData.customPlanSectionIds">
                     <Checkbox
                       ref="checkBox"
@@ -156,7 +156,7 @@ z<template>
           </FormItem>
           <FormItem label="定制计划主图:" prop="image">
             <Input v-model="rowData.image" style="width: auto" v-show="false"/>
-            <div class="demo-upload-list" v-for="item in uploadListMain">
+            <div class="demo-upload-list" v-for="(item,key) in uploadListMain" :key="'modalEdit' + key">
               <template v-if="item.status === 'finished'">
                 <div>
                   <img :src="item.url">
@@ -186,13 +186,13 @@ z<template>
           <FormItem label="是否上架:" prop="status">
             <Select
               class="search-col mr5" v-model="rowData.status" style="width: 100px" >
-              <Option v-for="item in onSaleStatusEnum" :value="item.value" class="ptb2-5" :key="`search-col-${item.value}`">
+              <Option v-for="item in customPlanStatusEnum" :value="item.value" class="ptb2-5" :key="`search-col-${item.value}`">
                 {{item.label}}
               </Option>
             </Select>
           </FormItem>
           <FormItem label="上架板块:" prop="customPlanSectionIds" v-if="tempModalType === modalType.create">
-            <div v-for="item in customPlanSectionData">
+            <div v-for="(item,key) in customPlanSectionData" :key="'modalEdit-Section' + key">
               <CheckboxGroup v-model="rowData.customPlanSectionIds">
                 <Checkbox
                   ref="checkBox"
@@ -216,13 +216,14 @@ z<template>
                   <Col span="11" v-for="product in period.products" :key="'addOrEdit' + period.index +  '-' + product.index">
                     <FormItem :label="'第'+ product.dayOfPeriod +'天:'">
                       <Select
-                      :filterable="true"
+                      filterable
                       style="width: 150px"
                       v-model="product.productName"
                       placeholder="输入上架商品名称"
-                      :remote="true"
+                      remote
                       :remote-method ="remoteMethod"
-                      :loading="shelfSpecificationLoading">
+                      :loading="shelfSpecificationLoading"
+                      transfer>
                           <Option
                             v-for="(option, index) in optionsShelfSpecification"
                             :value="option.name" :key="'addOrEdit' + period.index +  '-' + product.index + '-' + index" class="pb5 pt5 pl15"
@@ -267,13 +268,13 @@ z<template>
                         <Col span="11" v-for="product in period.products" :key="'update' + period.index +  '-' + product.index">
                           <FormItem :label="'第'+ product.dayOfPeriod +'天:'">
                             <Select
-                            :filterable="true"
+                            filterable
                             style="width: 200px"
-                            v-model="product.productName"
-                            :remote="true"
+                            remote
                             :remote-method ="remoteMethod"
-                            :loading="shelfSpecificationLoading"
-                            placeholder="输入上架商品名称">
+                            :loading ="shelfSpecificationLoading"
+                            :placeholder =  "product.productName == '' ? '输入上架商品名称' : product.productName"
+                            transfer>
                               <Option
                                   v-for="(option, index) in optionsShelfSpecification"
                                   :value="option.name" class="pb5 pt5 pl15"
@@ -314,8 +315,8 @@ z<template>
   import searchMixin from '@/mixins/searchMixin.js';
   import uploadMixin from '@/mixins/uploadMixin';
   import {fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber} from '@/libs/util';
-  import {onSaleStatusConvert} from '@/libs/converStatus';
-  import {onSaleStatusEnum, YNEnum, positionType} from '@/libs/enumerate';
+  import {customPlanStatusConvert} from '@/libs/converStatus';
+  import {customPlanStatusEnum, YNEnum, positionType} from '@/libs/enumerate';
   import BookTypeOption from '_c/book-type-option';
 
   const customPlanDetail = {
@@ -406,7 +407,7 @@ z<template>
         shelfSpecificationLoading: false,
         model: [],
         customPlanSectionData: [],
-        onSaleStatusEnum,
+        customPlanStatusEnum,
         topRuleInline: false,
         ruleInline: {
           name: [{required: true, message: '请填写定制名称'}],
@@ -607,11 +608,11 @@ z<template>
             render: (h, params, vm) => {
               let {row} = params;
               if (row.status == 'VALID') {
-                return <div><tag color="success">{onSaleStatusConvert(row.status).label}</tag></div>;
+                return <div><tag color="success">{customPlanStatusConvert(row.status).label}</tag></div>;
               } else if (row.status == 'INVALID') {
-                return <div><tag color="error">{onSaleStatusConvert(row.status).label}</tag></div>;
+                return <div><tag color="error">{customPlanStatusConvert(row.status).label}</tag></div>;
               }
-              return <div><tag color="primary">{onSaleStatusConvert(row.status).label}</tag></div>;
+              return <div>{row.status}</div>;
             }
           },
           {
@@ -907,7 +908,7 @@ z<template>
                 }
             });
             }
-            item['status'] = onSaleStatusConvert(item['status']).label;
+            item['status'] = customPlanStatusConvert(item['status']).label;
           });
           this.$refs.tables.handleDownload({
             filename: `定制计划-${new Date().valueOf()}`,
@@ -917,7 +918,7 @@ z<template>
       },
       updateProduct(id, shelfId) {
         console.log('updateProduct:' + id + ',' + shelfId);
-        if ((id !== null && shelfId !== null) || (id !== 0 && shelfId !== 0)) {
+        if ((id !== null && shelfId !== null) && (id !== 0 && shelfId !== 0)) {
           const params = {
             id: id,
             shelfId: shelfId
@@ -926,6 +927,8 @@ z<template>
           editCustomPlanProducts(params).then(res => {
                 this.$Message.info('修改成功');
           });
+        } else {
+          this.$Message.warning('商品id或者上架id不能为空');
         }
       },
       updateSpecification() {
