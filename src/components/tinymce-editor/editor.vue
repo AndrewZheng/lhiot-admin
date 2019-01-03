@@ -11,6 +11,7 @@
 import tinymce from 'tinymce/tinymce';
 import 'tinymce/themes/modern/theme';
 import Editor from '@tinymce/tinymce-vue';
+import zh_CN_url from '../../../public/tinymce/zh_CN.js'
 // Any plugins you want to use has to be imported
 import 'tinymce/plugins/advlist';
 import 'tinymce/plugins/wordcount';
@@ -129,9 +130,9 @@ export default {
       checkerTimeout: null,
       isTyping: false,
       defalutOps: {
-        language_url: '/tinymce/zh_CN.js',
+        language_url: zh_CN_url,
         language: 'zh_CN',
-        skin_url: '/tinymce/skins/lightgray',
+        skin_url: '~/tinymce/skins/lightgray',
         height: this.height,
         plugins: this.plugins,
         toolbar: this.toolbar,
