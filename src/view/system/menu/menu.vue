@@ -13,6 +13,8 @@
                   :loading="loading"
                   :columns="columns"
                   :exportType="exportType"
+                  :searchAreaColumn="14"
+                  :operateAreaColumn="10"
                   @on-delete="handleDelete"
                   @on-view="handleView"
                   @on-edit="handleEdit"
@@ -46,11 +48,11 @@
                 导入Excel
               </Button>
               <!-- 多类型导出 -->
+              <BookTypeOption v-model="exportType" class="mr5"/>
               <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload">
                 <Icon type="md-download"/>
                 多类型导出
               </Button>
-              <BookTypeOption v-model="exportType" class="mr5"/>
             </div>
           </tables>
           <div style="margin: 10px;overflow: hidden">

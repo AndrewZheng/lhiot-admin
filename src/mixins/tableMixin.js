@@ -14,7 +14,7 @@ let mixin = {
         create: 'create'
       },
       tempModalType: 'create'
-    }
+    };
   },
   methods: {
     changePage(page) {
@@ -27,11 +27,12 @@ let mixin = {
       this.getTableData();
     },
     handleEditClose() {
-      this.modalEdit = false
+      this.modalEdit = false;
     },
     handleClose() {
+      this.loading = false;
       this.modalView = false;
     }
   }
-}
-export default mixin
+};
+export default mixin;

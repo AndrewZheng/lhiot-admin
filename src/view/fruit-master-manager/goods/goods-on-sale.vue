@@ -217,8 +217,7 @@
               <Select :value="productDetail.shelfStatus" @on-change="useAbleUniteChange"
                       style="width: 100px">
                 <Option class="ptb2-5" style="padding-left: 5px" v-for="(item,index) in useAble" :value="item.value"
-                        :key="index">{{ item.label
-                  }}
+                        :key="index">{{ item.label}}
                 </Option>
               </Select>
             </FormItem>
@@ -469,7 +468,13 @@
             key: 'shelfStatus',
             render: (h, params, vm) => {
               const { row } = params;
-              return <div>{onSaleStatusConvert(row.shelfStatus).label}</div>;
+              if (row.shelfStatus === 'ON') {
+                return <div><tag color="success">{'上架'}</tag></div>;
+              } else if (row.shelfStatus === 'OFF') {
+                return <div><tag color="error">{'下架'}</tag></div>;
+              } else {
+                return <div>{row.shelfStatus}</div>;
+              }
             }
           },
           {

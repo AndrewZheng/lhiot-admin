@@ -1,6 +1,6 @@
 import {
   customOrderStatusConvert,
-  customPeriodConvert,
+  customPeriodConvert, customPlanStatusConvert,
   deliveryTypeCustomConvert, doctorLevelConvert, doctorStatusConvert, hotConvert, onSaleStatusConvert,
   orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert
 } from '../libs/converStatus';
@@ -87,23 +87,27 @@ let mixin = {
     // 商品上架
     onSaleStatusFilters(status) {
       return onSaleStatusConvert(status).label;
+    },
+    // 定制计划商品上架
+    customPlanStatusFilters(status) {
+      return customPlanStatusConvert(status).label;
     }
   },
   computed: {
     userInfo() {
       return this.$store.getters.getUserInfo;
     },
-    yuanToFenNumber(value){
-      if(typeof value === 'number'){
+    yuanToFenNumber(value) {
+      if (typeof value === 'number') {
         return value * 100;
-      }else if (typeof value === 'string') {
+      } else if (typeof value === 'string') {
         return parseInt(value) * 100;
       }
     },
-    fenToYuanDot2Number(){
-      if(typeof value === 'number'){
-        return Math.round(value) / 100.00
-      }else if (typeof value === 'string') {
+    fenToYuanDot2Number(value) {
+      if (typeof value === 'number') {
+        return Math.round(value) / 100.00;
+      } else if (typeof value === 'string') {
         return Math.round(parseInt(value) / 100.00);
       }
     }

@@ -326,7 +326,7 @@ export default {
               return <div><tag color="error">{'审核不通过'}</tag></div>;
             } else {
               return <div>{row.auditStatus}</div>;
-            };
+            }
           }
         },
         {

@@ -65,7 +65,7 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves type="success" class="mr5" @click="addChildren">
+          <Button v-waves type="success" class="mr5" @click="addArticle">
             <Icon type="md-add"/>
             创建
           </Button>
@@ -130,7 +130,7 @@
           <i-col span="24">
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="8">发布时间:</i-col>
-              <i-col span="16"></i-col>
+              <i-col span="16">{{articleDetail.publishAt}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -155,102 +155,16 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-    <Modal
-      v-model="modalEdit"
-      :width="1300"
-    >
-      <p slot="header">
-        <span>编辑文章</span>
-      </p>
-      <div class="modal-content">
-        <Form ref="modalEdit" :model="articleDetail" :rules="ruleInline" :label-width="80">
-          <Row>
-            <FormItem label="文章标题:" prop="title">
-              <Input v-model="articleDetail.title" placeholder="文章标题" style="width: 325px"/>
-            </FormItem>
-          </Row>
-          <Row>
-            <FormItem label="文章作者:" prop="author">
-              <Input v-model="articleDetail.author" placeholder="文章标题"  style="width: 325px"/>
-            </FormItem>
-          </Row>
-          <Row>
-            <FormItem label="是否发布:" prop="articleStatus">
-              <Select :value="articleDetail.articleStatus" @on-change="useAbleUniteChange"
-                      style="width: 100px">
-                <Option class="ptb2-5" style="padding-left: 5px" v-for="(item,index) in useAble" :value="item.value"
-                        :key="index">{{ item.label}}
-                </Option>
-              </Select>
-            </FormItem>
-          </Row>
-          <Row>
-            <FormItem label="关键词:" prop="keywords">
-              <Input ref="keyword1" v-model="keyword1" span="6" style="width: 100px;margin-right: 10px" @on-change="inputChange1"/>
-              <Input ref="keyword2" v-model="keyword2" span="6" style="width: 100px;margin-right: 10px" @on-change="inputChange2"/>
-              <Input ref="keyword3" v-model="keyword3" span="6" style="width: 100px;margin-right: 10px" @on-change="inputChange3"/>
-            </FormItem>
-          </Row>
-          <Row>
-            <FormItem label="文章主图:" prop="headImage">
-               <Input v-model="articleDetail.headImage" style="width: auto" v-show="false"/>
-              <div class="demo-upload-list" v-for="item in uploadListMain">
-                <template v-if="item.status === 'finished'">
-                  <div>
-                    <img :src="item.url">
-                    <div class="demo-upload-list-cover">
-                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                      <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
-                    </div>
-                  </div>
-                </template>
-                <template v-else>
-                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                </template>
-              </div>
-              <IViewUpload
-                ref="uploadMain"
-                :defaultList="defaultListMain"
-                @on-success="handleSuccessMain"
-                :imageSize="imageSize"
-              >
-                <div slot="content">
-                  <Button type="primary">
-                    上传图片
-                  </Button>
-                </div>
-              </IViewUpload>
-            </FormItem>
-          </Row>
-          <Row>
-            <FormItem label="文章内容:" prop="content">
-              <tinymce-editor span="24" id="tinymce" ref="editor" v-model="articleDetail.content" :height="300" />
-            </FormItem>
-          </Row>
-        </Form>
-      </div>
-      <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button type="primary" :loading="modalViewLoading" @click="handleSubmit('modalEdit')">确定
-        </Button>
-      </div>
-    </Modal>
-    <Modal title="View Image" v-model="uploadVisible">
-      <img :src="imgUploadViewItem" style="width: 100%">
-    </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
-  import {getArticlesPages, createArticle, deleteArticle, editArticle} from '@/api/fruitermaster';
+  import {getArticlesPages, deleteArticle, editArticle} from '@/api/fruitermaster';
   import deleteMixin from '@/mixins/deleteMixin.js';
   import tableMixin from '@/mixins/tableMixin.js';
   import searchMixin from '@/mixins/searchMixin.js';
   import uploadMixin from '@/mixins/uploadMixin';
-  import IViewUpload from '_c/iview-upload';
-  import tinymceEditor from '_c/tinymce-editor';
-  import Editor from '_c/editor';
   import BookTypeOption from '_c/book-type-option';
 
   const articleDetail = {
@@ -286,23 +200,14 @@
   export default {
     components: {
       Tables,
-      tinymceEditor,
-      Editor,
-      IViewUpload,
       BookTypeOption
     },
     mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
-    mounted() {
-      this.$refs.editor.initTinymce();
-    },
     created() {
       this.getTableData();
     },
     data() {
       return {
-        keyword1: '',
-        keyword2: '',
-        keyword3: '',
         modalViewLoading: false,
         ruleInline: {
           title: {required: true, message: '请输入文章标题'},
@@ -360,9 +265,9 @@
             render: (h, params, vm) => {
               const {row} = params;
               if (row.articleStatus === 'PUBLISH') {
-                return <div>{'发布'}</div>;
+                return <div><tag color="success">{'发布'}</tag></div>;
               } else if (row.articleStatus === 'UN_PUBLISH') {
-                return <div>{'未发布'}</div>;
+                return <div><tag color="error">{'未发布'}</tag></div>;
               } else {
                 return <div>{row.articleStatus}</div>;
               }
@@ -392,35 +297,6 @@
       };
     },
     methods: {
-      resetKeyWord() {
-        this.keyword1 = '';
-        this.keyword2 = '';
-        this.keyword3 = '';
-      },
-      setArticleKeyWords() {
-        let keyWordsArray = [this.keyword1, this.keyword2, this.keyword3];
-        let tempArr = [];
-        keyWordsArray.forEach(item => {
-          if (item !== null && item != '') {
-            tempArr.push(item);
-          };
-        });
-        if (tempArr.length > 0) {
-          this.articleDetail.keywords = tempArr.join(',');
-        } else {
-          this.articleDetail.keywords = null;
-        };
-        console.log(this.articleDetail.keywords);
-      },
-      inputChange1(event) {
-        this.setArticleKeyWords();
-      },
-      inputChange2(event) {
-        this.setArticleKeyWords();
-      },
-      inputChange3(event) {
-        this.setArticleKeyWords();
-      },
       useAbleUniteChange(value) {
         this.articleDetail.articleStatus = value;
       },
@@ -447,32 +323,6 @@
         this.searchRowData = _.cloneDeep(roleRowData);
         this.getTableData();
       },
-      handleSuccessMain(response, file, fileList) {
-        this.uploadListMain = fileList;
-        this.articleDetail.headImage = null;
-        this.articleDetail.headImage = fileList[0].url;
-      },
-      handleRemoveMain(file) {
-        this.$refs.uploadMain.deleteFile(file);
-        this.uploadListMain = [];
-        this.articleDetail.headImage = null;
-      },
-      handleSubmit(name) {
-        this.articleDetail.content = this.$refs.editor.content;
-        this.$refs[name].validate((valid) => {
-          if (valid) {
-            if (this.tempModalType === this.modalType.create) {
-              // 添加状态
-              this.createTableRow();
-            } else if (this.tempModalType === this.modalType.edit) {
-              // 编辑状态
-              this.editTableRow();
-            }
-          } else {
-            this.$Message.error('请完善商品的信息!');
-          }
-        });
-      },
       deleteTable(ids) {
         this.loading = true;
         deleteArticle({
@@ -489,37 +339,8 @@
           this.loading = false;
         });
       },
-      addChildren() {
-        if (this.tempModalType !== this.modalType.create) {
-          this.resetKeyWord();
-          this.resetFields();
-          this.articleDetail = this._.cloneDeep(articleDetail);
-        }
-        this.tempModalType = this.modalType.create;
-        this.modalEdit = true;
-      },
-      createTableRow() {
-        this.modalViewLoading = true;
-        this.loading =true;
-        createArticle(this.articleDetail).then(res => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
-          this.$Message.success('创建成功!');
-          this.getTableData();
-          this.resetKeyWord();
-          this.$refs.editor.content = null;
-        });
-      },
-      editTableRow() {
-        this.modalViewLoading = true;
-        this.loading =true;
-        editArticle(this.articleDetail).then(res => {
-          this.getTableData();
-        }).finally(res => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-          this.$refs.editor.content = null;
-        });
+      addArticle(params) {
+        this.turnToPage('article-edit');
       },
       onArticleStatus(params) {
         console.log(params.row.articleStatus);
@@ -532,37 +353,26 @@
         }
         this.editTableRow();
       },
+      editTableRow() {
+        this.modalViewLoading = true;
+        this.loading =true;
+        editArticle(this.articleDetail).then(res => {
+          this.$Message.success('修改成功!');
+          this.modalViewLoading = false;
+          this.loading =false;
+          this.getTableData();
+        });
+      },
       handleView(params) {
         this.tempModalType = this.modalType.view;
         this.articleDetail = this._.clone(params.row);
         this.modalView = true;
       },
       handleEdit(params) {
-        this.tempModalType = this.modalType.edit;
-        this.articleDetail = this._.cloneDeep(params.row);
-        let keyWordsArr = this.articleDetail.keywords.split(',');
-        this.$refs.editor.content = this.articleDetail.content;
-        if (keyWordsArr[0]) {
-          this.keyword1 = keyWordsArr[0];
-        };
-        if (keyWordsArr[1]) {
-          this.keyword2 = keyWordsArr[1];
-        };
-        if (keyWordsArr[2]) {
-          this.keyword3 = keyWordsArr[2];
-        };
-        this.setDefaultUploadList(params.row);
-        this.modalEdit = true;
-      },
-      setDefaultUploadList(res) {
-        if (res.headImage != null) {
-          const map = {status: 'finished', url: 'url'};
-          let mainImgArr = [];
-          map.url = res.headImage;
-          mainImgArr.push(map);
-          this.$refs.uploadMain.setDefaultFileList(mainImgArr);
-          this.uploadListMain = mainImgArr;
-        }
+        this.turnToPage({
+          name: 'article-edit',
+          query: {id: params.row.id}
+        });
       },
       getTableData() {
         this.loading = true;
@@ -574,11 +384,6 @@
           this.searchLoading = false;
         });
       },
-      // exportExcel() {
-      //   this.$refs.tables.exportCsv({
-      //     filename: `table-${new Date().valueOf()}.csv`
-      //   });
-      // },
       handleDownload() {
       // 导出不分页
       this.searchRowData.rows = null;
