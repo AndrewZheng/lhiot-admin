@@ -134,9 +134,9 @@
               <i-col span="3">详情图:</i-col>
               <i-col span="21">
                 <div class="demo-upload-list"  v-for="item in uploadListMultiple">
-                  <img :src="productDetail.detailImg"/>
+                  <img :src="item.url"/>
                   <div class="demo-upload-list-cover">
-                    <Icon type="ios-eye-outline" @click.native="handleUploadView(productDetail.detailImg)"></Icon>
+                    <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                   </div>
                 </div>
               </i-col>
@@ -290,7 +290,7 @@
           </Row>
           <Row>
             <FormItem label="商品详情:" prop="detailImg" :label-width="80">
-              <Input v-model="productDetail.detailImg" style="width: auto" v-show="false"/>
+              <Input v-model="productDetail.detailImg" style="width: auto" v-show="false"></Input>
               <div class="demo-upload-list" v-for="item in uploadListMultiple">
                 <template v-if="item.status === 'finished'">
                   <div>
@@ -430,13 +430,15 @@
       this.loading = true;
       this.createLoading = true;
       productSpecificationsUnits().then(res => {
-        res.forEach(value => {
-          const map = {label: 'label', value: 'value'};
-          map.value = value;
-          map.label = value;
-          this.unitsList.push(map);
-          this.createLoading = false;
-        });
+        if (res){
+          res.forEach(value => {
+            const map = {label: 'label', value: 'value'};
+            map.value = value;
+            map.label = value;
+            this.unitsList.push(map);
+            this.createLoading = false;
+          });
+        };
         getProductCategoriesTree().then(res => {
           if (res && res.array.length > 0) {
             this.productCategoriesTreeList = res.array;
@@ -619,7 +621,7 @@
           this.$refs[name1].validate((valid) => {
             if (valid && innerValid) {
               if (this.tempModalType === this.modalType.create) {
-                // 添加状态                
+                // 添加状态
                 this.createProduct();
               } else if (this.tempModalType === this.modalType.edit) {
                 // 编辑状态
@@ -739,6 +741,9 @@
           id: params.row.id
         }).then(res => {
           this.productDetail = res;
+          if (res) {
+            this.setDefaultUploadList(res)
+          };
           this.loading = false;
           this.modalView = true;
         }).catch(error => {
