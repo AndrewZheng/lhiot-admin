@@ -55,10 +55,10 @@
             @on-change="startTimeChange"
             type="datetime"
             placeholder="申请时间起"
-            class="search-input mr5"
+            class="search-input"
             style="width: 150px"
           />
-          <i>-</i>
+          <i> - </i>
           <DatePicker
             format="yyyy-MM-dd HH:mm:ss"
             @on-change="endTimeChange"
@@ -301,7 +301,6 @@ const salaryDetail = {
   cardNo: '',
   settlementStatus: null,
   phone: '',
-  dealAt: null,
   beginCreateAt: null,
   endCreateAt: null,
   realName: '',
@@ -455,7 +454,7 @@ export default {
         this.loading = false;
         this.searchLoading = false;
         this.clearSearchLoading = false;
-      }).catch(error => {
+      }).catch(() => {
         this.loading = false;
         this.searchLoading = false;
         this.clearSearchLoading = false;

@@ -130,7 +130,7 @@
                         prop="sectionImg"
                         :label-width="80">
                 <Input v-model="goodsModuleDetail.sectionImg" style="width: auto" v-show="false"/>
-                <div class="demo-upload-list" v-for="item in uploadListMain">
+                <div class="demo-upload-list" v-for="item in uploadListMain" :key="item.url">
                   <template v-if="item.status === 'finished'">
                     <div>
                       <img :src="item.url">
@@ -313,7 +313,7 @@
         this.selectDisable = false;
         this.goodsModuleList = res.array;
         this.getTableData();
-      }).catch(error => {
+      }).catch(() => {
         this.selectDisable = false;
       });
     },
@@ -330,12 +330,8 @@
               validator(rule, value, callback, source, options) {
                 console.log(value);
                 let errors = [];
-                if (value) {
-                  if (value.length < 1) {
-                    callback('请关联商品');
-                  };
-                } else {
-                  callback('请关联商品');
+                if (!value || value.length < 1) {
+                  errors.push(new Error('请关联商品'));
                 };
                 callback(errors);
               }
@@ -401,7 +397,7 @@
             title: '操作',
             minWidth: 200,
             key: 'handle',
-            options: ['delete', 'edit', 'view', 'relevance']
+            options: ['view', 'edit', 'delete', 'relevance']
           }
         ],
         shelfSpecificationLoading: false,
@@ -437,7 +433,7 @@
           this.$Message.success('创建成功!');
           this.resetFields();
           this.getTableData();
-        }).catch(error => {
+        }).catch(() => {
           this.modalViewLoading = false;
           this.modalEdit = false;
         });
@@ -488,7 +484,7 @@
               this.addTempDataLoading = false;
               this.tempTableLoading =false;
               this.loading = false;
-            }).catch(error => {
+            }).catch(() => {
               this.addTempDataLoading = false;
               this.tempTableLoading =false;
               this.loading = false;
@@ -537,7 +533,7 @@
           };
           console.log(this.optionsShelfSpecification);
           this.shelfSpecificationLoading = false;
-        }).catch(error => {
+        }).catch(() => {
           this.shelfSpecificationLoading = false;
         });
       },
@@ -574,7 +570,7 @@
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
-        }).catch(error => {
+        }).catch(() => {
           this.modalEdit = false;
           this.modalViewLoading = false;
         });
@@ -619,7 +615,7 @@
             this.tableDataSelected = [];
             this.getTableData();
           }
-        ).catch(err => {
+        ).catch(() => {
           this.loading = false;
         });
       },
@@ -630,7 +626,7 @@
           this.loading = false;
           this.clearSearchLoading = false;
           this.searchLoading = false;
-        }).catch(error => {
+        }).catch(() => {
           this.loading = false;
           this.clearSearchLoading = false;
           this.searchLoading = false;

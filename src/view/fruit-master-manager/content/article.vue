@@ -194,7 +194,7 @@
           <Row>
             <FormItem label="文章主图:" prop="headImage">
                <Input v-model="articleDetail.headImage" style="width: auto" v-show="false"/>
-              <div class="demo-upload-list" v-for="item in uploadListMain">
+              <div class="demo-upload-list" v-for="item in uploadListMain" :key="item.url">
                 <template v-if="item.status === 'finished'">
                   <div>
                     <img :src="item.url">
@@ -378,7 +378,7 @@
             title: '操作',
             minWidth: 200,
             key: 'handle',
-            options: ['delete', 'edit', 'view', 'onArticleStatus']
+            options: ['view', 'edit', 'delete', 'onArticleStatus']
           }
         ],
         defaultListMain: [],
@@ -485,7 +485,7 @@
             this.tableDataSelected = [];
             this.getTableData();
           }
-        ).catch(err => {
+        ).catch(() => {
           this.loading = false;
         });
       },

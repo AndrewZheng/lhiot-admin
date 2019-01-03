@@ -16,21 +16,21 @@
         <div slot="searchCondition" :searchAreaColumn="24">
           <Input
             placeholder="姓名"
-            class="search-input"
+            class="search-input mr5"
             v-model="searchRowData.realName"
             style="width: 100px"
             clearable
           />
           <Input
             placeholder="手机号码"
-            class="search-input"
+            class="search-input mr5"
             v-model="searchRowData.phone"
             style="width: 100px"
             clearable
           />
           <Input
             placeholder="身份证号码"
-            class="search-input"
+            class="search-input mr5"
             v-model="searchRowData.idcardNo"
             style="width: 150px"
             clearable
@@ -44,7 +44,7 @@
             v-model="searchRowData.beginCreateAt"
             style="width: 160px"
           />
-          <i>-</i>
+          <i> - </i>
           <DatePicker
             format="yyyy-MM-dd HH:mm:ss"
             @on-change="endTimeChange"
@@ -68,7 +68,7 @@
               :key="item.value"
             >{{ item.label }}</Option>
           </Select>
-          <Button v-waves @click="handleSearch" class="search-btn ml5" type="primary">
+          <Button v-waves @click="handleSearch" class="search-btn ml5 mr5" type="primary">
             <Icon type="md-search"/>&nbsp;搜索
           </Button>
           <Button
@@ -131,16 +131,16 @@
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
-          <i-col span="24">
+          <i-col span="12">
             <Row type="flex" :gutter="8" align="middle">
-              <i-col span="10">申请时间:</i-col>
-              <i-col span="14">{{masterDetail.createTime}}</i-col>
+              <i-col span="8">申请时间:</i-col>
+              <i-col span="16">{{masterDetail.createTime}}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="24">
-            <i-col span="4">身份证正面照:</i-col>
+            <i-col span="4">身份证正面照: </i-col>
             <i-col span="20">
               <img :src="masterDetail.idcardFront" style="width: 200px;height: auto">
             </i-col>
@@ -148,7 +148,7 @@
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="24">
-            <i-col span="4">身份证反面照:</i-col>
+            <i-col span="4">身份证反面照: </i-col>
             <i-col span="20">
               <img :src="masterDetail.idcardReverse" style="width: 200px;height: auto">
             </i-col>
@@ -156,7 +156,7 @@
         </Row>
         <Row type="flex" :gutter="8" align="middle" class-name="mb10">
           <i-col span="24">
-            <i-col span="4">资质证明:</i-col>
+            <i-col span="4">资质证明: </i-col>
             <i-col span="20">
               <img :src="masterDetail.credentials" style="width: 200px;height: auto">
             </i-col>

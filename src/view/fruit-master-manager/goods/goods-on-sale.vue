@@ -227,7 +227,7 @@
           <Row>
             <FormItem label="商品主图:建议尺寸;400x400(单位:px)" prop="image" :label-width="80">
               <Input v-model="productDetail.image" style="width: auto" v-show="false"/>
-              <div class="demo-upload-list" v-for="item in uploadListMain">
+              <div class="demo-upload-list" v-for="item in uploadListMain" :key="item.url">
                 <template v-if="item.status === 'finished'">
                   <div>
                     <img :src="item.url">
@@ -258,13 +258,14 @@
           <Row v-show="tempModalType===modalType.create">
             <Col span="24">
             <FormItem label="上架板块:">
-              <div v-for="item in uiPositionData">
+              <div v-for="item in uiPositionData" :key="item.id">
                 <div>
                   {{item.description}}:
                 </div>
                 <CheckboxGroup @on-change="checkAllGroupChange" v-model="model">
                   <Checkbox
                     ref="checkBox"
+                    :key="innerItem.id"
                     :label="innerItem.id"
                     v-for="innerItem in item.productSections"
                   >{{innerItem.sectionName}}
@@ -356,7 +357,7 @@
         this.uiPositionData = res.array;
         this.createLoading = false;
         this.getTableData();
-      }).catch(error => {
+      }).catch(() => {
         this.createLoading = false;
       });
     },
@@ -476,7 +477,7 @@
             title: '操作',
             minWidth: 200,
             key: 'handle',
-            options: ['delete', 'edit', 'view', 'onSale']
+            options: ['view', 'edit', 'delete', 'onSale']
           }
         ],
         searchRowData: _.cloneDeep(roleRowData),
@@ -547,7 +548,7 @@
             this.tableDataSelected = [];
             this.getTableData();
           }
-        ).catch(err => {
+        ).catch(() => {
           this.loading = false;
         });
       },
@@ -576,7 +577,7 @@
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
-        }).catch(err => {
+        }).catch(() => {
           this.resetFields();
           this.modalEdit = false;
           this.modalViewLoading = false;

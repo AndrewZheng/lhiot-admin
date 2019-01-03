@@ -163,6 +163,7 @@
 
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
+  import _ from 'lodash';
   import {
     createProductSpecification,
     deleteProductSpecification,
@@ -208,25 +209,13 @@
           this.createLoading = false;
         });
         this.getTableData();
-      })
+      });
     },
     data() {
       return {
         mixins: [deleteMixin],
         unitsList: [],
         ruleInline: {
-          barcode: [
-            {required: true, message: '请输入商品编码'},
-            {
-              validator(rule, value, callback, source, options) {
-                let errors = [];
-                if (!/^[0-9]+$/.test(value)) {
-                  callback('必须为整数');
-                }
-                callback(errors);
-              }
-            }
-          ],
           availableStatus: [
             {required: true, message: '请选择商品分类'}
           ],
@@ -239,7 +228,7 @@
               validator(rule, value, callback, source, options) {
                 let errors = [];
                 if (!/^[0-9]\d*$/.test(value)) {
-                  callback('必须为整数');
+                  errors.push(new Error('必须为整数'));
                 }
                 callback(errors);
               }
@@ -251,7 +240,7 @@
               validator(rule, value, callback, source, options) {
                 let errors = [];
                 if (!/^[1-9]\d*$/.test(value)) {
-                  callback('必须为非零整数');
+                  errors.push(new Error('必须为非零整数'));
                 }
                 callback(errors);
               }
@@ -263,7 +252,7 @@
               validator(rule, value, callback, source, options) {
                 let errors = [];
                 if (!/^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/.test(value)) {
-                  callback('必须为大于0的数字');
+                  errors.push(new Error('必须为大于0的数字'));
                 }
                 callback(errors);
               }
@@ -283,8 +272,8 @@
             title: '商品名称',
             key: 'productName',
             minWidth: 180,
-            render(h, params){
-              return <div>{params.row.product.name}</div>
+            render(h, params) {
+              return <div>{params.row.product.name}</div>;
             }
           },
           {
@@ -310,18 +299,18 @@
           {
             title: '重量(kg)',
             width: 120,
-            key: 'weight',
+            key: 'weight'
           },
           {
             title: '安全库存',
             width: 120,
-            key: 'limitInventory',
+            key: 'limitInventory'
           },
           {
             title: '操作',
             minWidth: 150,
             key: 'handle',
-            options: ['delete', 'edit', 'view']
+            options: ['view', 'edit', 'delete']
           }
         ],
         modalType: {
@@ -373,7 +362,7 @@
             this.tableDataSelected = [];
             this.getTableData();
           }
-        ).catch(err => {
+        ).catch(() => {
           this.loading = false;
         });
       },
@@ -403,7 +392,7 @@
       },
       handleCreateView() {
         if (this.tempModalType !== this.modalType.create) {
-          this.productStandardDetail = this._.cloneDeep(productStandardDetail)
+          this.productStandardDetail = this._.cloneDeep(productStandardDetail);
         };
         this.tempModalType = this.modalType.create;
         this.modalEdit = true;
@@ -418,7 +407,7 @@
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
-        }).catch(error => {
+        }).catch(() => {
           this.modalViewLoading = false;
           this.modalEdit = false;
         });
@@ -448,7 +437,7 @@
           this.productStandardDetail = productStandardDetail;
           this.productStandardDetail.productId = this.$route.params.id;
           this.getTableData();
-        }).catch( error => {
+        }).catch(() => {
           this.modalEdit = false;
           this.modalViewLoading = false;
         });
@@ -471,7 +460,7 @@
           this.tableData = res.array;
           this.total = res.total;
           this.loading = false;
-        }).catch( error => {
+        }).catch(() => {
           this.loading = false;
         });
       },

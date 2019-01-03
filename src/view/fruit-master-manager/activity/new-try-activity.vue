@@ -183,7 +183,7 @@
         ruleInline: {
           shelfId: [{required: true, message: '请填写上架商品ID'}],
           activityPrice: [{required: true, message: '请填写尝鲜价'}],
-          sort: [{required: true, message: '请填写整数排序',pattern:/^-?\d+$/}]
+          sort: [{required: true, message: '请填写整数排序', pattern: /^-?\d+$/}]
         },
         columns: [
           {
@@ -244,7 +244,7 @@
             title: '操作',
             minWidth: 200,
             key: 'handle',
-            options: ['delete', 'edit']
+            options: ['edit', 'delete']
           }
         ],
         modalViewLoading: false,
@@ -349,7 +349,7 @@
             this.tableDataSelected = [];
             this.getTableData();
           }
-        ).catch(err => {
+        ).catch(() => {
           this.tableDataSelected = [];
           this.loading = false;
         });
@@ -378,7 +378,7 @@
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
-        }).catch(error => {
+        }).catch(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

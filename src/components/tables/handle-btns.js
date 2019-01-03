@@ -381,7 +381,7 @@ const btns = {
         }, [
           h('Icon', {
             props: {
-              type: 'md-pause',
+              type: 'md-unlock',
               size: 16,
               color: '#fff'
             }
@@ -411,7 +411,7 @@ const btns = {
         }, [
           h('Icon', {
             props: {
-              type: 'md-play',
+              type: 'md-lock',
               size: 16,
               color: '#fff'
             }
@@ -441,7 +441,7 @@ const btns = {
         }
       }, [h('Icon', {
         props: {
-          custom: 'iconfont icon-shenhe',
+          type: 'md-hammer', // iconfont icon-shenhe
           size: 16,
           color: '#fff'
         }

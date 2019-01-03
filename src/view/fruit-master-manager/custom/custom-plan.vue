@@ -100,7 +100,7 @@ z<template>
             <Row type="flex" :gutter="8" align="middle" class-name="mb10">
               <i-col span="10">上架板块:</i-col>
               <i-col span="14">
-                <div v-for="item in customPlanSectionData">
+                <div v-for="item in customPlanSectionData" :key="item.id">
                   <CheckboxGroup v-model="rowData.customPlanSectionIds">
                     <Checkbox
                       ref="checkBox"
@@ -156,7 +156,7 @@ z<template>
           </FormItem>
           <FormItem label="定制计划主图:" prop="image">
             <Input v-model="rowData.image" style="width: auto" v-show="false"/>
-            <div class="demo-upload-list" v-for="item in uploadListMain">
+            <div class="demo-upload-list" v-for="item in uploadListMain" :key="item.url">
               <template v-if="item.status === 'finished'">
                 <div>
                   <img :src="item.url">
@@ -192,7 +192,7 @@ z<template>
             </Select>
           </FormItem>
           <FormItem label="上架板块:" prop="customPlanSectionIds" v-if="tempModalType === modalType.create">
-            <div v-for="item in customPlanSectionData">
+            <div v-for="item in customPlanSectionData" :key="item.id">
               <CheckboxGroup v-model="rowData.customPlanSectionIds">
                 <Checkbox
                   ref="checkBox"
@@ -398,7 +398,7 @@ z<template>
         this.getTableData();
       });
     },
-    mixins: [ deleteMixin, tableMixin, searchMixin, uploadMixin],
+    mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
     data() {
       return {
         shelfSpecificationLoadingDay1: false,
@@ -618,7 +618,7 @@ z<template>
             title: '操作',
             minWidth: 250,
             key: 'handle',
-            options: ['delete', 'edit', 'view', 'customOnSale', 'settings']
+            options: ['view', 'edit', 'delete', 'customOnSale', 'settings']
           }
         ],
         uploadListMain: [],
@@ -853,7 +853,7 @@ z<template>
             this.tableDataSelected = [];
             this.getTableData();
           }
-        ).catch(err => {
+        ).catch(() => {
           this.loading = false;
         });
       },

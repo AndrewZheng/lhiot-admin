@@ -320,6 +320,7 @@
           this.getTableData();
           this.loading = false;
         }).catch(err => {
+          console.log(err);
           this.loading = false;
         });
       },
@@ -335,6 +336,7 @@
           this.searchLoading = false;
           this.clearSearchLoading = false;
         }).catch(error => {
+          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

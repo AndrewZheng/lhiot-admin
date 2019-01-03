@@ -36,7 +36,6 @@
           </Button>
           <Poptip confirm
                   placement="bottom"
-                  style="width: 100px"
                   title="您确认删除选中的内容吗?"
                   @on-ok="poptipOk"
           >
@@ -116,7 +115,7 @@
             <Row>
               <i-col span="3">商品附图:</i-col>
               <i-col span="21">
-                <div class="demo-upload-list" v-for="item in productDetail.subImg">
+                <div class="demo-upload-list" v-for="item in productDetail.subImg" :key="item">
                   <div>
                     <img :src="item">
                     <div class="demo-upload-list-cover">
@@ -133,7 +132,7 @@
             <Row>
               <i-col span="3">详情图:</i-col>
               <i-col span="21">
-                <div class="demo-upload-list"  v-for="item in uploadListMultiple">
+                <div class="demo-upload-list"  v-for="item in uploadListMultiple" :key="item.id">
                   <img :src="productDetail.detailImg"/>
                   <div class="demo-upload-list-cover">
                     <Icon type="ios-eye-outline" @click.native="handleUploadView(productDetail.detailImg)"></Icon>
@@ -227,7 +226,7 @@
           <Row>
             <FormItem label="商品主图:建议尺寸;400x400(单位:px):" prop="mainImg" >
               <Input v-model="productDetail.mainImg" style="width: auto" v-show="false"/>
-              <div class="demo-upload-list" v-for="item in uploadListMain">
+              <div class="demo-upload-list" v-for="item in uploadListMain" :key="item.url">
                 <template v-if="item.status === 'finished'">
                   <div>
                     <img :src="item.url">
@@ -257,7 +256,7 @@
           </Row>
           <Row>
             <FormItem label="商品附图:建议尺寸600x338(单位:px)" prop="subImg">
-              <div class="demo-upload-list" v-for="item in uploadListSecond">
+              <div class="demo-upload-list" v-for="item in uploadListSecond" :key="item.url">
               <Input v-model="productDetail.subImg" style="width: auto" v-show="false"/>
                 <template v-if="item.status === 'finished'">
                   <div>
@@ -291,7 +290,7 @@
           <Row>
             <FormItem label="商品详情:" prop="detailImg" :label-width="80">
               <Input v-model="productDetail.detailImg" style="width: auto" v-show="false"/>
-              <div class="demo-upload-list" v-for="item in uploadListMultiple">
+              <div class="demo-upload-list" v-for="item in uploadListMultiple" :key="item.url">
                 <template v-if="item.status === 'finished'">
                   <div>
                     <img :src="item.url">
@@ -373,6 +372,7 @@
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
   import IViewUpload from '_c/iview-upload';
+  import _ from 'lodash';
   import {
     createProduct,
     deleteProduct,
@@ -450,7 +450,7 @@
             this.getTableData();
           }
         });
-      }).catch(error => {
+      }).catch(() => {
         this.createLoading = false;
       });
     },
@@ -463,7 +463,7 @@
               validator(rule, value, callback, source, options) {
                 let errors = [];
                 if (!/^[0-9]+$/.test(value)) {
-                  callback('必须为整数');
+                  errors.push(new Error('必须为整数'));
                 }
                 callback(errors);
               }
@@ -493,7 +493,7 @@
               validator(rule, value, callback, source, options) {
                 let errors = [];
                 if (!/^[0-9]\d*$/.test(value)) {
-                  callback('必须为非零整数');
+                  errors.push(new Error('必须为非零整数'));
                 }
                 callback(errors);
               }
@@ -505,7 +505,7 @@
               validator(rule, value, callback, source, options) {
                 let errors = [];
                 if (!/^[1-9]\d*$/.test(value)) {
-                  callback('必须为非零整数');
+                  errors.push(new Error('必须为非零整数'));
                 }
                 callback(errors);
               }
@@ -517,7 +517,7 @@
               validator(rule, value, callback, source, options) {
                 let errors = [];
                 if (!/^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/.test(value)) {
-                  callback('必须为大于0的数字');
+                  errors.push(new Error('必须为大于0的数字'));
                 }
                 callback(errors);
               }
@@ -568,7 +568,7 @@
             title: '操作',
             minWidth: 230,
             key: 'handle',
-            options: ['delete', 'edit', 'view', 'push']
+            options: ['view', 'edit', 'delete', 'push']
           }
         ],
         createLoading: false,
@@ -642,7 +642,7 @@
           this.$Message.success('创建成功!');
           this.resetFields();
           this.getTableData();
-        }).catch(error => {
+        }).catch(() => {
           this.modalViewLoading = false;
           this.modalEdit = false;
         });
@@ -656,7 +656,7 @@
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
-        }).catch(error => {
+        }).catch(() => {
           this.modalEdit = false;
           this.modalViewLoading = false;
         });
@@ -697,6 +697,7 @@
             this.getTableData();
           }
         ).catch(err => {
+          console.log(err);
           this.loading = false;
         });
       },
@@ -739,9 +740,11 @@
           id: params.row.id
         }).then(res => {
           this.productDetail = res;
+          console.log('pro detail: ', res);
           this.loading = false;
           this.modalView = true;
         }).catch(error => {
+          console.log(error);
           this.loading = false;
           this.modalView = true;
         });
@@ -761,6 +764,7 @@
           this.defaultGoodsCategoryData.reverse();
           this.modalEdit = true;
         }).catch(error => {
+          console.log(error);
           this.loading = false;
           this.modalEdit = true;
         });
@@ -790,6 +794,7 @@
           this.searchLoading = false;
           this.clearSearchLoading = false;
         }).catch(error => {
+          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -858,5 +863,4 @@
 </script>
 
 <style lang="scss" scoped>
-
 </style>
