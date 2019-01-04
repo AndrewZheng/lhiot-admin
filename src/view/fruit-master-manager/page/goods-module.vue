@@ -334,7 +334,7 @@ export default {
   },
   created() {
     getuiPositionsPages({
-      applicationType: 'HEALTH_GOOD',
+      applicationType: this.applicationType,
       includeSection: YNEnum.NO,
       positionType: positionType.PRODUCT,
       page: 0,

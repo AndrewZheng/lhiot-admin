@@ -110,6 +110,9 @@ let mixin = {
       } else if (typeof value === 'string') {
         return Math.round(parseInt(value) / 100.00);
       }
+    },
+    applicationType() {
+      return this.$store.getters.systemCurrent.applicationType;
     }
   },
   methods: {

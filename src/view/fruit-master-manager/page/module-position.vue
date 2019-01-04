@@ -101,7 +101,7 @@
   import searchMixin from '@/mixins/searchMixin.js';
 
   const uiPositionDetail = {
-    applicationType: 'HEALTH_GOOD',
+    applicationType: null,
     code: 'carousel',
     description: '鲜果师轮播图',
     id: 0,
@@ -113,7 +113,8 @@
     page: 1,
     rows: 10,
     positionType: null,
-    description: null
+    description: null,
+    applicationType: null
   };
 
   export default {
@@ -241,6 +242,7 @@
         });
       },
       getTableData() {
+        this.searchRowData.applicationType = this.applicationType;
         getuiPositionsPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;

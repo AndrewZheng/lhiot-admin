@@ -561,10 +561,10 @@ export const transferHdOrder = (data) => {
 };
 
 // 根据位置查询门店所有列表根据距离排序
-export const getStore = () => {
+export const getStore = (data) => {
   return Vue.prototype.$http.request({
     url: '/stores/pages',
-    data: {applicationType: 'HEALTH_GOOD'},
+    data: data,
     method: 'post'
   });
 };

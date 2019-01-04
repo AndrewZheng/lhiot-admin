@@ -322,9 +322,11 @@
     shelfType: 'NORMAL',
     sorting: 0,
     specificationId: 0,
-    specificationInfo: ''
+    specificationInfo: '',
+    applicationType: null
   };
   const roleRowData = {
+    applicationType: null,
     productName: '',
     name: '',
     page: 1,
@@ -346,7 +348,7 @@
       this.createLoading = true;
       this.searchRowData = _.cloneDeep(roleRowData);
       getuiPositionsPages({
-        applicationType: 'HEALTH_GOOD',
+        applicationType: this.applicationType,
         includeSection: YNEnum.YES,
         positionType: positionType.PRODUCT,
         page: 0,
@@ -560,6 +562,7 @@
         console.log(this.productDetail.originalPrice);
         this.$refs[name].validate((valid) => {
           if (valid) {
+            this.productDetail.applicationType = this.applicationType;
             if (this.tempModalType === this.modalType.create) {
               // 添加状态
               this.createProductShelve();
@@ -664,6 +667,7 @@
         }
       },
       getTableData() {
+        this.searchRowData.applicationType = this.applicationType;
         getProductShelvesPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;

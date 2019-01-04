@@ -397,6 +397,7 @@ const roleRowData = {
   userPhone: null,
   orderStatuses: null,
   orderType: null,
+  applicationType: '',
   page: 1,
   rows: 10
 };
@@ -614,7 +615,7 @@ export default {
   },
   created() {
     this.deliverOrderLoading = true;
-    getStore().then(res => {
+    getStore({applicationType: this.applicationType}).then(res => {
       this.storeList = res.array;
       this.deliverOrderLoading = false;
       this.getTableData();
@@ -708,6 +709,7 @@ export default {
     handleEdit(params) { },
     getTableData() {
       this.loading = true;
+      this.searchRowData.applicationType = this.applicationType;
       getOrdersPages(this.searchRowData).then(res => {
         this.tableData = res.array;
         this.total = res.total;

@@ -319,6 +319,7 @@
     advertiseRelationText: ''
   };
   const roleRowData = {
+    applicationType: null,
     advertiseName: '',
     positionId: '',
     page: 1,
@@ -333,7 +334,7 @@
     mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
     created() {
       getuiPositionsPages({
-        applicationType: 'HEALTH_GOOD',
+        applicationType: this.applicationType,
         includeSection: YNEnum.NO,
         positionType: positionType.ADVERTISEMENT,
         page: 0,
@@ -479,10 +480,10 @@
               const {row} = params;
               switch (row.advertiseStatus) {
                 case 'ON':
-                  return <div>{'开启'}</div>;
+                  return <div><tag color="error">{'开启'}</tag></div>;
                   break;
                 case 'OFF':
-                  return <div>{'关闭'}</div>;
+                  return <div><tag color="success">{'关闭'}</tag></div>;
                   break;
                 default :
                   return <div>{row.advertiseStatus}</div>;
@@ -731,6 +732,7 @@
 
       },
       getTableData() {
+        this.searchRowData.applicationType = this.applicationType;
         getAdvertisementsPages(this.searchRowData).then(res => {
           this.tableData = res.array;
           this.total = res.total;
