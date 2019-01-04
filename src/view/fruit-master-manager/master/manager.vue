@@ -23,6 +23,7 @@
             style="width: 100px"
             clearable
           >
+          </Input>
           <Input
             v-model="searchRowData.phone"
             placeholder="手机号码"
@@ -30,6 +31,7 @@
             style="width: 100px"
             clearable
           >
+          </Input>
           <Select
             v-model="searchRowData.doctorLevel"
             class="search-col mr5"
@@ -327,10 +329,10 @@
             </Col>
           </Row>
           <FormItem label="鲜果师头衔:" prop="jobTitle">
-            <Input v-model="managerDetail.jobTitle" placeholder="鲜果师头衔">
+            <Input v-model="managerDetail.jobTitle" placeholder="鲜果师头衔"></Input>
           </FormItem>
           <FormItem label="鲜果师简介:" prop="profile">
-            <Input v-model="managerDetail.profile" placeholder="鲜果师简介" type="textarea">
+            <Input v-model="managerDetail.profile" placeholder="鲜果师简介" type="textarea"></Input>
           </FormItem>
           <FormItem label="用户头像:">
             <img :src="managerDetail.avatar" width="80px" height="80px">
@@ -553,9 +555,9 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             if (row.doctorStatus === 'VALID') {
-              return <div><tag color="success">{doctorStatusConvert(row.doctorStatus).label}</tag></div>;
+              return <div><tag color='success'>{doctorStatusConvert(row.doctorStatus).label}</tag></div>;
             } else if (row.doctorStatus === 'INVALID') {
-              return <div><tag color="error">{doctorStatusConvert(row.doctorStatus).label}</tag></div>;
+              return <div><tag color='error'>{doctorStatusConvert(row.doctorStatus).label}</tag></div>;
             } else {
               return <div>{row.doctorStatus}</div>;
             }

@@ -23,6 +23,7 @@
             placeholder="版块名称"
             class="search-input mr5"
             style="width: 150px">
+          </Input>
           <Select
             :disable="selectDisable"
             v-model="searchRowData.positionId"
@@ -136,7 +137,7 @@
             </Row>
             <Row>
               <FormItem label="板块名称:" prop="sectionName">
-                <Input v-model="goodsModuleDetail.sectionName" placeholder="板块名称">
+                <Input v-model="goodsModuleDetail.sectionName" placeholder="板块名称"></Input>
               </FormItem>
             </Row>
             <Row>
@@ -144,7 +145,7 @@
                 :label-width="80"
                 label="板块主图:建议尺寸 (xxx*xxx):"
                 prop="sectionImg">
-                <Input v-show="false" v-model="goodsModuleDetail.sectionImg" style="width: auto">
+                <Input v-show="false" v-model="goodsModuleDetail.sectionImg" style="width: auto"></Input>
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>

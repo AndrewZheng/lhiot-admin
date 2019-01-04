@@ -24,6 +24,7 @@
             style="width: 150px"
             clearable
           >
+          </Input>
           <Input
             v-model="searchRowData.nickname"
             placeholder="昵称"
@@ -31,6 +32,7 @@
             style="width: 100px"
             clearable
           >
+          </Input>
           <Input
             v-model="searchRowData.phone"
             placeholder="手机号码"
@@ -38,6 +40,7 @@
             style="width: 100px"
             clearable
           >
+          </Input>
           <DatePicker
             v-model="searchRowData.createAtStart"
             type="datetime"

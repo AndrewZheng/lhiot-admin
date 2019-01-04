@@ -25,6 +25,7 @@
               style="width: 120px"
               clearable
             >
+            </Input>
             <Input
               v-model="searchRowData.userPhone"
               placeholder="用户手机号"
@@ -32,6 +33,7 @@
               style="width: 100px"
               clearable
             >
+            </Input>
             <Select
               v-model="searchRowData.orderType"
               class="search-col mr5"
@@ -519,11 +521,11 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             if (row.orderType === 'NORMAL') {
-              return <div><tag color="blue">{orderTypeConvert(row.orderType).label}</tag></div>;
+              return <div><tag color='blue'>{orderTypeConvert(row.orderType).label}</tag></div>;
             } else if (row.orderType === 'CUSTOM') {
-              return <div><tag color="cyan">{orderTypeConvert(row.orderType).label}</tag></div>;
+              return <div><tag color='cyan'>{orderTypeConvert(row.orderType).label}</tag></div>;
             } else {
-               return <div>{row.orderType}</div>;
+              return <div>{row.orderType}</div>;
             }
           }
         },
@@ -561,11 +563,11 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             if (row.receivingWay === 'TO_THE_HOME') {
-              return <div><tag color="green">{receivingWayConvert(row.receivingWay).label}</tag></div>;
+              return <div><tag color='green'>{receivingWayConvert(row.receivingWay).label}</tag></div>;
             } else if (row.receivingWay === 'TO_THE_STORE') {
-              return <div><tag color="gold">{receivingWayConvert(row.receivingWay).label}</tag></div>;
+              return <div><tag color='gold'>{receivingWayConvert(row.receivingWay).label}</tag></div>;
             } else {
-               return <div>{row.receivingWay}</div>;
+              return <div>{row.receivingWay}</div>;
             }
           }
         },
@@ -579,16 +581,16 @@ export default {
             // SEND_OUTING("出库中"),WAIT_DISPATCHING("待配送"),DISPATCHING("配送中"),RECEIVED("已收货"),RETURNING("退货中"),
             // RETURN_FAILURE("退款失败"),FAILURE("已失效"),
             // ALREADY_RETURN("退货完成"),FINISHED("完成")
-             if (row.status === 'WAIT_PAYMENT' || row.status === 'WAIT_SEND_OUT') {
-              return <div><tag color="default">{orderStatusConvert(row.status).label}</tag></div>;
+            if (row.status === 'WAIT_PAYMENT' || row.status === 'WAIT_SEND_OUT') {
+              return <div><tag color='default'>{orderStatusConvert(row.status).label}</tag></div>;
             } else if (row.status === 'SEND_OUTING' || row.status === 'WAIT_DISPATCHING' || row.status === 'DISPATCHING' || row.status === 'RECEIVED' || row.status === 'RETURNING') {
-              return <div><tag color="primary">{orderStatusConvert(row.status).label}</tag></div>;
+              return <div><tag color='primary'>{orderStatusConvert(row.status).label}</tag></div>;
             } else if (row.status === 'RETURN_FAILURE' || row.status === 'FAILURE') {
-              return <div><tag color="error">{orderStatusConvert(row.status).label}</tag></div>;
+              return <div><tag color='error'>{orderStatusConvert(row.status).label}</tag></div>;
             } else if (row.status === 'ALREADY_RETURN' || row.status === 'FINISHED') {
-              return <div><tag color="success">{orderStatusConvert(row.status).label}</tag></div>;
+              return <div><tag color='success'>{orderStatusConvert(row.status).label}</tag></div>;
             } else {
-               return <div>{row.status}</div>;
+              return <div>{row.status}</div>;
             }
           }
         },
@@ -615,7 +617,7 @@ export default {
   },
   created() {
     this.deliverOrderLoading = true;
-    getStore({applicationType: this.applicationType}).then(res => {
+    getStore({ applicationType: this.applicationType }).then(res => {
       this.storeList = res.array;
       this.deliverOrderLoading = false;
       this.getTableData();

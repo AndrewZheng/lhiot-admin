@@ -22,9 +22,9 @@
         <div slot="searchCondition">
           <Row>
             <i-col style="display: inline-block">¥</i-col>
-            <InputNumber :min="0" :value="minOrderAmountComputed" placeholder="最小金额" class="search-input" style="width: 100px" @on-change="minOrderAmountChange"/>
+            <InputNumber :min="0" :value="minOrderAmountComputed" placeholder="最小金额" class="search-input" style="width: 100px" @on-change="minOrderAmountChange"></InputNumber>
             <i-col style="display: inline-block" class="">-¥</i-col>
-            <InputNumber :min="0" :value="maxOrderAmountComputed" placeholder="最大金额" class="search-input mr5" style="width: 100px" @on-change="maxOrderAmountChange"/>
+            <InputNumber :min="0" :value="maxOrderAmountComputed" placeholder="最大金额" class="search-input mr5" style="width: 100px" @on-change="maxOrderAmountChange"></InputNumber>
             <Select
               v-model="searchRowData.deliveryAtType"
               class="search-col mr5"
@@ -93,7 +93,8 @@
                 placeholder="最小金额"
                 class="search-input"
                 style="width: 100px"
-                @on-change="postageDetailMinOrderAmountChange"/>
+                @on-change="postageDetailMinOrderAmountChange">
+              </InputNumber>
             </FormItem>
             </Col>
             <Col span="16">
@@ -105,7 +106,8 @@
                 placeholder="最大金额"
                 class="search-input"
                 style="width: 100px"
-                @on-change="postageDetailMaxOrderAmountChange"/>
+                @on-change="postageDetailMaxOrderAmountChange">
+              </InputNumber>
             </FormItem>
             </Col>
           </Row>

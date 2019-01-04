@@ -5,7 +5,7 @@
       <Button v-if="editable" class="tables-edit-btn" style="padding: 2px 4px;" type="text" @click="startEdit"><Icon type="md-create"></Icon></Button>
     </div>
     <div v-else class="tables-editting-con">
-      <Input :value="value" class="tables-edit-input" @input="handleInput">
+      <Input :value="value" class="tables-edit-input" @input="handleInput"></Input>
       <Button style="padding: 6px 4px;" type="text" @click="saveEdit"><Icon type="md-checkmark"></Icon></Button>
       <Button style="padding: 6px 4px;" type="text" @click="canceltEdit"><Icon type="md-close"></Icon></Button>
     </div>

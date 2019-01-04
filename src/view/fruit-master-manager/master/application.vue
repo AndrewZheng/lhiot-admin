@@ -21,6 +21,7 @@
             style="width: 100px"
             clearable
           >
+          </Input>
           <Input
             v-model="searchRowData.phone"
             placeholder="手机号码"
@@ -28,6 +29,7 @@
             style="width: 100px"
             clearable
           >
+          </Input>
           <Input
             v-model="searchRowData.idcardNo"
             placeholder="身份证号码"
@@ -35,6 +37,7 @@
             style="width: 150px"
             clearable
           >
+          </Input>
           <DatePicker
             v-model="searchRowData.beginCreateAt"
             format="yyyy-MM-dd HH:mm:ss"
@@ -220,7 +223,7 @@
             <i-col>{{ masterDetail.auditUser }}</i-col>
           </FormItem>
           <FormItem label="审核备注:" prop="failureReason">
-            <Input v-model="masterDetail.failureReason" type="textarea">
+            <Input v-model="masterDetail.failureReason" type="textarea"></Input>
           </FormItem>
         </Form>
       </div>

@@ -17,8 +17,8 @@
       >
         <div slot="searchCondition">
           <Row>
-            <Input v-model="searchRowData.name" placeholder="商品名称" class="search-input mr5" style="width: auto">
-            <Input v-model="searchRowData.barcode" placeholder="商品条码" class="search-input mr5" style="width: auto">
+            <Input v-model="searchRowData.name" placeholder="商品名称" class="search-input mr5" style="width: auto"></Input>
+            <Input v-model="searchRowData.barcode" placeholder="商品条码" class="search-input mr5" style="width: auto"></Input>
             <Button v-waves :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
@@ -91,7 +91,7 @@
                   {{ option.specificationInfo }}
                 </Option>
               </Select>
-              <Input v-else v-model="goodsDetail.specificationInfo" disabled style="width: 250px">
+              <Input v-else v-model="goodsDetail.specificationInfo" disabled style="width: 250px"></Input>
             </FormItem>
             </Col>
             <Col span="12">
@@ -114,7 +114,7 @@
             </Col>
             <Col span="12">
             <FormItem label="商品排序:" prop="sort">
-              <InputNumber :min="1" v-model="goodsDetail.sort" style="width: 150px"/>
+              <InputNumber :min="1" v-model="goodsDetail.sort" style="width: 150px"/></InputNumber>
             </FormItem>
             </Col>
           </Row>

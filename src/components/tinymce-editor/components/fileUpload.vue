@@ -44,7 +44,7 @@
             >
               <Button type="primary" icon="ios-cloud-upload"></Button>
             </Upload>
-              </Input>
+            </Input>
           </i-col>
         </Row>
 
@@ -71,11 +71,11 @@
           <i-col span="10">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10" >
               <i-col span="4">宽度</i-col>
-              <i-col span="12"><Input v-model="fileObj.width" placeholder="默认值 300" clearable ></i-col>
+              <i-col span="12"><Input v-model="fileObj.width" placeholder="默认值 300" clearable ></Input></i-col>
             </Row>
             <Row :gutter="8" type="flex" align="middle" class-name="mb10" >
               <i-col span="4">高度</i-col>
-              <i-col span="12"><Input v-model="fileObj.height" placeholder="默认值 150" clearable ></i-col>
+              <i-col span="12"><Input v-model="fileObj.height" placeholder="默认值 150" clearable ></Input></i-col>
             </Row>
           </i-col>
         </Row>

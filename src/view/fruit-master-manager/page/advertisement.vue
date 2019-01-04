@@ -22,6 +22,7 @@
             placeholder="广告名称"
             class="search-input mr5"
             style="width: 150px">
+          </Input>
           <Select
             :disable="selectDisable"
             v-model="searchRowData.positionId"
@@ -157,7 +158,7 @@
           </Row>
           <Row>
             <FormItem label="广告名:" prop="advertiseName">
-              <Input v-model="advertisementDetail.advertiseName" placeholder="广告名">
+              <Input v-model="advertisementDetail.advertiseName" placeholder="广告名"></Input>
             </FormItem>
           </Row>
           <Row>
@@ -200,7 +201,7 @@
               :label-width="80"
               prop="content">
               <div v-if="advertisementDetail.advertiseType ==='IMAGE'">
-                <Input v-show="false" v-model="advertisementDetail.content" style="width: auto">
+                <Input v-show="false" v-model="advertisementDetail.content" style="width: auto"></Input>
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>
@@ -229,7 +230,7 @@
                 </IViewUpload>
               </div>
               <div v-else>
-                <Input v-model="tempContent" placeholder="广告文字内容" @on-change="advertiseNameChange">
+                <Input v-model="tempContent" placeholder="广告文字内容" @on-change="advertiseNameChange"></Input>
               </div>
             </FormItem>
           </Row>
@@ -256,6 +257,7 @@
                 <Input
                   v-model="advertisementDetail.advertiseRelationText"
                   :disabled="advertisementDetail.relationType !== 'EXTERNAL_LINKS'">
+                </Input>
               </FormItem>
               </Col>
               <i-col span="6">

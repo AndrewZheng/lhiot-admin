@@ -21,6 +21,7 @@
             style="width: 100px"
             clearable
           >
+          </Input>
           <Input
             v-model="searchRowData.phone"
             placeholder="手机号码"
@@ -28,6 +29,7 @@
             style="width: 100px"
             clearable
           >
+          </Input>
           <Input
             v-model="searchRowData.idCard"
             placeholder="银行卡号"
@@ -35,6 +37,7 @@
             style="width: 150px"
             clearable
           >
+          </Input>
           <Select
             v-model="searchRowData.settlementStatus"
             class="search-col mr10"

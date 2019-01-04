@@ -26,8 +26,8 @@
               placeholder="商品编码"
               class="search-input mr5"
               style="width: auto"
-            >
-            <Input v-model="searchRowData.name" placeholder="商品名称" class="search-input mr5" style="width: auto">
+            ></Input>
+            <Input v-model="searchRowData.name" placeholder="商品名称" class="search-input mr5" style="width: auto"></Input>
             <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
@@ -240,7 +240,7 @@
           </Row>
           <Row>
             <FormItem label="商品主图:建议尺寸;400x400(单位:px):" prop="mainImg" >
-              <Input v-show="false" v-model="productDetail.mainImg" style="width: auto">
+              <Input v-show="false" v-model="productDetail.mainImg" style="width: auto"></Input>
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>
@@ -272,7 +272,7 @@
           <Row>
             <FormItem label="商品附图:建议尺寸600x338(单位:px)" prop="subImg">
               <div v-for="item in uploadListSecond" :key="item.url" class="demo-upload-list">
-                <Input v-show="false" v-model="productDetail.subImg" style="width: auto">
+                <Input v-show="false" v-model="productDetail.subImg" style="width: auto"></Input>
                 <template v-if="item.status === 'finished'">
                   <div>
                     <img :src="item.url">
@@ -304,7 +304,7 @@
           </Row>
           <Row>
             <FormItem :label-width="80" label="商品详情:" prop="detailImg">
-              <Input v-show="false" v-model="productDetail.detailImg" style="width: auto">
+              <Input v-show="false" v-model="productDetail.detailImg" style="width: auto"></Input>
               <div v-for="item in uploadListMultiple" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>
@@ -353,7 +353,7 @@
               </Col>
               <Col span="12">
               <FormItem :label-width="80" label="规格条码:" prop="barcode">
-                <Input v-model="productDetail.productSpecification.barcode">
+                <Input v-model="productDetail.productSpecification.barcode"></Input>
               </FormItem>
               </Col>
             </Row>
@@ -363,6 +363,7 @@
                 <Input
                   v-if="productDetail.productSpecification"
                   v-model="productDetail.productSpecification.limitInventory">
+                </Input>
               </FormItem>
               </Col>
               <Col span="12">
@@ -370,6 +371,7 @@
                 <Input
                   v-if="productDetail.productSpecification"
                   v-model="productDetail.productSpecification.weight">
+                </Input>
               </FormItem>
               </Col>
             </Row>
