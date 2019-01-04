@@ -16,7 +16,7 @@ export const getFruitMasterUserData = req => {
       cash: Random.integer(1, 1000),
       bonus: '0',
       status: '正常',
-      'userStatus|1':true,
+      'userStatus|1': true,
       registerTime: '2018-10-28'
     }]
   }).array;
@@ -26,7 +26,7 @@ export const getFruitMasterUserData = req => {
     'array': pageList,
     'total': list.length
   };
-}
+};
 
 export const getFruitMastGoodsCategoryData = req => {
   const {page = 1, rows = 10} = JSON.parse(req.body);
@@ -35,7 +35,7 @@ export const getFruitMastGoodsCategoryData = req => {
     'array|10': [{
       'id|1-10': 1,
       name: '葡提类',
-      code: Random.integer(1, 50),
+      code: Random.integer(1, 50)
     }]
   }).array;
   list.push(...randomData);
@@ -44,7 +44,7 @@ export const getFruitMastGoodsCategoryData = req => {
     'array': pageList,
     'total': list.length
   };
-}
+};
 
 export const getOnSaleData = req => {
   const {page = 1, rows = 10} = JSON.parse(req.body);
@@ -58,8 +58,8 @@ export const getOnSaleData = req => {
       roleCode: '@name',
       price: '100',
       sort: '1',
-      "onSale|1": true,
-      code: Random.integer(1, 50),
+      'onSale|1': true,
+      code: Random.integer(1, 50)
     }]
   }).array;
   list.push(...randomData);
@@ -68,4 +68,4 @@ export const getOnSaleData = req => {
     'array': pageList,
     'total': list.length
   };
-}
+};
