@@ -336,10 +336,9 @@ export const doctorStatusEnum = [
     value: doctorStatus.INVALID
   }
 ];
-// 上架商品 有效-VALID 无效-INVALID 或者 上架-ON 下架-OFF
+
+// 上架商品 上架-ON 下架-OFF
 export const onSaleStatus = {
-  VALID: 'VALID',
-  INVALID: 'INVALID',
   ON: 'ON',
   OFF: 'OFF'
 };
@@ -347,20 +346,29 @@ export const onSaleStatus = {
 export const onSaleStatusEnum = [
   {
     label: '上架',
-    value: onSaleStatus.VALID
+    value: onSaleStatus.ON
   },
   {
     label: '下架',
-    value: onSaleStatus.INVALID
+    value: onSaleStatus.OFF
   }
-  // {
-  //   label: '上架',
-  //   value: onSaleStatus.ON
-  // },
-  // {
-  //   label: '下架',
-  //   value: onSaleStatus.OFF
-  // }
+];
+
+// 定制计划状态 有效-VALID 无效-INVALID
+export const customPlanStatus = {
+  VALID: 'VALID',
+  INVALID: 'INVALID'
+};
+
+export const customPlanStatusEnum = [
+  {
+    label: '上架',
+    value: customPlanStatus.VALID
+  },
+  {
+    label: '下架',
+    value: customPlanStatus.INVALID
+  }
 ];
 
 // 是否明星鲜果师
@@ -394,15 +402,15 @@ export const deliveryAtType = {
 
 export const deliveryAtTypeEnum = [
   {
-    label: '(8:00,18:00)',
+    label: '白天8:00-18:00',
     value: deliveryAtType.DAYTIME
   },
   {
-    label: '(18:00,22:00)',
+    label: '晚上18:00-22:00',
     value: deliveryAtType.EVENING
   },
   {
-    label: '(8:00,22:00)',
+    label: '全天8:00-22:00',
     value: deliveryAtType.ALL_DAY
   }
 ];

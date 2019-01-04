@@ -527,6 +527,14 @@ export const editArticle = (data) => {
   });
 };
 
+// 查询文章详情
+export const getArticle = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/articles/' + id,
+    method: 'get'
+  });
+};
+
 // 根据条件分页获取订单列表
 export const getOrdersPages = (data) => {
   return Vue.prototype.$http.request({
@@ -708,19 +716,10 @@ export const editCustomPlanStatus = (data) => {
   });
 };
 
-// {id}修改定制计划商品
-export const editCustomPlanProducts = (data) => {
+// {id}修改定制计划周期类型信息
+export const editCustomPlanPeriod = (data) => {
   return Vue.prototype.$http.request({
-    url: '/custom-plan-products/' + data.id,
-    data,
-    method: 'put'
-  });
-};
-
-// {id}修改定制计划规格
-export const editCustomPlanSpecifications = (data) => {
-  return Vue.prototype.$http.request({
-    url: '/custom-plan-specification/' + data.id,
+    url: '/custom-plan-periods/' + data.id,
     data,
     method: 'put'
   });

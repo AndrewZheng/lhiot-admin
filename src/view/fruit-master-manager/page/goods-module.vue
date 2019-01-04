@@ -44,9 +44,8 @@
           </Button>
         </div>
         <div slot="operations">
-          <Button v-waves type="success" class=" mr5" @click="addChildren">
-            <Icon type="md-add"/>
-            创建
+          <Button v-waves type="success" class="mr5" @click="addChildren">
+            <Icon type="md-add"/>创建
           </Button>
           <Poptip
             confirm
@@ -56,8 +55,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>
-              删除
+              <Icon type="md-trash"/>删除
             </Button>
           </Poptip>
         </div>
@@ -75,11 +73,7 @@
       </div>
     </Card>
 
-    <Modal
-      v-model="modalView"
-      :mask-closable="false"
-      :width="700"
-    >
+    <Modal v-model="modalView" :mask-closable="false" :width="700">
       <p slot="header">
         <span>商品板块详情</span>
       </p>
@@ -118,11 +112,7 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-    <Modal
-      v-model="modalEdit"
-      :width="900"
-      :mask-closable="false"
-    >
+    <Modal v-model="modalEdit" :width="900" :mask-closable="false">
       <p slot="header">
         <span>{{ tempModalType === modalType.create?'创建板块':'编辑板块' }}</span>
       </p>
@@ -176,9 +166,7 @@
                   @on-success="handleSuccessMain"
                 >
                   <div slot="content">
-                    <Button type="primary">
-                      上传图片
-                    </Button>
+                    <Button type="primary">上传图片</Button>
                   </div>
                 </IViewUpload>
               </FormItem>
@@ -674,5 +662,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>

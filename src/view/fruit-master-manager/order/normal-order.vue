@@ -517,7 +517,13 @@ export default {
           key: 'orderType',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{orderTypeConvert(row.orderType).label}</div>;
+            if (row.orderType === 'NORMAL') {
+              return <div><tag color="blue">{orderTypeConvert(row.orderType).label}</tag></div>;
+            } else if (row.orderType === 'CUSTOM') {
+              return <div><tag color="cyan">{orderTypeConvert(row.orderType).label}</tag></div>;
+            } else {
+               return <div>{row.orderType}</div>;
+            }
           }
         },
         {
@@ -553,7 +559,13 @@ export default {
           key: 'receivingWay',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{receivingWayConvert(row.receivingWay).label}</div>;
+            if (row.receivingWay === 'TO_THE_HOME') {
+              return <div><tag color="green">{receivingWayConvert(row.receivingWay).label}</tag></div>;
+            } else if (row.receivingWay === 'TO_THE_STORE') {
+              return <div><tag color="gold">{receivingWayConvert(row.receivingWay).label}</tag></div>;
+            } else {
+               return <div>{row.receivingWay}</div>;
+            }
           }
         },
         {
@@ -562,7 +574,21 @@ export default {
           key: 'status',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{orderStatusConvert(row.status).label}</div>;
+            // WAIT_PAYMENT("待支付"),WAIT_SEND_OUT("待出库"),
+            // SEND_OUTING("出库中"),WAIT_DISPATCHING("待配送"),DISPATCHING("配送中"),RECEIVED("已收货"),RETURNING("退货中"),
+            // RETURN_FAILURE("退款失败"),FAILURE("已失效"),
+            // ALREADY_RETURN("退货完成"),FINISHED("完成")
+             if (row.status === 'WAIT_PAYMENT' || row.status === 'WAIT_SEND_OUT') {
+              return <div><tag color="default">{orderStatusConvert(row.status).label}</tag></div>;
+            } else if (row.status === 'SEND_OUTING' || row.status === 'WAIT_DISPATCHING' || row.status === 'DISPATCHING' || row.status === 'RECEIVED' || row.status === 'RETURNING') {
+              return <div><tag color="primary">{orderStatusConvert(row.status).label}</tag></div>;
+            } else if (row.status === 'RETURN_FAILURE' || row.status === 'FAILURE') {
+              return <div><tag color="error">{orderStatusConvert(row.status).label}</tag></div>;
+            } else if (row.status === 'ALREADY_RETURN' || row.status === 'FINISHED') {
+              return <div><tag color="success">{orderStatusConvert(row.status).label}</tag></div>;
+            } else {
+               return <div>{row.status}</div>;
+            }
           }
         },
         {

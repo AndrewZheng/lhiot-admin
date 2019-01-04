@@ -145,9 +145,9 @@
               <i-col span="3">详情图:</i-col>
               <i-col span="21">
                 <div v-for="item in uploadListMultiple" :key="item.id" class="demo-upload-list">
-                  <img :src="productDetail.detailImg">
+                  <img :src="item.url">
                   <div class="demo-upload-list-cover">
-                    <Icon type="ios-eye-outline" @click.native="handleUploadView(productDetail.detailImg)"></Icon>
+                    <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                   </div>
                 </div>
               </i-col>
@@ -352,11 +352,9 @@
               </FormItem>
               </Col>
               <Col span="12">
-
               <FormItem :label-width="80" label="规格条码:" prop="barcode">
                 <Input v-model="productDetail.productSpecification.barcode">
               </FormItem>
-
               </Col>
             </Row>
             <Row>
@@ -376,14 +374,15 @@
               </Col>
             </Row>
           </Form>
+          <div slot="footer">
+            <Button @click="handleEditClose">关闭</Button>
+            <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit','innerModalEdit')">确定
+            </Button>
+          </div>
         </Form>
       </div>
-      <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit','innerModalEdit')">确定
-        </Button>
-      </div>
     </Modal>
+
     <Modal v-model="uploadVisible" title="View Image">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>

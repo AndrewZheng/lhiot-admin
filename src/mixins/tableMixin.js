@@ -30,6 +30,7 @@ const mixin = {
       this.modalEdit = false;
     },
     handleClose() {
+      this.loading = false;
       this.modalView = false;
     }
   }

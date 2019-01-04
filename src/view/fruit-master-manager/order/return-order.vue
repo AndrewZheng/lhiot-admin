@@ -227,9 +227,75 @@ export default {
     handleClose() {
       this.modalView = false;
     },
-    handleView(params) {
-      this.userDetail = params.row;
-      this.modalView = true;
+    data() {
+      return {
+        columns: [
+          {
+            title: 'id',
+            key: 'id',
+            sortable: true,
+            width: 150,
+            fixed: 'left'
+          },
+          {
+            title: '昵称',
+            width: 150,
+            key: 'name'
+          },
+          {
+            title: '手机号码',
+            width: 120,
+            key: 'phoneNumber'
+          },
+          {
+            title: 'openid',
+            width: 185,
+            key: 'openid'
+          },
+          {
+            title: 'unionid',
+            width: 185,
+            key: 'unionid'
+          },
+          {
+            title: '余额',
+            width: 100,
+            key: 'cash'
+          },
+          {
+            title: '积分',
+            width: 80,
+            key: 'bonus',
+            sortable: true
+          },
+          {
+            title: '账号状态',
+            width: 90,
+            key: 'status'
+          },
+          {
+            title: '注册时间',
+            width: 120,
+            key: 'registerTime',
+            sortable: true
+          },
+          {
+            title: '操作',
+            width: 150,
+            key: 'handle',
+            options: ['view', 'relation']
+          }
+        ],
+        tableData: [],
+        total: 0,
+        page: 1,
+        pageSize: 10,
+        loading: true,
+        modalView: false,
+        image: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
+        userDetail: userDetail,
+        searchRowData: roleRowData
+      };
     },
     handleEdit(params) {
 
@@ -240,28 +306,46 @@ export default {
       this.page = page;
       this.getTableData();
     },
-    changePageSize(pageSize) {
-      console.log(pageSize);
-      this.page = 1;
-      this.pageSize = pageSize;
-      this.getTableData();
-    },
-    getTableData() {
-      getFruitMasterUserData({
-        page: this.page,
-        rows: this.pageSize
-      }).then(res => {
-        this.tableData = res.array;
-        this.total = res.total;
-        this.loading = false;
-      }).catch(() => {
-        this.loading = false;
-      });
-    },
-    exportExcel() {
-      this.$refs.tables.exportCsv({
-        filename: `table-${new Date().valueOf()}.csv`
-      });
+    methods: {
+      handleClose() {
+        this.modalView = false;
+      },
+      handleView(params) {
+        this.userDetail = params.row;
+        this.modalView = true;
+      },
+      handleEdit(params) {
+
+      },
+      handleSearch() {
+      },
+      changePage(page) {
+        this.page = page;
+        this.getTableData();
+      },
+      changePageSize(pageSize) {
+        console.log(pageSize);
+        this.page = 1;
+        this.pageSize = pageSize;
+        this.getTableData();
+      },
+      getTableData() {
+        getFruitMasterUserData({
+          page: this.page,
+          rows: this.pageSize
+        }).then(res => {
+          this.tableData = res.array;
+          this.total = res.total;
+          this.loading = false;
+        }).catch(() => {
+          this.loading = false;
+        });
+      },
+      exportExcel() {
+        this.$refs.tables.exportCsv({
+          filename: `table-${new Date().valueOf()}.csv`
+        });
+      }
     }
   }
 };

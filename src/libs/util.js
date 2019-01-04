@@ -8,6 +8,8 @@ export const TOKEN_KEY = 'token';
 
 export const GOODS_STANDARD = 'goodsStandard';
 
+export const ARTICLE = 'article';
+
 export const setGoodsStandard = (goodsStandard) => {
   const string = JSON.stringify(goodsStandard);
   Cookies.set(GOODS_STANDARD, string, {
@@ -17,6 +19,17 @@ export const setGoodsStandard = (goodsStandard) => {
 
 export const getGoodsStandard = () => {
   return JSON.parse(Cookies.get(GOODS_STANDARD));
+};
+
+export const setArticle = (article) => {
+  const string = JSON.stringify(article);
+  Cookies.set(ARTICLE, string, {
+    expires: config.cookieExpires || 1
+  });
+};
+
+export const getArticle = () => {
+  return JSON.parse(Cookies.get(ARTICLE));
 };
 
 export const setToken = (token) => {

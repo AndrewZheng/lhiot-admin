@@ -1,4 +1,4 @@
-z<template>
+<template>
   <div class="m-role">
     <Card>
       <tables
@@ -247,7 +247,7 @@ z<template>
                     {{ option.name }}</Option>
                 </Select>
               </FormItem>
-              </Col>
+                  </Col>
             </TabPane>
           </Tabs>
         </Form>
@@ -270,7 +270,7 @@ z<template>
       <div class="modal-content">
         <Form ref="modalSetting" :model="rowData">
           <template v-for="customPlan in rowData">
-            <Tabs v-if=" customPlan.periodList.length > 0" :key="'productUpdate' + customPlan.id" value="name1" type="card">
+            <Tabs v-if="customPlan.periodList.length>0" :key="'productUpdate' + customPlan.id" value="name1" type="card">
               <TabPane v-for="(period, key) in customPlan" :key="'update' + period.index" :label="period.planPeriod == '7' ? '周' : '月'" :name="'name'+(key+1)">
                 <Col v-for="specification in period.specificationList" :key="'update' + period.index + '--' + specification.index" span="7">
                 <FormItem :label="specification.description + '价:'">
@@ -282,7 +282,7 @@ z<template>
                     style="width: 90px"
                     @on-change="priceOnChange($event, period.index, specification.index)"/>
                 </FormItem>
-                </Col>
+                        </Col>
                 <Col v-for="product in period.products" :key="'update' + period.index + '-' + product.index" span="11">
                 <FormItem :label="'第'+ product.dayOfPeriod +'天:'">
                   <Select
@@ -303,7 +303,7 @@ z<template>
                       {{ option.name }}</Option>
                   </Select>
                 </FormItem>
-                        </Col>
+                </Col>
               </TabPane>
             </Tabs>
           </template>

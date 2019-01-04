@@ -385,13 +385,30 @@ export default {
           width: 120,
           key: 'totalQty',
           render(h, params, vm) {
-            return <div>{customPeriodConvert(params.row.totalQty).label}</div>;
+            if (params.row.totalQty === 7) {
+              return <div><tag color="blue">{customPeriodConvert(params.row.totalQty).label}</tag></div>;
+            } else if (params.row.totalQty === 30) {
+              return <div><tag color="cyan">{customPeriodConvert(params.row.totalQty).label}</tag></div>;
+            } else {
+               return <div>{params.row.totalQty}</div>;
+            }
           }
         },
         {
           title: '定制份数',
           width: 120,
-          key: 'description'
+          key: 'description',
+          render(h, params, vm) {
+            if (params.row.description === '单人套餐') {
+              return <div><tag color="geekblue">{params.row.description}</tag></div>;
+            } else if (params.row.description === '双人套餐') {
+              return <div><tag color="purple">{params.row.description}</tag></div>;
+            } else if (params.row.description === '三人套餐') {
+              return <div><tag color="magenta">{params.row.description}</tag></div>;
+            } else {
+               return <div>{params.row.description}</div>;
+            }
+          }
         },
         {
           title: '定制金额',
@@ -407,7 +424,24 @@ export default {
           width: 120,
           key: 'status',
           render(h, params, vm) {
-            return <div>{customOrderStatusConvert(params.row.status).label}</div>;
+            // WAIT_PAYMENT-待付款
+            // CUSTOMING-定制中
+            // PAUSE_DELIVERY-暂停配送
+            // INVALID-已失效
+            // FINISHED-已结束 
+           if (params.row.status === 'WAIT_PAYMENT') {
+              return <div><tag color="default">{customOrderStatusConvert(params.row.status).label}</tag></div>;
+            } else if (params.row.status === 'CUSTOMING') {
+              return <div><tag color="primary">{customOrderStatusConvert(params.row.status).label}</tag></div>;
+            } else if (params.row.status === 'PAUSE_DELIVERY') {
+              return <div><tag color="warning">{customOrderStatusConvert(params.row.status).label}</tag></div>;
+            } else if (params.row.status === 'INVALID') {
+              return <div><tag color="error">{customOrderStatusConvert(params.row.status).label}</tag></div>;
+            } else if (params.row.status === 'FINISHED') {
+              return <div><tag color="success">{customOrderStatusConvert(params.row.status).label}</tag></div>;
+            } else {
+               return <div>{params.row.status}</div>;
+            }
           }
         },
         {
@@ -415,7 +449,13 @@ export default {
           width: 120,
           key: 'deliveryType',
           render: (h, params, vm) => {
-            return <div>{deliveryTypeCustomConvert(params.row.deliveryType).label}</div>;
+            if (params.row.deliveryType === 'MANUAL') {
+              return <div><tag color="green">{deliveryTypeCustomConvert(params.row.deliveryType).label}</tag></div>;
+            } else if (params.row.deliveryType === 'AUTO') {
+              return <div><tag color="gold">{deliveryTypeCustomConvert(params.row.deliveryType).label}</tag></div>;
+            } else {
+               return <div>{params.row.deliveryType}</div>;
+            }
           }
         },
         {

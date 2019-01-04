@@ -13,6 +13,8 @@
             :loading="loading"
             :columns="columns"
             :export-type="exportType"
+            :search-area-column="14"
+            :operate-area-column="10"
             editable
             searchable
             border
@@ -55,11 +57,11 @@
                 导入Excel
               </Button>
               <!-- 多类型导出 -->
+              <BookTypeOption v-model="exportType" class="mr5"/>
               <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload">
                 <Icon type="md-download"/>
                 多类型导出
               </Button>
-              <BookTypeOption v-model="exportType" class="mr5"/>
             </div>
           </tables>
           <div style="margin: 10px;overflow: hidden">

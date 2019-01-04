@@ -97,7 +97,7 @@
             </FormItem>
             </Col>
             <Col span="16">
-            <FormItem label="—¥" prop="maxOrderAmount">
+            <FormItem label="— ¥" prop="maxOrderAmount">
               <InputNumber
                 :readonly="modalTypeComputed"
                 :min="0"
@@ -128,7 +128,7 @@
               ></tables>
             </FormItem>
           </Row>
-          <Row class="mt15">
+          <Row v-if="tempModalType === modalType.create || tempModalType === modalType.edit" class="mt15">
             <Button v-waves type="success" class="mr5" @click="addPostageRuleTableColumns">
               <Icon type="md-add"/>
               添加

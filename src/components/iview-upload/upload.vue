@@ -43,14 +43,6 @@ export default {
       default() {
         return [];
       }
-    },
-    showUploadList: {
-      type: Boolean,
-      default: false
-    },
-    multiple: {
-      type: Boolean,
-      default: false
     }
   },
   methods: {
@@ -141,5 +133,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>
