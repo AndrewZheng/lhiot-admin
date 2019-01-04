@@ -108,8 +108,6 @@
 
 <script>
 /* eslint-disable */
-"use strict";
-// import request from "@/libs/request.js";
 import language from "./utils/language.js";
 import mimes from "./utils/mimes.js";
 import data2blob from "./utils/data2blob.js";
@@ -769,23 +767,23 @@ export default {
       that.reset();
       that.loading = 1;
       that.setStep(3);
-      // request({
-      //   url,
-      //   method: "post",
-      //   data: fmData
-      // })
-      //   .then(resData => {
-      //     that.loading = 2;
-      //     that.$emit("crop-upload-success", resData.data);
-      //   })
-      //   .catch(err => {
-      //     if (that.value) {
-      //       that.loading = 3;
-      //       that.hasError = true;
-      //       that.errorMsg = lang.fail;
-      //       that.$emit("crop-upload-fail", err, field, ki);
-      //     }
-      //   });
+      this.$http.request({
+        url,
+        method: "post",
+        data: fmData
+      })
+        .then(resData => {
+          that.loading = 2;
+          that.$emit("crop-upload-success", resData.data);
+        })
+        .catch(err => {
+          if (that.value) {
+            that.loading = 3;
+            that.hasError = true;
+            that.errorMsg = lang.fail;
+            that.$emit("crop-upload-fail", err, field, ki);
+          }
+        });
     }
   },
   created() {

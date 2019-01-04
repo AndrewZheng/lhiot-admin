@@ -21,8 +21,7 @@
             v-model="searchRowData.advertiseName"
             placeholder="广告名称"
             class="search-input mr5"
-            style="width: 150px">
-          </Input>
+            style="width: 150px"/>
           <Select
             :disable="selectDisable"
             v-model="searchRowData.positionId"
@@ -158,7 +157,7 @@
           </Row>
           <Row>
             <FormItem label="广告名:" prop="advertiseName">
-              <Input v-model="advertisementDetail.advertiseName" placeholder="广告名"></Input>
+              <Input v-model="advertisementDetail.advertiseName" placeholder="广告名"/>
             </FormItem>
           </Row>
           <Row>
@@ -201,7 +200,7 @@
               :label-width="80"
               prop="content">
               <div v-if="advertisementDetail.advertiseType ==='IMAGE'">
-                <Input v-show="false" v-model="advertisementDetail.content" style="width: auto"></Input>
+                <Input v-show="false" v-model="advertisementDetail.content" style="width: auto"/>
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>
@@ -230,7 +229,7 @@
                 </IViewUpload>
               </div>
               <div v-else>
-                <Input v-model="tempContent" placeholder="广告文字内容" @on-change="advertiseNameChange"></Input>
+                <Input v-model="tempContent" placeholder="广告文字内容" @on-change="advertiseNameChange"/>
               </div>
             </FormItem>
           </Row>
@@ -256,8 +255,7 @@
               <FormItem label="链接目标:" prop="advertiseRelation">
                 <Input
                   v-model="advertisementDetail.advertiseRelationText"
-                  :disabled="advertisementDetail.relationType !== 'EXTERNAL_LINKS'">
-                </Input>
+                  :disabled="advertisementDetail.relationType !== 'EXTERNAL_LINKS'"/>
               </FormItem>
               </Col>
               <i-col span="6">

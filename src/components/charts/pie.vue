@@ -10,9 +10,9 @@ export default {
   name: 'ChartPie',
   props: {
     value: {
-      type: Object,
+      type: Array,
       default() {
-        return {};
+        return [];
       }
     },
     text: {

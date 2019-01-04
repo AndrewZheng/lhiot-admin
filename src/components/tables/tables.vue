@@ -50,7 +50,7 @@
     </Table>
     <div v-if="searchable && searchPlace === 'bottom'" class="search-con search-con-top">
       <Select v-model="searchKey" class="search-col">
-        <Option v-for="item in columns" v-if="item.key !== 'handle' && item.type!=='selection'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
+        <Option v-for="item in columns" v-show="item.key !== 'handle' && item.type!=='selection'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
       </Select>
       <Input v-model="searchValue" placeholder="输入关键字搜索" class="search-input"></Input>
       <Button class="search-btn" type="primary"><Icon type="search"/>搜索</Button>
@@ -84,7 +84,7 @@ export default {
     },
     size: {
       type: String,
-      default: ''
+      default: 'default'
     },
     width: {
       type: [Number, String],
