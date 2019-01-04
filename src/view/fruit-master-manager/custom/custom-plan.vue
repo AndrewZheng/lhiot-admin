@@ -209,7 +209,7 @@ z<template>
                     <FormItem :label="specification.description + '价:'">
                       <InputNumber :min="0" class="search-input mr5" :value="priceComputed(specification.price)"
                       placeholder="最多两位小数"
-                       @on-change="priceOnChange($event, period.index, specification.index)"
+                       @on-change="priceOnChange(period.index, specification.index, $event)"
                         style="width: 90px"/>
                     </FormItem>
                   </Col>
@@ -227,7 +227,7 @@ z<template>
                           <Option
                             v-for="(option, index) in optionsShelfSpecification"
                             :value="option.name" :key="'addOrEdit' + period.index +  '-' + product.index + '-' + index" class="pb5 pt5 pl15"
-                             @click.native="editProduct(period.index, product.index, option.id)"
+                             @click.native="updateProduct(period.index, product.index, option.id, product.id)"
                           >
                           {{option.name}}</Option>
                       </Select>
@@ -261,7 +261,7 @@ z<template>
                           <FormItem :label="specification.description + '价:'">
                           <InputNumber :min="0" class="search-input mr5" :value="priceComputed(specification.price)"
                           placeholder="最多两位小数"
-                       @on-change="priceOnChange($event, period.index, specification.index)"
+                       @on-change="priceOnChange(period.index, specification.index, $event, specification.id)"
                         style="width: 90px"/>
                           </FormItem>
                         </Col>
@@ -279,7 +279,7 @@ z<template>
                                   v-for="(option, index) in optionsShelfSpecification"
                                   :value="option.name" class="pb5 pt5 pl15"
                                   :key="'update' + period.index +  '-' + product.index + '-' + index"
-                                  @click.native="updateProduct(product.id, option.id)"
+                                  @click.native="updateProduct(period.index, product.index, option.id, product.id)"
                                 >
                                 {{option.name}}</Option>
                             </Select>
@@ -292,7 +292,7 @@ z<template>
       </div>
       <div slot="footer">
         <Button @click="handleSettingClose('modalSetting')">关闭</Button>
-        <Button type="primary" :loading="modalViewLoading" @click="updateSpecification()">确定
+        <Button type="primary" :loading="modalViewLoading" @click="updatePeriod()">确定
         </Button>
       </div>
     </Modal>
@@ -308,7 +308,7 @@ z<template>
     deleteCustomPlan,
     getCustomPlanSectionsPages,
     createCustomPlan,
-    getProductShelvesPages, getCustomPlan, editCustomPlan, editCustomPlanStatus, editCustomPlanProducts, editCustomPlanSpecifications} from '@/api/fruitermaster';
+    getProductShelvesPages, getCustomPlan, editCustomPlan, editCustomPlanStatus, editCustomPlanPeriod} from '@/api/fruitermaster';
   import IViewUpload from '_c/iview-upload';
   import deleteMixin from '@/mixins/deleteMixin.js';
   import tableMixin from '@/mixins/tableMixin.js';
@@ -316,7 +316,7 @@ z<template>
   import uploadMixin from '@/mixins/uploadMixin';
   import {fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber} from '@/libs/util';
   import {customPlanStatusConvert} from '@/libs/converStatus';
-  import {customPlanStatusEnum, YNEnum, positionType} from '@/libs/enumerate';
+  import {customPlanStatusEnum} from '@/libs/enumerate';
   import BookTypeOption from '_c/book-type-option';
 
   const customPlanDetail = {
@@ -338,7 +338,8 @@ z<template>
             image: '',
             planId: 0,
             productName: '',
-            shelfId: 0
+            shelfId: 0,
+            optionType: null
           }
         ],
         specificationList: [
@@ -350,7 +351,8 @@ z<template>
             planPeriod: 0,
             price: 0,
             quantity: 0,
-            standardId: 0
+            standardId: 0,
+            optionType: null
           }
         ]
       }
@@ -399,7 +401,7 @@ z<template>
         this.getTableData();
       });
     },
-    mixins: [ deleteMixin, tableMixin, searchMixin, uploadMixin],
+    mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
     data() {
       return {
         shelfSpecificationLoadingDay1: false,
@@ -735,6 +737,7 @@ z<template>
           this.rowData = res;
           // 如果只有一个周期的套餐，则另一个套餐数据补齐
           if (res.periodList.length !== 2) {
+            let planId = this.rowData.id;
             let planPeriod = this.rowData.periodList[0].planPeriod;
             let newPlanPeriod = planPeriod == 7 ? 30 : 7;
             let newIndex = this.rowData.periodList[0].index == 0 ? 1 : 0;
@@ -742,11 +745,11 @@ z<template>
             // 升序排序
             res.periodList.sort((a, b) => a.index - b.index);
             for (var product = 0; product < newPlanPeriod; product++) {
-                this.rowData.periodList[newIndex].products.push({'index': product, 'benefit': '', 'dayOfPeriod': (product+1), 'description': '', 'id': 0, 'image': '', 'planId': 0, 'productName': '', 'shelfId': 0});
+                this.rowData.periodList[newIndex].products.push({'index': product, 'benefit': '', 'dayOfPeriod': (product+1), 'description': '', 'id': 0, 'image': '', 'planId': planId, 'productName': '', 'shelfId': 0, 'optionType': null});
             }
             for (var specification = 0; specification < 3; specification++) {
                 let description = specification == 0 ? '单人套餐' : (specification == 1 ? '双人套餐' : '三人套餐');
-                this.rowData.periodList[newIndex].specificationList.push({'index': specification, 'description': description, 'id': 0, 'image': '', 'planId': 0, 'planPeriod': newPlanPeriod, 'price': 0, 'quantity': (specification+1), 'standardId': 0});
+                this.rowData.periodList[newIndex].specificationList.push({'options': null, 'index': specification, 'description': description, 'id': 0, 'image': '', 'planId': planId, 'planPeriod': newPlanPeriod, 'price': 0, 'quantity': (specification+1), 'standardId': 0, 'optionType': null});
             }
             // console.log(JSON.stringify(this.rowData));
           }
@@ -768,11 +771,11 @@ z<template>
           let planPeriod = period == 0 ? 7 : 30;
           this.rowData.periodList.push({'index': period, 'planPeriod': planPeriod, 'products': [], 'specificationList': []});
           for (var product = 0; product < planPeriod; product++) {
-              this.rowData.periodList[period].products.push({'index': product, 'benefit': '', 'dayOfPeriod': (product+1), 'description': '', 'id': 0, 'image': '', 'planId': 0, 'productName': '', 'shelfId': 0});
+              this.rowData.periodList[period].products.push({'index': product, 'benefit': '', 'dayOfPeriod': (product+1), 'description': '', 'id': 0, 'image': '', 'planId': 0, 'productName': '', 'shelfId': 0, 'optionType': null});
           }
           for (var specification = 0; specification < 3; specification++) {
               let description = specification == 0 ? '单人套餐' : (specification == 1 ? '双人套餐' : '三人套餐');
-              this.rowData.periodList[period].specificationList.push({'index': specification, 'description': description, 'id': 0, 'image': '', 'planId': 0, 'planPeriod': planPeriod, 'price': 0, 'quantity': (specification+1), 'standardId': 0});
+              this.rowData.periodList[period].specificationList.push({'index': specification, 'description': description, 'id': 0, 'image': '', 'planId': 0, 'planPeriod': planPeriod, 'price': 0, 'quantity': (specification+1), 'standardId': 0, 'optionType': null});
           }
         }
         // console.log(JSON.stringify(this.rowData));
@@ -803,8 +806,8 @@ z<template>
         }).finally(res => {
           this.loading = false;
           this.modalViewLoading = false;
-          this.modalEdit = false;
           this.getTableData();
+          this.modalEdit = false;
         });
       },
       handleEdit(params) {
@@ -858,11 +861,6 @@ z<template>
           this.loading = false;
         });
       },
-      // exportExcel() {
-      //   this.$refs.tables.exportCsv({
-      //     filename: `table-${new Date().valueOf()}.csv`
-      //   });
-      // },
       handleDownload() {
         // 导出不分页
         this.searchRowData.rows = null;
@@ -916,43 +914,24 @@ z<template>
           });
         });
       },
-      updateProduct(id, shelfId) {
-        console.log('updateProduct:' + id + ',' + shelfId);
-        if ((id !== null && shelfId !== null) && (id !== 0 && shelfId !== 0)) {
-          const params = {
-            id: id,
-            shelfId: shelfId
-          };
-          console.log('修改定制计划商品:' + JSON.stringify(params));
-          editCustomPlanProducts(params).then(res => {
-                this.$Message.info('修改成功');
-          });
-        } else {
-          this.$Message.warning('商品id或者上架id不能为空');
-        }
+      updateProduct(periodIndex, productIndex, shelfId, productId) {
+        console.log('updateProduct:' + periodIndex + ',' + productIndex + ',' + shelfId + ',' + productId);
+        this.rowData.periodList[periodIndex].products[productIndex].shelfId = shelfId;
+        this.rowData.periodList[periodIndex].products[productIndex].optionType = productId === 0 ? 'INSERT' : 'UPDATE';
       },
-      updateSpecification() {
-        editCustomPlanSpecifications(this.rowData).then(res => {
+      updatePeriod() {
+         editCustomPlanPeriod(this.rowData).then(res => {
             this.$Message.info('修改成功');
+            this.getTableData();
             this.step = 'name1';
             this.modalSetting = false;
-            this.getTableData();
         });
       },
-      addProduct(periodIndex, productIndex, shelfId) {
-        console.log('addProduct:' + periodIndex + ',' + productIndex + ',' + shelfId);
-        this.rowData.periodList[periodIndex].products[productIndex].shelfId = shelfId;
-        // console.log('rowData:' + JSON.stringify(this.rowData));
-        editCustomPlanSpecifications(this.rowData).then(res => {
-            this.$Message.info('修改成功');
-            this.getTableData();
-        });
-      },
-      editProduct(periodIndex, productIndex, shelfId) {
-        console.log('editProduct:' + periodIndex + ',' + productIndex + ',' + shelfId);
-        this.rowData.periodList[periodIndex].products[productIndex].shelfId = shelfId;
-        console.log(this.rowData.periodList[periodIndex].products[productIndex].shelfId);
-      },
+      // editProduct(periodIndex, productIndex, shelfId) {
+      //   console.log('editProduct:' + periodIndex + ',' + productIndex + ',' + shelfId);
+      //   this.rowData.periodList[periodIndex].products[productIndex].shelfId = shelfId;
+      //   console.log(this.rowData.periodList[periodIndex].products[productIndex].shelfId);
+      // },
       handleEditClose(name) {
         this.modalEdit = false;
         this.isCreated = false;
@@ -975,10 +954,11 @@ z<template>
       priceComputed(price) {
         return fenToYuanDot2Number(price);
       },
-      priceOnChange(value, periodIndex, specificationIndex) {
-        console.log(value);
+      priceOnChange(periodIndex, specificationIndex, value, specificationId) {
+        console.log('priceOnChange:' + periodIndex + ',' + specificationIndex + ',' + value + ',' + specificationId);
         if (value !== null) {
           this.rowData.periodList[periodIndex].specificationList[specificationIndex].price = yuanToFenNumber(value);
+          this.rowData.periodList[periodIndex].specificationList[specificationIndex].optionType = specificationId === 0 ? 'INSERT' : 'UPDATE';
         }
         console.log(this.rowData.periodList[periodIndex].specificationList[specificationIndex].price);
       }
