@@ -33,11 +33,11 @@
       <div class="modal-content">
         <Row :gutter="8" type="flex" align="middle" class-name="mb10" >
           <i-col span="2">姓名</i-col>
-          <i-col span="8"><Input v-model="rowData.name" placeholder="" clearable ></i-col>
+          <i-col span="8"><Input v-model="rowData.name" placeholder="" clearable ></Input></i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10" >
           <i-col span="2">年龄</i-col>
-          <i-col span="8"> <Input v-model="rowData.age" placeholder="" clearable ></i-col>
+          <i-col span="8"> <Input v-model="rowData.age" placeholder="" clearable ></Input></i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10" >
           <i-col span="2">性别</i-col>
@@ -54,7 +54,7 @@
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10" >
           <i-col span="2">邮箱</i-col>
-          <i-col span="12"> <Input v-model="rowData.email" placeholder="" clearable ></i-col>
+          <i-col span="12"> <Input v-model="rowData.email" placeholder="" clearable ></Input></i-col>
         </Row>
       </div>
     </Modal>

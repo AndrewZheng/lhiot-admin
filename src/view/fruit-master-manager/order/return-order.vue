@@ -13,11 +13,11 @@
         @on-view="handleView"
       >
         <div slot="searchCondition">
-          <Input v-model="searchRowData.name" placeholder="姓名" class="search-input" style="width: 100px">
-          <Input v-model="searchRowData.phoneNumber" placeholder="手机号码" class="search-input" style="width: 100px">
-          <Input v-model="searchRowData.idCard" placeholder="身份证号码" class="search-input" style="width: 100px">
-          <Input v-model="searchRowData.timeStart" placeholder="注册时间起" class="search-input ml20" style="width: 100px">
-          <Input v-model="searchRowData.timeEnd" placeholder="注册时间止" class="search-input mr20" style="width: 100px">
+          <Input v-model="searchRowData.name" placeholder="姓名" class="search-input" style="width: 100px"></Input>
+          <Input v-model="searchRowData.phoneNumber" placeholder="手机号码" class="search-input" style="width: 100px"></Input>
+          <Input v-model="searchRowData.idCard" placeholder="身份证号码" class="search-input" style="width: 100px"></Input>
+          <Input v-model="searchRowData.timeStart" placeholder="注册时间起" class="search-input ml20" style="width: 100px"></Input>
+          <Input v-model="searchRowData.timeEnd" placeholder="注册时间止" class="search-input mr20" style="width: 100px"></Input>
           <Button v-waves class="search-btn ml5" type="primary" @click="handleSearch">
             <Icon type="md-search"/>&nbsp;搜索
           </Button>

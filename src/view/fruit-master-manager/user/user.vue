@@ -333,6 +333,7 @@ export default {
       this.modalView = true;
     },
     getTableData() {
+      this.searchRowData.applicationType = this.applicationType;
       getUserPages(this.searchRowData).then(res => {
         this.tableData = res.array;
         this.total = res.total;

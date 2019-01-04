@@ -73,7 +73,7 @@
             <Input v-model="currentCategory.groupName" placeholder="子分类名"/>
           </FormItem>
           <FormItem label="序号:">
-            <InputNumber :min="0" v-model="currentCategory.rank" placeholder="序号"/>
+            <InputNumber :min="0" v-model="currentCategory.rank" placeholder="序号"></InputNumber>
           </FormItem>
         </Form>
       </div>

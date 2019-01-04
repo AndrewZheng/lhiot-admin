@@ -17,7 +17,7 @@
         @on-relation="handleMenu"
       >
         <div slot="searchCondition">
-          <Input v-model="searchRowData.name" placeholder="角色名称" class="search-input mr5" style="width: auto" clearable>
+          <Input v-model="searchRowData.name" placeholder="角色名称" class="search-input mr5" style="width: auto" clearable></Input>
           <Select v-model="searchRowData.status" class="search-col mr5" placeholder="角色状态" style="width: auto" clearable>
             <Option v-for="item in roleStatusList" :value="item.key" :key="`search-col-${item.key}`">{{ item.value }}</Option>
           </Select>
@@ -51,7 +51,7 @@
       <div class="modal-content">
         <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
           <FormItem label="角色名称" prop="name">
-            <Input v-model="rowData.name" placeholder="请输入角色名称">
+            <Input v-model="rowData.name" placeholder="请输入角色名称"></Input>
           </FormItem>
           <FormItem label="角色状态" prop="status">
             <Select v-model="rowData.status" class="search-col" placeholder="请选择用户状态">
@@ -59,7 +59,7 @@
             </Select>
           </FormItem>
           <FormItem label="角色描述" prop="roleDesc">
-            <Input v-model="rowData.roleDesc" :autosize="{minRows: 2,maxRows: 5}" type="textarea" placeholder="请输入角色描述" >
+            <Input v-model="rowData.roleDesc" :autosize="{minRows: 2,maxRows: 5}" type="textarea" placeholder="请输入角色描述" ></Input>
           </FormItem>
         </Form>
       </div>
@@ -75,7 +75,7 @@
           <TabPane label="创建角色" name="roleAdd">
             <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
               <FormItem label="角色名称" prop="name">
-                <Input v-model="rowData.name" placeholder="请输入角色名称">
+                <Input v-model="rowData.name" placeholder="请输入角色名称"></Input>
               </FormItem>
               <FormItem label="角色状态" prop="status">
                 <Select v-model="rowData.status" class="search-col" placeholder="请选择用户状态">
@@ -83,7 +83,7 @@
                 </Select>
               </FormItem>
               <FormItem label="角色描述" prop="roleDesc">
-                <Input v-model="rowData.roleDesc" :autosize="{minRows: 2,maxRows: 5}" type="textarea" placeholder="请输入角色描述" >
+                <Input v-model="rowData.roleDesc" :autosize="{minRows: 2,maxRows: 5}" type="textarea" placeholder="请输入角色描述" ></Input>
               </FormItem>
             </Form>
           </TabPane>

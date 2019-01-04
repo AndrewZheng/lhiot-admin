@@ -24,6 +24,7 @@
             style="width: auto"
             clearable
           >
+          </Input>
           <Input
             v-model="searchRowData.tel"
             placeholder="电话"
@@ -31,6 +32,7 @@
             style="width: auto"
             clearable
           >
+          </Input>
           <Select
             v-model="searchRowData.status"
             class="search-col mr5"
@@ -91,19 +93,19 @@
       <div class="modal-content">
         <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
           <FormItem label="姓名" prop="name">
-            <Input v-model="rowData.name" placeholder="请输入姓名">
+            <Input v-model="rowData.name" placeholder="请输入姓名"></Input>
           </FormItem>
           <FormItem label="账号" prop="account">
-            <Input v-model="rowData.account" placeholder="请输入账号">
+            <Input v-model="rowData.account" placeholder="请输入账号"></Input>
           </FormItem>
           <FormItem label="密码" prop="password">
-            <Input v-model="rowData.password" type="password">
+            <Input v-model="rowData.password" type="password"></Input>
           </FormItem>
           <FormItem label="确认密码" prop="passwdCheck">
-            <Input v-model="rowData.passwdCheck" type="password" placeholder="请确认密码">
+            <Input v-model="rowData.passwdCheck" type="password" placeholder="请确认密码"></Input>
           </FormItem>
           <FormItem label="电话" prop="tel">
-            <Input v-model="rowData.tel" placeholder="请输入电话号码">
+            <Input v-model="rowData.tel" placeholder="请输入电话号码"></Input>
           </FormItem>
           <FormItem label="用户头像" prop="avatarUrl">
             <Button class="add-image" @click="imagecropperShow=true">
@@ -127,6 +129,7 @@
               type="textarea"
               placeholder="请输入备注"
             >
+            </Input>
           </FormItem>
         </Form>
       </div>
@@ -140,19 +143,19 @@
           <TabPane label="创建用户" name="userAdd">
             <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
               <FormItem label="姓名" prop="name">
-                <Input v-model="rowData.name" placeholder="请输入姓名">
+                <Input v-model="rowData.name" placeholder="请输入姓名"></Input>
               </FormItem>
               <FormItem label="账号" prop="account">
-                <Input v-model="rowData.account" placeholder="请输入账号">
+                <Input v-model="rowData.account" placeholder="请输入账号"></Input>
               </FormItem>
               <FormItem label="密码" prop="password">
-                <Input v-model="rowData.password" type="password" placeholder="请输入密码">
+                <Input v-model="rowData.password" type="password" placeholder="请输入密码"></Input>
               </FormItem>
               <FormItem label="确认密码" prop="passwdCheck">
-                <Input v-model="rowData.passwdCheck" type="password">
+                <Input v-model="rowData.passwdCheck" type="password"></Input>
               </FormItem>
               <FormItem label="电话" prop="tel">
-                <Input v-model="rowData.tel" placeholder="请输入电话号码">
+                <Input v-model="rowData.tel" placeholder="请输入电话号码"></Input>
               </FormItem>
               <FormItem label="用户头像" prop="avatarUrl">
                 <Button class="add-image" @click="imagecropperShow=true">
@@ -178,6 +181,7 @@
                   type="textarea"
                   placeholder="请输入备注"
                 >
+                </Input>
               </FormItem>
             </Form>
           </TabPane>

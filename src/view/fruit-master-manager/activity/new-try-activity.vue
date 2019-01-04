@@ -114,7 +114,7 @@
             </Col>
             <Col span="12">
             <FormItem label="商品排序:" prop="sort">
-              <InputNumber :min="1" v-model="goodsDetail.sort" style="width: 150px"/>
+              <InputNumber :min="1" v-model="goodsDetail.sort" style="width: 150px"/></InputNumber>
             </FormItem>
             </Col>
           </Row>

@@ -210,7 +210,7 @@
                 :min="0"
                 :value="originalPriceComputed"
                 placeholder="商品原价"
-                @on-change="originalPriceInputNumberOnchange"/>
+                @on-change="originalPriceInputNumberOnchange"></InputNumber>
             </FormItem>
             </Col>
             <Col span="12">
@@ -219,7 +219,7 @@
                 :min="0"
                 :value="priceComputed"
                 placeholder="商品特价"
-                @on-change="priceInputNumberOnchange"/>
+                @on-change="priceInputNumberOnchange"></InputNumber>
             </FormItem>
             </Col>
           </Row>
@@ -343,9 +343,11 @@ const productDetail = {
   shelfType: 'NORMAL',
   sorting: 0,
   specificationId: 0,
-  specificationInfo: ''
+  specificationInfo: '',
+  applicationType: null
 };
 const roleRowData = {
+  applicationType: null,
   productName: '',
   name: '',
   page: 1,
@@ -493,7 +495,7 @@ export default {
     this.createLoading = true;
     this.searchRowData = _.cloneDeep(roleRowData);
     getuiPositionsPages({
-      applicationType: 'HEALTH_GOOD',
+      applicationType: this.applicationType,
       includeSection: YNEnum.YES,
       positionType: positionType.PRODUCT,
       page: 0,
@@ -679,6 +681,7 @@ export default {
       }
     },
     getTableData() {
+      this.searchRowData.applicationType = this.applicationType;
       getProductShelvesPages(this.searchRowData).then(res => {
         this.tableData = res.array;
         this.total = res.total;

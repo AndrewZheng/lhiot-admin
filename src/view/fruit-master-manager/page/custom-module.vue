@@ -189,7 +189,7 @@
                 </Select>
                 </Col>
                 <Col span="4">
-                <InputNumber :min="1" v-model="sort" class="ml20"/>
+                <InputNumber :min="1" v-model="sort" class="ml20"></InputNumber>
                 </Col>
                 <Col span="4">
                 <Button v-waves :loading="addTempDataLoading" span="4" class="search-btn ml20" type="primary" @click="addTempData">

@@ -96,6 +96,9 @@ const mixin = {
   computed: {
     userInfo() {
       return this.$store.getters.getUserInfo;
+    },
+    applicationType() {
+      return this.$store.getters.systemCurrent.applicationType;
     }
   },
   methods: {

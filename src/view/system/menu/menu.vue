@@ -31,6 +31,7 @@
                 class="search-input mr5"
                 style="width: auto"
                 clearable>
+              </Input>
               <Select v-model="searchRowData.type" class="search-col" placeholder="菜单类型" style="width: auto" clearable>
                 <Option value="PARENT">父级菜单</Option>
                 <Option value="SON">子级菜单</Option>
@@ -146,13 +147,13 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="4">类型</i-col>
-              <i-col span="12"><Input v-model="menuType" placeholder="" readonly></i-col>
+              <i-col span="12"><Input v-model="menuType" placeholder="" readonly></Input></i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="4">名称</i-col>
-              <i-col span="12"><Input v-model="rowData.name" placeholder="" clearable></i-col>
+              <i-col span="12"><Input v-model="rowData.name" placeholder="" clearable></Input></i-col>
             </Row>
           </i-col>
         </Row>
@@ -160,13 +161,13 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="4">编码</i-col>
-              <i-col span="12"><Input v-model="rowData.code" placeholder="" clearable></i-col>
+              <i-col span="12"><Input v-model="rowData.code" placeholder="" clearable></Input></i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="4">排序</i-col>
-              <i-col span="12"><Input v-model="rowData.sort" placeholder="" clearable></i-col>
+              <i-col span="12"><Input v-model="rowData.sort" placeholder="" clearable></Input></i-col>
             </Row>
           </i-col>
         </Row>
@@ -193,7 +194,7 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="4">名称</i-col>
-              <i-col span="12"><Input v-model="operateRowData.name" placeholder="" clearable></i-col>
+              <i-col span="12"><Input v-model="operateRowData.name" placeholder="" clearable></Input></i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -211,7 +212,7 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="4">路径</i-col>
-              <i-col span="16"><Input v-model="operateRowData.antUrl" placeholder="" clearable></i-col>
+              <i-col span="16"><Input v-model="operateRowData.antUrl" placeholder="" clearable></Input></i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -257,13 +258,13 @@
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
                   <i-col span="4">类型</i-col>
-                  <i-col span="12"><Input v-model="menuType" placeholder="" readonly></i-col>
+                  <i-col span="12"><Input v-model="menuType" placeholder="" readonly></Input></i-col>
                 </Row>
               </i-col>
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
                   <i-col span="4">名称</i-col>
-                  <i-col span="12"><Input v-model="rowData.name" placeholder="" clearable></i-col>
+                  <i-col span="12"><Input v-model="rowData.name" placeholder="" clearable></Input></i-col>
                 </Row>
               </i-col>
             </Row>
@@ -271,13 +272,13 @@
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
                   <i-col span="4">编码</i-col>
-                  <i-col span="12"><Input v-model="rowData.code" placeholder="" clearable></i-col>
+                  <i-col span="12"><Input v-model="rowData.code" placeholder="" clearable></Input></i-col>
                 </Row>
               </i-col>
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
                   <i-col span="4">排序</i-col>
-                  <i-col span="12"><Input v-model="rowData.sort" placeholder="" clearable></i-col>
+                  <i-col span="12"><Input v-model="rowData.sort" placeholder="" clearable></Input></i-col>
                 </Row>
               </i-col>
             </Row>
@@ -287,7 +288,7 @@
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
                   <i-col span="4">名称</i-col>
-                  <i-col span="12"><Input v-model="operateRowData.name" placeholder="" clearable></i-col>
+                  <i-col span="12"><Input v-model="operateRowData.name" placeholder="" clearable></Input></i-col>
                 </Row>
               </i-col>
               <i-col span="12">
@@ -305,7 +306,7 @@
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
                   <i-col span="4">路径</i-col>
-                  <i-col span="16"><Input v-model="operateRowData.antUrl" placeholder="" clearable></i-col>
+                  <i-col span="16"><Input v-model="operateRowData.antUrl" placeholder="" clearable></Input></i-col>
                 </Row>
               </i-col>
               <i-col span="12">

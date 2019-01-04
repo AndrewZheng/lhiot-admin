@@ -553,9 +553,9 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             if (row.doctorStatus === 'VALID') {
-              return <div><tag color="success">{doctorStatusConvert(row.doctorStatus).label}</tag></div>;
+              return <div><tag color='success'>{doctorStatusConvert(row.doctorStatus).label}</tag></div>;
             } else if (row.doctorStatus === 'INVALID') {
-              return <div><tag color="error">{doctorStatusConvert(row.doctorStatus).label}</tag></div>;
+              return <div><tag color='error'>{doctorStatusConvert(row.doctorStatus).label}</tag></div>;
             } else {
               return <div>{row.doctorStatus}</div>;
             }
