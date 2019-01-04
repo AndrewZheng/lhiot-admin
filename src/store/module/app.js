@@ -12,8 +12,8 @@ import {
 import beforeClose from '@/router/before-close';
 import router from '@/router';
 import routers from '@/router/routers';
-import {getSystemList} from '@/api/system';
-import {PcLockr, enums, gbs} from 'util/';
+import { getSystemList } from '@/api/system';
+import { PcLockr, enums } from 'util/';
 
 const closePage = (state, route) => {
   const nextRoute = getNextRoute(state.tagNavList, route);
@@ -60,7 +60,7 @@ const mutations = {
   setCurrentSystem(state, list) {
     // 如果不是第一次登录则从Pclockr里取
     if (!PcLockr.get(enums.SYSTEM)) {
-      let obj = list[0] || {};
+      const obj = list[0] || {};
       state.systemCurrent = obj;
       PcLockr.set(enums.SYSTEM, JSON.stringify(obj));
     } else {
@@ -68,7 +68,7 @@ const mutations = {
     }
   },
   closeTag(state, route) {
-    let tag = state.tagNavList.filter(item => routeEqual(item, route));
+    const tag = state.tagNavList.filter(item => routeEqual(item, route));
     route = tag[0] ? tag[0] : null;
     if (!route) return;
     if (route.meta && route.meta.beforeCloseName && route.meta.beforeCloseName in beforeClose) {
@@ -81,8 +81,8 @@ const mutations = {
       closePage(state, route);
     }
   },
-  addTag(state, {route, type = 'unshift'}) {
-    let router = getRouteTitleHandled(route);
+  addTag(state, { route, type = 'unshift' }) {
+    const router = getRouteTitleHandled(route);
     if (!routeHasExist(state.tagNavList, router)) {
       if (type === 'push') state.tagNavList.push(router);
       else {
@@ -99,7 +99,7 @@ const mutations = {
 };
 
 const actions = {
-  getSystemList({commit}) {
+  getSystemList({ commit }) {
     return new Promise((resolve, reject) => {
       getSystemList().then(res => {
         if (res && res.array.length > 0) {

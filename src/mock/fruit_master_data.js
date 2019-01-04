@@ -1,12 +1,10 @@
 import Mock from 'mockjs';
-import {doCustomTimes, getParams} from '@/libs/util';
-
 const Random = Mock.Random;
 
 export const getFruitMasterUserData = req => {
-  const {page = 1, rows = 10} = JSON.parse(req.body);
-  let list = [];
-  let randomData = Mock.mock({
+  const { page = 1, rows = 10 } = JSON.parse(req.body);
+  const list = [];
+  const randomData = Mock.mock({
     'array|50': [{
       'id|500000000000000-599999999999999': 500000000000000,
       name: '@name',
@@ -29,9 +27,9 @@ export const getFruitMasterUserData = req => {
 };
 
 export const getFruitMastGoodsCategoryData = req => {
-  const {page = 1, rows = 10} = JSON.parse(req.body);
-  let list = [];
-  let randomData = Mock.mock({
+  const { page = 1, rows = 10 } = JSON.parse(req.body);
+  const list = [];
+  const randomData = Mock.mock({
     'array|10': [{
       'id|1-10': 1,
       name: '葡提类',
@@ -47,9 +45,9 @@ export const getFruitMastGoodsCategoryData = req => {
 };
 
 export const getOnSaleData = req => {
-  const {page = 1, rows = 10} = JSON.parse(req.body);
-  let list = [];
-  let randomData = Mock.mock({
+  const { page = 1, rows = 10 } = JSON.parse(req.body);
+  const list = [];
+  const randomData = Mock.mock({
     'array|10': [{
       'id|1-10': 1,
       name: '@name',

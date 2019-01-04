@@ -13,7 +13,7 @@ class HttpRequest {
   }
 
   getInsideConfig() {
-    let defaultOps = {
+    const defaultOps = {
       baseURL: this.baseUrl,
       timeout: 10000,
       headers: {
@@ -21,12 +21,14 @@ class HttpRequest {
       },
       withCredentials: true // 是否允许带cookie
     };
+
+    const imsServiceOps = _.merge({}, defaultOps, {
+      baseURL: this.baseUrl
+    });
+
     // 后端微服务有需求再扩展
     switch (this.centerType) {
       case 'IMS_SERVICE':
-        const imsServiceOps = _.merge({}, defaultOps, {
-          baseURL: this.baseUrl
-        });
         return imsServiceOps;
       default:
         return defaultOps;
@@ -67,20 +69,20 @@ class HttpRequest {
         const errorStatus = errorInfo.status; // 404 403 500 ...
         switch (errorStatus) {
           case '404':
-          router.push({
-            name: '/404'
-          });
-          break;
+            router.push({
+              name: '/404'
+            });
+            break;
           case '401':
-          router.push({
-            name: '/401'
-          });
-          break;
+            router.push({
+              name: '/401'
+            });
+            break;
           case '500':
-          router.push({
-            name: '/500'
-          });
-          break;
+            router.push({
+              name: '/500'
+            });
+            break;
         }
       }
       Vue.prototype.$Message.error('请求失败或超时!');

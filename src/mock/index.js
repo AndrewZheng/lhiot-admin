@@ -11,8 +11,8 @@ import {
   getMasterManagerData,
   getMasterSalary
 } from './data';
-import { getSystemList, getRouteListById, getMenuList } from './system';
-import {getFruitMasterUserData, getFruitMastGoodsCategoryData, getOnSaleData} from './fruit_master_data';
+import { getRouteListById, getMenuList } from './system';
+import { getFruitMastGoodsCategoryData, getOnSaleData } from './fruit_master_data';
 
 // 登录相关和获取用户信息
 Mock.mock(/\/login/, login);

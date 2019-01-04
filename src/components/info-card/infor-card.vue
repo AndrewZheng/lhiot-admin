@@ -1,10 +1,10 @@
 <template>
-  <Card :shadow="shadow" class="info-card-wrapper" :padding="0">
+  <Card :shadow="shadow" :padding="0" class="info-card-wrapper">
     <div class="content-con">
-      <div class="left-area" :style="{background: color, width: leftWidth}">
-        <common-icon class="icon" :type="icon" :size="iconSize" color="#fff"/>
+      <div :style="{background: color, width: leftWidth}" class="left-area">
+        <common-icon :type="icon" :size="iconSize" class="icon" color="#fff"/>
       </div>
-      <div class="right-area" :style="{width: rightWidth}">
+      <div :style="{width: rightWidth}" class="right-area">
         <div>
           <slot></slot>
         </div>
@@ -43,10 +43,10 @@ export default {
     }
   },
   computed: {
-    leftWidth () {
+    leftWidth() {
       return `${this.left}%`;
     },
-    rightWidth () {
+    rightWidth() {
       return `${100 - this.left}%`;
     }
   }

@@ -1,59 +1,61 @@
 <template>
-<div>
-    <div class="demo-upload-list" v-for="item in uploadList" :key="item.uid" :style="demoStyle">
-        <template v-if="item.status === 'finished'">
-            <img :src="item.response.fileUrl" />
-            <div class="demo-upload-list-cover">
-                <Icon type="ios-eye-outline" @click.native="handlePreView(item)"></Icon>
-                <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-            </div>
-        </template>
-        <template v-else>
-            <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-        </template>
+  <div>
+    <div v-for="item in uploadList" :key="item.uid" :style="demoStyle" class="demo-upload-list">
+      <template v-if="item.status === 'finished'">
+        <img :src="item.response.fileUrl" >
+        <div class="demo-upload-list-cover">
+          <Icon type="ios-eye-outline" @click.native="handlePreView(item)"></Icon>
+          <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+        </div>
+      </template>
+      <template v-else>
+        <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+      </template>
     </div>
     <Upload
-        ref="upload"
-        :action="action"
-        :headers="headers"
-        :multiple="multiple"
-        :paste="paste"
-        :data="data"
-        :name="name"
-        :with-credentials="withCredentials"
-        :show-upload-list="showUploadList"
-        :type="type"
-        :accept="accept"
-        :format="format"
-        :max-size="maxSize"
-        :before-upload="handleBeforeUpload"
-        :on-progress="handleProgress"
-        :on-success="handleSuccess"
-        :on-error="handleError"
-        :on-preview="handlePreView"
-        :on-remove="handleRemove"
-        :default-file-list="defaultList"
-        :on-format-error="handleFormatError"
-        :on-exceeded-size="handleMaxSize"
-        :style="demoStyle3"
-        >
-        <div :style="demoStyle2">
-            <Icon type="ios-camera" size="20"></Icon>
-            <slot name="tip"></slot>
-        </div>
+      ref="upload"
+      :action="action"
+      :headers="headers"
+      :multiple="multiple"
+      :paste="paste"
+      :data="data"
+      :name="name"
+      :with-credentials="withCredentials"
+      :show-upload-list="showUploadList"
+      :type="type"
+      :accept="accept"
+      :format="format"
+      :max-size="maxSize"
+      :before-upload="handleBeforeUpload"
+      :on-progress="handleProgress"
+      :on-success="handleSuccess"
+      :on-error="handleError"
+      :on-preview="handlePreView"
+      :on-remove="handleRemove"
+      :default-file-list="defaultList"
+      :on-format-error="handleFormatError"
+      :on-exceeded-size="handleMaxSize"
+      :style="demoStyle3"
+    >
+      <div :style="demoStyle2">
+        <Icon type="ios-camera" size="20"></Icon>
+        <slot name="tip"></slot>
+      </div>
     </Upload>
 
-    <Modal title="图片预览" v-model="visible" draggable style="text-align:center;" :z-index='1024'>
-        <img :src="imgPreview" v-if="visible" style="max-width:100%;">
+    <Modal v-model="visible" :z-index="1024" title="图片预览" draggable style="text-align:center;">
+      <img v-if="visible" :src="imgPreview" style="max-width:100%;">
     </Modal>
-</div>
+  </div>
 </template>
 
 <script type='text/ecmascript-6'>
 import _ from 'lodash';
 
 export default {
-  name: 'img-upload',
+  name: 'ImgUpload',
+  filters: {},
+  components: {},
   props: {
     action: {
       type: String,
@@ -82,7 +84,10 @@ export default {
       default: false
     },
     data: {
-      type: Object
+      type: Object,
+      default() {
+        return {}
+      }
     },
     name: {
       type: String,
@@ -101,7 +106,8 @@ export default {
       default: 'select'
     },
     accept: {
-      type: String
+      type: String,
+      default: ''
     },
     format: {
       type: Array,
@@ -114,16 +120,16 @@ export default {
       default: 1024
     },
     defaultList: {
-       type: Array,
-       default() {
-         return [];
-       }
+      type: Array,
+      default() {
+        return [];
+      }
     },
     imgList: {
-       type: Array,
-       default() {
-         return [];
-       }
+      type: Array,
+      default() {
+        return [];
+      }
     },
     beforeUpload: {
       type: Function,
@@ -134,13 +140,13 @@ export default {
     onProgress: {
       type: Function,
       default() {
-       return '';
+        return '';
       }
     },
     onSuccess: {
       type: Function,
       default() {
-       return '';
+        return '';
       }
     },
     onError: {
@@ -181,22 +187,23 @@ export default {
       visible: false,
       uploadList: [],
       demoStyle: {
-        width: this.width+'px',
-        height: this.height+'px',
-        lineHeight: this.height+'px'
+        width: this.width + 'px',
+        height: this.height + 'px',
+        lineHeight: this.height + 'px'
       },
       demoStyle2: {
-        width: (this.width-2)+'px',
-        height: (this.height-2)+'px',
-        lineHeight: (this.height-2)+'px'
+        width: (this.width - 2) + 'px',
+        height: (this.height - 2) + 'px',
+        lineHeight: (this.height - 2) + 'px'
       },
       demoStyle3: {
         display: 'inline-block',
-        width: (this.width-2)+'px'
+        width: (this.width - 2) + 'px'
       },
       imgUrlList: this.imgList
     };
   },
+  computed: {},
   watch: {
     imgUrlList(val, oldVal) {
       // 每当imgUrlList的值改变则发送事件update:img-list , 并且把值传过去
@@ -210,8 +217,6 @@ export default {
     this.uploadList = this.$refs.upload.fileList;
     console.log('uploadList init:', this.uploadList);
   },
-  computed: {},
-  filters: {},
   methods: {
     handlePreView(file) {
       this.imgPreview = file.response.fileUrl;
@@ -220,7 +225,7 @@ export default {
     handleRemove(file) {
       const fileList = this.$refs.upload.fileList;
       this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
-      this.imgUrlList= _.without(this.imgUrlList, file.response.fileUrl);
+      this.imgUrlList = _.without(this.imgUrlList, file.response.fileUrl);
       console.log('remove file:', this.imgUrlList);
     },
     handleSuccess(res, file, fileList) {
@@ -262,11 +267,10 @@ export default {
     },
     clearFiles() {
       // 清空已上传的列表
-      this.uploadList=[];
+      this.uploadList = [];
       this.$refs.upload.clearFiles();
     }
-  },
-  components: {}
+  }
 };
 </script>
 

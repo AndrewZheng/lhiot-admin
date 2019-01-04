@@ -2,17 +2,17 @@
   <div class="drag-list-wrapper">
     <div class="drag-list-con con1">
       <slot name="left-title"></slot>
-      <draggable class="drop-box1" :class="dropConClass.left" :options="options" :value="list1" @input="handleListChange($event, 'left')" @end="handleEnd($event, 'left')">
-        <div class="drag-list-item" v-for="(itemLeft, index) in list1" :key="`drag_li1_${index}`">
-          <slot name="left" :itemLeft="itemLeft">{{ itemLeft }}</slot>
+      <draggable :class="dropConClass.left" :options="options" :value="list1" class="drop-box1" @input="handleListChange($event, 'left')" @end="handleEnd($event, 'left')">
+        <div v-for="(itemLeft, index) in list1" :key="`drag_li1_${index}`" class="drag-list-item">
+          <slot :itemLeft="itemLeft" name="left">{{ itemLeft }}</slot>
         </div>
       </draggable>
     </div>
     <div class="drag-list-con con2">
       <slot name="right-title"></slot>
-      <draggable class="drop-box2" :class="dropConClass.right" :options="options" :value="list2" @input="handleListChange($event, 'right')" @end="handleEnd($event, 'right')">
-        <div class="drag-list-item" v-for="(itemRight, index) in list2" :key="`drag_li2_${index}`">
-          <slot name="right" :itemRight="itemRight">{{ itemRight }}</slot>
+      <draggable :class="dropConClass.right" :options="options" :value="list2" class="drop-box2" @input="handleListChange($event, 'right')" @end="handleEnd($event, 'right')">
+        <div v-for="(itemRight, index) in list2" :key="`drag_li2_${index}`" class="drag-list-item">
+          <slot :itemRight="itemRight" name="right">{{ itemRight }}</slot>
         </div>
       </draggable>
     </div>
@@ -39,17 +39,17 @@ export default {
       default: () => ({})
     }
   },
-  data () {
+  data() {
     return {
       options: { group: 'drag_list' }
     };
   },
   methods: {
-    handleListChange (value, type) {
+    handleListChange(value, type) {
       if (type === 'left') this.$emit('update:list1', value);
       else this.$emit('update:list2', value);
     },
-    handleEnd (event, type) {
+    handleEnd(event, type) {
       const srcClassName = (event.srcElement || event.target).classList[0];
       const targetClassName = event.to.classList[0];
       let src = '';

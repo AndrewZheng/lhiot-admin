@@ -1,4 +1,4 @@
-let mixin = {
+const mixin = {
   data() {
     return {
       // 选中的行
@@ -23,11 +23,11 @@ let mixin = {
         this.$Message.warning('请选中要删除的行');
         return;
       }
-      let tempDeleteList = [];
+      const tempDeleteList = [];
       this.tableDataSelected.filter(value => {
         tempDeleteList.push(value.id);
       });
-      let strTempDelete = tempDeleteList.join(',');
+      const strTempDelete = tempDeleteList.join(',');
       this.deleteTable(strTempDelete);
     }
   }

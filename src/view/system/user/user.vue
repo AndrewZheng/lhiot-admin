@@ -3,13 +3,13 @@
     <Card>
       <tables
         ref="tables"
+        v-model="tableData"
+        :loading="loading"
+        :columns="columns"
         editable
         searchable
         search-place="top"
         size="small"
-        v-model="tableData"
-        :loading="loading"
-        :columns="columns"
         @on-selection-change="onSelectionChange"
         @on-delete="handleDelete"
         @on-view="handleView"
@@ -18,19 +18,19 @@
       >
         <div slot="searchCondition">
           <Input
+            v-model="searchRowData.name"
             placeholder="姓名"
             class="search-input mr5"
-            v-model="searchRowData.name"
             style="width: auto"
             clearable
-          />
+          >
           <Input
+            v-model="searchRowData.tel"
             placeholder="电话"
             class="search-input mr5"
-            v-model="searchRowData.tel"
             style="width: auto"
             clearable
-          />
+          >
           <Select
             v-model="searchRowData.status"
             class="search-col mr5"
@@ -42,20 +42,20 @@
               v-for="item in userStatusList"
               :value="item.key"
               :key="`search-col-${item.key}`"
-            >{{item.value}}</Option>
+            >{{ item.value }}</Option>
           </Select>
-          <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary">
+          <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch">
             <Icon type="md-search"/>&nbsp;搜索
           </Button>
-          <Button v-waves @click="handleClear" class="search-btn" type="info">
+          <Button v-waves class="search-btn" type="info" @click="handleClear">
             <Icon type="md-refresh"/>&nbsp;清除条件
           </Button>
         </div>
         <div slot="operations">
-          <Button @click="handleAdd" type="success" class="mr5">
+          <Button type="success" class="mr5" @click="handleAdd">
             <Icon type="md-add"/>新增
           </Button>
-          <Button @click="handleDeleteBatch" type="error" class="mr5">
+          <Button type="error" class="mr5" @click="handleDeleteBatch">
             <Icon type="md-trash"/>删除
           </Button>
         </div>
@@ -65,10 +65,10 @@
           <Page
             :total="total"
             :current="page"
-            @on-change="changePage"
-            @on-page-size-change="changePageSize"
             show-sizer
             show-total
+            @on-change="changePage"
+            @on-page-size-change="changePageSize"
           ></Page>
         </Row>
       </div>
@@ -76,37 +76,37 @@
 
     <!-- 创建/修改模态框 -->
     <Modal
+      ref="formValidate"
       v-model="modalEdit"
       :loading="loadingBtn"
       :mask-closable="false"
-      @on-ok="handleAddOrEditOk('formValidate')"
-      @on-cancel="handleCancel"
-      ref="formValidate"
       :model="rowData"
       :rules="ruleValidate"
+      @on-ok="handleAddOrEditOk('formValidate')"
+      @on-cancel="handleCancel"
     >
       <p slot="header">
-        <span>{{rowData.id==''?'创建用户':'编辑用户'}}</span>
+        <span>{{ rowData.id==''?'创建用户':'编辑用户' }}</span>
       </p>
       <div class="modal-content">
         <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
           <FormItem label="姓名" prop="name">
-            <Input v-model="rowData.name" placeholder="请输入姓名"/>
+            <Input v-model="rowData.name" placeholder="请输入姓名">
           </FormItem>
           <FormItem label="账号" prop="account">
-            <Input v-model="rowData.account" placeholder="请输入账号"/>
+            <Input v-model="rowData.account" placeholder="请输入账号">
           </FormItem>
           <FormItem label="密码" prop="password">
-            <Input v-model="rowData.password" type="password"/>
+            <Input v-model="rowData.password" type="password">
           </FormItem>
           <FormItem label="确认密码" prop="passwdCheck">
-            <Input v-model="rowData.passwdCheck" type="password" placeholder="请确认密码"/>
+            <Input v-model="rowData.passwdCheck" type="password" placeholder="请确认密码">
           </FormItem>
           <FormItem label="电话" prop="tel">
-            <Input v-model="rowData.tel" placeholder="请输入电话号码"/>
+            <Input v-model="rowData.tel" placeholder="请输入电话号码">
           </FormItem>
           <FormItem label="用户头像" prop="avatarUrl">
-            <Button @click="imagecropperShow=true" class="add-image">
+            <Button class="add-image" @click="imagecropperShow=true">
               <Icon type="ios-camera" size="20"></Icon>
             </Button>
             <img :src="image" width="80px" height="80px">
@@ -117,16 +117,16 @@
                 v-for="item in userStatusList"
                 :value="item.key"
                 :key="`search-col-${item.key}`"
-              >{{item.value}}</Option>
+              >{{ item.value }}</Option>
             </Select>
           </FormItem>
           <FormItem label="备注" prop="remark">
             <Input
               v-model="rowData.remark"
-              type="textarea"
               :autosize="{minRows: 2,maxRows: 5}"
+              type="textarea"
               placeholder="请输入备注"
-            />
+            >
           </FormItem>
         </Form>
       </div>
@@ -135,27 +135,27 @@
     <!-- 多功能添加模态框(创建用户/关联角色) -->
     <Modal v-model="modalAdd" :loading="loadingBtn" :mask-closable="false">
       <div class="modal-content">
-        <Tabs size="small" v-model="step">
+        <Tabs v-model="step" size="small">
           <!-- :value="tabOperation.tabSelected" -->
           <TabPane label="创建用户" name="userAdd">
             <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
               <FormItem label="姓名" prop="name">
-                <Input v-model="rowData.name" placeholder="请输入姓名"/>
+                <Input v-model="rowData.name" placeholder="请输入姓名">
               </FormItem>
               <FormItem label="账号" prop="account">
-                <Input v-model="rowData.account" placeholder="请输入账号"/>
+                <Input v-model="rowData.account" placeholder="请输入账号">
               </FormItem>
               <FormItem label="密码" prop="password">
-                <Input v-model="rowData.password" type="password" placeholder="请输入密码"/>
+                <Input v-model="rowData.password" type="password" placeholder="请输入密码">
               </FormItem>
               <FormItem label="确认密码" prop="passwdCheck">
-                <Input v-model="rowData.passwdCheck" type="password"/>
+                <Input v-model="rowData.passwdCheck" type="password">
               </FormItem>
               <FormItem label="电话" prop="tel">
-                <Input v-model="rowData.tel" placeholder="请输入电话号码"/>
+                <Input v-model="rowData.tel" placeholder="请输入电话号码">
               </FormItem>
               <FormItem label="用户头像" prop="avatarUrl">
-                <Button @click="imagecropperShow=true" class="add-image">
+                <Button class="add-image" @click="imagecropperShow=true">
                   <Icon type="ios-camera" size="20"></Icon>
                 </Button>
                 <div v-if="imageVisible" style="display: inline-block">
@@ -168,20 +168,20 @@
                     v-for="item in userStatusList"
                     :value="item.key"
                     :key="`search-col-${item.key}`"
-                  >{{item.value}}</Option>
+                  >{{ item.value }}</Option>
                 </Select>
               </FormItem>
               <FormItem label="备注" prop="remark">
                 <Input
                   v-model="rowData.remark"
-                  type="textarea"
                   :autosize="{minRows: 2,maxRows: 5}"
+                  type="textarea"
                   placeholder="请输入备注"
-                />
+                >
               </FormItem>
             </Form>
           </TabPane>
-          <TabPane label="关联角色" name="roleAdd" :disabled="isDisable">
+          <TabPane :disabled="isDisable" label="关联角色" name="roleAdd">
             <Transfer
               :data="roleData"
               :target-keys="targetKeys"
@@ -192,13 +192,13 @@
           </TabPane>
         </Tabs>
       </div>
-      <div slot="footer" v-if="step=='userAdd' && !isCreated">
+      <div v-if="step=='userAdd' && !isCreated" slot="footer">
         <Button type="primary" @click="handleAddOrEditOk('formValidate')">下一步</Button>
       </div>
-      <div slot="footer" v-else-if="step=='roleAdd'">
+      <div v-else-if="step=='roleAdd'" slot="footer">
         <Button type="primary" @click="handleRoleOk">保存</Button>
       </div>
-      <div slot="footer" v-else>
+      <div v-else slot="footer">
         <Button type="primary" @click="handleCloseAdd">关闭</Button>
       </div>
     </Modal>
@@ -260,11 +260,12 @@ const userRowData = {
 };
 
 export default {
-  name: 'user_page',
+  name: 'UserPage',
   components: {
     Tables,
     ImageCropper
   },
+  filters: {},
   data() {
     const validatePassCheck = (rule, value, callback) => {
       console.log(this.rowData.password);
@@ -277,7 +278,7 @@ export default {
       }
     };
     return {
-      
+
       columns: [
         {
           type: 'selection',
@@ -307,7 +308,7 @@ export default {
           width: 120,
           render: (h, params, vm) => {
             const { row } = params;
-            const str = <img src={row.avatarUrl} height="60" width="60" />;
+            const str = <img src={row.avatarUrl} height='60' width='60' />;
             return <div>{str}</div>;
           }
         },
@@ -319,15 +320,15 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             const str =
-              row.status == 'AVAILABLE' ? (
-                <tag color="success">
+              row.status === 'AVAILABLE' ? (
+                <tag color='success'>
                   {this.getDictValueByKey(this.userStatus, row.status)}
                 </tag>
               ) : (
-                  <tag color="error">
-                    {this.getDictValueByKey(this.userStatus, row.status)}
-                  </tag>
-                );
+                <tag color='error'>
+                  {this.getDictValueByKey(this.userStatus, row.status)}
+                </tag>
+              );
             return <div>{str}</div>;
           }
         },
@@ -416,13 +417,12 @@ export default {
       userStatusList: []
     };
   },
+  computed: {},
   created() { },
   mounted() {
     this.getTableData();
     this.getStatusList();
   },
-  computed: {},
-  filters: {},
   methods: {
     renderContent(h, { root, node, data }) {
       if (data.chirenderContentldren) {
@@ -463,8 +463,8 @@ export default {
           `<br>
           创建时间: ${this.tableData[params.row.initRowIndex].createAt}<br>
           最后登录时间: ${
-          this.tableData[params.row.initRowIndex].lastLoginAt
-          }<br>
+  this.tableData[params.row.initRowIndex].lastLoginAt
+}<br>
           备注: ${this.tableData[params.row.initRowIndex].remark}<br>
           关联角色：<tag type="border">角色1</tag><tag type="border">角色2</tag><tag type="border">角色3</tag>`
       });
@@ -486,7 +486,7 @@ export default {
         });
     },
     handleDeleteBatch() {
-      if (this.ids.length != 0) {
+      if (this.ids.length !== 0) {
         // 发送axios请求
         this.$http
           .request({
@@ -616,7 +616,7 @@ export default {
       this.handleSearch();
     },
     handleRoleOk() {
-      let roleIds = this.targetKeys.join(',');
+      const roleIds = this.targetKeys.join(',');
       // 发送axios请求
       this.$http
         .request({
@@ -625,11 +625,11 @@ export default {
         })
         .then(res => {
           this.loadingBtn = false;
-          if (this.modalRole == true) {
+          if (this.modalRole === true) {
             this.modalRole = false;
             this.targetKeys = [];
             this.$Message.info('修改成功');
-          } else if (this.modalAdd == true) {
+          } else if (this.modalAdd === true) {
             this.modalAdd = false;
             this.$Message.info('保存成功');
             this.step = 'userAdd';
@@ -679,7 +679,7 @@ export default {
     },
     // 模拟双栏穿梭选择框数据
     getRoleData() {
-      let role = [];
+      const role = [];
       getRoleList().then(res => {
         if (res && res.array.length > 0) {
           for (let i = 0; i < res.array.length; i++) {
@@ -696,7 +696,7 @@ export default {
       return role;
     },
     getRelationRoleIds(res) {
-      let relationRoles = [];
+      const relationRoles = [];
       for (let i = 0; i < res.length; i++) {
         relationRoles.push({
           key: res[i].id.toString(),

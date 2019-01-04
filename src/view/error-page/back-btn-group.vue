@@ -8,31 +8,31 @@
 <script>
 import './error.less';
 export default {
-  name: 'backBtnGroup',
-  data () {
+  name: 'BackBtnGroup',
+  data() {
     return {
       second: 5,
       timer: null
     };
   },
-  methods: {
-    backHome () {
-      this.$router.replace({
-        name: 'home'
-      });
-    },
-    backPrev () {
-      this.$router.go(-1);
-    }
-  },
-  mounted () {
+  mounted() {
     this.timer = setInterval(() => {
       if (this.second === 0) this.backPrev();
       else this.second--;
     }, 1000);
   },
-  beforeDestroy () {
+  beforeDestroy() {
     clearInterval(this.timer);
+  },
+  methods: {
+    backHome() {
+      this.$router.replace({
+        name: 'home'
+      });
+    },
+    backPrev() {
+      this.$router.go(-1);
+    }
   }
 };
 </script>
