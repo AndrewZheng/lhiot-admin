@@ -73,7 +73,6 @@
         <Button type="primary" :loading="modalViewLoading" @click="handleSubmit('modalEdit')">确定
         </Button>
       </div>
-    </Modal>
     <Modal title="View Image" v-model="uploadVisible">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
