@@ -3,34 +3,34 @@
     <Card>
       <tables
         ref="tables"
+        v-model="tableData"
+        :columns="columns"
+        :loading="loading"
+        :search-area-column="20"
+        :operate-area-column="4"
         editable
         searchable
         border
         highlight-row
         search-place="top"
-        v-model="tableData"
-        :columns="columns"
-        :loading="loading"
         @on-view="handleView"
-        :searchAreaColumn="20"
-        :operateAreaColumn="4"
       >
         <div slot="searchCondition">
           <Row>
             <Input
+              v-model="searchRowData.customOrderCode"
               placeholder="定制编码"
               class="search-input mr5"
-              v-model="searchRowData.customOrderCode"
               style="width: 120px"
               clearable
-            />
+            >
             <Input
+              v-model="searchRowData.phone"
               placeholder="用户手机号"
               class="search-input mr5"
-              v-model="searchRowData.phone"
               style="width: 100px"
               clearable
-            />
+            >
             <Select
               v-model="searchRowData.totalQty"
               class="search-col mr5"
@@ -40,79 +40,80 @@
               <Option
                 v-for="item in totalQtyList"
                 :value="item.value"
-                class="ptb2-5"
                 :key="`search-col-${item.value}`"
-              >{{item.label}}</Option>
+                class="ptb2-5"
+              >{{ item.label }}</Option>
             </Select>
             <Select
+              v-model="searchRowData.quantity"
               class="search-col mr5"
               placeholder="定制份数"
-              v-model="searchRowData.quantity"
-              style="width: 100px" clearable>
+              style="width: 100px"
+              clearable>
               <Option
                 v-for="item in customCopiesList"
                 :value="item.quantity"
-                class="ptb2-5"
                 :key="`search-col-${item.quantity}`"
-              >{{item.description}}</Option>
+                class="ptb2-5"
+              >{{ item.description }}</Option>
             </Select>
             <Select
+              v-model="searchRowData.statusIn"
               multiple
               class="search-col mr5"
               placeholder="订单状态"
               style="width: 150px"
-              v-model="searchRowData.statusIn"
-              @on-change="orderStatusesOnChange"
-              clearable>
+              clearable
+              @on-change="orderStatusesOnChange">
               <Option
                 v-for="item in orderStatus"
                 :value="item.value"
-                class="ptb2-5"
                 :key="`search-col-${item.value}`"
-              >{{item.label}}</Option>
+                class="ptb2-5"
+              >{{ item.label }}</Option>
             </Select>
             <DatePicker
               v-model="searchRowData.beginCreateAt"
-              @on-change="startTimeChange"
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
               placeholder="开始时间"
               class="mr5"
               style="width: 160px"
+              @on-change="startTimeChange"
             />
             <i>-</i>
             <DatePicker
               v-model="searchRowData.endCreateAt"
-              @on-change="endTimeChange"
               format="yyyy-MM-dd HH:mm:ss"
               placeholder="结束时间"
               class="mr5"
               style="width: 160px"
+              @on-change="endTimeChange"
             />
             <Button
               v-waves
-              @click="handleSearch"
+              :loading="searchLoading"
               class="search-btn mr5"
               type="primary"
-              :loading="searchLoading"
+              @click="handleSearch"
             >
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
             <Button
               v-waves
-              @click="handleClear"
+              :loading="clearSearchLoading"
               class="search-btn"
               type="info"
-              :loading="clearSearchLoading"
+              @click="handleClear"
             >
               <Icon type="md-refresh"/>&nbsp;清除条件
             </Button>
           </Row>
         </div>
         <div slot="operations">
-           <!-- 多类型导出 -->
-           <BookTypeOption v-model="exportType" class="mr5"/>
-           <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
+          <!-- 多类型导出 -->
+          <BookTypeOption v-model="exportType" class="mr5"/>
+          <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -120,10 +121,10 @@
           <Page
             :total="total"
             :current.sync="page"
-            @on-change="changePage"
-            @on-page-size-change="changePageSize"
             show-sizer
             show-total
+            @on-change="changePage"
+            @on-page-size-change="changePageSize"
           ></Page>
         </Row>
       </div>
@@ -138,13 +139,13 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">订单编号:</i-col>
-              <i-col span="16">{{orderDetail.customOrderCode}}</i-col>
+              <i-col span="16">{{ orderDetail.customOrderCode }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">用户手机号:</i-col>
-              <i-col span="16">{{orderDetail.phone}}</i-col>
+              <i-col span="16">{{ orderDetail.phone }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -152,13 +153,13 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">用户昵称:</i-col>
-              <i-col span="16">{{orderDetail.nickname}}</i-col>
+              <i-col span="16">{{ orderDetail.nickname }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
-            <Row class-name="mb10" v-if="orderDetail.customPlan">
+            <Row v-if="orderDetail.customPlan" class-name="mb10">
               <i-col span="6">定制计划:</i-col>
-              <i-col span="18">{{orderDetail.customPlan.name}}</i-col>
+              <i-col span="18">{{ orderDetail.customPlan.name }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -166,13 +167,13 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">定制周期:</i-col>
-              <i-col span="16">{{orderDetail.totalQty|customPeriodFilters}}</i-col>
+              <i-col span="16">{{ orderDetail.totalQty|customPeriodFilters }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">定制份数:</i-col>
-              <i-col span="16">{{orderDetail.quantity}}</i-col>
+              <i-col span="16">{{ orderDetail.quantity }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -180,27 +181,27 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">定制状态:</i-col>
-              <i-col span="16">{{orderDetail.status|customOrderStatusFilters}}</i-col>
+              <i-col span="16">{{ orderDetail.status|customOrderStatusFilters }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">配送方式:</i-col>
-              <i-col span="16">{{orderDetail.deliveryType|deliveryTypeCustomFilters}}</i-col>
+              <i-col span="16">{{ orderDetail.deliveryType|deliveryTypeCustomFilters }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row
-          style="background: lightgray;margin-bottom: 10px"
           v-if="orderDetail.deliveryType === deliveryTypeCustom.AUTO"
+          style="background: lightgray;margin-bottom: 10px"
         >
           <Row>
             <i-col span="24">
               <Row class="mb10 pl10 pt5">
                 <i-col span="8">收货地址:</i-col>
                 <i-col span="16">
-                  {{orderDetail.deliveryAddress +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+ orderDetail.nickname +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+
-                  orderDetail.phone}}
+                  {{ orderDetail.deliveryAddress +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+ orderDetail.nickname +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+
+                  orderDetail.phone }}
                 </i-col>
               </Row>
             </i-col>
@@ -209,7 +210,7 @@
             <i-col span="12">
               <Row class="mb10 pl10 pt5">
                 <i-col span="8">收货时间:</i-col>
-                <i-col span="16">{{orderDetail.deliveryTime}}</i-col>
+                <i-col span="16">{{ orderDetail.deliveryTime }}</i-col>
               </Row>
             </i-col>
           </Row>
@@ -218,13 +219,13 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">定制总额:</i-col>
-              <i-col span="16">{{orderDetail.price|fenToYuanDot2Filters}}</i-col>
+              <i-col span="16">{{ orderDetail.price|fenToYuanDot2Filters }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">剩余次数:</i-col>
-              <i-col span="16">{{orderDetail.remainingQty}}</i-col>
+              <i-col span="16">{{ orderDetail.remainingQty }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -232,15 +233,15 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">创建时间:</i-col>
-              <i-col span="16">{{orderDetail.createAt}}</i-col>
+              <i-col span="16">{{ orderDetail.createAt }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row>
           <tables
-            border
             :columns="orderViewRelationsColumn"
             v-model="orderDetail.customOrderDeliveryList"
+            border
           ></tables>
         </Row>
       </div>
@@ -253,11 +254,11 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import { getCustomOrdersPages, getcustomPlanSpecificationStandardsPages, getcustomOrders, transferHdOrder, getStore } from '@/api/fruitermaster';
+import { getCustomOrdersPages, getcustomPlanSpecificationStandardsPages, getcustomOrders } from '@/api/fruitermaster';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import { fenToYuanDot2 } from '@/libs/util';
-import { receivingWayEnum, orderStatusEnum, orderTypeEnum, deliveryTypeCustom, customOrderStatusEnum } from '@/libs/enumerate';
+import { deliveryTypeCustom, customOrderStatusEnum } from '@/libs/enumerate';
 import { customOrderStatusConvert, customPeriodConvert, deliveryTypeCustomConvert, customDeliverStatusConvert } from '@/libs/converStatus';
 import BookTypeOption from '_c/book-type-option';
 
@@ -332,7 +333,7 @@ export default {
           minWidth: 100,
           key: 'dayOfPeriod',
           render(h, params, vm) {
-            return <div>{'第'+ params.row.dayOfPeriod + '天'}</div>;
+            return <div>{'第' + params.row.dayOfPeriod + '天'}</div>;
           }
         },
         {
@@ -414,7 +415,7 @@ export default {
           width: 120,
           key: 'price',
           render(h, params, vm) {
-            let amount = fenToYuanDot2(params.row.price);
+            const amount = fenToYuanDot2(params.row.price);
             return <div>{amount}</div>;
           }
         },
@@ -487,7 +488,7 @@ export default {
     getcustomPlanSpecificationStandardsPages({}).then(res => {
       this.customCopiesList = res.array;
       this.getTableData();
-    }).catch(error => {
+    }).catch(() => {
       this.searchLoading = true;
       this.clearSearchLoading = true;
     });
@@ -527,11 +528,11 @@ export default {
         this.loading = false;
         this.clearSearchLoading = false;
         this.searchLoading = false;
-      }).catch(error => {
+      }).catch(() => {
         this.loading = false;
         this.clearSearchLoading = false;
         this.searchLoading = false;
-      }); ;
+      });
     },
     // exportExcel() {
     //   this.$refs.tables.exportCsv({
@@ -542,12 +543,12 @@ export default {
       // 导出不分页
       this.searchRowData.rows = null;
       getCustomOrdersPages(this.searchRowData).then(res => {
-        let tableData = res.array;
+        const tableData = res.array;
         // 表格数据导出字段翻译
         tableData.forEach(item => {
           item['customOrderCode'] = item['customOrderCode'] + '';
           item['name'] = item['customPlan']['name'];
-          item['price'] = (item['price'] /100.00).toFixed(2);
+          item['price'] = (item['price'] / 100.00).toFixed(2);
           item['status'] = customOrderStatusConvert(item['status']).label;
           item['deliveryType'] = deliveryTypeCustomConvert(item['deliveryType']).label;
         });

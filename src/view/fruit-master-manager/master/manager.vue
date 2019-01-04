@@ -3,98 +3,98 @@
     <Card>
       <tables
         ref="tables"
+        v-model="tableData"
+        :columns="columns"
+        :loading="loading"
+        :search-area-column="20"
+        :operate-area-column="4"
         editable
         searchable
         border
         search-place="top"
-        v-model="tableData"
-        :columns="columns"
-        :loading="loading"
-        :searchAreaColumn="20"
-        :operateAreaColumn="4"
         @on-view="handleView"
         @on-edit="handleEdit"
       >
         <div slot="searchCondition">
           <Input
+            v-model="searchRowData.realName"
             placeholder="姓名"
             class="search-input mr5"
-            v-model="searchRowData.realName"
             style="width: 100px"
             clearable
-          />
+          >
           <Input
+            v-model="searchRowData.phone"
             placeholder="手机号码"
             class="search-input mr5"
-            v-model="searchRowData.phone"
             style="width: 100px"
             clearable
-          />
+          >
           <Select
+            v-model="searchRowData.doctorLevel"
             class="search-col mr5"
             placeholder="鲜果师等级"
-            v-model="searchRowData.doctorLevel"
             style="width:100px"
             clearable
           >
-          <Option
-              class="ptb2-5"
+            <Option
               v-for="item in userStatus"
               :value="item.value"
               :key="item.value"
+              class="ptb2-5"
             >{{ item.label }}</Option>
           </Select>
           <Select
+            v-model="searchRowData.doctorStatus"
             class="search-col mr5"
             placeholder="鲜果师状态"
-            v-model="searchRowData.doctorStatus"
             style="width:100px"
             clearable
           >
-           <Option
-              class="ptb2-5"
+            <Option
               v-for="item in doctorStatus"
               :value="item.value"
               :key="item.value"
+              class="ptb2-5"
             >{{ item.label }}</Option>
           </Select>
           <Select
+            v-model="searchRowData.hot"
             class="search-col mr5"
             placeholder="明星鲜果师"
-            v-model="searchRowData.hot"
             style="width:100px"
             clearable
           >
-          <Option
-              class="ptb2-5"
+            <Option
               v-for="item in hotStatus"
               :value="item.value"
               :key="item.value"
+              class="ptb2-5"
             >{{ item.label }}</Option>
           </Select>
           <Button
             v-waves
-            @click="handleSearch"
+            :searchLoading="searchLoading"
             class="search-btn mr5"
             type="primary"
-            :searchLoading="searchLoading"
+            @click="handleSearch"
           >
             <Icon type="md-search"/>&nbsp;搜索
           </Button>
           <Button
             v-waves
-            @click="handleClear"
+            :loading="clearSearchLoading"
             class="search-btn"
             type="info"
-            :loading="clearSearchLoading"
+            @click="handleClear"
           >
             <Icon type="md-refresh"/>&nbsp;清除条件
           </Button>
         </div>
         <div slot="operations">
-           <!-- 多类型导出 -->
-           <BookTypeOption v-model="exportType" class="mr5"/>
-           <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
+          <!-- 多类型导出 -->
+          <BookTypeOption v-model="exportType" class="mr5"/>
+          <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -102,10 +102,10 @@
           <Page
             :total="total"
             :current="page"
-            @on-change="changePage"
-            @on-page-size-change="changePageSize"
             show-sizer
             show-total
+            @on-change="changePage"
+            @on-page-size-change="changePageSize"
           ></Page>
         </Row>
       </div>
@@ -117,121 +117,121 @@
         <span>鲜果师详情</span>
       </p>
       <div class="modal-content">
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="4">ID:</i-col>
-              <i-col span="20">{{managerDetail.id}}</i-col>
+              <i-col span="20">{{ managerDetail.id }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="4">姓名:</i-col>
-              <i-col span="20">{{managerDetail.realName}}</i-col>
+              <i-col span="20">{{ managerDetail.realName }}</i-col>
             </Row>
           </i-col>
         </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">手机号码:</i-col>
-              <i-col span="16">{{managerDetail.phone}}</i-col>
+              <i-col span="16">{{ managerDetail.phone }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="6">邀请码:</i-col>
-              <i-col span="18">{{managerDetail.inviteCode}}</i-col>
+              <i-col span="18">{{ managerDetail.inviteCode }}</i-col>
             </Row>
           </i-col>
         </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="10">鲜果师等级:</i-col>
-              <i-col span="14">{{managerDetail.doctorLevel|doctorLevelFilters}}</i-col>
+              <i-col span="14">{{ managerDetail.doctorLevel|doctorLevelFilters }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="4">状态:</i-col>
-              <i-col span="20">{{managerDetail.doctorStatus|doctorStatusFilters}}</i-col>
+              <i-col span="20">{{ managerDetail.doctorStatus|doctorStatusFilters }}</i-col>
             </Row>
           </i-col>
         </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="10">明星鲜果师:</i-col>
-              <i-col span="14">{{managerDetail.hot|hotFilters}}</i-col>
+              <i-col span="14">{{ managerDetail.hot|hotFilters }}</i-col>
             </Row>
           </i-col>
         </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="4">个人简介:</i-col>
-              <i-col span="20">{{managerDetail.profile}}</i-col>
+              <i-col span="20">{{ managerDetail.profile }}</i-col>
             </Row>
           </i-col>
         </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="4">头像:</i-col>
               <Avatar :src="managerDetail.avatar" size="large"/>
             </Row>
           </i-col>
         </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="4">职业照:</i-col>
               <img :src="managerDetail.photo" class="img">
             </Row>
           </i-col>
         </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="4">半身照:</i-col>
               <img :src="managerDetail.upperbodyPhoto" class="img">
             </Row>
           </i-col>
         </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="10">开户人姓名:</i-col>
-              <i-col span="14">{{managerDetail.cardUsername}}</i-col>
+              <i-col span="14">{{ managerDetail.cardUsername }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">开户行:</i-col>
-              <i-col span="16">{{managerDetail.bankDeposit}}</i-col>
+              <i-col span="16">{{ managerDetail.bankDeposit }}</i-col>
             </Row>
           </i-col>
         </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="10">银行卡号:</i-col>
-              <i-col span="14">{{managerDetail.cardNo}}</i-col>
+              <i-col span="14">{{ managerDetail.cardNo }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">红利余额:</i-col>
-              <i-col span="16">{{managerDetail.bonus|fenToYuanDot2Filters}}</i-col>
+              <i-col span="16">{{ managerDetail.bonus|fenToYuanDot2Filters }}</i-col>
             </Row>
           </i-col>
         </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">可结算余额:</i-col>
-              <i-col span="16">{{managerDetail.settlement|fenToYuanDot2Filters}}</i-col>
+              <i-col span="16">{{ managerDetail.settlement|fenToYuanDot2Filters }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -243,100 +243,100 @@
 
     <Modal v-model="modalEdit">
       <div class="modal-content" style="margin-top: 20px">
-        <Form :label-width="100" ref="modalEdit" :model="managerDetail" :rules="ruleInline">
+        <Form ref="modalEdit" :label-width="100" :model="managerDetail" :rules="ruleInline">
           <Row>
             <Col span="12">
-              <FormItem label="ID:">
-                <i-col>{{managerDetail.id}}</i-col>
-              </FormItem>
+            <FormItem label="ID:">
+              <i-col>{{ managerDetail.id }}</i-col>
+            </FormItem>
             </Col>
             <Col span="12">
-              <FormItem label="姓名:" prop="realName">
-                <Input v-model="managerDetail.realName" placeholder="请输入您的姓名"></Input>
-              </FormItem>
+            <FormItem label="姓名:" prop="realName">
+              <Input v-model="managerDetail.realName" placeholder="请输入您的姓名"></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-              <FormItem label="手机号码:" prop="phone">
-                <Input v-model="managerDetail.phone" placeholder="请输入您的手机号码"></Input>
-              </FormItem>
+            <FormItem label="手机号码:" prop="phone">
+              <Input v-model="managerDetail.phone" placeholder="请输入您的手机号码"></Input>
+            </FormItem>
             </Col>
             <Col span="12">
-              <FormItem label="邀请码:">
-                <i-col>{{managerDetail.inviteCode}}</i-col>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="12">
-              <FormItem label="鲜果师等级:" prop="doctorLevel">
-                <Select
-                  class="search-col mr5"
-                  placeholder="鲜果师等级"
-                  v-model="managerDetail.doctorLevel"
-                  style="width:100px"
-                  clearable
-                >
-                  <Option
-                    class="ptb2-5"
-                    v-for="item in userStatus"
-                    :value="item.value"
-                    :key="item.value"
-                  >{{ item.label}}</Option>
-                </Select>
-              </FormItem>
-            </Col>
-            <Col span="12">
-              <FormItem label="鲜果师状态:" prop="doctorStatus">
-                <Select
-                  class="search-col mr5"
-                  placeholder="鲜果师状态"
-                  v-model="managerDetail.doctorStatus"
-                  style="width:100px"
-                  clearable
-                >
-                  <Option
-                    class="ptb2-5"
-                    v-for="item in doctorStatus"
-                    :value="item.value"
-                    :key="item.value"
-                  >{{ item.label}}</Option>
-                </Select>
-              </FormItem>
+            <FormItem label="邀请码:">
+              <i-col>{{ managerDetail.inviteCode }}</i-col>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-              <FormItem label="明星鲜果师:" prop="hot">
-                <Select
-                  class="search-col mr5"
-                  placeholder="明星鲜果师"
-                  v-model="managerDetail.hot"
-                  style="width:100px"
-                  clearable
-                >
-                  <Option
-                    class="ptb2-5"
-                    v-for="item in hotStatus"
-                    :value="item.value"
-                    :key="item.value"
-                  >{{ item.label}}</Option>
-                </Select>
-              </FormItem>
+            <FormItem label="鲜果师等级:" prop="doctorLevel">
+              <Select
+                v-model="managerDetail.doctorLevel"
+                class="search-col mr5"
+                placeholder="鲜果师等级"
+                style="width:100px"
+                clearable
+              >
+                <Option
+                  v-for="item in userStatus"
+                  :value="item.value"
+                  :key="item.value"
+                  class="ptb2-5"
+                >{{ item.label }}</Option>
+              </Select>
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="鲜果师状态:" prop="doctorStatus">
+              <Select
+                v-model="managerDetail.doctorStatus"
+                class="search-col mr5"
+                placeholder="鲜果师状态"
+                style="width:100px"
+                clearable
+              >
+                <Option
+                  v-for="item in doctorStatus"
+                  :value="item.value"
+                  :key="item.value"
+                  class="ptb2-5"
+                >{{ item.label }}</Option>
+              </Select>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem label="明星鲜果师:" prop="hot">
+              <Select
+                v-model="managerDetail.hot"
+                class="search-col mr5"
+                placeholder="明星鲜果师"
+                style="width:100px"
+                clearable
+              >
+                <Option
+                  v-for="item in hotStatus"
+                  :value="item.value"
+                  :key="item.value"
+                  class="ptb2-5"
+                >{{ item.label }}</Option>
+              </Select>
+            </FormItem>
             </Col>
           </Row>
           <FormItem label="鲜果师头衔:" prop="jobTitle">
-            <Input v-model="managerDetail.jobTitle" placeholder="鲜果师头衔"/>
+            <Input v-model="managerDetail.jobTitle" placeholder="鲜果师头衔">
           </FormItem>
           <FormItem label="鲜果师简介:" prop="profile">
-            <Input v-model="managerDetail.profile" placeholder="鲜果师简介" type="textarea"/>
+            <Input v-model="managerDetail.profile" placeholder="鲜果师简介" type="textarea">
           </FormItem>
           <FormItem label="用户头像:">
             <img :src="managerDetail.avatar" width="80px" height="80px">
           </FormItem>
           <FormItem label="职业照:" prop="photo">
-            <div class="demo-upload-list" v-for="item in uploadListMain">
+            <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
               <template v-if="item.status === 'finished'">
                 <div>
                   <img :src="item.url">
@@ -352,9 +352,9 @@
             </div>
             <IViewUpload
               ref="uploadMain"
-              :defaultList="defaultListMain"
+              :default-list="defaultListMain"
+              :image-size="imageSize"
               @on-success="handleSuccessMain"
-              :imageSize="imageSize"
             >
               <div slot="content">
                 <Button type="primary">上传图片</Button>
@@ -362,7 +362,7 @@
             </IViewUpload>
           </FormItem>
           <FormItem label="半身照:" prop="upperbodyPhoto">
-            <div class="demo-upload-list" v-for="item in uploadListSecond">
+            <div v-for="item in uploadListSecond" :key="item.url" class="demo-upload-list">
               <template v-if="item.status === 'finished'">
                 <div>
                   <img :src="item.url">
@@ -378,9 +378,9 @@
             </div>
             <IViewUpload
               ref="uploadSecond"
-              :defaultList="defaultListSecond"
+              :default-list="defaultListSecond"
+              :image-size="imageSize"
               @on-success="handleSuccessSecond"
-              :imageSize="imageSize"
             >
               <div slot="content">
                 <Button type="primary">上传图片</Button>
@@ -389,43 +389,43 @@
           </FormItem>
           <Row>
             <Col span="12">
-              <FormItem label="开户人姓名:">
-                <i-col>{{managerDetail.cardUsername}}</i-col>
-              </FormItem>
+            <FormItem label="开户人姓名:">
+              <i-col>{{ managerDetail.cardUsername }}</i-col>
+            </FormItem>
             </Col>
             <Col span="12">
-              <FormItem label="开户行:">
-                <i-col>{{managerDetail.bankDeposit}}</i-col>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="12">
-              <FormItem label="银行卡号:">
-                <i-col>{{managerDetail.cardNo}}</i-col>
-              </FormItem>
-            </Col>
-            <Col span="12">
-              <FormItem label="红利余额:">
-                <i-col>{{managerDetail.bonus|fenToYuanDot2Filters}}</i-col>
-              </FormItem>
+            <FormItem label="开户行:">
+              <i-col>{{ managerDetail.bankDeposit }}</i-col>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-              <FormItem label="可结算余额:">
-                <i-col>{{managerDetail.settlement|fenToYuanDot2Filters}}</i-col>
-              </FormItem>
+            <FormItem label="银行卡号:">
+              <i-col>{{ managerDetail.cardNo }}</i-col>
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="红利余额:">
+              <i-col>{{ managerDetail.bonus|fenToYuanDot2Filters }}</i-col>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem label="可结算余额:">
+              <i-col>{{ managerDetail.settlement|fenToYuanDot2Filters }}</i-col>
+            </FormItem>
             </Col>
           </Row>
         </Form>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button type="primary" :loading="modalViewLoading" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
       </div>
     </Modal>
-    <Modal title="View Image" v-model="uploadVisible">
+    <Modal v-model="uploadVisible" title="View Image">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
@@ -433,6 +433,7 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
+import _ from 'lodash';
 import { getFruitDoctorsPages, editFruitDoctor } from '@/api/fruitermaster';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
@@ -443,7 +444,7 @@ import {
   doctorStatusConvert,
   hotConvert
 } from '@/libs/converStatus';
-import {fenToYuanDot2} from '../../../libs/util';
+import { fenToYuanDot2 } from '../../../libs/util';
 import BookTypeOption from '_c/book-type-option';
 
 const managerDetail = {
@@ -649,7 +650,7 @@ export default {
     setDefaultUploadList(res) {
       if (res.photo != null) {
         const map = { status: 'finished', url: 'url' };
-        let mainImgArr = [];
+        const mainImgArr = [];
         map.url = res.photo;
         mainImgArr.push(map);
         this.$refs.uploadMain.setDefaultFileList(mainImgArr);
@@ -657,7 +658,7 @@ export default {
       }
       if (res.upperbodyPhoto != null) {
         const map = { status: 'finished', url: 'url' };
-        let mainImgArr = [];
+        const mainImgArr = [];
         map.url = res.upperbodyPhoto;
         mainImgArr.push(map);
         this.$refs.uploadSecond.setDefaultFileList(mainImgArr);
@@ -731,12 +732,12 @@ export default {
       // 导出不分页
       this.searchRowData.rows = null;
       getFruitDoctorsPages(this.searchRowData).then(res => {
-        let tableData = res.array;
+        const tableData = res.array;
         // 表格数据导出字段翻译
         tableData.forEach(item => {
           item['id'] = item['id'] + '';
-          item['bonus'] = (item['bonus'] /100.00).toFixed(2);
-          item['settlement'] = (item['settlement'] /100.00).toFixed(2);
+          item['bonus'] = (item['bonus'] / 100.00).toFixed(2);
+          item['settlement'] = (item['settlement'] / 100.00).toFixed(2);
           item['doctorLevel'] = doctorLevelConvert(item['doctorLevel']).label;
           item['hot'] = hotConvert(item['hot']).label;
           item['doctorStatus'] = doctorStatusConvert(item['doctorStatus']).label;

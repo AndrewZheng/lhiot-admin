@@ -4,7 +4,7 @@
       <span>{{ system.name }}</span>
       <Icon :size="18" type="md-arrow-dropdown"></Icon>
       <DropdownMenu slot="list">
-        <DropdownItem v-for="item in systemList" :name="item | obj2Json" :key="item.id">{{item.name}}</DropdownItem>
+        <DropdownItem v-for="item in systemList" :name="item | obj2Json" :key="item.id">{{ item.name }}</DropdownItem>
       </DropdownMenu>
     </Dropdown>
   </div>
@@ -16,11 +16,17 @@ import { PcLockr, enums } from '@/util/';
 
 export default {
   name: 'System',
+  filters: {
+    obj2Json(value) {
+      if (!value) return;
+      return JSON.stringify(value);
+    }
+  },
   props: {
     system: {
       type: Object,
       required: false,
-      default: function () {
+      default: function() {
         return { name: '' };
       }
     },
@@ -29,18 +35,12 @@ export default {
       required: true
     }
   },
-  filters: {
-    obj2Json(value) {
-      if (!value) return;
-      return JSON.stringify(value);
-    }
-  },
   computed: {},
   methods: {
     ...mapMutations(['setCurrentSystem']),
     ...mapActions(['handleLogOut', 'getRouteListById']),
     switchSystem(item) {
-      const obj= JSON.parse(item);
+      const obj = JSON.parse(item);
       console.log('current at', obj.code);
       // 更新system本地缓存的值
       if (PcLockr.get(enums.SYSTEM) != null) {

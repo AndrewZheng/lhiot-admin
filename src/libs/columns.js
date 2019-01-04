@@ -1,5 +1,5 @@
-import {fenToYuanDot2} from './util';
-import {onSaleStatusConvert} from './converStatus';
+import { fenToYuanDot2 } from './util';
+import { onSaleStatusConvert } from './converStatus';
 
 export const goodsOnSalesColumns = [
   {
@@ -7,8 +7,8 @@ export const goodsOnSalesColumns = [
     key: 'id',
     width: 120,
     render: (h, params, vm) => {
-      let {row} = params;
-      const str = <img src={row.image} style="margin-top:5px" height="60" width="60" margin-top="10px"/>;
+      const { row } = params;
+      const str = <img src={row.image} style='margin-top:5px' height='60' width='60' margin-top='10px'/>;
       return <div>{str}</div>;
     }
   },
@@ -63,8 +63,8 @@ export const customPlanColumns = [
     width: 120,
     align: 'center',
     render: (h, params, vm) => {
-      let {row} = params;
-      const str = <img src={row.image} style="margin-top:5px" height="60" width="60" margin-top="10px"/>;
+      const { row } = params;
+      const str = <img src={row.image} style='margin-top:5px' height='60' width='60' margin-top='10px'/>;
       return <div>{str}</div>;
     }
   },
@@ -77,20 +77,20 @@ export const customPlanColumns = [
     title: '价格(周/单人)',
     width: 120,
     render: (h, params, vm) => {
-      let {row} = params;
+      const { row } = params;
       if (!row.periodList) {
         return <div></div>;
-      } ;
-      let obj = row.periodList.find(item => {
+      }
+      const obj = row.periodList.find(item => {
         return item.planPeriod === 7;
       });
       if (!obj) {
         return <div></div>;
-      };
+      }
       if (!obj.specificationList) {
         return <div></div>;
-      };
-      let innerObj = obj.specificationList.find(item => {
+      }
+      const innerObj = obj.specificationList.find(item => {
         return item.quantity === 1;
       });
       if (!innerObj) {
@@ -103,20 +103,20 @@ export const customPlanColumns = [
     title: '价格(周/双人)',
     width: 120,
     render: (h, params, vm) => {
-      let {row} = params;
+      const { row } = params;
       if (!row.periodList) {
         return <div></div>;
-      } ;
-      let obj = row.periodList.find(item => {
+      }
+      const obj = row.periodList.find(item => {
         return item.planPeriod === 7;
       });
       if (!obj) {
         return <div></div>;
-      };
+      }
       if (!obj.specificationList) {
         return <div></div>;
-      };
-      let innerObj = obj.specificationList.find(item => {
+      }
+      const innerObj = obj.specificationList.find(item => {
         return item.quantity === 2;
       });
       if (!innerObj) {
@@ -129,20 +129,20 @@ export const customPlanColumns = [
     title: '价格(周/三人)',
     width: 120,
     render: (h, params, vm) => {
-      let {row} = params;
+      const { row } = params;
       if (!row.periodList) {
         return <div></div>;
-      } ;
-      let obj = row.periodList.find(item => {
+      }
+      const obj = row.periodList.find(item => {
         return item.planPeriod === 7;
       });
       if (!obj) {
         return <div></div>;
-      };
+      }
       if (!obj.specificationList) {
         return <div></div>;
-      };
-      let innerObj = obj.specificationList.find(item => {
+      }
+      const innerObj = obj.specificationList.find(item => {
         return item.quantity === 3;
       });
       if (!innerObj) {
@@ -155,20 +155,20 @@ export const customPlanColumns = [
     title: '价格(月/单人)',
     width: 120,
     render: (h, params, vm) => {
-      let {row} = params;
+      const { row } = params;
       if (!row.periodList) {
         return <div></div>;
-      };
-      let obj = row.periodList.find(item => {
+      }
+      const obj = row.periodList.find(item => {
         return item.planPeriod === 30;
       });
       if (!obj) {
         return <div></div>;
-      };
+      }
       if (!obj.specificationList) {
         return <div></div>;
-      };
-      let innerObj = obj.specificationList.find(item => {
+      }
+      const innerObj = obj.specificationList.find(item => {
         return item.quantity === 1;
       });
       if (!innerObj) {
@@ -181,20 +181,20 @@ export const customPlanColumns = [
     title: '价格(月/双人)',
     width: 120,
     render: (h, params, vm) => {
-      let {row} = params;
+      const { row } = params;
       if (!row.periodList) {
         return <div></div>;
-      } ;
-      let obj = row.periodList.find(item => {
+      }
+      const obj = row.periodList.find(item => {
         return item.planPeriod === 30;
       });
       if (!obj) {
         return <div></div>;
-      };
+      }
       if (!obj.specificationList) {
         return <div></div>;
-      };
-      let innerObj = obj.specificationList.find(item => {
+      }
+      const innerObj = obj.specificationList.find(item => {
         return item.quantity === 2;
       });
       if (!innerObj) {
@@ -207,20 +207,20 @@ export const customPlanColumns = [
     title: '价格(月/三人)',
     width: 120,
     render: (h, params, vm) => {
-      let {row} = params;
+      const { row } = params;
       if (!row.periodList) {
         return <div></div>;
-      } ;
-      let obj = row.periodList.find(item => {
+      }
+      const obj = row.periodList.find(item => {
         return item.planPeriod === 30;
       });
       if (!obj) {
         return <div></div>;
-      };
+      }
       if (!obj.specificationList) {
         return <div></div>;
-      };
-      let innerObj = obj.specificationList.find(item => {
+      }
+      const innerObj = obj.specificationList.find(item => {
         return item.quantity === 3;
       });
       if (!innerObj) {
@@ -233,7 +233,7 @@ export const customPlanColumns = [
     title: '是否上架',
     width: 100,
     render: (h, params, vm) => {
-      let {row} = params;
+      const { row } = params;
       return <div>{onSaleStatusConvert(row.status).label}</div>;
     }
   }
@@ -317,7 +317,7 @@ export const articleColumns = [
     minWidth: 100,
     key: 'articleStatus',
     render: (h, params, vm) => {
-      const {row} = params;
+      const { row } = params;
       if (row.articleStatus === 'PUBLISH') {
         return <div>{'发布'}</div>;
       } else if (row.articleStatus === 'UN_PUBLISH') {

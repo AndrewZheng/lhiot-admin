@@ -3,13 +3,13 @@
     <Card>
       <tables
         ref="tables"
+        v-model="tableData"
+        :columns="columns"
+        :loading="loading"
         editable
         searchable
         border
         search-place="top"
-        v-model="tableData"
-        :columns="columns"
-        :loading="loading"
         @on-delete="handleDelete"
         @on-view="handleView"
         @on-edit="handleEdit"
@@ -19,35 +19,27 @@
       >
         <div slot="searchCondition">
           <Input
+            v-model="searchRowData.sectionName"
             placeholder="版块名称"
             class="search-input mr5"
-            v-model="searchRowData.sectionName"
-            style="width: 150px"
-          />
+            style="width: 150px">
           <Select
             :disable="selectDisable"
             v-model="searchRowData.positionId"
             class="search-col mr5"
             placeholder="版块位置"
-            style="width: 150px"
-          >
+            style="width: 150px">
             <Option
               v-for="item in goodsModuleList"
               :value="item.id"
-              class="pt5 pb5 pl15"
               :key="`search-col-${item.id}`"
-            >{{item.description}}</Option>
+              class="pt5 pb5 pl15">{{ item.description }}
+            </Option>
           </Select>
-          <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary">
+          <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch">
             <Icon type="md-search"/>&nbsp;搜索
           </Button>
-          <Button
-            v-waves
-            @click="handleClear"
-            class="search-btn"
-            type="info"
-            :loading="clearSearchLoading"
-          >
+          <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
             <Icon type="md-refresh"/>&nbsp;清除条件
           </Button>
         </div>
@@ -73,11 +65,10 @@
           <Page
             :total="total"
             :current="page"
-            @on-change="changePage"
-            @on-page-size-change="changePageSize"
             show-sizer
             show-total
-          ></Page>
+            @on-change="changePage"
+            @on-page-size-change="changePageSize"></Page>
         </Row>
       </div>
     </Card>
@@ -87,7 +78,7 @@
         <span>商品板块详情</span>
       </p>
       <div class="modal-content">
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <i-col span="6">商品板块图片:</i-col>
             <img :src="goodsModuleDetail.sectionImg" span="18" style="width: 300px">
@@ -95,22 +86,26 @@
         </Row>
         <Row>
           <i-col span="24">
-            <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">板块位置:</i-col>
-              <i-col span="16">{{advertisementPositionComputed}}</i-col>
+              <i-col span="16">{{ advertisementPositionComputed }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row span="24" class-name="mb10">
           <i-col span="8">板块名称:</i-col>
-          <i-col span="16">{{goodsModuleDetail.sectionName}}</i-col>
+          <i-col span="16">{{ goodsModuleDetail.sectionName }}</i-col>
         </Row>
         <Row span="24" class-name="mb10">
           <i-col span="8">板块序号:</i-col>
-          <i-col span="16">{{goodsModuleDetail.sorting}}</i-col>
+          <i-col span="16">{{ goodsModuleDetail.sorting }}</i-col>
         </Row>
         <Row v-if="goodsModuleDetail.productShelfList" class-name="mb10">
-          <tables border :columns="tempColumnsView" v-model="goodsModuleDetail.productShelfList"></tables>
+          <tables
+            :columns="tempColumnsView"
+            v-model="goodsModuleDetail.productShelfList"
+            border
+          ></tables>
         </Row>
       </div>
       <div slot="footer">
@@ -119,7 +114,7 @@
     </Modal>
     <Modal v-model="modalEdit" :width="900" :mask-closable="false">
       <p slot="header">
-        <span>{{tempModalType === modalType.create?'创建板块':'编辑板块'}}</span>
+        <span>{{ tempModalType === modalType.create?'创建板块':'编辑板块' }}</span>
       </p>
       <div class="modal-content">
         <Form ref="modalEdit" :model="goodsModuleDetail" :rules="ruleInline" :label-width="80">
@@ -128,27 +123,29 @@
               <FormItem label="板块位置:" prop="positionId">
                 <Select
                   v-model="goodsModuleDetail.positionId"
-                  @on-change="goodsModuleTypeChange"
                   style="width: 200px"
-                >
+                  @on-change="goodsModuleTypeChange">
                   <Option
                     v-for="item in goodsModuleList"
                     :value="item.id"
-                    class="pt5 pb5 pl15"
                     :key="`search-col-${item.id}`"
-                  >{{item.description}}</Option>
+                    class="pt5 pb5 pl15">{{ item.description }}
+                  </Option>
                 </Select>
               </FormItem>
             </Row>
             <Row>
               <FormItem label="板块名称:" prop="sectionName">
-                <Input v-model="goodsModuleDetail.sectionName" placeholder="板块名称"/>
+                <Input v-model="goodsModuleDetail.sectionName" placeholder="板块名称">
               </FormItem>
             </Row>
             <Row>
-              <FormItem label="板块主图:建议尺寸 (xxx*xxx):" prop="sectionImg" :label-width="80">
-                <Input v-model="goodsModuleDetail.sectionImg" style="width: auto" v-show="false"/>
-                <div class="demo-upload-list" v-for="item in uploadListMain">
+              <FormItem
+                :label-width="80"
+                label="板块主图:建议尺寸 (xxx*xxx):"
+                prop="sectionImg">
+                <Input v-show="false" v-model="goodsModuleDetail.sectionImg" style="width: auto">
+                <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>
                       <img :src="item.url">
@@ -164,9 +161,9 @@
                 </div>
                 <IViewUpload
                   ref="uploadMain"
-                  :defaultList="defaultListMain"
+                  :default-list="defaultListMain"
+                  :image-size="imageSize"
                   @on-success="handleSuccessMain"
-                  :imageSize="imageSize"
                 >
                   <div slot="content">
                     <Button type="primary">上传图片</Button>
@@ -175,63 +172,52 @@
               </FormItem>
             </Row>
           </Row>
-          <Row
-            v-if=" tempModalType !== this.modalType.edit && tempModalType !== this.modalType.view"
-          >
+          <Row v-if=" tempModalType !== modalType.edit && tempModalType !== modalType.view">
             <FormItem label="关联商品:">
               <Row>
                 <Col span="15">
-                  <Select
-                    ref="shelfSpecificationSelect"
-                    :remote="true"
-                    :filterable="true"
-                    :remote-method="remoteMethod"
-                    :loading="shelfSpecificationLoading"
-                  >
-                    <Option
-                      @click.native="selectIndex(option)"
-                      class="pb5 pt5 pl15"
-                      v-for="(option, index) in optionsShelfSpecification"
-                      :value="option.id"
-                      :key="index"
-                    >{{option.specificationInfo}}</Option>
-                  </Select>
+                <Select
+                  ref="shelfSpecificationSelect"
+                  :remote="true"
+                  :filterable="true"
+                  :remote-method="remoteMethod"
+                  :loading="shelfSpecificationLoading">
+                  <Option
+                    v-for="(option, index) in optionsShelfSpecification"
+                    :value="option.id"
+                    :key="index"
+                    class="pb5 pt5 pl15"
+                    @click.native="selectIndex(option)">
+                    {{ option.specificationInfo }}
+                  </Option>
+                </Select>
                 </Col>
                 <Col span="4">
-                  <Button
-                    span="4"
-                    v-waves
-                    @click="addTempData"
-                    :loading="addTempDataLoading"
-                    class="search-btn ml20"
-                    type="primary"
-                  >
-                    <Icon type="md-add"/>&nbsp;添加
-                  </Button>
+                <Button v-waves :loading="addTempDataLoading" span="4" class="search-btn ml20" type="primary" @click="addTempData">
+                  <Icon type="md-add"/>&nbsp;添加
+                </Button>
                 </Col>
               </Row>
             </FormItem>
             <tables
-              border
               :columns="tempColumns"
               v-model="goodsModuleDetail.productShelfList"
+              :loading="tempTableLoading"
+              border
               @on-delete="modalHandleDelete"
               @on-inline-edit="modalHandleEdit"
               @on-inline-save="modalHandleSave"
-              :loading="tempTableLoading"
             ></tables>
           </Row>
         </Form>
       </div>
-      <div
-        slot="footer"
-        v-if="tempModalType === modalType.create || tempModalType === modalType.edit"
-      >
+      <div v-if="tempModalType === modalType.create || tempModalType === modalType.edit" slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button type="primary" :loading="modalViewLoading" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定
+        </Button>
       </div>
     </Modal>
-    <Modal title="View Image" v-model="uploadVisible">
+    <Modal v-model="uploadVisible" title="View Image">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
@@ -239,6 +225,7 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   createProductSection,
   deleteProductSection,
@@ -303,7 +290,7 @@ const commonTempColumns = [
     key: 'originalPrice',
     minWidth: 100,
     render: (h, params, vm) => {
-      let { row } = params;
+      const { row } = params;
       return <div>{fenToYuanDot2(row.originalPrice)}</div>;
     }
   },
@@ -312,7 +299,7 @@ const commonTempColumns = [
     key: 'price',
     minWidth: 100,
     render: (h, params, vm) => {
-      let { row } = params;
+      const { row } = params;
       return <div>{fenToYuanDot2(row.price)}</div>;
     }
   }
@@ -323,30 +310,6 @@ export default {
     IViewUpload
   },
   mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
-  computed: {
-    advertisementPositionComputed() {
-      let tempObj = this.goodsModuleList.find(item => item.id === this.goodsModuleDetail.positionId);
-      if (tempObj) {
-        return tempObj.description;
-      }
-      return '';
-    }
-  },
-  created() {
-    getuiPositionsPages({
-      applicationType: 'HEALTH_GOOD',
-      includeSection: YNEnum.NO,
-      positionType: positionType.PRODUCT,
-      page: 0,
-      rows: 0
-    }).then(res => {
-      this.selectDisable = false;
-      this.goodsModuleList = res.array;
-      this.getTableData();
-    }).catch(error => {
-      this.selectDisable = false;
-    });
-  },
   data() {
     return {
       selectDisable: true,
@@ -356,20 +319,16 @@ export default {
         sectionName: [{ required: true, message: '请填写板块名称' }],
         sectionImg: [{ required: true, message: '请上传板块主图' }],
         productShelfList: [{ required: true, message: '请关联商品' },
-        {
-          validator(rule, value, callback, source, options) {
-            console.log(value);
-            let errors = [];
-            if (value) {
-              if (value.length < 1) {
-                callback('请关联商品');
-              };
-            } else {
-              callback('请关联商品');
-            };
-            callback(errors);
+          {
+            validator(rule, value, callback, source, options) {
+              console.log(value);
+              const errors = [];
+              if (!value || value.length < 1) {
+                errors.push(new Error('请关联商品'));
+              }
+              callback(errors);
+            }
           }
-        }
         ]
       },
       tempColumns: [
@@ -404,7 +363,7 @@ export default {
           minWidth: 170,
           render: (h, params, vm) => {
             const { row } = params;
-            let tempObj = this.goodsModuleList.find(item => item.id === row.positionId);
+            const tempObj = this.goodsModuleList.find(item => item.id === row.positionId);
             if (tempObj) {
               return <div>{tempObj.description}</div>;
             } else {
@@ -431,7 +390,7 @@ export default {
           title: '操作',
           minWidth: 200,
           key: 'handle',
-          options: ['delete', 'edit', 'view', 'relevance']
+          options: ['view', 'edit', 'delete', 'relevance']
         }
       ],
       shelfSpecificationLoading: false,
@@ -446,17 +405,41 @@ export default {
       tempOptionsShelfSpecification: null
     };
   },
+  computed: {
+    advertisementPositionComputed() {
+      const tempObj = this.goodsModuleList.find(item => item.id === this.goodsModuleDetail.positionId);
+      if (tempObj) {
+        return tempObj.description;
+      }
+      return '';
+    }
+  },
+  created() {
+    getuiPositionsPages({
+      applicationType: 'HEALTH_GOOD',
+      includeSection: YNEnum.NO,
+      positionType: positionType.PRODUCT,
+      page: 0,
+      rows: 0
+    }).then(res => {
+      this.selectDisable = false;
+      this.goodsModuleList = res.array;
+      this.getTableData();
+    }).catch(() => {
+      this.selectDisable = false;
+    });
+  },
   methods: {
     setDefaultUploadList(res) {
       if (res.sectionImg != null) {
         const map = { status: 'finished', url: 'url' };
-        let mainImgArr = [];
+        const mainImgArr = [];
         map.url = res.sectionImg;
         mainImgArr.push(map);
         if (this.$refs.uploadMain) {
           this.$refs.uploadMain.setDefaultFileList(mainImgArr);
           this.uploadListMain = mainImgArr;
-        };
+        }
       }
     },
     createTableRow() {
@@ -467,7 +450,7 @@ export default {
         this.$Message.success('创建成功!');
         this.resetFields();
         this.getTableData();
-      }).catch(error => {
+      }).catch(() => {
         this.modalViewLoading = false;
         this.modalEdit = false;
       });
@@ -496,11 +479,11 @@ export default {
       if (!this.tempOptionsShelfSpecification) {
         this.$Message.warning('请选择定制计划');
         return;
-      };
+      }
       if (!this.goodsModuleDetail.productShelfList) {
         this.goodsModuleDetail.productShelfList = [];
       }
-      let obj = this.goodsModuleDetail.productShelfList.some(item => {
+      const obj = this.goodsModuleDetail.productShelfList.some(item => {
         return item.id === this.tempOptionsShelfSpecification.id;
       });
       if (!obj) {
@@ -518,12 +501,12 @@ export default {
             this.addTempDataLoading = false;
             this.tempTableLoading = false;
             this.loading = false;
-          }).catch(error => {
+          }).catch(() => {
             this.addTempDataLoading = false;
             this.tempTableLoading = false;
             this.loading = false;
           });
-        };
+        }
       } else {
         this.$Message.warning('已经添加该商品！');
       }
@@ -564,10 +547,10 @@ export default {
         if (res.array.length > 0) {
           this.optionsShelfSpecification.length = 0;
           this.optionsShelfSpecification = this.optionsShelfSpecification.concat(res.array);
-        };
+        }
         console.log(this.optionsShelfSpecification);
         this.shelfSpecificationLoading = false;
-      }).catch(error => {
+      }).catch(() => {
         this.shelfSpecificationLoading = false;
       });
     },
@@ -604,7 +587,7 @@ export default {
         this.modalEdit = false;
         this.modalViewLoading = false;
         this.getTableData();
-      }).catch(error => {
+      }).catch(() => {
         this.modalEdit = false;
         this.modalViewLoading = false;
       });
@@ -623,7 +606,7 @@ export default {
       this.setDefaultUploadList(params.row);
       if (!this.goodsModuleDetail.productShelfList) {
         this.goodsModuleDetail.productShelfList = [];
-      };
+      }
       this.modalEdit = true;
     },
     handleView(params) {
@@ -642,14 +625,14 @@ export default {
       deleteProductSection({
         ids
       }).then(res => {
-        let totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+        const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
         if (this.tableData.length == this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
           this.searchRowData.page -= 1;
         }
         this.tableDataSelected = [];
         this.getTableData();
       }
-      ).catch(err => {
+      ).catch(() => {
         this.loading = false;
       });
     },
@@ -660,7 +643,7 @@ export default {
         this.loading = false;
         this.clearSearchLoading = false;
         this.searchLoading = false;
-      }).catch(error => {
+      }).catch(() => {
         this.loading = false;
         this.clearSearchLoading = false;
         this.searchLoading = false;

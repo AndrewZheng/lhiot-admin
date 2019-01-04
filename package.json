@@ -66,5 +66,13 @@
   ],
   "gitHooks": {
     "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "git add"
+    ],
+    "*.vue": [
+      "git add"
+    ]
   }
 }

@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: 'argu_page'
+  name: 'ArguPage'
 };
 </script>
 

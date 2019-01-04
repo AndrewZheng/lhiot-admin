@@ -1,4 +1,4 @@
-import {gbs} from '../settings';
+import { gbs } from '../settings';
 import Cookies from 'js-cookie';
 
 class PcCookie {
@@ -10,10 +10,11 @@ class PcCookie {
   }
 
   set(cookieParam) {
-    let {key, value, expires, path, success} = cookieParam;
+    let { key } = cookieParam;
+    const { value, expires, path, success } = cookieParam;
     PcCookie.checkKey(key);
     key = this.pcPrefix + key;
-    Cookies.set(key, value, {expires: expires || this.expireTime, path: path || '/', domain: this.domain});
+    Cookies.set(key, value, { expires: expires || this.expireTime, path: path || '/', domain: this.domain });
     success && success();
   }
 
@@ -23,9 +24,9 @@ class PcCookie {
   }
 
   delete(cookieParam) {
-    let {key, path, success} = cookieParam;
+    const { key, path, success } = cookieParam;
     PcCookie.checkKey(key);
-    Cookies.remove(this.pcPrefix + key, {path: path || '/', domain: this.domain});
+    Cookies.remove(this.pcPrefix + key, { path: path || '/', domain: this.domain });
     success && success();
   }
 

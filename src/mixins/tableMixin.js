@@ -1,4 +1,4 @@
-let mixin = {
+const mixin = {
   data() {
     return {
       tableData: [],

@@ -1,8 +1,8 @@
 export default (codemirror) => {
-  (function (mod) {
+  (function(mod) {
     mod(codemirror);
-  })(function (CodeMirror) {
-    CodeMirror.defineOption('placeholder', '', function (cm, val, old) {
+  })(function(CodeMirror) {
+    CodeMirror.defineOption('placeholder', '', function(cm, val, old) {
       var prev = old && old !== CodeMirror.Init;
       if (val && !prev) {
         cm.on('blur', onBlur);
@@ -21,13 +21,13 @@ export default (codemirror) => {
       if (val && !cm.hasFocus()) onBlur(cm);
     });
 
-    function clearPlaceholder (cm) {
+    function clearPlaceholder(cm) {
       if (cm.state.placeholder) {
         cm.state.placeholder.parentNode.removeChild(cm.state.placeholder);
         cm.state.placeholder = null;
       }
     }
-    function setPlaceholder (cm) {
+    function setPlaceholder(cm) {
       clearPlaceholder(cm);
       var elt = cm.state.placeholder = document.createElement('pre');
       elt.style.cssText = 'height: 0; overflow: visible; color: #80848f;';
@@ -39,19 +39,19 @@ export default (codemirror) => {
       cm.display.lineSpace.insertBefore(elt, cm.display.lineSpace.firstChild);
     }
 
-    function onBlur (cm) {
+    function onBlur(cm) {
       if (isEmpty(cm)) setPlaceholder(cm);
     }
-    function onChange (cm) {
-      let wrapper = cm.getWrapperElement();
-      let empty = isEmpty(cm);
+    function onChange(cm) {
+      const wrapper = cm.getWrapperElement();
+      const empty = isEmpty(cm);
       wrapper.className = wrapper.className.replace(' CodeMirror-empty', '') + (empty ? ' CodeMirror-empty' : '');
 
       if (empty) setPlaceholder(cm);
       else clearPlaceholder(cm);
     }
 
-    function isEmpty (cm) {
+    function isEmpty(cm) {
       return (cm.lineCount() === 1) && (cm.getLine(0) === '');
     }
   });

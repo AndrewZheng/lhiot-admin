@@ -31,8 +31,9 @@ Vue.use(iView, {
 
 // 循环注册filters
 Object.keys(filters).forEach(k => Vue.filter(k, filters[k]));
-Vue.prototype._ = lodashLib;
+window._ = lodashLib;
 // 引用第三方库 挂载到vue原型对象上，优雅的使用
+Object.defineProperty(Vue.prototype, '_', { value: lodashLib });
 Object.defineProperty(Vue.prototype, '$config', { value: config });
 Object.defineProperty(Vue.prototype, '$moment', { value: moment });
 Object.defineProperty(Vue.prototype, '$pcEnum', { value: enums });

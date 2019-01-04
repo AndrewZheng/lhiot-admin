@@ -11,7 +11,7 @@ import {
 } from './enumerate';
 
 const convertFunction = (value, list) => {
-  let filterObj = list.find(item => {
+  const filterObj = list.find(item => {
     return item.value === value;
   });
   if (filterObj) {
