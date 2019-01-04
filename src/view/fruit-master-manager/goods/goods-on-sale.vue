@@ -21,8 +21,8 @@
       >
         <div slot="searchCondition">
           <Row>
-            <Input v-model="searchRowData.name" placeholder="上架名称" class="search-input mr5" style="width: auto">
-            <Input v-model="searchRowData.keyword" placeholder="规格条码" class="search-input mr5" style="width: auto">
+            <Input v-model="searchRowData.name" placeholder="上架名称" class="search-input mr5" style="width: auto"/>
+            <Input v-model="searchRowData.keyword" placeholder="规格条码" class="search-input mr5" style="width: auto"/>
             <Button v-waves :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
@@ -175,12 +175,12 @@
                   {{ option.specificationInfo }}
                 </Option>
               </Select>
-              <Input v-else :value="shelfSpecificationEditDefault" disabled>
+              <Input v-else :value="shelfSpecificationEditDefault" disabled/>
             </FormItem>
             </Col>
             <Col span="12">
             <FormItem label="上架名称:" prop="name">
-              <Input v-model="productDetail.name" placeholder="上架名称">
+              <Input v-model="productDetail.name" placeholder="上架名称"/>
             </FormItem>
             </Col>
           </Row>
@@ -199,7 +199,7 @@
           <Row>
             <Col span="24">
             <FormItem label="上架描述:">
-              <Input v-model="productDetail.description" placeholder="上架描述">
+              <Input v-model="productDetail.description" placeholder="上架描述"/>
             </FormItem>
             </Col>
           </Row>
@@ -244,7 +244,7 @@
           </Row>
           <Row>
             <FormItem :label-width="80" label="商品主图:建议尺寸;400x400(单位:px)" prop="image">
-              <Input v-show="false" v-model="productDetail.image" style="width: auto">
+              <Input v-show="false" v-model="productDetail.image" style="width: auto"/>
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>

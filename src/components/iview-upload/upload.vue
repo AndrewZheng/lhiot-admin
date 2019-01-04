@@ -40,9 +40,15 @@ export default {
     },
     defaultList: {
       type: Array,
-      default() {
-        return [];
-      }
+      default: () => []
+    },
+    showUploadList: {
+      type: Boolean,
+      default: false
+    },
+    multiple: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -117,7 +123,7 @@ export default {
               resolve();
             } else if (!check) {
               self.$Notice.error({ title: '请上传的图片最多不能超过' + num + '张' });
-              reject(new Error('请上传的图片最多不能超过' + num + '张'));
+              reject();
             } else {
               resolve();
             }
@@ -133,4 +139,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 </style>

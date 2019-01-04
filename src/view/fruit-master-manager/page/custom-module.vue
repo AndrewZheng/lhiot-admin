@@ -22,7 +22,7 @@
             v-model="searchRowData.sectionName"
             placeholder="版块名称"
             class="search-input mr5"
-            style="width: 150px">
+            style="width: 150px"/>
           <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch">
             <Icon type="md-search"/>&nbsp;搜索
           </Button>
@@ -115,17 +115,17 @@
           <Row v-if="tempModalType === modalType.create || tempModalType === modalType.edit">
             <Row>
               <FormItem label="定制板块编码:" prop="sectionCode">
-                <Input v-model="goodsModuleDetail.sectionCode">
+                <Input v-model="goodsModuleDetail.sectionCode"/>
               </FormItem>
             </Row>
             <Row>
               <FormItem label="板块名称:" prop="sectionName">
-                <Input v-model="goodsModuleDetail.sectionName" placeholder="板块名称">
+                <Input v-model="goodsModuleDetail.sectionName" placeholder="板块名称"/>
               </FormItem>
             </Row>
             <Row>
               <FormItem label="链接url:" prop="url">
-                <Input v-model="goodsModuleDetail.url" placeholder="链接url">
+                <Input v-model="goodsModuleDetail.url" placeholder="链接url" />
               </FormItem>
             </Row>
             <Row>
@@ -133,7 +133,7 @@
                 label="板块主图:建议尺寸 (xxx*xxx):"
                 prop="sectionImage"
               >
-                <Input v-show="false" v-model="goodsModuleDetail.sectionImage" style="width: auto">
+                <Input v-show="false" v-model="goodsModuleDetail.sectionImage" style="width: auto"/>
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>
@@ -164,7 +164,7 @@
             </Row>
             <Row>
               <FormItem label="板块序号:" prop="sort">
-                <Input v-model="goodsModuleDetail.sort" placeholder="广告名">
+                <Input v-model="goodsModuleDetail.sort" placeholder="广告名"/>
               </FormItem>
             </Row>
           </Row>

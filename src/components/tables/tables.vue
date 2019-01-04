@@ -84,7 +84,7 @@ export default {
     },
     size: {
       type: String,
-      default: ''
+      default: 'default'
     },
     width: {
       type: [Number, String],

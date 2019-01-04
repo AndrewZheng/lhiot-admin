@@ -22,8 +22,8 @@
         <div slot="searchCondition">
           <Row>
             <Col span="24">
-            <Input v-model="searchRowData.title" placeholder="文章标题" class="search-input mr5" style="width: auto">
-            <Input v-model="searchRowData.keywords" placeholder="关键词" class="search-input mr5" style="width: auto">
+            <Input v-model="searchRowData.title" placeholder="文章标题" class="search-input mr5" style="width: auto"/>
+            <Input v-model="searchRowData.keywords" placeholder="关键词" class="search-input mr5" style="width: auto"/>
             <DatePicker
               v-model="searchRowData.beginCreateAt"
               format="yyyy-MM-dd HH:mm:ss"

@@ -23,14 +23,14 @@
               class="search-input mr5"
               style="width: 120px"
               clearable
-            >
+            />
             <Input
               v-model="searchRowData.phone"
               placeholder="用户手机号"
               class="search-input mr5"
               style="width: 100px"
               clearable
-            >
+            />
             <Select
               v-model="searchRowData.totalQty"
               class="search-col mr5"
