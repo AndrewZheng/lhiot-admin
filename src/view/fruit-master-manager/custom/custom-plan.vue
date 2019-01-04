@@ -722,6 +722,8 @@ z<template>
             let newPlanPeriod = planPeriod == 7 ? 30 : 7;
             let newIndex = this.rowData.periodList[0].index == 0 ? 1 : 0;
             this.rowData.periodList.push({'index': newIndex, 'planPeriod': newPlanPeriod, 'products': [], 'specificationList': []});
+            // 升序排序
+            res.periodList.sort((a, b) => a.index - b.index);
             // console.log(JSON.stringify(this.rowData));
           }
           this.modalView = true;
