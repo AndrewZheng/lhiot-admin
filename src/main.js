@@ -16,10 +16,10 @@ import { enums, PcEncrypt } from '@/util/';
 import 'iview/dist/styles/iview.css';
 import './index.less';
 import 'assets/icons/iconfont.css';
-import './assets/iconfont/iconfont.css'
+import './assets/iconfont/iconfont.css';
 import 'assets/styles/style.scss';
 import moment from 'moment';
-import lodashLib from 'lodash'
+import lodashLib from 'lodash';
 // if (process.env.NODE_ENV !== 'production') require('@/mock');
 
 Vue.mixin(Mixin);
@@ -31,7 +31,7 @@ Vue.use(iView, {
 
 // 循环注册filters
 Object.keys(filters).forEach(k => Vue.filter(k, filters[k]));
-Vue.prototype._ = lodashLib
+Vue.prototype._ = lodashLib;
 // 引用第三方库 挂载到vue原型对象上，优雅的使用
 Object.defineProperty(Vue.prototype, '$config', { value: config });
 Object.defineProperty(Vue.prototype, '$moment', { value: moment });

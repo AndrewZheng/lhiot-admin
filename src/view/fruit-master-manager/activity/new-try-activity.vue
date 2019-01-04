@@ -183,7 +183,7 @@
         ruleInline: {
           shelfId: [{required: true, message: '请填写上架商品ID'}],
           activityPrice: [{required: true, message: '请填写尝鲜价'}],
-          sort: [{required: true, message: '请填写整数排序',pattern:/^-?\d+$/}]
+          sort: [{required: true, message: '请填写整数排序', pattern: /^-?\d+$/}]
         },
         columns: [
           {

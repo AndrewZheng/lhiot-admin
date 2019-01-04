@@ -56,19 +56,19 @@
         const fileList = this.$refs.iViewUpload.fileList;
         this.$refs.iViewUpload.fileList.splice(fileList.indexOf(file), 1);
       },
-      //清空已上传的文件列表
+      // 清空已上传的文件列表
       clearFileList() {
-        this.$refs.iViewUpload.clearFiles()
+        this.$refs.iViewUpload.clearFiles();
       },
-      //设置默认文件列表
+      // 设置默认文件列表
       setDefaultFileList(array) {
-        this.$refs.iViewUpload.fileList = array
+        this.$refs.iViewUpload.fileList = array;
       },
-      //获取文件列表
-      getFileList(){
-        return this.$refs.iViewUpload.fileList
+      // 获取文件列表
+      getFileList() {
+        return this.$refs.iViewUpload.fileList;
       },
-      //上传成功
+      // 上传成功
       handleSuccess(response, file, fileList) {
         if (this.multiple) {
           if (fileList.length > this.maxNum) {
@@ -77,36 +77,36 @@
           this.$refs.iViewUpload.fileList = fileList;
         } else {
           let fileItem = fileList.pop();
-          let fileItemList = [fileItem]
-          fileList = fileItemList
+          let fileItemList = [fileItem];
+          fileList = fileItemList;
           this.$refs.iViewUpload.fileList = fileList;
         }
         file.url = response.fileUrl;
         file.name = file.name;
         this.$emit('on-success', response, file, fileList);
       },
-      //上传之前的校验
+      // 上传之前的校验
       handleBeforeUpload(file) {
-        return this.checkImageWH(file, this.imgWith, this.imgHeight, this.maxNum)
+        return this.checkImageWH(file, this.imgWith, this.imgHeight, this.maxNum);
       },
-      //文件格式校验
+      // 文件格式校验
       handleFormatError(file) {
         this.$Notice.warning({
           title: 'The file format is incorrect',
           desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
         });
       },
-      //文件大小校验
+      // 文件大小校验
       handleMaxSize(file) {
         this.$Notice.warning({
           title: 'Exceeding file size limit',
           desc: 'File  ' + file.name + ' is too large, no more than 2M.'
         });
       },
-      //图片宽高校验
+      // 图片宽高校验
       checkImageWH(file, width, height, num) {
         let self = this;
-        const check = this.$refs.iViewUpload.fileList.length < num
+        const check = this.$refs.iViewUpload.fileList.length < num;
         return new Promise(function (resolve, reject) {
           let filereader = new FileReader();
           filereader.onload = e => {
@@ -122,7 +122,7 @@
                 // reject();
                 resolve();
               } else if (!check) {
-                self.$Notice.error({title: '请上传的图片最多不能超过' + num + "张",});
+                self.$Notice.error({title: '请上传的图片最多不能超过' + num + '张' });
                 reject();
               } else {
                 resolve();
@@ -135,7 +135,7 @@
         });
       }
     }
-  }
+  };
 </script>
 
 <style lang="scss" scoped>

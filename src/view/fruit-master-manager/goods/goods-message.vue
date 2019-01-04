@@ -430,7 +430,7 @@
       this.loading = true;
       this.createLoading = true;
       productSpecificationsUnits().then(res => {
-        if (res){
+        if (res) {
           res.forEach(value => {
             const map = {label: 'label', value: 'value'};
             map.value = value;
@@ -742,7 +742,7 @@
         }).then(res => {
           this.productDetail = res;
           if (res) {
-            this.setDefaultUploadList(res)
+            this.setDefaultUploadList(res);
           };
           this.loading = false;
           this.modalView = true;

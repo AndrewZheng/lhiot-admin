@@ -97,18 +97,18 @@
 <script type="text/ecmascript-6">
   import Tables from '_c/tables';
   import {getUiPosition, getuiPositionsPages} from '@/api/fruitermaster';
-  import tableMixin from '@/mixins/tableMixin.js'
-  import searchMixin from '@/mixins/searchMixin.js'
+  import tableMixin from '@/mixins/tableMixin.js';
+  import searchMixin from '@/mixins/searchMixin.js';
 
   const uiPositionDetail = {
-    applicationType: "HEALTH_GOOD",
-    code: "carousel",
-    description: "鲜果师轮播图",
+    applicationType: 'HEALTH_GOOD',
+    code: 'carousel',
+    description: '鲜果师轮播图',
     id: 0,
-    positionType: "ADVERTISEMENT",
+    positionType: 'ADVERTISEMENT',
     productSectionList: [],
     advertisementList: []
-  }
+  };
   const roleRowData = {
     page: 1,
     rows: 10,
@@ -121,7 +121,7 @@
       Tables
     },
     created() {
-      this.searchRowData = _.cloneDeep(roleRowData)
+      this.searchRowData = _.cloneDeep(roleRowData);
       this.getTableData();
     },
     mixins: [tableMixin, searchMixin],
@@ -131,7 +131,7 @@
           {
             title: '广告图',
             render: (h, params, vm) => {
-              let {row} = params
+              let {row} = params;
               const str = <img src={row.image} style="margin-top:5px" height="60" width="60" margin-top="10px"/>;
               return <div>{str}</div>;
             }
@@ -162,12 +162,12 @@
             title: '关联商品',
             key: 'productShelfList',
             render: (h, params, vm) => {
-              let {row} = params
-              let array = []
+              let {row} = params;
+              let array = [];
               if (row.productShelfList.length > 0) {
                 row.productShelfList.forEach(value => {
-                  array.push(value.name)
-                })
+                  array.push(value.name);
+                });
               }
               return <div>{array.join(',  ')}</div>;
             }
@@ -232,13 +232,13 @@
       handleView(params) {
         this.loading = true;
         getUiPosition({id: params.row.id}).then(res => {
-          this.uiPositionDetail = res
+          this.uiPositionDetail = res;
           this.modalView = true;
           this.loading = false;
-        }).catch( error => {
+        }).catch(error => {
           this.modalView = true;
           this.loading = false;
-        })
+        });
       },
       getTableData() {
         getuiPositionsPages(this.searchRowData).then(res => {
@@ -247,7 +247,7 @@
           this.loading = false;
           this.clearSearchLoading = false;
           this.searchLoading = false;
-        }).catch( error => {
+        }).catch(error => {
           this.loading = false;
           this.clearSearchLoading = false;
           this.searchLoading = false;

@@ -186,7 +186,7 @@
           {
             title: '账号状态',
             width: 90,
-            key: 'status',
+            key: 'status'
           },
           {
             title: '注册时间',
@@ -209,7 +209,7 @@
         modalView: false,
         image: 'https://i.loli.net/2017/08/21/599a521472424.jpg',
         userDetail: userDetail,
-        searchRowData: roleRowData,
+        searchRowData: roleRowData
       };
     },
     created() {
@@ -246,7 +246,7 @@
           this.tableData = res.array;
           this.total = res.total;
           this.loading = false;
-        }).catch( error => {
+        }).catch(error => {
           this.loading = false;
         });
       },
