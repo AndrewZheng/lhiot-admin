@@ -19,7 +19,7 @@
             v-model="searchRowData.description"
             placeholder="板块位置描述"
             class="search-input mr5"
-            style="width: auto">
+            style="width: auto"/>
           <Select
             ref="selectRef"
             v-model="searchRowData.positionType"
