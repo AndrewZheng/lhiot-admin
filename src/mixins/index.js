@@ -5,34 +5,34 @@ import {
   orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert
 } from '../libs/converStatus';
 
-let mixin = {
+const mixin = {
   data() {
     return {
       // 待翻译字典对象信息
       userStatus: [{
-          key: 'INITIAL',
-          value: '初始化'
-        },
-        {
-          key: 'AVAILABLE',
-          value: '可用'
-        },
-        {
-          key: 'UNAVAILABLE',
-          value: '不可用'
-        },
-        {
-          key: 'LOCK',
-          value: '锁定，暂不可用'
-        },
-        {
-          key: 'DELETE',
-          value: '删除，永不可用'
-        },
-        {
-          key: 'UNKNOWN',
-          value: '未知'
-        }
+        key: 'INITIAL',
+        value: '初始化'
+      },
+      {
+        key: 'AVAILABLE',
+        value: '可用'
+      },
+      {
+        key: 'UNAVAILABLE',
+        value: '不可用'
+      },
+      {
+        key: 'LOCK',
+        value: '锁定，暂不可用'
+      },
+      {
+        key: 'DELETE',
+        value: '删除，永不可用'
+      },
+      {
+        key: 'UNKNOWN',
+        value: '未知'
+      }
       ]
     };
   },
@@ -40,7 +40,7 @@ let mixin = {
     // 计算分转元 保留两位小数
     fenToYuanDot2Filters(number) {
       if (typeof number === 'number') {
-        return '¥' + (number/100.00).toFixed(2);
+        return '¥' + (number / 100.00).toFixed(2);
       }
       return number;
     },
@@ -61,8 +61,8 @@ let mixin = {
       return hotConvert(name).label;
     },
     // 订单状态
-    orderStatusFilters (status) {
-     return orderStatusConvert(status).label;
+    orderStatusFilters(status) {
+      return orderStatusConvert(status).label;
     },
     // 提货方式
     receivingWayFilters(status) {
@@ -92,24 +92,10 @@ let mixin = {
   computed: {
     userInfo() {
       return this.$store.getters.getUserInfo;
-    },
-    yuanToFenNumber(value){
-      if(typeof value === 'number'){
-        return value * 100;
-      }else if (typeof value === 'string') {
-        return parseInt(value) * 100;
-      }
-    },
-    fenToYuanDot2Number(){
-      if(typeof value === 'number'){
-        return Math.round(value) / 100.00
-      }else if (typeof value === 'string') {
-        return Math.round(parseInt(value) / 100.00);
-      }
     }
   },
   methods: {
-    turnToPage (route) {
+    turnToPage(route) {
       let { name, params, query } = {};
       if (typeof route === 'string') name = route;
       else {
@@ -253,8 +239,8 @@ let mixin = {
       return month + '-' + day + ' ' + weekdayStr + ' ';
     },
     getUrlParam(name) {
-      let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
-      let result = window.location.search.substr(1).match(reg);
+      const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+      const result = window.location.search.substr(1).match(reg);
       return result ? decodeURIComponent(result[2]) : null;
     },
     logout() {
@@ -304,7 +290,7 @@ let mixin = {
     getDictValueByKey(list, key) {
       console.log('getDictValueByKey:key：' + key);
       if (list.length !== 0) {
-        let column = list.filter(item => item.key == key);
+        const column = list.filter(item => item.key == key);
         return column.length > 0 ? column[0].value : '';
       }
       return '';

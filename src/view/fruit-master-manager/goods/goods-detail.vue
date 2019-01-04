@@ -13,20 +13,20 @@
   </div>
 </template>
 <script>
-  export default {
-    data () {
-      return {
-        value9: 1000,
-        value10: 0
-      }
-    },
-    watch:{
-      value10(value){
-        console.log(typeof value);
-        // let  parseInt(value)
-        console.log(value);
-      }
-
+export default {
+  data() {
+    return {
+      value9: 1000,
+      value10: 0
+    };
+  },
+  watch: {
+    value10(value) {
+      console.log(typeof value);
+      // let  parseInt(value)
+      console.log(value);
     }
+
   }
+};
 </script>

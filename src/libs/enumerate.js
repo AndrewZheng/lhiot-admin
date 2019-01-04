@@ -6,7 +6,7 @@ export const YNEnum = {
 // 提货方式
 // TO_THE_STORE-门店自提,
 // TO_THE_HOME-送货上门
-export const receivingWay ={
+export const receivingWay = {
   TO_THE_STORE: 'TO_THE_STORE',
   TO_THE_HOME: 'TO_THE_HOME'
 };
@@ -34,7 +34,7 @@ export const receivingWayEnum = [
 // ALREADY_RETURN-退货完成
 // FAILURE-已失效,
 // FINISHED-完成
-export const orderStatus ={
+export const orderStatus = {
   WAIT_PAYMENT: 'WAIT_PAYMENT',
   WAIT_SEND_OUT: 'WAIT_SEND_OUT',
   SEND_OUTING: 'SEND_OUTING',
@@ -100,7 +100,7 @@ export const orderStatusEnum = [
 // CUSTOM-定制订单,
 // TEAM_BUY-团购订单,
 // FREEGO-孚力购订单
-export const orderType ={
+export const orderType = {
   NORMAL: 'NORMAL',
   CUSTOM: 'CUSTOM',
   TEAM_BUY: 'TEAM_BUY',
@@ -272,7 +272,7 @@ export const deliveryTypeCustomEnum = [
 // UNSETTLED-未处理
 // SUCCESS-已成功
 // EXPIRED-已过期
-export const settlementStatus ={
+export const settlementStatus = {
   UNSETTLED: 'UNSETTLED',
   SUCCESS: 'SUCCESS',
   EXPIRED: 'EXPIRED'
@@ -352,7 +352,7 @@ export const onSaleStatusEnum = [
   {
     label: '下架',
     value: onSaleStatus.INVALID
-  },
+  }
   // {
   //   label: '上架',
   //   value: onSaleStatus.ON
