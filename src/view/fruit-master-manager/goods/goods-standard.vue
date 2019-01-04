@@ -208,7 +208,7 @@
           this.createLoading = false;
         });
         this.getTableData();
-      })
+      });
     },
     data() {
       return {
@@ -283,8 +283,8 @@
             title: '商品名称',
             key: 'productName',
             minWidth: 180,
-            render(h, params){
-              return <div>{params.row.product.name}</div>
+            render(h, params) {
+              return <div>{params.row.product.name}</div>;
             }
           },
           {
@@ -310,12 +310,12 @@
           {
             title: '重量(kg)',
             width: 120,
-            key: 'weight',
+            key: 'weight'
           },
           {
             title: '安全库存',
             width: 120,
-            key: 'limitInventory',
+            key: 'limitInventory'
           },
           {
             title: '操作',
@@ -403,7 +403,7 @@
       },
       handleCreateView() {
         if (this.tempModalType !== this.modalType.create) {
-          this.productStandardDetail = this._.cloneDeep(productStandardDetail)
+          this.productStandardDetail = this._.cloneDeep(productStandardDetail);
         };
         this.tempModalType = this.modalType.create;
         this.modalEdit = true;
@@ -448,7 +448,7 @@
           this.productStandardDetail = productStandardDetail;
           this.productStandardDetail.productId = this.$route.params.id;
           this.getTableData();
-        }).catch( error => {
+        }).catch(error => {
           this.modalEdit = false;
           this.modalViewLoading = false;
         });
@@ -471,7 +471,7 @@
           this.tableData = res.array;
           this.total = res.total;
           this.loading = false;
-        }).catch( error => {
+        }).catch(error => {
           this.loading = false;
         });
       },

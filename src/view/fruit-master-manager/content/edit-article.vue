@@ -73,7 +73,6 @@
         <Button type="primary" :loading="modalViewLoading" @click="handleSubmit('modalEdit')">确定
         </Button>
       </div>
-    </Modal>
     <Modal title="View Image" v-model="uploadVisible">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
@@ -197,7 +196,7 @@
         this.articleDetail.headImage = null;
       },
       handleSubmit(name) {
-        this.articleDetail.content = this.$refs.editor.content;        
+        this.articleDetail.content = this.$refs.editor.content;
         this.$refs[name].validate((valid) => {
           if (valid) {
             if (this.articleDetail.id === 0 || this.articleDetail.id === null) {
@@ -217,7 +216,7 @@
         this.loading =true;
         createArticle(this.articleDetail).then(res => {
           this.modalViewLoading = false;
-          this.$Message.success('创建成功!');         
+          this.$Message.success('创建成功!');
           this.$refs.editor.content = null;
            this.$router.push({name: 'fruit-master-content-article'});
         });
@@ -255,7 +254,7 @@
         }
       },
       addKeyword() {
-        this.keywords.push('');        
+        this.keywords.push('');
       },
       removeKeyword() {
         this.keywords.pop();

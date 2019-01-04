@@ -11,7 +11,7 @@
 import tinymce from 'tinymce/tinymce';
 import 'tinymce/themes/modern/theme';
 import Editor from '@tinymce/tinymce-vue';
-import zh_CN_url from '../../../public/tinymce/zh_CN.js'
+import zh_CN_url from '../../../public/tinymce/zh_CN.js';
 // Any plugins you want to use has to be imported
 import 'tinymce/plugins/advlist';
 import 'tinymce/plugins/wordcount';
