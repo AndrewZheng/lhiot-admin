@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-export const getMasterApplication = ({page, rows}) => {
+export const getMasterApplication = ({ page, rows }) => {
   const data = {
     page, rows
   };
@@ -11,7 +11,7 @@ export const getMasterApplication = ({page, rows}) => {
   });
 };
 
-export const getMasterManager = ({page, rows}) => {
+export const getMasterManager = ({ page, rows }) => {
   const data = {
     page, rows
   };
@@ -22,7 +22,7 @@ export const getMasterManager = ({page, rows}) => {
   });
 };
 
-export const getMasterSalary = ({page, rows}) => {
+export const getMasterSalary = ({ page, rows }) => {
   const data = {
     page, rows
   };
@@ -33,7 +33,7 @@ export const getMasterSalary = ({page, rows}) => {
   });
 };
 
-export const getFruitMasterUserData = ({page, rows}) => {
+export const getFruitMasterUserData = ({ page, rows }) => {
   const data = {
     page, rows
   };
@@ -44,7 +44,7 @@ export const getFruitMasterUserData = ({page, rows}) => {
   });
 };
 
-export const getFruitMastGoodsCategoryData = ({page, rows}) => {
+export const getFruitMastGoodsCategoryData = ({ page, rows }) => {
   const data = {
     page, rows
   };
@@ -55,7 +55,7 @@ export const getFruitMastGoodsCategoryData = ({page, rows}) => {
   });
 };
 
-export const getOnSaleData = ({page, rows}) => {
+export const getOnSaleData = ({ page, rows }) => {
   const data = {
     page, rows
   };
@@ -93,7 +93,7 @@ export const addProductCategories = (data) => {
 };
 
 // 根据Ids删除商品分类
-export const deleteProductCategories = ({ids}) => {
+export const deleteProductCategories = ({ ids }) => {
   return Vue.prototype.$http.request({
     url: '/product-categories/' + ids,
     method: 'delete'
@@ -127,7 +127,7 @@ export const getProductPages = (data) => {
 };
 
 // 根据商品Ids删除商品
-export const deleteProduct = ({ids}) => {
+export const deleteProduct = ({ ids }) => {
   return Vue.prototype.$http.request({
     url: '/products/' + ids,
     method: 'delete'
@@ -135,7 +135,7 @@ export const deleteProduct = ({ids}) => {
 };
 
 // 根据Id查找商品
-export const getProduct = ({id}) => {
+export const getProduct = ({ id }) => {
   return Vue.prototype.$http.request({
     url: '/products/' + id,
     method: 'get'
@@ -170,7 +170,7 @@ export const getProductSpecificationsPages = (data) => {
 };
 
 // 根据商品规格Ids删除商品规格
-export const deleteProductSpecification = ({ids}) => {
+export const deleteProductSpecification = ({ ids }) => {
   return Vue.prototype.$http.request({
     url: '/product-specifications/' + ids,
     method: 'delete'
@@ -186,7 +186,7 @@ export const createProductSpecification = (data) => {
   });
 };
 
-/// 修改商品规格
+// / 修改商品规格
 export const editProductSpecification = (data) => {
   return Vue.prototype.$http.request({
     url: '/product-specifications/' + data.id,
@@ -205,7 +205,7 @@ export const getProductShelvesPages = (data) => {
 };
 
 // 根据商品上架Ids删除商品上架
-export const deleteProductShelve = ({ids}) => {
+export const deleteProductShelve = ({ ids }) => {
   return Vue.prototype.$http.request({
     url: '/product-shelves/' + ids,
     method: 'delete'
@@ -231,7 +231,7 @@ export const editProductShelve = (data) => {
 };
 
 // 根据Id查找商品上架
-export const getProductShelve = ({id}) => {
+export const getProductShelve = ({ id }) => {
   return Vue.prototype.$http.request({
     url: '/product-shelves/' + id,
     method: 'get'
@@ -248,7 +248,7 @@ export const getuiPositionsPages = (data) => {
 };
 
 // 根据Id查找UI位置
-export const getUiPosition = ({id}) => {
+export const getUiPosition = ({ id }) => {
   return Vue.prototype.$http.request({
     url: '/ui-positions/' + id,
     method: 'get'
@@ -274,7 +274,7 @@ export const createAdvertisement = (data) => {
 };
 
 // 根据广告Ids删除广告
-export const deleteAdvertisement = ({ids}) => {
+export const deleteAdvertisement = ({ ids }) => {
   return Vue.prototype.$http.request({
     url: '/advertisements/' + ids,
     method: 'delete'
@@ -291,7 +291,7 @@ export const editAdvertisement = (data) => {
 };
 
 // 根据Id查找广告
-export const getAdvertisement = ({id}) => {
+export const getAdvertisement = ({ id }) => {
   return Vue.prototype.$http.request({
     url: '/advertisements/' + id,
     method: 'get'
@@ -308,7 +308,7 @@ export const getProductSectionsPages = (data) => {
 };
 
 // 根据商品Ids删除商品版块
-export const deleteProductSection = ({ids}) => {
+export const deleteProductSection = ({ ids }) => {
   return Vue.prototype.$http.request({
     url: '/product-sections/' + ids,
     method: 'delete'
@@ -327,7 +327,7 @@ export const createProductSection = (data) => {
 // 修改商品版块
 export const editProductSection = (data) => {
   return Vue.prototype.$http.request({
-    url: '/product-sections/'+data.id,
+    url: '/product-sections/' + data.id,
     data,
     method: 'put'
   });
@@ -343,9 +343,9 @@ export const addProductSectionRelationBatch = (data) => {
 };
 
 // 根据关联id删除商品和板块关联
-export const deleteProductSectionRelationBatch = ({sectionId, shelfIds}) => {
+export const deleteProductSectionRelationBatch = ({ sectionId, shelfIds }) => {
   return Vue.prototype.$http.request({
-    url: '/product-sections/relation/batches?sectionId='+sectionId+'&shelfIds='+shelfIds,
+    url: '/product-sections/relation/batches?sectionId=' + sectionId + '&shelfIds=' + shelfIds,
     method: 'delete'
   });
 };
@@ -380,16 +380,16 @@ export const createCustomPlanSection = (data) => {
 // 修改定制板块
 export const editCustomPlanSection = (data) => {
   return Vue.prototype.$http.request({
-    url: '/custom-plan-sections/'+data.id,
+    url: '/custom-plan-sections/' + data.id,
     data,
     method: 'put'
   });
 };
 
 // 根据ids删除定制板块
-export const deletetCustomPlanSection = ({ids}) => {
+export const deletetCustomPlanSection = ({ ids }) => {
   return Vue.prototype.$http.request({
-    url: '/custom-plan-sections/'+ids,
+    url: '/custom-plan-sections/' + ids,
     method: 'delete'
   });
 };
@@ -406,16 +406,16 @@ export const addCustomPlanSectionRelationBatch = (data) => {
 // 修改定制板块关系
 export const editCustomPlanSectionRelation = (data) => {
   return Vue.prototype.$http.request({
-    url: '/custom-plan-sections/relation/'+ data.id,
+    url: '/custom-plan-sections/relation/' + data.id,
     data,
     method: 'put'
   });
 };
 
 // 批量删除定制版块与定制计划架关系
-export const deletetCustomPlanSectionRelationBatch = ({sectionId, planIds}) => {
+export const deletetCustomPlanSectionRelationBatch = ({ sectionId, planIds }) => {
   return Vue.prototype.$http.request({
-    url: '/custom-plan-sections/relation/batches?sectionId='+sectionId+'&planIds='+planIds,
+    url: '/custom-plan-sections/relation/batches?sectionId=' + sectionId + '&planIds=' + planIds,
     method: 'delete'
   });
 };
@@ -432,7 +432,7 @@ export const getUserPages = (data) => {
 // 修改用户锁状态
 export const editUser = (data) => {
   return Vue.prototype.$http.request({
-    url: '/users/'+data.id+'/locked-status?lockStatus='+data.lockStatus,
+    url: '/users/' + data.id + '/locked-status?lockStatus=' + data.lockStatus,
     data,
     method: 'put'
   });
@@ -450,7 +450,7 @@ export const getFruitDoctorsQualificationsPages = (data) => {
 // 根据id更新鲜果师申请记录
 export const editFruitDoctorsQualification = (data) => {
   return Vue.prototype.$http.request({
-    url: '/fruit-doctors/qualifications/'+data.id,
+    url: '/fruit-doctors/qualifications/' + data.id,
     data,
     method: 'put'
   });
@@ -468,7 +468,7 @@ export const getFruitDoctorsSettlementPagesPages = (data) => {
 // 结算申请修改
 export const editFruitDoctorsSettlement = (data) => {
   return Vue.prototype.$http.request({
-    url: '/fruit-doctors/settlement/'+data.id,
+    url: '/fruit-doctors/settlement/' + data.id,
     data,
     method: 'put'
   });
@@ -486,7 +486,7 @@ export const getFruitDoctorsPages = (data) => {
 // 修改鲜果师成员信息
 export const editFruitDoctor = (data) => {
   return Vue.prototype.$http.request({
-    url: '/fruit-doctors/'+data.id,
+    url: '/fruit-doctors/' + data.id,
     data,
     method: 'put'
   });
@@ -511,9 +511,9 @@ export const createArticle = (data) => {
 };
 
 // 根据Id删除文章
-export const deleteArticle = ({ids}) => {
+export const deleteArticle = ({ ids }) => {
   return Vue.prototype.$http.request({
-    url: '/articles/'+ids,
+    url: '/articles/' + ids,
     method: 'delete'
   });
 };
@@ -521,7 +521,7 @@ export const deleteArticle = ({ids}) => {
 // 修改文章
 export const editArticle = (data) => {
   return Vue.prototype.$http.request({
-    url: '/articles/'+data.id,
+    url: '/articles/' + data.id,
     data,
     method: 'put'
   });
@@ -537,9 +537,9 @@ export const getOrdersPages = (data) => {
 };
 
 // 根据订单code查询订单详情
-export const getOrderDetail = ({code}) => {
+export const getOrderDetail = ({ code }) => {
   return Vue.prototype.$http.request({
-    url: '/orders/'+code,
+    url: '/orders/' + code,
     method: 'get'
   });
 };
@@ -547,7 +547,7 @@ export const getOrderDetail = ({code}) => {
 // 海鼎订单调货
 export const transferHdOrder = (data) => {
   return Vue.prototype.$http.request({
-    url: '/orders/'+data.code+'/store?storeId='+data.storeId,
+    url: '/orders/' + data.code + '/store?storeId=' + data.storeId,
     method: 'put'
   });
 };
@@ -556,7 +556,7 @@ export const transferHdOrder = (data) => {
 export const getStore = () => {
   return Vue.prototype.$http.request({
     url: '/stores/pages',
-    data: {applicationType: 'HEALTH_GOOD'},
+    data: { applicationType: 'HEALTH_GOOD' },
     method: 'post'
   });
 };
@@ -580,9 +580,9 @@ export const getcustomPlanSpecificationStandardsPages = (data) => {
 };
 
 // 根据orderCode查询定制订单信息
-export const getcustomOrders = ({id}) => {
+export const getcustomOrders = ({ id }) => {
   return Vue.prototype.$http.request({
-    url: '/custom-orders/'+id,
+    url: '/custom-orders/' + id,
     method: 'get'
   });
 };
@@ -597,9 +597,9 @@ export const getActivityProductsPages = (data) => {
 };
 
 // 根据ids删除新品尝鲜活动商品
-export const deleteActivityProduct = ({ids}) => {
+export const deleteActivityProduct = ({ ids }) => {
   return Vue.prototype.$http.request({
-    url: '/activity-products/'+ids,
+    url: '/activity-products/' + ids,
     method: 'delete'
   });
 };
@@ -616,7 +616,7 @@ export const addActivityProduct = (data) => {
 // 修改新品尝鲜活动商品
 export const editActivityProduct = (data) => {
   return Vue.prototype.$http.request({
-    url: '/activity-products/'+data.id,
+    url: '/activity-products/' + data.id,
     data,
     method: 'put'
   });
@@ -641,9 +641,9 @@ export const createDeliveryFeeRule = (data) => {
 };
 
 // 根据配送费规则模板Id删除
-export const deleteDeliveryFeeRule = ({ids}) => {
+export const deleteDeliveryFeeRule = ({ ids }) => {
   return Vue.prototype.$http.request({
-    url: '/delivery-fee-rule/'+ids,
+    url: '/delivery-fee-rule/' + ids,
     method: 'delete'
   });
 };
@@ -651,7 +651,7 @@ export const deleteDeliveryFeeRule = ({ids}) => {
 // 修改配送费计算规则
 export const editDeliveryFeeRule = (data) => {
   return Vue.prototype.$http.request({
-    url: '/delivery-fee-rule/'+data.id,
+    url: '/delivery-fee-rule/' + data.id,
     data,
     method: 'put'
   });
@@ -667,9 +667,9 @@ export const getCustomPlansPages = (data) => {
 };
 
 // 根据ids删除定制计划
-export const deleteCustomPlan = ({ids}) => {
+export const deleteCustomPlan = ({ ids }) => {
   return Vue.prototype.$http.request({
-    url: '/custom-plans/'+ids,
+    url: '/custom-plans/' + ids,
     method: 'delete'
   });
 };
@@ -684,9 +684,9 @@ export const createCustomPlan = (data) => {
 };
 
 // 定制计划详细信息
-export const getCustomPlan = ({id}) => {
+export const getCustomPlan = ({ id }) => {
   return Vue.prototype.$http.request({
-    url: '/custom-plans/'+id,
+    url: '/custom-plans/' + id,
     method: 'get'
   });
 };
@@ -694,7 +694,7 @@ export const getCustomPlan = ({id}) => {
 // 修改定制计划
 export const editCustomPlan = (data) => {
   return Vue.prototype.$http.request({
-    url: '/custom-plans/'+data.id,
+    url: '/custom-plans/' + data.id,
     data,
     method: 'put'
   });
@@ -703,7 +703,7 @@ export const editCustomPlan = (data) => {
 // 定制计划上下架
 export const editCustomPlanStatus = (data) => {
   return Vue.prototype.$http.request({
-    url: '/custom-plans/'+ data.id + '/status?status=' + data.status,
+    url: '/custom-plans/' + data.id + '/status?status=' + data.status,
     method: 'put'
   });
 };
@@ -711,7 +711,7 @@ export const editCustomPlanStatus = (data) => {
 // {id}修改定制计划商品
 export const editCustomPlanProducts = (data) => {
   return Vue.prototype.$http.request({
-    url: '/custom-plan-products/'+data.id,
+    url: '/custom-plan-products/' + data.id,
     data,
     method: 'put'
   });
@@ -720,7 +720,7 @@ export const editCustomPlanProducts = (data) => {
 // {id}修改定制计划规格
 export const editCustomPlanSpecifications = (data) => {
   return Vue.prototype.$http.request({
-    url: '/custom-plan-specification/'+data.id,
+    url: '/custom-plan-specification/' + data.id,
     data,
     method: 'put'
   });

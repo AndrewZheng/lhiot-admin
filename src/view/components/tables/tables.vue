@@ -1,58 +1,62 @@
 <template>
   <div>
     <Card>
-      <tables ref="tables" editable searchable
-      search-place="top" size="small"
-      v-model="tableData"
-      :loading="loading"
-      :columns="columns"
-      @on-delete="handleDelete"
-      @on-view="handleView"
-      @on-edit="handleEdit" />
+      <tables
+        ref="tables"
+        v-model="tableData"
+        :loading="loading"
+        :columns="columns"
+        editable
+        searchable
+        search-place="top"
+        size="small"
+        @on-delete="handleDelete"
+        @on-view="handleView"
+        @on-edit="handleEdit" />
       <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
-            <Page :total="total" :current="page" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer show-total></Page>
+          <Page :total="total" :current="page" show-sizer show-total @on-change="changePage" @on-page-size-change="changePageSize"></Page>
         </Row>
       </div>
       <Button style="margin: 10px 0;" type="primary" @click="exportExcel">导出为Csv文件</Button>
     </Card>
 
-     <Modal
-        v-model="modalEdit"
-        :loading="loadingBtn"
-        :mask-closable="false"
-        @on-ok="handleOk"
-        @on-cancel="handleCancel">
-        <p slot="header">
-            <span>用户信息管理</span>
-        </p>
-       <div class="modal-content">
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+    <Modal
+      v-model="modalEdit"
+      :loading="loadingBtn"
+      :mask-closable="false"
+      @on-ok="handleOk"
+      @on-cancel="handleCancel">
+      <p slot="header">
+        <span>用户信息管理</span>
+      </p>
+      <div class="modal-content">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10" >
           <i-col span="2">姓名</i-col>
-          <i-col span="8"><Input v-model="rowData.name" placeholder="" clearable /></i-col>
-         </Row>
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+          <i-col span="8"><Input v-model="rowData.name" placeholder="" clearable ></i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10" >
           <i-col span="2">年龄</i-col>
-          <i-col span="8"> <Input v-model="rowData.age" placeholder="" clearable /></i-col>
-         </Row>
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+          <i-col span="8"> <Input v-model="rowData.age" placeholder="" clearable ></i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10" >
           <i-col span="2">性别</i-col>
           <i-col span="8">
             <RadioGroup v-model="rowData.sex" @on-change="changeSex">
-                <Radio label="1">
-                    <span>男</span>
-                </Radio>
-                <Radio label="0">
-                    <span>女</span>
-                </Radio>
+              <Radio label="1">
+                <span>男</span>
+              </Radio>
+              <Radio label="0">
+                <span>女</span>
+              </Radio>
             </RadioGroup>
           </i-col>
-         </Row>
-         <Row type="flex" :gutter="8" align="middle" class-name="mb10" >
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10" >
           <i-col span="2">邮箱</i-col>
-          <i-col span="12"> <Input v-model="rowData.email" placeholder="" clearable /></i-col>
-         </Row>
-       </div>
+          <i-col span="12"> <Input v-model="rowData.email" placeholder="" clearable ></i-col>
+        </Row>
+      </div>
     </Modal>
   </div>
 </template>
@@ -61,7 +65,7 @@
 import Tables from '_c/tables';
 import { getTableData } from '@/api/data';
 export default {
-  name: 'tables_page',
+  name: 'TablesPage',
   components: {
     Tables
   },
@@ -79,7 +83,7 @@ export default {
           sortable: true,
           maxWidth: 80,
           render: (h, params, vm) => {
-            const { row, index, column } = params;
+            const { row } = params;
             return h('span', row.id + '');
           }
         },
@@ -91,7 +95,7 @@ export default {
           sortable: true,
           maxWidth: 100,
           render: (h, params, vm) => {
-            const { row, index, column } = params;
+            const { row } = params;
             const str = row.sex == '1' ? '男' : '女';
             return <span>{str}</span>;
           }
@@ -142,6 +146,9 @@ export default {
     };
   },
   computed: {},
+  mounted() {
+    this.getTableData();
+  },
   methods: {
     handleView(params) {
       this.$Modal.info({
@@ -157,7 +164,7 @@ export default {
     },
     handleEdit(params) {
       console.log(params);
-      const { row, index, column } = params;
+      const { row } = params;
       this.rowData = row;
       this.modalEdit = true;
     },
@@ -201,9 +208,6 @@ export default {
         this.loading = false;
       });
     }
-  },
-  mounted() {
-    this.getTableData();
   }
 };
 </script>

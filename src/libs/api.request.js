@@ -3,10 +3,10 @@ import config from '@/config';
 const baseUrl = process.env.NODE_ENV === 'development' ? config.baseUrl.dev : config.baseUrl.pro;
 
 const Axios = new HttpRequest(baseUrl);
-const imsAxios=new HttpRequest(baseUrl, 'IMS_SERVICE');
+const imsAxios = new HttpRequest(baseUrl, 'IMS_SERVICE');
 
 export default {
-  install: function (Vue, Option) {
+  install: function(Vue, Option) {
     Object.defineProperty(Vue.prototype, '$http', {
       value: Axios
     });

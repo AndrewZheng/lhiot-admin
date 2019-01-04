@@ -2,12 +2,12 @@
   <div class="tables-edit-outer">
     <div v-if="!isEditting" class="tables-edit-con">
       <span class="value-con">{{ value }}</span>
-      <Button v-if="editable" @click="startEdit" class="tables-edit-btn" style="padding: 2px 4px;" type="text"><Icon type="md-create"></Icon></Button>
+      <Button v-if="editable" class="tables-edit-btn" style="padding: 2px 4px;" type="text" @click="startEdit"><Icon type="md-create"></Icon></Button>
     </div>
     <div v-else class="tables-editting-con">
-      <Input :value="value" @input="handleInput" class="tables-edit-input"/>
-      <Button @click="saveEdit" style="padding: 6px 4px;" type="text"><Icon type="md-checkmark"></Icon></Button>
-      <Button @click="canceltEdit" style="padding: 6px 4px;" type="text"><Icon type="md-close"></Icon></Button>
+      <Input :value="value" class="tables-edit-input" @input="handleInput">
+      <Button style="padding: 6px 4px;" type="text" @click="saveEdit"><Icon type="md-checkmark"></Icon></Button>
+      <Button style="padding: 6px 4px;" type="text" @click="canceltEdit"><Icon type="md-close"></Icon></Button>
     </div>
   </div>
 </template>
@@ -16,27 +16,41 @@
 export default {
   name: 'TablesEdit',
   props: {
-    value: [String, Number],
-    edittingCellId: String,
-    params: Object,
-    editable: Boolean
+    value: {
+      type: [String, Number],
+      default: ''
+    },
+    edittingCellId: {
+      type: String,
+      default: ''
+    },
+    params: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
+    editable: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
-    isEditting () {
+    isEditting() {
       return this.edittingCellId === `editting-${this.params.index}-${this.params.column.key}`;
     }
   },
   methods: {
-    handleInput (val) {
+    handleInput(val) {
       this.$emit('input', val);
     },
-    startEdit () {
+    startEdit() {
       this.$emit('on-start-edit', this.params);
     },
-    saveEdit () {
+    saveEdit() {
       this.$emit('on-save-edit', this.params);
     },
-    canceltEdit () {
+    canceltEdit() {
       this.$emit('on-cancel-edit', this.params);
     }
   }

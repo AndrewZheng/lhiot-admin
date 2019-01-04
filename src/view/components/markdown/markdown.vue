@@ -7,11 +7,11 @@
 <script>
 import MarkdownEditor from '_c/markdown';
 export default {
-  name: 'markdown_page',
+  name: 'MarkdownPage',
   components: {
     MarkdownEditor
   },
-  data () {
+  data() {
     return {
       content: ''
     };

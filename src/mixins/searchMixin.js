@@ -1,4 +1,4 @@
-let minxin = {
+const minxin = {
   data() {
     return {
       searchLoading: false,

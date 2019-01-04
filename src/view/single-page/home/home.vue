@@ -1,8 +1,8 @@
 <template>
   <div>
     <Row :gutter="20">
-      <i-col span="4" v-for="(infor, i) in inforCardData" :key="`infor-${i}`" style="height: 120px;">
-        <infor-card shadow :color="infor.color" :icon="infor.icon" :icon-size="36">
+      <i-col v-for="(infor, i) in inforCardData" :key="`infor-${i}`" span="4" style="height: 120px;">
+        <infor-card :color="infor.color" :icon="infor.icon" :icon-size="36" shadow>
           <count-to :end="infor.count" count-class="count-style"/>
           <p>{{ infor.title }}</p>
         </infor-card>
@@ -11,12 +11,12 @@
     <Row :gutter="20" style="margin-top: 20px;">
       <i-col span="8">
         <Card shadow>
-          <chart-pie style="height: 300px;" :value="pieData" text="用户访问来源"></chart-pie>
+          <chart-pie :value="pieData" style="height: 300px;" text="用户访问来源"></chart-pie>
         </Card>
       </i-col>
       <i-col span="16">
         <Card shadow>
-          <chart-bar style="height: 300px;" :value="barData" text="每周用户活跃量"/>
+          <chart-bar :value="barData" style="height: 300px;" text="每周用户活跃量"/>
         </Card>
       </i-col>
     </Row>
@@ -34,7 +34,7 @@ import CountTo from '_c/count-to';
 import { ChartPie, ChartBar } from '_c/charts';
 import Example from './example.vue';
 export default {
-  name: 'home',
+  name: 'Home',
   components: {
     InforCard,
     CountTo,
@@ -42,7 +42,7 @@ export default {
     ChartBar,
     Example
   },
-  data () {
+  data() {
     return {
       inforCardData: [
         { title: '新增用户', icon: 'md-person-add', count: 803, color: '#2d8cf0' },
@@ -53,11 +53,11 @@ export default {
         { title: '新增页面', icon: 'md-map', count: 14, color: '#9A66E4' }
       ],
       pieData: [
-        {value: 335, name: '直接访问'},
-        {value: 310, name: '邮件营销'},
-        {value: 234, name: '联盟广告'},
-        {value: 135, name: '视频广告'},
-        {value: 1548, name: '搜索引擎'}
+        { value: 335, name: '直接访问' },
+        { value: 310, name: '邮件营销' },
+        { value: 234, name: '联盟广告' },
+        { value: 135, name: '视频广告' },
+        { value: 1548, name: '搜索引擎' }
       ],
       barData: {
         Mon: 13253,
@@ -70,7 +70,7 @@ export default {
       }
     };
   },
-  mounted () {
+  mounted() {
     //
   }
 };

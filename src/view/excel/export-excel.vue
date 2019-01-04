@@ -5,7 +5,7 @@
   <div>
     <Card title="导出EXCEL">
       <Row>
-        <Button icon="md-download" :loading="exportLoading" @click="exportExcel">导出文件</Button>
+        <Button :loading="exportLoading" icon="md-download" @click="exportExcel">导出文件</Button>
       </Row>
     </Card>
     <Row class="margin-top-10">
@@ -16,8 +16,8 @@
 <script>
 import excel from '@/libs/excel';
 export default {
-  name: 'export-excel',
-  data () {
+  name: 'ExportExcel',
+  data() {
     return {
       exportLoading: false,
       tableTitle: [
@@ -53,8 +53,14 @@ export default {
       ]
     };
   },
+  created() {
+
+  },
+  mounted() {
+
+  },
   methods: {
-    exportExcel () {
+    exportExcel() {
       if (this.tableData.length) {
         this.exportLoading = true;
         const params = {
@@ -70,12 +76,6 @@ export default {
         this.$Message.info('表格数据不能为空！');
       }
     }
-  },
-  created () {
-
-  },
-  mounted () {
-
   }
 };
 </script>

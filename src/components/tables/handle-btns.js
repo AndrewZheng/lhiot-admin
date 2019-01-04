@@ -1,4 +1,4 @@
-import {onSaleStatus} from '../../libs/enumerate';
+import { onSaleStatus } from '../../libs/enumerate';
 
 const btns = {
   view: (h, params, vm) => {

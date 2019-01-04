@@ -5,14 +5,14 @@
   <div>
     <Card title="导入EXCEL">
       <Row>
-        <Upload action="" :before-upload="handleBeforeUpload" accept=".xls, .xlsx">
-          <Button icon="ios-cloud-upload-outline" :loading="uploadLoading" @click="handleUploadFile">上传文件</Button>
+        <Upload :before-upload="handleBeforeUpload" action="" accept=".xls, .xlsx">
+          <Button :loading="uploadLoading" icon="ios-cloud-upload-outline" @click="handleUploadFile">上传文件</Button>
         </Upload>
       </Row>
       <Row>
-        <div class="ivu-upload-list-file" v-if="file !== null">
+        <div v-if="file !== null" class="ivu-upload-list-file">
           <Icon type="ios-stats"></Icon>
-            {{ file.name }}
+          {{ file.name }}
           <Icon v-show="showRemoveFile" type="ios-close" class="ivu-upload-list-remove" @click.native="handleRemove()"></Icon>
         </div>
       </Row>
@@ -35,8 +35,8 @@
 <script>
 import excel from '@/libs/excel';
 export default {
-  name: 'upload-excel',
-  data () {
+  name: 'UploadExcel',
+  data() {
     return {
       uploadLoading: false,
       progressPercent: 0,
@@ -48,22 +48,28 @@ export default {
       tableLoading: false
     };
   },
+  created() {
+
+  },
+  mounted() {
+
+  },
   methods: {
-    initUpload () {
+    initUpload() {
       this.file = null;
       this.showProgress = false;
       this.loadingProgress = 0;
       this.tableData = [];
       this.tableTitle = [];
     },
-    handleUploadFile () {
+    handleUploadFile() {
       this.initUpload();
     },
-    handleRemove () {
+    handleRemove() {
       this.initUpload();
       this.$Message.info('上传的文件已删除！');
     },
-    handleBeforeUpload (file) {
+    handleBeforeUpload(file) {
       const fileExt = file.name.split('.').pop().toLocaleLowerCase();
       if (fileExt === 'xlsx' || fileExt === 'xls') {
         this.readFile(file);
@@ -77,7 +83,7 @@ export default {
       return false;
     },
     // 读取文件
-    readFile (file) {
+    readFile(file) {
       const reader = new FileReader();
       reader.readAsArrayBuffer(file);
       reader.onloadstart = e => {
@@ -103,12 +109,6 @@ export default {
         this.showRemoveFile = true;
       };
     }
-  },
-  created () {
-
-  },
-  mounted () {
-
   }
 };
 </script>

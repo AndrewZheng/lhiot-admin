@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import { enums } from 'util/';
 
 export const login = ({ account, password }) => {
   const data = {
@@ -23,8 +22,8 @@ export const getUserInfo = (token) => {
   //   method: 'get'
   // });
   return Vue.prototype.$http.request({
-      url: '/admin/sessions',
-      method: 'get'
+    url: '/admin/sessions',
+    method: 'get'
   });
 };
 

@@ -2,7 +2,7 @@
   <Row>
     <i-col span="16">
       <Row v-for="i in (customIconList.length / 3)" :key="`custom-icon-row-${i}`">
-        <i-col span="8" v-for="item in customIconList.slice((i - 1) * 3, i * 3)" :key="`custom-icon-${item}`">
+        <i-col v-for="item in customIconList.slice((i - 1) * 3, i * 3)" :key="`custom-icon-${item}`" span="8">
           <Card style="margin: 0 5px 5px; text-align: center;">
             <icons :size="30" :type="item"/>
             <p class="icon-code">&lt;Icons :size="30" type="{{ item }}"&gt;</p>
@@ -22,8 +22,8 @@
     </i-col>
     <i-col span="8">
       <Card>
-        <p class="intro-p"><Icon style="margin-right: 10px;" :size="10" type="heart"/>Icons组件支持自定义图标的显示，具体自定义图标字体文件的制作请参考文档。</p>
-        <p class="intro-p"><Icon style="margin-right: 10px;" :size="10" type="heart"/>CommonIcon组件同时支持iView内置图标类型和自定义图标类型，为了区别这两种类型，需要在自定义图标名称前加下划线"_"</p>
+        <p class="intro-p"><Icon :size="10" style="margin-right: 10px;" type="heart"/>Icons组件支持自定义图标的显示，具体自定义图标字体文件的制作请参考文档。</p>
+        <p class="intro-p"><Icon :size="10" style="margin-right: 10px;" type="heart"/>CommonIcon组件同时支持iView内置图标类型和自定义图标类型，为了区别这两种类型，需要在自定义图标名称前加下划线"_"</p>
       </Card>
     </i-col>
   </Row>
@@ -33,12 +33,12 @@
 import Icons from '_c/icons';
 import CommonIcon from '_c/common-icon';
 export default {
-  name: 'icons_pages',
+  name: 'IconsPages',
   components: {
     Icons,
     CommonIcon
   },
-  data () {
+  data() {
     return {
       customIconList: [
         'woman',

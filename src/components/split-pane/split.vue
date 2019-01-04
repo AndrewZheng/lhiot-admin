@@ -11,7 +11,7 @@
     </div>
     <div v-else :class="`${prefix}-vertical`">
       <div :style="{bottom: `${anotherOffset}%`}" :class="[`${prefix}-pane`, 'top-pane']"><slot name="top"/></div>
-     <div :class="`${prefix}-trigger-con`" :style="{top: `${offset}%`}" @mousedown="handleMousedown">
+      <div :class="`${prefix}-trigger-con`" :style="{top: `${offset}%`}" @mousedown="handleMousedown">
         <slot name="trigger">
           <trigger mode="horizontal"/>
         </slot>
@@ -35,7 +35,7 @@ export default {
       default: 0.5
     },
     mode: {
-      validator (value) {
+      validator(value) {
         return oneOf(value, ['horizontal', 'vertical']);
       },
       default: 'horizontal'
@@ -55,7 +55,7 @@ export default {
    * @on-moving 返回值：事件对象，但是在事件对象中加入了两个参数：atMin(当前是否在最小值处), atMax(当前是否在最大值处)
    * @on-move-end
    */
-  data () {
+  data() {
     return {
       prefix: 'ivu-split',
       offset: 0,
@@ -64,60 +64,70 @@ export default {
     };
   },
   computed: {
-    wrapperClasses () {
+    wrapperClasses() {
       return [
         `${this.prefix}-wrapper`,
         this.isMoving ? 'no-select' : ''
       ];
     },
-    isHorizontal () {
+    isHorizontal() {
       return this.mode === 'horizontal';
     },
-    anotherOffset () {
+    anotherOffset() {
       return 100 - this.offset;
     },
-    valueIsPx () {
+    valueIsPx() {
       return typeof this.value === 'string';
     },
-    offsetSize () {
+    offsetSize() {
       return this.isHorizontal ? 'offsetWidth' : 'offsetHeight';
     },
-    computedMin () {
+    computedMin() {
       return this.getComputedThresholdValue('min');
     },
-    computedMax () {
+    computedMax() {
       return this.getComputedThresholdValue('max');
     }
   },
+  watch: {
+    value() {
+      this.offset = (this.valueIsPx ? this.px2percent(this.value, this.$refs.outerWrapper[this.offsetSize]) : this.value) * 10000 / 100;
+    }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.offset = (this.valueIsPx ? this.px2percent(this.value, this.$refs.outerWrapper[this.offsetSize]) : this.value) * 10000 / 100;
+    });
+  },
   methods: {
-    px2percent (numerator, denominator) {
+    px2percent(numerator, denominator) {
       return parseFloat(numerator) / parseFloat(denominator);
     },
-    getComputedThresholdValue (type) {
-      let size = this.$refs.outerWrapper[this.offsetSize];
+    getComputedThresholdValue(type) {
+      const size = this.$refs.outerWrapper[this.offsetSize];
       if (this.valueIsPx) return typeof this[type] === 'string' ? this[type] : size * this[type];
       else return typeof this[type] === 'string' ? this.px2percent(this[type], size) : this[type];
     },
-    getMin (value1, value2) {
+    getMin(value1, value2) {
       if (this.valueIsPx) return `${Math.min(parseFloat(value1), parseFloat(value2))}px`;
       else return Math.min(value1, value2);
     },
-    getMax (value1, value2) {
+    getMax(value1, value2) {
       if (this.valueIsPx) return `${Math.max(parseFloat(value1), parseFloat(value2))}px`;
       else return Math.max(value1, value2);
     },
-    getAnotherOffset (value) {
+    getAnotherOffset(value) {
       let res = 0;
       if (this.valueIsPx) res = `${this.$refs.outerWrapper[this.offsetSize] - parseFloat(value)}px`;
       else res = 1 - value;
       return res;
     },
-    handleMove (e) {
-      let pageOffset = this.isHorizontal ? e.pageX : e.pageY;
-      let offset = pageOffset - this.initOffset;
-      let outerWidth = this.$refs.outerWrapper[this.offsetSize];
+    handleMove(e) {
+      const pageOffset = this.isHorizontal ? e.pageX : e.pageY;
+      const offset = pageOffset - this.initOffset;
+      const outerWidth = this.$refs.outerWrapper[this.offsetSize];
       let value = this.valueIsPx ? `${parseFloat(this.oldOffset) + offset}px` : (this.px2percent(outerWidth * this.oldOffset + offset, outerWidth));
-      let anotherValue = this.getAnotherOffset(value);
+      const anotherValue = this.getAnotherOffset(value);
       if (parseFloat(value) <= parseFloat(this.computedMin)) value = this.getMax(value, this.computedMin);
       if (parseFloat(anotherValue) <= parseFloat(this.computedMax)) value = this.getAnotherOffset(this.getMax(anotherValue, this.computedMax));
       e.atMin = this.value === this.computedMin;
@@ -125,13 +135,13 @@ export default {
       this.$emit('input', value);
       this.$emit('on-moving', e);
     },
-    handleUp () {
+    handleUp() {
       this.isMoving = false;
       off(document, 'mousemove', this.handleMove);
       off(document, 'mouseup', this.handleUp);
       this.$emit('on-move-end');
     },
-    handleMousedown (e) {
+    handleMousedown(e) {
       this.initOffset = this.isHorizontal ? e.pageX : e.pageY;
       this.oldOffset = this.value;
       this.isMoving = true;
@@ -139,16 +149,6 @@ export default {
       on(document, 'mouseup', this.handleUp);
       this.$emit('on-move-start');
     }
-  },
-  watch: {
-    value () {
-      this.offset = (this.valueIsPx ? this.px2percent(this.value, this.$refs.outerWrapper[this.offsetSize]) : this.value) * 10000 / 100;
-    }
-  },
-  mounted () {
-    this.$nextTick(() => {
-      this.offset = (this.valueIsPx ? this.px2percent(this.value, this.$refs.outerWrapper[this.offsetSize]) : this.value) * 10000 / 100;
-    });
   }
 };
 </script>

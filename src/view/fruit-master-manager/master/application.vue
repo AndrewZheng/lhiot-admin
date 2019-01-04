@@ -3,80 +3,80 @@
     <Card>
       <tables
         ref="tables"
+        v-model="tableData"
+        :columns="columns"
+        :loading="loading"
         editable
         searchable
         border
         search-place="top"
-        v-model="tableData"
-        :columns="columns"
-        :loading="loading"
         @on-view="handleView"
         @on-auditor="onAuditor"
       >
         <div slot="searchCondition" :searchAreaColumn="24">
           <Input
+            v-model="searchRowData.realName"
             placeholder="姓名"
             class="search-input mr5"
-            v-model="searchRowData.realName"
             style="width: 100px"
             clearable
-          />
+          >
           <Input
+            v-model="searchRowData.phone"
             placeholder="手机号码"
             class="search-input mr5"
-            v-model="searchRowData.phone"
             style="width: 100px"
             clearable
-          />
+          >
           <Input
+            v-model="searchRowData.idcardNo"
             placeholder="身份证号码"
             class="search-input mr5"
-            v-model="searchRowData.idcardNo"
             style="width: 150px"
             clearable
-          />
+          >
           <DatePicker
+            v-model="searchRowData.beginCreateAt"
             format="yyyy-MM-dd HH:mm:ss"
-            @on-change="startTimeChange"
             type="datetime"
             placeholder="申请时间起"
             class="search-input ml20"
-            v-model="searchRowData.beginCreateAt"
             style="width: 160px"
+            @on-change="startTimeChange"
           />
           <i> - </i>
           <DatePicker
+            v-model="searchRowData.endCreateAt"
             format="yyyy-MM-dd HH:mm:ss"
-            @on-change="endTimeChange"
             type="datetime"
             placeholder="申请时间止"
             class="search-input mr20"
-            v-model="searchRowData.endCreateAt"
             style="width: 160px"
+            @on-change="endTimeChange"
           />
           <Select
+            v-model="searchRowData.auditStatus"
             class="search-col"
             placeholder="审核状态"
-            v-model="searchRowData.auditStatus"
             style="width:100px"
             clearable
           >
             <Option
-              class="ml15 mt10"
               v-for="item in userStatus"
               :value="item.value"
               :key="item.value"
+              class="ml15 mt10"
             >{{ item.label }}</Option>
           </Select>
-          <Button v-waves @click="handleSearch" class="search-btn ml5 mr5" type="primary">
+          <Button v-waves class="search-btn ml5 mr5" type="primary" @click="handleSearch">
             <Icon type="md-search"/>&nbsp;搜索
           </Button>
           <Button
             v-waves
-            @click="handleClear"
+            :loading="clearSearchLoading"
             class="search-btn"
             type="info"
-            :loading="clearSearchLoading"
+            @click="handleClear"
           >
             <Icon type="md-refresh"/>&nbsp;清除条件
           </Button>
@@ -87,10 +87,10 @@
           <Page
             :total="total"
             :current="page"
-            @on-change="changePage"
-            @on-page-size-change="changePageSize"
             show-sizer
             show-total
+            @on-change="changePage"
+            @on-page-size-change="changePageSize"
           ></Page>
         </Row>
       </div>
@@ -102,43 +102,43 @@
         <span>鲜果师申请详情</span>
       </p>
       <div class="modal-content">
-        <Row type="flex" :gutter="8" align="middle" class="mb10">
+        <Row :gutter="8" type="flex" align="middle" class="mb10">
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle">
+            <Row :gutter="8" type="flex" align="middle">
               <i-col span="4">ID:</i-col>
-              <i-col span="20">{{masterDetail.id}}</i-col>
+              <i-col span="20">{{ masterDetail.id }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle">
+            <Row :gutter="8" type="flex" align="middle">
               <i-col span="4">姓名:</i-col>
-              <i-col span="20">{{masterDetail.realName}}</i-col>
+              <i-col span="20">{{ masterDetail.realName }}</i-col>
             </Row>
           </i-col>
         </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle">
+            <Row :gutter="8" type="flex" align="middle">
               <i-col span="8">手机号码:</i-col>
-              <i-col span="16">{{masterDetail.phone}}</i-col>
+              <i-col span="16">{{ masterDetail.phone }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle">
+            <Row :gutter="8" type="flex" align="middle">
               <i-col span="8">身份证号码:</i-col>
-              <i-col span="16">{{masterDetail.idcardNo}}</i-col>
+              <i-col span="16">{{ masterDetail.idcardNo }}</i-col>
             </Row>
           </i-col>
         </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
-            <Row type="flex" :gutter="8" align="middle">
+            <Row :gutter="8" type="flex" align="middle">
               <i-col span="8">申请时间:</i-col>
-              <i-col span="16">{{masterDetail.createTime}}</i-col>
+              <i-col span="16">{{ masterDetail.createTime }}</i-col>
             </Row>
           </i-col>
         </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <i-col span="4">身份证正面照: </i-col>
             <i-col span="20">
@@ -146,7 +146,7 @@
             </i-col>
           </i-col>
         </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <i-col span="4">身份证反面照: </i-col>
             <i-col span="20">
@@ -154,7 +154,7 @@
             </i-col>
           </i-col>
         </Row>
-        <Row type="flex" :gutter="8" align="middle" class-name="mb10">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <i-col span="4">资质证明: </i-col>
             <i-col span="20">
@@ -164,68 +164,68 @@
         </Row>
         <Divider orientation="center">审核信息</Divider>
         <Row v-if="tempModalType === modalType.view">
-          <Row type="flex" :gutter="8" align="middle" class="mb10">
+          <Row :gutter="8" type="flex" align="middle" class="mb10">
             <i-col span="12">
-              <Row type="flex" :gutter="8" align="middle">
+              <Row :gutter="8" type="flex" align="middle">
                 <i-col span="8">审核状态:</i-col>
-                <i-col span="16">{{auditStatusComputed}}</i-col>
+                <i-col span="16">{{ auditStatusComputed }}</i-col>
               </Row>
             </i-col>
             <i-col span="12">
-              <Row type="flex" :gutter="8" align="middle">
+              <Row :gutter="8" type="flex" align="middle">
                 <i-col span="8">审核时间:</i-col>
-                <i-col span="16">{{masterDetail.auditTime}}</i-col>
+                <i-col span="16">{{ masterDetail.auditTime }}</i-col>
               </Row>
             </i-col>
           </Row>
-          <Row type="flex" :gutter="8" align="middle" class="mb10">
+          <Row :gutter="8" type="flex" align="middle" class="mb10">
             <i-col span="12">
-              <Row type="flex" :gutter="8" align="middle">
+              <Row :gutter="8" type="flex" align="middle">
                 <i-col span="8">审核人:</i-col>
-                <i-col span="16">{{masterDetail.auditUser}}</i-col>
+                <i-col span="16">{{ masterDetail.auditUser }}</i-col>
               </Row>
             </i-col>
             <i-col span="12">
-              <Row type="flex" :gutter="8" align="middle">
+              <Row :gutter="8" type="flex" align="middle">
                 <i-col span="8">审核备注:</i-col>
-                <i-col span="16">{{masterDetail.failureReason}}</i-col>
+                <i-col span="16">{{ masterDetail.failureReason }}</i-col>
               </Row>
             </i-col>
           </Row>
         </Row>
         <Form
+          v-if="tempModalType === modalType.edit"
           ref="modalEdit"
           :model="masterDetail"
           :rules="ruleInline"
           :label-width="80"
-          v-if="tempModalType === modalType.edit"
         >
           <FormItem label="审核状态:" prop>
             <Select
+              v-model="masterDetail.auditStatus"
               class="search-col"
               placeholder="审核状态"
-              v-model="masterDetail.auditStatus"
               style="width:100px"
               clearable
             >
               <Option
-                class="ml15 mt10"
                 v-for="item in userStatus"
                 :value="item.value"
                 :key="item.value"
+                class="ml15 mt10"
               >{{ item.label }}</Option>
             </Select>
           </FormItem>
           <FormItem label="审核人:">
-            <i-col>{{masterDetail.auditUser}}</i-col>
+            <i-col>{{ masterDetail.auditUser }}</i-col>
           </FormItem>
           <FormItem label="审核备注:" prop="failureReason">
-            <Input type="textarea" v-model="masterDetail.failureReason"/>
+            <Input v-model="masterDetail.failureReason" type="textarea">
           </FormItem>
         </Form>
       </div>
-      <div slot="footer" v-if="tempModalType === modalType.edit">
-        <Button type="primary" @click="handleAuditUser('modalEdit')" :loading="auditUserLoading">审核</Button>
+      <div v-if="tempModalType === modalType.edit" slot="footer">
+        <Button :loading="auditUserLoading" type="primary" @click="handleAuditUser('modalEdit')">审核</Button>
       </div>
     </Modal>
   </div>
@@ -233,6 +233,7 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
+import _ from 'lodash';
 import { getFruitDoctorsQualificationsPages, editFruitDoctorsQualification } from '@/api/fruitermaster';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
@@ -273,19 +274,6 @@ export default {
     Tables
   },
   mixins: [tableMixin, searchMixin],
-  computed: {
-    auditStatusComputed() {
-      if (this.masterDetail.auditStatus === 'UNAUDITED') {
-        return '待审核';
-      } else if (this.masterDetail.auditStatus === 'AGREE') {
-        return '审核通过';
-      } else if (this.masterDetail.auditStatus === 'REJECT') {
-        return '审核不通过';
-      } else {
-        return this.masterDetail.auditStatus;
-      };
-    }
-  },
   data() {
     return {
       ruleInline: {},
@@ -319,14 +307,14 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             if (row.auditStatus === 'UNAUDITED') {
-              return <div><tag color="primary">{'待审核'}</tag></div>;
+              return <div><tag color='primary'>{'待审核'}</tag></div>;
             } else if (row.auditStatus === 'AGREE') {
-              return <div><tag color="success">{'审核通过'}</tag></div>;
+              return <div><tag color='success'>{'审核通过'}</tag></div>;
             } else if (row.auditStatus === 'REJECT') {
-              return <div><tag color="error">{'审核不通过'}</tag></div>;
+              return <div><tag color='error'>{'审核不通过'}</tag></div>;
             } else {
               return <div>{row.auditStatus}</div>;
-            };
+            }
           }
         },
         {
@@ -367,6 +355,19 @@ export default {
           value: 'REJECT'
         }]
     };
+  },
+  computed: {
+    auditStatusComputed() {
+      if (this.masterDetail.auditStatus === 'UNAUDITED') {
+        return '待审核';
+      } else if (this.masterDetail.auditStatus === 'AGREE') {
+        return '审核通过';
+      } else if (this.masterDetail.auditStatus === 'REJECT') {
+        return '审核不通过';
+      } else {
+        return this.masterDetail.auditStatus;
+      }
+    }
   },
   created() {
     this.getTableData();

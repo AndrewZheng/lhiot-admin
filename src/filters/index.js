@@ -1,5 +1,4 @@
 import moment from 'moment';
-import _ from 'lodash';
 
 const filters = {};
 
@@ -32,60 +31,60 @@ filters.switchStatus = (val) => {
   let statusName = '';
   switch (val) {
     case 'FAILURE':
-      {
-        statusName = '已失效';
-        break;
-      }
+    {
+      statusName = '已失效';
+      break;
+    }
     case 'WAIT_PAYMENT':
-      {
-        statusName = '待付款';
-        break;
-      }
+    {
+      statusName = '待付款';
+      break;
+    }
     case 'PAYMENTING':
-      {
-        statusName = '支付中';
-        break;
-      }
+    {
+      statusName = '支付中';
+      break;
+    }
     case 'WAIT_SEND_OUT':
-      {
-        statusName = '待发货';
-        break;
-      }
+    {
+      statusName = '待发货';
+      break;
+    }
     case 'SEND_OUT':
-      {
-        statusName = '已发货';
-        break;
-      }
+    {
+      statusName = '已发货';
+      break;
+    }
     case 'DISPATCHING':
-      {
-        statusName = '配送中';
-        break;
-      }
+    {
+      statusName = '配送中';
+      break;
+    }
     case 'RECEIVED':
-      {
-        statusName = '已收货';
-        break;
-      }
+    {
+      statusName = '已收货';
+      break;
+    }
     case 'RETURNING':
-      {
-        statusName = '退货中';
-        break;
-      }
+    {
+      statusName = '退货中';
+      break;
+    }
     case 'ALREADY_RETURN':
-      {
-        statusName = '退货完成';
-        break;
-      }
+    {
+      statusName = '退货完成';
+      break;
+    }
     case 'RETURN_FAILURE':
-      {
-        statusName = '退货失败';
-        break;
-      }
+    {
+      statusName = '退货失败';
+      break;
+    }
     case 'FINISHED':
-      {
-        statusName = '已完成';
-        break;
-      }
+    {
+      statusName = '已完成';
+      break;
+    }
   }
   return statusName;
 };
@@ -94,15 +93,15 @@ filters.switchPayType = (val) => {
   let type = '';
   switch (val) {
     case 'balance':
-      {
-        type = '鲜果币支付';
-        break;
-      }
+    {
+      type = '鲜果币支付';
+      break;
+    }
     case 'weixin':
-      {
-        type = '微信支付';
-        break;
-      }
+    {
+      type = '微信支付';
+      break;
+    }
     default:
       type = '未支付';
   }
@@ -113,15 +112,15 @@ filters.switchDeliveryType = (val) => {
   let type = '';
   switch (val) {
     case 'TO_THE_STORE':
-      {
-        type = '门店自提';
-        break;
-      }
+    {
+      type = '门店自提';
+      break;
+    }
     case 'TO_THE_HOME':
-      {
-        type = '送货上门';
-        break;
-      }
+    {
+      type = '送货上门';
+      break;
+    }
   }
   return type;
 };
@@ -130,49 +129,49 @@ filters.switchAuditStatus = (val) => {
   let statusName = '';
   switch (val) {
     case 'unaudited':
-      {
-        statusName = '待审核';
-        break;
-      }
+    {
+      statusName = '待审核';
+      break;
+    }
     case 'auditeding':
-      {
-        statusName = '审核中';
-        break;
-      }
+    {
+      statusName = '审核中';
+      break;
+    }
     case 'agree':
-      {
-        statusName = '审核通过';
-        break;
-      }
+    {
+      statusName = '审核通过';
+      break;
+    }
     case 'reject':
-      {
-        statusName = '审核不通过';
-        break;
-      }
+    {
+      statusName = '审核不通过';
+      break;
+    }
   }
   return statusName;
 };
 
 filters.defaultImg = (value) => {
-  let src = require('assets/images/icon/img-error.png');
+  const src = require('assets/images/icon/img-error.png');
   if (!value) return src;
   return value;
 };
 
 filters.defaultBanner = (value) => {
-  let src = require('assets/images/icon/default_banner.png');
+  const src = require('assets/images/icon/default_banner.png');
   if (!value) return src;
   return value;
 };
 
 filters.defaultProduct = (value) => {
-  let src = require('assets/images/icon/default_product.png');
+  const src = require('assets/images/icon/default_product.png');
   if (!value) return src;
   return value;
 };
 
 filters.defaultNews = (value) => {
-  let src = require('assets/images/icon/default_news.png');
+  const src = require('assets/images/icon/default_news.png');
   if (!value) return src;
   return value;
 };
@@ -207,29 +206,29 @@ filters.timeAgo = (time) => {
 /* 数字 格式化 */
 filters.numberFormatter = (num, digits) => {
   const si = [{
-      value: 1E18,
-      symbol: 'E'
-    },
-    {
-      value: 1E15,
-      symbol: 'P'
-    },
-    {
-      value: 1E12,
-      symbol: 'T'
-    },
-    {
-      value: 1E9,
-      symbol: 'G'
-    },
-    {
-      value: 1E6,
-      symbol: 'M'
-    },
-    {
-      value: 1E3,
-      symbol: 'k'
-    }
+    value: 1E18,
+    symbol: 'E'
+  },
+  {
+    value: 1E15,
+    symbol: 'P'
+  },
+  {
+    value: 1E12,
+    symbol: 'T'
+  },
+  {
+    value: 1E9,
+    symbol: 'G'
+  },
+  {
+    value: 1E6,
+    symbol: 'M'
+  },
+  {
+    value: 1E3,
+    symbol: 'k'
+  }
   ];
   for (let i = 0; i < si.length; i++) {
     if (num >= si[i].value) {
