@@ -736,16 +736,17 @@ export default {
         this.loading = false;
         this.rowData = {};
         this.rowData = res;
+        console.log(JSON.stringify(this.rowData));
         // 如果只有一个周期的套餐，则另一个套餐数据补齐
         if (res.periodList.length !== 2) {
           const planPeriod = this.rowData.periodList[0].planPeriod;
           const newPlanPeriod = planPeriod === 7 ? 30 : 7;
           const newIndex = this.rowData.periodList[0].index === 0 ? 1 : 0;
           this.rowData.periodList.push({ 'index': newIndex, 'planPeriod': newPlanPeriod, 'products': [], 'specificationList': [] });
-          // 升序排序
-          res.periodList.sort((a, b) => a.index - b.index);
           // console.log(JSON.stringify(this.rowData));
         }
+        // 升序排序
+        this.rowData.periodList.sort((a, b) => a.index - b.index);
         this.modalView = true;
       });
     },
@@ -765,7 +766,7 @@ export default {
           const newIndex = this.rowData.periodList[0].index === 0 ? 1 : 0;
           this.rowData.periodList.push({ 'index': newIndex, 'planPeriod': newPlanPeriod, 'products': [], 'specificationList': [] });
           // 升序排序
-          res.periodList.sort((a, b) => a.index - b.index);
+          this.rowData.periodList.sort((a, b) => a.index - b.index);
           for (var product = 0; product < newPlanPeriod; product++) {
             this.rowData.periodList[newIndex].products.push({ 'index': product, 'benefit': '', 'dayOfPeriod': (product + 1), 'description': '', 'id': 0, 'image': '', 'planId': planId, 'productName': '', 'shelfId': 0, 'optionType': null });
           }
