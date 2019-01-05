@@ -691,7 +691,7 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          console.log('添加/修改');
+          // console.log('添加/修改');
           if (this.rowData.id === 0) {
             this.modalViewLoading = true;
             this.loading = true;
@@ -736,7 +736,6 @@ export default {
         this.loading = false;
         this.rowData = {};
         this.rowData = res;
-        console.log(JSON.stringify(this.rowData));
         // 如果只有一个周期的套餐，则另一个套餐数据补齐
         if (res.periodList.length !== 2) {
           const planPeriod = this.rowData.periodList[0].planPeriod;
@@ -978,7 +977,7 @@ export default {
         this.rowData.periodList[periodIndex].specificationList[specificationIndex].price = yuanToFenNumber(value);
         this.rowData.periodList[periodIndex].specificationList[specificationIndex].optionType = specificationId === 0 ? 'INSERT' : 'UPDATE';
       }
-      console.log(this.rowData.periodList[periodIndex].specificationList[specificationIndex].price);
+      // console.log(this.rowData.periodList[periodIndex].specificationList[specificationIndex].price);
     }
   }
 };

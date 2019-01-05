@@ -118,11 +118,11 @@ export default {
     },
     noDataText: {
       type: String,
-      default: ''
+      default: '暂无数据'
     },
     noFilteredDataText: {
       type: String,
-      default: ''
+      default: '暂无筛选结果'
     },
     disabledHover: {
       type: Boolean,
