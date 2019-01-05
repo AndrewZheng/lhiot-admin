@@ -325,7 +325,7 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import { getCustomPlansPages,
-  deconsteCustomPlan,
+  deleteCustomPlan,
   getCustomPlanSectionsPages,
   createCustomPlan,
   getProductShelvesPages, getCustomPlan, editCustomPlan, editCustomPlanStatus, editCustomPlanPeriod } from '@/api/fruitermaster';
@@ -668,12 +668,12 @@ export default {
   methods: {
     remoteMethod(query) {
       if (query !== '') {
-        this.handleSearchAutoCompconste(query);
+        this.handleSearchAutoComplete(query);
       } else {
         this.optionsShelfSpecification = [];
       }
     },
-    handleSearchAutoCompconste(value) {
+    handleSearchAutoComplete(value) {
       this.shelfSpecificationLoading = true;
       getProductShelvesPages({
         keyword: value + '',
@@ -724,7 +724,7 @@ export default {
       this.rowData.image = fileList[0].url;
     },
     handleRemoveMain(file) {
-      this.$refs.uploadMain.deconsteFile(file);
+      this.$refs.uploadMain.deleteFile(file);
       this.uploadListMain = [];
       this.rowData.image = null;
     },
@@ -867,9 +867,9 @@ export default {
         this.clearSearchLoading = false;
       });
     },
-    deconsteTable(ids) {
+    deleteTable(ids) {
       this.loading = true;
-      deconsteCustomPlan({
+      deleteCustomPlan({
         ids
       }).then(res => {
         const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
