@@ -179,10 +179,10 @@ const postageDetail = {
 const detailList = {
   minDistance: 0,
   maxDistance: 3,
-  firstWeight: 3,
-  firstFee: 500,
-  additionalWeight: 5,
-  additionalFee: 500,
+  firstWeight: 5,
+  firstFee: 0,
+  additionalWeight: 1,
+  additionalFee: 0,
   updateWay: updateWay.INSERT
 };
 const roleRowData = {
