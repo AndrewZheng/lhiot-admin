@@ -639,6 +639,26 @@ export const asyncRouterMap = [
     ]
   },
   {
+    path: '/dictionary-manager',
+    name: 'dictionary-manager',
+    meta: {
+      icon: 'md-bookmarks',
+      title: '数据字典管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/dictionary',
+        name: 'dictionary',
+        meta: {
+          icon: 'ios-book',
+          title: '数据字典'
+        },
+        component: () => import('@/view/basic-manager/dictionary/dictionary.vue')
+      }
+    ]
+  },
+  {
     path: '/'
   },
   {
