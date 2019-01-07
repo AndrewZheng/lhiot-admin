@@ -25,7 +25,7 @@
             style="width: 150px"/>
           <Select
             :disable="selectDisable"
-            v-model="searchRowData.positionId"
+            v-model="searchRowData.positionIds"
             class="search-col mr5"
             placeholder="版块位置"
             style="width: 150px">
@@ -259,7 +259,7 @@ const roleRowData = {
   includeProduct: true,
   includeShelves: true,
   sectionName: '',
-  positionId: '',
+  positionIds: '',
   page: 1,
   rows: 10
 };
@@ -637,6 +637,7 @@ export default {
       });
     },
     getTableData() {
+      this.searchRowData.applicationType = this.applicationType;
       getProductSectionsPages(this.searchRowData).then(res => {
         this.tableData = res.array;
         this.total = res.total;

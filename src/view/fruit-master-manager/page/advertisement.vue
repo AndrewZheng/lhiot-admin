@@ -24,7 +24,7 @@
             style="width: 150px"/>
           <Select
             :disable="selectDisable"
-            v-model="searchRowData.positionId"
+            v-model="searchRowData.positionIds"
             class="search-col mr5"
             placeholder="广告位置"
             style="width: 150px">
@@ -379,7 +379,7 @@ const advertisementDetail = {
 const roleRowData = {
   applicationType: null,
   advertiseName: '',
-  positionId: '',
+  positionIds: '',
   page: 1,
   rows: 10
 };
