@@ -241,6 +241,24 @@
               </Select>
             </FormItem>
             </Col>
+            <Col span="12">
+            <FormItem label="应用类型:" prop="applicationType">
+              <Select
+                :value="productDetail.applicationType"
+                :disabled="applicationType===null?false:true"
+                clearable
+                style="width: 100px"
+                @on-change="applicationTypeChange">
+                <Option
+                  v-for="(item,index) in applicationTypeList"
+                  :value="item.code"
+                  :key="index"
+                  class="ptb2-5"
+                  style="padding-left: 5px">{{ item.name }}
+                </Option>
+              </Select>
+            </FormItem>
+            </Col>
           </Row>
           <Row>
             <FormItem :label-width="80" label="商品主图:建议尺寸;400x400(单位:px)" prop="image">
@@ -319,6 +337,7 @@ import {
   getProductShelvesPages,
   getProductSpecificationsPages
 } from '@/api/fruitermaster';
+import { getDictionary } from '@/api/basic'
 import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
@@ -381,6 +400,7 @@ export default {
       createLoading: false,
       model: [],
       uiPositionData: [],
+      originalUiPositionData: [],
       ruleInline: {
         originalPrice: [
           { required: true, message: '请输入商品原价' },
@@ -403,7 +423,8 @@ export default {
         ],
         shelfStatus: [
           { required: true, message: '请选择是否上架', trigger: 'blur' }
-        ]
+        ],
+        applicationType: [{ required: true, message: '请输入应用类型' }]
       },
       useAble: [{ label: '是', value: 'ON' }, { label: '否', value: 'OFF' }],
       defaultListMain: [],
@@ -470,7 +491,7 @@ export default {
         },
         {
           title: '是否上架',
-          minWidth: 100,
+          minWidth: 80,
           key: 'shelfStatus',
           render: (h, params, vm) => {
             const { row } = params;
@@ -483,8 +504,22 @@ export default {
           }
         },
         {
+          title: '应用类型',
+          minWidth: 120,
+          key: 'applicationType',
+          sortable: true,
+          render: (h, params, vm) => {
+            const { row } = params;
+            const filterObj = this.applicationTypeList.find(item => {
+              return item.code === row.applicationType;
+            });
+            // if (JSON.stringify(filterObj) !== '{}') {
+            return <div>{filterObj !== null ? filterObj.name : row.applicationType }</div>;
+          }
+        },
+        {
           title: '操作',
-          minWidth: 200,
+          minWidth: 170,
           key: 'handle',
           options: ['view', 'edit', 'delete', 'onSale']
         }
@@ -493,7 +528,8 @@ export default {
       productDetail: productDetail,
       exportExcelLoading: false,
       exportType: 'xlsx',
-      downloadLoading: false
+      downloadLoading: false,
+      applicationTypeList: []
     };
   },
   computed: {
@@ -505,6 +541,7 @@ export default {
     }
   },
   mounted() {
+    this.getApplications();
   },
 
   created() {
@@ -519,6 +556,7 @@ export default {
       rows: 0
     }).then(res => {
       this.uiPositionData = res.array;
+      this.originalUiPositionData = _.cloneDeep(this.uiPositionData);
       this.createLoading = false;
       this.getTableData();
     }).catch(() => {
@@ -593,7 +631,7 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.productDetail.applicationType = this.applicationType;
+          // this.productDetail.applicationType = this.applicationType;
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
             this.createProductShelve();
@@ -651,10 +689,9 @@ export default {
       this.productDetail.shelfStatus = value;
     },
     addChildren() {
-      if (this.tempModalType !== this.modalType.create) {
-        this.resetFields();
-      }
+      this.resetFields();
       this.tempModalType = this.modalType.create;
+      this.productDetail.applicationType = this.applicationType;
       this.modalEdit = true;
     },
     onSale(params) {
@@ -682,13 +719,17 @@ export default {
       // this.shelfSpecificationModel.push(temp)
       // this.$refs.shelfSpecificationSelect.setQuery(temp)
       this.setDefaultUploadList(params.row);
+      this.$refs.modalEdit.resetFields();
       this.modalEdit = true;
     },
     resetFields() {
       this.$refs.modalEdit.resetFields();
       this.$refs.uploadMain.clearFileList();
       this.uploadListMain = [];
+      this.optionsShelfSpecification = [];
+      this.productDetail = {};
       this.productDetail = this._.cloneDeep(productDetail);
+      console.log('this.productDetail' + JSON.stringify(this.productDetail));
     },
     setDefaultUploadList(res) {
       if (res.image != null) {
@@ -710,22 +751,10 @@ export default {
         this.searchLoading = false;
       });
     },
-    // exportExcel() {
-    //   this.exportExcelLoading = true;
-    //   getProductShelvesPages({}).then(res => {
-    //     if (res.array.length > 0) {
-    //       this.$refs.tables.exportCsv({
-    //         filename: `table-${new Date().valueOf()}.csv`,
-    //         columns: this.columns.filter((col, index) => index !== 0),
-    //         data: res.array
-    //       });
-    //     }
-    //     this.exportExcelLoading = false;
-    //   });
-    // },
     handleDownload() {
       // 导出不分页
       this.searchRowData.rows = null;
+      this.searchRowData.applicationType = this.applicationType;
       getProductShelvesPages(this.searchRowData).then(res => {
         const tableData = res.array;
         // 表格数据导出字段翻译
@@ -740,6 +769,18 @@ export default {
           data: tableData
         });
       });
+    },
+    getApplications() {
+      getDictionary({ code: 'applications' }).then(res => {
+        if (res.entries) {
+          this.applicationTypeList = res.entries;
+        }
+      });
+    },
+    applicationTypeChange(value) {
+      this.productDetail.applicationType = value;
+      this.uiPositionData = this.originalUiPositionData;
+      this.uiPositionData = this.uiPositionData.filter(item => item.applicationType == value);
     }
   }
 };

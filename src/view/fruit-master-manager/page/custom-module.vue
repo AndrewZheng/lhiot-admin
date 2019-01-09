@@ -602,8 +602,9 @@ export default {
       this.goodsModuleDetail.customPlanList.forEach(element => {
         element.isEdit = false;
       });
-      console.log('handleEdit' + JSON.stringify(this.goodsModuleDetail.customPlanList));
+      // console.log('handleEdit' + JSON.stringify(this.goodsModuleDetail.customPlanList));
       this.setDefaultUploadList(params.row);
+      this.$refs.modalEdit.resetFields();
       this.modalEdit = true;
     },
     deleteTable(ids) {

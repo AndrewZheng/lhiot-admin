@@ -677,6 +677,7 @@ export default {
       this.shelfSpecificationLoading = true;
       getProductShelvesPages({
         keyword: value + '',
+        applicationType: this.applicationType,
         page: '1',
         rows: '5',
         shelfStatus: 'ON'
@@ -780,9 +781,7 @@ export default {
       });
     },
     handleAdd() {
-      if (this.tempModalType !== this.modalType.create) {
-        this.resetFields();
-      }
+      this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.create;
       // 对象初始化
       this.rowData = {};
@@ -833,6 +832,7 @@ export default {
       });
     },
     handleEdit(params) {
+      this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.edit;
       this.loading = true;
       this.showHeader = true;

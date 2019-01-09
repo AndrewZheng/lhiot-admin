@@ -14,7 +14,7 @@
           </i>
           <span v-show="loading !== 1" class="vicp-hint">{{ lang.hint }}</span>
           <span v-show="!isSupported" class="vicp-no-supported-hint">{{ lang.noSupported }}</span>
-          <input v-show="false" v-if="step == 1" ref="fileinput" type="file" @change="handleChange">
+          <input v-show="false" v-if="step == 1" ref="fileinput" type="file" @change="handleChange"></Input>
         </div>
         <div v-show="hasError" class="vicp-error">
           <i class="vicp-icon2"/> {{ errorMsg }}
@@ -54,7 +54,7 @@
             </div>
 
             <div class="vicp-range">
-              <input :value="scale.range" type="range" step="1" min="0" max="100" @input="zoomChange">
+              <input :value="scale.range" type="range" step="1" min="0" max="100" @input="zoomChange"></Input>
               <i class="vicp-icon5" @mousedown="startZoomSub" @mouseout="endZoomSub" @mouseup="endZoomSub"/>
               <i class="vicp-icon6" @mousedown="startZoomAdd" @mouseout="endZoomAdd" @mouseup="endZoomAdd"/>
             </div>

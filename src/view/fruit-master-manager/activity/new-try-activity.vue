@@ -294,6 +294,7 @@ export default {
       this.shelfSpecificationLoading = true;
       getProductShelvesPages({
         keyword: value + '',
+        applicationType: this.applicationType,
         page: '1',
         rows: '5',
         shelfStatus: 'ON'
@@ -374,6 +375,7 @@ export default {
       this.getTableData();
     },
     addChildren() {
+      // this.$refs.modalEdit.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.tempModalType = this.modalType.create;
         this.goodsDetail = this._.cloneDeep(goodsDetail);
@@ -381,6 +383,7 @@ export default {
       this.modalEdit = true;
     },
     handleEdit(params) {
+      // this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.edit;
       this.goodsDetail = this._.clone(params.row);
       this.modalEdit = true;
