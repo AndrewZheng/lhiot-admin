@@ -2,15 +2,15 @@
   <div>
     <tinymce-editor id="tinymce" ref="editor" v-model="content" :height="300" />
     <img-upload
-    :show-upload-list="false"
-    :default-list="defaultList"
-    :max-size="2048"
-    :img-list.sync="imgList"
-    multiple
-    type='drag'
-    class="mt10"
-    width="60"
-    height="60"
+      :show-upload-list="false"
+      :default-list="defaultList"
+      :max-size="2048"
+      :img-list.sync="imgList"
+      multiple
+      type="drag"
+      class="mt10"
+      width="60"
+      height="60"
     />
   </div>
 </template>
@@ -20,19 +20,18 @@ import tinymceEditor from '_c/tinymce-editor';
 import ImgUpload from '_c/img-upload';
 
 export default {
-  name: 'editor_page',
+  name: 'EditorPage',
   components: {
     tinymceEditor,
     ImgUpload
   },
-  data () {
+  data() {
     return {
       content: '',
       defaultList: [],
       imgList: []
     };
   },
-  methods: {},
   watch: {
     content(val, oldVal) {
       console.log(`new: ${val}, old: ${oldVal}`);
@@ -40,9 +39,9 @@ export default {
     imgList(val, oldVal) {
       console.log(`new: ${val}, old: ${oldVal}`);
     }
-  }
+  },
+  methods: {}
 };
 </script>
-
 <style>
 </style>

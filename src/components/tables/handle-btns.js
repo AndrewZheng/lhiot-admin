@@ -1,3 +1,5 @@
+import { onSaleStatus } from '../../libs/enumerate';
+
 const btns = {
   view: (h, params, vm) => {
     return h('Button', {
@@ -128,6 +130,7 @@ const btns = {
       })]);
     }
   },
+  // 商品上下架操作
   onSale: (h, params, vm) => {
     const {
       row
@@ -188,6 +191,73 @@ const btns = {
               type: 'md-cloud-download',
               size: 16,
               color: '#fff'
+            }
+          })
+        ])
+      ]);
+    }
+  },
+  // 定制计划商品上下架操作
+  customOnSale: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.status === onSaleStatus.VALID) {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要下架该商品吗?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('custom-on-sale', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-cloud-download',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
+    } else {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要上架该商品吗?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('custom-on-sale', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-cloud-upload',
+              size: 16,
+              color: '#green'
             }
           })
         ])
@@ -260,6 +330,7 @@ const btns = {
       }
     })]);
   },
+  // 邮费复制操作
   copy: (h, params, vm) => {
     return h('Button', {
       props: {
@@ -282,15 +353,16 @@ const btns = {
       }
     })]);
   },
+  // 用户锁定状态按钮
   usable: (h, params, vm) => {
     const {
       row
     } = params;
-    if (row.userStatus) {
+    if (row.locked === 'LOCK') {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要禁用该账号吗?'
+          title: '确认要解除该账号的禁用吗?'
         },
         style: {
           marginRight: '5px'
@@ -309,7 +381,7 @@ const btns = {
         }, [
           h('Icon', {
             props: {
-              type: 'md-pause',
+              type: 'md-unlock',
               size: 16,
               color: '#fff'
             }
@@ -320,7 +392,7 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要解除该账号的禁用吗?'
+          title: '确认要禁用该账号吗?'
         },
         style: {
           marginRight: '5px'
@@ -339,13 +411,178 @@ const btns = {
         }, [
           h('Icon', {
             props: {
-              type: 'md-play',
+              type: 'md-lock',
               size: 16,
               color: '#fff'
             }
           })
         ])
       ]);
+    }
+  },
+  // 鲜果师审核<Icon custom="iconfont icon-bumenzhinenggongzuoshenhe"/>
+  auditor: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.auditStatus === 'UNAUDITED') {
+      return h('Button', {
+        props: {
+          type: 'success',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-auditor', params);
+          }
+        }
+      }, [h('Icon', {
+        props: {
+          type: 'md-hammer', // iconfont icon-shenhe
+          size: 16,
+          color: '#fff'
+        }
+      })]);
+    }
+  },
+  // articleStatus发布状态（PUBLISH-发布 UN_PUBLISH-未发布）
+  onArticleStatus: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.articleStatus === 'PUBLISH') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要把该文章改未发布吗?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-publish', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-cloud-download',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
+    } else {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要把该文章改为发布吗?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-publish', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-cloud-upload',
+              size: 16,
+              color: '#green'
+            }
+          })
+        ])
+      ]);
+    }
+  },
+  customPlanProduct: (h, params, vm) => {
+    return h('Button', {
+      props: {
+        type: 'info',
+        size: 'small'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        click: () => {
+          vm.$emit('on-custom-plan-product', params);
+        }
+      }
+    }, [h('Icon', {
+      props: {
+        type: 'md-settings',
+        size: 16,
+        color: '#fff'
+      }
+    })]);
+  },
+  inlineEdit: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.isEdit === false) {
+      return h('Button', {
+        props: {
+          type: 'warning',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-inline-edit', params);
+          }
+        }
+      }, [h('Icon', {
+        props: {
+          type: 'md-create',
+          size: 16,
+          color: '#fff'
+        }
+      })]);
+    } else {
+      return h('Button', {
+        props: {
+          type: 'success',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-inline-save', params);
+          }
+        }
+      }, [h('Icon', {
+        props: {
+          type: 'md-checkmark',
+          size: 16,
+          color: '#green'
+        }
+      })]);
     }
   }
 };

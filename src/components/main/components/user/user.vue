@@ -25,7 +25,7 @@ export default {
     ...mapActions([
       'handleLogOut'
     ]),
-    handleClick (name) {
+    handleClick(name) {
       switch (name) {
         case 'logout':
           this.handleLogOut().then(() => {

@@ -1,41 +1,108 @@
-let mixin = {
+import {
+  customOrderStatusConvert,
+  customPeriodConvert, customPlanStatusConvert,
+  deliveryTypeCustomConvert, doctorLevelConvert, doctorStatusConvert, hotConvert, onSaleStatusConvert,
+  orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert
+} from '../libs/converStatus';
+
+const mixin = {
   data() {
     return {
       // 待翻译字典对象信息
       userStatus: [{
-          key: 'INITIAL',
-          value: '初始化'
-        },
-        {
-          key: 'AVAILABLE',
-          value: '可用'
-        },
-        {
-          key: 'UNAVAILABLE',
-          value: '不可用'
-        },
-        {
-          key: 'LOCK',
-          value: '锁定，暂不可用'
-        },
-        {
-          key: 'DELETE',
-          value: '删除，永不可用'
-        },
-        {
-          key: 'UNKNOWN',
-          value: '未知'
-        }
+        key: 'INITIAL',
+        value: '初始化'
+      },
+      {
+        key: 'AVAILABLE',
+        value: '可用'
+      },
+      {
+        key: 'UNAVAILABLE',
+        value: '不可用'
+      },
+      {
+        key: 'LOCK',
+        value: '锁定，暂不可用'
+      },
+      {
+        key: 'DELETE',
+        value: '删除，永不可用'
+      },
+      {
+        key: 'UNKNOWN',
+        value: '未知'
+      }
       ]
     };
+  },
+  filters: {
+    // 计算分转元 保留两位小数
+    fenToYuanDot2Filters(number) {
+      if (typeof number === 'number') {
+        return '¥' + (number / 100.00).toFixed(2);
+      }
+      return number;
+    },
+    // 结算状态
+    settlementStatusFilters(name) {
+      return settlementStatusConvert(name).label;
+    },
+    // 鲜果师等级
+    doctorLevelFilters(name) {
+      return doctorLevelConvert(name).label;
+    },
+    // 鲜果师状态
+    doctorStatusFilters(name) {
+      return doctorStatusConvert(name).label;
+    },
+    // 明星鲜果师
+    hotFilters(name) {
+      return hotConvert(name).label;
+    },
+    // 订单状态
+    orderStatusFilters(status) {
+      return orderStatusConvert(status).label;
+    },
+    // 提货方式
+    receivingWayFilters(status) {
+      return receivingWayConvert(status).label;
+    },
+    // 订单类型
+    orderTypeFilters(status) {
+      return orderTypeConvert(status).label;
+    },
+    // 定制周期
+    customPeriodFilters(status) {
+      return customPeriodConvert(status).label;
+    },
+    // 定制状态
+    customOrderStatusFilters(status) {
+      return customOrderStatusConvert(status).label;
+    },
+    // 定制配送方式
+    deliveryTypeCustomFilters(status) {
+      return deliveryTypeCustomConvert(status).label;
+    },
+    // 商品上架
+    onSaleStatusFilters(status) {
+      return onSaleStatusConvert(status).label;
+    },
+    // 定制计划商品上架
+    customPlanStatusFilters(status) {
+      return customPlanStatusConvert(status).label;
+    }
   },
   computed: {
     userInfo() {
       return this.$store.getters.getUserInfo;
+    },
+    applicationType() {
+      return this.$store.getters.systemCurrent.applicationType;
     }
   },
   methods: {
-    turnToPage (route) {
+    turnToPage(route) {
       let { name, params, query } = {};
       if (typeof route === 'string') name = route;
       else {
@@ -179,8 +246,8 @@ let mixin = {
       return month + '-' + day + ' ' + weekdayStr + ' ';
     },
     getUrlParam(name) {
-      let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
-      let result = window.location.search.substr(1).match(reg);
+      const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+      const result = window.location.search.substr(1).match(reg);
       return result ? decodeURIComponent(result[2]) : null;
     },
     logout() {
@@ -230,7 +297,7 @@ let mixin = {
     getDictValueByKey(list, key) {
       console.log('getDictValueByKey:key：' + key);
       if (list.length !== 0) {
-        let column = list.filter(item => item.key == key);
+        const column = list.filter(item => item.key == key);
         return column.length > 0 ? column[0].value : '';
       }
       return '';

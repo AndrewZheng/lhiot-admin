@@ -9,15 +9,26 @@ echarts.registerTheme('tdTheme', tdTheme);
 export default {
   name: 'ChartBar',
   props: {
-    value: Object,
-    text: String,
-    subtext: String
+    value: {
+      type: Object,
+      default() {
+        return {};
+      }
+    },
+    text: {
+      type: String,
+      default: ''
+    },
+    subtext: {
+      type: String,
+      default: ''
+    }
   },
-  mounted () {
+  mounted() {
     this.$nextTick(() => {
-      let xAxisData = Object.keys(this.value);
-      let seriesData = Object.values(this.value);
-      let option = {
+      const xAxisData = Object.keys(this.value);
+      const seriesData = Object.values(this.value);
+      const option = {
         title: {
           text: this.text,
           subtext: this.subtext,
@@ -37,7 +48,7 @@ export default {
           }
         ]
       };
-      let dom = echarts.init(this.$refs.dom, 'tdTheme');
+      const dom = echarts.init(this.$refs.dom, 'tdTheme');
       dom.setOption(option);
     });
   }

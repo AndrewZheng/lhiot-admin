@@ -1,6 +1,14 @@
 <template>
   <div class="tinymce">
-    <editor :id="id" v-model="content" :init="defalutOps" @onInit="handleInit" @onChange="handleChange" @onKeyUp="handleKeyup" class="tinymce-textarea"/>
+    <editor
+      :id="id"
+      v-model="content"
+      :init="defalutOps"
+      class="tinymce-textarea"
+      @onInit="handleInit"
+      @onChange="handleChange"
+      @onKeyUp="handleKeyup"
+    />
     <div class="editor-custom-btn-container">
       <file-upload class="editor-upload-btn" @successCBK="handleSuccessCBK"/>
     </div>
@@ -8,66 +16,23 @@
 </template>
 
 <script>
-import tinymce from 'tinymce/tinymce';
-import 'tinymce/themes/modern/theme';
 import Editor from '@tinymce/tinymce-vue';
-// Any plugins you want to use has to be imported
-import 'tinymce/plugins/advlist';
-import 'tinymce/plugins/wordcount';
-import 'tinymce/plugins/autolink';
-import 'tinymce/plugins/autosave';
-import 'tinymce/plugins/charmap';
-import 'tinymce/plugins/codesample';
-import 'tinymce/plugins/contextmenu';
-import 'tinymce/plugins/emoticons';
-import 'tinymce/plugins/fullscreen';
-import 'tinymce/plugins/hr';
-import 'tinymce/plugins/imagetools';
-import 'tinymce/plugins/insertdatetime';
-import 'tinymce/plugins/link';
-import 'tinymce/plugins/media';
-import 'tinymce/plugins/noneditable';
-import 'tinymce/plugins/paste';
-import 'tinymce/plugins/print';
-import 'tinymce/plugins/searchreplace';
-import 'tinymce/plugins/tabfocus';
-import 'tinymce/plugins/template';
-import 'tinymce/plugins/textpattern';
-import 'tinymce/plugins/visualblocks';
-import 'tinymce/plugins/anchor';
-import 'tinymce/plugins/autoresize';
-import 'tinymce/plugins/bbcode';
-import 'tinymce/plugins/code';
-import 'tinymce/plugins/colorpicker';
-import 'tinymce/plugins/directionality';
-import 'tinymce/plugins/fullpage';
-import 'tinymce/plugins/help';
-import 'tinymce/plugins/image';
-import 'tinymce/plugins/importcss';
-import 'tinymce/plugins/legacyoutput';
-import 'tinymce/plugins/lists';
-import 'tinymce/plugins/nonbreaking';
-import 'tinymce/plugins/pagebreak';
-import 'tinymce/plugins/preview';
-import 'tinymce/plugins/save';
-import 'tinymce/plugins/spellchecker';
-import 'tinymce/plugins/table';
-import 'tinymce/plugins/textcolor';
-import 'tinymce/plugins/toc';
-import 'tinymce/plugins/visualchars';
-import _ from 'lodash';
 import plugins from './plugins';
 import toolbar from './toolbar';
 import { PcLockr, enums } from '@/util/';
 import fileUpload from './components/fileUpload';
 
 export default {
-  name: 'tinymce-editor',
+  name: 'TinymceEditor',
   components: { Editor, fileUpload },
   props: {
     id: {
       default: function() {
-        return 'vue-tinymce-'+ new Date().getTime() + ((Math.random() * 1000).toFixed(0) + '');
+        return (
+          'vue-tinymce-' +
+          new Date().getTime() +
+          ((Math.random() * 1000).toFixed(0) + '')
+        );
       },
       type: String
     },
@@ -106,7 +71,7 @@ export default {
       default: 300,
       required: false
     },
-     /**
+    /**
      * @description 设置change事件触发时间间隔
      */
     changeInterval: {
@@ -128,13 +93,24 @@ export default {
       cTinyMce: null,
       checkerTimeout: null,
       isTyping: false,
+      tinymceId: this.id,
       defalutOps: {
-        language_url: '/tinymce/zh_CN.js',
         language: 'zh_CN',
-        skin_url: '/tinymce/skins/lightgray',
+        selector: `#${this.tinymceId}`,
         height: this.height,
+        body_class: 'panel-body ',
+        object_resizing: false,
         plugins: this.plugins,
         toolbar: this.toolbar,
+        end_container_on_empty_block: true,
+        powerpaste_word_import: 'clean',
+        code_dialog_height: 450,
+        code_dialog_width: 1000,
+        advlist_bullet_styles: 'square',
+        advlist_number_styles: 'default',
+        default_link_target: '_blank',
+        link_title: false,
+        nonbreaking_force_tab: true, // inserting nonbreaking space &nbsp; need Nonbreaking Space Plugin
         branding: false,
         images_upload_url:
           'https://resource.food-see.com/v1/upload/product_image',
@@ -150,7 +126,7 @@ export default {
           input.onchange = function() {
             var file = this.files[0];
             var id = 'blobid' + new Date().getTime();
-            var blobCache = tinymce.activeEditor.editorUpload.blobCache;
+            var blobCache = window.tinymce.activeEditor.editorUpload.blobCache;
             var blobInfo = blobCache.create(id, file);
             blobCache.add(blobInfo);
             cb(blobInfo.blobUri(), { title: file.name });
@@ -160,13 +136,13 @@ export default {
       }
     };
   },
-  created() {
-    if (typeof tinymce === 'undefined') throw new Error('tinymce undefined');
-  },
   computed: {
     cacheKey() {
-      return enums.EDITOR_CACHE+ '_'+ this.id;
+      return enums.EDITOR_CACHE + '_' + this.tinymceId;
     }
+  },
+  created() {
+    if (typeof tinymce === 'undefined') throw new Error('tinymce undefined');
   },
   mounted() {
     // 如果本地有存储加载本地存储内容
@@ -178,13 +154,27 @@ export default {
     console.log('init content: ', this.content);
     this.initTinymce();
   },
+  beforeDestroy() {
+    this.editor.remove();
+    // 清除掉localcahe
+    if (PcLockr.get(this.cacheKey)) {
+      PcLockr.delete(this.cacheKey);
+    }
+  },
+  destroyed() {
+    this.destroyTinymce();
+  },
   methods: {
     initTinymce() {
       const ops = Object.assign({}, this.defalutOps, this.other0ptions);
-      tinymce.init(ops);
+      window.tinymce.init(ops);
+    },
+    destroyTinymce() {
+      const tinymce = window.tinymce.get(this.tinymceId);
+      if (tinymce) { tinymce.destroy(); }
     },
     handleInit() {
-      this.editor=tinymce.get(this.id);
+      this.editor = window.tinymce.get(this.tinymceId);
       this.editor.setContent(this.content);
       this.$emit('input', this.content);
     },
@@ -203,7 +193,7 @@ export default {
       this.$emit('input', this.editor.getContent());
     },
     handleImgUpload(blobInfo, success, failure) {
-      let formdata = new FormData();
+      const formdata = new FormData();
       formdata.set('file', blobInfo.blob());
       this.$http
         .request({
@@ -220,23 +210,35 @@ export default {
     },
     handleSuccessCBK(file) {
       console.log('file object:', file);
-      let sourceCode='';
-      if (file.fileType=='video') {
-        sourceCode= '<video width="' + file.width + '" height="' + file.height + '"' + (file.poster ? ' poster="' + file.poster + '"' : '') + ' controls="controls">\n'+
-                    '<source src="' + file.fileUrl + '"' + (file.source1mime ? ' type="' + file.source1mime + '"' : '') + ' />' + '</video>';
+      let sourceCode = '';
+      if (file.fileType == 'video') {
+        sourceCode =
+          '<video width="' +
+          file.width +
+          '" height="' +
+          file.height +
+          '"' +
+          (file.poster ? ' poster="' + file.poster + '"' : '') +
+          ' controls="controls">\n' +
+          '<source src="' +
+          file.fileUrl +
+          '"' +
+          (file.source1mime ? ' type="' + file.source1mime + '"' : '') +
+          ' />' +
+          '</video>';
       } else {
-        sourceCode='<audio controls>' + '\n<source src="' + file.fileUrl + '"' + (file.source1mime ? ' type="' + file.source1mime + '"' : '') + ' />\n' + '</audio>';
+        sourceCode =
+          '<audio controls>' +
+          '\n<source src="' +
+          file.fileUrl +
+          '"' +
+          (file.source1mime ? ' type="' + file.source1mime + '"' : '') +
+          ' />\n' +
+          '</audio>';
       }
       // 根据上传的文件类型来插入源码
       console.log(`sourceCode: ${sourceCode}`);
       this.editor.insertContent(sourceCode);
-    }
-  },
-  beforeDestroy() {
-    this.editor.remove();
-    // 清除掉localcahe
-    if (PcLockr.get(this.cacheKey)) {
-      PcLockr.delete(this.cacheKey);
     }
   }
 };

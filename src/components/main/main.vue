@@ -1,11 +1,26 @@
 <template>
   <Layout style="height: 100%" class="main">
-    <Sider hide-trigger collapsible :width="256" :collapsed-width="64" v-model="collapsed" class="left-sider" :style="{overflow: 'hidden'}">
-      <side-menu accordion ref="sideMenu" :active-name="$route.name" :collapsed="collapsed" @on-select="turnToPage" :menu-list="menuList">
+    <Sider
+      :width="256"
+      :collapsed-width="64"
+      v-model="collapsed"
+      :style="{overflow: 'hidden'}"
+      hide-trigger
+      collapsible
+      class="left-sider"
+    >
+      <side-menu
+        ref="sideMenu"
+        :active-name="$route.name"
+        :collapsed="collapsed"
+        :menu-list="menuList"
+        accordion
+        @on-select="turnToPage"
+      >
         <!-- 需要放在菜单上面的内容，如Logo，写在side-menu标签内部，如下 -->
         <div class="logo-con">
-          <img v-show="!collapsed" :src="maxLogo" key="max-logo" />
-          <img v-show="collapsed" :src="minLogo" key="min-logo" />
+          <img v-show="!collapsed" key="max-logo" :src="maxLogo">
+          <img v-show="collapsed" key="min-logo" :src="minLogo">
         </div>
       </side-menu>
     </Sider>
@@ -13,15 +28,20 @@
       <Header class="header-con">
         <header-bar :collapsed="collapsed" @on-coll-change="handleCollapsedChange">
           <user :user-avator="userAvator"/>
-          <System style="margin-right: 10px;" :system="systemCurrent" :system-list="systemList" />
-          <language @on-lang-change="setLocal" style="margin-right: 10px;" :lang="local" />
-          <fullscreen v-model="isFullscreen" style="margin-right: 10px;" />
+          <System :system="systemCurrent" :system-list="systemList" style="margin-right: 10px;"/>
+          <language :lang="local" style="margin-right: 10px;" @on-lang-change="setLocal"/>
+          <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
         </header-bar>
       </Header>
       <Content class="main-content-con">
         <Layout class="main-layout-con">
           <div class="tag-nav-wrapper">
-            <tags-nav :value="$route" @input="handleClick" :list="tagNavList" @on-close="handleCloseTag"/>
+            <tags-nav
+              :value="$route"
+              :list="tagNavList"
+              @input="handleClick"
+              @on-close="handleCloseTag"
+            />
           </div>
           <Content class="content-wrapper">
             <keep-alive :include="cacheList">
@@ -57,7 +77,7 @@ export default {
     User,
     System
   },
-  data () {
+  data() {
     return {
       collapsed: false,
       minLogo,
@@ -66,62 +86,37 @@ export default {
     };
   },
   computed: {
-    tagNavList () {
+    tagNavList() {
       return this.$store.state.app.tagNavList;
     },
-    tagRouter () {
+    tagRouter() {
       return this.$store.state.app.tagRouter;
     },
-    userAvator () {
+    userAvator() {
       return this.$store.state.user.avatorImgPath;
     },
-    cacheList () {
-      return this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : [];
+    cacheList() {
+      return this.tagNavList.length
+        ? this.tagNavList
+          .filter(item => !(item.meta && item.meta.notCache))
+          .map(item => item.name)
+        : [];
     },
-    menuList () {
+    menuList() {
       return this.$store.getters.menuList;
     },
     systemList() {
       return this.$store.getters.systemList;
     },
-    local () {
+    local() {
       return this.$store.state.app.local;
     },
-    systemCurrent () {
+    systemCurrent() {
       return this.$store.getters.systemCurrent;
     }
   },
-  methods: {
-    ...mapMutations([
-      'setBreadCrumb',
-      'setTagNavList',
-      'addTag',
-      'setLocal'
-    ]),
-    ...mapActions([
-      'handleLogin'
-    ]),
-    handleCollapsedChange (state) {
-      this.collapsed = state;
-    },
-    handleCloseTag (res, type, route) {
-      if (type === 'all') {
-        this.turnToPage('home');
-      } else if (routeEqual(this.$route, route)) {
-        if (type === 'others') {
-        } else {
-          const nextRoute = getNextRoute(this.tagNavList, route);
-          this.$router.push(nextRoute);
-        }
-      }
-      this.setTagNavList(res);
-    },
-    handleClick (item) {
-      this.turnToPage(item);
-    }
-  },
   watch: {
-    '$route' (newRoute) {
+    $route(newRoute) {
       const { name, query, params, meta } = newRoute;
       this.addTag({
         route: { name, query, params, meta },
@@ -132,7 +127,7 @@ export default {
       this.$refs.sideMenu.updateOpenName(newRoute.name);
     }
   },
-  mounted () {
+  mounted() {
     /**
      * @description 初始化设置面包屑导航和标签导航
      */
@@ -143,6 +138,27 @@ export default {
     this.setBreadCrumb(this.$route);
     // 设置初始语言
     this.setLocal(this.$i18n.locale);
+  },
+  methods: {
+    ...mapMutations(['setBreadCrumb', 'setTagNavList', 'addTag', 'setLocal']),
+    ...mapActions(['handleLogin']),
+    handleCollapsedChange(state) {
+      this.collapsed = state;
+    },
+    handleCloseTag(res, type, route) {
+      if (type === 'all') {
+        this.turnToPage('home');
+      } else if (routeEqual(this.$route, route)) {
+        if (type !== 'others') {
+          const nextRoute = getNextRoute(this.tagNavList, route);
+          this.$router.push(nextRoute);
+        }
+      }
+      this.setTagNavList(res);
+    },
+    handleClick(item) {
+      this.turnToPage(item);
+    }
   }
 };
 </script>

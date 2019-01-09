@@ -18,7 +18,7 @@ const router = new Router({
 const LOGIN_PAGE_NAME = 'login';
 const whiteList = ['/login', '/redirect', '/401', '/404', '/500'];
 // 如果在静态路由列表中
-const constantRouter= getNamesByRouters(constantRouterMap);
+const constantRouter = getNamesByRouters(constantRouterMap);
 
 // permission judge function
 function hasPermission(userPermission, currentRoute) {
@@ -41,13 +41,13 @@ router.beforeEach((to, from, next) => {
     } else {
       console.log('hasGetInfo: ', store.getters.hasGetInfo);
       if (!store.getters.hasGetInfo) {
-          store.dispatch('generateAllMenus').then(() => {
-            console.log('getActualRouter: ', store.getters.getActualRouter);
-            router.addRoutes(store.getters.getActualRouter);
-            next({ ...to,
-              replace: true
-            });
+        store.dispatch('generateAllMenus').then(() => {
+          console.log('getActualRouter: ', store.getters.getActualRouter);
+          router.addRoutes(store.getters.getActualRouter);
+          next({ ...to,
+            replace: true
           });
+        });
       } else {
         // 没有动态改变权限的需求可直接next()
         console.log('userPermission: ', store.getters.getUserPermission);

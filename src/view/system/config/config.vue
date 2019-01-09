@@ -1,20 +1,20 @@
 <template>
-<div class="m-config">
+  <div class="m-config">
 
-</div>
+  </div>
 </template>
 
 <script type='text/ecmascript-6'>
 export default {
+  filters: {},
+  components: {},
   data() {
     return {};
   },
+  computed: {},
   created() {},
   mounted() {},
-  computed: {},
-  filters: {},
-  methods: {},
-  components: {}
+  methods: {}
 };
 </script>
 

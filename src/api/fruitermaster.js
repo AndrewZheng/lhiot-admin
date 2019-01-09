@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-export const getMasterApplication = ({page, rows}) => {
+export const getMasterApplication = ({ page, rows }) => {
   const data = {
     page, rows
   };
@@ -11,7 +11,7 @@ export const getMasterApplication = ({page, rows}) => {
   });
 };
 
-export const getMasterManager = ({page, rows}) => {
+export const getMasterManager = ({ page, rows }) => {
   const data = {
     page, rows
   };
@@ -22,7 +22,7 @@ export const getMasterManager = ({page, rows}) => {
   });
 };
 
-export const getMasterSalary = ({page, rows}) => {
+export const getMasterSalary = ({ page, rows }) => {
   const data = {
     page, rows
   };
@@ -33,7 +33,7 @@ export const getMasterSalary = ({page, rows}) => {
   });
 };
 
-export const getFruitMasterUserData = ({page, rows}) => {
+export const getFruitMasterUserData = ({ page, rows }) => {
   const data = {
     page, rows
   };
@@ -44,7 +44,7 @@ export const getFruitMasterUserData = ({page, rows}) => {
   });
 };
 
-export const getFruitMastGoodsCategoryData = ({page, rows}) => {
+export const getFruitMastGoodsCategoryData = ({ page, rows }) => {
   const data = {
     page, rows
   };
@@ -55,7 +55,7 @@ export const getFruitMastGoodsCategoryData = ({page, rows}) => {
   });
 };
 
-export const getOnSaleData = ({page, rows}) => {
+export const getOnSaleData = ({ page, rows }) => {
   const data = {
     page, rows
   };
@@ -93,7 +93,7 @@ export const addProductCategories = (data) => {
 };
 
 // 根据Ids删除商品分类
-export const deleteProductCategories = ({ids}) => {
+export const deleteProductCategories = ({ ids }) => {
   return Vue.prototype.$http.request({
     url: '/product-categories/' + ids,
     method: 'delete'
@@ -101,14 +101,9 @@ export const deleteProductCategories = ({ids}) => {
 };
 
 // 修改商品分类
-export const putProductCategories = ({parentId, id, groupName, rank}) => {
-  const data = {
-    parentId,
-    groupName,
-    rank
-  };
+export const putProductCategories = (data) => {
   return Vue.prototype.$http.request({
-    url: '/product-categories/' + id,
+    url: '/product-categories/' + data.id,
     data,
     method: 'put'
   });
@@ -132,7 +127,7 @@ export const getProductPages = (data) => {
 };
 
 // 根据商品Ids删除商品
-export const deleteProduct = ({ids}) => {
+export const deleteProduct = ({ ids }) => {
   return Vue.prototype.$http.request({
     url: '/products/' + ids,
     method: 'delete'
@@ -140,7 +135,7 @@ export const deleteProduct = ({ids}) => {
 };
 
 // 根据Id查找商品
-export const getProduct = ({id}) => {
+export const getProduct = ({ id }) => {
   return Vue.prototype.$http.request({
     url: '/products/' + id,
     method: 'get'
@@ -175,7 +170,7 @@ export const getProductSpecificationsPages = (data) => {
 };
 
 // 根据商品规格Ids删除商品规格
-export const deleteProductSpecification = ({ids}) => {
+export const deleteProductSpecification = ({ ids }) => {
   return Vue.prototype.$http.request({
     url: '/product-specifications/' + ids,
     method: 'delete'
@@ -191,7 +186,7 @@ export const createProductSpecification = (data) => {
   });
 };
 
-/// 修改商品规格
+// / 修改商品规格
 export const editProductSpecification = (data) => {
   return Vue.prototype.$http.request({
     url: '/product-specifications/' + data.id,
@@ -200,7 +195,7 @@ export const editProductSpecification = (data) => {
   });
 };
 
-//根据条件分页查询商品上架信息列表
+// 根据条件分页查询商品上架信息列表
 export const getProductShelvesPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/product-shelves/pages',
@@ -209,15 +204,15 @@ export const getProductShelvesPages = (data) => {
   });
 };
 
-//根据商品上架Ids删除商品上架
-export const deleteProductShelve = ({ids}) => {
+// 根据商品上架Ids删除商品上架
+export const deleteProductShelve = ({ ids }) => {
   return Vue.prototype.$http.request({
     url: '/product-shelves/' + ids,
     method: 'delete'
   });
 };
 
-//添加商品上架
+// 添加商品上架
 export const createProductShelve = (data) => {
   return Vue.prototype.$http.request({
     url: '/product-shelves/',
@@ -226,7 +221,7 @@ export const createProductShelve = (data) => {
   });
 };
 
-//修改商品上架
+// 修改商品上架
 export const editProductShelve = (data) => {
   return Vue.prototype.$http.request({
     url: '/product-shelves/' + data.id,
@@ -235,17 +230,8 @@ export const editProductShelve = (data) => {
   });
 };
 
-//查询UI位置列表集合（可包括位置的子板块）
-export const checkUiPosition = (data) => {
-  return Vue.prototype.$http.request({
-    url: '/ui-positions/',
-    data,
-    method: 'post'
-  });
-};
-
-//根据Id查找商品上架
-export const getProductShelve = ({id}) => {
+// 根据Id查找商品上架
+export const getProductShelve = ({ id }) => {
   return Vue.prototype.$http.request({
     url: '/product-shelves/' + id,
     method: 'get'
@@ -262,14 +248,14 @@ export const getuiPositionsPages = (data) => {
 };
 
 // 根据Id查找UI位置
-export const getUiPosition = ({id}) => {
+export const getUiPosition = ({ id }) => {
   return Vue.prototype.$http.request({
     url: '/ui-positions/' + id,
     method: 'get'
   });
 };
 
-//根据条件分页查询广告信息列表
+// 根据条件分页查询广告信息列表
 export const getAdvertisementsPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/advertisements/pages',
@@ -278,7 +264,7 @@ export const getAdvertisementsPages = (data) => {
   });
 };
 
-//添加广告
+// 添加广告
 export const createAdvertisement = (data) => {
   return Vue.prototype.$http.request({
     url: '/advertisements/',
@@ -287,15 +273,32 @@ export const createAdvertisement = (data) => {
   });
 };
 
-//根据广告Ids删除广告
-export const deleteAdvertisement = ({ids}) => {
+// 根据广告Ids删除广告
+export const deleteAdvertisement = ({ ids }) => {
   return Vue.prototype.$http.request({
     url: '/advertisements/' + ids,
     method: 'delete'
   });
 };
 
-//根据条件分页查询商品版块信息列表
+// 修改广告
+export const editAdvertisement = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/advertisements/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据Id查找广告
+export const getAdvertisement = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/advertisements/' + id,
+    method: 'get'
+  });
+};
+
+// 根据条件分页查询商品版块信息列表
 export const getProductSectionsPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/product-sections/pages',
@@ -304,12 +307,420 @@ export const getProductSectionsPages = (data) => {
   });
 };
 
-//根据商品Ids删除商品版块
-export const deleteProductSection = ({ids}) => {
+// 根据商品Ids删除商品版块
+export const deleteProductSection = ({ ids }) => {
   return Vue.prototype.$http.request({
     url: '/product-sections/' + ids,
     method: 'delete'
   });
 };
 
+// 添加商品版块(包括添加商品关联关系)
+export const createProductSection = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/product-sections/',
+    data,
+    method: 'post'
+  });
+};
 
+// 修改商品版块
+export const editProductSection = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/product-sections/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 新增商品和板块的关联
+export const addProductSectionRelationBatch = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/product-sections/relation',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据关联id删除商品和板块关联
+export const deleteProductSectionRelationBatch = ({ sectionId, shelfIds }) => {
+  return Vue.prototype.$http.request({
+    url: '/product-sections/relation/batches?sectionId=' + sectionId + '&shelfIds=' + shelfIds,
+    method: 'delete'
+  });
+};
+
+// 根据条件分页查询定制板块信息列表
+export const getCustomPlanSectionsPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-sections/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据条件分页查询定制计划信息列表
+export const getCustomPlanPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plans/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 添加定制板块
+export const createCustomPlanSection = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-sections',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改定制板块
+export const editCustomPlanSection = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-sections/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据ids删除定制板块
+export const deletetCustomPlanSection = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-sections/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加定制版块与定制计划关系
+export const addCustomPlanSectionRelationBatch = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-sections/relation',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改定制板块关系
+export const editCustomPlanSectionRelation = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-sections/relation/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 批量删除定制版块与定制计划架关系
+export const deletetCustomPlanSectionRelationBatch = ({ sectionId, planIds }) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-sections/relation/batches?sectionId=' + sectionId + '&planIds=' + planIds,
+    method: 'delete'
+  });
+};
+
+// 查询用户分页列表
+export const getUserPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/users/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改用户锁状态
+export const editUser = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/users/' + data.id + '/locked-status?lockStatus=' + data.lockStatus,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询鲜果师申请记录列表
+export const getFruitDoctorsQualificationsPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/fruit-doctors/qualifications/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据id更新鲜果师申请记录
+export const editFruitDoctorsQualification = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/fruit-doctors/qualifications/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 查询鲜果师成员分页列表
+export const getFruitDoctorsSettlementPagesPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/fruit-doctors/settlement/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 结算申请修改
+export const editFruitDoctorsSettlement = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/fruit-doctors/settlement/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 查询鲜果师成员分页列表
+export const getFruitDoctorsPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/fruit-doctors/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改鲜果师成员信息
+export const editFruitDoctor = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/fruit-doctors/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询文章信息列表
+export const getArticlesPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/articles/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 添加文章
+export const createArticle = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/articles',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Id删除文章
+export const deleteArticle = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/articles/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改文章
+export const editArticle = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/articles/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 查询文章详情
+export const getArticle = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/articles/' + id,
+    method: 'get'
+  });
+};
+
+// 根据条件分页获取订单列表
+export const getOrdersPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/orders/pages/',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据订单code查询订单详情
+export const getOrderDetail = ({ code }) => {
+  return Vue.prototype.$http.request({
+    url: '/orders/' + code,
+    method: 'get'
+  });
+};
+
+// 海鼎订单调货
+export const transferHdOrder = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/orders/' + data.code + '/store?storeId=' + data.storeId,
+    method: 'put'
+  });
+};
+
+// 根据位置查询门店所有列表根据距离排序
+export const getStore = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/stores/pages',
+    data: data,
+    method: 'post'
+  });
+};
+
+// 根据条件分页查询定制订单信息列表
+export const getCustomOrdersPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-orders/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 查询定制计划规格基础数据分页列表
+export const getcustomPlanSpecificationStandardsPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-specification-standards/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据orderCode查询定制订单信息
+export const getcustomOrders = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-orders/' + id,
+    method: 'get'
+  });
+};
+
+// 根据条件分页查询新品尝鲜活动商品信息列表
+export const getActivityProductsPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/activity-products/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据ids删除新品尝鲜活动商品
+export const deleteActivityProduct = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/activity-products/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加新品尝鲜活动商品
+export const addActivityProduct = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/activity-products/',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改新品尝鲜活动商品
+export const editActivityProduct = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/activity-products/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 后台管理查询配送费规则列表
+export const getDeliveryFeeRulePages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/delivery-fee-rule/pages/',
+    data,
+    method: 'post'
+  });
+};
+
+// 添加配送费计算规则
+export const createDeliveryFeeRule = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/delivery-fee-rule',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据配送费规则模板Id删除
+export const deleteDeliveryFeeRule = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/delivery-fee-rule/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改配送费计算规则
+export const editDeliveryFeeRule = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/delivery-fee-rule/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询定制计划信息列表
+export const getCustomPlansPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plans/pages/',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据ids删除定制计划
+export const deleteCustomPlan = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plans/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加定制计划
+export const createCustomPlan = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plans',
+    data,
+    method: 'post'
+  });
+};
+
+// 定制计划详细信息
+export const getCustomPlan = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plans/' + id,
+    method: 'get'
+  });
+};
+
+// 修改定制计划
+export const editCustomPlan = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plans/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 定制计划上下架
+export const editCustomPlanStatus = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plans/' + data.id + '/status?status=' + data.status,
+    method: 'put'
+  });
+};
+
+// {id}修改定制计划周期类型信息
+export const editCustomPlanPeriod = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-periods/' + data.id,
+    data,
+    method: 'put'
+  });
+};

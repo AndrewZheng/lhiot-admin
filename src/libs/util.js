@@ -1,10 +1,36 @@
 import Cookies from 'js-cookie';
 // cookie保存的天数
 import config from '@/config';
-import {forEach, hasOneOf, objEqual} from '@/libs/tools';
+import { forEach, hasOneOf, objEqual } from '@/libs/tools';
 import _ from 'lodash';
 
 export const TOKEN_KEY = 'token';
+
+export const GOODS_STANDARD = 'goodsStandard';
+
+export const ARTICLE = 'article';
+
+export const setGoodsStandard = (goodsStandard) => {
+  const string = JSON.stringify(goodsStandard);
+  Cookies.set(GOODS_STANDARD, string, {
+    expires: config.cookieExpires || 1
+  });
+};
+
+export const getGoodsStandard = () => {
+  return JSON.parse(Cookies.get(GOODS_STANDARD));
+};
+
+export const setArticle = (article) => {
+  const string = JSON.stringify(article);
+  Cookies.set(ARTICLE, string, {
+    expires: config.cookieExpires || 1
+  });
+};
+
+export const getArticle = () => {
+  return JSON.parse(Cookies.get(ARTICLE));
+};
 
 export const setToken = (token) => {
   Cookies.set(TOKEN_KEY, token, {
@@ -34,10 +60,10 @@ const showThisMenuEle = (item, access) => {
  * @returns {Array}
  */
 export const getMenuByRouter = (list) => {
-  let res = [];
+  const res = [];
   forEach(list, item => {
     if (!item.meta || (item.meta && !item.meta.hideInMenu)) {
-      let obj = {
+      const obj = {
         icon: (item.meta && item.meta.icon) || '',
         name: item.name,
         meta: item.meta
@@ -77,15 +103,14 @@ export const getNamesByRouters = (routes) => {
  */
 export const filterLocalRoute = (routeList, routersLocal) => {
   let actualRouter = [];
-  let findLocalRoute = (array, base) => {
-    let replyResult = [];
+  const findLocalRoute = (array, base) => {
+    const replyResult = [];
     array.forEach(route => {
       // let pathKey = (base ? base + '/' : '') + route.path;
       // if (route.path == '/' || route.path == '/home') {
       //   pathKey = route.path;
       // }
       routeList.forEach(accessRoute => {
-        getParams;
         if (accessRoute.code === route.name) {
           if (Array.isArray(route.children)) {
             route.children = findLocalRoute(route.children, route.path);
@@ -110,15 +135,15 @@ export const filterLocalRoute = (routeList, routersLocal) => {
  * @returns {Array}
  */
 export const getBreadCrumbList = (route, homeRoute) => {
-  let routeMetched = route.matched;
+  const routeMetched = route.matched;
   let res = routeMetched.filter(item => {
     return item.meta === undefined || !item.meta.hide;
   }).map(item => {
-    let meta = {
+    const meta = {
       ...item.meta
     };
     if (meta.title && typeof meta.title === 'function') meta.title = meta.title(route);
-    let obj = {
+    const obj = {
       icon: (item.meta && item.meta.icon) || '',
       name: item.name,
       meta: meta
@@ -134,10 +159,10 @@ export const getBreadCrumbList = (route, homeRoute) => {
 };
 
 export const getRouteTitleHandled = route => {
-  let router = {
+  const router = {
     ...route
   };
-  let meta = {
+  const meta = {
     ...route.meta
   };
   if (meta.title && typeof meta.title === 'function') meta.title = meta.title(router);
@@ -167,12 +192,12 @@ export const getTagNavListFromLocalstorage = () => {
  */
 export const getHomeRoute = routers => {
   let i = -1;
-  let len = routers.length;
+  const len = routers.length;
   let homeRoute = {};
   while (++i < len) {
-    let item = routers[i];
+    const item = routers[i];
     if (item.children && item.children.length) {
-      let res = getHomeRoute(item.children);
+      const res = getHomeRoute(item.children);
       if (res.name) return res;
     } else {
       if (item.name === 'home') homeRoute = item;
@@ -192,7 +217,7 @@ export const getNewTagList = (list, newRoute) => {
     path,
     meta
   } = newRoute;
-  let newList = [...list];
+  const newList = [...list];
   if (newList.findIndex(item => item.name === name) >= 0) return newList;
   else {
     newList.push({
@@ -240,7 +265,7 @@ export const canTurnTo = (name, access, routes) => {
  */
 export const getParams = url => {
   const keyValueArr = url.split('?')[1].split('&');
-  let paramObj = {};
+  const paramObj = {};
   keyValueArr.forEach(item => {
     const keyValue = item.split('=');
     paramObj[keyValue[0]] = keyValue[1];
@@ -282,15 +307,15 @@ export const doCustomTimes = (times, callback) => {
  * @description 从Csv文件中解析出表格，解析成二维数组
  */
 export const getArrayFromFile = (file) => {
-  let nameSplit = file.name.split('.');
-  let format = nameSplit[nameSplit.length - 1];
+  const nameSplit = file.name.split('.');
+  const format = nameSplit[nameSplit.length - 1];
   return new Promise((resolve, reject) => {
-    let reader = new FileReader();
+    const reader = new FileReader();
     reader.readAsText(file); // 以文本格式读取
     let arr = [];
-    reader.onload = function (evt) {
-      let data = evt.target.result; // 读到的数据
-      let pasteData = data.trim();
+    reader.onload = function(evt) {
+      const data = evt.target.result; // 读到的数据
+      const pasteData = data.trim();
       arr = pasteData.split((/[\n\u0085\u2028\u2029]|\r\n?/g)).map(row => {
         return row.split('\t');
       }).map(item => {
@@ -311,7 +336,7 @@ export const getTableDataFromArray = (array) => {
   let columns = [];
   let tableData = [];
   if (array.length > 1) {
-    let titles = array.shift();
+    const titles = array.shift();
     columns = titles.map(item => {
       return {
         title: item,
@@ -319,7 +344,7 @@ export const getTableDataFromArray = (array) => {
       };
     });
     tableData = array.map(item => {
-      let res = {};
+      const res = {};
       item.forEach((col, i) => {
         res[titles[i]] = col;
       });
@@ -343,9 +368,9 @@ export const findNodeUpper = (ele, tag) => {
 };
 
 export const findNodeUpperByClasses = (ele, classes) => {
-  let parentNode = ele.parentNode;
+  const parentNode = ele.parentNode;
   if (parentNode) {
-    let classList = parentNode.classList;
+    const classList = parentNode.classList;
     if (classList && classes.every(className => classList.contains(className))) {
       return parentNode;
     } else {
@@ -358,9 +383,9 @@ export const findNodeDownward = (ele, tag) => {
   const tagName = tag.toUpperCase();
   if (ele.childNodes.length) {
     let i = -1;
-    let len = ele.childNodes.length;
+    const len = ele.childNodes.length;
     while (++i < len) {
-      let child = ele.childNodes[i];
+      const child = ele.childNodes[i];
       if (child.tagName === tagName) return child;
       else return findNodeDownward(child, tag);
     }
@@ -388,7 +413,7 @@ export const routeEqual = (route1, route2) => {
  * 判断打开的标签列表里是否已存在这个新添加的路由对象
  */
 export const routeHasExist = (tagNavList, routeItem) => {
-  let len = tagNavList.length;
+  const len = tagNavList.length;
   let res = false;
   doCustomTimes(len, (index) => {
     if (routeEqual(tagNavList[index], routeItem)) res = true;
@@ -397,7 +422,7 @@ export const routeHasExist = (tagNavList, routeItem) => {
 };
 
 // sessionStorage
-export const session = function (key, value) {
+export const session = function(key, value) {
   if (value === void (0)) {
     var lsVal = sessionStorage.getItem(key);
     if (lsVal && lsVal.indexOf('autostringify-') === 0) {
@@ -414,7 +439,7 @@ export const session = function (key, value) {
 };
 
 // 生成随机数
-export const getUUID = function (len) {
+export const getUUID = function(len) {
   len = len || 6;
   len = parseInt(len, 10);
   len = isNaN(len) ? 6 : len;
@@ -428,10 +453,10 @@ export const getUUID = function (len) {
 };
 
 // 深拷贝
-export const deepcopy = function (source) {
+export const deepcopy = function(source) {
   if (!source) return source;
-  let sourceCopy = source instanceof Array ? [] : {};
-  for (let item in source) {
+  const sourceCopy = source instanceof Array ? [] : {};
+  for (const item in source) {
     sourceCopy[item] = typeof source[item] === 'object' ? deepcopy(source[item]) : source[item];
   }
   return sourceCopy;
@@ -439,8 +464,8 @@ export const deepcopy = function (source) {
 
 // 菜单数据组织
 export const buildMenu = (array, ckey, isFind = true) => {
-  let menuData = [];
-  let indexKeys = Array.isArray(array) ? array.map((e) => {
+  const menuData = [];
+  const indexKeys = Array.isArray(array) ? array.map((e) => {
     return e.id;
   }) : [];
   ckey = ckey || 'parentid';
@@ -451,7 +476,7 @@ export const buildMenu = (array, ckey, isFind = true) => {
       menuData.push(deepcopy(e)); // 深拷贝
     } else if (Array.isArray(indexKeys)) {
       // 检测ckey有效性
-      let parentIndex = indexKeys.findIndex((id) => {
+      const parentIndex = indexKeys.findIndex((id) => {
         return id == e[ckey];
       });
       if (parentIndex === -1) {
@@ -460,7 +485,7 @@ export const buildMenu = (array, ckey, isFind = true) => {
     }
   });
   console.log('menuData parent level: ', menuData);
-  let findChildren = (parentArr) => {
+  const findChildren = (parentArr) => {
     if (Array.isArray(parentArr) && parentArr.length) {
       parentArr.forEach((parentNode) => {
         array.forEach((node) => {
@@ -486,11 +511,11 @@ export const buildMenu = (array, ckey, isFind = true) => {
 };
 
 export const getRoutes = (routeList) => {
-  let routeHash = {};
-  let setMenu2Hash = function (array, base) {
+  const routeHash = {};
+  const setMenu2Hash = function(array, base) {
     array.map(key => {
       if (key.path) {
-        let hashKey = ((base ? base + '/' : '') + key.path).replace(/^\//, '');
+        const hashKey = ((base ? base + '/' : '') + key.path).replace(/^\//, '');
         routeHash['/' + hashKey] = true;
         if (Array.isArray(key.children)) {
           setMenu2Hash(key.children, key.path);
@@ -500,7 +525,7 @@ export const getRoutes = (routeList) => {
   };
 
   if (Array.isArray(routeList)) {
-    let arrayMenus = buildMenu(routeList, 'parentid');
+    const arrayMenus = buildMenu(routeList, 'parentid');
     console.log('built menus: ', arrayMenus);
     setMenu2Hash(arrayMenus);
   }
@@ -525,7 +550,7 @@ export const convertTree = (tree, map, isExpand = false) => {
     let children = item[map.children];
 
     // 对应iview Tree Props
-    let obj = {
+    const obj = {
       expand: isExpand,
       disabled: false,
       disableCheckbox: false,
@@ -561,7 +586,7 @@ export const convertTreeCategory = (tree, map, isExpand = false) => {
     let children = item[map.children];
     // 如果有子节点，递归
     if (children.length > 0) {
-      count = count + 1
+      count = count + 1;
       children = convertTreeCategory(children, map, isExpand);
       result.push({
         ...item,
@@ -617,28 +642,39 @@ export const setTreeNodeChecked = (tree, ids) => {
   return tree;
 };
 
-export const getParent = (array, childs, ids) => {
-  array.forEach(item => {
-    if (Number(item.id) === Number(ids)) {
-      childs.push(item);
-      return childs;
-    }
-
-    if (item.children && item.children.length > 0) {
-      childs.push(item);
-      let rs = getParent(item.children, childs, ids);
-      if (rs) {
-        return rs;
-      } else {
-        let index = childs.indexOf(item);
-        if (index > -1) {
-          childs.splice(index, 1);
-        }
-      }
+export const getParent = (tree, map, id) => {
+  // let count = 0;
+  const parentIds = [];
+  // let find = false
+  // 遍历 tree
+  tree.forEach((item) => {
+    const children = item[map.children];
+    console.log('一');
+    // 如果有子节点，递归
+    if (children.length > 0) {
+      // count = count + 1;
+      console.log('二');
+      getParent(children, map, id);
+      console.log('三');
+    } else {
+      console.log('四');
+      // if (count > 0) {
+      //   // disabled: true,
+      //   if (!find) {
+      //     parentIds[0] = itemId;
+      //   }
+      // } else {
+      //   // disabled: false,
+      //   if (itemId === id) {
+      //     console.log(itemId);
+      //     parentIds[1] = itemId;
+      //     find = true
+      //   }
+      // }
     }
   });
-
-  return false;
+  console.log('五');
+  return parentIds;
 };
 
 /**
@@ -677,11 +713,35 @@ export const changeObjKeyName = (obj, oldKey, newKey) => {
  * @param data2
  */
 export const compareData = (date1, date2) => {
-  let oDate1 = new Date(date1);
-  let oDate2 = new Date(date2);
-  return oDate1.getTime() > oDate2.getTime()
-}
+  const oDate1 = new Date(date1);
+  const oDate2 = new Date(date2);
+  return oDate1.getTime() > oDate2.getTime();
+};
 
+/**
+ * 计算分转元 保留两位小数
+ */
+export const fenToYuanDot2 = (number) => {
+  if (typeof number === 'number') {
+    return '¥' + (number / 100.00).toFixed(2);
+  }
+  return number;
+};
 
+export const yuanToFenNumber = (value) => {
+  if (typeof value === 'number') {
+    return Math.round((value * 100));
+  } else if (typeof value === 'string') {
+    return Math.round((parseInt(value) * 100));
+  }
+};
 
-
+export const fenToYuanDot2Number = (value) => {
+  if (typeof value === 'number') {
+    return Math.round(value) / 100.00;
+  } else if (typeof value === 'string') {
+    return Math.round(parseInt(value) / 100.00);
+  } else {
+    return null;
+  }
+};

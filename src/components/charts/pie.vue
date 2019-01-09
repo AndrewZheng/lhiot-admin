@@ -9,14 +9,25 @@ echarts.registerTheme('tdTheme', tdTheme);
 export default {
   name: 'ChartPie',
   props: {
-    value: Array,
-    text: String,
-    subtext: String
+    value: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
+    text: {
+      type: String,
+      default: ''
+    },
+    subtext: {
+      type: String,
+      default: ''
+    }
   },
-  mounted () {
+  mounted() {
     this.$nextTick(() => {
-      let legend = this.value.map(_ => _.name);
-      let option = {
+      const legend = this.value.map(_ => _.name);
+      const option = {
         title: {
           text: this.text,
           subtext: this.subtext,
@@ -47,7 +58,7 @@ export default {
           }
         ]
       };
-      let dom = echarts.init(this.$refs.dom, 'tdTheme');
+      const dom = echarts.init(this.$refs.dom, 'tdTheme');
       dom.setOption(option);
     });
   }

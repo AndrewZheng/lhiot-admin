@@ -108,8 +108,6 @@
 
 <script>
 /* eslint-disable */
-"use strict";
-import request from "@/libs/request.js";
 import language from "./utils/language.js";
 import mimes from "./utils/mimes.js";
 import data2blob from "./utils/data2blob.js";
@@ -769,7 +767,7 @@ export default {
       that.reset();
       that.loading = 1;
       that.setStep(3);
-      request({
+      this.$http.request({
         url,
         method: "post",
         data: fmData

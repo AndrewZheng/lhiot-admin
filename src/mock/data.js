@@ -7,7 +7,7 @@ import {
 const Random = Mock.Random;
 
 export const getTableData = req => {
-  let tableData = [];
+  const tableData = [];
   const {
     page = 1, rows = 10
   } = getParams(req.url);
@@ -32,7 +32,7 @@ export const getTableData = req => {
 };
 
 export const getDragList = req => {
-  let dragList = [];
+  const dragList = [];
   doCustomTimes(5, () => {
     dragList.push(Mock.mock({
       name: Random.csentence(10, 13),
@@ -43,8 +43,8 @@ export const getDragList = req => {
 };
 
 export const getMenuData = req => {
-  let tableData = [];
-  const {page = 1, rows = 10, pid} = getParams(req.url);
+  const tableData = [];
+  const { page = 1, rows = 10, pid } = getParams(req.url);
 
   const one = [{
     'id': 6,
@@ -59,84 +59,84 @@ export const getMenuData = req => {
     },
     'type': 'SON'
   },
-    {
-      'id': 12,
-      'parentid': 11,
-      'sort': 11,
-      'code': 'system',
-      'path': '/system',
-      'name': '系统管理',
-      'meta': {
-        'title': '系统管理',
-        'icon': 'ios-settings'
-      },
-      'type': 'PARENT'
+  {
+    'id': 12,
+    'parentid': 11,
+    'sort': 11,
+    'code': 'system',
+    'path': '/system',
+    'name': '系统管理',
+    'meta': {
+      'title': '系统管理',
+      'icon': 'ios-settings'
     },
-    {
-      'id': 13,
-      'parentid': 12,
-      'sort': 12,
-      'code': 'menu',
-      'path': 'menu',
-      'name': '菜单管理',
-      'meta': {
-        'title': '菜单管理',
-        'icon': 'ios-settings'
-      },
-      'type': 'SON'
+    'type': 'PARENT'
+  },
+  {
+    'id': 13,
+    'parentid': 12,
+    'sort': 12,
+    'code': 'menu',
+    'path': 'menu',
+    'name': '菜单管理',
+    'meta': {
+      'title': '菜单管理',
+      'icon': 'ios-settings'
     },
-    {
-      'id': 14,
-      'parentid': 11,
-      'sort': 13,
-      'code': 'config',
-      'path': 'config',
-      'name': '参数管理',
-      'meta': {
-        'title': '参数管理',
-        'icon': 'md-settings'
-      },
-      'type': 'SON'
+    'type': 'SON'
+  },
+  {
+    'id': 14,
+    'parentid': 11,
+    'sort': 13,
+    'code': 'config',
+    'path': 'config',
+    'name': '参数管理',
+    'meta': {
+      'title': '参数管理',
+      'icon': 'md-settings'
     },
-    {
-      'id': 15,
-      'parentid': 12,
-      'sort': 14,
-      'code': 'permission',
-      'path': 'permission',
-      'name': '权限管理',
-      'meta': {
-        'title': '权限管理',
-        'icon': 'md-lock'
-      },
-      'type': 'SON'
+    'type': 'SON'
+  },
+  {
+    'id': 15,
+    'parentid': 12,
+    'sort': 14,
+    'code': 'permission',
+    'path': 'permission',
+    'name': '权限管理',
+    'meta': {
+      'title': '权限管理',
+      'icon': 'md-lock'
     },
-    {
-      'id': 16,
-      'parentid': 12,
-      'sort': 15,
-      'code': 'role',
-      'path': 'role',
-      'name': '角色管理',
-      'meta': {
-        'title': '角色管理',
-        'icon': 'ios-people'
-      },
-      'type': 'SON'
+    'type': 'SON'
+  },
+  {
+    'id': 16,
+    'parentid': 12,
+    'sort': 15,
+    'code': 'role',
+    'path': 'role',
+    'name': '角色管理',
+    'meta': {
+      'title': '角色管理',
+      'icon': 'ios-people'
     },
-    {
-      'id': 17,
-      'parentid': 12,
-      'sort': 20,
-      'code': 'user',
-      'path': 'user',
-      'name': '用户管理',
-      'meta': {
-        'title': '用户管理',
-        'icon': 'md-person'
-      },
-      'type': 'SON'
-    }];
+    'type': 'SON'
+  },
+  {
+    'id': 17,
+    'parentid': 12,
+    'sort': 20,
+    'code': 'user',
+    'path': 'user',
+    'name': '用户管理',
+    'meta': {
+      'title': '用户管理',
+      'icon': 'md-person'
+    },
+    'type': 'SON'
+  }];
 
   const two = [{
     'id': 21,
@@ -208,110 +208,110 @@ export const getMenuData = req => {
     },
     'type': 'PARENT'
   },
-    {
-      'id': 8,
-      'parentid': 7,
-      'sort': 3,
-      'code': 'count_to_page',
-      'path': 'count_to_page',
-      'name': '数字渐变',
-      'meta': {
-        'title': '数字渐变',
-        'icon': 'md-trending-up'
-      },
-      'type': 'SON'
+  {
+    'id': 8,
+    'parentid': 7,
+    'sort': 3,
+    'code': 'count_to_page',
+    'path': 'count_to_page',
+    'name': '数字渐变',
+    'meta': {
+      'title': '数字渐变',
+      'icon': 'md-trending-up'
     },
-    {
-      'id': 9,
-      'parentid': 7,
-      'sort': 4,
-      'code': 'drag_list_page',
-      'path': 'drag_list_page',
-      'name': '拖拽列表',
-      'meta': {
-        'title': '拖拽列表',
-        'icon': 'ios-infinite'
-      },
-      'type': 'SON'
+    'type': 'SON'
+  },
+  {
+    'id': 9,
+    'parentid': 7,
+    'sort': 4,
+    'code': 'drag_list_page',
+    'path': 'drag_list_page',
+    'name': '拖拽列表',
+    'meta': {
+      'title': '拖拽列表',
+      'icon': 'ios-infinite'
     },
-    {
-      'id': 10,
-      'parentid': 7,
-      'sort': 5,
-      'path': 'tables_page',
-      'code': 'tables_page',
-      'name': '多功能表格',
-      'meta': {
-        'title': '多功能表格',
-        'icon': 'md-grid'
-      },
-      'type': 'SON'
+    'type': 'SON'
+  },
+  {
+    'id': 10,
+    'parentid': 7,
+    'sort': 5,
+    'path': 'tables_page',
+    'code': 'tables_page',
+    'name': '多功能表格',
+    'meta': {
+      'title': '多功能表格',
+      'icon': 'md-grid'
     },
-    {
-      'id': 11,
-      'parentid': 7,
-      'sort': 6,
-      'path': 'split_pane_page',
-      'code': 'split_pane_page',
-      'name': '分割窗口',
-      'meta': {
-        'title': '分割窗口',
-        'icon': 'md-pause'
-      },
-      'type': 'SON'
+    'type': 'SON'
+  },
+  {
+    'id': 11,
+    'parentid': 7,
+    'sort': 6,
+    'path': 'split_pane_page',
+    'code': 'split_pane_page',
+    'name': '分割窗口',
+    'meta': {
+      'title': '分割窗口',
+      'icon': 'md-pause'
     },
-    {
-      'id': 12,
-      'parentid': 7,
-      'sort': 7,
-      'path': 'markdown_page',
-      'code': 'markdown_page',
-      'name': 'Markdown编辑器',
-      'meta': {
-        'icon': 'logo-markdown',
-        'title': 'Markdown编辑器'
-      },
-      'type': 'SON'
+    'type': 'SON'
+  },
+  {
+    'id': 12,
+    'parentid': 7,
+    'sort': 7,
+    'path': 'markdown_page',
+    'code': 'markdown_page',
+    'name': 'Markdown编辑器',
+    'meta': {
+      'icon': 'logo-markdown',
+      'title': 'Markdown编辑器'
     },
-    {
-      'id': 13,
-      'parentid': 7,
-      'sort': 8,
-      'path': 'editor_page',
-      'code': 'editor_page',
-      'name': '富文本编辑器',
-      'meta': {
-        'icon': 'ios-create',
-        'title': '富文本编辑器'
-      },
-      'type': 'SON'
+    'type': 'SON'
+  },
+  {
+    'id': 13,
+    'parentid': 7,
+    'sort': 8,
+    'path': 'editor_page',
+    'code': 'editor_page',
+    'name': '富文本编辑器',
+    'meta': {
+      'icon': 'ios-create',
+      'title': '富文本编辑器'
     },
-    {
-      'id': 14,
-      'parentid': 7,
-      'sort': 9,
-      'path': 'icons_page',
-      'code': 'icons_page',
-      'name': '自定义图标',
-      'meta': {
-        'icon': '_bear',
-        'title': '自定义图标'
-      },
-      'type': 'SON'
+    'type': 'SON'
+  },
+  {
+    'id': 14,
+    'parentid': 7,
+    'sort': 9,
+    'path': 'icons_page',
+    'code': 'icons_page',
+    'name': '自定义图标',
+    'meta': {
+      'icon': '_bear',
+      'title': '自定义图标'
     },
-    {
-      'id': 15,
-      'parentid': 7,
-      'sort': 10,
-      'path': 'tinymce_editor_page',
-      'code': 'tinymce_editor_page',
-      'name': 'Tinymce编辑器',
-      'meta': {
-        'icon': 'ios-create',
-        'title': 'Tinymce编辑器'
-      },
-      'type': 'SON'
-    }];
+    'type': 'SON'
+  },
+  {
+    'id': 15,
+    'parentid': 7,
+    'sort': 10,
+    'path': 'tinymce_editor_page',
+    'code': 'tinymce_editor_page',
+    'name': 'Tinymce编辑器',
+    'meta': {
+      'icon': 'ios-create',
+      'title': 'Tinymce编辑器'
+    },
+    'type': 'SON'
+  }];
 
   const sixteen = [{
     'id': 16,
@@ -326,71 +326,71 @@ export const getMenuData = req => {
     },
     'type': 'PARENT'
   },
-    {
-      'id': 17,
-      'parentid': 16,
-      'sort': 12,
-      'code': 'menu',
-      'path': 'menu',
-      'name': '菜单管理',
-      'meta': {
-        'title': '菜单管理',
-        'icon': 'ios-settings'
-      },
-      'type': 'SON'
+  {
+    'id': 17,
+    'parentid': 16,
+    'sort': 12,
+    'code': 'menu',
+    'path': 'menu',
+    'name': '菜单管理',
+    'meta': {
+      'title': '菜单管理',
+      'icon': 'ios-settings'
     },
-    {
-      'id': 18,
-      'parentid': 16,
-      'sort': 13,
-      'code': 'config',
-      'path': 'config',
-      'name': '参数管理',
-      'meta': {
-        'title': '参数管理',
-        'icon': 'md-settings'
-      },
-      'type': 'SON'
+    'type': 'SON'
+  },
+  {
+    'id': 18,
+    'parentid': 16,
+    'sort': 13,
+    'code': 'config',
+    'path': 'config',
+    'name': '参数管理',
+    'meta': {
+      'title': '参数管理',
+      'icon': 'md-settings'
     },
-    {
-      'id': 19,
-      'parentid': 16,
-      'sort': 14,
-      'code': 'permission',
-      'path': 'permission',
-      'name': '权限管理',
-      'meta': {
-        'title': '权限管理',
-        'icon': 'md-lock'
-      },
-      'type': 'SON'
+    'type': 'SON'
+  },
+  {
+    'id': 19,
+    'parentid': 16,
+    'sort': 14,
+    'code': 'permission',
+    'path': 'permission',
+    'name': '权限管理',
+    'meta': {
+      'title': '权限管理',
+      'icon': 'md-lock'
     },
-    {
-      'id': 20,
-      'parentid': 16,
-      'sort': 15,
-      'code': 'role',
-      'path': 'role',
-      'name': '角色管理',
-      'meta': {
-        'title': '角色管理',
-        'icon': 'ios-people'
-      },
-      'type': 'SON'
+    'type': 'SON'
+  },
+  {
+    'id': 20,
+    'parentid': 16,
+    'sort': 15,
+    'code': 'role',
+    'path': 'role',
+    'name': '角色管理',
+    'meta': {
+      'title': '角色管理',
+      'icon': 'ios-people'
     },
-    {
-      'id': 25,
-      'parentid': 16,
-      'sort': 20,
-      'code': 'user',
-      'path': 'user',
-      'name': '用户管理',
-      'meta': {
-        'title': '用户管理',
-        'icon': 'md-person'
-      },
-      'type': 'SON'
-    }];
+    'type': 'SON'
+  },
+  {
+    'id': 25,
+    'parentid': 16,
+    'sort': 20,
+    'code': 'user',
+    'path': 'user',
+    'name': '用户管理',
+    'meta': {
+      'title': '用户管理',
+      'icon': 'md-person'
+    },
+    'type': 'SON'
+  }];
 
   switch (pid) {
     case '11':
@@ -425,7 +425,7 @@ export const getMenuData = req => {
 };
 
 export const getRoleData = req => {
-  let roleData = [];
+  const roleData = [];
   const {
     page = 1, rows = 10
   } = getParams(req.url);
@@ -448,7 +448,7 @@ export const getRoleData = req => {
 };
 
 export const getUserData = req => {
-  let userData = [];
+  const userData = [];
   const {
     page = 1, rows = 10
   } = getParams(req.url);
@@ -474,8 +474,8 @@ export const getUserData = req => {
 };
 
 export const getOperateData = req => {
-  let tableData = [];
-  const {page = 1, rows = 10, menuId = 0} = getParams(req.url);
+  const tableData = [];
+  const { page = 1, rows = 10, menuId = 0 } = getParams(req.url);
   const data = [{
     'id': 1,
     'type': 'get,post',
@@ -483,20 +483,20 @@ export const getOperateData = req => {
     'name': '菜单操作限制',
     'antUrl': '/**/ims-menu/**'
   },
-    {
-      'id': 2,
-      'type': 'get',
-      'menuId': 0,
-      'name': '菜单获取限制',
-      'antUrl': '/ims-menu/{id}'
-    },
-    {
-      'id': 3,
-      'type': 'post',
-      'menuId': 0,
-      'name': '菜单添加限制',
-      'antUrl': '/ims-menu/create'
-    }];
+  {
+    'id': 2,
+    'type': 'get',
+    'menuId': 0,
+    'name': '菜单获取限制',
+    'antUrl': '/ims-menu/{id}'
+  },
+  {
+    'id': 3,
+    'type': 'post',
+    'menuId': 0,
+    'name': '菜单添加限制',
+    'antUrl': '/ims-menu/create'
+  }];
 
   const data2 = [{
     'id': 1,
@@ -513,13 +513,13 @@ export const getOperateData = req => {
     'name': '操作权限创建限制',
     'antUrl': '/ims-operation/create'
   },
-    {
-      'id': 2,
-      'type': 'get',
-      'menuId': 17,
-      'name': '操作权限获取限制',
-      'antUrl': '/ims-operation/{menuId}'
-    }];
+  {
+    'id': 2,
+    'type': 'get',
+    'menuId': 17,
+    'name': '操作权限获取限制',
+    'antUrl': '/ims-operation/{menuId}'
+  }];
 
   switch (menuId) {
     case '6':
@@ -541,7 +541,7 @@ export const getOperateData = req => {
 };
 
 export const getMasterApplication = req => {
-  const {page = 1, rows = 10} = JSON.parse(req.body);
+  const { page = 1, rows = 10 } = JSON.parse(req.body);
   const tableData = [
     {
       id: '1',
@@ -662,9 +662,9 @@ export const getMasterApplication = req => {
 };
 
 export const getMasterManagerData = req => {
-  const {page = 1, rows = 10} = JSON.parse(req.body);
-  let list = [];
-  let randomData = Mock.mock({
+  const { page = 1, rows = 10 } = JSON.parse(req.body);
+  const list = [];
+  const randomData = Mock.mock({
     'array|50': [{
       'id|1-47': 1,
       name: '@name',
@@ -684,9 +684,9 @@ export const getMasterManagerData = req => {
   };
 };
 export const getMasterSalary = req => {
-  const {page = 1, rows = 10} = JSON.parse(req.body);
-  let list = [];
-  let randomData = Mock.mock({
+  const { page = 1, rows = 10 } = JSON.parse(req.body);
+  const list = [];
+  const randomData = Mock.mock({
     'array|50': [{
       'id|1-47': 1,
       name: '@name',

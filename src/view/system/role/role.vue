@@ -1,117 +1,121 @@
 <template>
-<div class="m-role">
+  <div class="m-role">
     <Card>
-      <tables ref="tables" editable searchable
-      search-place="top" size="small"
-      v-model="tableData"
-      :loading="loading"
-      :columns="columns"
-      @on-selection-change="onSelectionChange"
-      @on-delete="handleDelete"
-      @on-view="handleView"
-      @on-edit="handleEdit"
-      @on-relation="handleMenu"
+      <tables
+        ref="tables"
+        v-model="tableData"
+        :loading="loading"
+        :columns="columns"
+        editable
+        searchable
+        search-place="top"
+        size="small"
+        @on-selection-change="onSelectionChange"
+        @on-delete="handleDelete"
+        @on-view="handleView"
+        @on-edit="handleEdit"
+        @on-relation="handleMenu"
       >
-       <div slot="searchCondition">
-          <Input  placeholder="角色名称" class="search-input mr5" v-model="searchRowData.name" style="width: auto" clearable/>
+        <div slot="searchCondition">
+          <Input v-model="searchRowData.name" placeholder="角色名称" class="search-input mr5" style="width: auto" clearable></Input>
           <Select v-model="searchRowData.status" class="search-col mr5" placeholder="角色状态" style="width: auto" clearable>
-            <Option v-for="item in roleStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
+            <Option v-for="item in roleStatusList" :value="item.key" :key="`search-col-${item.key}`">{{ item.value }}</Option>
           </Select>
-          <Button v-waves @click="handleSearch" class="search-btn mr5" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button>
-          <Button v-waves @click="handleClear" class="search-btn" type="info"><Icon type="md-refresh"/>&nbsp;清除条件</Button>
+          <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch"><Icon type="md-search"/>&nbsp;搜索</Button>
+          <Button v-waves class="search-btn" type="info" @click="handleClear"><Icon type="md-refresh"/>&nbsp;清除条件</Button>
         </div>
         <div slot="operations">
-          <Button v-waves @click="handleAdd" type="success" class="mr5">
-            <Icon type="md-add"/> 新增</Button>
-          <Button v-waves @click="handleDeleteBatch" type="error" class="mr5">
-            <Icon type="md-trash"/> 删除</Button>
+          <Button v-waves type="success" class="mr5" @click="handleAdd">
+          <Icon type="md-add"/> 新增</Button>
+          <Button v-waves type="error" class="mr5" @click="handleDeleteBatch">
+          <Icon type="md-trash"/> 删除</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
-            <Page :total="total" :current="page" @on-change="changePage" @on-page-size-change="changePageSize" show-sizer show-total></Page>
+          <Page :total="total" :current="page" show-sizer show-total @on-change="changePage" @on-page-size-change="changePageSize"></Page>
         </Row>
       </div>
     </Card>
 
     <!-- 创建/修改模态框 -->
-     <Modal
-        v-model="modalEdit"
-        :loading="loadingBtn"
-        :mask-closable="false"
-        @on-ok="handleAddOrEditOk('formValidate')"
-        @on-cancel="handleCancel">
-        <p slot="header">
-            <span>{{rowData.id==''?'创建角色':'编辑角色'}}</span>
-        </p>
-       <div class="modal-content">
-         <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
-            <FormItem label="角色名称" prop="name">
-                <Input v-model="rowData.name" placeholder="请输入角色名称"/>
-            </FormItem>
-            <FormItem label="角色状态" prop="status">
-               <Select v-model="rowData.status" class="search-col"  placeholder="请选择用户状态">
-                  <Option v-for="item in roleStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
-                </Select>
-            </FormItem>
-            <FormItem label="角色描述" prop="roleDesc">
-                <Input v-model="rowData.roleDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入角色描述" />
-            </FormItem>
+    <Modal
+      v-model="modalEdit"
+      :loading="loadingBtn"
+      :mask-closable="false"
+      @on-ok="handleAddOrEditOk('formValidate')"
+      @on-cancel="handleCancel">
+      <p slot="header">
+        <span>{{ rowData.id==''?'创建角色':'编辑角色' }}</span>
+      </p>
+      <div class="modal-content">
+        <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
+          <FormItem label="角色名称" prop="name">
+            <Input v-model="rowData.name" placeholder="请输入角色名称"></Input>
+          </FormItem>
+          <FormItem label="角色状态" prop="status">
+            <Select v-model="rowData.status" class="search-col" placeholder="请选择用户状态">
+              <Option v-for="item in roleStatusList" :value="item.key" :key="`search-col-${item.key}`">{{ item.value }}</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="角色描述" prop="roleDesc">
+            <Input v-model="rowData.roleDesc" :autosize="{minRows: 2,maxRows: 5}" type="textarea" placeholder="请输入角色描述" ></Input>
+          </FormItem>
         </Form>
-       </div>
+      </div>
     </Modal>
 
     <!-- 多功能添加模态框 -->
-     <Modal
-        v-model="modalAdd"
-        :loading="loadingBtn"
-        :mask-closable="false">
-       <div class="modal-content">
-          <Tabs size="small" v-model="step">
-            <TabPane label="创建角色" name="roleAdd">
-              <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
-                  <FormItem label="角色名称" prop="name">
-                      <Input v-model="rowData.name" placeholder="请输入角色名称"/>
-                  </FormItem>
-                  <FormItem label="角色状态" prop="status">
-                      <Select v-model="rowData.status" class="search-col"  placeholder="请选择用户状态">
-                        <Option v-for="item in roleStatusList" :value="item.key"  :key="`search-col-${item.key}`">{{item.value}}</Option>
-                      </Select>
-                  </FormItem>
-                  <FormItem label="角色描述" prop="roleDesc">
-                      <Input v-model="rowData.roleDesc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入角色描述" />
-                  </FormItem>
-              </Form>
-            </TabPane>
-            <TabPane label="关联菜单" name="menuAdd" :disabled="isDisable">
-              <Tree :data="menuList" :render="renderContent" show-checkbox multiple ref="menuTree" @on-check-change="handleChange"></Tree>
-            </TabPane>
-          </Tabs>
-       </div>
-       <div slot="footer" v-if="step=='roleAdd' && !isCreated">
+    <Modal
+      v-model="modalAdd"
+      :loading="loadingBtn"
+      :mask-closable="false">
+      <div class="modal-content">
+        <Tabs v-model="step" size="small">
+          <TabPane label="创建角色" name="roleAdd">
+            <Form ref="formValidate" :model="rowData" :rules="ruleValidate" :label-width="80">
+              <FormItem label="角色名称" prop="name">
+                <Input v-model="rowData.name" placeholder="请输入角色名称"></Input>
+              </FormItem>
+              <FormItem label="角色状态" prop="status">
+                <Select v-model="rowData.status" class="search-col" placeholder="请选择用户状态">
+                  <Option v-for="item in roleStatusList" :value="item.key" :key="`search-col-${item.key}`">{{ item.value }}</Option>
+                </Select>
+              </FormItem>
+              <FormItem label="角色描述" prop="roleDesc">
+                <Input v-model="rowData.roleDesc" :autosize="{minRows: 2,maxRows: 5}" type="textarea" placeholder="请输入角色描述" ></Input>
+              </FormItem>
+            </Form>
+          </TabPane>
+          <TabPane :disabled="isDisable" label="关联菜单" name="menuAdd">
+            <Tree ref="menuTree" :data="menuList" :render="renderContent" show-checkbox multiple @on-check-change="handleChange"></Tree>
+          </TabPane>
+        </Tabs>
+      </div>
+      <div v-if="step=='roleAdd' && !isCreated" slot="footer">
         <Button type="primary" @click="handleAddOrEditOk('formValidate')">下一步</Button>
       </div>
-      <div slot="footer" v-else-if="step=='menuAdd'">
+      <div v-else-if="step=='menuAdd'" slot="footer">
         <Button type="primary" @click="handleMenuOk">保存</Button>
-       </div>
-      <div slot="footer" v-else>
+      </div>
+      <div v-else slot="footer">
         <Button type="primary" @click="handleCloseAdd">关闭</Button>
       </div>
     </Modal>
 
     <!-- 关联菜单 -->
     <Modal
-        v-model="modalMenu"
-        :loading="loadingBtn"
-        :mask-closable="false"
-        @on-ok="handleMenuOk"
-        @on-cancel="handleCancel">
-        <p slot="header">
-            <span>关联菜单</span>
-        </p>
-       <div class="modal-content">
-         <Tree :data="menuList" :render="renderContent" show-checkbox multiple ref="menuTree" @on-check-change="handleChange"></Tree>
-       </div>
+      v-model="modalMenu"
+      :loading="loadingBtn"
+      :mask-closable="false"
+      @on-ok="handleMenuOk"
+      @on-cancel="handleCancel">
+      <p slot="header">
+        <span>关联菜单</span>
+      </p>
+      <div class="modal-content">
+        <Tree ref="menuTree" :data="menuList" :render="renderContent" show-checkbox multiple @on-check-change="handleChange"></Tree>
+      </div>
     </Modal>
   </div>
 </template>
@@ -133,7 +137,7 @@ const roleRowData = {
 };
 
 export default {
-  name: 'role_page',
+  name: 'RolePage',
   inject: ['reload'],
   components: {
     Tables
@@ -166,11 +170,11 @@ export default {
             const { row } = params;
             const str =
               row.status == 'AVAILABLE' ? (
-                <tag color="success">
+                <tag color='success'>
                   {this.getDictValueByKey(this.roleStatusList, row.status)}
                 </tag>
               ) : (
-                <tag color="error">
+                <tag color='error'>
                   {this.getDictValueByKey(this.roleStatusList, row.status)}
                 </tag>
               );
@@ -294,7 +298,7 @@ export default {
         })
         .then(res => {
           // 返回结果为0则不能删除
-          if (res == 0) {
+          if (res === 0) {
             this.$Message.error('已关联用户 删除失败');
           } else {
             this.$Message.info('删除成功');
@@ -304,7 +308,7 @@ export default {
         });
     },
     handleDeleteBatch() {
-      if (this.ids.length != 0) {
+      if (this.ids.length !== 0) {
         // 发送axios请求
         this.$http
           .request({
@@ -313,7 +317,7 @@ export default {
           })
           .then(res => {
             // 返回结果为0则不能删除
-            if (res == 0) {
+            if (res === 0) {
               this.$Message.error('有角色已关联用户 删除失败');
             } else {
               this.$Message.info('删除成功');
@@ -403,14 +407,14 @@ export default {
       this.modalMenu = true;
     },
     getRelationMenuIds(res) {
-      let relationMenuIds = res.map(item => item.id.toString());
+      const relationMenuIds = res.map(item => item.id.toString());
       console.log(relationMenuIds);
       return relationMenuIds.toString();
     },
     handleChange(checkedArr) {
       console.log('checkedArr: ', checkedArr);
       // 循环执行所有选中的节点链,找到他们的id以及他们父级id，父级的父级id
-      let result = [];
+      const result = [];
       checkedArr.forEach(item => {
         // 递归寻找父级
         result.push(...this.findParent(item));
@@ -440,11 +444,11 @@ export default {
       this.handleSearch();
     },
     findParent(item) {
-      let result = [];
-      let findParentIds = node => {
+      const result = [];
+      const findParentIds = node => {
         result.push(node.id);
         if (node && node.parentid) {
-          let parent = this.originMenuList.find(o => o.id == node.parentid);
+          const parent = this.originMenuList.find(o => o.id === node.parentid);
           findParentIds(parent);
         }
       };
@@ -468,7 +472,7 @@ export default {
     handleMenuOk() {
       let menuIds = '';
       console.log('selectedIds:' + this.selectedIds + ',this.rowData.menuids:' + this.rowData.menuids);
-      if (this.selectedIds == this.rowData.menuids) { // 未修改
+      if (this.selectedIds === this.rowData.menuids) { // 未修改
         this.loadingBtn = false;
         this.modalAdd = false;
       } else {
@@ -481,11 +485,11 @@ export default {
           })
           .then(res => {
             this.loadingBtn = false;
-            if (this.modalMenu == true) {
+            if (this.modalMenu === true) {
               this.modalMenu = false;
               this.targetKeys = [];
               this.$Message.info('修改成功');
-            } else if (this.modalAdd == true) {
+            } else if (this.modalAdd === true) {
               this.modalAdd = false;
               this.$Message.info('保存成功');
               this.isCreated = true;

@@ -2,8 +2,7 @@ import { login, logout, getUserInfo } from '@/api/user';
 import { getRouterById } from '@/api/system';
 import { setToken, getToken, filterLocalRoute, getMenuByRouter } from '@/libs/util';
 import routersLocal, { constantRouterMap } from '@/router/routers';
-import { PcLockr, enums, gbs } from 'util/';
-import _ from 'lodash';
+import { PcLockr, enums } from 'util/';
 
 const state = {
   userName: '',
@@ -21,14 +20,14 @@ const state = {
 
 const getters = {
   menuList: (state) => {
-    let menuData = getMenuByRouter(state.actualRouter);
+    const menuData = getMenuByRouter(state.actualRouter);
     console.log('menuData generate by router: ', menuData);
     return menuData;
   },
 
   getUserName: (state) => {
     if (!state.userName) {
-      state.userName= PcLockr.get(enums.USER.LOGIN_NAME);
+      state.userName = PcLockr.get(enums.USER.LOGIN_NAME);
     }
     return state.userName;
   },
@@ -58,7 +57,7 @@ const mutations = {
     }
     PcLockr.set(enums.USER.ID, id);
   },
-  setHasGetInfo (state, status) {
+  setHasGetInfo(state, status) {
     state.hasGetInfo = status;
   },
   setUserName(state, name) {
@@ -76,16 +75,16 @@ const mutations = {
     setToken(token);
   },
   setRoutePermission(state, routePermission) {
-    state.routePermission=routePermission;
+    state.routePermission = routePermission;
   },
   generateRoutes(state, routeList) {
     console.log('userPermission', routeList);
     state.userPermission = routeList;
-    let actualRouter= filterLocalRoute(routeList, routersLocal);
+    const actualRouter = filterLocalRoute(routeList, routersLocal);
     console.log('actualRouter: ', actualRouter);
     // 清空上一次的数据
-    if (state.actualRouter.length>0) {
-      state.actualRouter =[];
+    if (state.actualRouter.length > 0) {
+      state.actualRouter = [];
     }
     state.actualRouter = actualRouter;
     state.routers = constantRouterMap.concat(actualRouter);
@@ -155,7 +154,7 @@ const actions = {
     console.log('step 2');
     await dispatch('getUserInfo');
     await dispatch('getSystemList');
-    let pid=0;
+    let pid = 0;
     if (PcLockr.get(enums.SYSTEM)) {
       const system = JSON.parse(PcLockr.get(enums.SYSTEM));
       pid = system.id;
@@ -165,7 +164,7 @@ const actions = {
   // 动态修改权限
   async changePermission({ commit, dispatch }) {
     await dispatch('getUserInfo');
-    let pid=0;
+    let pid = 0;
     if (PcLockr.get(enums.SYSTEM)) {
       const system = JSON.parse(PcLockr.get(enums.SYSTEM));
       pid = system.id;

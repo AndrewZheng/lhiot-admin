@@ -2,20 +2,20 @@
   <Form ref="loginForm" :model="form" :rules="rules" @keydown.enter.native="handleSubmit">
     <FormItem prop="account">
       <Input v-model="form.account" placeholder="请输入用户名">
-        <span slot="prepend">
-          <Icon :size="16" type="ios-person"></Icon>
-        </span>
+      <span slot="prepend">
+        <Icon :size="16" type="ios-person"></Icon>
+      </span>
       </Input>
     </FormItem>
     <FormItem prop="password">
-      <Input type="password" v-model="form.password" placeholder="请输入密码">
-        <span slot="prepend">
-          <Icon :size="14" type="md-lock"></Icon>
-        </span>
+      <Input v-model="form.password" type="password" placeholder="请输入密码">
+      <span slot="prepend">
+        <Icon :size="14" type="md-lock"></Icon>
+      </span>
       </Input>
     </FormItem>
     <FormItem>
-      <Button @click="handleSubmit" type="primary" long>登录</Button>
+      <Button type="primary" long @click="handleSubmit">登录</Button>
     </FormItem>
   </Form>
 </template>
@@ -40,7 +40,7 @@ export default {
       }
     }
   },
-  data () {
+  data() {
     return {
       form: {
         account: 'admin',
@@ -49,7 +49,7 @@ export default {
     };
   },
   computed: {
-    rules () {
+    rules() {
       return {
         account: this.userNameRules,
         password: this.passwordRules
@@ -57,7 +57,7 @@ export default {
     }
   },
   methods: {
-    handleSubmit () {
+    handleSubmit() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.$emit('on-success-valid', {

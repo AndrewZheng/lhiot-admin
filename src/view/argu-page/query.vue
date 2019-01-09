@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: 'query'
+  name: 'Query'
 };
 </script>
 

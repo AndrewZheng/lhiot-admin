@@ -1,12 +1,10 @@
 import Mock from 'mockjs';
-import {doCustomTimes, getParams} from '@/libs/util';
-
 const Random = Mock.Random;
 
 export const getFruitMasterUserData = req => {
-  const {page = 1, rows = 10} = JSON.parse(req.body);
-  let list = [];
-  let randomData = Mock.mock({
+  const { page = 1, rows = 10 } = JSON.parse(req.body);
+  const list = [];
+  const randomData = Mock.mock({
     'array|50': [{
       'id|500000000000000-599999999999999': 500000000000000,
       name: '@name',
@@ -16,7 +14,7 @@ export const getFruitMasterUserData = req => {
       cash: Random.integer(1, 1000),
       bonus: '0',
       status: '正常',
-      'userStatus|1':true,
+      'userStatus|1': true,
       registerTime: '2018-10-28'
     }]
   }).array;
@@ -26,16 +24,16 @@ export const getFruitMasterUserData = req => {
     'array': pageList,
     'total': list.length
   };
-}
+};
 
 export const getFruitMastGoodsCategoryData = req => {
-  const {page = 1, rows = 10} = JSON.parse(req.body);
-  let list = [];
-  let randomData = Mock.mock({
+  const { page = 1, rows = 10 } = JSON.parse(req.body);
+  const list = [];
+  const randomData = Mock.mock({
     'array|10': [{
       'id|1-10': 1,
       name: '葡提类',
-      code: Random.integer(1, 50),
+      code: Random.integer(1, 50)
     }]
   }).array;
   list.push(...randomData);
@@ -44,12 +42,12 @@ export const getFruitMastGoodsCategoryData = req => {
     'array': pageList,
     'total': list.length
   };
-}
+};
 
 export const getOnSaleData = req => {
-  const {page = 1, rows = 10} = JSON.parse(req.body);
-  let list = [];
-  let randomData = Mock.mock({
+  const { page = 1, rows = 10 } = JSON.parse(req.body);
+  const list = [];
+  const randomData = Mock.mock({
     'array|10': [{
       'id|1-10': 1,
       name: '@name',
@@ -58,8 +56,8 @@ export const getOnSaleData = req => {
       roleCode: '@name',
       price: '100',
       sort: '1',
-      "onSale|1": true,
-      code: Random.integer(1, 50),
+      'onSale|1': true,
+      code: Random.integer(1, 50)
     }]
   }).array;
   list.push(...randomData);
@@ -68,4 +66,4 @@ export const getOnSaleData = req => {
     'array': pageList,
     'total': list.length
   };
-}
+};

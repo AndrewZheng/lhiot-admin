@@ -1,7 +1,7 @@
 <template>
   <div class="tags-nav">
     <ul v-show="visible" :style="{left: contextMenuLeft + 'px', top: contextMenuTop + 'px'}" class="contextmenu">
-      <li v-for="(item, key) of menuList" @click="handleTagsOption(key)" :key="key">{{item}}</li>
+      <li v-for="(item, key) of menuList" :key="key" @click="handleTagsOption(key)">{{ item }}</li>
     </ul>
     <div class="btn-con left-btn">
       <Button type="text" @click="handleScroll(240)">
@@ -13,19 +13,19 @@
         <Icon :size="18" type="ios-arrow-forward" />
       </Button>
     </div>
-    <div class="scroll-outer" ref="scrollOuter" @DOMMouseScroll="handlescroll" @mousewheel="handlescroll">
-      <div ref="scrollBody" class="scroll-body" :style="{left: tagBodyLeft + 'px'}">
+    <div ref="scrollOuter" class="scroll-outer" @DOMMouseScroll="handlescroll" @mousewheel="handlescroll">
+      <div ref="scrollBody" :style="{left: tagBodyLeft + 'px'}" class="scroll-body">
         <transition-group name="taglist-moving-animation">
           <Tag
-            type="dot"
             v-for="(item, index) in list"
             ref="tagsPageOpened"
             :key="`tag-nav-${index}`"
             :name="item.name"
-            @on-close="handleClose(item)"
-            @click.native="handleClick(item)"
             :closable="item.name !== 'home'"
             :color="isCurrentTag(item) ? 'primary' : 'default'"
+            type="dot"
+            @on-close="handleClose(item)"
+            @click.native="handleClick(item)"
             @contextmenu.prevent.native="contextMenu(item, $event)"
           >{{ showTitleInside(item) }}</Tag>
         </transition-group>
@@ -40,15 +40,20 @@ import beforeClose from '@/router/before-close';
 export default {
   name: 'TagsNav',
   props: {
-    value: Object,
+    value: {
+      type: Object,
+      default() {
+        return {};
+      }
+    },
     list: {
       type: Array,
-      default () {
+      default() {
         return [];
       }
     }
   },
-  data () {
+  data() {
     return {
       tagBodyLeft: 0,
       rightOffset: 40,
@@ -63,13 +68,30 @@ export default {
     };
   },
   computed: {
-    currentRouteObj () {
+    currentRouteObj() {
       const { name, params, query } = this.value;
       return { name, params, query };
     }
   },
+  watch: {
+    '$route'(to) {
+      this.getTagElementByName(to.name);
+    },
+    visible(value) {
+      if (value) {
+        document.body.addEventListener('click', this.closeMenu);
+      } else {
+        document.body.removeEventListener('click', this.closeMenu);
+      }
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.getTagElementByName(this.$route.name);
+    }, 200);
+  },
   methods: {
-    handlescroll (e) {
+    handlescroll(e) {
       var type = e.type;
       let delta = 0;
       if (type === 'DOMMouseScroll' || type === 'mousewheel') {
@@ -77,7 +99,7 @@ export default {
       }
       this.handleScroll(delta);
     },
-    handleScroll (offset) {
+    handleScroll(offset) {
       const outerWidth = this.$refs.scrollOuter.offsetWidth;
       const bodyWidth = this.$refs.scrollBody.offsetWidth;
       if (offset > 0) {
@@ -94,21 +116,21 @@ export default {
         }
       }
     },
-    handleTagsOption (type) {
+    handleTagsOption(type) {
       if (type === 'all') {
         // 关闭所有，除了home
-        let res = this.list.filter(item => item.name === 'home');
+        const res = this.list.filter(item => item.name === 'home');
         this.$emit('on-close', res, 'all');
       } else if (type === 'others') {
         // 关闭除当前页和home页的其他页
-        let res = this.list.filter(item => routeEqual(this.currentRouteObj, item) || item.name === 'home');
+        const res = this.list.filter(item => routeEqual(this.currentRouteObj, item) || item.name === 'home');
         this.$emit('on-close', res, 'others', this.currentRouteObj);
         setTimeout(() => {
           this.getTagElementByName(this.currentRouteObj.name);
         }, 100);
       }
     },
-    handleClose (current) {
+    handleClose(current) {
       if (current.meta && current.meta.beforeCloseName && current.meta.beforeCloseName in beforeClose) {
         new Promise(beforeClose[current.meta.beforeCloseName]).then(close => {
           if (close) {
@@ -119,20 +141,20 @@ export default {
         this.close(current);
       }
     },
-    close (route) {
-      let res = this.list.filter(item => !routeEqual(route, item));
+    close(route) {
+      const res = this.list.filter(item => !routeEqual(route, item));
       this.$emit('on-close', res, undefined, route);
     },
-    handleClick (item) {
+    handleClick(item) {
       this.$emit('input', item);
     },
-    showTitleInside (item) {
+    showTitleInside(item) {
       return showTitle(item, this);
     },
-    isCurrentTag (item) {
+    isCurrentTag(item) {
       return routeEqual(this.currentRouteObj, item);
     },
-    moveToView (tag) {
+    moveToView(tag) {
       const outerWidth = this.$refs.scrollOuter.offsetWidth;
       const bodyWidth = this.$refs.scrollBody.offsetWidth;
       if (bodyWidth < outerWidth) {
@@ -148,18 +170,18 @@ export default {
         this.tagBodyLeft = -(tag.offsetLeft - (outerWidth - this.outerPadding - tag.offsetWidth));
       }
     },
-    getTagElementByName (name) {
+    getTagElementByName(name) {
       this.$nextTick(() => {
         this.refsTag = this.$refs.tagsPageOpened;
         this.refsTag.forEach((item, index) => {
           if (name === item.name) {
-            let tag = this.refsTag[index].$el;
+            const tag = this.refsTag[index].$el;
             this.moveToView(tag);
           }
         });
       });
     },
-    contextMenu (item, e) {
+    contextMenu(item, e) {
       if (item.name === 'home') {
         return;
       }
@@ -168,26 +190,9 @@ export default {
       this.contextMenuLeft = e.clientX - offsetLeft + 10;
       this.contextMenuTop = e.clientY - 64;
     },
-    closeMenu () {
+    closeMenu() {
       this.visible = false;
     }
-  },
-  watch: {
-    '$route' (to) {
-      this.getTagElementByName(to.name);
-    },
-    visible (value) {
-      if (value) {
-        document.body.addEventListener('click', this.closeMenu);
-      } else {
-        document.body.removeEventListener('click', this.closeMenu);
-      }
-    }
-  },
-  mounted () {
-    setTimeout(() => {
-      this.getTagElementByName(this.$route.name);
-    }, 200);
   }
 };
 </script>

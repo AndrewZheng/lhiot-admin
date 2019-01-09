@@ -1,6 +1,6 @@
 
 const Main = () => import('@/components/main');
-const ParentView= () => import('@/components/parent-view');
+const ParentView = () => import('@/components/parent-view');
 const Home = () => import('@/view/single-page/home');
 const JoinPage = () => import('@/view/join-page.vue');
 const CountTo = () => import('@/view/components/count-to/count-to.vue');

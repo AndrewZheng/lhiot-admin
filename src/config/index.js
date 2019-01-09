@@ -14,6 +14,6 @@ export default {
    */
   baseUrl: {
     dev: '/api',
-    pro: 'https://testhealth.food-see.com'
+    pro: 'http://172.16.10.203:2018'
   }
 };

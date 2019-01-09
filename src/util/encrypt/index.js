@@ -1,5 +1,5 @@
 import CryptoJS from 'crypto-js';
-import {gbs} from '../settings';
+import { gbs } from '../settings';
 
 class PcEncrypt {
   constructor() {
@@ -10,7 +10,7 @@ class PcEncrypt {
     if (!key) {
       key = this.secretKey;
     }
-    let ciphertext = CryptoJS.AES.encrypt(data, key);
+    const ciphertext = CryptoJS.AES.encrypt(data, key);
     return ciphertext.toString();
   }
 
@@ -28,10 +28,10 @@ class PcEncrypt {
   }
 
   aesEncrypt(data, keyStr, ivStr) {
-    let sendData = CryptoJS.enc.Utf8.parse(data);
-    let key = CryptoJS.enc.Utf8.parse(keyStr);
-    let iv = CryptoJS.enc.Utf8.parse(ivStr);
-    let encrypted = CryptoJS.AES.encrypt(sendData, key, {
+    const sendData = CryptoJS.enc.Utf8.parse(data);
+    const key = CryptoJS.enc.Utf8.parse(keyStr);
+    const iv = CryptoJS.enc.Utf8.parse(ivStr);
+    const encrypted = CryptoJS.AES.encrypt(sendData, key, {
       iv: iv,
       mode: CryptoJS.mode.CBC,
       padding: CryptoJS.pad.Iso10126
@@ -40,10 +40,10 @@ class PcEncrypt {
   }
 
   aesDecrypt(data, keyStr, ivStr) {
-    let key = CryptoJS.enc.Utf8.parse(keyStr);
-    let iv = CryptoJS.enc.Utf8.parse(ivStr);
+    const key = CryptoJS.enc.Utf8.parse(keyStr);
+    const iv = CryptoJS.enc.Utf8.parse(ivStr);
     // 解密的是基于BASE64的数据，此处data是BASE64数据
-    let decrypted = CryptoJS.AES.decrypt(data, key, {
+    const decrypted = CryptoJS.AES.decrypt(data, key, {
       iv: iv,
       mode: CryptoJS.mode.CBC,
       padding: CryptoJS.pad.Iso10126
