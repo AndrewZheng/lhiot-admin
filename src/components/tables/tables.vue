@@ -7,7 +7,7 @@
           <!-- <Select v-model="searchKey" class="search-col">
             <Option v-for="item in columns" v-if="item.key !== 'handle' && item.type!=='selection'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
           </Select>
-          <Input @on-change="handleClear" clearable placeholder="输入关键字搜索" class="search-input" v-model="searchValue"/>
+          <Input @on-change="handleClear" clearable placeholder="输入关键字搜索" class="search-input" v-model="searchValue"></Input>
           <Button v-waves @click="handleSearch" class="search-btn" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button> -->
           <!-- 自定义搜索条件 -->
           <slot name="searchCondition"></slot>

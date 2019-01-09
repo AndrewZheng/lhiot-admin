@@ -661,7 +661,6 @@ export default {
         this.modalViewLoading = false;
         this.modalEdit = false;
         this.$Message.success('创建成功!');
-        this.resetFields();
         this.getTableData();
       }).catch(() => {
         this.modalViewLoading = false;
@@ -673,7 +672,6 @@ export default {
       editProduct({
         ...this.productDetail
       }).then(res => {
-        this.resetFields();
         this.modalEdit = false;
         this.modalViewLoading = false;
         this.getTableData();

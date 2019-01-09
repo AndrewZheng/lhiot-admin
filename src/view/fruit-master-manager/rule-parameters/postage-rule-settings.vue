@@ -562,6 +562,7 @@ export default {
       }
     },
     addChildren() {
+      // this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.create;
       this.postageDetail.detailList.length = 0;
       this.postageDetail.detailList.push(this._.cloneDeep(detailList));
@@ -579,6 +580,7 @@ export default {
       this.modalEdit = true;
     },
     handleEdit(params) {
+      // this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.edit;
       this.postageDetail = this._.cloneDeep(params.row);
       this.tempDetailList.length = 0;

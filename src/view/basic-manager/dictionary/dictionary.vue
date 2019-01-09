@@ -508,6 +508,7 @@ export default {
     handleAdd() {
       this.tempModalType = this.modalType.create;
       this.dictionaryDetail = dictionaryDetail;
+      this.$refs.modalEdit.resetFields();
       this.modalEdit = true;
     },
     resetSearchRowData() {
@@ -523,6 +524,7 @@ export default {
     handleEdit(params) {
       this.tempModalType = this.modalType.edit;
       this.dictionaryDetail = this._.cloneDeep(params.row);
+      this.$refs.modalEdit.resetFields();
       this.modalEdit = true;
     },
     getTableData() {
@@ -633,11 +635,6 @@ export default {
     handleEntriesClose() {
       this.loading = false;
       this.modalEntries = false;
-    },
-    handleEditClose(name) {
-      this.loading = false;
-      this.modalEdit = false;
-      this.$refs[name].resetFields();
     }
   }
 };

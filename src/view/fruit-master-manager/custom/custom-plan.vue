@@ -677,6 +677,7 @@ export default {
       this.shelfSpecificationLoading = true;
       getProductShelvesPages({
         keyword: value + '',
+        applicationType: this.applicationType,
         page: '1',
         rows: '5',
         shelfStatus: 'ON'
@@ -780,9 +781,7 @@ export default {
       });
     },
     handleAdd() {
-      if (this.tempModalType !== this.modalType.create) {
-        this.resetFields();
-      }
+      this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.create;
       // 对象初始化
       this.rowData = {};
@@ -833,6 +832,7 @@ export default {
       });
     },
     handleEdit(params) {
+      this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.edit;
       this.loading = true;
       this.showHeader = true;
@@ -937,7 +937,7 @@ export default {
       });
     },
     updateProduct(periodIndex, productIndex, shelfId, productId) {
-      console.log('updateProduct:' + periodIndex + ',' + productIndex + ',' + shelfId + ',' + productId);
+      // console.log('updateProduct:' + periodIndex + ',' + productIndex + ',' + shelfId + ',' + productId);
       this.rowData.periodList[periodIndex].products[productIndex].shelfId = shelfId;
       this.rowData.periodList[periodIndex].products[productIndex].optionType = productId === 0 ? 'INSERT' : 'UPDATE';
     },
@@ -972,7 +972,7 @@ export default {
       return fenToYuanDot2Number(price);
     },
     priceOnChange(periodIndex, specificationIndex, value, specificationId) {
-      console.log('priceOnChange:' + periodIndex + ',' + specificationIndex + ',' + value + ',' + specificationId);
+      // console.log('priceOnChange:' + periodIndex + ',' + specificationIndex + ',' + value + ',' + specificationId);
       if (value !== null) {
         this.rowData.periodList[periodIndex].specificationList[specificationIndex].price = yuanToFenNumber(value);
         this.rowData.periodList[periodIndex].specificationList[specificationIndex].optionType = specificationId === 0 ? 'INSERT' : 'UPDATE';

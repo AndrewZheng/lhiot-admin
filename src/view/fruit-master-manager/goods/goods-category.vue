@@ -59,7 +59,7 @@
 
     <!--编辑菜单 -->
     <Modal
-      v-model="modalEditView"
+      v-model="modalEdit"
     >
       <p slot="header">
         <span>编辑商品分类</span>
@@ -70,7 +70,7 @@
             <i-col>{{ parentCategory.groupName }}</i-col>
           </FormItem>
           <FormItem label="子分类名:">
-            <Input v-model="currentCategory.groupName" placeholder="子分类名"/>
+            <Input v-model="currentCategory.groupName" placeholder="子分类名"></Input>
           </FormItem>
           <FormItem label="序号:">
             <InputNumber :min="0" v-model="currentCategory.rank" placeholder="序号"></InputNumber>
@@ -150,7 +150,7 @@ export default {
           options: ['edit', 'delete']
         }
       ],
-      modalEditView: false,
+      modalEdit: false,
       modalViewLoading: false,
       modalEditLoading: false,
       currentParentName: '',
@@ -209,7 +209,7 @@ export default {
       }
       this.currentCategory.currentParentId = this.currentParentId;
       this.tempModalType = this.modalType.create;
-      this.modalEditView = true;
+      this.modalEdit = true;
     },
     asyncEditOK() {
       if (!this.currentCategory.groupName) {
@@ -239,19 +239,19 @@ export default {
         }).finally(res => {
           this.initMenuList();
           this.modalEditLoading = false;
-          this.modalEditView = false;
+          this.modalEdit = false;
         });
       } else if (this.tempModalType === this.modalType.edit) {
         putProductCategories(this.currentCategory).then(res => {
         }).finally(res => {
           this.initMenuList();
           this.modalEditLoading = false;
-          this.modalEditView = false;
+          this.modalEdit = false;
         });
       }
     },
     handleEditClose() {
-      this.modalEditView = false;
+      this.modalEdit = false;
     },
     // 删除
     deleteTable(ids) {
@@ -272,9 +272,10 @@ export default {
     },
     // 编辑分类
     handleEdit(params) {
+      // this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.edit;
       this.currentCategory = _.cloneDeep(params.row);
-      this.modalEditView = true;
+      this.modalEdit = true;
     },
     getTableData() {
       this.loading = true;

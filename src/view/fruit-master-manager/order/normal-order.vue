@@ -24,14 +24,14 @@
               class="search-input mr5"
               style="width: 120px"
               clearable
-            />
+            ></Input>
             <Input
               v-model="searchRowData.userPhone"
               placeholder="用户手机号"
               class="search-input mr5"
               style="width: 100px"
               clearable
-            />
+            ></Input>
             <Select
               v-model="searchRowData.orderType"
               class="search-col mr5"
@@ -730,6 +730,7 @@ export default {
     handleDownload() {
       // 导出不分页
       this.searchRowData.rows = null;
+      this.searchRowData.applicationType = this.applicationType;
       getOrdersPages(this.searchRowData).then(res => {
         const tableData = res.array;
         // 表格数据导出字段翻译
