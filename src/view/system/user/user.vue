@@ -397,9 +397,7 @@ export default {
         name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
         account: [{ required: true, message: '账号不能为空', trigger: 'blur' }],
         password: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
-        passwdCheck: [
-          { required: true, validator: validatePassCheck, trigger: 'blur' }
-        ],
+        passwdCheck: [{ required: true, validator: validatePassCheck, trigger: 'blur' }],
         tel: [
           {
             required: true,

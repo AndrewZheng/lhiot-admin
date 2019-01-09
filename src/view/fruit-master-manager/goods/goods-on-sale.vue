@@ -21,8 +21,8 @@
       >
         <div slot="searchCondition">
           <Row>
-            <Input v-model="searchRowData.name" placeholder="上架名称" class="search-input mr5" style="width: auto"/>
-            <Input v-model="searchRowData.keyword" placeholder="规格条码" class="search-input mr5" style="width: auto"/>
+            <Input v-model="searchRowData.name" placeholder="上架名称" class="search-input mr5" style="width: auto"></Input>
+            <Input v-model="searchRowData.keyword" placeholder="规格条码" class="search-input mr5" style="width: auto"></Input>
             <Button v-waves :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
@@ -175,12 +175,12 @@
                   {{ option.specificationInfo }}
                 </Option>
               </Select>
-              <Input v-else :value="shelfSpecificationEditDefault" disabled/>
+              <Input v-else :value="shelfSpecificationEditDefault" disabled></Input>
             </FormItem>
             </Col>
             <Col span="12">
             <FormItem label="上架名称:" prop="name">
-              <Input v-model="productDetail.name" placeholder="上架名称"/>
+              <Input v-model="productDetail.name" placeholder="上架名称"></Input>
             </FormItem>
             </Col>
           </Row>
@@ -199,7 +199,7 @@
           <Row>
             <Col span="24">
             <FormItem label="上架描述:">
-              <Input v-model="productDetail.description" placeholder="上架描述"/>
+              <Input v-model="productDetail.description" placeholder="上架描述"></Input>
             </FormItem>
             </Col>
           </Row>
@@ -244,7 +244,7 @@
           </Row>
           <Row>
             <FormItem :label-width="80" label="商品主图:建议尺寸;400x400(单位:px)" prop="image">
-              <Input v-show="false" v-model="productDetail.image" style="width: auto"/>
+              <Input v-show="false" v-model="productDetail.image" style="width: auto"></Input>
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>
@@ -362,6 +362,17 @@ export default {
   },
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
+    const validatePrice = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('特价不能为空'));
+      } else if (value <= 0) {
+        callback(new Error('特价不能小于0'));
+      } else if (value > this.productDetail.originalPrice) {
+        callback(new Error('特价不能大于原价'));
+      } else {
+        callback();
+      }
+    };
     return {
       shelfSpecificationEditDefault: '',
       shelfSpecificationLoading: false,
@@ -372,11 +383,12 @@ export default {
       uiPositionData: [],
       ruleInline: {
         originalPrice: [
-          { required: true, message: '请输入商品原价' }
+          { required: true, message: '请输入商品原价' },
+          { message: '必须为大于0的数字', pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/ }
         ],
         price: [
-          { required: true, message: '请输入商品特价' },
-          { message: '必须为大于0的数字', pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/ }
+          { required: true, validator: validatePrice }
+          // { message: '必须为大于0的数字', pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/ }
         ],
         specificationId: [{ required: true, message: '请输入商品规格', pattern: /^[1-9]\d*$/ }],
         image: [{ required: true, message: '请上传图片' }],
@@ -386,11 +398,11 @@ export default {
           { message: '必须为非零整数', pattern: /^[1-9]\d*$/ }
         ],
         sorting: [
-          { required: true, message: '请输入上架份数' },
+          { required: true, message: '请输入商品排序' },
           { message: '必须为非零整数', pattern: /^[1-9]\d*$/ }
         ],
         shelfStatus: [
-          { required: true, message: '请选择是否上架' }
+          { required: true, message: '请选择是否上架', trigger: 'blur' }
         ]
       },
       useAble: [{ label: '是', value: 'ON' }, { label: '否', value: 'OFF' }],
@@ -462,7 +474,12 @@ export default {
           key: 'shelfStatus',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{onSaleStatusConvert(row.shelfStatus).label}</div>;
+            if (row.shelfStatus === 'ON') {
+              return <div><tag color='success'>{onSaleStatusConvert(row.shelfStatus).label}</tag></div>;
+            } else if (row.shelfStatus === 'OFF') {
+              return <div><tag color='error'>{onSaleStatusConvert(row.shelfStatus).label}</tag></div>;
+            }
+            return <div><tag color='primary'>{onSaleStatusConvert(row.shelfStatus).label}</tag></div>;
           }
         },
         {
@@ -522,6 +539,7 @@ export default {
     },
     selectIndex(options) {
       this.productDetail.specificationId = options.id;
+      this.productDetail.productImage = options.product.productImage;
       this.productDetail.image = options.product.productImage;
       this.productDetail.name = options.product.name;
       const tempImgObj = {};
@@ -544,7 +562,6 @@ export default {
       }).then(res => {
         console.log(res.array.length);
         console.log(this.optionsShelfSpecification);
-
         if (res.array.length > 0) {
           this.optionsShelfSpecification.length = 0;
           this.optionsShelfSpecification = this.optionsShelfSpecification.concat(res.array);
@@ -574,9 +591,9 @@ export default {
       });
     },
     handleSubmit(name) {
-      console.log(this.productDetail.originalPrice);
       this.$refs[name].validate((valid) => {
         if (valid) {
+          this.productDetail.applicationType = this.applicationType;
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
             this.createProductShelve();
@@ -596,13 +613,15 @@ export default {
       }).then(res => {
         this.resetFields();
         this.modalEdit = false;
-        this.modalViewLoading = false;
         this.getTableData();
-      }).catch(() => {
-        this.resetFields();
-        this.modalEdit = false;
-        this.modalViewLoading = false;
+      }).catch(error => {
+        this.$Modal.error({
+          title: '修改失败',
+          content: error.response.data
+        });
       });
+      this.modalViewLoading = false;
+      this.loading = false;
     },
     createProductShelve() {
       this.modalViewLoading = true;
@@ -610,11 +629,12 @@ export default {
         ...this.productDetail
       }).then(res => {
         this.resetFields();
-        this.modalViewLoading = false;
         this.modalEdit = false;
         this.$Message.success('创建成功!');
         this.getTableData();
       });
+      this.modalViewLoading = false;
+      this.loading = false;
     },
     // 商品主图
     handleSuccessMain(response, file, fileList) {

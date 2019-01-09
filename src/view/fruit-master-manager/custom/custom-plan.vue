@@ -937,7 +937,7 @@ export default {
       });
     },
     updateProduct(periodIndex, productIndex, shelfId, productId) {
-      console.log('updateProduct:' + periodIndex + ',' + productIndex + ',' + shelfId + ',' + productId);
+      // console.log('updateProduct:' + periodIndex + ',' + productIndex + ',' + shelfId + ',' + productId);
       this.rowData.periodList[periodIndex].products[productIndex].shelfId = shelfId;
       this.rowData.periodList[periodIndex].products[productIndex].optionType = productId === 0 ? 'INSERT' : 'UPDATE';
     },
@@ -972,7 +972,7 @@ export default {
       return fenToYuanDot2Number(price);
     },
     priceOnChange(periodIndex, specificationIndex, value, specificationId) {
-      console.log('priceOnChange:' + periodIndex + ',' + specificationIndex + ',' + value + ',' + specificationId);
+      // console.log('priceOnChange:' + periodIndex + ',' + specificationIndex + ',' + value + ',' + specificationId);
       if (value !== null) {
         this.rowData.periodList[periodIndex].specificationList[specificationIndex].price = yuanToFenNumber(value);
         this.rowData.periodList[periodIndex].specificationList[specificationIndex].optionType = specificationId === 0 ? 'INSERT' : 'UPDATE';
