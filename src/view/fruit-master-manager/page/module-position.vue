@@ -19,7 +19,7 @@
             v-model="searchRowData.description"
             placeholder="板块位置描述"
             class="search-input mr5"
-            style="width: auto"/>
+            style="width: auto"></Input>
           <Select
             ref="selectRef"
             v-model="searchRowData.positionType"
@@ -272,11 +272,6 @@ export default {
         this.loading = false;
         this.clearSearchLoading = false;
         this.searchLoading = false;
-      });
-    },
-    exportExcel() {
-      this.$refs.tables.exportCsv({
-        filename: `table-${new Date().valueOf()}.csv`
       });
     }
   }

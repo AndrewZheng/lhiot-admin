@@ -404,11 +404,13 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      // this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.edit;
       this.productStandardDetail = _.cloneDeep(params.row);
       this.modalEdit = true;
     },
     handleCreateView() {
+      // this.$refs.modalEdit.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.productStandardDetail = this._.cloneDeep(productStandardDetail);
       }

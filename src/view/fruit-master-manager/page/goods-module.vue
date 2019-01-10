@@ -22,7 +22,7 @@
             v-model="searchRowData.sectionName"
             placeholder="版块名称"
             class="search-input mr5"
-            style="width: 150px"/>
+            style="width: 150px"></Input>
           <Select
             :disable="selectDisable"
             v-model="searchRowData.positionIds"
@@ -136,7 +136,7 @@
             </Row>
             <Row>
               <FormItem label="板块名称:" prop="sectionName">
-                <Input v-model="goodsModuleDetail.sectionName" placeholder="板块名称"/>
+                <Input v-model="goodsModuleDetail.sectionName" placeholder="板块名称"></Input>
               </FormItem>
             </Row>
             <Row>
@@ -144,7 +144,7 @@
                 :label-width="80"
                 label="板块主图:建议尺寸 (xxx*xxx):"
                 prop="sectionImg">
-                <Input v-show="false" v-model="goodsModuleDetail.sectionImg" style="width: auto"/>
+                <Input v-show="false" v-model="goodsModuleDetail.sectionImg" style="width: auto"></Input>
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>
@@ -540,6 +540,7 @@ export default {
       this.shelfSpecificationLoading = true;
       getProductShelvesPages({
         keyword: value + '',
+        applicationType: this.applicationType,
         page: '1',
         rows: '5',
         shelfStatus: 'ON'
@@ -615,6 +616,7 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.edit;
       this.goodsModuleDetail = _.cloneDeep(params.row);
       this.setDefaultUploadList(params.row);
@@ -648,11 +650,6 @@ export default {
         this.loading = false;
         this.clearSearchLoading = false;
         this.searchLoading = false;
-      });
-    },
-    exportExcel() {
-      this.$refs.tables.exportCsv({
-        filename: `table-${new Date().valueOf()}.csv`
       });
     },
     modalHandleEdit(params) {
