@@ -84,3 +84,12 @@ export const getUserData = ({ page, rows }) => {
     method: 'post'
   });
 };
+
+// 用户管理上传头像
+export const uploadFile = (data) => {
+  return Vue.prototype.$http.request({
+    url: 'https://resource.food-see.com/v1/upload/product_image',
+    data: data,
+    method: 'post'
+  });
+};

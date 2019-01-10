@@ -474,6 +474,14 @@ export const editFruitDoctorsSettlement = (data) => {
   });
 };
 
+// 结算申请退款
+export const refundFruitDoctorsSettlement = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/fruit-doctors/settlement/refund/' + id,
+    method: 'put'
+  });
+};
+
 // 查询鲜果师成员分页列表
 export const getFruitDoctorsPages = (data) => {
   return Vue.prototype.$http.request({
