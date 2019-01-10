@@ -54,6 +54,11 @@ export const goodsOnSalesColumns = [
     title: '是否上架',
     minWidth: 100,
     key: 'shelfStatus'
+  },
+  {
+    title: '应用类型',
+    minWidth: 100,
+    key: 'applicationType'
   }
 ];
 

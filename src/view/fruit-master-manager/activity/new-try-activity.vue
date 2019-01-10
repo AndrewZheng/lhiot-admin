@@ -17,8 +17,8 @@
       >
         <div slot="searchCondition">
           <Row>
-            <Input v-model="searchRowData.name" placeholder="商品名称" class="search-input mr5" style="width: auto"/>
-            <Input v-model="searchRowData.barcode" placeholder="商品条码" class="search-input mr5" style="width: auto"/>
+            <Input v-model="searchRowData.name" placeholder="商品名称" class="search-input mr5" style="width: auto"></Input>
+            <Input v-model="searchRowData.barcode" placeholder="商品条码" class="search-input mr5" style="width: auto"></Input>
             <Button v-waves :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
@@ -91,7 +91,7 @@
                   {{ option.specificationInfo }}
                 </Option>
               </Select>
-              <Input v-else v-model="goodsDetail.specificationInfo" disabled style="width: 250px"/>
+              <Input v-else v-model="goodsDetail.specificationInfo" disabled style="width: 250px"></Input>
             </FormItem>
             </Col>
             <Col span="12">
@@ -281,6 +281,7 @@ export default {
     selectIndex(options) {
       this.goodsDetail.shelfId = options.id;
       this.goodsDetail.price = options.price;
+      this.goodsDetail.originalPrice = options.originalPrice;
     },
     remoteMethod(query) {
       if (query !== '') {
@@ -293,6 +294,7 @@ export default {
       this.shelfSpecificationLoading = true;
       getProductShelvesPages({
         keyword: value + '',
+        applicationType: this.applicationType,
         page: '1',
         rows: '5',
         shelfStatus: 'ON'
@@ -305,7 +307,7 @@ export default {
       });
     },
     handleSubmit(name) {
-      if (this.goodsDetail.price < this.goodsDetail.activityPrice) {
+      if (this.goodsDetail.activityPrice > this.goodsDetail.price || this.goodsDetail.activityPrice > this.goodsDetail.originalPrice) {
         this.$Message.error('尝鲜价格不能高于商品价格');
         return;
       }
@@ -373,6 +375,7 @@ export default {
       this.getTableData();
     },
     addChildren() {
+      // this.$refs.modalEdit.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.tempModalType = this.modalType.create;
         this.goodsDetail = this._.cloneDeep(goodsDetail);
@@ -380,6 +383,7 @@ export default {
       this.modalEdit = true;
     },
     handleEdit(params) {
+      // this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.edit;
       this.goodsDetail = this._.clone(params.row);
       this.modalEdit = true;

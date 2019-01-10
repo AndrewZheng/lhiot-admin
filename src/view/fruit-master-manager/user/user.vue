@@ -350,6 +350,7 @@ export default {
     handleDownload() {
       // 导出不分页
       this.searchRowData.rows = null;
+      this.searchRowData.applicationType = this.applicationType;
       getUserPages(this.searchRowData).then(res => {
         const tableData = res.array;
         // 表格数据导出字段翻译

@@ -152,15 +152,15 @@ const btns = {
       }, [
         h('Button', {
           props: {
-            type: 'success',
+            type: 'error',
             size: 'small'
           }
         }, [
           h('Icon', {
             props: {
-              type: 'md-cloud-upload',
+              type: 'md-cloud-download',
               size: 16,
-              color: '#green'
+              color: '#fff'
             }
           })
         ])
@@ -182,15 +182,15 @@ const btns = {
       }, [
         h('Button', {
           props: {
-            type: 'error',
+            type: 'success',
             size: 'small'
           }
         }, [
           h('Icon', {
             props: {
-              type: 'md-cloud-download',
+              type: 'md-cloud-upload',
               size: 16,
-              color: '#fff'
+              color: '#green'
             }
           })
         ])

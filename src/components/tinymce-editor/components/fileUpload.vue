@@ -25,7 +25,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="4">文件上传</i-col>
           <i-col span="20">
-            <Input v-model="fileObj.fileUrl">
+            <Input v-model="fileObj.fileUrl"></Input>
             <Upload
               slot="append"
               ref="fileUpload"
