@@ -73,9 +73,9 @@ class HttpRequest {
               name: '/404'
             });
             break;
-          case '401':
+          case '403': // 由401改为403
             router.push({
-              name: '/401'
+              name: '/401' // 由401改为403
             });
             break;
           case '500':
@@ -109,9 +109,9 @@ class HttpRequest {
         if (error.response.status === 400) {
           console.log('Error 400', error.response.data);
           errorMsg = error.response.data;
-        } else if (error.response.status === 401) {
+        } else if (error.response.status === 403) { // 由401改为403
           errorMsg = '您无访问权限';
-        } else if (error.response.status === 402) {
+        } else if (error.response.status === 401) { // 由402改完401
           errorMsg = '页面已过期，请重新登录';
           // 清除本地Token 然后重新登录
           setToken('');

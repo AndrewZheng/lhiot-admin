@@ -758,9 +758,9 @@ export default {
         this.loading = false;
         this.rowData = {};
         this.rowData = res;
+        const planId = this.rowData.id;
         // 如果只有一个周期的套餐，则另一个套餐数据补齐
         if (res.periodList.length !== 2) {
-          const planId = this.rowData.id;
           const planPeriod = this.rowData.periodList[0].planPeriod;
           const newPlanPeriod = planPeriod === 7 ? 30 : 7;
           const newIndex = this.rowData.periodList[0].index === 0 ? 1 : 0;
@@ -776,6 +776,27 @@ export default {
           }
           // console.log(JSON.stringify(this.rowData));
         }
+        // 如果某个周期内的套餐不完整，不完整的部分补齐
+        res.periodList.forEach(period => {
+          if (period.products.length !== period.planPeriod) {
+            // 套餐应该有的index集合
+            const index = [];
+            for (var i = 0; i < period.planPeriod; i++) {
+              index[i] = i;
+            }
+            // 套餐真实的index集合
+            const realIndex = [];
+            period.products.forEach(p => realIndex.push(p.index));
+            // 差集
+            const diffIndex = index.concat(realIndex).filter(v => index.includes(v) && !realIndex.includes(v));
+            // 补齐
+            diffIndex.forEach(diff => {
+              this.rowData.periodList[period.index].products.push({ 'index': diff, 'benefit': '', 'dayOfPeriod': (diff + 1), 'description': '', 'id': 0, 'image': '', 'planId': planId, 'productName': '', 'shelfId': 0, 'optionType': null });
+            });
+            // 升序排序
+            this.rowData.periodList[period.index].products.sort((a, b) => a.index - b.index);
+          }
+        });
         this.step = 'name1';
         this.modalSetting = true;
       });
