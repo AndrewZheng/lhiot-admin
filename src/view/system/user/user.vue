@@ -107,11 +107,34 @@
           <FormItem label="电话" prop="tel">
             <Input v-model="rowData.tel" placeholder="请输入电话号码"></Input>
           </FormItem>
-          <FormItem label="用户头像" prop="avatarUrl">
-            <Button class="add-image" @click="imagecropperShow=true">
-              <Icon type="ios-camera" size="20"></Icon>
-            </Button>
-            <img :src="image" width="80px" height="80px">
+          <FormItem label="用户头像" prop="avatarUrl" >
+            <Input v-show="false" v-model="rowData.avatarUrl" style="width: auto"></Input>
+            <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+              <template v-if="item.status === 'finished'">
+                <div>
+                  <img :src="item.url">
+                  <div class="demo-upload-list-cover">
+                    <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                    <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                  </div>
+                </div>
+              </template>
+              <template v-else>
+                <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+              </template>
+            </div>
+            <IViewUpload
+              ref="uploadMain"
+              :default-list="defaultListMain"
+              :image-size="imageSize"
+              @on-success="handleSuccessMain"
+            >
+              <div slot="content">
+                <Button type="primary">
+                  上传图片
+                </Button>
+              </div>
+            </IViewUpload>
           </FormItem>
           <FormItem label="用户状态" prop="status">
             <Select v-model="rowData.status" class="search-col" placeholder="请选择用户状态">
@@ -157,13 +180,34 @@
               <FormItem label="电话" prop="tel">
                 <Input v-model="rowData.tel" placeholder="请输入电话号码"></Input>
               </FormItem>
-              <FormItem label="用户头像" prop="avatarUrl">
-                <Button class="add-image" @click="imagecropperShow=true">
-                  <Icon type="ios-camera" size="20"></Icon>
-                </Button>
-                <div v-if="imageVisible" style="display: inline-block">
-                  <img :src="image" width="80px" height="80px">
+              <FormItem label="用户头像" prop="avatarUrl" >
+                <Input v-show="false" v-model="rowData.avatarUrl" style="width: auto"></Input>
+                <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+                  <template v-if="item.status === 'finished'">
+                    <div>
+                      <img :src="item.url">
+                      <div class="demo-upload-list-cover">
+                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                  </template>
                 </div>
+                <IViewUpload
+                  ref="uploadMain"
+                  :default-list="defaultListMain"
+                  :image-size="imageSize"
+                  @on-success="handleSuccessMain"
+                >
+                  <div slot="content">
+                    <Button type="primary">
+                      上传图片
+                    </Button>
+                  </div>
+                </IViewUpload>
               </FormItem>
               <FormItem label="用户状态" prop="status">
                 <Select v-model="rowData.status" class="search-col" placeholder="请选择用户状态">
@@ -235,7 +279,6 @@
       :width="70"
       :height="70"
       :key="imagecropperKey"
-      url="https://resource.food-see.com/v1/upload/product_image"
       lang-type="zh"
       @close="close"
       @crop-upload-success="cropSuccess"
@@ -248,6 +291,8 @@ import Tables from '_c/tables';
 import { getUserData, getRoleList, getRelationRoles } from '@/api/system';
 import ImageCropper from '_c/ImageCropper';
 import _ from 'lodash';
+import uploadMixin from '@/mixins/uploadMixin';
+import IViewUpload from '_c/iview-upload';
 
 const userRowData = {
   id: '',
@@ -267,12 +312,14 @@ export default {
   name: 'UserPage',
   components: {
     Tables,
-    ImageCropper
+    ImageCropper,
+    IViewUpload
   },
   filters: {},
+  mixins: [uploadMixin],
   data() {
     const validatePassCheck = (rule, value, callback) => {
-      console.log(this.rowData.password);
+      // console.log(this.rowData.password);
       if (value === '') {
         callback(new Error('请再次输入您的密码'));
       } else if (value !== this.rowData.password) {
@@ -302,8 +349,8 @@ export default {
           },
           fixed: 'left'
         },
-        { title: '姓名', key: 'name', sortable: true, width: 80 },
-        { title: '账号', key: 'account', sortable: true, width: 120 },
+        { title: '姓名', key: 'name', sortable: true, width: 140 },
+        { title: '账号', key: 'account', sortable: true, width: 140 },
         { title: '电话', key: 'tel', sortable: true, width: 140 },
         {
           title: '用户头像url',
@@ -343,7 +390,7 @@ export default {
           sortable: true,
           width: 160
         },
-        { title: '备注', key: 'remark', sortable: true, width: 160 },
+        { title: '备注', key: 'remark', sortable: true, width: 180 },
         {
           title: '操作',
           key: 'handle',
@@ -400,15 +447,13 @@ export default {
         passwdCheck: [{ required: true, validator: validatePassCheck, trigger: 'blur' }],
         tel: [
           {
-            required: true,
+            required: false,
             pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/,
             message: '电话号码不正确',
             trigger: 'blur'
           }
         ],
-        avatarUrl: [
-          { required: true, message: '头像不能为空', trigger: 'blur' }
-        ],
+        avatarUrl: [{ required: true, message: '头像不能为空', trigger: 'blur' }],
         status: [{ required: true, message: '请选择角色状态', trigger: 'blur' }]
       },
       // 头像上传
@@ -416,7 +461,10 @@ export default {
       imagecropperKey: 0,
       image: '',
       ids: [],
-      userStatusList: []
+      userStatusList: [],
+      defaultListMultiple: [],
+      defaultListMain: [],
+      uploadListMain: []
     };
   },
   computed: {},
@@ -464,13 +512,11 @@ export default {
           ) +
           `<br>
           创建时间: ${this.tableData[params.row.initRowIndex].createAt}<br>
-          最后登录时间: ${
-  this.tableData[params.row.initRowIndex].lastLoginAt
-}<br>
-          备注: ${this.tableData[params.row.initRowIndex].remark}<br>
-          关联角色：<tag type="border">角色1</tag><tag type="border">角色2</tag><tag type="border">角色3</tag>`
+          最后登录时间: ${this.tableData[params.row.initRowIndex].lastLoginAt}<br>
+          备注: ${this.tableData[params.row.initRowIndex].remark}<br>`
+        // 关联角色：<tag type="border">角色1</tag><tag type="border">角色2</tag><tag type="border">角色3</tag>
       });
-      console.log(this.tableData[params.row.initRowIndex].avatarUrl);
+      // console.log(this.tableData[params.row.initRowIndex].avatarUrl);
     },
     handleDelete(params) {
       const { row } = params;
@@ -509,16 +555,17 @@ export default {
       console.log('选择变化,当前页选择ids:' + this.ids);
     },
     handleEdit(params) {
-      console.log(params);
+      // console.log(params);
       const { row } = params;
       this.image = '';
       this.rowData = _.merge({}, this.rowData, row);
       this.rowData.passwdCheck = row.password;
-      this.image = this.rowData.avatarUrl;
+      this.defaultListMain = [];
+      // this.image = this.rowData.avatarUrl;
       this.modalEdit = true;
     },
     handleAddOrEditOk(name) {
-      this.rowData.avatarUrl = this.image;
+      // this.rowData.avatarUrl = this.image;
       this.loadingBtn = false;
       this.$refs[name].validate(valid => {
         if (valid) {
@@ -579,19 +626,20 @@ export default {
       this.imageVisible = false;
       this.rowData = _.merge({}, this.rowData);
       this.rowData = {};
+      this.defaultListMain = [];
       this.step = 'userAdd';
       this.isDisable = true;
       this.isCreated = false;
       this.modalAdd = true;
     },
     handleRole(params) {
-      console.log(params);
+      // console.log(params);
       const { row } = params;
       this.rowData = row;
       this.targetKeys = [];
       getRelationRoles(this.rowData.id).then(res => {
         if (res && res.length > 0) {
-          console.log('relationRoleIds: ', this.getRelationRoleIds(res));
+          // console.log('relationRoleIds: ', this.getRelationRoleIds(res));
           this.targetKeys = this.getRelationRoleIds(res);
         }
       });
@@ -731,6 +779,13 @@ export default {
     // 数据字典集合
     getStatusList() {
       this.userStatusList = this.getDictListByName('userStatus');
+    },
+    // 用户头像
+    handleSuccessMain(response, file, fileList) {
+      this.uploadListMain = fileList;
+      this.rowData.avatarUrl = null;
+      this.rowData.avatarUrl = fileList[0].url;
+      console.log(this.rowData.avatarUrl);
     }
   }
 };

@@ -275,7 +275,8 @@ export const deliveryTypeCustomEnum = [
 export const settlementStatus = {
   UNSETTLED: 'UNSETTLED',
   SUCCESS: 'SUCCESS',
-  EXPIRED: 'EXPIRED'
+  EXPIRED: 'EXPIRED',
+  REFUND: 'REFUND'
 };
 
 export const settlementStatusEnum = [
@@ -290,6 +291,10 @@ export const settlementStatusEnum = [
   {
     label: '已过期',
     value: settlementStatus.EXPIRED
+  },
+  {
+    label: '已退款',
+    value: settlementStatus.REFUND
   }
 ];
 
