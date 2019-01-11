@@ -126,7 +126,8 @@ export const filterLocalRoute = (routeList, routersLocal) => {
       actualRouter = actualRouter.concat(replyResult);
     }
   };
-  findLocalRoute(routersLocal);
+  const tempRouteLocal = _.cloneDeep(routersLocal);
+  findLocalRoute(tempRouteLocal);
   return actualRouter;
 };
 

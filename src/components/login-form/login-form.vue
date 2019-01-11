@@ -76,7 +76,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .login-form /deep/ .ivu-btn-primary{
-  margin-top: 100px;
+  margin-top: 44px;
   width: 500px;
   height: 89px;
   background-color: #5172ff;
@@ -111,5 +111,18 @@ export default {
   border-radius: 20px;
   box-shadow: 0px 10px 30px 0px
   rgba(21, 21, 21, 0.1);
+}
+.remember_password{
+  display: flex;
+  align-items: center;
+  margin-top: 55px;
+  img {
+    margin-left: 28px;
+  }
+  a {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 28px;
+  }
 }
 </style>
