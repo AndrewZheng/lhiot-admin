@@ -497,13 +497,12 @@ export default {
       ruleInline: {
         realName: { required: true, message: '请填写姓名' },
         phone: { required: true, message: '请填写电话号码' },
-        upperbodyPhoto: { required: true, message: '请上传图片' },
-        photo: { required: true, message: '请上传图片' },
+        upperbodyPhoto: { required: true, message: '请上传半身照' },
+        photo: { required: true, message: '请上传职业照' },
         doctorStatus: { required: true, message: '请选择鲜果师状态' },
         doctorLevel: { required: true, message: '请选择鲜果师等级' },
         hot: { required: true, message: '请选择明星鲜果师状态' },
-        jobTitle: { required: true, message: '请填写鲜果师头衔' },
-        profile: { required: true, message: '请填写鲜果师个人简历' }
+        jobTitle: { required: true, message: '请填写鲜果师头衔' }
       },
       columns: [
         {
