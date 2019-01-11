@@ -228,7 +228,20 @@ export default {
         {
           title: '位置类型',
           minWidth: 150,
-          key: 'positionType'
+          key: 'positionType',
+          render: (h, params, vm) => {
+            const { row } = params;
+            switch (row.positionType) {
+              case 'PRODUCT':
+                return <div>{'商品'}</div>;
+              case 'ADVERTISEMENT':
+                return <div>{'广告'}</div>;
+              case 'ARTICLE':
+                return <div>{'文章'}</div>;
+              default :
+                return <div>{row.positionType}</div>;
+            }
+          }
         },
         {
           title: '操作',
