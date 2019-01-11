@@ -67,9 +67,7 @@ export default {
     }
   },
   created() {
-    setRemember(false)
-    console.log('sessionStorage');
-    console.log(sessionStorage.getItem('isChoose'));
+    setRemember(false);
   },
   methods: {
     handleSubmit() {
