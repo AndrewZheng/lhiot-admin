@@ -4,7 +4,7 @@ import { constantRouterMap } from './routers';
 import store from '@/store';
 import iView from 'iview';
 
-import { getToken, getNamesByRouters } from '@/libs/util';
+import { getToken, getNamesByRouters, getRemember } from '@/libs/util';
 Vue.use(Router);
 
 const router = new Router({
@@ -32,6 +32,7 @@ function hasPermission(userPermission, currentRoute) {
 router.beforeEach((to, from, next) => {
   iView.LoadingBar.start();
   const token = getToken();
+  const if_remember = getRemember();
   console.log('token');
   console.log(token);
   if (token) {
