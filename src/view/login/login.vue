@@ -7,7 +7,7 @@
     <div class="login-con">
       <div class="login-con-header">
         <div class="login-con-header-left">
-          <img :src="maxLogo">绿航物联
+          <img :onerror="logo" src="../../../src/assets/images/lhiot_logo.jpg" >绿航物联
         </div>
         <div style="color: black">|</div>
         <div class="login-con-header-right">云平台管理</div>
@@ -30,7 +30,8 @@ export default {
   },
   data() {
     return {
-      maxLogo
+      maxLogo,
+      logo: 'this.src="' + require('../../../src/assets/images/lhiot_logo.jpg') + '"'
     }
   },
   methods: {
