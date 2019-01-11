@@ -376,7 +376,7 @@ export default {
     },
     handleView(params) {
       this.tempModalType = this.modalType.view;
-      this.articleDetail = this._.clone(params.row);
+      this.articleDetail = this._.cloneDeep(params.row);
       this.modalView = true;
     },
     handleEdit(params) {

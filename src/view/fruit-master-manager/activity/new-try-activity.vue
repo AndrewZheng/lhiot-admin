@@ -261,9 +261,9 @@ export default {
       modalViewLoading: false,
       shelfSpecificationLoading: false,
       optionsShelfSpecification: [],
-      searchRowData: this._.clone(roleRowData),
+      searchRowData: this._.cloneDeep(roleRowData),
       fruitMasterDetail: fruitMasterDetail,
-      goodsDetail: this._.clone(goodsDetail)
+      goodsDetail: this._.cloneDeep(goodsDetail)
     };
   },
   computed: {
@@ -385,7 +385,7 @@ export default {
     handleEdit(params) {
       // this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.edit;
-      this.goodsDetail = this._.clone(params.row);
+      this.goodsDetail = this._.cloneDeep(params.row);
       this.modalEdit = true;
     },
     getTableData() {
