@@ -4,7 +4,7 @@ import { constantRouterMap } from './routers';
 import store from '@/store';
 import iView from 'iview';
 
-import { getToken, getNamesByRouters } from '@/libs/util';
+import { getToken, getNamesByRouters, getRemember } from '@/libs/util';
 Vue.use(Router);
 
 const router = new Router({

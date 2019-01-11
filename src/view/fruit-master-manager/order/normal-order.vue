@@ -702,6 +702,7 @@ export default {
             this.deliverNoteList.push(res.deliverNote);
           }
           this.modalView = true;
+          this.loading = false;
         }).catch(res => {
           this.loading = false;
         });

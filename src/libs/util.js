@@ -6,9 +6,13 @@ import _ from 'lodash';
 
 export const TOKEN_KEY = 'token';
 
+export const IF_REMEMBER = 'if_remember'
+
 export const GOODS_STANDARD = 'goodsStandard';
 
 export const ARTICLE = 'article';
+
+export const LHIOT_TOKEN = 'lhiot_token';
 
 export const setGoodsStandard = (goodsStandard) => {
   const string = JSON.stringify(goodsStandard);
@@ -32,16 +36,51 @@ export const getArticle = () => {
   return JSON.parse(Cookies.get(ARTICLE));
 };
 
-export const setToken = (token) => {
-  Cookies.set(TOKEN_KEY, token, {
+// 是否记住用户账号密码
+export const setRemember = (if_remember) => {
+  const string = JSON.stringify({ if_remember });
+  Cookies.set(IF_REMEMBER, string, {
     expires: config.cookieExpires || 1
   });
 };
 
+// 是否记住用户账号密码
+export const getRemember = () => {
+  const tempRemember = Cookies.get(IF_REMEMBER);
+  if (tempRemember) {
+    const token = JSON.parse(tempRemember);
+    if (token) return token.if_remember;
+    else return false;
+  } else {
+    return false;
+  }
+};
+export const setToken = (token) => {
+  const remember = getRemember();
+  if (remember) {
+    // 记住账号密码
+    Cookies.set(TOKEN_KEY, token, {
+      expires: config.cookieExpires || 1
+    });
+  } else {
+    // 没有记住账号密码
+    sessionStorage.setItem(LHIOT_TOKEN, token);
+  }
+};
+
 export const getToken = () => {
-  const token = Cookies.get(TOKEN_KEY);
-  if (token) return token;
-  else return false;
+  const remember = getRemember();
+  if (remember) {
+    // 记住账号密码
+    const token = Cookies.get(TOKEN_KEY);
+    if (token) return token;
+    else return false;
+  } else {
+    // 没有记住账号密码
+    const tempLhiot_token = sessionStorage.getItem(LHIOT_TOKEN);
+    if (tempLhiot_token) return tempLhiot_token;
+    else return false;
+  }
 };
 
 export const hasChild = (item) => {

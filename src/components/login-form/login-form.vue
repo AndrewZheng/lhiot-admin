@@ -17,6 +17,9 @@
         </span>
         </Input>
       </FormItem>
+      <div :class="{remember_password:isChoose,remember_password_checked:!isChoose}" @click="changeCheck">
+        记住我
+      </div>
       <FormItem>
         <Button type="primary" long @click="handleSubmit">登录</Button>
       </FormItem>
@@ -24,6 +27,7 @@
   </div>
 </template>
 <script>
+import { setRemember, getRemember } from '../../libs/util';
 export default {
   name: 'LoginForm',
   props: {
@@ -44,12 +48,14 @@ export default {
       }
     }
   },
+
   data() {
     return {
       form: {
         account: 'admin',
         password: ''
-      }
+      },
+      isChoose: false
     };
   },
   computed: {
@@ -60,8 +66,12 @@ export default {
       };
     }
   },
+  created() {
+    setRemember(false);
+  },
   methods: {
     handleSubmit() {
+      setRemember(this.isChoose);
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.$emit('on-success-valid', {
@@ -70,11 +80,17 @@ export default {
           });
         }
       });
+    },
+    changeCheck() {
+      this.isChoose = !this.isChoose
     }
   }
 };
 </script>
 <style lang="scss" scoped>
+.checkImage{
+  background-image: url('./check_able.png')
+}
 .login-form /deep/ .ivu-btn-primary{
   margin-top: 44px;
   width: 500px;
@@ -99,6 +115,7 @@ export default {
   border-radius: 20px;
   background: white !important;
   border: 0;
+  letter-spacing: 8px;
 }
 .login-form /deep/ .ivu-input-group-prepend{
   border-radius: 20px;
@@ -113,16 +130,27 @@ export default {
   rgba(21, 21, 21, 0.1);
 }
 .remember_password{
+  cursor: pointer;
   display: flex;
   align-items: center;
-  margin-top: 55px;
-  img {
-    margin-left: 28px;
-  }
-  a {
-    display: inline-block;
-    margin-left: 10px;
-    font-size: 28px;
-  }
+  margin-top: 45px;
+  height: 40px;
+  padding-left: 50px;
+  margin-left: 25px;
+  font-size: 20px;
+  color: #5b5b5b;
+  background: url("../../../src/assets/images/check_able.png") no-repeat ;
+}
+.remember_password_checked{
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-top: 45px;
+  height: 40px;
+  padding-left: 50px;
+  margin-left: 25px;
+  font-size: 20px;
+  color: #5b5b5b;
+  background: url("../../../src/assets/images/check_disable.png") no-repeat ;
 }
 </style>
