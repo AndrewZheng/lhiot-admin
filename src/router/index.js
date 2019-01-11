@@ -32,7 +32,6 @@ function hasPermission(userPermission, currentRoute) {
 router.beforeEach((to, from, next) => {
   iView.LoadingBar.start();
   const token = getToken();
-  const if_remember = getRemember();
   console.log('token');
   console.log(token);
   if (token) {

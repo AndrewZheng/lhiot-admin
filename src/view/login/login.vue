@@ -7,7 +7,7 @@
     <div class="login-con">
       <div class="login-con-header">
         <div class="login-con-header-left">
-          <img src="../../../src/assets/images/logo.jpg">绿航物联
+          <img :src="maxLogo">绿航物联
         </div>
         <div style="color: black">|</div>
         <div class="login-con-header-right">云平台管理</div>
@@ -23,9 +23,15 @@
 <script>
 import LoginForm from '_c/login-form';
 import { mapActions } from 'vuex';
+import maxLogo from '@/assets/images/lhiot_logo.jpg';
 export default {
   components: {
     LoginForm
+  },
+  data() {
+    return {
+      maxLogo
+    }
   },
   methods: {
     ...mapActions([
