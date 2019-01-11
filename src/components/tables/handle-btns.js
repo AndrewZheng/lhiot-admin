@@ -584,6 +584,75 @@ const btns = {
         }
       })]);
     }
+  },
+  settlementRefund: (h, params, vm) => {
+    const { row } = params;
+    // 薪资已过期显示退款按钮
+    if (row.settlementStatus == 'EXPIRED') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '你确定要退款吗?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-refund', params);
+            // 页面验证 删除成功则刷新表格内容
+            // vm.$emit('input', params.tableData.filter((item, index) => index !== params.row.initRowIndex));
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          },
+          style: {
+            marginRight: '5px'
+          }
+        }, [h('Icon', {
+          props: {
+            type: 'md-log-out',
+            size: 16,
+            color: '#fff'
+          }
+        })
+        ])
+      ]);
+    } else {
+      return '';
+    }
+  },
+  settlementEdit: (h, params, vm) => {
+    const { row } = params;
+    // 除了薪资未审核的其他不显示修改权限按钮
+    if (row.settlementStatus == 'UNSETTLED') {
+      return h('Button', {
+        props: {
+          type: 'warning',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-edit', params);
+          }
+        }
+      }, [h('Icon', {
+        props: {
+          type: 'md-create',
+          size: 16,
+          color: '#fff'
+        }
+      })]);
+    } else {
+      return '';
+    }
   }
 };
 export default btns;

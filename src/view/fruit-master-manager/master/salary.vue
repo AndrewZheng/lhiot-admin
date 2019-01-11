@@ -12,6 +12,7 @@
         search-place="top"
         @on-edit="handleEdit"
         @on-view="handleView"
+        @on-refund="handleRefund"
       >
         <div slot="searchCondition">
           <Input
@@ -143,20 +144,6 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">银行卡号:</i-col>
-              <i-col span="16">{{ salaryDetail.cardNo }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">结算状态:</i-col>
-              <i-col span="16">{{ salaryDetail.settlementStatus|settlementStatusFilters }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">申请时间:</i-col>
               <i-col span="16">{{ salaryDetail.createAt }}</i-col>
             </Row>
@@ -179,6 +166,20 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">持卡人姓名:</i-col>
               <i-col span="16">{{ salaryDetail.cardUsername }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">银行卡号:</i-col>
+              <i-col span="16">{{ salaryDetail.cardNo }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">结算状态:</i-col>
+              <i-col span="16">{{ salaryDetail.settlementStatus|settlementStatusFilters }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -223,34 +224,6 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">银行卡号:</i-col>
-              <i-col span="16">{{ salaryDetail.cardNo }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">结算状态:</i-col>
-              <Select
-                v-model="salaryDetail.settlementStatus"
-                span="16"
-                class="search-col mr5"
-                placeholder="结算状态"
-                style="width:150px"
-                clearable
-              >
-                <Option
-                  v-for="item in editStatus"
-                  :value="item.value"
-                  :key="item.value"
-                  class="ptb2-5"
-                >{{ item.label }}</Option>
-              </Select>
-            </Row>
-          </i-col>
-        </Row>
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">申请时间:</i-col>
               <i-col span="16">{{ salaryDetail.createAt }}</i-col>
             </Row>
@@ -276,6 +249,34 @@
             </Row>
           </i-col>
         </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">银行卡号:</i-col>
+              <i-col span="16">{{ salaryDetail.cardNo }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">结算状态:</i-col>
+              <Select
+                v-model="salaryDetail.settlementStatus"
+                span="16"
+                class="search-col mr5"
+                placeholder="结算状态"
+                style="width:150px"
+                clearable
+              >
+                <Option
+                  v-for="item in editStatus"
+                  :value="item.value"
+                  :key="item.value"
+                  class="ptb2-5"
+                >{{ item.label }}</Option>
+              </Select>
+            </Row>
+          </i-col>
+        </Row>
       </div>
       <div slot="footer">
         <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
@@ -287,7 +288,7 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import _ from 'lodash';
-import { getFruitDoctorsSettlementPagesPages, editFruitDoctorsSettlement } from '@/api/fruitermaster';
+import { getFruitDoctorsSettlementPagesPages, editFruitDoctorsSettlement, refundFruitDoctorsSettlement } from '@/api/fruitermaster';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import { settlementStatusConvert } from '@/libs/converStatus';
@@ -363,7 +364,17 @@ export default {
           key: 'settlementStatus',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{settlementStatusConvert(row.settlementStatus).label}</div>;
+            if (row.settlementStatus === 'UNSETTLED') {
+              return <div><tag color='warning'>{settlementStatusConvert(row.settlementStatus).label}</tag></div>;
+            } else if (row.settlementStatus === 'SUCCESS') {
+              return <div><tag color='success'>{settlementStatusConvert(row.settlementStatus).label}</tag></div>;
+            } else if (row.settlementStatus === 'EXPIRED') {
+              return <div><tag color='error'>{settlementStatusConvert(row.settlementStatus).label}</tag></div>;
+            } else if (row.settlementStatus === 'REFUND') {
+              return <div><tag color='primary'>{settlementStatusConvert(row.settlementStatus).label}</tag></div>;
+            } else {
+              return <div>{settlementStatusConvert(row.settlementStatus).label}</div>;
+            }
           }
         },
         {
@@ -388,7 +399,7 @@ export default {
           minWidth: 150,
           key: 'handle',
           fixed: 'right',
-          options: ['view', 'edit']
+          options: ['view', 'settlementEdit', 'settlementRefund']
         }
       ],
       userStatus: settlementStatusEnum,
@@ -484,6 +495,11 @@ export default {
           filename: `薪资信息-${new Date().valueOf()}`,
           data: tableData
         });
+      });
+    },
+    handleRefund(params) {
+      refundFruitDoctorsSettlement({ 'id': params.row.id }).then(res => {
+        this.getTableData();
       });
     }
   }

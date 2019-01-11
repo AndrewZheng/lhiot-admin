@@ -295,7 +295,7 @@ const mixin = {
     },
     // 翻译字典 list 需要翻译集合，key 需要翻译的字段
     getDictValueByKey(list, key) {
-      console.log('getDictValueByKey:key：' + key);
+      // console.log('getDictValueByKey:key：' + key);
       if (list.length !== 0) {
         const column = list.filter(item => item.key == key);
         return column.length > 0 ? column[0].value : '';
