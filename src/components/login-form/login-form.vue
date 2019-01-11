@@ -17,9 +17,6 @@
         </span>
         </Input>
       </FormItem>
-      <!--<div class="remember_password">-->
-        <!--<img src="../../../src/assets/images/check_able.png"><a>记住我</a>-->
-      <!--</div>-->
       <FormItem>
         <Button type="primary" long @click="handleSubmit">登录</Button>
       </FormItem>
