@@ -557,6 +557,15 @@ export const asyncRouterMap = [
           title: '定制计划管理'
         },
         component: () => import('@/view/fruit-master-manager/custom/custom-plan.vue')
+      },
+      {
+        path: '/custom_plan_specification_standard',
+        name: 'custom_plan_specification_standard',
+        meta: {
+          icon: 'md-albums',
+          title: '定制套餐配图管理'
+        },
+        component: () => import('@/view/fruit-master-manager/custom/specification-standard.vue')
       }
     ]
   },

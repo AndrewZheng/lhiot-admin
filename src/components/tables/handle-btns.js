@@ -375,13 +375,13 @@ const btns = {
       }, [
         h('Button', {
           props: {
-            type: 'error',
+            type: 'success',
             size: 'small'
           }
         }, [
           h('Icon', {
             props: {
-              type: 'md-unlock',
+              type: 'md-lock',
               size: 16,
               color: '#fff'
             }
@@ -405,13 +405,13 @@ const btns = {
       }, [
         h('Button', {
           props: {
-            type: 'success',
+            type: 'error',
             size: 'small'
           }
         }, [
           h('Icon', {
             props: {
-              type: 'md-lock',
+              type: 'md-unlock',
               size: 16,
               color: '#fff'
             }
