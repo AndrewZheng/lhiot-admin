@@ -587,11 +587,37 @@ export const getCustomOrdersPages = (data) => {
 };
 
 // 查询定制计划规格基础数据分页列表
-export const getcustomPlanSpecificationStandardsPages = (data) => {
+export const getCustomPlanSpecificationStandardsPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/custom-plan-specification-standards/pages',
     data,
     method: 'post'
+  });
+};
+
+// 根据ids删除定制计划规格基础数据
+export const deleteCustomPlanSpecificationStandard = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-specification-standards/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加定制计划规格基础数据
+export const addCustomPlanSpecificationStandard = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-specification-standards/',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改定制计划规格基础数据
+export const editCustomPlanSpecificationStandard = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/custom-plan-specification-standards/' + data.id,
+    data,
+    method: 'put'
   });
 };
 

@@ -254,7 +254,7 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import { getCustomOrdersPages, getcustomPlanSpecificationStandardsPages, getcustomOrders } from '@/api/fruitermaster';
+import { getCustomOrdersPages, getCustomPlanSpecificationStandardsPages, getcustomOrders } from '@/api/fruitermaster';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import { fenToYuanDot2 } from '@/libs/util';
@@ -485,7 +485,7 @@ export default {
   created() {
     this.searchLoading = true;
     this.clearSearchLoading = true;
-    getcustomPlanSpecificationStandardsPages({}).then(res => {
+    getCustomPlanSpecificationStandardsPages({}).then(res => {
       this.customCopiesList = res.array;
       this.getTableData();
     }).catch(() => {
