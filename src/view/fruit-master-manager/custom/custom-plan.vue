@@ -110,7 +110,7 @@
               <i-col span="10">上架板块:</i-col>
               <i-col span="14">
                 <div v-for="item in customPlanSectionData" :key="item.id">
-                  <CheckboxGroup v-model="rowData.customPlanSectionIds">
+                  <CheckboxGroup v-if="rowData.customPlanSectionIds" v-model="rowData.customPlanSectionIds">
                     <Checkbox
                       ref="checkBox"
                       :label="item.id"
@@ -733,17 +733,20 @@ export default {
       this.tempModalType = this.modalType.view;
       this.loading = true;
       getCustomPlan({ id: params.row.id }).then(res => {
+        console.log('res:' + JSON.stringify(res));
         this.step = 'name1';
         this.loading = false;
         this.rowData = {};
         this.rowData = res;
         // 如果只有一个周期的套餐，则另一个套餐数据补齐
-        if (res.periodList.length !== 2) {
+        if (res.periodList.length === 1) {
           const planPeriod = this.rowData.periodList[0].planPeriod;
           const newPlanPeriod = planPeriod === 7 ? 30 : 7;
           const newIndex = this.rowData.periodList[0].index === 0 ? 1 : 0;
           this.rowData.periodList.push({ 'index': newIndex, 'planPeriod': newPlanPeriod, 'products': [], 'specificationList': [] });
-          // console.log(JSON.stringify(this.rowData));
+        } else if (res.periodList.length === 0) { // 如果一个周期的套餐都没有或者商品下架，则全部补齐
+          this.rowData.periodList.push({ 'index': 0, 'planPeriod': 7, 'products': [], 'specificationList': [] });
+          this.rowData.periodList.push({ 'index': 1, 'planPeriod': 30, 'products': [], 'specificationList': [] });
         }
         // 升序排序
         this.rowData.periodList.sort((a, b) => a.index - b.index);
@@ -760,7 +763,7 @@ export default {
         this.rowData = res;
         const planId = this.rowData.id;
         // 如果只有一个周期的套餐，则另一个套餐数据补齐
-        if (res.periodList.length !== 2) {
+        if (res.periodList.length === 1) {
           const planPeriod = this.rowData.periodList[0].planPeriod;
           const newPlanPeriod = planPeriod === 7 ? 30 : 7;
           const newIndex = this.rowData.periodList[0].index === 0 ? 1 : 0;
@@ -774,7 +777,25 @@ export default {
             const description = specification === 0 ? '单人套餐' : (specification === 1 ? '双人套餐' : '三人套餐');
             this.rowData.periodList[newIndex].specificationList.push({ 'options': null, 'index': specification, 'description': description, 'id': 0, 'image': '', 'planId': planId, 'planPeriod': newPlanPeriod, 'price': 0, 'quantity': (specification + 1), 'standardId': 0, 'optionType': null });
           }
-          // console.log(JSON.stringify(this.rowData));
+        } else if (res.periodList.length === 0) { // 如果一个周期的套餐都没有或者商品下架，则全部补齐
+          // 周套餐
+          this.rowData.periodList.push({ 'index': 0, 'planPeriod': 7, 'products': [], 'specificationList': [] });
+          for (var weekProduct = 0; weekProduct < 7; weekProduct++) {
+            this.rowData.periodList[0].products.push({ 'index': weekProduct, 'benefit': '', 'dayOfPeriod': (weekProduct + 1), 'description': '', 'id': 0, 'image': '', 'planId': planId, 'productName': '', 'shelfId': 0, 'optionType': null });
+          }
+          for (var weekSpecification = 0; weekSpecification < 3; weekSpecification++) {
+            const description = weekSpecification === 0 ? '单人套餐' : (weekSpecification === 1 ? '双人套餐' : '三人套餐');
+            this.rowData.periodList[0].specificationList.push({ 'options': null, 'index': weekSpecification, 'description': description, 'id': 0, 'image': '', 'planId': planId, 'planPeriod': 7, 'price': 0, 'quantity': (weekSpecification + 1), 'standardId': 0, 'optionType': null });
+          }
+          // 月套餐
+          this.rowData.periodList.push({ 'index': 1, 'planPeriod': 30, 'products': [], 'specificationList': [] });
+          for (var monthProduct = 0; monthProduct < 30; monthProduct++) {
+            this.rowData.periodList[1].products.push({ 'index': monthProduct, 'benefit': '', 'dayOfPeriod': (monthProduct + 1), 'description': '', 'id': 0, 'image': '', 'planId': planId, 'productName': '', 'shelfId': 0, 'optionType': null });
+          }
+          for (var monthSpecification = 0; monthSpecification < 3; monthSpecification++) {
+            const description = monthSpecification === 0 ? '单人套餐' : (monthSpecification === 1 ? '双人套餐' : '三人套餐');
+            this.rowData.periodList[1].specificationList.push({ 'options': null, 'index': monthSpecification, 'description': description, 'id': 0, 'image': '', 'planId': planId, 'planPeriod': 30, 'price': 0, 'quantity': (monthSpecification + 1), 'standardId': 0, 'optionType': null });
+          }
         }
         // 如果某个周期内的套餐不完整，不完整的部分补齐
         res.periodList.forEach(period => {

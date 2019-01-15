@@ -1,5 +1,3 @@
-import { onSaleStatus } from '../../libs/enumerate';
-
 const btns = {
   view: (h, params, vm) => {
     return h('Button', {
@@ -202,7 +200,7 @@ const btns = {
     const {
       row
     } = params;
-    if (row.status === onSaleStatus.VALID) {
+    if (row.status === 'VALID') {
       return h('Poptip', {
         props: {
           confirm: true,
