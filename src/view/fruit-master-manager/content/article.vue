@@ -269,7 +269,6 @@ export default {
         {
           title: '发布状态',
           width: 100,
-          key: 'articleStatus',
           render: (h, params, vm) => {
             const { row } = params;
             if (row.articleStatus === 'PUBLISH') {
@@ -360,7 +359,7 @@ export default {
       if (this.articleDetail.articleStatus == 'PUBLISH') {
         this.articleDetail.articleStatus = 'UN_PUBLISH';
       } else {
-        this.$Message.error('请完善商品的信息!');
+        this.articleDetail.articleStatus = 'PUBLISH';
       }
       this.editTableRow();
     },

@@ -451,11 +451,11 @@ const btns = {
     const {
       row
     } = params;
-    if (row.articleStatus === 'PUBLISH') {
+    if (row.articleStatus === 'UN_PUBLISH') {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要把该文章改未发布吗?'
+          title: '确认要把该文章改成发布吗?'
         },
         style: {
           marginRight: '5px'
@@ -485,7 +485,7 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要把该文章改为发布吗?'
+          title: '确认要把该文章改未发布吗?'
         },
         style: {
           marginRight: '5px'

@@ -291,7 +291,7 @@
               </IViewUpload>
             </FormItem>
           </Row>
-          <Row v-show="tempModalType===modalType.create">
+          <Row v-show="false">
             <Col span="24">
             <FormItem label="上架板块:">
               <div v-for="item in uiPositionData" :key="item.id">
