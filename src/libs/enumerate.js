@@ -517,3 +517,87 @@ export const relationTypeEnum = [
     value: relationType.EXTERNAL_LINKS
   }
 ];
+
+// 反馈状态
+// (UNREPLY-未回复，
+// REPLY-已回复且用户未读，
+// READED-已读’)
+
+export const feedbackStatus = {
+  UNREPLY: 'UNREPLY',
+  REPLY: 'REPLY',
+  READED: 'READED'
+}
+
+export const feedbackStatusEnum = [
+  {
+    label: '未回复',
+    value: feedbackStatus.UNREPLY
+  },
+  {
+    label: '已回复',
+    value: feedbackStatus.REPLY
+  },
+  {
+    label: '已读',
+    value: feedbackStatus.READED
+  }
+];
+
+// 门店状态 ENABLED(营业),DISABLED(未营业);
+export const storeStatus = {
+  ENABLED: 'ENABLED',
+  DISABLED: 'DISABLED'
+};
+
+export const storeStatusEnum = [
+  {
+    label: '营业',
+    value: storeStatus.ENABLED
+  },
+  {
+    label: '未营业',
+    value: storeStatus.DISABLED
+  }
+];
+
+// 门店类型：ORDINARY_STORE(普通门店),FLAGSHIP_STORE (旗舰店)
+export const storeType = {
+  ORDINARY_STORE: 'ORDINARY_STORE',
+  FLAGSHIP_STORE: 'FLAGSHIP_STORE'
+};
+
+export const storeTypeEnum = [
+  {
+    label: '普通门店',
+    value: storeType.ORDINARY_STORE
+  },
+  {
+    label: '旗舰店',
+    value: storeType.FLAGSHIP_STORE
+  }
+];
+
+// GCJ02("高德坐标系/火星坐标系"),
+//   BD09("百度坐标系"),
+//   WGS84("GPS坐标系")
+export const coordinateType = {
+  GCJ02: 'GCJ02',
+  BD09: 'BD09',
+  WGS84: 'WGS84'
+};
+
+export const coordinateTypeEnum = [
+  {
+    label: '高德坐标系/火星坐标系',
+    value: coordinateType.GCJ02
+  },
+  {
+    label: '百度坐标系',
+    value: coordinateType.BD09
+  },
+  {
+    label: 'GPS坐标系',
+    value: coordinateType.WGS84
+  }
+];

@@ -7,7 +7,8 @@
     <div class="login-con">
       <div class="login-con-header">
         <div class="login-con-header-left">
-          <img :onerror="logo" src="../../../src/assets/images/lhiot_logo.jpg" >绿航物联
+          <div class="login-con-header-left-image"/>
+          <div>绿航物联</div>
         </div>
         <div style="color: black">|</div>
         <div class="login-con-header-right">云平台管理</div>

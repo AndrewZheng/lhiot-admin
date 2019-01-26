@@ -651,6 +651,101 @@ const btns = {
     } else {
       return '';
     }
+  },
+  feedback: (h, params, vm) => {
+    const { row } = params;
+    // 除了未回复的其他不显示修改按钮
+    if (row.status == 'UNREPLY') {
+      return h('Button', {
+        props: {
+          type: 'warning',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-edit', params);
+          }
+        }
+      }, [h('Icon', {
+        props: {
+          type: 'md-create',
+          size: 16,
+          color: '#fff'
+        }
+      })]);
+    } else {
+      return '';
+    }
+  },
+  // 门店状态 ENABLED(营业),DISABLED(未营业);
+  onStoreStatus: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.status === 'DISABLED') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要把该门店改为营业吗?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-storeStatus', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-cloud-upload',
+              size: 16,
+              color: '#green'
+            }
+          })
+        ])
+      ]);
+    } else {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要把该门店改为未营业吗?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-storeStatus', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-cloud-download',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
+    }
   }
 };
 export default btns;

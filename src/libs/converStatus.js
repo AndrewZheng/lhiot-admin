@@ -7,7 +7,8 @@ import {
   orderTypeEnum, positionTypeEnum,
   receivingWayEnum, relationTypeEnum,
   settlementStatusEnum,
-  thirdDelieverStatusEnum, updateWayEnum
+  thirdDelieverStatusEnum, updateWayEnum, storeStatusEnum, storeTypeEnum, coordinateTypeEnum,
+  feedbackStatusEnum
 } from './enumerate';
 
 const convertFunction = (value, list) => {
@@ -91,4 +92,20 @@ export const relationTypeConvert = (value) => {
 
 export const customPlanStatusConvert = (value) => {
   return convertFunction(value, customPlanStatusEnum);
+};
+
+export const feedbackStatusConvert = (value) => {
+  return convertFunction(value, feedbackStatusEnum);
+};
+
+export const storeStatusConvert = (value) => {
+  return convertFunction(value, storeStatusEnum);
+};
+
+export const storeTypeConvert = (value) => {
+  return convertFunction(value, storeTypeEnum);
+};
+
+export const coordinateTypeConvert = (value) => {
+  return convertFunction(value, coordinateTypeEnum);
 };
