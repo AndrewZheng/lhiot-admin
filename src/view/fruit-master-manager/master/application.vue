@@ -307,7 +307,7 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             if (row.auditStatus === 'UNAUDITED') {
-              return <div><tag color='primary'>{'待审核'}</tag></div>;
+              return <div><tag color='warning'>{'待审核'}</tag></div>;
             } else if (row.auditStatus === 'AGREE') {
               return <div><tag color='success'>{'审核通过'}</tag></div>;
             } else if (row.auditStatus === 'REJECT') {

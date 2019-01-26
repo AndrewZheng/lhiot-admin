@@ -44,7 +44,7 @@ module.exports = {
       '/api': {
         target: 'http://172.16.10.203:2018',
         // 'http://172.16.10.203:2018',
-        // http://192.168.1.212:2018
+        // http://192.168.1.225:2018
         ws: true,
         logLevel: 'debug',
         changeOrigin: true,

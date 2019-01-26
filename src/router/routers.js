@@ -490,6 +490,15 @@ export const asyncRouterMap = [
           title: '文章管理'
         },
         component: () => import('@/view/fruit-master-manager/content/article.vue')
+      },
+      {
+        path: '/fruit-master-content-feedback',
+        name: 'fruit-master-content-feedback',
+        meta: {
+          icon: 'md-paper',
+          title: '用户反馈'
+        },
+        component: () => import('@/view/fruit-master-manager/content/feedback.vue')
       }
     ]
   },
@@ -528,6 +537,15 @@ export const asyncRouterMap = [
           title: '商品板块管理'
         },
         component: () => import('@/view/fruit-master-manager/page/goods-module.vue')
+      },
+      {
+        path: '/fruit-master-page-articles-module',
+        name: 'fruit-master-page-articles-module',
+        meta: {
+          icon: 'md-bookmarks',
+          title: '文章板块管理'
+        },
+        component: () => import('@/view/fruit-master-manager/page/articles-module.vue')
       },
       {
         path: '/fruit-master-page-custom-module',
@@ -644,6 +662,26 @@ export const asyncRouterMap = [
           title: '新品尝鲜活动'
         },
         component: () => import('@/view/fruit-master-manager/activity/new-try-activity.vue')
+      }
+    ]
+  },
+  {
+    path: '/fruit-master-manager-store',
+    name: 'fruit-master-manager-store',
+    meta: {
+      icon: 'ios-analytics',
+      title: '门店管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/fruit-master-store-message',
+        name: 'fruit-master-store-message',
+        meta: {
+          icon: 'md-beer',
+          title: '门店信息管理'
+        },
+        component: () => import('@/view/fruit-master-manager/store/store-message.vue')
       }
     ]
   },

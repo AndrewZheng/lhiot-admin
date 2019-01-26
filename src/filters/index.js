@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { coordinateTypeConvert } from '../libs/converStatus';
 
 const filters = {};
 
@@ -241,5 +242,10 @@ filters.numberFormatter = (num, digits) => {
 filters.toThousandFilter = (num) => {
   return (+num || 0).toString().replace(/^-?\d+/g, m => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','));
 };
+
+// 坐标系
+filters.coordinateTypeFilter = (value) => {
+  return coordinateTypeConvert(value).label
+}
 
 export default filters;

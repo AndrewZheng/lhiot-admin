@@ -19,8 +19,8 @@
       >
         <div slot="searchCondition">
           <Input
-            v-model="searchRowData.sectionName"
-            placeholder="版块名称"
+            v-model="searchRowData.nameCn"
+            placeholder="板块名称"
             class="search-input mr5"
             style="width: 150px"
             clearable></Input>
@@ -28,7 +28,7 @@
             :disable="selectDisable"
             v-model="searchRowData.positionIds"
             class="search-col mr5"
-            placeholder="版块位置"
+            placeholder="板块位置"
             style="width: 150px"
             clearable>
             <Option
@@ -75,37 +75,46 @@
       </div>
     </Card>
 
+    <!-- 板块详情 -->
     <Modal v-model="modalView" :mask-closable="false" :width="700">
       <p slot="header">
-        <span>商品板块详情</span>
+        <span>文章板块详情</span>
       </p>
       <div class="modal-content">
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-          <i-col span="24">
-            <i-col span="6">商品板块图片:</i-col>
-            <img :src="goodsModuleDetail.sectionImg" span="18" style="width: 300px">
+        <Row span="24" class-name="mb10">
+          <i-col span="12">
+            <i-col span="8">板块位置:</i-col>
+            <i-col span="16">{{ advertisementPositionComputed }}</i-col>
           </i-col>
-        </Row>
-        <Row>
-          <i-col span="24">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">板块位置:</i-col>
-              <i-col span="16">{{ advertisementPositionComputed }}</i-col>
-            </Row>
+          <i-col span="12">
+            <i-col span="8">板块名称:</i-col>
+            <i-col span="16">{{ articlesModuleDetail.nameCn }}</i-col>
           </i-col>
         </Row>
         <Row span="24" class-name="mb10">
-          <i-col span="8">板块名称:</i-col>
-          <i-col span="16">{{ goodsModuleDetail.sectionName }}</i-col>
+          <i-col span="12">
+            <i-col span="8">板块编码:</i-col>
+            <i-col span="16">{{ articlesModuleDetail.nameEn }}</i-col>
+          </i-col>
+          <i-col span="12">
+            <i-col span="8">创建时间:</i-col>
+            <i-col span="16">{{ articlesModuleDetail.createAt }}</i-col>
+          </i-col>
         </Row>
         <Row span="24" class-name="mb10">
-          <i-col span="8">板块序号:</i-col>
-          <i-col span="16">{{ goodsModuleDetail.sorting }}</i-col>
+          <i-col span="12">
+            <i-col span="8">板块序号:</i-col>
+            <i-col span="16">{{ articlesModuleDetail.sorting }}</i-col>
+          </i-col>
+          <i-col span="12">
+            <i-col span="8">父级板块id:</i-col>
+            <i-col span="16">{{ articlesModuleDetail.parentId }}</i-col>
+          </i-col>
         </Row>
-        <Row v-if="goodsModuleDetail.productShelfList" class-name="mb10">
+        <Row v-if="articlesModuleDetail.articleList" class-name="mb10">
           <tables
             :columns="tempColumnsView"
-            v-model="goodsModuleDetail.productShelfList"
+            v-model="articlesModuleDetail.articleList"
             border
           ></tables>
         </Row>
@@ -114,17 +123,20 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
+
+    <!-- 新增/修改 -->
     <Modal v-model="modalEdit" :width="900" :mask-closable="false">
       <p slot="header">
-        <span>{{ tempModalType === modalType.create?'创建板块':'编辑板块' }}</span>
+        <span>{{ tempModalType === modalType.create?'创建文章板块':'编辑文章板块' }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="goodsModuleDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="modalEdit" :model="articlesModuleDetail" :rules="ruleInline" :label-width="80">
           <Row v-if="tempModalType === modalType.create || tempModalType === modalType.edit">
             <Row>
+              <Col span="12">
               <FormItem label="板块位置:" prop="positionId">
                 <Select
-                  v-model="goodsModuleDetail.positionId"
+                  v-model="articlesModuleDetail.positionId"
                   style="width: 200px"
                   @on-change="goodsModuleTypeChange">
                   <Option
@@ -135,79 +147,73 @@
                   </Option>
                 </Select>
               </FormItem>
+              </Col>
+              <Col span="12">
+              <FormItem label="父级id:" prop="parentId">
+                <InputNumber v-model="articlesModuleDetail.parentId" placeholder="父级id" style="width: 200px"></InputNumber>
+              </FormItem>
+               </Col>
             </Row>
             <Row>
-              <FormItem label="板块名称:" prop="sectionName">
-                <Input v-model="goodsModuleDetail.sectionName" placeholder="板块名称"></Input>
+              <Col span="12">
+              <FormItem label="板块名称:" prop="nameCn">
+                <Input v-model="articlesModuleDetail.nameCn" placeholder="板块名称"></Input>
               </FormItem>
+              </Col>
+              <Col span="12">
+              <FormItem label="板块编码:" prop="nameEn">
+                <Input v-model="articlesModuleDetail.nameEn" placeholder="板块编码"></Input>
+              </FormItem>
+              </Col>
             </Row>
             <Row>
-              <FormItem
-                :label-width="80"
-                label="板块主图:建议尺寸 (xxx*xxx):"
-                prop="sectionImg">
-                <Input v-show="false" v-model="goodsModuleDetail.sectionImg" style="width: auto"></Input>
-                <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
-                  <template v-if="item.status === 'finished'">
-                    <div>
-                      <img :src="item.url">
-                      <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
-                      </div>
-                    </div>
-                  </template>
-                  <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                  </template>
-                </div>
-                <IViewUpload
-                  ref="uploadMain"
-                  :default-list="defaultListMain"
-                  :image-size="imageSize"
-                  @on-success="handleSuccessMain"
-                >
-                  <div slot="content">
-                    <Button type="primary">上传图片</Button>
-                  </div>
-                </IViewUpload>
+              <Col span="12">
+              <FormItem label="板块排序:" prop="sorting">
+                <InputNumber v-model="articlesModuleDetail.sorting" placeholder="板块排序" style="width: 200px"></InputNumber>
               </FormItem>
+              </Col>
             </Row>
           </Row>
           <Row v-if=" tempModalType !== modalType.edit && tempModalType !== modalType.view">
-            <FormItem label="关联商品:">
-              <Row>
-                <Col span="15">
+            <Row>
+              <Col span="11">
+              <FormItem label="关联文章:">
                 <Select
-                  ref="shelfSpecificationSelect"
+                  ref="shelfArticleSelect"
                   :remote="true"
                   :filterable="true"
                   :remote-method="remoteMethod"
-                  :loading="shelfSpecificationLoading">
+                  :loading="shelfArticleLoading"
+                  clearable
+                  placeholder="请输入文章标题">
                   <Option
-                    v-for="(option, index) in optionsShelfSpecification"
+                    v-for="(option, index) in optionsShelfArticle"
                     :value="option.id"
                     :key="index"
                     class="pb5 pt5 pl15"
                     @click.native="selectIndex(option)">
-                    {{ option.specificationInfo }}
+                    {{ option.title }}
                   </Option>
                 </Select>
+              </FormItem>
                 </Col>
-                <Col span="4">
-                <Button v-waves :loading="addTempDataLoading" span="4" class="search-btn ml20" type="primary" @click="addTempData">
-                  <Icon type="md-add"/>&nbsp;添加
-                </Button>
+              <Col span="6">
+              <!-- <FormItem label="关联序号:" >
+                <InputNumber v-model="articlesModuleDetail.relationSorting" class="ml20" label="关联序号"></InputNumber>
+              </FormItem> -->
                 </Col>
-              </Row>
-            </FormItem>
+              <Col span="4">
+              <Button v-waves :loading="addTempDataLoading" span="4" class="search-btn ml20" type="primary" @click="addTempData">
+                <Icon type="md-add"/>&nbsp;添加
+              </Button>
+                </Col>
+            </Row>
             <tables
               :columns="tempColumns"
-              v-model="goodsModuleDetail.productShelfList"
+              v-model="articlesModuleDetail.articleList"
               :loading="tempTableLoading"
               border
               @on-delete="modalHandleDelete"
-
             ></tables>
           </Row>
         </Form>
@@ -228,14 +234,14 @@
 import Tables from '_c/tables';
 import _ from 'lodash';
 import {
-  createProductSection,
-  deleteProductSection,
-  editProductSection,
-  getProductSectionsPages,
-  getProductShelvesPages,
+  createArticleSection,
+  deleteArticleSection,
+  editArticleSection,
+  getArticleSectionsPages,
+  getArticlesPages,
   getuiPositionsPages,
-  addProductSectionRelationBatch,
-  deleteProductSectionRelationBatch
+  addArticleSectionRelation,
+  deleteArticleSectionRelationBatch
 } from '@/api/fruitermaster';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
@@ -243,67 +249,84 @@ import searchMixin from '@/mixins/searchMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 import IViewUpload from '_c/iview-upload';
 import { positionType, YNEnum } from '@/libs/enumerate';
-import { fenToYuanDot2 } from '@/libs/util';
 
-const goodsModuleDetail = {
+const articlesModuleDetail = {
   id: 0,
   positionId: null,
-  sectionName: '',
-  sectionImg: '',
+  nameCn: '',
+  nameEn: '',
   sorting: 0,
   createAt: '',
   parentId: 0,
-  productShelfList: []
+  articleList: [],
+  relationSorting: 0
 };
 
 const roleRowData = {
   applicationType: null,
-  includeProduct: true,
-  includeShelves: true,
-  sectionName: '',
+  includeArticles: true,
+  includeArticlesQty: 10,
+  nameCn: '',
   positionIds: '',
   page: 1,
   rows: 10
 };
 const commonTempColumns = [
   {
-    title: '商品名称',
-    key: 'name',
-    minWidth: 100
+    title: 'ID',
+    key: 'id',
+    minWidth: 60
   },
   {
-    title: '商品条码',
+    title: '文章标题',
+    key: 'title',
+    minWidth: 120
+  },
+  {
+    title: '作者',
+    minWidth: 80,
+    key: 'author'
+  },
+  {
+    title: '文章简介',
     minWidth: 100,
+    key: 'introduce',
+    tooltip: true
+  },
+  {
+    title: '文章类型',
+    minWidth: 90,
+    key: 'articleType',
     render: (h, params, vm) => {
       const { row } = params;
-      return <div>{row.productSpecification.barcode}</div>;
+      if (row.articleType === 'ORIGINAL') {
+        return <div><tag color='success'>{'原创'}</tag></div>;
+      } else if (row.articleType === 'REPRINTED') {
+        return <div><tag color='warning'>{'转载'}</tag></div>;
+      } else {
+        return <div>{row.articleType}</div>;
+      }
     }
   },
   {
-    title: '商品规格',
-    minWidth: 100,
+    title: '文章状态',
+    minWidth: 90,
+    key: 'articleStatus',
     render: (h, params, vm) => {
       const { row } = params;
-      return <div>{row.productSpecification.weight + '*' + row.productSpecification.specificationQty + row.productSpecification.packagingUnit}</div>;
+      if (row.articleStatus === 'PUBLISH') {
+        return <div><tag color='success'>{'发布'}</tag></div>;
+      } else if (row.articleStatus === 'UN_PUBLISH') {
+        return <div><tag color='error'>{'未发布'}</tag></div>;
+      } else {
+        return <div>{row.articleStatus}</div>;
+      }
     }
   },
   {
-    title: '商品原价',
-    key: 'originalPrice',
-    minWidth: 100,
-    render: (h, params, vm) => {
-      const { row } = params;
-      return <div>{fenToYuanDot2(row.originalPrice)}</div>;
-    }
-  },
-  {
-    title: '商品特价',
-    key: 'price',
-    minWidth: 100,
-    render: (h, params, vm) => {
-      const { row } = params;
-      return <div>{fenToYuanDot2(row.price)}</div>;
-    }
+    title: '发布时间',
+    minWidth: 160,
+    key: 'publishAt'
   }
 ];
 export default {
@@ -318,15 +341,17 @@ export default {
       goodsModuleList: [],
       ruleInline: {
         positionId: [{ required: true, message: '请选择板块位置' }],
-        sectionName: [{ required: true, message: '请填写板块名称' }],
-        sectionImg: [{ required: true, message: '请上传板块主图' }],
-        productShelfList: [{ required: true, message: '请关联商品' },
+        nameCn: [{ required: true, message: '请填写板块名称' }],
+        nameEn: [{ required: true, message: '请填写板块编码' }],
+        sorting: [{ required: true, message: '请填写板块排序' }],
+        parentId: [{ required: true, message: '请填写父级板块id' }],
+        articleList: [{ required: true, message: '请关联文章' },
           {
             validator(rule, value, callback, source, options) {
               console.log(value);
               const errors = [];
               if (!value || value.length < 1) {
-                errors.push(new Error('请关联商品'));
+                errors.push(new Error('请关联文章'));
               }
               callback(errors);
             }
@@ -362,7 +387,7 @@ export default {
         },
         {
           title: '板块位置',
-          minWidth: 170,
+          minWidth: 120,
           render: (h, params, vm) => {
             const { row } = params;
             const tempObj = this.goodsModuleList.find(item => item.id === row.positionId);
@@ -376,7 +401,17 @@ export default {
         {
           title: '板块名称',
           width: 150,
-          key: 'sectionName'
+          key: 'nameCn'
+        },
+        {
+          title: '板块编码',
+          width: 150,
+          key: 'nameEn'
+        },
+        {
+          title: '父级id',
+          width: 160,
+          key: 'parentId'
         },
         {
           title: '创建时间',
@@ -395,21 +430,21 @@ export default {
           options: ['view', 'edit', 'delete', 'relevance']
         }
       ],
-      shelfSpecificationLoading: false,
+      shelfArticleLoading: false,
       addTempDataLoading: false,
       tempTableLoading: false,
       modalViewLoading: false,
-      optionsShelfSpecification: [],
+      optionsShelfArticle: [],
       defaultListMain: [],
       uploadListMain: [],
       searchRowData: _.cloneDeep(roleRowData),
-      goodsModuleDetail: _.cloneDeep(goodsModuleDetail),
-      tempOptionsShelfSpecification: null
+      articlesModuleDetail: _.cloneDeep(articlesModuleDetail),
+      tempOptionsArticle: null
     };
   },
   computed: {
     advertisementPositionComputed() {
-      const tempObj = this.goodsModuleList.find(item => item.id === this.goodsModuleDetail.positionId);
+      const tempObj = this.goodsModuleList.find(item => item.id === this.articlesModuleDetail.positionId);
       if (tempObj) {
         return tempObj.description;
       }
@@ -420,7 +455,7 @@ export default {
     getuiPositionsPages({
       applicationType: this.applicationType,
       includeSection: YNEnum.NO,
-      positionType: positionType.PRODUCT,
+      positionType: positionType.ARTICLE,
       page: 0,
       rows: 0
     }).then(res => {
@@ -432,21 +467,10 @@ export default {
     });
   },
   methods: {
-    setDefaultUploadList(res) {
-      if (res.sectionImg != null) {
-        const map = { status: 'finished', url: 'url' };
-        const mainImgArr = [];
-        map.url = res.sectionImg;
-        mainImgArr.push(map);
-        if (this.$refs.uploadMain) {
-          this.$refs.uploadMain.setDefaultFileList(mainImgArr);
-          this.uploadListMain = mainImgArr;
-        }
-      }
-    },
     createTableRow() {
       this.modalViewLoading = true;
-      createProductSection({ ...this.goodsModuleDetail }).then(res => {
+      this.articlesModuleDetail.applicationType = this.applicationType;
+      createArticleSection({ ...this.articlesModuleDetail }).then(res => {
         this.modalViewLoading = false;
         this.modalEdit = false;
         this.$Message.success('创建成功!');
@@ -459,16 +483,16 @@ export default {
     },
     modalHandleDelete(params) {
       if (this.tempModalType === this.modalType.create) {
-        this.goodsModuleDetail.productShelfList = this.goodsModuleDetail.productShelfList.filter((item, index) =>
+        this.articlesModuleDetail.articleList = this.articlesModuleDetail.articleList.filter((item, index) =>
           index !== params.row.initRowIndex
         );
       } else {
         this.tempTableLoading = true;
-        deleteProductSectionRelationBatch({
-          sectionId: this.goodsModuleDetail.id,
-          shelfIds: params.row.id
+        deleteArticleSectionRelationBatch({
+          sectionId: this.articlesModuleDetail.id,
+          articleIds: params.row.id
         }).then(res => {
-          this.goodsModuleDetail.productShelfList = this.goodsModuleDetail.productShelfList.filter((item, index) =>
+          this.articlesModuleDetail.articleList = this.articlesModuleDetail.articleList.filter((item, index) =>
             index !== params.row.initRowIndex
           );
           this.getTableData();
@@ -478,28 +502,33 @@ export default {
       }
     },
     addTempData() {
-      if (!this.tempOptionsShelfSpecification) {
-        this.$Message.warning('请选择定制计划');
+      if (!this.tempOptionsArticle) {
+        this.$Message.warning('请选择文章');
         return;
       }
-      if (!this.goodsModuleDetail.productShelfList) {
-        this.goodsModuleDetail.productShelfList = [];
+      // if (!(this.articlesModuleDetail.relationSorting > 0)) {
+      //   this.$Message.warning('关联序号必须大于0');
+      //   return;
+      // }
+      if (!this.articlesModuleDetail.articleList) {
+        this.articlesModuleDetail.articleList = [];
       }
-      const obj = this.goodsModuleDetail.productShelfList.some(item => {
-        return item.id === this.tempOptionsShelfSpecification.id;
+      const obj = this.articlesModuleDetail.articleList.some(item => {
+        return item.id === this.tempOptionsArticle.id;
       });
       if (!obj) {
         if (this.tempModalType === this.modalType.create) {
-          this.goodsModuleDetail.productShelfList.push({ ...this.tempOptionsShelfSpecification });
+          this.articlesModuleDetail.articleList.push({ ...this.tempOptionsArticle });
         } else {
           this.addTempDataLoading = true;
           this.tempTableLoading = true;
           this.loading = true;
-          addProductSectionRelationBatch({
-            sectionId: this.goodsModuleDetail.id,
-            shelfId: this.tempOptionsShelfSpecification.id
+          addArticleSectionRelation({
+            sectionId: this.articlesModuleDetail.id,
+            articleId: this.tempOptionsArticle.id
+            // sorting: this.articlesModuleDetail.relationSorting
           }).then(res => {
-            this.goodsModuleDetail.productShelfList.push({ ...this.tempOptionsShelfSpecification });
+            this.articlesModuleDetail.articleList.push({ ...this.tempOptionsArticle });
             this.addTempDataLoading = false;
             this.tempTableLoading = false;
             this.loading = false;
@@ -529,41 +558,41 @@ export default {
       });
     },
     selectIndex(options) {
-      this.tempOptionsShelfSpecification = options;
+      this.tempOptionsArticle = options;
     },
     remoteMethod(query) {
       if (query !== '') {
         this.handleSearchAutoComplete(query);
       } else {
-        this.optionsShelfSpecification = [];
+        this.optionsShelfArticle = [];
       }
     },
     handleSearchAutoComplete(value) {
-      this.shelfSpecificationLoading = true;
-      getProductShelvesPages({
-        keyword: value + '',
+      this.shelfArticleLoading = true;
+      getArticlesPages({
+        title: value + '',
         applicationType: this.applicationType,
         page: '1',
         rows: '5',
-        shelfStatus: 'ON'
+        articleStatus: 'PUBLISH'
       }).then(res => {
         if (res.array.length > 0) {
-          this.optionsShelfSpecification.length = 0;
-          this.optionsShelfSpecification = this.optionsShelfSpecification.concat(res.array);
+          this.optionsShelfArticle.length = 0;
+          this.optionsShelfArticle = this.optionsShelfArticle.concat(res.array);
         }
-        console.log(this.optionsShelfSpecification);
-        this.shelfSpecificationLoading = false;
+        console.log(this.optionsShelfArticle);
+        this.shelfArticleLoading = false;
       }).catch(() => {
-        this.shelfSpecificationLoading = false;
+        this.shelfArticleLoading = false;
       });
     },
     goodsModuleTypeChange(value) {
-      this.goodsModuleDetail.positionId = value;
+      this.articlesModuleDetail.positionId = value;
     },
     handleSuccessMain(response, file, fileList) {
       this.uploadListMain = fileList;
-      this.goodsModuleDetail.sectionImg = null;
-      this.goodsModuleDetail.sectionImg = fileList[0].url;
+      this.articlesModuleDetail.sectionImg = null;
+      this.articlesModuleDetail.sectionImg = fileList[0].url;
     },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
@@ -574,17 +603,17 @@ export default {
         this.$refs.uploadMain.clearFileList();
       }
       this.uploadListMain = [];
-      this.goodsModuleDetail = _.cloneDeep(goodsModuleDetail);
+      this.articlesModuleDetail = _.cloneDeep(articlesModuleDetail);
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
       this.uploadListMain = [];
-      this.goodsModuleDetail.sectionImg = null;
+      this.articlesModuleDetail.sectionImg = null;
     },
     editTableRow() {
       this.modalViewLoading = true;
-      editProductSection({
-        ...this.goodsModuleDetail
+      editArticleSection({
+        ...this.articlesModuleDetail
       }).then(res => {
         this.resetFields();
         this.modalEdit = false;
@@ -605,28 +634,26 @@ export default {
     },
     onRelevance(params) {
       this.tempModalType = null;
-      this.goodsModuleDetail = params.row;
-      this.setDefaultUploadList(params.row);
-      if (!this.goodsModuleDetail.productShelfList) {
-        this.goodsModuleDetail.productShelfList = [];
+      this.articlesModuleDetail = params.row;
+      if (!this.articlesModuleDetail.articleList) {
+        this.articlesModuleDetail.articleList = [];
       }
       this.modalEdit = true;
     },
     handleView(params) {
       this.tempModalType = this.modalType.view;
-      this.goodsModuleDetail = params.row;
+      this.articlesModuleDetail = params.row;
       this.modalView = true;
     },
     handleEdit(params) {
       this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.edit;
-      this.goodsModuleDetail = _.cloneDeep(params.row);
-      this.setDefaultUploadList(params.row);
+      this.articlesModuleDetail = _.cloneDeep(params.row);
       this.modalEdit = true;
     },
     deleteTable(ids) {
       this.loading = true;
-      deleteProductSection({
+      deleteArticleSection({
         ids
       }).then(res => {
         const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
@@ -642,7 +669,7 @@ export default {
     },
     getTableData() {
       this.searchRowData.applicationType = this.applicationType;
-      getProductSectionsPages(this.searchRowData).then(res => {
+      getArticleSectionsPages(this.searchRowData).then(res => {
         this.tableData = res.array;
         this.total = res.total;
         this.loading = false;

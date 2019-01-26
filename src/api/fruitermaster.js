@@ -758,3 +758,131 @@ export const editCustomPlanPeriod = (data) => {
     method: 'put'
   });
 };
+
+// 根据条件分页查询文章版块信息列表
+export const getArticleSectionsPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/article-sections/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据文章Ids删除文章版块
+export const deleteArticleSection = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/article-sections/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加文章版块(包括添加文章关联关系)
+export const createArticleSection = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/article-sections/',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改文章版块
+export const editArticleSection = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/article-sections/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 新增文章和板块的关联
+export const addArticleSectionRelation = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/article-section-relations',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据关联id删除文章和板块关联
+export const deleteArticleSectionRelationBatch = ({ sectionId, articleIds }) => {
+  return Vue.prototype.$http.request({
+    url: '/article-section-relations/batches?sectionId=' + sectionId + '&articleIds=' + articleIds,
+    method: 'delete'
+  });
+};
+
+// 根据条件分页查询用户反馈信息列表
+export const getFeedbacksPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/feedbacks/pages',
+    data,
+    method: 'post'
+  });
+};
+
+// 查询用户反馈详情
+export const getFeedback = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/feedbacks/' + id,
+    method: 'get'
+  });
+};
+
+// 修改用户反馈
+export const editFeedback = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/feedbacks/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据位置查询门店所有列表根据距离排序
+export const getStorePages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/stores/pages',
+    data,
+    method: 'post'
+  });
+};
+// 根据id删除门店
+export const deleteStore = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/stores/' + ids,
+    method: 'delete'
+  });
+};
+
+// 根据id查询门店
+export const getStoreDetail = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/stores/' + id,
+    method: 'get'
+  });
+};
+
+// 查询所有门店区域
+export const getStoreAreas = () => {
+  return Vue.prototype.$http.request({
+    url: '/store-areas',
+    method: 'get'
+  });
+};
+
+// 根据id更新门店 /stores/{id}
+export const editStore = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/stores/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 添加门店
+export const addStore = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/stores',
+    data,
+    method: 'post'
+  });
+};
