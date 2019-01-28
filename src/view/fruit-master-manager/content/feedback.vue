@@ -92,7 +92,7 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">反馈用户:</i-col>
-              <i-col span="16">{{ feedbackDetail.userId }}</i-col>
+              <i-col span="16">{{ feedbackDetail.nickname }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -191,7 +191,8 @@ const feedbackDetail = {
   id: 0,
   status: null,
   title: '',
-  userId: 0
+  userId: 0,
+  nickname: ''
 };
 
 const roleRowData = {
@@ -235,7 +236,7 @@ export default {
         {
           title: '反馈用户',
           width: 185,
-          key: 'userId'
+          key: 'nickname'
         },
         {
           title: '创建时间',
