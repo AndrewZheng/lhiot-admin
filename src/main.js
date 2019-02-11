@@ -1,5 +1,4 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+
 import Vue from 'vue';
 import App from './App';
 import router from './router';
@@ -29,10 +28,9 @@ Vue.use(iView, {
   i18n: (key, value) => i18n.t(key, value)
 });
 
-// 循环注册filters
 Object.keys(filters).forEach(k => Vue.filter(k, filters[k]));
 window._ = lodashLib;
-// 引用第三方库 挂载到vue原型对象上，优雅的使用
+
 Object.defineProperty(Vue.prototype, '_', { value: lodashLib });
 Object.defineProperty(Vue.prototype, '$config', { value: config });
 Object.defineProperty(Vue.prototype, '$moment', { value: moment });
