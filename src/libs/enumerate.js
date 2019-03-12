@@ -54,7 +54,7 @@ export const orderStatusEnum = [
     value: orderStatus.WAIT_PAYMENT
   },
   {
-    label: '待支付',
+    label: '待出库',
     value: orderStatus.WAIT_SEND_OUT
   },
   {
