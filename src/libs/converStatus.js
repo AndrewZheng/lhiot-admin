@@ -8,7 +8,8 @@ import {
   receivingWayEnum, relationTypeEnum,
   settlementStatusEnum,
   thirdDelieverStatusEnum, updateWayEnum, storeStatusEnum, storeTypeEnum, coordinateTypeEnum,
-  feedbackStatusEnum
+  feedbackStatusEnum,
+  splitStatusEnum
 } from './enumerate';
 
 const convertFunction = (value, list) => {
@@ -108,4 +109,8 @@ export const storeTypeConvert = (value) => {
 
 export const coordinateTypeConvert = (value) => {
   return convertFunction(value, coordinateTypeEnum);
+};
+
+export const splitConvert = (value) => {
+  return convertFunction(value, splitStatusEnum);
 };

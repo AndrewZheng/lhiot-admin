@@ -601,3 +601,20 @@ export const coordinateTypeEnum = [
     value: coordinateType.WGS84
   }
 ];
+
+// 是否可拆分 SEPARABLE("可拆分"),NO_SEPARABLE("不可拆分");
+export const splitStatus = {
+  SEPARABLE: 'SEPARABLE',
+  NO_SEPARABLE: 'NO_SEPARABLE'
+};
+
+export const splitStatusEnum = [
+  {
+    label: '是',
+    value: splitStatus.SEPARABLE
+  },
+  {
+    label: '否',
+    value: splitStatus.NO_SEPARABLE
+  }
+];

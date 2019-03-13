@@ -42,7 +42,7 @@ module.exports = {
     open: true, // 配置自动启动浏览器
     proxy: {
       '/api': {
-        target: 'http://172.16.10.203:2018',
+        target: 'http://192.168.1.225:2018',
         // 'http://172.16.10.203:2018',
         // http://192.168.1.225:2018
         ws: true,

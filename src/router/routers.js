@@ -686,6 +686,120 @@ export const asyncRouterMap = [
     ]
   },
   {
+    path: '/small-goods-manager',
+    name: 'small-goods-manager',
+    meta: {
+      icon: 'md-menu',
+      title: '商品管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/small-goods-category',
+        name: 'small-goods-category',
+        meta: {
+          icon: 'md-pricetag',
+          title: '商品分类管理'
+        },
+        component: () => import('@/view/mini-program-manager/goods/goods-category.vue')
+      },
+      {
+        path: '/small-goods-unit',
+        name: 'small-goods-unit',
+        meta: {
+          icon: 'md-pricetag',
+          title: '商品单位管理'
+        },
+        component: () => import('@/view/mini-program-manager/goods/goods-unit.vue')
+      },
+      {
+        path: '/small-goods-info',
+        name: 'small-goods-info',
+        meta: {
+          icon: 'md-pricetag',
+          title: '基础商品管理'
+        },
+        component: () => import('@/view/mini-program-manager/goods/goods-message.vue')
+      },
+      {
+        path: '/small-goods-standard',
+        name: 'small-goods-standard',
+        meta: {
+          icon: 'md-pricetag',
+          title: '商品规格管理'
+        },
+        component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
+      },
+      {
+        path: '/small-goods-section',
+        name: 'small-goods-section',
+        meta: {
+          icon: 'md-pricetag',
+          title: '板块管理'
+        },
+        component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
+      },
+       {
+        path: '/small-goods-section-relation',
+        name: 'small-goods-section-relation',
+        meta: {
+          icon: 'md-pricetag',
+          title: '商品板块管理'
+        },
+        component: () => import('@/view/mini-program-manager/goods/store-message.vue')
+      },
+      {
+        path: '/small-store',
+        name: 'small-store',
+        meta: {
+          icon: 'md-pricetag',
+          title: '门店管理'
+        },
+        component: () => import('@/view/mini-program-manager/goods/store-message.vue')
+      }
+    ]
+  },
+  {
+    path: '/small-goods-activity-manager',
+    name: 'small-goods-activity-manager',
+    meta: {
+      icon: 'md-menu',
+      title: '微商城小程序活动管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/small-goods-postage-rule',
+        name: 'small-goods-postage-rule',
+        meta: {
+          icon: 'md-pricetag',
+          title: '邮费管理'
+        },
+        component: () => import('@/view/fruit-master-manager/rule-parameters/postage-rule-settings.vue')
+      },
+    ]
+  },
+  {
+    path: '/group-booking-goods-manager',
+    name: 'group-booking-goods-manager',
+    meta: {
+      icon: 'md-menu',
+      title: '小程序商品管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/group-booking-goods-category',
+        name: 'group-booking-goods-category',
+        meta: {
+          icon: 'md-pricetag',
+          title: '商品分类管理'
+        },
+        component: () => import('@/view/fruit-master-manager/goods/goods-category.vue')
+      },
+    ]
+  },
+  {
     path: '/dictionary-manager',
     name: 'dictionary-manager',
     meta: {
