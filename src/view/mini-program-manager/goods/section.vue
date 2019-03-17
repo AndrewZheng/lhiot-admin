@@ -13,7 +13,7 @@
             :columns="columns"
             :loading="loading"
             :search-area-column="16"
-            :operate-area-column="8"
+            :operate-area-column="6"
             editable
             searchable
             border
@@ -25,8 +25,8 @@
           >
             <div slot="searchCondition">
               <Row>
-                <Input v-model="searchRowData.groupName" placeholder="分类名称" class="search-input mr5" style="width: auto"></Input>
-                <Button :loading="loading" class="search-btn mr5" type="primary" @click="handleSearch">
+                <Input v-model="searchRowData.sectionName" placeholder="板块名称" class="search-input mr5" style="width: auto" clearable></Input>
+                <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
                   <Icon type="md-search"/>&nbsp;搜索
                 </Button>
                 <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
@@ -37,7 +37,7 @@
             <div slot="operations">
               <Button v-waves type="success" class="mr5" @click="createTableRow">
                 <Icon type="md-add"/>
-                添加
+                子分类
               </Button>
               <Poptip
                 confirm
@@ -70,21 +70,76 @@
 
     <!--编辑菜单 -->
     <Modal
-      v-model="modalEdit"
+      v-model="modalView"
     >
       <p slot="header">
         <span>编辑商品分类</span>
       </p>
       <div class="modal-content">
         <Form :label-width="100">
+
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button @click="handleEditClose">关闭</Button>
+        <Button :loading="modalEditLoading" type="primary" @click="asyncEditOK">确定</Button>
+      </div>
+    </Modal>
+
+    <!--编辑菜单 -->
+    <Modal
+      v-model="modalEdit"
+    >
+      <p slot="header">
+        <span>编辑商品分类</span>
+      </p>
+      <div class="modal-content">
+        <Form :label-width="120">
           <FormItem label="父级ID:">
-            <i-col>{{ currentCategory.parentId }}</i-col>
+            <i-col>{{ parentCategory.id }}</i-col>
           </FormItem>
-          <FormItem label="父级分类:">
+          <FormItem label="父级名称:">
             <i-col>{{ parentCategory.groupName }}</i-col>
           </FormItem>
-          <FormItem label="子分类名:">
-            <Input v-model="currentCategory.groupName" placeholder="子分类名"></Input>
+          <FormItem label="板块名称:">
+            <Input v-model="currentCategory.sectionName"></Input>
+          </FormItem>
+          <FormItem label="板块位置英文描述:">
+            <Input v-model="currentCategory.positionName"></Input>
+          </FormItem>
+          <FormItem label="板块顺序:">
+            <Input v-model="currentCategory.rankNo"></Input>
+          </FormItem>
+          <FormItem label="商品小图:">
+            <FormItem label="商品主图:建议尺寸;400x400(单位:px):" prop=" sectionImg" >
+              <Input v-show="false" v-model="currentCategory. sectionImg" style="width: auto"></Input>
+              <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+                <template v-if="item.status === 'finished'">
+                  <div>
+                    <img :src="item.url">
+                    <div class="demo-upload-list-cover">
+                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                      <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                    </div>
+                  </div>
+                </template>
+                <template v-else>
+                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                </template>
+              </div>
+              <IViewUpload
+                ref="uploadMain"
+                :default-list="defaultListMain"
+                :image-size="imageSize"
+                @on-success="handleSuccessMain"
+              >
+                <div slot="content">
+                  <Button type="primary">
+                    上传图片
+                  </Button>
+                </div>
+              </IViewUpload>
+            </FormItem>
           </FormItem>
         </Form>
       </div>
@@ -100,25 +155,34 @@
 import Tables from '_c/tables';
 import _ from 'lodash';
 import {
-  addMiniProgramProductCategories,
-  deleteMiniProgramProductCategories,
-  getMiniProgramProductCategoriesPages,
-  getMiniProgramProductCategoriesTree,
-  putMiniProgramProductCategories
+  createProductSection,
+  deleteProductSection,
+  getProductSectionPages,
+  getProductSectionTree,
+  editProductSection
 } from '@/api/mini-program';
 import { buildMenu, convertTree } from '@/libs/util';
 import CommonIcon from '_c/common-icon';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import deleteMixin from '@/mixins/deleteMixin.js';
+import uploadMixin from '@/mixins/uploadMixin';
+import IViewUpload from '_c/iview-upload';
 
 const currentCategory = {
+  applyType: null,
   id: 0,
-  parentId: 0,
-  groupName: ''
+  parentId: '',
+  sectionProductId: '',
+  sectionName: '',
+  sectionImg: '',
+  rankNo: '',
+  positionName: '',
+  productStandardList: null
 };
 const roleRowData = {
-  parentId: 0,
+  applyType: 'WXSMALL_SHOP',
+  sectionName: null,
   page: 1,
   rows: 10
 };
@@ -126,9 +190,10 @@ const roleRowData = {
 export default {
   components: {
     Tables,
-    CommonIcon
+    CommonIcon,
+    IViewUpload
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin],
   data() {
     return {
       menuData: [],
@@ -141,18 +206,43 @@ export default {
           fixed: 'left'
         },
         {
-          title: '商品分类ID',
+          title: '板块ID',
           key: 'id',
           sortable: true,
           align: 'center',
           minWidth: 150
         },
         {
-          title: '分类名',
-          key: 'groupName',
+          title: '板块名称',
+          key: 'sectionName',
           sortable: true,
           align: 'center',
-
+          minWidth: 150
+        },
+        {
+          title: '板块图片',
+          key: 'sectionImg',
+          sortable: true,
+          align: 'center',
+          minWidth: 150,
+          render: (h, params, vm) => {
+            const { row } = params;
+            const str = <img src={row.sectionImg} height='60' width='60' />;
+            return <div>{str}</div>;
+          }
+        },
+        {
+          title: '位置英文描述',
+          key: 'positionName',
+          sortable: true,
+          align: 'center',
+          minWidth: 150
+        },
+        {
+          title: '排序',
+          key: 'rankNo',
+          sortable: true,
+          align: 'center',
           minWidth: 150
         },
         {
@@ -169,7 +259,10 @@ export default {
       currentParentId: 0,
       currentCategory: this._.cloneDeep(currentCategory),
       parentCategory: this._.cloneDeep(currentCategory),
-      searchRowData: this._.cloneDeep(roleRowData)
+      searchRowData: this._.cloneDeep(roleRowData),
+      treeData: this._.cloneDeep(currentCategory),
+      uploadListMain: [],
+      defaultListMain: []
     };
   },
   created() {
@@ -224,10 +317,11 @@ export default {
       this.modalEdit = true;
     },
     asyncEditOK() {
-      if (!this.currentCategory.groupName) {
-        this.$Message.warning('请输入子分类');
-        return;
-      }
+      // if (!this.currentCategory.groupName) {
+      //   this.$Message.warning('请输入子分类');
+      //   return;
+      // }
+      this.currentCategory.applyType = 'WXSMALL_SHOP';
       this.modalEditLoading = true;
       this.modalViewLoading = true;
       if (!this.parentCategory.id) {
@@ -236,7 +330,7 @@ export default {
         this.currentCategory.parentId = this.parentCategory.id;
       }
       if (this.tempModalType === this.modalType.create) {
-        addMiniProgramProductCategories(this.currentCategory
+        createProductSection(this.currentCategory
         ).then(res => {
 
         }).finally(res => {
@@ -245,7 +339,7 @@ export default {
           this.modalEdit = false;
         });
       } else if (this.tempModalType === this.modalType.edit) {
-        putMiniProgramProductCategories(this.currentCategory).then(res => {
+        editProductSection(this.currentCategory).then(res => {
         }).finally(res => {
           this.initMenuList();
           this.modalEditLoading = false;
@@ -259,7 +353,7 @@ export default {
     // 删除
     deleteTable(ids) {
       this.loading = true;
-      deleteMiniProgramProductCategories({
+      deleteProductSection({
         ids
       }).then(res => {
         const totalPage = Math.ceil(this.total / this.pageSize);
@@ -282,18 +376,19 @@ export default {
     },
     getTableData() {
       this.loading = true;
-      getMiniProgramProductCategoriesPages(this.searchRowData).then(res => {
+      getProductSectionPages(this.searchRowData).then(res => {
         if (this.menuData.length > 0) {
           // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
+          this.searchLoading = false;
         }
       });
     },
     // 初始化商品菜单列表
     initMenuList() {
-      getMiniProgramProductCategoriesTree().then(res => {
+      getProductSectionTree(this.treeData).then(res => {
         if (res && res.array.length > 0) {
           const menuList = buildMenu(res.array);
           const map = {
@@ -341,6 +436,43 @@ export default {
           this.expandChildren(item.children);
         }
       });
+    },
+    // 设置编辑商品的图片列表
+    setDefaultUploadList(res) {
+      if (res.mainImg != null) {
+        const map = { status: 'finished', url: 'url' };
+        const mainImgArr = [];
+        map.url = res.mainImg;
+        mainImgArr.push(map);
+        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+        this.uploadListMain = mainImgArr;
+      }
+      if (res.subImg != null) {
+        const subImgArr = [];
+        res.subImg.forEach(value => {
+          const innerMapSub = { status: 'finished', url: 'url' };
+          innerMapSub.url = value;
+          subImgArr.push(innerMapSub);
+        });
+        this.$refs.uploadSecond.setDefaultFileList(subImgArr);
+        this.uploadListSecond = subImgArr;
+      }
+      if (res.detailImg != null) {
+        const detailImgArr = [];
+        res.detailImg.forEach(value => {
+          const innerMapDetailImg = { status: 'finished', url: 'url' };
+          innerMapDetailImg.url = value;
+          detailImgArr.push(innerMapDetailImg);
+        });
+        this.$refs.uploadMultiple.setDefaultFileList(detailImgArr);
+        this.uploadListMultiple = detailImgArr;
+      }
+    },
+    // 商品主图
+    handleSuccessMain(response, file, fileList) {
+      this.uploadListMain = fileList;
+      this.currentCategory.sectionImg = null;
+      this.currentCategory.sectionImg = fileList[0].url;
     }
   }
 };

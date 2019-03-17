@@ -17,6 +17,70 @@
         @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
+          <Row>
+            <Input
+              v-model="searchRowData.barcode"
+              placeholder="商品条码"
+              class="search-input mr5"
+              style="width: auto"
+              clearable
+            >
+            </Input>
+            <Input
+              v-model="searchRowData.productCode"
+              placeholder="商品编号"
+              class="search-input mr5"
+              style="width: auto"
+              clearable
+            >
+            </Input>
+            <Input
+              v-model="searchRowData.productName"
+              placeholder="商品名称"
+              class="search-input mr5"
+              style="width: auto"
+              clearable
+            >
+            </Input>
+            <Select
+              v-model="searchRowData.shelvesStatus"
+              class="search-col"
+              placeholder="上架状态"
+              style="width:100px"
+              clearable
+            >
+              <Option
+                v-for="item in shelvesStatus"
+                :value="item.value"
+                :key="item.value"
+                class="ml15 mt10"
+              >{{ item.label }}</Option>
+            </Select>
+            <Input
+              v-model="searchRowData.minPrice"
+              placeholder="最低价格"
+              class="search-input mr5"
+              style="width: auto"
+              clearable
+            >
+            </Input>
+            <Input
+              v-model="searchRowData.maxPrice"
+              placeholder="最高价格"
+              class="search-input mr5"
+              style="width: auto"
+              clearable
+            >
+            </Input>
+            <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
+              <Icon type="md-search"/>&nbsp;搜索
+            </Button>
+            <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
+              <Icon type="md-refresh"/>&nbsp;清除条件
+            </Button>
+          </Row>
+        </div>
+        <div slot="operations">
           <Button v-waves class="search-btn ml5 mr5" type="primary" @click="handleCreateView">
             <Icon type="md-add"/>&nbsp;创建
           </Button>
@@ -47,53 +111,146 @@
       </div>
     </Card>
 
-    <Modal
-      v-model="modalView"
-      :mask-closable="false"
-    >
+    <Modal v-model="modalView" :mask-closable="false" :width="700">
       <p slot="header">
-        <span>鲜果师详情</span>
+        <span>商品规格详情</span>
       </p>
       <div class="modal-content">
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品ID:</i-col>
+              <i-col span="16">{{ productStandardDetail.productId }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品名称:</i-col>
-              <i-col v-if="productStandardDetail.product" span="16">{{ productStandardDetail.product.name }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">规格条码:</i-col>
-              <i-col span="16">{{ productStandardDetail.barcode }}</i-col>
+              <i-col span="16">{{ productStandardDetail.baseProductName }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">规格单位:</i-col>
-              <i-col span="16">{{ productStandardDetail.packagingUnit }}</i-col>
+              <i-col span="8">商品分类:</i-col>
+              <i-col span="16">{{ productStandardDetail.groupName }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="10">海鼎规格数量:</i-col>
-              <i-col span="14">{{ productStandardDetail.specificationQty }}</i-col>
+              <i-col span="10">基础单位:</i-col>
+              <i-col span="14">{{ productStandardDetail.baseUnit }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">是否可用:</i-col>
+              <i-col span="8">商品主图:</i-col>
               <i-col span="16">{{ productStandardDetail.availableStatus }}</i-col>
             </Row>
           </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="10">单份商品重量:</i-col>
-              <i-col span="14">{{ productStandardDetail.weight }}</i-col>
+              <i-col span="8">商品编号:</i-col>
+              <i-col span="16">{{ productStandardDetail.productCode }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品条码:</i-col>
+              <i-col span="16">{{ productStandardDetail.baseBarcode }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品描述:</i-col>
+              <i-col span="16">{{ productStandardDetail.baseProductDescription }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">上架商品名称:</i-col>
+              <i-col span="16">{{ productStandardDetail.productName }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">上架商品描述:</i-col>
+              <i-col span="16">{{ productStandardDetail.productDescription }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">上架商品主图:</i-col>
+              <i-col v-if="productStandardDetail.image" span="16"><img :src="productStandardDetail.image" width="100" height="100"></i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">上架商品详情图:</i-col>
+              <i-col v-if="productStandardDetail.detailImage" span="16"><img :src="productStandardDetail.detailImage" width="100" height="100" ></i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品条码:</i-col>
+              <i-col span="16">{{ productStandardDetail.barcode }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品状态:</i-col>
+              <i-col span="16">{{ productStandardDetail.shelvesStatus|customOrderStatusFilters }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品规格:</i-col>
+              <i-col span="16">{{ productStandardDetail.specification }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">数量/重量:</i-col>
+              <i-col span="16">{{ productStandardDetail.standardQty }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品原价:</i-col>
+              <i-col span="16">{{ productStandardDetail.price }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品单位:</i-col>
+              <i-col span="16">{{ productStandardDetail.unitId }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品排序:</i-col>
+              <i-col span="16">{{ productStandardDetail.rank }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -102,29 +259,160 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-    <Modal
-      v-model="modalEdit"
-    >
+
+    <Modal v-model="modalEdit" :width="700">
       <p slot="header">
-        <span>鲜果师详情</span>
+        <span>{{ productStandardDetail.id == ''?'创建商品规格':'编辑商品规格' }}</span>
       </p>
       <div class="modal-content">
         <Form ref="modalEdit" :model="productStandardDetail" :rules="ruleInline" :label-width="100">
           <Row>
             <Col span="12">
-            <FormItem v-if="productStandardDetail.product" label="商品名称:">
-              {{ productStandardDetail.product.name }}
+            <FormItem label="商品ID:">
+              {{ productStandardDetail.productId }}
             </FormItem>
             </Col>
             <Col span="12">
-            <FormItem label="规格条码:" prop="barcode">
-              <Input v-model="productStandardDetail.barcode"></Input>
+            <FormItem label="商品名称:" prop="baseProductName">
+              <Input v-model="productStandardDetail.baseProductName"></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-            <FormItem :label-width="80" label="规格单位:" prop="packagingUnit">
+            <FormItem label="商品分类:" prop="groupId">
+              <Input v-model="productStandardDetail.groupId"></Input>
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="基础单位:" prop="baseUnit">
+              <Input v-model="productStandardDetail.baseUnit"></Input>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem v-if="productStandardDetail.product" label="商品主图:" prop="image">
+              {{ productStandardDetail.image }}
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem label="商品编号:" prop="productCode">
+              <Input v-model="productStandardDetail.productCode"></Input>
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="商品条码:" prop="baseBarcode">
+              <Input v-model="productStandardDetail.baseBarcode"></Input>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem label="商品描述:" prop="baseProductDescription">
+              <Input v-model="productStandardDetail.baseProductDescription"></Input>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem label="上架商品名称:" prop="productName">
+              <Input v-model="productStandardDetail.productName"></Input>
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="上架商品描述:" prop="productDescription">
+              <Input v-model="productStandardDetail.productDescription"></Input>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem v-if="productStandardDetail.image" label="上架商品主图:" prop="standardQty">
+              {{ productStandardDetail.image }}
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem v-if="productStandardDetail.detailImage" label="上架商品详情图:" prop="standardQty">
+              {{ productStandardDetail.detailImage }}
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem label="商品条码:" prop="barcode">
+              <Input v-model="productStandardDetail.barcode"></Input>
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="商品状态:" prop="shelvesStatus">
+              <Select
+                :value="productStandardDetail.shelvesStatus"
+                @on-change="statusChange">
+                <Option
+                  v-for="(item,index) in shelvesStatus"
+                  :value="item.value"
+                  :key="index"
+                  class="ptb2-5"
+                  style="padding-left: 5px">{{ item.label
+                  }}
+                </Option>
+              </Select>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem label="商品规格:" prop="specification">
+              <Input v-model="productStandardDetail.specification"></Input>
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="数量/重量:" prop="standardQty">
+              <InputNumber :min="0" v-model="productStandardDetail.standardQty"></InputNumber>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem label="商品原价:" prop="price">
+              <Input v-model="productStandardDetail.price"></Input>
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="优惠价格:" prop="salePrice">
+              <Input v-model="productStandardDetail.salePrice"></Input>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem label="商品单位:" prop="unitId">
+              <Select v-model="productStandardDetail.unitId" @on-change="uniteChange">
+                <Option
+                  v-for="(item,index) in unitsList"
+                  :value="item.value"
+                  :key="index"
+                  class="ptb2-5"
+                  style="padding-left: 5px">
+                  {{ item.label }}
+                </Option>
+              </Select>
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="商品排序:" prop="rank">
+              <InputNumber :min="0" v-model="productStandardDetail.rank"></InputNumber>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem label="规格单位:" prop="packagingUnit">
               <Select v-model="productStandardDetail.packagingUnit" @on-change="uniteChange">
                 <Option
                   v-for="(item,index) in unitsList"
@@ -138,33 +426,8 @@
             </FormItem>
             </Col>
             <Col span="12">
-            <FormItem label="海鼎规格数量:" prop="specificationQty">
-              <Input v-model="productStandardDetail.specificationQty"></Input>
-            </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="12">
-            <FormItem :label-width="80" label="是否可用:" prop="packagingUnit">
-              <Select
-                :value="productStandardDetail.availableStatus"
-                style="width: 100px"
-                @on-change="useAbleUniteChange">
-                <Option
-                  v-for="(item,index) in useAble"
-                  :value="item.value"
-                  :key="index"
-                  class="ptb2-5"
-                  style="padding-left: 5px">{{ item.label
-                  }}
-                </Option>
-              </Select>
-            </FormItem>
-            </Col>
-            <Col span="12">
-            <FormItem label="单份商品重量:" prop="weight">
-              <Input v-model="productStandardDetail.weight" style="width: 100px"></Input>
-              <i-col style="display: inline-block;margin-left: 5px">kg</i-col>
+            <FormItem label="规格描述:" prop="description">
+              <Input v-model="productStandardDetail.description"></Input>
             </FormItem>
             </Col>
           </Row>
@@ -191,25 +454,63 @@ import {
 import {
   productSpecificationsUnits
 } from '@/api/fruitermaster';
+import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
-import { getGoodsStandard } from '../../../libs/util';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import { getGoodsStandard, fenToYuanDot2 } from '@/libs/util';
+import { customPlanStatusConvert } from '@/libs/converStatus';
 
 const productStandardDetail = {
   id: 0,
-  productName: null,
-  barcode: null,
-  packagingUnit: null,
-  weight: 0,
-  specificationQty: 0,
-  limitInventory: 0,
   productId: 0,
-  inventorySpecification: 'NO',
-  availableStatus: null,
-  createAt: null,
-  specification: null
+  barcode: '',
+  specification: '',
+  standardQty: 0,
+  unitId: 0,
+  productUnit: '',
+  price: 0,
+  salePrice: 0,
+  rank: 0,
+  description: '',
+  shelvesStatus: '',
+  applyType: '',
+  productName: '',
+  createUser: null,
+  image: '',
+  productDescription: '',
+  productCode: '',
+  baseProductName: '',
+  baseProductDescription: '',
+  groupId: 0,
+  groupName: '',
+  sourceCode: '',
+  baseImage: '',
+  smallImage: '',
+  largeImage: '',
+  status: '',
+  baseUnitId: 0,
+  baseUnit: '',
+  baseBarcode: '',
+  hdSkuid: '',
+  videoUrl: '',
+  videoImage: '',
+  baseQty: 0,
+  limitQty: 0,
+  queryStatus: null,
+  invEnough: null,
+  invNum: null,
+  saleCount: null,
+  positionName: null,
+  dbId: null
 };
 const roleRowData = {
-  productId: 0,
+  barcode: '',
+  productCode: '',
+  productName: '',
+  shelvesStatus: null,
+  minPrice: '',
+  maxPrice: '',
   page: 1,
   rows: 10
 };
@@ -218,17 +519,26 @@ export default {
   components: {
     Tables
   },
+  mixins: [uploadMixin, deleteMixin, searchMixin, tableMixin],
   data() {
     return {
-      mixins: [deleteMixin],
       unitsList: [],
       ruleInline: {
-        availableStatus: [
-          { required: true, message: '请选择商品分类' }
-        ],
-        packagingUnit: [
-          { required: true, message: '请选择规格单位' }
-        ],
+        productName: [{ required: true, message: '请选择上架商品名称' }],
+        baseProductName: [{ required: true, message: '请输入商品名称' }],
+        groupId: [{ required: true, message: '请选择商品分类' }],
+        baseUnit: [{ required: true, message: '请选择基础单位' }],
+        productCode: [{ required: true, message: '请输入商品编码' }],
+        baseBarcode: [{ required: true, message: '请输入商品条码' }],
+        baseProductDescription: [{ required: true, message: '请输入商品描述' }],
+        description: [{ required: true, message: '请输入商品描述' }],
+        availableStatus: [{ required: true, message: '请选择商品分类' }],
+        // packagingUnit: [{ required: true, message: '请选择规格单位' }],
+        productDescription: [{ required: true, message: '请输入上架商品描述' }],
+        shelvesStatus: [{ required: true, message: '请选择商品状态' }],
+        specification: [{ required: true, message: '请输入商品规格' }],
+        price: [{ required: true, message: '请输入商品价格' }],
+        salePrice: [{ required: true, message: '请输入优惠价格' }],
         barcode: [
           { required: true, message: '请输入规格条码' },
           {
@@ -253,7 +563,19 @@ export default {
             }
           }
         ],
-        weight: [
+        rank: [
+          { required: true, message: '请输入商品排序' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[1-9]\d*$/.test(value)) {
+                errors.push(new Error('必须为非零整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        standardQty: [
           { required: true, message: '请输入重量' },
           {
             validator(rule, value, callback, source, options) {
@@ -266,7 +588,6 @@ export default {
           }
         ]
       },
-      useAble: [{ label: '是', value: 'ENABLE' }, { label: '否', value: 'DISABLE' }],
       columns: [
         {
           type: 'selection',
@@ -276,42 +597,71 @@ export default {
           fixed: 'left'
         },
         {
+          title: '规格ID',
+          key: 'id',
+          minWidth: 180
+        },
+        {
+          title: '商品条码',
+          key: 'barcode',
+          minWidth: 150
+        },
+        {
+          title: '商品编号',
+          key: 'productCode',
+          minWidth: 150
+        },
+        {
           title: '商品名称',
           key: 'productName',
-          minWidth: 180,
-          render(h, params) {
-            return <div>{params.row.product.name}</div>;
+          minWidth: 120
+        },
+        {
+          title: '商品规格',
+          key: 'specification',
+          minWidth: 120
+        },
+        {
+          title: '商品单位',
+          width: 100,
+          key: 'productUnit'
+        },
+        {
+          title: '商品原价',
+          width: 120,
+          key: 'price',
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(params.row.price);
+            return <div>{amount}</div>;
           }
         },
         {
-          title: '规格条码',
-          key: 'barcode',
-          minWidth: 100
-        },
-        {
-          title: '规格单位',
-          width: 100,
-          key: 'packagingUnit'
-        },
-        {
-          title: '是否基础规格',
-          width: 120,
-          key: 'inventorySpecification'
-        },
-        {
-          title: '规格',
+          title: '优惠价格',
           minWidth: 130,
-          key: 'specificationInfo'
+          key: 'salePrice',
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(params.row.salePrice);
+            return <div>{amount}</div>;
+          }
         },
         {
-          title: '重量(kg)',
+          title: '商品状态',
           width: 120,
-          key: 'weight'
+          key: 'shelvesStatus',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.shelvesStatus === 'VALID') {
+              return <div><tag color='success'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
+            } else if (row.shelvesStatus === 'INVALID') {
+              return <div><tag color='error'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
+            }
+            return <div><tag color='primary'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
+          }
         },
         {
-          title: '安全库存',
+          title: '商品排序',
           width: 120,
-          key: 'limitInventory'
+          key: 'rank'
         },
         {
           title: '操作',
@@ -335,21 +685,32 @@ export default {
       searchRowData: _.cloneDeep(roleRowData),
       productStandardDetail: _.cloneDeep(productStandardDetail),
       // 选中的行
-      tableDataSelected: []
+      tableDataSelected: [],
+      shelvesStatus: [
+        {
+          label: '上架',
+          value: 'VALID'
+        },
+        {
+          label: '下架',
+          value: 'INVALID'
+        }]
     };
   },
   created() {
-    // this.unitsList = this.$route.params.unitsList;
+    this.unitsList = this.$route.params.unitsList;
     productSpecificationsUnits().then(res => {
       res.forEach(value => {
         const map = { label: 'label', value: 'value' };
         map.value = value;
         map.label = value;
         this.unitsList.push(map);
-        this.createLoading = false;
+        // this.createLoading = false;
       });
-      this.getTableData();
+      // this.getTableData();
     });
+    this.createLoading = false;
+    this.getTableData();
   },
   methods: {
     handleDelete(params) {
@@ -474,16 +835,18 @@ export default {
       this.getTableData();
     },
     getTableData() {
-      const goodsStandard = getGoodsStandard();
-      this.searchRowData.productId = goodsStandard.id;
-      this.productStandardDetail.productId = goodsStandard.id;
-      this.productStandardDetail.productName = goodsStandard.name;
+      // const goodsStandard = getGoodsStandard();
+      // this.searchRowData.productId = goodsStandard.id;
+      // this.productStandardDetail.productId = goodsStandard.id;
+      // this.productStandardDetail.productName = goodsStandard.name;
       getProductStandardsPages(this.searchRowData).then(res => {
         this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;
+        this.searchLoading = false;
       }).catch(() => {
         this.loading = false;
+        this.searchLoading = false;
       });
     },
     onSelectionAll(selection) {
@@ -491,6 +854,9 @@ export default {
     },
     onSelectionChange(selection) {
       this.tableDataSelected = selection;
+    },
+    statusChange(value) {
+      this.productStandardDetail.shelvesStatus = value;
     }
   }
 };

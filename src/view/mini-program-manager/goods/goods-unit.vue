@@ -43,7 +43,7 @@
           </Button>
         </div>
         <div slot="operations">
-          <Button v-waves type="success" class="mr5" @click="createTableRow">
+          <Button v-waves type="success" class="mr5" @click="handleAdd">
             <Icon type="md-add"/>
             新增
           </Button>
@@ -109,7 +109,7 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import _ from 'lodash';
-import { getMiniProgramProductUnitsPages, putMiniProgramProductUnits, deleteMiniProgramProductUnits } from '@/api/mini-program';
+import { getMiniProgramProductUnitsPages, putMiniProgramProductUnits, deleteMiniProgramProductUnits, addMiniProgramProductUnits } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import deleteMixin from '@/mixins/deleteMixin.js';
@@ -202,7 +202,11 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          this.editTableRow();
+          if (this.tempModalType === this.modalType.create) {
+            this.createTableRow();
+          } else if (this.tempModalType === this.modalType.edit) {
+            this.editTableRow();
+          }
         } else {
           this.$Message.error('请完善商品单位信息!');
         }
@@ -213,14 +217,26 @@ export default {
       putMiniProgramProductUnits(this.unitDetail).then(res => {
         this.modalViewLoading = false;
         this.modalEdit = false;
-        this.resetFields();
         this.getTableData();
+        this.resetFields();
+      });
+    },
+    createTableRow() {
+      addMiniProgramProductUnits(this.unitDetail).then(res => {
+      }).finally(res => {
+        debugger;
+        // this.initMenuList();
+        this.modalEditLoading = false;
+        this.modalEdit = false;
+        this.getTableData();
+        this.resetFields();
       });
     },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
     },
     handleEdit(params) {
+      this.tempModalType = this.modalType.edit;
       this.unitDetail = this._.cloneDeep(params.row);
       this.modalEdit = true;
     },
@@ -234,8 +250,9 @@ export default {
         this.clearSearchLoading = false;
       });
     },
-    createTableRow() {
+    handleAdd() {
       this.$refs.modalEdit.resetFields();
+      this.tempModalType = this.modalType.create;
       this.unitDetail = unitDetail;
       this.modalEdit = true;
     },
@@ -250,7 +267,9 @@ export default {
           this.page -= 1;
         }
         this.tableDataSelected = [];
-        this.initMenuList();
+        this.getTableData();
+        this.loading = false;
+        // this.initMenuList();
       }
       ).catch(() => {
         this.loading = false;

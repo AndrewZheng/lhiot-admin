@@ -9,7 +9,8 @@ import {
   settlementStatusEnum,
   thirdDelieverStatusEnum, updateWayEnum, storeStatusEnum, storeTypeEnum, coordinateTypeEnum,
   feedbackStatusEnum,
-  splitStatusEnum
+  // 小程序
+  splitStatusEnum, productStatusEnum
 } from './enumerate';
 
 const convertFunction = (value, list) => {
@@ -114,3 +115,7 @@ export const coordinateTypeConvert = (value) => {
 export const splitConvert = (value) => {
   return convertFunction(value, splitStatusEnum);
 };
+
+export const productStatusConvert = (value) => {
+  return convertFunction(value, productStatusEnum);
+}

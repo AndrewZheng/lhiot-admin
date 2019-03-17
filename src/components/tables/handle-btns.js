@@ -685,7 +685,7 @@ const btns = {
     const {
       row
     } = params;
-    if (row.status === 'DISABLED') {
+    if (row.status == 'DISABLED' || row.storeStatus == 'DISABLED') {
       return h('Poptip', {
         props: {
           confirm: true,

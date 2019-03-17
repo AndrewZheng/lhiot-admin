@@ -20,14 +20,8 @@
       >
         <div slot="searchCondition">
           <Row>
-            <Input
-              v-model="searchRowData.productCode"
-              placeholder="商品编码"
-              class="search-input mr5"
-              style="width: auto"
-            >
-            </Input>
-            <Input v-model="searchRowData.productName" placeholder="商品名称" class="search-input mr5" style="width: auto"></Input>
+            <Input v-model="searchRowData.productCode" placeholder="商品编码" class="search-input mr5" style="width: auto" clearable></Input>
+            <Input v-model="searchRowData.productName" placeholder="商品名称" class="search-input mr5" style="width: auto" clearable></Input>
             <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
@@ -100,7 +94,7 @@
           <i-col span="12">
             <Row>
               <i-col span="8">商品状态:</i-col>
-              <i-col span="16">{{ productDetail.status }}</i-col>
+              <i-col span="16">{{ productDetail.status|productStatusFilter }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -135,14 +129,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">商品小图标:</i-col>
+              <i-col span="6">小图标:</i-col>
               <i-col span="18">
-                <div class="demo-upload-list">
-                  <img :src="productDetail.smallImage">
-                  <div class="demo-upload-list-cover">
-                    <Icon type="ios-eye-outline" @click.native="handleUploadView(productDetail.smallImage)"></Icon>
-                  </div>
-                </div>
+                <img :src="productDetail.smallImage">
               </i-col>
             </Row>
           </i-col>
@@ -235,7 +224,7 @@
           </Row>
           <Row>
             <Col span="24">
-            <FormItem label="商品分类:" prop="categoryId">
+            <FormItem label="商品分类:" prop="groupId">
               <Cascader
                 :data="goodsCategoryData"
                 v-model="defaultGoodsCategoryData"
@@ -248,20 +237,31 @@
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="产地编码:" prop="productCode">
-              <Input v-model="productDetail.productCode" placeholder="产地编码"></Input>
+            <FormItem label="产地编码:" prop="sourceCode">
+              <Input v-model="productDetail.sourceCode" placeholder="产地编码"></Input>
             </FormItem>
             </Col>
             <Col span="12">
             <FormItem label="商品状态:" prop="status">
-              <Input v-model="productDetail.status" placeholder="商品状态"></Input>
+              <Select
+                :value="productDetail.status"
+                @on-change="statusChange">
+                <Option
+                  v-for="(item,index) in productStatus"
+                  :value="item.value"
+                  :key="index"
+                  class="ptb2-5"
+                  style="padding-left: 5px">{{ item.label
+                  }}
+                </Option>
+              </Select>
             </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="基础单位:" prop="unitName">
-              <Input v-model="productDetail.unitName" placeholder="基础单位"></Input>
+            <FormItem label="基础单位:" prop="unitId">
+              <Input v-model="productDetail.unitId" placeholder="基础单位"></Input>
             </FormItem>
             </Col>
             <Col span="12">
@@ -278,7 +278,14 @@
             </Col>
             <Col span="12">
             <FormItem label="基础重量:" prop="baseQty">
-              <Input v-model="productDetail.baseQty" placeholder="基础重量"></Input>
+              <InputNumber :min="0" v-model="productDetail.baseQty" placeholder="基础重量"></InputNumber>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem label="最低库存:" prop="limitQty">
+              <InputNumber :min="0" v-model="productDetail.limitQty" placeholder="最低库存"></InputNumber>
             </FormItem>
             </Col>
           </Row>
@@ -290,8 +297,8 @@
             </i-col>
           </Row>
           <Row>
-            <FormItem label="商品主图:建议尺寸;400x400(单位:px):" prop="mainImg" >
-              <Input v-show="false" v-model="productDetail.mainImg" style="width: auto"></Input>
+            <FormItem label="商品主图:建议尺寸;400x400(单位:px):" prop="image" >
+              <Input v-show="false" v-model="productDetail.image" style="width: auto"></Input>
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>
@@ -320,77 +327,11 @@
               </IViewUpload>
             </FormItem>
           </Row>
-          <Row>
-            <FormItem label="商品附图:建议尺寸600x338(单位:px)" prop="subImg">
-              <div v-for="item in uploadListSecond" :key="item.url" class="demo-upload-list">
-                <Input v-show="false" v-model="productDetail.subImg" style="width: auto"></Input>
-                <template v-if="item.status === 'finished'">
-                  <div>
-                    <img :src="item.url">
-                    <div class="demo-upload-list-cover">
-                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                      <Icon type="ios-trash-outline" @click.native="handleRemoveSecond(item)"></Icon>
-                    </div>
-                  </div>
-                </template>
-                <template v-else>
-                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                </template>
-              </div>
-              <IViewUpload
-                ref="uploadSecond"
-                :image-size="imageSize"
-                :default-list="defaultListSecond"
-                :max-num="5"
-                multiple
-                @on-success="handleSuccessSecond"
-              >
-                <div slot="content">
-                  <Button type="primary">
-                    上传图片
-                  </Button>
-                </div>
-              </IViewUpload>
-            </FormItem>
-          </Row>
-          <Row>
-            <FormItem :label-width="80" label="商品详情:" prop="detailImg">
-              <Input v-show="false" v-model="productDetail.detailImg" style="width: auto"></Input>
-              <div v-for="item in uploadListMultiple" :key="item.url" class="demo-upload-list">
-                <template v-if="item.status === 'finished'">
-                  <div>
-                    <img :src="item.url">
-                    <div class="demo-upload-list-cover">
-                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                      <Icon type="ios-trash-outline" @click.native="handleRemoveMultiple(item)"></Icon>
-                    </div>
-                  </div>
-                </template>
-                <template v-else>
-                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                </template>
-              </div>
-              <IViewUpload
-                ref="uploadMultiple"
-                :image-size="imageSize"
-                :default-list="defaultListMultiple"
-                :max-num="5"
-                multiple
-                @on-success="handleSuccessMultiple"
-              >
-                <div slot="content">
-                  <Button type="primary" style="width:auto">
-                    上传图片
-                  </Button>
-                </div>
-              </IViewUpload>
-            </FormItem>
-          </Row>
         </Form>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit','innerModalEdit')">确定
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定
         </Button>
       </div>
     </Modal>
@@ -405,23 +346,14 @@
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
 import _ from 'lodash';
-import {
-  createProduct,
-  deleteProduct,
-  editProduct,
-  getProduct,
-  getProductPages
-} from '@/api/mini-program';
-import {
-  getProductCategoriesTree,
-  productSpecificationsUnits
-} from '@/api/fruitermaster';
-import { buildMenu, convertTreeCategory } from '@/libs/util';
+import { createProduct, deleteProduct, editProduct, getProduct, getProductPages } from '@/api/mini-program';
+import { getProductCategoriesTree, productSpecificationsUnits } from '@/api/fruitermaster';
+import { buildMenu, convertTreeCategory, setGoodsStandard } from '@/libs/util';
 import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
-import { setGoodsStandard } from '../../../libs/util';
+import { productStatusConvert } from '@/libs/converStatus';
 
 const productDetail = {
   id: 0,
@@ -477,17 +409,23 @@ export default {
         productName: [
           { required: true, message: '请输入商品名称' }
         ],
-        categoryId: [
+        status: [
+          { required: true, message: '请选择商品状态' }
+        ],
+        unitId: [
+          { required: true, message: '请选择商品单位' }
+        ],
+        baseBarcode: [
+          { required: true, message: '请输入基础条码' }
+        ],
+        description: [
+          { required: true, message: '请输入商品描述' }
+        ],
+        groupId: [
           { required: true, message: '请选择商品分类' }
         ],
-        mainImg: [
+        image: [
           { required: true, message: '请上传商品主图' }
-        ],
-        subImg: [
-          { required: true, message: '请上传商品附图', type: 'array' }
-        ],
-        detailImg: [
-          { required: true, message: '请上传商品详情图', type: 'array' }
         ],
         packagingUnit: [
           { required: true, message: '请选择规格单位' }
@@ -504,7 +442,7 @@ export default {
             }
           }
         ],
-        limitInventory: [
+        limitQty: [
           { required: true, message: '请输入安全库存' },
           {
             validator(rule, value, callback, source, options) {
@@ -516,7 +454,7 @@ export default {
             }
           }
         ],
-        weight: [
+        baseQty: [
           { required: true, message: '请输入重量' },
           {
             validator(rule, value, callback, source, options) {
@@ -584,6 +522,7 @@ export default {
         {
           title: '产品编码',
           minWidth: 150,
+          sortable: true,
           key: 'sourceCode'
         },
         {
@@ -594,12 +533,23 @@ export default {
         {
           title: '基础重量',
           minWidth: 150,
+          sortable: true,
           key: 'baseQty'
         },
         {
           title: '商品状态',
           minWidth: 150,
-          key: 'status'
+          sortable: true,
+          key: 'status',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.status === 'NORMAL') {
+              return <div><tag color='success'>{productStatusConvert(row.status).label}</tag></div>;
+            } else if (row.status === 'STOP_MINING') {
+              return <div><tag color='error'>{productStatusConvert(row.status).label}</tag></div>;
+            }
+            return <div><tag color='primary'>row.status</tag></div>;
+          }
         },
         {
           title: '操作',
@@ -612,7 +562,8 @@ export default {
       modalViewLoading: false,
       exportExcelLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
-      productDetail: _.cloneDeep(productDetail)
+      productDetail: _.cloneDeep(productDetail),
+      productStatus: [{ label: '正常', value: 'NORMAL' }, { label: '停采', value: 'STOP_MINING' }]
     };
   },
   mounted() {
@@ -680,26 +631,24 @@ export default {
       this.productDetail.subImg = null;
       this.productDetail.detailImg = null;
     },
-    handleSubmit(name1, name2) {
-      this.$refs[name2].validate((innerValid) => {
-        this.$refs[name1].validate((valid) => {
-          if (valid && innerValid) {
-            if (this.tempModalType === this.modalType.create) {
-              // 添加状态
-              this.createProduct();
-            } else if (this.tempModalType === this.modalType.edit) {
-              // 编辑状态
-              this.editProduct();
-            }
-          } else {
-            this.$Message.error('请完善商品的信息!');
+    handleSubmit(name1) {
+      this.$refs[name1].validate((valid) => {
+        if (valid) {
+          if (this.tempModalType === this.modalType.create) {
+            // 添加状态
+            this.createProduct();
+          } else if (this.tempModalType === this.modalType.edit) {
+            // 编辑状态
+            this.editProduct();
           }
-        });
+        } else {
+          this.$Message.error('请完善商品的信息!');
+        }
       });
     },
     createProduct() {
       this.modalViewLoading = true;
-      this.productDetail.productSpecification.specificationQty = 1;
+      // this.productDetail.productSpecification.specificationQty = 1;
       createProduct({
         ...this.productDetail
       }).then(res => {
@@ -731,9 +680,9 @@ export default {
     // 选择分类
     goodsCategoryChange(value, selectedData) {
       if (selectedData.length > 0) {
-        this.productDetail.categoryId = selectedData[selectedData.length - 1].id;
+        this.productDetail.groupId = selectedData[selectedData.length - 1].id;
       } else {
-        this.productDetail.categoryId = null;
+        this.productDetail.groupId = null;
       }
       this.defaultGoodsCategoryData = selectedData;
     },
@@ -824,7 +773,7 @@ export default {
         this.productDetail = res;
         this.setDefaultUploadList(res);
         this.defaultGoodsCategoryData = [];
-        this.findParentId(this.productDetail.categoryId);
+        this.findParentId(this.productDetail.groupId);
         this.defaultGoodsCategoryData.reverse();
         this.modalEdit = true;
       }).catch(error => {
@@ -896,31 +845,11 @@ export default {
     // 商品主图
     handleSuccessMain(response, file, fileList) {
       this.uploadListMain = fileList;
-      this.productDetail.mainImg = null;
-      this.productDetail.mainImg = fileList[0].url;
+      this.productDetail.image = null;
+      this.productDetail.image = fileList[0].url;
     },
-    // 商品详情
-    handleSuccessMultiple(response, file, fileList) {
-      this.uploadListMultiple = fileList;
-      this.productDetail.detailImg = [];
-      fileList.forEach(value => {
-        if (value.url) {
-          this.productDetail.detailImg.push(value.url);
-        }
-      });
-    },
-    // 商品附图
-    handleSuccessSecond(response, file, fileList) {
-      this.uploadListSecond = fileList;
-      this.productDetail.subImg = [];
-      fileList.forEach(value => {
-        if (value.url) {
-          this.productDetail.subImg.push(value.url);
-        }
-      });
-      if (this.tempSubImg.indexOf(response.fileUrl) < 0) {
-        this.tempSubImg.push(response.fileUrl);
-      }
+    statusChange(value) {
+      this.productDetail.status = value;
     }
   }
 };

@@ -2,7 +2,7 @@ import {
   customOrderStatusConvert,
   customPeriodConvert, customPlanStatusConvert,
   deliveryTypeCustomConvert, doctorLevelConvert, doctorStatusConvert, hotConvert, onSaleStatusConvert,
-  orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert, feedbackStatusConvert
+  orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert, feedbackStatusConvert, productStatusConvert
 } from '../libs/converStatus';
 
 const mixin = {
@@ -95,6 +95,10 @@ const mixin = {
     // 反馈状态
     feedbackStatusFilters(status) {
       return feedbackStatusConvert(status).label;
+    },
+    // 小程序商品状态
+    productStatusFilter(status) {
+      return productStatusConvert(status).label;
     }
   },
   computed: {

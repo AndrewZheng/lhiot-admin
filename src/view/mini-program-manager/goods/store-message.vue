@@ -31,7 +31,7 @@
             <Select v-model="searchRowData.storeArea" placeholder="所属区域" style="padding-right: 5px;width: 100px" clearable>
               <Option
                 v-for="(item,index) in areaList"
-                :value="item.storeArea"
+                :value="item.area"
                 :key="index"
                 class="ptb2-5"
                 style="padding-left: 5px;width: 100px">{{ item.areaName }}
@@ -207,7 +207,7 @@
               <Select v-model="storeDetail.storeArea">
                 <Option
                   v-for="(item,index) in areaList"
-                  :value="item.storeArea"
+                  :value="item.area"
                   :key="index"
                   class="ptb2-5"
                   style="padding-left: 5px">{{ item.areaName }}
@@ -223,7 +223,7 @@
                   :value="item.storeFlagship"
                   :key="index"
                   class="ptb2-5"
-                  style="padding-left: 5px">{{ item.name }}
+                  style="padding-left: 5px">{{ item.storeName }}
                 </Option>
               </Select>
             </FormItem>
@@ -287,7 +287,7 @@
             <FormItem label="推荐使用尺寸为400X225(单位:px):" prop="storeImage" >
               <Input v-show="false" v-model="storeDetail.storeImage" style="width: auto"></Input>
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
-                <template v-if="item.storeStatus === 'finished'">
+                <template v-if="item.status === 'finished'">
                   <div>
                     <img :src="item.url">
                     <div class="demo-upload-list-cover">
@@ -358,7 +358,7 @@ import { storeStatusConvert, storeTypeConvert, coordinateTypeConvert } from '../
 import { getDictionary } from '@/api/basic';
 
 const storeDetail = {
-  storeId: 30,
+  storeId: 0,
   storeCode: '',
   storeName: '',
   storeAddress: '',
@@ -466,10 +466,11 @@ export default {
         {
           title: '所属区域',
           minWidth: 150,
+          key: 'storeArea',
           render: (h, params, vm) => {
             const { row } = params;
             const obj = this.areaList.find(item => {
-              return item.storeArea === row.storeArea
+              return item.area === row.storeArea
             })
             if (obj) {
               return h('span', obj.areaName + '');
@@ -485,8 +486,9 @@ export default {
           render: (h, params) => {
             const { row } = params;
             const obj = this.flagShipList.find(item => row.storeFlagship === item.storeFlagship)
+            console.log('obj' + obj);
             if (obj) {
-              return h('span', obj.name);
+              return h('span', obj.storeName);
             }
             return h('span', row.storeFlagship);
           }
@@ -494,6 +496,7 @@ export default {
         {
           title: '门店状态',
           minWidth: 150,
+          key: 'storeStatus',
           render: (h, params) => {
             const { row } = params;
             if (row.storeStatus === 'ENABLED') {
@@ -540,9 +543,10 @@ export default {
     this.loading = true;
     this.createLoading = true;
     getStoreAreas().then(res => {
-      this.areaList = res.rows;
+      this.areaList = res.array;
       getStorePages({
-        storeType: storeType.FLAGSHIP_STORE,
+        // 数据库数据不完整，暂时先注释掉门店类型条件
+        // storeType: storeType.FLAGSHIP_STORE,
         page: 1,
         rows: 10
       }).then(res => {
@@ -605,14 +609,20 @@ export default {
       });
     },
     addStore() {
+      this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
-        this.resetFields();
         this.tempModalType = this.modalType.create;
         this.storeDetail = _.cloneDeep(storeDetail)
       }
+
       this.modalEdit = true;
     },
     // 删除
+    handleDelete(params) {
+      this.tableDataSelected = [];
+      this.tableDataSelected.push(params.row);
+      this.deleteTable(params.row.storeId);
+    },
     deleteTable(ids) {
       this.loading = true;
       deleteStore({

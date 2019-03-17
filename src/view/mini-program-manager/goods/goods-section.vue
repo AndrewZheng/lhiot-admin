@@ -25,8 +25,31 @@
           >
             <div slot="searchCondition">
               <Row>
-                <Input v-model="searchRowData.groupName" placeholder="分类名称" class="search-input mr5" style="width: auto"></Input>
-                <Button :loading="loading" class="search-btn mr5" type="primary" @click="handleSearch">
+                <Input
+                  v-model="searchRowData.sectionName"
+                  placeholder="板块名称"
+                  class="search-input mr5"
+                  style="width: auto"
+                  clearable
+                >
+                </Input>
+                <Input
+                  v-model="searchRowData.productName"
+                  placeholder="商品名称"
+                  class="search-input mr5"
+                  style="width: auto"
+                  clearable
+                >
+                </Input>
+                <Input
+                  v-model="searchRowData.applyType"
+                  placeholder="应用类型"
+                  class="search-input mr5"
+                  style="width: auto"
+                  clearable
+                >
+                </Input>
+                <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
                   <Icon type="md-search"/>&nbsp;搜索
                 </Button>
                 <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
@@ -38,6 +61,10 @@
               <Button v-waves type="success" class="mr5" @click="createTableRow">
                 <Icon type="md-add"/>
                 添加
+              </Button>
+              <Button v-waves type="primary" class="mr5" @click="createTableRow">
+                <Icon type="md-repeat" />
+                更换板块
               </Button>
               <Poptip
                 confirm
@@ -67,32 +94,6 @@
         </Card>
       </i-col>
     </Row>
-
-    <!--编辑菜单 -->
-    <Modal
-      v-model="modalEdit"
-    >
-      <p slot="header">
-        <span>编辑商品分类</span>
-      </p>
-      <div class="modal-content">
-        <Form :label-width="100">
-          <FormItem label="父级ID:">
-            <i-col>{{ currentCategory.parentId }}</i-col>
-          </FormItem>
-          <FormItem label="父级分类:">
-            <i-col>{{ parentCategory.groupName }}</i-col>
-          </FormItem>
-          <FormItem label="子分类名:">
-            <Input v-model="currentCategory.groupName" placeholder="子分类名"></Input>
-          </FormItem>
-        </Form>
-      </div>
-      <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="asyncEditOK">确定</Button>
-      </div>
-    </Modal>
   </div>
 </template>
 
@@ -100,25 +101,68 @@
 import Tables from '_c/tables';
 import _ from 'lodash';
 import {
-  addMiniProgramProductCategories,
-  deleteMiniProgramProductCategories,
-  getMiniProgramProductCategoriesPages,
-  getMiniProgramProductCategoriesTree,
-  putMiniProgramProductCategories
+  createProductStandard,
+  deleteProductStandard,
+  getProductStandardsPages,
+  editProductStandard,
+  getProductSectionTree
 } from '@/api/mini-program';
 import { buildMenu, convertTree } from '@/libs/util';
 import CommonIcon from '_c/common-icon';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import deleteMixin from '@/mixins/deleteMixin.js';
+import { fenToYuanDot2 } from '@/libs/util';
+import { customPlanStatusConvert } from '@/libs/converStatus';
 
-const currentCategory = {
+const productSectionDetail = {
   id: 0,
-  parentId: 0,
-  groupName: ''
+  productId: 0,
+  barcode: '',
+  specification: '',
+  standardQty: 0,
+  unitId: 0,
+  productUnit: '',
+  price: 0,
+  salePrice: 0,
+  rank: 0,
+  description: '',
+  shelvesStatus: '',
+  applyType: '',
+  productName: '',
+  createUser: null,
+  image: '',
+  productDescription: '',
+  productCode: '',
+  baseProductName: '',
+  baseProductDescription: '',
+  groupId: 0,
+  groupName: '',
+  sourceCode: '',
+  baseImage: '',
+  smallImage: '',
+  largeImage: '',
+  status: '',
+  baseUnitId: 0,
+  baseUnit: '',
+  baseBarcode: '',
+  hdSkuid: '',
+  videoUrl: '',
+  videoImage: '',
+  baseQty: 0,
+  limitQty: 0,
+  queryStatus: null,
+  invEnough: null,
+  invNum: null,
+  saleCount: null,
+  positionName: null,
+  dbId: null
 };
+
 const roleRowData = {
-  parentId: 0,
+  applyType: null,
+  sectionName: '',
+  productName: '',
   page: 1,
   rows: 10
 };
@@ -141,25 +185,71 @@ export default {
           fixed: 'left'
         },
         {
-          title: '商品分类ID',
-          key: 'id',
+          title: '商品条码',
+          key: 'barcode',
           sortable: true,
-          align: 'center',
-          minWidth: 150
+          align: 'center'
         },
         {
-          title: '分类名',
-          key: 'groupName',
+          title: '商品编号',
+          key: 'productCode',
           sortable: true,
           align: 'center',
-
-          minWidth: 150
+          width: 150
+        },
+        {
+          title: '商品名称',
+          key: 'productName',
+          sortable: true,
+          align: 'center'
+        },
+        {
+          title: '商品规格',
+          key: 'specification',
+          sortable: true,
+          align: 'center'
+        },
+        {
+          title: '商品单位',
+          key: 'productUnit',
+          sortable: true,
+          align: 'center'
+        },
+        {
+          title: '商品价格',
+          key: 'price',
+          sortable: true,
+          align: 'center',
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(params.row.price);
+            return <div>{amount}</div>;
+          }
+        },
+        {
+          title: '商品状态',
+          key: 'shelvesStatus',
+          sortable: true,
+          align: 'center',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.shelvesStatus === 'VALID') {
+              return <div><tag color='success'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
+            } else if (row.shelvesStatus === 'INVALID') {
+              return <div><tag color='error'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
+            }
+            return <div><tag color='primary'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
+          }
+        },
+        {
+          title: '排序',
+          key: 'rank',
+          sortable: true,
+          align: 'center'
         },
         {
           title: '操作',
           key: 'handle',
-          minWidth: 150,
-          options: ['edit', 'delete']
+          options: ['delete']
         }
       ],
       modalEdit: false,
@@ -167,9 +257,10 @@ export default {
       modalEditLoading: false,
       currentParentName: '',
       currentParentId: 0,
-      currentCategory: this._.cloneDeep(currentCategory),
-      parentCategory: this._.cloneDeep(currentCategory),
-      searchRowData: this._.cloneDeep(roleRowData)
+      currentCategory: this._.cloneDeep(productSectionDetail),
+      parentCategory: this._.cloneDeep(productSectionDetail),
+      searchRowData: this._.cloneDeep(roleRowData),
+      treeData: this._.cloneDeep(productSectionDetail)
     };
   },
   created() {
@@ -217,7 +308,7 @@ export default {
     },
     createTableRow() {
       if (this.tempModalType !== this.modalType.create) {
-        this.currentCategory = this._.cloneDeep(currentCategory);
+        this.currentCategory = this._.cloneDeep(productSectionDetail);
       }
       this.currentCategory.currentParentId = this.currentParentId;
       this.tempModalType = this.modalType.create;
@@ -236,7 +327,7 @@ export default {
         this.currentCategory.parentId = this.parentCategory.id;
       }
       if (this.tempModalType === this.modalType.create) {
-        addMiniProgramProductCategories(this.currentCategory
+        createProductStandard(this.currentCategory
         ).then(res => {
 
         }).finally(res => {
@@ -245,7 +336,7 @@ export default {
           this.modalEdit = false;
         });
       } else if (this.tempModalType === this.modalType.edit) {
-        putMiniProgramProductCategories(this.currentCategory).then(res => {
+        editProductStandard(this.currentCategory).then(res => {
         }).finally(res => {
           this.initMenuList();
           this.modalEditLoading = false;
@@ -259,7 +350,7 @@ export default {
     // 删除
     deleteTable(ids) {
       this.loading = true;
-      deleteMiniProgramProductCategories({
+      deleteProductStandard({
         ids
       }).then(res => {
         const totalPage = Math.ceil(this.total / this.pageSize);
@@ -282,18 +373,19 @@ export default {
     },
     getTableData() {
       this.loading = true;
-      getMiniProgramProductCategoriesPages(this.searchRowData).then(res => {
+      getProductStandardsPages(this.searchRowData).then(res => {
         if (this.menuData.length > 0) {
           // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
+          this.searchLoading = false;
         }
       });
     },
     // 初始化商品菜单列表
     initMenuList() {
-      getMiniProgramProductCategoriesTree().then(res => {
+      getProductSectionTree(this.treeData).then(res => {
         if (res && res.array.length > 0) {
           const menuList = buildMenu(res.array);
           const map = {
@@ -307,7 +399,6 @@ export default {
         }
       });
     },
-
     handleClick({ root, node, data }) {
       this.loading = true;
       // 展开当前节点

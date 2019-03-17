@@ -13,7 +13,8 @@ export const getMiniProgramProductCategoriesPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-categories/pages',
     data,
-    method: 'post'
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
   });
 };
 
@@ -48,7 +49,8 @@ export const getMiniProgramProductUnitsPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-units/pages',
     data,
-    method: 'post'
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
   });
 };
 
@@ -83,7 +85,8 @@ export const getStorePages = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/stores/pages',
     data,
-    method: 'post'
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
   });
 };
 // 根据id删除门店
@@ -113,7 +116,7 @@ export const getStoreAreas = () => {
 // 根据id更新门店 /stores/{id}
 export const editStore = (data) => {
   return Vue.prototype.$http.request({
-    url: '/minapp/stores/' + data.id,
+    url: '/minapp/stores/',
     data,
     method: 'put'
   });
@@ -122,7 +125,7 @@ export const editStore = (data) => {
 // 添加门店
 export const addStore = (data) => {
   return Vue.prototype.$http.request({
-    url: '/minapp/stores',
+    url: '/minapp/stores/',
     data,
     method: 'post'
   });
@@ -133,7 +136,8 @@ export const getProductPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/products/pages',
     data,
-    method: 'post'
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
   });
 };
 
@@ -156,7 +160,7 @@ export const getProduct = ({ id }) => {
 // 修改商品
 export const editProduct = (data) => {
   return Vue.prototype.$http.request({
-    url: '/minapp/products/' + data.id,
+    url: '/minapp/products/',
     data,
     method: 'put'
   });
@@ -176,7 +180,8 @@ export const getProductStandardsPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-standards/pages',
     data,
-    method: 'post'
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
   });
 };
 
@@ -205,3 +210,86 @@ export const editProductStandard = (data) => {
     method: 'put'
   });
 };
+
+// 根据条件分页查询板块信息列表(传值productId)
+export const getProductSectionPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/product-sections/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 根据板块Ids删除板块
+export const deleteProductSection = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/product-sections/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加板块
+export const createProductSection = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/product-sections/',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// / 修改板块
+export const editProductSection = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/product-sections/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 查询商品分类树结构
+export const getProductSectionTree = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/product-sections/tree',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据条件分页查询商品板块信息列表(传值productId)
+export const getProductSectionRelationPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/product-section-relations/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 根据商品板块Ids删除商品板块
+export const deleteProductSectionRelation = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/product-section-relations/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加商品板块
+export const createProductSectionRelation = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/product-section-relations/',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改商品板块
+export const editProductSectionRelation = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/product-section-relations/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+

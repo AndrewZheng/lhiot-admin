@@ -618,3 +618,21 @@ export const splitStatusEnum = [
     value: splitStatus.NO_SEPARABLE
   }
 ];
+
+// 小程序商品状态 NORMAL-正常 STOP_MINING	停采
+
+export const productStatus = {
+  NORMAL: 'NORMAL',
+  STOP_MINING: 'STOP_MINING'
+}
+
+export const productStatusEnum = [
+  {
+    label: '正常',
+    value: productStatus.NORMAL
+  },
+  {
+    label: '停采',
+    value: productStatus.STOP_MINING
+  }
+]

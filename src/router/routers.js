@@ -698,7 +698,7 @@ export const asyncRouterMap = [
         path: '/small-goods-category',
         name: 'small-goods-category',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'ios-albums',
           title: '商品分类管理'
         },
         component: () => import('@/view/mini-program-manager/goods/goods-category.vue')
@@ -707,7 +707,7 @@ export const asyncRouterMap = [
         path: '/small-goods-unit',
         name: 'small-goods-unit',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'ios-barcode',
           title: '商品单位管理'
         },
         component: () => import('@/view/mini-program-manager/goods/goods-unit.vue')
@@ -716,7 +716,7 @@ export const asyncRouterMap = [
         path: '/small-goods-info',
         name: 'small-goods-info',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'md-menu',
           title: '基础商品管理'
         },
         component: () => import('@/view/mini-program-manager/goods/goods-message.vue')
@@ -725,7 +725,7 @@ export const asyncRouterMap = [
         path: '/small-goods-standard',
         name: 'small-goods-standard',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'ios-basket',
           title: '商品规格管理'
         },
         component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
@@ -734,10 +734,10 @@ export const asyncRouterMap = [
         path: '/small-goods-section',
         name: 'small-goods-section',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'ios-apps',
           title: '板块管理'
         },
-        component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
+        component: () => import('@/view/mini-program-manager/goods/section.vue')
       },
        {
         path: '/small-goods-section-relation',
@@ -746,13 +746,13 @@ export const asyncRouterMap = [
           icon: 'md-pricetag',
           title: '商品板块管理'
         },
-        component: () => import('@/view/mini-program-manager/goods/store-message.vue')
+        component: () => import('@/view/mini-program-manager/goods/goods-section.vue')
       },
       {
         path: '/small-store',
         name: 'small-store',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'ios-home',
           title: '门店管理'
         },
         component: () => import('@/view/mini-program-manager/goods/store-message.vue')
