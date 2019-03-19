@@ -239,7 +239,7 @@ export const createProductSection = (data) => {
   });
 };
 
-// / 修改板块
+//  修改板块
 export const editProductSection = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-sections/' + data.id,
@@ -293,3 +293,112 @@ export const editProductSectionRelation = (data) => {
   });
 };
 
+// ———————————— 活动管理 —————————————
+
+// 根据条件分页查询拼团机器人列表
+export const getRobotPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/robots/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 根据拼团机器人Ids删除拼团机器人
+export const deleteRobot = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/robots/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加拼团机器人
+export const createRobot = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/robots/',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改拼团机器人
+export const editRobot = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/robots/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询图片管理列表
+export const getImagePages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-images/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 根据图片管理Ids删除图片管理
+export const deleteImage = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-images/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加图片管理
+export const createImage = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-images/',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改图片管理
+export const editImage = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-images/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询拼团活动管理列表
+export const getTeamBuyPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-team-buys/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 根据拼团活动管理Ids删除拼团活动管理
+export const deleteTeamBuy = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-team-buys/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加拼团活动管理
+export const createTeamBuy = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-team-buys/',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改拼团活动管理
+export const editTeamBuy = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-team-buys/' + data.id,
+    data,
+    method: 'put'
+  });
+};

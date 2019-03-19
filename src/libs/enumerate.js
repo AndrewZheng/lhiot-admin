@@ -636,3 +636,56 @@ export const productStatusEnum = [
     value: productStatus.STOP_MINING
   }
 ]
+
+// 小程序图片状态 OFF 关闭 ， ON 开启
+
+export const imageStatus = {
+  OFF: 'OFF',
+  ON: 'ON'
+}
+
+export const imageStatusEnum = [
+  {
+    label: '关闭',
+    value: imageStatus.OFF
+  },
+  {
+    label: '开启',
+    value: imageStatus.ON
+  }
+]
+
+// 小程序图片类型 TEAM_GUARANTEE 拼团保障图
+
+export const imageType = {
+  TEAM_GUARANTEE: 'TEAM_GUARANTEE'
+}
+
+export const imageTypeEnum = [
+  {
+    label: '拼团保障图',
+    value: imageType.TEAM_GUARANTEE
+  }
+]
+
+// 小程序团购活动状态 off 未开启 on 开启  expire 过期
+export const teamBuyStatus = {
+  off: 'off',
+  on: 'on',
+  expire: 'expire'
+}
+
+export const teamBuyStatusEnum = [
+  {
+    label: '关闭',
+    value: teamBuyStatus.off
+  },
+  {
+    label: '开启',
+    value: teamBuyStatus.on
+  },
+  {
+    label: '过期',
+    value: teamBuyStatus.expire
+  }
+]

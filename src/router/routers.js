@@ -760,22 +760,40 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '/small-goods-activity-manager',
-    name: 'small-goods-activity-manager',
+    path: '/small-goods-teambuy',
+    name: 'small-goods-teambuy',
     meta: {
       icon: 'md-menu',
-      title: '微商城小程序活动管理'
+      title: '团购管理'
     },
     component: Main,
     children: [
       {
-        path: '/small-goods-postage-rule',
-        name: 'small-goods-postage-rule',
+        path: '/small-goods-activity-teambuy',
+        name: 'small-goods-activity-teambuy',
         meta: {
           icon: 'md-pricetag',
-          title: '邮费管理'
+          title: '拼团活动'
         },
-        component: () => import('@/view/fruit-master-manager/rule-parameters/postage-rule-settings.vue')
+        component: () => import('@/view/mini-program-manager/activity/teambuy.vue')
+      },
+      {
+        path: '/small-goods-robot',
+        name: 'small-goods-robot',
+        meta: {
+          icon: 'md-pricetag',
+          title: '拼团机器人'
+        },
+        component: () => import('@/view/mini-program-manager/activity/robot.vue')
+      },
+      {
+        path: '/small-goods-images',
+        name: 'small-goods-images',
+        meta: {
+          icon: 'md-pricetag',
+          title: '图片管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/images.vue')
       },
     ]
   },

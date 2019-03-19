@@ -548,7 +548,7 @@ export default {
             } else if (row.status === 'STOP_MINING') {
               return <div><tag color='error'>{productStatusConvert(row.status).label}</tag></div>;
             }
-            return <div><tag color='primary'>row.status</tag></div>;
+            return <div><tag color='primary'>{row.status}</tag></div>;
           }
         },
         {
