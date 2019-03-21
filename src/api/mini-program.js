@@ -402,3 +402,75 @@ export const editTeamBuy = (data) => {
     method: 'put'
   });
 };
+
+// 根据条件分页查询拼团活动管理列表
+export const getActivitiesPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activities/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 根据拼团活动管理Ids删除拼团活动管理
+export const deleteActivities = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activities/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加拼团活动管理
+export const createActivities = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activities/',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改拼团活动管理
+export const editActivities = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activities/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询限时抢购列表
+export const getFlashsalePages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-flashsales/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 根据限时抢购Ids删除限时抢购
+export const deleteFlashsale = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-flashsales/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加限时抢购
+export const createFlashsale = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-flashsales/',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改限时抢购
+export const editFlashsale = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-flashsales/' + data.id,
+    data,
+    method: 'put'
+  });
+};

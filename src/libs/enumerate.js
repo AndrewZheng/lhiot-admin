@@ -689,3 +689,64 @@ export const teamBuyStatusEnum = [
     value: teamBuyStatus.expire
   }
 ]
+
+// 小程序团购活动活动类型 ORDINARY_TEAM("普通团"),OLD_AND_NEW("老带新团")
+export const teamBuyType = {
+  ORDINARY_TEAM: 'ORDINARY_TEAM',
+  OLD_AND_NEW: 'OLD_AND_NEW'
+}
+
+export const teamBuyTypeEnum = [
+  {
+    label: '普通团',
+    value: teamBuyType.ORDINARY_TEAM
+  },
+  {
+    label: '老带新团',
+    value: teamBuyType.OLD_AND_NEW
+  }
+]
+
+//  小程序红包活动设置 DISABLE("关闭"),ALL_ENABLE("全部开启"),SINGLE_ENABLE("单人购买开启活动"),MULTIPLE_ENABLE("多人团开启活动")
+export const rewardActivitySetting = {
+  DISABLE: 'DISABLE',
+  ALL_ENABLE: 'ALL_ENABLE',
+  SINGLE_ENABLE: 'SINGLE_ENABLE',
+  MULTIPLE_ENABLE: 'MULTIPLE_ENABLE'
+}
+
+export const rewardActivitySettingEnum = [
+  {
+    label: '关闭',
+    value: rewardActivitySetting.DISABLE
+  },
+  {
+    label: '全部开启',
+    value: rewardActivitySetting.ALL_ENABLE
+  },
+  {
+    label: '单人购买开启活动',
+    value: rewardActivitySetting.SINGLE_ENABLE
+  },
+  {
+    label: '多人团开启活动',
+    value: rewardActivitySetting.MULTIPLE_ENABLE
+  }
+]
+
+// 小程序关联门店 ALL(全部门店), PART(部分门店)
+export const relationStoreType = {
+  ALL: 'ALL',
+  PART: 'PART'
+}
+
+export const relationStoreTypeEnum = [
+  {
+    label: '全部门店',
+    value: relationStoreType.ALL
+  },
+  {
+    label: '部分门店',
+    value: relationStoreType.PART
+  }
+]

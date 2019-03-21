@@ -798,6 +798,80 @@ export const asyncRouterMap = [
     ]
   },
   {
+    path: '/small-activities',
+    name: 'small-activities',
+    meta: {
+      icon: 'md-menu',
+      title: '活动管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/small-activity',
+        name: 'small-activity',
+        meta: {
+          icon: 'md-pricetag',
+          title: '统一活动管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/activities.vue')
+      },
+      {
+        path: '/small-activity-flashsale',
+        name: 'small-activity-flashsale',
+        meta: {
+          icon: 'md-pricetag',
+          title: '限时抢购管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
+      },
+      {
+        path: '/small-activity-coupon',
+        name: 'small-activity-coupon',
+        meta: {
+          icon: 'md-pricetag',
+          title: '优惠券活动管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/images.vue')
+      },
+      {
+        path: '/small-activity-share-reward',
+        name: 'small-activity-share-reward',
+        meta: {
+          icon: 'md-pricetag',
+          title: '分享红包活动'
+        },
+        component: () => import('@/view/mini-program-manager/activity/images.vue')
+      },
+      {
+        path: '/small-activity-title',
+        name: 'small-activity-title',
+        meta: {
+          icon: 'md-pricetag',
+          title: '拼团标题设置'
+        },
+        component: () => import('@/view/mini-program-manager/activity/images.vue')
+      },
+      {
+        path: '/small-postage-rule-setting',
+        name: 'small-postage-rule-setting',
+        meta: {
+          icon: 'md-pricetag',
+          title: '邮费管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/images.vue')
+      },
+      {
+        path: '/small-activity-register-reward',
+        name: 'small-activity-register-reward',
+        meta: {
+          icon: 'md-pricetag',
+          title: '注册送礼优惠券活动'
+        },
+        component: () => import('@/view/mini-program-manager/activity/images.vue')
+      },
+    ]
+  },
+  {
     path: '/group-booking-goods-manager',
     name: 'group-booking-goods-manager',
     meta: {

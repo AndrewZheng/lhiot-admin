@@ -10,7 +10,7 @@ import {
   thirdDelieverStatusEnum, updateWayEnum, storeStatusEnum, storeTypeEnum, coordinateTypeEnum,
   feedbackStatusEnum,
   // 小程序
-  splitStatusEnum, productStatusEnum, imageStatusEnum, imageTypeEnum, teamBuyStatusEnum
+  splitStatusEnum, productStatusEnum, imageStatusEnum, imageTypeEnum, teamBuyStatusEnum, teamBuyTypeEnum, rewardActivitySettingEnum
 } from './enumerate';
 
 const convertFunction = (value, list) => {
@@ -128,6 +128,14 @@ export const imageTypeConvert = (value) => {
   return convertFunction(value, imageTypeEnum);
 }
 
-export const teamBuyConvert = (value) => {
+export const teamBuyStatusConvert = (value) => {
   return convertFunction(value, teamBuyStatusEnum);
+}
+
+export const teamBuyTypeConvert = (value) => {
+  return convertFunction(value, teamBuyTypeEnum);
+}
+
+export const rewardActivitySettingConvert = (value) => {
+  return convertFunction(value, rewardActivitySettingEnum);
 }
