@@ -636,3 +636,161 @@ export const productStatusEnum = [
     value: productStatus.STOP_MINING
   }
 ]
+
+// 小程序图片状态 OFF 关闭 ， ON 开启
+
+export const imageStatus = {
+  OFF: 'OFF',
+  ON: 'ON'
+}
+
+export const imageStatusEnum = [
+  {
+    label: '关闭',
+    value: imageStatus.OFF
+  },
+  {
+    label: '开启',
+    value: imageStatus.ON
+  }
+]
+
+// 小程序图片类型 TEAM_GUARANTEE 拼团保障图
+
+export const imageType = {
+  TEAM_GUARANTEE: 'TEAM_GUARANTEE'
+}
+
+export const imageTypeEnum = [
+  {
+    label: '拼团保障图',
+    value: imageType.TEAM_GUARANTEE
+  }
+]
+
+// 小程序团购活动状态 off 未开启 on 开启  expire 过期
+export const teamBuyStatus = {
+  off: 'off',
+  on: 'on',
+  expire: 'expire'
+}
+
+export const teamBuyStatusEnum = [
+  {
+    label: '关闭',
+    value: teamBuyStatus.off
+  },
+  {
+    label: '开启',
+    value: teamBuyStatus.on
+  },
+  {
+    label: '过期',
+    value: teamBuyStatus.expire
+  }
+]
+
+// 小程序团购活动活动类型 ORDINARY_TEAM("普通团"),OLD_AND_NEW("老带新团")
+export const teamBuyType = {
+  ORDINARY_TEAM: 'ORDINARY_TEAM',
+  OLD_AND_NEW: 'OLD_AND_NEW'
+}
+
+export const teamBuyTypeEnum = [
+  {
+    label: '普通团',
+    value: teamBuyType.ORDINARY_TEAM
+  },
+  {
+    label: '老带新团',
+    value: teamBuyType.OLD_AND_NEW
+  }
+]
+
+//  小程序红包活动设置 DISABLE("关闭"),ALL_ENABLE("全部开启"),SINGLE_ENABLE("单人购买开启活动"),MULTIPLE_ENABLE("多人团开启活动")
+export const rewardActivitySetting = {
+  DISABLE: 'DISABLE',
+  ALL_ENABLE: 'ALL_ENABLE',
+  SINGLE_ENABLE: 'SINGLE_ENABLE',
+  MULTIPLE_ENABLE: 'MULTIPLE_ENABLE'
+}
+
+export const rewardActivitySettingEnum = [
+  {
+    label: '关闭',
+    value: rewardActivitySetting.DISABLE
+  },
+  {
+    label: '全部开启',
+    value: rewardActivitySetting.ALL_ENABLE
+  },
+  {
+    label: '单人购买开启活动',
+    value: rewardActivitySetting.SINGLE_ENABLE
+  },
+  {
+    label: '多人团开启活动',
+    value: rewardActivitySetting.MULTIPLE_ENABLE
+  }
+]
+
+// 小程序关联门店 ALL(全部门店), PART(部分门店)
+export const relationStoreType = {
+  ALL: 'ALL',
+  PART: 'PART'
+}
+
+export const relationStoreTypeEnum = [
+  {
+    label: '全部门店',
+    value: relationStoreType.ALL
+  },
+  {
+    label: '部分门店',
+    value: relationStoreType.PART
+  }
+]
+
+// 小程序优惠券状态 有效-VALID 无效-INVALID
+export const couponStatus = {
+  VALID: 'VALID',
+  INVALID: 'INVALID',
+  EXPIRE: 'EXPIRE'
+};
+
+export const couponStatusEnum = [
+  {
+    label: '有效',
+    value: couponStatus.VALID
+  },
+  {
+    label: '无效',
+    value: couponStatus.INVALID
+  },
+  {
+    label: '过期',
+    value: couponStatus.EXPIRE
+  }
+];
+
+// 小程序优惠券类型(FULL_CUT_COUPON 满减券;DISCOUNT_COUPON 折扣券;CASH_COUPON 现金券)
+export const couponType = {
+  FULL_CUT_COUPON: 'FULL_CUT_COUPON',
+  DISCOUNT_COUPON: 'DISCOUNT_COUPON',
+  CASH_COUPON: 'CASH_COUPON'
+};
+
+export const couponTypeEnum = [
+  {
+    label: '满减券',
+    value: couponType.FULL_CUT_COUPON
+  },
+  {
+    label: '折扣券',
+    value: couponType.DISCOUNT_COUPON
+  },
+  {
+    label: '现金券',
+    value: couponType.CASH_COUPON
+  }
+];

@@ -2,7 +2,7 @@ import {
   customOrderStatusConvert,
   customPeriodConvert, customPlanStatusConvert,
   deliveryTypeCustomConvert, doctorLevelConvert, doctorStatusConvert, hotConvert, onSaleStatusConvert,
-  orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert, feedbackStatusConvert, productStatusConvert
+  orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert, feedbackStatusConvert, productStatusConvert, imageStatusConvert, imageTypeConvert, teamBuyStatusConvert, teamBuyTypeConvert, rewardActivitySettingConvert, couponStatusConvert, couponTypeConvert
 } from '../libs/converStatus';
 
 const mixin = {
@@ -99,6 +99,34 @@ const mixin = {
     // 小程序商品状态
     productStatusFilter(status) {
       return productStatusConvert(status).label;
+    },
+    // 小程序图片状态
+    imageStatusFilter(status) {
+      return imageStatusConvert(status).label;
+    },
+    // 小程序图片类型
+    imageTypeFilter(type) {
+      return imageTypeConvert(type).label;
+    },
+    // 小程序团购活动状态
+    teamBuyStatusFilter(status) {
+      return teamBuyStatusConvert(status).label;
+    },
+    // 小程序团购类型
+    teamBuyTypeFilter(type) {
+      return teamBuyTypeConvert(type).label;
+    },
+    // 小程序红包活动设置
+    rewardActivitySettingFilter(type) {
+      return rewardActivitySettingConvert(type).label;
+    },
+    // 小程序优惠券状态
+    couponStatusFilter(status) {
+      return couponStatusConvert(status).label;
+    },
+    // 小程序优惠券状态
+    couponTypeFilter(type) {
+      return couponTypeConvert(type).label;
     }
   },
   computed: {

@@ -59,7 +59,7 @@
             </Select>
           </FormItem>
           <FormItem label="角色描述" prop="roleDesc">
-            <Input v-model="rowData.roleDesc" :autosize="{minRows: 2,maxRows: 5}" type="textarea" placeholder="请输入角色描述" ></Input>
+            <Input v-model="rowData.roleDesc" :autosize="{minRows: 2,maxRows: 5}" width="100px" type="textarea" placeholder="请输入角色描述" ></Input>
           </FormItem>
         </Form>
       </div>
@@ -83,7 +83,7 @@
                 </Select>
               </FormItem>
               <FormItem label="角色描述" prop="roleDesc">
-                <Input v-model="rowData.roleDesc" :autosize="{minRows: 2,maxRows: 5}" type="textarea" placeholder="请输入角色描述" ></Input>
+                <Input v-model="rowData.roleDesc" :autosize="{ minRows: 2,maxRows: 5}" type="textarea" placeholder="请输入角色描述" ></Input>
               </FormItem>
             </Form>
           </TabPane>
