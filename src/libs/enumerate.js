@@ -750,3 +750,47 @@ export const relationStoreTypeEnum = [
     value: relationStoreType.PART
   }
 ]
+
+// 小程序优惠券状态 有效-VALID 无效-INVALID
+export const couponStatus = {
+  VALID: 'VALID',
+  INVALID: 'INVALID',
+  EXPIRE: 'EXPIRE'
+};
+
+export const couponStatusEnum = [
+  {
+    label: '有效',
+    value: couponStatus.VALID
+  },
+  {
+    label: '无效',
+    value: couponStatus.INVALID
+  },
+  {
+    label: '过期',
+    value: couponStatus.EXPIRE
+  }
+];
+
+// 小程序优惠券类型(FULL_CUT_COUPON 满减券;DISCOUNT_COUPON 折扣券;CASH_COUPON 现金券)
+export const couponType = {
+  FULL_CUT_COUPON: 'FULL_CUT_COUPON',
+  DISCOUNT_COUPON: 'DISCOUNT_COUPON',
+  CASH_COUPON: 'CASH_COUPON'
+};
+
+export const couponTypeEnum = [
+  {
+    label: '满减券',
+    value: couponType.FULL_CUT_COUPON
+  },
+  {
+    label: '折扣券',
+    value: couponType.DISCOUNT_COUPON
+  },
+  {
+    label: '现金券',
+    value: couponType.CASH_COUPON
+  }
+];

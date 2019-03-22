@@ -474,3 +474,147 @@ export const editFlashsale = (data) => {
     method: 'put'
   });
 };
+
+// 根据条件分页查询优惠券列表
+export const getCouponPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-coupons/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 根据优惠券Ids删除优惠券
+export const deleteCoupon = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-coupons/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加优惠券
+export const createCoupon = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-coupons/',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改优惠券
+export const editCoupon = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-coupons/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询优惠券模板列表
+export const getCouponTemplatePages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/coupon-templates/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 根据优惠券模板Ids删除优惠券模板
+export const deleteCouponTemplate = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/coupon-templates/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加优惠券模板
+export const createCouponTemplate = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/coupon-templates/',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改优惠券模板
+export const editCouponTemplate = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/coupon-templates/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询分享红包列表
+export const getShareRewardPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-share-rewards/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 根据分享红包Ids删除分享红包
+export const deleteShareReward = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-share-rewards/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加分享红包
+export const createShareReward = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-share-rewards/',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改分享红包
+export const editShareReward = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-share-rewards/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询注册送礼列表
+export const getRegisterRewardPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-register-rewards/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 根据注册送礼Ids删除注册送礼
+export const deleteRegisterReward = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-register-rewards/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加注册送礼
+export const createRegisterReward = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-register-rewards/',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改注册送礼
+export const editRegisterReward = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-register-rewards/' + data.id,
+    data,
+    method: 'put'
+  });
+};

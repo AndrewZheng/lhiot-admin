@@ -19,52 +19,8 @@
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
-        <div slot="searchCondition">
-          <Row>
-            <DatePicker
-              v-model="searchRowData.stBeginTime"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetime"
-              placeholder="开始时间起"
-              class="search-input"
-              style="width: 150px"
-              @on-change="stBeginTimeChange"
-            />
-            <i>-</i>
-            <DatePicker
-              v-model="searchRowData.stFinishTime"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetime"
-              placeholder="开始时间止"
-              class="search-input  mr5"
-              style="width: 150px"
-              @on-change="stFinishTimeChange"/>
-            <DatePicker
-              v-model="searchRowData.beginPublishAt"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetime"
-              class="search-input  mr5"
-              style="width: 150px"
-              placeholder="结束时间起"
-              @on-change="edBeginTimeChange"/>
-            <i>-</i>
-            <DatePicker
-              v-model="searchRowData.endPublishAt"
-              type="datetime"
-              placeholder="结束时间止"
-              style="width: 150px"
-              class="mr5"
-              @on-change="edFinishTimeChange"/>
-            <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
-              <Icon type="md-search"/>&nbsp;搜索
-            </Button>
-            <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-              <Icon type="md-refresh"/>&nbsp;清除条件
-            </Button>
-          </Row>
-        </div>
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addFlashsale">
+          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addRegisterReward">
             <Icon type="md-add"/>
             创建
           </Button>
@@ -100,46 +56,62 @@
       :mask-closable="false"
     >
       <p slot="header">
-        <span>限时抢购活动详情</span>
+        <span>注册送礼优惠券详情</span>
       </p>
       <div class="modal-content">
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
               <i-col span="6">活动ID:</i-col>
-              <i-col span="18">{{ flashsaleDetail.id }}</i-col>
+              <i-col span="18">{{ registerRewardDetail.id }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动名称:</i-col>
-              <i-col span="18">限时抢购</i-col>
+              <i-col span="6">优惠券名称:</i-col>
+              <i-col span="18">{{ registerRewardDetail.couponName }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">开始时间:</i-col>
-              <i-col span="18">{{ flashsaleDetail.startTime }}</i-col>
+              <i-col span="6">优惠券类型:</i-col>
+              <i-col span="18">{{ registerRewardDetail.couponType | couponTypeFilter }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">结束时间:</i-col>
-              <i-col span="18">{{ flashsaleDetail.endTime }}</i-col>
+              <i-col span="6">单次发放数量:</i-col>
+              <i-col span="18">{{ registerRewardDetail.issuedNum }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动开关:</i-col>
-              <i-col span="18">{{ flashsaleDetail.onOff | imageStatusFilter }}</i-col>
+              <i-col span="6">有效天数:</i-col>
+              <i-col span="18">{{ registerRewardDetail.effectiveDay }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">创建人:</i-col>
+              <i-col span="18">{{ registerRewardDetail.createBy }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">创建时间:</i-col>
+              <i-col span="18">{{ registerRewardDetail.createTime }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -154,59 +126,50 @@
       style="z-index: 1000"
     >
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改限时抢购活动':'创建限时抢购活动' }}</i-col>
+        <i-col>{{ tempModalType===modalType.edit?'修改注册送礼优惠券活动':'创建注册送礼优惠券活动' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="flashsaleDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="modalEdit" :model="registerRewardDetail" :rules="ruleInline" :label-width="80">
           <Row>
             <Col span="18">
-            <FormItem label="活动名称:">
-              限时抢购
+            <FormItem label="优惠券名称:" prop="couponName">
+              <Input v-model="registerRewardDetail.couponName" ></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-            <FormItem label="有效期起:" prop="startTime">
-              <DatePicker
-                v-model="flashsaleDetail.startTime"
-                format="yyyy-MM-dd HH:mm:ss"
-                type="datetime"
-                placeholder="有效期起"
-                class="search-input"
-                style="width: 150px"
-                @on-change="startTimeChange"
-              />
-            </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="18">
-            <FormItem label="有效期止:" prop="endTime">
-              <DatePicker
-                v-model="flashsaleDetail.endTime"
-                format="yyyy-MM-dd HH:mm:ss"
-                type="datetime"
-                placeholder="有效期止"
-                class="search-input"
-                style="width: 150px"
-                @on-change="endTimeChange"
-              />
-            </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="18">
-            <FormItem label="活动开关:" prop="onOff">
-              <Select v-model="flashsaleDetail.onOff" clearable>
+            <FormItem label="优惠券类型:" prop="couponType">
+              <Select v-model="registerRewardDetail.couponType" clearable>
                 <Option
-                  v-for="(item,index) in imageStatusEnum"
+                  v-for="(item,index) in couponTypeEnum"
                   :value="item.value"
                   :key="index"
                   class="ptb2-5"
                   style="padding-left: 5px;width: 100%">{{ item.label }}
                 </Option>
               </Select>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="18">
+            <FormItem label="单次发放数量:" prop="issuedNum">
+              <Input v-model="registerRewardDetail.issuedNum" ></Input>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="18">
+            <FormItem label="有效天数:" prop="effectiveDay">
+              <Input v-model="registerRewardDetail.effectiveDay" ></Input>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="18">
+            <FormItem label="创建人:" prop="createBy">
+              <Input v-model="registerRewardDetail.createBy" ></Input>
             </FormItem>
             </Col>
           </Row>
@@ -225,30 +188,31 @@
 import Tables from '_c/tables';
 import _ from 'lodash';
 import {
-  deleteFlashsale,
-  getFlashsalePages,
-  editFlashsale,
-  createFlashsale
+  deleteRegisterReward,
+  getRegisterRewardPages,
+  editRegisterReward,
+  createRegisterReward
 } from '@/api/mini-program';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
-import { imageStatusConvert } from '@/libs/converStatus';
-import { imageStatusEnum } from '@/libs/enumerate'
+import { couponStatusConvert, couponTypeConvert } from '@/libs/converStatus';
+import { couponStatusEnum, couponTypeEnum } from '@/libs/enumerate'
 
-const flashsaleDetail = {
-  stBeginTime: null,
-  stFinishTime: null,
-  edBeginTime: null,
-  edFinishTime: null,
+const registerRewardDetail = {
+  couponName: '',
+  couponFee: 0,
+  minBuyFee: 0,
+  couponStatus: null,
+  couponImage: '',
+  couponType: null,
   id: 0,
-  activityId: 0,
-  startTime: '',
-  endTime: '',
-  onOff: null,
-  applicationType: null,
-  standardId: 0,
-  productName: ''
+  activityRegisterId: 0,
+  couponTemplateId: 0,
+  issuedNum: 0,
+  effectiveDay: 0,
+  createTime: null,
+  createBy: ''
 };
 
 const roleRowData = {
@@ -291,7 +255,8 @@ export default {
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
-      imageStatusEnum,
+      couponStatusEnum,
+      couponTypeEnum,
       columns: [
         {
           type: 'selection',
@@ -299,36 +264,69 @@ export default {
           align: 'center'
         },
         {
-          title: '活动ID',
+          title: '活动与模板配置表id',
           key: 'id'
         },
         {
-          title: '活动名称',
+          title: '优惠券名称',
+          key: 'couponName'
+        },
+        {
+          title: '优惠券类型',
+          key: 'couponType',
           render: (h, params, vm) => {
-            const str = '限时抢购';
+            const { row } = params;
+            if (row.couponType === 'FULL_CUT_COUPON') {
+              return <div><tag color='magenta'>{couponTypeConvert(row.couponType).label}</tag></div>;
+            } else if (row.couponType === 'DISCOUNT_COUPON') {
+              return <div><tag color='orange'>{couponTypeConvert(row.couponType).label}</tag></div>;
+            } else if (row.couponType === 'CASH_COUPON') {
+              return <div><tag color='cyan'>{couponTypeConvert(row.couponType).label}</tag></div>;
+            }
+            return <div><tag color='error'>{row.couponType}</tag></div>;
+          }
+        },
+        {
+          title: '优惠金额',
+          key: 'couponFee'
+        },
+        {
+          title: '优惠/折扣额度',
+          key: 'minBuyFee'
+        },
+        {
+          title: '优惠券状态',
+          key: 'couponStatus',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.couponStatus === 'VALID') {
+              return <div><tag color='success'>{couponStatusConvert(row.couponStatus).label}</tag></div>;
+            } else if (row.couponStatus === 'INVALID') {
+              return <div><tag color='error'>{couponStatusConvert(row.couponStatus).label}</tag></div>;
+            }
+            return <div><tag color='primary'>{row.couponStatus}</tag></div>;
+          }
+        },
+        {
+          title: '优惠券图片',
+          key: 'couponImage',
+          render: (h, params, vm) => {
+            const { row } = params;
+            const str = <img src={row.couponImage} width='100%' />;
             return <div>{str}</div>;
           }
         },
         {
-          title: '活动开始时间',
-          key: 'startTime'
+          title: '单次发放数量',
+          key: 'issuedNum'
         },
         {
-          title: '活动结束时间',
-          key: 'endTime'
+          title: '有效天数',
+          key: 'effectiveDay'
         },
         {
-          title: '活动状态',
-          key: 'onOff',
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.onOff === 'ON') {
-              return <div><tag color='success'>{imageStatusConvert(row.onOff).label}</tag></div>;
-            } else if (row.onOff === 'OFF') {
-              return <div><tag color='error'>{imageStatusConvert(row.onOff).label}</tag></div>;
-            }
-            return <div><tag color='primary'>{row.onOff}</tag></div>;
-          }
+          title: '创建人',
+          key: 'createBy'
         },
         {
           title: '操作',
@@ -340,7 +338,7 @@ export default {
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
-      flashsaleDetail: _.cloneDeep(flashsaleDetail)
+      registerRewardDetail: _.cloneDeep(registerRewardDetail)
     };
   },
   mounted() {
@@ -358,26 +356,26 @@ export default {
       this.$refs.modalEdit.resetFields();
       // this.$refs.uploadMain.clearFileList();
       this.uploadListMain = [];
-      this.flashsaleDetail.storeImage = null;
+      this.registerRewardDetail.couponImage = null;
     },
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
-            this.createFlashsale();
+            this.createRegisterReward();
           } else if (this.tempModalType === this.modalType.edit) {
             // 编辑状态
-            this.editFlashsale();
+            this.editRegisterReward();
           }
         } else {
           this.$Message.error('请完善商品的信息!');
         }
       });
     },
-    createFlashsale() {
+    createRegisterReward() {
       this.modalViewLoading = true;
-      createFlashsale(this.flashsaleDetail).then(res => {
+      createRegisterReward(this.registerRewardDetail).then(res => {
         this.modalViewLoading = false;
         this.modalEdit = false;
         this.$Message.success('创建成功!');
@@ -387,9 +385,9 @@ export default {
         this.modalEdit = false;
       });
     },
-    editFlashsale() {
+    editRegisterReward() {
       this.modalViewLoading = true;
-      editFlashsale(this.flashsaleDetail).then(res => {
+      editRegisterReward(this.registerRewardDetail).then(res => {
         this.modalEdit = false;
         this.modalViewLoading = false;
         this.getTableData();
@@ -398,11 +396,11 @@ export default {
         this.modalViewLoading = false;
       });
     },
-    addFlashsale() {
+    addRegisterReward() {
       this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.tempModalType = this.modalType.create;
-        this.flashsaleDetail = _.cloneDeep(flashsaleDetail)
+        this.registerRewardDetail = _.cloneDeep(registerRewardDetail)
       }
 
       this.modalEdit = true;
@@ -415,7 +413,7 @@ export default {
     },
     deleteTable(ids) {
       this.loading = true;
-      deleteFlashsale({
+      deleteRegisterReward({
         ids
       }).then(res => {
         const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
@@ -433,17 +431,17 @@ export default {
     handleView(params) {
       this.resetFields();
       this.tempModalType = this.modalType.view;
-      this.flashsaleDetail = _.cloneDeep(params.row);
+      this.registerRewardDetail = _.cloneDeep(params.row);
       this.modalView = true;
     },
     handleEdit(params) {
       this.resetFields();
       this.tempModalType = this.modalType.edit;
-      this.flashsaleDetail = _.cloneDeep(params.row);
+      this.registerRewardDetail = _.cloneDeep(params.row);
       this.modalEdit = true;
     },
     getTableData() {
-      getFlashsalePages(this.searchRowData).then(res => {
+      getRegisterRewardPages(this.searchRowData).then(res => {
         this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;
@@ -457,32 +455,20 @@ export default {
       });
     },
     onOff(params) {
-      this.flashsaleDetail = this._.cloneDeep(params.row);
+      this.registerRewardDetail = this._.cloneDeep(params.row);
       if (params.row.onOff === 'ON') {
-        this.flashsaleDetail.onOff = 'OFF';
+        this.registerRewardDetail.onOff = 'OFF';
       } else {
-        this.flashsaleDetail.onOff = 'ON';
+        this.registerRewardDetail.onOff = 'ON';
       }
       this.loading = true;
-      this.editFlashsale();
+      this.editRegisterReward();
     },
     startTimeChange(value, date) {
-      this.flashsaleDetail.startTime = value;
+      this.registerRewardDetail.startTime = value;
     },
     endTimeChange(value, date) {
-      this.flashsaleDetail.endTime = value;
-    },
-    stBeginTimeChange(value, date) {
-      this.flashsaleDetail.stBeginTime = value;
-    },
-    stFinishTimeChange(value, date) {
-      this.flashsaleDetail.stFinishTime = value;
-    },
-    edBeginTimeChange(value) {
-      this.searchRowData.edBeginTime = value;
-    },
-    edFinishTimeChange(value) {
-      this.searchRowData.edFinishTime = value;
+      this.registerRewardDetail.endTime = value;
     }
   }
 };

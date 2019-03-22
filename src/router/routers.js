@@ -823,6 +823,15 @@ export const asyncRouterMap = [
           title: '限时抢购管理'
         },
         component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
+      },      
+      {
+        path: '/small-coupon-templates',
+        name: 'small-coupon-templates',
+        meta: {
+          icon: 'md-pricetag',
+          title: '优惠券模板管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/couponTemplate.vue')
       },
       {
         path: '/small-activity-coupon',
@@ -831,7 +840,7 @@ export const asyncRouterMap = [
           icon: 'md-pricetag',
           title: '优惠券活动管理'
         },
-        component: () => import('@/view/mini-program-manager/activity/images.vue')
+        component: () => import('@/view/mini-program-manager/activity/coupon.vue')
       },
       {
         path: '/small-activity-share-reward',
@@ -840,7 +849,7 @@ export const asyncRouterMap = [
           icon: 'md-pricetag',
           title: '分享红包活动'
         },
-        component: () => import('@/view/mini-program-manager/activity/images.vue')
+        component: () => import('@/view/mini-program-manager/activity/share-reward.vue')
       },
       {
         path: '/small-activity-title',
@@ -867,8 +876,111 @@ export const asyncRouterMap = [
           icon: 'md-pricetag',
           title: '注册送礼优惠券活动'
         },
-        component: () => import('@/view/mini-program-manager/activity/images.vue')
+        component: () => import('@/view/mini-program-manager/activity/register-reward.vue')
       },
+    ]
+  },
+  {
+    path: '/small-orders',
+    name: 'small-orders',
+    meta: {
+      icon: 'md-menu',
+      title: '综合订单管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/small-order',
+        name: 'small-order',
+        meta: {
+          icon: 'md-pricetag',
+          title: '订单管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/activities.vue')
+      },
+      {
+        path: '/small-paymentlogs',
+        name: 'small-paymentlogs',
+        meta: {
+          icon: 'md-pricetag',
+          title: '鲜果币流水管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
+      }
+    ]
+  },
+  {
+    path: '/small-content',
+    name: 'small-content',
+    meta: {
+      icon: 'md-menu',
+      title: '内容管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/small-article-category',
+        name: 'small-article-category',
+        meta: {
+          icon: 'md-pricetag',
+          title: '文章分类管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/activities.vue')
+      },
+      {
+        path: '/small-article-section',
+        name: 'small-article-section',
+        meta: {
+          icon: 'md-pricetag',
+          title: '文章管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
+      },
+      {
+        path: '/small-feedback',
+        name: 'small-feedback',
+        meta: {
+          icon: 'md-pricetag',
+          title: '用户反馈'
+        },
+        component: () => import('@/view/mini-program-manager/activity/activities.vue')
+      },
+      {
+        path: '/small-faq-category',
+        name: 'small-faq-category',
+        meta: {
+          icon: 'md-pricetag',
+          title: 'FAQ分类管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
+      },
+      {
+        path: '/small-faq',
+        name: 'small-faq',
+        meta: {
+          icon: 'md-pricetag',
+          title: 'FAQ管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/activities.vue')
+      },
+      {
+        path: '/small-advertisement-position',
+        name: 'small-advertisement-position',
+        meta: {
+          icon: 'md-pricetag',
+          title: '广告位管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
+      },
+      {
+        path: '/small-advertisement',
+        name: 'small-advertisement',
+        meta: {
+          icon: 'md-pricetag',
+          title: '广告管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/activities.vue')
+      }
     ]
   },
   {
