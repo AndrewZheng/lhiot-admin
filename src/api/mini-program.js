@@ -618,3 +618,122 @@ export const editRegisterReward = (data) => {
     method: 'put'
   });
 };
+
+// 根据条件分页查询商城小程序订单列表
+export const getOrderPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/orders/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 根据条件分页查询支付列表
+export const getPaymentLogPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/payment-logs/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 根据条件分页查询用户反馈列表
+export const getFeedbackPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/feedbacks/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 修改用户反馈
+export const editFeedback = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/feedbacks/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 查询FAQ分类树结构
+export const getFaqCategoriesTree = () => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/faq-categories/tree',
+    method: 'get'
+  });
+};
+
+// 根据条件分页查询FAQ分类信息列表
+export const getFaqCategoriesPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/faq-categories/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 添加FAQ分类
+export const addFaqCategories = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/faq-categories/',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Ids删除FAQ分类
+export const deleteFaqCategories = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/faq-categories/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改FAQ分类
+export const putFaqCategories = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/faq-categories/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询FAQ信息列表
+export const getFaqPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/faqs/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 添加FAQ
+export const addFaq = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/faqs/',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Ids删除FAQ
+export const deleteFaq = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/faqs/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改FAQ
+export const putFaq = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/faqs/' + data.id,
+    data,
+    method: 'put'
+  });
+};

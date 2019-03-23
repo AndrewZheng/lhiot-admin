@@ -2,7 +2,7 @@ import {
   customOrderStatusConvert,
   customPeriodConvert, customPlanStatusConvert,
   deliveryTypeCustomConvert, doctorLevelConvert, doctorStatusConvert, hotConvert, onSaleStatusConvert,
-  orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert, feedbackStatusConvert, productStatusConvert, imageStatusConvert, imageTypeConvert, teamBuyStatusConvert, teamBuyTypeConvert, rewardActivitySettingConvert, couponStatusConvert, couponTypeConvert
+  orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert, feedbackStatusConvert, productStatusConvert, imageStatusConvert, imageTypeConvert, teamBuyStatusConvert, teamBuyTypeConvert, rewardActivitySettingConvert, couponStatusConvert, couponTypeConvert, appTypeConvert, bankTypeConvert
 } from '../libs/converStatus';
 
 const mixin = {
@@ -127,6 +127,14 @@ const mixin = {
     // 小程序优惠券状态
     couponTypeFilter(type) {
       return couponTypeConvert(type).label;
+    },
+    // 小程序应用类型
+    appTypeFilter(type) {
+      return appTypeConvert(type).label;
+    },
+    // 小程序银行类型
+    bankTypeFilter(type) {
+      return bankTypeConvert(type).label;
     }
   },
   computed: {
