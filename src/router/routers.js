@@ -896,7 +896,7 @@ export const asyncRouterMap = [
           icon: 'md-pricetag',
           title: '订单管理'
         },
-        component: () => import('@/view/mini-program-manager/activity/activities.vue')
+        component: () => import('@/view/mini-program-manager/order/order.vue')
       },
       {
         path: '/small-paymentlogs',
@@ -905,7 +905,7 @@ export const asyncRouterMap = [
           icon: 'md-pricetag',
           title: '鲜果币流水管理'
         },
-        component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
+        component: () => import('@/view/mini-program-manager/order/paylog.vue')
       }
     ]
   },
@@ -918,24 +918,24 @@ export const asyncRouterMap = [
     },
     component: Main,
     children: [
-      {
-        path: '/small-article-category',
-        name: 'small-article-category',
-        meta: {
-          icon: 'md-pricetag',
-          title: '文章分类管理'
-        },
-        component: () => import('@/view/mini-program-manager/activity/activities.vue')
-      },
-      {
-        path: '/small-article-section',
-        name: 'small-article-section',
-        meta: {
-          icon: 'md-pricetag',
-          title: '文章管理'
-        },
-        component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
-      },
+      // {
+      //   path: '/small-article-category',
+      //   name: 'small-article-category',
+      //   meta: {
+      //     icon: 'md-pricetag',
+      //     title: '文章分类管理'
+      //   },
+      //   component: () => import('@/view/mini-program-manager/activity/activities.vue')
+      // },
+      // {
+      //   path: '/small-article-section',
+      //   name: 'small-article-section',
+      //   meta: {
+      //     icon: 'md-pricetag',
+      //     title: '文章管理'
+      //   },
+      //   component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
+      // },
       {
         path: '/small-feedback',
         name: 'small-feedback',
@@ -943,7 +943,7 @@ export const asyncRouterMap = [
           icon: 'md-pricetag',
           title: '用户反馈'
         },
-        component: () => import('@/view/mini-program-manager/activity/activities.vue')
+        component: () => import('@/view/mini-program-manager/content/feedback.vue')
       },
       {
         path: '/small-faq-category',
@@ -952,7 +952,7 @@ export const asyncRouterMap = [
           icon: 'md-pricetag',
           title: 'FAQ分类管理'
         },
-        component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
+        component: () => import('@/view/mini-program-manager/content/faq-category.vue')
       },
       {
         path: '/small-faq',
@@ -961,7 +961,7 @@ export const asyncRouterMap = [
           icon: 'md-pricetag',
           title: 'FAQ管理'
         },
-        component: () => import('@/view/mini-program-manager/activity/activities.vue')
+        component: () => import('@/view/mini-program-manager/content/faq.vue')
       },
       {
         path: '/small-advertisement-position',
