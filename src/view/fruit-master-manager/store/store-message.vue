@@ -392,7 +392,7 @@ import {
   getStorePages,
   getStoreAreas,
   editStore,
-  addStore
+  createStore
 } from '@/api/fruitermaster';
 import { buildMenu, convertTreeCategory } from '@/libs/util';
 import uploadMixin from '@/mixins/uploadMixin';
@@ -665,7 +665,7 @@ export default {
     },
     createStore() {
       this.modalViewLoading = true;
-      addStore(this.storeDetail).then(res => {
+      createStore(this.storeDetail).then(res => {
         this.modalViewLoading = false;
         this.modalEdit = false;
         this.$Message.success('创建成功!');

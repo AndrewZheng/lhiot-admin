@@ -109,7 +109,7 @@
       :width="rowData.type=='SON'?'750':'540'"
     >
       <p slot="header">
-        <span>鲜果师详情</span>
+        <span>文章详情</span>
       </p>
       <div class="modal-content">
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">

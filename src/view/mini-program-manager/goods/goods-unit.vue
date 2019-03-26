@@ -14,6 +14,8 @@
         search-place="top"
         @on-delete="handleDelete"
         @on-edit="handleEdit"
+        @on-select-all="onSelectionAll"
+        @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
           <Input
@@ -47,10 +49,18 @@
             <Icon type="md-add"/>
             新增
           </Button>
-          <Button type="error" class="mr5" @click="handleDeleteBatch">
-            <Icon type="md-trash"/>
-            删除
-          </Button>
+          <Poptip
+            confirm
+            placement="bottom"
+            style="width: 100px"
+            title="您确认删除选中的内容吗?"
+            @on-ok="poptipOk"
+          >
+            <Button type="error" class="mr5">
+              <Icon type="md-trash"/>
+              删除
+            </Button>
+          </Poptip>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -109,7 +119,7 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import _ from 'lodash';
-import { getMiniProgramProductUnitsPages, putMiniProgramProductUnits, deleteMiniProgramProductUnits, addMiniProgramProductUnits } from '@/api/mini-program';
+import { getMiniProgramProductUnitsPages, editMiniProgramProductUnits, deleteMiniProgramProductUnits, createMiniProgramProductUnits } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import deleteMixin from '@/mixins/deleteMixin.js';
@@ -185,9 +195,7 @@ export default {
       ],
       searchRowData: this._.cloneDeep(roleRowData),
       unitDetail: this._.cloneDeep(unitDetail),
-      ids: [],
-      // 选中的行
-      tableDataSelected: []
+      ids: []
     };
   },
   created() {
@@ -196,8 +204,6 @@ export default {
   methods: {
     resetFields() {
       this.$refs.modalEdit.resetFields();
-      this.$refs.uploadMain.clearFileList();
-      this.$refs.uploadSecond.clearFileList();
     },
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
@@ -214,7 +220,7 @@ export default {
     },
     editTableRow() {
       this.modalViewLoading = true;
-      putMiniProgramProductUnits(this.unitDetail).then(res => {
+      editMiniProgramProductUnits(this.unitDetail).then(res => {
         this.modalViewLoading = false;
         this.modalEdit = false;
         this.getTableData();
@@ -222,10 +228,8 @@ export default {
       });
     },
     createTableRow() {
-      addMiniProgramProductUnits(this.unitDetail).then(res => {
+      createMiniProgramProductUnits(this.unitDetail).then(res => {
       }).finally(res => {
-        debugger;
-        // this.initMenuList();
         this.modalEditLoading = false;
         this.modalEdit = false;
         this.getTableData();
@@ -269,31 +273,10 @@ export default {
         this.tableDataSelected = [];
         this.getTableData();
         this.loading = false;
-        // this.initMenuList();
       }
       ).catch(() => {
         this.loading = false;
       });
-    },
-    handleDeleteBatch() {
-      if (this.ids.length !== 0) {
-        const ids = this.ids;
-        deleteMiniProgramProductUnits({
-          ids
-        }).then(res => {
-          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-          if (this.tableData.length === this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
-            this.searchRowData.page -= 1;
-          }
-          this.tableDataSelected = [];
-          this.getTableData();
-        }
-        ).catch(() => {
-          this.loading = false;
-        });
-      } else {
-        this.$Message.error('请至少选择一行记录');
-      }
     }
   }
 };

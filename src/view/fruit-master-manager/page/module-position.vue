@@ -60,7 +60,7 @@
       :width="800"
     >
       <p slot="header">
-        <span>鲜果师详情</span>
+        <span>位置板块详情</span>
       </p>
       <div class="modal-content">
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">

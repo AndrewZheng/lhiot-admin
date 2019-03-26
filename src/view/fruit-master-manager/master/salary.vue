@@ -110,7 +110,7 @@
 
     <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
-        <span>鲜果师详情</span>
+        <span>薪资管理详情</span>
       </p>
       <div class="modal-content">
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
@@ -190,7 +190,7 @@
     </Modal>
     <Modal v-model="modalEdit">
       <p slot="header">
-        <span>鲜果师详情</span>
+        <i-col>{{ tempModalType===modalType.edit?'修改薪资管理':'创建薪资管理' }}</i-col>
       </p>
       <div class="modal-content">
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">

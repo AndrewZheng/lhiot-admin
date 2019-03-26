@@ -37,7 +37,7 @@
             <div slot="operations">
               <Button v-waves type="success" class="mr5" @click="createTableRow">
                 <Icon type="md-add"/>
-                子分类
+                添加
               </Button>
               <Poptip
                 confirm
@@ -70,82 +70,62 @@
 
     <!--编辑菜单 -->
     <Modal
-      v-model="modalView"
-    >
-      <p slot="header">
-        <span>编辑商品分类</span>
-      </p>
-      <div class="modal-content">
-        <Form :label-width="100">
-
-        </Form>
-      </div>
-      <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="asyncEditOK">确定</Button>
-      </div>
-    </Modal>
-
-    <!--编辑菜单 -->
-    <Modal
       v-model="modalEdit"
     >
       <p slot="header">
-        <span>编辑商品分类</span>
+        <span>{{ currentCategory.id == ''?'创建板块':'编辑板块' }}</span>
       </p>
       <div class="modal-content">
-        <Form :label-width="120">
+        <Form ref="modalEdit" :model="currentCategory" :rules="ruleInline" :label-width="120">
           <FormItem label="父级ID:">
             <i-col>{{ parentCategory.id }}</i-col>
           </FormItem>
           <FormItem label="父级名称:">
             <i-col>{{ parentCategory.groupName }}</i-col>
           </FormItem>
-          <FormItem label="板块名称:">
+          <FormItem label="板块名称:" prop="sectionName">
             <Input v-model="currentCategory.sectionName"></Input>
           </FormItem>
-          <FormItem label="板块位置英文描述:">
+          <FormItem label="板块位置英文描述:" prop="positionName">
             <Input v-model="currentCategory.positionName"></Input>
           </FormItem>
-          <FormItem label="板块顺序:">
+          <FormItem label="板块顺序:" prop="rankNo">
             <Input v-model="currentCategory.rankNo"></Input>
           </FormItem>
-          <FormItem label="商品小图:">
-            <FormItem label="商品主图:建议尺寸;400x400(单位:px):" prop=" sectionImg" >
-              <Input v-show="false" v-model="currentCategory. sectionImg" style="width: auto"></Input>
-              <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
-                <template v-if="item.status === 'finished'">
-                  <div>
-                    <img :src="item.url">
-                    <div class="demo-upload-list-cover">
-                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                      <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
-                    </div>
+          <FormItem label="板块图片:建议尺寸;400x400(单位:px):" prop="sectionImg">
+            <Input v-show="false" v-model="currentCategory.sectionImg" style="width: auto"></Input>
+            <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+              <template v-if="item.status === 'finished'">
+                <div>
+                  <img :src="item.url">
+                  <div class="demo-upload-list-cover">
+                    <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                    <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
                   </div>
-                </template>
-                <template v-else>
-                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                </template>
-              </div>
-              <IViewUpload
-                ref="uploadMain"
-                :default-list="defaultListMain"
-                :image-size="imageSize"
-                @on-success="handleSuccessMain"
-              >
-                <div slot="content">
-                  <Button type="primary">
-                    上传图片
-                  </Button>
                 </div>
-              </IViewUpload>
-            </FormItem>
+              </template>
+              <template v-else>
+                <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+              </template>
+            </div>
+            <IViewUpload
+              ref="uploadMain"
+              :default-list="defaultListMain"
+              :image-size="imageSize"
+              @on-success="handleSuccessMain"
+            >
+              <div slot="content">
+                <Button type="primary">
+                  上传图片
+                </Button>
+              </div>
+            </IViewUpload>
           </FormItem>
         </Form>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="asyncEditOK">确定</Button>
+        <Button :loading="modalEditLoading" type="primary" @click="asyncEditOK('modalEdit')">确定</Button>
       </div>
     </Modal>
   </div>
@@ -181,7 +161,7 @@ const currentCategory = {
   productStandardList: null
 };
 const roleRowData = {
-  applyType: 'WXSMALL_SHOP',
+  applyType: 'S_MALL',
   sectionName: null,
   page: 1,
   rows: 10
@@ -197,6 +177,23 @@ export default {
   data() {
     return {
       menuData: [],
+      ruleInline: {
+        sectionName: [{ required: true, message: '请输入板块名称' }],
+        positionName: [{ required: true, message: '请输入板块位置英文描述:' }],
+        sectionImg: [{ required: true, message: '请上传上板块图片' }],
+        rankNo: [
+          { required: true, message: '请输入板块排序' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[1-9]\d*$/.test(value)) {
+                errors.push(new Error('必须为非零整数'));
+              }
+              callback(errors);
+            }
+          }
+        ]
+      },
       columns: [
         {
           type: 'selection',
@@ -316,36 +313,42 @@ export default {
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
     },
-    asyncEditOK() {
+    asyncEditOK(name) {
       // if (!this.currentCategory.groupName) {
       //   this.$Message.warning('请输入子分类');
       //   return;
       // }
-      this.currentCategory.applyType = 'WXSMALL_SHOP';
-      this.modalEditLoading = true;
-      this.modalViewLoading = true;
       if (!this.parentCategory.id) {
         this.currentCategory.parentId = 0;
       } else {
         this.currentCategory.parentId = this.parentCategory.id;
       }
-      if (this.tempModalType === this.modalType.create) {
-        createProductSection(this.currentCategory
-        ).then(res => {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          this.currentCategory.applyType = 'S_MALL';
+          this.modalEditLoading = true;
+          this.modalViewLoading = true;
+          if (this.tempModalType === this.modalType.create) {
+            createProductSection(this.currentCategory
+            ).then(res => {
 
-        }).finally(res => {
-          this.initMenuList();
-          this.modalEditLoading = false;
-          this.modalEdit = false;
-        });
-      } else if (this.tempModalType === this.modalType.edit) {
-        editProductSection(this.currentCategory).then(res => {
-        }).finally(res => {
-          this.initMenuList();
-          this.modalEditLoading = false;
-          this.modalEdit = false;
-        });
-      }
+            }).finally(res => {
+              this.initMenuList();
+              this.modalEditLoading = false;
+              this.modalEdit = false;
+            });
+          } else if (this.tempModalType === this.modalType.edit) {
+            editProductSection(this.currentCategory).then(res => {
+            }).finally(res => {
+              this.initMenuList();
+              this.modalEditLoading = false;
+              this.modalEdit = false;
+            });
+          }
+        } else {
+          this.$Message.error('请完善板块信息!');
+        }
+      });
     },
     handleEditClose() {
       this.modalEdit = false;
@@ -372,6 +375,7 @@ export default {
       // this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.edit;
       this.currentCategory = _.cloneDeep(params.row);
+      this.setDefaultUploadList(params.row);
       this.modalEdit = true;
     },
     getTableData() {
@@ -439,33 +443,13 @@ export default {
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
-      if (res.mainImg != null) {
+      if (res.sectionImg != null) {
         const map = { status: 'finished', url: 'url' };
         const mainImgArr = [];
-        map.url = res.mainImg;
+        map.url = res.sectionImg;
         mainImgArr.push(map);
         this.$refs.uploadMain.setDefaultFileList(mainImgArr);
         this.uploadListMain = mainImgArr;
-      }
-      if (res.subImg != null) {
-        const subImgArr = [];
-        res.subImg.forEach(value => {
-          const innerMapSub = { status: 'finished', url: 'url' };
-          innerMapSub.url = value;
-          subImgArr.push(innerMapSub);
-        });
-        this.$refs.uploadSecond.setDefaultFileList(subImgArr);
-        this.uploadListSecond = subImgArr;
-      }
-      if (res.detailImg != null) {
-        const detailImgArr = [];
-        res.detailImg.forEach(value => {
-          const innerMapDetailImg = { status: 'finished', url: 'url' };
-          innerMapDetailImg.url = value;
-          detailImgArr.push(innerMapDetailImg);
-        });
-        this.$refs.uploadMultiple.setDefaultFileList(detailImgArr);
-        this.uploadListMultiple = detailImgArr;
       }
     },
     // 商品主图

@@ -12,8 +12,8 @@
             v-model="tableData"
             :columns="columns"
             :loading="loading"
-            :search-area-column="16"
-            :operate-area-column="8"
+            :search-area-column="14"
+            :operate-area-column="10"
             editable
             searchable
             border
@@ -35,9 +35,13 @@
               </Row>
             </div>
             <div slot="operations">
-              <Button v-waves type="success" class="mr5" @click="createTableRow">
+              <Button v-waves type="success" class="mr5" @click="createParentRow">
                 <Icon type="md-add"/>
-                添加
+                添加一级分类
+              </Button>
+              <Button v-waves type="success" class="mr5" @click="createSonRow">
+                <Icon type="md-add"/>
+                添加子分类
               </Button>
               <Poptip
                 confirm
@@ -73,14 +77,14 @@
       v-model="modalEdit"
     >
       <p slot="header">
-        <span>编辑商品分类</span>
+        <i-col>{{ tempModalType===modalType.edit?'修改商品分类':'创建商品分类' }}</i-col>
       </p>
       <div class="modal-content">
         <Form :label-width="100">
-          <FormItem label="父级ID:">
-            <i-col>{{ currentCategory.parentId }}</i-col>
+          <FormItem v-show="addSon" label="父级ID:">
+            <i-col>{{ parentCategory.id }}</i-col>
           </FormItem>
-          <FormItem label="父级分类:">
+          <FormItem v-show="addSon" label="父级分类:">
             <i-col>{{ parentCategory.groupName }}</i-col>
           </FormItem>
           <FormItem label="子分类名:">
@@ -100,11 +104,11 @@
 import Tables from '_c/tables';
 import _ from 'lodash';
 import {
-  addMiniProgramProductCategories,
+  createMiniProgramProductCategories,
   deleteMiniProgramProductCategories,
   getMiniProgramProductCategoriesPages,
   getMiniProgramProductCategoriesTree,
-  putMiniProgramProductCategories
+  editMiniProgramProductCategories
 } from '@/api/mini-program';
 import { buildMenu, convertTree } from '@/libs/util';
 import CommonIcon from '_c/common-icon';
@@ -169,7 +173,8 @@ export default {
       currentParentId: 0,
       currentCategory: this._.cloneDeep(currentCategory),
       parentCategory: this._.cloneDeep(currentCategory),
-      searchRowData: this._.cloneDeep(roleRowData)
+      searchRowData: this._.cloneDeep(roleRowData),
+      addSon: false
     };
   },
   created() {
@@ -215,43 +220,63 @@ export default {
         );
       }
     },
-    createTableRow() {
+    createSonRow() {
+      if (!this.parentCategory.id) {
+        this.$Message.warning('请从左侧选择一个父分类');
+        return;
+      }
+      this.resetRowData();
       if (this.tempModalType !== this.modalType.create) {
         this.currentCategory = this._.cloneDeep(currentCategory);
       }
-      this.currentCategory.currentParentId = this.currentParentId;
+      this.addSon = true;
+      this.currentCategory.parentId = this.parentCategory.id;
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
+    },
+    createParentRow() {
+      this.addSon = false;
+      this.resetRowData();
+      if (this.tempModalType !== this.modalType.create) {
+        this.currentCategory = this._.cloneDeep(currentCategory);
+      }
+      this.currentCategory.parentId = 0;
+      this.tempModalType = this.modalType.create;
+      this.modalEdit = true;
+    },
+    resetRowData() {
+      this.currentCategory = this._.cloneDeep(currentCategory)
     },
     asyncEditOK() {
       if (!this.currentCategory.groupName) {
         this.$Message.warning('请输入子分类');
         return;
       }
-      this.modalEditLoading = true;
-      this.modalViewLoading = true;
-      if (!this.parentCategory.id) {
-        this.currentCategory.parentId = 0;
-      } else {
-        this.currentCategory.parentId = this.parentCategory.id;
-      }
       if (this.tempModalType === this.modalType.create) {
-        addMiniProgramProductCategories(this.currentCategory
-        ).then(res => {
-
-        }).finally(res => {
-          this.initMenuList();
-          this.modalEditLoading = false;
-          this.modalEdit = false;
-        });
+        this.createProductCategories();
       } else if (this.tempModalType === this.modalType.edit) {
-        putMiniProgramProductCategories(this.currentCategory).then(res => {
-        }).finally(res => {
-          this.initMenuList();
-          this.modalEditLoading = false;
-          this.modalEdit = false;
-        });
+        this.editProductCategories();
       }
+    },
+    createProductCategories() {
+      this.modalEditLoading = true;
+      createMiniProgramProductCategories(this.currentCategory
+      ).then(res => {
+
+      }).finally(res => {
+        this.initMenuList();
+        this.modalEditLoading = false;
+        this.modalEdit = false;
+      });
+    },
+    editProductCategories() {
+      this.modalEditLoading = true;
+      editMiniProgramProductCategories(this.currentCategory).then(res => {
+      }).finally(res => {
+        this.initMenuList();
+        this.modalEditLoading = false;
+        this.modalEdit = false;
+      });
     },
     handleEditClose() {
       this.modalEdit = false;

@@ -18,6 +18,7 @@
             searchable
             border
             search-place="top"
+            @on-view="handleView"
             @on-delete="handleDelete"
             @on-edit="handleEdit"
             @on-select-all="onSelectionAll"
@@ -25,7 +26,17 @@
           >
             <div slot="searchCondition">
               <Row>
-                <Input v-model="searchRowData.categoryName" placeholder="分类名称" class="search-input mr5" style="width: auto"></Input>
+                <Input v-model="searchRowData.title" placeholder="标题" class="search-input mr5" style="width: auto" clearable></Input>
+                <Input v-model="searchRowData.content" placeholder="内容" class="search-input mr5" style="width: auto" clearable></Input>
+                <Select v-model="searchRowData.applicationType" placeholder="应用类型" style="padding-right: 5px;width: 100px" clearable>
+                  <Option
+                    v-for="(item,index) in appTypeEnum"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                    style="padding-left: 5px">{{ item.label }}
+                  </Option>
+                </Select>
                 <Button :loading="loading" class="search-btn mr5" type="primary" @click="handleSearch">
                   <Icon type="md-search"/>&nbsp;搜索
                 </Button>
@@ -68,26 +79,104 @@
       </i-col>
     </Row>
 
+    <Modal
+      v-model="modalView"
+      :mask-closable="false"
+    >
+      <p slot="header">
+        <span>FAQ详情</span>
+      </p>
+      <div class="modal-content">
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">主键ID:</i-col>
+              <i-col span="18">{{ faq.id }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">标题:</i-col>
+              <i-col span="18">{{ faq.title }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">内容:</i-col>
+              <i-col span="18">{{ faq.content }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">序号:</i-col>
+              <i-col span="18">{{ faq.rankNo }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">应用类型:</i-col>
+              <i-col span="18">{{ faq.applicationType | appTypeFilter }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">创建时间:</i-col>
+              <i-col span="18">{{ faq.createTime }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">创建人:</i-col>
+              <i-col span="18">{{ faq.createUser }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+      </div>
+      <div slot="footer">
+        <Button type="primary" @click="handleClose">关闭</Button>
+      </div>
+    </Modal>
+
     <!--编辑菜单 -->
     <Modal
       v-model="modalEdit"
     >
       <p slot="header">
-        <span>编辑商品分类</span>
+        <span>{{ tempModalType===modalType.edit?'修改FAQ':'创建FAQ' }}</span>
       </p>
       <div class="modal-content">
         <Form ref="modalEdit" :label-width="100" :model="faq" :rules="ruleInline">
-          <FormItem label="父级ID:">
-            <i-col>{{ parentCategory.id }}</i-col>
+          <FormItem label="标题:" prop="title">
+            <Input v-model="faq.title" placeholder="标题"></Input>
           </FormItem>
-          <FormItem label="父级分类:">
-            <i-col>{{ parentCategory.categoryName }}</i-col>
+          <FormItem label="内容:" prop="content">
+            <Input v-model="faq.content" :autosize="{minRows: 4,maxRows: 10}" placeholder="内容" type="textarea"> </Input>
           </FormItem>
-          <FormItem label="子分类名:" prop="categoryName">
-            <Input v-model="faq.categoryName" placeholder="子分类名"></Input>
+          <FormItem label="序号:" prop="rankNo">
+            <InputNumber :min="0" v-model="faq.rankNo" placeholder="序号"></InputNumber>
           </FormItem>
-          <FormItem label="子分类英文名:" prop="categoryEnName">
-            <Input v-model="faq.categoryEnName" placeholder="子分类英文名"></Input>
+          <FormItem label="应用类型:" prop="applicationType">
+            <Select v-model="faq.applicationType" placeholder="应用类型" style="padding-right: 5px;width: 100px" clearable @on-change="uniteChange">
+              <Option
+                v-for="(item,index) in appTypeEnum"
+                :value="item.value"
+                :key="index"
+                class="ptb2-5"
+                style="padding-left: 5px">{{ item.label }}
+              </Option>
+            </Select>
           </FormItem>
         </Form>
       </div>
@@ -103,17 +192,19 @@
 import Tables from '_c/tables';
 import _ from 'lodash';
 import {
-  addFaq,
+  createFaq,
   deleteFaq,
   getFaqPages,
   getFaqCategoriesTree,
-  putFaq
+  editFaq
 } from '@/api/mini-program';
 import { buildMenu, convertTree } from '@/libs/util';
 import CommonIcon from '_c/common-icon';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import deleteMixin from '@/mixins/deleteMixin.js';
+import { appTypeEnum } from '@/libs/enumerate';
+import { appTypeConvert } from '@/libs/converStatus';
 
 const faq = {
   id: 0,
@@ -145,10 +236,21 @@ export default {
   data() {
     return {
       ruleInline: {
-        categoryName: { required: true, message: '请填写FAQ分类中文名称' },
-        categoryEnName: { required: true, message: '请填写FAQ分类英文名称' }
+        title: { required: true, message: '请输入FAQ标题' },
+        content: { required: true, message: '请输入FAQ内容' },
+        rankNo: [
+          { required: true, message: '请输入序号' },
+          { validator(rule, value, callback, source, options) {
+            const errors = [];
+            if (!/^[0-9]\d*$/.test(value)) {
+              errors.push(new Error('必须为整数'));
+            }
+            callback(errors);
+          } }],
+        applicationType: { required: true, message: '请选择应用类型' }
       },
       menuData: [],
+      appTypeEnum,
       columns: [
         {
           type: 'selection',
@@ -180,16 +282,17 @@ export default {
           tooltip: true
         },
         {
-          title: '常见问题分类id',
+          title: 'faq分类id',
           key: 'faqCategoryId',
-          sortable: true,
-          minWidth: 100
+          align: 'center',
+          minWidth: 70
         },
         {
           title: '序号',
           key: 'rankNo',
           sortable: true,
-          minWidth: 80
+          align: 'center',
+          minWidth: 50
         },
         {
           title: '创建时间',
@@ -208,13 +311,23 @@ export default {
           key: 'applicationType',
           sortable: true,
           align: 'center',
-          minWidth: 80
+          minWidth: 120,
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.applicationType === 'WXSMALL_SHOP') {
+              return <div><tag color='green'>{appTypeConvert(row.applicationType).label}</tag></div>;
+            } else if (row.applicationType === 'S_MALL') {
+              return <div><tag color='gold'>{appTypeConvert(row.applicationType).label}</tag></div>;
+            } else {
+              return <div>{row.applicationType}</div>;
+            }
+          }
         },
         {
           title: '操作',
           key: 'handle',
-          minWidth: 100,
-          options: ['edit', 'delete']
+          minWidth: 120,
+          options: ['view', 'edit', 'delete']
         }
       ],
       modalEdit: false,
@@ -274,45 +387,47 @@ export default {
       if (this.tempModalType !== this.modalType.create) {
         this.faq = this._.cloneDeep(faq);
       }
-      this.faq.currentParentId = this.currentParentId;
+      this.faq.faqCategoryId = this.currentParentId;
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
     },
-
+    resetFields() {
+      this.$refs.modalEdit.resetFields();
+      this.faq = _.cloneDeep(faq);
+    },
     asyncEditOK(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
           this.modalEditLoading = true;
           this.modalViewLoading = true;
           if (!this.parentCategory.id) {
-            this.faq.parentId = 0;
+            this.faq.faqCategoryId = 0;
           } else {
-            this.faq.parentId = this.parentCategory.id;
+            this.faq.faqCategoryId = this.parentCategory.id;
           }
           if (this.tempModalType === this.modalType.create) {
-            addFaq(this.faq
+            createFaq(this.faq
             ).then(res => {
 
             }).finally(res => {
               this.initMenuList();
               this.modalEditLoading = false;
               this.modalEdit = false;
+              this.resetFields();
             });
           } else if (this.tempModalType === this.modalType.edit) {
-            putFaq(this.faq).then(res => {
+            editFaq(this.faq).then(res => {
             }).finally(res => {
               this.initMenuList();
               this.modalEditLoading = false;
               this.modalEdit = false;
+              this.resetFields();
             });
           }
         } else {
           this.$Message.error('请完善信息!');
         }
       });
-    },
-    handleEditClose() {
-      this.modalEdit = false;
     },
     // 删除
     deleteTable(ids) {
@@ -405,6 +520,14 @@ export default {
       this.clearSearchLoading = true;
       this.searchRowData = this._.cloneDeep(roleRowData);
       this.getTableData();
+    },
+    handleView(params) {
+      this.tempModalType = this.modalType.view;
+      this.faq = _.cloneDeep(params.row);
+      this.modalView = true;
+    },
+    uniteChange(value) {
+      this.faq.applicationType = value;
     }
   }
 };

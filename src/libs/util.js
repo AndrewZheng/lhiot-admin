@@ -10,6 +10,8 @@ export const IF_REMEMBER = 'if_remember'
 
 export const GOODS_STANDARD = 'goodsStandard';
 
+export const SMAL_GOODS_STANDARD = 'smallGoodsStandard';
+
 export const ARTICLE = 'article';
 
 export const LHIOT_TOKEN = 'lhiot_token';
@@ -23,6 +25,17 @@ export const setGoodsStandard = (goodsStandard) => {
 
 export const getGoodsStandard = () => {
   return JSON.parse(Cookies.get(GOODS_STANDARD));
+};
+
+export const setSmallGoodsStandard = (smallGoodsStandard) => {
+  const string = JSON.stringify(smallGoodsStandard);
+  Cookies.set(SMAL_GOODS_STANDARD, string, {
+    expires: config.cookieExpires || 1
+  });
+};
+
+export const getSmallGoodsStandard = () => {
+  return JSON.parse(Cookies.get(SMAL_GOODS_STANDARD));
 };
 
 export const setArticle = (article) => {
