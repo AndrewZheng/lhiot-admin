@@ -108,20 +108,6 @@
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">链接类型:</i-col>
-              <i-col span="16">{{ relationTypeComputed }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">链接关联:</i-col>
-              <i-col span="16">{{ advertisementDetail.advertiseRelation }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="3">有效时间:</i-col>
           <i-col span="21">{{ validityPeriodComputed }}</i-col>
         </Row>
@@ -326,7 +312,6 @@
           :columns="tempColumns"
           :data="tempModalTableData"
           border
-          @on-row-click="onRowClick"
         ></Table>
       </div>
     </Modal>
@@ -337,44 +322,38 @@
 import Tables from '_c/tables';
 import _ from 'lodash';
 import {
-  getuiPositionsPages,
+  getAdvertisementPositionPages,
   createAdvertisement,
   deleteAdvertisement,
   editAdvertisement,
-  getAdvertisementsPages,
-  getProductShelvesPages,
-  getCustomPlansPages,
-  getProductSectionsPages,
-  getCustomPlanSectionsPages,
-  getArticlesPages,
+  getAdvertisementPages,
   getAdvertisement
-} from '@/api/fruitermaster';
-import { goodsOnSalesColumns, customPlanColumns, goodsModulsColumns, customPlanSectionColumns, articleColumns } from '@/libs/columns';
+} from '@/api/mini-program';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 import IViewUpload from '_c/iview-upload';
 import { compareData } from '@/libs/util';
-import { positionType, YNEnum } from '@/libs/enumerate';
 import { relationType } from '../../../libs/enumerate';
+import { couponStatusConvert } from '@/libs/converStatus'
 
 const advertisementDetail = {
   id: 0,
+  linkType: null,
+  rankNo: 0,
+  imageUrl: '',
+  advertisementRelation: 0,
+  advertisementName: '',
+  createTime: null,
+  status: null,
+  validTime: null,
+  invalidTime: null,
   positionId: 0,
-  image: '',
-  advertiseName: '',
-  advertiseRelation: '',
-  advertiseType: 'IMAGE',
-  advertiseStatus: '',
-  relationType: '',
-  sorting: 0,
-  beginAt: '',
-  endAt: '',
-  createAt: '',
-  isPermanent: 'OFF',
-  validityPeriod: '',
-  advertiseRelationText: ''
+  createUser: '',
+  contentDesc: '',
+  relationId: 0,
+  advertisementPosition: ''
 };
 const roleRowData = {
   applicationType: null,
@@ -411,17 +390,8 @@ export default {
         { value: 'IMAGE', label: '图片广告' },
         { value: 'TEXT', label: '文字广告' }
       ],
-      relationType: [
-        { value: relationType.PRODUCT_DETAILS, label: '商品详情', api: getProductShelvesPages, columns: goodsOnSalesColumns },
-        { value: relationType.PRODUCT_SECTION, label: '商品版块', api: getProductSectionsPages, columns: goodsModulsColumns },
-        { value: relationType.CUSTOM_PLAN, label: '定制计划', api: getCustomPlansPages, columns: customPlanColumns },
-        { value: relationType.CUSTOM_PLAN_SECTION, label: '定制版块', api: getCustomPlanSectionsPages, columns: customPlanSectionColumns },
-        { value: relationType.ARTICLE_DETAILS, label: '文章详情', api: getArticlesPages, columns: articleColumns },
-        // {value: relationType.STORE_LIVE_TELECAST, label: '门店直播', api: getProductShelvesPages},
-        // {value: relationType.MORE_AMUSEMENT, label: '多娱', api: getProductShelvesPages},
-        { value: relationType.EXTERNAL_LINKS, label: '外部链接', api: getProductShelvesPages }
-      ],
       tempColumns: [],
+      relationType,
       tempModalTableData: [],
       relationTypeKeys: [],
       useAble: [{ label: '开启', value: 'ON' }, { label: '关闭', value: 'OFF' }],
@@ -441,31 +411,12 @@ export default {
           title: 'ID',
           key: 'id',
           sortable: true,
-          minWidth: 80,
-          fixed: 'left'
+          minWidth: 80
         },
         {
-          title: '广告内容',
-          width: 120,
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.advertiseType === 'IMAGE') {
-              const str = <img src={row.content} style='margin-top:5px' height='60' width='60' margin-top='10px'/>;
-              return <div>{str}</div>;
-            } else {
-              return <div>{row.content}</div>;
-            }
-          }
-        },
-        {
-          title: '广告名称',
-          minWidth: 150,
-          key: 'advertiseName'
-        },
-        {
-          title: '广告类型',
+          title: '链接类型',
           minWidth: 100,
-          key: 'advertiseType',
+          key: 'linkType',
           render: (h, params, vm) => {
             const { row } = params;
             if (row.advertiseType === 'IMAGE') {
@@ -476,50 +427,75 @@ export default {
           }
         },
         {
-          title: '链接类型',
-          minWidth: 120,
+          title: '序号',
+          key: 'rankNo',
+          sortable: true,
+          minWidth: 80
+        },
+        {
+          title: '图片',
+          width: 120,
+          key: 'imageUrl',
           render: (h, params, vm) => {
             const { row } = params;
-            switch (row.relationType) {
-              case 'PRODUCT_DETAILS':
-                return <div>{'商品详情'}</div>;
-              case 'PRODUCT_SECTION':
-                return <div>{'定制计划'}</div>;
-              case 'CUSTOM_PLAN':
-                return <div>{'商品版块'}</div>;
-              case 'STORE_LIVE_TELECAST':
-                return <div>{'门店直播'}</div>;
-              case 'CUSTOM_PLAN_SECTION':
-                return <div>{'定制版块'}</div>;
-              case 'ARTICLE_DETAILS':
-                return <div>{'文章详情'}</div>;
-              case 'EXTERNAL_LINKS':
-                return <div>{'外部链接'}</div>;
-              default :
-                return <div>{row.relationType}</div>;
-            }
+            const str = <img src={row.imageUrl} height='60' width='100' />;
+            return <div>{str}</div>;
           }
         },
         {
-          title: '广告状态',
-          minWidth: 110,
-          key: 'advertiseStatus',
+          title: '广告关联',
+          minWidth: 150,
+          key: 'advertisementRelation'
+        },
+        {
+          title: '广告名称',
+          minWidth: 150,
+          key: 'advertisementName'
+        },
+        {
+          title: '创建时间',
+          minWidth: 160,
+          key: 'createTime'
+        },
+        {
+          title: '当前状态',
+          minWidth: 150,
+          key: 'status',
           render: (h, params, vm) => {
             const { row } = params;
-            switch (row.advertiseStatus) {
-              case 'ON':
-                return <div><tag color='error'>{'开启'}</tag></div>;
-              case 'OFF':
-                return <div><tag color='success'>{'关闭'}</tag></div>;
-              default :
-                return <div><tag color='primary'>{row.advertiseStatus}</tag></div>;
+            if (row.status === 'VALID') {
+              return <div><tag color='success'>{couponStatusConvert(row.status).label}</tag></div>;
+            } else if (row.status === 'INVALID') {
+              return <div><tag color='error'>{couponStatusConvert(row.status).label}</tag></div>;
             }
+            return <div><tag color='primary'>{row.status}</tag></div>;
           }
         },
         {
-          title: '有效时间',
-          minWidth: 110,
-          key: 'validityPeriod'
+          title: '生效时间',
+          minWidth: 160,
+          key: 'validTime'
+        },
+        {
+          title: '失效时间',
+          minWidth: 160,
+          key: 'invalidTime'
+        },
+        {
+          title: '广告位id',
+          minWidth: 150,
+          key: 'positionId'
+        },
+        {
+          title: '创建人',
+          minWidth: 150,
+          key: 'createUser'
+        },
+        {
+          title: '内容描述',
+          minWidth: 150,
+          key: 'contentDesc',
+          tooltip: true
         },
         {
           title: '操作',
@@ -551,14 +527,6 @@ export default {
         return '文字广告';
       }
     },
-    relationTypeComputed() {
-      const tempObj = this.relationType.find(item => item.value === this.advertisementDetail.relationType);
-      if (tempObj) {
-        return tempObj.label;
-      } else {
-        return advertisementDetail.relationType;
-      }
-    },
     validityPeriodComputed() {
       if (!this.advertisementDetail.endAt && !this.advertisementDetail.beginAt) {
         return '永久有效';
@@ -568,15 +536,12 @@ export default {
     }
   },
   created() {
-    getuiPositionsPages({
-      applicationType: this.applicationType,
-      includeSection: YNEnum.NO,
-      positionType: positionType.ADVERTISEMENT,
+    getAdvertisementPositionPages({
       page: 0,
       rows: 0
     }).then(res => {
       this.selectDisable = false;
-      this.advertisementList = res.array;
+      this.advertisementList = res.rows;
       this.getTableData();
     });
   },
@@ -631,20 +596,6 @@ export default {
       ).catch(() => {
         this.loading = false;
       });
-    },
-    onRowClick(row, index) {
-      if (this.advertisementDetail.relationType === relationType.PRODUCT_SECTION ||
-          this.advertisementDetail.relationType === relationType.CUSTOM_PLAN_SECTION) {
-        this.advertisementDetail.advertiseRelationText = row.sectionName;
-      } else if (this.advertisementDetail.relationType === relationType.ARTICLE_DETAILS) {
-        this.advertisementDetail.advertiseRelationText = row.title;
-      } else {
-        this.advertisementDetail.advertiseRelationText = row.name;
-      }
-      this.advertisementDetail.advertiseRelation = row.id;
-      console.log(row);
-      console.log(index);
-      this.relationTargetShow = false;
     },
     startTimeChange(value, date) {
       this.advertisementDetail.beginAt = value;
@@ -724,7 +675,7 @@ export default {
         }).then(res => {
           this.searchModalTableLoading = false;
           this.relationTargetShow = true;
-          this.tempModalTableData = res.array;
+          this.tempModalTableData = res.rows;
         });
       }
     },
@@ -815,8 +766,8 @@ export default {
     },
     getTableData() {
       this.searchRowData.applicationType = this.applicationType;
-      getAdvertisementsPages(this.searchRowData).then(res => {
-        this.tableData = res.array;
+      getAdvertisementPages(this.searchRowData).then(res => {
+        this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;
         this.searchLoading = false;

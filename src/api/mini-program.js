@@ -19,7 +19,7 @@ export const getMiniProgramProductCategoriesPages = (data) => {
 };
 
 // 添加商品分类
-export const addMiniProgramProductCategories = (data) => {
+export const createMiniProgramProductCategories = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-categories/',
     data,
@@ -36,7 +36,7 @@ export const deleteMiniProgramProductCategories = ({ ids }) => {
 };
 
 // 修改商品分类
-export const putMiniProgramProductCategories = (data) => {
+export const editMiniProgramProductCategories = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-categories/',
     data,
@@ -54,8 +54,16 @@ export const getMiniProgramProductUnitsPages = (data) => {
   });
 };
 
+// 根据条件分页查询商品单位列表
+export const getMiniProgramProductUnits = () => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/product-units/',
+    method: 'get'
+  });
+};
+
 // 添加商品单位
-export const addMiniProgramProductUnits = (data) => {
+export const createMiniProgramProductUnits = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-units/',
     data,
@@ -72,7 +80,7 @@ export const deleteMiniProgramProductUnits = ({ ids }) => {
 };
 
 // 修改商品单位
-export const putMiniProgramProductUnits = (data) => {
+export const editMiniProgramProductUnits = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-units/',
     data,
@@ -123,7 +131,7 @@ export const editStore = (data) => {
 };
 
 // 添加门店
-export const addStore = (data) => {
+export const createStore = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/stores/',
     data,
@@ -677,7 +685,7 @@ export const getFaqCategoriesPages = (data) => {
 };
 
 // 添加FAQ分类
-export const addFaqCategories = (data) => {
+export const createFaqCategories = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/faq-categories/',
     data,
@@ -694,7 +702,7 @@ export const deleteFaqCategories = ({ ids }) => {
 };
 
 // 修改FAQ分类
-export const putFaqCategories = (data) => {
+export const editFaqCategories = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/faq-categories/' + data.id,
     data,
@@ -713,7 +721,7 @@ export const getFaqPages = (data) => {
 };
 
 // 添加FAQ
-export const addFaq = (data) => {
+export const createFaq = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/faqs/',
     data,
@@ -730,9 +738,185 @@ export const deleteFaq = ({ ids }) => {
 };
 
 // 修改FAQ
-export const putFaq = (data) => {
+export const editFaq = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/faqs/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询广告位列表
+export const getAdvertisementPositionPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/advertisement-positions/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 查询广告位详情
+export const getAdvertisementPosition = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/advertisement-positions/' + id,
+    method: 'get'
+  });
+};
+
+// 添加广告位
+export const createAdvertisementPosition = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/advertisement-positions/',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Ids删除广告位
+export const deleteAdvertisementPosition = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/advertisement-positions/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改广告位
+export const editAdvertisementPosition = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/advertisement-positions/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询广告列表
+export const getAdvertisementPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/advertisements/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 查询广告位详情
+export const getAdvertisement = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/advertisements/' + id,
+    method: 'get'
+  });
+};
+
+// 添加广告
+export const createAdvertisement = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/advertisements/',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Ids删除广告
+export const deleteAdvertisement = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/advertisements/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改广告
+export const editAdvertisement = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/advertisements/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询邮费模板列表
+export const getDeliveryFeeConfigPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/delivery-fee-configs/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 查询邮费模板位详情
+export const getDeliveryFeeConfig = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/delivery-fee-configs/' + id,
+    method: 'get'
+  });
+};
+
+// 添加邮费模板
+export const createDeliveryFeeConfig = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/delivery-fee-configs/',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Ids删除邮费模板
+export const deleteDeliveryFeeConfig = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/delivery-fee-configs/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改邮费模板
+export const editDeliveryFeeConfig = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/delivery-fee-configs/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询邮费规则列表
+export const getDeliveryFeeConfigRulePages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/delivery-fee-config-rules/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 查询邮费规则位详情
+export const getDeliveryFeeConfigRule = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/delivery-fee-config-rules/' + id,
+    method: 'get'
+  });
+};
+
+// 添加邮费规则
+export const createDeliveryFeeConfigRule = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/delivery-fee-config-rules/',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Ids删除邮费规则
+export const deleteDeliveryFeeConfigRule = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/delivery-fee-config-rules/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改邮费规则
+export const editDeliveryFeeConfigRule = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/delivery-fee-config-rules/' + data.id,
     data,
     method: 'put'
   });

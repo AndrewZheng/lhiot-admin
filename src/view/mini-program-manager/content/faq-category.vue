@@ -103,11 +103,11 @@
 import Tables from '_c/tables';
 import _ from 'lodash';
 import {
-  addFaqCategories,
+  createFaqCategories,
   deleteFaqCategories,
   getFaqCategoriesPages,
   getFaqCategoriesTree,
-  putFaqCategories
+  editFaqCategories
 } from '@/api/mini-program';
 import { buildMenu, convertTree } from '@/libs/util';
 import CommonIcon from '_c/common-icon';
@@ -258,7 +258,7 @@ export default {
             this.faqCategory.parentId = this.parentCategory.id;
           }
           if (this.tempModalType === this.modalType.create) {
-            addFaqCategories(this.faqCategory
+            createFaqCategories(this.faqCategory
             ).then(res => {
 
             }).finally(res => {
@@ -267,7 +267,7 @@ export default {
               this.modalEdit = false;
             });
           } else if (this.tempModalType === this.modalType.edit) {
-            putFaqCategories(this.faqCategory).then(res => {
+            editFaqCategories(this.faqCategory).then(res => {
             }).finally(res => {
               this.initMenuList();
               this.modalEditLoading = false;

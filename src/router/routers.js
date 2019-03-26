@@ -165,6 +165,46 @@ export const constantRouterMap = [
       }
     ]
   },
+  {
+    path: '/small-manager-goods-detail',
+    name: 'small-manager-goods-detail',
+    meta: {
+      icon: 'md-menu',
+      title: '商品规格管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'small-goods-detail',
+        name: 'small-goods-detail',
+        meta: {
+          icon: 'md-menu',
+          title: '详情组合图片'
+        },
+        component: () => import('@/view/mini-program-manager/goods/goods-detail.vue')
+      }
+    ]
+  },
+  {
+    path: '/small-manager-goods-standard',
+    name: 'small-manager-goods-standard',
+    meta: {
+      icon: 'md-menu',
+      title: '商品规格管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'small-goods-standard',
+        name: 'small-goods-standard',
+        meta: {
+          icon: 'md-menu',
+          title: '商品规格管理'
+        },
+        component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
+      }
+    ]
+  },
 ];
 
 export const asyncRouterMap = [
@@ -720,7 +760,7 @@ export const asyncRouterMap = [
           title: '基础商品管理'
         },
         component: () => import('@/view/mini-program-manager/goods/goods-message.vue')
-      },
+      },      
       {
         path: '/small-goods-standard',
         name: 'small-goods-standard',
@@ -867,7 +907,7 @@ export const asyncRouterMap = [
           icon: 'md-pricetag',
           title: '邮费管理'
         },
-        component: () => import('@/view/mini-program-manager/activity/images.vue')
+        component: () => import('@/view/mini-program-manager/activity/delivery-fee.vue')
       },
       {
         path: '/small-activity-register-reward',
@@ -970,7 +1010,7 @@ export const asyncRouterMap = [
           icon: 'md-pricetag',
           title: '广告位管理'
         },
-        component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
+        component: () => import('@/view/mini-program-manager/content/advertisement-position.vue')
       },
       {
         path: '/small-advertisement',
@@ -979,7 +1019,7 @@ export const asyncRouterMap = [
           icon: 'md-pricetag',
           title: '广告管理'
         },
-        component: () => import('@/view/mini-program-manager/activity/activities.vue')
+        component: () => import('@/view/mini-program-manager/content/advertisement.vue')
       }
     ]
   },

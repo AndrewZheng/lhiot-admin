@@ -832,7 +832,6 @@ export const payTypeEnum = [
 ];
 
 // 小程序支付步骤 payStep sign 签名; paid 已支付;
-
 export const payStep = {
   sign: 'sign',
   paid: 'paid'
@@ -850,7 +849,6 @@ export const payStepEnum = [
 ];
 
 // 小程序来源类型 sourceType recharge: 充值;order: 订单
-
 export const sourceType = {
   recharge: 'recharge',
   order: 'order'
@@ -1332,3 +1330,41 @@ export const bankTypeEnum = [
   { label: 'VISA信用卡', value: bankType.VISA_CREDIT }
 ];
 
+// 小程序广告位时间限制 时间限制(LIMITED 限时   UNLIMITED 不限时)
+export const timeLimited = {
+  LIMITED: 'LIMITED',
+  UNLIMITED: 'UNLIMITED'
+};
+
+export const timeLimitedEnum = [
+  {
+    label: '限时',
+    value: timeLimited.LIMITED
+  },
+  {
+    label: '不限时',
+    value: timeLimited.UNLIMITED
+  }
+];
+
+// 小程序广告位类型(WORD 文字 IMAGE 图片 CAROUSEL 轮播)
+export const advertisementPositionType = {
+  WORD: 'WORD',
+  IMAGE: 'IMAGE',
+  CAROUSEL: 'CAROUSEL'
+};
+
+export const advertisementPositionTypeEnum = [
+  {
+    label: '文字',
+    value: advertisementPositionType.WORD
+  },
+  {
+    label: '图片',
+    value: advertisementPositionType.IMAGE
+  },
+  {
+    label: '轮播图',
+    value: advertisementPositionType.CAROUSEL
+  }
+];

@@ -10,7 +10,7 @@ import {
   thirdDelieverStatusEnum, updateWayEnum, storeStatusEnum, storeTypeEnum, coordinateTypeEnum,
   feedbackStatusEnum,
   // 小程序
-  splitStatusEnum, productStatusEnum, imageStatusEnum, imageTypeEnum, teamBuyStatusEnum, teamBuyTypeEnum, rewardActivitySettingEnum, couponStatusEnum, couponTypeEnum, appTypeEnum, payTypeEnum, payStepEnum, sourceTypeEnum, bankTypeEnum
+  splitStatusEnum, productStatusEnum, imageStatusEnum, imageTypeEnum, teamBuyStatusEnum, teamBuyTypeEnum, rewardActivitySettingEnum, couponStatusEnum, couponTypeEnum, appTypeEnum, payTypeEnum, payStepEnum, sourceTypeEnum, bankTypeEnum, advertisementPositionTypeEnum, timeLimitedEnum
 } from './enumerate';
 
 const convertFunction = (value, list) => {
@@ -167,3 +167,12 @@ export const sourceTypeConvert = (value) => {
 export const bankTypeConvert = (value) => {
   return convertFunction(value, bankTypeEnum);
 }
+
+export const timeLimitedConvert = (value) => {
+  return convertFunction(value, timeLimitedEnum);
+}
+
+export const advertisementPositionTypeConvert = (value) => {
+  return convertFunction(value, advertisementPositionTypeEnum);
+}
+
