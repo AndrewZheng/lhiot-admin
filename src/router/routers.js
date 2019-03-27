@@ -1024,6 +1024,35 @@ export const asyncRouterMap = [
     ]
   },
   {
+    path: '/small-system-manager',
+    name: 'small-system-manager',
+    meta: {
+      icon: 'md-menu',
+      title: '系统参数管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/small-system',
+        name: 'small-system',
+        meta: {
+          icon: 'md-pricetag',
+          title: '系统参数管理'
+        },
+        component: () => import('@/view/mini-program-manager/system/system.vue')
+      },
+      {
+        path: '/small-system-category',
+        name: 'small-system-category',
+        meta: {
+          icon: 'md-pricetag',
+          title: '系统参数分类管理'
+        },
+        component: () => import('@/view/mini-program-manager/system/system-category.vue')
+      }
+    ]
+  },
+  {
     path: '/group-booking-goods-manager',
     name: 'group-booking-goods-manager',
     meta: {

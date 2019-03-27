@@ -1,10 +1,10 @@
 <template>
   <div class="m-role">
     <Row :gutter="24" type="flex" align="top" justify="space-between">
-      <i-col span="6" order="1">
+      <i-col span="4" order="1">
         <Tree :data="menuData" :render="renderContent"></Tree>
       </i-col>
-      <i-col span="18" order="3">
+      <i-col span="20" order="3">
         <Card>
           <h6>当前选中：{{ parentCategory.groupName }}</h6>
           <tables
@@ -19,9 +19,8 @@
             border
             search-place="top"
             @on-delete="handleDelete"
-            @on-edit="handleEdit"
             @on-select-all="onSelectionAll"
-            @on-selection-change="onSelectionChange"
+            @on-selection-change="onRelationSelectionChange"
           >
             <div slot="searchCondition">
               <Row>
@@ -41,14 +40,15 @@
                   clearable
                 >
                 </Input>
-                <Input
-                  v-model="searchRowData.applyType"
-                  placeholder="应用类型"
-                  class="search-input mr5"
-                  style="width: auto"
-                  clearable
-                >
-                </Input>
+                <Select v-model="searchRowData.applyType" placeholder="应用类型" style="padding-right: 5px;width: 100px" clearable>
+                  <Option
+                    v-for="(item,index) in appTypeEnum"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                    style="padding-left: 5px">{{ item.label }}
+                  </Option>
+                </Select>
                 <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
                   <Icon type="md-search"/>&nbsp;搜索
                 </Button>
@@ -62,7 +62,7 @@
                 <Icon type="md-add"/>
                 添加
               </Button>
-              <Button v-waves type="primary" class="mr5" @click="createTableRow">
+              <Button v-waves type="primary" class="mr5" @click="handleEdit">
                 <Icon type="md-repeat" />
                 更换板块
               </Button>
@@ -94,6 +94,78 @@
         </Card>
       </i-col>
     </Row>
+
+    <!--编辑菜单 -->
+    <Modal
+      v-model="modalEdit"
+      :width="720"
+    >
+      <p slot="header">
+        <span>{{ tempModalType==modalType.create?'添加板块商品':'更换板块' }}</span>
+      </p>
+      <div class="modal-content">
+        <Form ref="modalEdit">
+          <Row v-if="tempModalType == modalType.edit">
+            <FormItem label="请选择要更换的商品板块:">
+              <Cascader
+                :data="goodsSectionData"
+                v-model="defaultGoodsSectionData"
+                span="21"
+                style="width: 70%"
+                @on-change="goodsSectionChange"
+              ></Cascader>
+            </FormItem>
+          </Row>
+          <Row v-if="tempModalType == modalType.create">
+            <FormItem>
+              <tables
+                ref="tables"
+                :columns="productColumns"
+                v-model="productStandard"
+                search-place="top"
+                searchable
+                highlight-row
+                border
+                @on-select-all="onSelectionAll"
+                @on-selection-change="onSelectionChange"
+              >
+                <div slot="searchCondition">
+                  <Row>
+                    <Input
+                      v-model="searchRowData.barcode"
+                      placeholder="商品条码"
+                      class="search-input mr5"
+                      style="width: auto"
+                      clearable
+                    >
+                    </Input>
+                    <Input
+                      v-model="searchRowData.productName"
+                      placeholder="商品名称"
+                      class="search-input mr5"
+                      style="width: auto"
+                      clearable
+                    >
+                    </Input>
+                    <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleProductSearch">
+                      <Icon type="md-search"/>&nbsp;搜索
+                    </Button>
+                    <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
+                      <Icon type="md-refresh"/>&nbsp;清除条件
+                    </Button>
+                  </Row>
+                </div>
+              </tables>
+            </FormItem>
+          </Ro>
+        </row></Form>
+      </div>
+      <div slot="footer">
+        <Button @click="handleEditClose">关闭</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="asyncEditOK('modalEdit')">添加
+        </Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -101,21 +173,23 @@
 import Tables from '_c/tables';
 import _ from 'lodash';
 import {
-  createProductStandard,
-  deleteProductStandard,
+  getProductSectionRelationPages,
+  createProductSectionRelation,
+  deleteProductSectionRelation,
   getProductStandardsPages,
-  editProductStandard,
+  editProductSectionRelation,
   getProductSectionTree
 } from '@/api/mini-program';
-import { buildMenu, convertTree } from '@/libs/util';
+import { buildMenu, convertTree, convertTreeCategory } from '@/libs/util';
 import CommonIcon from '_c/common-icon';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import { fenToYuanDot2 } from '@/libs/util';
-import { customPlanStatusConvert } from '@/libs/converStatus';
+import { customPlanStatusConvert, appTypeConvert } from '@/libs/converStatus';
+import { appTypeEnum } from '@/libs/enumerate';
 
-const productSectionDetail = {
+const productStandardDetail = {
   id: 0,
   productId: 0,
   barcode: '',
@@ -127,8 +201,8 @@ const productSectionDetail = {
   salePrice: 0,
   rank: 0,
   description: '',
-  shelvesStatus: '',
-  applyType: '',
+  shelvesStatus: null,
+  applyType: null,
   productName: '',
   createUser: null,
   image: '',
@@ -161,10 +235,19 @@ const productSectionDetail = {
 
 const roleRowData = {
   applyType: null,
-  sectionName: '',
-  productName: '',
+  sectionName: null,
+  productName: null,
+  barcode: null,
+  shelvesStatus: null,
   page: 1,
   rows: 10
+};
+
+const relationData = {
+  id: 0,
+  productStandardIds: 0,
+  productSectionId: 0,
+  rank: 0
 };
 
 export default {
@@ -175,6 +258,7 @@ export default {
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
     return {
+      appTypeEnum,
       menuData: [],
       columns: [
         {
@@ -241,6 +325,21 @@ export default {
           }
         },
         {
+          title: '应用类型',
+          width: 120,
+          key: 'applyType',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.applyType === 'WXSMALL_SHOP') {
+              return <div><tag color='green'>{appTypeConvert(row.applyType).label}</tag></div>;
+            } else if (row.applyType === 'S_MALL') {
+              return <div><tag color='gold'>{appTypeConvert(row.applyType).label}</tag></div>;
+            } else {
+              return <div>{row.applyType}</div>;
+            }
+          }
+        },
+        {
           title: '排序',
           key: 'rank',
           sortable: true,
@@ -252,16 +351,93 @@ export default {
           options: ['delete']
         }
       ],
+      productColumns: [
+        {
+          type: 'selection',
+          key: '',
+          width: 50,
+          align: 'center',
+          fixed: 'left'
+        },
+        {
+          title: '商品条码',
+          key: 'barcode',
+          minWidth: 70,
+          align: 'center'
+        },
+        {
+          title: '商品编号',
+          key: 'productCode',
+          align: 'center',
+          minWidth: 120
+        },
+        {
+          title: '商品名称',
+          key: 'productName',
+          minWidth: 100,
+          align: 'center'
+        },
+        {
+          title: '商品规格',
+          key: 'specification',
+          minWidth: 80,
+          align: 'center'
+        },
+        {
+          title: '商品单位',
+          key: 'productUnit',
+          minWidth: 80,
+          align: 'center'
+        },
+        {
+          title: '商品价格',
+          key: 'price',
+          minWidth: 80,
+          align: 'center',
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(params.row.price);
+            return <div>{amount}</div>;
+          }
+        },
+        {
+          title: '商品状态',
+          minWidth: 100,
+          key: 'shelvesStatus',
+          align: 'center',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.shelvesStatus === 'VALID') {
+              return <div><tag color='success'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
+            } else if (row.shelvesStatus === 'INVALID') {
+              return <div><tag color='error'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
+            }
+            return <div><tag color='primary'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
+          }
+        },
+        {
+          title: '排序',
+          key: 'rank',
+          minWidth: 60,
+          align: 'center'
+        }
+      ],
       modalEdit: false,
       modalViewLoading: false,
       modalEditLoading: false,
       currentParentName: '',
-      currentParentId: 0,
-      currentCategory: this._.cloneDeep(productSectionDetail),
-      parentCategory: this._.cloneDeep(productSectionDetail),
+      currentSectionId: 0,
+      currentStandard: this._.cloneDeep(productStandardDetail),
+      parentCategory: this._.cloneDeep(productStandardDetail),
+      productStandard: this._.cloneDeep(productStandardDetail),
       searchRowData: this._.cloneDeep(roleRowData),
-      treeData: this._.cloneDeep(productSectionDetail)
+      productStandardRelation: this._.cloneDeep(relationData),
+      treeData: this._.cloneDeep(productStandardDetail),
+      goodsSectionData: [],
+      defaultGoodsSectionData: [41]
     };
+  },
+  computed: {
+
   },
   created() {
     this.initMenuList();
@@ -299,7 +475,7 @@ export default {
             <span>
               <CommonIcon type='ios-paper' class='mr10'/>
             </span>
-            <span >
+            <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
             </span>
           </div>
@@ -307,27 +483,47 @@ export default {
       }
     },
     createTableRow() {
-      if (this.tempModalType !== this.modalType.create) {
-        this.currentCategory = this._.cloneDeep(productSectionDetail);
+      if (!this.currentSectionId || this.currentSectionId == 0) {
+        this.$Message.warning('请从左侧选择一个板块');
+        return;
       }
-      this.currentCategory.currentParentId = this.currentParentId;
+
+      if (this.tempModalType !== this.modalType.create) {
+        this.productStandard = this._.cloneDeep(productStandardDetail);
+      }
+      this.$refs.modalEdit.resetFields();
+      this.searchRowData.shelvesStatus = 'VALID';
+      this.getProductTableData();
+      this.currentStandard.currentSectionId = this.currentSectionId;
+      this.productStandardRelation.productSectionId = this.currentSectionId;
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
     },
-    asyncEditOK() {
-      if (!this.currentCategory.groupName) {
-        this.$Message.warning('请输入子分类');
+    // 编辑分类
+    handleEdit(params) {
+      if (!this.productStandardRelation.productStandardIds || this.productStandardRelation.productStandardIds == 0) {
+        this.$Message.warning('请选择要更换板块的商品');
         return;
       }
-      this.modalEditLoading = true;
-      this.modalViewLoading = true;
-      if (!this.parentCategory.id) {
-        this.currentCategory.parentId = 0;
-      } else {
-        this.currentCategory.parentId = this.parentCategory.id;
+      this.$refs.modalEdit.resetFields();
+      this.searchRowData.shelvesStatus = 'VALID';
+      this.getProductTableData();
+      this.tempModalType = this.modalType.edit;
+      this.modalEdit = true;
+    },
+    asyncEditOK() {
+      if (this.productStandardRelation.productSectionId == 0 || this.productStandardRelation.productSectionId == '') {
+        this.$Message.warning('商品规格id不能为空');
+        return;
       }
+      if (this.productStandardRelation.productStandardId == 0 || this.productStandardRelation.productStandardId == '') {
+        this.$Message.warning('请选择一条商品信息');
+        return;
+      }
+      // this.modalEditLoading = true;
+      // this.modalViewLoading = true;
       if (this.tempModalType === this.modalType.create) {
-        createProductStandard(this.currentCategory
+        createProductSectionRelation(this.productStandardRelation
         ).then(res => {
 
         }).finally(res => {
@@ -336,7 +532,7 @@ export default {
           this.modalEdit = false;
         });
       } else if (this.tempModalType === this.modalType.edit) {
-        editProductStandard(this.currentCategory).then(res => {
+        editProductSectionRelation(this.productStandardRelation).then(res => {
         }).finally(res => {
           this.initMenuList();
           this.modalEditLoading = false;
@@ -350,7 +546,7 @@ export default {
     // 删除
     deleteTable(ids) {
       this.loading = true;
-      deleteProductStandard({
+      deleteProductSectionRelation({
         ids
       }).then(res => {
         const totalPage = Math.ceil(this.total / this.pageSize);
@@ -364,22 +560,27 @@ export default {
         this.loading = false;
       });
     },
-    // 编辑分类
-    handleEdit(params) {
-      // this.$refs.modalEdit.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.currentCategory = _.cloneDeep(params.row);
-      this.modalEdit = true;
-    },
     getTableData() {
       this.loading = true;
-      getProductStandardsPages(this.searchRowData).then(res => {
+      getProductSectionRelationPages(this.searchRowData).then(res => {
         if (this.menuData.length > 0) {
           // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
+        }
+      });
+    },
+    getProductTableData() {
+      // this.loading = true;
+      getProductStandardsPages(this.searchRowData).then(res => {
+        if (this.menuData.length > 0) {
+          // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
+          this.productStandard = res.rows;
+          // this.total = res.total;
+          // this.loading = false;
+          // this.searchLoading = false;
         }
       });
     },
@@ -393,6 +594,7 @@ export default {
             children: 'children'
           };
           this.menuData = convertTree(menuList, map, true);
+          this.goodsSectionData = convertTreeCategory(menuList, map, true);
           if (this.menuData.length > 0) {
             this.getTableData();
           }
@@ -414,8 +616,9 @@ export default {
       }
       this.parentCategory.id = data.id;
       this.parentCategory.groupName = data.title;
-      this.currentParentId = data.id;
-      this.searchRowData.parentId = data.id;
+      this.currentSectionId = data.id;
+      this.searchRowData.productSectionId = data.id;
+      this.searchRowData.page = 1;
       // 获取新数据
       this.getTableData();
     },
@@ -432,6 +635,32 @@ export default {
           this.expandChildren(item.children);
         }
       });
+    },
+    handleProductSearch() {
+      this.getProductTableData();
+    },
+    onSelectionChange(selection) {
+      this.productStandardRelation.productStandardIds = selection.map(item => item.id.toString()).join(',');
+      console.log('商品选择变化,当前页选择productStandardIds:' + this.productStandardRelation.productStandardIds);
+    },
+    onRelationSelectionChange(selection) {
+      if (selection.length > 1) {
+        this.$Message.warning('最多选择一条商品记录');
+        return;
+      }
+      this.productStandardRelation.productStandardIds = selection.map(item => item.productStandardId.toString()).join(',');
+      console.log('商品关联选择变化,当前页选择productStandardIds:' + this.productStandardRelation.productStandardIds);
+      this.productStandardRelation.id = selection.map(item => item.id.toString()).join(',');
+      console.log('商品关联选择变化,当前页选择id:' + this.productStandardRelation.productStandardIds);
+    },
+    // 选择分类
+    goodsSectionChange(value, selectedData) {
+      if (selectedData.length > 0) {
+        this.productStandardRelation.productSectionId = selectedData[selectedData.length - 1].id;
+      } else {
+        this.productStandardRelation.productSectionId = null;
+      }
+      this.defaultGoodsSectionData = selectedData;
     }
   }
 };

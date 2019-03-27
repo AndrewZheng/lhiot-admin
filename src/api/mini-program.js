@@ -237,6 +237,14 @@ export const deleteProductSection = ({ ids }) => {
   });
 };
 
+// 根据板块Ids判断当前分类信息是否可以删除
+export const deleteProductSectionValidation = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/product-sections/whetherdelete' + ids,
+    method: 'get'
+  });
+};
+
 // 添加板块
 export const createProductSection = (data) => {
   return Vue.prototype.$http.request({
@@ -275,20 +283,20 @@ export const getProductSectionRelationPages = (data) => {
   });
 };
 
-// 根据商品板块Ids删除商品板块
-export const deleteProductSectionRelation = ({ ids }) => {
-  return Vue.prototype.$http.request({
-    url: '/minapp/product-section-relations/' + ids,
-    method: 'delete'
-  });
-};
-
-// 添加商品板块
+// 创建板块和商品之间的关联
 export const createProductSectionRelation = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-section-relations/',
     data,
     method: 'post'
+  });
+};
+
+// 根据商品板块Ids删除商品板块
+export const deleteProductSectionRelation = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/product-section-relations/' + ids,
+    method: 'delete'
   });
 };
 
@@ -917,6 +925,94 @@ export const deleteDeliveryFeeConfigRule = ({ ids }) => {
 export const editDeliveryFeeConfigRule = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/delivery-fee-config-rules/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询系统参数分类列表
+export const getSystemSettingCategoryPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/system-setting-categories/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 查询系统参数分类位详情
+export const getSystemSettingCategory = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/system-setting-categories/' + id,
+    method: 'get'
+  });
+};
+
+// 添加系统参数分类
+export const createSystemSettingCategory = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/system-setting-categories/',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Ids删除系统参数分类
+export const deleteSystemSettingCategory = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/system-setting-categories/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改系统参数分类
+export const editSystemSettingCategory = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/system-setting-categories/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询系统参数列表
+export const getSystemSettingPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/system-settings/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 查询系统参数位详情
+export const getSystemSetting = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/system-settings/' + id,
+    method: 'get'
+  });
+};
+
+// 添加系统参数
+export const createSystemSetting = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/system-settings/',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Ids删除系统参数
+export const deleteSystemSetting = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/system-settings/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改系统参数
+export const editSystemSetting = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/system-settings/' + data.id,
     data,
     method: 'put'
   });
