@@ -111,62 +111,62 @@
       <div class="modal-content">
         <Form ref="modalEdit" :model="productStandardDetail" :rules="ruleInline" :label-width="100">
           <Row>
-            <Col span="12">
-            <FormItem v-if="productStandardDetail.product" label="商品名称:">
-              {{ productStandardDetail.product.name }}
-            </FormItem>
-            </Col>
-            <Col span="12">
-            <FormItem label="规格条码:" prop="barcode">
-              <Input v-model="productStandardDetail.barcode"></Input>
-            </FormItem>
-            </Col>
+            <i-col span="12">
+              <FormItem v-if="productStandardDetail.product" label="商品名称:">
+                {{ productStandardDetail.product.name }}
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="规格条码:" prop="barcode">
+                <Input v-model="productStandardDetail.barcode"></Input>
+              </FormItem>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
-            <FormItem :label-width="80" label="规格单位:" prop="packagingUnit">
-              <Select v-model="productStandardDetail.packagingUnit" @on-change="uniteChange">
-                <Option
-                  v-for="(item,index) in unitsList"
-                  :value="item.value"
-                  :key="index"
-                  class="ptb2-5"
-                  style="padding-left: 5px">{{ item.label
-                  }}
-                </Option>
-              </Select>
-            </FormItem>
-            </Col>
-            <Col span="12">
-            <FormItem label="海鼎规格数量:" prop="specificationQty">
-              <Input v-model="productStandardDetail.specificationQty"></Input>
-            </FormItem>
-            </Col>
+            <i-col span="12">
+              <FormItem :label-width="80" label="规格单位:" prop="packagingUnit">
+                <Select v-model="productStandardDetail.packagingUnit" @on-change="uniteChange">
+                  <Option
+                    v-for="(item,index) in unitsList"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                    style="padding-left: 5px">{{ item.label
+                    }}
+                  </Option>
+                </Select>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="海鼎规格数量:" prop="specificationQty">
+                <Input v-model="productStandardDetail.specificationQty"></Input>
+              </FormItem>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
-            <FormItem :label-width="80" label="是否可用:" prop="packagingUnit">
-              <Select
-                :value="productStandardDetail.availableStatus"
-                style="width: 100px"
-                @on-change="useAbleUniteChange">
-                <Option
-                  v-for="(item,index) in useAble"
-                  :value="item.value"
-                  :key="index"
-                  class="ptb2-5"
-                  style="padding-left: 5px">{{ item.label
-                  }}
-                </Option>
-              </Select>
-            </FormItem>
-            </Col>
-            <Col span="12">
-            <FormItem label="单份商品重量:" prop="weight">
-              <Input v-model="productStandardDetail.weight" style="width: 100px"></Input>
-              <i-col style="display: inline-block;margin-left: 5px">kg</i-col>
-            </FormItem>
-            </Col>
+            <i-col span="12">
+              <FormItem :label-width="80" label="是否可用:" prop="packagingUnit">
+                <Select
+                  :value="productStandardDetail.availableStatus"
+                  style="width: 100px"
+                  @on-change="useAbleUniteChange">
+                  <Option
+                    v-for="(item,index) in useAble"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                    style="padding-left: 5px">{{ item.label
+                    }}
+                  </Option>
+                </Select>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="单份商品重量:" prop="weight">
+                <Input v-model="productStandardDetail.weight" style="width: 100px"></Input>
+                <i-col style="display: inline-block;margin-left: 5px">kg</i-col>
+              </FormItem>
+            </i-col>
           </Row>
         </Form>
       </div>
@@ -374,7 +374,8 @@ export default {
         ids
       }).then(res => {
         const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-        if (this.tableData.length == this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
+        if (this.tableData.length === this.tableDataSelected.length &&
+          this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
           this.searchRowData.page -= 1;
         }
         this.tableDataSelected = [];
