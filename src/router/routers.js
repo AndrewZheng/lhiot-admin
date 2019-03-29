@@ -898,7 +898,7 @@ export const asyncRouterMap = [
           icon: 'md-pricetag',
           title: '拼团标题设置'
         },
-        component: () => import('@/view/mini-program-manager/activity/images.vue')
+        component: () => import('@/view/mini-program-manager/activity/teambuy-title.vue')
       },
       {
         path: '/small-postage-rule-setting',

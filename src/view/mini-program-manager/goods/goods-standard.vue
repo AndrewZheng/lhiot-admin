@@ -610,7 +610,10 @@ export default {
         productDescription: [{ required: true, message: '请输入上架商品描述' }],
         shelvesStatus: [{ required: true, message: '请选择商品状态' }],
         specification: [{ required: true, message: '请输入商品规格' }],
-        price: [{ required: true, message: '请输入商品价格' }],
+        price: [
+          { required: true, message: '请输入商品价格' },
+          { message: '必须为大于0的数字', pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/ }
+        ],
         barcode: [
           { required: true, message: '请输入商品条码' },
           {

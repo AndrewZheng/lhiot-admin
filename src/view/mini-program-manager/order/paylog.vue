@@ -328,13 +328,13 @@ export default {
         {
           title: '用户昵称',
           key: 'nickName'
-        },
-        {
-          title: '操作',
-          minWidth: 80,
-          key: 'handle',
-          options: ['view']
         }
+        // {
+        //   title: '操作',
+        //   minWidth: 80,
+        //   key: 'handle',
+        //   options: ['view']
+        // }
       ],
       createLoading: false,
       modalViewLoading: false,

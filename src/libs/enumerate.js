@@ -773,6 +773,28 @@ export const couponStatusEnum = [
   }
 ];
 
+// 小程序优惠券使用范围 STORE("门店"),STORE_AND_SMALL("门店和商城"),SMALL("商城");
+export const couponScope = {
+  STORE: 'STORE',
+  STORE_AND_SMALL: 'STORE_AND_SMALL',
+  SMALL: 'SMALL'
+};
+
+export const couponScopeEnum = [
+  {
+    label: '门店',
+    value: couponScope.STORE
+  },
+  {
+    label: '全场通用',
+    value: couponScope.STORE_AND_SMALL
+  },
+  {
+    label: '商城',
+    value: couponScope.SMALL
+  }
+];
+
 // 小程序优惠券类型(FULL_CUT_COUPON 满减券;DISCOUNT_COUPON 折扣券;CASH_COUPON 现金券)
 export const couponType = {
   FULL_CUT_COUPON: 'FULL_CUT_COUPON',

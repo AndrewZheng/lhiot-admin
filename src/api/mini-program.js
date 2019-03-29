@@ -240,7 +240,7 @@ export const deleteProductSection = ({ ids }) => {
 // 根据板块Ids判断当前分类信息是否可以删除
 export const deleteProductSectionValidation = ({ ids }) => {
   return Vue.prototype.$http.request({
-    url: '/minapp/product-sections/whetherdelete' + ids,
+    url: '/minapp/product-sections/whetherdelete/' + ids,
     method: 'get'
   });
 };
@@ -486,6 +486,42 @@ export const createFlashsale = (data) => {
 export const editFlashsale = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/activity-flashsales/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询限时抢购商品关联列表
+export const getFlashsaleProductRelationPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-flashsale-product-relations/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 根据限时抢购商品关联Ids删除限时抢购商品关联
+export const deleteFlashsaleProductRelation = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-flashsale-product-relations/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加限时抢购商品关联
+export const createFlashsaleProductRelation = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-flashsale-product-relations/',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改限时抢购商品关联
+export const editFlashsaleProductRelation = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-flashsale-product-relations/' + data.id,
     data,
     method: 'put'
   });

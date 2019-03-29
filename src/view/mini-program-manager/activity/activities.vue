@@ -112,7 +112,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动开关:</i-col>
+              <i-col span="6">活动状态:</i-col>
               <i-col span="18">{{ activitiesDetail.onOff | imageStatusFilter }}</i-col>
             </Row>
           </i-col>
@@ -156,7 +156,7 @@
           </Row>
           <Row>
             <Col span="18">
-            <FormItem label="活动开关:" prop="onOff">
+            <FormItem label="活动状态:" prop="onOff">
               <Select v-model="activitiesDetail.onOff" clearable>
                 <Option
                   v-for="(item,index) in imageStatusEnum"
@@ -225,24 +225,14 @@ export default {
   data() {
     return {
       ruleInline: {
-        storeId: [
-          { required: true, message: '请选择门店' }
+        activityCode: [
+          { required: true, message: '请输入活动编码' }
         ],
-        userId: [
-          { required: true, message: '请输入用户id' },
-          { message: '必须为非零整数', pattern: /^[-1-9]\d*$/ }
+        activityName: [
+          { required: true, message: '请输入活动名称' }
         ],
-        receiverName: [
-          { required: true, message: '请输入收货人' }
-        ],
-        receiverMobile: [
-          { required: true, message: '请输入联系方式' }
-        ],
-        nickName: [
-          { required: true, message: '请输入用户昵称' }
-        ],
-        avater: [
-          { required: true, message: '请上传用户头像' }
+        onOff: [
+          { required: true, message: '请选择活动状态' }
         ]
       },
       defaultListMain: [],
@@ -338,7 +328,6 @@ export default {
         this.getTableData();
       }).catch(() => {
         this.modalViewLoading = false;
-        this.modalEdit = false;
       });
     },
     editActivities() {
@@ -365,7 +354,7 @@ export default {
     handleDelete(params) {
       this.tableDataSelected = [];
       this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.storeId);
+      this.deleteTable(params.row.id);
     },
     deleteTable(ids) {
       this.loading = true;

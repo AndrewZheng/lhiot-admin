@@ -154,6 +154,22 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
+              <i-col span="6">使用范围:</i-col>
+              <i-col span="18">{{ couponTemplateDetail.couponScope | couponScopeFilter }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">使用规则:</i-col>
+              <i-col span="18">{{ couponTemplateDetail.couponRules }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
               <i-col span="6">创建人:</i-col>
               <i-col span="18">{{ couponTemplateDetail.createUser }}</i-col>
             </Row>
@@ -242,6 +258,28 @@
             </Col>
           </Row>
           <Row>
+            <Col span="18">
+            <FormItem label="使用范围:" prop="couponScope">
+              <Select v-model="couponTemplateDetail.couponScope" clearable>
+                <Option
+                  v-for="(item,index) in couponScopeEnum"
+                  :value="item.value"
+                  :key="index"
+                  class="ptb2-5"
+                  style="padding-left: 5px;width: 100%">{{ item.label }}
+                </Option>
+              </Select>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="18">
+            <FormItem label="使用规则:" prop="couponRules">
+              <Input v-model="couponTemplateDetail.couponRules" :autosize="{ minRows: 2,maxRows: 5}" placeholder="使用规则" type="textarea"></Input>
+            </FormItem>
+             </Col>
+          </Row>
+          <Row>
             <FormItem label="优惠券图片     (推荐尺寸为750X160(单位:px)):" prop="couponImage" >
               <Input v-show="false" v-model="couponTemplateDetail.couponImage" style="width: auto"></Input>
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
@@ -297,8 +335,8 @@ import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
-import { couponStatusConvert, couponTypeConvert } from '@/libs/converStatus';
-import { couponStatusEnum, couponTypeEnum } from '@/libs/enumerate';
+import { couponStatusConvert, couponTypeConvert, couponScopeConvert } from '@/libs/converStatus';
+import { couponStatusEnum, couponTypeEnum, couponScopeEnum } from '@/libs/enumerate';
 import { fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber } from '@/libs/util';
 
 const couponTemplateDetail = {
@@ -310,7 +348,9 @@ const couponTemplateDetail = {
   couponStatus: null,
   couponImage: '',
   createUser: '',
-  createTime: null
+  createTime: null,
+  couponRules: '',
+  couponScope: null
 };
 
 const roleRowData = {
@@ -330,24 +370,28 @@ export default {
   data() {
     return {
       ruleInline: {
-        storeId: [
-          { required: true, message: '请选择门店' }
+        couponName: [
+          { required: true, message: '请输入优惠券名称' }
         ],
-        userId: [
-          { required: true, message: '请输入用户id' },
-          { message: '必须为非零整数', pattern: /^[-1-9]\d*$/ }
+        couponType: [
+          { required: true, message: '请选择优惠券类型' }
         ],
-        receiverName: [
-          { required: true, message: '请输入收货人' }
+        couponFee: [
+          { required: true, message: '请输入优惠金额' },
+          { message: '必须为大于0的数字', pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/ }
         ],
-        receiverMobile: [
-          { required: true, message: '请输入联系方式' }
+        minBuyFee: [
+          { required: true, message: '请输入最小购买金额' },
+          { message: '必须为大于0的数字', pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/ }
         ],
-        nickName: [
-          { required: true, message: '请输入用户昵称' }
+        couponStatus: [
+          { required: true, message: '请选择优惠券状态' }
         ],
-        avater: [
-          { required: true, message: '请上传用户头像' }
+        couponRules: [
+          { required: true, message: '请输入优惠券使用规则' }
+        ],
+        couponScope: [
+          { required: true, message: '请选择优惠券使用范围' }
         ]
       },
       defaultListMain: [],
@@ -355,6 +399,7 @@ export default {
       areaList: [],
       couponStatusEnum,
       couponTypeEnum,
+      couponScopeEnum,
       columns: [
         {
           type: 'selection',
@@ -381,7 +426,7 @@ export default {
             } else if (row.couponType === 'CASH_COUPON') {
               return <div><tag color='cyan'>{couponTypeConvert(row.couponType).label}</tag></div>;
             }
-            return <div><tag color='error'>{row.couponType}</tag></div>;
+            return <div>{row.couponType}</div>;
           }
         },
         {
@@ -408,7 +453,7 @@ export default {
             } else if (row.couponStatus === 'INVALID') {
               return <div><tag color='error'>{couponStatusConvert(row.couponStatus).label}</tag></div>;
             }
-            return <div><tag color='primary'>{row.couponStatus}</tag></div>;
+            return <div>{row.couponStatus}</div>;
           }
         },
         {
@@ -419,6 +464,26 @@ export default {
             const str = <img src={row.couponImage} height='60' width='60' />;
             return <div>{str}</div>;
           }
+        },
+        {
+          title: '使用范围',
+          key: 'couponScope',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.couponScope === 'STORE') {
+              return <div><tag color='magenta'>{couponScopeConvert(row.couponScope).label}</tag></div>;
+            } else if (row.couponScope === 'STORE_AND_SMALL') {
+              return <div><tag color='orange'>{couponScopeConvert(row.couponScope).label}</tag></div>;
+            } else if (row.couponScope === 'SMALL') {
+              return <div><tag color='cyan'>{couponScopeConvert(row.couponScope).label}</tag></div>;
+            }
+            return <div>{row.couponScope}</div>;
+          }
+        },
+        {
+          title: '使用规则',
+          key: 'couponRules',
+          tooltips: true
         },
         {
           title: '创建人',
@@ -469,6 +534,11 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
+          // TODO ? 最小金额能否大于优惠金额,即用户不需要支付额外金额
+          // if (this.couponTemplateDetail.minBuyFee >= this.couponTemplateDetail.couponFee) {
+          //   this.$Message.error('最小购买金额必须大于优惠金额!');
+          //   return;
+          // }
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
             this.createCouponTemplate();
