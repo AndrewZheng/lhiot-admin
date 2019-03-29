@@ -26,6 +26,15 @@
             <div slot="searchCondition">
               <Row>
                 <Input v-model="searchRowData.sectionName" placeholder="板块名称" class="search-input mr5" style="width: auto" clearable></Input>
+                <Select v-model="searchRowData.applyType" placeholder="应用类型" style="padding-right: 5px;width: 100px" clearable>
+                  <Option
+                    v-for="(item,index) in appTypeEnum"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                    style="padding-left: 5px">{{ item.label }}
+                  </Option>
+                </Select>
                 <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
                   <Icon type="md-search"/>&nbsp;搜索
                 </Button>
@@ -92,7 +101,7 @@
           <FormItem label="板块顺序:" prop="rankNo">
             <Input v-model="currentCategory.rankNo"></Input>
           </FormItem>
-          <FormItem label="板块图片:建议尺寸;400x400(单位:px):" prop="sectionImg">
+          <FormItem label="板块图片:建议尺寸;45x45(单位:px):" prop="sectionImg">
             <Input v-show="false" v-model="currentCategory.sectionImg" style="width: auto"></Input>
             <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
               <template v-if="item.status === 'finished'">
@@ -139,7 +148,8 @@ import {
   deleteProductSection,
   getProductSectionPages,
   getProductSectionTree,
-  editProductSection
+  editProductSection,
+  deleteProductSectionValidation
 } from '@/api/mini-program';
 import { buildMenu, convertTree } from '@/libs/util';
 import CommonIcon from '_c/common-icon';
@@ -148,6 +158,7 @@ import searchMixin from '@/mixins/searchMixin.js';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 import IViewUpload from '_c/iview-upload';
+import { appTypeEnum } from '@/libs/enumerate';
 
 const currentCategory = {
   applyType: null,
@@ -161,7 +172,7 @@ const currentCategory = {
   productStandardList: null
 };
 const roleRowData = {
-  applyType: 'S_MALL',
+  applyType: null,
   sectionName: null,
   page: 1,
   rows: 10
@@ -176,6 +187,7 @@ export default {
   mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin],
   data() {
     return {
+      appTypeEnum,
       menuData: [],
       ruleInline: {
         sectionName: [{ required: true, message: '请输入板块名称' }],
@@ -298,7 +310,7 @@ export default {
             <span>
               <CommonIcon type='ios-paper' class='mr10'/>
             </span>
-            <span >
+            <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
             </span>
           </div>
@@ -306,6 +318,7 @@ export default {
       }
     },
     createTableRow() {
+      this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.currentCategory = this._.cloneDeep(currentCategory);
       }
@@ -325,7 +338,7 @@ export default {
       }
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.currentCategory.applyType = 'S_MALL';
+          // this.currentCategory.applyType = 'S_MALL';
           this.modalEditLoading = true;
           this.modalViewLoading = true;
           if (this.tempModalType === this.modalType.create) {
@@ -355,24 +368,38 @@ export default {
     },
     // 删除
     deleteTable(ids) {
-      this.loading = true;
-      deleteProductSection({
-        ids
-      }).then(res => {
-        const totalPage = Math.ceil(this.total / this.pageSize);
-        if (this.tableData.length === this.tableDataSelected.length && this.page === totalPage && this.page !== 1) {
-          this.page -= 1;
+      // this.loading = true;
+      // 先做删除验证
+      deleteProductSectionValidation({ ids }).then(res => {
+        debugger
+        if (res == false) {
+          this.$Message.info('该板块或其子板块关联了商品，删除失败！');
+        } else if (res == true) {
+          deleteProductSection({
+            ids
+          }).then(res => {
+            const totalPage = Math.ceil(this.total / this.pageSize);
+            if (this.tableData.length === this.tableDataSelected.length && this.page === totalPage && this.page !== 1) {
+              this.page -= 1;
+            }
+            this.tableDataSelected = [];
+            this.initMenuList();
+            this.searchRowData.page = this.page;
+            this.getTableData();
+          }
+          ).catch(() => {
+            this.loading = false;
+          });
         }
-        this.tableDataSelected = [];
-        this.initMenuList();
-      }
-      ).catch(() => {
+        this.loading = false;
+      }).catch(() => {
         this.loading = false;
       });
     },
     // 编辑分类
     handleEdit(params) {
       // this.$refs.modalEdit.resetFields();
+      this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.currentCategory = _.cloneDeep(params.row);
       this.setDefaultUploadList(params.row);
@@ -457,6 +484,12 @@ export default {
       this.uploadListMain = fileList;
       this.currentCategory.sectionImg = null;
       this.currentCategory.sectionImg = fileList[0].url;
+    },
+    resetFields() {
+      this.$refs.modalEdit.resetFields();
+      this.$refs.uploadMain.clearFileList();
+      this.uploadListMain = [];
+      this.currentCategory.sectionImg = null;
     }
   }
 };

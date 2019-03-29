@@ -316,7 +316,7 @@
           </Row>
           <Row align="middle" type="flex">
             <Col span="24">
-            <FormItem label="直播地址:" prop="videoUrl">
+            <FormItem label="直播地址:">
               <Input v-model="storeDetail.videoUrl" type="textarea" ></Input>
             </FormItem>
             </Col>
@@ -440,9 +440,6 @@ export default {
         ],
         storeAddress: [
           { required: true, message: '请填写门店地址' }
-        ],
-        videoUrl: [
-          { required: true, message: '请填写直播地址' }
         ]
       },
       defaultListMain: [],
@@ -454,13 +451,11 @@ export default {
           title: '门店编码',
           key: 'storeCode',
           sortable: true,
-          fixed: 'left',
           minWidth: 150
         },
         {
           title: '门店名称',
           key: 'storeName',
-          fixed: 'left',
           minWidth: 150
         },
         {
@@ -522,7 +517,7 @@ export default {
             } else if (row.storeType === 'ORDINARY_STORE') {
               return <div><tag color='primary'>{storeTypeConvert(row.storeType).label}</tag></div>;
             }
-            return <div><tag>{row.storeType}</tag></div>;
+            return <div>{row.storeType}</div>;
           }
         },
         {

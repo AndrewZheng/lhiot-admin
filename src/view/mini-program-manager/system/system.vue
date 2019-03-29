@@ -15,23 +15,22 @@
         @on-delete="handleDelete"
         @on-view="handleView"
         @on-edit="handleEdit"
-        @on-sale="onOff"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
           <Row>
             <Input
-              v-model="searchRowData.activityCode"
-              placeholder="活动编码"
+              v-model="searchRowData.indexName"
+              placeholder="键"
               class="search-input mr5"
               style="width: auto"
               clearable
             >
             </Input>
             <Input
-              v-model="searchRowData.activityName"
-              placeholder="活动名称"
+              v-model="searchRowData.description"
+              placeholder="描述"
               class="search-input mr5"
               style="width: auto"
               clearable
@@ -46,7 +45,7 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addActivities">
+          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
             <Icon type="md-add"/>
             创建
           </Button>
@@ -82,46 +81,46 @@
       :mask-closable="false"
     >
       <p slot="header">
-        <span>活动信息详情</span>
+        <span>系统参数详情</span>
       </p>
       <div class="modal-content">
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动ID:</i-col>
-              <i-col span="18">{{ activitiesDetail.id }}</i-col>
+              <i-col span="4">主键ID:</i-col>
+              <i-col span="20">{{ systemDetail.id }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动编码:</i-col>
-              <i-col span="18">{{ activitiesDetail.activityCode }}</i-col>
+              <i-col span="4">键:</i-col>
+              <i-col span="20">{{ systemDetail.indexName }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动名称:</i-col>
-              <i-col span="18">{{ activitiesDetail.activityName }}</i-col>
+              <i-col span="4">值:</i-col>
+              <i-col span="20">{{ systemDetail.indexValue }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动状态:</i-col>
-              <i-col span="18">{{ activitiesDetail.onOff | imageStatusFilter }}</i-col>
+              <i-col span="4">描述:</i-col>
+              <i-col span="20">{{ systemDetail.description }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动链接:</i-col>
-              <i-col span="18">{{ activitiesDetail.activityUrl }}</i-col>
+              <i-col span="4">分类ID:</i-col>
+              <i-col span="20">{{ systemDetail.categoryId }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -136,46 +135,39 @@
       style="z-index: 1000"
     >
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改活动':'创建活动' }}</i-col>
+        <i-col>{{ tempModalType===modalType.edit?'修改系统参数':'创建系统参数' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="activitiesDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="modalEdit" :model="systemDetail" :rules="ruleInline" :label-width="80">
           <Row>
-            <Col span="18">
-            <FormItem label="活动编码:" prop="activityCode">
-              <Input v-model="activitiesDetail.activityCode" ></Input>
+            <Col span="12">
+            <FormItem label="键:" prop="indexName">
+              <Input v-model="systemDetail.indexName" placeholder="键"></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
-            <Col span="18">
-            <FormItem label="活动名称:" prop="activityName">
-              <Input v-model="activitiesDetail.activityName" ></Input>
+            <Col span="12">
+            <FormItem label="值:" prop="indexValue">
+              <Input v-model="systemDetail.indexValue" placeholder="值"></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
-            <Col span="18">
-            <FormItem label="活动状态:" prop="onOff">
-              <Select v-model="activitiesDetail.onOff" clearable>
-                <Option
-                  v-for="(item,index) in imageStatusEnum"
-                  :value="item.value"
-                  :key="index"
-                  class="ptb2-5"
-                  style="padding-left: 5px;width: 100%">{{ item.label }}
-                </Option>
-              </Select>
+            <Col span="12">
+            <FormItem label="描述:" prop="description">
+              <Input v-model="systemDetail.description" placeholder="描述"></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
-            <Col span="18">
-            <FormItem label="活动详情链接:" prop="activityUrl">
-              <Input v-model="activitiesDetail.activityUrl" ></Input>
+            <Col span="12">
+            <FormItem label="分类id:" prop="categoryId">
+              <InputNumber :min="0" v-model="systemDetail.categoryId" placeholder="分类id"></InputNumber>
             </FormItem>
             </Col>
           </Row>
+
         </Form>
       </div>
       <div slot="footer">
@@ -191,28 +183,29 @@
 import Tables from '_c/tables';
 import _ from 'lodash';
 import {
-  deleteActivities,
-  getActivitiesPages,
-  editActivities,
-  createActivities
+  deleteSystemSetting,
+  getSystemSettingPages,
+  editSystemSetting,
+  createSystemSetting
 } from '@/api/mini-program';
+import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
-import { imageStatusConvert } from '@/libs/converStatus';
-import { imageStatusEnum } from '@/libs/enumerate'
 
-const activitiesDetail = {
+const systemDetail = {
   id: 0,
-  activityCode: '',
-  activityName: '',
-  onOff: '',
-  activityUrl: ''
+  indexName: '',
+  indexValue: '',
+  description: '',
+  categoryId: 0
 };
 
 const roleRowData = {
-  activityCode: null,
-  activityName: null,
+  indexName: null,
+  indexValue: null,
+  categoryId: null,
+  description: null,
   page: 1,
   rows: 10
 };
@@ -221,70 +214,64 @@ export default {
   components: {
     Tables
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
     return {
       ruleInline: {
-        activityCode: [
-          { required: true, message: '请输入活动编码' }
+        indexName: [
+          { required: true, message: '请选择键' }
         ],
-        activityName: [
-          { required: true, message: '请输入活动名称' }
+        indexValue: [
+          { required: true, message: '请选择值' }
         ],
-        onOff: [
-          { required: true, message: '请选择活动状态' }
+        // 后期分类做完 取消注释
+        // categoryId: [
+        //   { required: true, message: '请输入分类ID' },
+        //   { message: '必须为非零整数', pattern: /^[1-9]\d*$/ }
+        // ],
+        description: [
+          { required: true, message: '请输入描述' }
         ]
       },
-      defaultListMain: [],
-      uploadListMain: [],
-      areaList: [],
-      imageStatusEnum,
       columns: [
         {
           type: 'selection',
           width: 60,
-          align: 'center'
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: '活动ID',
-          key: 'id'
+          title: 'ID',
+          key: 'id',
+          width: 80
         },
         {
-          title: '活动编码',
-          key: 'activityCode'
+          title: '键',
+          key: 'indexName'
         },
         {
-          title: '活动名称',
-          key: 'activityName'
+          title: '值',
+          key: 'indexValue'
         },
         {
-          title: '活动状态',
-          key: 'onOff',
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.onOff === 'ON') {
-              return <div><tag color='success'>{imageStatusConvert(row.onOff).label}</tag></div>;
-            } else if (row.onOff === 'OFF') {
-              return <div><tag color='error'>{imageStatusConvert(row.onOff).label}</tag></div>;
-            }
-            return <div><tag color='primary'>{row.onOff}</tag></div>;
-          }
+          title: '描述',
+          key: 'description'
         },
         {
-          title: '活动详情链接',
-          key: 'activityUrl'
+          title: '分类id',
+          key: 'categoryId'
         },
         {
           title: '操作',
           minWidth: 80,
           key: 'handle',
-          options: ['onSale', 'view', 'edit', 'delete']
+          options: ['view', 'edit', 'delete']
         }
       ],
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
-      activitiesDetail: _.cloneDeep(activitiesDetail)
+      systemDetail: _.cloneDeep(systemDetail)
     };
   },
   mounted() {
@@ -300,39 +287,37 @@ export default {
     },
     resetFields() {
       this.$refs.modalEdit.resetFields();
-      // this.$refs.uploadMain.clearFileList();
-      this.uploadListMain = [];
-      this.activitiesDetail.storeImage = null;
     },
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
-            this.createActivities();
+            this.createStore();
           } else if (this.tempModalType === this.modalType.edit) {
             // 编辑状态
-            this.editActivities();
+            this.editStore();
           }
         } else {
           this.$Message.error('请完善商品的信息!');
         }
       });
     },
-    createActivities() {
+    createStore() {
       this.modalViewLoading = true;
-      createActivities(this.activitiesDetail).then(res => {
+      createSystemSetting(this.systemDetail).then(res => {
         this.modalViewLoading = false;
         this.modalEdit = false;
         this.$Message.success('创建成功!');
         this.getTableData();
       }).catch(() => {
         this.modalViewLoading = false;
+        this.modalEdit = false;
       });
     },
-    editActivities() {
+    editStore() {
       this.modalViewLoading = true;
-      editActivities(this.activitiesDetail).then(res => {
+      editSystemSetting(this.systemDetail).then(res => {
         this.modalEdit = false;
         this.modalViewLoading = false;
         this.getTableData();
@@ -341,13 +326,12 @@ export default {
         this.modalViewLoading = false;
       });
     },
-    addActivities() {
+    addStore() {
       this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.tempModalType = this.modalType.create;
-        this.activitiesDetail = _.cloneDeep(activitiesDetail)
+        this.systemDetail = _.cloneDeep(systemDetail)
       }
-
       this.modalEdit = true;
     },
     // 删除
@@ -358,7 +342,7 @@ export default {
     },
     deleteTable(ids) {
       this.loading = true;
-      deleteActivities({
+      deleteSystemSetting({
         ids
       }).then(res => {
         const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
@@ -376,17 +360,17 @@ export default {
     handleView(params) {
       this.resetFields();
       this.tempModalType = this.modalType.view;
-      this.activitiesDetail = _.cloneDeep(params.row);
+      this.systemDetail = _.cloneDeep(params.row);
       this.modalView = true;
     },
     handleEdit(params) {
       this.resetFields();
       this.tempModalType = this.modalType.edit;
-      this.activitiesDetail = _.cloneDeep(params.row);
+      this.systemDetail = _.cloneDeep(params.row);
       this.modalEdit = true;
     },
     getTableData() {
-      getActivitiesPages(this.searchRowData).then(res => {
+      getSystemSettingPages(this.searchRowData).then(res => {
         this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;
@@ -398,16 +382,6 @@ export default {
         this.searchLoading = false;
         this.clearSearchLoading = false;
       });
-    },
-    onOff(params) {
-      this.activitiesDetail = this._.cloneDeep(params.row);
-      if (params.row.onOff === 'ON') {
-        this.activitiesDetail.onOff = 'OFF';
-      } else {
-        this.activitiesDetail.onOff = 'ON';
-      }
-      this.loading = true;
-      this.editActivities();
     }
   }
 };

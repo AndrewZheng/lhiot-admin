@@ -379,7 +379,7 @@
                 type="datetime"
                 placeholder="有效期起"
                 class="search-input"
-                style="width: 150px"
+                style="width: 200px"
                 @on-change="startTimeChange"
               />
             </FormItem>
@@ -392,7 +392,7 @@
                 type="datetime"
                 placeholder="有效期止"
                 class="search-input"
-                style="width: 150px"
+                style="width: 200px"
                 @on-change="endTimeChange"
               />
             </FormItem>
@@ -407,15 +407,17 @@
                 type="datetime"
                 placeholder="提货截止时间"
                 class="search-input"
-                style="width: 150px"
+                style="width: 200px"
                 @on-change="deliveryEndTimeChange"
               />
             </FormItem>
             </Col>
             <Col span="12">
             <FormItem label="成团有效时长:" prop="validSeconds">
-              <TimePicker type="time" placeholder="成团有效时长" style="width: 168px"></TimePicker>
+              <!-- TODO 后期插件修改 -->
+              <!-- <TimePicker type="time" placeholder="成团有效时长" style="width: 200px" @on-change=""></TimePicker> -->
               <!-- value="validSecondsComputed" -->
+              <Input v-model="teambuyDetail.validSeconds" ></Input>
             </FormItem>
             </Col>
           </Row>
@@ -497,8 +499,8 @@
               <InputNumber
                 :min="0"
                 :value="tourDiscountComputed"
-                placeholder="原价"
-                @on-change="originalPriceInputNumberOnchange"></InputNumber>
+                placeholder="团长优惠"
+                @on-change="tourDiscountInputNumberOnchange"></InputNumber>
             </FormItem>
             </Col>
             <Col span="12">
@@ -621,7 +623,7 @@ const teambuyDetail = {
   fullUserNum: 0,
   standardId: 0,
   validSeconds: null,
-  deliveryEndTime: '',
+  deliveryEndTime: null,
   standardDesc: '',
   fullTeambuyCount: 0,
   robot: null,
@@ -757,7 +759,8 @@ export default {
           key: 'activityName',
           sortable: true,
           fixed: 'left',
-          minWidth: 150
+          minWidth: 150,
+          tooltip: true
         },
         {
           title: '活动状态',

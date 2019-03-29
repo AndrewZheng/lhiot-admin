@@ -15,38 +15,11 @@
         @on-delete="handleDelete"
         @on-view="handleView"
         @on-edit="handleEdit"
-        @on-sale="onOff"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
-        <div slot="searchCondition">
-          <Row>
-            <Input
-              v-model="searchRowData.activityCode"
-              placeholder="活动编码"
-              class="search-input mr5"
-              style="width: auto"
-              clearable
-            >
-            </Input>
-            <Input
-              v-model="searchRowData.activityName"
-              placeholder="活动名称"
-              class="search-input mr5"
-              style="width: auto"
-              clearable
-            >
-            </Input>
-            <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
-              <Icon type="md-search"/>&nbsp;搜索
-            </Button>
-            <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-              <Icon type="md-refresh"/>&nbsp;清除条件
-            </Button>
-          </Row>
-        </div>
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addActivities">
+          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
             <Icon type="md-add"/>
             创建
           </Button>
@@ -82,46 +55,30 @@
       :mask-closable="false"
     >
       <p slot="header">
-        <span>活动信息详情</span>
+        <span>系统参数分类详情</span>
       </p>
       <div class="modal-content">
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动ID:</i-col>
-              <i-col span="18">{{ activitiesDetail.id }}</i-col>
+              <i-col span="4">主键ID:</i-col>
+              <i-col span="20">{{ systemCategoryDetail.id }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动编码:</i-col>
-              <i-col span="18">{{ activitiesDetail.activityCode }}</i-col>
+              <i-col span="4">父级分类ID:</i-col>
+              <i-col span="20">{{ systemCategoryDetail.parentId }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动名称:</i-col>
-              <i-col span="18">{{ activitiesDetail.activityName }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">活动状态:</i-col>
-              <i-col span="18">{{ activitiesDetail.onOff | imageStatusFilter }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">活动链接:</i-col>
-              <i-col span="18">{{ activitiesDetail.activityUrl }}</i-col>
+              <i-col span="4">分类名称:</i-col>
+              <i-col span="20">{{ systemCategoryDetail.categoriesName }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -136,43 +93,21 @@
       style="z-index: 1000"
     >
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改活动':'创建活动' }}</i-col>
+        <i-col>{{ tempModalType===modalType.edit?'修改系统参数分类':'创建系统参数分类' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="activitiesDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="modalEdit" :model="systemCategoryDetail" :rules="ruleInline" :label-width="80">
           <Row>
-            <Col span="18">
-            <FormItem label="活动编码:" prop="activityCode">
-              <Input v-model="activitiesDetail.activityCode" ></Input>
+            <Col span="12">
+            <FormItem label="父级分类id:" prop="parentId">
+              <InputNumber :min="0" v-model="systemCategoryDetail.parentId" placeholder="父级分类id"></InputNumber>
             </FormItem>
             </Col>
           </Row>
           <Row>
-            <Col span="18">
-            <FormItem label="活动名称:" prop="activityName">
-              <Input v-model="activitiesDetail.activityName" ></Input>
-            </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="18">
-            <FormItem label="活动状态:" prop="onOff">
-              <Select v-model="activitiesDetail.onOff" clearable>
-                <Option
-                  v-for="(item,index) in imageStatusEnum"
-                  :value="item.value"
-                  :key="index"
-                  class="ptb2-5"
-                  style="padding-left: 5px;width: 100%">{{ item.label }}
-                </Option>
-              </Select>
-            </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="18">
-            <FormItem label="活动详情链接:" prop="activityUrl">
-              <Input v-model="activitiesDetail.activityUrl" ></Input>
+            <Col span="12">
+            <FormItem label="分类名称:" prop="categoriesName">
+              <Input v-model="systemCategoryDetail.categoriesName" placeholder="分类名称"></Input>
             </FormItem>
             </Col>
           </Row>
@@ -191,28 +126,23 @@
 import Tables from '_c/tables';
 import _ from 'lodash';
 import {
-  deleteActivities,
-  getActivitiesPages,
-  editActivities,
-  createActivities
+  deleteSystemSettingCategory,
+  getSystemSettingCategoryPages,
+  editSystemSettingCategory,
+  createSystemSettingCategory
 } from '@/api/mini-program';
+import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
-import { imageStatusConvert } from '@/libs/converStatus';
-import { imageStatusEnum } from '@/libs/enumerate'
 
-const activitiesDetail = {
+const systemCategoryDetail = {
   id: 0,
-  activityCode: '',
-  activityName: '',
-  onOff: '',
-  activityUrl: ''
+  parentId: 0,
+  categoriesName: ''
 };
 
 const roleRowData = {
-  activityCode: null,
-  activityName: null,
   page: 1,
   rows: 10
 };
@@ -221,70 +151,46 @@ export default {
   components: {
     Tables
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
     return {
       ruleInline: {
-        activityCode: [
-          { required: true, message: '请输入活动编码' }
+        parentId: [
+          { required: true, message: '输入父级分类id' }
         ],
-        activityName: [
-          { required: true, message: '请输入活动名称' }
-        ],
-        onOff: [
-          { required: true, message: '请选择活动状态' }
+        categoriesName: [
+          { required: true, message: '请输入分类名称' }
         ]
       },
-      defaultListMain: [],
-      uploadListMain: [],
-      areaList: [],
-      imageStatusEnum,
       columns: [
         {
           type: 'selection',
           width: 60,
-          align: 'center'
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: '活动ID',
+          title: 'ID',
           key: 'id'
         },
         {
-          title: '活动编码',
-          key: 'activityCode'
+          title: '父级分类id',
+          key: 'parentId'
         },
         {
-          title: '活动名称',
-          key: 'activityName'
-        },
-        {
-          title: '活动状态',
-          key: 'onOff',
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.onOff === 'ON') {
-              return <div><tag color='success'>{imageStatusConvert(row.onOff).label}</tag></div>;
-            } else if (row.onOff === 'OFF') {
-              return <div><tag color='error'>{imageStatusConvert(row.onOff).label}</tag></div>;
-            }
-            return <div><tag color='primary'>{row.onOff}</tag></div>;
-          }
-        },
-        {
-          title: '活动详情链接',
-          key: 'activityUrl'
+          title: '分类名称',
+          key: 'categoriesName'
         },
         {
           title: '操作',
-          minWidth: 80,
           key: 'handle',
-          options: ['onSale', 'view', 'edit', 'delete']
+          options: ['view', 'edit', 'delete']
         }
       ],
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
-      activitiesDetail: _.cloneDeep(activitiesDetail)
+      systemCategoryDetail: _.cloneDeep(systemCategoryDetail)
     };
   },
   mounted() {
@@ -300,39 +206,37 @@ export default {
     },
     resetFields() {
       this.$refs.modalEdit.resetFields();
-      // this.$refs.uploadMain.clearFileList();
-      this.uploadListMain = [];
-      this.activitiesDetail.storeImage = null;
     },
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
-            this.createActivities();
+            this.createStore();
           } else if (this.tempModalType === this.modalType.edit) {
             // 编辑状态
-            this.editActivities();
+            this.editStore();
           }
         } else {
           this.$Message.error('请完善商品的信息!');
         }
       });
     },
-    createActivities() {
+    createStore() {
       this.modalViewLoading = true;
-      createActivities(this.activitiesDetail).then(res => {
+      createSystemSettingCategory(this.systemCategoryDetail).then(res => {
         this.modalViewLoading = false;
         this.modalEdit = false;
         this.$Message.success('创建成功!');
         this.getTableData();
       }).catch(() => {
         this.modalViewLoading = false;
+        this.modalEdit = false;
       });
     },
-    editActivities() {
+    editStore() {
       this.modalViewLoading = true;
-      editActivities(this.activitiesDetail).then(res => {
+      editSystemSettingCategory(this.systemCategoryDetail).then(res => {
         this.modalEdit = false;
         this.modalViewLoading = false;
         this.getTableData();
@@ -341,13 +245,12 @@ export default {
         this.modalViewLoading = false;
       });
     },
-    addActivities() {
+    addStore() {
       this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.tempModalType = this.modalType.create;
-        this.activitiesDetail = _.cloneDeep(activitiesDetail)
+        this.systemCategoryDetail = _.cloneDeep(systemCategoryDetail)
       }
-
       this.modalEdit = true;
     },
     // 删除
@@ -358,7 +261,7 @@ export default {
     },
     deleteTable(ids) {
       this.loading = true;
-      deleteActivities({
+      deleteSystemSettingCategory({
         ids
       }).then(res => {
         const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
@@ -376,17 +279,17 @@ export default {
     handleView(params) {
       this.resetFields();
       this.tempModalType = this.modalType.view;
-      this.activitiesDetail = _.cloneDeep(params.row);
+      this.systemCategoryDetail = _.cloneDeep(params.row);
       this.modalView = true;
     },
     handleEdit(params) {
       this.resetFields();
       this.tempModalType = this.modalType.edit;
-      this.activitiesDetail = _.cloneDeep(params.row);
+      this.systemCategoryDetail = _.cloneDeep(params.row);
       this.modalEdit = true;
     },
     getTableData() {
-      getActivitiesPages(this.searchRowData).then(res => {
+      getSystemSettingCategoryPages(this.searchRowData).then(res => {
         this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;
@@ -398,16 +301,6 @@ export default {
         this.searchLoading = false;
         this.clearSearchLoading = false;
       });
-    },
-    onOff(params) {
-      this.activitiesDetail = this._.cloneDeep(params.row);
-      if (params.row.onOff === 'ON') {
-        this.activitiesDetail.onOff = 'OFF';
-      } else {
-        this.activitiesDetail.onOff = 'ON';
-      }
-      this.loading = true;
-      this.editActivities();
     }
   }
 };

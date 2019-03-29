@@ -242,7 +242,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">优惠价格:</i-col>
+              <i-col span="8">出售价格:</i-col>
               <i-col span="16">{{ productStandardDetail.salePrice|fenToYuanDot2Filters }}</i-col>
             </Row>
           </i-col>
@@ -435,11 +435,11 @@
             </FormItem>
             </Col>
             <Col span="12">
-            <FormItem label="优惠价格:">
+            <FormItem label="出售价格:">
               <InputNumber
                 :min="0"
                 :value="salePriceComputed"
-                placeholder="优惠价格"
+                placeholder="出售价格"
                 @on-change="salePriceInputNumberOnchange"></InputNumber>
             </FormItem>
             </Col>
@@ -610,7 +610,10 @@ export default {
         productDescription: [{ required: true, message: '请输入上架商品描述' }],
         shelvesStatus: [{ required: true, message: '请选择商品状态' }],
         specification: [{ required: true, message: '请输入商品规格' }],
-        price: [{ required: true, message: '请输入商品价格' }],
+        price: [
+          { required: true, message: '请输入商品价格' },
+          { message: '必须为大于0的数字', pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/ }
+        ],
         barcode: [
           { required: true, message: '请输入商品条码' },
           {
@@ -708,7 +711,7 @@ export default {
           }
         },
         {
-          title: '优惠价格',
+          title: '出售价格',
           minWidth: 130,
           key: 'salePrice',
           render(h, params, vm) {
@@ -893,8 +896,8 @@ export default {
       });
     },
     handleSubmit(name) {
-      if ((this.productStandardDetail.salePrice > 0) && (this.productStandardDetail.salePrice > this.productStandardDetail.price)) {
-        this.$Message.error('优惠价不能大于商品价格');
+      if ((this.productStandardDetail.salePrice != null) && (this.productStandardDetail.salePrice <= 0)) {
+        this.$Message.error('出售价不能小于0');
         return;
       }
       this.$refs[name].validate((valid) => {
