@@ -310,7 +310,7 @@ export const editProductSectionRelation = (data) => {
 };
 
 // 根据条件分页查询优惠券活动和优惠券模板关联信息列表
-export const getCouponActivityRelationPages = (data) => {
+export const getCouponTemplateRelationPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/coupon-template-relations/pages',
     data,
@@ -320,7 +320,7 @@ export const getCouponActivityRelationPages = (data) => {
 };
 
 // 创建优惠券活动和优惠券模板之间的关联
-export const createCouponActivityRelation = (data) => {
+export const createCouponTemplateRelation = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/coupon-template-relations/',
     data,
@@ -329,7 +329,7 @@ export const createCouponActivityRelation = (data) => {
 };
 
 // 根据商品板块Ids删除优惠券活动和优惠券模板的关联
-export const deleteCouponActivityRelation = ({ ids }) => {
+export const deleteCouponTemplateRelation = ({ ids }) => {
   return Vue.prototype.$http.request({
     url: '/minapp/coupon-template-relations/' + ids,
     method: 'delete'
@@ -337,7 +337,7 @@ export const deleteCouponActivityRelation = ({ ids }) => {
 };
 
 // 修改优惠券活动和优惠券模板的关联
-export const editCouponActivityRelation = (data) => {
+export const editCouponTemplateRelation = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/coupon-template-relations/' + data.id,
     data,
