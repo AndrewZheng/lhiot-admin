@@ -6,6 +6,8 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
+        :search-area-column="18"
+        :operate-area-column="6"
         editable
         searchable
         border
@@ -82,7 +84,10 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves class="search-btn ml5 mr5" type="primary" @click="handleCreateView">
+          <Button v-waves v-show="showBack" class="search-btn ml5 mr5" type="primary" @click="goBack">
+            <Icon type="ios-arrow-back" />&nbsp;返回
+          </Button>
+          <Button v-waves class="search-btn ml5 mr5" type="success" @click="handleCreateView">
             <Icon type="md-add"/>&nbsp;创建
           </Button>
           <Poptip
@@ -251,7 +256,7 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品单位:</i-col>
-              <i-col span="16">{{ unitsList.find(item => productStandardDetail.unitId === item.value).label }}</i-col>
+              <i-col span="16">{{ unitsList != null ? unitsList.find(item => productStandardDetail.unitId === item.value).label : null }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -290,7 +295,7 @@
         <Form ref="modalEdit" :model="productStandardDetail" :rules="ruleInline" :label-width="100">
           <Row>
             <Col span="12">
-            <FormItem label="商品ID:">
+            <FormItem label="商品ID:" prop="productId">
               {{ productStandardDetail.productId }}
             </FormItem>
             </Col>
@@ -355,7 +360,7 @@
             <Col span="12">
             <FormItem label="上架商品主图:建议尺寸;400x400(单位:px):" prop="image" >
               <Input v-show="false" v-model="productStandardDetail.image" style="width: auto"></Input>
-              <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+              <div v-for="item in uploadListMain" :key="item.url" :v-show="productStandardDetail.image" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>
                     <img :src="item.url">
@@ -548,7 +553,7 @@ const productStandardDetail = {
   applyType: '',
   productName: '',
   createUser: null,
-  image: '',
+  image: null,
   productDescription: '',
   productCode: '',
   baseProductName: '',
@@ -602,6 +607,7 @@ export default {
       uploadListMain: [],
       uploadListMultiple: [],
       ruleInline: {
+        productId: [{ required: true, message: '请选择关联商品' }],
         productName: [{ required: true, message: '请选择上架商品名称' }],
         description: [{ required: true, message: '请上传规格描述图' }],
         image: [{ required: true, message: '请上传上架商品主图' }],
@@ -761,6 +767,7 @@ export default {
       productStandardDetail: _.cloneDeep(productStandardDetail),
       // 选中的行
       tableDataSelected: [],
+      showBack: false,
       shelvesStatus: [
         {
           label: '上架',
@@ -782,6 +789,8 @@ export default {
   },
   created() {
     this.unitsList = this.$route.params.unitsList;
+    this.showBack = this.$route.name === 'small-goods-relation-standard';
+    console.log('showBack:' + this.showBack);
     // productSpecificationsUnits().then(res => {
     //   res.forEach(value => {
     //     const map = { label: 'label', value: 'value' };
@@ -866,10 +875,10 @@ export default {
       this.modalEdit = true;
     },
     handleCreateView() {
+      this.$refs.modalEdit.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.productStandardDetail = this._.cloneDeep(productStandardDetail);
       }
-      this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.create;
       this.productStandardDetail.description = null;
       this.productStandardDetail.standardQty = 0;
@@ -939,19 +948,23 @@ export default {
       this.getTableData();
     },
     getTableData() {
-      // 获取商品页面穿过来的商品信息
-      const goodsStandard = getSmallGoodsStandard();
-      // 给商品规格的商品和搜索条件赋值
-      this.searchRowData.productId = goodsStandard.id;
-      this.productStandardDetail = this._.cloneDeep(goodsStandard);
-      this.productStandardDetail.productId = goodsStandard.id;
-      this.productStandardDetail.baseUnit = goodsStandard.unitName;
-      this.productStandardDetail.baseProductName = goodsStandard.productName;
-      this.productStandardDetail.baseImage = goodsStandard.image;
-      this.productStandardDetail.image = goodsStandard.image;
-      this.productStandardDetail.baseProductDescription = goodsStandard.description;
-      this.productStandardDetail.productDescription = goodsStandard.description;
-      this.unitsList = goodsStandard.unitsList;
+      // 获取商品页面传过来的商品信息
+      if (this.$route.name === 'small-goods-relation-standard') {
+        const goodsStandard = getSmallGoodsStandard();
+        if (goodsStandard != null && goodsStandard !== '') {
+        // 给商品规格的商品和搜索条件赋值
+          this.searchRowData.productId = goodsStandard.id;
+          this.productStandardDetail = this._.cloneDeep(goodsStandard);
+          this.productStandardDetail.productId = goodsStandard.id;
+          this.productStandardDetail.baseUnit = goodsStandard.unitName;
+          this.productStandardDetail.baseProductName = goodsStandard.productName;
+          this.productStandardDetail.baseImage = goodsStandard.image;
+          this.productStandardDetail.image = goodsStandard.image;
+          this.productStandardDetail.baseProductDescription = goodsStandard.description;
+          this.productStandardDetail.productDescription = goodsStandard.description;
+          this.unitsList = goodsStandard.unitsList;
+        }
+      }
       getProductStandardsPages(this.searchRowData).then(res => {
         this.tableData = res.rows;
         this.total = res.total;
@@ -1046,6 +1059,9 @@ export default {
         this.getTableData();
         this.modalEdit = false;
       });
+    },
+    goBack() {
+      this.turnToPage('small-goods-info');
     }
   }
 }

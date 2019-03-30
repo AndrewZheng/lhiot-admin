@@ -166,40 +166,29 @@ export const constantRouterMap = [
     ]
   },
   {
-    path: '/small-manager-goods-detail',
-    name: 'small-manager-goods-detail',
+    path: '/small-manager-detail',
+    name: 'small-manager-detail',
     meta: {
       icon: 'md-menu',
-      title: '商品规格管理'
+      title: '小程序跳转页面集合'
     },
     component: Main,
     children: [
       {
-        path: 'small-goods-detail',
-        name: 'small-goods-detail',
+        path: 'small-goods-relation-standard',
+        name: 'small-goods-relation-standard',
         meta: {
           icon: 'md-menu',
-          title: '详情组合图片'
+          title: '商品关联规格'
         },
-        component: () => import('@/view/mini-program-manager/goods/goods-detail.vue')
-      }
-    ]
-  },
-  {
-    path: '/small-manager-goods-standard',
-    name: 'small-manager-goods-standard',
-    meta: {
-      icon: 'md-menu',
-      title: '商品规格管理'
-    },
-    component: Main,
-    children: [
+        component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
+      },
       {
-        path: 'small-goods-standard',
-        name: 'small-goods-standard',
+        path: 'small-activity-relation-coupon',
+        name: 'small-activity-relation-coupon',
         meta: {
           icon: 'md-menu',
-          title: '商品规格管理'
+          title: '活动关联优惠券模板'
         },
         component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
       }
@@ -760,7 +749,7 @@ export const asyncRouterMap = [
           title: '基础商品管理'
         },
         component: () => import('@/view/mini-program-manager/goods/goods-message.vue')
-      },      
+      },
       {
         path: '/small-goods-standard',
         name: 'small-goods-standard',

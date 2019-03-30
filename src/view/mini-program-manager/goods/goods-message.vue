@@ -19,7 +19,7 @@
             search-place="top"
             @on-view="handleView"
             @on-edit="handleEdit"
-            @on-push="handlePush"
+            @on-relevance="handleSetting"
             @on-select-all="onSelectionAll"
             @on-selection-change="onSelectionChange"
           >
@@ -601,7 +601,7 @@ export default {
           title: '操作',
           minWidth: 150,
           key: 'handle',
-          options: ['view', 'edit', 'push']
+          options: ['view', 'edit', 'settings']
         }
       ],
       createLoading: false,
@@ -735,9 +735,9 @@ export default {
       }
       this.defaultGoodsCategoryData = selectedData;
     },
-    goDetail() {
-      this.turnToPage('small-goods-detail');
-    },
+    // goDetail() {
+    //   this.turnToPage('small-goods-detail');
+    // },
     addProduct() {
       // this.resetRowData();
       if (this.tempModalType !== this.modalType.create) {
@@ -841,14 +841,14 @@ export default {
         this.findGroupId(obj.parentid);
       }
     },
-    handlePush(params) {
-      console.log('setGoodsStandard:' + JSON.stringify(params.row));
-      debugger
+    handleSetting(params) {
+      // console.log('setGoodsStandard:' + JSON.stringify(params.row));
       var rows = params.row;
       rows.unitsList = this.unitsList;
       setSmallGoodsStandard(rows);
       this.turnToPage({
-        name: 'small-goods-standard',
+        name: 'small-goods-relation-standard',
+        // name: 'small-goods-raltion-standard',
         params: { productId: params.row.id, unitsList: this.unitsList }
         // params: { id: params.row.id, unitsList: this.unitsList, productName: params.row.productName }
       });

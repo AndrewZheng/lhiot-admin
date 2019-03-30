@@ -200,7 +200,7 @@ const btns = {
     const {
       row
     } = params;
-    if (row.status === 'VALID' || row.shelvesStatus === 'VALID') {
+    if (row.status === 'VALID' || row.shelvesStatus === 'VALID' || row.ifEffective === 'VALID') {
       return h('Poptip', {
         props: {
           confirm: true,

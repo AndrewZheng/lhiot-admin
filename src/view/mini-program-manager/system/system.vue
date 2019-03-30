@@ -140,28 +140,28 @@
       <div class="modal-content">
         <Form ref="modalEdit" :model="systemDetail" :rules="ruleInline" :label-width="80">
           <Row>
-            <Col span="12">
+            <Col span="20">
             <FormItem label="键:" prop="indexName">
               <Input v-model="systemDetail.indexName" placeholder="键"></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
-            <Col span="12">
+            <Col span="20">
             <FormItem label="值:" prop="indexValue">
-              <Input v-model="systemDetail.indexValue" placeholder="值"></Input>
+              <Input v-model="systemDetail.indexValue" :rows="6" type="textarea" placeholder="值"></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
-            <Col span="12">
+            <Col span="20">
             <FormItem label="描述:" prop="description">
               <Input v-model="systemDetail.description" placeholder="描述"></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
-            <Col span="12">
+            <Col span="20">
             <FormItem label="分类id:" prop="categoryId">
               <InputNumber :min="0" v-model="systemDetail.categoryId" placeholder="分类id"></InputNumber>
             </FormItem>
@@ -251,7 +251,8 @@ export default {
         },
         {
           title: '值',
-          key: 'indexValue'
+          key: 'indexValue',
+          type: 'html'
         },
         {
           title: '描述',
@@ -291,6 +292,8 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
+          console.log(this.indexValue);
+          this.systemDetail.indexValue = this.systemDetail.indexValue.replace(/\n|\r/g, '&');
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
             this.createStore();
@@ -371,6 +374,13 @@ export default {
     },
     getTableData() {
       getSystemSettingPages(this.searchRowData).then(res => {
+        if (res.rows.length !== 0) {
+          res.rows.forEach(element => {
+            // element.indexValue = element.indexValue.replace(/&/g, '<br>');
+            element.indexValue = element.indexValue == null ? null : element.indexValue.replace(/&/g, '\n');
+            // element.indexValue = element.indexValue.replace(/&/g, /\n/g);
+          });
+        }
         this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;

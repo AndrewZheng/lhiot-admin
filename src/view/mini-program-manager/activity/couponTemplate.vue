@@ -163,7 +163,7 @@
           <i-col span="24">
             <Row>
               <i-col span="6">使用规则:</i-col>
-              <i-col span="18">{{ couponTemplateDetail.couponRules }}</i-col>
+              <i-col span="18"><Input v-model="couponTemplateDetail.couponRules" :rows="6" type="textarea"></Input></i-col>
             </Row>
           </i-col>
         </Row>
@@ -275,7 +275,7 @@
           <Row>
             <Col span="18">
             <FormItem label="使用规则:" prop="couponRules">
-              <Input v-model="couponTemplateDetail.couponRules" :autosize="{ minRows: 2,maxRows: 5}" placeholder="使用规则" type="textarea"></Input>
+              <Input v-model="couponTemplateDetail.couponRules" :rows="6" placeholder="使用规则" type="textarea"></Input>
             </FormItem>
              </Col>
           </Row>
@@ -539,6 +539,7 @@ export default {
           //   this.$Message.error('最小购买金额必须大于优惠金额!');
           //   return;
           // }
+          this.couponTemplateDetail.couponRules = this.couponTemplateDetail.couponRules.replace(/\n|\r/g, '&');
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
             this.createCouponTemplate();
@@ -621,6 +622,11 @@ export default {
     },
     getTableData() {
       getCouponTemplatePages(this.searchRowData).then(res => {
+        if (res.rows.length !== 0) {
+          res.rows.forEach(element => {
+            element.couponRules = element.couponRules == null ? null : element.couponRules.replace(/&/g, '\n');
+          });
+        }
         this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;

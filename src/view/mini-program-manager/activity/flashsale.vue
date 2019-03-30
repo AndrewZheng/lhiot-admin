@@ -751,7 +751,7 @@ export default {
           title: '操作',
           minWidth: 80,
           key: 'handle',
-          options: ['onSale', 'view', 'edit', 'delete', 'relevance']
+          options: ['onSale', 'view', 'edit', 'delete', 'settings']
         }
       ],
       relationColumns: [
