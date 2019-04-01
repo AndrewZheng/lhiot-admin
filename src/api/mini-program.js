@@ -1089,3 +1089,136 @@ export const editSystemSetting = (data) => {
     method: 'put'
   });
 };
+
+// 根据条件分页查询充值返利活动列表
+export const getRechargePages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-recharges/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 查询充值返利活动位详情
+export const getRecharge = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-recharges/' + id,
+    method: 'get'
+  });
+};
+
+// 添加充值返利活动
+export const createRecharge = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-recharges/',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Ids删除充值返利活动
+export const deleteRecharge = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-recharges/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改充值返利活动
+export const editRecharge = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-recharges/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询充值返利规则列表
+export const getRechargeRulePages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-recharge-rules/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 查询充值返利规则位详情
+export const getRechargeRule = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-recharge-rules/' + id,
+    method: 'get'
+  });
+};
+
+// 添加充值返利规则
+export const createRechargeRule = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-recharge-rules/',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Ids删除充值返利规则
+export const deleteRechargeRule = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-recharge-rules/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改充值返利规则
+export const editRechargeRule = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-recharge-rules/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询随机立减活动列表
+export const getRandomDiscountPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-random-discounts/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 查询随机立减活动位详情
+export const getRandomDiscount = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-random-discounts/' + id,
+    method: 'get'
+  });
+};
+
+// 添加随机立减活动
+export const createRandomDiscount = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-random-discounts/',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Ids删除随机立减活动
+export const deleteRandomDiscount = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-random-discounts/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改随机立减活动
+export const editRandomDiscount = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-random-discounts/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+

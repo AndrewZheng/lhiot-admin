@@ -960,24 +960,12 @@ export default {
       this.getRelationTableData();
       this.modalEdit = true;
     },
-    modalHandleDelete(params) {
-      this.tempTableLoading = true;
-      deleteFlashsaleProductRelation({ ids: params.row.id }).then(res => {
-        this.relationDetail = this.relationDetail.filter((item, index) =>
-          index !== params.row.initRowIndex
-        );
-        this.getRelationTableData();
-      }).finally(res => {
-        this.tempTableLoading = false;
-      });
-    },
     addTempData(name) {
       // 先验证是否已经关联的商品
       if (this.relationDetail != null) {
         this.$Message.errors('限时抢购获得只能关联一个商品');
         return;
       }
-
       this.$refs[name].validate((valid) => {
         if (valid) {
           // 只能添加1个商品
@@ -1024,6 +1012,17 @@ export default {
       this.tempTableLoading = false;
       this.$set(params.row, 'isEdit', false);
       // console.log('modalHandleSave' + JSON.stringify(params.row));
+    },
+    modalHandleDelete(params) {
+      this.tempTableLoading = true;
+      deleteFlashsaleProductRelation({ ids: params.row.id }).then(res => {
+        this.relationDetail = this.relationDetail.filter((item, index) =>
+          index !== params.row.initRowIndex
+        );
+        this.getRelationTableData();
+      }).finally(res => {
+        this.tempTableLoading = false;
+      });
     },
     getProductTableData() {
       this.loading = true;

@@ -907,6 +907,24 @@ export const asyncRouterMap = [
         },
         component: () => import('@/view/mini-program-manager/activity/register-reward.vue')
       },
+      {
+        path: '/small-activity-recharge',
+        name: 'small-activity-recharge',
+        meta: {
+          icon: 'md-pricetag',
+          title: '充值活动管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/recharge.vue')
+      },
+      {
+        path: '/small-activity-random-discount',
+        name: 'small-activity-random-discount',
+        meta: {
+          icon: 'md-pricetag',
+          title: '随机立减活动'
+        },
+        component: () => import('@/view/mini-program-manager/activity/random-discount.vue')
+      },
     ]
   },
   {

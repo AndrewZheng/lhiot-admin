@@ -137,7 +137,7 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要下架该商品吗?'
+          title: '确认要下架?'
         },
         style: {
           marginRight: '5px'
@@ -167,7 +167,7 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要上架该商品吗?'
+          title: '确认要上架吗?'
         },
         style: {
           marginRight: '5px'
