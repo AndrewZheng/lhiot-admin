@@ -671,7 +671,79 @@ export const editShareReward = (data) => {
   });
 };
 
-// 根据条件分页查询注册送礼列表
+// 根据条件分页查询分享红包配置列表
+export const getShareRewardSettingPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-share-reward-settings/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 根据分享红包配置Ids删除分享红包配置
+export const deleteShareRewardSetting = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-share-reward-settings/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加分享红包配置
+export const createShareRewardSetting = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-share-reward-settings/',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改分享红包配置
+export const editShareRewardSetting = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-share-reward-settings/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询注册送礼活动列表
+export const getRegisterPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-registers/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 根据注册送礼活动Ids删除注册送礼活动
+export const deleteRegister = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-registers/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加注册送礼活动
+export const createRegister = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-registers/',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改注册送礼活动
+export const editRegister = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-registers/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询注册送礼活动与优惠券关联列表
 export const getRegisterRewardPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/activity-register-rewards/pages',
@@ -681,7 +753,7 @@ export const getRegisterRewardPages = (data) => {
   });
 };
 
-// 根据注册送礼Ids删除注册送礼
+// 根据注册送礼活动与优惠券关联Ids删除注册送礼活动与优惠券关联
 export const deleteRegisterReward = ({ ids }) => {
   return Vue.prototype.$http.request({
     url: '/minapp/activity-register-rewards/' + ids,
@@ -689,7 +761,7 @@ export const deleteRegisterReward = ({ ids }) => {
   });
 };
 
-// 添加注册送礼
+// 添加注册送礼活动与优惠券关联
 export const createRegisterReward = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/activity-register-rewards/',
@@ -698,7 +770,7 @@ export const createRegisterReward = (data) => {
   });
 };
 
-// 修改注册送礼
+// 修改注册送礼活动与优惠券关联
 export const editRegisterReward = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/activity-register-rewards/' + data.id,

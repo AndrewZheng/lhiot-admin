@@ -896,7 +896,7 @@ export const asyncRouterMap = [
           icon: 'md-pricetag',
           title: '邮费管理'
         },
-        component: () => import('@/view/mini-program-manager/activity/delivery-fee.vue')
+        component: () => import('@/view/mini-program-manager/system/delivery-fee.vue')
       },
       {
         path: '/small-activity-register-reward',
