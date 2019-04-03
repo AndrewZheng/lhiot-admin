@@ -345,6 +345,15 @@ export const editCouponTemplateRelation = (data) => {
   });
 };
 
+// 根据条件分页查询优惠券活动和海鼎优惠券活动关联信息列表
+export const getHdCouponActivitiesPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/hd-coupon-activities',
+    data,
+    method: 'post'
+  });
+};
+
 // ———————————— 活动管理 —————————————
 
 // 根据条件分页查询拼团机器人列表

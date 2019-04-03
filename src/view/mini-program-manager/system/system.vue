@@ -112,7 +112,7 @@
           <i-col span="24">
             <Row>
               <i-col span="4">描述:</i-col>
-              <i-col span="20">{{ systemDetail.description }}</i-col>
+              <i-col span="20">{{ systemDetail.description }}<img v-if="showImage" :src="systemDetail.description" width="70%"></i-col>
             </Row>
           </i-col>
         </Row>
@@ -157,6 +157,32 @@
             <Col span="20">
             <FormItem label="描述:" prop="description">
               <Input v-model="systemDetail.description" placeholder="描述"></Input>
+              <div v-for="item in uploadListMain" :key="item.url" v-if="showImage" class="demo-upload-list" >
+                <template v-if="item.status === 'finished'">
+                  <div>
+                    <img :src="item.url">
+                    <div class="demo-upload-list-cover">
+                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                      <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                    </div>
+                  </div>
+                </template>
+                <template v-else>
+                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                </template>
+              </div>
+              <IViewUpload
+                ref="uploadMain"
+                :default-list="defaultListMain"
+                :image-size="imageSize"
+                @on-success="handleSuccessMain"
+              >
+                <div slot="content">
+                  <Button type="primary">
+                    上传图片
+                  </Button>
+                </div>
+              </IViewUpload>
             </FormItem>
             </Col>
           </Row>
@@ -176,11 +202,16 @@
         </Button>
       </div>
     </Modal>
+
+    <Modal v-model="uploadVisible" title="View Image">
+      <img :src="imgUploadViewItem" style="width: 100%">
+    </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
+import IViewUpload from '_c/iview-upload';
 import _ from 'lodash';
 import {
   deleteSystemSetting,
@@ -212,7 +243,8 @@ const roleRowData = {
 
 export default {
   components: {
-    Tables
+    Tables,
+    IViewUpload
   },
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
@@ -269,10 +301,13 @@ export default {
           options: ['view', 'edit', 'delete']
         }
       ],
+      defaultListMain: [],
+      uploadListMain: [],
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
-      systemDetail: _.cloneDeep(systemDetail)
+      systemDetail: _.cloneDeep(systemDetail),
+      showImage: false
     };
   },
   mounted() {
@@ -288,6 +323,9 @@ export default {
     },
     resetFields() {
       this.$refs.modalEdit.resetFields();
+      this.$refs.uploadMain.clearFileList();
+      this.uploadListMain = [];
+      this.systemDetail.description = null;
     },
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
@@ -364,12 +402,19 @@ export default {
       this.resetFields();
       this.tempModalType = this.modalType.view;
       this.systemDetail = _.cloneDeep(params.row);
+      if(this.systemDetail.description!= null) {
+        this.showImage = this.systemDetail.description.indexOf('http') != -1 ? true : false;
+      }      
       this.modalView = true;
     },
     handleEdit(params) {
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.systemDetail = _.cloneDeep(params.row);
+      if(this.systemDetail.description!= null) {
+        this.showImage = this.systemDetail.description.indexOf('http') != -1 ? true : false;
+      }    
+      this.setDefaultUploadList(this.systemDetail);
       this.modalEdit = true;
     },
     getTableData() {
@@ -392,6 +437,27 @@ export default {
         this.searchLoading = false;
         this.clearSearchLoading = false;
       });
+    },
+    handleRemoveMain(file) {
+      this.$refs.uploadMain.deleteFile(file);
+      this.imageDetail.storeImage = null;
+    },
+    // 商品主图
+    handleSuccessMain(response, file, fileList) {
+      this.uploadListMain = fileList;
+      this.systemDetail.description = null;
+      this.systemDetail.description = fileList[0].url;
+    },
+    // 设置编辑商品的图片列表
+    setDefaultUploadList(res) {
+      if (res.description != null) {
+        const map = { status: 'finished', url: 'url' };
+        const mainImgArr = [];
+        map.url = res.description;
+        mainImgArr.push(map);
+        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+        this.uploadListMain = mainImgArr;
+      }
     }
   }
 };
