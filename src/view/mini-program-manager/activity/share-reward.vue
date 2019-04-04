@@ -15,7 +15,7 @@
         @on-delete="handleDelete"
         @on-view="handleView"
         @on-edit="handleEdit"
-        @on-sale="onOff"
+        @on-relevance="onRelevance"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
@@ -195,129 +195,175 @@
       style="z-index: 1000"
     >
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改分享红包活动':'创建分享红包活动' }}</i-col>
+        <i-col>{{ tempModalType==modalType.edit?'修改分享红包活动':(tempModalType==modalType.create?'创建分享红包活动': '分享红包配置') }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="shareRewardDetail" :rules="ruleInline" :label-width="80">
-          <Row>
-            <Col span="18">
-            <FormItem label="活动标题:" prop="name">
-              <Input v-model="shareRewardDetail.name" placeholder="活动标题"></Input>
-            </FormItem>
+        <Row v-if="tempModalType == modalType.edit || tempModalType == modalType.create">
+          <Form ref="modalEdit" :model="shareRewardDetail" :rules="ruleInline" :label-width="80">
+            <Row>
+              <Col span="18">
+              <FormItem label="活动标题:" prop="name">
+                <Input v-model="shareRewardDetail.name" placeholder="活动标题"></Input>
+              </FormItem>
             </Col>
-          </Row>
-          <Row>
-            <Col span="18">
-            <FormItem label="开启时间:" prop="startTime">
-              <DatePicker
-                v-model="shareRewardDetail.startTime"
-                format="yyyy-MM-dd HH:mm:ss"
-                type="datetime"
-                placeholder="有效期起"
-                class="search-input"
-                style="width: 170px"
-                @on-change="startTimeChange"
-              />
-            </FormItem>
+            </Row>
+            <Row>
+              <Col span="18">
+              <FormItem label="开启时间:" prop="startTime">
+                <DatePicker
+                  v-model="shareRewardDetail.startTime"
+                  format="yyyy-MM-dd HH:mm:ss"
+                  type="datetime"
+                  placeholder="有效期起"
+                  class="search-input"
+                  style="width: 170px"
+                  @on-change="startTimeChange"
+                />
+              </FormItem>
             </Col>
-          </Row>
-          <Row>
-            <Col span="18">
-            <FormItem label="结束时间:" prop="endTime">
-              <DatePicker
-                v-model="shareRewardDetail.endTime"
-                format="yyyy-MM-dd HH:mm:ss"
-                type="datetime"
-                placeholder="有效期止"
-                class="search-input"
-                style="width: 170px"
-                @on-change="endTimeChange"
-              />
-            </FormItem>
+            </Row>
+            <Row>
+              <Col span="18">
+              <FormItem label="结束时间:" prop="endTime">
+                <DatePicker
+                  v-model="shareRewardDetail.endTime"
+                  format="yyyy-MM-dd HH:mm:ss"
+                  type="datetime"
+                  placeholder="有效期止"
+                  class="search-input"
+                  style="width: 170px"
+                  @on-change="endTimeChange"
+                />
+              </FormItem>
             </Col>
-          </Row>
-          <Row>
-            <Col span="18">
-            <FormItem label="活动状态:" prop="status">
-              <Select v-model="shareRewardDetail.status" clearable>
-                <Option
-                  v-for="(item,index) in couponStatusEnum"
-                  :value="item.value"
-                  :key="index"
-                  class="ptb2-5"
-                  style="padding-left: 5px;width: 100%">{{ item.label }}
-                </Option>
-              </Select>
-            </FormItem>
+            </Row>
+            <Row>
+              <Col span="18">
+              <FormItem label="活动状态:" prop="status">
+                <Select v-model="shareRewardDetail.status" clearable>
+                  <Option
+                    v-for="(item,index) in couponStatusEnum"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                    style="padding-left: 5px;width: 100%">{{ item.label }}
+                  </Option>
+                </Select>
+              </FormItem>
             </Col>
-          </Row>
-          <Row>
-            <Col span="18">
-            <FormItem label="分享标题:" prop="shareName">
-              <Input v-model="shareRewardDetail.shareName" placeholder="分享标题"></Input>
-            </FormItem>
+            </Row>
+            <Row>
+              <Col span="18">
+              <FormItem label="分享标题:" prop="shareName">
+                <Input v-model="shareRewardDetail.shareName" placeholder="分享标题"></Input>
+              </FormItem>
             </Col>
-          </Row>
-          <Row>
-            <FormItem label="分享图片     (推荐尺寸为750X160(单位:px)):" prop="shareImageUrl" >
-              <Input v-show="false" v-model="shareRewardDetail.shareImageUrl" style="width: auto"></Input>
-              <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
-                <template v-if="item.status === 'finished'">
-                  <div>
-                    <img :src="item.url">
-                    <div class="demo-upload-list-cover">
-                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                      <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+            </Row>
+            <Row>
+              <FormItem label="分享图片     (推荐尺寸为750X160(单位:px)):" prop="shareImageUrl" >
+                <Input v-show="false" v-model="shareRewardDetail.shareImageUrl" style="width: auto"></Input>
+                <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+                  <template v-if="item.status === 'finished'">
+                    <div>
+                      <img :src="item.url">
+                      <div class="demo-upload-list-cover">
+                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                      </div>
                     </div>
-                  </div>
-                </template>
-                <template v-else>
-                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                </template>
-              </div>
-              <IViewUpload
-                ref="uploadMain"
-                :default-list="defaultListMain"
-                :image-size="imageSize"
-                @on-success="handleSuccessMain"
-              >
-                <div slot="content">
-                  <Button type="primary">
-                    上传图片
-                  </Button>
+                  </template>
+                  <template v-else>
+                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                  </template>
                 </div>
-              </IViewUpload>
-            </FormItem>
-          </Row>
-          <Row>
-            <Col span="18">
-            <FormItem label="红包个数:" prop="rewardCount">
-              <Input v-model="shareRewardDetail.rewardCount" placeholder="红包个数"></Input>
-            </FormItem>
+                <IViewUpload
+                  ref="uploadMain"
+                  :default-list="defaultListMain"
+                  :image-size="imageSize"
+                  @on-success="handleSuccessMain"
+                >
+                  <div slot="content">
+                    <Button type="primary">
+                      上传图片
+                    </Button>
+                  </div>
+                </IViewUpload>
+              </FormItem>
+            </Row>
+            <Row>
+              <Col span="18">
+              <FormItem label="红包个数:" prop="rewardCount">
+                <Input v-model="shareRewardDetail.rewardCount" placeholder="红包个数"></Input>
+              </FormItem>
             </Col>
-          </Row>
-          <Row>
-            <Col span="18">
-            <FormItem label="最大红包位置:" prop="rewardPositionStart">
-              <Input v-model="shareRewardDetail.rewardPositionStart" placeholder="最大红包位置"></Input>
-            </FormItem>
+            </Row>
+            <Row>
+              <Col span="18">
+              <FormItem label="最大红包位置:" prop="rewardPositionStart">
+                <Input v-model="shareRewardDetail.rewardPositionStart" placeholder="最大红包位置"></Input>
+              </FormItem>
             </Col>
-          </Row>
-          <Row>
-            <Col span="18">
-            <FormItem label="红包有效时间:" prop="rewardEffectiveTime">
-              <Input v-model="shareRewardDetail.rewardEffectiveTime" placeholder="红包有效时间"></Input>
-            </FormItem>
+            </Row>
+            <Row>
+              <Col span="18">
+              <FormItem label="红包有效时间:" prop="rewardEffectiveTime">
+                <Input v-model="shareRewardDetail.rewardEffectiveTime" placeholder="红包有效时间"></Input>
+              </FormItem>
             </Col>
-          </Row>
-          <Row>
-            <Col span="18">
-            <FormItem label="活动规则描述:" prop="activityRuleDesc">
-              <Input v-model="shareRewardDetail.activityRuleDesc" :autosize="{minRows: 2,maxRows: 5}" style="width: 230px" placeholder="活动规则描述" type="textarea"></Input>
-            </FormItem>
+            </Row>
+            <Row>
+              <Col span="18">
+              <FormItem label="活动规则描述:" prop="activityRuleDesc">
+                <Input v-model="shareRewardDetail.activityRuleDesc" :rows="6" placeholder="活动规则描述" type="textarea"></Input>
+              </FormItem>
             </Col>
-          </Row>
-        </Form>
+            </Row>
+          </Form>
+        </Row>
+
+        <Row v-if="tempModalType == null ">
+          <Form ref="modalCreate" :model="addRelationDetail" :rules="relationRuleInline" :label-width="80">
+            <Row>
+              <Col span="8">
+              <FormItem label="最小使用金额:" prop="price">
+                <InputNumber
+                  :min="0"
+                  :value="priceComputed"
+                  placeholder="最小使用金额"
+                  @on-change="priceInputNumberOnChange"></InputNumber>
+              </FormItem>
+               </Col>
+              <Col span="8">
+              <FormItem label="红包金额:" prop="minPrice">
+                <InputNumber
+                  :min="0"
+                  :value="minPriceComputed"
+                  placeholder="红包金额"
+                  @on-change="minPriceInputNumberOnChange"></InputNumber>
+              </FormItem>
+               </Col>
+              <Col span="8">
+              <Button v-waves :loading="addTempDataLoading" span="4" class="search-btn ml20" type="primary" @click="addTempData('modalCreate')">
+                <Icon type="md-add"/>&nbsp;关联商品
+              </Button>
+                </Col>
+            </Row>
+            说明：红包最少配置两个，取红包金额最大的作为最大红包，其他红包随机产生
+          </Form>
+
+          <Divider orientation="center">已配置参数</Divider>
+          <tables
+            :columns="relationColumns"
+            v-model="relationDetail"
+            :loading="tempTableLoading"
+            border
+            @on-delete="modalHandleDelete"
+            @on-inline-edit="modalHandleEdit"
+            @on-inline-save="modalHandleSave"
+          ></tables>
+
+        </Row>
+
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
@@ -336,14 +382,19 @@ import {
   deleteShareReward,
   getShareRewardPages,
   editShareReward,
-  createShareReward
+  createShareReward,
+  getShareRewardSettingPages,
+  deleteShareRewardSetting,
+  createShareRewardSetting,
+  editShareRewardSetting
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import { couponStatusConvert } from '@/libs/converStatus';
-import { couponStatusEnum } from '@/libs/enumerate'
+import { couponStatusEnum } from '@/libs/enumerate';
+import { fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber } from '@/libs/util';
 
 const shareRewardDetail = {
   id: 0,
@@ -363,10 +414,77 @@ const shareRewardDetail = {
   createTime: null
 };
 
+const relationDetail = {
+  id: 0,
+  activityShareRewardId: 0,
+  minPrice: 0,
+  price: 0,
+  isEdit: false
+};
+
 const roleRowData = {
   page: 1,
   rows: 10
 };
+
+const relationRowData = {
+  activityShareRewardId: 0,
+  page: 1,
+  rows: 10
+};
+
+const relationTempColumns = [
+  {
+    title: '最小使用金额/元',
+    key: 'minPrice',
+    minWidth: 100,
+    render(h, params) {
+      if (params.row.isEdit) {
+        return h('div', [
+          h('InputNumber', {
+            domProps: {
+              value: params.row.minPrice
+            },
+            on: {
+              input: function(event) {
+                if (event > 0) {
+                  params.row.minPrice = event;
+                }
+              }
+            }
+          })
+        ]);
+      } else {
+        return h('div', fenToYuanDot2(params.row.minPrice));
+      }
+    }
+  },
+  {
+    title: '红包金额/元',
+    key: 'price',
+    minWidth: 100,
+    render(h, params) {
+      if (params.row.isEdit) {
+        return h('div', [
+          h('InputNumber', {
+            domProps: {
+              value: params.row.price
+            },
+            on: {
+              input: function(event) {
+                if (event > 0) {
+                  params.row.price = event;
+                }
+              }
+            }
+          })
+        ]);
+      } else {
+        return h('div', fenToYuanDot2(params.row.price));
+      }
+    }
+  }
+];
 
 export default {
   components: {
@@ -397,6 +515,16 @@ export default {
           { required: true, message: '请上传用户头像' }
         ]
       },
+      relationRuleInline: {
+        price: [
+          { required: true, message: '请输入红包金额' },
+          { message: '必须为大于0的数字', pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/ }
+        ],
+        minPrice: [
+          { required: true, message: '请输入最小使用金额' },
+          { message: '必须为大于0的数字', pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/ }
+        ]
+      },
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
@@ -407,10 +535,10 @@ export default {
           width: 60,
           align: 'center'
         },
-        {
-          title: '主键id',
-          key: 'id'
-        },
+        // {
+        //   title: '主键id',
+        //   key: 'id'
+        // },
         {
           title: '活动标题',
           key: 'name'
@@ -473,10 +601,6 @@ export default {
           tooltip: true
         },
         {
-          title: '创建人id',
-          key: 'userId'
-        },
-        {
           title: '创建人名称',
           key: 'userName'
         },
@@ -488,14 +612,36 @@ export default {
           title: '操作',
           minWidth: 80,
           key: 'handle',
-          options: ['onSale', 'view', 'edit', 'delete']
+          options: ['view', 'edit', 'delete', 'settings']
         }
       ],
+      relationColumns: [
+        ...relationTempColumns,
+        {
+          title: '操作',
+          minWidth: 100,
+          key: 'handle',
+          options: ['inlineEdit', 'delete']
+        }
+      ],
+      addTempDataLoading: false,
+      tempTableLoading: false,
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
-      shareRewardDetail: _.cloneDeep(shareRewardDetail)
+      searchRelationRowData: _.cloneDeep(relationRowData),
+      shareRewardDetail: _.cloneDeep(shareRewardDetail),
+      relationDetail: _.cloneDeep(relationDetail),
+      addRelationDetail: _.cloneDeep(relationDetail)
     };
+  },
+  computed: {
+    priceComputed() {
+      return fenToYuanDot2Number(this.addRelationDetail.price);
+    },
+    minPriceComputed() {
+      return fenToYuanDot2Number(this.addRelationDetail.minPrice);
+    }
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
@@ -646,6 +792,102 @@ export default {
         this.$refs.uploadMain.setDefaultFileList(mainImgArr);
         this.uploadListMain = mainImgArr;
       }
+    },
+    onRelevance(params) {
+      this.tempModalType = null;
+      this.addRelationDetail.activityShareRewardId = params.row.id;
+      this.searchRelationRowData.activityShareRewardId = params.row.id;
+      this.getRelationTableData();
+      this.modalEdit = true;
+    },
+    getRelationTableData() {
+      getShareRewardSettingPages(this.searchRelationRowData).then(res => {
+        // 设置行是否可编辑
+        if (res.rows.length !== 0) {
+          res.rows.forEach(element => {
+            element.isEdit = false;
+          });
+          this.relationDetail = res.rows;
+        } else {
+          this.relationDetail = null;
+        }
+        // this.total = res.total;
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
+      }).catch(error => {
+        console.log(error);
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
+      });
+    },
+    addTempData(name) {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          // 只能添加1个商品
+          if (this.addRelationDetail.price > this.addRelationDetail.minPrice) {
+            this.$Message.error('红包金额不能大于红包最小使用金额');
+            return;
+          }
+          this.createRelation();
+        } else {
+          this.$Message.error('请完善信息!');
+        }
+      });
+    },
+    modalHandleEdit(params) {
+      this.$set(params.row, 'isEdit', true);
+    },
+    modalHandleSave(params) {
+      const row = params.row;
+      if (row.id == null || row.id == 0 || row.salePrice <= 0 || row.goodsLimit <= 0 || row.userLimit <= 0) {
+        this.$Message.error('请输入非0数');
+        return;
+      } else if (row.remainCount > row.goodsLimit) {
+        this.$Message.error('限时数量不能大于商品总数量');
+        return;
+      }
+      this.tempTableLoading = true;
+      // 如果前端没有剩余数量字段,则初始化剩余数量=商品数量
+      // row.remainCount = row.goodsLimit;
+      editShareRewardSetting(row).then(res => {
+        this.getRelationTableData();
+      }).finally(res => {
+        this.tempTableLoading = false;
+      });
+      this.tempTableLoading = false;
+      this.$set(params.row, 'isEdit', false);
+      // console.log('modalHandleSave' + JSON.stringify(params.row));
+    },
+    modalHandleDelete(params) {
+      this.tempTableLoading = true;
+      deleteShareRewardSetting({ ids: params.row.id }).then(res => {
+        this.relationDetail = this.relationDetail.filter((item, index) =>
+          index !== params.row.initRowIndex
+        );
+        this.getRelationTableData();
+      }).finally(res => {
+        this.tempTableLoading = false;
+      });
+    },
+    priceInputNumberOnChange(value) {
+      this.addRelationDetail.price = yuanToFenNumber(value);
+    },
+    minPriceInputNumberOnChange(value) {
+      this.addRelationDetail.minPrice = yuanToFenNumber(value);
+    },
+    createRelation() {
+      this.modalViewLoading = true;
+      createShareRewardSetting(this.addRelationDetail).then(res => {
+        this.modalViewLoading = false;
+        this.modalEdit = false;
+        this.$Message.success('创建成功!');
+        this.getRelationTableData();
+      }).catch(() => {
+        this.modalViewLoading = false;
+        this.modalEdit = false;
+      });
     }
   }
 };

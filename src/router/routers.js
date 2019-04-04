@@ -190,7 +190,7 @@ export const constantRouterMap = [
           icon: 'md-menu',
           title: '活动关联优惠券模板'
         },
-        component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
+        component: () => import('@/view/mini-program-manager/activity/coupon-relation.vue')
       }
     ]
   },
@@ -896,7 +896,7 @@ export const asyncRouterMap = [
           icon: 'md-pricetag',
           title: '邮费管理'
         },
-        component: () => import('@/view/mini-program-manager/activity/delivery-fee.vue')
+        component: () => import('@/view/mini-program-manager/system/delivery-fee.vue')
       },
       {
         path: '/small-activity-register-reward',

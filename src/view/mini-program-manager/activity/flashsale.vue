@@ -159,8 +159,8 @@
         <i-col>{{ tempModalType==modalType.edit?'修改限时抢购活动':(tempModalType==modalType.create?'创建限时抢购活动': '限时抢购活动和商品关联') }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="flashsaleDetail" :rules="ruleInline" :label-width="80">
-          <Row v-if="tempModalType == modalType.edit || tempModalType == modalType.create">
+        <Row v-if="tempModalType == modalType.edit || tempModalType == modalType.create">
+          <Form ref="modalEdit" :model="flashsaleDetail" :rules="ruleInline" :label-width="80">
             <Row>
               <Col span="18">
               <FormItem label="活动名称:">
@@ -213,101 +213,101 @@
               </FormItem>
             </Col>
             </Row>
-          </Row>
-          <Row v-if="tempModalType == null ">
-            <Row>
-              <!-- 限时抢购只能添加一个关联商品，所以只有当关联商品为空时才显示 -->
-              <Card v-if="relationDetail==null">
-                <tables
-                  ref="tables"
-                  v-model="productDetail"
-                  :columns="productColumns"
-                  :loading="tempTableLoading"
-                  border
-                  searchable
-                  search-place="top"
-                  @on-delete="modalHandleDelete"
-                  @on-inline-edit="modalHandleEdit"
-                  @on-inline-save="modalHandleSave"
-                  @on-select-all="onSelectionAll"
-                  @on-selection-change="onProductSelectionChange"
-                >
-                  <div slot="searchCondition">
-                    <Row>
-                      <Input v-model="searchProductRowData.productCode" placeholder="商品编码" class="search-input mr5" style="width: auto" clearable></Input>
-                      <Input v-model="searchProductRowData.productName" placeholder="商品名称" class="search-input mr5" style="width: auto" clearable></Input>
-                      <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleProductSearch">
-                        <Icon type="md-search"/>&nbsp;搜索
-                      </Button>
-                      <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleProductClear">
-                        <Icon type="md-refresh"/>&nbsp;清除条件
-                      </Button>
-                    </Row>
-                  </div>
-                </tables>
+          </Form>
+        </Row>
 
-                <div style="margin: 10px;overflow: hidden">
-                  <Row type="flex" justify="end">
-                    <Page
-                      :total="productTotal"
-                      :current="searchProductRowData.page"
-                      show-sizer
-                      show-total
-                      @on-change="changeProductPage"
-                      @on-page-size-change="changeProductPageSize"></Page>
+        <Row v-if="tempModalType == null ">
+          <Row>
+            <!-- 限时抢购只能添加一个关联商品，所以只有当关联商品为空时才显示 -->
+            <Card v-if="relationDetail==null">
+              <tables
+                ref="tables"
+                v-model="productDetail"
+                :columns="productColumns"
+                :loading="tempTableLoading"
+                border
+                searchable
+                search-place="top"
+                @on-delete="modalHandleDelete"
+                @on-inline-edit="modalHandleEdit"
+                @on-inline-save="modalHandleSave"
+                @on-select-all="onSelectionAll"
+                @on-selection-change="onProductSelectionChange"
+              >
+                <div slot="searchCondition">
+                  <Row>
+                    <Input v-model="searchProductRowData.productCode" placeholder="商品编码" class="search-input mr5" style="width: auto" clearable></Input>
+                    <Input v-model="searchProductRowData.productName" placeholder="商品名称" class="search-input mr5" style="width: auto" clearable></Input>
+                    <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleProductSearch">
+                      <Icon type="md-search"/>&nbsp;搜索
+                    </Button>
+                    <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleProductClear">
+                      <Icon type="md-refresh"/>&nbsp;清除条件
+                    </Button>
                   </Row>
                 </div>
+              </tables>
 
-                <Form ref="modalCreate" :model="addRelationDetail" :rules="relationRuleInline" :label-width="80">
-                  <Row>
-                    <Col span="5">
-                    <FormItem label="抢购价:" prop="salePrice">
-                      <InputNumber
-                        :min="0"
-                        :value="salePriceComputed"
-                        placeholder="抢购价"
-                        @on-change="salePriceInputNumberOnchange"></InputNumber>
-                    </FormItem>
+              <div style="margin: 10px;overflow: hidden">
+                <Row type="flex" justify="end">
+                  <Page
+                    :total="productTotal"
+                    :current="searchProductRowData.page"
+                    show-sizer
+                    show-total
+                    @on-change="changeProductPage"
+                    @on-page-size-change="changeProductPageSize"></Page>
+                </Row>
+              </div>
+
+              <Form ref="modalCreate" :model="addRelationDetail" :rules="relationRuleInline" :label-width="80">
+                <Row>
+                  <Col span="5">
+                  <FormItem label="抢购价:" prop="salePrice">
+                    <InputNumber
+                      :min="0"
+                      :value="salePriceComputed"
+                      placeholder="抢购价"
+                      @on-change="salePriceInputNumberOnchange"></InputNumber>
+                  </FormItem>
                   </Col>
-                    <Col span="5">
-                    <FormItem label="商品总数量:" prop="goodsLimit">
-                      <InputNumber :min="0" v-model="addRelationDetail.goodsLimit" class="ml20" label="商品总数量"></InputNumber>
-                    </FormItem>
+                  <Col span="5">
+                  <FormItem label="商品总数量:" prop="goodsLimit">
+                    <InputNumber :min="0" v-model="addRelationDetail.goodsLimit" class="ml20" label="商品总数量"></InputNumber>
+                  </FormItem>
                    </Col>
-                    <Col span="5">
-                    <FormItem label="剩余数量:" prop="remainCount">
-                      <InputNumber :min="0" v-model="addRelationDetail.remainCount" class="ml20" label="剩余数量"></InputNumber>
-                    </FormItem>
+                  <Col span="5">
+                  <FormItem label="剩余数量:" prop="remainCount">
+                    <InputNumber :min="0" v-model="addRelationDetail.remainCount" class="ml20" label="剩余数量"></InputNumber>
+                  </FormItem>
                    </Col>
-                    <Col span="5">
-                    <FormItem label="限购数量:" prop="userLimit">
-                      <InputNumber :min="0" v-model="addRelationDetail.userLimit" class="ml20" label="限购数量"></InputNumber>
-                    </FormItem>
+                  <Col span="5">
+                  <FormItem label="限购数量:" prop="userLimit">
+                    <InputNumber :min="0" v-model="addRelationDetail.userLimit" class="ml20" label="限购数量"></InputNumber>
+                  </FormItem>
                    </Col>
-                    <Col span="4">
-                    <Button v-waves :loading="addTempDataLoading" span="4" class="search-btn ml20" type="primary" @click="addTempData('modalCreate')">
-                      <Icon type="md-add"/>&nbsp;关联商品
-                    </Button>
+                  <Col span="4">
+                  <Button v-waves :loading="addTempDataLoading" span="4" class="search-btn ml20" type="primary" @click="addTempData('modalCreate')">
+                    <Icon type="md-add"/>&nbsp;关联商品
+                  </Button>
                 </Col>
-                  </Row>
-                </Form>
-                *Tips：请先选择要关联的商品，然后输入关联配置信息，若关联多个商品，则所有的商品配置信息相同，添加完成后可在下方表格修改
-              </Card>
-            </Row>
-
-            <Divider orientation="center">已关联商品</Divider>
-            <tables
-              :columns="relationColumns"
-              v-model="relationDetail"
-              :loading="tempTableLoading"
-              border
-              @on-delete="modalHandleDelete"
-              @on-inline-edit="modalHandleEdit"
-              @on-inline-save="modalHandleSave"
-            ></tables>
+                </Row>
+              </Form>
+              *Tips：请先选择要关联的商品，然后输入关联配置信息，若关联多个商品，则所有的商品配置信息相同，添加完成后可在下方表格修改
+            </Card>
           </Row>
 
-        </Form>
+          <Divider orientation="center">已关联商品</Divider>
+          <tables
+            :columns="relationColumns"
+            v-model="relationDetail"
+            :loading="tempTableLoading"
+            border
+            @on-delete="modalHandleDelete"
+            @on-inline-edit="modalHandleEdit"
+            @on-inline-save="modalHandleSave"
+          ></tables>
+        </Row>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>

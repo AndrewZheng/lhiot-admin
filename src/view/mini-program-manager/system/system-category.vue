@@ -100,7 +100,14 @@
           <Row>
             <Col span="12">
             <FormItem label="父级分类id:" prop="parentId">
-              <InputNumber :min="0" v-model="systemCategoryDetail.parentId" placeholder="父级分类id"></InputNumber>
+              <!-- <InputNumber :min="0" v-model="systemCategoryDetail.parentId" placeholder="父级分类id"></InputNumber> -->
+              <Cascader
+                :data="systemCategoryData"
+                v-model="defaultSystemCategoryData"
+                span="21"
+                style="width: 70%"
+                @on-change="systemCategoryChange"
+              ></Cascader>
             </FormItem>
             </Col>
           </Row>
@@ -129,12 +136,14 @@ import {
   deleteSystemSettingCategory,
   getSystemSettingCategoryPages,
   editSystemSettingCategory,
-  createSystemSettingCategory
+  createSystemSettingCategory,
+  getSystemSettingCategoryTree
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
+import { buildMenu, convertTreeCategory, convertTree } from '@/libs/util';
 
 const systemCategoryDetail = {
   id: 0,
@@ -155,9 +164,9 @@ export default {
   data() {
     return {
       ruleInline: {
-        parentId: [
-          { required: true, message: '输入父级分类id' }
-        ],
+        // parentId: [
+        //   { required: true, message: '输入父级分类id' }
+        // ],
         categoriesName: [
           { required: true, message: '请输入分类名称' }
         ]
@@ -187,6 +196,9 @@ export default {
           options: ['view', 'edit', 'delete']
         }
       ],
+      systemCategoryData: [],
+      defaultSystemCategoryData: [41],
+      systemCategoriesTreeList: [],
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
@@ -196,6 +208,7 @@ export default {
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
+    this.getSystemSettingCategoryTree();
   },
   created() {
   },
@@ -301,7 +314,54 @@ export default {
         this.searchLoading = false;
         this.clearSearchLoading = false;
       });
+    },
+    getSystemSettingCategoryTree() {
+      getSystemSettingCategoryTree().then(res => {
+        if (res && res.array.length > 0) {
+          this.systemCategoriesTreeList = res.array;
+          const menuList = buildMenu(res.array);
+          const map = {
+            id: 'id',
+            title: 'title',
+            children: 'children'
+          };
+          this.systemCategoryData = convertTreeCategory(menuList, map, true);
+          this.createLoading = false;
+        }
+      }).catch(() => {
+        this.createLoading = false;
+      });
+    },
+    // 设置编辑商品的图片列表
+    setDefaultUploadList(res) {
+      if (res.description != null) {
+        const map = { status: 'finished', url: 'url' };
+        const mainImgArr = [];
+        map.url = res.description;
+        mainImgArr.push(map);
+        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+        this.uploadListMain = mainImgArr;
+      }
+    },
+    // 选择分类
+    systemCategoryChange(value, selectedData) {
+      if (selectedData.length > 0) {
+        this.systemCategoryDetail.parentId = selectedData[selectedData.length - 1].id;
+      } else {
+        this.systemCategoryDetail.parentId = null;
+      }
+      this.defaultSystemCategoryData = selectedData;
+    },
+    findGroupId(id) {
+      const obj = this.systemCategoriesTreeList.find(item => {
+        return item.id === id;
+      });
+      this.defaultSystemCategoryData.push(id);
+      if (obj && obj.parentid !== 0) {
+        this.findGroupId(obj.parentid);
+      }
     }
+
   }
 };
 </script>

@@ -63,6 +63,9 @@
               <Icon type="md-refresh"/>&nbsp;清除条件
             </Button>
           </Row>
+          <Row>
+            <div>*同一时间段请不要开启多个活动，若开启多个活动，则以最新创建活动为主</div>
+          </Row>
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addRecharge">

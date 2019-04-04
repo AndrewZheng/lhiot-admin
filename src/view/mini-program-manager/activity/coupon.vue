@@ -471,7 +471,8 @@ import {
   deleteCouponTemplateRelation,
   createCouponTemplateRelation,
   editCouponTemplateRelation,
-  getCouponTemplatePages
+  getCouponTemplatePages,
+  getHdCouponActivitiesPages
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
@@ -479,7 +480,7 @@ import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import { couponStatusConvert, couponTypeConvert, couponScopeConvert } from '@/libs/converStatus';
 import { couponStatusEnum, couponTypeEnum, couponScopeEnum } from '@/libs/enumerate';
-import { compareData, setSmallGoodsStandard, fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber } from '@/libs/util';
+import { compareData, setSmallCouponActivity, fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber } from '@/libs/util';
 
 const couponDetail = {
   formBeginTime: null,
@@ -530,6 +531,18 @@ const couponTemplateDetail = {
   couponScope: null
 };
 
+const hdCouponTemplateDetail = {
+  activity_id: 0,
+  begin_date: null,
+  end_date: null,
+  coupon_name: '',
+  coupon_remark: '',
+  coupon_type: '',
+  face_value: 0,
+  price: 0,
+  use_rule: ''
+};
+
 const roleRowData = {
   formBeginTime: null,
   formEndTime: null,
@@ -551,6 +564,15 @@ const templateRowData = {
   couponStatus: 'VALID',
   page: 1,
   rows: 5
+};
+
+const hdTemplateRowData = {
+  storeId: null,
+  sortKey: null,
+  desc: null,
+  platformId: null,
+  activityTypes: ['all'],
+  activityId: null
 };
 
 const relationTempColumns = [
@@ -860,10 +882,12 @@ export default {
       searchRowData: _.cloneDeep(roleRowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
       searchTemplateRowData: _.cloneDeep(templateRowData),
+      searchHdTemplateRowData: _.cloneDeep(hdTemplateRowData),
       couponDetail: _.cloneDeep(couponDetail),
       relationDetail: _.cloneDeep(relationDetail),
       addRelationDetail: _.cloneDeep(relationDetail),
       couponTemplateDetail: _.cloneDeep(couponTemplateDetail),
+      hdCouponTemplateDetail: _.cloneDeep(hdCouponTemplateDetail),
       couponTemplateTotal: 0
     };
   },
@@ -1032,6 +1056,14 @@ export default {
       this.couponDetail.activityImage = fileList[0].url;
     },
     handleSetting(params) {
+      // console.log('setGoodsStandard:' + JSON.stringify(params.row));
+      var rows = params.row;
+      setSmallCouponActivity(rows);
+      this.turnToPage({
+        name: 'small-activity-relation-coupon'
+      });
+    },
+    handleSetting1(params) {
       this.tempModalType = null;
       // FIXME 查询商品规格分页信息（后期按钮触发，或者先存储，需要时再调用接口）
       this.getTemplateTableData();
@@ -1180,6 +1212,23 @@ export default {
         this.modalViewLoading = false;
         this.modalEdit = false;
       });
+    },
+    getHdTemplateTableData() {
+      getHdCouponActivitiesPages(this.searchHdTemplateRowData).then(res => {
+        this.couponTemplateDetail = res.rows;
+        this.couponTemplateTotal = res.total;
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
+      }).catch(error => {
+        console.log(error);
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
+      });
+    },
+    addHdCouponTemplate() {
+      this.getHdTemplateTableData();
     }
   }
 };

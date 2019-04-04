@@ -121,7 +121,9 @@
               </RadioGroup>
             </FormItem>
           </Row>
+          111{{ postageDetail.detailList }}
           <Row>
+
             <FormItem prop="detailList">
               <tables
                 :columns="tableColumnComputed"
@@ -150,7 +152,7 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import { getDeliveryFeeConfigPages, createDeliveryFeeConfig, deleteDeliveryFeeConfig, editDeliveryFeeConfig } from '@/api/mini-program';
+import { getDeliveryFeeConfigPages, createDeliveryFeeConfig, deleteDeliveryFeeConfig, editDeliveryFeeConfig, getDeliveryFeeConfigRulePages, createDeliveryFeeConfigRule, deleteDeliveryFeeConfigRule, editDeliveryFeeConfigRule } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import deleteMixin from '@/mixins/deleteMixin.js';
@@ -201,6 +203,12 @@ const roleRowData = {
   minOrderAmount: null,
   maxOrderAmount: null,
   deliveryAtType: null,
+  page: 1,
+  rows: 10
+};
+
+const relationRowData = {
+  deliveryFeeTemplateId: 0,
   page: 1,
   rows: 10
 };
@@ -403,6 +411,7 @@ export default {
       modalViewLoading: false,
       tempDetailList: [],
       searchRowData: this._.cloneDeep(roleRowData),
+      searchRelationRowData: _.cloneDeep(relationRowData),
       fruitMasterDetail: fruitMasterDetail,
       postageDetail: this._.cloneDeep(postageDetail)
     };
@@ -586,6 +595,8 @@ export default {
     handleView(params) {
       this.tempModalType = this.modalType.view;
       this.postageDetail = this._.cloneDeep(params.row);
+      this.searchRelationRowData.deliveryFeeTemplateId = params.row.id;
+      this.getRelationTableData();
       this.modalEdit = true;
     },
     handleEdit(params) {
@@ -612,6 +623,29 @@ export default {
     exportExcel() {
       this.$refs.tables.exportCsv({
         filename: `table-${new Date().valueOf()}.csv`
+      });
+    },
+    getRelationTableData() {
+      getDeliveryFeeConfigRulePages(this.searchRelationRowData).then(res => {
+        // 设置行是否可编辑
+        if (res.rows.length !== 0) {
+          res.rows.forEach(element => {
+            element.isEdit = false;
+          });
+          // this.relationDetail = res.rows;
+          this.postageDetail.detailList = res.rows;
+        } else {
+          this.postageDetail.detailList = [];
+        }
+        // this.total = res.total;
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
+      }).catch(error => {
+        console.log(error);
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
       });
     }
   }

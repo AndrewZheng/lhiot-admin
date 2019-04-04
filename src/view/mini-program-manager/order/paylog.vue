@@ -201,7 +201,8 @@ const paymentLogDetail = {
   deleted: '',
   orderCode: '',
   startTime: null,
-  endTime: null
+  endTime: null,
+  nickName: ''
 };
 
 const roleRowData = {
@@ -293,7 +294,7 @@ export default {
         },
         {
           title: '支付步骤',
-          width: 120,
+          width: 100,
           key: 'payStep',
           render: (h, params, vm) => {
             const { row } = params;
@@ -319,7 +320,7 @@ export default {
         {
           title: '银行类型',
           key: 'bankType',
-          width: 160,
+          width: 140,
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{bankTypeConvert(row.bankType).label}</div>;
