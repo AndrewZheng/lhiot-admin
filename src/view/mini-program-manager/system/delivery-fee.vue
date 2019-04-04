@@ -121,7 +121,6 @@
               </RadioGroup>
             </FormItem>
           </Row>
-          111{{ postageDetail.detailList }}
           <Row>
 
             <FormItem prop="detailList">
@@ -188,7 +187,8 @@ const postageDetail = {
   deliveryTime: null,
   createTime: null,
   updateTime: null,
-  createBy: ''
+  createBy: '',
+  detailList: []
 };
 const detailList = {
   minDistance: 0,
@@ -582,9 +582,9 @@ export default {
     addChildren() {
       // this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.create;
-      this.postageDetail.detailList.length = 0;
-      this.postageDetail.detailList.push(this._.cloneDeep(detailList));
-      this.postageDetail.deliveryAtType = deliveryAtType.ALL_DAY;
+      // this.postageDetail.detailList.length = 0;
+      // this.postageDetail.detailList.push(this._.cloneDeep(detailList));
+      // this.postageDetail.deliveryAtType = deliveryAtType.ALL_DAY;
       this.modalEdit = true;
     },
     resetSearchRowData() {
