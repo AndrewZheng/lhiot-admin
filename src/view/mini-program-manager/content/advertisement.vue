@@ -83,12 +83,6 @@
         <span>广告详情</span>
       </p>
       <div class="modal-content">
-        <Row>
-          <i-col span="3">广告内容:</i-col>
-          <i-col v-if="advertisementDetail.advertiseType === 'IMAGE'" span="21" class-name="mb10">
-          <img :src="advertisementDetail.content" style="width: 100px;height: auto"></i-col>
-          <i-col v-else span="21" class-name="mb10">{{ advertisementDetail.content }}</i-col>
-        </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="3">广告位置:</i-col>
           <i-col span="21">{{ advertisementPositionComputed }}</i-col>
@@ -97,7 +91,7 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">广告名称:</i-col>
-              <i-col span="16">{{ advertisementDetail.advertiseName }}</i-col>
+              <i-col span="16">{{ advertisementDetail.advertisementName }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -110,6 +104,65 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="3">有效时间:</i-col>
           <i-col span="21">{{ validityPeriodComputed }}</i-col>
+        </Row>
+
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">广告图:</i-col>
+              <i-col span="16"><img :scr="advertisementDetail.imageUrl" width="80%"></i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">链接类型:</i-col>
+              <i-col span="16">{{ advertisementDetail.linkType }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">广告状态:</i-col>
+              <i-col span="16">{{ advertisementDetail.status }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">有效时间:</i-col>
+              <i-col span="16">{{ advertisementDetail.validTime }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">失效时间:</i-col>
+              <i-col span="16">{{ advertisementDetail.invalidTime }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">广告内容:</i-col>
+              <i-col span="16">{{ advertisementDetail.contentDesc }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">创建人:</i-col>
+              <i-col span="16">{{ advertisementDetail.createUser }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">创建时间:</i-col>
+              <i-col span="16">{{ advertisementDetail.createTime }}</i-col>
+            </Row>
+          </i-col>
         </Row>
       </div>
       <div slot="footer">

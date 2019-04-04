@@ -392,8 +392,31 @@ const relationDetail = {
   effectiveEndTime: null,
   couponLimit: 0,
   receiveCount: 0,
+  couponRules: '',
+  couponScope: null,
+  hdActivityId: 0,
   couponTemplateIds: ''
 }
+const relationList = [
+  {
+    id: 0,
+    activityCouponId: 0,
+    couponName: '',
+    couponType: null,
+    couponFee: 0,
+    minBuyFee: 0,
+    couponStatus: null,
+    couponImage: '',
+    effectiveStartTime: null,
+    effectiveEndTime: null,
+    couponLimit: 0,
+    receiveCount: 0,
+    couponRules: '',
+    couponScope: null,
+    hdActivityId: 0,
+    couponTemplateIds: ''
+  }
+]
 
 const couponTemplateDetail = {
   id: 0,
@@ -572,11 +595,16 @@ const hdTemplateColumns = [
   {
     title: '券面额',
     key: 'face_value',
-    minWidth: 80,
-    render(h, params) {
-      return <div>{fenToYuanDot2(params.row.face_value)}</div>;
-    }
+    minWidth: 80
   },
+  // {
+  //   title: '券面额',
+  //   key: 'face_value',
+  //   minWidth: 80,
+  //   render(h, params) {
+  //     return <div>{fenToYuanDot2(params.row.face_value)}</div>;
+  //   }
+  // },
   {
     title: '券说明',
     key: 'coupon_remark',
@@ -741,7 +769,8 @@ export default {
       searchHdTemplateRowData: _.cloneDeep(hdTemplateRowData),
       couponDetail: _.cloneDeep(couponDetail),
       relationDetail: _.cloneDeep(relationDetail),
-      addRelationDetail: _.cloneDeep(relationDetail),
+      addRelationDetail: [],
+      addRelationList: _.cloneDeep(relationList),
       couponTemplateDetail: _.cloneDeep(couponTemplateDetail),
       hdCouponTemplateDetail: _.cloneDeep(hdCouponTemplateDetail),
       couponTemplateTotal: 0,
@@ -887,18 +916,88 @@ export default {
     onTemplateSelectionAll(selection) {
       this.addRelationDetail.couponTemplateIds = selection.map(item => item.id.toString()).join(',');
       console.log('商品选择变化,当前页选择couponTemplateIds:' + this.addRelationDetail.couponTemplateIds);
+      this.addRelationList = [];
+      selection.forEach(element => {
+        this.addRelationList.push({
+          couponName: element.couponName,
+          couponType: element.couponType,
+          couponFee: element.couponFee,
+          minBuyFee: element.minBuyFee,
+          couponStatus: element.couponStatus,
+          couponImage: element.couponImage,
+          receiveCount: 0,
+          couponRules: element.couponRules,
+          couponScope: element.couponScope
+        });
+      });
+      console.log(JSON.stringify(this.addRelationList));
     },
     onTemplateSelectionChange(selection) {
       this.addRelationDetail.couponTemplateIds = selection.map(item => item.id.toString()).join(',');
       console.log('商品选择变化,当前页选择couponTemplateIds:' + this.addRelationDetail.couponTemplateIds);
+      this.addRelationList = [];
+      selection.forEach(element => {
+        this.addRelationList.push({
+          couponName: element.couponName,
+          couponType: element.couponType,
+          couponFee: element.couponFee,
+          minBuyFee: element.minBuyFee,
+          couponStatus: element.couponStatus,
+          couponImage: element.couponImage,
+          receiveCount: 0,
+          couponRules: element.couponRules,
+          couponScope: element.couponScope
+        });
+      });
+      console.log(JSON.stringify(this.addRelationList));
     },
     onHdTemplateSelectionAll(selection) {
-      this.addRelationDetail.couponTemplateIds = selection.map(item => item.id.toString()).join(',');
-      console.log('商品选择变化,当前页选择couponTemplateIds:' + this.addRelationDetail.couponTemplateIds);
+      this.addRelationDetail.couponTemplateIds = selection.map(item => item.activity_id.toString()).join(',');
+      this.addRelationList = [];
+      selection.forEach(element => {
+        var startIndex = element.use_rule.indexOf('满');
+        var endIndex = element.use_rule.indexOf('元');
+        var minBuyFee = element.use_rule.slice(startIndex + 1, endIndex);
+        this.addRelationList.push({
+          couponName: element.coupon_name,
+          // couponType: element.coupon_type,
+          couponType: 'CASH_COUPON',
+          couponFee: element.face_value,
+          // minBuyFee: element.price,
+          minBuyFee: minBuyFee,
+          couponStatus: 'VALID',
+          couponImage: '',
+          receiveCount: 0,
+          couponRules: element.use_rule,
+          couponScope: 'STORE_AND_SMALL',
+          hdActivityId: element.activity_id
+        });
+      });
+      console.log(JSON.stringify(this.addRelationList));
     },
     onHdTemplateSelectionChange(selection) {
-      this.addRelationDetail.couponTemplateIds = selection.map(item => item.id.toString()).join(',');
-      console.log('商品选择变化,当前页选择couponTemplateIds:' + this.addRelationDetail.couponTemplateIds);
+      this.addRelationDetail.couponTemplateIds = selection.map(item => item.activity_id.toString()).join(',');
+      this.addRelationList = [];
+      selection.forEach(element => {
+        var startIndex = element.use_rule.indexOf('满');
+        var endIndex = element.use_rule.indexOf('元');
+        var minBuyFee = element.use_rule.slice(startIndex + 1, endIndex);
+        this.addRelationList.push({
+          couponName: element.coupon_name,
+          // couponType: element.coupon_type,
+          couponType: 'CASH_COUPON',
+          couponFee: element.face_value,
+          // minBuyFee: element.price,
+          minBuyFee: minBuyFee,
+          couponStatus: 'VALID',
+          couponImage: '',
+          receiveCount: 0,
+          couponRules: element.use_rule,
+          couponScope: 'STORE_AND_SMALL',
+          hdActivityId: element.activity_id
+        });
+      });
+      console.log(JSON.stringify(this.addRelationList));
     },
     effectiveStartTimeChange(value, date) {
       this.addRelationDetail.effectiveStartTime = value;
@@ -929,11 +1028,18 @@ export default {
     },
     createRelation() {
       this.modalViewLoading = true;
-      this.addRelationDetail.receiveCount = 0;
-      createCouponTemplateRelation(this.addRelationDetail).then(res => {
+      this.addRelationList.forEach(item => {
+        item.activityCouponId = this.addRelationDetail.activityCouponId;
+        item.effectiveStartTime = this.addRelationDetail.effectiveStartTime;
+        item.effectiveEndTime = this.addRelationDetail.effectiveEndTime;
+        item.couponLimit = this.addRelationDetail.couponLimit;
+      })
+      // this.addRelationDetail.receiveCount = 0;
+      createCouponTemplateRelation(this.addRelationList).then(res => {
         this.modalViewLoading = false;
         this.modalEdit = false;
         this.$Message.success('创建成功!');
+        this.modalAdd = false;
         this.getRelationTableData();
       }).catch(() => {
         this.modalViewLoading = false;
@@ -942,10 +1048,18 @@ export default {
     },
     createHdRelation() {
       this.modalViewLoading = true;
-      createCouponTemplateRelation(this.addRelationDetail).then(res => {
+      this.addRelationList.forEach(item => {
+        item.activityCouponId = this.addRelationDetail.activityCouponId;
+        item.effectiveStartTime = this.addRelationDetail.effectiveStartTime;
+        item.effectiveEndTime = this.addRelationDetail.effectiveEndTime;
+        item.couponLimit = this.addRelationDetail.couponLimit;
+      })
+      console.log(JSON.stringify(this.addRelationList));
+      createCouponTemplateRelation(this.addRelationList).then(res => {
         this.modalViewLoading = false;
         this.modalEdit = false;
         this.$Message.success('创建成功!');
+        this.modalAdd = false;
         this.getRelationTableData();
       }).catch(() => {
         this.modalViewLoading = false;
@@ -959,7 +1073,6 @@ export default {
         this.loading = false;
         this.searchLoading = false;
         this.clearSearchLoading = false;
-        console.log('aaaaaaaaaaaaaaaaa' + JSON.stringify(this.hdCouponTemplateDetail));
       }).catch(error => {
         console.log(error);
         this.loading = false;
@@ -975,6 +1088,7 @@ export default {
     addHdCouponTemplate() {
       this.getHdTemplateTableData();
       this.tempModalType = 'addHdTemplate';
+      this.addRelationList = this._.cloneDeep(relationList);
       this.modalAdd = true;
     },
     handleAddClose() {

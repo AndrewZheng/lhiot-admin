@@ -157,7 +157,7 @@
             <Col span="20">
             <FormItem label="描述:" prop="description">
               <Input v-model="systemDetail.description" placeholder="描述"></Input>
-              <div v-for="item in uploadListMain" :key="item.url" v-if="showImage" class="demo-upload-list" >
+              <div v-for="item in uploadListMain" :key="item.url" ：v-if="showImage" class="demo-upload-list" >
                 <template v-if="item.status === 'finished'">
                   <div>
                     <img :src="item.url">
@@ -189,7 +189,14 @@
           <Row>
             <Col span="20">
             <FormItem label="分类id:" prop="categoryId">
-              <InputNumber :min="0" v-model="systemDetail.categoryId" placeholder="分类id"></InputNumber>
+              <!-- <InputNumber :min="0" v-model="systemDetail.categoryId" placeholder="分类id"></InputNumber> -->
+              <Cascader
+                :data="systemCategoryData"
+                v-model="defaultSystemCategoryData"
+                span="21"
+                style="width: 70%"
+                @on-change="systemCategoryChange"
+              ></Cascader>
             </FormItem>
             </Col>
           </Row>
@@ -217,12 +224,14 @@ import {
   deleteSystemSetting,
   getSystemSettingPages,
   editSystemSetting,
-  createSystemSetting
+  createSystemSetting,
+  getSystemSettingCategoryTree
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
+import { buildMenu, convertTreeCategory, convertTree } from '@/libs/util';
 
 const systemDetail = {
   id: 0,
@@ -237,6 +246,11 @@ const roleRowData = {
   indexValue: null,
   categoryId: null,
   description: null,
+  page: 1,
+  rows: 10
+};
+
+const categoryRowData = {
   page: 1,
   rows: 10
 };
@@ -301,11 +315,15 @@ export default {
           options: ['view', 'edit', 'delete']
         }
       ],
+      systemCategoryData: [],
+      defaultSystemCategoryData: [41],
+      systemCategoriesTreeList: [],
       defaultListMain: [],
       uploadListMain: [],
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
+      searchTreeRowData: _.cloneDeep(categoryRowData),
       systemDetail: _.cloneDeep(systemDetail),
       showImage: false
     };
@@ -313,6 +331,7 @@ export default {
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
+    this.getSystemSettingCategoryTree();
   },
   created() {
   },
@@ -402,19 +421,22 @@ export default {
       this.resetFields();
       this.tempModalType = this.modalType.view;
       this.systemDetail = _.cloneDeep(params.row);
-      if(this.systemDetail.description!= null) {
-        this.showImage = this.systemDetail.description.indexOf('http') != -1 ? true : false;
-      }      
+      if (this.systemDetail.description != null) {
+        this.showImage = this.systemDetail.description.indexOf('http') != -1;
+      }
       this.modalView = true;
     },
     handleEdit(params) {
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.systemDetail = _.cloneDeep(params.row);
-      if(this.systemDetail.description!= null) {
-        this.showImage = this.systemDetail.description.indexOf('http') != -1 ? true : false;
-      }    
+      if (this.systemDetail.description != null) {
+        this.showImage = this.systemDetail.description.indexOf('http') != -1;
+      }
       this.setDefaultUploadList(this.systemDetail);
+      this.defaultGoodsCategoryData = [];
+      this.findGroupId(this.systemDetail.categoryId);
+      this.defaultGoodsCategoryData.reverse();
       this.modalEdit = true;
     },
     getTableData() {
@@ -448,6 +470,23 @@ export default {
       this.systemDetail.description = null;
       this.systemDetail.description = fileList[0].url;
     },
+    getSystemSettingCategoryTree() {
+      getSystemSettingCategoryTree().then(res => {
+        if (res && res.array.length > 0) {
+          this.systemCategoriesTreeList = res.array;
+          const menuList = buildMenu(res.array);
+          const map = {
+            id: 'id',
+            title: 'title',
+            children: 'children'
+          };
+          this.systemCategoryData = convertTreeCategory(menuList, map, true);
+          this.createLoading = false;
+        }
+      }).catch(() => {
+        this.createLoading = false;
+      });
+    },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.description != null) {
@@ -457,6 +496,24 @@ export default {
         mainImgArr.push(map);
         this.$refs.uploadMain.setDefaultFileList(mainImgArr);
         this.uploadListMain = mainImgArr;
+      }
+    },
+    // 选择分类
+    systemCategoryChange(value, selectedData) {
+      if (selectedData.length > 0) {
+        this.systemDetail.categoryId = selectedData[selectedData.length - 1].id;
+      } else {
+        this.systemDetail.categoryId = null;
+      }
+      this.defaultSystemCategoryData = selectedData;
+    },
+    findGroupId(id) {
+      const obj = this.systemCategoriesTreeList.find(item => {
+        return item.id === id;
+      });
+      this.defaultSystemCategoryData.push(id);
+      if (obj && obj.parentid !== 0) {
+        this.findGroupId(obj.parentid);
       }
     }
   }

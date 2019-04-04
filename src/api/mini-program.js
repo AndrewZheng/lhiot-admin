@@ -319,6 +319,15 @@ export const getCouponTemplateRelationPages = (data) => {
   });
 };
 
+// // 创建优惠券活动和优惠券模板之间的关联
+// export const createCouponTemplateRelation = (data) => {
+//   return Vue.prototype.$http.request({
+//     url: '/minapp/coupon-template-relations/',
+//     data,
+//     method: 'post'
+//   });
+// };
+
 // 创建优惠券活动和优惠券模板之间的关联
 export const createCouponTemplateRelation = (data) => {
   return Vue.prototype.$http.request({
@@ -1080,6 +1089,14 @@ export const editDeliveryFeeConfigRule = (data) => {
     url: '/minapp/delivery-fee-config-rules/' + data.id,
     data,
     method: 'put'
+  });
+};
+
+// 查询系统参数分类树结构
+export const getSystemSettingCategoryTree = () => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/system-setting-categories/tree',
+    method: 'get'
   });
 };
 
