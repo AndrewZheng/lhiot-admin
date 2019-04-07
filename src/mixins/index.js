@@ -2,7 +2,7 @@ import {
   customOrderStatusConvert,
   customPeriodConvert, customPlanStatusConvert,
   deliveryTypeCustomConvert, doctorLevelConvert, doctorStatusConvert, hotConvert, onSaleStatusConvert,
-  orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert, feedbackStatusConvert, productStatusConvert, imageStatusConvert, imageTypeConvert, teamBuyStatusConvert, teamBuyTypeConvert, rewardActivitySettingConvert, couponStatusConvert, couponTypeConvert, appTypeConvert, bankTypeConvert, timeLimitedConvert, advertisementPositionTypeConvert, couponScopeConvert
+  orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert, feedbackStatusConvert, productStatusConvert, imageStatusConvert, imageTypeConvert, teamBuyStatusConvert, teamBuyTypeConvert, rewardActivitySettingConvert, couponStatusConvert, couponTypeConvert, appTypeConvert, bankTypeConvert, timeLimitedConvert, advertisementPositionTypeConvert, couponScopeConvert, advertisementLinkTypeConvert, miniOrderStatusConvert, miniHdStatusConvert, miniOrderTypeConvert
 } from '../libs/converStatus';
 
 const mixin = {
@@ -147,7 +147,24 @@ const mixin = {
     // 小程序广告位类型
     advertisementPositionTypeFilter(type) {
       return advertisementPositionTypeConvert(type).label;
+    },
+    // 小程序广告位链接类型
+    advertisementLinkTypeFilter(type) {
+      return advertisementLinkTypeConvert(type).label;
+    },
+    // 小程序订单状态
+    miniOrderStatusFilter(status) {
+      return miniOrderStatusConvert(status).label;
+    },
+    // 小程序海鼎状态
+    miniHdStatusFilter(status) {
+      return miniHdStatusConvert(status).label;
+    },
+    // 小程序订单类型
+    miniOrderTypeFilter(type) {
+      return miniOrderTypeConvert(type).label;
     }
+
   },
   computed: {
     userInfo() {

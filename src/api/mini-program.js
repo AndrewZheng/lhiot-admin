@@ -971,9 +971,9 @@ export const getAdvertisementPages = (data) => {
 };
 
 // 查询广告位详情
-export const getAdvertisement = ({ id }) => {
+export const getAdvertisement = (data) => {
   return Vue.prototype.$http.request({
-    url: '/minapp/advertisements/' + id,
+    url: '/minapp/advertisements/' + data.id + '?flag=' + data.flag,
     method: 'get'
   });
 };

@@ -1,5 +1,5 @@
 import { fenToYuanDot2 } from './util';
-import { onSaleStatusConvert } from './converStatus';
+import { onSaleStatusConvert, customPlanStatusConvert } from './converStatus';
 
 export const goodsOnSalesColumns = [
   {
@@ -339,3 +339,83 @@ export const articleColumns = [
     sortable: true
   }
 ];
+
+// -----------------小程序广告关联---------------------
+
+export const miniGoodsStandardColumns = [
+  // {
+  //   type: 'selection',
+  //   key: '',
+  //   width: 60,
+  //   align: 'center',
+  //   fixed: 'left'
+  // },
+  {
+    title: '规格ID',
+    key: 'id',
+    minWidth: 80
+  },
+  {
+    title: '商品条码',
+    key: 'barcode',
+    minWidth: 100
+  },
+  {
+    title: '商品编号',
+    key: 'productCode',
+    minWidth: 100
+  },
+  {
+    title: '商品名称',
+    key: 'productName',
+    minWidth: 100
+  },
+  {
+    title: '商品规格',
+    key: 'specification',
+    minWidth: 100
+  },
+  {
+    title: '商品单位',
+    width: 100,
+    key: 'productUnit'
+  },
+  {
+    title: '商品原价',
+    width: 120,
+    key: 'price',
+    render(h, params, vm) {
+      const amount = fenToYuanDot2(params.row.price);
+      return <div>{amount}</div>;
+    }
+  },
+  {
+    title: '出售价格',
+    minWidth: 120,
+    key: 'salePrice',
+    render(h, params, vm) {
+      const amount = fenToYuanDot2(params.row.salePrice);
+      return <div>{amount}</div>;
+    }
+  },
+  {
+    title: '商品状态',
+    width: 100,
+    key: 'shelvesStatus',
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.shelvesStatus === 'VALID') {
+        return <div><tag color='success'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
+      } else if (row.shelvesStatus === 'INVALID') {
+        return <div><tag color='error'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
+      }
+      return <div><tag color='primary'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
+    }
+  },
+  {
+    title: '商品排序',
+    width: 80,
+    key: 'rank'
+  }
+];
+

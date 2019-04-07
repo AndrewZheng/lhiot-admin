@@ -344,7 +344,7 @@
                </Col>
               <Col span="8">
               <Button v-waves :loading="addTempDataLoading" span="4" class="search-btn ml20" type="primary" @click="addTempData('modalCreate')">
-                <Icon type="md-add"/>&nbsp;关联商品
+                <Icon type="md-add"/>&nbsp;添加配置
               </Button>
                 </Col>
             </Row>
