@@ -320,7 +320,7 @@
       :mask-closable="false"
       :width="1200"
       v-model="relationTargetShow"
-      title="View Image">
+      title="广告关联">
       <div class="modal-content">
         <Table
           :columns="tempColumns"
@@ -633,6 +633,7 @@ export default {
       });
     },
     onRowClick(row, index) {
+      debugger
       if (this.advertisementDetail.relationType === relationType.PRODUCT_SECTION ||
           this.advertisementDetail.relationType === relationType.CUSTOM_PLAN_SECTION) {
         this.advertisementDetail.advertiseRelationText = row.sectionName;
@@ -703,13 +704,13 @@ export default {
       });
     },
     searchAdvertisementRelation() {
-      if (this.advertisementDetail.relationType === null || this.advertisementDetail.relationType === '') {
+      if (this.advertisementDetail.linkType === null || this.advertisementDetail.linkType === '') {
         this.$Message.warning('请填写链接类型');
         return;
       }
       this.searchModalTableLoading = true;
-      const tempObj = this.relationType.find(item => {
-        return item.value === this.advertisementDetail.relationType;
+      const tempObj = this.linkType.find(item => {
+        return item.value === this.advertisementDetail.linkType;
       });
       console.log(tempObj);
       if (tempObj) {

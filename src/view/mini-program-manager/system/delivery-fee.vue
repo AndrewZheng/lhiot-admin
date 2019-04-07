@@ -113,9 +113,9 @@
             </Col>
           </Row>
           <Row>
-            <FormItem :label-width="100" label="配送时间段:" prop="deliveryAtType">
-              <RadioGroup v-model="postageDetail.deliveryAtType" :disabled="modalTypeComputed">
-                <Radio v-for="item in deliveryAtTypeEnum" :label="item.value" :disabled="modalTypeComputed" :key="item.value">
+            <FormItem :label-width="100" label="配送时间段:" prop="deliveryTime">
+              <RadioGroup v-model="postageDetail.deliveryTime" :disabled="modalTypeComputed">
+                <Radio v-for="item in minDeliveryAtTypeEnum" :label="item.value" :disabled="modalTypeComputed" :key="item.value">
                   <span>{{ item.label }}</span>
                 </Radio>
               </RadioGroup>
@@ -123,10 +123,10 @@
           </Row>
           <Row>
 
-            <FormItem prop="detailList">
+            <FormItem prop="deliveryRules">
               <tables
                 :columns="tableColumnComputed"
-                v-model="postageDetail.detailList"
+                v-model="postageDetail.deliveryRules"
                 border
                 @on-delete="postageRuleTableHandleDelete"
               ></tables>
@@ -188,9 +188,9 @@ const postageDetail = {
   createTime: null,
   updateTime: null,
   createBy: '',
-  detailList: []
+  deleteIds: []
 };
-const detailList = {
+const deliveryRules = {
   minDistance: 0,
   maxDistance: 3,
   firstWeight: 5,
@@ -224,10 +224,23 @@ export default {
         minOrderAmount: [{ required: true, message: '请填写最小金额', type: 'number' }],
         maxOrderAmount: [{ required: true, message: '请填写最大金额', type: 'number' }],
         deliveryAtType: [{ required: true, message: '请选择时间段' }],
-        detailList: [{ required: true, message: '请添加运费信息' }]
+        deliveryRules: [{ required: true, message: '请添加运费信息' }]
       },
       deliveryAtTypeList: deliveryAtTypeEnum,
-      deliveryAtTypeEnum,
+      minDeliveryAtTypeEnum: [
+        {
+          label: '白天8:00-18:00',
+          value: '8:00-18:00'
+        },
+        {
+          label: '晚上18:00-22:00',
+          value: '18:00-22:00'
+        },
+        {
+          label: '全天8:00-22:00',
+          value: '8:00-18:00,18:00-22:00'
+        }
+      ],
       distanceList: ['0-3', '3-5'],
       postageRuleTableColumns: [
         {
@@ -244,11 +257,11 @@ export default {
                   'on-change': e => {
                     console.log(vm);
                     if (e == '0-3') {
-                      this.postageDetail.detailList[params.row.initRowIndex].minDistance = 0;
-                      this.postageDetail.detailList[params.row.initRowIndex].maxDistance = 3;
+                      this.postageDetail.deliveryRules[params.row.initRowIndex].minDistance = 0;
+                      this.postageDetail.deliveryRules[params.row.initRowIndex].maxDistance = 3;
                     } else if (e == '3-5') {
-                      this.postageDetail.detailList[params.row.initRowIndex].minDistance = 3;
-                      this.postageDetail.detailList[params.row.initRowIndex].maxDistance = 5;
+                      this.postageDetail.deliveryRules[params.row.initRowIndex].minDistance = 3;
+                      this.postageDetail.deliveryRules[params.row.initRowIndex].maxDistance = 5;
                     }
                   }
                 }
@@ -286,7 +299,7 @@ export default {
                     if (!e) {
                       e = 0;
                     }
-                    this.postageDetail.detailList[params.row.initRowIndex].firstWeight = e;
+                    this.postageDetail.deliveryRules[params.row.initRowIndex].firstWeight = e;
                   }
                 }
               })
@@ -309,7 +322,7 @@ export default {
                     if (!e) {
                       e = 0;
                     }
-                    this.postageDetail.detailList[params.row.initRowIndex].firstFee = yuanToFenNumber(e);
+                    this.postageDetail.deliveryRules[params.row.initRowIndex].firstFee = yuanToFenNumber(e);
                   }
                 }
               })
@@ -332,7 +345,7 @@ export default {
                     if (!e) {
                       e = 0;
                     }
-                    this.postageDetail.detailList[params.row.initRowIndex].additionalWeight = e;
+                    this.postageDetail.deliveryRules[params.row.initRowIndex].additionalWeight = e;
                   }
                 }
               })
@@ -355,7 +368,7 @@ export default {
                     if (!e) {
                       e = 0;
                     }
-                    this.postageDetail.detailList[params.row.initRowIndex].additionalFee = yuanToFenNumber(e);
+                    this.postageDetail.deliveryRules[params.row.initRowIndex].additionalFee = yuanToFenNumber(e);
                   }
                 }
               })
@@ -371,8 +384,12 @@ export default {
           align: 'center'
         },
         {
+          title: 'Id',
+          key: 'id'
+        },
+        {
           title: '金额范围',
-          key: 'id',
+          key: 'minOrderAmount',
           minWidth: 180,
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.minOrderAmount) + ' - ' + fenToYuanDot2(params.row.maxOrderAmount)}</div>;
@@ -459,10 +476,13 @@ export default {
     },
     onCopy(params) {
       console.log(params);
-      params.row.detailList.forEach(item => {
-        item.updateWay = updateWay.INSERT;
-      });
+      if (params.row.deliveryRules.length !== 0) {
+        params.row.deliveryRules.forEach(item => {
+          item.updateWay = updateWay.INSERT;
+        });
+      }
       this.postageDetail = params.row;
+      console.log('postageDetail:' + JSON.stringify(this.postageDetail));
       this.createTableRow();
     },
     deleteTable(ids) {
@@ -524,9 +544,9 @@ export default {
       });
     },
     addPostageRuleTableColumns() {
-      if (this.postageDetail.detailList.length > 0) {
+      if (this.postageDetail.deliveryRules.length > 0) {
         const array = [];
-        this.postageDetail.detailList.forEach(item => {
+        this.postageDetail.deliveryRules.forEach(item => {
           array.push(item.minDistance + '-' + item.maxDistance);
         });
         console.log(array);
@@ -538,16 +558,16 @@ export default {
         } else {
           const str = tempArray[0];
           const strArray = str.split('-');
-          const obj = this._.cloneDeep(detailList);
+          const obj = this._.cloneDeep(deliveryRules);
           obj.minDistance = strArray[0];
           obj.maxDistance = strArray[1];
           obj.deliveryFeeRuleId = this.postageDetail.id;
-          this.postageDetail.detailList.push(obj);
+          this.postageDetail.deliveryRules.push(obj);
         }
       } else {
-        const obj = this._.cloneDeep(detailList);
+        const obj = this._.cloneDeep(deliveryRules);
         obj.deliveryFeeRuleId = this.postageDetail.id;
-        this.postageDetail.detailList.push(obj);
+        this.postageDetail.deliveryRules.push(obj);
       }
     },
     array_diff(a, b) {
@@ -565,7 +585,7 @@ export default {
     },
     postageRuleTableHandleDelete(params) {
       if (this.tempModalType === this.modalType.create) {
-        this.postageDetail.detailList = params.tableData.filter((item, index) => index !== params.row.initRowIndex);
+        this.postageDetail.deliveryRules = params.tableData.filter((item, index) => index !== params.row.initRowIndex);
       } else {
         const index = this.tempDetailList.findIndex(item => {
           return item.id === params.row.id;
@@ -576,14 +596,14 @@ export default {
           }
           this.postageDetail.deleteIds.push(params.row.id);
         }
-        this.postageDetail.detailList = params.tableData.filter((item, index) => index !== params.row.initRowIndex);
+        this.postageDetail.deliveryRules = params.tableData.filter((item, index) => index !== params.row.initRowIndex);
       }
     },
     addChildren() {
       // this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.create;
-      // this.postageDetail.detailList.length = 0;
-      // this.postageDetail.detailList.push(this._.cloneDeep(detailList));
+      // this.postageDetail.deliveryRules.length = 0;
+      // this.postageDetail.deliveryRules.push(this._.cloneDeep(deliveryRules));
       // this.postageDetail.deliveryAtType = deliveryAtType.ALL_DAY;
       this.modalEdit = true;
     },
@@ -595,16 +615,22 @@ export default {
     handleView(params) {
       this.tempModalType = this.modalType.view;
       this.postageDetail = this._.cloneDeep(params.row);
-      this.searchRelationRowData.deliveryFeeTemplateId = params.row.id;
-      this.getRelationTableData();
+      // this.searchRelationRowData.deliveryFeeTemplateId = params.row.id;
+      // this.getRelationTableData();
       this.modalEdit = true;
     },
     handleEdit(params) {
       // this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.edit;
       this.postageDetail = this._.cloneDeep(params.row);
+      if (this.postageDetail.deliveryRules.length !== 0) {
+        this.postageDetail.deliveryRules.forEach(item => {
+          item.updateWay = 'UPDATE'
+        });
+      }
       this.tempDetailList.length = 0;
-      this.tempDetailList = this.postageDetail.detailList;
+      this.tempDetailList = this.postageDetail.deliveryRules;
+
       this.modalEdit = true;
     },
     getTableData() {
@@ -633,9 +659,9 @@ export default {
             element.isEdit = false;
           });
           // this.relationDetail = res.rows;
-          this.postageDetail.detailList = res.rows;
+          this.postageDetail.deliveryRules = res.rows;
         } else {
-          this.postageDetail.detailList = [];
+          this.postageDetail.deliveryRules = [];
         }
         // this.total = res.total;
         this.loading = false;

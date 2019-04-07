@@ -157,7 +157,7 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="6">订单类型:</i-col>
-              <i-col span="18">{{ orderDetail.orderType|orderTypeFilters }}</i-col>
+              <i-col span="18">{{ orderDetail.orderType|miniOrderTypeFilter }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -171,11 +171,11 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">订单状态:</i-col>
-              <i-col span="16">{{ orderDetail.status|orderStatusFilters }}</i-col>
+              <i-col span="16">{{ orderDetail.orderStatus|miniOrderStatusFilter }}</i-col>
             </Row>
           </i-col>
         </Row>
-        <Row style="background: lightgray;margin-bottom: 10px">
+        <Row v-if="orderDetail.applyType === 'WXSMALL_SHOP'" style="background: lightgray;margin-bottom: 10px">
           <Row>
             <i-col span="24">
               <Row class="mb10 pl10 pt5">
@@ -219,7 +219,7 @@
             </Row>
           </i-col>
           <i-col span="12">
-            <Row class-name="mb10">
+            <Row v-if="orderDetail.applyType === 'WXSMALL_SHOP'" class-name="mb10">
               <i-col span="8">用户配送费:</i-col>
               <i-col span="16">{{ orderDetail.deliveryAmount|fenToYuanDot2Filters }}</i-col>
             </Row>
@@ -234,8 +234,8 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">海鼎备货时间:</i-col>
-              <i-col span="16">{{ orderDetail.hdStockAt }}</i-col>
+              <i-col span="8">海鼎状态:</i-col>
+              <i-col span="16">{{ orderDetail.hdStatus | miniHdStatusFilter }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -244,6 +244,12 @@
             <Row class-name="mb10">
               <i-col span="8">创建时间:</i-col>
               <i-col span="16">{{ orderDetail.createAt }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">海鼎备货时间:</i-col>
+              <i-col span="16">{{ orderDetail.hdStockAt }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -346,15 +352,7 @@ import {
   orderStatusEnum,
   orderTypeEnum
 } from '@/libs/enumerate';
-import {
-  orderTypeConvert,
-  thirdDeliverStatusConvert
-} from '@/libs/converStatus';
-import {
-  orderStatusConvert,
-  receivingWayConvert
-} from '../../../libs/converStatus';
-
+import { orderTypeConvert, thirdDeliverStatusConvert, miniOrderStatusConvert, miniHdStatusConvert, receivingWayConvert } from '@/libs/converStatus';
 import BookTypeOption from '_c/book-type-option';
 
 const orderDetail = {
@@ -382,7 +380,8 @@ const orderDetail = {
   deliveryEndTime: null,
   payType: '',
   payAt: null,
-  activityTeambuyContent: ''
+  activityTeambuyContent: '',
+  hdOrderCode: ''
 };
 const roleRowData = {
   page: 1,
@@ -563,23 +562,23 @@ export default {
         {
           title: '订单状态',
           width: 120,
-          key: 'status',
+          key: 'orderStatus',
           render: (h, params, vm) => {
             const { row } = params;
-            // WAIT_PAYMENT("待支付"),WAIT_SEND_OUT("待出库"),
-            // SEND_OUTING("出库中"),WAIT_DISPATCHING("待配送"),DISPATCHING("配送中"),RECEIVED("已收货"),RETURNING("退货中"),
-            // RETURN_FAILURE("退款失败"),FAILURE("已失效"),
-            // ALREADY_RETURN("退货完成"),FINISHED("完成")
-            if (row.status === 'WAIT_PAYMENT' || row.status === 'WAIT_SEND_OUT') {
-              return <div><tag color='default'>{orderStatusConvert(row.status).label}</tag></div>;
-            } else if (row.status === 'SEND_OUTING' || row.status === 'WAIT_DISPATCHING' || row.status === 'DISPATCHING' || row.status === 'RECEIVED' || row.status === 'RETURNING') {
-              return <div><tag color='primary'>{orderStatusConvert(row.status).label}</tag></div>;
-            } else if (row.status === 'RETURN_FAILURE' || row.status === 'FAILURE') {
-              return <div><tag color='error'>{orderStatusConvert(row.status).label}</tag></div>;
-            } else if (row.status === 'ALREADY_RETURN' || row.status === 'FINISHED') {
-              return <div><tag color='success'>{orderStatusConvert(row.status).label}</tag></div>;
+            // WAIT_PAYMENT("待支付"),PAYMENTING("支付中"),WAIT_SEND_OUT("待发货"),
+            // SEND_OUT("已发货"),DISPATCHING("配送中"),RECEIVED("已收货"),RETURNING("退货中"),
+            // ALREADY_RETURN("退货完成"),FAILURE("已失效")
+            // FINISHED("已完成")
+            if (row.orderStatus === 'WAIT_PAYMENT' || row.orderStatus === 'PAYMENTING' || row.orderStatus === 'WAIT_SEND_OUT') {
+              return <div><tag color='default'>{miniOrderStatusConvert(row.orderStatus).label}</tag></div>;
+            } else if (row.orderStatus === 'SEND_OUT' || row.orderStatus === 'DISPATCHING' || row.orderStatus === 'RECEIVED' || row.orderStatus === 'RETURNING') {
+              return <div><tag color='primary'>{miniOrderStatusConvert(row.orderStatus).label}</tag></div>;
+            } else if (row.orderStatus === 'FAILURE') {
+              return <div><tag color='error'>{miniOrderStatusConvert(row.orderStatus).label}</tag></div>;
+            } else if (row.orderStatus === 'ALREADY_RETURN' || row.orderStatus === 'FINISHED') {
+              return <div><tag color='success'>{miniOrderStatusConvert(row.orderStatus).label}</tag></div>;
             } else {
-              return <div>{row.status}</div>;
+              return <div>{row.orderStatus}</div>;
             }
           }
         },
@@ -589,52 +588,44 @@ export default {
           key: 'hdStatus',
           render: (h, params, vm) => {
             const { row } = params;
-            // WAIT_PAYMENT("待支付"),WAIT_SEND_OUT("待出库"),
-            // SEND_OUTING("出库中"),WAIT_DISPATCHING("待配送"),DISPATCHING("配送中"),RECEIVED("已收货"),RETURNING("退货中"),
-            // RETURN_FAILURE("退款失败"),FAILURE("已失效"),
-            // ALREADY_RETURN("退货完成"),FINISHED("完成")
-            if (row.hdStatus === 'WAIT_PAYMENT' || row.hdStatus === 'WAIT_SEND_OUT') {
-              return <div><tag color='default'>{orderStatusConvert(row.status).label}</tag></div>;
-            } else if (row.status === 'SEND_OUTING' || row.status === 'WAIT_DISPATCHING' || row.status === 'DISPATCHING' || row.status === 'RECEIVED' || row.status === 'RETURNING') {
-              return <div><tag color='primary'>{orderStatusConvert(row.status).label}</tag></div>;
-            } else if (row.status === 'RETURN_FAILURE' || row.status === 'FAILURE') {
-              return <div><tag color='error'>{orderStatusConvert(row.status).label}</tag></div>;
-            } else if (row.status === 'ALREADY_RETURN' || row.status === 'FINISHED') {
-              return <div><tag color='success'>{orderStatusConvert(row.status).label}</tag></div>;
+            // NOT_SEND("未发送"),SEND_OUT("成功")
+            if (row.hdStatus === 'NOT_SEND') {
+              return <div><tag color='error'>{miniHdStatusConvert(row.hdStatus).label}</tag></div>;
+            } else if (row.hdStatus === 'SEND_OUT') {
+              return <div><tag color='success'>{miniHdStatusConvert(row.hdStatus).label}</tag></div>;
             } else {
-              return <div>{row.status}</div>;
+              return <div>{row.hdStatus}</div>;
             }
           }
         },
-        {
-          title: '海鼎备货时间',
-          width: 160,
-          key: 'hdStockAt',
-          sortable: true
-        },
-        {
-          title: '配送状态',
-          width: 160,
-          key: 'deliverStatus',
-          sortable: true
-        },
-        {
-          title: '配送距离(km)',
-          width: 160,
-          key: 'distance',
-          sortable: true
-        },
-        {
-          title: '配送重量(kg)',
-          width: 160,
-          key: 'weight',
-          sortable: true
-        },
+        // {
+        //   title: '海鼎备货时间',
+        //   width: 160,
+        //   key: 'hdStockAt',
+        //   sortable: true
+        // },
+        // {
+        //   title: '配送状态',
+        //   width: 160,
+        //   key: 'deliverStatus',
+        //   sortable: true
+        // },
+        // {
+        //   title: '配送距离(km)',
+        //   width: 160,
+        //   key: 'distance',
+        //   sortable: true
+        // },
+        // {
+        //   title: '配送重量(kg)',
+        //   width: 160,
+        //   key: 'weight',
+        //   sortable: true
+        // },
         {
           title: '操作',
           minWidth: 150,
           key: 'handle',
-          fixed: 'right',
           options: ['view']
         }
       ],
@@ -747,7 +738,7 @@ export default {
           item['orderType'] = orderTypeConvert(item['orderType']).label;
           item['deliverStatus'] = thirdDeliverStatusConvert(item['deliverStatus']).label;
           item['receivingWay'] = receivingWayConvert(item['receivingWay']).label;
-          item['status'] = orderStatusConvert(item['status']).label;
+          item['status'] = miniOrderStatusConvert(item['status']).label;
         });
         this.$refs.tables.handleDownload({
           filename: `普通订单信息-${new Date().valueOf()}`,

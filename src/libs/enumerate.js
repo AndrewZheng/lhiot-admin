@@ -1390,3 +1390,163 @@ export const advertisementPositionTypeEnum = [
     value: advertisementPositionType.CAROUSEL
   }
 ];
+
+// 小程序广告关联类别
+// GOODSINFO("商品详情"),STORELIVE("门店直播"),AMUSEMENT("多娱"),EXTERNALLINK("外部链接"),GAME("游戏"),INVITEACTIVE("邀请有礼"),FLASHACTIVE("抢购商品"),RECHARGE("充值页面"),STOCK("仓库")
+export const linkType = {
+  GOODSINFO: 'GOODSINFO',
+  STORELIVE: 'STORELIVE',
+  AMUSEMENT: 'AMUSEMENT',
+  EXTERNALLINK: 'EXTERNALLINK',
+  GAME: 'GAME',
+  INVITEACTIVE: 'INVITEACTIVE',
+  FLASHACTIVE: 'FLASHACTIVE',
+  RECHARGE: 'RECHARGE',
+  STOCK: 'STOCK'
+};
+
+export const linkTypeEnum = [
+  {
+    label: '商品详情',
+    value: linkType.GOODSINFO
+  },
+  {
+    label: '门店直播',
+    value: linkType.STORELIVE
+  },
+  {
+    label: '多娱',
+    value: linkType.AMUSEMENT
+  },
+  {
+    label: '外部链接',
+    value: linkType.EXTERNALLINK
+  },
+  {
+    label: '游戏',
+    value: linkType.GAME
+  },
+  {
+    label: '邀请有礼',
+    value: linkType.INVITEACTIVE
+  },
+  {
+    label: '抢购商品',
+    value: linkType.FLASHACTIVE
+  },
+  {
+    label: '充值页面',
+    value: linkType.RECHARGE
+  },
+  {
+    label: '仓库',
+    value: linkType.STOCK
+  }
+];
+
+// 小程序订单状态
+// WAIT_PAYMENT("待支付"),PAYMENTING("支付中"),WAIT_SEND_OUT("待发货"),SEND_OUT("已发货"),
+// DISPATCHING("配送中"),RECEIVED("已收货"),RETURNING("退货中"),
+// ALREADY_RETURN("退货完成"),FAILURE("已失效"),FINISHED("已完成");
+
+export const miniOrderStatus = {
+  WAIT_PAYMENT: 'WAIT_PAYMENT',
+  PAYMENTING: 'PAYMENTING',
+  WAIT_SEND_OUT: 'WAIT_SEND_OUT',
+  SEND_OUT: 'SEND_OUT',
+  DISPATCHING: 'DISPATCHING',
+  RECEIVED: 'RECEIVED',
+  RETURNING: 'RETURNING',
+  ALREADY_RETURN: 'ALREADY_RETURN',
+  FAILURE: 'FAILURE',
+  FINISHED: 'FINISHED'
+};
+
+export const miniOrderStatusEnum = [
+  {
+    label: '待支付',
+    value: miniOrderStatus.WAIT_PAYMENT
+  },
+  {
+    label: '支付中',
+    value: miniOrderStatus.PAYMENTING
+  },
+  {
+    label: '待发货',
+    value: miniOrderStatus.WAIT_SEND_OUT
+  },
+  {
+    label: '已发货',
+    value: miniOrderStatus.SEND_OUT
+  },
+  {
+    label: '配送中',
+    value: miniOrderStatus.DISPATCHING
+  },
+  {
+    label: '已收货',
+    value: miniOrderStatus.RECEIVED
+  },
+  {
+    label: '退货中',
+    value: miniOrderStatus.RETURNING
+  },
+  {
+    label: '退货完成',
+    value: miniOrderStatus.ALREADY_RETURN
+  },
+  {
+    label: '已失效',
+    value: miniOrderStatus.FAILURE
+  },
+  {
+    label: '已完成',
+    value: miniOrderStatus.FINISHED
+  }
+];
+
+// 小程序海鼎状态 NOT_SEND("未发送"),SEND_OUT("成功")
+
+export const miniHdStatus = {
+  NOT_SEND: 'NOT_SEND',
+  SEND_OUT: 'SEND_OUT'
+};
+
+export const miniHdStatusEnum = [
+  {
+    label: '未发送',
+    value: miniHdStatus.NOT_SEND
+  },
+  {
+    label: '成功',
+    value: miniHdStatus.SEND_OUT
+  }
+];
+
+// 小程序订单类型 SHOPPING("导购订单"),SELF_BUYING("自购订单"),TEAM_BUYING("团购订单"),PICKING("提货订单");
+
+export const miniOrderType = {
+  SHOPPING: 'SHOPPING',
+  SELF_BUYING: 'SELF_BUYING',
+  TEAM_BUYING: 'TEAM_BUYING',
+  PICKING: 'PICKING'
+};
+
+export const miniOrderTypeEnum = [
+  {
+    label: '导购订单',
+    value: miniOrderType.SHOPPING
+  },
+  {
+    label: '自购订单',
+    value: miniOrderType.SELF_BUYING
+  },
+  {
+    label: '团购订单',
+    value: miniOrderType.TEAM_BUYING
+  },
+  {
+    label: '提货订单',
+    value: miniOrderType.PICKING
+  }
+];
