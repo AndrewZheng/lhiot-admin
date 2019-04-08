@@ -136,46 +136,150 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">订单编号:</i-col>
+              <i-col span="8">订单code:</i-col>
               <i-col span="16">{{ orderDetail.code }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">用户手机号:</i-col>
-              <i-col span="16">{{ orderDetail.userPhone }}</i-col>
+              <i-col span="8">应用类型:</i-col>
+              <i-col span="16">{{ orderDetail.apply | appTypeFilter }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">海鼎编码:</i-col>
+              <i-col span="16">{{ orderDetail.hdOrderCode }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">用户昵称:</i-col>
+              <i-col span="8">下单用户:</i-col>
               <i-col span="16">{{ orderDetail.nickname }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">订单类型:</i-col>
-              <i-col span="18">{{ orderDetail.orderType|miniOrderTypeFilter }}</i-col>
+              <i-col span="8">下单门店:</i-col>
+              <i-col span="16">{{ orderDetail.storeName }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">门店编码:</i-col>
+              <i-col span="16">{{ orderDetail.storeCode }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">优惠券id:</i-col>
+              <i-col span="16">{{ orderDetail.couponId }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">下单时间:</i-col>
+              <i-col span="16">{{ orderDetail.createAt }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">提货截止时间:</i-col>
+              <i-col span="16">{{ orderDetail.deliveryEndTime }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">订单类型:</i-col>
+              <i-col span="16">{{ orderDetail.orderType|miniOrderTypeFilter }}</i-col>
+            </Row>
+          </i-col>
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">收货方式:</i-col>
               <i-col span="16">{{ orderDetail.receivingWay|receivingWayFilters }}</i-col>
             </Row>
           </i-col>
+        </Row>
+        <Row>
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">订单状态:</i-col>
               <i-col span="16">{{ orderDetail.orderStatus|miniOrderStatusFilter }}</i-col>
             </Row>
           </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">海鼎状态:</i-col>
+              <i-col span="16">{{ orderDetail.hdStatus | miniHdStatusFilter }}</i-col>
+            </Row>
+          </i-col>
         </Row>
-        <Row v-if="orderDetail.applyType === 'WXSMALL_SHOP'" style="background: lightgray;margin-bottom: 10px">
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">订单总额:</i-col>
+              <i-col span="16">{{ orderDetail.totalAmount|fenToYuanDot2Filters }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">优惠金额:</i-col>
+              <i-col span="16">{{ orderDetail.couponAmount|fenToYuanDot2Filters }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col v-if="orderDetail.receivingWay === 'TO_THE_HOME'" span="12">
+            <Row class-name="mb10">
+              <i-col span="8">运费:</i-col>
+              <i-col span="16">{{ orderDetail.deliveryAmount|fenToYuanDot2Filters }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">应付金额:</i-col>
+              <i-col span="16">{{ orderDetail.amountPayable|fenToYuanDot2Filters }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">海鼎备货时间:</i-col>
+              <i-col span="16">{{ orderDetail.hdStockAt }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">是否允许退货:</i-col>
+              <i-col span="16">{{ orderDetail.allowRefund | yesNoFilter }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">收货人:</i-col>
+              <i-col span="16">{{ orderDetail.receiveUser }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">联系方式:</i-col>
+              <i-col span="16">{{ orderDetail.contactPhone }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row v-if="orderDetail.receivingWay === 'TO_THE_HOME'" style="background: lightgray;margin-bottom: 10px">
           <Row>
             <i-col span="24">
               <Row class="mb10 pl10 pt5">
@@ -195,74 +299,47 @@
               </Row>
             </i-col>
           </Row>
+          <Row>
+            <i-col span="24">
+              <Row class-name="mb10">
+                <i-col span="8">订单备注:</i-col>
+                <i-col span="16">{{ orderDetail.remark }}</i-col>
+              </Row>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
+              <Row class-name="mb10">
+                <i-col span="8">配送时间段:</i-col>
+                <i-col span="16">{{ orderDetail.deliverTime }}</i-col>
+              </Row>
+            </i-col>
+            <i-col span="12">
+              <Row class-name="mb10">
+                <i-col span="8">配送状态:</i-col>
+                <i-col span="16">{{ orderDetail.deliverStatus }}</i-col>
+              </Row>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
+              <Row class-name="mb10">
+                <i-col span="8">配送距离(km):</i-col>
+                <i-col span="16">{{ orderDetail.distance }}</i-col>
+              </Row>
+            </i-col>
+            <i-col span="12">
+              <Row class-name="mb10">
+                <i-col span="8">配送重量:</i-col>
+                <i-col span="16">{{ orderDetail.weight }}</i-col>
+              </Row>
+            </i-col>
+          </Row>
           <tables :columns="tempColumnsView" v-model="deliverNoteList" border></tables>
         </Row>
+
         <Row>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="8">订单总额:</i-col>
-              <i-col span="16">{{ orderDetail.totalAmount|fenToYuanDot2Filters }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="8">优惠金额:</i-col>
-              <i-col span="16">{{ orderDetail.couponAmount|fenToYuanDot2Filters }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="8">折后金额:</i-col>
-              <i-col span="16">{{ orderDetail.amountPayable|fenToYuanDot2Filters }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row v-if="orderDetail.applyType === 'WXSMALL_SHOP'" class-name="mb10">
-              <i-col span="8">用户配送费:</i-col>
-              <i-col span="16">{{ orderDetail.deliveryAmount|fenToYuanDot2Filters }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="8">海鼎编码:</i-col>
-              <i-col span="16">{{ orderDetail.hdOrderCode }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="8">海鼎状态:</i-col>
-              <i-col span="16">{{ orderDetail.hdStatus | miniHdStatusFilter }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="8">创建时间:</i-col>
-              <i-col span="16">{{ orderDetail.createAt }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="8">海鼎备货时间:</i-col>
-              <i-col span="16">{{ orderDetail.hdStockAt }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="8">订单备注:</i-col>
-              <i-col span="16">{{ orderDetail.remark }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row>
-          <tables :columns="orderViewRelationsColumn" v-model="orderDetail.orderProductList" border></tables>
+          <tables :columns="orderViewRelationsColumn" v-model="orderDetail.orderProducts" border></tables>
         </Row>
       </div>
       <div slot="footer">
@@ -341,18 +418,12 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import {
-  getOrderPages
-} from '@/api/mini-program';
+import { getOrderPages, getOrder } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import { fenToYuanDot2 } from '@/libs/util';
-import {
-  receivingWayEnum,
-  orderStatusEnum,
-  orderTypeEnum
-} from '@/libs/enumerate';
-import { orderTypeConvert, thirdDeliverStatusConvert, miniOrderStatusConvert, miniHdStatusConvert, receivingWayConvert } from '@/libs/converStatus';
+import { receivingWayEnum, orderStatusEnum, orderTypeEnum, appTypeEnum } from '@/libs/enumerate';
+import { orderTypeConvert, thirdDeliverStatusConvert, miniOrderStatusConvert, miniHdStatusConvert, receivingWayConvert, appTypeConvert } from '@/libs/converStatus';
 import BookTypeOption from '_c/book-type-option';
 
 const orderDetail = {
@@ -381,7 +452,10 @@ const orderDetail = {
   payType: '',
   payAt: null,
   activityTeambuyContent: '',
-  hdOrderCode: ''
+  hdOrderCode: '',
+  orderProducts: [],
+  orderFlows: [],
+  allowRefund: null
 };
 const roleRowData = {
   page: 1,
@@ -447,41 +521,60 @@ export default {
       ],
       orderViewRelationsColumn: [
         {
-          title: '商品名称',
-          minWidth: 100,
-          key: 'productName'
-        },
-        {
-          title: '商品条码',
-          minWidth: 100,
+          title: '商品编码',
+          // minWidth: 100,
           key: 'barcode'
         },
         {
-          title: '规格',
-          minWidth: 100,
-          key: 'shelfSpecification'
+          title: '商品名称',
+          // minWidth: 100,
+          key: 'productName'
         },
         {
-          title: '购买份数',
-          minWidth: 100,
+          title: '商品规格',
+          // minWidth: 100,
+          render(h, params, vm) {
+            const { row } = params;
+            return <div>{row.productQty + '*' + row.standardQty}</div>;
+          }
+        },
+        {
+          title: '商品数量',
+          // minWidth: 100,
           key: 'productQty'
         },
         {
-          title: '商品总金额',
-          minWidth: 100,
-          key: 'totalPrice',
+          title: '计量单位',
+          // minWidth: 100,
+          // key: 'unitName'
+          key: 'productUnit'
+        },
+        {
+          title: '原价',
+          // minWidth: 100,
+          key: 'price',
           render(h, params, vm) {
-            const amount = fenToYuanDot2(params.row.totalPrice);
+            const amount = fenToYuanDot2(params.row.price);
             return <div>{amount}</div>;
           }
         },
         {
-          title: '折后总金额',
-          minWidth: 100,
+          title: '折后价',
+          // minWidth: 100,
           key: 'discountPrice',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.discountPrice);
             return <div>{amount}</div>;
+          }
+        },
+        {
+          title: '总价',
+          // minWidth: 100,
+          key: 'discountPrice',
+          render(h, params, vm) {
+            const amount = params.row.discountPrice / 100;
+            const price = amount * params.row.productQty;
+            return <div>{'￥' + price}</div>;
           }
         }
       ],
@@ -494,6 +587,21 @@ export default {
           fixed: 'left'
         },
         {
+          title: '应用类型',
+          key: 'apply',
+          width: 120,
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.apply === 'WXSMALL_SHOP') {
+              return <div><tag color='green'>{appTypeConvert(row.apply).label}</tag></div>;
+            } else if (row.apply === 'S_MALL') {
+              return <div><tag color='gold'>{appTypeConvert(row.apply).label}</tag></div>;
+            } else {
+              return <div>{row.apply}</div>;
+            }
+          }
+        },
+        {
           title: '创建时间',
           width: 160,
           key: 'createAt'
@@ -503,11 +611,11 @@ export default {
           width: 150,
           key: 'userId'
         },
-        {
-          title: '下单门店',
-          width: 150,
-          key: 'storeName'
-        },
+        // {
+        //   title: '下单门店',
+        //   width: 150,
+        //   key: 'storeName'
+        // },
         {
           title: '订单总价',
           width: 120,
@@ -699,11 +807,17 @@ export default {
       this.getTableData();
     },
     handleView(params) {
-      this.tempModalType = this.modalType.view;
-      this.orderDetail = this._.cloneDeep(params.row);
-      this.modalView = true;
+      // this.$refs.modelView.resetFields();
+      this.loading = true;
+      getOrder({ orderCode: params.row.code }).then(res => {
+        this.orderDetail = res;
+        this.loading = false;
+        this.tempModalType = this.modalType.view;
+        this.modalView = true;
+      }).catch(() => {
+        this.loading = false;
+      });
     },
-    handleEdit(params) { },
     getTableData() {
       this.loading = true;
       getOrderPages(this.searchRowData).then(res => {

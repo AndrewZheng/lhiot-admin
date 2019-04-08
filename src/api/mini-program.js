@@ -807,6 +807,14 @@ export const getOrderPages = (data) => {
   });
 };
 
+// 根据条件分页查询商城小程序详情
+export const getOrder = ({ orderCode }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/orders/' + orderCode,
+    method: 'get'
+  });
+};
+
 // 根据条件分页查询支付列表
 export const getPaymentLogPages = (data) => {
   return Vue.prototype.$http.request({

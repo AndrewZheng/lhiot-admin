@@ -3,6 +3,17 @@ export const YNEnum = {
   NO: 'NO'
 };
 
+export const yesNoEnum = [
+  {
+    label: '是',
+    value: YNEnum.YES
+  },
+  {
+    label: '否',
+    value: YNEnum.NO
+  }
+]
+
 // 提货方式
 // TO_THE_STORE-门店自提,
 // TO_THE_HOME-送货上门

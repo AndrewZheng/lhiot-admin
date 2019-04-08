@@ -257,7 +257,7 @@
             </FormItem>
             </Col>
           </Row>
-          <Row>
+          <!-- <Row>
             <Col span="18">
             <FormItem label="使用范围:" prop="couponScope">
               <Select v-model="couponTemplateDetail.couponScope" clearable>
@@ -271,7 +271,7 @@
               </Select>
             </FormItem>
             </Col>
-          </Row>
+          </Row> -->
           <Row>
             <Col span="18">
             <FormItem label="使用规则:" prop="couponRules">
@@ -539,6 +539,7 @@ export default {
           //   this.$Message.error('最小购买金额必须大于优惠金额!');
           //   return;
           // }
+          this.couponTemplateDetail.couponScope = 'SMALL';
           this.couponTemplateDetail.couponRules = this.couponTemplateDetail.couponRules.replace(/\n|\r/g, '&');
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
