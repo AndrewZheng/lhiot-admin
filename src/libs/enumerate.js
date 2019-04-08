@@ -1561,3 +1561,35 @@ export const miniOrderTypeEnum = [
     value: miniOrderType.PICKING
   }
 ];
+
+// 配送状态 UNRECEIVE-未接单 WAIT_GET-待取货 TRANSFERING-配送中 DONE-配送完成 FAILURE-配送失败
+export const deliverStatus = {
+  UNRECEIVE: 'UNRECEIVE',
+  WAIT_GET: 'WAIT_GET',
+  TRANSFERING: 'TRANSFERING',
+  DONE: 'DONE',
+  FAILURE: 'FAILURE'
+}
+
+export const deliverStatusEnum = [
+  {
+    label: '未接单',
+    value: deliverStatus.UNRECEIVE
+  },
+  {
+    label: '待取货',
+    value: deliverStatus.WAIT_GET
+  },
+  {
+    label: '配送中',
+    value: deliverStatus.TRANSFERING
+  },
+  {
+    label: '配送完成',
+    value: deliverStatus.DONE
+  },
+  {
+    label: '配送失败',
+    value: deliverStatus.FAILURE
+  }
+]

@@ -15,6 +15,8 @@
         search-place="top"
         @on-view="handleView"
         @on-current-change="onCurrentChange"
+        @on-select-all="onSelectionAll"
+        @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
           <Row>
@@ -33,6 +35,19 @@
               clearable
             ></Input>
             <Select
+              v-model="searchRowData.apply"
+              :clearable="true"
+              style="padding-right: 5px;width: 120px"
+              placeholder="应用类型">
+              <Option
+                v-for="item in appTypeEnum"
+                :value="item.value"
+                :key="`appTypeEnum-col-${item.value}`"
+                class="ml15 mt10"
+                style="padding-left: 5px">{{ item.label }}
+              </Option>
+            </Select>
+            <Select
               v-model="searchRowData.orderType"
               class="search-col mr5"
               placeholder="订单类型"
@@ -42,21 +57,45 @@
               <Option
                 v-for="item in orderType"
                 :value="item.value"
+                :key="`orderType-col-${item.value}`"
+                class="ptb2-5"
+              >{{ item.label }}</Option>
+            </Select>
+            <Select
+              v-model="searchRowData.receivingWay"
+              class="search-col mr5"
+              placeholder="提货方式"
+              style="width: 100px"
+              clearable
+            >
+              <Option
+                v-for="item in receivingWayEnum"
+                :value="item.value"
                 :key="`search-col-${item.value}`"
                 class="ptb2-5"
               >{{ item.label }}</Option>
             </Select>
             <Select
-              v-model="searchRowData.orderStatuses"
-              multiple
+              v-model="searchRowData.status"
               class="search-col mr5"
               placeholder="订单状态"
-              style="width: 150px"
-              clearable
-              @on-change="orderStatusesOnChange"
-            >
+              style="width: 100px"
+              clearable>
               <Option
-                v-for="item in orderStatus"
+                v-for="item in miniOrderStatusEnum"
+                :value="item.value"
+                :key="`search-col-${item.value}`"
+                class="ptb2-5"
+              >{{ item.label }}</Option>
+            </Select>
+            <Select
+              v-model="searchRowData.hdStatus"
+              class="search-col mr5"
+              placeholder="海鼎状态"
+              style="width: 100px"
+              clearable>
+              <Option
+                v-for="item in miniHdStatusEnum"
                 :value="item.value"
                 :key="`search-col-${item.value}`"
                 class="ptb2-5"
@@ -101,13 +140,8 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button
-            v-waves
-            :loading="deliverOrderLoading"
-            class="search-btn mr5"
-            type="warning"
-            @click="deliverOrder"
-          >门店调货</Button>
+          <Button v-waves :loading="deliverOrderLoading" class="search-btn mr5" type="warning" @click="deliverOrder">门店调货</Button>
+          <Button v-waves class="search-btn ml5 mr5" type="primary" @click="resendToHd">海鼎重发</Button>
           <!-- 多类型导出 -->
           <BookTypeOption v-model="exportType" class="mr5"/>
           <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
@@ -146,10 +180,18 @@
               <i-col span="16">{{ orderDetail.apply | appTypeFilter }}</i-col>
             </Row>
           </i-col>
+        </Row>
+        <Row>
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">海鼎编码:</i-col>
               <i-col span="16">{{ orderDetail.hdOrderCode }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">海鼎备货时间:</i-col>
+              <i-col span="16">{{ orderDetail.hdStockAt }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -254,14 +296,14 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">海鼎备货时间:</i-col>
-              <i-col span="16">{{ orderDetail.hdStockAt }}</i-col>
+              <i-col span="8">是否允许退货:</i-col>
+              <i-col span="16">{{ orderDetail.allowRefund | yesNoFilter }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">是否允许退货:</i-col>
-              <i-col span="16">{{ orderDetail.allowRefund | yesNoFilter }}</i-col>
+              <i-col span="8">退货原因:</i-col>
+              <i-col span="16">{{ orderDetail.reason }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -285,25 +327,9 @@
               <Row class="mb10 pl10 pt5">
                 <i-col span="8">收货地址:</i-col>
                 <i-col span="16">
-                  {{ orderDetail.address +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+ orderDetail.nickname +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+
-                  orderDetail.userPhone }}
+                  {{ orderDetail.address +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+ orderDetail.receiveUser +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+
+                  orderDetail.contactPhone }}
                 </i-col>
-              </Row>
-            </i-col>
-          </Row>
-          <Row>
-            <i-col span="12">
-              <Row class="mb10 pl10 pt5">
-                <i-col span="8">收货时间:</i-col>
-                <i-col span="16">{{ orderDetail.deliverAt }}</i-col>
-              </Row>
-            </i-col>
-          </Row>
-          <Row>
-            <i-col span="24">
-              <Row class-name="mb10">
-                <i-col span="8">订单备注:</i-col>
-                <i-col span="16">{{ orderDetail.remark }}</i-col>
               </Row>
             </i-col>
           </Row>
@@ -311,13 +337,13 @@
             <i-col span="12">
               <Row class-name="mb10">
                 <i-col span="8">配送时间段:</i-col>
-                <i-col span="16">{{ orderDetail.deliverTime }}</i-col>
+                <i-col span="16">{{ orderDetail.deliverTime.startTime + '- ' + orderDetail.deliverTime.endTime }}</i-col>
               </Row>
             </i-col>
             <i-col span="12">
               <Row class-name="mb10">
                 <i-col span="8">配送状态:</i-col>
-                <i-col span="16">{{ orderDetail.deliverStatus }}</i-col>
+                <i-col span="16">{{ orderDetail.deliverTime.status | deliverStatusFilter }}</i-col>
               </Row>
             </i-col>
           </Row>
@@ -335,7 +361,7 @@
               </Row>
             </i-col>
           </Row>
-          <tables :columns="tempColumnsView" v-model="deliverNoteList" border></tables>
+          <!-- <tables :columns="tempColumnsView" v-model="deliverNoteList" border></tables> -->
         </Row>
 
         <Row>
@@ -369,13 +395,21 @@
         <i-col span="12">
           <Row class-name="mb20">
             <i-col span="8">当前门店:</i-col>
-            <i-col span="16">{{ currentTableRowSelected.orderStore }}</i-col>
+            <i-col span="16">{{ storeList.find(item => currentTableRowSelected.storeId === item.storeId).storeName }}</i-col>
           </Row>
         </i-col>
         <i-col span="12">
           <Row class-name="mb20">
             <i-col span="8">订单状态:</i-col>
-            <i-col span="16">{{ currentTableRowSelected.status|orderStatusFilters }}</i-col>
+            <i-col span="16">{{ currentTableRowSelected.orderStatus|miniOrderStatusFilter }}</i-col>
+          </Row>
+        </i-col>
+      </Row>
+      <Row v-if="currentTableRowSelected">
+        <i-col span="12">
+          <Row class-name="mb20">
+            <i-col span="8">海鼎状态:</i-col>
+            <i-col span="16">{{ currentTableRowSelected.hdStatus|miniHdStatusFilter }}</i-col>
           </Row>
         </i-col>
       </Row>
@@ -384,7 +418,7 @@
           <Row :gutter="8" type="flex" align="middle" class-name="mb10">
             <i-col span="8">调货门店:</i-col>
             <Select
-              v-model="currentTableRowSelected.orderStore"
+              v-model="currentTableRowSelected.newStoreId"
               class="search-col mr5"
               placeholder="调货门店"
               style="width: 200px"
@@ -392,10 +426,10 @@
             >
               <Option
                 v-for="item in storeList"
-                :value="item.id"
-                :key="`search-col-${item.id}`"
+                :value="item.storeId"
+                :key="`storeList-col-${item.storeId}`"
                 class="ptb2-5"
-              >{{ item.name }}</Option>
+              >{{ item.storeName }}</Option>
             </Select>
           </Row>
         </i-col>
@@ -403,7 +437,7 @@
       <Row style="background: lightgray">
         <i-col span="24" style="padding-left: 15px">满足以下几个条件的订单才允许调货：
           <br>1.仅门店自提订单；
-          <br>2.订单状态为待收货；
+          <br>2.订单状态为待发货；
           <br>3.海鼎状态为发送成功
           <br>
         </i-col>
@@ -418,11 +452,11 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import { getOrderPages, getOrder } from '@/api/mini-program';
+import { getOrderPages, getOrder, getStorePages, modifyStoreInOrder, resendToHd } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import { fenToYuanDot2 } from '@/libs/util';
-import { receivingWayEnum, orderStatusEnum, orderTypeEnum, appTypeEnum } from '@/libs/enumerate';
+import { receivingWayEnum, receivingWay, orderStatusEnum, miniOrderTypeEnum, appTypeEnum, miniOrderStatusEnum, miniOrderStatus, miniHdStatusEnum, miniHdStatus } from '@/libs/enumerate';
 import { orderTypeConvert, thirdDeliverStatusConvert, miniOrderStatusConvert, miniHdStatusConvert, receivingWayConvert, appTypeConvert } from '@/libs/converStatus';
 import BookTypeOption from '_c/book-type-option';
 
@@ -455,12 +489,20 @@ const orderDetail = {
   hdOrderCode: '',
   orderProducts: [],
   orderFlows: [],
-  allowRefund: null
+  allowRefund: null,
+  // json 数据结构
+  deliverTime: {
+    display: '',
+    startTime: null,
+    endTime: null,
+    status: null
+  }
 };
 const roleRowData = {
   page: 1,
   rows: 10
 };
+
 export default {
   components: {
     Tables,
@@ -469,7 +511,7 @@ export default {
   mixins: [tableMixin, searchMixin],
   data() {
     return {
-      orderType: orderTypeEnum,
+      orderType: miniOrderTypeEnum,
       orderStatus: orderStatusEnum,
       deliverNoteList: [],
       haiDingStatus: [],
@@ -477,6 +519,13 @@ export default {
       modalViewLoading: false,
       deliverOrderLoading: false,
       storeList: [],
+      receivingWayEnum,
+      receivingWay,
+      appTypeEnum,
+      miniOrderStatusEnum,
+      miniOrderStatus,
+      miniHdStatusEnum,
+      miniHdStatus,
       tempColumnsView: [
         {
           title: '配送方',
@@ -580,6 +629,13 @@ export default {
       ],
       columns: [
         {
+          type: 'selection',
+          key: '',
+          width: 60,
+          align: 'center',
+          fixed: 'left'
+        },
+        {
           title: '订单编号',
           key: 'code',
           sortable: true,
@@ -608,14 +664,22 @@ export default {
         },
         {
           title: '订单用户',
-          width: 150,
-          key: 'userId'
+          width: 120,
+          key: 'nickname'
         },
-        // {
-        //   title: '下单门店',
-        //   width: 150,
-        //   key: 'storeName'
-        // },
+        {
+          title: '下单门店',
+          width: 120,
+          key: 'storeId',
+          render: (h, params) => {
+            const { row } = params;
+            const obj = this.storeList.find(item => row.storeId === item.storeId)
+            if (obj) {
+              return h('span', obj.storeName);
+            }
+            return h('span', row.storeId);
+          }
+        },
         {
           title: '订单总价',
           width: 120,
@@ -741,11 +805,14 @@ export default {
       searchRowData: this._.cloneDeep(roleRowData),
       orderDetail: this._.cloneDeep(orderDetail),
       exportType: 'xlsx',
-      downloadLoading: false
+      downloadLoading: false,
+      // 选中的行
+      tableDataSelected: []
     };
   },
   created() {
     this.getTableData();
+    this.getStore();
   },
   methods: {
     orderStatusesOnChange(value) {
@@ -773,26 +840,29 @@ export default {
         );
         return;
       }
-      if (!this.currentTableRowSelected.orderStore) {
+      if (!this.currentTableRowSelected.storeId || !this.currentTableRowSelected.newStoreId) {
         this.$Message.error('该订单门店id为空');
         return;
       }
-      if (
-        this.currentTableRowSelected.receivingWay !==
-        receivingWayEnum.TO_THE_STORE
-      ) {
+      if (this.currentTableRowSelected.receivingWay !== receivingWay.TO_THE_STORE) {
         this.$Message.error('该订单提货方式不是门店自提！');
         return;
       }
-      if (this.currentTableRowSelected.status !== orderStatusEnum.SEND_OUTING) {
-        this.$Message.error('该订单不为待收货或者海鼎发送没有成功！');
+      if (this.currentTableRowSelected.orderStatus !== miniOrderStatus.WAIT_SEND_OUT) {
+        this.$Message.error('该订单不为待发货！');
         return;
       }
+      if (this.currentTableRowSelected.hdStatus !== miniHdStatus.SEND_OUT) {
+        this.$Message.error('该订单海鼎发送没有成功！');
+        return;
+      }
+      this.modifyStoreInOrder();
+      this.currentTableRowSelected = null;
     },
     deliverOrder() {
       if (!this.currentTableRowSelected) {
         this.$Message.error(
-          '请用鼠标左键点击选择下方表格一行订单数据,才能进行调货处理'
+          '请用鼠标左键点击选择下方表格一行门店自提订单数据,才能进行调货处理'
         );
         return;
       }
@@ -811,6 +881,10 @@ export default {
       this.loading = true;
       getOrder({ orderCode: params.row.code }).then(res => {
         this.orderDetail = res;
+        if (this.orderDetail != null && this.orderDetail.deliverTime != '' && this.orderDetail.deliverTime != null) {
+          // string转换为json数据
+          this.orderDetail.deliverTime = JSON.parse(this.orderDetail.deliverTime);
+        }
         this.loading = false;
         this.tempModalType = this.modalType.view;
         this.modalView = true;
@@ -859,6 +933,53 @@ export default {
           data: tableData
         });
       });
+    },
+    getStore() {
+      getStorePages({ page: 1, rows: -1 }).then(res => {
+        this.storeList = res.rows;
+      }).catch(error => {
+        console.log(error);
+      });
+    },
+    modifyStoreInOrder() {
+      // TODO 未测试
+      modifyStoreInOrder(this.currentTableRowSelected).then(res => {
+        this.$Message.info('调货成功！');
+        this.transferModalView = false;
+      }).catch(error => {
+        console.log(error);
+      });
+    },
+    resendToHd() {
+      // TODO 未测试
+      if (this.tableDataSelected.length > 0) {
+        const tempDeleteList = [];
+        this.tableDataSelected.filter(value => {
+          tempDeleteList.push(value.id);
+        });
+        const ids = tempDeleteList.join(',');
+        resendToHd({ ids: ids }).then(res => {
+          this.$Message.info('海鼎重复成功');
+        }).catch(error => {
+          console.log(error);
+        });
+      }
+    },
+    onSelectionAll(selection) {
+      this.tableDataSelected = selection;
+      if (selection.length === 1) {
+        this.currentTableRowSelected = selection[0];
+      } else {
+        this.currentTableRowSelected = null;
+      }
+    },
+    onSelectionChange(selection) {
+      this.tableDataSelected = selection;
+      if (selection.length === 1) {
+        this.currentTableRowSelected = selection[0];
+      } else {
+        this.currentTableRowSelected = null;
+      }
     }
   }
 };
