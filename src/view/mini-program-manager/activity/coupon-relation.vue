@@ -596,6 +596,10 @@ const hdTemplateColumns = [
     title: '券面额',
     key: 'face_value',
     minWidth: 80
+    // ,
+    // render(h, params) {
+    //   return <div>{fenToYuanDot2(params.row.face_value)}</div>;
+    // }
   },
   // {
   //   title: '券面额',
@@ -704,7 +708,7 @@ export default {
           }
         },
         {
-          title: '优惠/折扣额度',
+          title: '最小购买金额',
           key: 'minBuyFee',
           minWidth: 60,
           render(h, params) {
@@ -962,9 +966,9 @@ export default {
           couponName: element.coupon_name,
           // couponType: element.coupon_type,
           couponType: 'CASH_COUPON',
-          couponFee: element.face_value,
+          couponFee: element.face_value * 100,
           // minBuyFee: element.price,
-          minBuyFee: minBuyFee,
+          minBuyFee: minBuyFee * 100,
           couponStatus: 'VALID',
           couponImage: '',
           receiveCount: 0,
@@ -986,9 +990,9 @@ export default {
           couponName: element.coupon_name,
           // couponType: element.coupon_type,
           couponType: 'CASH_COUPON',
-          couponFee: element.face_value,
+          couponFee: element.face_value * 100,
           // minBuyFee: element.price,
-          minBuyFee: minBuyFee,
+          minBuyFee: minBuyFee * 100,
           couponStatus: 'VALID',
           couponImage: '',
           receiveCount: 0,
@@ -1069,6 +1073,11 @@ export default {
     getHdTemplateTableData() {
       getHdCouponActivitiesPages(this.searchHdTemplateRowData).then(res => {
         this.hdCouponTemplateDetail = res.rows;
+        // if (this.hdCouponTemplateDetail != null) {
+        //   this.hdCouponTemplateDetail.forEach(item => {
+        //     item.face_value = item.face_value * 100;
+        //   })
+        // }
         this.couponHdTemplateTotal = res.total;
         this.loading = false;
         this.searchLoading = false;

@@ -95,8 +95,8 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">创建时间:</i-col>
-              <i-col span="16">{{ teambuyDetail.createTime }}</i-col>
+              <i-col span="6">创建时间:</i-col>
+              <i-col span="18">{{ teambuyDetail.createTime }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -134,6 +134,7 @@
           <i-col span="12">
             <Row>
               <i-col span="6">有效期起:</i-col>
+              <!-- <i-col span="18">{{ startTimeComputed }}</i-col> -->
               <i-col span="18">{{ teambuyDetail.startTime }}</i-col>
             </Row>
           </i-col>
@@ -548,7 +549,7 @@
           <Row>
             <Col span="12">
             <FormItem label="关联门店:" prop="storeIds">
-              <Select v-model="teambuyDetail.storeIds">
+              <Select>
                 <Option
                   v-for="item in relationStoreTypeEnum"
                   :value="item.value"
@@ -558,6 +559,21 @@
                   @click.native="selectStore(item)">{{ item.label }}
                 </Option>
               </Select>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row v-show="showStoreList">
+            <Col span="24">
+            <FormItem label="门店列表:">
+              <CheckboxGroup v-model="model" @on-change="checkAllGroupChange">
+                <Checkbox
+                  v-for="item in storeList"
+                  ref="checkBox"
+                  :key="item.storeId"
+                  :label="item.storeId"
+                >{{ item.storeName }}
+                </Checkbox>
+              </CheckboxGroup>
             </FormItem>
             </Col>
           </Row>
@@ -580,12 +596,7 @@
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
 import _ from 'lodash';
-import {
-  deleteTeamBuy,
-  getTeamBuyPages,
-  editTeamBuy,
-  createTeamBuy
-} from '@/api/mini-program';
+import { deleteTeamBuy, getTeamBuyPages, editTeamBuy, createTeamBuy, getStorePages } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
@@ -623,7 +634,7 @@ const teambuyDetail = {
   fullUserNum: 0,
   standardId: 0,
   validSeconds: null,
-  deliveryEndTime: null,
+  deliveryEndTime: '',
   standardDesc: '',
   fullTeambuyCount: 0,
   robot: null,
@@ -753,6 +764,8 @@ export default {
       rewardActivitySettingEnum,
       relationStoreTypeEnum,
       flagShipList: [],
+      storeList: [],
+      model: [],
       columns: [
         {
           title: '活动名称',
@@ -853,6 +866,7 @@ export default {
       ],
       createLoading: false,
       modalViewLoading: false,
+      showStoreList: false,
       searchRowData: _.cloneDeep(roleRowData),
       teambuyDetail: _.cloneDeep(teambuyDetail)
     };
@@ -947,7 +961,7 @@ export default {
         this.tempModalType = this.modalType.create;
         this.teambuyDetail = _.cloneDeep(teambuyDetail)
       }
-
+      this.getStore();
       this.modalEdit = true;
     },
     // 删除
@@ -995,6 +1009,7 @@ export default {
       this.tempModalType = this.modalType.edit;
       this.teambuyDetail = _.cloneDeep(params.row);
       this.setDefaultUploadList(this.teambuyDetail);
+      this.getStore();
       this.modalEdit = true;
     },
     getTableData() {
@@ -1043,13 +1058,23 @@ export default {
       this.teambuyDetail.tourDiscount = yuanToFenNumber(value);
     },
     selectStore(options) {
-      if (options.value == 'ALL') {
-        this.teambuyDetail.storeIds = '';
-      } else if (options.value == 'PART') {
-        // this.teambuyDetail.storeIds == selectStoreIds;
+      if (options.value === 'ALL') {
+        this.showStoreList = false;
+      } else if (options.value === 'PART') {
+        this.showStoreList = true;
       }
-    }
+    },
     // TODO 选择门店id方法
+    getStore() {
+      getStorePages({ page: 1, rows: -1 }).then(res => {
+        this.storeList = res.rows;
+      }).catch(error => {
+        console.log(error);
+      });
+    },
+    checkAllGroupChange(data) {
+      this.teambuyDetail.storeIds = data.join(',');
+    }
   }
 };
 </script>

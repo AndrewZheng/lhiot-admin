@@ -807,6 +807,30 @@ export const getOrderPages = (data) => {
   });
 };
 
+// 根据条件分页查询商城小程序详情
+export const getOrder = ({ orderCode }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/orders/' + orderCode,
+    method: 'get'
+  });
+};
+
+// 海鼎订单调货
+export const modifyStoreInOrder = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/orders/' + data.id + '?storeId=' + data.storeId,
+    method: 'put'
+  });
+};
+
+// 手动发送海鼎
+export const resendToHd = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/orders/hd?ids=' + ids,
+    method: 'put'
+  });
+};
+
 // 根据条件分页查询支付列表
 export const getPaymentLogPages = (data) => {
   return Vue.prototype.$http.request({
