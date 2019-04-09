@@ -20,15 +20,15 @@
         <div slot="searchCondition">
           <Row>
             <Input
-              v-model="searchRowData.code"
+              v-model="searchRowData.storeCode"
               placeholder="门店编码"
               class="search-input mr5"
               style="width: auto"
               clearable
             >
             </Input>
-            <Input v-model="searchRowData.name" placeholder="门店名称" class="search-input mr5" style="width: auto" clearable></Input>
-            <Select v-model="searchRowData.area" placeholder="所属区域" style="padding-right: 5px;width: 100px" clearable>
+            <Input v-model="searchRowData.storeName" placeholder="门店名称" class="search-input mr5" style="width: auto" clearable></Input>
+            <Select v-model="searchRowData.storeArea" placeholder="所属区域" style="padding-right: 5px;width: 100px" clearable>
               <Option
                 v-for="(item,index) in areaList"
                 :value="item.area"
@@ -40,7 +40,7 @@
             <Select v-if="applicationType == null" v-model="searchRowData.applicationType" placeholder="应用类型" style="padding-right: 5px;width: 100px" clearable>
               <Option
                 v-for="(item,index) in applicationTypeList"
-                :value="item.code"
+                :value="item.storeCode"
                 :key="index"
                 class="ptb2-5"
                 style="padding-left: 5px">{{ item.name }}
@@ -86,13 +86,13 @@
           <i-col span="12">
             <Row>
               <i-col span="6">商品编码:</i-col>
-              <i-col span="18">{{ storeDetail.code }}</i-col>
+              <i-col span="18">{{ storeDetail.storeCode }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
               <i-col span="6">门店名称:</i-col>
-              <i-col span="18">{{ storeDetail.name }}</i-col>
+              <i-col span="18">{{ storeDetail.storeName }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -100,13 +100,13 @@
           <i-col span="12">
             <Row>
               <i-col span="6">所属区域:</i-col>
-              <i-col span="18">{{ storeDetail.area }}</i-col>
+              <i-col span="18">{{ storeDetail.storeArea }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
               <i-col span="8">所属旗舰店:</i-col>
-              <i-col span="16">{{ storeDetail.flagShip }}</i-col>
+              <i-col span="16">{{ storeDetail.storeFlagship }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -114,13 +114,13 @@
           <i-col span="12">
             <Row>
               <i-col span="6">门店状态:</i-col>
-              <i-col span="18">{{ storeDetail.status }}</i-col>
+              <i-col span="18">{{ storeDetail.storeStatus }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
               <i-col span="6">门店电话:</i-col>
-              <i-col span="18">{{ storeDetail.phone }}</i-col>
+              <i-col span="18">{{ storeDetail.storePhone }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -128,37 +128,19 @@
           <i-col span="12">
             <Row>
               <i-col span="6">位置经度:</i-col>
-              <i-col span="18">{{ storeDetail.latitude }}</i-col>
+              <i-col span="18">{{ storeDetail.storeCoordy }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
               <i-col span="6">位置纬度:</i-col>
-              <i-col span="18">{{ storeDetail.longitude }}</i-col>
+              <i-col span="18">{{ storeDetail.storeCoordx }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
-          <i-col span="12">
-            <Row>
-              <i-col span="6">门店地址:</i-col>
-              <i-col span="14">{{ storeDetail.address }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row>
-              <i-col span="8">坐标系类型:</i-col>
-              <i-col span="16">{{ storeDetail.coordinateType|coordinateTypeFilter }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="3">应用类型:</i-col>
-              <i-col span="21">{{ applicationTypeComputed(storeDetail.applicationType) }}</i-col>
-            </Row>
-          </i-col>
+          <i-col span="3">门店地址:</i-col>
+          <i-col span="21">{{ storeDetail.storeAddress }}</i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="3">录播地址:</i-col>
@@ -173,7 +155,7 @@
             <Row>
               <i-col span="3">商品主图:</i-col>
               <i-col span="21">
-                <img :src="storeDetail.image" style="width: 300px">
+                <img :src="storeDetail.storeImage" style="width: 300px">
               </i-col>
             </Row>
           </i-col>
@@ -209,20 +191,20 @@
         <Form ref="modalEdit" :model="storeDetail" :rules="ruleInline" :label-width="80">
           <Row>
             <Col span="12">
-            <FormItem label="门店编码:" prop="code">
-              <Input v-model="storeDetail.code"></Input>
+            <FormItem label="门店编码:" prop="storeCode">
+              <Input v-model="storeDetail.storeCode"></Input>
             </FormItem>
             </Col>
             <Col span="12">
-            <FormItem label="门店名称:" prop="name">
-              <Input v-model="storeDetail.name" ></Input>
+            <FormItem label="门店名称:" prop="storeName">
+              <Input v-model="storeDetail.storeName" ></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-            <FormItem :label-width="85" label="所属区域:" prop="area">
-              <Select v-model="storeDetail.area">
+            <FormItem :label-width="85" label="所属区域:" prop="storeArea">
+              <Select v-model="storeDetail.storeArea">
                 <Option
                   v-for="(item,index) in areaList"
                   :value="item.area"
@@ -234,14 +216,14 @@
             </FormItem>
             </Col>
             <Col span="12">
-            <FormItem :label-width="85" label="所属旗舰店:" prop="flagShip">
-              <Select v-model="storeDetail.flagShip">
+            <FormItem :label-width="85" label="所属旗舰店:" prop="storeFlagship">
+              <Select v-model="storeDetail.storeFlagship">
                 <Option
                   v-for="(item,index) in flagShipList"
-                  :value="item.flagShip"
+                  :value="item.storeFlagship"
                   :key="index"
                   class="ptb2-5"
-                  style="padding-left: 5px">{{ item.name }}
+                  style="padding-left: 5px">{{ item.storeName }}
                 </Option>
               </Select>
             </FormItem>
@@ -249,8 +231,8 @@
           </Row>
           <Row>
             <Col span="12">
-            <FormItem :label-width="85" label="门店状态:" prop="status">
-              <Select v-model="storeDetail.status">
+            <FormItem :label-width="85" label="门店状态:" prop="storeStatus">
+              <Select v-model="storeDetail.storeStatus">
                 <Option
                   v-for="(item,index) in storeStatusEnum"
                   :value="item.value"
@@ -262,20 +244,20 @@
             </FormItem>
             </Col>
             <Col span="12">
-            <FormItem :label-width="85" label="门店电话:" prop="phone">
-              <Input v-model="storeDetail.phone" ></Input>
+            <FormItem :label-width="85" label="门店电话:" prop="storePhone">
+              <Input v-model="storeDetail.storePhone" ></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="位置经度:" prop="longitude">
-              <Input v-model="storeDetail.longitude" ></Input>
+            <FormItem label="位置经度:" prop="storeCoordy">
+              <Input v-model="storeDetail.storeCoordy" ></Input>
             </FormItem>
             </Col>
             <Col span="12">
-            <FormItem label="位置纬度:" prop="latitude">
-              <Input v-model="storeDetail.latitude" ></Input>
+            <FormItem label="位置纬度:" prop="storeCoordx">
+              <Input v-model="storeDetail.storeCoordx" ></Input>
             </FormItem>
             </Col>
           </Row>
@@ -293,45 +275,17 @@
               </Select>
             </FormItem>
             </Col>
-            <Col span="12">
-            <FormItem :label-width="85" label="坐标系类型:" prop="coordinateType">
-              <Select v-model="storeDetail.coordinateType">
-                <Option
-                  v-for="(item,index) in coordinateTypeEnum"
-                  :value="item.value"
-                  :key="index"
-                  class="ptb2-5"
-                  style="padding-left: 5px">{{ item.label }}
-                </Option>
-              </Select>
-            </FormItem>
-            </Col>
           </Row>
           <Row align="middle" type="flex">
             <Col span="24">
-            <FormItem label="应用类型:" prop="applicationType">
-              <Select v-model="storeDetail.applicationTypeBak" multiple clearable>
-                <Option
-                  v-for="(item,index) in applicationTypeList"
-                  :value="item.code"
-                  :key="index"
-                  class="ptb2-5"
-                  style="padding-left: 5px">{{ item.name }}
-                </Option>
-              </Select>
-            </FormItem>
-            </Col>
-          </Row>
-          <Row align="middle" type="flex">
-            <Col span="24">
-            <FormItem label="门店地址:" prop="address">
-              <Input v-model="storeDetail.address" type="textarea"></Input>
+            <FormItem label="门店地址:" prop="storeAddress">
+              <Input v-model="storeDetail.storeAddress" type="textarea"></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
-            <FormItem label="推荐使用尺寸为400X225(单位:px):" prop="image" >
-              <Input v-show="false" v-model="storeDetail.image" style="width: auto"></Input>
+            <FormItem label="推荐使用尺寸为400X225(单位:px):" prop="storeImage" >
+              <Input v-show="false" v-model="storeDetail.storeImage" style="width: auto"></Input>
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>
@@ -362,7 +316,7 @@
           </Row>
           <Row align="middle" type="flex">
             <Col span="24">
-            <FormItem label="直播地址:" prop="videoUrl">
+            <FormItem label="直播地址:">
               <Input v-model="storeDetail.videoUrl" type="textarea" ></Input>
             </FormItem>
             </Col>
@@ -390,11 +344,11 @@ import {
   deleteStore,
   getStoreDetail,
   getStorePages,
-  getStoreAreas,
+  // getStoreAreas,
   editStore,
   createStore
-} from '@/api/fruitermaster';
-import { buildMenu, convertTreeCategory } from '@/libs/util';
+} from '@/api/mini-program';
+import { getStoreAreas } from '@/api/fruitermaster';
 import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
@@ -404,31 +358,28 @@ import { storeStatusConvert, storeTypeConvert, coordinateTypeConvert } from '../
 import { getDictionary } from '@/api/basic';
 
 const storeDetail = {
-  id: 30,
-  code: '',
-  name: '',
-  address: '',
-  phone: '',
-  image: '',
-  area: '',
-  status: '',
-  flagShip: null,
+  storeId: 0,
+  storeCode: '',
+  storeName: '',
+  storeAddress: '',
+  storePhone: '',
+  storeImage: '',
+  storeArea: '',
+  storeStatus: '',
+  storeFlagship: null,
   storeType: null,
   videoUrl: '',
   beginAt: '',
   endAt: '',
   tapeUrl: '',
-  latitude: null,
-  longitude: null,
-  applicationType: null,
-  applicationTypeBak: null,
+  storeCoordx: null,
+  storeCoordy: null,
   coordinateType: null
 };
 const roleRowData = {
-  code: null,
-  name: null,
-  area: null,
-  applicationType: null,
+  storeCode: null,
+  storeName: null,
+  storeArea: null,
   page: 1,
   rows: 10
 };
@@ -445,7 +396,7 @@ export default {
       storeTypeEnum,
       coordinateTypeEnum,
       ruleInline: {
-        code: [
+        storeCode: [
           { required: true, message: '请输入门店编码' },
           {
             validator(rule, value, callback, source, options) {
@@ -457,41 +408,38 @@ export default {
             }
           }
         ],
-        name: [
+        storeName: [
           { required: true, message: '请输入门店名称' }
         ],
-        status: [
+        storeStatus: [
           { required: true, message: '请选择门店状态' }
         ],
-        area: [
+        storeArea: [
           { required: true, message: '请选择门店区域' }
         ],
-        flagShip: [
+        storeFlagship: [
           { required: true, message: '请选择旗舰店' }
         ],
-        longitude: [
+        storeCoordy: [
           { required: true, message: '请填写正确的经度', pattern: /(^[\-0-9][0-9]*(.[0-9]+)?)$/ }
         ],
-        latitude: [
+        storeCoordx: [
           { required: true, message: '请填写正确的维度', pattern: /(^[\-0-9][0-9]*(.[0-9]+)?)$/ }
         ],
         coordinateType: [
           { required: true, message: '请选择坐标系类型' }
         ],
-        image: [
+        storeImage: [
           { required: true, message: '请上传门店图片' }
         ],
-        phone: [
+        storePhone: [
           { required: true, message: '请填写正确电话号码', pattern: /^1\d{10}$/ }
         ],
         storeType: [
           { required: true, message: '请选择门店类型' }
         ],
-        address: [
+        storeAddress: [
           { required: true, message: '请填写门店地址' }
-        ],
-        videoUrl: [
-          { required: true, message: '请填写直播地址' }
         ]
       },
       defaultListMain: [],
@@ -501,62 +449,63 @@ export default {
       columns: [
         {
           title: '门店编码',
-          key: 'code',
+          key: 'storeCode',
           sortable: true,
-          fixed: 'left',
           minWidth: 150
         },
         {
           title: '门店名称',
-          key: 'name',
-          fixed: 'left',
+          key: 'storeName',
           minWidth: 150
         },
         {
           title: '所属区域',
           minWidth: 150,
+          key: 'storeArea',
           render: (h, params, vm) => {
             const { row } = params;
             const obj = this.areaList.find(item => {
-              return item.area === row.area
+              return item.area === row.storeArea
             })
             if (obj) {
               return h('span', obj.areaName + '');
             } else {
-              return h('span', row.area + '');
+              return h('span', row.storeArea + '');
             }
           }
         },
         {
           title: '区域旗舰店',
           minWidth: 150,
-          key: 'flagShip',
+          key: 'storeFlagship',
           render: (h, params) => {
             const { row } = params;
-            const obj = this.flagShipList.find(item => row.flagShip === item.flagShip)
+            const obj = this.flagShipList.find(item => row.storeFlagship === item.storeFlagship)
+            console.log('obj' + obj);
             if (obj) {
-              return h('span', obj.name);
+              return h('span', obj.storeName);
             }
-            return h('span', row.flagShip);
+            return h('span', row.storeFlagship);
           }
         },
         {
           title: '门店状态',
           minWidth: 150,
+          key: 'storeStatus',
           render: (h, params) => {
             const { row } = params;
-            if (row.status === 'ENABLED') {
-              return <div><tag color='success'>{storeStatusConvert(row.status).label}</tag></div>;
-            } else if (row.status === 'DISABLED') {
-              return <div><tag color='error'>{storeStatusConvert(row.status).label}</tag></div>;
+            if (row.storeStatus === 'ENABLED') {
+              return <div><tag color='success'>{storeStatusConvert(row.storeStatus).label}</tag></div>;
+            } else if (row.storeStatus === 'DISABLED') {
+              return <div><tag color='error'>{storeStatusConvert(row.storeStatus).label}</tag></div>;
             }
-            return <div><tag color='primary'>{row.status}</tag></div>;
+            return <div><tag color='primary'>{row.storeStatus}</tag></div>;
           }
         },
         {
           title: '联系方式',
           minWidth: 150,
-          key: 'phone'
+          key: 'storePhone'
         },
         {
           title: '门店类型',
@@ -568,39 +517,9 @@ export default {
             } else if (row.storeType === 'ORDINARY_STORE') {
               return <div><tag color='primary'>{storeTypeConvert(row.storeType).label}</tag></div>;
             }
-            return <div><tag>{row.storeType}</tag></div>;
+            return <div>{row.storeType}</div>;
           }
         },
-        {
-          title: '应用类型',
-          width: 160,
-          key: 'applicationType',
-          sortable: true,
-          render: (h, params, vm) => {
-            const { row } = params;
-            const result = [];
-            if (row.applicationType !== null && row.applicationType !== '') {
-              let applicationTypes = [];
-              applicationTypes = row.applicationType.split(',');
-              applicationTypes.forEach(element => {
-                const filterObj = this.applicationTypeList.find(item => {
-                  return item.code === element;
-                });
-                result.push(filterObj !== null ? filterObj.name : element);
-              });
-              return <div>{result.join(', ')}</div>;
-            }
-          }
-        },
-        // {
-        //   title: '坐标系类型',
-        //   minWidth: 150,
-        //   key: 'coordinateType',
-        //   render: (h, params) => {
-        //     const { row } = params;
-        //     return h('span', coordinateTypeConvert(row.coordinateType).label + '');
-        //   }
-        // },
         {
           title: '操作',
           minWidth: 230,
@@ -611,8 +530,7 @@ export default {
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
-      storeDetail: _.cloneDeep(storeDetail),
-      applicationTypeList: []
+      storeDetail: _.cloneDeep(storeDetail)
     };
   },
   mounted() {
@@ -622,11 +540,12 @@ export default {
     getStoreAreas().then(res => {
       this.areaList = res.array;
       getStorePages({
-        storeType: storeType.FLAGSHIP_STORE,
+        // 数据库数据不完整，暂时先注释掉门店类型条件
+        // storeType: storeType.FLAGSHIP_STORE,
         page: 1,
         rows: 10
       }).then(res => {
-        this.flagShipList = res.array;
+        this.flagShipList = res.rows;
         this.getTableData();
         this.createLoading = false;
       })
@@ -644,7 +563,7 @@ export default {
       this.$refs.modalEdit.resetFields();
       this.$refs.uploadMain.clearFileList();
       this.uploadListMain = [];
-      this.storeDetail.image = null;
+      this.storeDetail.storeImage = null;
     },
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
@@ -654,8 +573,6 @@ export default {
             this.createStore();
           } else if (this.tempModalType === this.modalType.edit) {
             // 编辑状态
-            this.storeDetail.applicationType = this.storeDetail.applicationTypeBak.join(',');
-            console.log('this.storeDetail.applicationType:' + JSON.stringify(this.storeDetail.applicationType));
             this.editStore();
           }
         } else {
@@ -687,14 +604,20 @@ export default {
       });
     },
     addStore() {
+      this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
-        this.resetFields();
         this.tempModalType = this.modalType.create;
         this.storeDetail = _.cloneDeep(storeDetail)
       }
+
       this.modalEdit = true;
     },
     // 删除
+    handleDelete(params) {
+      this.tableDataSelected = [];
+      this.tableDataSelected.push(params.row);
+      this.deleteTable(params.row.storeId);
+    },
     deleteTable(ids) {
       this.loading = true;
       deleteStore({
@@ -733,31 +656,23 @@ export default {
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.storeDetail = _.cloneDeep(params.row);
-      if (this.storeDetail.applicationType !== null && this.storeDetail.applicationType !== '') {
-        this.storeDetail.applicationTypeBak = this.storeDetail.applicationType.split(',');
-        console.log('applicationTypeBak：' + this.storeDetail.applicationTypeBak);
-      }
       this.setDefaultUploadList(this.storeDetail);
       this.modalEdit = true;
     },
     onStoreStatus(params) {
       console.log(params);
       this.storeDetail = this._.cloneDeep(params.row);
-      if (params.row.status === storeStatus.ENABLED) {
-        this.storeDetail.status = storeStatus.DISABLED;
+      if (params.row.storeStatus === storeStatus.ENABLED) {
+        this.storeDetail.storeStatus = storeStatus.DISABLED;
       } else {
-        this.storeDetail.status = storeStatus.ENABLED;
+        this.storeDetail.storeStatus = storeStatus.ENABLED;
       }
       this.loading = true;
       this.editStore();
     },
     getTableData() {
-      // 当前系统应用类型不为空时，搜索的应用类型为当前应用类型
-      if (this.applicationType !== null) {
-        this.searchRowData.applicationType = this.applicationType;
-      }
       getStorePages(this.searchRowData).then(res => {
-        this.tableData = res.array;
+        this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;
         this.searchLoading = false;
@@ -771,38 +686,13 @@ export default {
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
-      this.storeDetail.image = null;
+      this.storeDetail.storeImage = null;
     },
     // 商品主图
     handleSuccessMain(response, file, fileList) {
       this.uploadListMain = fileList;
-      this.storeDetail.image = null;
-      this.storeDetail.image = fileList[0].url;
-    },
-    getApplications() {
-      getDictionary({ code: 'applications' }).then(res => {
-        if (res.entries) {
-          this.applicationTypeList = res.entries;
-          console.log('applicationTypeList:' + JSON.stringify(this.applicationTypeList));
-        }
-      });
-    },
-    applicationTypeComputed(applicationType) {
-      const result = [];
-      // const applicationType = _.cloneDeep(this.storeDetail.applicationType);
-      if (this.applicationTypeList !== [] && this.storeDetail.applicationType !== null) {
-        let applicationTypes = [];
-        applicationTypes = applicationType.split(',');
-        applicationTypes.forEach(element => {
-          const filterObj = this.applicationTypeList.find(item => {
-            return item.code === element;
-          });
-          result.push(filterObj !== null ? filterObj.name : element);
-        });
-        return result;
-      } else {
-        return applicationType;
-      }
+      this.storeDetail.storeImage = null;
+      this.storeDetail.storeImage = fileList[0].url;
     }
   }
 };

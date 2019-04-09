@@ -52,7 +52,7 @@
       :mask-closable="false"
     >
       <p slot="header">
-        <span>鲜果师详情</span>
+        <span>商品规格详情</span>
       </p>
       <div class="modal-content">
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
@@ -106,7 +106,7 @@
       v-model="modalEdit"
     >
       <p slot="header">
-        <span>鲜果师详情</span>
+        <i-col>{{ tempModalType===modalType.edit?'修改商品规格':'创建商品规格' }}</i-col>
       </p>
       <div class="modal-content">
         <Form ref="modalEdit" :model="productStandardDetail" :rules="ruleInline" :label-width="100">
@@ -405,18 +405,24 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
-      // this.$refs.modalEdit.resetFields();
+      this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.edit;
       this.productStandardDetail = _.cloneDeep(params.row);
       this.modalEdit = true;
     },
     handleCreateView() {
-      // this.$refs.modalEdit.resetFields();
+      this.$refs.modalEdit.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.productStandardDetail = this._.cloneDeep(productStandardDetail);
       }
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
+    },
+    resetFields() {
+      this.$refs.modalEdit.resetFields();
+      // this.$refs.uploadMain.clearFileList();
+      // this.uploadListMain = [];
+      // this.productDetail.image = null;
     },
     createStandard() {
       this.modalViewLoading = true;

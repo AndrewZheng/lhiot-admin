@@ -3,6 +3,17 @@ export const YNEnum = {
   NO: 'NO'
 };
 
+export const yesNoEnum = [
+  {
+    label: '是',
+    value: YNEnum.YES
+  },
+  {
+    label: '否',
+    value: YNEnum.NO
+  }
+]
+
 // 提货方式
 // TO_THE_STORE-门店自提,
 // TO_THE_HOME-送货上门
@@ -54,7 +65,7 @@ export const orderStatusEnum = [
     value: orderStatus.WAIT_PAYMENT
   },
   {
-    label: '待支付',
+    label: '待出库',
     value: orderStatus.WAIT_SEND_OUT
   },
   {
@@ -601,3 +612,984 @@ export const coordinateTypeEnum = [
     value: coordinateType.WGS84
   }
 ];
+
+// 是否可拆分 SEPARABLE("可拆分"),NO_SEPARABLE("不可拆分");
+export const splitStatus = {
+  SEPARABLE: 'SEPARABLE',
+  NO_SEPARABLE: 'NO_SEPARABLE'
+};
+
+export const splitStatusEnum = [
+  {
+    label: '是',
+    value: splitStatus.SEPARABLE
+  },
+  {
+    label: '否',
+    value: splitStatus.NO_SEPARABLE
+  }
+];
+
+// 小程序商品状态 NORMAL-正常 STOP_MINING	停采
+
+export const productStatus = {
+  NORMAL: 'NORMAL',
+  STOP_MINING: 'STOP_MINING'
+}
+
+export const productStatusEnum = [
+  {
+    label: '正常',
+    value: productStatus.NORMAL
+  },
+  {
+    label: '停采',
+    value: productStatus.STOP_MINING
+  }
+]
+
+// 小程序图片状态 OFF 关闭 ， ON 开启
+
+export const imageStatus = {
+  OFF: 'OFF',
+  ON: 'ON'
+}
+
+export const imageStatusEnum = [
+  {
+    label: '关闭',
+    value: imageStatus.OFF
+  },
+  {
+    label: '开启',
+    value: imageStatus.ON
+  }
+]
+
+// 小程序图片类型 TEAM_GUARANTEE 拼团保障图
+
+export const imageType = {
+  TEAM_GUARANTEE: 'TEAM_GUARANTEE'
+}
+
+export const imageTypeEnum = [
+  {
+    label: '拼团保障图',
+    value: imageType.TEAM_GUARANTEE
+  }
+]
+
+// 小程序团购活动状态 off 未开启 on 开启  expire 过期
+export const teamBuyStatus = {
+  off: 'off',
+  on: 'on',
+  expire: 'expire'
+}
+
+export const teamBuyStatusEnum = [
+  {
+    label: '关闭',
+    value: teamBuyStatus.off
+  },
+  {
+    label: '开启',
+    value: teamBuyStatus.on
+  },
+  {
+    label: '过期',
+    value: teamBuyStatus.expire
+  }
+]
+
+// 小程序团购活动活动类型 ORDINARY_TEAM("普通团"),OLD_AND_NEW("老带新团")
+export const teamBuyType = {
+  ORDINARY_TEAM: 'ORDINARY_TEAM',
+  OLD_AND_NEW: 'OLD_AND_NEW'
+}
+
+export const teamBuyTypeEnum = [
+  {
+    label: '普通团',
+    value: teamBuyType.ORDINARY_TEAM
+  },
+  {
+    label: '老带新团',
+    value: teamBuyType.OLD_AND_NEW
+  }
+]
+
+//  小程序红包活动设置 DISABLE("关闭"),ALL_ENABLE("全部开启"),SINGLE_ENABLE("单人购买开启活动"),MULTIPLE_ENABLE("多人团开启活动")
+export const rewardActivitySetting = {
+  DISABLE: 'DISABLE',
+  ALL_ENABLE: 'ALL_ENABLE',
+  SINGLE_ENABLE: 'SINGLE_ENABLE',
+  MULTIPLE_ENABLE: 'MULTIPLE_ENABLE'
+}
+
+export const rewardActivitySettingEnum = [
+  {
+    label: '关闭',
+    value: rewardActivitySetting.DISABLE
+  },
+  {
+    label: '全部开启',
+    value: rewardActivitySetting.ALL_ENABLE
+  },
+  {
+    label: '单人购买开启活动',
+    value: rewardActivitySetting.SINGLE_ENABLE
+  },
+  {
+    label: '多人团开启活动',
+    value: rewardActivitySetting.MULTIPLE_ENABLE
+  }
+]
+
+// 小程序关联门店 ALL(全部门店), PART(部分门店)
+export const relationStoreType = {
+  ALL: 'ALL',
+  PART: 'PART'
+}
+
+export const relationStoreTypeEnum = [
+  {
+    label: '全部门店',
+    value: relationStoreType.ALL
+  },
+  {
+    label: '部分门店',
+    value: relationStoreType.PART
+  }
+]
+
+// 小程序优惠券状态 有效-VALID 无效-INVALID
+export const couponStatus = {
+  VALID: 'VALID',
+  INVALID: 'INVALID',
+  EXPIRE: 'EXPIRE'
+};
+
+export const couponStatusEnum = [
+  {
+    label: '有效',
+    value: couponStatus.VALID
+  },
+  {
+    label: '无效',
+    value: couponStatus.INVALID
+  },
+  {
+    label: '过期',
+    value: couponStatus.EXPIRE
+  }
+];
+
+// 小程序优惠券使用范围 STORE("门店"),STORE_AND_SMALL("门店和商城"),SMALL("商城");
+export const couponScope = {
+  STORE: 'STORE',
+  STORE_AND_SMALL: 'STORE_AND_SMALL',
+  SMALL: 'SMALL'
+};
+
+export const couponScopeEnum = [
+  {
+    label: '门店',
+    value: couponScope.STORE
+  },
+  {
+    label: '全场通用',
+    value: couponScope.STORE_AND_SMALL
+  },
+  {
+    label: '商城',
+    value: couponScope.SMALL
+  }
+];
+
+// 小程序优惠券类型(FULL_CUT_COUPON 满减券;DISCOUNT_COUPON 折扣券;CASH_COUPON 现金券)
+export const couponType = {
+  FULL_CUT_COUPON: 'FULL_CUT_COUPON',
+  DISCOUNT_COUPON: 'DISCOUNT_COUPON',
+  CASH_COUPON: 'CASH_COUPON'
+};
+
+export const couponTypeEnum = [
+  {
+    label: '满减券',
+    value: couponType.FULL_CUT_COUPON
+  },
+  {
+    label: '折扣券',
+    value: couponType.DISCOUNT_COUPON
+  },
+  {
+    label: '现金券',
+    value: couponType.CASH_COUPON
+  }
+];
+
+// 小程序应用类型 appType WXSMALL_SHOP 微信小程序; S_MALL 拼团小程序; small 拼团小程序
+
+export const appType = {
+  WXSMALL_SHOP: 'WXSMALL_SHOP',
+  S_MALL: 'S_MALL'
+};
+
+export const appTypeEnum = [
+  {
+    label: '微信小程序',
+    value: appType.WXSMALL_SHOP
+  },
+  {
+    label: '拼团小程序',
+    value: appType.S_MALL
+  }
+];
+
+// 小程序支付类型 payType weixin 微信支付; balance 余额支付;
+
+export const payType = {
+  weixin: 'weixin',
+  balance: 'balance'
+};
+
+export const payTypeEnum = [
+  {
+    label: '微信支付',
+    value: payType.weixin
+  },
+  {
+    label: '余额支付',
+    value: payType.balance
+  }
+];
+
+// 小程序支付步骤 payStep sign 签名; paid 已支付;
+export const payStep = {
+  sign: 'sign',
+  paid: 'paid'
+};
+
+export const payStepEnum = [
+  {
+    label: '签名',
+    value: payStep.sign
+  },
+  {
+    label: '已支付',
+    value: payStep.paid
+  }
+];
+
+// 小程序来源类型 sourceType recharge: 充值;order: 订单
+export const sourceType = {
+  recharge: 'recharge',
+  order: 'order'
+};
+
+export const sourceTypeEnum = [
+  {
+    label: '充值',
+    value: sourceType.recharge
+  },
+  {
+    label: '订单',
+    value: sourceType.order
+  }
+];
+
+// 小程序银行类型 bankType CFT: 充值;HUNNX_DEBIT: 订单;BOC_DEBIT: 充值;ICBC_DEBIT: 订单;CSCB_DEBIT: 充值;CCB_DEBIT: 订单;ICBC_DEBIT: 订单;CSCB_DEBIT: 充值;CCB_DEBIT: 订单;
+export const bankType = {
+  ICBC_DEBIT: 'ICBC_DEBIT',
+  ICBC_CREDIT: 'ICBC_CREDIT',
+  ABC_DEBIT: 'ABC_DEBIT',
+  ABC_CREDIT: 'ABC_CREDIT',
+  PSBC_DEBIT: 'PSBC_DEBIT',
+  PSBC_CREDIT: 'PSBC_CREDIT',
+  CCB_DEBIT: 'CCB_DEBIT',
+  CCB_CREDIT: 'CCB_CREDIT',
+  CMB_DEBIT: 'CMB_DEBIT',
+  CMB_CREDIT: 'CMB_CREDIT',
+  BOC_DEBIT: 'BOC_DEBIT',
+  BOC_CREDIT: 'BOC_CREDIT',
+  COMM_DEBIT: 'COMM_DEBIT',
+  COMM_CREDIT: 'COMM_CREDIT',
+  SPDB_DEBIT: 'SPDB_DEBIT',
+  SPDB_CREDIT: 'SPDB_CREDIT',
+  GDB_DEBIT: 'GDB_DEBIT',
+  GDB_CREDIT: 'GDB_CREDIT',
+  CMBC_DEBIT: 'CMBC_DEBIT',
+  CMBC_CREDIT: 'CMBC_CREDIT',
+  PAB_DEBIT: 'PAB_DEBIT',
+  PAB_CREDIT: 'PAB_CREDIT',
+  CEB_DEBIT: 'CEB_DEBIT',
+  CEB_CREDIT: 'CEB_CREDIT',
+  CIB_DEBIT: 'CIB_DEBIT',
+  CIB_CREDIT: 'CIB_CREDIT',
+  CITIC_DEBIT: 'CITIC_DEBIT',
+  CITIC_CREDIT: 'CITIC_CREDIT',
+  BOSH_DEBIT: 'BOSH_DEBIT',
+  BOSH_CREDIT: 'BOSH_CREDIT',
+  CRB_DEBIT: 'CRB_DEBIT',
+  HZB_DEBIT: 'HZB_DEBIT',
+  HZB_CREDIT: 'HZB_CREDIT',
+  BSB_DEBIT: 'BSB_DEBIT',
+  BSB_CREDIT: 'BSB_CREDIT',
+  CQB_DEBIT: 'CQB_DEBIT',
+  SDEB_DEBIT: 'SDEB_DEBIT',
+  SZRCB_DEBIT: 'SZRCB_DEBIT',
+  SZRCB_CREDIT: 'SZRCB_CREDIT',
+  HRBB_DEBIT: 'HRBB_DEBIT',
+  BOCD_DEBIT: 'BOCD_DEBIT',
+  GDNYB_DEBIT: 'GDNYB_DEBIT',
+  GDNYB_CREDIT: 'GDNYB_CREDIT',
+  GZCB_DEBIT: 'GZCB_DEBIT',
+  GZCB_CREDIT: 'GZCB_CREDIT',
+  JSB_DEBIT: 'JSB_DEBIT',
+  JSB_CREDIT: 'JSB_CREDIT',
+  NBCB_DEBIT: 'NBCB_DEBIT',
+  NBCB_CREDIT: 'NBCB_CREDIT',
+  NJCB_DEBIT: 'NJCB_DEBIT',
+  QHNX_DEBIT: 'QHNX_DEBIT',
+  ORDOSB_CREDIT: 'ORDOSB_CREDIT',
+  ORDOSB_DEBIT: 'ORDOSB_DEBIT',
+  BJRCB_CREDIT: 'BJRCB_CREDIT',
+  BHB_DEBIT: 'BHB_DEBIT',
+  BGZB_DEBIT: 'BGZB_DEBIT',
+  BEEB_DEBIT: 'BEEB_DEBIT',
+  PZHCCB_DEBIT: 'PZHCCB_DEBIT',
+  QDCCB_CREDIT: 'QDCCB_CREDIT',
+  QDCCB_DEBIT: 'QDCCB_DEBIT',
+  SHINHAN_DEBIT: 'SHINHAN_DEBIT',
+  QLB_DEBIT: 'QLB_DEBIT',
+  QSB_DEBIT: 'QSB_DEBIT',
+  ZZB_DEBIT: 'ZZB_DEBIT',
+  CCAB_DEBIT: 'CCAB_DEBIT',
+  RZB_DEBIT: 'RZB_DEBIT',
+  SCNX_DEBIT: 'SCNX_DEBIT',
+  BEEB_CREDIT: 'BEEB_CREDIT',
+  SDRCU_DEBIT: 'SDRCU_DEBIT',
+  BCZ_DEBIT: 'BCZ_DEBIT',
+  SJB_DEBIT: 'SJB_DEBIT',
+  LNNX_DEBIT: 'LNNX_DEBIT',
+  JUFENGB_DEBIT: 'JUFENGB_DEBIT',
+  ZZB_CREDIT: 'ZZB_CREDIT',
+  JXNXB_DEBIT: 'JXNXB_DEBIT',
+  JZB_DEBIT: 'JZB_DEBIT',
+  JZCB_CREDIT: 'JZCB_CREDIT',
+  JZCB_DEBIT: 'JZCB_DEBIT',
+  KLB_DEBIT: 'KLB_DEBIT',
+  KRCB_DEBIT: 'KRCB_DEBIT',
+  KUERLECB_DEBIT: 'KUERLECB_DEBIT',
+  LJB_DEBIT: 'LJB_DEBIT',
+  NYCCB_DEBIT: 'NYCCB_DEBIT',
+  LSCCB_DEBIT: 'LSCCB_DEBIT',
+  LUZB_DEBIT: 'LUZB_DEBIT',
+  LWB_DEBIT: 'LWB_DEBIT',
+  LYYHB_DEBIT: 'LYYHB_DEBIT',
+  LZB_DEBIT: 'LZB_DEBIT',
+  MINTAIB_CREDIT: 'MINTAIB_CREDIT',
+  MINTAIB_DEBIT: 'MINTAIB_DEBIT',
+  NCB_DEBIT: 'NCB_DEBIT',
+  NMGNX_DEBIT: 'NMGNX_DEBIT',
+  XAB_DEBIT: 'XAB_DEBIT',
+  WFB_CREDIT: 'WFB_CREDIT',
+  WFB_DEBIT: 'WFB_DEBIT',
+  WHB_CREDIT: 'WHB_CREDIT',
+  WHB_DEBIT: 'WHB_DEBIT',
+  WHRC_CREDIT: 'WHRC_CREDIT',
+  WHRC_DEBIT: 'WHRC_DEBIT',
+  WJRCB_DEBIT: 'WJRCB_DEBIT',
+  WLMQB_DEBIT: 'WLMQB_DEBIT',
+  WRCB_DEBIT: 'WRCB_DEBIT',
+  WZB_DEBIT: 'WZB_DEBIT',
+  XAB_CREDIT: 'XAB_CREDIT',
+  WEB_DEBIT: 'WEB_DEBIT',
+  XIB_DEBIT: 'XIB_DEBIT',
+  XJRCCB_DEBIT: 'XJRCCB_DEBIT',
+  XMCCB_DEBIT: 'XMCCB_DEBIT',
+  YNRCCB_DEBIT: 'YNRCCB_DEBIT',
+  YRRCB_CREDIT: 'YRRCB_CREDIT',
+  YRRCB_DEBIT: 'YRRCB_DEBIT',
+  YTB_DEBIT: 'YTB_DEBIT',
+  ZJB_DEBIT: 'ZJB_DEBIT',
+  ZJLXRB_DEBIT: 'ZJLXRB_DEBIT',
+  ZJRCUB_CREDIT: 'ZJRCUB_CREDIT',
+  AHRCUB_DEBIT: 'AHRCUB_DEBIT',
+  BCZ_CREDIT: 'BCZ_CREDIT',
+  SRB_DEBIT: 'SRB_DEBIT',
+  ZYB_DEBIT: 'ZYB_DEBIT',
+  ZRCB_DEBIT: 'ZRCB_DEBIT',
+  SRCB_CREDIT: 'SRCB_CREDIT',
+  SRCB_DEBIT: 'SRCB_DEBIT',
+  ZJTLCB_DEBIT: 'ZJTLCB_DEBIT',
+  SUZB_DEBIT: 'SUZB_DEBIT',
+  SXNX_DEBIT: 'SXNX_DEBIT',
+  SXXH_DEBIT: 'SXXH_DEBIT',
+  ZJRCUB_DEBIT: 'ZJRCUB_DEBIT',
+  AE_CREDIT: 'AE_CREDIT',
+  TACCB_CREDIT: 'TACCB_CREDIT',
+  TACCB_DEBIT: 'TACCB_DEBIT',
+  TCRCB_DEBIT: 'TCRCB_DEBIT',
+  TJBHB_CREDIT: 'TJBHB_CREDIT',
+  TJBHB_DEBIT: 'TJBHB_DEBIT',
+  TJB_DEBIT: 'TJB_DEBIT',
+  TRCB_DEBIT: 'TRCB_DEBIT',
+  TZB_DEBIT: 'TZB_DEBIT',
+  URB_DEBIT: 'URB_DEBIT',
+  DYB_CREDIT: 'DYB_CREDIT',
+  CSRCB_DEBIT: 'CSRCB_DEBIT',
+  CZB_CREDIT: 'CZB_CREDIT',
+  CZB_DEBIT: 'CZB_DEBIT',
+  CZCB_CREDIT: 'CZCB_CREDIT',
+  CZCB_DEBIT: 'CZCB_DEBIT',
+  DANDONGB_CREDIT: 'DANDONGB_CREDIT',
+  DANDONGB_DEBIT: 'DANDONGB_DEBIT',
+  DLB_CREDIT: 'DLB_CREDIT',
+  DLB_DEBIT: 'DLB_DEBIT',
+  DRCB_CREDIT: 'DRCB_CREDIT',
+  DRCB_DEBIT: 'DRCB_DEBIT',
+  CSRCB_CREDIT: 'CSRCB_CREDIT',
+  DYB_DEBIT: 'DYB_DEBIT',
+  DYCCB_DEBIT: 'DYCCB_DEBIT',
+  FBB_DEBIT: 'FBB_DEBIT',
+  FDB_DEBIT: 'FDB_DEBIT',
+  FJHXB_CREDIT: 'FJHXB_CREDIT',
+  FJHXB_DEBIT: 'FJHXB_DEBIT',
+  FJNX_DEBIT: 'FJNX_DEBIT',
+  FUXINB_DEBIT: 'FUXINB_DEBIT',
+  BOCDB_DEBIT: 'BOCDB_DEBIT',
+  JSNX_DEBIT: 'JSNX_DEBIT',
+  BOLFB_DEBIT: 'BOLFB_DEBIT',
+  CCAB_CREDIT: 'CCAB_CREDIT',
+  CBHB_DEBIT: 'CBHB_DEBIT',
+  CDRCB_DEBIT: 'CDRCB_DEBIT',
+  BYK_DEBIT: 'BYK_DEBIT',
+  BOZ_DEBIT: 'BOZ_DEBIT',
+  CFT: 'CFT',
+  BOTSB_DEBIT: 'BOTSB_DEBIT',
+  BOSZS_DEBIT: 'BOSZS_DEBIT',
+  BOSXB_DEBIT: 'BOSXB_DEBIT',
+  BONX_DEBIT: 'BONX_DEBIT',
+  BONX_CREDIT: 'BONX_CREDIT',
+  GDHX_DEBIT: 'GDHX_DEBIT',
+  BOLB_DEBIT: 'BOLB_DEBIT',
+  BOJX_DEBIT: 'BOJX_DEBIT',
+  BOIMCB_DEBIT: 'BOIMCB_DEBIT',
+  BOHN_DEBIT: 'BOHN_DEBIT',
+  BOD_DEBIT: 'BOD_DEBIT',
+  CQRCB_CREDIT: 'CQRCB_CREDIT',
+  CQRCB_DEBIT: 'CQRCB_DEBIT',
+  CQTGB_DEBIT: 'CQTGB_DEBIT',
+  BOD_CREDIT: 'BOD_CREDIT',
+  CSCB_DEBIT: 'CSCB_DEBIT',
+  BOB_CREDIT: 'BOB_CREDIT',
+  GDRCU_DEBIT: 'GDRCU_DEBIT',
+  BOB_DEBIT: 'BOB_DEBIT',
+  HRXJB_DEBIT: 'HRXJB_DEBIT',
+  HSBC_DEBIT: 'HSBC_DEBIT',
+  HSB_CREDIT: 'HSB_CREDIT',
+  HSB_DEBIT: 'HSB_DEBIT',
+  HUNNX_DEBIT: 'HUNNX_DEBIT',
+  HUSRB_DEBIT: 'HUSRB_DEBIT',
+  HXB_CREDIT: 'HXB_CREDIT',
+  HXB_DEBIT: 'HXB_DEBIT',
+  HNNX_DEBIT: 'HNNX_DEBIT',
+  BNC_DEBIT: 'BNC_DEBIT',
+  BNC_CREDIT: 'BNC_CREDIT',
+  BJRCB_DEBIT: 'BJRCB_DEBIT',
+  JCB_DEBIT: 'JCB_DEBIT',
+  JJCCB_DEBIT: 'JJCCB_DEBIT',
+  JLB_DEBIT: 'JLB_DEBIT',
+  JLNX_DEBIT: 'JLNX_DEBIT',
+  JNRCB_DEBIT: 'JNRCB_DEBIT',
+  JRCB_DEBIT: 'JRCB_DEBIT',
+  JSHB_DEBIT: 'JSHB_DEBIT',
+  HAINNX_DEBIT: 'HAINNX_DEBIT',
+  GLB_DEBIT: 'GLB_DEBIT',
+  GRCB_CREDIT: 'GRCB_CREDIT',
+  GRCB_DEBIT: 'GRCB_DEBIT',
+  GSB_DEBIT: 'GSB_DEBIT',
+  GSNX_DEBIT: 'GSNX_DEBIT',
+  GXNX_DEBIT: 'GXNX_DEBIT',
+  GYCB_CREDIT: 'GYCB_CREDIT',
+  GYCB_DEBIT: 'GYCB_DEBIT',
+  GZNX_DEBIT: 'GZNX_DEBIT',
+  HAINNX_CREDIT: 'HAINNX_CREDIT',
+  HKB_DEBIT: 'HKB_DEBIT',
+  HANAB_DEBIT: 'HANAB_DEBIT',
+  HBCB_CREDIT: 'HBCB_CREDIT',
+  HBCB_DEBIT: 'HBCB_DEBIT',
+  HBNX_CREDIT: 'HBNX_CREDIT',
+  HBNX_DEBIT: 'HBNX_DEBIT',
+  HDCB_DEBIT: 'HDCB_DEBIT',
+  HEBNX_DEBIT: 'HEBNX_DEBIT',
+  HFB_DEBIT: 'HFB_DEBIT',
+  HKBEA_DEBIT: 'HKBEA_DEBIT',
+  JCB_CREDIT: 'JCB_CREDIT',
+  MASTERCARD_CREDIT: 'MASTERCARD_CREDIT',
+  VISA_CREDIT: 'VISA_CREDIT'
+};
+
+export const bankTypeEnum = [
+  { label: '工商银行借记卡', value: bankType.ICBC_DEBIT },
+  { label: '工商银行信用卡', value: bankType.ICBC_CREDIT },
+  { label: '农业银行借记卡', value: bankType.ABC_DEBIT },
+  { label: '农业银行信用卡', value: bankType.ABC_CREDIT },
+  { label: '邮政储蓄银行借记卡', value: bankType.PSBC_DEBIT },
+  { label: '邮政储蓄银行信用卡', value: bankType.PSBC_CREDIT },
+  { label: '建设银行借记卡', value: bankType.CCB_DEBIT },
+  { label: '建设银行信用卡', value: bankType.CCB_CREDIT },
+  { label: '招商银行借记卡', value: bankType.CMB_DEBIT },
+  { label: '招商银行信用卡', value: bankType.CMB_CREDIT },
+  { label: '中国银行借记卡', value: bankType.BOC_DEBIT },
+  { label: '中国银行信用卡', value: bankType.BOC_CREDIT },
+  { label: '交通银行借记卡', value: bankType.COMM_DEBIT },
+  { label: '交通银行信用卡', value: bankType.COMM_CREDIT },
+  { label: '浦发银行借记卡', value: bankType.SPDB_DEBIT },
+  { label: '浦发银行信用卡', value: bankType.SPDB_CREDIT },
+  { label: '广发银行借记卡', value: bankType.GDB_DEBIT },
+  { label: '广发银行信用卡', value: bankType.GDB_CREDIT },
+  { label: '民生银行借记卡', value: bankType.CMBC_DEBIT },
+  { label: '民生银行信用卡', value: bankType.CMBC_CREDIT },
+  { label: '平安银行借记卡', value: bankType.PAB_DEBIT },
+  { label: '平安银行信用卡', value: bankType.PAB_CREDIT },
+  { label: '光大银行借记卡', value: bankType.CEB_DEBIT },
+  { label: '光大银行信用卡', value: bankType.CEB_CREDIT },
+  { label: '兴业银行借记卡', value: bankType.CIB_DEBIT },
+  { label: '兴业银行信用卡', value: bankType.CIB_CREDIT },
+  { label: '中信银行借记卡', value: bankType.CITIC_DEBIT },
+  { label: '中信银行信用卡', value: bankType.CITIC_CREDIT },
+  { label: '上海银行借记卡', value: bankType.BOSH_DEBIT },
+  { label: '上海银行信用卡', value: bankType.BOSH_CREDIT },
+  { label: '华润银行借记卡', value: bankType.CRB_DEBIT },
+  { label: '杭州银行借记卡', value: bankType.HZB_DEBIT },
+  { label: '杭州银行信用卡', value: bankType.HZB_CREDIT },
+  { label: '包商银行借记卡', value: bankType.BSB_DEBIT },
+  { label: '包商银行信用卡', value: bankType.BSB_CREDIT },
+  { label: '重庆银行借记卡', value: bankType.CQB_DEBIT },
+  { label: '顺德农商行借记卡', value: bankType.SDEB_DEBIT },
+  { label: '深圳农商银行借记卡', value: bankType.SZRCB_DEBIT },
+  { label: '深圳农商银行信用卡', value: bankType.SZRCB_CREDIT },
+  { label: '哈尔滨银行借记卡', value: bankType.HRBB_DEBIT },
+  { label: '成都银行借记卡', value: bankType.BOCD_DEBIT },
+  { label: '南粤银行借记卡', value: bankType.GDNYB_DEBIT },
+  { label: '南粤银行信用卡', value: bankType.GDNYB_CREDIT },
+  { label: '广州银行借记卡', value: bankType.GZCB_DEBIT },
+  { label: '广州银行信用卡', value: bankType.GZCB_CREDIT },
+  { label: '江苏银行借记卡', value: bankType.JSB_DEBIT },
+  { label: '江苏银行信用卡', value: bankType.JSB_CREDIT },
+  { label: '宁波银行借记卡', value: bankType.NBCB_DEBIT },
+  { label: '宁波银行信用卡', value: bankType.NBCB_CREDIT },
+  { label: '南京银行借记卡', value: bankType.NJCB_DEBIT },
+  { label: '青海农信借记卡', value: bankType.QHNX_DEBIT },
+  { label: '鄂尔多斯银行信用卡', value: bankType.ORDOSB_CREDIT },
+  { label: '鄂尔多斯银行借记卡', value: bankType.ORDOSB_DEBIT },
+  { label: '北京农商信用卡', value: bankType.BJRCB_CREDIT },
+  { label: '河北银行借记卡', value: bankType.BHB_DEBIT },
+  { label: '贵州银行借记卡', value: bankType.BGZB_DEBIT },
+  { label: '鄞州银行借记卡', value: bankType.BEEB_DEBIT },
+  { label: '攀枝花银行借记卡', value: bankType.PZHCCB_DEBIT },
+  { label: '青岛银行信用卡', value: bankType.QDCCB_CREDIT },
+  { label: '青岛银行借记卡', value: bankType.QDCCB_DEBIT },
+  { label: '新韩银行借记卡', value: bankType.SHINHAN_DEBIT },
+  { label: '齐鲁银行借记卡', value: bankType.QLB_DEBIT },
+  { label: '齐商银行借记卡', value: bankType.QSB_DEBIT },
+  { label: '郑州银行借记卡', value: bankType.ZZB_DEBIT },
+  { label: '长安银行借记卡', value: bankType.CCAB_DEBIT },
+  { label: '日照银行借记卡', value: bankType.RZB_DEBIT },
+  { label: '四川农信借记卡', value: bankType.SCNX_DEBIT },
+  { label: '鄞州银行信用卡', value: bankType.BEEB_CREDIT },
+  { label: '山东农信借记卡', value: bankType.SDRCU_DEBIT },
+  { label: '沧州银行借记卡', value: bankType.BCZ_DEBIT },
+  { label: '盛京银行借记卡', value: bankType.SJB_DEBIT },
+  { label: '辽宁农信借记卡', value: bankType.LNNX_DEBIT },
+  { label: '临朐聚丰村镇银行借记卡', value: bankType.JUFENGB_DEBIT },
+  { label: '郑州银行信用卡', value: bankType.ZZB_CREDIT },
+  { label: '江西农信借记卡', value: bankType.JXNXB_DEBIT },
+  { label: '晋中银行借记卡', value: bankType.JZB_DEBIT },
+  { label: '锦州银行信用卡', value: bankType.JZCB_CREDIT },
+  { label: '锦州银行借记卡', value: bankType.JZCB_DEBIT },
+  { label: '昆仑银行借记卡', value: bankType.KLB_DEBIT },
+  { label: '昆山农商借记卡', value: bankType.KRCB_DEBIT },
+  { label: '库尔勒市商业银行借记卡', value: bankType.KUERLECB_DEBIT },
+  { label: '龙江银行借记卡', value: bankType.LJB_DEBIT },
+  { label: '南阳村镇银行借记卡', value: bankType.NYCCB_DEBIT },
+  { label: '乐山市商业银行借记卡', value: bankType.LSCCB_DEBIT },
+  { label: '柳州银行借记卡', value: bankType.LUZB_DEBIT },
+  { label: '莱商银行借记卡', value: bankType.LWB_DEBIT },
+  { label: '辽阳银行借记卡', value: bankType.LYYHB_DEBIT },
+  { label: '兰州银行借记卡', value: bankType.LZB_DEBIT },
+  { label: '民泰银行信用卡', value: bankType.MINTAIB_CREDIT },
+  { label: '民泰银行借记卡', value: bankType.MINTAIB_DEBIT },
+  { label: '宁波通商银行借记卡', value: bankType.NCB_DEBIT },
+  { label: '内蒙古农信借记卡', value: bankType.NMGNX_DEBIT },
+  { label: '西安银行借记卡', value: bankType.XAB_DEBIT },
+  { label: '潍坊银行信用卡', value: bankType.WFB_CREDIT },
+  { label: '潍坊银行借记卡', value: bankType.WFB_DEBIT },
+  { label: '威海商业银行信用卡', value: bankType.WHB_CREDIT },
+  { label: '威海市商业银行借记卡', value: bankType.WHB_DEBIT },
+  { label: '武汉农商信用卡', value: bankType.WHRC_CREDIT },
+  { label: '武汉农商行借记卡', value: bankType.WHRC_DEBIT },
+  { label: '吴江农商行借记卡', value: bankType.WJRCB_DEBIT },
+  { label: '乌鲁木齐银行借记卡', value: bankType.WLMQB_DEBIT },
+  { label: '无锡农商借记卡', value: bankType.WRCB_DEBIT },
+  { label: '温州银行借记卡', value: bankType.WZB_DEBIT },
+  { label: '西安银行信用卡', value: bankType.XAB_CREDIT },
+  { label: '微众银行借记卡', value: bankType.WEB_DEBIT },
+  { label: '厦门国际银行借记卡', value: bankType.XIB_DEBIT },
+  { label: '新疆农信银行借记卡', value: bankType.XJRCCB_DEBIT },
+  { label: '厦门银行借记卡', value: bankType.XMCCB_DEBIT },
+  { label: '云南农信借记卡', value: bankType.YNRCCB_DEBIT },
+  { label: '黄河农商银行信用卡', value: bankType.YRRCB_CREDIT },
+  { label: '黄河农商银行借记卡', value: bankType.YRRCB_DEBIT },
+  { label: '烟台银行借记卡', value: bankType.YTB_DEBIT },
+  { label: '紫金农商银行借记卡', value: bankType.ZJB_DEBIT },
+  { label: '兰溪越商银行借记卡', value: bankType.ZJLXRB_DEBIT },
+  { label: '浙江农信信用卡', value: bankType.ZJRCUB_CREDIT },
+  { label: '安徽省农村信用社联合社借记卡', value: bankType.AHRCUB_DEBIT },
+  { label: '沧州银行信用卡', value: bankType.BCZ_CREDIT },
+  { label: '上饶银行借记卡', value: bankType.SRB_DEBIT },
+  { label: '中原银行借记卡', value: bankType.ZYB_DEBIT },
+  { label: '张家港农商行借记卡', value: bankType.ZRCB_DEBIT },
+  { label: '上海农商银行信用卡', value: bankType.SRCB_CREDIT },
+  { label: '上海农商银行借记卡', value: bankType.SRCB_DEBIT },
+  { label: '浙江泰隆银行借记卡', value: bankType.ZJTLCB_DEBIT },
+  { label: '苏州银行借记卡', value: bankType.SUZB_DEBIT },
+  { label: '山西农信借记卡', value: bankType.SXNX_DEBIT },
+  { label: '陕西信合借记卡', value: bankType.SXXH_DEBIT },
+  { label: '浙江农信借记卡', value: bankType.ZJRCUB_DEBIT },
+  { label: 'AE信用卡', value: bankType.AE_CREDIT },
+  { label: '泰安银行信用卡', value: bankType.TACCB_CREDIT },
+  { label: '泰安银行借记卡', value: bankType.TACCB_DEBIT },
+  { label: '太仓农商行借记卡', value: bankType.TCRCB_DEBIT },
+  { label: '天津滨海农商行信用卡', value: bankType.TJBHB_CREDIT },
+  { label: '天津滨海农商行借记卡', value: bankType.TJBHB_DEBIT },
+  { label: '天津银行借记卡', value: bankType.TJB_DEBIT },
+  { label: '天津农商借记卡', value: bankType.TRCB_DEBIT },
+  { label: '台州银行借记卡', value: bankType.TZB_DEBIT },
+  { label: '联合村镇银行借记卡', value: bankType.URB_DEBIT },
+  { label: '东营银行信用卡', value: bankType.DYB_CREDIT },
+  { label: '常熟农商银行借记卡', value: bankType.CSRCB_DEBIT },
+  { label: '浙商银行信用卡', value: bankType.CZB_CREDIT },
+  { label: '浙商银行借记卡', value: bankType.CZB_DEBIT },
+  { label: '稠州银行信用卡', value: bankType.CZCB_CREDIT },
+  { label: '稠州银行借记卡', value: bankType.CZCB_DEBIT },
+  { label: '丹东银行信用卡', value: bankType.DANDONGB_CREDIT },
+  { label: '丹东银行借记卡', value: bankType.DANDONGB_DEBIT },
+  { label: '大连银行信用卡', value: bankType.DLB_CREDIT },
+  { label: '大连银行借记卡', value: bankType.DLB_DEBIT },
+  { label: '东莞农商银行信用卡', value: bankType.DRCB_CREDIT },
+  { label: '东莞农商银行借记卡', value: bankType.DRCB_DEBIT },
+  { label: '常熟农商银行信用卡', value: bankType.CSRCB_CREDIT },
+  { label: '东营银行借记卡', value: bankType.DYB_DEBIT },
+  { label: '德阳银行借记卡', value: bankType.DYCCB_DEBIT },
+  { label: '富邦华一银行借记卡', value: bankType.FBB_DEBIT },
+  { label: '富滇银行借记卡', value: bankType.FDB_DEBIT },
+  { label: '福建海峡银行信用卡', value: bankType.FJHXB_CREDIT },
+  { label: '福建海峡银行借记卡', value: bankType.FJHXB_DEBIT },
+  { label: '福建农信银行借记卡', value: bankType.FJNX_DEBIT },
+  { label: '阜新银行借记卡', value: bankType.FUXINB_DEBIT },
+  { label: '承德银行借记卡', value: bankType.BOCDB_DEBIT },
+  { label: '江苏农商行借记卡', value: bankType.JSNX_DEBIT },
+  { label: '廊坊银行借记卡', value: bankType.BOLFB_DEBIT },
+  { label: '长安银行信用卡', value: bankType.CCAB_CREDIT },
+  { label: '渤海银行借记卡', value: bankType.CBHB_DEBIT },
+  { label: '成都农商银行借记卡', value: bankType.CDRCB_DEBIT },
+  { label: '营口银行借记卡', value: bankType.BYK_DEBIT },
+  { label: '张家口市商业银行借记卡', value: bankType.BOZ_DEBIT },
+  { label: '零钱', value: bankType.CFT },
+  { label: '唐山银行借记卡', value: bankType.BOTSB_DEBIT },
+  { label: '石嘴山银行借记卡', value: bankType.BOSZS_DEBIT },
+  { label: '绍兴银行借记卡', value: bankType.BOSXB_DEBIT },
+  { label: '宁夏银行借记卡', value: bankType.BONX_DEBIT },
+  { label: '宁夏银行信用卡', value: bankType.BONX_CREDIT },
+  { label: '广东华兴银行借记卡', value: bankType.GDHX_DEBIT },
+  { label: '洛阳银行借记卡', value: bankType.BOLB_DEBIT },
+  { label: '嘉兴银行借记卡', value: bankType.BOJX_DEBIT },
+  { label: '内蒙古银行借记卡', value: bankType.BOIMCB_DEBIT },
+  { label: '海南银行借记卡', value: bankType.BOHN_DEBIT },
+  { label: '东莞银行借记卡', value: bankType.BOD_DEBIT },
+  { label: '重庆农商银行信用卡', value: bankType.CQRCB_CREDIT },
+  { label: '重庆农商银行借记卡', value: bankType.CQRCB_DEBIT },
+  { label: '重庆三峡银行借记卡', value: bankType.CQTGB_DEBIT },
+  { label: '东莞银行信用卡', value: bankType.BOD_CREDIT },
+  { label: '长沙银行借记卡', value: bankType.CSCB_DEBIT },
+  { label: '北京银行信用卡', value: bankType.BOB_CREDIT },
+  { label: '广东农信银行借记卡', value: bankType.GDRCU_DEBIT },
+  { label: '北京银行借记卡', value: bankType.BOB_DEBIT },
+  { label: '华融湘江银行借记卡', value: bankType.HRXJB_DEBIT },
+  { label: '恒生银行借记卡', value: bankType.HSBC_DEBIT },
+  { label: '徽商银行信用卡', value: bankType.HSB_CREDIT },
+  { label: '徽商银行借记卡', value: bankType.HSB_DEBIT },
+  { label: '湖南农信借记卡', value: bankType.HUNNX_DEBIT },
+  { label: '湖商村镇银行借记卡', value: bankType.HUSRB_DEBIT },
+  { label: '华夏银行信用卡', value: bankType.HXB_CREDIT },
+  { label: '华夏银行借记卡', value: bankType.HXB_DEBIT },
+  { label: '河南农信借记卡', value: bankType.HNNX_DEBIT },
+  { label: '江西银行借记卡', value: bankType.BNC_DEBIT },
+  { label: '江西银行信用卡', value: bankType.BNC_CREDIT },
+  { label: '北京农商行借记卡', value: bankType.BJRCB_DEBIT },
+  { label: '晋城银行借记卡', value: bankType.JCB_DEBIT },
+  { label: '九江银行借记卡', value: bankType.JJCCB_DEBIT },
+  { label: '吉林银行借记卡', value: bankType.JLB_DEBIT },
+  { label: '吉林农信借记卡', value: bankType.JLNX_DEBIT },
+  { label: '江南农商借记卡', value: bankType.JNRCB_DEBIT },
+  { label: '江阴农商行借记卡', value: bankType.JRCB_DEBIT },
+  { label: '晋商银行借记卡', value: bankType.JSHB_DEBIT },
+  { label: '海南农信借记卡', value: bankType.HAINNX_DEBIT },
+  { label: '桂林银行借记卡', value: bankType.GLB_DEBIT },
+  { label: '广州农商银行信用卡', value: bankType.GRCB_CREDIT },
+  { label: '广州农商银行借记卡', value: bankType.GRCB_DEBIT },
+  { label: '甘肃银行借记卡', value: bankType.GSB_DEBIT },
+  { label: '甘肃农信借记卡', value: bankType.GSNX_DEBIT },
+  { label: '广西农信借记卡', value: bankType.GXNX_DEBIT },
+  { label: '贵阳银行信用卡', value: bankType.GYCB_CREDIT },
+  { label: '贵阳银行借记卡', value: bankType.GYCB_DEBIT },
+  { label: '贵州农信借记卡', value: bankType.GZNX_DEBIT },
+  { label: '海南农信信用卡', value: bankType.HAINNX_CREDIT },
+  { label: '汉口银行借记卡', value: bankType.HKB_DEBIT },
+  { label: '韩亚银行借记卡', value: bankType.HANAB_DEBIT },
+  { label: '湖北银行信用卡', value: bankType.HBCB_CREDIT },
+  { label: '湖北银行借记卡', value: bankType.HBCB_DEBIT },
+  { label: '湖北农信信用卡', value: bankType.HBNX_CREDIT },
+  { label: '湖北农信借记卡', value: bankType.HBNX_DEBIT },
+  { label: '邯郸银行借记卡', value: bankType.HDCB_DEBIT },
+  { label: '河北农信借记卡', value: bankType.HEBNX_DEBIT },
+  { label: '恒丰银行借记卡', value: bankType.HFB_DEBIT },
+  { label: '东亚银行借记卡', value: bankType.HKBEA_DEBIT },
+  { label: 'JCB信用卡', value: bankType.JCB_CREDIT },
+  { label: 'MASTERCARD信用卡', value: bankType.MASTERCARD_CREDIT },
+  { label: 'VISA信用卡', value: bankType.VISA_CREDIT }
+];
+
+// 小程序广告位时间限制 时间限制(LIMITED 限时   UNLIMITED 不限时)
+export const timeLimited = {
+  LIMITED: 'LIMITED',
+  UNLIMITED: 'UNLIMITED'
+};
+
+export const timeLimitedEnum = [
+  {
+    label: '限时',
+    value: timeLimited.LIMITED
+  },
+  {
+    label: '不限时',
+    value: timeLimited.UNLIMITED
+  }
+];
+
+// 小程序广告位类型(WORD 文字 IMAGE 图片 CAROUSEL 轮播)
+export const advertisementPositionType = {
+  WORD: 'WORD',
+  IMAGE: 'IMAGE',
+  CAROUSEL: 'CAROUSEL'
+};
+
+export const advertisementPositionTypeEnum = [
+  {
+    label: '文字',
+    value: advertisementPositionType.WORD
+  },
+  {
+    label: '图片',
+    value: advertisementPositionType.IMAGE
+  },
+  {
+    label: '轮播图',
+    value: advertisementPositionType.CAROUSEL
+  }
+];
+
+// 小程序广告关联类别
+// GOODSINFO("商品详情"),STORELIVE("门店直播"),AMUSEMENT("多娱"),EXTERNALLINK("外部链接"),GAME("游戏"),INVITEACTIVE("邀请有礼"),FLASHACTIVE("抢购商品"),RECHARGE("充值页面"),STOCK("仓库")
+export const linkType = {
+  GOODSINFO: 'GOODSINFO',
+  STORELIVE: 'STORELIVE',
+  AMUSEMENT: 'AMUSEMENT',
+  EXTERNALLINK: 'EXTERNALLINK',
+  GAME: 'GAME',
+  INVITEACTIVE: 'INVITEACTIVE',
+  FLASHACTIVE: 'FLASHACTIVE',
+  RECHARGE: 'RECHARGE',
+  STOCK: 'STOCK'
+};
+
+export const linkTypeEnum = [
+  {
+    label: '商品详情',
+    value: linkType.GOODSINFO
+  },
+  {
+    label: '门店直播',
+    value: linkType.STORELIVE
+  },
+  {
+    label: '多娱',
+    value: linkType.AMUSEMENT
+  },
+  {
+    label: '外部链接',
+    value: linkType.EXTERNALLINK
+  },
+  {
+    label: '游戏',
+    value: linkType.GAME
+  },
+  {
+    label: '邀请有礼',
+    value: linkType.INVITEACTIVE
+  },
+  {
+    label: '抢购商品',
+    value: linkType.FLASHACTIVE
+  },
+  {
+    label: '充值页面',
+    value: linkType.RECHARGE
+  },
+  {
+    label: '仓库',
+    value: linkType.STOCK
+  }
+];
+
+// 小程序订单状态
+// WAIT_PAYMENT("待支付"),PAYMENTING("支付中"),WAIT_SEND_OUT("待发货"),SEND_OUT("已发货"),
+// DISPATCHING("配送中"),RECEIVED("已收货"),RETURNING("退货中"),
+// ALREADY_RETURN("退货完成"),FAILURE("已失效"),FINISHED("已完成");
+
+export const miniOrderStatus = {
+  WAIT_PAYMENT: 'WAIT_PAYMENT',
+  PAYMENTING: 'PAYMENTING',
+  WAIT_SEND_OUT: 'WAIT_SEND_OUT',
+  SEND_OUT: 'SEND_OUT',
+  DISPATCHING: 'DISPATCHING',
+  RECEIVED: 'RECEIVED',
+  RETURNING: 'RETURNING',
+  ALREADY_RETURN: 'ALREADY_RETURN',
+  FAILURE: 'FAILURE',
+  FINISHED: 'FINISHED'
+};
+
+export const miniOrderStatusEnum = [
+  {
+    label: '待支付',
+    value: miniOrderStatus.WAIT_PAYMENT
+  },
+  {
+    label: '支付中',
+    value: miniOrderStatus.PAYMENTING
+  },
+  {
+    label: '待发货',
+    value: miniOrderStatus.WAIT_SEND_OUT
+  },
+  {
+    label: '已发货',
+    value: miniOrderStatus.SEND_OUT
+  },
+  {
+    label: '配送中',
+    value: miniOrderStatus.DISPATCHING
+  },
+  {
+    label: '已收货',
+    value: miniOrderStatus.RECEIVED
+  },
+  {
+    label: '退货中',
+    value: miniOrderStatus.RETURNING
+  },
+  {
+    label: '退货完成',
+    value: miniOrderStatus.ALREADY_RETURN
+  },
+  {
+    label: '已失效',
+    value: miniOrderStatus.FAILURE
+  },
+  {
+    label: '已完成',
+    value: miniOrderStatus.FINISHED
+  }
+];
+
+// 小程序海鼎状态 NOT_SEND("未发送"),SEND_OUT("成功")
+
+export const miniHdStatus = {
+  NOT_SEND: 'NOT_SEND',
+  SEND_OUT: 'SEND_OUT'
+};
+
+export const miniHdStatusEnum = [
+  {
+    label: '未发送',
+    value: miniHdStatus.NOT_SEND
+  },
+  {
+    label: '成功',
+    value: miniHdStatus.SEND_OUT
+  }
+];
+
+// 小程序订单类型 SHOPPING("导购订单"),SELF_BUYING("自购订单"),TEAM_BUYING("团购订单"),PICKING("提货订单");
+
+export const miniOrderType = {
+  SHOPPING: 'SHOPPING',
+  SELF_BUYING: 'SELF_BUYING',
+  TEAM_BUYING: 'TEAM_BUYING',
+  PICKING: 'PICKING'
+};
+
+export const miniOrderTypeEnum = [
+  {
+    label: '导购订单',
+    value: miniOrderType.SHOPPING
+  },
+  {
+    label: '自购订单',
+    value: miniOrderType.SELF_BUYING
+  },
+  {
+    label: '团购订单',
+    value: miniOrderType.TEAM_BUYING
+  },
+  {
+    label: '提货订单',
+    value: miniOrderType.PICKING
+  }
+];
+
+// 配送状态 UNRECEIVE-未接单 WAIT_GET-待取货 TRANSFERING-配送中 DONE-配送完成 FAILURE-配送失败
+export const deliverStatus = {
+  UNRECEIVE: 'UNRECEIVE',
+  WAIT_GET: 'WAIT_GET',
+  TRANSFERING: 'TRANSFERING',
+  DONE: 'DONE',
+  FAILURE: 'FAILURE'
+}
+
+export const deliverStatusEnum = [
+  {
+    label: '未接单',
+    value: deliverStatus.UNRECEIVE
+  },
+  {
+    label: '待取货',
+    value: deliverStatus.WAIT_GET
+  },
+  {
+    label: '配送中',
+    value: deliverStatus.TRANSFERING
+  },
+  {
+    label: '配送完成',
+    value: deliverStatus.DONE
+  },
+  {
+    label: '配送失败',
+    value: deliverStatus.FAILURE
+  }
+]

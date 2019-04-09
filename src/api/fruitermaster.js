@@ -879,7 +879,7 @@ export const editStore = (data) => {
 };
 
 // 添加门店
-export const addStore = (data) => {
+export const createStore = (data) => {
   return Vue.prototype.$http.request({
     url: '/stores',
     data,

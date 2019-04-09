@@ -2,7 +2,7 @@ import {
   customOrderStatusConvert,
   customPeriodConvert, customPlanStatusConvert,
   deliveryTypeCustomConvert, doctorLevelConvert, doctorStatusConvert, hotConvert, onSaleStatusConvert,
-  orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert, feedbackStatusConvert
+  orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert, feedbackStatusConvert, productStatusConvert, imageStatusConvert, imageTypeConvert, teamBuyStatusConvert, teamBuyTypeConvert, rewardActivitySettingConvert, couponStatusConvert, couponTypeConvert, appTypeConvert, bankTypeConvert, timeLimitedConvert, advertisementPositionTypeConvert, couponScopeConvert, advertisementLinkTypeConvert, miniOrderStatusConvert, miniHdStatusConvert, miniOrderTypeConvert, yesNoConvert, deliverStatusConvert
 } from '../libs/converStatus';
 
 const mixin = {
@@ -95,6 +95,81 @@ const mixin = {
     // 反馈状态
     feedbackStatusFilters(status) {
       return feedbackStatusConvert(status).label;
+    },
+    // 小程序商品状态
+    productStatusFilter(status) {
+      return productStatusConvert(status).label;
+    },
+    // 小程序图片状态
+    imageStatusFilter(status) {
+      return imageStatusConvert(status).label;
+    },
+    // 小程序图片类型
+    imageTypeFilter(type) {
+      return imageTypeConvert(type).label;
+    },
+    // 小程序团购活动状态
+    teamBuyStatusFilter(status) {
+      return teamBuyStatusConvert(status).label;
+    },
+    // 小程序团购类型
+    teamBuyTypeFilter(type) {
+      return teamBuyTypeConvert(type).label;
+    },
+    // 小程序红包活动设置
+    rewardActivitySettingFilter(type) {
+      return rewardActivitySettingConvert(type).label;
+    },
+    // 小程序优惠券状态
+    couponStatusFilter(status) {
+      return couponStatusConvert(status).label;
+    },
+    // 小程序优惠券使用范围
+    couponScopeFilter(status) {
+      return couponScopeConvert(status).label;
+    },
+    // 小程序优惠券状态
+    couponTypeFilter(type) {
+      return couponTypeConvert(type).label;
+    },
+    // 小程序应用类型
+    appTypeFilter(type) {
+      return appTypeConvert(type).label;
+    },
+    // 小程序银行类型
+    bankTypeFilter(type) {
+      return bankTypeConvert(type).label;
+    },
+    // 小程序广告位时间限制
+    timeLimitedFilter(type) {
+      return timeLimitedConvert(type).label;
+    },
+    // 小程序广告位类型
+    advertisementPositionTypeFilter(type) {
+      return advertisementPositionTypeConvert(type).label;
+    },
+    // 小程序广告位链接类型
+    advertisementLinkTypeFilter(type) {
+      return advertisementLinkTypeConvert(type).label;
+    },
+    // 小程序订单状态
+    miniOrderStatusFilter(status) {
+      return miniOrderStatusConvert(status).label;
+    },
+    // 小程序海鼎状态
+    miniHdStatusFilter(status) {
+      return miniHdStatusConvert(status).label;
+    },
+    // 小程序订单类型
+    miniOrderTypeFilter(type) {
+      return miniOrderTypeConvert(type).label;
+    },
+    yesNoFilter(type) {
+      return yesNoConvert(type).label;
+    },
+    // 小程序订单配送状态
+    deliverStatusFilter(status) {
+      return deliverStatusConvert(status).label;
     }
   },
   computed: {

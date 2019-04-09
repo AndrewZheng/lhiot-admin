@@ -165,6 +165,35 @@ export const constantRouterMap = [
       }
     ]
   },
+  {
+    path: '/small-manager-detail',
+    name: 'small-manager-detail',
+    meta: {
+      icon: 'md-menu',
+      title: '小程序跳转页面集合'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'small-goods-relation-standard',
+        name: 'small-goods-relation-standard',
+        meta: {
+          icon: 'md-menu',
+          title: '商品关联规格'
+        },
+        component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
+      },
+      {
+        path: 'small-activity-relation-coupon',
+        name: 'small-activity-relation-coupon',
+        meta: {
+          icon: 'md-menu',
+          title: '活动关联优惠券模板'
+        },
+        component: () => import('@/view/mini-program-manager/activity/coupon-relation.vue')
+      }
+    ]
+  },
 ];
 
 export const asyncRouterMap = [
@@ -683,6 +712,371 @@ export const asyncRouterMap = [
         },
         component: () => import('@/view/fruit-master-manager/store/store-message.vue')
       }
+    ]
+  },
+  {
+    path: '/small-goods-manager',
+    name: 'small-goods-manager',
+    meta: {
+      icon: 'md-menu',
+      title: '商品管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/small-goods-category',
+        name: 'small-goods-category',
+        meta: {
+          icon: 'ios-albums',
+          title: '商品分类管理'
+        },
+        component: () => import('@/view/mini-program-manager/goods/goods-category.vue')
+      },
+      {
+        path: '/small-goods-unit',
+        name: 'small-goods-unit',
+        meta: {
+          icon: 'ios-barcode',
+          title: '商品单位管理'
+        },
+        component: () => import('@/view/mini-program-manager/goods/goods-unit.vue')
+      },
+      {
+        path: '/small-goods-info',
+        name: 'small-goods-info',
+        meta: {
+          icon: 'md-menu',
+          title: '基础商品管理'
+        },
+        component: () => import('@/view/mini-program-manager/goods/goods-message.vue')
+      },
+      {
+        path: '/small-goods-standard',
+        name: 'small-goods-standard',
+        meta: {
+          icon: 'ios-basket',
+          title: '商品规格管理'
+        },
+        component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
+      },
+      {
+        path: '/small-goods-section',
+        name: 'small-goods-section',
+        meta: {
+          icon: 'ios-apps',
+          title: '板块管理'
+        },
+        component: () => import('@/view/mini-program-manager/goods/section.vue')
+      },
+       {
+        path: '/small-goods-section-relation',
+        name: 'small-goods-section-relation',
+        meta: {
+          icon: 'md-pricetag',
+          title: '商品板块管理'
+        },
+        component: () => import('@/view/mini-program-manager/goods/goods-section.vue')
+      },
+      {
+        path: '/small-store',
+        name: 'small-store',
+        meta: {
+          icon: 'ios-home',
+          title: '门店管理'
+        },
+        component: () => import('@/view/mini-program-manager/goods/store-message.vue')
+      }
+    ]
+  },
+  {
+    path: '/small-goods-teambuy',
+    name: 'small-goods-teambuy',
+    meta: {
+      icon: 'md-menu',
+      title: '团购管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/small-goods-activity-teambuy',
+        name: 'small-goods-activity-teambuy',
+        meta: {
+          icon: 'md-pricetag',
+          title: '拼团活动'
+        },
+        component: () => import('@/view/mini-program-manager/activity/teambuy.vue')
+      },
+      {
+        path: '/small-goods-robot',
+        name: 'small-goods-robot',
+        meta: {
+          icon: 'md-pricetag',
+          title: '拼团机器人'
+        },
+        component: () => import('@/view/mini-program-manager/activity/robot.vue')
+      },
+      {
+        path: '/small-goods-images',
+        name: 'small-goods-images',
+        meta: {
+          icon: 'md-pricetag',
+          title: '图片管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/images.vue')
+      },
+    ]
+  },
+  {
+    path: '/small-activities',
+    name: 'small-activities',
+    meta: {
+      icon: 'md-menu',
+      title: '活动管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/small-activity',
+        name: 'small-activity',
+        meta: {
+          icon: 'md-pricetag',
+          title: '统一活动管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/activities.vue')
+      },
+      {
+        path: '/small-activity-flashsale',
+        name: 'small-activity-flashsale',
+        meta: {
+          icon: 'md-pricetag',
+          title: '限时抢购管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
+      },      
+      {
+        path: '/small-coupon-templates',
+        name: 'small-coupon-templates',
+        meta: {
+          icon: 'md-pricetag',
+          title: '优惠券模板管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/couponTemplate.vue')
+      },
+      {
+        path: '/small-activity-coupon',
+        name: 'small-activity-coupon',
+        meta: {
+          icon: 'md-pricetag',
+          title: '优惠券活动管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/coupon.vue')
+      },
+      {
+        path: '/small-activity-share-reward',
+        name: 'small-activity-share-reward',
+        meta: {
+          icon: 'md-pricetag',
+          title: '分享红包活动'
+        },
+        component: () => import('@/view/mini-program-manager/activity/share-reward.vue')
+      },
+      {
+        path: '/small-activity-title',
+        name: 'small-activity-title',
+        meta: {
+          icon: 'md-pricetag',
+          title: '拼团标题设置'
+        },
+        component: () => import('@/view/mini-program-manager/activity/teambuy-title.vue')
+      },
+      {
+        path: '/small-postage-rule-setting',
+        name: 'small-postage-rule-setting',
+        meta: {
+          icon: 'md-pricetag',
+          title: '邮费管理'
+        },
+        component: () => import('@/view/mini-program-manager/system/delivery-fee.vue')
+      },
+      {
+        path: '/small-activity-register-reward',
+        name: 'small-activity-register-reward',
+        meta: {
+          icon: 'md-pricetag',
+          title: '注册送礼优惠券活动'
+        },
+        component: () => import('@/view/mini-program-manager/activity/register-reward.vue')
+      },
+      {
+        path: '/small-activity-recharge',
+        name: 'small-activity-recharge',
+        meta: {
+          icon: 'md-pricetag',
+          title: '充值活动管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/recharge.vue')
+      },
+      {
+        path: '/small-activity-random-discount',
+        name: 'small-activity-random-discount',
+        meta: {
+          icon: 'md-pricetag',
+          title: '随机立减活动'
+        },
+        component: () => import('@/view/mini-program-manager/activity/random-discount.vue')
+      },
+    ]
+  },
+  {
+    path: '/small-orders',
+    name: 'small-orders',
+    meta: {
+      icon: 'md-menu',
+      title: '综合订单管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/small-order',
+        name: 'small-order',
+        meta: {
+          icon: 'md-pricetag',
+          title: '订单管理'
+        },
+        component: () => import('@/view/mini-program-manager/order/order.vue')
+      },
+      {
+        path: '/small-paymentlogs',
+        name: 'small-paymentlogs',
+        meta: {
+          icon: 'md-pricetag',
+          title: '鲜果币流水管理'
+        },
+        component: () => import('@/view/mini-program-manager/order/paylog.vue')
+      }
+    ]
+  },
+  {
+    path: '/small-content',
+    name: 'small-content',
+    meta: {
+      icon: 'md-menu',
+      title: '内容管理'
+    },
+    component: Main,
+    children: [
+      // {
+      //   path: '/small-article-category',
+      //   name: 'small-article-category',
+      //   meta: {
+      //     icon: 'md-pricetag',
+      //     title: '文章分类管理'
+      //   },
+      //   component: () => import('@/view/mini-program-manager/activity/activities.vue')
+      // },
+      // {
+      //   path: '/small-article-section',
+      //   name: 'small-article-section',
+      //   meta: {
+      //     icon: 'md-pricetag',
+      //     title: '文章管理'
+      //   },
+      //   component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
+      // },
+      {
+        path: '/small-feedback',
+        name: 'small-feedback',
+        meta: {
+          icon: 'md-pricetag',
+          title: '用户反馈'
+        },
+        component: () => import('@/view/mini-program-manager/content/feedback.vue')
+      },
+      {
+        path: '/small-faq-category',
+        name: 'small-faq-category',
+        meta: {
+          icon: 'md-pricetag',
+          title: 'FAQ分类管理'
+        },
+        component: () => import('@/view/mini-program-manager/content/faq-category.vue')
+      },
+      {
+        path: '/small-faq',
+        name: 'small-faq',
+        meta: {
+          icon: 'md-pricetag',
+          title: 'FAQ管理'
+        },
+        component: () => import('@/view/mini-program-manager/content/faq.vue')
+      },
+      {
+        path: '/small-advertisement-position',
+        name: 'small-advertisement-position',
+        meta: {
+          icon: 'md-pricetag',
+          title: '广告位管理'
+        },
+        component: () => import('@/view/mini-program-manager/content/advertisement-position.vue')
+      },
+      {
+        path: '/small-advertisement',
+        name: 'small-advertisement',
+        meta: {
+          icon: 'md-pricetag',
+          title: '广告管理'
+        },
+        component: () => import('@/view/mini-program-manager/content/advertisement.vue')
+      }
+    ]
+  },
+  {
+    path: '/small-system-manager',
+    name: 'small-system-manager',
+    meta: {
+      icon: 'md-menu',
+      title: '系统参数管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/small-system',
+        name: 'small-system',
+        meta: {
+          icon: 'md-pricetag',
+          title: '系统参数管理'
+        },
+        component: () => import('@/view/mini-program-manager/system/system.vue')
+      },
+      {
+        path: '/small-system-category',
+        name: 'small-system-category',
+        meta: {
+          icon: 'md-pricetag',
+          title: '系统参数分类管理'
+        },
+        component: () => import('@/view/mini-program-manager/system/system-category.vue')
+      }
+    ]
+  },
+  {
+    path: '/group-booking-goods-manager',
+    name: 'group-booking-goods-manager',
+    meta: {
+      icon: 'md-menu',
+      title: '小程序商品管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/group-booking-goods-category',
+        name: 'group-booking-goods-category',
+        meta: {
+          icon: 'md-pricetag',
+          title: '商品分类管理'
+        },
+        component: () => import('@/view/fruit-master-manager/goods/goods-category.vue')
+      },
     ]
   },
   {

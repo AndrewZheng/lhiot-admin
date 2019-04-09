@@ -8,7 +8,9 @@ import {
   receivingWayEnum, relationTypeEnum,
   settlementStatusEnum,
   thirdDelieverStatusEnum, updateWayEnum, storeStatusEnum, storeTypeEnum, coordinateTypeEnum,
-  feedbackStatusEnum
+  feedbackStatusEnum,
+  // 小程序
+  splitStatusEnum, productStatusEnum, imageStatusEnum, imageTypeEnum, teamBuyStatusEnum, teamBuyTypeEnum, rewardActivitySettingEnum, couponStatusEnum, couponTypeEnum, appTypeEnum, payTypeEnum, payStepEnum, sourceTypeEnum, bankTypeEnum, advertisementPositionTypeEnum, timeLimitedEnum, couponScopeEnum, linkTypeEnum, miniOrderStatusEnum, miniHdStatusEnum, miniOrderTypeEnum, YesNoEnum, yesNoEnum, deliverStatusEnum
 } from './enumerate';
 
 const convertFunction = (value, list) => {
@@ -109,3 +111,95 @@ export const storeTypeConvert = (value) => {
 export const coordinateTypeConvert = (value) => {
   return convertFunction(value, coordinateTypeEnum);
 };
+
+export const splitConvert = (value) => {
+  return convertFunction(value, splitStatusEnum);
+};
+
+export const productStatusConvert = (value) => {
+  return convertFunction(value, productStatusEnum);
+}
+
+export const imageStatusConvert = (value) => {
+  return convertFunction(value, imageStatusEnum);
+}
+
+export const imageTypeConvert = (value) => {
+  return convertFunction(value, imageTypeEnum);
+}
+
+export const teamBuyStatusConvert = (value) => {
+  return convertFunction(value, teamBuyStatusEnum);
+}
+
+export const teamBuyTypeConvert = (value) => {
+  return convertFunction(value, teamBuyTypeEnum);
+}
+
+export const rewardActivitySettingConvert = (value) => {
+  return convertFunction(value, rewardActivitySettingEnum);
+}
+
+export const couponStatusConvert = (value) => {
+  return convertFunction(value, couponStatusEnum);
+}
+
+export const couponScopeConvert = (value) => {
+  return convertFunction(value, couponScopeEnum);
+}
+
+export const couponTypeConvert = (value) => {
+  return convertFunction(value, couponTypeEnum);
+}
+
+export const appTypeConvert = (value) => {
+  return convertFunction(value, appTypeEnum);
+}
+
+export const payTypeConvert = (value) => {
+  return convertFunction(value, payTypeEnum);
+}
+
+export const payStepConvert = (value) => {
+  return convertFunction(value, payStepEnum);
+}
+
+export const sourceTypeConvert = (value) => {
+  return convertFunction(value, sourceTypeEnum);
+}
+
+export const bankTypeConvert = (value) => {
+  return convertFunction(value, bankTypeEnum);
+}
+
+export const timeLimitedConvert = (value) => {
+  return convertFunction(value, timeLimitedEnum);
+}
+
+export const advertisementPositionTypeConvert = (value) => {
+  return convertFunction(value, advertisementPositionTypeEnum);
+}
+
+export const advertisementLinkTypeConvert = (value) => {
+  return convertFunction(value, linkTypeEnum);
+}
+
+export const miniOrderStatusConvert = (value) => {
+  return convertFunction(value, miniOrderStatusEnum);
+}
+
+export const miniHdStatusConvert = (value) => {
+  return convertFunction(value, miniHdStatusEnum);
+}
+
+export const miniOrderTypeConvert = (value) => {
+  return convertFunction(value, miniOrderTypeEnum);
+}
+
+export const yesNoConvert = (value) => {
+  return convertFunction(value, yesNoEnum);
+}
+
+export const deliverStatusConvert = (value) => {
+  return convertFunction(value, deliverStatusEnum);
+}

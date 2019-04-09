@@ -10,6 +10,10 @@ export const IF_REMEMBER = 'if_remember'
 
 export const GOODS_STANDARD = 'goodsStandard';
 
+export const SMAL_GOODS_STANDARD = 'smallGoodsStandard';
+
+export const SMALL_COUPON_ACTIVITY = 'smallCouponActivity';
+
 export const ARTICLE = 'article';
 
 export const LHIOT_TOKEN = 'lhiot_token';
@@ -23,6 +27,28 @@ export const setGoodsStandard = (goodsStandard) => {
 
 export const getGoodsStandard = () => {
   return JSON.parse(Cookies.get(GOODS_STANDARD));
+};
+
+export const setSmallGoodsStandard = (smallGoodsStandard) => {
+  const string = JSON.stringify(smallGoodsStandard);
+  Cookies.set(SMAL_GOODS_STANDARD, string, {
+    expires: config.cookieExpires || 1
+  });
+};
+
+export const getSmallGoodsStandard = () => {
+  return JSON.parse(Cookies.get(SMAL_GOODS_STANDARD));
+};
+
+export const setSmallCouponActivity = (smallCouponActivity) => {
+  const string = JSON.stringify(smallCouponActivity);
+  Cookies.set(SMALL_COUPON_ACTIVITY, string, {
+    expires: config.cookieExpires || 1
+  });
+};
+
+export const getSmallCouponActivity = () => {
+  return JSON.parse(Cookies.get(SMALL_COUPON_ACTIVITY));
 };
 
 export const setArticle = (article) => {
