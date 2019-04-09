@@ -1,10 +1,10 @@
 <template>
   <div class="m-role">
     <Row :gutter="24" type="flex" align="top" justify="space-between">
-      <i-col span="6" order="1">
+      <i-col span="3" order="1">
         <Tree :data="menuData" :render="renderContent"></Tree>
       </i-col>
-      <i-col span="18" order="3">
+      <i-col span="21" order="3">
         <Card>
           <h6>当前选中：{{ parentCategory.groupName }}</h6>
           <tables
@@ -35,7 +35,7 @@
                     style="padding-left: 5px">{{ item.label }}
                   </Option>
                 </Select>
-                <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
+                <Button :searchLoading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
                   <Icon type="md-search"/>&nbsp;搜索
                 </Button>
                 <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
@@ -99,7 +99,7 @@
             <Input v-model="currentCategory.positionName"></Input>
           </FormItem>
           <FormItem label="板块顺序:" prop="rankNo">
-            <Input v-model="currentCategory.rankNo"></Input>
+            <InputNumber v-model="currentCategory.rankNo"></InputNumber>
           </FormItem>
           <FormItem label="板块图片:建议尺寸;45x45(单位:px):" prop="sectionImg">
             <Input v-show="false" v-model="currentCategory.sectionImg" style="width: auto"></Input>
@@ -130,6 +130,17 @@
               </div>
             </IViewUpload>
           </FormItem>
+          <FormItem label="应用类型:" prop="applyType">
+            <Select v-model="currentCategory.applyType" placeholder="应用类型" style="padding-right: 5px;width: 100px" clearable>
+              <Option
+                v-for="(item,index) in appTypeEnum"
+                :value="item.value"
+                :key="index"
+                class="ptb2-5"
+                style="padding-left: 5px">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
         </Form>
       </div>
       <div slot="footer">
@@ -159,17 +170,18 @@ import deleteMixin from '@/mixins/deleteMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 import IViewUpload from '_c/iview-upload';
 import { appTypeEnum } from '@/libs/enumerate';
+import { appTypeConvert } from '@/libs/converStatus';
 
 const currentCategory = {
   applyType: null,
   id: 0,
-  parentId: '',
-  sectionProductId: '',
+  parentId: 0,
+  sectionProductId: 0,
   sectionName: '',
   sectionImg: '',
-  rankNo: '',
-  positionName: '',
-  productStandardList: null
+  rankNo: 0,
+  productStandardList: [],
+  positionName: ''
 };
 const roleRowData = {
   applyType: null,
@@ -193,6 +205,7 @@ export default {
         sectionName: [{ required: true, message: '请输入板块名称' }],
         positionName: [{ required: true, message: '请输入板块位置英文描述:' }],
         sectionImg: [{ required: true, message: '请上传上板块图片' }],
+        applyType: [{ required: true, message: '请选择应用类型' }],
         rankNo: [
           { required: true, message: '请输入板块排序' },
           {
@@ -255,6 +268,21 @@ export default {
           minWidth: 150
         },
         {
+          title: '应用类型',
+          width: 120,
+          key: 'applyType',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.applyType === 'WXSMALL_SHOP') {
+              return <div><tag color='green'>{appTypeConvert(row.applyType).label}</tag></div>;
+            } else if (row.applyType === 'S_MALL') {
+              return <div><tag color='gold'>{appTypeConvert(row.applyType).label}</tag></div>;
+            } else {
+              return <div>{row.applyType}</div>;
+            }
+          }
+        },
+        {
           title: '操作',
           key: 'handle',
           minWidth: 150,
@@ -264,6 +292,7 @@ export default {
       modalEdit: false,
       modalViewLoading: false,
       modalEditLoading: false,
+      clearSearchLoading: false,
       currentParentName: '',
       currentParentId: 0,
       currentCategory: this._.cloneDeep(currentCategory),
@@ -338,7 +367,6 @@ export default {
       }
       this.$refs[name].validate((valid) => {
         if (valid) {
-          // this.currentCategory.applyType = 'S_MALL';
           this.modalEditLoading = true;
           this.modalViewLoading = true;
           if (this.tempModalType === this.modalType.create) {
@@ -372,9 +400,9 @@ export default {
       // 先做删除验证
       deleteProductSectionValidation({ ids }).then(res => {
         debugger
-        if (res == false) {
+        if (res === false) {
           this.$Message.info('该板块或其子板块关联了商品，删除失败！');
-        } else if (res == true) {
+        } else if (res === true) {
           deleteProductSection({
             ids
           }).then(res => {
@@ -414,6 +442,7 @@ export default {
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
+          this.clearSearchLoading = false;
         }
       });
     },
@@ -490,6 +519,9 @@ export default {
       this.$refs.uploadMain.clearFileList();
       this.uploadListMain = [];
       this.currentCategory.sectionImg = null;
+    },
+    resetSearchRowData() {
+      this.searchRowData = _.cloneDeep(roleRowData);
     }
   }
 };

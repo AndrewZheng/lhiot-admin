@@ -144,7 +144,7 @@
         </Row>
         <Row class-name="mb20">
           <i-col span="3">录播地址:</i-col>
-          <i-col span="21">{{ storeDetail.tapeUrl }}</i-col>
+          <i-col span="21"><a :href="storeDetail.tapeUrl" target="_blank">{{ storeDetail.tapeUrl }}</a></i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="3">直播地址:</i-col>

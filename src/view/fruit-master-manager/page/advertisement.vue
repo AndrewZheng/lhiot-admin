@@ -633,7 +633,6 @@ export default {
       });
     },
     onRowClick(row, index) {
-      debugger
       if (this.advertisementDetail.relationType === relationType.PRODUCT_SECTION ||
           this.advertisementDetail.relationType === relationType.CUSTOM_PLAN_SECTION) {
         this.advertisementDetail.advertiseRelationText = row.sectionName;
