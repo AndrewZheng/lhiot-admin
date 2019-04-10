@@ -929,7 +929,7 @@ export default {
             this.editCoupon();
           }
         } else {
-          this.$Message.error('请完善商品的信息!');
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -1162,7 +1162,7 @@ export default {
           console.log(JSON.stringify(this.addRelationDetail));
           this.createRelation();
         } else {
-          this.$Message.error('请完善商品的信息!');
+          this.$Message.error('请完善信息!');
         }
       });
       // this.createFlashsaleProductRelation(this.addRelationDetail)

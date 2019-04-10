@@ -1041,16 +1041,16 @@ export default {
       });
     },
     handleSubmit(name) {
-      if (this.productStandardDetail.salePrice < 0) {
-        this.$Message.error('优惠价格不能小于0');
-        return;
-      }
-      if (this.productStandardDetail.salePrice > this.productStandardDetail.price) {
-        this.$Message.error('优惠价格不能大于原价');
-        return;
-      }
       this.$refs[name].validate((valid) => {
         if (valid) {
+          if (this.productStandardDetail.salePrice < 0) {
+            this.$Message.error('优惠价格不能小于0');
+            return;
+          }
+          if (this.productStandardDetail.salePrice > this.productStandardDetail.price) {
+            this.$Message.error('优惠价格不能大于原价');
+            return;
+          }
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
             this.createStandard();
@@ -1059,7 +1059,7 @@ export default {
             this.editProductStandard();
           }
         } else {
-          this.$Message.error('请完善商品的信息!');
+          this.$Message.error('请完善信息!');
         }
       });
     },
