@@ -20,7 +20,7 @@
         @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
-          <Row>
+          <Row v-show="!showBack">
             <Input
               v-model="searchRowData.barcode"
               placeholder="商品条码"
@@ -59,23 +59,25 @@
                 class="ml15 mt10"
               >{{ item.label }}</Option>
             </Select>
-            <Input
-              v-model="searchRowData.minPrice"
+            <InputNumber
+              v-model="searchMinPrice"
               placeholder="最低价格"
               class="search-input mr5"
               style="width: auto"
               clearable
+              @on-change="searchMinPriceChange"
             >
-            </Input>
-            <Input
-              v-model="searchRowData.maxPrice"
+            </InputNumber>
+            <InputNumber
+              v-model="searchMaxPrice"
               placeholder="最高价格"
               class="search-input mr5"
               style="width: auto"
               clearable
+              @on-change="searchMaxPriceChange"
             >
-            </Input>
-            <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
+            </InputNumber>
+            <Button :searchLoading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
             <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
@@ -145,8 +147,8 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="10">基础单位:</i-col>
-              <i-col span="14">{{ productStandardDetail.baseUnit }}</i-col>
+              <i-col span="8">基础单位:</i-col>
+              <i-col span="16">{{ productStandardDetail.baseUnit }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -180,6 +182,7 @@
             </Row>
           </i-col>
         </Row>
+        <Divider orientation="center">商品规格</Divider>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
@@ -202,14 +205,14 @@
             </Row>
           </i-col>
         </Row>
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+        <!-- <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">上架商品详情图:</i-col>
               <i-col v-if="productStandardDetail.detailImage" span="16"><img :src="productStandardDetail.detailImage" width="100" height="100" ></i-col>
             </Row>
           </i-col>
-        </Row>
+        </Row> -->
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
@@ -247,7 +250,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">出售价格:</i-col>
+              <i-col span="8">优惠价格:</i-col>
               <i-col span="16">{{ productStandardDetail.salePrice|fenToYuanDot2Filters }}</i-col>
             </Row>
           </i-col>
@@ -256,7 +259,7 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品单位:</i-col>
-              <i-col span="16">{{ unitsList != null ? unitsList.find(item => productStandardDetail.unitId === item.value).label : null }}</i-col>
+              <i-col span="16">{{ productStandardDetail.productUnit }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -296,7 +299,7 @@
           <Row>
             <Col span="12">
             <FormItem label="商品ID:" prop="productId">
-              {{ productStandardDetail.productId }}
+              <Input v-model="productStandardDetail.productId" readonly="readonly"><Button slot="append" icon="ios-search" @click="handleRelation"></Button></Input>
             </FormItem>
             </Col>
             <Col span="12">
@@ -308,7 +311,7 @@
           <Row>
             <Col span="12">
             <FormItem label="商品分类:">
-              {{ productStandardDetail.groupId }}
+              {{ productStandardDetail.groupName }}
             </FormItem>
             </Col>
             <Col span="12">
@@ -404,7 +407,7 @@
             </Col>
             <Col span="12">
             <FormItem label="商品状态:" prop="shelvesStatus">
-              <Select :value="productStandardDetail.shelvesStatus" @on-change="statusChange">
+              <Select v-model="productStandardDetail.shelvesStatus">
                 <Option
                   v-for="(item,index) in shelvesStatus"
                   :value="item.value"
@@ -440,11 +443,11 @@
             </FormItem>
             </Col>
             <Col span="12">
-            <FormItem label="出售价格:">
+            <FormItem label="优惠价格:">
               <InputNumber
                 :min="0"
                 :value="salePriceComputed"
-                placeholder="出售价格"
+                placeholder="优惠价格"
                 @on-change="salePriceInputNumberOnchange"></InputNumber>
             </FormItem>
             </Col>
@@ -452,7 +455,7 @@
           <Row>
             <Col span="12">
             <FormItem label="商品单位:" prop="unitId">
-              <Select v-model="productStandardDetail.unitId" @on-change="uniteChange">
+              <Select v-model="productStandardDetail.unitId" @on-change="unitChange">
                 <Option
                   v-for="(item,index) in unitsList"
                   :value="item.value"
@@ -514,6 +517,46 @@
       </div>
     </Modal>
 
+    <Modal v-model="modalProduct" :width="1000" title="关联商品">
+      <Card>
+        <tables
+          ref="tables"
+          v-model="productData"
+          :columns="productColumns"
+          :loading="loading"
+          editable
+          searchable
+          border
+          search-place="top"
+          @on-row-click="onRowClick"
+        >
+          <div slot="searchCondition">
+            <Row>
+              <Input v-model="searchProductRowData.productCode" placeholder="商品编码" class="search-input mr5" style="width: auto" clearable></Input>
+              <Input v-model="searchProductRowData.productName" placeholder="商品名称" class="search-input mr5" style="width: auto" clearable></Input>
+              <Button :searchLoading="searchLoading" class="search-btn mr5" type="primary" @click="handleProductSearch">
+                <Icon type="md-search"/>&nbsp;搜索
+              </Button>
+              <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleProductClear">
+                <Icon type="md-refresh"/>&nbsp;清除条件
+              </Button>
+            </Row>
+          </div>
+        </tables>
+        <div style="margin: 10px;overflow: hidden">
+          <Row type="flex" justify="end">
+            <Page
+              :total="productTotal"
+              :current="searchProductRowData.page"
+              show-sizer
+              show-total
+              @on-change="changeProductPage"
+              @on-page-size-change="changeProductPageSize"></Page>
+          </Row>
+        </div>
+      </Card>
+    </Modal>
+
     <Modal v-model="uploadVisible" title="View Image">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
@@ -528,14 +571,16 @@ import {
   createProductStandard,
   deleteProductStandard,
   getProductStandardsPages,
-  editProductStandard
+  editProductStandard,
+  getMiniProgramProductUnits,
+  getProductPages
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import { getSmallGoodsStandard, fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber } from '@/libs/util';
-import { customPlanStatusConvert } from '@/libs/converStatus';
+import { customPlanStatusConvert, productStatusConvert } from '@/libs/converStatus';
 
 const productStandardDetail = {
   id: 0,
@@ -592,6 +637,38 @@ const roleRowData = {
   rows: 10
 };
 
+const productDetail = {
+  id: 0,
+  productCode: '',
+  productName: '',
+  groupId: 0,
+  sourceCode: '',
+  image: '',
+  smallImage: '',
+  largeImage: '',
+  status: null,
+  unitId: 0,
+  baseBarcode: '',
+  hdSkuid: '',
+  videoUrl: '',
+  videoImage: '',
+  baseQty: 0,
+  limitQty: 0,
+  description: '',
+  unitName: '',
+  groupName: '',
+  createUser: ''
+};
+
+const productRowData = {
+  groupId: null,
+  productCode: null,
+  productName: null,
+  status: 'NORMAL',
+  page: 1,
+  rows: 10
+};
+
 export default {
   components: {
     Tables,
@@ -607,7 +684,7 @@ export default {
       uploadListMain: [],
       uploadListMultiple: [],
       ruleInline: {
-        productId: [{ required: true, message: '请选择关联商品' }],
+        productId: [{ required: true, message: '请选择关联商品' }, { message: '请选择要关联的商品', pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/ }],
         productName: [{ required: true, message: '请选择上架商品名称' }],
         description: [{ required: true, message: '请上传规格描述图' }],
         image: [{ required: true, message: '请上传上架商品主图' }],
@@ -673,43 +750,43 @@ export default {
         {
           type: 'selection',
           key: '',
-          width: 60,
+          minWidth: 60,
           align: 'center',
           fixed: 'left'
         },
         {
           title: '规格ID',
           key: 'id',
-          minWidth: 180
+          minWidth: 80
         },
         {
           title: '商品条码',
           key: 'barcode',
-          minWidth: 150
+          minWidth: 80
         },
         {
           title: '商品编号',
           key: 'productCode',
-          minWidth: 150
+          minWidth: 100
         },
         {
           title: '商品名称',
           key: 'productName',
-          minWidth: 120
+          minWidth: 100
         },
         {
           title: '商品规格',
           key: 'specification',
-          minWidth: 120
+          minWidth: 100
         },
         {
           title: '商品单位',
-          width: 100,
+          minWidth: 100,
           key: 'productUnit'
         },
         {
           title: '商品原价',
-          width: 120,
+          minWidth: 120,
           key: 'price',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.price);
@@ -717,8 +794,8 @@ export default {
           }
         },
         {
-          title: '出售价格',
-          minWidth: 130,
+          title: '优惠价格',
+          minWidth: 120,
           key: 'salePrice',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.salePrice);
@@ -727,7 +804,7 @@ export default {
         },
         {
           title: '商品状态',
-          width: 120,
+          minWidth: 100,
           key: 'shelvesStatus',
           render: (h, params, vm) => {
             const { row } = params;
@@ -741,14 +818,67 @@ export default {
         },
         {
           title: '商品排序',
-          width: 120,
+          minWidth: 100,
           key: 'rank'
         },
         {
           title: '操作',
-          minWidth: 170,
+          minWidth: 150,
           key: 'handle',
           options: ['customOnSale', 'view', 'edit', 'delete']
+        }
+      ],
+      productColumns: [
+        {
+          title: '商品图片',
+          key: 'image',
+          minWidth: 120,
+          render: (h, params, vm) => {
+            const { row } = params;
+            const str = <img src={row.image} height='60' width='60' />;
+            return <div>{str}</div>;
+          }
+        },
+        {
+          title: '商品编码',
+          key: 'productCode',
+          sortable: true,
+          minWidth: 140
+        },
+        {
+          title: '商品名称',
+          sortable: true,
+          key: 'productName',
+          minWidth: 120
+        },
+        {
+          title: '商品类别',
+          key: 'groupName',
+          minWidth: 120
+        },
+        {
+          title: '基础单位',
+          minWidth: 90,
+          key: 'unitName'
+        },
+        {
+          title: '基础重量(kg)',
+          minWidth: 90,
+          key: 'baseQty'
+        },
+        {
+          title: '商品状态',
+          minWidth: 90,
+          key: 'status',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.status === 'NORMAL') {
+              return <div><tag color='success'>{productStatusConvert(row.status).label}</tag></div>;
+            } else if (row.status === 'STOP_MINING') {
+              return <div><tag color='error'>{productStatusConvert(row.status).label}</tag></div>;
+            }
+            return <div><tag color='primary'>{row.status}</tag></div>;
+          }
         }
       ],
       modalType: {
@@ -759,12 +889,17 @@ export default {
       tempModalType: 'create',
       tableData: [],
       total: 0,
+      productData: [],
+      productTotal: 0,
       loading: true,
       modalViewLoading: false,
       modalView: false,
       modalEdit: false,
+      modalProduct: false,
       searchRowData: _.cloneDeep(roleRowData),
+      searchProductRowData: _.cloneDeep(productRowData),
       productStandardDetail: _.cloneDeep(productStandardDetail),
+      productDetail: _.cloneDeep(productDetail),
       // 选中的行
       tableDataSelected: [],
       showBack: false,
@@ -776,7 +911,9 @@ export default {
         {
           label: '下架',
           value: 'INVALID'
-        }]
+        }],
+      searchMinPrice: null,
+      searchMaxPrice: null
     };
   },
   computed: {
@@ -788,21 +925,19 @@ export default {
     }
   },
   created() {
-    this.unitsList = this.$route.params.unitsList;
     this.showBack = this.$route.name === 'small-goods-relation-standard';
-    console.log('showBack:' + this.showBack);
-    // productSpecificationsUnits().then(res => {
-    //   res.forEach(value => {
-    //     const map = { label: 'label', value: 'value' };
-    //     map.value = value;
-    //     map.label = value;
-    //     this.unitsList.push(map);
-    //     // this.createLoading = false;
-    //   });
-    //   // this.getTableData();
-    // });
-    // this.createLoading = false;
     this.getTableData();
+  },
+  mounted() {
+    getMiniProgramProductUnits().then(res => {
+      res.array.forEach(value => {
+        const map = { label: 'label', value: 'value' };
+        map.value = value.id;
+        map.label = value.unitName;
+        this.unitsList.push(map);
+        this.createLoading = false;
+      });
+    });
   },
   methods: {
     priceInputNumberOnchange(value) {
@@ -810,6 +945,12 @@ export default {
     },
     salePriceInputNumberOnchange(value) {
       this.productStandardDetail.salePrice = yuanToFenNumber(value);
+    },
+    searchMinPriceChange(value) {
+      this.searchRowData.minPrice = yuanToFenNumber(this.searchMinPrice);
+    },
+    searchMaxPriceChange(value) {
+      this.searchRowData.maxPrice = yuanToFenNumber(this.searchMaxPrice);
     },
     handleDelete(params) {
       this.tableDataSelected = [];
@@ -845,17 +986,12 @@ export default {
         this.loading = false;
       });
     },
-    uniteChange(value) {
-      this.productStandardDetail.packagingUnit = value;
+    unitChange(value) {
+      this.productStandardDetail.productUnit = value;
     },
     handleClose() {
       this.modalView = false;
     },
-    // handleEditClose() {
-    //   this.productStandardDetail = productStandardDetail;
-    //   this.productStandardDetail.productId = this.$route.params.id;
-    //   this.modalEdit = false;
-    // },
     handleView(params) {
       this.tempModalType = this.modalType.view;
       this.productStandardDetail = params.row;
@@ -905,12 +1041,16 @@ export default {
       });
     },
     handleSubmit(name) {
-      if ((this.productStandardDetail.salePrice != null) && (this.productStandardDetail.salePrice <= 0)) {
-        this.$Message.error('出售价不能小于0');
-        return;
-      }
       this.$refs[name].validate((valid) => {
         if (valid) {
+          if (this.productStandardDetail.salePrice < 0) {
+            this.$Message.error('优惠价格不能小于0');
+            return;
+          }
+          if (this.productStandardDetail.salePrice > this.productStandardDetail.price) {
+            this.$Message.error('优惠价格不能大于原价');
+            return;
+          }
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
             this.createStandard();
@@ -919,7 +1059,7 @@ export default {
             this.editProductStandard();
           }
         } else {
-          this.$Message.error('请完善商品的信息!');
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -962,17 +1102,20 @@ export default {
           this.productStandardDetail.image = goodsStandard.image;
           this.productStandardDetail.baseProductDescription = goodsStandard.description;
           this.productStandardDetail.productDescription = goodsStandard.description;
-          this.unitsList = goodsStandard.unitsList;
+          // this.unitsList = goodsStandard.unitsList;
         }
       }
+      // console.log('searchRowData', JSON.stringify(this.searchRowData));
       getProductStandardsPages(this.searchRowData).then(res => {
         this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;
         this.searchLoading = false;
+        this.clearSearchLoading = false;
       }).catch(() => {
         this.loading = false;
         this.searchLoading = false;
+        this.clearSearchLoading = false;
       });
     },
     onSelectionAll(selection) {
@@ -1062,6 +1205,81 @@ export default {
     },
     goBack() {
       this.turnToPage('small-goods-info');
+    },
+    resetSearchRowData() {
+      this.searchRowData = _.cloneDeep(roleRowData);
+    },
+    findUnit(unitId) {
+      if (this.unitsList != null) {
+        const obj = this.unitsList.find(item => item.value === unitId);
+        if (obj) {
+          return obj.label;
+        }
+      }
+    },
+    handleRelation() {
+      this.getProductTableData();
+      this.modalProduct = true;
+    },
+    getProductTableData() {
+      getProductPages(this.searchProductRowData).then(res => {
+        this.productData = res.rows;
+        this.productTotal = res.total;
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
+      }).catch(error => {
+        console.log(error);
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
+      });
+    },
+    changeProductPage(page) {
+      this.searchProductRowData.page = page;
+      this.getProductTableData();
+    },
+    changeProductPageSize(pageSize) {
+      this.searchProductRowData.page = 1;
+      this.searchProductRowData.rows = pageSize;
+      this.getProductTableData();
+    },
+    handleProductSearch() {
+      this.searchProductRowData.page = 1;
+      this.searchLoading = true;
+      this.getProductTableData();
+    },
+    resetSearchProductRowData() {
+      this.searchProductRowData = _.cloneDeep(productRowData);
+      this.getProductTableData();
+    },
+    handleProductClear() {
+      // 重置商品搜索数据
+      this.resetSearchProductRowData();
+      this.page = 1;
+      this.pageSize = 10;
+      this.clearSearchLoading = true;
+      this.handleProductSearch();
+    },
+    onRowClick(row, index) {
+      // 给基础商品信息赋值
+      this.productStandardDetail.productId = row.id;
+      this.productStandardDetail.baseProductName = row.productName;
+      this.productStandardDetail.groupName = row.groupName;
+      this.productStandardDetail.baseUnit = row.unitName;
+      this.productStandardDetail.productCode = row.sourceCode;
+      this.productStandardDetail.baseBarcode = row.baseBarcode;
+      this.productStandardDetail.baseImage = row.image;
+      this.productStandardDetail.baseProductDescription = row.description;
+
+      // 给要关联的规格信息设置默认值，用户可以选择修改
+      this.productStandardDetail.productName = row.productName;
+      this.productStandardDetail.productDescription = row.description;
+      this.productStandardDetail.image = row.image;
+      this.productStandardDetail.barcode = row.baseBarcode;
+      this.productStandardDetail.shelvesStatus = row.status === 'NORMAL' ? 'VALID' : 'INVALID';
+      this.setDefaultUploadList(this.productStandardDetail);
+      this.modalProduct = false;
     }
   }
 }

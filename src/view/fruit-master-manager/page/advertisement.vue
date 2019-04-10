@@ -633,7 +633,6 @@ export default {
       });
     },
     onRowClick(row, index) {
-      debugger
       if (this.advertisementDetail.relationType === relationType.PRODUCT_SECTION ||
           this.advertisementDetail.relationType === relationType.CUSTOM_PLAN_SECTION) {
         this.advertisementDetail.advertiseRelationText = row.sectionName;
@@ -678,7 +677,7 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error('请完善商品的信息!');
+          this.$Message.error('请完善信息!');
         }
       });
     },

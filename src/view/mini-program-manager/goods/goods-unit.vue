@@ -85,7 +85,7 @@
         <Form ref="modalEdit" :label-width="100" :model="unitDetail" :rules="ruleInline">
           <Row>
             <FormItem label="单位名称:" prop="unitName">
-              <Input v-model="unitDetail.unitName" placeholder="请输入单位名称"></Input>
+              <Input v-model="unitDetail.unitName" placeholder="请输入单位名称" style="width: 200px"></Input>
             </FormItem>
           </Row>
           <Row>

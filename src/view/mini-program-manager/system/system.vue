@@ -36,7 +36,7 @@
               clearable
             >
             </Input>
-            <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
+            <Button :searchLoading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
             <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
@@ -156,8 +156,8 @@
           <Row>
             <Col span="20">
             <FormItem label="描述:" prop="description">
-              <Input v-model="systemDetail.description" placeholder="描述"></Input>
-              <div v-for="item in uploadListMain" :key="item.url" ：v-if="showImage" class="demo-upload-list" >
+              <Input v-model="systemDetail.description" type="textarea" placeholder="描述"></Input>
+              <div v-for="item in uploadListMain" v-if="showImage" :key="item.url" class="demo-upload-list" >
                 <template v-if="item.status === 'finished'">
                   <div>
                     <img :src="item.url">
@@ -265,16 +265,15 @@ export default {
     return {
       ruleInline: {
         indexName: [
-          { required: true, message: '请选择键' }
+          { required: true, message: '请输入键' }
         ],
         indexValue: [
-          { required: true, message: '请选择值' }
+          { required: true, message: '请输入值' }
         ],
-        // 后期分类做完 取消注释
-        // categoryId: [
-        //   { required: true, message: '请输入分类ID' },
-        //   { message: '必须为非零整数', pattern: /^[1-9]\d*$/ }
-        // ],
+        categoryId: [
+          { required: true, message: '请选择分类' },
+          { message: '必须为非零整数', pattern: /^[1-9]\d*$/ }
+        ],
         description: [
           { required: true, message: '请输入描述' }
         ]
@@ -359,7 +358,7 @@ export default {
             this.editStore();
           }
         } else {
-          this.$Message.error('请完善商品的信息!');
+          this.$Message.error('请完善信息!');
         }
       });
     },

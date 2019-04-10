@@ -1,10 +1,10 @@
 <template>
   <div class="m-role">
     <Row :gutter="24" type="flex" align="top" justify="space-between">
-      <i-col span="4" order="1">
+      <i-col span="3" order="1">
         <Tree :data="menuData" :render="renderContent"></Tree>
       </i-col>
-      <i-col span="20" order="3">
+      <i-col span="21" order="3">
         <Card>
           <tables
             ref="tables"
@@ -27,7 +27,7 @@
               <Row>
                 <Input v-model="searchRowData.productCode" placeholder="商品编码" class="search-input mr5" style="width: auto" clearable></Input>
                 <Input v-model="searchRowData.productName" placeholder="商品名称" class="search-input mr5" style="width: auto" clearable></Input>
-                <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
+                <Button :searchLoading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
                   <Icon type="md-search"/>&nbsp;搜索
                 </Button>
                 <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
@@ -87,7 +87,7 @@
           <i-col span="12">
             <Row>
               <i-col span="6">商品分类:</i-col>
-              <i-col span="18">{{ productDetail.groupId }}</i-col>
+              <i-col span="18">{{ findGroupName(productDetail.groupId) }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -101,7 +101,7 @@
           <i-col span="12">
             <Row>
               <i-col span="8">商品状态:</i-col>
-              <i-col span="16">{{ productDetail.shelvesStatus|productStatusFilter }}</i-col>
+              <i-col span="16">{{ productDetail.status|productStatusFilter }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -214,7 +214,7 @@
       style="z-index: 1000"
     >
       <p slot="header">
-        <span>修改商品基础信息</span>
+        <span>{{ productDetail.id == ''?'创建基础商品信息':'编辑基础商品信息' }}</span>
       </p>
       <div class="modal-content">
         <Form ref="modalEdit" :model="productDetail" :rules="ruleInline" :label-width="80">
@@ -244,11 +244,6 @@
             </Col>
           </Row>
           <Row>
-            <!-- <Col span="12">
-            <FormItem label="产地编码:" prop="sourceCode">
-              <Input v-model="productDetail.sourceCode" placeholder="产地编码"></Input>
-            </FormItem>
-            </Col> -->
             <Col span="12">
             <FormItem label="商品状态:" prop="status">
               <Select
@@ -263,6 +258,11 @@
                   }}
                 </Option>
               </Select>
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="产地编码:" prop="sourceCode">
+              <Input v-model="productDetail.sourceCode" placeholder="产地编码"></Input>
             </FormItem>
             </Col>
           </Row>
@@ -293,7 +293,7 @@
             </FormItem>
             </Col> -->
             <Col span="12">
-            <FormItem label="基础重量:" prop="baseQty">
+            <FormItem label="基础重量(kg):" prop="baseQty">
               <InputNumber :min="0" v-model="productDetail.baseQty" placeholder="基础重量"></InputNumber>
             </FormItem>
             </Col>
@@ -342,8 +342,9 @@
             </i-col>
           </Row>
         </Form>
+        <!--
         <Divider orientation="center">商品规格</Divider>
-        <!-- <Form ref="innerModalEdit" :model="productDetail.productSpecification" :rules="ruleInline">
+        <Form ref="innerModalEdit" :model="productDetail.productSpecification" :rules="ruleInline">
           <Row>
             <Col span="12">
             <FormItem :label-width="80" label="规格单位:" prop="packagingUnit">
@@ -449,42 +450,15 @@ export default {
     return {
       menuData: [],
       ruleInline: {
-        productCode: [
-          { required: true, message: '请输入商品编码' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        productName: [
-          { required: true, message: '请输入商品名称' }
-        ],
-        status: [
-          { required: true, message: '请选择商品状态' }
-        ],
-        unitId: [
-          { required: true, message: '请选择商品单位' }
-        ],
-        baseBarcode: [
-          { required: true, message: '请输入基础条码' }
-        ],
-        description: [
-          { required: true, message: '请输入商品描述' }
-        ],
-        groupId: [
-          { required: true, message: '请选择商品分类' }
-        ],
-        image: [
-          { required: true, message: '请上传商品主图' }
-        ],
-        packagingUnit: [
-          { required: true, message: '请选择规格单位' }
-        ],
+        productCode: [{ required: true, message: '请输入商品编码' }],
+        productName: [{ required: true, message: '请输入商品名称' }],
+        status: [{ required: true, message: '请选择商品状态' }],
+        unitId: [{ required: true, message: '请选择商品单位' }],
+        baseBarcode: [{ required: true, message: '请输入基础条码' }],
+        description: [{ required: true, message: '请输入商品描述' }],
+        groupId: [{ required: true, message: '请选择商品分类' }],
+        image: [{ required: true, message: '请上传商品主图' }],
+        packagingUnit: [{ required: true, message: '请选择规格单位' }],
         barcode: [
           { required: true, message: '请输入规格条码' },
           {
@@ -565,10 +539,18 @@ export default {
         {
           title: '商品类别',
           key: 'groupId',
-          minWidth: 120
+          minWidth: 120,
+          render: (h, params) => {
+            const { row } = params;
+            const obj = this.productCategoriesTreeList.find(item => row.groupId === item.id)
+            if (obj) {
+              return h('span', obj.title);
+            }
+            return h('span', row.groupId);
+          }
         },
         {
-          title: '产品编码',
+          title: '产地编码',
           minWidth: 120,
           sortable: true,
           key: 'sourceCode'
@@ -579,7 +561,7 @@ export default {
           key: 'unitName'
         },
         {
-          title: '基础重量',
+          title: '基础重量(kg)',
           minWidth: 90,
           key: 'baseQty'
         },
@@ -631,6 +613,7 @@ export default {
     });
 
     getMiniProgramProductCategoriesTree().then(res => {
+      this.productCategoriesTreeList = null;
       if (res && res.array.length > 0) {
         this.productCategoriesTreeList = res.array;
         const menuList = buildMenu(res.array);
@@ -694,7 +677,7 @@ export default {
             this.editProduct();
           }
         } else {
-          this.$Message.error('请完善商品的信息!');
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -839,6 +822,14 @@ export default {
       this.defaultGoodsCategoryData.push(id);
       if (obj && obj.parentid !== 0) {
         this.findGroupId(obj.parentid);
+      }
+    },
+    findGroupName(id) {
+      if (this.productCategoriesTreeList != null) {
+        const obj = this.productCategoriesTreeList.find(item => item.id === id);
+        if (obj) {
+          return obj.title;
+        }
       }
     },
     handleSetting(params) {

@@ -1,10 +1,10 @@
 <template>
   <div class="m-role">
     <Row :gutter="24" type="flex" align="top" justify="space-between">
-      <i-col span="4" order="1">
+      <i-col span="3" order="1">
         <Tree :data="menuData" :render="renderContent"></Tree>
       </i-col>
-      <i-col span="20" order="3">
+      <i-col span="21" order="3">
         <Card>
           <h6>当前选中：{{ parentCategory.groupName }}</h6>
           <tables
@@ -104,7 +104,7 @@
         <span>{{ tempModalType==modalType.create?'添加板块商品':'更换板块' }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit">
+        <Form ref="modalEdit" :model="productStandardRelation" :rules="ruleInline">
           <Row v-if="tempModalType == modalType.edit">
             <FormItem label="请选择要更换的商品板块:">
               <Cascader
@@ -121,7 +121,7 @@
               <tables
                 ref="tables"
                 :columns="productColumns"
-                v-model="productStandard"
+                v-model="productData"
                 search-place="top"
                 searchable
                 highlight-row
@@ -132,7 +132,7 @@
                 <div slot="searchCondition">
                   <Row>
                     <Input
-                      v-model="searchRowData.barcode"
+                      v-model="searchProductRowData.barcode"
                       placeholder="商品条码"
                       class="search-input mr5"
                       style="width: auto"
@@ -140,7 +140,7 @@
                     >
                     </Input>
                     <Input
-                      v-model="searchRowData.productName"
+                      v-model="searchProductRowData.productName"
                       placeholder="商品名称"
                       class="search-input mr5"
                       style="width: auto"
@@ -150,12 +150,26 @@
                     <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleProductSearch">
                       <Icon type="md-search"/>&nbsp;搜索
                     </Button>
-                    <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
+                    <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="resetSearchProductRowData">
                       <Icon type="md-refresh"/>&nbsp;清除条件
                     </Button>
                   </Row>
                 </div>
               </tables>
+              <div style="margin: 10px;overflow: hidden">
+                <Row type="flex" justify="end">
+                  <Page
+                    :total="productTotal"
+                    :current="searchProductRowData.page"
+                    show-sizer
+                    show-total
+                    @on-change="changeProductPage"
+                    @on-page-size-change="changeProductPageSize"></Page>
+                </Row>
+              </div>
+            </FormItem>
+            <FormItem label="排序排序:" prop="rank">
+              <InputNumber :min="0" v-model="productStandardRelation.rank"></InputNumber>
             </FormItem>
           </Ro>
         </row></Form>
@@ -250,6 +264,18 @@ const relationData = {
   rank: 0
 };
 
+const productRowData = {
+  productId: '',
+  barcode: '',
+  productCode: '',
+  productName: '',
+  shelvesStatus: 'VALID',
+  minPrice: '',
+  maxPrice: '',
+  page: 1,
+  rows: 10
+};
+
 export default {
   components: {
     Tables,
@@ -258,6 +284,33 @@ export default {
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
     return {
+      ruleInline: {
+        productId: [{ required: true, message: '请选择关联商品' }, { message: '请选择要关联的商品', pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/ }],
+        specificationQty: [
+          { required: true, message: '请输入安全库存' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[1-9]\d*$/.test(value)) {
+                errors.push(new Error('必须为非零整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        rank: [
+          { required: true, message: '请输入商品排序' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[1-9]\d*$/.test(value)) {
+                errors.push(new Error('必须为非零整数'));
+              }
+              callback(errors);
+            }
+          }
+        ]
+      },
       appTypeEnum,
       menuData: [],
       columns: [
@@ -325,6 +378,12 @@ export default {
           }
         },
         {
+          title: '排序',
+          key: 'rank',
+          sortable: true,
+          align: 'center'
+        },
+        {
           title: '应用类型',
           width: 120,
           key: 'applyType',
@@ -338,12 +397,6 @@ export default {
               return <div>{row.applyType}</div>;
             }
           }
-        },
-        {
-          title: '排序',
-          key: 'rank',
-          sortable: true,
-          align: 'center'
         },
         {
           title: '操作',
@@ -419,6 +472,21 @@ export default {
           key: 'rank',
           minWidth: 60,
           align: 'center'
+        },
+        {
+          title: '应用类型',
+          key: 'apply',
+          width: 120,
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.apply === 'WXSMALL_SHOP') {
+              return <div><tag color='green'>{appTypeConvert(row.apply).label}</tag></div>;
+            } else if (row.apply === 'S_MALL') {
+              return <div><tag color='gold'>{appTypeConvert(row.apply).label}</tag></div>;
+            } else {
+              return <div>{row.apply}</div>;
+            }
+          }
         }
       ],
       modalEdit: false,
@@ -430,10 +498,13 @@ export default {
       parentCategory: this._.cloneDeep(productStandardDetail),
       productStandard: this._.cloneDeep(productStandardDetail),
       searchRowData: this._.cloneDeep(roleRowData),
+      searchProductRowData: _.cloneDeep(productRowData),
       productStandardRelation: this._.cloneDeep(relationData),
       treeData: this._.cloneDeep(productStandardDetail),
       goodsSectionData: [],
-      defaultGoodsSectionData: [41]
+      defaultGoodsSectionData: [41],
+      productData: [],
+      productTotal: 0
     };
   },
   computed: {
@@ -511,34 +582,38 @@ export default {
       this.tempModalType = this.modalType.edit;
       this.modalEdit = true;
     },
-    asyncEditOK() {
-      if (this.productStandardRelation.productSectionId == 0 || this.productStandardRelation.productSectionId == '') {
-        this.$Message.warning('商品规格id不能为空');
-        return;
-      }
-      if (this.productStandardRelation.productStandardId == 0 || this.productStandardRelation.productStandardId == '') {
-        this.$Message.warning('请选择一条商品信息');
-        return;
-      }
-      // this.modalEditLoading = true;
-      // this.modalViewLoading = true;
-      if (this.tempModalType === this.modalType.create) {
-        createProductSectionRelation(this.productStandardRelation
-        ).then(res => {
+    asyncEditOK(name) {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          if (this.productStandardRelation.productSectionId == 0 || this.productStandardRelation.productSectionId == '') {
+            this.$Message.warning('商品规格id不能为空');
+            return;
+          }
+          if (!this.productStandardRelation.productStandardIds || this.productStandardRelation.productStandardIds == 0 || this.productStandardRelation.productStandardIds === '') {
+            this.$Message.warning('请选择一条商品信息');
+            return;
+          }
+          // this.modalEditLoading = true;
+          // this.modalViewLoading = true;
+          if (this.tempModalType === this.modalType.create) {
+            createProductSectionRelation(this.productStandardRelation
+            ).then(res => {
 
-        }).finally(res => {
-          this.initMenuList();
-          this.modalEditLoading = false;
-          this.modalEdit = false;
-        });
-      } else if (this.tempModalType === this.modalType.edit) {
-        editProductSectionRelation(this.productStandardRelation).then(res => {
-        }).finally(res => {
-          this.initMenuList();
-          this.modalEditLoading = false;
-          this.modalEdit = false;
-        });
-      }
+            }).finally(res => {
+              this.initMenuList();
+              this.modalEditLoading = false;
+              this.modalEdit = false;
+            });
+          } else if (this.tempModalType === this.modalType.edit) {
+            editProductSectionRelation(this.productStandardRelation).then(res => {
+            }).finally(res => {
+              this.initMenuList();
+              this.modalEditLoading = false;
+              this.modalEdit = false;
+            });
+          }
+        }
+      });
     },
     handleEditClose() {
       this.modalEdit = false;
@@ -574,11 +649,11 @@ export default {
     },
     getProductTableData() {
       // this.loading = true;
-      getProductStandardsPages(this.searchRowData).then(res => {
+      getProductStandardsPages(this.searchProductRowData).then(res => {
         if (this.menuData.length > 0) {
           // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
-          this.productStandard = res.rows;
-          // this.total = res.total;
+          this.productData = res.rows;
+          this.productTotal = res.total;
           // this.loading = false;
           // this.searchLoading = false;
         }
@@ -661,6 +736,19 @@ export default {
         this.productStandardRelation.productSectionId = null;
       }
       this.defaultGoodsSectionData = selectedData;
+    },
+    resetSearchProductRowData() {
+      this.searchProductRowData = _.cloneDeep(productRowData);
+      this.getProductTableData();
+    },
+    changeProductPage(page) {
+      this.searchProductRowData.page = page;
+      this.getProductTableData();
+    },
+    changeProductPageSize(pageSize) {
+      this.searchProductRowData.page = 1;
+      this.searchProductRowData.rows = pageSize;
+      this.getProductTableData();
     }
   }
 };

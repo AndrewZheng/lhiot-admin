@@ -250,8 +250,7 @@ export const createProductSection = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-sections/',
     data,
-    method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    method: 'post'
   });
 };
 

@@ -816,6 +816,15 @@ export const asyncRouterMap = [
         component: () => import('@/view/mini-program-manager/activity/robot.vue')
       },
       {
+        path: '/small-activity-title',
+        name: 'small-activity-title',
+        meta: {
+          icon: 'md-pricetag',
+          title: '拼团标题设置'
+        },
+        component: () => import('@/view/mini-program-manager/activity/teambuy-title.vue')
+      },
+      {
         path: '/small-goods-images',
         name: 'small-goods-images',
         meta: {
@@ -879,16 +888,7 @@ export const asyncRouterMap = [
           title: '分享红包活动'
         },
         component: () => import('@/view/mini-program-manager/activity/share-reward.vue')
-      },
-      {
-        path: '/small-activity-title',
-        name: 'small-activity-title',
-        meta: {
-          icon: 'md-pricetag',
-          title: '拼团标题设置'
-        },
-        component: () => import('@/view/mini-program-manager/activity/teambuy-title.vue')
-      },
+      },      
       {
         path: '/small-postage-rule-setting',
         name: 'small-postage-rule-setting',

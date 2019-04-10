@@ -300,7 +300,12 @@ export default {
           { required: true, message: '请输入收货人' }
         ],
         receiverMobile: [
-          { required: true, message: '请输入联系方式' }
+          {
+            required: true,
+            pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/,
+            message: '电话号码不正确',
+            trigger: 'blur'
+          }
         ],
         nickName: [
           { required: true, message: '请输入用户昵称' }
@@ -403,7 +408,7 @@ export default {
             this.editStore();
           }
         } else {
-          this.$Message.error('请完善商品的信息!');
+          this.$Message.error('请完善信息!');
         }
       });
     },
