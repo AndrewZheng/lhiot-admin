@@ -43,8 +43,8 @@ module.exports = {
     open: true, // 配置自动启动浏览器
     proxy: {
       '/api': {
-        target: 'http://192.168.1.225:2018', // 本机调试
-        // target: 'http://172.16.10.203:2018', // 测试环境
+        // target: 'http://192.168.1.225:2018', // 本机调试
+        target: 'http://172.16.10.194:2018', // 测试环境
         ws: true,
         logLevel: 'debug',
         changeOrigin: true,
