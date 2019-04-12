@@ -472,7 +472,7 @@ const hdTemplateRowData = {
   sortKey: null,
   desc: null,
   platformId: null,
-  activityTypes: ['all'],
+  activityTypes: ['applet'], // all表示查全部，manual（手工发券），behavior（行为发券），scmaction（分销领券），trans（交易发券），applet（小程序发券），mbrgrade（会员等级发券）， recharge（充值发券），component（第三方发券），precision（精准发券）
   activityId: null
 };
 
