@@ -25,8 +25,8 @@
           >
             <div slot="searchCondition">
               <Row>
-                <Input v-model="searchRowData.groupName" placeholder="分类名称" class="search-input mr5" style="width: auto"></Input>
-                <Button :loading="loading" class="search-btn mr5" type="primary" @click="handleSearch">
+                <Input v-model="searchRowData.groupName" placeholder="分类名称" class="search-input mr5" style="width: auto" clearable></Input>
+                <Button :searchLoading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
                   <Icon type="md-search"/>&nbsp;搜索
                 </Button>
                 <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
@@ -169,6 +169,7 @@ export default {
       modalEdit: false,
       modalViewLoading: false,
       modalEditLoading: false,
+      clearSearchLoading: false,
       currentParentName: '',
       currentParentId: 0,
       currentCategory: this._.cloneDeep(currentCategory),
@@ -313,6 +314,8 @@ export default {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         }
       });
     },
@@ -366,6 +369,11 @@ export default {
           this.expandChildren(item.children);
         }
       });
+    },
+    resetSearchRowData() {
+      this.clearSearchLoading = true;
+      this.searchRowData = this._.cloneDeep(roleRowData);
+      this.getTableData();
     }
   }
 };

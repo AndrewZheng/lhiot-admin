@@ -570,7 +570,7 @@ export default {
             this.editRecharge();
           }
         } else {
-          this.$Message.error('请完善商品的信息!');
+          this.$Message.error('请完善信息!');
         }
       });
     },

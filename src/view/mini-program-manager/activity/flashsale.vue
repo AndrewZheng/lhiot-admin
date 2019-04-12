@@ -818,7 +818,7 @@ export default {
             this.editFlashsale();
           }
         } else {
-          this.$Message.error('请完善商品的信息!');
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -984,7 +984,7 @@ export default {
           // this.addRelationDetail.remainCount = this.addRelationDetail.goodsLimit;
           this.createRelation();
         } else {
-          this.$Message.error('请完善商品的信息!');
+          this.$Message.error('请完善信息!');
         }
       });
       // this.createFlashsaleProductRelation(this.addRelationDetail)
