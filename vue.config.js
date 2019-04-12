@@ -22,7 +22,7 @@ module.exports = {
   lintOnSave: false,
   chainWebpack: config => {
     config.resolve.alias
-      .set('@', resolve('src')) // key,value自行定义，比如.set('@@', resolve('src/components'))
+      .set('@', resolve('src'))
       .set('_c', resolve('src/components'))
       .set('_conf', resolve('config'))
       .set('assets', resolve('src/assets'))
@@ -36,9 +36,9 @@ module.exports = {
   productionSourceMap: false,
   // 这里写你调用接口的基础路径，来解决跨域，如果设置了代理，那你本地开发环境的axios的baseUrl要写为 '' ，即空字符串
   devServer: {
-    port: 8080, // 端口号
-    host: 'localhost', // 本地，打包选这个
-    // host: '192.168.1.225', // 本地ip，方便其他人通过ip访问
+    port: 80, // 端口号
+    // host: 'localhost', // 本地，打包选这个
+    host: '192.168.1.58', // 本地ip，方便其他人通过ip访问
     https: false, // https:{type:Boolean}
     open: true, // 配置自动启动浏览器
     proxy: {
@@ -49,7 +49,7 @@ module.exports = {
         logLevel: 'debug',
         changeOrigin: true,
         pathRewrite: {
-          '^/api': ''
+          '^/api' : ''
         }
       }
     }
