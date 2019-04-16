@@ -281,47 +281,6 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '/argu',
-    name: 'argu',
-    meta: {
-      hideInMenu: true
-    },
-    component: Main,
-    children: [{
-      path: 'params/:id',
-      name: 'params',
-      meta: {
-        icon: 'md-flower',
-        title: route => `动态路由-${route.params.id}`,
-        notCache: true,
-        beforeCloseName: 'before_close_normal'
-      },
-      component: () =>
-        import('@/view/argu-page/params.vue')
-    },
-      {
-        path: 'query',
-        name: 'query',
-        meta: {
-          icon: 'md-flower',
-          title: route => `带参路由-${route.query.id}`,
-          notCache: true
-        },
-        component: () =>
-          import('@/view/argu-page/query.vue')
-      }
-    ]
-  },
-  {
-    path: '',
-    name: 'doc',
-    meta: {
-      title: '文档',
-      href: 'https://lison16.github.io/iview-admin-doc/#/',
-      icon: 'ios-book'
-    }
-  },
-  {
     path: '/excel',
     name: 'excel',
     meta: {
