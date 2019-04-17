@@ -326,6 +326,7 @@ export default {
             children: 'children'
           };
           this.systemCategoryData = convertTreeCategory(menuList, map, true);
+          console.log('cate after convert', this.systemCategoryData);
           this.createLoading = false;
         }
       }).catch(() => {

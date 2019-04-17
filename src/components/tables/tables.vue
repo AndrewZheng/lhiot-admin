@@ -342,7 +342,6 @@ export default {
           });
           break;
         case 'zip':
-          // this.$Message.info('开发中...');
           this.exportZip(params);
           break;
         default:

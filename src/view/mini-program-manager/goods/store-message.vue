@@ -344,11 +344,10 @@ import {
   deleteStore,
   getStoreDetail,
   getStorePages,
-  // getStoreAreas,
+  getStoreAreas,
   editStore,
   createStore
 } from '@/api/mini-program';
-import { getStoreAreas } from '@/api/fruitermaster';
 import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
@@ -552,7 +551,7 @@ export default {
     });
   },
   created() {
-    this.getApplications();
+    // this.getApplications();
   },
   methods: {
     resetSearchRowData() {

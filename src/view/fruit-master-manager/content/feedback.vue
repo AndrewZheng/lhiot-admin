@@ -318,11 +318,11 @@ export default {
 
   },
   mounted() {
-    // this.getApplications();
+    this.getApplications();
   },
   created() {
     this.getTableData();
-    this.getApplications();
+    // this.getApplications();
   },
   methods: {
     resetSearchRowData() {

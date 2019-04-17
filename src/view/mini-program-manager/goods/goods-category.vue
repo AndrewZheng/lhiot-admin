@@ -104,11 +104,11 @@
 import Tables from '_c/tables';
 import _ from 'lodash';
 import {
-  createMiniProgramProductCategories,
-  deleteMiniProgramProductCategories,
-  getMiniProgramProductCategoriesPages,
-  getMiniProgramProductCategoriesTree,
-  editMiniProgramProductCategories
+  createProductCategories,
+  delProductCategories,
+  getProductCategoriesPages,
+  getProductCategoriesTree,
+  editProductCategories
 } from '@/api/mini-program';
 import { buildMenu, convertTree } from '@/libs/util';
 import CommonIcon from '_c/common-icon';
@@ -261,7 +261,7 @@ export default {
     },
     createProductCategories() {
       this.modalEditLoading = true;
-      createMiniProgramProductCategories(this.currentCategory
+      createProductCategories(this.currentCategory
       ).then(res => {
 
       }).finally(res => {
@@ -272,7 +272,7 @@ export default {
     },
     editProductCategories() {
       this.modalEditLoading = true;
-      editMiniProgramProductCategories(this.currentCategory).then(res => {
+      editProductCategories(this.currentCategory).then(res => {
       }).finally(res => {
         this.initMenuList();
         this.modalEditLoading = false;
@@ -285,7 +285,7 @@ export default {
     // 删除
     deleteTable(ids) {
       this.loading = true;
-      deleteMiniProgramProductCategories({
+      delProductCategories({
         ids
       }).then(res => {
         const totalPage = Math.ceil(this.total / this.pageSize);
@@ -308,7 +308,7 @@ export default {
     },
     getTableData() {
       this.loading = true;
-      getMiniProgramProductCategoriesPages(this.searchRowData).then(res => {
+      getProductCategoriesPages(this.searchRowData).then(res => {
         if (this.menuData.length > 0) {
           // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
           this.tableData = res.rows;
@@ -321,7 +321,7 @@ export default {
     },
     // 初始化商品菜单列表
     initMenuList() {
-      getMiniProgramProductCategoriesTree().then(res => {
+      getProductCategoriesTree().then(res => {
         if (res && res.array.length > 0) {
           const menuList = buildMenu(res.array);
           const map = {

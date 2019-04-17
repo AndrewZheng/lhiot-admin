@@ -1,4 +1,3 @@
-/* eslint-disable vue/no-parsing-error */
 <template>
   <div class="upload-container">
     <Button v-waves type="primary" size="small" @click=" modalUpload= true">

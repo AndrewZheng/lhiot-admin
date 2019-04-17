@@ -119,7 +119,7 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import _ from 'lodash';
-import { getMiniProgramProductUnitsPages, editMiniProgramProductUnits, deleteMiniProgramProductUnits, createMiniProgramProductUnits } from '@/api/mini-program';
+import { getProductUnitsPages, editProductUnits, delProductUnits, createProductUnits } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import deleteMixin from '@/mixins/deleteMixin.js';
@@ -220,7 +220,7 @@ export default {
     },
     editTableRow() {
       this.modalViewLoading = true;
-      editMiniProgramProductUnits(this.unitDetail).then(res => {
+      editProductUnits(this.unitDetail).then(res => {
         this.modalViewLoading = false;
         this.modalEdit = false;
         this.getTableData();
@@ -228,7 +228,7 @@ export default {
       });
     },
     createTableRow() {
-      createMiniProgramProductUnits(this.unitDetail).then(res => {
+      createProductUnits(this.unitDetail).then(res => {
       }).finally(res => {
         this.modalEditLoading = false;
         this.modalEdit = false;
@@ -245,7 +245,7 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
-      getMiniProgramProductUnitsPages(this.searchRowData).then(res => {
+      getProductUnitsPages(this.searchRowData).then(res => {
         // this.tableData = res.array;
         this.tableData = res.rows;
         this.total = res.total;
@@ -263,7 +263,7 @@ export default {
     // 删除
     deleteTable(ids) {
       this.loading = true;
-      deleteMiniProgramProductUnits({
+      delProductUnits({
         ids
       }).then(res => {
         const totalPage = Math.ceil(this.total / this.pageSize);

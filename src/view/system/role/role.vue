@@ -337,8 +337,6 @@ export default {
       console.log(params);
       const { row } = params;
       this.rowData = Object.assign({}, row);
-      // 测试先写死
-      // this.rowData.menuids='11,12,13,14';
       this.rowData = _.merge({}, this.rowData, row);
       this.modalEdit = true;
     },

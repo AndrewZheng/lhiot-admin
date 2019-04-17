@@ -1,7 +1,7 @@
 import Vue from 'vue';
 
 // 查询商品分类树结构
-export const getMiniProgramProductCategoriesTree = () => {
+export const getProductCategoriesTree = () => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-categories/tree',
     method: 'get'
@@ -9,7 +9,7 @@ export const getMiniProgramProductCategoriesTree = () => {
 };
 
 // 根据条件分页查询商品分类信息列表
-export const getMiniProgramProductCategoriesPages = (data) => {
+export const getProductCategoriesPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-categories/pages',
     data,
@@ -19,7 +19,7 @@ export const getMiniProgramProductCategoriesPages = (data) => {
 };
 
 // 添加商品分类
-export const createMiniProgramProductCategories = (data) => {
+export const createProductCategories = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-categories/',
     data,
@@ -28,7 +28,7 @@ export const createMiniProgramProductCategories = (data) => {
 };
 
 // 根据Ids删除商品分类
-export const deleteMiniProgramProductCategories = ({ ids }) => {
+export const delProductCategories = ({ ids }) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-categories/' + ids,
     method: 'delete'
@@ -36,7 +36,7 @@ export const deleteMiniProgramProductCategories = ({ ids }) => {
 };
 
 // 修改商品分类
-export const editMiniProgramProductCategories = (data) => {
+export const editProductCategories = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-categories/',
     data,
@@ -45,7 +45,7 @@ export const editMiniProgramProductCategories = (data) => {
 };
 
 // 根据条件分页查询商品单位列表
-export const getMiniProgramProductUnitsPages = (data) => {
+export const getProductUnitsPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-units/pages',
     data,
@@ -55,7 +55,7 @@ export const getMiniProgramProductUnitsPages = (data) => {
 };
 
 // 根据条件分页查询商品单位列表
-export const getMiniProgramProductUnits = () => {
+export const getProductUnits = () => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-units/',
     method: 'get'
@@ -63,7 +63,7 @@ export const getMiniProgramProductUnits = () => {
 };
 
 // 添加商品单位
-export const createMiniProgramProductUnits = (data) => {
+export const createProductUnits = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-units/',
     data,
@@ -72,7 +72,7 @@ export const createMiniProgramProductUnits = (data) => {
 };
 
 // 根据Ids删除商品单位
-export const deleteMiniProgramProductUnits = ({ ids }) => {
+export const delProductUnits = ({ ids }) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-units/' + ids,
     method: 'delete'
@@ -80,7 +80,7 @@ export const deleteMiniProgramProductUnits = ({ ids }) => {
 };
 
 // 修改商品单位
-export const editMiniProgramProductUnits = (data) => {
+export const editProductUnits = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-units/',
     data,
@@ -116,7 +116,7 @@ export const getStoreDetail = ({ id }) => {
 // 查询所有门店区域
 export const getStoreAreas = () => {
   return Vue.prototype.$http.request({
-    url: '/store-areas',
+    url: '/minapp/stores/store-areas',
     method: 'get'
   });
 };

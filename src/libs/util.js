@@ -645,8 +645,6 @@ export const convertTreeCategory = (tree, map, isExpand = false) => {
   // 遍历 tree
   tree.forEach((item) => {
     // 读取 map 的键值映射
-    // value: 'beijing',
-    //   label: '北京',
     const value = item[map.id];
     const label = item[map.title];
     let children = item[map.children];

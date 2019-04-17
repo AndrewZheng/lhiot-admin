@@ -572,7 +572,7 @@ import {
   deleteProductStandard,
   getProductStandardsPages,
   editProductStandard,
-  getMiniProgramProductUnits,
+  getProductUnits,
   getProductPages
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
@@ -929,7 +929,7 @@ export default {
     this.getTableData();
   },
   mounted() {
-    getMiniProgramProductUnits().then(res => {
+    getProductUnits().then(res => {
       res.array.forEach(value => {
         const map = { label: 'label', value: 'value' };
         map.value = value.id;

@@ -400,7 +400,7 @@
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
 import _ from 'lodash';
-import { createProduct, deleteProduct, editProduct, getProduct, getProductPages, getMiniProgramProductCategoriesTree, getMiniProgramProductUnits } from '@/api/mini-program';
+import { createProduct, deleteProduct, editProduct, getProduct, getProductPages, getProductCategoriesTree, getProductUnits } from '@/api/mini-program';
 import { buildMenu, convertTreeCategory, setSmallGoodsStandard, convertTree } from '@/libs/util';
 import CommonIcon from '_c/common-icon';
 import uploadMixin from '@/mixins/uploadMixin';
@@ -602,7 +602,7 @@ export default {
     this.searchRowData = _.cloneDeep(roleRowData);
     this.loading = true;
     this.createLoading = true;
-    getMiniProgramProductUnits().then(res => {
+    getProductUnits().then(res => {
       res.array.forEach(value => {
         const map = { label: 'label', value: 'value' };
         map.value = value.id;
@@ -612,7 +612,7 @@ export default {
       });
     });
 
-    getMiniProgramProductCategoriesTree().then(res => {
+    getProductCategoriesTree().then(res => {
       this.productCategoriesTreeList = null;
       if (res && res.array.length > 0) {
         this.productCategoriesTreeList = res.array;
@@ -898,7 +898,7 @@ export default {
     },
     // 初始化商品菜单列表
     initMenuList() {
-      getMiniProgramProductCategoriesTree().then(res => {
+      getProductCategoriesTree().then(res => {
         if (res && res.array.length > 0) {
           const menuList = buildMenu(res.array);
           const map = {
