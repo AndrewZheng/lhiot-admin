@@ -183,6 +183,22 @@ export const createProduct = (data) => {
   });
 };
 
+// 根据商品规格id查询扩展信息(传值stadardId)
+export const getProStandardExpand = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/product-standard-expand/standard/' + id,
+    method: 'get'
+  });
+};
+
+export const modifyProStandardExpand = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/product-standard-expand/modify',
+    data,
+    method: 'post'
+  });
+};
+
 // 根据条件分页查询商品规格信息列表(传值productId)
 export const getProductStandardsPages = (data) => {
   return Vue.prototype.$http.request({

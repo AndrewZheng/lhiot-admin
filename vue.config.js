@@ -31,6 +31,7 @@ module.exports = {
       .set('mixins', resolve('src/mixins'))
       .set('util', resolve('src/util'))
       .set('filters', resolve('src/filters'));
+    config.resolve.symlinks(true); //修复 HMR(热更新)失效
   },
   // 打包时不生成.map文件
   productionSourceMap: false,
@@ -45,7 +46,7 @@ module.exports = {
       '/api': {
         // target: 'http://192.168.1.225:2018', // 本机调试
         target: 'http://172.16.10.194:2018', // 测试环境
-        ws: true,
+        ws: false,
         logLevel: 'debug',
         changeOrigin: true,
         pathRewrite: {

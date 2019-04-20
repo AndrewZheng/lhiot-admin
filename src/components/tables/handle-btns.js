@@ -128,6 +128,28 @@ const btns = {
       })]);
     }
   },
+  discount: (h, params, vm) => {
+    return h('Button', {
+      props: {
+        type: 'primary',
+        size: 'small'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        click: () => {
+          vm.$emit('on-discount', params);
+        }
+      }
+    }, [h('Icon', {
+      props: {
+        type: 'md-pricetags',
+        size: 16,
+        color: '#fff'
+      }
+    })]);
+  },
   // 商品上下架操作
   onSale: (h, params, vm) => {
     const {

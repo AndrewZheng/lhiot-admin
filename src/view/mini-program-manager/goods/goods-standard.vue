@@ -14,6 +14,7 @@
         search-place="top"
         @on-view="handleView"
         @on-edit="handleEdit"
+        @on-discount="handleDiscount"
         @on-delete="handleDelete"
         @custom-on-sale="customOnSale"
         @on-select-all="onSelectionAll"
@@ -250,7 +251,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">优惠价格:</i-col>
+              <i-col span="8">售卖价格:</i-col>
               <i-col span="16">{{ productStandardDetail.salePrice|fenToYuanDot2Filters }}</i-col>
             </Row>
           </i-col>
@@ -443,11 +444,11 @@
             </FormItem>
             </Col>
             <Col span="12">
-            <FormItem label="优惠价格:">
+            <FormItem label="售卖价格:">
               <InputNumber
                 :min="0"
                 :value="salePriceComputed"
-                placeholder="优惠价格"
+                placeholder="售卖价格"
                 @on-change="salePriceInputNumberOnchange"></InputNumber>
             </FormItem>
             </Col>
@@ -516,6 +517,84 @@
         </Button>
       </div>
     </Modal>
+    
+    <Modal v-model="modalDiscount" :width="700" title="折扣配置">
+      <p slot="header">
+        <span>折扣配置</span>
+      </p>
+      <div class="modal-content">
+        <Form ref="modalDiscount" :model="proStandardExpand" :label-width="100">
+          <Row>
+            <Col span="12">
+             <FormItem label="上架商品规格ID:" prop="id">
+              <Input v-model="productStandardDetail.id" disabled></Input>
+            </FormItem>
+            </Col>
+            <Col span="12">
+             <FormItem label="上架商品名称:" prop="productName">
+              <Input v-model="productStandardDetail.productName" disabled></Input>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem label="商品原价:" prop="price">
+              <InputNumber
+                :min="0"
+                :value="priceComputed"
+                placeholder="商品原价"
+                disabled
+                ></InputNumber>
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="售卖价格:">
+              <InputNumber
+                :min="0"
+                :value="salePriceComputed"
+                disabled
+                ></InputNumber>
+            </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+            <FormItem label="限购份数:" prop="limitNum">
+              <Input v-model="proStandardExpand.limitNum"></Input>
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="起购份数:" prop="startNum">
+              <Input v-model="proStandardExpand.startNum"></Input>
+            </FormItem>
+            </Col>
+          </Row>
+           <Row>
+            <Col span="12">
+            <FormItem label="折扣价:">
+              <InputNumber
+                :min="0"
+                :max="salePriceComputed > 0? salePriceComputed: priceComputed"
+                :value="discountPriceComputed"
+                @on-change="calDiscountRate"
+                ></InputNumber>
+                <div>（以售卖价格优先计算折扣率）</div>
+            </FormItem>
+            </Col>
+            <Col span="12">
+            <FormItem label="折扣率:" prop="discountRate">
+              <Input v-model="proStandardExpand.discountRate" readonly></Input>
+            </FormItem>
+            </Col>
+          </Row>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button @click="handleDiscountClose">关闭</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmitDiscount">确定
+        </Button>
+      </div>
+    </Modal>
 
     <Modal v-model="modalProduct" :width="1000" title="关联商品">
       <Card>
@@ -570,7 +649,9 @@ import _ from 'lodash';
 import {
   createProductStandard,
   deleteProductStandard,
+  getProStandardExpand,
   getProductStandardsPages,
+  modifyProStandardExpand,
   editProductStandard,
   getProductUnits,
   getProductPages
@@ -625,6 +706,7 @@ const productStandardDetail = {
   positionName: null,
   dbId: null
 };
+
 const roleRowData = {
   productId: '',
   barcode: '',
@@ -669,6 +751,15 @@ const productRowData = {
   rows: 10
 };
 
+const proStandardExpand={
+  id: null,
+  discountPrice: 0,
+  discountRate: 0,
+  limitNum: 0,
+  standardId: 0,
+  startNum: 0
+}
+
 export default {
   components: {
     Tables,
@@ -683,6 +774,12 @@ export default {
       defaultListMultiple: [],
       uploadListMain: [],
       uploadListMultiple: [],
+      ruleValidate: {
+          limitNum: [{ required: false, message: '请输入限购份数', trigger: 'blur' }],
+          startNum: [{ required: false, message: '请输入起购份数', trigger: 'blur' }],
+          discountPrice: [{ required: true, message: '请输入折扣价格', trigger: 'change' }],
+          discountRate: [{ required: false, message: '请计算折扣率', trigger: 'change'}]
+      },
       ruleInline: {
         productId: [{ required: true, message: '请选择关联商品' }, { message: '请选择要关联的商品', pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/ }],
         productName: [{ required: true, message: '请选择上架商品名称' }],
@@ -794,7 +891,7 @@ export default {
           }
         },
         {
-          title: '优惠价格',
+          title: '售卖价格',
           minWidth: 120,
           key: 'salePrice',
           render(h, params, vm) {
@@ -823,9 +920,9 @@ export default {
         },
         {
           title: '操作',
-          minWidth: 150,
+          minWidth: 180,
           key: 'handle',
-          options: ['customOnSale', 'view', 'edit', 'delete']
+          options: ['customOnSale', 'view', 'edit','discount', 'delete']
         }
       ],
       productColumns: [
@@ -895,11 +992,13 @@ export default {
       modalViewLoading: false,
       modalView: false,
       modalEdit: false,
+      modalDiscount: false,
       modalProduct: false,
-      searchRowData: _.cloneDeep(roleRowData),
-      searchProductRowData: _.cloneDeep(productRowData),
-      productStandardDetail: _.cloneDeep(productStandardDetail),
-      productDetail: _.cloneDeep(productDetail),
+      searchRowData: roleRowData,
+      searchProductRowData: productRowData,
+      productStandardDetail: productStandardDetail,
+      proStandardExpand: proStandardExpand,
+      productDetail: productDetail,
       // 选中的行
       tableDataSelected: [],
       showBack: false,
@@ -922,6 +1021,9 @@ export default {
     },
     salePriceComputed() {
       return fenToYuanDot2Number(this.productStandardDetail.salePrice);
+    },
+    discountPriceComputed(){
+      return fenToYuanDot2Number(this.proStandardExpand.discountPrice);
     }
   },
   created() {
@@ -951,6 +1053,21 @@ export default {
     },
     searchMaxPriceChange(value) {
       this.searchRowData.maxPrice = yuanToFenNumber(this.searchMaxPrice);
+    },
+    calDiscountRate(value){
+      this.proStandardExpand.discountPrice= yuanToFenNumber(value);
+      if(this.productStandardDetail.salePrice== 0 && this.productStandardDetail.price == 0){ return false; }
+      //优先获取售价
+      let price = this.productStandardDetail.salePrice > 0? this.productStandardDetail.salePrice : this.productStandardDetail.price;
+      // 如果价格设置为售价则为10折
+      if(this.proStandardExpand.discountPrice == price){
+        this.proStandardExpand.discountRate = 10;
+        return false;
+      }
+      //计算折扣率
+      let discountRate =  Number(Number(this.proStandardExpand.discountPrice) / Number(price) * 10).toFixed(2);
+      console.log(`discountRate by cal: ${discountRate}`);
+      if(discountRate.length > 2){ this.proStandardExpand.discountRate = discountRate.substring(0,3);}
     },
     handleDelete(params) {
       this.tableDataSelected = [];
@@ -989,12 +1106,17 @@ export default {
     unitChange(value) {
       this.productStandardDetail.productUnit = value;
     },
+    handleDiscountClose() {
+      this.modalDiscount = false;
+      // 清楚掉表单数据
+      this.$refs.modalDiscount.resetFields();
+    },
     handleClose() {
       this.modalView = false;
     },
     handleView(params) {
       this.tempModalType = this.modalType.view;
-      this.productStandardDetail = params.row;
+      this.productStandardDetail = this._.cloneDeep(params.row);
       if (this.productStandardDetail.description != null) {
         this.descriptionList = this.productStandardDetail.description.split(',');
       }
@@ -1009,6 +1131,23 @@ export default {
       this.setDefaultUploadList(params.row);
       this.$refs.modalEdit.resetFields();
       this.modalEdit = true;
+    },
+    handleDiscount(params){
+      // 展示折扣配置弹窗
+      this.productStandardDetail = this._.cloneDeep(params.row);
+      // 先清除上次请求的数据
+      this.proStandardExpand=  proStandardExpand;
+      // 请求数据展示
+      getProStandardExpand({
+        id: this.productStandardDetail.id 
+      }).then(res=>{
+        if(res && res.id > 0 ){
+         this.proStandardExpand= res;
+        }
+        this.modalDiscount = true;
+      }).catch(() => {
+        this.modalDiscount  = false;
+      });
     },
     handleCreateView() {
       this.$refs.modalEdit.resetFields();
@@ -1061,6 +1200,36 @@ export default {
         } else {
           this.$Message.error('请完善信息!');
         }
+      });
+    },
+    handleSubmitDiscount(){
+      // 校验某些字段
+      this.$refs.modalDiscount.validate((valid)=>{
+        if (valid) {
+          if(this.proStandardExpand.limitNum <= 0){
+            this.$Message.warning("请输入合法的数字");
+            return false;
+          }
+          this.updateProStandardExpand();
+        } else {
+          this.$Message.error('请完善信息!');
+        }
+      });
+    },
+    updateProStandardExpand(){
+      this.proStandardExpand.standardId = this.productStandardDetail.id;
+      this.modalViewLoading = true;
+      // 新增或修改
+      modifyProStandardExpand({
+        ...this.proStandardExpand
+      }).then(res => {
+        const msg= this.proStandardExpand.id?'修改成功!': '创建成功';
+        this.modalDiscount  = false;
+        this.modalViewLoading = false;
+        this.$Message.success(msg);
+      }).catch(() => {
+        this.modalDiscount  = false;
+        this.modalViewLoading = false;
       });
     },
     editProductStandard() {
