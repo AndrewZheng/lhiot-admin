@@ -550,7 +550,7 @@ export const buildMenu = (array, ckey, isFind = true) => {
       }
     }
   });
-  console.log('menuData parent level: ', menuData);
+  // console.log('menuData parent level: ', menuData);
   const findChildren = (parentArr) => {
     if (Array.isArray(parentArr) && parentArr.length) {
       parentArr.forEach((parentNode) => {
@@ -807,5 +807,21 @@ export const fenToYuanDot2Number = (value) => {
     return Math.round(parseInt(value) / 100.00);
   } else {
     return null;
+  }
+};
+
+export const secondsToDate = (value) => {
+  if (!value) {
+    return 'N/A';
+  } else if (typeof value === 'number') {
+    let hour = parseInt(value / 3600);
+    let minute = parseInt(value % 3600 / 60);
+    let secods = value % 3600 % 60;
+    if (hour < 10) { hour = '0' + hour; }
+    if (minute < 10) { minute = '0' + minute; }
+    if (secods < 10) { secods = '0' + secods; }
+    return hour + ':' + minute + ':' + secods;
+  } else {
+    return value;
   }
 };

@@ -760,7 +760,7 @@ export const asyncRouterMap = [
         path: '/small-goods-activity-teambuy',
         name: 'small-goods-activity-teambuy',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'ios-people',
           title: '拼团活动'
         },
         component: () => import('@/view/mini-program-manager/activity/teambuy.vue')
@@ -769,7 +769,7 @@ export const asyncRouterMap = [
         path: '/small-goods-robot',
         name: 'small-goods-robot',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'logo-reddit',
           title: '拼团机器人'
         },
         component: () => import('@/view/mini-program-manager/activity/robot.vue')
@@ -778,7 +778,7 @@ export const asyncRouterMap = [
         path: '/small-activity-title',
         name: 'small-activity-title',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'ios-settings',
           title: '拼团标题设置'
         },
         component: () => import('@/view/mini-program-manager/activity/teambuy-title.vue')
@@ -787,7 +787,7 @@ export const asyncRouterMap = [
         path: '/small-goods-images',
         name: 'small-goods-images',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'md-images',
           title: '图片管理'
         },
         component: () => import('@/view/mini-program-manager/activity/images.vue')
@@ -807,7 +807,7 @@ export const asyncRouterMap = [
         path: '/small-activity',
         name: 'small-activity',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'md-cube',
           title: '统一活动管理'
         },
         component: () => import('@/view/mini-program-manager/activity/activities.vue')
@@ -816,7 +816,7 @@ export const asyncRouterMap = [
         path: '/small-activity-flashsale',
         name: 'small-activity-flashsale',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'ios-alarm',
           title: '限时抢购管理'
         },
         component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
@@ -825,7 +825,7 @@ export const asyncRouterMap = [
         path: '/small-coupon-templates',
         name: 'small-coupon-templates',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'md-bookmarks',
           title: '优惠券模板管理'
         },
         component: () => import('@/view/mini-program-manager/activity/couponTemplate.vue')
@@ -843,7 +843,7 @@ export const asyncRouterMap = [
         path: '/small-activity-share-reward',
         name: 'small-activity-share-reward',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'md-share',
           title: '分享红包活动'
         },
         component: () => import('@/view/mini-program-manager/activity/share-reward.vue')
@@ -852,7 +852,7 @@ export const asyncRouterMap = [
         path: '/small-postage-rule-setting',
         name: 'small-postage-rule-setting',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'md-bus',
           title: '邮费管理'
         },
         component: () => import('@/view/mini-program-manager/system/delivery-fee.vue')
@@ -861,7 +861,7 @@ export const asyncRouterMap = [
         path: '/small-activity-register-reward',
         name: 'small-activity-register-reward',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'md-basket',
           title: '注册送礼优惠券活动'
         },
         component: () => import('@/view/mini-program-manager/activity/register-reward.vue')
@@ -870,7 +870,7 @@ export const asyncRouterMap = [
         path: '/small-activity-recharge',
         name: 'small-activity-recharge',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'md-cash',
           title: '充值活动管理'
         },
         component: () => import('@/view/mini-program-manager/activity/recharge.vue')
@@ -879,7 +879,7 @@ export const asyncRouterMap = [
         path: '/small-activity-random-discount',
         name: 'small-activity-random-discount',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'md-flash',
           title: '随机立减活动'
         },
         component: () => import('@/view/mini-program-manager/activity/random-discount.vue')
@@ -899,7 +899,7 @@ export const asyncRouterMap = [
         path: '/small-order',
         name: 'small-order',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'md-pricetags',
           title: '订单管理'
         },
         component: () => import('@/view/mini-program-manager/order/order.vue')
@@ -908,7 +908,7 @@ export const asyncRouterMap = [
         path: '/small-paymentlogs',
         name: 'small-paymentlogs',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'logo-usd',
           title: '鲜果币流水管理'
         },
         component: () => import('@/view/mini-program-manager/order/paylog.vue')
@@ -946,7 +946,7 @@ export const asyncRouterMap = [
         path: '/small-feedback',
         name: 'small-feedback',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'md-quote',
           title: '用户反馈'
         },
         component: () => import('@/view/mini-program-manager/content/feedback.vue')
@@ -955,7 +955,7 @@ export const asyncRouterMap = [
         path: '/small-faq-category',
         name: 'small-faq-category',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'md-analytics',
           title: 'FAQ分类管理'
         },
         component: () => import('@/view/mini-program-manager/content/faq-category.vue')
@@ -973,7 +973,7 @@ export const asyncRouterMap = [
         path: '/small-advertisement-position',
         name: 'small-advertisement-position',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'md-radio',
           title: '广告位管理'
         },
         component: () => import('@/view/mini-program-manager/content/advertisement-position.vue')
@@ -982,7 +982,7 @@ export const asyncRouterMap = [
         path: '/small-advertisement',
         name: 'small-advertisement',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'md-ionitron',
           title: '广告管理'
         },
         component: () => import('@/view/mini-program-manager/content/advertisement.vue')
@@ -1002,7 +1002,7 @@ export const asyncRouterMap = [
         path: '/small-system',
         name: 'small-system',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'logo-buffer',
           title: '系统参数管理'
         },
         component: () => import('@/view/mini-program-manager/system/system.vue')
@@ -1011,7 +1011,7 @@ export const asyncRouterMap = [
         path: '/small-system-category',
         name: 'small-system-category',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'md-list-box',
           title: '系统参数分类管理'
         },
         component: () => import('@/view/mini-program-manager/system/system-category.vue')

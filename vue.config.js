@@ -31,7 +31,7 @@ module.exports = {
       .set('mixins', resolve('src/mixins'))
       .set('util', resolve('src/util'))
       .set('filters', resolve('src/filters'));
-    config.resolve.symlinks(true); //修复 HMR(热更新)失效
+    // config.resolve.symlinks(true); //修复 HMR(热更新)失效
   },
   // 打包时不生成.map文件
   productionSourceMap: false,
@@ -39,14 +39,14 @@ module.exports = {
   devServer: {
     port: 80, // 端口号
     // host: 'localhost', // 本地，打包选这个
-    host: '192.168.1.58', // 本地ip，方便其他人通过ip访问
+    host: '192.168.1.92', // 本地ip，方便其他人通过ip访问
     https: false, // https:{type:Boolean}
     open: true, // 配置自动启动浏览器
     proxy: {
       '/api': {
         // target: 'http://192.168.1.225:2018', // 本机调试
-        target: 'http://172.16.10.194:2018', // 测试环境
-        ws: false,
+        target: 'http://172.16.10.196:2018', // 测试环境
+        ws: true,
         logLevel: 'debug',
         changeOrigin: true,
         pathRewrite: {

@@ -66,6 +66,10 @@
             <Icon type="md-add"/>
             创建
           </Button>
+           <Button v-waves :loading="exportExcelLoading" type="primary" class="mr5" @click="handleDownload">
+              <Icon type="md-download"/>
+              导出
+            </Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -671,7 +675,7 @@ import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import { teamBuyStatusConvert, customPlanStatusConvert } from '@/libs/converStatus';
 import { teamBuyStatusEnum, teamBuyTypeEnum, rewardActivitySettingEnum, relationStoreTypeEnum } from '@/libs/enumerate';
-import { fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber, compareData } from '@/libs/util';
+import { fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber, compareData,secondsToDate } from '@/libs/util';
 
 const teambuyDetail = {
   remainingProductNum: 0,
@@ -923,7 +927,7 @@ export default {
       },
       defaultListMain: [],
       uploadListMain: [],
-      teamBuyStatus: [{ label: '关闭', value: 'off' }, { label: '开启', value: 'on' }],
+      teamBuyStatus: [{ label: '关闭', value: 'off' }, { label: '开启', value: 'on' },{ label: '过期', value: 'expire'}],
       teamBuyStatusEnum,
       teamBuyTypeEnum,
       rewardActivitySettingEnum,
@@ -990,7 +994,10 @@ export default {
         {
           title: '成团有效时长',
           minWidth: 100,
-          key: 'validSeconds'
+          key: 'validSeconds',
+          render(h, params){
+            return <div>{secondsToDate(params.row.validSeconds)}</div>
+          }
         },
         {
           title: '提货截至时间',
@@ -1111,6 +1118,7 @@ export default {
       modalProduct: false,
       createLoading: false,
       modalViewLoading: false,
+      exportExcelLoading: false,
       showStoreList: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchProductRowData: _.cloneDeep(productRowData),
@@ -1131,9 +1139,6 @@ export default {
     tourDiscountComputed() {
       return fenToYuanDot2Number(this.teambuyDetail.tourDiscount);
     },
-    validSecondsComputed() {
-      return fenToYuanDot2Number(this.teambuyDetail.validSeconds);
-    }
   },
   watch: {
     numberInput(v) {
@@ -1317,6 +1322,25 @@ export default {
         this.showStoreList = false;
       }
       this.modalEdit = true;
+    },
+    handleDownload() {
+      this.exportExcelLoading = true;
+      getProductPages(this.searchRowData).then(res => {
+        const tableData = res.rows;
+        // 表格数据导出字段翻译
+        tableData.forEach(item => {
+          item['groupId'] = item['groupName'];
+          item['status'] = teamBuyStatusConvert(item['status']).label;
+          item['activityPrice'] = (item['activityPrice'] / 100.00).toFixed(2);
+          item['tourDiscount'] = (item['tourDiscount'] / 100.00).toFixed(2);
+          item['robot']=teamBuyStatusConvert(item['robot']).label;
+        });
+        this.$refs.tables.handleDownload({
+          filename: `拼团活动信息-${new Date().valueOf()}`,
+          data: tableData
+        });
+        this.exportExcelLoading = false;
+      });
     },
     getTableData() {
       getTeamBuyPages(this.searchRowData).then(res => {

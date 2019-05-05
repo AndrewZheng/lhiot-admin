@@ -29,7 +29,7 @@
         <header-bar :collapsed="collapsed" @on-coll-change="handleCollapsedChange">
           <user :user-avator="userAvator"/>
           <System :system="systemCurrent" :system-list="systemList" style="margin-right: 10px;"/>
-          <language :lang="local" style="margin-right: 10px;" @on-lang-change="setLocal"/>
+          <!-- <language :lang="local" style="margin-right: 10px;" @on-lang-change="setLocal"/> -->
           <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
         </header-bar>
       </Header>

@@ -6,7 +6,7 @@
       </i-col>
       <i-col span="18" order="3">
         <Card>
-          <h6>当前选中：{{ parentCategory.groupName }}</h6>
+          <h6>当前选中：<span class="brand-red font-sm">{{ parentCategory.groupName? parentCategory.groupName: '所有父级分类' }}</span></h6>
           <tables
             ref="tables"
             v-model="tableData"
@@ -338,17 +338,20 @@ export default {
 
     handleClick({ root, node, data }) {
       this.loading = true;
-      // 展开当前节点
+      // 递归展开当前节点
       if (typeof data.expand === 'undefined') {
-        // this.$set(data, 'expend', true);
-        this.$set(data, 'expend', false);
-        // if (data.children) {
+          this.$set(data, 'expend', false);
         if (data.children) {
           this.expandChildren(data.children);
         }
-      } else {
-        // data.expand = !data.expand;
       }
+
+      if(typeof data.selected ==='undefined'){
+        this.$set(data, 'selected', true);
+      }else{
+        this.$set(data, 'selected', !data.selected);
+      }
+
       this.parentCategory.id = data.id;
       this.parentCategory.groupName = data.title;
       this.currentParentId = data.id;
@@ -359,9 +362,7 @@ export default {
     expandChildren(array) {
       array.forEach(item => {
         if (typeof item.expand === 'undefined') {
-          // this.$set(item, 'expend', true);
           this.$set(item, 'expend', false);
-        // } else {
         } else {
           item.expand = !item.expand;
         }

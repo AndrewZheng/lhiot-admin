@@ -40,7 +40,7 @@
                 <Icon type="md-add"/>
                 创建
               </Button>
-              <Button v-waves :loading="exportExcelLoading" type="primary" class="mr5" @click="exportExcel">
+              <Button v-waves :loading="exportExcelLoading" type="primary" class="mr5" @click="handleDownload">
                 <Icon type="md-download"/>
                 导出
               </Button>
@@ -393,7 +393,7 @@
     <Modal v-model="uploadVisible" title="View Image">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
-  </i-col></row></div>
+  </div>
 </template>
 
 <script type="text/ecmascript-6">
@@ -635,21 +635,19 @@ export default {
       this.searchRowData = _.cloneDeep(roleRowData);
       this.getTableData();
     },
-    // 导出Excel
-    exportExcel() {
+    handleDownload() {
       this.exportExcelLoading = true;
       getProductPages(this.searchRowData).then(res => {
-        if (res.rows.length > 0) {
-          // let tempTableList = res.array.map(value => {
-          //   value.code = '=' + value.code
-          //   return value
-          // })
-          this.$refs.tables.exportCsv({
-            filename: `table-${new Date().valueOf()}.csv`,
-            columns: this.columns.filter((col, index) => index !== 0),
-            data: res.rows
-          });
-        }
+        const tableData = res.rows;
+        // 表格数据导出字段翻译
+        tableData.forEach(item => {
+          item['groupId'] = item['groupName'];
+          item['status'] = item['status'] === 'NORMAL'? ' 正常': '停采';
+        });
+        this.$refs.tables.handleDownload({
+          filename: `商品基础信息-${new Date().valueOf()}`,
+          data: tableData
+        });
         this.exportExcelLoading = false;
       });
     },

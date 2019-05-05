@@ -2,8 +2,8 @@
   <div class="m-role">
     <Card>
       <tables
-        :columns="columns"
         v-model="relationDetail"
+        :columns="columns"
         :loading="tempTableLoading"
         :search-area-column="16"
         :operate-area-column="8"

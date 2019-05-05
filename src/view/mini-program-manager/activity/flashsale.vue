@@ -160,7 +160,7 @@
       </p>
       <div class="modal-content">
         <Row v-if="tempModalType == modalType.edit || tempModalType == modalType.create">
-          <Form ref="modalEdit" :model="flashsaleDetail" :rules="ruleInline" :label-width="80">
+          <Form ref="editFrom" :model="flashsaleDetail" :rules="ruleInline" :label-width="80">
             <Row>
               <Col span="18">
               <FormItem label="活动名称:">
@@ -798,7 +798,7 @@ export default {
       this.getTableData();
     },
     resetFields() {
-      this.$refs.modalEdit.resetFields();
+      this.$refs.editFrom.resetFields();
       // this.$refs.uploadMain.clearFileList();
       this.uploadListMain = [];
       this.flashsaleDetail.storeImage = null;
@@ -875,7 +875,6 @@ export default {
       });
     },
     handleView(params) {
-      this.resetFields();
       this.tempModalType = this.modalType.view;
       this.flashsaleDetail = _.cloneDeep(params.row);
       this.modalView = true;

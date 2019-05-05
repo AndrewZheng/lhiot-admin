@@ -217,7 +217,7 @@
         <i-col>{{ tempModalType==modalType.edit?'修改限时抢购活动':(tempModalType==modalType.create?'创建优惠券活动': '优惠券活动和模板关联') }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="couponDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="editForm" :model="couponDetail" :rules="ruleInline" :label-width="80">
           <Row v-if="tempModalType == modalType.edit || tempModalType == modalType.create">
             <Row>
               <Col span="18">
@@ -903,7 +903,7 @@ export default {
       this.getTableData();
     },
     resetFields() {
-      this.$refs.modalEdit.resetFields();
+      this.$refs.editForm.resetFields();
       this.$refs.uploadMain.clearFileList();
       this.uploadListMain = [];
       this.couponDetail.storeImage = null;
@@ -1056,7 +1056,6 @@ export default {
       this.couponDetail.activityImage = fileList[0].url;
     },
     handleSetting(params) {
-      // console.log('setGoodsStandard:' + JSON.stringify(params.row));
       var rows = params.row;
       setSmallCouponActivity(rows);
       this.turnToPage({
