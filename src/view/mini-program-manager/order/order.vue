@@ -906,11 +906,6 @@ export default {
         this.searchLoading = false;
       });
     },
-    // exportExcel() {
-    //   this.$refs.tables.exportCsv({
-    //     filename: `table-${new Date().valueOf()}.csv`
-    //   });
-    // },
     handleDownload() {
       // 导出不分页
       this.searchRowData.rows = null;

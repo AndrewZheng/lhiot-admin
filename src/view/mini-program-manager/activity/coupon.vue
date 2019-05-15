@@ -447,7 +447,7 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')">确定
         </Button>
       </div>
     </Modal>
@@ -1032,6 +1032,7 @@ export default {
       this.couponDetail.formBeginTime = value;
     },
     endTimeChange(value, date) {
+      console.log('endTime:', value);
       this.couponDetail.endTime = value;
       this.couponDetail.formEndTime = value;
     },

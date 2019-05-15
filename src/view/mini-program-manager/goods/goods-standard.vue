@@ -1258,8 +1258,10 @@ export default {
     },
     getTableData() {
       // 获取商品页面传过来的商品信息
+      console.log('this.$route.name:', this.$route.name);
       if (this.$route.name === 'small-goods-relation-standard') {
         const goodsStandard = getSmallGoodsStandard();
+        console.log('standard from cookie:', goodsStandard);
         if (goodsStandard != null && goodsStandard !== '') {
         // 给商品规格的商品和搜索条件赋值
           this.searchRowData.productId = goodsStandard.id;
@@ -1273,8 +1275,11 @@ export default {
           this.productStandardDetail.productDescription = goodsStandard.description;
           // this.unitsList = goodsStandard.unitsList;
         }
+      }else{
+        // 清楚上次的查询条件
+         this.searchRowData.productId= '';
       }
-      // console.log('searchRowData', JSON.stringify(this.searchRowData));
+
       getProductStandardsPages(this.searchRowData).then(res => {
         this.tableData = res.rows;
         this.total = res.total;

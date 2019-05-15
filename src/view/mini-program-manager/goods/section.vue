@@ -397,27 +397,25 @@ export default {
     // 删除
     deleteTable(ids) {
       // this.loading = true;
-      // 先做删除验证
       deleteProductSectionValidation({ ids }).then(res => {
-        debugger
-        if (res === false) {
-          this.$Message.info('该板块或其子板块关联了商品，删除失败！');
-        } else if (res === true) {
-          deleteProductSection({
-            ids
-          }).then(res => {
-            const totalPage = Math.ceil(this.total / this.pageSize);
-            if (this.tableData.length === this.tableDataSelected.length && this.page === totalPage && this.page !== 1) {
-              this.page -= 1;
+          if (!res) {
+            this.$Message.info('该板块或其子板块关联了商品，删除失败！');
+          } else if (res) {
+            deleteProductSection({
+              ids
+            }).then(res => {
+              const totalPage = Math.ceil(this.total / this.pageSize);
+              if (this.tableData.length === this.tableDataSelected.length && this.page === totalPage && this.page !== 1) {
+                this.page -= 1;
+              }
+              this.tableDataSelected = [];
+              this.initMenuList();
+              this.searchRowData.page = this.page;
+              this.getTableData();
             }
-            this.tableDataSelected = [];
-            this.initMenuList();
-            this.searchRowData.page = this.page;
-            this.getTableData();
-          }
-          ).catch(() => {
-            this.loading = false;
-          });
+            ).catch(() => {
+              this.loading = false;
+            });
         }
         this.loading = false;
       }).catch(() => {

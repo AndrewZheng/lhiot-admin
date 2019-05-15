@@ -65,7 +65,6 @@ import handleBtns from './handle-btns';
 import excel from '@/libs/excel';
 import zip from '@/libs/zip';
 import './index.less';
-// import './common.less';
 
 export default {
   name: 'Tables',
@@ -284,12 +283,6 @@ export default {
       this.$refs.tablesMain.exportCsv(params);
     },
     exportExcel(params) {
-      // this.columns.forEach(item => {
-      //   if (item.key !== 'handle' && item.type!=='selection') {
-      //     this.exportTitle.push(item['title']);
-      //     this.exportKey.push(item['key']);
-      //   }
-      // });
       if (params.data.length) {
         const params1 = {
           title: this.exportTitle,
@@ -307,12 +300,6 @@ export default {
       }
     },
     exportZip(params) {
-      // this.columns.forEach(item => {
-      //   if (item.key !== 'handle' && item.type!=='selection') {
-      //     this.exportTitle.push(item['title']);
-      //     this.exportKey.push(item['key']);
-      //   }
-      // });
       const data = this.formatJson(this.exportKey, params.data);
       const params1 = {
         th: this.exportTitle,

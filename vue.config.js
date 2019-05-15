@@ -31,7 +31,7 @@ module.exports = {
       .set('mixins', resolve('src/mixins'))
       .set('util', resolve('src/util'))
       .set('filters', resolve('src/filters'));
-    // config.resolve.symlinks(true); //修复 HMR(热更新)失效
+    config.resolve.symlinks(true); //修复 HMR(热更新)失效
   },
   // 打包时不生成.map文件
   productionSourceMap: false,

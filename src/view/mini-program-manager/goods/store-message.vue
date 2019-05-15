@@ -480,7 +480,7 @@ export default {
           render: (h, params) => {
             const { row } = params;
             const obj = this.flagShipList.find(item => row.storeFlagship === item.storeFlagship)
-            console.log('obj' + obj);
+            // console.log('obj: ', obj);
             if (obj) {
               return h('span', obj.storeName);
             }

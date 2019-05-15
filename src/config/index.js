@@ -14,6 +14,6 @@ export default {
    */
   baseUrl: {
     dev: '/api',
-    pro: 'http://172.16.10.194:2018'
+    pro: 'http://172.16.10.196:2018'
   }
 };

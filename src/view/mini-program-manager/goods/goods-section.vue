@@ -373,8 +373,9 @@ export default {
               return <div><tag color='success'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
             } else if (row.shelvesStatus === 'INVALID') {
               return <div><tag color='error'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
+            }else{
+              return <div><tag color='primary'>N/A</tag></div>;
             }
-            return <div><tag color='primary'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
           }
         },
         {

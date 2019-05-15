@@ -637,12 +637,14 @@ export default {
     },
     handleDownload() {
       this.exportExcelLoading = true;
+      // 导出不带分页搜索条件
+      this.searchRowData.rows = null;
       getProductPages(this.searchRowData).then(res => {
         const tableData = res.rows;
         // 表格数据导出字段翻译
         tableData.forEach(item => {
           item['groupId'] = item['groupName'];
-          item['status'] = item['status'] === 'NORMAL'? ' 正常': '停采';
+          item['status'] = item['status'] === 'NORMAL'? '正常': '停采';
         });
         this.$refs.tables.handleDownload({
           filename: `商品基础信息-${new Date().valueOf()}`,
