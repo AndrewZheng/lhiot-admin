@@ -117,6 +117,7 @@ export const orderType = {
   TEAM_BUY: 'TEAM_BUY',
   FREEGO: 'FREEGO'
 };
+
 export const orderTypeEnum = [
   {
     label: '普通订单',
@@ -149,6 +150,7 @@ export const customOrderStatus = {
   CUSTOMING: 'CUSTOMING',
   FINISHED: 'FINISHED'
 };
+
 export const customOrderStatusEnum = [
   {
     label: '待付款',
@@ -631,7 +633,6 @@ export const splitStatusEnum = [
 ];
 
 // 小程序商品状态 NORMAL-正常 STOP_MINING	停采
-
 export const productStatus = {
   NORMAL: 'NORMAL',
   STOP_MINING: 'STOP_MINING'
@@ -649,7 +650,6 @@ export const productStatusEnum = [
 ]
 
 // 小程序图片状态 OFF 关闭 ， ON 开启
-
 export const imageStatus = {
   OFF: 'OFF',
   ON: 'ON'
@@ -701,86 +701,116 @@ export const teamBuyStatusEnum = [
   }
 ]
 
-// 小程序团购活动活动类型 ORDINARY_TEAM("普通团"),OLD_AND_NEW("老带新团")
-export const teamBuyType = {
-  ORDINARY_TEAM: 'ORDINARY_TEAM',
-  OLD_AND_NEW: 'OLD_AND_NEW'
-}
-
+// 小程序团购活动类型
 export const teamBuyTypeEnum = [
   {
     label: '普通团',
-    value: teamBuyType.ORDINARY_TEAM
+    value: 'ORDINARY_TEAM'
   },
   {
     label: '老带新团',
-    value: teamBuyType.OLD_AND_NEW
+    value: 'OLD_AND_NEW'
   }
 ]
 
-//  小程序红包活动设置 DISABLE("关闭"),ALL_ENABLE("全部开启"),SINGLE_ENABLE("单人购买开启活动"),MULTIPLE_ENABLE("多人团开启活动")
-export const rewardActivitySetting = {
-  DISABLE: 'DISABLE',
-  ALL_ENABLE: 'ALL_ENABLE',
-  SINGLE_ENABLE: 'SINGLE_ENABLE',
-  MULTIPLE_ENABLE: 'MULTIPLE_ENABLE'
-}
-
+// 小程序红包活动设置
 export const rewardActivitySettingEnum = [
   {
     label: '关闭',
-    value: rewardActivitySetting.DISABLE
+    value: 'DISABLE'
   },
   {
     label: '全部开启',
-    value: rewardActivitySetting.ALL_ENABLE
+    value: 'ALL_ENABLE'
   },
   {
     label: '单人购买开启活动',
-    value: rewardActivitySetting.SINGLE_ENABLE
+    value: 'SINGLE_ENABLE'
   },
   {
     label: '多人团开启活动',
-    value: rewardActivitySetting.MULTIPLE_ENABLE
+    value: 'MULTIPLE_ENABLE'
   }
 ]
 
-// 小程序关联门店 ALL(全部门店), PART(部分门店)
-export const relationStoreType = {
-  ALL: 'ALL',
-  PART: 'PART'
-}
+// 实物类型: COMMON_GOODS(普通商品),PERIPHERY_GOODS(周边商品)
+export const entityTypeEnum = [
+  {
+    label: '普通商品',
+    value: 'COMMON_GOODS'
+  },
+  {
+    label: '周边商品',
+    value: 'PERIPHERY_GOODS'
+  }
+]
 
 export const relationStoreTypeEnum = [
   {
     label: '全部门店',
-    value: relationStoreType.ALL
+    value: 'ALL'
   },
   {
     label: '部分门店',
-    value: relationStoreType.PART
+    value: 'PART'
   }
 ]
-
-// 小程序优惠券状态 有效-VALID 无效-INVALID
-export const couponStatus = {
-  VALID: 'VALID',
-  INVALID: 'INVALID',
-  EXPIRE: 'EXPIRE'
-};
 
 export const couponStatusEnum = [
   {
     label: '有效',
-    value: couponStatus.VALID
+    value: 'VALID'
   },
   {
     label: '无效',
-    value: couponStatus.INVALID
+    value: 'INVALID'
+  }
+];
+// {
+//   label: '过期',
+//   value: 'EXPIRE'
+// }
+
+export const couponActivityTypeEnum = [
+  {
+    label: '领券中心',
+    value: 'COUPON_CENTER_ACTIVITY'
   },
   {
-    label: '过期',
-    value: couponStatus.EXPIRE
+    label: '积分商城兑换',
+    value: 'COUPON_CENTER_POINT'
+  }
+];
+
+// 小程序优惠券使用限制 SMALL_ALL("小程序全场券"),PART_GOODS("部分商品券"),PART_STORES("部分门店券")，HD_ALL("海鼎全场券");
+export const couponUseLimitEnum = [
+  {
+    label: '小程序全场券',
+    value: 'SMALL_ALL'
+  },
+  {
+    label: '部分商品券',
+    value: 'PART_GOODS'
+  },
+  {
+    label: '部分门店券',
+    value: 'PART_STORES'
+  },
+  {
+    label: '海鼎全场券',
+    value: 'HD_ALL'
+  }
+];
+
+// 券有效期类型: FIXED_DATE(固定日期),UN_FIXED_DATE(相对发券日期)
+export const validDateTypeEnum = [
+  {
+    label: '固定日期',
+    value: 'FIXED_DATE'
+  },
+  {
+    label: '相对发券日期',
+    value: 'UN_FIXED_DATE'
   }
 ];
 

@@ -840,6 +840,24 @@ export const asyncRouterMap = [
         component: () => import('@/view/mini-program-manager/activity/coupon.vue')
       },
       {
+        path: '/integral-coupon',
+        name: 'integral-coupon',
+        meta: {
+          icon: 'md-barcode',
+          title: '积分兑换券管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/integral-coupon.vue')
+      },
+      {
+        path: '/integral-entity',
+        name: 'integral-entity',
+        meta: {
+          icon: 'md-cube',
+          title: '积分兑换实物管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/integral-entity.vue')
+      },
+      {
         path: '/small-activity-share-reward',
         name: 'small-activity-share-reward',
         meta: {

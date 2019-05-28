@@ -334,15 +334,6 @@ export const getCouponTemplateRelationPages = (data) => {
   });
 };
 
-// // 创建优惠券活动和优惠券模板之间的关联
-// export const createCouponTemplateRelation = (data) => {
-//   return Vue.prototype.$http.request({
-//     url: '/minapp/coupon-template-relations/',
-//     data,
-//     method: 'post'
-//   });
-// };
-
 // 创建优惠券活动和优惠券模板之间的关联
 export const createCouponTemplateRelation = (data) => {
   return Vue.prototype.$http.request({
@@ -374,7 +365,8 @@ export const getHdCouponActivitiesPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/hd-coupon-activities',
     data,
-    method: 'post'
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
   });
 };
 
@@ -1359,3 +1351,84 @@ export const editRandomDiscount = (data) => {
   });
 };
 
+// 积分兑换优惠券相关接口 CRUD
+export const getCouponExchange = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/points-exchange-coupon-setting/' + id,
+    method: 'get'
+  });
+};
+
+export const deleteCouponExchange = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/points-exchange-coupon-setting/' + ids,
+    method: 'delete'
+  });
+};
+
+export const createCouponExchange = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/points-exchange-coupon-setting/create',
+    data,
+    method: 'post'
+  });
+};
+
+export const editCouponExchange = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/points-exchange-coupon-setting/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询积分兑换优惠券列表
+export const getCouponExchangePages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/points-exchange-coupon-setting/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 积分兑换实物相关接口 CRUD
+export const getEntityExchange = ({ id }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/points-exchange-entity-setting/' + id,
+    method: 'get'
+  });
+};
+
+export const deleteEntityExchange = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/points-exchange-entity-setting/' + ids,
+    method: 'delete'
+  });
+};
+
+export const createEntityExchange = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/points-exchange-entity-setting/create',
+    data,
+    method: 'post'
+  });
+};
+
+export const editEntityExchange = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/points-exchange-entity-setting/update/' + data.id,
+    data,
+    method: 'PUT'
+  });
+};
+
+// 根据条件分页查询积分兑换优惠券列表
+export const getEntityExchangePages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/points-exchange-entity-setting/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};

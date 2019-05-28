@@ -1,16 +1,53 @@
 import {
   customDeliverStatusEnum,
   customOrderStatusEnum,
-  customPeriodEnum, deliveryAtTypeEnum, customPlanStatusEnum,
-  deliveryTypeCustomEnum, doctorLevelEnum, doctorStatusEnum, hotEnum, onSaleStatusEnum,
+  customPeriodEnum,
+  deliveryAtTypeEnum,
+  customPlanStatusEnum,
+  deliveryTypeCustomEnum,
+  doctorLevelEnum,
+  doctorStatusEnum,
+  hotEnum,
+  onSaleStatusEnum,
   orderStatusEnum,
-  orderTypeEnum, positionTypeEnum,
-  receivingWayEnum, relationTypeEnum,
+  orderTypeEnum,
+  positionTypeEnum,
+  receivingWayEnum,
+  relationTypeEnum,
   settlementStatusEnum,
-  thirdDelieverStatusEnum, updateWayEnum, storeStatusEnum, storeTypeEnum, coordinateTypeEnum,
+  thirdDelieverStatusEnum,
+  updateWayEnum,
+  storeStatusEnum,
+  storeTypeEnum,
+  coordinateTypeEnum,
   feedbackStatusEnum,
   // 小程序
-  splitStatusEnum, productStatusEnum, imageStatusEnum, imageTypeEnum, teamBuyStatusEnum, teamBuyTypeEnum, rewardActivitySettingEnum, couponStatusEnum, couponTypeEnum, appTypeEnum, payTypeEnum, payStepEnum, sourceTypeEnum, bankTypeEnum, advertisementPositionTypeEnum, timeLimitedEnum, couponScopeEnum, linkTypeEnum, miniOrderStatusEnum, miniHdStatusEnum, miniOrderTypeEnum, YesNoEnum, yesNoEnum, deliverStatusEnum
+  splitStatusEnum,
+  productStatusEnum,
+  imageStatusEnum,
+  imageTypeEnum,
+  teamBuyStatusEnum,
+  teamBuyTypeEnum,
+  rewardActivitySettingEnum,
+  couponActivityTypeEnum,
+  couponStatusEnum,
+  couponTypeEnum,
+  couponScopeEnum,
+  couponUseLimitEnum,
+  appTypeEnum,
+  payTypeEnum,
+  payStepEnum,
+  sourceTypeEnum,
+  bankTypeEnum,
+  advertisementPositionTypeEnum,
+  timeLimitedEnum,
+  linkTypeEnum,
+  miniOrderStatusEnum,
+  miniHdStatusEnum,
+  miniOrderTypeEnum,
+  YesNoEnum,
+  yesNoEnum,
+  deliverStatusEnum
 } from './enumerate';
 
 const convertFunction = (value, list) => {
@@ -20,7 +57,9 @@ const convertFunction = (value, list) => {
   if (filterObj) {
     return filterObj;
   } else {
-    return { label: value };
+    return {
+      label: value || 'N/A'
+    };
   }
 };
 
@@ -140,12 +179,20 @@ export const rewardActivitySettingConvert = (value) => {
   return convertFunction(value, rewardActivitySettingEnum);
 }
 
+export const couponActivityTypeConvert = (value) => {
+  return convertFunction(value, couponActivityTypeEnum);
+}
+
 export const couponStatusConvert = (value) => {
   return convertFunction(value, couponStatusEnum);
 }
 
 export const couponScopeConvert = (value) => {
   return convertFunction(value, couponScopeEnum);
+}
+
+export const couponUseLimitConvert = (value) => {
+  return convertFunction(value, couponUseLimitEnum);
 }
 
 export const couponTypeConvert = (value) => {

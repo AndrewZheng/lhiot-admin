@@ -214,79 +214,94 @@
       style="z-index: 1000"
     >
       <p slot="header">
-        <i-col>{{ tempModalType==modalType.edit?'修改限时抢购活动':(tempModalType==modalType.create?'创建优惠券活动': '优惠券活动和模板关联') }}</i-col>
+        <i-col>{{ tempModalType == modalType.edit?'修改限时抢购活动':(tempModalType==modalType.create?'创建优惠券活动': '优惠券活动和模板关联') }}</i-col>
       </p>
       <div class="modal-content">
         <Form ref="editForm" :model="couponDetail" :rules="ruleInline" :label-width="80">
           <Row v-if="tempModalType == modalType.edit || tempModalType == modalType.create">
             <Row>
-              <Col span="18">
+              <i-col span="18">
               <FormItem label="活动名称:" prop="activityName">
                 <Input v-model="couponDetail.activityName" placeholder="活动名称"></Input>
               </FormItem>
-            </Col>
+              </i-col>
             </Row>
-            <Row>
-              <Col span="18">
-              <FormItem label="活动规则:" prop="activityRuel">
-                <Input v-model="couponDetail.activityRuel" :rows="6" placeholder="活动规则" type="textarea"></Input>
-              </FormItem>
-            </Col>
-            </Row>
-            <Row>
-              <Col span="18">
-              <FormItem label="活动内容:" prop="activityContent">
-                <Input v-model="couponDetail.activityContent" placeholder="活动内容"></Input>
-              </FormItem>
-            </Col>
-            </Row>
-            <Row>
-              <Col span="18">
-              <FormItem label="活动开关:" prop="ifEffective">
-                <Select v-model="couponDetail.ifEffective" clearable>
+            <!-- <Row>
+              <i-col span="18">
+              <FormItem label="活动类型:" prop="activityType">
+                <Select v-model="couponDetail.activityType" placeholder="活动类型" style="padding-right: 5px;width: 100px" clearable>
                   <Option
-                    v-for="(item,index) in couponStatusEnum"
+                    v-for="(item,index) in couponActivityTypeEnum"
                     :value="item.value"
                     :key="index"
                     class="ptb2-5"
-                    style="padding-left: 5px;width: 100%">{{ item.label }}
+                    style="padding-left: 5px;width: 100px">{{ item.label }}
                   </Option>
                 </Select>
               </FormItem>
-            </Col>
+              </i-col>
+            </Row> -->
+            <Row>
+              <i-col span="18">
+                <FormItem label="活动规则:" prop="activityRuel">
+                  <Input v-model="couponDetail.activityRuel" :rows="6" placeholder="活动规则" type="textarea"></Input>
+                </FormItem>
+              </i-col>
             </Row>
             <Row>
-              <Col span="18">
-              <FormItem label="有效期起:" prop="beginTime">
-                <DatePicker
-                  v-model="couponDetail.beginTime"
-                  format="yyyy-MM-dd HH:mm:ss"
-                  type="datetime"
-                  placeholder="有效期起"
-                  class="search-input"
-                  style="width: 200px"
-                  @on-change="beginTimeChange"
-                />
-              </FormItem>
-            </Col>
+              <i-col span="18">
+                <FormItem label="活动内容:" prop="activityContent">
+                  <Input v-model="couponDetail.activityContent" placeholder="活动内容"></Input>
+                </FormItem>
+              </i-col>
             </Row>
             <Row>
-              <Col span="18">
-              <FormItem label="有效期止:" prop="endTime">
-                <DatePicker
-                  v-model="couponDetail.endTime"
-                  format="yyyy-MM-dd HH:mm:ss"
-                  type="datetime"
-                  placeholder="有效期止"
-                  class="search-input"
-                  style="width: 200px"
-                  @on-change="endTimeChange"
-                />
-              </FormItem>
-            </Col>
+              <i-col span="18">
+                <FormItem label="活动开关:" prop="ifEffective">
+                  <Select v-model="couponDetail.ifEffective" clearable>
+                    <Option
+                      v-for="(item,index) in couponStatusEnum"
+                      :value="item.value"
+                      :key="index"
+                      class="ptb2-5"
+                      style="padding-left: 5px;width: 100%">{{ item.label }}
+                    </Option>
+                  </Select>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row>
+              <i-col span="18">
+                <FormItem label="有效期起:" prop="beginTime">
+                  <DatePicker
+                    v-model="couponDetail.beginTime"
+                    format="yyyy-MM-dd HH:mm:ss"
+                    type="datetime"
+                    placeholder="有效期起"
+                    class="search-input"
+                    style="width: 200px"
+                    @on-change="beginTimeChange"
+                  />
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row>
+              <i-col span="18">
+                <FormItem label="有效期止:" prop="endTime">
+                  <DatePicker
+                    v-model="couponDetail.endTime"
+                    format="yyyy-MM-dd HH:mm:ss"
+                    type="datetime"
+                    placeholder="有效期止"
+                    class="search-input"
+                    style="width: 200px"
+                    @on-change="endTimeChange"
+                  />
+                </FormItem>
+              </i-col>
             </Row>
             <!-- <Row>
-            <Col span="18">
+            <i-col span="18">
             <FormItem label="商品是否显示:" prop="ifEffective">
               <Select v-model="couponDetail.ifEffective" clearable>
                 <Option
@@ -298,7 +313,7 @@
                 </Option>
               </Select>
             </FormItem>
-            </Col>
+            </i-col>
           </Row> -->
             <Row>
               <FormItem label="宣传图片   推荐使用尺寸为400X225(单位:px):">
@@ -332,11 +347,11 @@
               </FormItem>
             </Row>
             <Row>
-              <Col span="18">
+              <i-col span="18">
               <FormItem label="宣传链接:">
                 <Input v-model="couponDetail.activityUrl" placeholder="宣传链接"></Input>
               </FormItem>
-            </Col>
+            </i-col>
             </Row>
           </Row>
 
@@ -394,7 +409,7 @@
 
                 <Form ref="modalCreate" :model="addRelationDetail" :rules="relationRuleInline" :label-width="80">
                   <Row>
-                    <Col span="7">
+                    <i-col span="7">
                     <FormItem label="生效时间:" prop="effectiveStartTime">
                       <DatePicker
                         :value="addRelationDetail.effectiveStartTime"
@@ -404,8 +419,8 @@
                         style="width: 160px"
                         @on-change="effectiveStartTimeChange"/>
                     </FormItem>
-                  </Col>
-                    <Col span="7">
+                  </i-col>
+                    <i-col span="7">
                     <FormItem label="失效时间:" prop="effectiveEndTime">
                       <DatePicker
                         :value="addRelationDetail.effectiveEndTime"
@@ -415,17 +430,17 @@
                         style="width: 160px"
                         @on-change="effectiveEndTimeChange"/>
                     </FormItem>
-                   </Col>
-                    <Col span="5">
+                   </i-col>
+                    <i-col span="5">
                     <FormItem label="发券总数:" prop="couponLimit">
                       <InputNumber :min="0" v-model="addRelationDetail.couponLimit" class="ml20" label="限购数量"></InputNumber>
                     </FormItem>
-                   </Col>
-                    <Col span="5">
+                   </i-col>
+                    <i-col span="5">
                     <Button v-waves :loading="addTempDataLoading" span="4" class="search-btn ml20" type="primary" @click="addTempData('modalCreate')">
                       <Icon type="md-add"/>&nbsp;关联优惠券模板
                     </Button>
-                </Col>
+                </i-col>
                   </Row>
                 </Form>
                 *Tips：请先选择要关联的优惠券模板，然后输入关联配置信息，若关联多个优惠券模板，则所有的商品配置信息相同，添加完成后可在下方表格修改
@@ -478,8 +493,8 @@ import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
-import { couponStatusConvert, couponTypeConvert, couponScopeConvert } from '@/libs/converStatus';
-import { couponStatusEnum, couponTypeEnum, couponScopeEnum } from '@/libs/enumerate';
+import { couponStatusConvert, couponTypeConvert, couponScopeConvert, couponActivityTypeConvert } from '@/libs/converStatus';
+import { couponStatusEnum, couponActivityTypeEnum, couponTypeEnum, couponScopeEnum } from '@/libs/enumerate';
 import { compareData, setSmallCouponActivity, fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber } from '@/libs/util';
 
 const couponDetail = {
@@ -548,6 +563,7 @@ const roleRowData = {
   formEndTime: null,
   ifEffective: null,
   activityName: null,
+  activityType: 'COUPON_CENTER_ACTIVITY',
   page: 1,
   rows: 10
 };
@@ -636,9 +652,9 @@ const relationTempColumns = [
     minWidth: 60,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.couponStatus === 'VALID') {
+      if (row.couponStatus && row.couponStatus === 'VALID') {
         return <div><tag color='success'>{couponStatusConvert(row.couponStatus).label}</tag></div>;
-      } else if (row.couponStatus === 'INVALID') {
+      } else if (row.couponStatus && row.couponStatus === 'INVALID') {
         return <div><tag color='error'>{couponStatusConvert(row.couponStatus).label}</tag></div>;
       }
       return <div>{row.couponStatus}</div>;
@@ -815,6 +831,7 @@ export default {
       couponStatusEnum,
       couponTypeEnum,
       couponScopeEnum,
+      couponActivityTypeEnum,
       columns: [
         {
           type: 'selection',
@@ -830,6 +847,20 @@ export default {
           key: 'activityName'
         },
         {
+          title: '活动类型',
+          key: 'activityType',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.activityType === 'COUPON_CENTER_ACTIVITY') {
+              return <div>{couponActivityTypeConvert(row.activityType).label}</div>;
+            } else if (row.activityType === 'COUPON_CENTER_POINT') {
+              return <div>{couponActivityTypeConvert(row.activityType).label}</div>;
+            }else{
+              return <div>N/A</div>;
+            }
+          }
+        },
+        {
           title: '活动状态',
           key: 'ifEffective',
           render: (h, params, vm) => {
@@ -838,8 +869,9 @@ export default {
               return <div><tag color='success'>{couponStatusConvert(row.ifEffective).label}</tag></div>;
             } else if (row.ifEffective === 'INVALID') {
               return <div><tag color='error'>{couponStatusConvert(row.ifEffective).label}</tag></div>;
+            }else{
+              return <div><tag color='primary'>{row.ifEffective}</tag></div>;
             }
-            return <div><tag color='primary'>{row.ifEffective}</tag></div>;
           }
         },
         {
@@ -1202,7 +1234,6 @@ export default {
     },
     createRelation() {
       this.modalViewLoading = true;
-      this.addRelationDetail.receiveCount = 0;
       createCouponTemplateRelation(this.addRelationDetail).then(res => {
         this.modalViewLoading = false;
         this.modalEdit = false;

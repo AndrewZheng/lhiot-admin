@@ -205,15 +205,13 @@
               <i-col v-if="productStandardDetail.image" span="16"><img :src="productStandardDetail.image" width="100" height="100"></i-col>
             </Row>
           </i-col>
-        </Row>
-        <!-- <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">上架商品详情图:</i-col>
               <i-col v-if="productStandardDetail.detailImage" span="16"><img :src="productStandardDetail.detailImage" width="100" height="100" ></i-col>
             </Row>
           </i-col>
-        </Row> -->
+        </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
@@ -293,75 +291,77 @@
 
     <Modal v-model="modalEdit" :width="700">
       <p slot="header">
-        <span>{{ productStandardDetail.id == ''?'创建商品规格':'编辑商品规格' }}</span>
+        <span>{{ productStandardDetail.id >0?'创建商品规格':'编辑商品规格' }}</span>
       </p>
       <div class="modal-content">
         <Form ref="modalEdit" :model="productStandardDetail" :rules="ruleInline" :label-width="100">
           <Row>
-            <Col span="12">
+            <i-col span="12">
             <FormItem label="商品ID:" prop="productId">
-              <Input v-model="productStandardDetail.productId" readonly="readonly"><Button slot="append" icon="ios-search" @click="handleRelation"></Button></Input>
+              <Input v-model="productStandardDetail.productId" readonly="readonly">
+              <Button slot="append" icon="ios-search" @click="handleRelation"></Button>
+              </Input>
             </FormItem>
-            </Col>
-            <Col span="12">
-            <FormItem label="商品名称:">
-              {{ productStandardDetail.baseProductName }}
-            </FormItem>
-            </Col>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="商品名称:">
+                {{ productStandardDetail.baseProductName }}
+              </FormItem>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
             <FormItem label="商品分类:">
               {{ productStandardDetail.groupName }}
             </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
             <FormItem label="基础单位:">
               {{ productStandardDetail.baseUnit }}
             </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
             <FormItem label="商品编号:">
               {{ productStandardDetail.productCode }}
             </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
             <FormItem label="商品条码:">
               {{ productStandardDetail.baseBarcode }}
             </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
             <FormItem v-if="productStandardDetail.baseImage" label="商品主图:">
               <img :src="productStandardDetail.baseImage" width="100" height="100">
             </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
             <FormItem label="商品描述:">
               {{ productStandardDetail.baseProductDescription }}
             </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Divider orientation="center">规格信息</Divider>
           <Row>
-            <Col span="12">
+            <i-col span="12">
             <FormItem label="上架商品名称:" prop="productName">
               <Input v-model="productStandardDetail.productName"></Input>
             </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
             <FormItem label="上架商品描述:" prop="productDescription">
               <Input v-model="productStandardDetail.productDescription"></Input>
             </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
             <FormItem label="上架商品主图:建议尺寸;400x400(单位:px):" prop="image" >
               <Input v-show="false" v-model="productStandardDetail.image" style="width: auto"></Input>
               <div v-for="item in uploadListMain" :key="item.url" :v-show="productStandardDetail.image" class="demo-upload-list">
@@ -391,22 +391,46 @@
                 </div>
               </IViewUpload>
             </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="12">
-            <FormItem v-if="productStandardDetail.detailImage" label="上架商品详情图:" prop="standardQty">
-              {{ productStandardDetail.detailImage }}
+            </i-col>
+            <i-col span="12">
+            <FormItem label="上架商品详情图:建议尺寸;690x340(单位:px)" prop="detailImage">
+              <Input v-show="false" v-model="productStandardDetail.detailImage" style="width: auto"></Input>
+              <div v-for="item in uploadListDetail" :key="item.url" :v-show="productStandardDetail.detailImage" class="demo-upload-list">
+                <template v-if="item.status === 'finished'">
+                  <div>
+                    <img :src="item.url">
+                    <div class="demo-upload-list-cover">
+                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                      <Icon type="ios-trash-outline" @click.native="handleRemoveDetail(item)"></Icon>
+                    </div>
+                  </div>
+                </template>
+                <template v-else>
+                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                </template>
+              </div>
+              <IViewUpload
+                ref="uploadDetail"
+                :default-list="defaultListDetail"
+                :image-size="imageSize"
+                @on-success="handleSuccessDetail"
+              >
+                <div slot="content">
+                  <Button type="primary">
+                    上传图片
+                  </Button>
+                </div>
+              </IViewUpload>
             </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
             <FormItem label="商品条码:" prop="barcode">
               <Input v-model="productStandardDetail.barcode"></Input>
             </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
             <FormItem label="商品状态:" prop="shelvesStatus">
               <Select v-model="productStandardDetail.shelvesStatus">
                 <Option
@@ -419,22 +443,22 @@
                 </Option>
               </Select>
             </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
             <FormItem label="商品规格:" prop="specification">
               <Input v-model="productStandardDetail.specification"></Input>
             </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
             <FormItem label="数量/重量:" prop="standardQty">
               <InputNumber :min="0" v-model="productStandardDetail.standardQty"></InputNumber>
             </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
             <FormItem label="商品原价:" prop="price">
               <InputNumber
                 :min="0"
@@ -442,8 +466,8 @@
                 placeholder="商品原价"
                 @on-change="priceInputNumberOnchange"></InputNumber>
             </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
             <FormItem label="售卖价格:">
               <InputNumber
                 :min="0"
@@ -451,10 +475,10 @@
                 placeholder="售卖价格"
                 @on-change="salePriceInputNumberOnchange"></InputNumber>
             </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
             <FormItem label="商品单位:" prop="unitId">
               <Select v-model="productStandardDetail.unitId" @on-change="unitChange">
                 <Option
@@ -467,15 +491,15 @@
                 </Option>
               </Select>
             </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
             <FormItem label="商品排序:" prop="rank">
               <InputNumber :min="0" v-model="productStandardDetail.rank"></InputNumber>
             </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
             <FormItem label="规格描述:建议尺寸;400x400(单位:px):" prop="description" >
               <Input v-show="false" v-model="productStandardDetail.description" style="width: auto"></Input>
               <div v-for="item in uploadListMultiple" :key="item.url" :v-show="productStandardDetail.description" class="demo-upload-list">
@@ -507,7 +531,7 @@
                 </div>
               </IViewUpload>
             </FormItem>
-            </Col>
+            </i-col>
           </Row>
         </Form>
       </div>
@@ -525,19 +549,19 @@
       <div class="modal-content">
         <Form ref="modalDiscount" :model="proStandardExpand" :label-width="100">
           <Row>
-            <Col span="12">
+            <i-col span="12">
              <FormItem label="上架商品规格ID:" prop="id">
               <Input v-model="productStandardDetail.id" disabled></Input>
             </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
              <FormItem label="上架商品名称:" prop="productName">
               <Input v-model="productStandardDetail.productName" disabled></Input>
             </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
             <FormItem label="商品原价:" prop="price">
               <InputNumber
                 :min="0"
@@ -546,8 +570,8 @@
                 disabled
                 ></InputNumber>
             </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
             <FormItem label="售卖价格:">
               <InputNumber
                 :min="0"
@@ -555,22 +579,22 @@
                 disabled
                 ></InputNumber>
             </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
             <FormItem label="限购份数:" prop="limitNum">
               <Input v-model="proStandardExpand.limitNum"></Input>
             </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
             <FormItem label="起购份数:" prop="startNum">
               <Input v-model="proStandardExpand.startNum"></Input>
             </FormItem>
-            </Col>
+            </i-col>
           </Row>
            <Row>
-            <Col span="12">
+            <i-col span="12">
             <FormItem label="折扣价:">
               <InputNumber
                 :min="0"
@@ -580,12 +604,12 @@
                 ></InputNumber>
                 <div>（以售卖价格优先计算折扣率）</div>
             </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
             <FormItem label="折扣率:" prop="discountRate">
               <Input v-model="proStandardExpand.discountRate" readonly></Input>
             </FormItem>
-            </Col>
+            </i-col>
           </Row>
         </Form>
       </div>
@@ -680,6 +704,7 @@ const productStandardDetail = {
   productName: '',
   createUser: null,
   image: null,
+  detailImage: null,
   productDescription: '',
   productCode: '',
   baseProductName: '',
@@ -772,7 +797,9 @@ export default {
       descriptionList: [],
       defaultListMain: [],
       defaultListMultiple: [],
+      defaultListDetail:[],
       uploadListMain: [],
+      uploadListDetail: [],
       uploadListMultiple: [],
       ruleValidate: {
           limitNum: [{ required: false, message: '请输入限购份数', trigger: 'blur' }],
@@ -1301,6 +1328,12 @@ export default {
     statusChange(value) {
       this.productStandardDetail.shelvesStatus = value;
     },
+    // 上架商品详情图
+    handleSuccessDetail(response, file, fileList) {
+      this.uploadListDetail = fileList;
+      this.productStandardDetail.detailImage = null;
+      this.productStandardDetail.detailImage = fileList[0].url;
+    },
     // 上架商品主图
     handleSuccessMain(response, file, fileList) {
       this.uploadListMain = fileList;
@@ -1331,6 +1364,16 @@ export default {
         this.$refs.uploadMain.setDefaultFileList(mainImgArr);
         this.uploadListMain = mainImgArr;
       }
+
+      if (res.detailImage != null) {
+        const map = { status: 'finished', url: 'url' };
+        const detailImgArr = [];
+        map.url = res.detailImage;
+        detailImgArr.push(map);
+        this.$refs.uploadDetail.setDefaultFileList(detailImgArr);
+        this.uploadListDetail = detailImgArr;
+      }
+
       if (res.description != null) {
         const descriptionImgArr = [];
         const descriptionArr = res.description.split(',');
@@ -1342,6 +1385,10 @@ export default {
         this.$refs.uploadMultiple.setDefaultFileList(descriptionImgArr);
         this.uploadListMultiple = descriptionImgArr;
       }
+    },
+    handleRemoveMain(file) {
+      this.$refs.uploadDetail.deleteFile(file);
+      this.productStandardDetail.detailImage = null;
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);

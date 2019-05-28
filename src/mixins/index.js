@@ -2,7 +2,11 @@ import {
   customOrderStatusConvert,
   customPeriodConvert, customPlanStatusConvert,
   deliveryTypeCustomConvert, doctorLevelConvert, doctorStatusConvert, hotConvert, onSaleStatusConvert,
-  orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert, feedbackStatusConvert, productStatusConvert, imageStatusConvert, imageTypeConvert, teamBuyStatusConvert, teamBuyTypeConvert, rewardActivitySettingConvert, couponStatusConvert, couponTypeConvert, appTypeConvert, bankTypeConvert, timeLimitedConvert, advertisementPositionTypeConvert, couponScopeConvert, advertisementLinkTypeConvert, miniOrderStatusConvert, miniHdStatusConvert, miniOrderTypeConvert, yesNoConvert, deliverStatusConvert
+  orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert, feedbackStatusConvert,
+  productStatusConvert, imageStatusConvert, imageTypeConvert, teamBuyStatusConvert, teamBuyTypeConvert,
+  rewardActivitySettingConvert, couponStatusConvert, couponTypeConvert, appTypeConvert, bankTypeConvert,
+  timeLimitedConvert, advertisementPositionTypeConvert, couponScopeConvert, advertisementLinkTypeConvert,
+  miniOrderStatusConvert, miniHdStatusConvert, miniOrderTypeConvert, yesNoConvert, deliverStatusConvert
 } from '../libs/converStatus';
 
 const mixin = {

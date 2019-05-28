@@ -1,12 +1,10 @@
 const mixin = {
   data() {
     return {
-      // 选中的行
       tableDataSelected: []
     };
   },
   methods: {
-    // 删除单个行
     handleDelete(params) {
       this.tableDataSelected = [];
       this.tableDataSelected.push(params.row);

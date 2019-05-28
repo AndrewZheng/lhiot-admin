@@ -6,6 +6,7 @@ const mixin = {
       page: 1,
       pageSize: 10,
       loading: true,
+      modalAdd: false,
       modalView: false,
       modalEdit: false,
       modalType: {
