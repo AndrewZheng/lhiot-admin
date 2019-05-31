@@ -286,9 +286,7 @@ const btns = {
   },
   // 优惠券上下架操作
   couponStatus: (h, params, vm) => {
-    const {
-      row
-    } = params;
+    const { row } = params;
     if (row.couponStatus === 'VALID') {
       return h('Poptip', {
         props: {
@@ -331,6 +329,71 @@ const btns = {
         on: {
           'on-ok': () => {
             vm.$emit('coupon-status', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-cloud-upload',
+              size: 16,
+              color: '#green'
+            }
+          })
+        ])
+      ]);
+    }
+  },
+  // 兑换商品实物上下架操作
+  proStatus: (h, params, vm) => {
+    const { row } = params;
+    if (row.status === 'VALID') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要下架吗?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('pro-status', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-cloud-download',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
+    } else {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要上架吗?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('pro-status', params);
           }
         }
       }, [

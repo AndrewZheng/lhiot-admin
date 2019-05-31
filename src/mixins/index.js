@@ -6,7 +6,8 @@ import {
   productStatusConvert, imageStatusConvert, imageTypeConvert, teamBuyStatusConvert, teamBuyTypeConvert,
   rewardActivitySettingConvert, couponStatusConvert, couponTypeConvert, appTypeConvert, bankTypeConvert,
   timeLimitedConvert, advertisementPositionTypeConvert, couponScopeConvert, advertisementLinkTypeConvert,
-  miniOrderStatusConvert, miniHdStatusConvert, miniOrderTypeConvert, yesNoConvert, deliverStatusConvert
+  miniOrderStatusConvert, miniHdStatusConvert, miniOrderTypeConvert, yesNoConvert, deliverStatusConvert,
+  couponUseLimitConvert, validDateTypeConvert
 } from '../libs/converStatus';
 
 const mixin = {
@@ -131,6 +132,14 @@ const mixin = {
     // 小程序优惠券使用范围
     couponScopeFilter(status) {
       return couponScopeConvert(status).label;
+    },
+    // 小程序优惠券有效期类型
+    validDateTypeFilter(status) {
+      return validDateTypeConvert(status).label;
+    },
+    // 小程序优惠券使用限制
+    couponUseLimitFilter(status) {
+      return couponUseLimitConvert(status).label;
     },
     // 小程序优惠券状态
     couponTypeFilter(type) {

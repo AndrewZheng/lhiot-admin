@@ -12,6 +12,7 @@
         searchable
         border
         @on-delete="handleDelete"
+        @pro-status="statusChange"
         @on-edit="handleEdit"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
@@ -104,13 +105,22 @@
                 </FormItem>
               </i-col>
               <i-col span="6">
-                <FormItem label="商品单位:" prop="unitName">
-                  <Input v-model="addRelationDetail.unitName"></Input>
+                <FormItem label="商品单位:" prop="unitId">
+                  <Select v-model="addRelationDetail.unitId" @on-change="unitChange" style="width: 80px">
+                    <Option
+                      v-for="(item,index) in unitsList"
+                      :value="item.value"
+                      :key="index"
+                      class="ptb2-5"
+                      style="padding-left: 5px">
+                      {{ item.label }}
+                    </Option>
+                  </Select>
                 </FormItem>
               </i-col>
               <i-col span="6">
                 <FormItem label="数量/重量:" prop="standardQty">
-                  <Input v-model="addRelationDetail.standardQty"></Input>
+                  <Input v-model="addRelationDetail.standardQty" style="width: 80px"></Input>
                 </FormItem>
               </i-col>
               <i-col span="6">
@@ -126,8 +136,8 @@
                 </FormItem>
               </i-col>
                <i-col span="6">
-                <FormItem label="商品规格:" prop="standardId">
-                  {{ addRelationDetail.standardId }}
+                <FormItem label="商品规格:" prop="specification">
+                  {{ addRelationDetail.specification }}
                 </FormItem>
               </i-col>
                <i-col span="6">
@@ -189,7 +199,7 @@
             <Row>
               <i-col span="6">
                 <FormItem label="是否限会员可兑:" prop="memberLimitType">
-                   <i-switch v-model="addRelationDetail.memberLimitType" size="large">
+                   <i-switch v-model="isMemberLimit" size="large" @on-change="changeMemberLimit">
                       <span slot="open">ON</span>
                       <span slot="close">OFF</span>
                   </i-switch>
@@ -208,8 +218,8 @@
             </Row>
             <Row>
               <i-col span="12">
-                <FormItem label="兑换说明：" prop="exchangeRemark">
-                    <Input v-model="addRelationDetail.exchangeRemark" type="textarea" :autosize="{minRows: 3,maxRows: 8}" placeholder="请输入兑换说明，使用&符号换行"></Input>
+                <FormItem label="兑换说明：" prop="exchangeRemark" :label-width="100">
+                    <Input v-model="addRelationDetail.exchangeRemark" type="textarea" :autosize="{minRows: 3,maxRows: 8}" placeholder="请输入兑换说明"></Input>
                 </FormItem>
               </i-col>
             </Row>
@@ -294,7 +304,8 @@ import {
   editEntityExchange,
   getEntityTemplatePages,
   getProductStandardsPages,
-  getHdCouponActivitiesPages
+  getHdCouponActivitiesPages,
+  getProductUnits,
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
@@ -302,14 +313,14 @@ import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import { couponStatusConvert, couponTypeConvert, couponScopeConvert, couponUseLimitConvert, customPlanStatusConvert } from '@/libs/converStatus';
 import { couponStatusEnum, couponTypeEnum, couponScopeEnum, couponUseLimitEnum, validDateTypeEnum, entityTypeEnum } from '@/libs/enumerate';
-import { compareData, getSmallCouponActivity, fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber } from '@/libs/util';
+import { compareData, getSmallCouponActivity, fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber, replaceByTag, replaceByTab } from '@/libs/util';
 
 const relationDetail = {
   baseQty: 0,
 	baseUnitName: '',
   description: '',
   detailImage: null,
-  entityLimit: 0,
+  entityLimit: 999,
   entityType: 'COMMON_GOODS', //COMMON_GOODS(普通商品),PERIPHERY_GOODS(周边商品)
   exchangeRemark: '',
   id: 0,
@@ -321,13 +332,14 @@ const relationDetail = {
   rank: 0,
   realPoints: 0,
   receiveCount: 0,
-  receiveLimit: 0,
+  receiveLimit: 999,
   standardId: 0,
   standardQty: 0,
-  status: '',
+  status: 'VALID',
   unitId: 0,
   unitName: '',
   barcode: '', // inherit
+  specification: ''
 }
 
 const productStandardDetail = {
@@ -387,7 +399,7 @@ const templateRowData = {
   barcode: '',
   productCode: '',
   productName: '',
-  shelvesStatus: null,
+  shelvesStatus: 'VALID',
   page: 1,
   rows: 5
 };
@@ -450,7 +462,7 @@ const dataColumns= [
     title: '操作',
     minWidth: 80,
     key: 'handle',
-    options: ['edit', 'delete']
+    options: ['proStatus', 'edit', 'delete']
   }
 ];
 
@@ -534,52 +546,35 @@ export default {
   mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
   data() {
     return {
-      ruleInline: {
-        effectiveStartTime: [{ required: true, message: '请选择生效时间' }],
-        effectiveEndTime: [{ required: true, message: '请选择失效时间' }],
-        couponLimit: [
-          { required: true, message: '请输入发券限制数量' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
-              }
-              callback(errors);
-            }
-          }
-        ]
-      },
       relationRuleInline: {
-        effectiveStartTime: [{ required: false, message: '请选择生效时间' }],
-        effectiveEndTime: [{ required: false, message: '请选择失效时间' }],
-        couponScope: [{ required: true, message: '请选择券使用范围' }],
-        receiveLimit: [{ required: true, message: '请输入每人限兑数量' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
-              }
-              callback(errors);
+        productName: [{ required: true, message: '请先关联一个商品' }],
+        entityType: [{ required: true, message: '请选择实物类型' }],
+        points: [{ required: true, message: '请输入兑换积分' },],
+        realPoints: [{ required: true, message: '请输入促销积分' }],
+        exchangeRemark: [{ required: true, message: '请输入兑换说明' }],
+        receiveLimit: [{ required: true, message: '请输入每人限兑数量' }, {
+          validator(rule, value, callback, source, options) {
+            const errors = [];
+            if (!/^[-1-9]\d*$/.test(value)) {
+              errors.push(new Error('必须为非零整数'));
             }
+            callback(errors);
           }
-        ],
-        couponLimit: [{ required: true, message: '请输入发券限制数量' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
-              }
-              callback(errors);
+        }],
+        entityLimit: [{ required: true, message: '请输入兑换限制的总数' },{
+          validator(rule, value, callback, source, options) {
+            const errors = [];
+            if (!/^[-1-9]\d*$/.test(value)) {
+              errors.push(new Error('必须为非零整数'));
             }
+            callback(errors);
           }
-        ]
+        }]
       },
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
+      unitsList: [],
       couponStatusEnum,
       couponTypeEnum,
       couponScopeEnum,
@@ -602,34 +597,65 @@ export default {
       hdCouponTemplateData: [],
       couponTemplateTotal: 0,
       couponHdTemplateTotal: 0,
-      modalAdd: false,
       modalRelation: false
     };
   },
   computed: {
     minBuyFeeComputed() {
       return fenToYuanDot2Number(this.relationDetail.minBuyFee);
+    },
+    isMemberLimit(){
+      return this.addRelationDetail.memberLimitType !='ALL';
     }
+  },
+  created(){
+    getProductUnits().then(res => {
+      res.array.forEach(item => {
+        let map = { label: 'label', value: 'value' };
+        map.value = item.id;
+        map.label = item.unitName;
+        this.unitsList.push(map);
+      });
+    });
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);// 刷新清除上次搜索结果
     this.getTableData();
   },
   methods: {
+    changeMemberLimit(value){
+      if(value){
+        this.addRelationDetail.memberLimitType = '';
+      }else{
+        this.addRelationDetail.memberLimitType = 'ALL';
+      }
+    },
+    statusChange(params) {
+      this.addRelationDetail = _.cloneDeep(params.row);
+      if (params.row.status === 'VALID') {
+        this.addRelationDetail.status = 'INVALID';
+      } else {
+        this.addRelationDetail.status = 'VALID';
+      }
+      this.editEntityExchange();
+    },
+    unitChange(value) {
+      this.addRelationDetail.unitName = value;
+    },
     handleEdit(params) {
       this.tempModalType = this.modalType.edit;
-      console.log('row:', params.row);
       this.addRelationDetail = _.cloneDeep(params.row);
       this.modalAdd= true;
+      this.getProStandardData();
     },
     handleModalAdd(isShow){
       // 如果是创建则先清除对象
       if(isShow && this.tempModalType === this.modalType.create){
-        this.$refs.addForm.resetFields();
-        this.addRelationDetail= _.cloneDeep(relationDetail);
+        this.resetFields();
       }
     },
     addEntityExchange(){
+      this.tempModalType= this.modalType.create;
       this.modalAdd= true;
       this.getProStandardData();
     },
@@ -641,9 +667,8 @@ export default {
       this.getTableData();
     },
     resetFields() {
-      this.$refs.modalCreate.resetFields();
-      this.$refs.uploadMain.clearFileList();
-      this.uploadListMain = [];
+      this.$refs.addForm.resetFields();
+      this.addRelationDetail= _.cloneDeep(relationDetail);
     },
     getTableData() {
       getEntityExchangePages(this.searchRowData).then(res => {
@@ -691,59 +716,51 @@ export default {
       this.searchTemplateRowData= _.cloneDeep(templateRowData);
       this.handleTemplateSearch();
     },
-    handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          if (this.addRelationDetail.validDateType=='FIXED_DATE' &&
-            compareData(this.addRelationDetail.effectiveStartTime, this.addRelationDetail.effectiveEndTime)) {
-            this.$Message.error('结束时间必须大于开始时间!');
-            return;
-          }
-          if (this.tempModalType === this.modalType.edit) {
-            // 编辑状态
-            this.tempTableLoading = true;
-            editCouponExchange(this.addRelationDetail).then(res => {
-              this.modalEdit = false;
-              this.$Message.success('修改成功!');
-              this.getTableData();
-            }).finally(res => {
-              this.tempTableLoading = false;
-            });
-          }
-        } else {
-          this.$Message.error('请完善信息!');
-        }
+    createEntityExchange(){
+      if(this.addRelationDetail.realPoints > this.addRelationDetail.points){
+        this.$Message.error('促销积分不能大于兑换积分');
+        return false;
+      }
+      this.modalViewLoading = true;
+      createEntityExchange(this.addRelationDetail).then(res => {
+        this.modalViewLoading = false;
+        this.$Message.success('创建成功!');
+        this.modalAdd = false;
+        this.getTableData();
+      }).catch(() => {
+        this.modalViewLoading = false;
+      });
+    },
+    editEntityExchange(){
+      this.modalViewLoading = true;
+      editEntityExchange(this.addRelationDetail).then(res => {
+        this.modalViewLoading = false;
+        this.modalAdd= false;
+        this.$Message.success('修改成功!');
+        this.getTableData();
+      }).catch(() => {
+        this.modalViewLoading = false;
       });
     },
     handleTemplateAdd(name) {
-      this.modalViewLoading = true;
       console.log('before create:', this.addRelationDetail);
-      if(name === 'add'){
-        createEntityExchange(this.addRelationDetail).then(res => {
-          this.modalViewLoading = false;
-          this.$Message.success('创建成功!');
-          this.modalAdd = false;
-          this.getTableData();
-        }).catch(() => {
-          this.modalViewLoading = false;
-        });
-      }else{
-        editEntityExchange(this.addRelationDetail).then(res => {
-          this.modalViewLoading = false;
-          this.$Message.success('修改成功!');
-          this.modalAdd = false;
-          this.getTableData();
-        }).catch(() => {
-          this.modalViewLoading = false;
-        });
-      }
+      this.$refs.addForm.validate((valid) => {
+        if(valid){
+          if(name === 'add'){
+            this.createEntityExchange();
+          } else {
+            this.editEntityExchange();
+          }
+        }else{
+          this.$Message.error('请完善信息!');
+        }
+      });
     },
     handleChange(row, index) {
       // 关联选择相关规格的商品
       this.addRelationDetail.baseQty = row.baseQty;
       this.addRelationDetail.baseUnitName = row.baseUnit;
       this.addRelationDetail.description = row.description;
-      // TODO: 规格管理欠补充字段
       this.addRelationDetail.detailImage = row.detailImage;
       this.addRelationDetail.image= row.image;
       this.addRelationDetail.standardId = row.id;
@@ -752,6 +769,7 @@ export default {
       this.addRelationDetail.barcode = row.barcode; // 商品条码
       this.addRelationDetail.unitId = row.unitId;
       this.addRelationDetail.unitName= row.productUnit;
+      this.addRelationDetail.specification = row.specification; // 商品规格描述
       this.modalRelation=false;
     },
     handleAddClose() {

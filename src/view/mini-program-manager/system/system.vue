@@ -157,20 +157,22 @@
             <Col span="20">
             <FormItem label="描述:" prop="description">
               <Input v-model="systemDetail.description" type="textarea" placeholder="描述"></Input>
-              <div v-for="item in uploadListMain" v-if="showImage" :key="item.url" class="demo-upload-list" >
-                <template v-if="item.status === 'finished'">
-                  <div>
-                    <img :src="item.url">
-                    <div class="demo-upload-list-cover">
-                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                      <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+              <template v-if="showImage">
+                <div v-for="item in uploadListMain"  :key="item.url" class="demo-upload-list" >
+                  <template v-if="item.status === 'finished'">
+                    <div>
+                      <img :src="item.url">
+                      <div class="demo-upload-list-cover">
+                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                      </div>
                     </div>
-                  </div>
-                </template>
-                <template v-else>
-                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                </template>
-              </div>
+                  </template>
+                  <template v-else>
+                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                  </template>
+                </div>
+              </template>
               <IViewUpload
                 ref="uploadMain"
                 :default-list="defaultListMain"

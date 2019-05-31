@@ -47,7 +47,8 @@ import {
   miniOrderTypeEnum,
   YesNoEnum,
   yesNoEnum,
-  deliverStatusEnum
+  deliverStatusEnum,
+  validDateTypeEnum
 } from './enumerate';
 
 const convertFunction = (value, list) => {
@@ -193,6 +194,10 @@ export const couponScopeConvert = (value) => {
 
 export const couponUseLimitConvert = (value) => {
   return convertFunction(value, couponUseLimitEnum);
+}
+
+export const validDateTypeConvert = (value) => {
+  return convertFunction(value, validDateTypeEnum);
 }
 
 export const couponTypeConvert = (value) => {

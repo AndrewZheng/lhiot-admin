@@ -191,7 +191,7 @@
 
     <Modal
       v-model="modalEdit"
-      style="z-index: 1000"
+      :z-index="1000"
     >
       <p slot="header">
         <i-col>{{ tempModalType===modalType.edit?'修改优惠券模板':'创建优惠券模板' }}</i-col>
@@ -200,14 +200,14 @@
         <Form ref="modalEdit" :model="couponTemplateDetail" :rules="ruleInline" :label-width="80">
           <Row>
             <Col span="18">
-            <FormItem label="优惠券名称:" prop="couponName">
+            <FormItem label="优惠券名称:" prop="couponName" :label-width="100">
               <Input v-model="couponTemplateDetail.couponName" placeholder="优惠券名称"></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-            <FormItem label="优惠券类型:" prop="couponType">
+            <FormItem label="优惠券类型:" prop="couponType" :label-width="100">
               <Select v-model="couponTemplateDetail.couponType" clearable>
                 <Option
                   v-for="(item,index) in couponTypeEnum"
@@ -222,7 +222,7 @@
           </Row>
           <Row>
             <Col span="18">
-            <FormItem label="优惠金额:" prop="couponFee">
+            <FormItem label="优惠金额:" prop="couponFee" :label-width="100">
               <InputNumber
                 :min="0"
                 :value="couponFeeComputed"
@@ -233,7 +233,7 @@
           </Row>
           <Row>
             <Col span="18">
-            <FormItem label="最小购买金额:" prop="minBuyFee">
+            <FormItem label="最小购买金额:" prop="minBuyFee" :label-width="100">
               <InputNumber
                 :min="0"
                 :value="minBuyFeeComputed"
@@ -244,7 +244,7 @@
           </Row>
           <Row>
             <Col span="18">
-            <FormItem label="优惠券状态:" prop="couponStatus">
+            <FormItem label="优惠券状态:" prop="couponStatus" :label-width="100">
               <Select v-model="couponTemplateDetail.couponStatus" clearable>
                 <Option
                   v-for="(item,index) in couponStatusEnum"
@@ -274,13 +274,13 @@
           </Row> -->
           <Row>
             <Col span="18">
-            <FormItem label="使用规则:" prop="couponRules">
+            <FormItem label="使用规则:" prop="couponRules" :label-width="100">
               <Input v-model="couponTemplateDetail.couponRules" :rows="6" placeholder="使用规则" type="textarea"></Input>
             </FormItem>
              </Col>
           </Row>
           <Row>
-            <FormItem label="优惠券图片     (推荐尺寸为750X160(单位:px)):" prop="couponImage" >
+            <FormItem label="优惠券图片     (推荐尺寸为750X160(单位:px)):" prop="couponImage" :label-width="100">
               <Input v-show="false" v-model="couponTemplateDetail.couponImage" style="width: auto"></Input>
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">

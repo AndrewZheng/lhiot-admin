@@ -825,3 +825,13 @@ export const secondsToDate = (value) => {
     return value;
   }
 };
+
+export const replaceByTag = (value, tag = '&') => {
+  if (!value) { return value; }
+  return value.replace(/\n|\r/g, tag);
+}
+
+export const replaceByTab = (value) => {
+  if (!value) { return value; }
+  return value.replace(/&/g, '\n');
+}
