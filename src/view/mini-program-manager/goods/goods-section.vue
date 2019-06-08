@@ -6,7 +6,7 @@
       </i-col>
       <i-col span="21" order="3">
         <Card>
-          <h6>当前选中：{{ parentCategory.groupName }}</h6>
+          <h6>当前选中：<span class="brand-red font-sm">{{ parentCategory.groupName? parentCategory.groupName : '全部板块' }}</span></h6>
           <tables
             ref="tables"
             v-model="tableData"
@@ -40,15 +40,6 @@
                   clearable
                 >
                 </Input>
-                <Select v-model="searchRowData.applyType" placeholder="应用类型" style="padding-right: 5px;width: 100px" clearable>
-                  <Option
-                    v-for="(item,index) in appTypeEnum"
-                    :value="item.value"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px">{{ item.label }}
-                  </Option>
-                </Select>
                 <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
                   <Icon type="md-search"/>&nbsp;搜索
                 </Button>
@@ -98,7 +89,7 @@
     <!--编辑菜单 -->
     <Modal
       v-model="modalEdit"
-      :width="720"
+      :width="1000"
     >
       <p slot="header">
         <span>{{ tempModalType==modalType.create?'添加板块商品':'更换板块' }}</span>
@@ -248,7 +239,6 @@ const productStandardDetail = {
 };
 
 const roleRowData = {
-  applyType: null,
   sectionName: null,
   productName: null,
   barcode: null,
@@ -275,6 +265,155 @@ const productRowData = {
   page: 1,
   rows: 10
 };
+
+const dataColunms=[
+  {
+    type: 'selection',
+    key: '',
+    width: 60,
+    align: 'center',
+    fixed: 'left'
+  },
+  {
+    title: '商品条码',
+    key: 'barcode',
+    sortable: true,
+    align: 'center'
+  },
+  {
+    title: '商品编号',
+    key: 'productCode',
+    sortable: true,
+    align: 'center',
+    width: 150
+  },
+  {
+    title: '商品名称',
+    key: 'productName',
+    sortable: true,
+    align: 'center'
+  },
+  {
+    title: '商品规格',
+    key: 'specification',
+    sortable: true,
+    align: 'center'
+  },
+  {
+    title: '商品单位',
+    key: 'productUnit',
+    sortable: true,
+    align: 'center'
+  },
+  {
+    title: '商品价格',
+    key: 'price',
+    sortable: true,
+    align: 'center',
+    render(h, params, vm) {
+      const amount = fenToYuanDot2(params.row.price);
+      return <div>{amount}</div>;
+    }
+  },
+  {
+    title: '商品状态',
+    key: 'shelvesStatus',
+    sortable: true,
+    align: 'center',
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.shelvesStatus === 'VALID') {
+        return <div><tag color='success'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
+      } else if (row.shelvesStatus === 'INVALID') {
+        return <div><tag color='error'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
+      }else{
+        return <div><tag color='primary'>N/A</tag></div>;
+      }
+    }
+  },
+  {
+    title: '排序',
+    key: 'rank',
+    sortable: true,
+    align: 'center'
+  },
+  {
+    title: '操作',
+    key: 'handle',
+    options: ['delete']
+  }
+]
+
+const productColumns=[
+  {
+    type: 'selection',
+    key: '',
+    width: 50,
+    align: 'center',
+    fixed: 'left'
+  },
+  {
+    title: '商品条码',
+    key: 'barcode',
+    minWidth: 70,
+    align: 'center'
+  },
+  {
+    title: '商品编号',
+    key: 'productCode',
+    align: 'center',
+    minWidth: 120
+  },
+  {
+    title: '商品名称',
+    key: 'productName',
+    minWidth: 100,
+    align: 'center'
+  },
+  {
+    title: '商品规格',
+    key: 'specification',
+    minWidth: 80,
+    align: 'center'
+  },
+  {
+    title: '商品单位',
+    key: 'productUnit',
+    minWidth: 80,
+    align: 'center'
+  },
+  {
+    title: '商品价格',
+    key: 'price',
+    minWidth: 80,
+    align: 'center',
+    render(h, params, vm) {
+      const amount = fenToYuanDot2(params.row.price);
+      return <div>{amount}</div>;
+    }
+  },
+  {
+    title: '商品状态',
+    minWidth: 100,
+    key: 'shelvesStatus',
+    align: 'center',
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.shelvesStatus === 'VALID') {
+        return <div><tag color='success'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
+      } else if (row.shelvesStatus === 'INVALID') {
+        return <div><tag color='error'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
+      }
+      return <div><tag color='primary'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
+    }
+  },
+  {
+    title: '排序',
+    key: 'rank',
+    minWidth: 60,
+    align: 'center'
+  }
+]
 
 export default {
   components: {
@@ -313,183 +452,8 @@ export default {
       },
       appTypeEnum,
       menuData: [],
-      columns: [
-        {
-          type: 'selection',
-          key: '',
-          width: 60,
-          align: 'center',
-          fixed: 'left'
-        },
-        {
-          title: '商品条码',
-          key: 'barcode',
-          sortable: true,
-          align: 'center'
-        },
-        {
-          title: '商品编号',
-          key: 'productCode',
-          sortable: true,
-          align: 'center',
-          width: 150
-        },
-        {
-          title: '商品名称',
-          key: 'productName',
-          sortable: true,
-          align: 'center'
-        },
-        {
-          title: '商品规格',
-          key: 'specification',
-          sortable: true,
-          align: 'center'
-        },
-        {
-          title: '商品单位',
-          key: 'productUnit',
-          sortable: true,
-          align: 'center'
-        },
-        {
-          title: '商品价格',
-          key: 'price',
-          sortable: true,
-          align: 'center',
-          render(h, params, vm) {
-            const amount = fenToYuanDot2(params.row.price);
-            return <div>{amount}</div>;
-          }
-        },
-        {
-          title: '商品状态',
-          key: 'shelvesStatus',
-          sortable: true,
-          align: 'center',
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.shelvesStatus === 'VALID') {
-              return <div><tag color='success'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
-            } else if (row.shelvesStatus === 'INVALID') {
-              return <div><tag color='error'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
-            }else{
-              return <div><tag color='primary'>N/A</tag></div>;
-            }
-          }
-        },
-        {
-          title: '排序',
-          key: 'rank',
-          sortable: true,
-          align: 'center'
-        },
-        {
-          title: '应用类型',
-          width: 120,
-          key: 'applyType',
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.applyType === 'WXSMALL_SHOP') {
-              return <div><tag color='green'>{appTypeConvert(row.applyType).label}</tag></div>;
-            } else if (row.applyType === 'S_MALL') {
-              return <div><tag color='gold'>{appTypeConvert(row.applyType).label}</tag></div>;
-            } else {
-              return <div>{row.applyType}</div>;
-            }
-          }
-        },
-        {
-          title: '操作',
-          key: 'handle',
-          options: ['delete']
-        }
-      ],
-      productColumns: [
-        {
-          type: 'selection',
-          key: '',
-          width: 50,
-          align: 'center',
-          fixed: 'left'
-        },
-        {
-          title: '商品条码',
-          key: 'barcode',
-          minWidth: 70,
-          align: 'center'
-        },
-        {
-          title: '商品编号',
-          key: 'productCode',
-          align: 'center',
-          minWidth: 120
-        },
-        {
-          title: '商品名称',
-          key: 'productName',
-          minWidth: 100,
-          align: 'center'
-        },
-        {
-          title: '商品规格',
-          key: 'specification',
-          minWidth: 80,
-          align: 'center'
-        },
-        {
-          title: '商品单位',
-          key: 'productUnit',
-          minWidth: 80,
-          align: 'center'
-        },
-        {
-          title: '商品价格',
-          key: 'price',
-          minWidth: 80,
-          align: 'center',
-          render(h, params, vm) {
-            const amount = fenToYuanDot2(params.row.price);
-            return <div>{amount}</div>;
-          }
-        },
-        {
-          title: '商品状态',
-          minWidth: 100,
-          key: 'shelvesStatus',
-          align: 'center',
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.shelvesStatus === 'VALID') {
-              return <div><tag color='success'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
-            } else if (row.shelvesStatus === 'INVALID') {
-              return <div><tag color='error'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
-            }
-            return <div><tag color='primary'>{customPlanStatusConvert(row.shelvesStatus).label}</tag></div>;
-          }
-        },
-        {
-          title: '排序',
-          key: 'rank',
-          minWidth: 60,
-          align: 'center'
-        },
-        {
-          title: '应用类型',
-          key: 'apply',
-          width: 120,
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.apply === 'WXSMALL_SHOP') {
-              return <div><tag color='green'>{appTypeConvert(row.apply).label}</tag></div>;
-            } else if (row.apply === 'S_MALL') {
-              return <div><tag color='gold'>{appTypeConvert(row.apply).label}</tag></div>;
-            } else {
-              return <div>{row.apply}</div>;
-            }
-          }
-        }
-      ],
+      columns: dataColunms,
+      productColumns: productColumns,
       modalEdit: false,
       modalViewLoading: false,
       modalEditLoading: false,

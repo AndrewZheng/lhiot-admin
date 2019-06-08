@@ -25,39 +25,65 @@
               class="search-input mr5"
               style="width: auto"
               clearable
+            ></Input>
+            <Input
+              v-model="searchRowData.storeName"
+              placeholder="门店名称"
+              class="search-input mr5"
+              style="width: auto"
+              clearable
+            ></Input>
+            <Select
+              v-model="searchRowData.storeArea"
+              placeholder="所属区域"
+              style="padding-right: 5px;width: 100px"
+              clearable
             >
-            </Input>
-            <Input v-model="searchRowData.storeName" placeholder="门店名称" class="search-input mr5" style="width: auto" clearable></Input>
-            <Select v-model="searchRowData.storeArea" placeholder="所属区域" style="padding-right: 5px;width: 100px" clearable>
               <Option
                 v-for="(item,index) in areaList"
                 :value="item.area"
                 :key="index"
                 class="ptb2-5"
-                style="padding-left: 5px;width: 100px">{{ item.areaName }}
-              </Option>
+                style="padding-left: 5px;width: 100px"
+              >{{ item.areaName }}</Option>
             </Select>
-            <Select v-if="applicationType == null" v-model="searchRowData.applicationType" placeholder="应用类型" style="padding-right: 5px;width: 100px" clearable>
+            <Select
+              v-if="applicationType == null"
+              v-model="searchRowData.applicationType"
+              placeholder="应用类型"
+              style="padding-right: 5px;width: 100px"
+              clearable
+            >
               <Option
                 v-for="(item,index) in applicationTypeList"
                 :value="item.storeCode"
                 :key="index"
                 class="ptb2-5"
-                style="padding-left: 5px">{{ item.name }}
-              </Option>
+                style="padding-left: 5px"
+              >{{ item.name }}</Option>
             </Select>
-            <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
+            <Button
+              :loading="searchLoading"
+              class="search-btn mr5"
+              type="primary"
+              @click="handleSearch"
+            >
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
-            <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
+            <Button
+              v-waves
+              :loading="clearSearchLoading"
+              class="search-btn"
+              type="info"
+              @click="handleClear"
+            >
               <Icon type="md-refresh"/>&nbsp;清除条件
             </Button>
           </Row>
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
-            <Icon type="md-add"/>
-            创建
+            <Icon type="md-add"/>创建
           </Button>
         </div>
       </tables>
@@ -69,15 +95,13 @@
             show-sizer
             show-total
             @on-change="changePage"
-            @on-page-size-change="changePageSize"></Page>
+            @on-page-size-change="changePageSize"
+          ></Page>
         </Row>
       </div>
     </Card>
 
-    <Modal
-      v-model="modalView"
-      :mask-closable="false"
-    >
+    <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
         <span>门店信息详情</span>
       </p>
@@ -144,7 +168,9 @@
         </Row>
         <Row class-name="mb20">
           <i-col span="3">录播地址:</i-col>
-          <i-col span="21"><a :href="storeDetail.tapeUrl" target="_blank">{{ storeDetail.tapeUrl }}</a></i-col>
+          <i-col span="21">
+            <a :href="storeDetail.tapeUrl" target="_blank">{{ storeDetail.tapeUrl }}</a>
+          </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="3">直播地址:</i-col>
@@ -180,111 +206,108 @@
       </div>
     </Modal>
 
-    <Modal
-      v-model="modalEdit"
-      style="z-index: 1000"
-    >
+    <Modal v-model="modalEdit" style="z-index: 1000">
       <p slot="header">
         <span>门店基础信息</span>
       </p>
       <div class="modal-content">
         <Form ref="modalEdit" :model="storeDetail" :rules="ruleInline" :label-width="80">
           <Row>
-            <Col span="12">
-            <FormItem label="门店编码:" prop="storeCode">
-              <Input v-model="storeDetail.storeCode"></Input>
-            </FormItem>
-            </Col>
-            <Col span="12">
-            <FormItem label="门店名称:" prop="storeName">
-              <Input v-model="storeDetail.storeName" ></Input>
-            </FormItem>
-            </Col>
+            <i-col span="12">
+              <FormItem label="门店编码:" prop="storeCode">
+                <Input v-model="storeDetail.storeCode"></Input>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="门店名称:" prop="storeName">
+                <Input v-model="storeDetail.storeName"></Input>
+              </FormItem>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
-            <FormItem :label-width="85" label="所属区域:" prop="storeArea">
-              <Select v-model="storeDetail.storeArea">
-                <Option
-                  v-for="(item,index) in areaList"
-                  :value="item.area"
-                  :key="index"
-                  class="ptb2-5"
-                  style="padding-left: 5px">{{ item.areaName }}
-                </Option>
-              </Select>
-            </FormItem>
-            </Col>
-            <Col span="12">
-            <FormItem :label-width="85" label="所属旗舰店:" prop="storeFlagship">
-              <Select v-model="storeDetail.storeFlagship">
-                <Option
-                  v-for="(item,index) in flagShipList"
-                  :value="item.storeFlagship"
-                  :key="index"
-                  class="ptb2-5"
-                  style="padding-left: 5px">{{ item.storeName }}
-                </Option>
-              </Select>
-            </FormItem>
-            </Col>
+            <i-col span="12">
+              <FormItem :label-width="85" label="所属区域:" prop="storeArea">
+                <Select v-model="storeDetail.storeArea">
+                  <Option
+                    v-for="(item,index) in areaList"
+                    :value="item.area"
+                    :key="index"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                  >{{ item.areaName }}</Option>
+                </Select>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem :label-width="85" label="所属旗舰店:" prop="storeFlagship">
+                <Select v-model="storeDetail.storeFlagship">
+                  <Option
+                    v-for="(item,index) in flagShipList"
+                    :value="item.storeFlagship"
+                    :key="index"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                  >{{ item.storeName }}</Option>
+                </Select>
+              </FormItem>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
-            <FormItem :label-width="85" label="门店状态:" prop="storeStatus">
-              <Select v-model="storeDetail.storeStatus">
-                <Option
-                  v-for="(item,index) in storeStatusEnum"
-                  :value="item.value"
-                  :key="index"
-                  class="ptb2-5"
-                  style="padding-left: 5px">{{ item.label }}
-                </Option>
-              </Select>
-            </FormItem>
-            </Col>
-            <Col span="12">
-            <FormItem :label-width="85" label="门店电话:" prop="storePhone">
-              <Input v-model="storeDetail.storePhone" ></Input>
-            </FormItem>
-            </Col>
+            <i-col span="12">
+              <FormItem :label-width="85" label="门店状态:" prop="storeStatus">
+                <Select v-model="storeDetail.storeStatus">
+                  <Option
+                    v-for="(item,index) in storeStatusEnum"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem :label-width="85" label="门店电话:" prop="storePhone">
+                <Input v-model="storeDetail.storePhone"></Input>
+              </FormItem>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
-            <FormItem label="位置经度:" prop="storeCoordy">
-              <Input v-model="storeDetail.storeCoordy" ></Input>
-            </FormItem>
-            </Col>
-            <Col span="12">
-            <FormItem label="位置纬度:" prop="storeCoordx">
-              <Input v-model="storeDetail.storeCoordx" ></Input>
-            </FormItem>
-            </Col>
+            <i-col span="12">
+              <FormItem label="位置经度:" prop="storeCoordy">
+                <Input v-model="storeDetail.storeCoordy"></Input>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="位置纬度:" prop="storeCoordx">
+                <Input v-model="storeDetail.storeCoordx"></Input>
+              </FormItem>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
-            <FormItem :label-width="85" label="门店类型:" prop="storeType">
-              <Select v-model="storeDetail.storeType">
-                <Option
-                  v-for="(item,index) in storeTypeEnum"
-                  :value="item.value"
-                  :key="index"
-                  class="ptb2-5"
-                  style="padding-left: 5px">{{ item.label }}
-                </Option>
-              </Select>
-            </FormItem>
-            </Col>
+            <i-col span="12">
+              <FormItem :label-width="85" label="门店类型:" prop="storeType">
+                <Select v-model="storeDetail.storeType">
+                  <Option
+                    v-for="(item,index) in storeTypeEnum"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+            </i-col>
           </Row>
           <Row align="middle" type="flex">
-            <Col span="24">
-            <FormItem label="门店地址:" prop="storeAddress">
-              <Input v-model="storeDetail.storeAddress" type="textarea"></Input>
-            </FormItem>
-            </Col>
+            <i-col span="24">
+              <FormItem label="门店地址:" prop="storeAddress">
+                <Input v-model="storeDetail.storeAddress" type="textarea"></Input>
+              </FormItem>
+            </i-col>
           </Row>
           <Row>
-            <FormItem label="推荐使用尺寸为400X225(单位:px):" prop="storeImage" >
+            <FormItem label="推荐使用尺寸为400X225(单位:px):" prop="storeImage">
               <Input v-show="false" v-model="storeDetail.storeImage" style="width: auto"></Input>
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
@@ -307,26 +330,23 @@
                 @on-success="handleSuccessMain"
               >
                 <div slot="content">
-                  <Button type="primary">
-                    上传图片
-                  </Button>
+                  <Button type="primary">上传图片</Button>
                 </div>
               </IViewUpload>
             </FormItem>
           </Row>
           <Row align="middle" type="flex">
-            <Col span="24">
-            <FormItem label="直播地址:">
-              <Input v-model="storeDetail.videoUrl" type="textarea" ></Input>
-            </FormItem>
-            </Col>
+            <i-col span="24">
+              <FormItem label="直播地址:">
+                <Input v-model="storeDetail.videoUrl" type="textarea"></Input>
+              </FormItem>
+            </i-col>
           </Row>
         </Form>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定
-        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
       </div>
     </Modal>
 
@@ -337,9 +357,9 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
+import Tables from "_c/tables";
+import IViewUpload from "_c/iview-upload";
+import _ from "lodash";
 import {
   deleteStore,
   getStoreDetail,
@@ -347,34 +367,44 @@ import {
   getStoreAreas,
   editStore,
   createStore
-} from '@/api/mini-program';
-import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import { storeType, storeStatus, storeStatusEnum, storeTypeEnum, coordinateTypeEnum } from '../../../libs/enumerate';
-import { storeStatusConvert, storeTypeConvert, coordinateTypeConvert } from '../../../libs/converStatus';
-import { getDictionary } from '@/api/basic';
+} from "@/api/mini-program";
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import {
+  storeType,
+  storeStatus,
+  storeStatusEnum,
+  storeTypeEnum,
+  coordinateTypeEnum
+} from "@/libs/enumerate";
+import {
+  storeStatusConvert,
+  storeTypeConvert,
+  coordinateTypeConvert
+} from "@/libs/converStatus";
 
 const storeDetail = {
   storeId: 0,
-  storeCode: '',
-  storeName: '',
-  storeAddress: '',
-  storePhone: '',
-  storeImage: '',
-  storeArea: '',
-  storeStatus: '',
+  storeCode: "",
+  storeName: "",
+  storeAddress: "",
+  storePhone: "",
+  storeImage: "",
+  storeArea: "",
+  storeStatus: "",
   storeFlagship: null,
   storeType: null,
-  videoUrl: '',
-  beginAt: '',
-  endAt: '',
-  tapeUrl: '',
+  videoUrl: "",
+  beginAt: "",
+  endAt: "",
+  tapeUrl: "",
   storeCoordx: null,
   storeCoordy: null,
   coordinateType: null
 };
+
 const roleRowData = {
   storeCode: null,
   storeName: null,
@@ -396,50 +426,46 @@ export default {
       coordinateTypeEnum,
       ruleInline: {
         storeCode: [
-          { required: true, message: '请输入门店编码' },
+          { required: true, message: "请输入门店编码" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
+                errors.push(new Error("必须为整数"));
               }
               callback(errors);
             }
           }
         ],
-        storeName: [
-          { required: true, message: '请输入门店名称' }
-        ],
-        storeStatus: [
-          { required: true, message: '请选择门店状态' }
-        ],
-        storeArea: [
-          { required: true, message: '请选择门店区域' }
-        ],
-        storeFlagship: [
-          { required: true, message: '请选择旗舰店' }
-        ],
+        storeName: [{ required: true, message: "请输入门店名称" }],
+        storeStatus: [{ required: true, message: "请选择门店状态" }],
+        storeArea: [{ required: true, message: "请选择门店区域" }],
+        storeFlagship: [{ required: true, message: "请选择旗舰店" }],
         storeCoordy: [
-          { required: true, message: '请填写正确的经度', pattern: /(^[\-0-9][0-9]*(.[0-9]+)?)$/ }
+          {
+            required: true,
+            message: "请填写正确的经度",
+            pattern: /(^[\-0-9][0-9]*(.[0-9]+)?)$/
+          }
         ],
         storeCoordx: [
-          { required: true, message: '请填写正确的维度', pattern: /(^[\-0-9][0-9]*(.[0-9]+)?)$/ }
+          {
+            required: true,
+            message: "请填写正确的维度",
+            pattern: /(^[\-0-9][0-9]*(.[0-9]+)?)$/
+          }
         ],
-        coordinateType: [
-          { required: true, message: '请选择坐标系类型' }
-        ],
-        storeImage: [
-          { required: true, message: '请上传门店图片' }
-        ],
+        coordinateType: [{ required: true, message: "请选择坐标系类型" }],
+        storeImage: [{ required: true, message: "请上传门店图片" }],
         storePhone: [
-          { required: true, message: '请填写正确电话号码', pattern: /^1\d{10}$/ }
+          {
+            required: true,
+            message: "请填写正确电话号码",
+            pattern: /^1\d{10}$/
+          }
         ],
-        storeType: [
-          { required: true, message: '请选择门店类型' }
-        ],
-        storeAddress: [
-          { required: true, message: '请填写门店地址' }
-        ]
+        storeType: [{ required: true, message: "请选择门店类型" }],
+        storeAddress: [{ required: true, message: "请填写门店地址" }]
       },
       defaultListMain: [],
       uploadListMain: [],
@@ -447,83 +473,112 @@ export default {
       flagShipList: [],
       columns: [
         {
-          title: '门店编码',
-          key: 'storeCode',
+          title: "门店编码",
+          key: "storeCode",
           sortable: true,
           minWidth: 150
         },
         {
-          title: '门店名称',
-          key: 'storeName',
+          title: "门店名称",
+          key: "storeName",
           minWidth: 150
         },
         {
-          title: '所属区域',
+          title: "所属区域",
           minWidth: 150,
-          key: 'storeArea',
+          key: "storeArea",
           render: (h, params, vm) => {
             const { row } = params;
             const obj = this.areaList.find(item => {
-              return item.area === row.storeArea
-            })
+              return item.area === row.storeArea;
+            });
             if (obj) {
-              return h('span', obj.areaName + '');
+              return h("span", obj.areaName + "");
             } else {
-              return h('span', row.storeArea + '');
+              return h("span", row.storeArea + "");
             }
           }
         },
         {
-          title: '区域旗舰店',
+          title: "区域旗舰店",
           minWidth: 150,
-          key: 'storeFlagship',
-          render: (h, params) => {
+          key: "storeFlagship",
+          render: (h, params, vm) => {
             const { row } = params;
-            const obj = this.flagShipList.find(item => row.storeFlagship === item.storeFlagship)
-            // console.log('obj: ', obj);
+            const obj = this.flagShipList.find(
+              item => row.storeFlagship === item.storeFlagship
+            );
             if (obj) {
-              return h('span', obj.storeName);
+              return h("span", obj.storeName);
             }
-            return h('span', row.storeFlagship);
+            return h("span", row.storeFlagship);
           }
         },
         {
-          title: '门店状态',
+          title: "门店状态",
           minWidth: 150,
-          key: 'storeStatus',
-          render: (h, params) => {
+          key: "storeStatus",
+          render: (h, params, vm) => {
             const { row } = params;
-            if (row.storeStatus === 'ENABLED') {
-              return <div><tag color='success'>{storeStatusConvert(row.storeStatus).label}</tag></div>;
-            } else if (row.storeStatus === 'DISABLED') {
-              return <div><tag color='error'>{storeStatusConvert(row.storeStatus).label}</tag></div>;
+            if (row.storeStatus === "ENABLED") {
+              return (
+                <div>
+                  <tag color="success">
+                    {storeStatusConvert(row.storeStatus).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.storeStatus === "DISABLED") {
+              return (
+                <div>
+                  <tag color="error">
+                    {storeStatusConvert(row.storeStatus).label}
+                  </tag>
+                </div>
+              );
             }
-            return <div><tag color='primary'>{row.storeStatus}</tag></div>;
+            return (
+              <div>
+                <tag color="primary">{row.storeStatus}</tag>
+              </div>
+            );
           }
         },
         {
-          title: '联系方式',
+          title: "联系方式",
           minWidth: 150,
-          key: 'storePhone'
+          key: "storePhone"
         },
         {
-          title: '门店类型',
+          title: "门店类型",
           minWidth: 150,
           render: (h, params) => {
             const { row } = params;
-            if (row.storeType === 'FLAGSHIP_STORE') {
-              return <div><tag color='success'>{storeTypeConvert(row.storeType).label}</tag></div>;
-            } else if (row.storeType === 'ORDINARY_STORE') {
-              return <div><tag color='primary'>{storeTypeConvert(row.storeType).label}</tag></div>;
+            if (row.storeType === "FLAGSHIP_STORE") {
+              return (
+                <div>
+                  <tag color="success">
+                    {storeTypeConvert(row.storeType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.storeType === "ORDINARY_STORE") {
+              return (
+                <div>
+                  <tag color="primary">
+                    {storeTypeConvert(row.storeType).label}
+                  </tag>
+                </div>
+              );
             }
             return <div>{row.storeType}</div>;
           }
         },
         {
-          title: '操作',
+          title: "操作",
           minWidth: 230,
-          key: 'handle',
-          options: ['view', 'delete', 'edit', 'onStoreStatus']
+          key: "handle",
+          options: ["onStoreStatus", "view", "edit", "delete"]
         }
       ],
       createLoading: false,
@@ -547,12 +602,10 @@ export default {
         this.flagShipList = res.rows;
         this.getTableData();
         this.createLoading = false;
-      })
+      });
     });
   },
-  created() {
-    // this.getApplications();
-  },
+  created() {},
   methods: {
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
@@ -565,7 +618,7 @@ export default {
       this.storeDetail.storeImage = null;
     },
     handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
+      this.$refs[name].validate(valid => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -575,40 +628,43 @@ export default {
             this.editStore();
           }
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
     },
     createStore() {
       this.modalViewLoading = true;
-      createStore(this.storeDetail).then(res => {
-        this.modalViewLoading = false;
-        this.modalEdit = false;
-        this.$Message.success('创建成功!');
-        this.getTableData();
-      }).catch(() => {
-        this.modalViewLoading = false;
-        this.modalEdit = false;
-      });
+      createStore(this.storeDetail)
+        .then(res => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
+          this.$Message.success("创建成功!");
+          this.getTableData();
+        })
+        .catch(() => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
+        });
     },
     editStore() {
       this.modalViewLoading = true;
-      editStore(this.storeDetail).then(res => {
-        this.modalEdit = false;
-        this.modalViewLoading = false;
-        this.getTableData();
-      }).catch(() => {
-        this.modalEdit = false;
-        this.modalViewLoading = false;
-      });
+      editStore(this.storeDetail)
+        .then(res => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+          this.getTableData();
+        })
+        .catch(() => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+        });
     },
     addStore() {
       this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.tempModalType = this.modalType.create;
-        this.storeDetail = _.cloneDeep(storeDetail)
+        this.storeDetail = _.cloneDeep(storeDetail);
       }
-
       this.modalEdit = true;
     },
     // 删除
@@ -621,23 +677,28 @@ export default {
       this.loading = true;
       deleteStore({
         ids
-      }).then(res => {
-        const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-        if (this.tableData.length == this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
-          this.searchRowData.page -= 1;
-        }
-        this.tableDataSelected = [];
-        this.getTableData();
-      }
-      ).catch(err => {
-        console.log(err);
-        this.loading = false;
-      });
+      })
+        .then(res => {
+          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+          if (
+            this.tableData.length == this.tableDataSelected.length &&
+            this.searchRowData.page === totalPage &&
+            this.searchRowData.page !== 1
+          ) {
+            this.searchRowData.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.getTableData();
+        })
+        .catch(err => {
+          console.log(err);
+          this.loading = false;
+        });
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.image != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.image;
         mainImgArr.push(map);
@@ -670,18 +731,20 @@ export default {
       this.editStore();
     },
     getTableData() {
-      getStorePages(this.searchRowData).then(res => {
-        this.tableData = res.rows;
-        this.total = res.total;
-        this.loading = false;
-        this.searchLoading = false;
-        this.clearSearchLoading = false;
-      }).catch(error => {
-        console.log(error);
-        this.loading = false;
-        this.searchLoading = false;
-        this.clearSearchLoading = false;
-      });
+      getStorePages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.rows;
+          this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);

@@ -81,6 +81,7 @@ export const getRemember = () => {
     return false;
   }
 };
+
 export const setToken = (token) => {
   const remember = getRemember();
   if (remember) {
@@ -660,23 +661,23 @@ export const convertTreeCategory = (tree, map, isExpand = false) => {
         children
       });
     } else {
-      if (count > 0) {
-        result.push({
-          ...item,
-          disabled: true,
-          value,
-          label,
-          children
-        });
-      } else {
-        result.push({
-          ...item,
-          disabled: false,
-          value,
-          label,
-          children
-        });
-      }
+      // if (count > 0) {
+      //   result.push({
+      //     ...item,
+      //     disabled: true,
+      //     value,
+      //     label,
+      //     children
+      //   });
+      // } else {
+      result.push({
+        ...item,
+        disabled: false,
+        value,
+        label,
+        children
+      });
+      // }
     }
   });
   return result;
@@ -777,6 +778,7 @@ export const changeObjKeyName = (obj, oldKey, newKey) => {
  * @param data2
  */
 export const compareData = (date1, date2) => {
+  if (!(date1 && date2)) { return false; }
   const oDate1 = new Date(date1);
   const oDate2 = new Date(date2);
   return oDate1.getTime() > oDate2.getTime();

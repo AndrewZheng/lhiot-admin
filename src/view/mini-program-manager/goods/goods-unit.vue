@@ -47,7 +47,7 @@
         <div slot="operations">
           <Button v-waves type="success" class="mr5" @click="handleAdd">
             <Icon type="md-add"/>
-            新增
+            添加
           </Button>
           <Poptip
             confirm
@@ -77,7 +77,7 @@
       </div>
     </Card>
 
-    <Modal v-model="modalEdit">
+    <Modal v-model="modalEdit" :mask-closable="false" >
       <p slot="header">
         <span>{{ unitDetail.id == ''?'创建商品单位':'编辑商品单位' }}</span>
       </p>

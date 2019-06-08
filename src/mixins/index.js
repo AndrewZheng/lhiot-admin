@@ -49,6 +49,12 @@ const mixin = {
       }
       return number;
     },
+    fenToDiscountFilters(number) {
+      if (typeof number === 'number') {
+        return (number / 10.0).toFixed(1) + '折';
+      }
+      return number;
+    },
     // 结算状态
     settlementStatusFilters(name) {
       return settlementStatusConvert(name).label;

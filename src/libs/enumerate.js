@@ -493,7 +493,6 @@ export const relationType = {
   STORE_LIVE_TELECAST: 'STORE_LIVE_TELECAST',
   MORE_AMUSEMENT: 'MORE_AMUSEMENT',
   EXTERNAL_LINKS: 'EXTERNAL_LINKS'
-
 };
 
 export const relationTypeEnum = [
@@ -858,7 +857,7 @@ export const couponTypeEnum = [
   }
 ];
 
-// 小程序应用类型 appType WXSMALL_SHOP 微信小程序; S_MALL 拼团小程序; small 拼团小程序
+// 小程序应用类型 appType WXSMALL_SHOP 微信小程序; S_MALL 拼团小程序;
 
 export const appType = {
   WXSMALL_SHOP: 'WXSMALL_SHOP',

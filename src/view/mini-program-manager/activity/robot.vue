@@ -26,20 +26,29 @@
               class="search-input mr5"
               style="width: auto"
               clearable
+            ></Input>
+            <Button
+              :loading="searchLoading"
+              class="search-btn mr5"
+              type="primary"
+              @click="handleSearch"
             >
-            </Input>
-            <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
-            <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
+            <Button
+              v-waves
+              :loading="clearSearchLoading"
+              class="search-btn"
+              type="info"
+              @click="handleClear"
+            >
               <Icon type="md-refresh"/>&nbsp;清除条件
             </Button>
           </Row>
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
-            <Icon type="md-add"/>
-            创建
+            <Icon type="md-add"/>创建
           </Button>
           <Poptip
             confirm
@@ -49,8 +58,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>
-              删除
+              <Icon type="md-trash"/>删除
             </Button>
           </Poptip>
         </div>
@@ -63,15 +71,13 @@
             show-sizer
             show-total
             @on-change="changePage"
-            @on-page-size-change="changePageSize"></Page>
+            @on-page-size-change="changePageSize"
+          ></Page>
         </Row>
       </div>
     </Card>
 
-    <Modal
-      v-model="modalView"
-      :mask-closable="false"
-    >
+    <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
         <span>机器人详情</span>
       </p>
@@ -148,10 +154,7 @@
       </div>
     </Modal>
 
-    <Modal
-      v-model="modalEdit"
-      style="z-index: 1000"
-    >
+    <Modal v-model="modalEdit" style="z-index: 1000">
       <p slot="header">
         <i-col>{{ tempModalType===modalType.edit?'修改机器人信息':'创建机器人信息' }}</i-col>
       </p>
@@ -159,50 +162,50 @@
         <Form ref="modalEdit" :model="robotDetail" :rules="ruleInline" :label-width="80">
           <Row>
             <Col span="18">
-            <FormItem :label-width="85" label="所属门店:" prop="storeId">
-              <Select v-model="robotDetail.storeId">
-                <Option
-                  v-for="(item,index) in flagShipList"
-                  :value="item.storeId"
-                  :key="index"
-                  class="ptb2-5"
-                  style="padding-left: 5px"
-                  @click.native="selectStore(item)">{{ item.storeName }}
-                </Option>
-              </Select>
-            </FormItem>
+              <FormItem :label-width="85" label="所属门店:" prop="storeId">
+                <Select v-model="robotDetail.storeId">
+                  <Option
+                    v-for="(item,index) in flagShipList"
+                    :value="item.storeId"
+                    :key="index"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                    @click.native="selectStore(item)"
+                  >{{ item.storeName }}</Option>
+                </Select>
+              </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-            <FormItem label="用户ID:" prop="userId">
-              <InputNumber v-model="robotDetail.userId" ></InputNumber>
-            </FormItem>
+              <FormItem label="用户ID:" prop="userId">
+                <InputNumber v-model="robotDetail.userId"></InputNumber>
+              </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-            <FormItem label="收货人:" prop="receiverName">
-              <Input v-model="robotDetail.receiverName " ></Input>
-            </FormItem>
+              <FormItem label="收货人:" prop="receiverName">
+                <Input v-model="robotDetail.receiverName "></Input>
+              </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-            <FormItem label="联系方式:" prop="receiverMobile">
-              <Input v-model="robotDetail.receiverMobile" ></Input>
-            </FormItem>
+              <FormItem label="联系方式:" prop="receiverMobile">
+                <Input v-model="robotDetail.receiverMobile"></Input>
+              </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-            <FormItem label="用户昵称:" prop="nickName">
-              <Input v-model="robotDetail.nickName" ></Input>
-            </FormItem>
+              <FormItem label="用户昵称:" prop="nickName">
+                <Input v-model="robotDetail.nickName"></Input>
+              </FormItem>
             </Col>
           </Row>
           <Row>
-            <FormItem label="用户头像   推荐使用尺寸为400X225(单位:px):" prop="avater" >
+            <FormItem label="用户头像   推荐使用尺寸为400X225(单位:px):" prop="avater">
               <Input v-show="false" v-model="robotDetail.avater" style="width: auto"></Input>
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
@@ -225,9 +228,7 @@
                 @on-success="handleSuccessMain"
               >
                 <div slot="content">
-                  <Button type="primary">
-                    上传图片
-                  </Button>
+                  <Button type="primary">上传图片</Button>
                 </div>
               </IViewUpload>
             </FormItem>
@@ -236,8 +237,7 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定
-        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
       </div>
     </Modal>
 
@@ -248,34 +248,34 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
+import Tables from "_c/tables";
+import IViewUpload from "_c/iview-upload";
+import _ from "lodash";
 import {
   deleteRobot,
   getRobotPages,
   editRobot,
   createRobot,
   getStorePages
-} from '@/api/mini-program';
-import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
+} from "@/api/mini-program";
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
 
 const robotDetail = {
   id: 0,
   storeId: 0,
-  storeName: '',
+  storeName: "",
   userId: 0,
-  receiverName: '',
-  receiverMobile: '',
-  nickName: '',
-  avater: ''
+  receiverName: "",
+  receiverMobile: "",
+  nickName: "",
+  avater: ""
 };
 
 const roleRowData = {
-  nickName: '',
+  nickName: "",
   page: 1,
   rows: 10
 };
@@ -289,30 +289,22 @@ export default {
   data() {
     return {
       ruleInline: {
-        storeId: [
-          { required: true, message: '请选择门店' }
-        ],
+        storeId: [{ required: true, message: "请选择门店" }],
         userId: [
-          { required: true, message: '请输入用户id' },
-          { message: '必须为非零整数', pattern: /^[-1-9]\d*$/ }
+          { required: true, message: "请输入用户id" },
+          { message: "必须为非零整数", pattern: /^[-1-9]\d*$/ }
         ],
-        receiverName: [
-          { required: true, message: '请输入收货人' }
-        ],
+        receiverName: [{ required: true, message: "请输入收货人" }],
         receiverMobile: [
           {
             required: true,
             pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/,
-            message: '电话号码不正确',
-            trigger: 'blur'
+            message: "电话号码不正确",
+            trigger: "blur"
           }
         ],
-        nickName: [
-          { required: true, message: '请输入用户昵称' }
-        ],
-        avater: [
-          { required: true, message: '请上传用户头像' }
-        ]
+        nickName: [{ required: true, message: "请输入用户昵称" }],
+        avater: [{ required: true, message: "请上传用户头像" }]
       },
       defaultListMain: [],
       uploadListMain: [],
@@ -320,49 +312,49 @@ export default {
       flagShipList: [],
       columns: [
         {
-          type: 'selection',
+          type: "selection",
           width: 60,
-          align: 'center',
-          fixed: 'left'
+          align: "center",
+          fixed: "left"
         },
         {
-          title: '门店ID',
-          key: 'storeId'
+          title: "门店ID",
+          key: "storeId"
         },
         {
-          title: '门店名称',
-          key: 'storeName'
+          title: "门店名称",
+          key: "storeName"
         },
         {
-          title: '用户ID',
-          key: 'userId'
+          title: "用户ID",
+          key: "userId"
         },
         {
-          title: '收货人',
-          key: 'receiverName'
+          title: "收货人",
+          key: "receiverName"
         },
         {
-          title: '联系方式',
-          key: 'receiverMobile'
+          title: "联系方式",
+          key: "receiverMobile"
         },
         {
-          title: '用户昵称',
-          key: 'nickName'
+          title: "用户昵称",
+          key: "nickName"
         },
         {
-          title: '用户头像',
-          key: 'avater',
+          title: "用户头像",
+          key: "avater",
           render: (h, params, vm) => {
             const { row } = params;
-            const str = <img src={row.avater} height='60' width='60' />;
+            const str = <img src={row.avater} height="60" width="60" />;
             return <div>{str}</div>;
           }
         },
         {
-          title: '操作',
+          title: "操作",
           minWidth: 80,
-          key: 'handle',
-          options: ['view', 'edit', 'delete']
+          key: "handle",
+          options: ["view", "edit", "delete"]
         }
       ],
       createLoading: false,
@@ -382,10 +374,9 @@ export default {
     }).then(res => {
       this.flagShipList = res.rows;
       this.createLoading = false;
-    })
+    });
   },
-  created() {
-  },
+  created() {},
   methods: {
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
@@ -398,7 +389,7 @@ export default {
       this.robotDetail.storeImage = null;
     },
     handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
+      this.$refs[name].validate(valid => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -408,38 +399,42 @@ export default {
             this.editStore();
           }
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
     },
     createStore() {
       this.modalViewLoading = true;
-      createRobot(this.robotDetail).then(res => {
-        this.modalViewLoading = false;
-        this.modalEdit = false;
-        this.$Message.success('创建成功!');
-        this.getTableData();
-      }).catch(() => {
-        this.modalViewLoading = false;
-        this.modalEdit = false;
-      });
+      createRobot(this.robotDetail)
+        .then(res => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
+          this.$Message.success("创建成功!");
+          this.getTableData();
+        })
+        .catch(() => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
+        });
     },
     editStore() {
       this.modalViewLoading = true;
-      editRobot(this.robotDetail).then(res => {
-        this.modalEdit = false;
-        this.modalViewLoading = false;
-        this.getTableData();
-      }).catch(() => {
-        this.modalEdit = false;
-        this.modalViewLoading = false;
-      });
+      editRobot(this.robotDetail)
+        .then(res => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+          this.getTableData();
+        })
+        .catch(() => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+        });
     },
     addStore() {
       this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.tempModalType = this.modalType.create;
-        this.robotDetail = _.cloneDeep(robotDetail)
+        this.robotDetail = _.cloneDeep(robotDetail);
       }
 
       this.modalEdit = true;
@@ -454,23 +449,28 @@ export default {
       this.loading = true;
       deleteRobot({
         ids
-      }).then(res => {
-        const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-        if (this.tableData.length == this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
-          this.searchRowData.page -= 1;
-        }
-        this.tableDataSelected = [];
-        this.getTableData();
-      }
-      ).catch(err => {
-        console.log(err);
-        this.loading = false;
-      });
+      })
+        .then(res => {
+          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+          if (
+            this.tableData.length == this.tableDataSelected.length &&
+            this.searchRowData.page === totalPage &&
+            this.searchRowData.page !== 1
+          ) {
+            this.searchRowData.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.getTableData();
+        })
+        .catch(err => {
+          console.log(err);
+          this.loading = false;
+        });
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.avater != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.avater;
         mainImgArr.push(map);
@@ -492,18 +492,20 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
-      getRobotPages(this.searchRowData).then(res => {
-        this.tableData = res.rows;
-        this.total = res.total;
-        this.loading = false;
-        this.searchLoading = false;
-        this.clearSearchLoading = false;
-      }).catch(error => {
-        console.log(error);
-        this.loading = false;
-        this.searchLoading = false;
-        this.clearSearchLoading = false;
-      });
+      getRobotPages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.rows;
+          this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);

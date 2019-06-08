@@ -121,6 +121,7 @@ const currentCategory = {
   parentId: 0,
   groupName: ''
 };
+
 const roleRowData = {
   parentId: 0,
   page: 1,

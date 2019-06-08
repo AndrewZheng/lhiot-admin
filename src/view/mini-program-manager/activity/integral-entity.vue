@@ -106,6 +106,7 @@
               </i-col>
               <i-col span="6">
                 <FormItem label="商品单位:" prop="unitId">
+                  <Input v-model="addRelationDetail.unitName" v-show="false"></Input>
                   <Select v-model="addRelationDetail.unitId" @on-change="unitChange" style="width: 80px">
                     <Option
                       v-for="(item,index) in unitsList"
@@ -192,7 +193,9 @@
               </i-col>
                <i-col span="6">
                 <FormItem label="兑换价格" prop="price">
-                  <InputNumber :min="0" v-model="addRelationDetail.price" label="兑换价格" style="width: 160px"></InputNumber>
+                  <InputNumber :min="0" :value="exchangePrice" 
+                  label="兑换价格" style="width: 160px" 
+                  @on-change="exchangePriceChange"></InputNumber>
                 </FormItem>
               </i-col>
             </Row>
@@ -549,9 +552,25 @@ export default {
       relationRuleInline: {
         productName: [{ required: true, message: '请先关联一个商品' }],
         entityType: [{ required: true, message: '请选择实物类型' }],
-        points: [{ required: true, message: '请输入兑换积分' },],
-        realPoints: [{ required: true, message: '请输入促销积分' }],
         exchangeRemark: [{ required: true, message: '请输入兑换说明' }],
+        points: [{ required: true, message: '请输入兑换积分' },{
+           validator(rule, value, callback, source, options) {
+            const errors = [];
+            if (!/^[-1-9]\d*$/.test(value)) {
+              errors.push(new Error('必须为非零整数'));
+            }
+            callback(errors);
+          }
+        }],
+        realPoints: [{ required: true, message: '请输入促销积分' },{
+           validator(rule, value, callback, source, options) {
+            const errors = [];
+            if (!/^[-1-9]\d*$/.test(value)) {
+              errors.push(new Error('必须为非零整数'));
+            }
+            callback(errors);
+          }
+        }],
         receiveLimit: [{ required: true, message: '请输入每人限兑数量' }, {
           validator(rule, value, callback, source, options) {
             const errors = [];
@@ -601,8 +620,11 @@ export default {
     };
   },
   computed: {
+    exchangePrice(){
+      return fenToYuanDot2Number(this.addRelationDetail.price);
+    },
     minBuyFeeComputed() {
-      return fenToYuanDot2Number(this.relationDetail.minBuyFee);
+      return fenToYuanDot2Number(this.addRelationDetail.minBuyFee);
     },
     isMemberLimit(){
       return this.addRelationDetail.memberLimitType !='ALL';
@@ -625,10 +647,13 @@ export default {
   methods: {
     changeMemberLimit(value){
       if(value){
-        this.addRelationDetail.memberLimitType = '';
+        this.addRelationDetail.memberLimitType = 'MEMBER';
       }else{
         this.addRelationDetail.memberLimitType = 'ALL';
       }
+    },
+    exchangePriceChange(value){
+      this.addRelationDetail.price = yuanToFenNumber(value);
     },
     statusChange(params) {
       this.addRelationDetail = _.cloneDeep(params.row);
@@ -640,11 +665,14 @@ export default {
       this.editEntityExchange();
     },
     unitChange(value) {
-      this.addRelationDetail.unitName = value;
+      const unit = this.unitsList.find(x=>x.value == value);
+      this.addRelationDetail.unitId = value;
+      this.addRelationDetail.unitName = unit.label;
     },
     handleEdit(params) {
       this.tempModalType = this.modalType.edit;
       this.addRelationDetail = _.cloneDeep(params.row);
+      this.replaceTextByTab();
       this.modalAdd= true;
       this.getProStandardData();
     },
@@ -742,10 +770,21 @@ export default {
         this.modalViewLoading = false;
       });
     },
+    replaceTextByTab(){
+      if (this.addRelationDetail.exchangeRemark) {
+        this.addRelationDetail.exchangeRemark = replaceByTab(this.addRelationDetail.exchangeRemark);
+      }
+    },
+    replaceTextByTag(){
+      if (this.addRelationDetail.exchangeRemark) {
+        this.addRelationDetail.exchangeRemark = replaceByTag(this.addRelationDetail.exchangeRemark);
+      }
+    },
     handleTemplateAdd(name) {
       console.log('before create:', this.addRelationDetail);
       this.$refs.addForm.validate((valid) => {
         if(valid){
+          this.replaceTextByTag();
           if(name === 'add'){
             this.createEntityExchange();
           } else {
@@ -768,7 +807,7 @@ export default {
       this.addRelationDetail.productName = row.productName;
       this.addRelationDetail.barcode = row.barcode; // 商品条码
       this.addRelationDetail.unitId = row.unitId;
-      this.addRelationDetail.unitName= row.productUnit;
+      // this.addRelationDetail.unitName= row.productUnit;
       this.addRelationDetail.specification = row.specification; // 商品规格描述
       this.modalRelation=false;
     },

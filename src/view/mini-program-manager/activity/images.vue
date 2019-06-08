@@ -20,8 +20,7 @@
       >
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
-            <Icon type="md-add"/>
-            创建
+            <Icon type="md-add"/>创建
           </Button>
           <Poptip
             confirm
@@ -31,8 +30,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>
-              删除
+              <Icon type="md-trash"/>删除
             </Button>
           </Poptip>
         </div>
@@ -45,15 +43,13 @@
             show-sizer
             show-total
             @on-change="changePage"
-            @on-page-size-change="changePageSize"></Page>
+            @on-page-size-change="changePageSize"
+          ></Page>
         </Row>
       </div>
     </Card>
 
-    <Modal
-      v-model="modalView"
-      :mask-closable="false"
-    >
+    <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
         <span>图片信息详情</span>
       </p>
@@ -78,7 +74,9 @@
           <i-col span="24">
             <Row>
               <i-col span="4">图片详情:</i-col>
-              <i-col span="20"><img :src="imageDetail.imageUrl" width="100%"></i-col>
+              <i-col span="20">
+                <img :src="imageDetail.imageUrl" width="100%">
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -128,10 +126,7 @@
       </div>
     </Modal>
 
-    <Modal
-      v-model="modalEdit"
-      style="z-index: 1000"
-    >
+    <Modal v-model="modalEdit" style="z-index: 1000">
       <p slot="header">
         <i-col>{{ tempModalType===modalType.edit?'修改图片信息':'创建图片信息' }}</i-col>
       </p>
@@ -139,21 +134,21 @@
         <Form ref="modalEdit" :model="imageDetail" :rules="ruleInline" :label-width="80">
           <Row>
             <Col span="18">
-            <FormItem :label-width="85" label="图片类型:" prop="imageType">
-              <Select v-model="imageDetail.imageType">
-                <Option
-                  v-for="item in imageType"
-                  :value="item.value"
-                  :key="item.value"
-                  class="ptb2-5"
-                  style="padding-left: 5px">{{ item.label }}
-                </Option>
-              </Select>
-            </FormItem>
+              <FormItem :label-width="85" label="图片类型:" prop="imageType">
+                <Select v-model="imageDetail.imageType">
+                  <Option
+                    v-for="item in imageType"
+                    :value="item.value"
+                    :key="item.value"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
             </Col>
           </Row>
           <Row>
-            <FormItem label="图片详情     (推荐尺寸为750X160(单位:px)):" prop="imageUrl" >
+            <FormItem label="图片详情     (推荐尺寸为750X160(单位:px)):" prop="imageUrl">
               <Input v-show="false" v-model="imageDetail.imageUr" style="width: auto"></Input>
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
@@ -176,48 +171,45 @@
                 @on-success="handleSuccessMain"
               >
                 <div slot="content">
-                  <Button type="primary">
-                    上传图片
-                  </Button>
+                  <Button type="primary">上传图片</Button>
                 </div>
               </IViewUpload>
             </FormItem>
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="图片名称:" prop="imageName">
-              <Input v-model="imageDetail.imageName" placeholder="图片名称"></Input>
-            </FormItem>
+              <FormItem label="图片名称:" prop="imageName">
+                <Input v-model="imageDetail.imageName" placeholder="图片名称"></Input>
+              </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="排序序号:" prop="rank">
-              <InputNumber :min="0" v-model="imageDetail.rank" placeholder="排序序号"></InputNumber>
-            </FormItem>
+              <FormItem label="排序序号:" prop="rank">
+                <InputNumber :min="0" v-model="imageDetail.rank" placeholder="排序序号"></InputNumber>
+              </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="图片状态:" prop="imageStatus">
-              <Select v-model="imageDetail.imageStatus">
-                <Option
-                  v-for="item in imageStatus"
-                  :value="item.value"
-                  :key="item.value"
-                  class="ptb2-5"
-                  style="padding-left: 5px">{{ item.label }}
-                </Option>
-              </Select>
-            </FormItem>
+              <FormItem label="图片状态:" prop="imageStatus">
+                <Select v-model="imageDetail.imageStatus">
+                  <Option
+                    v-for="item in imageStatus"
+                    :value="item.value"
+                    :key="item.value"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
             </Col>
           </Row>
         </Form>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定
-        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
       </div>
     </Modal>
 
@@ -228,30 +220,30 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
+import Tables from "_c/tables";
+import IViewUpload from "_c/iview-upload";
+import _ from "lodash";
 import {
   deleteImage,
   getImagePages,
   editImage,
   createImage
-} from '@/api/mini-program';
-import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import { imageStatusConvert, imageTypeConvert } from '@/libs/converStatus';
+} from "@/api/mini-program";
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import { imageStatusConvert, imageTypeConvert } from "@/libs/converStatus";
 
 const imageDetail = {
   id: 0,
   imageType: null,
-  imageUrl: '',
-  imageName: '',
+  imageUrl: "",
+  imageName: "",
   rank: 0,
   imageStatus: null,
-  createUser: '',
-  createTime: ''
+  createUser: "",
+  createTime: ""
 };
 
 const roleRowData = {
@@ -268,98 +260,121 @@ export default {
   data() {
     return {
       ruleInline: {
-        imageType: [
-          { required: true, message: '请选择图片类型' }
-        ],
+        imageType: [{ required: true, message: "请选择图片类型" }],
         rank: [
-          { required: true, message: '请输入排序序号' },
-          { message: '必须为非零整数', pattern: /^[1-9]\d*$/ }
+          { required: true, message: "请输入排序序号" },
+          { message: "必须为非零整数", pattern: /^[1-9]\d*$/ }
         ],
-        imageName: [
-          { required: true, message: '请输入图片名称' }
-        ],
-        imageStatus: [
-          { required: true, message: '请选择图片状态' }
-        ],
-        imageUrl: [
-          { required: true, message: '请上传图片详情' }
-        ]
+        imageName: [{ required: true, message: "请输入图片名称" }],
+        imageStatus: [{ required: true, message: "请选择图片状态" }],
+        imageUrl: [{ required: true, message: "请上传图片详情" }]
       },
       defaultListMain: [],
       uploadListMain: [],
-      imageType: [{ label: '拼团保障图', value: 'TEAM_GUARANTEE' }],
-      imageStatus: [{ label: '关闭', value: 'OFF' }, { label: '开启', value: 'ON' }],
+      imageType: [{ label: "拼团保障图", value: "TEAM_GUARANTEE" }],
+      imageStatus: [
+        { label: "关闭", value: "OFF" },
+        { label: "开启", value: "ON" }
+      ],
       columns: [
         {
-          type: 'selection',
+          type: "selection",
           width: 60,
-          align: 'center',
-          fixed: 'left'
+          align: "center",
+          fixed: "left"
         },
         {
-          title: '图片ID',
-          key: 'id'
+          title: "图片ID",
+          key: "id"
         },
         {
-          title: '图片地址',
-          key: 'imageUrl',
+          title: "图片地址",
+          key: "imageUrl",
           tooltip: true
         },
         {
-          title: '图片',
-          key: 'imageUrl',
+          title: "图片",
+          key: "imageUrl",
           render: (h, params, vm) => {
             const { row } = params;
-            const str = <img src={row.imageUrl} width='100%' />;
+            const str = <img src={row.imageUrl} width="100%" />;
             return <div>{str}</div>;
           }
         },
         {
-          title: '图片类型',
-          key: 'imageType',
+          title: "图片类型",
+          key: "imageType",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.imageType === 'TEAM_GUARANTEE') {
-              return <div><tag color='success' type='border'>{imageTypeConvert(row.imageType).label}</tag></div>;
+            if (row.imageType === "TEAM_GUARANTEE") {
+              return (
+                <div>
+                  <tag color="success" type="border">
+                    {imageTypeConvert(row.imageType).label}
+                  </tag>
+                </div>
+              );
             }
-            return <div><tag color='primary' type='border'>{row.imageType}</tag></div>;
+            return (
+              <div>
+                <tag color="primary" type="border">
+                  {row.imageType}
+                </tag>
+              </div>
+            );
           }
         },
         {
-          title: '图片名称',
-          key: 'imageName'
+          title: "图片名称",
+          key: "imageName"
         },
         {
-          title: '排序序号',
-          key: 'rank'
+          title: "排序序号",
+          key: "rank"
         },
         {
-          title: '图片状态',
-          key: 'imageStatus',
+          title: "图片状态",
+          key: "imageStatus",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.imageStatus === 'ON') {
-              return <div><tag color='success'>{imageStatusConvert(row.imageStatus).label}</tag></div>;
-            } else if (row.imageStatus === 'OFF') {
-              return <div><tag color='error'>{imageStatusConvert(row.imageStatus).label}</tag></div>;
+            if (row.imageStatus === "ON") {
+              return (
+                <div>
+                  <tag color="success">
+                    {imageStatusConvert(row.imageStatus).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.imageStatus === "OFF") {
+              return (
+                <div>
+                  <tag color="error">
+                    {imageStatusConvert(row.imageStatus).label}
+                  </tag>
+                </div>
+              );
             }
-            return <div><tag color='primary'>{row.imageStatus}</tag></div>;
+            return (
+              <div>
+                <tag color="primary">{row.imageStatus}</tag>
+              </div>
+            );
           }
         },
         {
-          title: '创建用户',
-          key: 'createUser'
+          title: "创建用户",
+          key: "createUser"
         },
         {
-          title: '创建时间',
-          key: 'createTime',
+          title: "创建时间",
+          key: "createTime",
           minWidth: 100
         },
         {
-          title: '操作',
+          title: "操作",
           minWidth: 80,
-          key: 'handle',
-          options: ['view', 'edit', 'delete']
+          key: "handle",
+          options: ["view", "edit", "delete"]
         }
       ],
       createLoading: false,
@@ -372,8 +387,7 @@ export default {
     this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
   },
-  created() {
-  },
+  created() {},
   methods: {
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
@@ -386,7 +400,7 @@ export default {
       this.imageDetail.imageUrl = null;
     },
     handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
+      this.$refs[name].validate(valid => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -396,38 +410,42 @@ export default {
             this.editStore();
           }
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
     },
     createStore() {
       this.modalViewLoading = true;
-      createImage(this.imageDetail).then(res => {
-        this.modalViewLoading = false;
-        this.modalEdit = false;
-        this.$Message.success('创建成功!');
-        this.getTableData();
-      }).catch(() => {
-        this.modalViewLoading = false;
-        this.modalEdit = false;
-      });
+      createImage(this.imageDetail)
+        .then(res => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
+          this.$Message.success("创建成功!");
+          this.getTableData();
+        })
+        .catch(() => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
+        });
     },
     editStore() {
       this.modalViewLoading = true;
-      editImage(this.imageDetail).then(res => {
-        this.modalEdit = false;
-        this.modalViewLoading = false;
-        this.getTableData();
-      }).catch(() => {
-        this.modalEdit = false;
-        this.modalViewLoading = false;
-      });
+      editImage(this.imageDetail)
+        .then(res => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+          this.getTableData();
+        })
+        .catch(() => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+        });
     },
     addStore() {
       this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.tempModalType = this.modalType.create;
-        this.imageDetail = _.cloneDeep(imageDetail)
+        this.imageDetail = _.cloneDeep(imageDetail);
       }
       this.modalEdit = true;
     },
@@ -441,23 +459,28 @@ export default {
       this.loading = true;
       deleteImage({
         ids
-      }).then(res => {
-        const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-        if (this.tableData.length == this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
-          this.searchRowData.page -= 1;
-        }
-        this.tableDataSelected = [];
-        this.getTableData();
-      }
-      ).catch(err => {
-        console.log(err);
-        this.loading = false;
-      });
+      })
+        .then(res => {
+          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+          if (
+            this.tableData.length == this.tableDataSelected.length &&
+            this.searchRowData.page === totalPage &&
+            this.searchRowData.page !== 1
+          ) {
+            this.searchRowData.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.getTableData();
+        })
+        .catch(err => {
+          console.log(err);
+          this.loading = false;
+        });
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.imageUrl != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.imageUrl;
         mainImgArr.push(map);
@@ -479,18 +502,20 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
-      getImagePages(this.searchRowData).then(res => {
-        this.tableData = res.rows;
-        this.total = res.total;
-        this.loading = false;
-        this.searchLoading = false;
-        this.clearSearchLoading = false;
-      }).catch(error => {
-        console.log(error);
-        this.loading = false;
-        this.searchLoading = false;
-        this.clearSearchLoading = false;
-      });
+      getImagePages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.rows;
+          this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);

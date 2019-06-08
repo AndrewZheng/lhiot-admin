@@ -430,14 +430,20 @@ export default {
           }
         },
         {
-          title: '优惠金额',
+          title: '优惠/折扣额度',
           key: 'couponFee',
+          minWidth: 60,
           render(h, params) {
-            return <div>{fenToYuanDot2(params.row.couponFee)}</div>;
+            const { row } = params;
+            if(row.couponType === 'DISCOUNT_COUPON'){
+              return <div>{ fenToYuanDot2Number(row.couponFee)*10 + '折'}</div>
+            }else{
+              return <div>{fenToYuanDot2(row.couponFee)}</div>;
+            }
           }
         },
         {
-          title: '使用优惠券的最小购买金额',
+          title: '最小购买金额',
           key: 'minBuyFee',
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.minBuyFee)}</div>;
@@ -480,11 +486,11 @@ export default {
             return <div>{row.couponScope}</div>;
           }
         },
-        {
+        /* {
           title: '使用规则',
           key: 'couponRules',
           tooltips: true
-        },
+        }, */
         {
           title: '创建人',
           key: 'createUser'

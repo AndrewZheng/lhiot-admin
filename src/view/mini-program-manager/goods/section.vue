@@ -26,15 +26,6 @@
             <div slot="searchCondition">
               <Row>
                 <Input v-model="searchRowData.sectionName" placeholder="板块名称" class="search-input mr5" style="width: auto" clearable></Input>
-                <Select v-model="searchRowData.applyType" placeholder="应用类型" style="padding-right: 5px;width: 100px" clearable>
-                  <Option
-                    v-for="(item,index) in appTypeEnum"
-                    :value="item.value"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px">{{ item.label }}
-                  </Option>
-                </Select>
                 <Button :searchLoading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
                   <Icon type="md-search"/>&nbsp;搜索
                 </Button>
@@ -130,17 +121,6 @@
               </div>
             </IViewUpload>
           </FormItem>
-          <FormItem label="应用类型:" prop="applyType">
-            <Select v-model="currentCategory.applyType" placeholder="应用类型" style="padding-right: 5px;width: 100px" clearable>
-              <Option
-                v-for="(item,index) in appTypeEnum"
-                :value="item.value"
-                :key="index"
-                class="ptb2-5"
-                style="padding-left: 5px">{{ item.label }}
-              </Option>
-            </Select>
-          </FormItem>
         </Form>
       </div>
       <div slot="footer">
@@ -173,7 +153,7 @@ import { appTypeEnum } from '@/libs/enumerate';
 import { appTypeConvert } from '@/libs/converStatus';
 
 const currentCategory = {
-  applyType: null,
+  applyType: 'S_MALL', //默认就一个小程序 S_MALL
   id: 0,
   parentId: 0,
   sectionProductId: 0,
@@ -183,12 +163,68 @@ const currentCategory = {
   productStandardList: [],
   positionName: ''
 };
+
 const roleRowData = {
-  applyType: null,
   sectionName: null,
   page: 1,
   rows: 10
 };
+
+const dataColumns= [
+  {
+    type: 'selection',
+    key: '',
+    width: 60,
+    align: 'center',
+    fixed: 'left'
+  },
+  {
+    title: '板块ID',
+    key: 'id',
+    sortable: true,
+    align: 'center',
+    minWidth: 150
+  },
+  {
+    title: '板块名称',
+    key: 'sectionName',
+    sortable: true,
+    align: 'center',
+    minWidth: 150
+  },
+  {
+    title: '板块图片',
+    key: 'sectionImg',
+    sortable: true,
+    align: 'center',
+    minWidth: 150,
+    render: (h, params, vm) => {
+      const { row } = params;
+      const str = <img src={row.sectionImg} height='60' width='60' />;
+      return <div>{str}</div>;
+    }
+  },
+  {
+    title: '位置英文描述',
+    key: 'positionName',
+    sortable: true,
+    align: 'center',
+    minWidth: 150
+  },
+  {
+    title: '排序',
+    key: 'rankNo',
+    sortable: true,
+    align: 'center',
+    minWidth: 150
+  },
+  {
+    title: '操作',
+    key: 'handle',
+    minWidth: 150,
+    options: ['edit', 'delete']
+  }
+]
 
 export default {
   components: {
@@ -205,7 +241,6 @@ export default {
         sectionName: [{ required: true, message: '请输入板块名称' }],
         positionName: [{ required: true, message: '请输入板块位置英文描述:' }],
         sectionImg: [{ required: true, message: '请上传上板块图片' }],
-        applyType: [{ required: true, message: '请选择应用类型' }],
         rankNo: [
           { required: true, message: '请输入板块排序' },
           {
@@ -219,76 +254,7 @@ export default {
           }
         ]
       },
-      columns: [
-        {
-          type: 'selection',
-          key: '',
-          width: 60,
-          align: 'center',
-          fixed: 'left'
-        },
-        {
-          title: '板块ID',
-          key: 'id',
-          sortable: true,
-          align: 'center',
-          minWidth: 150
-        },
-        {
-          title: '板块名称',
-          key: 'sectionName',
-          sortable: true,
-          align: 'center',
-          minWidth: 150
-        },
-        {
-          title: '板块图片',
-          key: 'sectionImg',
-          sortable: true,
-          align: 'center',
-          minWidth: 150,
-          render: (h, params, vm) => {
-            const { row } = params;
-            const str = <img src={row.sectionImg} height='60' width='60' />;
-            return <div>{str}</div>;
-          }
-        },
-        {
-          title: '位置英文描述',
-          key: 'positionName',
-          sortable: true,
-          align: 'center',
-          minWidth: 150
-        },
-        {
-          title: '排序',
-          key: 'rankNo',
-          sortable: true,
-          align: 'center',
-          minWidth: 150
-        },
-        {
-          title: '应用类型',
-          width: 120,
-          key: 'applyType',
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.applyType === 'WXSMALL_SHOP') {
-              return <div><tag color='green'>{appTypeConvert(row.applyType).label}</tag></div>;
-            } else if (row.applyType === 'S_MALL') {
-              return <div><tag color='gold'>{appTypeConvert(row.applyType).label}</tag></div>;
-            } else {
-              return <div>{row.applyType}</div>;
-            }
-          }
-        },
-        {
-          title: '操作',
-          key: 'handle',
-          minWidth: 150,
-          options: ['edit', 'delete']
-        }
-      ],
+      columns: dataColumns,
       modalEdit: false,
       modalViewLoading: false,
       modalEditLoading: false,

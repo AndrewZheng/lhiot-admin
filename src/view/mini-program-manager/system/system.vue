@@ -476,12 +476,14 @@ export default {
         if (res && res.array.length > 0) {
           this.systemCategoriesTreeList = res.array;
           const menuList = buildMenu(res.array);
+          console.log('menuList from server:', menuList);
           const map = {
             id: 'id',
             title: 'title',
             children: 'children'
           };
           this.systemCategoryData = convertTreeCategory(menuList, map, true);
+          console.log('menuList after covert:', this.systemCategoryData);
           this.createLoading = false;
         }
       }).catch(() => {
