@@ -216,6 +216,8 @@
             </Row>
           </div>
 
+          <Divider>关联优惠券后配置</Divider>
+
           <Form
             ref="addForm"
             :model="addRelationDetail"
@@ -344,10 +346,12 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem
-                label="优惠金额:"
-                prop="couponFee"
-              >{{ addRelationDetail.couponFee | fenToYuanDot2Filters }}</FormItem>
+              <FormItem label="折扣额度:" prop="couponFee" v-if="addRelationDetail.couponType === 'DISCOUNT_COUPON'">
+                {{ addRelationDetail.couponFee | fenToDiscountFilters }}
+              </FormItem>
+              <FormItem label="优惠金额:" prop="couponFee" v-else>
+                {{ addRelationDetail.couponFee | fenToYuanDot2Filters }}
+              </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem
@@ -716,6 +720,11 @@ const dataColumns = [
         return <div>N/A</div>;
       }
     }
+  },
+  {
+    title: "已领取统计",
+    key: "receiveCount",
+    minWidth: 40
   },
   {
     title: "发券总数限制",

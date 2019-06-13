@@ -6,7 +6,7 @@
       </i-col>
       <i-col span="21" order="3">
         <Card>
-          <h6>当前选中：<span class="brand-red font-sm">{{ parentCategory.groupName? parentCategory.groupName : '全部板块' }}</span></h6>
+          <h6>当前选中：<span class="brand-red font-sm">{{ parentCategory.groupName!=''? parentCategory.groupName : '全部板块' }}</span></h6>
           <tables
             ref="tables"
             v-model="tableData"
