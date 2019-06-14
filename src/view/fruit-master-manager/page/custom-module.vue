@@ -22,18 +22,24 @@
             v-model="searchRowData.sectionName"
             placeholder="版块名称"
             class="search-input mr5"
-            style="width: 150px"></Input>
+            style="width: 150px"
+          ></Input>
           <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch">
             <Icon type="md-search"/>&nbsp;搜索
           </Button>
-          <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
+          <Button
+            v-waves
+            :loading="clearSearchLoading"
+            class="search-btn"
+            type="info"
+            @click="handleClear"
+          >
             <Icon type="md-refresh"/>&nbsp;清除条件
           </Button>
         </div>
         <div slot="operations">
-          <Button v-waves type="success" class=" mr5" @click="addChildren">
-            <Icon type="md-add"/>
-            创建
+          <Button v-waves type="success" class="mr5" @click="addChildren">
+            <Icon type="md-add"/>创建
           </Button>
           <Poptip
             confirm
@@ -43,8 +49,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>
-              删除
+              <Icon type="md-trash"/>删除
             </Button>
           </Poptip>
         </div>
@@ -57,16 +62,13 @@
             show-sizer
             show-total
             @on-change="changePage"
-            @on-page-size-change="changePageSize"></Page>
+            @on-page-size-change="changePageSize"
+          ></Page>
         </Row>
       </div>
     </Card>
 
-    <Modal
-      v-model="modalView"
-      :mask-closable="false"
-      :width="700"
-    >
+    <Modal v-model="modalView" :mask-closable="false" :width="700">
       <p slot="header">
         <span>商品板块详情</span>
       </p>
@@ -90,11 +92,7 @@
           <i-col span="16">{{ goodsModuleDetail.sort }}</i-col>
         </Row>
         <Row v-if="goodsModuleDetail.customPlanList" class-name="mb10">
-          <tables
-            :columns="tempColumnsView"
-            v-model="goodsModuleDetail.customPlanList"
-            border
-          ></tables>
+          <tables :columns="tempColumnsView" v-model="goodsModuleDetail.customPlanList" border></tables>
         </Row>
       </div>
       <div slot="footer">
@@ -102,11 +100,7 @@
       </div>
     </Modal>
 
-    <Modal
-      v-model="modalEdit"
-      :width="900"
-      :mask-closable="false"
-    >
+    <Modal v-model="modalEdit" :mask-closable="false" :width="900">
       <p slot="header">
         <span>{{ tempModalType === modalType.create?'创建板块':'编辑板块' }}</span>
       </p>
@@ -125,14 +119,11 @@
             </Row>
             <Row>
               <FormItem label="链接url:" prop="url">
-                <Input v-model="goodsModuleDetail.url" placeholder="链接url" ></Input>
+                <Input v-model="goodsModuleDetail.url" placeholder="链接url"></Input>
               </FormItem>
             </Row>
             <Row>
-              <FormItem
-                label="板块主图:建议尺寸 (xxx*xxx):"
-                prop="sectionImage"
-              >
+              <FormItem label="板块主图:建议尺寸 (xxx*xxx):" prop="sectionImage">
                 <Input v-show="false" v-model="goodsModuleDetail.sectionImage" style="width: auto"></Input>
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
@@ -155,9 +146,7 @@
                   @on-success="handleSuccessMain"
                 >
                   <div slot="content">
-                    <Button type="primary">
-                      上传图片
-                    </Button>
+                    <Button type="primary">上传图片</Button>
                   </div>
                 </IViewUpload>
               </FormItem>
@@ -172,29 +161,36 @@
             <FormItem label="关联定制:">
               <Row>
                 <Col span="10">
-                <Select
-                  ref="shelfSpecificationSelect"
-                  :remote="true"
-                  :filterable="true"
-                  :remote-method="remoteMethod"
-                  :loading="shelfSpecificationLoading">
-                  <Option
-                    v-for="(option, index) in optionsShelfSpecification"
-                    :value="option.id"
-                    :key="index"
-                    class="pb5 pt5 pl15"
-                    @click.native="selectIndex(option)">
-                    {{ option.name }}
-                  </Option>
-                </Select>
+                  <Select
+                    ref="shelfSpecificationSelect"
+                    :remote="true"
+                    :filterable="true"
+                    :remote-method="remoteMethod"
+                    :loading="shelfSpecificationLoading"
+                  >
+                    <Option
+                      v-for="(option, index) in optionsShelfSpecification"
+                      :value="option.id"
+                      :key="index"
+                      class="pb5 pt5 pl15"
+                      @click.native="selectIndex(option)"
+                    >{{ option.name }}</Option>
+                  </Select>
                 </Col>
                 <Col span="4">
-                <InputNumber :min="1" v-model="sort" class="ml20"></InputNumber>
+                  <InputNumber :min="1" v-model="sort" class="ml20"></InputNumber>
                 </Col>
                 <Col span="4">
-                <Button v-waves :loading="addTempDataLoading" span="4" class="search-btn ml20" type="primary" @click="addTempData">
-                  <Icon type="md-add"/>&nbsp;添加
-                </Button>
+                  <Button
+                    v-waves
+                    :loading="addTempDataLoading"
+                    span="4"
+                    class="search-btn ml20"
+                    type="primary"
+                    @click="addTempData"
+                  >
+                    <Icon type="md-add"/>&nbsp;添加
+                  </Button>
                 </Col>
               </Row>
             </FormItem>
@@ -210,12 +206,15 @@
           </Row>
         </Form>
       </div>
-      <div v-if="tempModalType === modalType.create || tempModalType === modalType.edit" slot="footer">
+      <div
+        v-if="tempModalType === modalType.create || tempModalType === modalType.edit"
+        slot="footer"
+      >
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定
-        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
       </div>
     </Modal>
+    
     <Modal v-model="uploadVisible" title="View Image">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
@@ -223,8 +222,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import _ from 'lodash';
+import Tables from "_c/tables";
+import _ from "lodash";
 import {
   createCustomPlanSection,
   deletetCustomPlanSection,
@@ -234,49 +233,49 @@ import {
   addCustomPlanSectionRelationBatch,
   deletetCustomPlanSectionRelationBatch,
   editCustomPlanSectionRelation
-} from '@/api/fruitermaster';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import uploadMixin from '@/mixins/uploadMixin';
-import IViewUpload from '_c/iview-upload';
+} from "@/api/fruitermaster";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import uploadMixin from "@/mixins/uploadMixin";
+import IViewUpload from "_c/iview-upload";
 
 const goodsModuleDetail = {
   id: 0,
-  sectionName: '',
-  sectionImage: '',
+  sectionName: "",
+  sectionImage: "",
   sort: 0,
-  createAt: '',
+  createAt: "",
   parentId: 0,
-  sectionCode: '',
+  sectionCode: "",
   customPlanList: []
 };
 
 const roleRowData = {
-  sectionName: '',
+  sectionName: "",
   page: 1,
   rows: 10
 };
 
 const commonTempColumns = [
   {
-    title: '定制名称',
-    key: 'name',
+    title: "定制名称",
+    key: "name",
     minWidth: 100
   },
   {
-    title: '定制描述',
-    key: 'description',
+    title: "定制描述",
+    key: "description",
     minWidth: 100
   },
   {
-    title: '排序',
-    key: 'relationSort',
+    title: "排序",
+    key: "relationSort",
     minWidth: 100,
     render: (h, params) => {
       if (params.row.isEdit) {
-        return h('div', [
-          h('InputNumber', {
+        return h("div", [
+          h("InputNumber", {
             domProps: {
               value: params.row.relationSort
             },
@@ -290,7 +289,7 @@ const commonTempColumns = [
           })
         ]);
       } else {
-        return h('div', params.row.relationSort);
+        return h("div", params.row.relationSort);
       }
     }
   }
@@ -308,26 +307,29 @@ export default {
       selectDisable: true,
       goodsModuleList: [],
       ruleInline: {
-        sectionCode: [{ required: true, message: '请填写编码' }],
-        sectionName: [{ required: true, message: '请填写板块名称' }],
-        sectionImage: [{ required: true, message: '请上传板块主图' }],
+        sectionCode: [{ required: true, message: "请填写编码" }],
+        sectionName: [{ required: true, message: "请填写板块名称" }],
+        sectionImage: [{ required: true, message: "请上传板块主图" }],
         sorting: [
-          { required: true, message: '请输入序号' },
-          { validator(rule, value, callback, source, options) {
-            const errors = [];
-            if (!/^[0-9]\d*$/.test(value)) {
-              errors.push(new Error('必须为整数'));
+          { required: true, message: "请输入序号" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[0-9]\d*$/.test(value)) {
+                errors.push(new Error("必须为整数"));
+              }
+              callback(errors);
             }
-            callback(errors);
-          } }
+          }
         ],
-        customPlanList: [{ required: true, message: '请关联定制' },
+        customPlanList: [
+          { required: true, message: "请关联定制" },
           {
             validator(rule, value, callback, source, options) {
               console.log(value);
               const errors = [];
               if (!value || value.length < 1) {
-                errors.push(new Error('请关联定制'));
+                errors.push(new Error("请关联定制"));
               }
               callback(errors);
             }
@@ -337,55 +339,53 @@ export default {
       tempColumns: [
         ...commonTempColumns,
         {
-          title: '操作',
+          title: "操作",
           minWidth: 100,
-          key: 'handle',
-          options: ['inlineEdit', 'delete']
+          key: "handle",
+          options: ["inlineEdit", "delete"]
         }
       ],
-      tempColumnsView: [
-        ...commonTempColumns
-      ],
+      tempColumnsView: [...commonTempColumns],
       columns: [
         {
-          type: 'selection',
-          key: '',
+          type: "selection",
+          key: "",
           width: 60,
-          align: 'center',
-          fixed: 'left'
+          align: "center",
+          fixed: "left"
         },
         {
-          title: 'ID',
-          key: 'id',
+          title: "ID",
+          key: "id",
           sortable: true,
           width: 80,
-          fixed: 'left'
+          fixed: "left"
         },
         {
-          title: '板块名称',
+          title: "板块名称",
           minWidth: 150,
-          key: 'sectionName'
+          key: "sectionName"
         },
         {
-          title: '链接url',
+          title: "链接url",
           minWidth: 150,
-          key: 'url'
+          key: "url"
         },
         {
-          title: '创建时间',
+          title: "创建时间",
           width: 160,
-          key: 'createAt'
+          key: "createAt"
         },
         {
-          title: '板块排序',
+          title: "板块排序",
           width: 150,
-          key: 'sort'
+          key: "sort"
         },
         {
-          title: '操作',
+          title: "操作",
           minWidth: 200,
-          key: 'handle',
-          options: ['view', 'edit', 'delete', 'relevance']
+          key: "handle",
+          options: ["view", "edit", "delete", "relevance"]
         }
       ],
       shelfSpecificationLoading: false,
@@ -406,7 +406,7 @@ export default {
   methods: {
     setDefaultUploadList(res) {
       if (res.sectionImage != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.sectionImage;
         mainImgArr.push(map);
@@ -418,21 +418,23 @@ export default {
     },
     createTableRow() {
       this.modalViewLoading = true;
-      createCustomPlanSection({ ...this.goodsModuleDetail }).then(res => {
-        this.modalViewLoading = false;
-        this.modalEdit = false;
-        this.$Message.success('创建成功!');
-        this.resetFields();
-        this.getTableData();
-      }).catch(() => {
-        this.modalViewLoading = false;
-        this.modalEdit = false;
-      });
+      createCustomPlanSection({ ...this.goodsModuleDetail })
+        .then(res => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
+          this.$Message.success("创建成功!");
+          this.resetFields();
+          this.getTableData();
+        })
+        .catch(() => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
+        });
     },
     modalHandleDelete(params) {
       if (this.tempModalType === this.modalType.create) {
-        this.goodsModuleDetail.customPlanList = this.goodsModuleDetail.customPlanList.filter((item, index) =>
-          index !== params.row.initRowIndex
+        this.goodsModuleDetail.customPlanList = this.goodsModuleDetail.customPlanList.filter(
+          (item, index) => index !== params.row.initRowIndex
         );
       } else {
         this.tempTableLoading = true;
@@ -440,25 +442,27 @@ export default {
           sectionId: this.goodsModuleDetail.id,
           planIds: params.row.id,
           sort: this.sort
-        }).then(res => {
-          this.goodsModuleDetail.customPlanList = this.goodsModuleDetail.customPlanList.filter((item, index) =>
-            index !== params.row.initRowIndex
-          );
-          this.getTableData();
-        }).finally(res => {
-          this.tempTableLoading = false;
-        });
+        })
+          .then(res => {
+            this.goodsModuleDetail.customPlanList = this.goodsModuleDetail.customPlanList.filter(
+              (item, index) => index !== params.row.initRowIndex
+            );
+            this.getTableData();
+          })
+          .finally(res => {
+            this.tempTableLoading = false;
+          });
       }
     },
     addTempData() {
       console.log(this.optionsShelfSpecification);
       if (!this.tempOptionsShelfSpecification) {
-        this.$Message.warning('请选择定制计划');
+        this.$Message.warning("请选择定制计划");
         return;
       }
       const reg = /^-?\d+$/;
       if (!reg.test(this.sort)) {
-        this.$Message.error('排序必须是整数');
+        this.$Message.error("排序必须是整数");
         return;
       }
       if (!this.goodsModuleDetail.customPlanList) {
@@ -469,7 +473,11 @@ export default {
       });
       if (!obj) {
         if (this.tempModalType === this.modalType.create) {
-          this.goodsModuleDetail.customPlanList.push({ ...this.tempOptionsShelfSpecification, relationSort: this.sort, isEdit: false });
+          this.goodsModuleDetail.customPlanList.push({
+            ...this.tempOptionsShelfSpecification,
+            relationSort: this.sort,
+            isEdit: false
+          });
         } else {
           this.addTempDataLoading = true;
           this.tempTableLoading = true;
@@ -478,24 +486,30 @@ export default {
             sectionId: this.goodsModuleDetail.id,
             planId: this.tempOptionsShelfSpecification.id,
             sort: this.sort
-          }).then(res => {
-            this.goodsModuleDetail.customPlanList.push({ ...this.tempOptionsShelfSpecification, relationSort: this.sort, isEdit: false });
-            this.addTempDataLoading = false;
-            this.tempTableLoading = false;
-            this.loading = false;
-            this.getTableData();
-          }).catch(() => {
-            this.addTempDataLoading = false;
-            this.tempTableLoading = false;
-            this.loading = false;
-          });
+          })
+            .then(res => {
+              this.goodsModuleDetail.customPlanList.push({
+                ...this.tempOptionsShelfSpecification,
+                relationSort: this.sort,
+                isEdit: false
+              });
+              this.addTempDataLoading = false;
+              this.tempTableLoading = false;
+              this.loading = false;
+              this.getTableData();
+            })
+            .catch(() => {
+              this.addTempDataLoading = false;
+              this.tempTableLoading = false;
+              this.loading = false;
+            });
         }
       } else {
-        this.$Message.warning('已经添加该商品！');
+        this.$Message.warning("已经添加该商品！");
       }
     },
     handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
+      this.$refs[name].validate(valid => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -505,7 +519,7 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
     },
@@ -513,7 +527,7 @@ export default {
       this.tempOptionsShelfSpecification = options;
     },
     remoteMethod(query) {
-      if (query !== '') {
+      if (query !== "") {
         this.handleSearchAutoComplete(query);
       } else {
         this.optionsShelfSpecification = [];
@@ -522,19 +536,23 @@ export default {
     handleSearchAutoComplete(value) {
       this.shelfSpecificationLoading = true;
       getCustomPlanPages({
-        name: value + '',
-        page: '1',
-        rows: '5'
-      }).then(res => {
-        if (res.array.length > 0) {
-          this.optionsShelfSpecification.length = 0;
-          this.optionsShelfSpecification = this.optionsShelfSpecification.concat(res.array);
-        }
-        console.log(this.optionsShelfSpecification);
-        this.shelfSpecificationLoading = false;
-      }).catch(() => {
-        this.shelfSpecificationLoading = false;
-      });
+        name: value + "",
+        page: "1",
+        rows: "5"
+      })
+        .then(res => {
+          if (res.array.length > 0) {
+            this.optionsShelfSpecification.length = 0;
+            this.optionsShelfSpecification = this.optionsShelfSpecification.concat(
+              res.array
+            );
+          }
+          console.log(this.optionsShelfSpecification);
+          this.shelfSpecificationLoading = false;
+        })
+        .catch(() => {
+          this.shelfSpecificationLoading = false;
+        });
     },
     handleSuccessMain(response, file, fileList) {
       this.uploadListMain = fileList;
@@ -561,15 +579,17 @@ export default {
       this.modalViewLoading = true;
       editCustomPlanSection({
         ...this.goodsModuleDetail
-      }).then(res => {
-        this.resetFields();
-        this.modalEdit = false;
-        this.modalViewLoading = false;
-        this.getTableData();
-      }).catch(() => {
-        this.modalEdit = false;
-        this.modalViewLoading = false;
-      });
+      })
+        .then(res => {
+          this.resetFields();
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+          this.getTableData();
+        })
+        .catch(() => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+        });
     },
     addChildren() {
       if (this.tempModalType !== this.modalType.create) {
@@ -611,30 +631,37 @@ export default {
       this.loading = true;
       deletetCustomPlanSection({
         ids
-      }).then(res => {
-        const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-        if (this.tableData.length == this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
-          this.searchRowData.page -= 1;
-        }
-        this.tableDataSelected = [];
-        this.getTableData();
-      }
-      ).catch(() => {
-        this.loading = false;
-      });
+      })
+        .then(res => {
+          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+          if (
+            this.tableData.length == this.tableDataSelected.length &&
+            this.searchRowData.page === totalPage &&
+            this.searchRowData.page !== 1
+          ) {
+            this.searchRowData.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.getTableData();
+        })
+        .catch(() => {
+          this.loading = false;
+        });
     },
     getTableData() {
-      getCustomPlanSectionsPages(this.searchRowData).then(res => {
-        this.tableData = res.array;
-        this.total = res.total;
-        this.loading = false;
-        this.clearSearchLoading = false;
-        this.searchLoading = false;
-      }).catch(() => {
-        this.loading = false;
-        this.clearSearchLoading = false;
-        this.searchLoading = false;
-      });
+      getCustomPlanSectionsPages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.array;
+          this.total = res.total;
+          this.loading = false;
+          this.clearSearchLoading = false;
+          this.searchLoading = false;
+        })
+        .catch(() => {
+          this.loading = false;
+          this.clearSearchLoading = false;
+          this.searchLoading = false;
+        });
     },
     exportExcel() {
       this.$refs.tables.exportCsv({
@@ -642,7 +669,7 @@ export default {
       });
     },
     modalHandleEdit(params) {
-      this.$set(params.row, 'isEdit', true);
+      this.$set(params.row, "isEdit", true);
       // console.log('modalHandleEidt' + JSON.stringify(params.row));
     },
     modalHandleSave(params) {
@@ -654,16 +681,18 @@ export default {
         planId: params.row.id,
         sort: params.row.relationSort
       };
-        // console.log('data' + JSON.stringify(data));
+      // console.log('data' + JSON.stringify(data));
       if (data.id !== null && data.sort > 0) {
-        editCustomPlanSectionRelation(data).then(res => {
-          this.getTableData();
-        }).finally(res => {
-          this.tempTableLoading = false;
-        });
+        editCustomPlanSectionRelation(data)
+          .then(res => {
+            this.getTableData();
+          })
+          .finally(res => {
+            this.tempTableLoading = false;
+          });
       }
       this.tempTableLoading = false;
-      this.$set(params.row, 'isEdit', false);
+      this.$set(params.row, "isEdit", false);
       // console.log('modalHandleSave' + JSON.stringify(params.row));
     }
   }
@@ -671,5 +700,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>

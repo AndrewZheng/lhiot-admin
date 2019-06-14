@@ -6,7 +6,12 @@
       </i-col>
       <i-col span="18" order="3">
         <Card>
-          <h6>当前选中：<span class="brand-red font-sm">{{ parentCategory.groupName? parentCategory.groupName: '所有父级分类' }}</span></h6>
+          <h6>
+            当前选中：
+            <span
+              class="brand-red font-sm"
+            >{{ parentCategory.groupName? parentCategory.groupName: '所有父级分类' }}</span>
+          </h6>
           <tables
             ref="tables"
             v-model="tableData"
@@ -25,23 +30,38 @@
           >
             <div slot="searchCondition">
               <Row>
-                <Input v-model="searchRowData.groupName" placeholder="分类名称" class="search-input mr5" style="width: auto" clearable></Input>
-                <Button :searchLoading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
+                <Input
+                  v-model="searchRowData.groupName"
+                  placeholder="分类名称"
+                  class="search-input mr5"
+                  style="width: auto"
+                  clearable
+                ></Input>
+                <Button
+                  :searchLoading="searchLoading"
+                  class="search-btn mr5"
+                  type="primary"
+                  @click="handleSearch"
+                >
                   <Icon type="md-search"/>&nbsp;搜索
                 </Button>
-                <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
+                <Button
+                  v-waves
+                  :loading="clearSearchLoading"
+                  class="search-btn"
+                  type="info"
+                  @click="handleClear"
+                >
                   <Icon type="md-refresh"/>&nbsp;清除条件
                 </Button>
               </Row>
             </div>
             <div slot="operations">
               <Button v-waves type="success" class="mr5" @click="createParentRow">
-                <Icon type="md-add"/>
-                添加一级分类
+                <Icon type="md-add"/>添加一级分类
               </Button>
               <Button v-waves type="success" class="mr5" @click="createSonRow">
-                <Icon type="md-add"/>
-                添加子分类
+                <Icon type="md-add"/>添加子分类
               </Button>
               <Poptip
                 confirm
@@ -51,8 +71,7 @@
                 @on-ok="poptipOk"
               >
                 <Button type="error" class="mr5">
-                  <Icon type="md-trash"/>
-                  删除
+                  <Icon type="md-trash"/>删除
                 </Button>
               </Poptip>
             </div>
@@ -65,7 +84,8 @@
                 show-sizer
                 show-total
                 @on-change="changePage"
-                @on-page-size-change="changePageSize"></Page>
+                @on-page-size-change="changePageSize"
+              ></Page>
             </Row>
           </div>
         </Card>
@@ -73,9 +93,7 @@
     </Row>
 
     <!--编辑菜单 -->
-    <Modal
-      v-model="modalEdit"
-    >
+    <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
         <i-col>{{ tempModalType===modalType.edit?'修改商品分类':'创建商品分类' }}</i-col>
       </p>
@@ -101,25 +119,25 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import _ from 'lodash';
+import Tables from "_c/tables";
+import _ from "lodash";
 import {
   createProductCategories,
   delProductCategories,
   getProductCategoriesPages,
   getProductCategoriesTree,
   editProductCategories
-} from '@/api/mini-program';
-import { buildMenu, convertTree } from '@/libs/util';
-import CommonIcon from '_c/common-icon';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
+} from "@/api/mini-program";
+import { buildMenu, convertTree } from "@/libs/util";
+import CommonIcon from "_c/common-icon";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import deleteMixin from "@/mixins/deleteMixin.js";
 
 const currentCategory = {
   id: 0,
   parentId: 0,
-  groupName: ''
+  groupName: ""
 };
 
 const roleRowData = {
@@ -139,39 +157,39 @@ export default {
       menuData: [],
       columns: [
         {
-          type: 'selection',
-          key: '',
+          type: "selection",
+          key: "",
           width: 60,
-          align: 'center',
-          fixed: 'left'
+          align: "center",
+          fixed: "left"
         },
         {
-          title: '商品分类ID',
-          key: 'id',
+          title: "商品分类ID",
+          key: "id",
           sortable: true,
-          align: 'center',
+          align: "center",
           minWidth: 150
         },
         {
-          title: '分类名',
-          key: 'groupName',
+          title: "分类名",
+          key: "groupName",
           sortable: true,
-          align: 'center',
+          align: "center",
 
           minWidth: 150
         },
         {
-          title: '操作',
-          key: 'handle',
+          title: "操作",
+          key: "handle",
           minWidth: 150,
-          options: ['edit', 'delete']
+          options: ["edit", "delete"]
         }
       ],
       modalEdit: false,
       modalViewLoading: false,
       modalEditLoading: false,
       clearSearchLoading: false,
-      currentParentName: '',
+      currentParentName: "",
       currentParentId: 0,
       currentCategory: this._.cloneDeep(currentCategory),
       parentCategory: this._.cloneDeep(currentCategory),
@@ -184,18 +202,18 @@ export default {
   },
   methods: {
     renderContent(h, { root, node, data }) {
-      if (data.type == 'PARENT') {
+      if (data.type == "PARENT") {
         return (
           <div
             style={{
-              display: 'inline-block',
-              width: '100%',
-              fontSize: '14px',
-              cursor: 'pointer'
+              display: "inline-block",
+              width: "100%",
+              fontSize: "14px",
+              cursor: "pointer"
             }}
           >
             <span>
-              <CommonIcon type='ios-folder' class='mr10'/>
+              <CommonIcon type="ios-folder" class="mr10" />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -206,25 +224,23 @@ export default {
         return (
           <div
             style={{
-              display: 'inline-block',
-              width: '100%',
-              fontSize: '14px',
-              cursor: 'pointer'
+              display: "inline-block",
+              width: "100%",
+              fontSize: "14px",
+              cursor: "pointer"
             }}
           >
             <span>
-              <CommonIcon type='ios-paper' class='mr10'/>
+              <CommonIcon type="ios-paper" class="mr10" />
             </span>
-            <span >
-              {data.title}
-            </span>
+            <span>{data.title}</span>
           </div>
         );
       }
     },
     createSonRow() {
       if (!this.parentCategory.id) {
-        this.$Message.warning('请从左侧选择一个父分类');
+        this.$Message.warning("请从左侧选择一个父分类");
         return;
       }
       this.resetRowData();
@@ -247,11 +263,11 @@ export default {
       this.modalEdit = true;
     },
     resetRowData() {
-      this.currentCategory = this._.cloneDeep(currentCategory)
+      this.currentCategory = this._.cloneDeep(currentCategory);
     },
     asyncEditOK() {
       if (!this.currentCategory.groupName) {
-        this.$Message.warning('请输入子分类');
+        this.$Message.warning("请输入子分类");
         return;
       }
       if (this.tempModalType === this.modalType.create) {
@@ -262,23 +278,23 @@ export default {
     },
     createProductCategories() {
       this.modalEditLoading = true;
-      createProductCategories(this.currentCategory
-      ).then(res => {
-
-      }).finally(res => {
-        this.initMenuList();
-        this.modalEditLoading = false;
-        this.modalEdit = false;
-      });
+      createProductCategories(this.currentCategory)
+        .then(res => {})
+        .finally(res => {
+          this.initMenuList();
+          this.modalEditLoading = false;
+          this.modalEdit = false;
+        });
     },
     editProductCategories() {
       this.modalEditLoading = true;
-      editProductCategories(this.currentCategory).then(res => {
-      }).finally(res => {
-        this.initMenuList();
-        this.modalEditLoading = false;
-        this.modalEdit = false;
-      });
+      editProductCategories(this.currentCategory)
+        .then(res => {})
+        .finally(res => {
+          this.initMenuList();
+          this.modalEditLoading = false;
+          this.modalEdit = false;
+        });
     },
     handleEditClose() {
       this.modalEdit = false;
@@ -288,17 +304,22 @@ export default {
       this.loading = true;
       delProductCategories({
         ids
-      }).then(res => {
-        const totalPage = Math.ceil(this.total / this.pageSize);
-        if (this.tableData.length === this.tableDataSelected.length && this.page === totalPage && this.page !== 1) {
-          this.page -= 1;
-        }
-        this.tableDataSelected = [];
-        this.initMenuList();
-      }
-      ).catch(() => {
-        this.loading = false;
-      });
+      })
+        .then(res => {
+          const totalPage = Math.ceil(this.total / this.pageSize);
+          if (
+            this.tableData.length === this.tableDataSelected.length &&
+            this.page === totalPage &&
+            this.page !== 1
+          ) {
+            this.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.initMenuList();
+        })
+        .catch(() => {
+          this.loading = false;
+        });
     },
     // 编辑分类
     handleEdit(params) {
@@ -326,8 +347,8 @@ export default {
         if (res && res.array.length > 0) {
           const menuList = buildMenu(res.array);
           const map = {
-            title: 'title',
-            children: 'children'
+            title: "title",
+            children: "children"
           };
           this.menuData = convertTree(menuList, map, true);
           if (this.menuData.length > 0) {
@@ -340,17 +361,17 @@ export default {
     handleClick({ root, node, data }) {
       this.loading = true;
       // 递归展开当前节点
-      if (typeof data.expand === 'undefined') {
-          this.$set(data, 'expend', false);
+      if (typeof data.expand === "undefined") {
+        this.$set(data, "expend", false);
         if (data.children) {
           this.expandChildren(data.children);
         }
       }
 
-      if(typeof data.selected ==='undefined'){
-        this.$set(data, 'selected', true);
-      }else{
-        this.$set(data, 'selected', !data.selected);
+      if (typeof data.selected === "undefined") {
+        this.$set(data, "selected", true);
+      } else {
+        this.$set(data, "selected", !data.selected);
       }
 
       this.parentCategory.id = data.id;
@@ -362,8 +383,8 @@ export default {
     },
     expandChildren(array) {
       array.forEach(item => {
-        if (typeof item.expand === 'undefined') {
-          this.$set(item, 'expend', false);
+        if (typeof item.expand === "undefined") {
+          this.$set(item, "expend", false);
         } else {
           item.expand = !item.expand;
         }
@@ -382,14 +403,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .img {
-    width: 150px;
-    height: auto !important
-  }
+.img {
+  width: 150px;
+  height: auto !important;
+}
 
-  .add-image {
-    line-height: 48px;
-    vertical-align: text-bottom;
-    margin-right: 10px;
-  }
+.add-image {
+  line-height: 48px;
+  vertical-align: text-bottom;
+  margin-right: 10px;
+}
 </style>

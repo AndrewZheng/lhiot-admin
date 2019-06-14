@@ -206,7 +206,7 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" style="z-index: 1000">
+    <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <span>门店基础信息</span>
       </p>

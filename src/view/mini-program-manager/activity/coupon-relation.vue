@@ -116,7 +116,7 @@
       </div>
     </Card>
 
-    <Modal v-model="modalAdd" :width="1000" :z-index="1000">
+    <Modal v-model="modalAdd" :width="1000" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <i-col>{{ tempModalType == 'addTemplate'?'添加系统优惠券':'添加海鼎优惠券' }}</i-col>
       </p>
@@ -330,7 +330,7 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :z-index="1000">
+    <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <i-col>修改优惠券活动和模板关联</i-col>
       </p>

@@ -192,7 +192,8 @@
 
     <Modal
       v-model="modalEdit"
-      style="z-index: 1000"
+      :mask-closable="false"
+      :z-index="1000"
     >
       <p slot="header">
         <span>修改商品基础信息</span>

@@ -25,19 +25,34 @@
           >
             <div slot="searchCondition">
               <Row>
-                <Input v-model="searchRowData.categoryName" placeholder="分类名称" class="search-input mr5" style="width: auto"></Input>
-                <Button :loading="loading" class="search-btn mr5" type="primary" @click="handleSearch">
+                <Input
+                  v-model="searchRowData.categoryName"
+                  placeholder="分类名称"
+                  class="search-input mr5"
+                  style="width: auto"
+                ></Input>
+                <Button
+                  :loading="loading"
+                  class="search-btn mr5"
+                  type="primary"
+                  @click="handleSearch"
+                >
                   <Icon type="md-search"/>&nbsp;搜索
                 </Button>
-                <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
+                <Button
+                  v-waves
+                  :loading="clearSearchLoading"
+                  class="search-btn"
+                  type="info"
+                  @click="handleClear"
+                >
                   <Icon type="md-refresh"/>&nbsp;清除条件
                 </Button>
               </Row>
             </div>
             <div slot="operations">
               <Button v-waves type="success" class="mr5" @click="createTableRow">
-                <Icon type="md-add"/>
-                添加
+                <Icon type="md-add"/>添加
               </Button>
               <Poptip
                 confirm
@@ -47,8 +62,7 @@
                 @on-ok="poptipOk"
               >
                 <Button type="error" class="mr5">
-                  <Icon type="md-trash"/>
-                  删除
+                  <Icon type="md-trash"/>删除
                 </Button>
               </Poptip>
             </div>
@@ -61,7 +75,8 @@
                 show-sizer
                 show-total
                 @on-change="changePage"
-                @on-page-size-change="changePageSize"></Page>
+                @on-page-size-change="changePageSize"
+              ></Page>
             </Row>
           </div>
         </Card>
@@ -69,9 +84,7 @@
     </Row>
 
     <!--编辑菜单 -->
-    <Modal
-      v-model="modalEdit"
-    >
+    <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
         <span>编辑商品分类</span>
       </p>
@@ -100,26 +113,26 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import _ from 'lodash';
+import Tables from "_c/tables";
+import _ from "lodash";
 import {
   createFaqCategories,
   deleteFaqCategories,
   getFaqCategoriesPages,
   getFaqCategoriesTree,
   editFaqCategories
-} from '@/api/mini-program';
-import { buildMenu, convertTree } from '@/libs/util';
-import CommonIcon from '_c/common-icon';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
+} from "@/api/mini-program";
+import { buildMenu, convertTree } from "@/libs/util";
+import CommonIcon from "_c/common-icon";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import deleteMixin from "@/mixins/deleteMixin.js";
 
 const faqCategory = {
   id: 0,
   parentId: 0,
-  categoryName: '',
-  categoryEnName: '',
+  categoryName: "",
+  categoryEnName: "",
   faqs: null
 };
 
@@ -138,57 +151,57 @@ export default {
   data() {
     return {
       ruleInline: {
-        categoryName: { required: true, message: '请填写FAQ分类中文名称' },
-        categoryEnName: { required: true, message: '请填写FAQ分类英文名称' }
+        categoryName: { required: true, message: "请填写FAQ分类中文名称" },
+        categoryEnName: { required: true, message: "请填写FAQ分类英文名称" }
       },
       menuData: [],
       columns: [
         {
-          type: 'selection',
-          key: '',
+          type: "selection",
+          key: "",
           width: 60,
-          align: 'center',
-          fixed: 'left'
+          align: "center",
+          fixed: "left"
         },
         {
-          title: '分类ID',
-          key: 'id',
+          title: "分类ID",
+          key: "id",
           sortable: true,
-          align: 'center',
+          align: "center",
           minWidth: 150
         },
         {
-          title: '父级ID',
-          key: 'parentId',
+          title: "父级ID",
+          key: "parentId",
           sortable: true,
-          align: 'center',
+          align: "center",
           minWidth: 150
         },
         {
-          title: '分类名称',
-          key: 'categoryName',
+          title: "分类名称",
+          key: "categoryName",
           sortable: true,
-          align: 'center',
+          align: "center",
           minWidth: 150
         },
         {
-          title: '分类英文名称',
-          key: 'categoryEnName',
+          title: "分类英文名称",
+          key: "categoryEnName",
           sortable: true,
-          align: 'center',
+          align: "center",
           minWidth: 150
         },
         {
-          title: '操作',
-          key: 'handle',
+          title: "操作",
+          key: "handle",
           minWidth: 150,
-          options: ['edit', 'delete']
+          options: ["edit", "delete"]
         }
       ],
       modalEdit: false,
       modalViewLoading: false,
       modalEditLoading: false,
-      currentParentName: '',
+      currentParentName: "",
       currentParentId: 0,
       faqCategory: this._.cloneDeep(faqCategory),
       parentCategory: this._.cloneDeep(faqCategory),
@@ -200,18 +213,18 @@ export default {
   },
   methods: {
     renderContent(h, { root, node, data }) {
-      if (data.type == 'PARENT') {
+      if (data.type == "PARENT") {
         return (
           <div
             style={{
-              display: 'inline-block',
-              width: '100%',
-              fontSize: '14px',
-              cursor: 'pointer'
+              display: "inline-block",
+              width: "100%",
+              fontSize: "14px",
+              cursor: "pointer"
             }}
           >
             <span>
-              <CommonIcon type='ios-folder' class='mr10'/>
+              <CommonIcon type="ios-folder" class="mr10" />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -222,18 +235,16 @@ export default {
         return (
           <div
             style={{
-              display: 'inline-block',
-              width: '100%',
-              fontSize: '14px',
-              cursor: 'pointer'
+              display: "inline-block",
+              width: "100%",
+              fontSize: "14px",
+              cursor: "pointer"
             }}
           >
             <span>
-              <CommonIcon type='ios-paper' class='mr10'/>
+              <CommonIcon type="ios-paper" class="mr10" />
             </span>
-            <span >
-              {data.title}
-            </span>
+            <span>{data.title}</span>
           </div>
         );
       }
@@ -258,24 +269,24 @@ export default {
             this.faqCategory.parentId = this.parentCategory.id;
           }
           if (this.tempModalType === this.modalType.create) {
-            createFaqCategories(this.faqCategory
-            ).then(res => {
-
-            }).finally(res => {
-              this.initMenuList();
-              this.modalEditLoading = false;
-              this.modalEdit = false;
-            });
+            createFaqCategories(this.faqCategory)
+              .then(res => {})
+              .finally(res => {
+                this.initMenuList();
+                this.modalEditLoading = false;
+                this.modalEdit = false;
+              });
           } else if (this.tempModalType === this.modalType.edit) {
-            editFaqCategories(this.faqCategory).then(res => {
-            }).finally(res => {
-              this.initMenuList();
-              this.modalEditLoading = false;
-              this.modalEdit = false;
-            });
+            editFaqCategories(this.faqCategory)
+              .then(res => {})
+              .finally(res => {
+                this.initMenuList();
+                this.modalEditLoading = false;
+                this.modalEdit = false;
+              });
           }
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
     },
@@ -287,17 +298,22 @@ export default {
       this.loading = true;
       deleteFaqCategories({
         ids
-      }).then(res => {
-        const totalPage = Math.ceil(this.total / this.pageSize);
-        if (this.tableData.length === this.tableDataSelected.length && this.page === totalPage && this.page !== 1) {
-          this.page -= 1;
-        }
-        this.tableDataSelected = [];
-        this.initMenuList();
-      }
-      ).catch(() => {
-        this.loading = false;
-      });
+      })
+        .then(res => {
+          const totalPage = Math.ceil(this.total / this.pageSize);
+          if (
+            this.tableData.length === this.tableDataSelected.length &&
+            this.page === totalPage &&
+            this.page !== 1
+          ) {
+            this.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.initMenuList();
+        })
+        .catch(() => {
+          this.loading = false;
+        });
     },
     // 编辑分类
     handleEdit(params) {
@@ -324,8 +340,8 @@ export default {
         if (res && res.array.length > 0) {
           const menuList = buildMenu(res.array);
           const map = {
-            title: 'title',
-            children: 'children'
+            title: "title",
+            children: "children"
           };
           this.menuData = convertTree(menuList, map, true);
           if (this.menuData.length > 0) {
@@ -338,9 +354,9 @@ export default {
     handleClick({ root, node, data }) {
       this.loading = true;
       // 展开当前节点
-      if (typeof data.expand === 'undefined') {
+      if (typeof data.expand === "undefined") {
         // this.$set(data, 'expend', true);
-        this.$set(data, 'expend', false);
+        this.$set(data, "expend", false);
         // if (data.children) {
         if (data.children) {
           this.expandChildren(data.children);
@@ -357,10 +373,10 @@ export default {
     },
     expandChildren(array) {
       array.forEach(item => {
-        if (typeof item.expand === 'undefined') {
+        if (typeof item.expand === "undefined") {
           // this.$set(item, 'expend', true);
-          this.$set(item, 'expend', false);
-        // } else {
+          this.$set(item, "expend", false);
+          // } else {
         } else {
           item.expand = !item.expand;
         }
@@ -379,14 +395,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .img {
-    width: 150px;
-    height: auto !important
-  }
+.img {
+  width: 150px;
+  height: auto !important;
+}
 
-  .add-image {
-    line-height: 48px;
-    vertical-align: text-bottom;
-    margin-right: 10px;
-  }
+.add-image {
+  line-height: 48px;
+  vertical-align: text-bottom;
+  margin-right: 10px;
+}
 </style>

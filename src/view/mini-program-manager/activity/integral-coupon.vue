@@ -488,6 +488,7 @@
 
     <Modal
       v-model="modalEdit"
+      :mask-closable="false"
       :width="1000"
       draggable
     >

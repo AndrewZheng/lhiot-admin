@@ -150,6 +150,7 @@
     <!-- 定制计划新增和修改 -->
     <Modal
       v-model="modalEdit"
+      :mask-closable="false"
       :width="650"
     >
       <p slot="header">

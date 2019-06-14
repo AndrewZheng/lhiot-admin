@@ -191,6 +191,7 @@
 
     <Modal
       v-model="modalEdit"
+      :mask-closable="false"
       :z-index="1000"
     >
       <p slot="header">

@@ -160,7 +160,7 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :width="720" :z-index="1000">
+    <Modal v-model="modalEdit" :width="720" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <i-col>{{ tempModalType==modalType.edit?'修改限时抢购活动':(tempModalType==modalType.create?'创建限时抢购活动': '限时抢购活动和商品关联') }}</i-col>
       </p>

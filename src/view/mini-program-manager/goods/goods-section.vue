@@ -89,6 +89,7 @@
     <!--编辑菜单 -->
     <Modal
       v-model="modalEdit"
+      :mask-closable="false"
       :width="1000"
     >
       <p slot="header">

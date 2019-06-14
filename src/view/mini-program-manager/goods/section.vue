@@ -71,6 +71,7 @@
     <!--编辑菜单 -->
     <Modal
       v-model="modalEdit"
+      :mask-closable="false"
     >
       <p slot="header">
         <span>{{ currentCategory.id == ''?'创建板块':'编辑板块' }}</span>

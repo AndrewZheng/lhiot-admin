@@ -224,6 +224,7 @@
         </Button>
       </div>
     </Modal>
+    
     <Modal v-model="uploadVisible" title="View Image">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>

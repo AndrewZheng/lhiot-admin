@@ -212,7 +212,7 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" style="z-index: 1000">
+    <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <i-col>{{ tempModalType==modalType.edit?'修改分享红包活动':(tempModalType==modalType.create?'创建分享红包活动': '分享红包配置') }}</i-col>
       </p>

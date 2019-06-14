@@ -90,7 +90,8 @@
 
     <Modal
       v-model="modalEdit"
-      style="z-index: 1000"
+      :mask-closable="false"
+      :z-index="1000"
     >
       <p slot="header">
         <i-col>{{ tempModalType===modalType.edit?'修改系统参数分类':'创建系统参数分类' }}</i-col>

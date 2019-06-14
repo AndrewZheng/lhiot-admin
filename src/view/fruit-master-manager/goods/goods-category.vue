@@ -60,6 +60,7 @@
     <!--编辑菜单 -->
     <Modal
       v-model="modalEdit"
+      :mask-closable="false"
     >
       <p slot="header">
         <span>编辑商品分类</span>

@@ -22,63 +22,79 @@
             v-model="searchRowData.description"
             placeholder="广告位描述"
             class="search-input mr5"
-            style="width: auto"></Input>
+            style="width: auto"
+          ></Input>
           <Input
             :clearable="true"
             v-model="searchRowData.postionName"
             placeholder="广告位英文名"
             class="search-input mr5"
-            style="width: auto"></Input>
+            style="width: auto"
+          ></Input>
           <Select
             v-model="searchRowData.timeLimited"
             :clearable="true"
             style="padding-right: 5px;width: 120px"
-            placeholder="时间限制">
+            placeholder="时间限制"
+          >
             <Option
               v-for="item in timeLimitedEnum"
               :value="item.value"
               :key="`search-col-${item.value}`"
               class="ml15 mt10"
-              style="padding-left: 5px">{{ item.label }}
-            </Option>
+              style="padding-left: 5px"
+            >{{ item.label }}</Option>
           </Select>
           <Select
             v-model="searchRowData.applicationType"
             :clearable="true"
             style="padding-right: 5px;width: 120px"
-            placeholder="应用类型">
+            placeholder="应用类型"
+          >
             <Option
               v-for="item in appTypeEnum"
               :value="item.value"
               :key="`search-col-${item.value}`"
               class="ml15 mt10"
-              style="padding-left: 5px">{{ item.label }}
-            </Option>
+              style="padding-left: 5px"
+            >{{ item.label }}</Option>
           </Select>
           <Select
             v-model="searchRowData.positionType"
             :clearable="true"
             style="padding-right: 5px;width: 120px"
-            placeholder="广告位类型">
+            placeholder="广告位类型"
+          >
             <Option
               v-for="item in advertisementPositionTypeEnum"
               :value="item.value"
               :key="`search-col-${item.value}`"
               class="ml15 mt10"
-              style="padding-left: 5px">{{ item.label }}
-            </Option>
+              style="padding-left: 5px"
+            >{{ item.label }}</Option>
           </Select>
-          <Button v-waves :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
+          <Button
+            v-waves
+            :loading="searchLoading"
+            class="search-btn mr5"
+            type="primary"
+            @click="handleSearch"
+          >
             <Icon type="md-search"/>&nbsp;搜索
           </Button>
-          <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
+          <Button
+            v-waves
+            :loading="clearSearchLoading"
+            class="search-btn"
+            type="info"
+            @click="handleClear"
+          >
             <Icon type="md-refresh"/>&nbsp;清除条件
           </Button>
         </div>
         <div slot="operations">
           <Button v-waves type="success" class="mr5" @click="createTableRow">
-            <Icon type="md-add"/>
-            添加
+            <Icon type="md-add"/>添加
           </Button>
           <Poptip
             confirm
@@ -88,8 +104,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>
-              删除
+              <Icon type="md-trash"/>删除
             </Button>
           </Poptip>
         </div>
@@ -102,15 +117,13 @@
             show-sizer
             show-total
             @on-change="changePage"
-            @on-page-size-change="changePageSize"></Page>
+            @on-page-size-change="changePageSize"
+          ></Page>
         </Row>
       </div>
     </Card>
 
-    <Modal
-      v-model="modalView"
-      :mask-closable="false"
-    >
+    <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
         <span>广告位详情</span>
       </p>
@@ -159,7 +172,9 @@
           <i-col span="24">
             <Row>
               <i-col span="6">广告位类型:</i-col>
-              <i-col span="18">{{ advertisementPositionDetail.positionType | advertisementPositionTypeFilter }}</i-col>
+              <i-col
+                span="18"
+              >{{ advertisementPositionDetail.positionType | advertisementPositionTypeFilter }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -170,51 +185,69 @@
     </Modal>
 
     <!--编辑菜单 -->
-    <Modal
-      v-model="modalEdit"
-    >
+    <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
         <span>{{ tempModalType===modalType.edit?'修改广告位':'创建广告' }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :label-width="100" :model="advertisementPositionDetail" :rules="ruleInline">
+        <Form
+          ref="modalEdit"
+          :label-width="100"
+          :model="advertisementPositionDetail"
+          :rules="ruleInline"
+        >
           <FormItem label="广告位描述:" prop="description">
             <Input v-model="advertisementPositionDetail.description" placeholder="标题"></Input>
           </FormItem>
           <FormItem label="广告位英文名:" prop="postionName">
-            <Input v-model="advertisementPositionDetail.postionName" placeholder="内容"> </Input>
+            <Input v-model="advertisementPositionDetail.postionName" placeholder="内容"></Input>
           </FormItem>
           <FormItem label="时间限制:" prop="timeLimited">
-            <Select v-model="advertisementPositionDetail.timeLimited" placeholder="时间限制" style="padding-right: 5px;width: 100px" clearable>
+            <Select
+              v-model="advertisementPositionDetail.timeLimited"
+              placeholder="时间限制"
+              style="padding-right: 5px;width: 100px"
+              clearable
+            >
               <Option
                 v-for="(item,index) in timeLimitedEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
-                style="padding-left: 5px">{{ item.label }}
-              </Option>
+                style="padding-left: 5px"
+              >{{ item.label }}</Option>
             </Select>
           </FormItem>
           <FormItem label="应用类型:" prop="applicationType">
-            <Select v-model="advertisementPositionDetail.applicationType" placeholder="应用类型" style="padding-right: 5px;width: 100px" clearable>
+            <Select
+              v-model="advertisementPositionDetail.applicationType"
+              placeholder="应用类型"
+              style="padding-right: 5px;width: 100px"
+              clearable
+            >
               <Option
                 v-for="(item,index) in appTypeEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
-                style="padding-left: 5px">{{ item.label }}
-              </Option>
+                style="padding-left: 5px"
+              >{{ item.label }}</Option>
             </Select>
           </FormItem>
           <FormItem label="广告位类型:" prop="positionType">
-            <Select v-model="advertisementPositionDetail.positionType" placeholder="广告位类型" style="padding-right: 5px;width: 100px" clearable>
+            <Select
+              v-model="advertisementPositionDetail.positionType"
+              placeholder="广告位类型"
+              style="padding-right: 5px;width: 100px"
+              clearable
+            >
               <Option
                 v-for="(item,index) in advertisementPositionTypeEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
-                style="padding-left: 5px">{{ item.label }}
-              </Option>
+                style="padding-left: 5px"
+              >{{ item.label }}</Option>
             </Select>
           </FormItem>
         </Form>
@@ -232,35 +265,44 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
+import Tables from "_c/tables";
+import IViewUpload from "_c/iview-upload";
+import _ from "lodash";
 import {
   getAdvertisementPosition,
   getAdvertisementPositionPages,
   createAdvertisementPosition,
   deleteAdvertisementPosition,
-  editAdvertisementPosition } from '@/api/mini-program';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import uploadMixin from '@/mixins/uploadMixin';
-import { appTypeEnum, timeLimitedEnum, advertisementPositionTypeEnum } from '@/libs/enumerate';
-import { appTypeConvert, timeLimitedConvert, advertisementPositionTypeConvert } from '@/libs/converStatus';
+  editAdvertisementPosition
+} from "@/api/mini-program";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import uploadMixin from "@/mixins/uploadMixin";
+import {
+  appTypeEnum,
+  timeLimitedEnum,
+  advertisementPositionTypeEnum
+} from "@/libs/enumerate";
+import {
+  appTypeConvert,
+  timeLimitedConvert,
+  advertisementPositionTypeConvert
+} from "@/libs/converStatus";
 
 const advertisementPositionDetail = {
   relationId: 0,
   id: 0,
-  description: '',
-  postionName: '',
+  description: "",
+  postionName: "",
   timeLimited: null,
   applicationType: null,
   positionType: null
 };
 
 const roleRowData = {
-  description: '',
-  postionName: '',
+  description: "",
+  postionName: "",
   timeLimited: null,
   applicationType: null,
   positionType: null,
@@ -277,21 +319,11 @@ export default {
   data() {
     return {
       ruleInline: {
-        description: [
-          { required: true, message: '请输入广告位描述' }
-        ],
-        postionName: [
-          { required: true, message: '请输入广告位英文名' }
-        ],
-        timeLimited: [
-          { required: true, message: '请选择时间限制类型' }
-        ],
-        applicationType: [
-          { required: true, message: '请选择应用类型' }
-        ],
-        positionType: [
-          { required: true, message: '请选择广告位类型' }
-        ]
+        description: [{ required: true, message: "请输入广告位描述" }],
+        postionName: [{ required: true, message: "请输入广告位英文名" }],
+        timeLimited: [{ required: true, message: "请选择时间限制类型" }],
+        applicationType: [{ required: true, message: "请选择应用类型" }],
+        positionType: [{ required: true, message: "请选择广告位类型" }]
       },
       appTypeEnum,
       timeLimitedEnum,
@@ -306,76 +338,118 @@ export default {
         //   }
         // },
         {
-          type: 'selection',
-          key: '',
+          type: "selection",
+          key: "",
           width: 60,
-          align: 'center',
-          fixed: 'left'
+          align: "center",
+          fixed: "left"
         },
         {
-          title: 'ID',
-          key: 'id'
+          title: "ID",
+          key: "id"
         },
         {
-          title: '广告位描述',
-          key: 'description'
+          title: "广告位描述",
+          key: "description"
         },
         {
-          title: '广告位英文名',
-          key: 'postionName'
+          title: "广告位英文名",
+          key: "postionName"
         },
         {
-          title: '时间限制',
-          key: 'timeLimited',
+          title: "时间限制",
+          key: "timeLimited",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.timeLimited === 'LIMITED') {
-              return <div><tag color='primary'>{timeLimitedConvert(row.timeLimited).label}</tag></div>;
-            } else if (row.timeLimited === 'UNLIMITED') {
-              return <div><tag color='success'>{timeLimitedConvert(row.timeLimited).label}</tag></div>;
+            if (row.timeLimited === "LIMITED") {
+              return (
+                <div>
+                  <tag color="primary">
+                    {timeLimitedConvert(row.timeLimited).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.timeLimited === "UNLIMITED") {
+              return (
+                <div>
+                  <tag color="success">
+                    {timeLimitedConvert(row.timeLimited).label}
+                  </tag>
+                </div>
+              );
             } else {
               return <div>{row.timeLimited}</div>;
             }
           }
         },
         {
-          title: '应用类型',
-          key: 'applicationType',
+          title: "应用类型",
+          key: "applicationType",
           sortable: true,
-          align: 'center',
+          align: "center",
           minWidth: 120,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.applicationType === 'WXSMALL_SHOP') {
-              return <div><tag color='green'>{appTypeConvert(row.applicationType).label}</tag></div>;
-            } else if (row.applicationType === 'S_MALL') {
-              return <div><tag color='gold'>{appTypeConvert(row.applicationType).label}</tag></div>;
+            if (row.applicationType === "WXSMALL_SHOP") {
+              return (
+                <div>
+                  <tag color="green">
+                    {appTypeConvert(row.applicationType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.applicationType === "S_MALL") {
+              return (
+                <div>
+                  <tag color="gold">
+                    {appTypeConvert(row.applicationType).label}
+                  </tag>
+                </div>
+              );
             } else {
               return <div>{row.applicationType}</div>;
             }
           }
         },
         {
-          title: '广告位类型',
-          key: 'positionType',
+          title: "广告位类型",
+          key: "positionType",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.positionType === 'WORD') {
-              return <div><tag color='cyan'>{advertisementPositionTypeConvert(row.positionType).label}</tag></div>;
-            } else if (row.positionType === 'IMAGE') {
-              return <div><tag color='blue'>{advertisementPositionTypeConvert(row.positionType).label}</tag></div>;
-            } else if (row.positionType === 'CAROUSEL') {
-              return <div><tag color='purple'>{advertisementPositionTypeConvert(row.positionType).label}</tag></div>;
+            if (row.positionType === "WORD") {
+              return (
+                <div>
+                  <tag color="cyan">
+                    {advertisementPositionTypeConvert(row.positionType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.positionType === "IMAGE") {
+              return (
+                <div>
+                  <tag color="blue">
+                    {advertisementPositionTypeConvert(row.positionType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.positionType === "CAROUSEL") {
+              return (
+                <div>
+                  <tag color="purple">
+                    {advertisementPositionTypeConvert(row.positionType).label}
+                  </tag>
+                </div>
+              );
             } else {
               return <div>{row.positionType}</div>;
             }
           }
         },
         {
-          title: '操作',
-          key: 'handle',
+          title: "操作",
+          key: "handle",
           minWidth: 120,
-          options: ['view', 'edit', 'delete']
+          options: ["view", "edit", "delete"]
         }
       ],
       searchRowData: _.cloneDeep(roleRowData),
@@ -397,45 +471,54 @@ export default {
     },
     handleView(params) {
       this.loading = true;
-      getAdvertisementPosition({ id: params.row.id }).then(res => {
-        this.advertisementPositionDetail = res;
-        this.modalView = true;
-        this.loading = false;
-      }).catch(() => {
-        this.modalView = true;
-        this.loading = false;
-      });
+      getAdvertisementPosition({ id: params.row.id })
+        .then(res => {
+          this.advertisementPositionDetail = res;
+          this.modalView = true;
+          this.loading = false;
+        })
+        .catch(() => {
+          this.modalView = true;
+          this.loading = false;
+        });
     },
     getTableData() {
       // this.searchRowData.applicationType = this.applicationType;
-      getAdvertisementPositionPages(this.searchRowData).then(res => {
-        this.tableData = res.rows;
-        this.total = res.total;
-        this.loading = false;
-        this.clearSearchLoading = false;
-        this.searchLoading = false;
-      }).catch(() => {
-        this.loading = false;
-        this.clearSearchLoading = false;
-        this.searchLoading = false;
-      });
+      getAdvertisementPositionPages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.rows;
+          this.total = res.total;
+          this.loading = false;
+          this.clearSearchLoading = false;
+          this.searchLoading = false;
+        })
+        .catch(() => {
+          this.loading = false;
+          this.clearSearchLoading = false;
+          this.searchLoading = false;
+        });
     },
     // 删除
     deleteTable(ids) {
       this.loading = true;
       deleteAdvertisementPosition({
         ids
-      }).then(res => {
-        const totalPage = Math.ceil(this.total / this.pageSize);
-        if (this.tableData.length === this.tableDataSelected.length && this.page === totalPage && this.page !== 1) {
-          this.page -= 1;
-        }
-        this.tableDataSelected = [];
-        this.getTableData();
-      }
-      ).catch(() => {
-        this.loading = false;
-      });
+      })
+        .then(res => {
+          const totalPage = Math.ceil(this.total / this.pageSize);
+          if (
+            this.tableData.length === this.tableDataSelected.length &&
+            this.page === totalPage &&
+            this.page !== 1
+          ) {
+            this.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.getTableData();
+        })
+        .catch(() => {
+          this.loading = false;
+        });
     },
     // 编辑分类
     handleEdit(params) {
@@ -448,16 +531,20 @@ export default {
       this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.tempModalType = this.modalType.create;
-        this.advertisementPositionDetail = _.cloneDeep(advertisementPositionDetail)
+        this.advertisementPositionDetail = _.cloneDeep(
+          advertisementPositionDetail
+        );
       }
       this.modalEdit = true;
     },
     resetFields() {
       this.$refs.modalEdit.resetFields();
-      this.advertisementPositionDetail = _.cloneDeep(advertisementPositionDetail);
+      this.advertisementPositionDetail = _.cloneDeep(
+        advertisementPositionDetail
+      );
     },
     handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
+      this.$refs[name].validate(valid => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -467,32 +554,36 @@ export default {
             this.editAdvertisementPosition();
           }
         } else {
-          this.$Message.error('请完善广告位信息!');
+          this.$Message.error("请完善广告位信息!");
         }
       });
     },
     createAdvertisementPosition() {
       this.modalViewLoading = true;
-      createAdvertisementPosition(this.advertisementPositionDetail).then(res => {
-        this.modalViewLoading = false;
-        this.modalEdit = false;
-        this.$Message.success('创建成功!');
-        this.getTableData();
-      }).catch(() => {
-        this.modalViewLoading = false;
-        this.modalEdit = false;
-      });
+      createAdvertisementPosition(this.advertisementPositionDetail)
+        .then(res => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
+          this.$Message.success("创建成功!");
+          this.getTableData();
+        })
+        .catch(() => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
+        });
     },
     editAdvertisementPosition() {
       this.modalViewLoading = true;
-      editAdvertisementPosition(this.advertisementPositionDetail).then(res => {
-        this.modalEdit = false;
-        this.modalViewLoading = false;
-        this.getTableData();
-      }).catch(() => {
-        this.modalEdit = false;
-        this.modalViewLoading = false;
-      });
+      editAdvertisementPosition(this.advertisementPositionDetail)
+        .then(res => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+          this.getTableData();
+        })
+        .catch(() => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+        });
     },
     // 商品主图
     handleSuccessMain(response, file, fileList) {
@@ -505,5 +596,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>

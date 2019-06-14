@@ -23,25 +23,33 @@
             placeholder="版块名称"
             class="search-input mr5"
             style="width: 150px"
-            clearable></Input>
+            clearable
+          ></Input>
           <Select
             :disable="selectDisable"
             v-model="searchRowData.positionIds"
             class="search-col mr5"
             placeholder="版块位置"
             style="width: 150px"
-            clearable>
+            clearable
+          >
             <Option
               v-for="item in goodsModuleList"
               :value="item.id"
               :key="`search-col-${item.id}`"
-              class="pt5 pb5 pl15">{{ item.description }}
-            </Option>
+              class="pt5 pb5 pl15"
+            >{{ item.description }}</Option>
           </Select>
           <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch">
             <Icon type="md-search"/>&nbsp;搜索
           </Button>
-          <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
+          <Button
+            v-waves
+            :loading="clearSearchLoading"
+            class="search-btn"
+            type="info"
+            @click="handleClear"
+          >
             <Icon type="md-refresh"/>&nbsp;清除条件
           </Button>
         </div>
@@ -70,7 +78,8 @@
             show-sizer
             show-total
             @on-change="changePage"
-            @on-page-size-change="changePageSize"></Page>
+            @on-page-size-change="changePageSize"
+          ></Page>
         </Row>
       </div>
     </Card>
@@ -103,18 +112,15 @@
           <i-col span="16">{{ goodsModuleDetail.sorting }}</i-col>
         </Row>
         <Row v-if="goodsModuleDetail.productShelfList" class-name="mb10">
-          <tables
-            :columns="tempColumnsView"
-            v-model="goodsModuleDetail.productShelfList"
-            border
-          ></tables>
+          <tables :columns="tempColumnsView" v-model="goodsModuleDetail.productShelfList" border></tables>
         </Row>
       </div>
       <div slot="footer">
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-    <Modal v-model="modalEdit" :width="900" :mask-closable="false">
+
+    <Modal v-model="modalEdit" :mask-closable="false" :width="900">
       <p slot="header">
         <span>{{ tempModalType === modalType.create?'创建板块':'编辑板块' }}</span>
       </p>
@@ -126,13 +132,14 @@
                 <Select
                   v-model="goodsModuleDetail.positionId"
                   style="width: 200px"
-                  @on-change="goodsModuleTypeChange">
+                  @on-change="goodsModuleTypeChange"
+                >
                   <Option
                     v-for="item in goodsModuleList"
                     :value="item.id"
                     :key="`search-col-${item.id}`"
-                    class="pt5 pb5 pl15">{{ item.description }}
-                  </Option>
+                    class="pt5 pb5 pl15"
+                  >{{ item.description }}</Option>
                 </Select>
               </FormItem>
             </Row>
@@ -142,10 +149,7 @@
               </FormItem>
             </Row>
             <Row>
-              <FormItem
-                :label-width="80"
-                label="板块主图:建议尺寸 (xxx*xxx):"
-                prop="sectionImg">
+              <FormItem :label-width="80" label="板块主图:建议尺寸 (xxx*xxx):" prop="sectionImg">
                 <Input v-show="false" v-model="goodsModuleDetail.sectionImg" style="width: auto"></Input>
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
@@ -178,26 +182,33 @@
             <FormItem label="关联商品:">
               <Row>
                 <Col span="15">
-                <Select
-                  ref="shelfSpecificationSelect"
-                  :remote="true"
-                  :filterable="true"
-                  :remote-method="remoteMethod"
-                  :loading="shelfSpecificationLoading">
-                  <Option
-                    v-for="(option, index) in optionsShelfSpecification"
-                    :value="option.id"
-                    :key="index"
-                    class="pb5 pt5 pl15"
-                    @click.native="selectIndex(option)">
-                    {{ option.specificationInfo }}
-                  </Option>
-                </Select>
+                  <Select
+                    ref="shelfSpecificationSelect"
+                    :remote="true"
+                    :filterable="true"
+                    :remote-method="remoteMethod"
+                    :loading="shelfSpecificationLoading"
+                  >
+                    <Option
+                      v-for="(option, index) in optionsShelfSpecification"
+                      :value="option.id"
+                      :key="index"
+                      class="pb5 pt5 pl15"
+                      @click.native="selectIndex(option)"
+                    >{{ option.specificationInfo }}</Option>
+                  </Select>
                 </Col>
                 <Col span="4">
-                <Button v-waves :loading="addTempDataLoading" span="4" class="search-btn ml20" type="primary" @click="addTempData">
-                  <Icon type="md-add"/>&nbsp;添加
-                </Button>
+                  <Button
+                    v-waves
+                    :loading="addTempDataLoading"
+                    span="4"
+                    class="search-btn ml20"
+                    type="primary"
+                    @click="addTempData"
+                  >
+                    <Icon type="md-add"/>&nbsp;添加
+                  </Button>
                 </Col>
               </Row>
             </FormItem>
@@ -207,17 +218,19 @@
               :loading="tempTableLoading"
               border
               @on-delete="modalHandleDelete"
-
             ></tables>
           </Row>
         </Form>
       </div>
-      <div v-if="tempModalType === modalType.create || tempModalType === modalType.edit" slot="footer">
+      <div
+        v-if="tempModalType === modalType.create || tempModalType === modalType.edit"
+        slot="footer"
+      >
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定
-        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
       </div>
     </Modal>
+    
     <Modal v-model="uploadVisible" title="View Image">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
@@ -225,8 +238,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import _ from 'lodash';
+import Tables from "_c/tables";
+import _ from "lodash";
 import {
   createProductSection,
   deleteProductSection,
@@ -236,22 +249,22 @@ import {
   getuiPositionsPages,
   addProductSectionRelationBatch,
   deleteProductSectionRelationBatch
-} from '@/api/fruitermaster';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import uploadMixin from '@/mixins/uploadMixin';
-import IViewUpload from '_c/iview-upload';
-import { positionType, YNEnum } from '@/libs/enumerate';
-import { fenToYuanDot2 } from '@/libs/util';
+} from "@/api/fruitermaster";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import uploadMixin from "@/mixins/uploadMixin";
+import IViewUpload from "_c/iview-upload";
+import { positionType, YNEnum } from "@/libs/enumerate";
+import { fenToYuanDot2 } from "@/libs/util";
 
 const goodsModuleDetail = {
   id: 0,
   positionId: null,
-  sectionName: '',
-  sectionImg: '',
+  sectionName: "",
+  sectionImg: "",
   sorting: 0,
-  createAt: '',
+  createAt: "",
   parentId: 0,
   productShelfList: []
 };
@@ -260,19 +273,19 @@ const roleRowData = {
   applicationType: null,
   includeProduct: true,
   includeShelves: true,
-  sectionName: '',
-  positionIds: '',
+  sectionName: "",
+  positionIds: "",
   page: 1,
   rows: 10
 };
 const commonTempColumns = [
   {
-    title: '商品名称',
-    key: 'name',
+    title: "商品名称",
+    key: "name",
     minWidth: 100
   },
   {
-    title: '商品条码',
+    title: "商品条码",
     minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
@@ -280,16 +293,23 @@ const commonTempColumns = [
     }
   },
   {
-    title: '商品规格',
+    title: "商品规格",
     minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
-      return <div>{row.productSpecification.weight + '*' + row.productSpecification.specificationQty + row.productSpecification.packagingUnit}</div>;
+      return (
+        <div>
+          {row.productSpecification.weight +
+            "*" +
+            row.productSpecification.specificationQty +
+            row.productSpecification.packagingUnit}
+        </div>
+      );
     }
   },
   {
-    title: '商品原价',
-    key: 'originalPrice',
+    title: "商品原价",
+    key: "originalPrice",
     minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
@@ -297,8 +317,8 @@ const commonTempColumns = [
     }
   },
   {
-    title: '商品特价',
-    key: 'price',
+    title: "商品特价",
+    key: "price",
     minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
@@ -317,16 +337,17 @@ export default {
       selectDisable: true,
       goodsModuleList: [],
       ruleInline: {
-        positionId: [{ required: true, message: '请选择板块位置' }],
-        sectionName: [{ required: true, message: '请填写板块名称' }],
-        sectionImg: [{ required: true, message: '请上传板块主图' }],
-        productShelfList: [{ required: true, message: '请关联商品' },
+        positionId: [{ required: true, message: "请选择板块位置" }],
+        sectionName: [{ required: true, message: "请填写板块名称" }],
+        sectionImg: [{ required: true, message: "请上传板块主图" }],
+        productShelfList: [
+          { required: true, message: "请关联商品" },
           {
             validator(rule, value, callback, source, options) {
               console.log(value);
               const errors = [];
               if (!value || value.length < 1) {
-                errors.push(new Error('请关联商品'));
+                errors.push(new Error("请关联商品"));
               }
               callback(errors);
             }
@@ -336,36 +357,36 @@ export default {
       tempColumns: [
         ...commonTempColumns,
         {
-          title: '操作',
+          title: "操作",
           minWidth: 100,
-          key: 'handle',
-          options: ['delete']
+          key: "handle",
+          options: ["delete"]
         }
       ],
-      tempColumnsView: [
-        ...commonTempColumns
-      ],
+      tempColumnsView: [...commonTempColumns],
       columns: [
         {
-          type: 'selection',
-          key: '',
+          type: "selection",
+          key: "",
           width: 60,
-          align: 'center',
-          fixed: 'left'
+          align: "center",
+          fixed: "left"
         },
         {
-          title: 'ID',
-          key: 'id',
+          title: "ID",
+          key: "id",
           sortable: true,
           width: 80,
-          fixed: 'left'
+          fixed: "left"
         },
         {
-          title: '板块位置',
+          title: "板块位置",
           minWidth: 170,
           render: (h, params, vm) => {
             const { row } = params;
-            const tempObj = this.goodsModuleList.find(item => item.id === row.positionId);
+            const tempObj = this.goodsModuleList.find(
+              item => item.id === row.positionId
+            );
             if (tempObj) {
               return <div>{tempObj.description}</div>;
             } else {
@@ -374,25 +395,25 @@ export default {
           }
         },
         {
-          title: '板块名称',
+          title: "板块名称",
           width: 150,
-          key: 'sectionName'
+          key: "sectionName"
         },
         {
-          title: '创建时间',
+          title: "创建时间",
           width: 160,
-          key: 'createAt'
+          key: "createAt"
         },
         {
-          title: '板块排序',
+          title: "板块排序",
           width: 150,
-          key: 'sorting'
+          key: "sorting"
         },
         {
-          title: '操作',
+          title: "操作",
           minWidth: 200,
-          key: 'handle',
-          options: ['view', 'edit', 'delete', 'relevance']
+          key: "handle",
+          options: ["view", "edit", "delete", "relevance"]
         }
       ],
       shelfSpecificationLoading: false,
@@ -409,11 +430,13 @@ export default {
   },
   computed: {
     advertisementPositionComputed() {
-      const tempObj = this.goodsModuleList.find(item => item.id === this.goodsModuleDetail.positionId);
+      const tempObj = this.goodsModuleList.find(
+        item => item.id === this.goodsModuleDetail.positionId
+      );
       if (tempObj) {
         return tempObj.description;
       }
-      return '';
+      return "";
     }
   },
   created() {
@@ -423,18 +446,20 @@ export default {
       positionType: positionType.PRODUCT,
       page: 0,
       rows: 0
-    }).then(res => {
-      this.selectDisable = false;
-      this.goodsModuleList = res.array;
-      this.getTableData();
-    }).catch(() => {
-      this.selectDisable = false;
-    });
+    })
+      .then(res => {
+        this.selectDisable = false;
+        this.goodsModuleList = res.array;
+        this.getTableData();
+      })
+      .catch(() => {
+        this.selectDisable = false;
+      });
   },
   methods: {
     setDefaultUploadList(res) {
       if (res.sectionImg != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.sectionImg;
         mainImgArr.push(map);
@@ -446,40 +471,44 @@ export default {
     },
     createTableRow() {
       this.modalViewLoading = true;
-      createProductSection({ ...this.goodsModuleDetail }).then(res => {
-        this.modalViewLoading = false;
-        this.modalEdit = false;
-        this.$Message.success('创建成功!');
-        this.resetFields();
-        this.getTableData();
-      }).catch(() => {
-        this.modalViewLoading = false;
-        this.modalEdit = false;
-      });
+      createProductSection({ ...this.goodsModuleDetail })
+        .then(res => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
+          this.$Message.success("创建成功!");
+          this.resetFields();
+          this.getTableData();
+        })
+        .catch(() => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
+        });
     },
     modalHandleDelete(params) {
       if (this.tempModalType === this.modalType.create) {
-        this.goodsModuleDetail.productShelfList = this.goodsModuleDetail.productShelfList.filter((item, index) =>
-          index !== params.row.initRowIndex
+        this.goodsModuleDetail.productShelfList = this.goodsModuleDetail.productShelfList.filter(
+          (item, index) => index !== params.row.initRowIndex
         );
       } else {
         this.tempTableLoading = true;
         deleteProductSectionRelationBatch({
           sectionId: this.goodsModuleDetail.id,
           shelfIds: params.row.id
-        }).then(res => {
-          this.goodsModuleDetail.productShelfList = this.goodsModuleDetail.productShelfList.filter((item, index) =>
-            index !== params.row.initRowIndex
-          );
-          this.getTableData();
-        }).finally(res => {
-          this.tempTableLoading = false;
-        });
+        })
+          .then(res => {
+            this.goodsModuleDetail.productShelfList = this.goodsModuleDetail.productShelfList.filter(
+              (item, index) => index !== params.row.initRowIndex
+            );
+            this.getTableData();
+          })
+          .finally(res => {
+            this.tempTableLoading = false;
+          });
       }
     },
     addTempData() {
       if (!this.tempOptionsShelfSpecification) {
-        this.$Message.warning('请选择定制计划');
+        this.$Message.warning("请选择定制计划");
         return;
       }
       if (!this.goodsModuleDetail.productShelfList) {
@@ -490,7 +519,9 @@ export default {
       });
       if (!obj) {
         if (this.tempModalType === this.modalType.create) {
-          this.goodsModuleDetail.productShelfList.push({ ...this.tempOptionsShelfSpecification });
+          this.goodsModuleDetail.productShelfList.push({
+            ...this.tempOptionsShelfSpecification
+          });
         } else {
           this.addTempDataLoading = true;
           this.tempTableLoading = true;
@@ -498,23 +529,27 @@ export default {
           addProductSectionRelationBatch({
             sectionId: this.goodsModuleDetail.id,
             shelfId: this.tempOptionsShelfSpecification.id
-          }).then(res => {
-            this.goodsModuleDetail.productShelfList.push({ ...this.tempOptionsShelfSpecification });
-            this.addTempDataLoading = false;
-            this.tempTableLoading = false;
-            this.loading = false;
-          }).catch(() => {
-            this.addTempDataLoading = false;
-            this.tempTableLoading = false;
-            this.loading = false;
-          });
+          })
+            .then(res => {
+              this.goodsModuleDetail.productShelfList.push({
+                ...this.tempOptionsShelfSpecification
+              });
+              this.addTempDataLoading = false;
+              this.tempTableLoading = false;
+              this.loading = false;
+            })
+            .catch(() => {
+              this.addTempDataLoading = false;
+              this.tempTableLoading = false;
+              this.loading = false;
+            });
         }
       } else {
-        this.$Message.warning('已经添加该商品！');
+        this.$Message.warning("已经添加该商品！");
       }
     },
     handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
+      this.$refs[name].validate(valid => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -524,7 +559,7 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
     },
@@ -532,7 +567,7 @@ export default {
       this.tempOptionsShelfSpecification = options;
     },
     remoteMethod(query) {
-      if (query !== '') {
+      if (query !== "") {
         this.handleSearchAutoComplete(query);
       } else {
         this.optionsShelfSpecification = [];
@@ -541,21 +576,25 @@ export default {
     handleSearchAutoComplete(value) {
       this.shelfSpecificationLoading = true;
       getProductShelvesPages({
-        keyword: value + '',
+        keyword: value + "",
         applicationType: this.applicationType,
-        page: '1',
-        rows: '5',
-        shelfStatus: 'ON'
-      }).then(res => {
-        if (res.array.length > 0) {
-          this.optionsShelfSpecification.length = 0;
-          this.optionsShelfSpecification = this.optionsShelfSpecification.concat(res.array);
-        }
-        console.log(this.optionsShelfSpecification);
-        this.shelfSpecificationLoading = false;
-      }).catch(() => {
-        this.shelfSpecificationLoading = false;
-      });
+        page: "1",
+        rows: "5",
+        shelfStatus: "ON"
+      })
+        .then(res => {
+          if (res.array.length > 0) {
+            this.optionsShelfSpecification.length = 0;
+            this.optionsShelfSpecification = this.optionsShelfSpecification.concat(
+              res.array
+            );
+          }
+          console.log(this.optionsShelfSpecification);
+          this.shelfSpecificationLoading = false;
+        })
+        .catch(() => {
+          this.shelfSpecificationLoading = false;
+        });
     },
     goodsModuleTypeChange(value) {
       this.goodsModuleDetail.positionId = value;
@@ -585,15 +624,17 @@ export default {
       this.modalViewLoading = true;
       editProductSection({
         ...this.goodsModuleDetail
-      }).then(res => {
-        this.resetFields();
-        this.modalEdit = false;
-        this.modalViewLoading = false;
-        this.getTableData();
-      }).catch(() => {
-        this.modalEdit = false;
-        this.modalViewLoading = false;
-      });
+      })
+        .then(res => {
+          this.resetFields();
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+          this.getTableData();
+        })
+        .catch(() => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+        });
     },
     addChildren() {
       if (this.tempModalType !== this.modalType.create) {
@@ -628,34 +669,41 @@ export default {
       this.loading = true;
       deleteProductSection({
         ids
-      }).then(res => {
-        const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-        if (this.tableData.length == this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
-          this.searchRowData.page -= 1;
-        }
-        this.tableDataSelected = [];
-        this.getTableData();
-      }
-      ).catch(() => {
-        this.loading = false;
-      });
+      })
+        .then(res => {
+          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+          if (
+            this.tableData.length == this.tableDataSelected.length &&
+            this.searchRowData.page === totalPage &&
+            this.searchRowData.page !== 1
+          ) {
+            this.searchRowData.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.getTableData();
+        })
+        .catch(() => {
+          this.loading = false;
+        });
     },
     getTableData() {
       this.searchRowData.applicationType = this.applicationType;
-      getProductSectionsPages(this.searchRowData).then(res => {
-        this.tableData = res.array;
-        this.total = res.total;
-        this.loading = false;
-        this.clearSearchLoading = false;
-        this.searchLoading = false;
-      }).catch(() => {
-        this.loading = false;
-        this.clearSearchLoading = false;
-        this.searchLoading = false;
-      });
+      getProductSectionsPages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.array;
+          this.total = res.total;
+          this.loading = false;
+          this.clearSearchLoading = false;
+          this.searchLoading = false;
+        })
+        .catch(() => {
+          this.loading = false;
+          this.clearSearchLoading = false;
+          this.searchLoading = false;
+        });
     },
     modalHandleEdit(params) {
-      console.log('modalHandleEdit' + params.rows);
+      console.log("modalHandleEdit" + params.rows);
     }
   }
 };

@@ -247,7 +247,7 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" style="z-index: 1000">
+    <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <span>{{ productDetail.id == ''?'创建基础商品信息':'编辑基础商品信息' }}</span>
       </p>

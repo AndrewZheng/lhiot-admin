@@ -105,7 +105,7 @@
       </div>
     </Card>
 
-    <Modal v-model="modalView" :mask-closable="false" width="720">
+    <Modal v-model="modalView" :mask-closable="false" :width="720">
       <p slot="header">
         <span>团购活动详情</span>
       </p>
@@ -172,7 +172,6 @@
           <i-col span="12">
             <Row>
               <i-col span="6">有效期起:</i-col>
-              <!-- <i-col span="18">{{ startTimeComputed }}</i-col> -->
               <i-col span="18">{{ teambuyDetail.startTime }}</i-col>
             </Row>
           </i-col>
@@ -311,12 +310,12 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" style="z-index: 1000" width="720px">
+    <Modal v-model="modalEdit" :z-index="1000" :width="720" :mask-closable="false">
       <p slot="header">
         <i-col>{{ tempModalType===modalType.edit?'修改团购活动':'创建团购活动' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="teambuyDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="editForm" :model="teambuyDetail" :rules="ruleInline" :label-width="80">
           <Row v-show="tempModalType===modalType.edit">
             <Col span="12">
               <FormItem label="团购ID:" prop="id">{{ teambuyDetail.id }}</FormItem>
@@ -358,6 +357,7 @@
                     v-for="item in teamBuyStatus"
                     :value="item.value"
                     :key="item.value"
+                    :disabled="item.value=='expire'"
                     class="ptb2-5"
                     style="padding-left: 5px"
                   >{{ item.label }}</Option>
@@ -372,7 +372,7 @@
               </FormItem>
             </Col>
             <Col span="12">
-              <FormItem label="活动banner 推荐使用尺寸为400X225(单位:px):" prop="banner">
+              <FormItem label="活动banner 推荐使用尺寸为750*304(单位:px):" prop="banner">
                 <Input v-show="false" v-model="teambuyDetail.banner" style="width: auto"></Input>
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
@@ -487,6 +487,7 @@
                     v-for="item in teamBuyStatus"
                     :value="item.value"
                     :key="item.value"
+                    :disabled="item.value=='expire'"
                     class="ptb2-5"
                     style="padding-left: 5px"
                   >{{ item.label }}</Option>
@@ -502,6 +503,7 @@
                     v-for="item in teamBuyStatus"
                     :value="item.value"
                     :key="item.value"
+                    :disabled="item.value=='expire'"
                     class="ptb2-5"
                     style="padding-left: 5px"
                   >{{ item.label }}</Option>
@@ -642,7 +644,14 @@
           <Row v-show="showStoreList">
             <Col span="24">
               <FormItem label="门店列表:">
-                <CheckboxGroup v-model="model" @on-change="checkAllGroupChange">
+                <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
+                  <Checkbox
+                    :indeterminate="indeterminate"
+                    :value="checkAll"
+                    @click.prevent.native="handleCheckAll"
+                  >全选/反选</Checkbox>
+                </div>
+                <CheckboxGroup v-model="storeIds" @on-change="checkAllGroupChange">
                   <Checkbox
                     v-for="item in storeList"
                     ref="checkBox"
@@ -767,7 +776,7 @@ import {
 
 const teambuyDetail = {
   remainingProductNum: 0,
-  triesLimit: 0,
+  triesLimit: 999, // 默认限购次数999
   teamGuaranteeURL: "",
   storeId: 0,
   storeIds: "",
@@ -775,15 +784,15 @@ const teambuyDetail = {
   originalPrice: null,
   saleQuantity: 0,
   createTime: "",
-  teamBuyType: null,
+  teamBuyType: "ORDINARY_TEAM", // 默认普通团
   teamBuyNum: 0,
-  rewardActivitySetting: "",
-  joinInfoStatus: "",
+  rewardActivitySetting: "DISABLE", // 默认红包活动关闭
+  joinInfoStatus: "on", // 默认参团信息列表状态开启
   teamResultEnum: null,
   id: 0,
   activityName: "",
   content: "",
-  status: null,
+  status: "off", // 默认活动关闭
   rank: 0,
   startTime: "",
   endTime: "",
@@ -797,7 +806,7 @@ const teambuyDetail = {
   deliveryEndTime: "",
   standardDesc: "",
   fullTeambuyCount: 0,
-  robot: null,
+  robot: "off", // 默认关闭模拟成团
   teamBuys: null,
   productStandard: null,
   leftTime: "",
@@ -1007,7 +1016,7 @@ export default {
       relationStoreTypeEnum,
       flagShipList: [],
       storeList: [],
-      model: [],
+      storeIds: [],
       columns: [
         {
           title: "活动名称",
@@ -1249,6 +1258,8 @@ export default {
       modalViewLoading: false,
       exportExcelLoading: false,
       showStoreList: false,
+      indeterminate: false,
+      checkAll: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchProductRowData: _.cloneDeep(productRowData),
       productDetail: _.cloneDeep(productStandardDetail),
@@ -1289,7 +1300,7 @@ export default {
       this.getTableData();
     },
     resetFields() {
-      this.$refs.modalEdit.resetFields();
+      this.$refs.editForm.resetFields();
       this.$refs.uploadMain.clearFileList();
       this.uploadListMain = [];
       this.teambuyDetail.banner = null;
@@ -1367,12 +1378,6 @@ export default {
           if (!numRe.test(this.teambuyDetail.validSeconds)) {
             this.$Message.error("成团有效时长不能为小数");
             return;
-          }
-          if (
-            this.teambuyDetail.triesLimit == null ||
-            this.teambuyDetail.triesLimit == 0
-          ) {
-            this.teambuyDetail.triesLimit = 999;
           }
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -1490,8 +1495,15 @@ export default {
         this.teambuyDetail.relationStoreType = "PART";
         const storeIds = this.teambuyDetail.storeIds.split(",");
         storeIds.forEach(element => {
-          this.model.push(parseInt(element));
+          this.storeIds.push(parseInt(element));
         });
+        // 全选/反选按钮的样式
+        if (
+          this.storeIds.length > 0 &&
+          this.storeIds.length !== this.storeList.length
+        ) {
+          this.indeterminate = true;
+        }
       } else {
         this.showStoreList = false;
       }
@@ -1592,8 +1604,35 @@ export default {
           console.log(error);
         });
     },
+    handleCheckAll() {
+      if (this.indeterminate) {
+        this.checkAll = false;
+      } else {
+        this.checkAll = !this.checkAll;
+      }
+      this.indeterminate = false;
+      if (this.checkAll) {
+        let allIds = [];
+        this.storeList.forEach(item => {
+          allIds.push(item.storeId);
+        });
+        this.storeIds = allIds; // 全选中所有门店
+      } else {
+        this.storeIds = [];
+      }
+    },
     checkAllGroupChange(data) {
       this.teambuyDetail.storeIds = data.join(",");
+      if (data.length === this.storeList.length) {
+        this.indeterminate = false;
+        this.checkAll = true;
+      } else if (data.length > 0) {
+        this.indeterminate = true;
+        this.checkAll = false;
+      } else {
+        this.indeterminate = false;
+        this.checkAll = false;
+      }
     },
     handleRelation() {
       this.getProductTableData();

@@ -139,7 +139,7 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :width="1000" style="z-index: 1000">
+    <Modal v-model="modalEdit" :width="1000" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <i-col>{{ tempModalType==modalType.edit?'修改注册送礼优惠券活动':(tempModalType==modalType.create?'创建注册送礼优惠券活动': '注册送礼和优惠券模板关联') }}</i-col>
       </p>

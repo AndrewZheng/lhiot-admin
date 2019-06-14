@@ -77,6 +77,7 @@
 
     <Modal
       v-model="modalEdit"
+      :mask-closable="false"
       :width="900"
     >
       <p slot="header">

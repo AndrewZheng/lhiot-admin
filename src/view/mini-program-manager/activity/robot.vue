@@ -154,7 +154,7 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" style="z-index: 1000">
+    <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <i-col>{{ tempModalType===modalType.edit?'修改机器人信息':'创建机器人信息' }}</i-col>
       </p>

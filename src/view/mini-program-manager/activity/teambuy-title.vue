@@ -168,7 +168,7 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" style="z-index: 1000">
+    <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <i-col>{{ tempModalType===modalType.edit?'修改系统参数':'创建系统参数' }}</i-col>
       </p>

@@ -94,7 +94,8 @@
 
     <Modal
       v-model="modalEdit"
-      style="z-index: 1000"
+      :mask-closable="false"
+      :z-index="1000"
     >
       <p slot="header">
         <span>{{ tempModalType===modalType.edit ?'修改规格基础数据':'创建规格基础数据' }}</span>
