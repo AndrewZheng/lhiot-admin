@@ -1432,3 +1432,11 @@ export const getEntityExchangePages = (data) => {
     headers: { 'page': data.page, 'rows': data.rows }
   });
 };
+
+// 未成团、未发送海鼎、未退款的订单手动退款
+export const ordersRefund = ({ endTime }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/order-center/wxsmall/failure/orders/refund/' + endTime,
+    method: 'get'
+  })
+}

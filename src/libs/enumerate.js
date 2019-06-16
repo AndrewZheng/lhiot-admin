@@ -1549,7 +1549,8 @@ export const miniOrderStatusEnum = [
 
 export const miniHdStatus = {
   NOT_SEND: 'NOT_SEND',
-  SEND_OUT: 'SEND_OUT'
+  SEND_OUT: 'SEND_OUT',
+  SEND_FAILURE: 'SEND_FAILURE'
 };
 
 export const miniHdStatusEnum = [
@@ -1560,6 +1561,10 @@ export const miniHdStatusEnum = [
   {
     label: '成功',
     value: miniHdStatus.SEND_OUT
+  },
+  {
+    label: '失败',
+    value: miniHdStatus.SEND_FAILURE
   }
 ];
 

@@ -6,8 +6,8 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="20"
-        :operate-area-column="4"
+        :search-area-column="19"
+        :operate-area-column="5"
         editable
         searchable
         border
@@ -24,11 +24,11 @@
               v-model="searchRowData.code"
               placeholder="订单编码"
               class="search-input mr5"
-              style="width: 120px"
+              style="width: 100px"
               clearable
             ></Input>
             <Input
-              v-model="searchRowData.userPhone"
+              v-model="searchRowData.phone"
               placeholder="用户手机号"
               class="search-input mr5"
               style="width: 100px"
@@ -135,7 +135,7 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除条件
+              <Icon type="md-refresh"/>&nbsp;清除
             </Button>
           </Row>
         </div>
@@ -143,8 +143,19 @@
           <Button v-waves :loading="deliverOrderLoading" class="search-btn mr5" type="warning" @click="deliverOrder">门店调货</Button>
           <Button v-waves class="search-btn ml5 mr5" type="primary" @click="resendToHd">海鼎重发</Button>
           <!-- 多类型导出 -->
-          <BookTypeOption v-model="exportType" class="mr5"/>
-          <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
+          <!-- <BookTypeOption v-model="exportType" class="mr5"/> -->
+          <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/> 导出</Button>
+          <!-- <Poptip
+            confirm
+            placement="bottom"
+            style="width: 100px"
+            title="请核实下结束时间，再确认手动退款(一次最多退20条)"
+            @on-ok="handleRefund"
+          >
+            <Button type="error" class="mr5">
+              <Icon type="md-money"/>手动退款
+            </Button>
+          </Poptip> -->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -162,7 +173,7 @@
     </Card>
 
     <!--查看订单详情-->
-    <Modal v-model="modalView" :width="700">
+    <Modal v-model="modalView" :width="750" :mask-closable="false">
       <p slot="header">
         <span>查看订单详情</span>
       </p>
@@ -452,7 +463,7 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import { getOrderPages, getOrder, getStorePages, modifyStoreInOrder, resendToHd } from '@/api/mini-program';
+import { getOrderPages, getOrder, getStorePages, modifyStoreInOrder, resendToHd, ordersRefund } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import { fenToYuanDot2 } from '@/libs/util';
@@ -490,7 +501,6 @@ const orderDetail = {
   orderProducts: [],
   orderFlows: [],
   allowRefund: null,
-  // json 数据结构
   deliverTime: {
     display: '',
     startTime: null,
@@ -498,7 +508,10 @@ const orderDetail = {
     status: null
   }
 };
+
 const roleRowData = {
+  phone: '',
+  endAt: null,
   page: 1,
   rows: 10
 };
@@ -571,17 +584,14 @@ export default {
       orderViewRelationsColumn: [
         {
           title: '商品编码',
-          // minWidth: 100,
           key: 'barcode'
         },
         {
           title: '商品名称',
-          // minWidth: 100,
           key: 'productName'
         },
         {
           title: '商品规格',
-          // minWidth: 100,
           render(h, params, vm) {
             const { row } = params;
             return <div>{row.productQty + '*' + row.standardQty}</div>;
@@ -589,18 +599,14 @@ export default {
         },
         {
           title: '商品数量',
-          // minWidth: 100,
           key: 'productQty'
         },
         {
           title: '计量单位',
-          // minWidth: 100,
-          // key: 'unitName'
           key: 'productUnit'
         },
         {
           title: '原价',
-          // minWidth: 100,
           key: 'price',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.price);
@@ -609,7 +615,6 @@ export default {
         },
         {
           title: '折后价',
-          // minWidth: 100,
           key: 'discountPrice',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.discountPrice);
@@ -618,7 +623,6 @@ export default {
         },
         {
           title: '总价',
-          // minWidth: 100,
           key: 'discountPrice',
           render(h, params, vm) {
             const amount = params.row.discountPrice / 100;
@@ -760,11 +764,12 @@ export default {
           key: 'hdStatus',
           render: (h, params, vm) => {
             const { row } = params;
-            // NOT_SEND("未发送"),SEND_OUT("成功")
             if (row.hdStatus === 'NOT_SEND') {
-              return <div><tag color='error'>{miniHdStatusConvert(row.hdStatus).label}</tag></div>;
+              return <div><tag color='warning'>{miniHdStatusConvert(row.hdStatus).label}</tag></div>;
             } else if (row.hdStatus === 'SEND_OUT') {
               return <div><tag color='success'>{miniHdStatusConvert(row.hdStatus).label}</tag></div>;
+            } else if (row.hdStatus === 'SEND_FAILURE') {
+              return <div><tag color='error'>{miniHdStatusConvert(row.hdStatus).label}</tag></div>;
             } else {
               return <div>{row.hdStatus}</div>;
             }
@@ -802,11 +807,10 @@ export default {
         }
       ],
       currentTableRowSelected: null,
-      searchRowData: this._.cloneDeep(roleRowData),
-      orderDetail: this._.cloneDeep(orderDetail),
+      searchRowData: _.cloneDeep(roleRowData),
+      orderDetail: _.cloneDeep(orderDetail),
       exportType: 'xlsx',
       downloadLoading: false,
-      // 选中的行
       tableDataSelected: []
     };
   },
@@ -832,6 +836,16 @@ export default {
     },
     handleEditClose() {
       this.modalViewLoading = false;
+    },
+    handleRefund(){
+      if(!this.searchRowData.endAt){
+        this.$Message.error('请先选择结束时间，再手动退款');
+        return false;
+      }
+      // 处理手动退款
+      ordersRefund({ endTime: this.searchRowData.endAt }).then(res => {
+        this.resetSearchRowData();
+      });
     },
     handleSubmit() {
       if (!this.currentTableRowSelected) {
@@ -877,12 +891,10 @@ export default {
       this.getTableData();
     },
     handleView(params) {
-      // this.$refs.modelView.resetFields();
       this.loading = true;
       getOrder({ orderCode: params.row.code }).then(res => {
         this.orderDetail = res;
         if (this.orderDetail != null && this.orderDetail.deliverTime != '' && this.orderDetail.deliverTime != null) {
-          // string转换为json数据
           this.orderDetail.deliverTime = JSON.parse(this.orderDetail.deliverTime);
         }
         this.loading = false;

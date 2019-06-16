@@ -297,10 +297,10 @@
           </i-col>
         </Row>
         <Row class-name="mb20">
-          <i-col span="12">
+          <i-col span="24">
             <Row>
-              <i-col span="6">关联门店:</i-col>
-              <i-col span="18">{{ teambuyDetail.storeIds }}</i-col>
+              <i-col span="4">关联门店:</i-col>
+              <i-col span="20">{{ relationStore }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -354,10 +354,10 @@
               <FormItem label="活动状态:" prop="status">
                 <Select v-model="teambuyDetail.status">
                   <Option
-                    v-for="item in teamBuyStatus"
+                    v-for="item in activityStatus"
                     :value="item.value"
                     :key="item.value"
-                    :disabled="item.value=='expire'"
+                    :disabled="tempModalType === modalType.create && item.value=='expire'"
                     class="ptb2-5"
                     style="padding-left: 5px"
                   >{{ item.label }}</Option>
@@ -406,7 +406,7 @@
               <FormItem label="有效期起:" prop="startTime">
                 <DatePicker
                   :readonly="tempModalType === modalType.edit"
-                  v-model="teambuyDetail.startTime"
+                  :value="teambuyDetail.startTime"
                   format="yyyy-MM-dd HH:mm:ss"
                   type="datetime"
                   placeholder="有效期起"
@@ -420,7 +420,7 @@
               <FormItem label="有效期止:" prop="endTime">
                 <DatePicker
                   :readonly="tempModalType === modalType.edit"
-                  v-model="teambuyDetail.endTime"
+                  :value="teambuyDetail.endTime"
                   format="yyyy-MM-dd HH:mm:ss"
                   type="datetime"
                   placeholder="有效期止"
@@ -666,7 +666,7 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit" v-show="teambuyDetail.status!='expire'">确定</Button>
       </div>
     </Modal>
 
@@ -674,10 +674,10 @@
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
 
-    <Modal v-model="modalProduct" :width="1000" title="关联商品">
+    <Modal v-model="modalProduct" :width="1000" title="关联商品" footer-hide>
       <Card>
         <tables
-          ref="tables"
+          ref="products"
           v-model="productData"
           :columns="productColumns"
           :loading="loading"
@@ -1005,10 +1005,14 @@ export default {
       },
       defaultListMain: [],
       uploadListMain: [],
+      activityStatus: [
+        { label: "未开始", value: "off" },
+        { label: "进行中", value: "on" },
+        { label: "已结束", value: "expire" }
+      ],
       teamBuyStatus: [
         { label: "关闭", value: "off" },
-        { label: "开启", value: "on" },
-        { label: "过期", value: "expire" }
+        { label: "开启", value: "on" }
       ],
       teamBuyStatusEnum,
       teamBuyTypeEnum,
@@ -1157,13 +1161,13 @@ export default {
         }
       ],
       productColumns: [
-        {
-          type: "selection",
-          key: "",
-          minWidth: 60,
-          align: "center",
-          fixed: "left"
-        },
+        // {
+        //   type: "selection",
+        //   key: "",
+        //   minWidth: 60,
+        //   align: "center",
+        //   fixed: "left"
+        // },
         {
           title: "规格ID",
           key: "id",
@@ -1278,6 +1282,19 @@ export default {
     },
     tourDiscountComputed() {
       return fenToYuanDot2Number(this.teambuyDetail.tourDiscount);
+    },
+    relationStore(){
+      if(!this.teambuyDetail.storeIds){ return '全部门店'; }
+      let ids = this.teambuyDetail.storeIds.substring(1, this.teambuyDetail.storeIds.length-1).split('][');
+      let list= this.storeList;
+      let str= '';
+      if(list.length > 0){
+        ids.forEach(id => {
+          let item = list.find(item => item.storeId == id);
+          str += item.storeName + ',';
+        })
+        return str.substring(0,str.length-1);
+      }
     }
   },
   watch: {
@@ -1305,8 +1322,8 @@ export default {
       this.uploadListMain = [];
       this.teambuyDetail.banner = null;
     },
-    handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+    handleSubmit() {
+      this.$refs.editForm.validate(valid => {
         if (valid) {
           if (
             this.teambuyDetail.teamBuyType === "OLD_AND_NEW" &&
@@ -1493,7 +1510,8 @@ export default {
       ) {
         this.showStoreList = true;
         this.teambuyDetail.relationStoreType = "PART";
-        const storeIds = this.teambuyDetail.storeIds.split(",");
+        const storeIds = this.teambuyDetail.storeIds.substring(1, this.teambuyDetail.storeIds.length-1).split('][');
+        console.log('storeIds before edit:', storeIds);
         storeIds.forEach(element => {
           this.storeIds.push(parseInt(element));
         });
@@ -1506,13 +1524,14 @@ export default {
         }
       } else {
         this.showStoreList = false;
+        this.teambuyDetail.relationStoreType = "ALL"; // storeIds为''默认关联的门店则是全部门店
       }
       this.modalEdit = true;
     },
     handleDownload() {
       this.exportExcelLoading = true;
-      getProductPages(this.searchRowData).then(res => {
-        const tableData = res.rows;
+      getTeamBuyPages(this.searchRowData).then(res => {
+        let tableData = res.rows;
         // 表格数据导出字段翻译
         tableData.forEach(item => {
           item["groupId"] = item["groupName"];
@@ -1561,10 +1580,10 @@ export default {
       this.teambuyDetail.endTime = value;
     },
     createTimeStartChange(value, date) {
-      this.teambuyDetail.createTimeStart = value;
+      this.teambuyDetail.createTimeStart = value? value: null;
     },
     createTimeEndChange(value, date) {
-      this.teambuyDetail.createTimeEnd = value;
+      this.teambuyDetail.createTimeEnd = value? value: null;
     },
     deliveryEndTimeChange(value, date) {
       this.teambuyDetail.deliveryEndTime = value;
@@ -1616,22 +1635,31 @@ export default {
         this.storeList.forEach(item => {
           allIds.push(item.storeId);
         });
-        this.storeIds = allIds; // 全选中所有门店
+        this.storeIds = allIds;
       } else {
         this.storeIds = [];
       }
     },
+    onRowClick(row, index) {
+      // 给团购活动赋值
+      this.teambuyDetail.standardId = row.id;
+      this.teambuyDetail.originalPrice = row.price;
+      this.modalProduct = false;
+    },
     checkAllGroupChange(data) {
-      this.teambuyDetail.storeIds = data.join(",");
       if (data.length === this.storeList.length) {
         this.indeterminate = false;
         this.checkAll = true;
+        this.teambuyDetail.storeIds = ''; // 全选存空字符串
       } else if (data.length > 0) {
         this.indeterminate = true;
         this.checkAll = false;
+        this.teambuyDetail.storeIds = '[' + data.join('][') + ']';
+        console.log('storeIds before submit:', this.teambuyDetail.storeIds);
       } else {
         this.indeterminate = false;
         this.checkAll = false;
+        this.teambuyDetail.storeIds = '';
       }
     },
     handleRelation() {
@@ -1679,12 +1707,6 @@ export default {
       this.pageSize = 10;
       this.clearSearchLoading = true;
       this.handleProductSearch();
-    },
-    onRowClick(row, index) {
-      // 给团购活动赋值
-      this.teambuyDetail.standardId = row.id;
-      this.teambuyDetail.originalPrice = row.price;
-      this.modalProduct = false;
     }
   }
 };

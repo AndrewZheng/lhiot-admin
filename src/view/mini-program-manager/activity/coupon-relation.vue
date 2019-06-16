@@ -326,19 +326,21 @@
       </div>
       <div slot="footer">
         <Button @click="handleAddClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleTemplateAdd('addForm')">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleTemplateAdd">确定</Button>
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
+    <Modal v-model="modalEdit" :width="700" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <i-col>修改优惠券活动和模板关联</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="addRelationDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="editForm" :model="addRelationDetail" :rules="ruleInline" :label-width="100">
           <Row>
             <i-col span="12">
-              <FormItem label="优惠券名称:">{{ addRelationDetail.couponName }}</FormItem>
+              <FormItem label="优惠券名称:">
+                <Input v-model="addRelationDetail.couponName" clearable></Input>
+              </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="优惠券类型:">{{ addRelationDetail.couponType | couponTypeFilter }}</FormItem>
@@ -376,7 +378,7 @@
           </Row>
           <Row>
             <i-col span="7">
-              <FormItem label="生效时间:" prop="effectiveStartTime">
+              <FormItem label="生效时间:" prop="effectiveStartTime" v-if="addRelationDetail.source==='SMALL'">
                 <DatePicker
                   :value="addRelationDetail.effectiveStartTime"
                   format="yyyy-MM-dd HH:mm:ss"
@@ -390,7 +392,7 @@
           </Row>
           <Row>
             <i-col span="7">
-              <FormItem label="失效时间:" prop="effectiveEndTime">
+              <FormItem label="失效时间:" prop="effectiveEndTime" v-if="addRelationDetail.source==='SMALL'">
                 <DatePicker
                   :value="addRelationDetail.effectiveEndTime"
                   format="yyyy-MM-dd HH:mm:ss"
@@ -403,12 +405,11 @@
             </i-col>
           </Row>
           <Row>
-            <i-col span="18">
-              <FormItem label="发券总限制:" prop="couponLimit">
+            <i-col span="7">
+              <FormItem label="发券限制:" prop="couponLimit">
                 <InputNumber
                   :min="0"
                   v-model="addRelationDetail.couponLimit"
-                  class="ml20"
                   label="限购数量"
                 ></InputNumber>
               </FormItem>
@@ -430,7 +431,7 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleTemplateEdit">确定</Button>
       </div>
     </Modal>
 
@@ -1045,36 +1046,6 @@ export default {
       }
       this.modalEdit = true;
     },
-    handleSubmit(name) {
-      this.$refs[name].validate(valid => {
-        if (valid) {
-          if (
-            compareData(
-              this.addRelationDetail.effectiveStartTime,
-              this.addRelationDetail.effectiveEndTime
-            )
-          ) {
-            this.$Message.error("结束时间必须大于开始时间!");
-            return;
-          }
-          if (this.tempModalType === this.modalType.edit) {
-            // 编辑状态
-            this.tempTableLoading = true;
-            editCouponTemplateRelation(this.addRelationDetail)
-              .then(res => {
-                this.getRelationTableData();
-                this.modalEdit = false;
-              })
-              .finally(res => {
-                this.tempTableLoading = false;
-              });
-            this.tempTableLoading = false;
-          }
-        } else {
-          this.$Message.error("请完善信息!");
-        }
-      });
-    },
     goBack() {
       this.turnToPage("small-activity-coupon");
     },
@@ -1251,8 +1222,46 @@ export default {
           this.clearSearchLoading = false;
         });
     },
-    handleTemplateAdd(name) {
-      this.$refs[name].validate(valid => {
+    handleTemplateEdit() {
+      this.$refs.editForm.validate(valid => {
+        if (valid) {
+          if (
+            compareData(
+              this.addRelationDetail.effectiveStartTime,
+              this.addRelationDetail.effectiveEndTime
+            )
+          ) {
+            this.$Message.error("结束时间必须大于开始时间!");
+            return;
+          }
+
+          // 活动规则换行用“&”拼接
+          if (this.addRelationDetail.couponRules) {
+            this.addRelationDetail.couponRules = replaceByTag(
+              this.addRelationDetail.couponRules
+            );
+          }
+
+          if (this.tempModalType === this.modalType.edit) {
+            // 编辑状态
+            this.tempTableLoading = true;
+            editCouponTemplateRelation(this.addRelationDetail)
+              .then(res => {
+                this.getRelationTableData();
+                this.modalEdit = false;
+              })
+              .finally(res => {
+                this.tempTableLoading = false;
+              });
+            this.tempTableLoading = false;
+          }
+        } else {
+          this.$Message.error("请完善信息!");
+        }
+      });
+    },
+    handleTemplateAdd() {
+      this.$refs.addForm.validate(valid => {
         if (valid) {
           if (
             compareData(
