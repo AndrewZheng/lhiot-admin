@@ -160,20 +160,20 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :width="720" :z-index="1000" :mask-closable="false">
+    <Modal v-model="modalEdit" :width="1000" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <i-col>{{ tempModalType==modalType.edit?'修改限时抢购活动':(tempModalType==modalType.create?'创建限时抢购活动': '限时抢购活动和商品关联') }}</i-col>
       </p>
       <div class="modal-content">
         <Row v-if="tempModalType == modalType.edit || tempModalType == modalType.create">
-          <Form ref="editFrom" :model="flashsaleDetail" :rules="ruleInline" :label-width="80">
+          <Form ref="editForm" :model="flashsaleDetail" :rules="ruleInline" :label-width="80">
             <Row>
-              <Col span="18">
+              <i-col span="18">
                 <FormItem label="活动名称:">限时抢购</FormItem>
-              </Col>
+              </i-col>
             </Row>
             <Row>
-              <Col span="18">
+              <i-col span="18">
                 <FormItem label="有效期起:" prop="startTime">
                   <DatePicker
                     v-model="flashsaleDetail.startTime"
@@ -185,10 +185,10 @@
                     @on-change="startTimeChange"
                   />
                 </FormItem>
-              </Col>
+              </i-col>
             </Row>
             <Row>
-              <Col span="18">
+              <i-col span="18">
                 <FormItem label="有效期止:" prop="endTime">
                   <DatePicker
                     v-model="flashsaleDetail.endTime"
@@ -200,10 +200,10 @@
                     @on-change="endTimeChange"
                   />
                 </FormItem>
-              </Col>
+              </i-col>
             </Row>
             <Row>
-              <Col span="18">
+              <i-col span="18">
                 <FormItem label="活动状态:" prop="onOff">
                   <Select v-model="flashsaleDetail.onOff" clearable style="width: 170px">
                     <Option
@@ -215,7 +215,7 @@
                     >{{ item.label }}</Option>
                   </Select>
                 </FormItem>
-              </Col>
+              </i-col>
             </Row>
           </Form>
         </Row>
@@ -223,10 +223,10 @@
         <Row v-if="tempModalType == null ">
           <Row>
             <!-- 限时抢购只能添加一个关联商品，所以只有当关联商品为空时才显示 -->
-            <Card v-if="relationDetail==null">
+            <Card v-if="relationProducts.length === 0">
               <tables
                 ref="tables"
-                v-model="productDetail"
+                v-model="products"
                 :columns="productColumns"
                 :loading="tempTableLoading"
                 border
@@ -235,7 +235,6 @@
                 @on-delete="modalHandleDelete"
                 @on-inline-edit="modalHandleEdit"
                 @on-inline-save="modalHandleSave"
-                @on-select-all="onSelectionAll"
                 @on-selection-change="onProductSelectionChange"
               >
                 <div slot="searchCondition">
@@ -295,7 +294,7 @@
                 :label-width="80"
               >
                 <Row>
-                  <Col span="5">
+                  <i-col span="5">
                     <FormItem label="抢购价:" prop="salePrice">
                       <InputNumber
                         :min="0"
@@ -304,8 +303,8 @@
                         @on-change="salePriceInputNumberOnchange"
                       ></InputNumber>
                     </FormItem>
-                  </Col>
-                  <Col span="5">
+                  </i-col>
+                  <i-col span="5">
                     <FormItem label="商品总数量:" prop="goodsLimit">
                       <InputNumber
                         :min="0"
@@ -314,8 +313,8 @@
                         label="商品总数量"
                       ></InputNumber>
                     </FormItem>
-                  </Col>
-                  <Col span="5">
+                  </i-col>
+                  <i-col span="5">
                     <FormItem label="剩余数量:" prop="remainCount">
                       <InputNumber
                         :min="0"
@@ -324,8 +323,8 @@
                         label="剩余数量"
                       ></InputNumber>
                     </FormItem>
-                  </Col>
-                  <Col span="5">
+                  </i-col>
+                  <i-col span="5">
                     <FormItem label="限购数量:" prop="userLimit">
                       <InputNumber
                         :min="0"
@@ -334,8 +333,8 @@
                         label="限购数量"
                       ></InputNumber>
                     </FormItem>
-                  </Col>
-                  <Col span="4">
+                  </i-col>
+                  <i-col span="4">
                     <Button
                       v-waves
                       :loading="addTempDataLoading"
@@ -346,7 +345,7 @@
                     >
                       <Icon type="md-add"/>&nbsp;关联商品
                     </Button>
-                  </Col>
+                  </i-col>
                 </Row>
               </Form>*Tips：请先选择要关联的商品，然后输入关联配置信息，若关联多个商品，则所有的商品配置信息相同，添加完成后可在下方表格修改
             </Card>
@@ -355,7 +354,7 @@
           <Divider orientation="center">已关联商品</Divider>
           <tables
             :columns="relationColumns"
-            v-model="relationDetail"
+            v-model="relationProducts"
             :loading="tempTableLoading"
             border
             @on-delete="modalHandleDelete"
@@ -366,7 +365,7 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <!-- <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定 </Button> -->
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')" v-if="tempModalType == modalType.edit || tempModalType == modalType.create">确定 </Button>
       </div>
     </Modal>
   </div>
@@ -722,18 +721,7 @@ export default {
       ruleInline: {
         startTime: [{ required: true, message: "请选择活动开始时间" }],
         endTime: [{ required: true, message: "请选择活动结束时间" }],
-        onOff: [
-          { required: true, message: "请输入安全库存" },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
-              }
-              callback(errors);
-            }
-          }
-        ]
+        onOff: [{ required: true, message: "请选择活动状态" }]
       },
       relationRuleInline: {
         salePrice: [
@@ -831,7 +819,7 @@ export default {
             }
             return (
               <div>
-                <tag color="primary">{row.onOff}</tag>
+                <tag color="primary">{row.onOff? row.onOff : 'N/A'}</tag>
               </div>
             );
           }
@@ -861,9 +849,10 @@ export default {
       searchRelationRowData: _.cloneDeep(relationRowData),
       searchProductRowData: _.cloneDeep(productRowData),
       flashsaleDetail: _.cloneDeep(flashsaleDetail),
-      relationDetail: _.cloneDeep(relationDetail),
+      relationProducts: [],
       addRelationDetail: _.cloneDeep(relationDetail),
       productDetail: _.cloneDeep(productDetail),
+      products: [],
       productTotal: 0
     };
   },
@@ -886,8 +875,7 @@ export default {
       this.getTableData();
     },
     resetFields() {
-      this.$refs.editFrom.resetFields();
-      // this.$refs.uploadMain.clearFileList();
+      this.$refs.editForm.resetFields();
       this.uploadListMain = [];
       this.flashsaleDetail.storeImage = null;
     },
@@ -1002,21 +990,17 @@ export default {
       getFlashsaleProductRelationPages(this.searchRelationRowData)
         .then(res => {
           // 设置行是否可编辑
-          if (res.rows.length !== 0) {
+          if (res && res.rows.length > 0) {
             res.rows.forEach(element => {
               element.isEdit = false;
             });
-            this.relationDetail = res.rows;
-          } else {
-            this.relationDetail = null;
+            this.relationProducts = res.rows;
           }
-          // this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
         .catch(error => {
-          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1062,9 +1046,9 @@ export default {
     },
     addTempData(name) {
       // 先验证是否已经关联的商品
-      if (this.relationDetail != null) {
-        this.$Message.errors("限时抢购获得只能关联一个商品");
-        return;
+      if (this.relationProducts.length > 0 ) {
+        this.$Message.errors("限时抢购目前只能关联一个商品");
+        return false;
       }
       this.$refs[name].validate(valid => {
         if (valid) {
@@ -1079,7 +1063,7 @@ export default {
             this.$Message.error("请选择一个要关联的商品!");
             return;
           } else if (productStandardIds.length > 1) {
-            this.$Message.error("限时抢购获得只能关联一个商品");
+            this.$Message.error("限时抢购目前只能关联一个商品");
             return;
           } else if (
             this.addRelationDetail.remainCount >
@@ -1133,7 +1117,7 @@ export default {
       this.tempTableLoading = true;
       deleteFlashsaleProductRelation({ ids: params.row.id })
         .then(res => {
-          this.relationDetail = this.relationDetail.filter(
+          this.relationProducts = this.relationProducts.filter(
             (item, index) => index !== params.row.initRowIndex
           );
           this.getRelationTableData();
@@ -1145,13 +1129,10 @@ export default {
     getProductTableData() {
       this.loading = true;
       getProductStandardsPages(this.searchProductRowData).then(res => {
-        // if (this.menuData.length > 0) {
-        // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
-        this.productDetail = res.rows;
+        this.products = res.rows;
         this.productTotal = res.total;
         this.loading = false;
         this.searchLoading = false;
-        // }
       });
     },
     changeProductPage(page) {
@@ -1189,10 +1170,6 @@ export default {
       this.addRelationDetail.standardIds = selection
         .map(item => item.id.toString())
         .join(",");
-      console.log(
-        "商品选择变化,当前页选择productStandardIds:" +
-          this.addRelationDetail.standardIds
-      );
     },
     priceInputNumberOnchange(value) {
       this.addRelationDetail.price = yuanToFenNumber(value);

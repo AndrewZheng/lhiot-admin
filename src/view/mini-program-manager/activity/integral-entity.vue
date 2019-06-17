@@ -340,7 +340,7 @@ const relationDetail = {
   standardQty: 0,
   status: 'VALID',
   unitId: 0,
-  unitName: '',
+  unitName: null,
   barcode: '', // inherit
   specification: ''
 }
@@ -807,7 +807,7 @@ export default {
       this.addRelationDetail.productName = row.productName;
       this.addRelationDetail.barcode = row.barcode; // 商品条码
       this.addRelationDetail.unitId = row.unitId;
-      // this.addRelationDetail.unitName= row.productUnit;
+      this.addRelationDetail.unitName = row.productUnit; // 商品规格单位
       this.addRelationDetail.specification = row.specification; // 商品规格描述
       this.modalRelation=false;
     },

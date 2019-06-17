@@ -409,7 +409,8 @@ export default {
         },
         {
           title: '模板ID',
-          key: 'id'
+          key: 'id',
+          maxWidth: 80
         },
         {
           title: '优惠券名称',

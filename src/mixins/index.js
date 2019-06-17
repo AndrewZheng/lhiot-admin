@@ -7,7 +7,7 @@ import {
   rewardActivitySettingConvert, couponStatusConvert, couponTypeConvert, appTypeConvert, bankTypeConvert,
   timeLimitedConvert, advertisementPositionTypeConvert, couponScopeConvert, advertisementLinkTypeConvert,
   miniOrderStatusConvert, miniHdStatusConvert, miniOrderTypeConvert, yesNoConvert, deliverStatusConvert,
-  couponUseLimitConvert, validDateTypeConvert
+  couponUseLimitConvert, validDateTypeConvert, storeStatusConvert
 } from '../libs/converStatus';
 
 const mixin = {
@@ -74,6 +74,10 @@ const mixin = {
     // 订单状态
     orderStatusFilters(status) {
       return orderStatusConvert(status).label;
+    },
+    // 门店管理状态
+    storeStatusFilters(status) {
+      return storeStatusConvert(status).label;
     },
     // 提货方式
     receivingWayFilters(status) {

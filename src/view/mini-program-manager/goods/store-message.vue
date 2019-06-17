@@ -138,7 +138,7 @@
           <i-col span="12">
             <Row>
               <i-col span="6">门店状态:</i-col>
-              <i-col span="18">{{ storeDetail.storeStatus }}</i-col>
+              <i-col span="18">{{ storeDetail.storeStatus | storeStatusFilters }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">

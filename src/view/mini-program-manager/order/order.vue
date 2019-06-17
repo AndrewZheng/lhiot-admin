@@ -210,7 +210,7 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">下单用户:</i-col>
-              <i-col span="16">{{ orderDetail.nickname }}</i-col>
+              <i-col span="16">{{ orderDetail.receiveUser }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -230,7 +230,7 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">优惠券id:</i-col>
-              <i-col span="16">{{ orderDetail.couponId }}</i-col>
+              <i-col span="16">{{ orderDetail.couponId? orderDetail.couponId: '未使用' }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -244,7 +244,7 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">提货截止时间:</i-col>
-              <i-col span="16">{{ orderDetail.deliveryEndTime }}</i-col>
+              <i-col span="16">{{ orderDetail.deliveryEndTime?orderDetail.deliveryEndTime: 'N/A' }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -412,7 +412,7 @@
         <i-col span="12">
           <Row class-name="mb20">
             <i-col span="8">订单状态:</i-col>
-            <i-col span="16">{{ currentTableRowSelected.orderStatus|miniOrderStatusFilter }}</i-col>
+            <i-col span="16">{{ currentTableRowSelected.orderStatus| miniOrderStatusFilter }}</i-col>
           </Row>
         </i-col>
       </Row>
@@ -420,7 +420,7 @@
         <i-col span="12">
           <Row class-name="mb20">
             <i-col span="8">海鼎状态:</i-col>
-            <i-col span="16">{{ currentTableRowSelected.hdStatus|miniHdStatusFilter }}</i-col>
+            <i-col span="16">{{ currentTableRowSelected.hdStatus| miniHdStatusFilter }}</i-col>
           </Row>
         </i-col>
       </Row>
@@ -524,14 +524,14 @@ export default {
   mixins: [tableMixin, searchMixin],
   data() {
     return {
-      orderType: miniOrderTypeEnum,
-      orderStatus: orderStatusEnum,
       deliverNoteList: [],
       haiDingStatus: [],
+      storeList: [],
       transferModalView: false,
       modalViewLoading: false,
       deliverOrderLoading: false,
-      storeList: [],
+      orderType: miniOrderTypeEnum,
+      orderStatus: orderStatusEnum,
       receivingWayEnum,
       receivingWay,
       appTypeEnum,
@@ -669,7 +669,7 @@ export default {
         {
           title: '订单用户',
           width: 120,
-          key: 'nickname'
+          key: 'receiveUser'
         },
         {
           title: '下单门店',
@@ -708,7 +708,7 @@ export default {
           key: 'deliveryAmount',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.deliveryAmount);
-            return <div>{amount}</div>;
+            return <div>{ amount?amount:'N/A' }</div>;
           }
         },
         {
@@ -854,6 +854,14 @@ export default {
         );
         return;
       }
+
+      if (!this.currentTableRowSelected.apply!='S_MALL') {
+        this.$Message.error(
+          '该功能只适用于拼团小程序'
+        );
+        return;
+      }
+
       if (!this.currentTableRowSelected.storeId || !this.currentTableRowSelected.newStoreId) {
         this.$Message.error('该订单门店id为空');
         return;
@@ -875,9 +883,7 @@ export default {
     },
     deliverOrder() {
       if (!this.currentTableRowSelected) {
-        this.$Message.error(
-          '请用鼠标左键点击选择下方表格一行门店自提订单数据,才能进行调货处理'
-        );
+        this.$Message.error('请用鼠标左键点击选择下方表格一行门店自提订单数据,才能进行调货处理');
         return;
       }
       this.transferModalView = true;
@@ -958,6 +964,12 @@ export default {
       });
     },
     resendToHd() {
+       if (!this.tableDataSelected.apply!='S_MALL') {
+        this.$Message.error(
+          '该功能只适用于拼团小程序'
+        );
+        return false;
+      }
       // TODO 未测试
       if (this.tableDataSelected.length > 0) {
         const tempDeleteList = [];
@@ -966,7 +978,7 @@ export default {
         });
         const ids = tempDeleteList.join(',');
         resendToHd({ ids: ids }).then(res => {
-          this.$Message.info('海鼎重复成功');
+          this.$Message.info('海鼎重发成功');
         }).catch(error => {
           console.log(error);
         });
