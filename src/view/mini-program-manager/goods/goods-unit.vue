@@ -41,7 +41,7 @@
             type="info"
             @click="handleClear"
           >
-            <Icon type="md-refresh"/>&nbsp;清除条件
+            <Icon type="md-refresh"/>&nbsp;清除
           </Button>
         </div>
         <div slot="operations">
@@ -58,7 +58,7 @@
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash"/>
-              删除
+              批量删除
             </Button>
           </Poptip>
         </div>

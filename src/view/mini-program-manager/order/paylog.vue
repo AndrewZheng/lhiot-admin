@@ -74,7 +74,7 @@
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
             <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-              <Icon type="md-refresh"/>&nbsp;清除条件
+              <Icon type="md-refresh"/>&nbsp;清除
             </Button>
           </Row>
         </div>

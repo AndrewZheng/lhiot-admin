@@ -44,7 +44,7 @@
                   <Icon type="md-search"/>&nbsp;搜索
                 </Button>
                 <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-                  <Icon type="md-refresh"/>&nbsp;清除条件
+                  <Icon type="md-refresh"/>&nbsp;清除
                 </Button>
               </Row>
             </div>
@@ -66,7 +66,7 @@
               >
                 <Button type="error" class="mr5">
                   <Icon type="md-trash"/>
-                  删除
+                  批量删除
                 </Button>
               </Poptip>
             </div>
@@ -143,7 +143,7 @@
                       <Icon type="md-search"/>&nbsp;搜索
                     </Button>
                     <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="resetSearchProductRowData">
-                      <Icon type="md-refresh"/>&nbsp;清除条件
+                      <Icon type="md-refresh"/>&nbsp;清除
                     </Button>
                   </Row>
                 </div>

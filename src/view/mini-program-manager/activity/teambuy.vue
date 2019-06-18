@@ -72,13 +72,13 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除条件
+              <Icon type="md-refresh"/>&nbsp;清除
             </Button>
           </Row>
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
-            <Icon type="md-add"/>创建
+            <Icon type="md-add"/> 添加
           </Button>
           <Button
             v-waves
@@ -87,7 +87,7 @@
             class="mr5"
             @click="handleDownload"
           >
-            <Icon type="md-download"/>导出
+            <Icon type="md-download"/> 导出
           </Button>
         </div>
       </tables>
@@ -394,8 +394,8 @@
                   :image-size="imageSize"
                   @on-success="handleSuccessMain"
                 >
-                  <div slot="content">
-                    <Button type="primary">上传图片</Button>
+                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                      <Icon type="ios-camera" size="20"></Icon>
                   </div>
                 </IViewUpload>
               </FormItem>
@@ -670,7 +670,7 @@
       </div>
     </Modal>
 
-    <Modal v-model="uploadVisible" title="View Image">
+    <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
 
@@ -718,7 +718,7 @@
                 type="info"
                 @click="handleProductClear"
               >
-                <Icon type="md-refresh"/>&nbsp;清除条件
+                <Icon type="md-refresh"/>&nbsp;清除
               </Button>
             </Row>
           </div>

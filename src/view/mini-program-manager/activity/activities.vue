@@ -50,7 +50,7 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除条件
+              <Icon type="md-refresh"/>&nbsp;清除
             </Button>
           </Row>
         </div>
@@ -62,7 +62,7 @@
             class="mr5"
             @click="addActivities"
           >
-            <Icon type="md-add"/>创建
+            <Icon type="md-add"/> 添加
           </Button>
           <Poptip
             confirm
@@ -72,7 +72,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>删除
+              <Icon type="md-trash"/> 批量删除
             </Button>
           </Poptip>
         </div>

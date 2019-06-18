@@ -58,7 +58,7 @@
                   type="info"
                   @click="handleClear"
                 >
-                  <Icon type="md-refresh"/>&nbsp;清除条件
+                  <Icon type="md-refresh"/>&nbsp;清除
                 </Button>
               </Row>
             </div>
@@ -70,7 +70,7 @@
                 class="mr5"
                 @click="addProduct"
               >
-                <Icon type="md-add"/>创建
+                <Icon type="md-add"/>添加
               </Button>
               <Button
                 v-waves
@@ -334,7 +334,7 @@
             </Col>
             <Col span="12">
               <FormItem label="最低库存:" prop="limitQty">
-                <InputNumber :min="0" v-model="productDetail.limitQty" placeholder="最低库存"></InputNumber>
+                <InputNumber v-model="productDetail.limitQty" placeholder="最低库存"></InputNumber>
               </FormItem>
             </Col>
           </Row>
@@ -361,8 +361,8 @@
                 :image-size="imageSize"
                 @on-success="handleSuccessMain"
               >
-                <div slot="content">
-                  <Button type="primary">上传图片</Button>
+                <div slot="content" style="width:58px;height:58px;line-height:58px">
+                    <Icon type="ios-camera" size="20"></Icon>
                 </div>
               </IViewUpload>
             </FormItem>
@@ -422,7 +422,7 @@
       </div>
     </Modal>
 
-    <Modal v-model="uploadVisible" title="View Image">
+    <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
@@ -515,18 +515,7 @@ export default {
             }
           }
         ],
-        limitQty: [
-          { required: true, message: "请输入安全库存" },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
-              }
-              callback(errors);
-            }
-          }
-        ],
+        limitQty: [{ required: true, message: "请输入安全库存" }],
         baseQty: [
           { required: true, message: "请输入重量" },
           {

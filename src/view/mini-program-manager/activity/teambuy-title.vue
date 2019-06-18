@@ -27,7 +27,7 @@
             class="mr5"
             @click="addSystemSetting"
           >
-            <Icon type="md-add"/>创建
+            <Icon type="md-add"/>添加
           </Button>
           <!-- <Poptip
             confirm

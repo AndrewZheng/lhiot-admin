@@ -48,14 +48,14 @@
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
             <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-              <Icon type="md-refresh"/>&nbsp;清除条件
+              <Icon type="md-refresh"/>&nbsp;清除
             </Button>
           </Row>
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addEntityExchange">
             <Icon type="md-add"/>
-            创建
+            添加
           </Button>
           <Poptip
             confirm
@@ -269,7 +269,7 @@
               <Icon type="md-search"/>&nbsp;搜索
             </Button>
             <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleTemplateClear">
-              <Icon type="md-refresh"/>&nbsp;清除条件
+              <Icon type="md-refresh"/>&nbsp;清除
             </Button>
           </Row>
         </div>
@@ -290,7 +290,7 @@
       </div>
     </Modal>
 
-    <Modal v-model="uploadVisible" title="View Image">
+    <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>

@@ -88,7 +88,7 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除条件
+              <Icon type="md-refresh"/>&nbsp;清除
             </Button>
           </Row>
         </div>
@@ -103,7 +103,7 @@
             <Icon type="ios-arrow-back"/>&nbsp;返回
           </Button>
           <Button v-waves class="search-btn ml5 mr5" type="success" @click="handleCreateView">
-            <Icon type="md-add"/>&nbsp;创建
+            <Icon type="md-add"/>&nbsp;添加
           </Button>
           <Poptip
             confirm
@@ -113,7 +113,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>删除
+              <Icon type="md-trash"/> 批量删除
             </Button>
           </Poptip>
         </div>
@@ -678,7 +678,7 @@
                 type="info"
                 @click="handleProductClear"
               >
-                <Icon type="md-refresh"/>&nbsp;清除条件
+                <Icon type="md-refresh"/>&nbsp;清除
               </Button>
             </Row>
           </div>
@@ -698,7 +698,7 @@
       </Card>
     </Modal>
 
-    <Modal v-model="uploadVisible" title="View Image">
+    <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>

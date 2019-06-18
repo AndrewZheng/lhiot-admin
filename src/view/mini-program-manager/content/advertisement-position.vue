@@ -89,12 +89,12 @@
             type="info"
             @click="handleClear"
           >
-            <Icon type="md-refresh"/>&nbsp;清除条件
+            <Icon type="md-refresh"/>&nbsp;清除
           </Button>
         </div>
         <div slot="operations">
           <Button v-waves type="success" class="mr5" @click="createTableRow">
-            <Icon type="md-add"/>添加
+            <Icon type="md-add"/> 添加
           </Button>
           <Poptip
             confirm
@@ -104,7 +104,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>删除
+              <Icon type="md-trash"/> 批量删除
             </Button>
           </Poptip>
         </div>
@@ -258,7 +258,7 @@
       </div>
     </Modal>
 
-    <Modal v-model="uploadVisible" title="View Image">
+    <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
