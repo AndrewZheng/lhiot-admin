@@ -275,10 +275,11 @@
             v-model="couponTemplateData"
             :columns="templateColumns"
             :loading="tempTableLoading"
+            highlight-row
             border
             searchable
             search-place="top"
-            @on-selection-change="handleTemplateChange"
+            @on-current-change="handleTemplateChange"
           >
             <div slot="searchCondition">
               <Row>
@@ -308,10 +309,11 @@
             v-model="hdCouponTemplateData"
             :columns="hdTemplateColumns"
             :loading="tempTableLoading"
+            highlight-row
             border
             searchable
             search-place="top"
-            @on-selection-change="handleHdTemplateChange"
+            @on-current-change="handleHdTemplateChange"
           >
           </tables>
 
@@ -896,7 +898,7 @@ const dataColumns= [
 
 const templateColumns = [
   {
-    type: 'selection',
+    type: 'index',
     width: 60,
     align: 'center'
   },
@@ -976,7 +978,7 @@ const templateColumns = [
 
 const hdTemplateColumns = [
   {
-    type: 'selection',
+    type: 'index',
     width: 60,
     align: 'center'
   },
@@ -1330,20 +1332,15 @@ export default {
           }
       });
     },
-    handleTemplateChange(selection) {
-      // 选中关联的优惠券模板冗余对应字段到配置对象中- 默认为最后选择的一条数据
-      if(selection.length >= 2 ){
-        this.$Message.error('每次只能关联一张优惠券')
-        return;
-      }
-      const couponTemplate = selection[0];
+    handleTemplateChange(currentRow, oldCurrentRow) {
+      const couponTemplate = currentRow;
       this.addRelationDetail.couponName = couponTemplate.couponName;
       this.addRelationDetail.couponFee = couponTemplate.couponFee;
       this.addRelationDetail.minBuyFee = couponTemplate.minBuyFee;
       this.addRelationDetail.couponStatus = couponTemplate.couponStatus;
       this.addRelationDetail.couponType = couponTemplate.couponType;
     },
-    handleHdTemplateChange(selection) {
+    handleHdTemplateChange(currentRow, oldCurrentRow) {
       const couponTemplate = selection[0];
       const startIndex = couponTemplate.useRule.indexOf('满');
       const endIndex = couponTemplate.useRule.indexOf('元');
@@ -1354,6 +1351,8 @@ export default {
       this.addRelationDetail.couponFee = couponTemplate.faceValue;
       this.addRelationDetail.hdActivityId = couponTemplate.activityId;
       this.addRelationDetail.minBuyFee = minBuyFee * 100;
+      this.addRelationDetail.effectiveStartTime = couponTemplate.beginDate; //海鼎活动开始时间
+      this.addRelationDetail.effectiveEndTime = couponTemplate.endDate; //海鼎活动结束时间
     },
     effectiveStartTimeChange(value, date) {
       this.addRelationDetail.effectiveStartTime = value;

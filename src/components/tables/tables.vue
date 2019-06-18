@@ -337,7 +337,7 @@ export default {
       }
     },
     clearCurrentRow() {
-      this.$refs.talbesMain.clearCurrentRow();
+      this.$refs.tablesMain.clearCurrentRow();
     },
     onCurrentChange(currentRow, oldCurrentRow) {
       this.$emit('on-current-change', currentRow, oldCurrentRow);

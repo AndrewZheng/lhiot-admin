@@ -97,7 +97,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>批量删除
+              <Icon type="md-trash"/> 批量删除
             </Button>
           </Poptip>
         </div>
@@ -124,14 +124,15 @@
         <Row>
           <tables
             v-if="tempModalType == 'addTemplate'"
-            ref="tables"
+            ref="sysTables"
             v-model="couponTemplateData"
             :columns="templateColumns"
             :loading="tempTableLoading"
+            highlight-row
             border
             searchable
             search-place="top"
-            @on-selection-change="handleTemplateChange"
+            @on-current-change="handleTemplateChange"
           >
             <div slot="searchCondition">
               <Row>
@@ -179,14 +180,15 @@
 
           <tables
             v-if="tempModalType=='addHdTemplate'"
-            ref="tables"
+            ref="hdTables"
             v-model="hdCouponTemplateData"
             :columns="hdTemplateColumns"
             :loading="tempTableLoading"
             border
             searchable
+            highlight-row
             search-place="top"
-            @on-selection-change="handleHdTemplateChange"
+            @on-current-change="handleHdTemplateChange"
           ></tables>
 
           <div style="margin: 10px;overflow: hidden">
@@ -742,7 +744,7 @@ const dataColumns = [
 
 const templateColumns = [
   {
-    type: "selection",
+    type: "index",
     width: 60,
     align: "center"
   },
@@ -851,7 +853,7 @@ const templateColumns = [
 
 const hdTemplateColumns = [
   {
-    type: "selection",
+    type: "index",
     width: 60,
     align: "center"
   },
@@ -1122,28 +1124,30 @@ export default {
       this.searchTemplateRowData = _.cloneDeep(templateRowData);
       this.handleTemplateSearch();
     },
-    handleTemplateChange(selection) {
+    handleTemplateChange(currentRow, oldCurrentRow) {
       // 选中关联的优惠券模板冗余对应字段到配置对象中- 默认为最后选择的一条数据
-      const couponTemplate = selection[0];
-      this.addRelationDetail.couponName = couponTemplate.couponName;
-      this.addRelationDetail.couponFee = couponTemplate.couponFee;
-      this.addRelationDetail.minBuyFee = couponTemplate.minBuyFee;
-      this.addRelationDetail.couponStatus = couponTemplate.couponStatus;
-      this.addRelationDetail.couponType = couponTemplate.couponType;
+      this.addRelationDetail.couponName = currentRow.couponName;
+      this.addRelationDetail.couponFee = currentRow.couponFee;
+      this.addRelationDetail.minBuyFee = currentRow.minBuyFee;
+      this.addRelationDetail.couponStatus = currentRow.couponStatus;
+      this.addRelationDetail.couponType = currentRow.couponType;
+      // this.$refs.sysTables.clearCurrentRow();
     },
-    handleHdTemplateChange(selection) {
+    handleHdTemplateChange(currentRow, oldCurrentRow) {
       // 选中关联的优惠券模板冗余对应字段到配置对象中- 默认为最后选择的一条数据
-      const couponTemplate = selection[0];
-      const startIndex = couponTemplate.useRule.indexOf("满");
-      const endIndex = couponTemplate.useRule.indexOf("元");
-      const minBuyFee = couponTemplate.useRule.slice(startIndex + 1, endIndex);
-      this.addRelationDetail.useLimitType = couponTemplate.useLimitType; // 海鼎券的uselimitType从couponRemark解析出
-      this.addRelationDetail.couponName = couponTemplate.couponName;
-      this.addRelationDetail.couponType = couponTemplate.couponType;
-      this.addRelationDetail.couponFee = couponTemplate.faceValue;
-      this.addRelationDetail.hdActivityId = couponTemplate.activityId;
+      const startIndex = currentRow.useRule.indexOf("满");
+      const endIndex = currentRow.useRule.indexOf("元");
+      const minBuyFee = currentRow.useRule.slice(startIndex + 1, endIndex);
+      this.addRelationDetail.useLimitType = currentRow.useLimitType; // 海鼎券的uselimitType从couponRemark解析出
+      this.addRelationDetail.couponName = currentRow.couponName;
+      this.addRelationDetail.couponType = currentRow.couponType;
+      this.addRelationDetail.couponFee = currentRow.faceValue;
+      this.addRelationDetail.hdActivityId = currentRow.activityId;
       this.addRelationDetail.minBuyFee = minBuyFee * 100;
       this.addRelationDetail.couponStatus = "VALID"; // 海鼎券默认为有效状态
+      this.addRelationDetail.effectiveStartTime = currentRow.beginDate; //海鼎活动开始时间
+      this.addRelationDetail.effectiveEndTime = currentRow.endDate; //海鼎活动结束时间
+      // this.$refs.hdTables.clearCurrentRow();
     },
     effectiveStartTimeChange(value, date) {
       this.addRelationDetail.effectiveStartTime = value;
@@ -1176,13 +1180,14 @@ export default {
       this.addRelationDetail.validDateType = "FIXED_DATE";
       this.addRelationDetail.activityCouponId = this.couponDetail.id;
       console.log("before create:", this.addRelationDetail);
-      this.addRelationList.push(this.addRelationDetail); // 按以前的逻辑实现
+      this.addRelationList.push(this.addRelationDetail);
       createCouponTemplateRelation(this.addRelationList)
         .then(res => {
           this.modalViewLoading = false;
           this.modalAdd = false;
           this.$Message.success("创建成功!");
           this.getRelationTableData();
+          this.addRelationList = [];
         })
         .catch(() => {
           this.modalViewLoading = false;
@@ -1194,13 +1199,14 @@ export default {
       this.addRelationDetail.source = "HD";
       this.addRelationDetail.activityCouponId = this.couponDetail.id;
       console.log("before create:", this.addRelationDetail);
-      this.addRelationList.push(this.addRelationDetail); // 按以前的逻辑实现
+      this.addRelationList.push(this.addRelationDetail);
       createCouponTemplateRelation(this.addRelationList)
         .then(res => {
           this.modalViewLoading = false;
           this.$Message.success("创建成功!");
           this.modalAdd = false;
           this.getRelationTableData();
+          this.addRelationList = [];
         })
         .catch(() => {
           this.modalViewLoading = false;

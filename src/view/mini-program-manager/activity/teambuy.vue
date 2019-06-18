@@ -317,20 +317,20 @@
       <div class="modal-content">
         <Form ref="editForm" :model="teambuyDetail" :rules="ruleInline" :label-width="80">
           <Row v-show="tempModalType===modalType.edit">
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="团购ID:" prop="id">{{ teambuyDetail.id }}</FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem label="创建时间:" prop="createTime">{{ teambuyDetail.createTime }}</FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="活动名称:" prop="activityName">
                 <Input v-model="teambuyDetail.activityName"></Input>
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem label="活动类型:" prop="teamBuyType">
                 <Select v-model="teambuyDetail.teamBuyType">
                   <Option
@@ -342,15 +342,15 @@
                   >{{ item.label }}</Option>
                 </Select>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="活动内容:" prop="content">
                 <Input v-model="teambuyDetail.content"></Input>
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem label="活动状态:" prop="status">
                 <Select v-model="teambuyDetail.status">
                   <Option
@@ -363,15 +363,15 @@
                   >{{ item.label }}</Option>
                 </Select>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="排序序号:" prop="rank">
                 <InputNumber :min="0" v-model="teambuyDetail.rank" style="width: 200px"></InputNumber>
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem label="活动banner 推荐使用尺寸为750*304(单位:px):" prop="banner">
                 <Input v-show="false" v-model="teambuyDetail.banner" style="width: auto"></Input>
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
@@ -399,14 +399,14 @@
                   </div>
                 </IViewUpload>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="有效期起:" prop="startTime">
                 <DatePicker
                   :readonly="tempModalType === modalType.edit"
-                  :value="teambuyDetail.startTime"
+                  v-model="teambuyDetail.startTime"
                   format="yyyy-MM-dd HH:mm:ss"
                   type="datetime"
                   placeholder="有效期起"
@@ -415,12 +415,12 @@
                   @on-change="startTimeChange"
                 />
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem label="有效期止:" prop="endTime">
                 <DatePicker
                   :readonly="tempModalType === modalType.edit"
-                  :value="teambuyDetail.endTime"
+                  v-model="teambuyDetail.endTime"
                   format="yyyy-MM-dd HH:mm:ss"
                   type="datetime"
                   placeholder="有效期止"
@@ -429,10 +429,10 @@
                   @on-change="endTimeChange"
                 />
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="提货截止时间:" prop="deliveryEndTime">
                 <DatePicker
                   :readonly="tempModalType === modalType.edit"
@@ -445,8 +445,8 @@
                   @on-change="deliveryEndTimeChange"
                 />
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem label="成团有效时长:" prop="validSeconds">
                 <!-- TODO 后期插件修改 -->
                 <!-- <TimePicker type="time" placeholder="成团有效时长" style="width: 200px" @on-change=""></TimePicker> -->
@@ -472,15 +472,15 @@
                   @on-change="validSecondsChange"
                 ></InputNumber>秒
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="成团人数:" prop="fullUserNum">
                 <InputNumber :min="0" v-model="teambuyDetail.fullUserNum" style="width: 200px"></InputNumber>
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem label="参团信息列表:" prop="joinInfoStatus">
                 <Select v-model="teambuyDetail.joinInfoStatus">
                   <Option
@@ -493,10 +493,10 @@
                   >{{ item.label }}</Option>
                 </Select>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="是否模拟成团:" prop="robot">
                 <Select v-model="teambuyDetail.robot">
                   <Option
@@ -509,15 +509,15 @@
                   >{{ item.label }}</Option>
                 </Select>
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem label="多少秒后虚位补齐:" prop="robotStartSecond">
                 <Input v-model="teambuyDetail.robotStartSecond"></Input>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="商品规格:" prop="standardId">
                 <Input v-model="teambuyDetail.standardId" readonly="readonly">
                   <Button
@@ -528,15 +528,15 @@
                   ></Button>
                 </Input>
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem label="规格描述:" prop="standardDesc">
                 <Input v-model="teambuyDetail.standardDesc"></Input>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="原价:">
                 {{ teambuyDetail.originalPrice | fenToYuanDot2Filters }}
                 <!-- <InputNumber
@@ -547,8 +547,8 @@
                 style="width: 200px"
                 @on-change="originalPriceInputNumberOnchange"></InputNumber>-->
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem label="活动价:" prop="activityPrice">
                 <InputNumber
                   :min="0"
@@ -558,10 +558,10 @@
                   @on-change="activityPriceInputNumberOnchange"
                 ></InputNumber>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="团长优惠:" prop="tourDiscount">
                 <InputNumber
                   :min="0"
@@ -571,8 +571,8 @@
                   @on-change="tourDiscountInputNumberOnchange"
                 ></InputNumber>
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem label="限购次数:" prop="triesLimit">
                 <InputNumber
                   :min="0"
@@ -581,10 +581,10 @@
                   placeholder="默认999"
                 ></InputNumber>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="库存数量:" prop="productNum">
                 <InputNumber
                   v-model="teambuyDetail.productNum"
@@ -592,15 +592,15 @@
                   style="width: 200px"
                 ></InputNumber>
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem label="已售份数:" prop="saleQuantity">
                 <InputNumber :min="0" v-model="teambuyDetail.saleQuantity" style="width: 200px"></InputNumber>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="单人团购价格:" prop="singleTeambuyPrice">
                 <InputNumber
                   :min="0"
@@ -610,8 +610,8 @@
                   @on-change="singleTeambuyPriceInputNumberOnchange"
                 ></InputNumber>
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem label="红包活动设置:" prop="rewardActivitySetting">
                 <Select v-model="teambuyDetail.rewardActivitySetting">
                   <Option
@@ -623,10 +623,10 @@
                   >{{ item.label }}</Option>
                 </Select>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="关联门店:">
                 <Select v-model="teambuyDetail.relationStoreType">
                   <Option
@@ -639,10 +639,10 @@
                   >{{ item.label }}</Option>
                 </Select>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row v-show="showStoreList">
-            <Col span="24">
+            <i-col span="24">
               <FormItem label="门店列表:">
                 <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
                   <Checkbox
@@ -660,7 +660,7 @@
                   >{{ item.storeName }}</Checkbox>
                 </CheckboxGroup>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
         </Form>
       </div>
@@ -794,8 +794,9 @@ const teambuyDetail = {
   content: "",
   status: "off", // 默认活动关闭
   rank: 0,
-  startTime: "",
-  endTime: "",
+  startTime: null,
+  endTime: null,
+  deliveryEndTime: null,
   banner: "",
   totalNum: 0,
   activityPrice: null,
@@ -803,7 +804,6 @@ const teambuyDetail = {
   fullUserNum: 0,
   standardId: 0,
   validSeconds: null,
-  deliveryEndTime: "",
   standardDesc: "",
   fullTeambuyCount: 0,
   robot: "off", // 默认关闭模拟成团
@@ -1396,6 +1396,22 @@ export default {
             this.$Message.error("成团有效时长不能为小数");
             return;
           }
+          // 活动格式转换Formart
+          if(this.teambuyDetail.startTime.indexOf('GMT') > 0){
+            this.teambuyDetail.startTime = this.$moment(this.teambuyDetail.startTime).format('yyyy-MM-dd HH:mm:ss');
+            console.log('startTime after format', this.teambuyDetail.startTime);
+          }
+
+          if(this.teambuyDetail.endTime.indexOf('GMT') > 0){
+            this.teambuyDetail.endTime = this.$moment(this.teambuyDetail.endTime).format('yyyy-MM-dd HH:mm:ss');
+            console.log('endTime after format', this.teambuyDetail.endTime);
+          }
+          
+          if(this.teambuyDetail.deliveryEndTime.indexOf('GMT') > 0){
+            this.teambuyDetail.deliveryEndTime = this.$moment(this.teambuyDetail.deliveryEndTime).format('yyyy-MM-dd HH:mm:ss');
+            console.log('endTime after format', this.teambuyDetail.deliveryEndTime);
+          }
+
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
             this.createStore();
@@ -1410,6 +1426,7 @@ export default {
     },
     createStore() {
       this.modalViewLoading = true;
+      this.teambuyDetail.id = null; // 新建时不需要传递id
       createTeamBuy(this.teambuyDetail)
         .then(res => {
           this.modalViewLoading = false;
@@ -1574,9 +1591,11 @@ export default {
       this.teambuyDetail.banner = fileList[0].url;
     },
     startTimeChange(value, date) {
+      console.log('change start value:', value);
       this.teambuyDetail.startTime = value;
     },
     endTimeChange(value, date) {
+      console.log('change end value:', value);
       this.teambuyDetail.endTime = value;
     },
     createTimeStartChange(value, date) {
