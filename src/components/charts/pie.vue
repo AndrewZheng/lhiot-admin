@@ -3,31 +3,31 @@
 </template>
 
 <script>
-import echarts from 'echarts'
-import tdTheme from './theme.json'
-import { on, off } from '@/libs/tools'
-echarts.registerTheme('tdTheme', tdTheme)
+import echarts from 'echarts';
+import tdTheme from './theme.json';
+echarts.registerTheme('tdTheme', tdTheme);
 export default {
   name: 'ChartPie',
   props: {
-    value: Array,
-    text: String,
-    subtext: String
-  },
-  data () {
-    return {
-      dom: null
+    value: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
+    text: {
+      type: String,
+      default: ''
+    },
+    subtext: {
+      type: String,
+      default: ''
     }
   },
-  methods: {
-    resize () {
-      this.dom.resize()
-    }
-  },
-  mounted () {
+  mounted() {
     this.$nextTick(() => {
-      let legend = this.value.map(_ => _.name)
-      let option = {
+      const legend = this.value.map(_ => _.name);
+      const option = {
         title: {
           text: this.text,
           subtext: this.subtext,
@@ -57,14 +57,13 @@ export default {
             }
           }
         ]
-      }
-      this.dom = echarts.init(this.$refs.dom, 'tdTheme')
-      this.dom.setOption(option)
-      on(window, 'resize', this.resize)
-    })
-  },
-  beforeDestroy () {
-    off(window, 'resize', this.resize)
+      };
+      const dom = echarts.init(this.$refs.dom, 'tdTheme');
+      dom.setOption(option);
+    });
   }
-}
+};
 </script>
+
+<style lang="less">
+</style>

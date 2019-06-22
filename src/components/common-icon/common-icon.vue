@@ -3,38 +3,46 @@
 </template>
 
 <script>
-import Icons from '_c/icons'
+import Icons from '_c/icons';
 export default {
   name: 'CommonIcon',
-  components: {Icons},
+  components: { Icons },
   props: {
     type: {
       type: String,
       required: true
     },
-    color: String,
-    size: Number
+    color: {
+      type: String,
+      required: false,
+      default: ''
+    },
+    size: {
+      type: Number,
+      required: false,
+      default: 0
+    }
   },
   computed: {
-    iconType () {
-      return this.type.indexOf('_') === 0 ? 'Icons' : 'Icon'
+    iconType() {
+      return this.type.indexOf('_') === 0 ? 'Icons' : 'Icon';
     },
-    iconName () {
-      return this.iconType === 'Icons' ? this.getCustomIconName(this.type) : this.type
+    iconName() {
+      return this.iconType === 'Icons' ? this.getCustomIconName(this.type) : this.type;
     },
-    iconSize () {
-      return this.size || (this.iconType === 'Icons' ? 12 : undefined)
+    iconSize() {
+      return this.size || (this.iconType === 'Icons' ? 12 : undefined);
     },
-    iconColor () {
-      return this.color || ''
+    iconColor() {
+      return this.color || '';
     }
   },
   methods: {
-    getCustomIconName (iconName) {
-      return iconName.slice(1)
+    getCustomIconName(iconName) {
+      return iconName.slice(1);
     }
   }
-}
+};
 </script>
 
 <style>

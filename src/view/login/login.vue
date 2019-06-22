@@ -5,41 +5,62 @@
 <template>
   <div class="login">
     <div class="login-con">
-      <Card icon="log-in" title="欢迎登录" :bordered="false">
-        <div class="form-con">
-          <login-form @on-success-valid="handleSubmit"></login-form>
-          <p class="login-tip">输入任意用户名和密码即可</p>
+      <div class="login-con-header">
+        <div class="login-con-header-left">
+          <div class="login-con-header-left-image"/>
+          <div>绿航物联</div>
         </div>
-      </Card>
+        <div style="color: black">|</div>
+        <div class="login-con-header-right">云平台管理</div>
+      </div>
+      <div class="form-con">
+        <login-form @on-success-valid="handleSubmit"></login-form>
+        <!-- <p class="login-tip">输入任意用户名和密码即可</p> -->
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import LoginForm from '_c/login-form'
-import { mapActions } from 'vuex'
+import LoginForm from '_c/login-form';
+import { mapActions } from 'vuex';
+import maxLogo from '@/assets/images/lhiot_logo.jpg';
 export default {
   components: {
     LoginForm
+  },
+  data() {
+    return {
+      maxLogo,
+      logo: 'this.src="' + require('../../../src/assets/images/lhiot_logo.jpg') + '"'
+    }
   },
   methods: {
     ...mapActions([
       'handleLogin',
       'getUserInfo'
     ]),
-    handleSubmit ({ userName, password }) {
-      this.handleLogin({ userName, password }).then(res => {
-        this.getUserInfo().then(res => {
-          this.$router.push({
-            name: this.$config.homeName
-          })
-        })
-      })
+    handleSubmit({ account, password }) {
+      this.handleLogin({ account, password }).then(res => {
+        this.$router.push({
+          name: 'home'
+        });
+      });
     }
   }
-}
+};
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+/*.login /deep/ */
+  .login-con{
+    width: 580px;
+    height: 620px;
+    min-height: 290px;
+    min-width: 310px;
+    box-shadow: 0px 16px 32px 0px
+    rgba(81, 114, 255, 0.5);
+    border-radius: 20px;
+    background: rgba(255,255,255,0.7)
+  }
 </style>

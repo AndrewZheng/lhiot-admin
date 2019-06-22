@@ -1,0 +1,44 @@
+
+@mixin absolute-center($positionCenter:absolute){
+    position: $positionCenter;
+    left:50%;
+    top:50%;
+    transform: translate(-50%,-50%);
+    -webkit-transfrom: translate(-50%,-50%);
+    -moz-transfrom:translate(-50%,-50%);
+    -o-transfrom:translate(-50%,-50%);
+}
+
+@mixin rounded-circle{
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -o-border-radius:50%;
+    border-radius: 50%;
+}
+
+@mixin rounded-circle-value($radius:22px){
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    -o-border-radius:$radius;
+    border-radius: $radius;
+}
+
+@mixin card-box-shadow($shadows...){
+    -webkit-box-shadow:$shadows;
+    -moz-box-shadow:$shadows;
+    -o-box-shadow:$shadows;
+    box-shadow:$shadows;
+}
+
+@mixin line-gradient-bg{
+    background: linear-gradient(12deg,#82abfd 0%,#6bc6ee 54%);
+    background:-webkit-linear-gradient(12deg,#82abfd,#6bc6ee);
+}
+
+@mixin show-two-row{
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}

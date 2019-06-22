@@ -1,11 +1,21 @@
 <template>
   <div>
     <div v-if="searchable && searchPlace === 'top'" class="search-con search-con-top">
-      <Select v-model="searchKey" class="search-col">
-        <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
-      </Select>
-      <Input @on-change="handleClear" clearable placeholder="输入关键字搜索" class="search-input" v-model="searchValue"/>
-      <Button @click="handleSearch" class="search-btn" type="primary"><Icon type="search"/>&nbsp;&nbsp;搜索</Button>
+      <Row :gutter="24" type="flex" align="top" justify="space-between">
+        <i-col :span="searchAreaColumn">
+          <!-- 自带下拉搜索 -->
+          <!-- <Select v-model="searchKey" class="search-col">
+            <Option v-for="item in columns" v-if="item.key !== 'handle' && item.type!=='selection'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
+          </Select>
+          <Input @on-change="handleClear" clearable placeholder="输入关键字搜索" class="search-input" v-model="searchValue"></Input>
+          <Button v-waves @click="handleSearch" class="search-btn" type="primary"><Icon type="md-search"/>&nbsp;搜索</Button> -->
+          <!-- 自定义搜索条件 -->
+          <slot name="searchCondition"></slot>
+        </i-col>
+        <i-col :span="operateAreaColumn">
+          <slot name="operations"></slot>
+        </i-col>
+      </Row>
     </div>
     <Table
       ref="tablesMain"
@@ -34,46 +44,54 @@
       @on-row-dblclick="onRowDblclick"
       @on-expand="onExpand"
     >
-      <slot name="header" slot="header"></slot>
-      <slot name="footer" slot="footer"></slot>
-      <slot name="loading" slot="loading"></slot>
+      <slot slot="header" name="header"></slot>
+      <slot slot="footer" name="footer"></slot>
+      <slot slot="loading" name="loading"></slot>
     </Table>
     <div v-if="searchable && searchPlace === 'bottom'" class="search-con search-con-top">
       <Select v-model="searchKey" class="search-col">
-        <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
+        <Option v-for="item in columns" v-show="item.key !== 'handle' && item.type!=='selection'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
       </Select>
-      <Input placeholder="输入关键字搜索" class="search-input" v-model="searchValue"/>
-      <Button class="search-btn" type="primary"><Icon type="search"/>&nbsp;&nbsp;搜索</Button>
+      <Input v-model="searchValue" placeholder="输入关键字搜索" class="search-input"></Input>
+      <Button class="search-btn" type="primary"><Icon type="search"/>搜索</Button>
     </div>
     <a id="hrefToExportTable" style="display: none;width: 0px;height: 0px;"></a>
   </div>
 </template>
 
 <script>
-import TablesEdit from './edit.vue'
-import handleBtns from './handle-btns'
-import './index.less'
+import TablesEdit from './edit.vue';
+import handleBtns from './handle-btns';
+import excel from '@/libs/excel';
+import zip from '@/libs/zip';
+import './index.less';
+
 export default {
   name: 'Tables',
   props: {
     value: {
       type: Array,
-      default () {
-        return []
+      default() {
+        return [];
       }
     },
     columns: {
       type: Array,
-      default () {
-        return []
+      default() {
+        return [];
       }
     },
-    size: String,
+    size: {
+      type: String,
+      default: 'default'
+    },
     width: {
-      type: [Number, String]
+      type: [Number, String],
+      default: ''
     },
     height: {
-      type: [Number, String]
+      type: [Number, String],
+      default: ''
     },
     stripe: {
       type: Boolean,
@@ -93,21 +111,21 @@ export default {
     },
     rowClassName: {
       type: Function,
-      default () {
-        return ''
+      default() {
+        return '';
       }
     },
-    context: {
-      type: Object
-    },
     noDataText: {
-      type: String
+      type: String,
+      default: '暂无数据'
     },
     noFilteredDataText: {
-      type: String
+      type: String,
+      default: '暂无筛选结果'
     },
     disabledHover: {
-      type: Boolean
+      type: Boolean,
+      default: false
     },
     loading: {
       type: Boolean,
@@ -133,6 +151,22 @@ export default {
     searchPlace: {
       type: String,
       default: 'top'
+    },
+    searchAreaColumn: {
+      type: [Number, String],
+      default: 20
+    },
+    operateAreaColumn: {
+      type: [Number, String],
+      default: 4
+    },
+    filename: {
+      type: String,
+      default: '导出'
+    },
+    exportType: {
+      type: String,
+      default: 'xlsx'
     }
   },
   /**
@@ -141,18 +175,35 @@ export default {
    * @on-cancel-edit 返回值 {Object} 同上
    * @on-save-edit 返回值 {Object} ：除上面三个参数外，还有一个value: 修改后的数据
    */
-  data () {
+  data() {
     return {
       insideColumns: [],
       insideTableData: [],
       edittingCellId: '',
       edittingText: '',
       searchValue: '',
-      searchKey: ''
+      searchKey: '',
+      exportTitle: [],
+      exportKey: []
+    };
+  },
+  watch: {
+    columns(columns) {
+      this.handleColumns(columns);
+      this.setDefaultSearchKey();
+    },
+    value(val) {
+      this.handleTableData();
+      this.handleSearch();
     }
   },
+  mounted() {
+    this.handleColumns(this.columns);
+    this.setDefaultSearchKey();
+    this.handleTableData();
+  },
   methods: {
-    suportEdit (item, index) {
+    suportEdit(item, index) {
       item.render = (h, params) => {
         return h(TablesEdit, {
           props: {
@@ -163,115 +214,161 @@ export default {
           },
           on: {
             'input': val => {
-              this.edittingText = val
+              this.edittingText = val;
             },
             'on-start-edit': (params) => {
-              this.edittingCellId = `editting-${params.index}-${params.column.key}`
-              this.$emit('on-start-edit', params)
+              this.edittingCellId = `editting-${params.index}-${params.column.key}`;
+              this.$emit('on-start-edit', params);
             },
             'on-cancel-edit': (params) => {
-              this.edittingCellId = ''
-              this.$emit('on-cancel-edit', params)
+              this.edittingCellId = '';
+              this.$emit('on-cancel-edit', params);
             },
             'on-save-edit': (params) => {
-              this.value[params.row.initRowIndex][params.column.key] = this.edittingText
-              this.$emit('input', this.value)
-              this.$emit('on-save-edit', Object.assign(params, {value: this.edittingText}))
-              this.edittingCellId = ''
+              this.value[params.row.initRowIndex][params.column.key] = this.edittingText;
+              this.$emit('input', this.value);
+              this.$emit('on-save-edit', Object.assign(params, { value: this.edittingText }));
+              this.edittingCellId = '';
             }
           }
-        })
-      }
-      return item
+        });
+      };
+      return item;
     },
-    surportHandle (item) {
-      let options = item.options || []
-      let insideBtns = []
+    surportHandle(item) {
+      const options = item.options || [];
+      const insideBtns = [];
       options.forEach(item => {
-        if (handleBtns[item]) insideBtns.push(handleBtns[item])
-      })
-      let btns = item.button ? [].concat(insideBtns, item.button) : insideBtns
+        if (handleBtns[item]) insideBtns.push(handleBtns[item]);
+      });
+      const btns = item.button ? [].concat(insideBtns, item.button) : insideBtns;
       item.render = (h, params) => {
-        params.tableData = this.value
-        return h('div', btns.map(item => item(h, params, this)))
-      }
-      return item
+        params.tableData = this.value;
+        return h('div', btns.map(item => item(h, params, this)));
+      };
+      return item;
     },
-    handleColumns (columns) {
+    handleColumns(columns) {
       this.insideColumns = columns.map((item, index) => {
-        let res = item
-        if (res.editable) res = this.suportEdit(res, index)
-        if (res.key === 'handle') res = this.surportHandle(res)
-        return res
-      })
+        let res = item;
+        if (res.editable) res = this.suportEdit(res, index);
+        if (res.key === 'handle') res = this.surportHandle(res);
+        return res;
+      });
     },
-    setDefaultSearchKey () {
-      this.searchKey = this.columns[0].key !== 'handle' ? this.columns[0].key : (this.columns.length > 1 ? this.columns[1].key : '')
+    setDefaultSearchKey() {
+      const columnArr = this.columns.filter(item => item.key !== 'handle' && item.key !== 'id' && item.type !== 'selection');
+      this.searchKey = columnArr.length > 0 ? columnArr[0].key : '';
     },
-    handleClear (e) {
-      if (e.target.value === '') this.insideTableData = this.value
+    handleClear(e) {
+      if (e.target.value === '') this.insideTableData = this.value;
     },
-    handleSearch () {
-      this.insideTableData = this.value.filter(item => item[this.searchKey].indexOf(this.searchValue) > -1)
+    handleSearch() {
+      this.insideTableData = this.value.filter(item => {
+        if (typeof item[this.searchKey] === 'string') {
+          return item[this.searchKey].indexOf(this.searchValue) > -1;
+        } else {
+          return true;
+        }
+      });
     },
-    handleTableData () {
+    handleTableData() {
       this.insideTableData = this.value.map((item, index) => {
-        let res = item
-        res.initRowIndex = index
-        return res
-      })
+        const res = item;
+        res.initRowIndex = index;
+        return res;
+      });
     },
-    exportCsv (params) {
-      this.$refs.tablesMain.exportCsv(params)
+    exportCsv(params) {
+      this.$refs.tablesMain.exportCsv(params);
     },
-    clearCurrentRow () {
-      this.$refs.talbesMain.clearCurrentRow()
+    exportExcel(params) {
+      if (params.data.length) {
+        const params1 = {
+          title: this.exportTitle,
+          key: this.exportKey,
+          data: params.data,
+          autoWidth: true,
+          filename: params.filename
+        };
+        excel.export_array_to_excel(params1);
+        // 清空数据
+        this.exportTitle = [];
+        this.exportKey = [];
+      } else {
+        this.$Message.info('表格数据不能为空！');
+      }
     },
-    onCurrentChange (currentRow, oldCurrentRow) {
-      this.$emit('on-current-change', currentRow, oldCurrentRow)
+    exportZip(params) {
+      const data = this.formatJson(this.exportKey, params.data);
+      const params1 = {
+        th: this.exportTitle,
+        jsonData: data,
+        txtName: params.filename,
+        zipName: params.filename
+      };
+      zip.export_txt_to_zip(params1);
     },
-    onSelect (selection, row) {
-      this.$emit('on-select', selection, row)
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]));
     },
-    onSelectCancel (selection, row) {
-      this.$emit('on-select-cancel', selection, row)
+    handleDownload(params) {
+      this.columns.forEach(item => {
+        if (item.key !== 'handle' && item.type !== 'selection') {
+          this.exportTitle.push(item['title']);
+          this.exportKey.push(item['key']);
+        }
+      });
+      switch (this.exportType) {
+        case 'xlsx':
+          this.exportExcel(params);
+          break;
+        case 'csv':
+          this.exportCsv({
+            filename: params.filename
+          });
+          break;
+        case 'zip':
+          this.exportZip(params);
+          break;
+        default:
+          this.exportExcel(params);
+          break;
+      }
     },
-    onSelectAll (selection) {
-      this.$emit('on-select-all', selection)
+    clearCurrentRow() {
+      this.$refs.tablesMain.clearCurrentRow();
     },
-    onSelectionChange (selection) {
-      this.$emit('on-selection-change', selection)
+    onCurrentChange(currentRow, oldCurrentRow) {
+      this.$emit('on-current-change', currentRow, oldCurrentRow);
     },
-    onSortChange (column, key, order) {
-      this.$emit('on-sort-change', column, key, order)
+    onSelect(selection, row) {
+      this.$emit('on-select', selection, row);
     },
-    onFilterChange (row) {
-      this.$emit('on-filter-change', row)
+    onSelectCancel(selection, row) {
+      this.$emit('on-select-cancel', selection, row);
     },
-    onRowClick (row, index) {
-      this.$emit('on-row-click', row, index)
+    onSelectAll(selection) {
+      this.$emit('on-select-all', selection);
     },
-    onRowDblclick (row, index) {
-      this.$emit('on-row-dblclick', row, index)
+    onSelectionChange(selection) {
+      this.$emit('on-selection-change', selection);
     },
-    onExpand (row, status) {
-      this.$emit('on-expand', row, status)
+    onSortChange(column, key, order) {
+      this.$emit('on-sort-change', column, key, order);
+    },
+    onFilterChange(row) {
+      this.$emit('on-filter-change', row);
+    },
+    onRowClick(row, index) {
+      this.$emit('on-row-click', row, index);
+    },
+    onRowDblclick(row, index) {
+      this.$emit('on-row-dblclick', row, index);
+    },
+    onExpand(row, status) {
+      this.$emit('on-expand', row, status);
     }
-  },
-  watch: {
-    columns (columns) {
-      this.handleColumns(columns)
-      this.setDefaultSearchKey()
-    },
-    value (val) {
-      this.handleTableData()
-      this.handleSearch()
-    }
-  },
-  mounted () {
-    this.handleColumns(this.columns)
-    this.setDefaultSearchKey()
-    this.handleTableData()
   }
-}
+};
 </script>

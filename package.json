@@ -1,29 +1,39 @@
 {
   "name": "iview-admin",
-  "version": "2.0.0",
-  "author": "Lison<lison.modern@gmail.com>",
+  "version": "2.1.1",
+  "description": "A magical vue admin. An out-of-box UI solution for enterprise applications. Newest development stack of vue. Lots of awesome features",
+  "author": "Andrew<andrew.zhengx@gmail.com>",
   "private": false,
+  "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve --open",
-    "build": "vue-cli-service build",
+    "build:prod": "vue-cli-service build",
+    "build:stage": "vue-cli-service build --mode staging",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e"
   },
   "dependencies": {
+    "@tinymce/tinymce-vue": "^1.0.9",
     "axios": "^0.18.0",
     "clipboard": "^2.0.0",
     "codemirror": "^5.38.0",
     "countup": "^1.8.2",
     "cropperjs": "^1.2.2",
-    "dayjs": "^1.7.7",
+    "crypto-js": "^3.1.9-1",
     "echarts": "^4.0.4",
+    "file-saver": "^2.0.0-rc.4",
     "html2canvas": "^1.0.0-alpha.12",
     "iview": "^3.1.3",
     "iview-area": "^1.5.17",
     "js-cookie": "^2.2.0",
+    "jszip": "^3.1.5",
+    "lockr": "^0.8.4",
+    "lodash": "^4.17.10",
+    "moment": "^2.22.2",
     "simplemde": "^1.11.2",
     "sortablejs": "^1.7.0",
+    "tinymce": "^4.8.3",
     "vue": "^2.5.10",
     "vue-i18n": "^7.8.0",
     "vue-router": "^3.0.1",
@@ -39,12 +49,17 @@
     "@vue/cli-service": "^3.0.1",
     "@vue/eslint-config-standard": "^3.0.0-beta.10",
     "@vue/test-utils": "^1.0.0-beta.10",
+    "autoprefixer": "^9.1.5",
+    "babel-eslint": "^8.2.6",
     "chai": "^4.1.2",
     "eslint-plugin-cypress": "^2.0.1",
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
     "lint-staged": "^6.0.0",
     "mockjs": "^1.0.1-beta3",
+    "node-sass": "^4.9.3",
+    "sass-loader": "^7.1.0",
+    "script-loader": "^0.7.2",
     "vue-template-compiler": "^2.5.13"
   },
   "browserslist": [
@@ -57,11 +72,9 @@
   },
   "lint-staged": {
     "*.js": [
-      "vue-cli-service lint",
       "git add"
     ],
     "*.vue": [
-      "vue-cli-service lint",
       "git add"
     ]
   }

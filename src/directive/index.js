@@ -1,4 +1,7 @@
-import directive from './directives'
+import directive from './directives';
+import waves from './waves';
+import clipboard from './clipboard';
+import sticky from './sticky';
 
 const importDirective = Vue => {
   /**
@@ -9,7 +12,11 @@ const importDirective = Vue => {
    *  recover: /拖动结束之后是否恢复到原来的位置/
    * }
    */
-  Vue.directive('draggable', directive.draggable)
-}
+  Vue.directive('draggable', directive.draggable);
+  Vue.directive('has', directive.has);
+  Vue.directive('waves', waves);
+  Vue.directive('clipboard', clipboard);
+  Vue.directive('sticky', sticky);
+};
 
-export default importDirective
+export default importDirective;

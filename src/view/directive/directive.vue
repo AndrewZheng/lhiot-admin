@@ -6,7 +6,7 @@
           <Row>
             <i-col span="5">
               <Button type="primary" @click="showModal">显示可拖动弹窗</Button>
-              <br/>
+              <br>
               <Button v-draggable="buttonOptions" class="draggable-btn">这个按钮也是可以拖动的</Button>
             </i-col>
             <i-col span="19">
@@ -32,8 +32,8 @@
 
 <script>
 export default {
-  name: 'directive_page',
-  data () {
+  name: 'DirectivePage',
+  data() {
     return {
       modalVisible: false,
       options: {
@@ -46,14 +46,14 @@ export default {
         body: '.draggable-btn'
       },
       statu: 1
-    }
+    };
   },
   methods: {
-    showModal () {
-      this.modalVisible = true
+    showModal() {
+      this.modalVisible = true;
     }
   }
-}
+};
 </script>
 
 <style>

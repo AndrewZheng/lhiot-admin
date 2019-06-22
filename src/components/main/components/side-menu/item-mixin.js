@@ -8,14 +8,14 @@ export default {
     iconSize: Number
   },
   computed: {
-    parentName () {
-      return this.parentItem.name
+    parentName() {
+      return this.parentItem.name;
     },
-    children () {
-      return this.parentItem.children
+    children() {
+      return this.parentItem.children;
     },
-    textColor () {
-      return this.theme === 'dark' ? '#fff' : '#495060'
+    textColor() {
+      return this.theme === 'dark' ? '#fff' : '#495060';
     }
   }
-}
+};

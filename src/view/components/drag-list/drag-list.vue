@@ -4,11 +4,11 @@
       <div class="drag-box-card">
 
         <!-- 切记设置list1和list2属性时，一定要添加.sync修饰符 -->
-        <drag-list :list1.sync="list1" :list2.sync="list2" :dropConClass="dropConClass" @on-change="handleChange">
+        <drag-list :list1.sync="list1" :list2.sync="list2" :drop-con-class="dropConClass" @on-change="handleChange">
           <h3 slot="left-title">待办事项</h3>
-          <Card class="drag-item" slot="left" slot-scope="left">{{ left.itemLeft.name }}</Card>
+          <Card slot="left" slot-scope="left" class="drag-item">{{ left.itemLeft.name }}</Card>
           <h3 slot="right-title">完成事项</h3>
-          <Card class="drag-item" slot="right" slot-scope="right">{{ right.itemRight.name }}</Card>
+          <Card slot="right" slot-scope="right" class="drag-item">{{ right.itemRight.name }}</Card>
         </drag-list>
 
       </div>
@@ -28,14 +28,14 @@
   </div>
 </template>
 <script>
-import DragList from '_c/drag-list'
-import { getDragList } from '@/api/data'
+import DragList from '_c/drag-list';
+import { getDragList } from '@/api/data';
 export default {
-  name: 'drag_list_page',
+  name: 'DragListPage',
   components: {
     DragList
   },
-  data () {
+  data() {
     return {
       list1: [],
       list2: [],
@@ -44,20 +44,20 @@ export default {
         right: ['drop-box', 'right-drop-box']
       },
       handleList: []
-    }
+    };
+  },
+  mounted() {
+    getDragList().then(res => {
+      this.list1 = res;
+      this.list2 = [res[0]];
+    });
   },
   methods: {
-    handleChange ({ src, target, oldIndex, newIndex }) {
-      this.handleList.push(`${src} => ${target}, ${oldIndex} => ${newIndex}`)
+    handleChange({ src, target, oldIndex, newIndex }) {
+      this.handleList.push(`${src} => ${target}, ${oldIndex} => ${newIndex}`);
     }
-  },
-  mounted () {
-    getDragList().then(res => {
-      this.list1 = res.data
-      this.list2 = [res.data[0]]
-    })
   }
-}
+};
 </script>
 <style lang="less">
 .drag-box-card{
@@ -77,9 +77,6 @@ export default {
   }
   .left-drop-box{
     margin-right: 10px;
-  }
-  .right-drop-box{
-    //
   }
 }
 .handle-log-box{

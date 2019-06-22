@@ -1,21 +1,42 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view v-cloak v-if="isRouterAlive"/>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
-}
+  name: 'App',
+  provide() {
+    return {
+      reload: this.reload
+    };
+  },
+  data() {
+    return {
+      isRouterAlive: true
+    };
+  },
+  created() {},
+  mounted() {},
+  methods: {
+    reload() {
+      this.isRouterAlive = false;
+      this.$nextTick(function() {
+        this.isRouterAlive = true;
+      });
+    }
+  }
+};
 </script>
 
 <style lang="less">
-.size{
+.size {
   width: 100%;
   height: 100%;
 }
-html,body{
+html,
+body {
   .size;
   overflow: hidden;
   margin: 0;

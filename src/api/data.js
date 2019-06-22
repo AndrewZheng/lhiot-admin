@@ -1,30 +1,70 @@
-import axios from '@/libs/api.request'
+import Vue from 'vue';
 
-export const getTableData = () => {
-  return axios.request({
+export const getTableData = ({
+  page,
+  rows
+}) => {
+  const data = {
+    page,
+    rows
+  };
+
+  return Vue.prototype.$http.request({
     url: 'get_table_data',
+    params: data,
     method: 'get'
-  })
-}
+  });
+};
 
 export const getDragList = () => {
-  return axios.request({
+  return Vue.prototype.$http.request({
     url: 'get_drag_list',
     method: 'get'
-  })
-}
+  });
+};
 
-export const errorReq = () => {
-  return axios.request({
-    url: 'error_url',
-    method: 'post'
-  })
-}
+export const getMenuData = ({
+  page,
+  rows,
+  pid
+}) => {
+  const data = {
+    page,
+    rows,
+    pid
+  };
 
-export const saveErrorLogger = info => {
-  return axios.request({
-    url: 'save_error_logger',
-    data: info,
+  // return Vue.prototype.$http.request({
+  //   url: 'get_menu_data',
+  //   params: data,
+  //   method: 'get'
+  // });
+  return Vue.prototype.$http.request({
+    url: '/ims-menu/pages',
+    data: data,
     method: 'post'
-  })
-}
+  });
+};
+
+export const getOperateData = ({
+  page,
+  rows,
+  menuId
+}) => {
+  const data = {
+    page,
+    rows,
+    menuId
+  };
+
+  // return Vue.prototype.$http.request({
+  //   url: 'get_operate_data',
+  //   params: data,
+  //   method: 'get'
+  // });
+  return Vue.prototype.$http.request({
+    url: '/ims-operation/pages',
+    data: data,
+    method: 'post'
+  });
+};

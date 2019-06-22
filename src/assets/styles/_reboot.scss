@@ -1,0 +1,57 @@
+html, body {
+    font-family: $baseFont;
+    word-break: break-all;
+    word-wrap: break-word;
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body, h1, h2, h3, h4, h5, h6, p, ul, li, dl, dt, dd {
+    padding: 0;
+    margin: 0;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+p {
+    font-family: $baseFont;
+}
+
+li {
+    list-style: none;
+}
+
+em {
+    font-style: normal;
+}
+
+a{
+    color:$brandColor-H;
+    outline: 0;
+    text-decoration: none !important;
+    font-weight: 400 !important;
+    font-family: $baseFont;
+    
+    &:hover{
+       text-decoration: none;
+    }
+}
+
+button{
+    font-family: $baseFont;
+    &:focus{
+       outline: 0;
+    }
+}
+
+textarea {
+    font-family: $baseFont;
+    font-size: 1.2rem;
+}
+
+input {
+    font-family: $baseFont;
+    outline: none !important;
+    font-size: 1.4rem;
+}

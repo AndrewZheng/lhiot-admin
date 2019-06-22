@@ -16,9 +16,12 @@
 export default {
   name: 'Language',
   props: {
-    lang: String
+    lang: {
+      type: String,
+      default: 'zh-CN'
+    }
   },
-  data () {
+  data() {
     return {
       langList: {
         'zh-CN': '语言',
@@ -30,22 +33,22 @@ export default {
         'zh-TW': '中文繁体',
         'en-US': 'English'
       }
+    };
+  },
+  computed: {
+    title() {
+      return this.langList[this.lang];
     }
   },
   watch: {
-    lang (lang) {
-      this.$i18n.locale = lang
-    }
-  },
-  computed: {
-    title () {
-      return this.langList[this.lang]
+    lang(lang) {
+      this.$i18n.locale = lang;
     }
   },
   methods: {
-    selectLang (name) {
-      this.$emit('on-lang-change', name)
+    selectLang(name) {
+      this.$emit('on-lang-change', name);
     }
   }
-}
+};
 </script>

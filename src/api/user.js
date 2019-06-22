@@ -1,30 +1,39 @@
-import axios from '@/libs/api.request'
+import Vue from 'vue';
 
-export const login = ({ userName, password }) => {
+export const login = ({ account, password }) => {
   const data = {
-    userName,
+    account,
     password
-  }
-  return axios.request({
-    url: 'login',
+  };
+
+  return Vue.prototype.$http.request({
+    url: '/admin/sessions', // login /admin/sessions
     data,
     method: 'post'
-  })
-}
+  });
+};
 
 export const getUserInfo = (token) => {
-  return axios.request({
-    url: 'get_info',
-    params: {
-      token
-    },
+  // return Vue.prototype.$http.request({
+  //   url: 'get_info',
+  //   params: {
+  //     token
+  //   },
+  //   method: 'get'
+  // });
+  return Vue.prototype.$http.request({
+    url: '/admin/sessions',
     method: 'get'
-  })
-}
+  });
+};
 
 export const logout = (token) => {
-  return axios.request({
-    url: 'logout',
-    method: 'post'
-  })
-}
+  // return Vue.prototype.$http.request({
+  //   url: 'logout',
+  //   method: 'post'
+  // });
+  return Vue.prototype.$http.request({
+    url: '/admin/sessions',
+    method: 'delete'
+  });
+};

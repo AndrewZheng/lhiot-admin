@@ -1,6 +1,6 @@
 <template>
-  <Dropdown ref="dropdown" @on-click="handleClick" :class="hideTitle ? '' : 'collased-menu-dropdown'" :transfer="hideTitle" :placement="placement">
-    <a class="drop-menu-a" type="text" @mouseover="handleMousemove($event, children)" :style="{textAlign: !hideTitle ? 'left' : ''}"><common-icon :size="rootIconSize" :color="textColor" :type="parentItem.icon"/><span class="menu-title" v-if="!hideTitle">{{ showTitle(parentItem) }}</span><Icon style="float: right;" v-if="!hideTitle" type="ios-arrow-forward" :size="16"/></a>
+  <Dropdown ref="dropdown" :class="hideTitle ? '' : 'collased-menu-dropdown'" :transfer="hideTitle" :placement="placement" @on-click="handleClick">
+    <a :style="{textAlign: !hideTitle ? 'left' : ''}" class="drop-menu-a" type="text" @mouseover="handleMousemove($event, children)"><common-icon :size="rootIconSize" :color="textColor" :type="parentItem.icon"/><span v-if="!hideTitle" class="menu-title">{{ showTitle(parentItem) }}</span><Icon v-if="!hideTitle" :size="16" style="float: right;" type="ios-arrow-forward"/></a>
     <DropdownMenu ref="dropdown" slot="list">
       <template v-for="child in children">
         <collapsed-menu v-if="showChildren(child)" :icon-size="iconSize" :parent-item="child" :key="`drop-${child.name}`"></collapsed-menu>
@@ -10,13 +10,13 @@
   </Dropdown>
 </template>
 <script>
-import mixin from './mixin'
-import itemMixin from './item-mixin'
-import { findNodeUpperByClasses } from '@/libs/util'
+import mixin from './mixin';
+import itemMixin from './item-mixin';
+import { findNodeUpperByClasses } from '@/libs/util';
 
 export default {
   name: 'CollapsedMenu',
-  mixins: [ mixin, itemMixin ],
+  mixins: [mixin, itemMixin],
   props: {
     hideTitle: {
       type: Boolean,
@@ -27,25 +27,25 @@ export default {
       default: 16
     }
   },
-  data () {
+  data() {
     return {
       placement: 'right-end'
-    }
+    };
+  },
+  mounted() {
+    const dropdown = findNodeUpperByClasses(this.$refs.dropdown.$el, ['ivu-select-dropdown', 'ivu-dropdown-transfer']);
+    if (dropdown) dropdown.style.overflow = 'visible';
   },
   methods: {
-    handleClick (name) {
-      this.$emit('on-click', name)
+    handleClick(name) {
+      this.$emit('on-click', name);
     },
-    handleMousemove (event, children) {
-      const { pageY } = event
-      const height = children.length * 38
-      const isOverflow = pageY + height < window.innerHeight
-      this.placement = isOverflow ? 'right-start' : 'right-end'
+    handleMousemove(event, children) {
+      const { pageY } = event;
+      const height = children.length * 38;
+      const isOverflow = pageY + height < window.innerHeight;
+      this.placement = isOverflow ? 'right-start' : 'right-end';
     }
-  },
-  mounted () {
-    let dropdown = findNodeUpperByClasses(this.$refs.dropdown.$el, ['ivu-select-dropdown', 'ivu-dropdown-transfer'])
-    if (dropdown) dropdown.style.overflow = 'visible'
   }
-}
+};
 </script>

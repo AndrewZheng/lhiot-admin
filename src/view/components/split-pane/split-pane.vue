@@ -6,7 +6,7 @@
           <div slot="top" class="pane top-pane"></div>
           <div slot="bottom" class="pane bottom-pane"></div>
           <div slot="trigger" class="custom-trigger">
-            <icons class="trigger-icon" :size="22" type="resize-vertical" color="#fff"/>
+            <icons :size="22" class="trigger-icon" type="resize-vertical" color="#fff"/>
           </div>
         </split-pane>
       </div>
@@ -16,26 +16,26 @@
 </template>
 
 <script>
-import SplitPane from '_c/split-pane'
-import Icons from '_c/icons'
+import SplitPane from '_c/split-pane';
+import Icons from '_c/icons';
 export default {
-  name: 'split_pane_page',
+  name: 'SplitPanePage',
   components: {
     SplitPane,
     Icons
   },
-  data () {
+  data() {
     return {
       offset: 0.6,
       offsetVertical: '250px'
-    }
+    };
   },
   methods: {
-    handleMoving (e) {
-      console.log(e.atMin, e.atMax)
+    handleMoving(e) {
+      console.log(e.atMin, e.atMax);
     }
   }
-}
+};
 </script>
 
 <style lang="less">

@@ -20,14 +20,14 @@ export default {
     }
   },
   computed: {
-    styles () {
+    styles() {
       return {
         fontSize: `${this.size}px`,
         color: this.color
-      }
+      };
     }
   }
-}
+};
 </script>
 
 <style>

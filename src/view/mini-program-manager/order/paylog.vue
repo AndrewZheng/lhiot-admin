@@ -1,0 +1,391 @@
+<template>
+  <div class="m-role">
+    <Card>
+      <tables
+        ref="tables"
+        v-model="tableData"
+        :columns="columns"
+        :loading="loading"
+        :search-area-column="18"
+        :operate-area-column="6"
+        editable
+        searchable
+        border
+        search-place="top"
+        @on-view="handleView"
+      >
+        <div slot="searchCondition">
+          <Row>
+            <DatePicker
+              v-model="searchRowData.startTime"
+              format="yyyy-MM-dd HH:mm:ss"
+              type="datetime"
+              placeholder="支付时间起"
+              class="search-input"
+              style="width: 150px"
+              @on-change="startTimeChange"
+            />
+            <i>-</i>
+            <DatePicker
+              v-model="searchRowData.endTime"
+              format="yyyy-MM-dd HH:mm:ss"
+              type="datetime"
+              placeholder="支付时间止"
+              class="search-input  mr5"
+              style="width: 150px"
+              @on-change="endTimeChange"/>
+            <Select v-model="searchRowData.app_type" placeholder="应用类型" style="padding-right: 5px;width: 100px" clearable>
+              <Option
+                v-for="(item,index) in appTypeEnum"
+                :value="item.value"
+                :key="index"
+                class="ptb2-5"
+                style="padding-left: 5px">{{ item.label }}
+              </Option>
+            </Select>
+            <Select v-model="searchRowData.payType" placeholder="支付类型" style="padding-right: 5px;width: 100px" clearable>
+              <Option
+                v-for="(item,index) in payTypeEnum"
+                :value="item.value"
+                :key="index"
+                class="ptb2-5"
+                style="padding-left: 5px">{{ item.label }}
+              </Option>
+            </Select>
+            <Select v-model="searchRowData.payStep" placeholder="支付步骤" style="padding-right: 5px;width: 100px" clearable>
+              <Option
+                v-for="(item,index) in payStepEnum"
+                :value="item.value"
+                :key="index"
+                class="ptb2-5"
+                style="padding-left: 5px">{{ item.label }}
+              </Option>
+            </Select>
+            <Select v-model="searchRowData.sourceType" placeholder="支付来源" style="padding-right: 5px;width: 100px" clearable>
+              <Option
+                v-for="(item,index) in sourceTypeEnum"
+                :value="item.value"
+                :key="index"
+                class="ptb2-5"
+                style="padding-left: 5px">{{ item.label }}
+              </Option>
+            </Select>
+            <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
+              <Icon type="md-search"/>&nbsp;搜索
+            </Button>
+            <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
+              <Icon type="md-refresh"/>&nbsp;清除
+            </Button>
+          </Row>
+        </div>
+      </tables>
+      <div style="margin: 10px;overflow: hidden">
+        <Row type="flex" justify="end">
+          <Page
+            :total="total"
+            :current="searchRowData.page"
+            show-sizer
+            show-total
+            @on-change="changePage"
+            @on-page-size-change="changePageSize"></Page>
+        </Row>
+      </div>
+    </Card>
+
+    <Modal
+      v-model="modalView"
+      :mask-closable="false"
+    >
+      <p slot="header">
+        <span>机器人详情</span>
+      </p>
+      <div class="modal-content">
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">主键ID:</i-col>
+              <i-col span="18">{{ paymentLogDetail.id }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">门店id:</i-col>
+              <i-col span="18">{{ paymentLogDetail.storeId }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">门店名称:</i-col>
+              <i-col span="18">{{ paymentLogDetail.storeName }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">用户id:</i-col>
+              <i-col span="18">{{ paymentLogDetail.userId }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">收货人:</i-col>
+              <i-col span="18">{{ paymentLogDetail.receiverName }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">联系方式:</i-col>
+              <i-col span="18">{{ paymentLogDetail.receiverMobile }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">用户昵称:</i-col>
+              <i-col span="18">{{ paymentLogDetail.nickName }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">用户头像:</i-col>
+              <i-col span="18">
+                <img :src="paymentLogDetail.avater" style="width: 150px">
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+      </div>
+      <div slot="footer">
+        <Button type="primary" @click="handleClose">关闭</Button>
+      </div>
+    </Modal>
+
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+import Tables from '_c/tables';
+import _ from 'lodash';
+import { getPaymentLogPages } from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import { fenToYuanDot2 } from '@/libs/util';
+import { appTypeConvert, payTypeConvert, payStepConvert, sourceTypeConvert, bankTypeConvert } from '@/libs/converStatus';
+import { appTypeEnum, payTypeEnum, payStepEnum, sourceTypeEnum } from '@/libs/enumerate';
+
+const paymentLogDetail = {
+  id: 0,
+  orderId: '',
+  userId: 0,
+  app_type: null,
+  sourceType: null,
+  payType: null,
+  payStep: null,
+  payFee: 0,
+  tradeId: '',
+  signAt: null,
+  payAt: null,
+  bankType: null,
+  deleted: '',
+  orderCode: '',
+  startTime: null,
+  endTime: null,
+  nickName: ''
+};
+
+const roleRowData = {
+  sourceType: null,
+  payType: null,
+  payStep: null,
+  app_type: null,
+  page: 1,
+  rows: 10
+};
+
+export default {
+  components: {
+    Tables
+  },
+  mixins: [tableMixin, searchMixin],
+  data() {
+    return {
+      columns: [
+        {
+          title: '订单Id',
+          key: 'orderId',
+          width: 170,
+          fixed: 'left'
+        },
+        {
+          title: '用户Id',
+          key: 'userId',
+          width: 80
+        },
+        {
+          title: '应用类型',
+          key: 'app_type',
+          width: 120,
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.app_type === 'WXSMALL_SHOP') {
+              return <div><tag color='green'>{appTypeConvert(row.app_type).label}</tag></div>;
+            } else if (row.app_type === 'S_MALL') {
+              return <div><tag color='gold'>{appTypeConvert(row.app_type).label}</tag></div>;
+            } else {
+              return <div>{row.app_type}</div>;
+            }
+          }
+        },
+        {
+          title: '支付类型',
+          width: 120,
+          key: 'payType',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.payType === 'weixin') {
+              return <div><tag color='green'>{payTypeConvert(row.payType).label}</tag></div>;
+            } else if (row.payType === 'balance') {
+              return <div><tag color='gold'>{payTypeConvert(row.payType).label}</tag></div>;
+            } else {
+              return <div>{row.payType}</div>;
+            }
+          }
+        },
+        {
+          title: '支付来源',
+          width: 120,
+          key: 'sourceType',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.sourceType === 'recharge') {
+              return <div><tag color='green'>{sourceTypeConvert(row.sourceType).label}</tag></div>;
+            } else if (row.sourceType === 'order') {
+              return <div><tag color='gold'>{sourceTypeConvert(row.sourceType).label}</tag></div>;
+            } else {
+              return <div>{row.sourceType}</div>;
+            }
+          }
+        },
+        {
+          title: '第三方支付金额',
+          width: 120,
+          key: 'payFee',
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(params.row.payFee);
+            return <div>{amount}</div>;
+          }
+        },
+        {
+          title: '第三方单号',
+          key: 'tradeId',
+          width: 170
+        },
+        {
+          title: '支付步骤',
+          width: 100,
+          key: 'payStep',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.payStep === 'paid') {
+              return <div><tag color='green'>{payStepConvert(row.payStep).label}</tag></div>;
+            } else if (row.payStep === 'sign') {
+              return <div><tag color='gold'>{payStepConvert(row.payStep).label}</tag></div>;
+            } else {
+              return <div>{row.payStep}</div>;
+            }
+          }
+        },
+        {
+          title: '签名时间',
+          key: 'signAt',
+          width: 160
+        },
+        {
+          title: '支付时间',
+          key: 'payAt',
+          width: 160
+        },
+        {
+          title: '银行类型',
+          key: 'bankType',
+          width: 140,
+          render: (h, params, vm) => {
+            const { row } = params;
+            return <div>{bankTypeConvert(row.bankType).label}</div>;
+          }
+        },
+        {
+          title: '用户昵称',
+          key: 'nickName'
+        }
+        // {
+        //   title: '操作',
+        //   minWidth: 80,
+        //   key: 'handle',
+        //   options: ['view']
+        // }
+      ],
+      createLoading: false,
+      modalViewLoading: false,
+      searchRowData: _.cloneDeep(roleRowData),
+      paymentLogDetail: _.cloneDeep(paymentLogDetail),
+      appTypeEnum,
+      payTypeEnum,
+      payStepEnum,
+      sourceTypeEnum
+    };
+  },
+  mounted() {
+    this.searchRowData = _.cloneDeep(roleRowData);
+    this.getTableData();
+  },
+  created() {
+  },
+  methods: {
+    resetSearchRowData() {
+      this.searchRowData = _.cloneDeep(roleRowData);
+      this.getTableData();
+    },
+    handleView(params) {
+      this.tempModalType = this.modalType.view;
+      this.paymentLogDetail = _.cloneDeep(params.row);
+      this.modalView = true;
+    },
+    getTableData() {
+      getPaymentLogPages(this.searchRowData).then(res => {
+        this.tableData = res.rows;
+        this.total = res.total;
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
+      }).catch(error => {
+        console.log(error);
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
+      });
+    },
+    startTimeChange(value, date) {
+      this.paymentLogDetail.startTime = value;
+    },
+    endTimeChange(value, date) {
+      this.paymentLogDetail.endTime = value;
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+</style>

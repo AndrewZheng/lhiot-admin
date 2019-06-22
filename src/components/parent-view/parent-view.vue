@@ -4,5 +4,5 @@
 <script>
 export default {
   name: 'ParentView'
-}
+};
 </script>
