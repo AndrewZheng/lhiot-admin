@@ -1,8 +1,10 @@
 {
   "name": "iview-admin",
-  "version": "2.0.0",
+  "version": "2.1.1",
+  "description": "A magical vue admin. An out-of-box UI solution for enterprise applications. Newest development stack of vue. Lots of awesome features",
   "author": "Andrew<andrew.zhengx@gmail.com>",
   "private": false,
+  "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve --open",
     "build:prod": "vue-cli-service build",
