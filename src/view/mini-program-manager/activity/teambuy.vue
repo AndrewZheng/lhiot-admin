@@ -312,7 +312,7 @@
 
     <Modal v-model="modalEdit" :z-index="1000" :width="720" :mask-closable="false">
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改团购活动':'创建团购活动' }}</i-col>
+        <i-col>{{ tempModalType === modalType.edit?'修改团购活动':'创建团购活动' }}</i-col>
       </p>
       <div class="modal-content">
         <Form ref="editForm" :model="teambuyDetail" :rules="ruleInline" :label-width="80">
@@ -600,7 +600,7 @@
             </i-col>
           </Row>
           <Row>
-            <i-col span="12">
+            <i-col span="12" v-if="teambuyDetail.teamBuyType!=='OLD_AND_NEW'">
               <FormItem label="单人团购价格:" prop="singleTeambuyPrice">
                 <InputNumber
                   :min="0"
@@ -666,7 +666,7 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit" v-show="teambuyDetail.status!='expire'">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
       </div>
     </Modal>
 
@@ -1323,64 +1323,65 @@ export default {
       this.teambuyDetail.banner = null;
     },
     handleSubmit() {
+      let _this = this;
       this.$refs.editForm.validate(valid => {
         if (valid) {
           if (
-            this.teambuyDetail.teamBuyType === "OLD_AND_NEW" &&
-            this.teambuyDetail.fullUserNum <= 1
+            _this.teambuyDetail.teamBuyType === "OLD_AND_NEW" &&
+            _this.teambuyDetail.fullUserNum <= 1
           ) {
-            this.$Message.error("老带新团成团人数必须大于1");
+            _this.$Message.error("老带新团成团人数必须大于1");
             return;
           }
           if (
             compareData(
-              this.teambuyDetail.startTime,
-              this.teambuyDetail.endTime
+              _this.teambuyDetail.startTime,
+              _this.teambuyDetail.endTime
             )
           ) {
-            this.$Message.error("结束时间必须大于开始时间!");
+            _this.$Message.error("结束时间必须大于开始时间!");
             return;
           }
           if (
             compareData(
-              this.teambuyDetail.endTime,
-              this.teambuyDetail.deliveryEndTime
+              _this.teambuyDetail.endTime,
+              _this.teambuyDetail.deliveryEndTime
             )
           ) {
-            this.$Message.error("提货截止时间必须大于有效期止时间!");
+            _this.$Message.error("提货截止时间必须大于有效期止时间!");
             return;
           }
           if (
-            this.teambuyDetail.robotStartSecond >
-            this.teambuyDetail.validSeconds
+            _this.teambuyDetail.robotStartSecond >
+            _this.teambuyDetail.validSeconds
           ) {
-            this.$Message.error("虚位补齐时间不能超过成团有效时长!");
+            _this.$Message.error("虚位补齐时间不能超过成团有效时长!");
             return;
           }
           if (
-            parseInt(this.teambuyDetail.productNum) %
-              parseInt(this.teambuyDetail.fullUserNum) !==
+            parseInt(_this.teambuyDetail.productNum) %
+              parseInt(_this.teambuyDetail.fullUserNum) !==
             0
           ) {
-            this.$Message.error("商品份额必须被成团人数整除!");
+            _this.$Message.error("商品份额必须被成团人数整除!");
             return;
           }
           if (
-            this.teambuyDetail.relationStoreType === "PART" &&
-            (this.teambuyDetail.storeIds == null ||
-              this.teambuyDetail.storeIds === "")
+            _this.teambuyDetail.relationStoreType === "PART" &&
+            (_this.teambuyDetail.storeIds == null ||
+              _this.teambuyDetail.storeIds === "")
           ) {
-            this.$Message.error("选择部分门店时必须选择至少一个门店!");
+            _this.$Message.error("选择部分门店时必须选择至少一个门店!");
             return;
           }
-          if (this.teambuyDetail.productNum < this.teambuyDetail.fullUserNum) {
-            this.$Message.error("库存数量不能小于成团人数!");
+          if (_this.teambuyDetail.productNum < _this.teambuyDetail.fullUserNum) {
+            _this.$Message.error("库存数量不能小于成团人数!");
             return;
           }
           if (
-            this.teambuyDetail.tourDiscount >= this.teambuyDetail.activityPrice
+            _this.teambuyDetail.tourDiscount >= _this.teambuyDetail.activityPrice
           ) {
-            this.$Message.error("团长优惠不能大于等于活动金额!");
+            _this.$Message.error("团长优惠不能大于等于活动金额!");
             return;
           }
           // if (this.teambuyDetail.activityPrice > this.teambuyDetail.originalPrice) {
@@ -1392,35 +1393,35 @@ export default {
           //   return;
           // }
           var numRe = new RegExp(/^[0-9]+$/);
-          if (!numRe.test(this.teambuyDetail.validSeconds)) {
-            this.$Message.error("成团有效时长不能为小数");
+          if (!numRe.test(_this.teambuyDetail.validSeconds)) {
+            _this.$Message.error("成团有效时长不能为小数");
             return;
           }
           // 活动格式转换Formart
-          if(this.teambuyDetail.startTime.indexOf('GMT') > 0){
-            this.teambuyDetail.startTime = this.$moment(this.teambuyDetail.startTime).format('yyyy-MM-dd HH:mm:ss');
-            console.log('startTime after format', this.teambuyDetail.startTime);
+          if(_this.teambuyDetail.startTime.indexOf('GMT') > 0){
+            _this.teambuyDetail.startTime = _this.$moment(_this.teambuyDetail.startTime).format('yyyy-MM-dd HH:mm:ss');
+            console.log('startTime after format', _this.teambuyDetail.startTime);
           }
 
-          if(this.teambuyDetail.endTime.indexOf('GMT') > 0){
-            this.teambuyDetail.endTime = this.$moment(this.teambuyDetail.endTime).format('yyyy-MM-dd HH:mm:ss');
-            console.log('endTime after format', this.teambuyDetail.endTime);
+          if(_this.teambuyDetail.endTime.indexOf('GMT') > 0){
+            _this.teambuyDetail.endTime = _this.$moment(_this.teambuyDetail.endTime).format('yyyy-MM-dd HH:mm:ss');
+            console.log('endTime after format', _this.teambuyDetail.endTime);
           }
           
-          if(this.teambuyDetail.deliveryEndTime.indexOf('GMT') > 0){
-            this.teambuyDetail.deliveryEndTime = this.$moment(this.teambuyDetail.deliveryEndTime).format('yyyy-MM-dd HH:mm:ss');
-            console.log('endTime after format', this.teambuyDetail.deliveryEndTime);
+          if(_this.teambuyDetail.deliveryEndTime.indexOf('GMT') > 0){
+            _this.teambuyDetail.deliveryEndTime = _this.$moment(_this.teambuyDetail.deliveryEndTime).format('yyyy-MM-dd HH:mm:ss');
+            console.log('endTime after format', _this.teambuyDetail.deliveryEndTime);
           }
 
-          if (this.tempModalType === this.modalType.create) {
+          if (_this.tempModalType === _this.modalType.create) {
             // 添加状态
-            this.createStore();
-          } else if (this.tempModalType === this.modalType.edit) {
+            _this.createStore();
+          } else if (_this.tempModalType === _this.modalType.edit) {
             // 编辑状态
-            this.editStore();
+            _this.editStore();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          _this.$Message.error("请完善信息!");
         }
       });
     },

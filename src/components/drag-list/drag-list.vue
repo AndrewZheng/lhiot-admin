@@ -85,8 +85,16 @@ export default {
 .drag-list-wrapper{
   height: 100%;
   .drag-list-con{
-    width: 50%;
+    width: auto;
     float: left;
+
+    .drag-list-item{
+      display: inline-block;
+      border: 1px solid #eeeded;
+      padding: 5px;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
   }
 }
 </style>

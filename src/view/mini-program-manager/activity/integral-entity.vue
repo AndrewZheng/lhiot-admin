@@ -218,6 +218,11 @@
                   <InputNumber :min="0" v-model="addRelationDetail.entityLimit" label="限购数量"></InputNumber>
                 </FormItem>
               </i-col>
+              <i-col span="6">
+                <FormItem label="排序字段:" prop="rank">
+                  <InputNumber :min="0" v-model="addRelationDetail.rank" label="排序字段"></InputNumber>
+                </FormItem>
+              </i-col>
             </Row>
             <Row>
               <i-col span="12">
@@ -553,6 +558,7 @@ export default {
         productName: [{ required: true, message: '请先关联一个商品' }],
         entityType: [{ required: true, message: '请选择实物类型' }],
         exchangeRemark: [{ required: true, message: '请输入兑换说明' }],
+        rank: [{ required: true, message: '请输入排序字段' }],
         points: [{ required: true, message: '请输入兑换积分' },{
            validator(rule, value, callback, source, options) {
             const errors = [];

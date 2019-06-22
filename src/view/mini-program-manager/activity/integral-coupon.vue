@@ -1017,7 +1017,14 @@ const hdTemplateColumns = [
     key: 'faceValue',
     minWidth: 80,
     render(h, params) {
-      return <div>{fenToYuanDot2(params.row.faceValue)}</div>;
+      const { row } = params;
+      if (row.couponType === "DISCOUNT_COUPON") {
+        const lastIndex = row.couponName.indexOf('折');
+        const couponFee = row.couponName.substring(0, lastIndex+1);
+        return <div>{ couponFee }</div>;
+      } else {
+        return <div>{fenToYuanDot2(params.row.faceValue)}</div>;
+      }
     }
   },
   {
@@ -1341,18 +1348,22 @@ export default {
       this.addRelationDetail.couponType = couponTemplate.couponType;
     },
     handleHdTemplateChange(currentRow, oldCurrentRow) {
-      const couponTemplate = selection[0];
-      const startIndex = couponTemplate.useRule.indexOf('满');
-      const endIndex = couponTemplate.useRule.indexOf('元');
-      const minBuyFee = couponTemplate.useRule.slice(startIndex + 1, endIndex);
-      this.addRelationDetail.useLimitType= couponTemplate.useLimitType; // 海鼎券的uselimitType从couponRemark解析出
-      this.addRelationDetail.couponName = couponTemplate.couponName;
-      this.addRelationDetail.couponType = couponTemplate.couponType;
-      this.addRelationDetail.couponFee = couponTemplate.faceValue;
-      this.addRelationDetail.hdActivityId = couponTemplate.activityId;
+      const startIndex = currentRow.useRule.indexOf('满');
+      const endIndex = currentRow.useRule.indexOf('元');
+      const minBuyFee = currentRow.useRule.slice(startIndex + 1, endIndex);
+      this.addRelationDetail.useLimitType= currentRow.useLimitType; // 海鼎券的uselimitType从couponRemark解析出
+      this.addRelationDetail.couponName = currentRow.couponName;
+      this.addRelationDetail.couponType = currentRow.couponType;
+      this.addRelationDetail.couponFee = currentRow.faceValue;
+      if(currentRow.couponType === 'DISCOUNT_COUPON'){
+        const lastIndex = currentRow.couponName.indexOf('折');
+        this.addRelationDetail.couponFee = parseFloat(currentRow.couponName.substring(0,lastIndex)) * 10;
+        console.log('DISCOUNT_COUPON couponFee:', this.addRelationDetail.couponFee);
+      }
+      this.addRelationDetail.hdActivityId = currentRow.activityId;
       this.addRelationDetail.minBuyFee = minBuyFee * 100;
-      this.addRelationDetail.effectiveStartTime = couponTemplate.beginDate; //海鼎活动开始时间
-      this.addRelationDetail.effectiveEndTime = couponTemplate.endDate; //海鼎活动结束时间
+      this.addRelationDetail.effectiveStartTime = currentRow.beginDate; //海鼎活动开始时间
+      this.addRelationDetail.effectiveEndTime = currentRow.endDate; //海鼎活动结束时间
     },
     effectiveStartTimeChange(value, date) {
       this.addRelationDetail.effectiveStartTime = value;

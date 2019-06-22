@@ -6,7 +6,7 @@
       </i-col>
       <i-col span="21" order="3">
         <Card>
-          <h6>当前选中：<span class="brand-red font-sm">{{ parentCategory.groupName!=''? parentCategory.groupName : '全部板块' }}</span></h6>
+          <h6>当前选中：<span class="brand-red font-sm">{{ currentCategory.sectionName!=''? currentCategory.sectionName : '所有板块' }}</span></h6>
           <tables
             ref="tables"
             v-model="tableData"
@@ -18,20 +18,22 @@
             searchable
             border
             search-place="top"
+            @on-exchange="handleEdit"
+            @on-edit="handleEdit"
             @on-delete="handleDelete"
             @on-select-all="onSelectionAll"
             @on-selection-change="onRelationSelectionChange"
           >
             <div slot="searchCondition">
               <Row>
-                <Input
+                <!-- <Input
                   v-model="searchRowData.sectionName"
                   placeholder="板块名称"
                   class="search-input mr5"
                   style="width: auto"
                   clearable
                 >
-                </Input>
+                </Input> -->
                 <Input
                   v-model="searchRowData.productName"
                   placeholder="商品名称"
@@ -49,13 +51,9 @@
               </Row>
             </div>
             <div slot="operations">
-              <Button v-waves type="success" class="mr5" @click="createTableRow">
+              <Button v-waves type="success" class="mr5" @click="addProSection">
                 <Icon type="md-add"/>
                 添加
-              </Button>
-              <Button v-waves type="primary" class="mr5" @click="handleEdit">
-                <Icon type="md-repeat" />
-                更换板块
               </Button>
               <Poptip
                 confirm
@@ -86,17 +84,16 @@
       </i-col>
     </Row>
 
-    <!--编辑菜单 -->
     <Modal
       v-model="modalEdit"
       :mask-closable="false"
       :width="1000"
     >
       <p slot="header">
-        <span>{{ tempModalType==modalType.create?'添加板块商品':'更换板块' }}</span>
+        <span>{{ tempModalType == modalType.create? '添加板块商品':'编辑板块' }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="productStandardRelation" :rules="ruleInline">
+        <Form ref="editForm" :model="productStandardRelation" :rules="ruleInline">
           <Row v-if="tempModalType == modalType.edit">
             <FormItem label="请选择要更换的商品板块:">
               <Cascader
@@ -142,7 +139,7 @@
                     <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleProductSearch">
                       <Icon type="md-search"/>&nbsp;搜索
                     </Button>
-                    <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="resetSearchProductRowData">
+                    <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="hanldeProductClear">
                       <Icon type="md-refresh"/>&nbsp;清除
                     </Button>
                   </Row>
@@ -160,16 +157,15 @@
                 </Row>
               </div>
             </FormItem>
-            <FormItem label="排序排序:" prop="rank">
-              <InputNumber :min="0" v-model="productStandardRelation.rank"></InputNumber>
-            </FormItem>
-          </Ro>
-        </row></Form>
+          </Row>
+          <FormItem label="排序:" prop="productSectionRank">
+            <InputNumber v-model="productStandardRelation.productSectionRank"></InputNumber>
+          </FormItem>
+        </Form>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="asyncEditOK('modalEdit')">添加
-        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')">确认</Button>
       </div>
     </Modal>
   </div>
@@ -196,54 +192,58 @@ import { customPlanStatusConvert, appTypeConvert } from '@/libs/converStatus';
 import { appTypeEnum } from '@/libs/enumerate';
 
 const productStandardDetail = {
-  id: 0,
-  productId: 0,
-  barcode: '',
-  specification: '',
-  standardQty: 0,
-  unitId: 0,
-  productUnit: '',
-  price: 0,
-  salePrice: 0,
-  rank: 0,
-  description: '',
-  shelvesStatus: null,
-  applyType: null,
-  productName: '',
-  createUser: null,
-  image: '',
-  productDescription: '',
-  productCode: '',
-  baseProductName: '',
-  baseProductDescription: '',
-  groupId: 0,
-  groupName: '',
-  sourceCode: '',
-  baseImage: '',
-  smallImage: '',
-  largeImage: '',
-  status: '',
-  baseUnitId: 0,
-  baseUnit: '',
-  baseBarcode: '',
-  hdSkuid: '',
-  videoUrl: '',
-  videoImage: '',
+  applyType: "",
+  barcode: "",
+  baseBarcode: "",
+  baseImage: "",
   baseQty: 0,
-  limitQty: 0,
-  queryStatus: null,
-  invEnough: null,
-  invNum: null,
-  saleCount: null,
-  positionName: null,
-  dbId: null
+  baseUnit: null,
+  baseUnitId: 0,
+  description: "",
+  groupId: 0,
+  groupName: null,
+  hdSkuid: "",
+  id: 0,
+  image: "",
+  largeImage: null,
+  limitQty: null,
+  price: 0,
+  productCode: "",
+  productDescription: "",
+  productId: 0,
+  productName: "",
+  productSectionId: 0,
+  productSectionRank: 0,
+  productStandardId: 0,
+  productStandardIds: null,
+  productUnit: "",
+  rank: null,
+  salePrice: 0,
+  shelvesStatus: "",
+  smallImage: null,
+  sourceCode: "",
+  specification: "",
+  standardQty: 0.5,
+  status: "",
+  unitId: 0,
+  videoImage: "",
+  videoUrl: ""
+};
+
+const currentCategory = {
+  applyType: 'S_MALL',
+  id: 0,
+  parentId: 0,
+  sectionProductId: 0,
+  sectionName: '',
+  sectionImg: '',
+  rankNo: 0,
+  productStandardList: [],
+  positionName: ''
 };
 
 const roleRowData = {
-  sectionName: null,
   productName: null,
-  barcode: null,
-  shelvesStatus: null,
   page: 1,
   rows: 10
 };
@@ -252,7 +252,7 @@ const relationData = {
   id: 0,
   productStandardIds: 0,
   productSectionId: 0,
-  rank: 0
+  productSectionRank: 0
 };
 
 const productRowData = {
@@ -270,7 +270,6 @@ const productRowData = {
 const dataColunms=[
   {
     type: 'selection',
-    key: '',
     width: 60,
     align: 'center',
     fixed: 'left'
@@ -334,14 +333,14 @@ const dataColunms=[
   },
   {
     title: '排序',
-    key: 'rank',
+    key: 'productSectionRank',
     sortable: true,
     align: 'center'
   },
   {
     title: '操作',
     key: 'handle',
-    options: ['delete']
+    options: ['exchange','edit','delete']
   }
 ]
 
@@ -438,35 +437,24 @@ export default {
             }
           }
         ],
-        rank: [
-          { required: true, message: '请输入商品排序' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
-              }
-              callback(errors);
-            }
-          }
-        ]
+        rank: [{ required: true, message: '请输入商品排序' }]
       },
       appTypeEnum,
       menuData: [],
       columns: dataColunms,
       productColumns: productColumns,
       modalEdit: false,
+      modalChange: false,
       modalViewLoading: false,
       modalEditLoading: false,
       currentParentName: '',
       currentSectionId: 0,
-      currentStandard: this._.cloneDeep(productStandardDetail),
-      parentCategory: this._.cloneDeep(productStandardDetail),
-      productStandard: this._.cloneDeep(productStandardDetail),
-      searchRowData: this._.cloneDeep(roleRowData),
+      currentStandard: _.cloneDeep(productStandardDetail),
+      currentCategory: _.cloneDeep(currentCategory),
+      searchRowData: _.cloneDeep(roleRowData),
       searchProductRowData: _.cloneDeep(productRowData),
-      productStandardRelation: this._.cloneDeep(relationData),
-      treeData: this._.cloneDeep(productStandardDetail),
+      productStandardRelation: _.cloneDeep(relationData),
+      treeData: _.cloneDeep(productStandardDetail),
       goodsSectionData: [],
       defaultGoodsSectionData: [41],
       productData: [],
@@ -519,60 +507,55 @@ export default {
         );
       }
     },
-    createTableRow() {
-      if (!this.currentSectionId || this.currentSectionId == 0) {
-        this.$Message.warning('请从左侧选择一个板块');
+    resetSearchRowData() {
+      this.searchRowData = _.cloneDeep(roleRowData);
+      this.getTableData();
+    },
+    addProSection() {
+      if (!this.currentSectionId) {
+        this.$Message.warning('请先从左侧选择一个板块');
         return;
       }
-
-      if (this.tempModalType !== this.modalType.create) {
-        this.productStandard = this._.cloneDeep(productStandardDetail);
-      }
-      this.$refs.modalEdit.resetFields();
-      this.searchRowData.shelvesStatus = 'VALID';
+      this.$refs.editForm.resetFields();
       this.getProductTableData();
       this.currentStandard.currentSectionId = this.currentSectionId;
       this.productStandardRelation.productSectionId = this.currentSectionId;
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
     },
-    // 编辑分类
     handleEdit(params) {
-      if (!this.productStandardRelation.productStandardIds || this.productStandardRelation.productStandardIds == 0) {
-        this.$Message.warning('请选择要更换板块的商品');
+      if (!this.currentSectionId || this.currentSectionId == 0) {
+        this.$Message.warning('请从左侧选择一个板块');
         return;
       }
-      this.$refs.modalEdit.resetFields();
-      this.searchRowData.shelvesStatus = 'VALID';
-      this.getProductTableData();
+      const { row } = params;
+      this.productStandardRelation.id = row.id;
+      this.productStandardRelation.productStandardIds = row.productStandardId;
+      this.productStandardRelation.productSectionRank =  row.productSectionRank;
+      this.currentStandard.currentSectionId = this.currentSectionId;
+      this.productStandardRelation.productSectionId = this.currentSectionId;
       this.tempModalType = this.modalType.edit;
       this.modalEdit = true;
     },
-    asyncEditOK(name) {
+    handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          if (this.productStandardRelation.productSectionId == 0 || this.productStandardRelation.productSectionId == '') {
-            this.$Message.warning('商品规格id不能为空');
+          if (!this.productStandardRelation.productSectionId) {
+            this.$Message.warning('商品板块id不能为空');
             return;
           }
-          if (!this.productStandardRelation.productStandardIds || this.productStandardRelation.productStandardIds == 0 || this.productStandardRelation.productStandardIds === '') {
+          if (!this.productStandardRelation.productStandardIds) {
             this.$Message.warning('请选择一条商品信息');
             return;
           }
-          // this.modalEditLoading = true;
-          // this.modalViewLoading = true;
           if (this.tempModalType === this.modalType.create) {
-            createProductSectionRelation(this.productStandardRelation
-            ).then(res => {
-
-            }).finally(res => {
+            createProductSectionRelation(this.productStandardRelation).then(res => {
               this.initMenuList();
               this.modalEditLoading = false;
               this.modalEdit = false;
             });
           } else if (this.tempModalType === this.modalType.edit) {
             editProductSectionRelation(this.productStandardRelation).then(res => {
-            }).finally(res => {
               this.initMenuList();
               this.modalEditLoading = false;
               this.modalEdit = false;
@@ -605,23 +588,19 @@ export default {
       this.loading = true;
       getProductSectionRelationPages(this.searchRowData).then(res => {
         if (this.menuData.length > 0) {
-          // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
+          this.clearSearchLoading = false;
         }
       });
     },
     getProductTableData() {
-      // this.loading = true;
       getProductStandardsPages(this.searchProductRowData).then(res => {
         if (this.menuData.length > 0) {
-          // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
           this.productData = res.rows;
           this.productTotal = res.total;
-          // this.loading = false;
-          // this.searchLoading = false;
         }
       });
     },
@@ -655,8 +634,8 @@ export default {
       } else {
         // data.expand = !data.expand;
       }
-      this.parentCategory.id = data.id;
-      this.parentCategory.groupName = data.title;
+      this.currentCategory.id = data.id;
+      this.currentCategory.sectionName = data.title;
       this.currentSectionId = data.id;
       this.searchRowData.productSectionId = data.id;
       this.searchRowData.page = 1;
@@ -682,7 +661,6 @@ export default {
     },
     onSelectionChange(selection) {
       this.productStandardRelation.productStandardIds = selection.map(item => item.id.toString()).join(',');
-      console.log('商品选择变化,当前页选择productStandardIds:' + this.productStandardRelation.productStandardIds);
     },
     onRelationSelectionChange(selection) {
       if (selection.length > 1) {
@@ -690,9 +668,7 @@ export default {
         return;
       }
       this.productStandardRelation.productStandardIds = selection.map(item => item.productStandardId.toString()).join(',');
-      console.log('商品关联选择变化,当前页选择productStandardIds:' + this.productStandardRelation.productStandardIds);
       this.productStandardRelation.id = selection.map(item => item.id.toString()).join(',');
-      console.log('商品关联选择变化,当前页选择id:' + this.productStandardRelation.productStandardIds);
     },
     // 选择分类
     goodsSectionChange(value, selectedData) {
@@ -703,7 +679,7 @@ export default {
       }
       this.defaultGoodsSectionData = selectedData;
     },
-    resetSearchProductRowData() {
+    hanldeProductClear() {
       this.searchProductRowData = _.cloneDeep(productRowData);
       this.getProductTableData();
     },

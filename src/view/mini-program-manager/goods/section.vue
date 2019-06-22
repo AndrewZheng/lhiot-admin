@@ -6,7 +6,7 @@
       </i-col>
       <i-col span="21" order="3">
         <Card>
-          <h6>当前选中：{{ parentCategory.groupName }}</h6>
+          <h6>当前选中：<span class="brand-red font-sm">{{ parentCategory.groupName? parentCategory.groupName: '全部板块' }}</span></h6>
           <tables
             ref="tables"
             v-model="tableData"
@@ -35,7 +35,7 @@
               </Row>
             </div>
             <div slot="operations">
-              <Button v-waves type="success" class="mr5" @click="createTableRow">
+              <Button v-waves type="success" class="mr5" @click="addSection">
                 <Icon type="md-add"/>
                 添加
               </Button>
@@ -82,7 +82,7 @@
             <i-col>{{ parentCategory.id }}</i-col>
           </FormItem>
           <FormItem label="父级名称:">
-            <i-col>{{ parentCategory.groupName }}</i-col>
+            <i-col>{{ parentCategory.groupName?parentCategory.groupName:'全部板块' }}</i-col>
           </FormItem>
           <FormItem label="板块名称:" prop="sectionName">
             <Input v-model="currentCategory.sectionName"></Input>
@@ -311,7 +311,7 @@ export default {
         );
       }
     },
-    createTableRow() {
+    addSection() {
       this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.currentCategory = this._.cloneDeep(currentCategory);

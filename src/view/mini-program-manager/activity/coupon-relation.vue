@@ -906,7 +906,9 @@ const hdTemplateColumns = [
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{fenToYuanDot2Number(row.faceValue) * 10 + "折"}</div>;
+        const lastIndex = row.couponName.indexOf('折');
+        const couponFee = row.couponName.substring(0, lastIndex+1);
+        return <div>{ couponFee }</div>;
       } else {
         return <div>{fenToYuanDot2(row.faceValue)}</div>;
       }
@@ -1131,7 +1133,6 @@ export default {
       this.addRelationDetail.minBuyFee = currentRow.minBuyFee;
       this.addRelationDetail.couponStatus = currentRow.couponStatus;
       this.addRelationDetail.couponType = currentRow.couponType;
-      // this.$refs.sysTables.clearCurrentRow();
     },
     handleHdTemplateChange(currentRow, oldCurrentRow) {
       // 选中关联的优惠券模板冗余对应字段到配置对象中- 默认为最后选择的一条数据
@@ -1142,12 +1143,16 @@ export default {
       this.addRelationDetail.couponName = currentRow.couponName;
       this.addRelationDetail.couponType = currentRow.couponType;
       this.addRelationDetail.couponFee = currentRow.faceValue;
+      if(currentRow.couponType === 'DISCOUNT_COUPON'){
+        const lastIndex = currentRow.couponName.indexOf('折');
+        this.addRelationDetail.couponFee = parseFloat(currentRow.couponName.substring(0,lastIndex)) * 10;
+        console.log('DISCOUNT_COUPON couponFee:', this.addRelationDetail.couponFee);
+      }
       this.addRelationDetail.hdActivityId = currentRow.activityId;
       this.addRelationDetail.minBuyFee = minBuyFee * 100;
       this.addRelationDetail.couponStatus = "VALID"; // 海鼎券默认为有效状态
       this.addRelationDetail.effectiveStartTime = currentRow.beginDate; //海鼎活动开始时间
       this.addRelationDetail.effectiveEndTime = currentRow.endDate; //海鼎活动结束时间
-      // this.$refs.hdTables.clearCurrentRow();
     },
     effectiveStartTimeChange(value, date) {
       this.addRelationDetail.effectiveStartTime = value;

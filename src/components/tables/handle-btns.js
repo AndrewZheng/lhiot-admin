@@ -99,6 +99,28 @@ const btns = {
       }
     })]);
   },
+  exchange: (h, params, vm) => {
+    return h('Button', {
+      props: {
+        type: 'primary',
+        size: 'small'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        click: () => {
+          vm.$emit('on-exchange', params);
+        }
+      }
+    }, [h('Icon', {
+      props: {
+        type: 'md-repeat',
+        size: 16,
+        color: '#fff'
+      }
+    })]);
+  },
   permission: (h, params, vm) => {
     const {
       row

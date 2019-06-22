@@ -21,7 +21,7 @@
         <div slot="searchCondition">
           <Row>
             <Input
-              v-model="searchRowData.code"
+              v-model="searchRowData.orderCode"
               placeholder="订单编码"
               class="search-input mr5"
               style="width: 100px"
@@ -46,20 +46,6 @@
                 class="ml15 mt10"
                 style="padding-left: 5px">{{ item.label }}
               </Option>
-            </Select>
-            <Select
-              v-model="searchRowData.orderType"
-              class="search-col mr5"
-              placeholder="订单类型"
-              style="width: 100px"
-              clearable
-            >
-              <Option
-                v-for="item in orderType"
-                :value="item.value"
-                :key="`orderType-col-${item.value}`"
-                class="ptb2-5"
-              >{{ item.label }}</Option>
             </Select>
             <Select
               v-model="searchRowData.receivingWay"
@@ -511,6 +497,7 @@ const orderDetail = {
 
 const roleRowData = {
   phone: '',
+  orderCode: '',
   endAt: null,
   page: 1,
   rows: 10

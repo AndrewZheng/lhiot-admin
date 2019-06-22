@@ -489,6 +489,16 @@
   margin: 0 2px;
 }
 
+.demo-upload-list-input{
+  position: absolute;
+  z-index: 1050;
+  top: 100;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: block;
+}
+
 .ivu-input-number-input{
   font-size: 0.5rem;
 }
@@ -497,4 +507,12 @@
   width: 58px;
   height:58px;
   line-height: 58px;
+}
+
+.clearfix{
+  &::after {
+    display: block;
+    content: "";
+    clear: both;
+  }
 }

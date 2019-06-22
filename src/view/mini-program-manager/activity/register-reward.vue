@@ -15,7 +15,7 @@
         @on-delete="handleDelete"
         @on-view="handleView"
         @on-edit="handleEdit"
-        @on-sale="onOff"
+        @on-sale="switchStatus"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
         @on-relevance="onRelevance"
@@ -23,7 +23,6 @@
         <div slot="operations">
           <Button
             v-waves
-            :loading="createLoading"
             type="success"
             class="mr5"
             @click="addRegisterReward"
@@ -139,13 +138,13 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :width="1000" :z-index="1000" :mask-closable="false">
+    <Modal v-model="modalEdit" :width="1200" :z-index="1000" :mask-closable="false">
       <p slot="header">
-        <i-col>{{ tempModalType==modalType.edit?'修改注册送礼优惠券活动':(tempModalType==modalType.create?'创建注册送礼优惠券活动': '注册送礼和优惠券模板关联') }}</i-col>
+        <i-col>{{ tempModalType === modalType.edit?'修改注册送礼优惠券活动': '创建注册送礼优惠券活动'}}</i-col>
       </p>
       <div class="modal-content">
-        <Row v-if="tempModalType == modalType.edit || tempModalType == modalType.create">
-          <Form ref="modalEdit" :model="registerDetail" :rules="ruleInline" :label-width="80">
+        <Row>
+          <Form ref="editForm" :model="registerDetail" :rules="ruleInline" :label-width="80">
             <Row>
               <Col span="18">
                 <FormItem label="活动名称:" prop="activityName">
@@ -212,16 +211,26 @@
             </Row>
           </Form>
         </Row>
+      </div>
+      <div slot="footer">
+        <Button @click="handleEditClose">关闭</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
+      </div>
+    </Modal>
 
-        <Row v-if="tempModalType == null ">
+     <!--关联优惠券模板 -->
+    <Modal v-model="modalRelation" :width="1000" :z-index="1000" :mask-closable="false" footer-hide>
+      <p slot="header">
+        <i-col>注册送礼和优惠券模板关联</i-col>
+      </p>
+      <div class="modal-content">
           <Row>
-            <!-- 限时抢购只能添加一个关联商品，所以只有当关联商品为空时才显示 -->
             <Card>
               <tables
-                ref="tables"
-                v-model="couponTemplateDetail"
+                ref="realtionTables"
+                v-model="couponTemplates"
                 :columns="templateColumns"
-                :loading="tempTableLoading"
+                :loading="templateLoading"
                 border
                 searchable
                 search-place="top"
@@ -280,6 +289,8 @@
                   <Page
                     :total="couponTemplateTotal"
                     :current="searchTemplateRowData.page"
+                    :page-size="searchTemplateRowData.rows"
+                    :page-size-opts="templatePageOpts"
                     show-sizer
                     show-total
                     @on-change="changeTemplatePage"
@@ -331,22 +342,18 @@
               </Form>*Tips：请先选择要关联的优惠券模板，然后输入关联配置信息，若关联多个优惠券模板，则所有的商品配置信息相同，添加完成后可在下方表格修改
             </Card>
           </Row>
-
+          
           <Divider orientation="center">已关联优惠券模板</Divider>
+
           <tables
             :columns="relationColumns"
-            v-model="relationDetail"
+            v-model="relationDatas"
             :loading="tempTableLoading"
             border
             @on-delete="modalHandleDelete"
             @on-inline-edit="modalHandleEdit"
             @on-inline-save="modalHandleSave"
           ></tables>
-        </Row>
-      </div>
-      <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
       </div>
     </Modal>
   </div>
@@ -761,6 +768,7 @@ export default {
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
+      templatePageOpts: [5, 10],
       couponStatusEnum,
       couponTypeEnum,
       imageStatusEnum,
@@ -837,36 +845,40 @@ export default {
       templateColumns: _.cloneDeep(templateColumns),
       addTempDataLoading: false,
       tempTableLoading: false,
-      createLoading: false,
+      templateLoading: false,
       modalViewLoading: false,
+      modalRelation: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
       searchTemplateRowData: _.cloneDeep(templateRowData),
       relationDetail: _.cloneDeep(relationDetail),
+      relationDatas: [],
       registerDetail: _.cloneDeep(registerDetail),
       addRelationDetail: _.cloneDeep(relationDetail),
       couponTemplateDetail: _.cloneDeep(couponTemplateDetail),
+      couponTemplates: [],
       couponTemplateTotal: 0
     };
   },
   mounted() {
-    this.searchRowData = _.cloneDeep(relationRowData);
+    this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
   },
   created() {},
   methods: {
     resetSearchRowData() {
-      this.searchRowData = _.cloneDeep(relationRowData);
+      this.searchRelationRowData = _.cloneDeep(relationRowData);
       this.getTableData();
     },
     resetFields() {
-      this.$refs.modalEdit.resetFields();
-      // this.$refs.uploadMain.clearFileList();
+      if(this.tempModalType == null){
+        this.$refs.modalCreate.resetFields();
+      }
+      this.$refs.editForm.resetFields();
       this.uploadListMain = [];
-      // this.registerDetail.couponImage = null;
     },
-    handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+    handleSubmit() {
+      this.$refs.editForm.validate(valid => {
         if (valid) {
           if (
             compareData(
@@ -882,10 +894,7 @@ export default {
             this.registerDetail.activityRule !== null ||
             this.registerDetail.activityRule !== ""
           ) {
-            this.registerDetail.activityRule = this.registerDetail.activityRule.replace(
-              /\n|\r/g,
-              "&"
-            );
+            this.registerDetail.activityRule = this.registerDetail.activityRule.replace(/\n|\r/g,"&");
           }
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -915,6 +924,13 @@ export default {
     },
     editRegister() {
       this.modalViewLoading = true;
+      // UTC通用时间标准 2019-06-19T16:00:00.000Z转换为正常格式
+      if(this.registerDetail.beginTime.indexOf('T') > -1){
+        this.registerDetail.beginTime = this.$moment(this.registerDetail.beginTime).format('YYYY-MM-DD HH:mm:ss');
+      }
+      if(this.registerDetail.endTime.indexOf('T') > -1){
+        this.registerDetail.endTime = this.$moment(this.registerDetail.endTime).format('YYYY-MM-DD HH:mm:ss');
+      }
       editRegister(this.registerDetail)
         .then(res => {
           this.modalEdit = false;
@@ -927,11 +943,11 @@ export default {
         });
     },
     addRegisterReward() {
-      this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.tempModalType = this.modalType.create;
         this.registerDetail = _.cloneDeep(registerDetail);
       }
+      this.resetFields();
       this.modalEdit = true;
     },
     // 删除
@@ -973,13 +989,10 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
-      this.resetFields();
       this.tempModalType = this.modalType.edit;
+      this.resetFields();
       this.registerDetail = _.cloneDeep(params.row);
-      this.registerDetail.activityRule = this.registerDetail.activityRule.replace(
-        /&/g,
-        "\n"
-      );
+      this.registerDetail.activityRule = this.registerDetail.activityRule.replace(/&/g,"\n");
       this.modalEdit = true;
     },
     getTableData() {
@@ -998,8 +1011,8 @@ export default {
           this.clearSearchLoading = false;
         });
     },
-    onOff(params) {
-      this.registerDetail = this._.cloneDeep(params.row);
+    switchStatus(params) {
+      this.registerDetail = _.cloneDeep(params.row);
       if (params.row.onOff === "ON") {
         this.registerDetail.onOff = "OFF";
       } else {
@@ -1010,28 +1023,28 @@ export default {
     },
     beginTimeChange(value, date) {
       this.registerDetail.beginTime = value;
+      if(this.registerDetail.beginTime.indexOf('T') > -1){
+        this.registerDetail.beginTime = this.$moment(this.registerDetail.beginTime).format('YYYY-MM-DD HH:mm:ss');
+      }
     },
     endTimeChange(value, date) {
       this.registerDetail.endTime = value;
+      if(this.registerDetail.endTime.indexOf('T') > -1){
+        this.registerDetail.endTime = this.$moment(this.registerDetail.endTime).format('YYYY-MM-DD HH:mm:ss');
+      }
     },
     onRelevance(params) {
-      // this.addRelationDetail = this._.addRelationDetail;
-      this.tempModalType = null;
-      // FIXME 查询商品规格分页信息（后期按钮触发，或者先存储，需要时再调用接口）
       this.getTemplateTableData();
-      // 查询限时抢购关联商品
       this.searchRelationRowData.activityRegisterId = params.row.id;
       this.addRelationDetail.activityRegisterId = params.row.id;
       this.getRelationTableData();
-      this.modalEdit = true;
+      this.modalRelation = true;
     },
     addTempData(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
           const activityRegisterId = this.addRelationDetail.activityRegisterId;
-          const couponTemplateIds = this.addRelationDetail.couponTemplateIds.split(
-            ","
-          );
+          const couponTemplateIds = this.addRelationDetail.couponTemplateIds.split(",");
           if (activityRegisterId === 0 || activityRegisterId === "") {
             this.$Message.error("注册送优惠券活动不能为空!");
             return;
@@ -1042,13 +1055,12 @@ export default {
             this.$Message.error("请选择要关联的优惠券模板!");
             return;
           }
-          console.log(JSON.stringify(this.addRelationDetail));
+          console.log('realtion couponTemplate', JSON.stringify(this.addRelationDetail));
           this.createRelation();
         } else {
           this.$Message.error("请完善信息!");
         }
       });
-      // this.createFlashsaleProductRelation(this.addRelationDetail)
     },
     modalHandleEdit(params) {
       this.$set(params.row, "isEdit", true);
@@ -1086,7 +1098,7 @@ export default {
       this.tempTableLoading = true;
       deleteRegisterReward({ ids: params.row.id })
         .then(res => {
-          this.relationDetail = this.relationDetail.filter(
+          this.relationDatas = this.relationDatas.filter(
             (item, index) => index !== params.row.initRowIndex
           );
           this.getRelationTableData();
@@ -1096,15 +1108,13 @@ export default {
         });
     },
     getTemplateTableData() {
-      this.loading = true;
+      this.templateLoading = true;
       getCouponTemplatePages(this.searchTemplateRowData).then(res => {
-        // if (this.menuData.length > 0) {
-        // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
-        this.couponTemplateDetail = res.rows;
+        this.couponTemplates = res.rows;
         this.couponTemplateTotal = res.total;
-        this.loading = false;
+        this.templateLoading = false;
         this.searchLoading = false;
-        // }
+        this.clearSearchLoading= false;
       });
     },
     changeTemplatePage(page) {
@@ -1122,50 +1132,39 @@ export default {
       this.getTemplateTableData();
     },
     handleTemplateClear() {
-      // 重置数据
-      this.resetSearchRowData();
-      this.page = 1;
-      this.pageSize = 10;
       this.clearSearchLoading = true;
+      this.searchTemplateRowData = _.cloneDeep(templateRowData);
       this.handleTemplateSearch();
-    },
-    priceInputNumberOnchange(value) {
-      this.addRelationDetail.price = yuanToFenNumber(value);
-    },
-    salePriceInputNumberOnchange(value) {
-      this.addRelationDetail.salePrice = yuanToFenNumber(value);
     },
     createRelation() {
       this.modalViewLoading = true;
       createRegisterReward(this.addRelationDetail)
         .then(res => {
           this.modalViewLoading = false;
-          this.modalEdit = false;
+          this.modalRelation = false;
           this.$Message.success("创建成功!");
           this.getRelationTableData();
         })
         .catch(() => {
           this.modalViewLoading = false;
-          this.modalEdit = false;
+          this.modalRelation = false;
         });
     },
     onTemplateSelectionChange(selection) {
       this.addRelationDetail.couponTemplateIds = selection
         .map(item => item.id.toString())
         .join(",");
-      console.log(
-        "商品选择变化,当前页选择couponTemplateIds:" +
-          this.addRelationDetail.couponTemplateIds
-      );
     },
     onTemplateSelectionAll(selection) {
       this.addRelationDetail.couponTemplateIds = selection
         .map(item => item.id.toString())
         .join(",");
-      console.log(
-        "商品选择变化,当前页选择couponTemplateIds:" +
-          this.addRelationDetail.couponTemplateIds
-      );
+    },
+    priceInputNumberOnchange(value) {
+      this.addRelationDetail.price = yuanToFenNumber(value);
+    },
+    salePriceInputNumberOnchange(value) {
+      this.addRelationDetail.salePrice = yuanToFenNumber(value);
     },
     effectiveStartTimeChange(value, date) {
       this.addRelationDetail.effectiveStartTime = value;
@@ -1181,11 +1180,8 @@ export default {
             res.rows.forEach(element => {
               element.isEdit = false;
             });
-            this.relationDetail = res.rows;
-          } else {
-            this.relationDetail = null;
+            this.relationDatas = res.rows;
           }
-          // this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

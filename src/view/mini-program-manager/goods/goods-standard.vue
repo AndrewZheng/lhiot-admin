@@ -557,6 +557,9 @@
                 </IViewUpload>
               </FormItem>
             </i-col>
+            <i-col span="12">
+              <Button v-waves type="primary" @click="handleImageSort">规格描述排序</Button>
+            </i-col>
           </Row>
         </Form>
       </div>
@@ -701,11 +704,27 @@
     <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
+
+    <Modal v-model="modalSort" title="图片排序" :mask-closable="false">
+      <p slot="header">
+        <span>图片排序</span>
+      </p>
+      <div class="modal-content">
+        <drag-list :list1.sync="uploadListMultiple" :drop-con-class="dropConClass" @on-change="handleChange" class="clearfix">
+          <img :src="left.itemLeft.url"  slot="left" slot-scope="left" class="drag-item" width="80" height="80" />
+        </drag-list>
+      </div>
+      <div slot="footer">
+        <Button @click="modalSort=false">关闭</Button>
+        <Button type="primary" @click="handleImgSort">确定</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
+import DragList from '_c/drag-list';
 import IViewUpload from "_c/iview-upload";
 import _ from "lodash";
 import {
@@ -834,7 +853,8 @@ const proStandardExpand = {
 export default {
   components: {
     Tables,
-    IViewUpload
+    IViewUpload,
+    DragList
   },
   mixins: [uploadMixin, deleteMixin, searchMixin, tableMixin],
   data() {
@@ -1114,6 +1134,10 @@ export default {
         edit: "edit",
         create: "create"
       },
+      dropConClass: {
+        left: ['drop-box', 'left-drop-box'],
+        right: ['drop-box', 'right-drop-box']
+      },
       tempModalType: "create",
       tableData: [],
       total: 0,
@@ -1125,6 +1149,7 @@ export default {
       modalEdit: false,
       modalDiscount: false,
       modalProduct: false,
+      modalSort: false,
       searchRowData: roleRowData,
       searchProductRowData: productRowData,
       productStandardDetail: productStandardDetail,
@@ -1213,6 +1238,9 @@ export default {
         this.proStandardExpand.discountRate = discountRate.substring(0, 3);
       }
     },
+    handleChange(){
+      
+    },
     handleDelete(params) {
       this.tableDataSelected = [];
       this.tableDataSelected.push(params.row);
@@ -1254,6 +1282,21 @@ export default {
     },
     unitChange(value) {
       this.productStandardDetail.productUnit = value;
+    },
+    handleImgSort(){
+      this.descriptionList = [];
+      this.uploadListMultiple.forEach(item => {
+        if (item.url) {
+          this.descriptionList.push(item.url);
+        }
+      });
+      this.productStandardDetail.description = "";
+      this.productStandardDetail.description = this.descriptionList.join(",");
+      console.log('after sort:', this.productStandardDetail.description);
+      this.modalSort = false;
+    },
+    handleImageSort(){
+      this.modalSort = true;
     },
     handleDiscountClose() {
       this.modalDiscount = false;
@@ -1675,10 +1718,12 @@ export default {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   margin-right: 4px;
 }
+
 .demo-upload-list img {
   width: 100%;
   height: 100%;
 }
+
 .demo-upload-list-cover {
   display: none;
   position: absolute;
@@ -1688,9 +1733,11 @@ export default {
   right: 0;
   background: rgba(0, 0, 0, 0.6);
 }
+
 .demo-upload-list:hover .demo-upload-list-cover {
   display: block;
 }
+
 .demo-upload-list-cover i {
   color: #fff;
   font-size: 20px;
