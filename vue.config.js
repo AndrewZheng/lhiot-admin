@@ -45,7 +45,7 @@ module.exports = {
     proxy: {
       '/api': {
         // target: 'http://192.168.1.69:2018', // 本机调试
-        target: 'http://172.16.10.194:2018', // 测试环境 http://172.16.10.196:2018 http://192.168.1.230:2018
+        target: 'http://172.16.10.194:2018', // 测试环境
         ws: true,
         logLevel: 'debug',
         changeOrigin: true,

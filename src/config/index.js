@@ -14,6 +14,6 @@ export default {
    */
   baseUrl: {
     dev: '/api',
-    pro: 'http://172.16.10.194:2018' // http://172.16.10.194:2018 QA http://172.16.10.182:5565 PRO
+    pro: process.env.VUE_APP_BASE_API
   }
 };
