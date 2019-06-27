@@ -1432,7 +1432,9 @@ export const advertisementPositionTypeEnum = [
 ];
 
 // 小程序广告关联类别
-// GOODSINFO("商品详情"),STORELIVE("门店直播"),AMUSEMENT("多娱"),EXTERNALLINK("外部链接"),GAME("游戏"),INVITEACTIVE("邀请有礼"),FLASHACTIVE("抢购商品"),RECHARGE("充值页面"),STOCK("仓库")
+// GOODSINFO("商品详情"),STORELIVE("门店直播"),
+// AMUSEMENT("多娱"),EXTERNALLINK("外部链接"), INTERNALLINK('内部链接')
+// GAME("游戏"),INVITEACTIVE("邀请有礼"),FLASHACTIVE("抢购商品"),RECHARGE("充值页面"),STOCK("仓库")
 export const linkType = {
   GOODSINFO: 'GOODSINFO',
   STORELIVE: 'STORELIVE',
@@ -1442,7 +1444,8 @@ export const linkType = {
   INVITEACTIVE: 'INVITEACTIVE',
   FLASHACTIVE: 'FLASHACTIVE',
   RECHARGE: 'RECHARGE',
-  STOCK: 'STOCK'
+  STOCK: 'STOCK',
+  INTERNALLINK: 'INTERNALLINK'
 };
 
 export const linkTypeEnum = [
@@ -1457,6 +1460,10 @@ export const linkTypeEnum = [
   {
     label: '多娱',
     value: linkType.AMUSEMENT
+  },
+  {
+    label: '内部链接',
+    value: linkType.INTERNALLINK
   },
   {
     label: '外部链接',
@@ -1571,17 +1578,12 @@ export const miniHdStatusEnum = [
 // 小程序订单类型 SHOPPING("导购订单"),SELF_BUYING("自购订单"),TEAM_BUYING("团购订单"),PICKING("提货订单");
 
 export const miniOrderType = {
-  SHOPPING: 'SHOPPING',
   SELF_BUYING: 'SELF_BUYING',
   TEAM_BUYING: 'TEAM_BUYING',
-  PICKING: 'PICKING'
+  POINTS_BUYING: 'POINTS_BUYING'
 };
 
 export const miniOrderTypeEnum = [
-  {
-    label: '导购订单',
-    value: miniOrderType.SHOPPING
-  },
   {
     label: '自购订单',
     value: miniOrderType.SELF_BUYING
@@ -1591,8 +1593,8 @@ export const miniOrderTypeEnum = [
     value: miniOrderType.TEAM_BUYING
   },
   {
-    label: '提货订单',
-    value: miniOrderType.PICKING
+    label: '积分兑换订单',
+    value: miniOrderType.POINTS_BUYING
   }
 ];
 

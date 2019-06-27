@@ -48,6 +48,20 @@
               </Option>
             </Select>
             <Select
+              v-model="searchRowData.orderType"
+              class="search-col mr5"
+              placeholder="订单类型"
+              style="width: 100px"
+              clearable
+            >
+              <Option
+                v-for="item in orderType"
+                :value="item.value"
+                :key="`orderType-col-${item.value}`"
+                class="ptb2-5"
+              >{{ item.label }}</Option>
+            </Select>
+            <Select
               v-model="searchRowData.receivingWay"
               class="search-col mr5"
               placeholder="提货方式"
@@ -88,7 +102,7 @@
               >{{ item.label }}</Option>
             </Select>
             <DatePicker
-              v-model="searchRowData.startAt"
+              v-model="searchRowData.startTime"
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
               placeholder="开始时间"
@@ -98,8 +112,9 @@
             />
             <i>-</i>
             <DatePicker
-              v-model="searchRowData.endAt"
+              v-model="searchRowData.endTime"
               format="yyyy-MM-dd HH:mm:ss"
+              type="datetime"
               placeholder="结束时间"
               class="mr5"
               style="width: 160px"
@@ -238,13 +253,13 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">订单类型:</i-col>
-              <i-col span="16">{{ orderDetail.orderType|miniOrderTypeFilter }}</i-col>
+              <i-col span="16">{{ orderDetail.orderType| miniOrderTypeFilter }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">收货方式:</i-col>
-              <i-col span="16">{{ orderDetail.receivingWay|receivingWayFilters }}</i-col>
+              <i-col span="16">{{ orderDetail.receivingWay| receivingWayFilters }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -252,7 +267,7 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">订单状态:</i-col>
-              <i-col span="16">{{ orderDetail.orderStatus|miniOrderStatusFilter }}</i-col>
+              <i-col span="16">{{ orderDetail.orderStatus| miniOrderStatusFilter }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -358,7 +373,6 @@
               </Row>
             </i-col>
           </Row>
-          <!-- <tables :columns="tempColumnsView" v-model="deliverNoteList" border></tables> -->
         </Row>
 
         <Row>
@@ -497,8 +511,10 @@ const orderDetail = {
 
 const roleRowData = {
   phone: '',
+  orderType: '',
   orderCode: '',
-  endAt: null,
+  startTime: null,
+  endTime: null,
   page: 1,
   rows: 10
 };
@@ -813,10 +829,10 @@ export default {
       }
     },
     startTimeChange(value, date) {
-      this.searchRowData.startAt = value;
+      this.searchRowData.startTime = value;
     },
     endTimeChange(value, date) {
-      this.searchRowData.endAt = value;
+      this.searchRowData.endTime = value;
     },
     handleEditCloseTransferModalView() {
       this.transferModalView = false;
@@ -825,12 +841,12 @@ export default {
       this.modalViewLoading = false;
     },
     handleRefund(){
-      if(!this.searchRowData.endAt){
+      if(!this.searchRowData.endTime){
         this.$Message.error('请先选择结束时间，再手动退款');
         return false;
       }
       // 处理手动退款
-      ordersRefund({ endTime: this.searchRowData.endAt }).then(res => {
+      ordersRefund({ endTime: this.searchRowData.endTime }).then(res => {
         this.resetSearchRowData();
       });
     },
@@ -914,17 +930,22 @@ export default {
     handleDownload() {
       // 导出不分页
       this.searchRowData.rows = null;
-      // this.searchRowData.applicationType = this.applicationType;
       getOrderPages(this.searchRowData).then(res => {
         const tableData = res.rows;
         // 表格数据导出字段翻译
+        let _this= this;
         tableData.forEach(item => {
+          const obj = _this.storeList.find(x => item.storeId === x.storeId);
           item['code'] = item['code'] + '';
+          item['apply'] = appTypeConvert(item['apply']).label;
+          item['storeId'] = obj.storeName || item['storeId'];
           item['totalAmount'] = (item['totalAmount'] / 100.00).toFixed(2);
           item['couponAmount'] = (item['couponAmount'] / 100.00).toFixed(2);
           item['amountPayable'] = (item['amountPayable'] / 100.00).toFixed(2);
           item['orderType'] = orderTypeConvert(item['orderType']).label;
           item['deliverStatus'] = thirdDeliverStatusConvert(item['deliverStatus']).label;
+          item['orderStatus'] = miniOrderStatusConvert(item['orderStatus']).label;
+          item['hdStatus']= miniHdStatusConvert(item['hdStatus']).label;
           item['receivingWay'] = receivingWayConvert(item['receivingWay']).label;
           item['status'] = miniOrderStatusConvert(item['status']).label;
         });
@@ -951,11 +972,12 @@ export default {
       });
     },
     resendToHd() {
-       if (!this.tableDataSelected.apply!='S_MALL') {
+      console.log(`current apply: ${this.tableDataSelected.apply}`);
+      if (this.tableDataSelected.apply!=='S_MALL') {
         this.$Message.error(
           '该功能只适用于拼团小程序'
         );
-        return false;
+        return;
       }
       // TODO 未测试
       if (this.tableDataSelected.length > 0) {

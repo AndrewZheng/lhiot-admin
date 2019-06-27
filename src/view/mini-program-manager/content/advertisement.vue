@@ -334,28 +334,27 @@
             <Col span="12">
               <Row span="24" align="middle" type="flex">
                 <FormItem label="链接目标:" prop="advertisementRelation">
-                  <Row v-if="advertisementDetail.linkType != 'EXTERNALLINK'">
-                    <Col span="18">
+                  <Row v-if="advertisementDetail.linkType == 'EXTERNALLINK' || advertisementDetail.linkType == 'INTERNALLINK'">
+                    <Input v-model="advertisementDetail.advertisementRelation"></Input>
+                  </Row>
+                  <Row v-else>
+                    <Col span="24">
                       <Input
                         v-model="advertisementDetail.advertisementRelationText"
                         :disabled="advertisementDetail.linkType !== 'EXTERNALLINK'"
-                      ></Input>
-                    </Col>
-                    <Col span="5">
-                      <Button
-                        v-waves
-                        :loading="searchModalTableLoading"
-                        class="search-btn mt-25"
-                        style="margin-left: 15px"
-                        type="primary"
-                        @click="searchAdvertisementRelation"
                       >
-                        <Icon type="md-search"/>&nbsp;搜索
-                      </Button>
+                        <Button
+                          v-waves
+                          slot="append"
+                          :loading="searchModalTableLoading"
+                          class="search-btn mt-25"
+                          type="primary"
+                          @click="searchAdvertisementRelation"
+                        >
+                          <Icon type="md-search"/>&nbsp;搜索
+                        </Button>
+                      </Input>
                     </Col>
-                  </Row>
-                  <Row v-else>
-                    <Input v-model="advertisementDetail.advertisementRelation"></Input>
                   </Row>
                 </FormItem>
               </Row>
@@ -599,7 +598,8 @@ export default {
           api: getProductStandardsPages,
           columns: miniGoodsStandardColumns
         },
-        { value: linkType.EXTERNALLINK, label: "外部链接" }
+        { value: linkType.EXTERNALLINK, label: "外部链接" },
+        { value: linkType.INTERNALLINK, label: "内部链接" }
       ],
       tempColumns: [],
       linkTypeEnum,
@@ -821,10 +821,6 @@ export default {
         }
         this.advertisementDetail.content = this.tempImage;
       }
-      // 切换成图片
-
-      // 切换成文字
-      // if (value) ;
     },
     deleteTable(ids) {
       this.loading = true;
@@ -1047,8 +1043,6 @@ export default {
         this.advertisementDetail.advertisementRelationText = row.name;
       }
       this.advertisementDetail.advertisementRelation = row.id;
-      console.log(row);
-      console.log(index);
       this.relationTargetShow = false;
     },
     changeRelationPage(page) {
@@ -1084,7 +1078,6 @@ export default {
       this.editTableRow();
     },
     relationTextChange(event) {
-      debugger;
       this.advertisementDetail.advertisementRelation = event;
     }
   }
