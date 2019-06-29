@@ -513,6 +513,7 @@ const roleRowData = {
   phone: '',
   orderType: '',
   orderCode: '',
+  apply: '',
   startTime: null,
   endTime: null,
   page: 1,
@@ -928,8 +929,8 @@ export default {
       });
     },
     handleDownload() {
-      // 导出不分页
-      this.searchRowData.rows = null;
+      // 导出不分页 按条件查出多少条导出多少条
+      this.searchRowData.rows = this.total;
       getOrderPages(this.searchRowData).then(res => {
         const tableData = res.rows;
         // 表格数据导出字段翻译
