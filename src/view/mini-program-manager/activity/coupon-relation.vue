@@ -223,10 +223,15 @@
           <Form
             ref="addForm"
             :model="addRelationDetail"
-            :rules="relationRuleInline"
+            :rules="ruleInline"
             :label-width="80"
           >
             <Row>
+              <i-col span="6">
+                <FormItem label="优惠券名称:" prop="couponName" :label-width="100">
+                  <Input v-model="addRelationDetail.couponName" clearable></Input>
+                </FormItem>
+              </i-col>
               <i-col span="7" v-if="tempModalType=='addTemplate'">
                 <FormItem label="生效时间:" prop="effectiveStartTime">
                   <DatePicker
@@ -251,7 +256,7 @@
                   />
                 </FormItem>
               </i-col>
-              <i-col span="5">
+              <i-col span="4">
                 <FormItem label="发券总数:" prop="couponLimit">
                   <InputNumber :min="0" v-model="addRelationDetail.couponLimit" label="限购数量"></InputNumber>
                 </FormItem>
@@ -959,22 +964,7 @@ export default {
       ruleInline: {
         effectiveStartTime: [{ required: true, message: "请选择生效时间" }],
         effectiveEndTime: [{ required: true, message: "请选择失效时间" }],
-        couponLimit: [
-          { required: true, message: "请输入发券限制数量" },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
-              }
-              callback(errors);
-            }
-          }
-        ]
-      },
-      relationRuleInline: {
-        effectiveStartTime: [{ required: true, message: "请选择生效时间" }],
-        effectiveEndTime: [{ required: true, message: "请选择失效时间" }],
+        couponName: [{ required: true, message: '请输入券名称' }],
         couponLimit: [
           { required: true, message: "请输入发券限制数量" },
           {

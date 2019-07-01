@@ -929,17 +929,19 @@ export default {
       });
     },
     handleDownload() {
-      // 导出不分页 按条件查出多少条导出多少条
-      this.searchRowData.rows = this.total;
+      // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
+      this.searchRowData.rows = this.total > 5000 ? 5000: this.total;
       getOrderPages(this.searchRowData).then(res => {
         const tableData = res.rows;
+        // 恢复正常页数
+        this.searchRowData.rows = 10;
         // 表格数据导出字段翻译
         let _this= this;
         tableData.forEach(item => {
           const obj = _this.storeList.find(x => item.storeId === x.storeId);
           item['code'] = item['code'] + '';
           item['apply'] = appTypeConvert(item['apply']).label;
-          item['storeId'] = obj.storeName || item['storeId'];
+          item['storeId'] = obj && obj.storeName? obj.storeName : item['storeId']; // 如果找不到就显示门店Id
           item['totalAmount'] = (item['totalAmount'] / 100.00).toFixed(2);
           item['couponAmount'] = (item['couponAmount'] / 100.00).toFixed(2);
           item['amountPayable'] = (item['amountPayable'] / 100.00).toFixed(2);

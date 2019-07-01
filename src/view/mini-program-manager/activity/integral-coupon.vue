@@ -395,6 +395,11 @@
                   </FormItem>
                 </i-col>
               </template>
+              <i-col span="6">
+                <FormItem label="优惠券名称:" prop="couponName">
+                  <Input v-model="addRelationDetail.couponName" clearable></Input>
+                </FormItem>
+              </i-col>
               <i-col span="4">
                 <FormItem label="排序字段:" prop="rank">
                   <InputNumber :min="0" v-model="addRelationDetail.rank" label=""></InputNumber>
@@ -1076,6 +1081,7 @@ export default {
         endDay: [{ required: true, message: '请输入失效天数' }],
         couponScope: [{ required: true, message: '请选择券使用范围' }],
         useLimitType: [{ required: true, message: '请选择券使用限制' }],
+        couponName: [{ required: true, message: '请输入券名称' }],
         couponRules: [{ required: true, message: '请输入券使用规则' }],
         couponDetail: [{ required: true, message: '请输入券详情' }],
         couponReminderMsg: [{ required: true, message: '请输入券温馨提示' }],
