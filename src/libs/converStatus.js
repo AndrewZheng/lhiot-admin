@@ -31,6 +31,7 @@ import {
   rewardActivitySettingEnum,
   couponActivityTypeEnum,
   couponStatusEnum,
+  vipStatusEnum,
   couponTypeEnum,
   couponScopeEnum,
   couponUseLimitEnum,
@@ -48,7 +49,7 @@ import {
   YesNoEnum,
   yesNoEnum,
   deliverStatusEnum,
-  validDateTypeEnum
+  validDateTypeEnum,
 } from './enumerate';
 
 const convertFunction = (value, list) => {
@@ -203,6 +204,11 @@ export const validDateTypeConvert = (value) => {
 export const couponTypeConvert = (value) => {
   return convertFunction(value, couponTypeEnum);
 }
+
+export const vipTypeConvert = (value) => {
+  return convertFunction(value, vipStatusEnum);
+}
+
 
 export const appTypeConvert = (value) => {
   return convertFunction(value, appTypeEnum);

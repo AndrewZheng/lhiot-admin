@@ -769,6 +769,16 @@ export const couponStatusEnum = [
 //   label: '过期',
 //   value: 'EXPIRE'
 // }
+export const vipStatusEnum = [
+  {
+    label: 'SVIP会员',
+    value: 'SUPERVIP'
+  },
+  {
+    label: '试用会员',
+    value: 'FREEVIP'
+  }
+];
 
 export const couponActivityTypeEnum = [
   {
@@ -834,12 +844,22 @@ export const couponScopeEnum = [
     value: couponScope.SMALL
   }
 ];
+export const vipCouponType = {
+  FREE_SHIPPING_COUPON:'FREE_SHIPPING_COUPON'
+};
 
-// 小程序优惠券类型(FULL_CUT_COUPON 满减券;DISCOUNT_COUPON 折扣券;CASH_COUPON 现金券)
+// export const vipCouponTypeEnum = [
+//   {
+//     label: '免运费券',
+//     value: vipCouponType.FREE_SHIPPING_COUPON
+//   }
+// ];
+// 小程序优惠券类型(FULL_CUT_COUPON 满减券;DISCOUNT_COUPON 折扣券;CASH_COUPON 现金券;FREE_SHIPPING_COUPON免运费券)
 export const couponType = {
   FULL_CUT_COUPON: 'FULL_CUT_COUPON',
   DISCOUNT_COUPON: 'DISCOUNT_COUPON',
-  CASH_COUPON: 'CASH_COUPON'
+  CASH_COUPON: 'CASH_COUPON',
+  FREE_SHIPPING_COUPON:'FREE_SHIPPING_COUPON'
 };
 
 export const couponTypeEnum = [
@@ -854,6 +874,27 @@ export const couponTypeEnum = [
   {
     label: '现金券',
     value: couponType.CASH_COUPON
+  },
+  {
+    label: '免运费券',
+    value: vipCouponType.FREE_SHIPPING_COUPON
+  }
+];
+
+// 小程序SVIP身份识别(SUPER_VIP svip   PROBATION_VIP  试用vip)
+export const svipType = {
+  SUPER_VIP: 'SUPER_VIP',
+  PROBATION_VIP: 'PROBATION_VIP',
+};
+
+export const svipTypeEnum = [
+  {
+    label: 'SVIP会员',
+    value: svipType.SUPER_VIP
+  },
+  {
+    label: '试用会员',
+    value: svipType.PROBATION_VIP
   }
 ];
 

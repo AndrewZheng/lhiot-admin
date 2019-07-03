@@ -370,6 +370,8 @@ export const getHdCouponActivitiesPages = (data) => {
   });
 };
 
+
+
 // ———————————— 活动管理 —————————————
 
 // 根据条件分页查询拼团机器人列表
@@ -732,6 +734,7 @@ export const editShareRewardSetting = (data) => {
   });
 };
 
+// 原先注册送礼后台接口
 // 根据条件分页查询注册送礼活动列表
 export const getRegisterPages = (data) => {
   return Vue.prototype.$http.request({
@@ -768,6 +771,59 @@ export const editRegister = (data) => {
   });
 };
 
+
+// ———————————— 1.6版本注册送礼活动配置 ————————————— 
+//根据id查询注册送礼活动配置
+export const getRegisteredGiftPage = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-register-setting/' + data.id,
+    data,
+    method: 'get'
+  });
+};
+
+//添加注册送礼活动配置 /minapp/activity-register-setting/create
+export const createRegisterGift = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-register-setting/create',
+    data,
+    method: 'post'
+  });
+};
+
+
+// 查询注册送礼活动配置分页列表 minapp/activity-register-setting/create
+export const getRegisteredGiftPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-register-setting/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+
+// 根据id更新注册送礼活动配置 /minapp/activity-register-setting/update/{id}
+export const editRegisterGift = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-register-setting/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+
+// 根据ids删除注册送礼活动配置  /minapp/activity-register-setting/{ids}
+export const deleteRegisterGift = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-register-setting/' + ids,
+    method: 'delete'
+  });
+};
+
+
+// ------------------------
+
 // 根据条件分页查询注册送礼活动与优惠券关联列表
 export const getRegisterRewardPages = (data) => {
   return Vue.prototype.$http.request({
@@ -803,7 +859,7 @@ export const editRegisterReward = (data) => {
     method: 'put'
   });
 };
-
+// ------------------------------------
 // 根据条件分页查询商城小程序订单列表
 export const getOrderPages = (data) => {
   return Vue.prototype.$http.request({

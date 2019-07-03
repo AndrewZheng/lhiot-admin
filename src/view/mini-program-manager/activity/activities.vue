@@ -232,7 +232,7 @@ export default {
   data() {
     return {
       ruleInline: {
-        activityCode: [{ required: true, message: "请输入活动编码" }],
+        activityCode: [{ required: true, message: "请输入活动编码1" }],
         activityName: [{ required: true, message: "请输入活动名称" }],
         onOff: [{ required: true, message: "请选择活动状态" }]
       },
