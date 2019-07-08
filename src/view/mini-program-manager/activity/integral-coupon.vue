@@ -326,6 +326,7 @@
                     v-for="(item,index) in couponTypeEnum"
                     :value="item.value"
                     :key="index"
+                    :disabled="index==3"
                     class="ptb2-5"
                     style="padding-left: 5px;width: 100px"
                   >{{ item.label }}</Option>

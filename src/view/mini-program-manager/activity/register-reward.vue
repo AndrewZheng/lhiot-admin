@@ -657,7 +657,7 @@ export default {
           key: "endTime"
         },
         {
-          title: "优惠券状态",
+          title: "活动状态",
           key: "onOff",
           render: (h, params, vm) => {
             const { row } = params;
@@ -929,7 +929,7 @@ export default {
             ","
           );
           if (activityRegisterId === 0 || activityRegisterId === "") {
-            this.$Message.error("注册送优惠券活动不能为空!");
+            this.$Message.error("注册送礼优惠券活动不能为空!");
             return;
           } else if (
             couponTemplateIds.length === 0 ||

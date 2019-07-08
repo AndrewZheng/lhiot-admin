@@ -46,7 +46,7 @@
         <div slot="operations">
           <Button v-waves type="success" class="mr5" @click="addChildren">
             <Icon type="md-add"/>
-            添加3333
+            添加
           </Button>
           <Poptip
             confirm

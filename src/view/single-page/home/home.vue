@@ -45,19 +45,19 @@ export default {
   data() {
     return {
       inforCardData: [
-        { title: '新增用户', icon: 'md-person-add', count: 869, color: '#2d8cf0' },
-        { title: '累计点击', icon: 'md-locate', count: 25680, color: '#19be6b' },
+        { title: '新增用户', icon: 'md-person-add', count: 1993, color: '#2d8cf0' },
+        { title: '累计点击', icon: 'md-locate', count: 36928, color: '#19be6b' },
         { title: '新增问答', icon: 'md-help-circle', count: 168, color: '#ff9900' },
-        { title: '分享统计', icon: 'md-share', count: 869, color: '#ed3f14' },
+        { title: '分享统计', icon: 'md-share', count: 928, color: '#ed3f14' },
         { title: '新增互动', icon: 'md-chatbubbles', count: 69, color: '#E46CBB' },
-        { title: '新增页面', icon: 'md-map', count: 14, color: '#9A66E4' }
+        { title: '新增页面', icon: 'md-map', count: 18, color: '#9A66E4' }
       ],
       pieData: [
-        { value: 335, name: '直接访问' },
-        { value: 310, name: '邮件营销' },
-        { value: 234, name: '联盟广告' },
-        { value: 135, name: '视频广告' },
-        { value: 1548, name: '搜索引擎' }
+        { value: 1993, name: '公众号下发' },
+        { value: 928, name: '最近示使用' },
+        { value: 369, name: '公众号菜单' },
+        { value: 199, name: '会话' },
+        { value: 168, name: '公众号菜单' }
       ],
       barData: {
         Mon: 13253,

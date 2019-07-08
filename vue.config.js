@@ -16,7 +16,7 @@ const BASE_URL = process.env.NODE_ENV === 'production' ?
   '/';
 
 module.exports = {
-  publicPath: BASE_URL,
+  baseUrl: BASE_URL,
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: false,
@@ -39,7 +39,7 @@ module.exports = {
   devServer: {
     port: 80, // 端口号
     // host: 'localhost', // 本地，打包选这个
-    host: '192.168.1.229', // 本地ip，方便其他人通过ip访问
+    host: '192.168.1.134', // 本地ip，方便其他人通过ip访问
     https: false, // https:{type:Boolean}
     open: true, // 配置自动启动浏览器
     proxy: {
