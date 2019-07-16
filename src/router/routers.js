@@ -191,6 +191,15 @@ export const constantRouterMap = [
           title: '活动关联优惠券模板'
         },
         component: () => import('@/view/mini-program-manager/activity/coupon-relation.vue')
+      },
+      {
+        path: 'small-vip-activities-associated',
+        name: 'small-vip-activities-associated',
+        meta: {
+          icon: 'md-menu',
+          title: '活动关联优惠券模板'
+        },
+        component: () => import('@/view/mini-program-manager/vip/activities-associated.vue')
       }
     ]
   },
@@ -930,7 +939,7 @@ export const asyncRouterMap = [
           title: '鲜果币流水管理'
         },
         component: () => import('@/view/mini-program-manager/order/paylog.vue')
-      }
+      },
     ]
   },
   {
@@ -1033,7 +1042,45 @@ export const asyncRouterMap = [
           title: '系统参数分类管理'
         },
         component: () => import('@/view/mini-program-manager/system/system-category.vue')
-      }
+      },
+    ]
+  },
+  {
+    path: '/small-vip',
+    name: 'small-vip',
+    meta: {
+      icon: 'md-menu',
+      title: '付费会员管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/small-souvenir',
+        name: 'small-souvenir',
+        meta: {
+          icon: 'md-basket',
+          title: '开卡礼包'
+        },
+        component: () => import('@/view/mini-program-manager/vip/souvenir.vue')
+      },
+      {
+        path: '/small-distribution',
+        name: 'small-distribution',
+        meta: {
+          icon: 'md-bus',
+          title: '省心配送券活动'
+        },
+        component: () => import('@/view/mini-program-manager/vip/distribution.vue')
+      },
+      {
+        path: '/small-privilege',
+        name: 'small-privilege',
+        meta: {
+          icon: 'md-pricetag',
+          title: '生日特权券活动'
+        },
+        component: () => import('@/view/mini-program-manager/vip/privilege.vue')
+      },
     ]
   },
   {

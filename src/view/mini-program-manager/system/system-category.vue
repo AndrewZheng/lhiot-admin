@@ -21,7 +21,7 @@
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
             <Icon type="md-add"/>
-            添加
+            添加111
           </Button>
           <Poptip
             confirm

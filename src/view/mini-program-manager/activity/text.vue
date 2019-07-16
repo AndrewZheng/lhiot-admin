@@ -75,6 +75,21 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
+              <i-col span="6">活动规则:</i-col>
+              <i-col span="18">
+                <Input
+                  :v-if="registerDetail.activityRule"
+                  :rows="6"
+                  :value="registerDetail.activityRule"
+                  type="textarea"
+                ></Input>
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
               <i-col span="6">活动状态:</i-col>
               <i-col span="18">{{ registerDetail.onOff | imageStatusFilter }}</i-col>
             </Row>
@@ -112,21 +127,6 @@
             </Row>
           </i-col>
         </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">活动规则:</i-col>
-              <i-col span="18">
-                <Input
-                  :v-if="registerDetail.activityRule"
-                  :rows="6"
-                  :value="registerDetail.activityRule"
-                  type="textarea"
-                ></Input>
-              </i-col>
-            </Row>
-          </i-col>
-        </Row>
       </div>
       <div slot="footer">
         <Button type="primary" @click="handleClose">关闭</Button>
@@ -143,7 +143,19 @@
             <Row>
               <Col span="18">
                 <FormItem label="活动名称:" prop="activityName">
-                  <Input v-model="registerDetail.activityName" style="width: 170px"></Input>
+                  <Input v-model="registerDetail.activityName"></Input>
+                </FormItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col span="18">
+                <FormItem label="活动规则:" prop="activityRule">
+                  <Input
+                    v-model="registerDetail.activityRule"
+                    :rows="6"
+                    placeholder="活动规则"
+                    type="textarea"
+                  ></Input>
                 </FormItem>
               </Col>
             </Row>
@@ -192,18 +204,6 @@
                 </FormItem>
               </Col>
             </Row>
-            <Row>
-              <Col span="18">
-                <FormItem label="活动规则:" prop="activityRule">
-                  <Input
-                    v-model="registerDetail.activityRule"
-                    :rows="6"
-                    placeholder="活动规则"
-                    type="textarea"
-                  ></Input>
-                </FormItem>
-              </Col>
-            </Row>
           </Form>
         </Row>
       </div>
@@ -223,10 +223,10 @@ import {
   deleteRegister,
   createRegister,
   editRegister,
-  deleteRegisterGift,
-  getRegisteredGiftPages,
-  editRegisterGift,
-  createRegisterGift,
+  deleteRegisterReward,
+  getRegisterRewardPages,
+  editRegisterReward,
+  createRegisterReward,
   getCouponTemplatePages
 } from "@/api/mini-program";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -248,7 +248,7 @@ import {
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber,
-  setSmallCouponActivity
+  setSmallCouponActivity,
 } from "@/libs/util";
 
 const registerDetail = {
@@ -770,16 +770,6 @@ export default {
     },
     createRegister() {
       this.modalViewLoading = true;
-      if (this.registerDetail.beginTime.indexOf("T") > -1) {
-        this.registerDetail.beginTime = this.$moment(
-          this.registerDetail.beginTime
-        ).format("YYYY-MM-DD HH:mm:ss");
-      }
-      if (this.registerDetail.endTime.indexOf("T") > -1) {
-        this.registerDetail.endTime = this.$moment(
-          this.registerDetail.endTime
-        ).format("YYYY-MM-DD HH:mm:ss");
-      }
       createRegister(this.registerDetail)
         .then(res => {
           this.modalViewLoading = false;
@@ -969,7 +959,7 @@ export default {
       this.tempTableLoading = true;
       // 如果前端没有剩余数量字段,则初始化剩余数量=商品数量
       // row.remainCount = row.goodsLimit;
-      editRegisterGift(row)
+      editRegisterReward(row)
         .then(res => {
           this.getRelationTableData();
         })
@@ -982,7 +972,7 @@ export default {
     },
     modalHandleDelete(params) {
       this.tempTableLoading = true;
-      deleteRegisterGift({ ids: params.row.id })
+      deleteRegisterReward({ ids: params.row.id })
         .then(res => {
           this.relationDatas = this.relationDatas.filter(
             (item, index) => index !== params.row.initRowIndex
@@ -1024,7 +1014,7 @@ export default {
     },
     createRelation() {
       this.modalViewLoading = true;
-      createRegisterGift(this.addRelationDetail)
+      createRegisterReward(this.addRelationDetail)
         .then(res => {
           this.modalViewLoading = false;
           this.modalRelation = false;
@@ -1059,7 +1049,7 @@ export default {
       this.addRelationDetail.effectiveEndTime = value;
     },
     getRelationTableData() {
-      getRegisteredGiftPages(this.searchRelationRowData)
+      getRegisterRewardPages(this.searchRelationRowData)
         .then(res => {
           // 设置行是否可编辑
           if (res.rows.length !== 0) {
