@@ -32,9 +32,14 @@ import {
   couponActivityTypeEnum,
   couponStatusEnum,
   vipStatusEnum,
+  packageTypeEnum,
+  packageStatusEnum,
+  userScopeEnum,
+  memberLimitEnum,
   couponTypeEnum,
   couponScopeEnum,
   couponUseLimitEnum,
+  giftTypeEnum,
   appTypeEnum,
   payTypeEnum,
   payStepEnum,
@@ -197,6 +202,10 @@ export const couponUseLimitConvert = (value) => {
   return convertFunction(value, couponUseLimitEnum);
 }
 
+export const giftTypeConvert = (value) => {
+  return convertFunction(value, giftTypeEnum);
+}
+
 export const validDateTypeConvert = (value) => {
   return convertFunction(value, validDateTypeEnum);
 }
@@ -209,6 +218,21 @@ export const vipTypeConvert = (value) => {
   return convertFunction(value, vipStatusEnum);
 }
 
+export const packageStatusConvert = (value) => {
+  return convertFunction(value, packageStatusEnum);
+}
+
+export const packageTypeConvert = (value) => {
+  return convertFunction(value, packageTypeEnum);
+}
+
+export const userScopeConvert = (value) => {
+  return convertFunction(value, userScopeEnum);
+}
+
+export const memberLimitConvert = (value) => {
+  return convertFunction(value, memberLimitEnum);
+}
 
 export const appTypeConvert = (value) => {
   return convertFunction(value, appTypeEnum);

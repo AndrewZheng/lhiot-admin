@@ -38,14 +38,15 @@
               v-model="searchRowData.apply"
               :clearable="true"
               style="padding-right: 5px;width: 120px"
-              placeholder="应用类型">
+              placeholder="应用类型"
+            >
               <Option
                 v-for="item in appTypeEnum"
                 :value="item.value"
                 :key="`appTypeEnum-col-${item.value}`"
                 class="ml15 mt10"
-                style="padding-left: 5px">{{ item.label }}
-              </Option>
+                style="padding-left: 5px"
+              >{{ item.label }}</Option>
             </Select>
             <Select
               v-model="searchRowData.orderType"
@@ -80,7 +81,8 @@
               class="search-col mr5"
               placeholder="订单状态"
               style="width: 100px"
-              clearable>
+              clearable
+            >
               <Option
                 v-for="item in miniOrderStatusEnum"
                 :value="item.value"
@@ -93,7 +95,8 @@
               class="search-col mr5"
               placeholder="海鼎状态"
               style="width: 100px"
-              clearable>
+              clearable
+            >
               <Option
                 v-for="item in miniHdStatusEnum"
                 :value="item.value"
@@ -127,7 +130,7 @@
               type="primary"
               @click="handleSearch"
             >
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
               v-waves
@@ -136,16 +139,29 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除
+              <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves :loading="deliverOrderLoading" class="search-btn mr5" type="warning" @click="deliverOrder">门店调货</Button>
+          <Button
+            v-waves
+            :loading="deliverOrderLoading"
+            class="search-btn mr5"
+            type="warning"
+            @click="deliverOrder"
+          >门店调货</Button>
           <Button v-waves class="search-btn ml5 mr5" type="primary" @click="resendToHd">海鼎重发</Button>
           <!-- 多类型导出 -->
           <!-- <BookTypeOption v-model="exportType" class="mr5"/> -->
-          <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/> 导出</Button>
+          <Button
+            :loading="downloadLoading"
+            class="search-btn mr5"
+            type="primary"
+            @click="handleDownload"
+          >
+            <Icon type="md-download" />导出
+          </Button>
           <!-- <Poptip
             confirm
             placement="bottom"
@@ -156,7 +172,7 @@
             <Button type="error" class="mr5">
               <Icon type="md-money"/>手动退款
             </Button>
-          </Poptip> -->
+          </Poptip>-->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -333,7 +349,10 @@
             </Row>
           </i-col>
         </Row>
-        <Row v-if="orderDetail.receivingWay === 'TO_THE_HOME'" style="background: lightgray;margin-bottom: 10px">
+        <Row
+          v-if="orderDetail.receivingWay === 'TO_THE_HOME'"
+          style="background: lightgray;margin-bottom: 10px"
+        >
           <Row>
             <i-col span="24">
               <Row class="mb10 pl10 pt5">
@@ -349,7 +368,9 @@
             <i-col span="12">
               <Row class-name="mb10">
                 <i-col span="8">配送时间段:</i-col>
-                <i-col span="16">{{ orderDetail.deliverTime.startTime + '- ' + orderDetail.deliverTime.endTime }}</i-col>
+                <i-col
+                  span="16"
+                >{{ orderDetail.deliverTime.startTime + '- ' + orderDetail.deliverTime.endTime }}</i-col>
               </Row>
             </i-col>
             <i-col span="12">
@@ -406,7 +427,9 @@
         <i-col span="12">
           <Row class-name="mb20">
             <i-col span="8">当前门店:</i-col>
-            <i-col span="16">{{ storeList.find(item => currentTableRowSelected.storeId === item.storeId).storeName }}</i-col>
+            <i-col
+              span="16"
+            >{{ storeList.find(item => currentTableRowSelected.storeId === item.storeId).storeName }}</i-col>
           </Row>
         </i-col>
         <i-col span="12">
@@ -446,11 +469,12 @@
         </i-col>
       </Row>
       <Row style="background: lightgray">
-        <i-col span="24" style="padding-left: 15px">满足以下几个条件的订单才允许调货：
-          <br>1.仅门店自提订单；
-          <br>2.订单状态为待发货；
-          <br>3.海鼎状态为发送成功
-          <br>
+        <i-col span="24" style="padding-left: 15px">
+          满足以下几个条件的订单才允许调货：
+          <br />1.仅门店自提订单；
+          <br />2.订单状态为待发货；
+          <br />3.海鼎状态为发送成功
+          <br />
         </i-col>
       </Row>
       <div slot="footer">
@@ -462,24 +486,48 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import { getOrderPages, getOrder, getStorePages, modifyStoreInOrder, resendToHd, ordersRefund } from '@/api/mini-program';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import { fenToYuanDot2 } from '@/libs/util';
-import { receivingWayEnum, receivingWay, orderStatusEnum, miniOrderTypeEnum, appTypeEnum, miniOrderStatusEnum, miniOrderStatus, miniHdStatusEnum, miniHdStatus } from '@/libs/enumerate';
-import { orderTypeConvert, thirdDeliverStatusConvert, miniOrderStatusConvert, miniHdStatusConvert, receivingWayConvert, appTypeConvert } from '@/libs/converStatus';
-import BookTypeOption from '_c/book-type-option';
+import Tables from "_c/tables";
+import {
+  getOrderPages,
+  getOrder,
+  getStorePages,
+  modifyStoreInOrder,
+  resendToHd,
+  ordersRefund
+} from "@/api/mini-program";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import { fenToYuanDot2 } from "@/libs/util";
+import {
+  receivingWayEnum,
+  receivingWay,
+  orderStatusEnum,
+  miniOrderTypeEnum,
+  appTypeEnum,
+  miniOrderStatusEnum,
+  miniOrderStatus,
+  miniHdStatusEnum,
+  miniHdStatus
+} from "@/libs/enumerate";
+import {
+  orderTypeConvert,
+  thirdDeliverStatusConvert,
+  miniOrderStatusConvert,
+  miniHdStatusConvert,
+  receivingWayConvert,
+  appTypeConvert
+} from "@/libs/converStatus";
+import BookTypeOption from "_c/book-type-option";
 
 const orderDetail = {
   id: 0,
-  code: '',
+  code: "",
   userId: 0,
   apply: null,
   orderType: null,
   storeId: 0,
-  storeCode: '',
-  storeName: '',
+  storeCode: "",
+  storeName: "",
   receivingWay: null,
   totalAmount: 0,
   amountPayable: 0,
@@ -487,22 +535,22 @@ const orderDetail = {
   couponAmount: 0,
   hdStatus: null,
   orderStatus: null,
-  address: '',
-  reason: '',
+  address: "",
+  reason: "",
   createAt: null,
-  receiveUser: '',
-  contactPhone: '',
-  remark: '',
+  receiveUser: "",
+  contactPhone: "",
+  remark: "",
   deliveryEndTime: null,
-  payType: '',
+  payType: "",
   payAt: null,
-  activityTeambuyContent: '',
-  hdOrderCode: '',
+  activityTeambuyContent: "",
+  hdOrderCode: "",
   orderProducts: [],
   orderFlows: [],
   allowRefund: null,
   deliverTime: {
-    display: '',
+    display: "",
     startTime: null,
     endTime: null,
     status: null
@@ -510,10 +558,10 @@ const orderDetail = {
 };
 
 const roleRowData = {
-  phone: '',
-  orderType: '',
-  orderCode: '',
-  apply: '',
+  phone: "",
+  orderType: "",
+  orderCode: "",
+  apply: "",
   startTime: null,
   endTime: null,
   page: 1,
@@ -545,28 +593,28 @@ export default {
       miniHdStatus,
       tempColumnsView: [
         {
-          title: '配送方',
+          title: "配送方",
           minWidth: 100,
-          key: 'deliverType'
+          key: "deliverType"
         },
         {
-          title: '配送距离',
+          title: "配送距离",
           minWidth: 100,
-          key: 'distance'
+          key: "distance"
         },
         {
-          title: '配送费',
+          title: "配送费",
           minWidth: 100,
-          key: 'fee',
+          key: "fee",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.fee);
             return <div>{amount}</div>;
           }
         },
         {
-          title: '配送状态',
+          title: "配送状态",
           minWidth: 100,
-          key: 'deliverStatus',
+          key: "deliverStatus",
           render: (h, params, vm) => {
             const { row } = params;
             return (
@@ -575,205 +623,286 @@ export default {
           }
         },
         {
-          title: '接单时间',
+          title: "接单时间",
           minWidth: 100,
-          key: 'receiveTime'
+          key: "receiveTime"
         },
         {
-          title: '配送员手机号',
+          title: "配送员手机号",
           minWidth: 110,
-          key: 'deliverPhone'
+          key: "deliverPhone"
         }
       ],
       orderViewRelationsColumn: [
         {
-          title: '商品编码',
-          key: 'barcode'
+          title: "商品编码",
+          key: "barcode"
         },
         {
-          title: '商品名称',
-          key: 'productName'
+          title: "商品名称",
+          key: "productName"
         },
         {
-          title: '商品规格',
+          title: "商品规格",
           render(h, params, vm) {
             const { row } = params;
-            return <div>{row.productQty + '*' + row.standardQty}</div>;
+            return <div>{row.productQty + "*" + row.standardQty}</div>;
           }
         },
         {
-          title: '商品数量',
-          key: 'productQty'
+          title: "商品数量",
+          key: "productQty"
         },
         {
-          title: '计量单位',
-          key: 'productUnit'
+          title: "计量单位",
+          key: "productUnit"
         },
         {
-          title: '原价',
-          key: 'price',
+          title: "原价",
+          key: "price",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.price);
             return <div>{amount}</div>;
           }
         },
         {
-          title: '折后价',
-          key: 'discountPrice',
+          title: "折后价",
+          key: "discountPrice",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.discountPrice);
             return <div>{amount}</div>;
           }
         },
         {
-          title: '总价',
-          key: 'discountPrice',
+          title: "总价",
+          key: "discountPrice",
           render(h, params, vm) {
             const amount = params.row.discountPrice / 100;
             const price = amount * params.row.productQty;
-            return <div>{'￥' + price}</div>;
+            return <div>{"￥" + price}</div>;
           }
         }
       ],
       columns: [
         {
-          type: 'selection',
-          key: '',
+          type: "selection",
+          key: "",
           width: 60,
-          align: 'center',
-          fixed: 'left'
+          align: "center",
+          fixed: "left"
         },
         {
-          title: '订单编号',
-          key: 'code',
+          title: "订单编号",
+          key: "code",
           sortable: true,
           width: 170,
-          fixed: 'left'
+          fixed: "left"
         },
         {
-          title: '应用类型',
-          key: 'apply',
+          title: "应用类型",
+          key: "apply",
           width: 120,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.apply === 'WXSMALL_SHOP') {
-              return <div><tag color='green'>{appTypeConvert(row.apply).label}</tag></div>;
-            } else if (row.apply === 'S_MALL') {
-              return <div><tag color='gold'>{appTypeConvert(row.apply).label}</tag></div>;
+            if (row.apply === "WXSMALL_SHOP") {
+              return (
+                <div>
+                  <tag color="green">{appTypeConvert(row.apply).label}</tag>
+                </div>
+              );
+            } else if (row.apply === "S_MALL") {
+              return (
+                <div>
+                  <tag color="gold">{appTypeConvert(row.apply).label}</tag>
+                </div>
+              );
             } else {
               return <div>{row.apply}</div>;
             }
           }
         },
         {
-          title: '创建时间',
+          title: "创建时间",
           width: 160,
-          key: 'createAt'
+          key: "createAt"
         },
         {
-          title: '订单用户',
+          title: "订单用户",
           width: 120,
-          key: 'receiveUser'
+          key: "receiveUser"
         },
         {
-          title: '下单门店',
+          title: "手机号码",
           width: 120,
-          key: 'storeId',
+          key: "contactPhone"
+        },
+        {
+          title: "下单门店",
+          width: 120,
+          key: "storeId",
           render: (h, params) => {
             const { row } = params;
-            const obj = this.storeList.find(item => row.storeId === item.storeId)
+            const obj = this.storeList.find(
+              item => row.storeId === item.storeId
+            );
             if (obj) {
-              return h('span', obj.storeName);
+              return h("span", obj.storeName);
             }
-            return h('span', row.storeId);
+            return h("span", row.storeId);
           }
         },
         {
-          title: '订单总价',
+          title: "订单总价",
           width: 120,
-          key: 'totalAmount',
+          key: "totalAmount",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.totalAmount);
             return <div>{amount}</div>;
           }
         },
         {
-          title: '优惠金额',
+          title: "优惠金额",
           width: 120,
-          key: 'couponAmount',
+          key: "couponAmount",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.couponAmount);
             return <div>{amount}</div>;
           }
         },
         {
-          title: '运费',
+          title: "运费",
           width: 120,
-          key: 'deliveryAmount',
+          key: "deliveryAmount",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.deliveryAmount);
-            return <div>{ amount?amount:'N/A' }</div>;
+            return <div>{amount ? amount : "N/A"}</div>;
           }
         },
         {
-          title: '应付金额',
+          title: "应付金额",
           width: 120,
-          key: 'amountPayable',
+          key: "amountPayable",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.amountPayable);
             return <div>{amount}</div>;
           }
         },
         {
-          title: '提货类型',
+          title: "提货类型",
           width: 120,
-          key: 'receivingWay',
+          key: "receivingWay",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.receivingWay === 'TO_THE_HOME') {
-              return <div><tag color='green'>{receivingWayConvert(row.receivingWay).label}</tag></div>;
-            } else if (row.receivingWay === 'TO_THE_STORE') {
-              return <div><tag color='gold'>{receivingWayConvert(row.receivingWay).label}</tag></div>;
+            if (row.receivingWay === "TO_THE_HOME") {
+              return (
+                <div>
+                  <tag color="green">
+                    {receivingWayConvert(row.receivingWay).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.receivingWay === "TO_THE_STORE") {
+              return (
+                <div>
+                  <tag color="gold">
+                    {receivingWayConvert(row.receivingWay).label}
+                  </tag>
+                </div>
+              );
             } else {
               return <div>{row.receivingWay}</div>;
             }
           }
         },
         {
-          title: '订单状态',
+          title: "订单状态",
           width: 120,
-          key: 'orderStatus',
+          key: "orderStatus",
           render: (h, params, vm) => {
             const { row } = params;
             // WAIT_PAYMENT("待支付"),PAYMENTING("支付中"),WAIT_SEND_OUT("待发货"),
             // SEND_OUT("已发货"),DISPATCHING("配送中"),RECEIVED("已收货"),RETURNING("退货中"),
             // ALREADY_RETURN("退货完成"),FAILURE("已失效")
             // FINISHED("已完成")
-            if (row.orderStatus === 'WAIT_PAYMENT' || row.orderStatus === 'PAYMENTING' || row.orderStatus === 'WAIT_SEND_OUT') {
-              return <div><tag color='default'>{miniOrderStatusConvert(row.orderStatus).label}</tag></div>;
-            } else if (row.orderStatus === 'SEND_OUT' || row.orderStatus === 'DISPATCHING' || row.orderStatus === 'RECEIVED' || row.orderStatus === 'RETURNING') {
-              return <div><tag color='primary'>{miniOrderStatusConvert(row.orderStatus).label}</tag></div>;
-            } else if (row.orderStatus === 'FAILURE') {
-              return <div><tag color='error'>{miniOrderStatusConvert(row.orderStatus).label}</tag></div>;
-            } else if (row.orderStatus === 'ALREADY_RETURN' || row.orderStatus === 'FINISHED') {
-              return <div><tag color='success'>{miniOrderStatusConvert(row.orderStatus).label}</tag></div>;
+            if (
+              row.orderStatus === "WAIT_PAYMENT" ||
+              row.orderStatus === "PAYMENTING" ||
+              row.orderStatus === "WAIT_SEND_OUT"
+            ) {
+              return (
+                <div>
+                  <tag color="default">
+                    {miniOrderStatusConvert(row.orderStatus).label}
+                  </tag>
+                </div>
+              );
+            } else if (
+              row.orderStatus === "SEND_OUT" ||
+              row.orderStatus === "DISPATCHING" ||
+              row.orderStatus === "RECEIVED" ||
+              row.orderStatus === "RETURNING"
+            ) {
+              return (
+                <div>
+                  <tag color="primary">
+                    {miniOrderStatusConvert(row.orderStatus).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.orderStatus === "FAILURE") {
+              return (
+                <div>
+                  <tag color="error">
+                    {miniOrderStatusConvert(row.orderStatus).label}
+                  </tag>
+                </div>
+              );
+            } else if (
+              row.orderStatus === "ALREADY_RETURN" ||
+              row.orderStatus === "FINISHED"
+            ) {
+              return (
+                <div>
+                  <tag color="success">
+                    {miniOrderStatusConvert(row.orderStatus).label}
+                  </tag>
+                </div>
+              );
             } else {
               return <div>{row.orderStatus}</div>;
             }
           }
         },
         {
-          title: '海鼎状态',
+          title: "海鼎状态",
           width: 120,
-          key: 'hdStatus',
+          key: "hdStatus",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.hdStatus === 'NOT_SEND') {
-              return <div><tag color='warning'>{miniHdStatusConvert(row.hdStatus).label}</tag></div>;
-            } else if (row.hdStatus === 'SEND_OUT') {
-              return <div><tag color='success'>{miniHdStatusConvert(row.hdStatus).label}</tag></div>;
-            } else if (row.hdStatus === 'SEND_FAILURE') {
-              return <div><tag color='error'>{miniHdStatusConvert(row.hdStatus).label}</tag></div>;
+            if (row.hdStatus === "NOT_SEND") {
+              return (
+                <div>
+                  <tag color="warning">
+                    {miniHdStatusConvert(row.hdStatus).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.hdStatus === "SEND_OUT") {
+              return (
+                <div>
+                  <tag color="success">
+                    {miniHdStatusConvert(row.hdStatus).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.hdStatus === "SEND_FAILURE") {
+              return (
+                <div>
+                  <tag color="error">
+                    {miniHdStatusConvert(row.hdStatus).label}
+                  </tag>
+                </div>
+              );
             } else {
               return <div>{row.hdStatus}</div>;
             }
@@ -804,16 +933,16 @@ export default {
         //   sortable: true
         // },
         {
-          title: '操作',
+          title: "操作",
           minWidth: 150,
-          key: 'handle',
-          options: ['view']
+          key: "handle",
+          options: ["view"]
         }
       ],
       currentTableRowSelected: null,
       searchRowData: _.cloneDeep(roleRowData),
       orderDetail: _.cloneDeep(orderDetail),
-      exportType: 'xlsx',
+      exportType: "xlsx",
       downloadLoading: false,
       tableDataSelected: []
     };
@@ -841,9 +970,9 @@ export default {
     handleEditClose() {
       this.modalViewLoading = false;
     },
-    handleRefund(){
-      if(!this.searchRowData.endTime){
-        this.$Message.error('请先选择结束时间，再手动退款');
+    handleRefund() {
+      if (!this.searchRowData.endTime) {
+        this.$Message.error("请先选择结束时间，再手动退款");
         return false;
       }
       // 处理手动退款
@@ -854,32 +983,38 @@ export default {
     handleSubmit() {
       if (!this.currentTableRowSelected) {
         this.$Message.error(
-          '请用鼠标左键点击选择下方表格一行订单数据,才能进行调货处理'
+          "请用鼠标左键点击选择下方表格一行订单数据,才能进行调货处理"
         );
         return;
       }
 
-      if (!this.currentTableRowSelected.apply!='S_MALL') {
-        this.$Message.error(
-          '该功能只适用于拼团小程序'
-        );
+      if (!this.currentTableRowSelected.apply != "S_MALL") {
+        this.$Message.error("该功能只适用于拼团小程序");
         return;
       }
 
-      if (!this.currentTableRowSelected.storeId || !this.currentTableRowSelected.newStoreId) {
-        this.$Message.error('该订单门店id为空');
+      if (
+        !this.currentTableRowSelected.storeId ||
+        !this.currentTableRowSelected.newStoreId
+      ) {
+        this.$Message.error("该订单门店id为空");
         return;
       }
-      if (this.currentTableRowSelected.receivingWay !== receivingWay.TO_THE_STORE) {
-        this.$Message.error('该订单提货方式不是门店自提！');
+      if (
+        this.currentTableRowSelected.receivingWay !== receivingWay.TO_THE_STORE
+      ) {
+        this.$Message.error("该订单提货方式不是门店自提！");
         return;
       }
-      if (this.currentTableRowSelected.orderStatus !== miniOrderStatus.WAIT_SEND_OUT) {
-        this.$Message.error('该订单不为待发货！');
+      if (
+        this.currentTableRowSelected.orderStatus !==
+        miniOrderStatus.WAIT_SEND_OUT
+      ) {
+        this.$Message.error("该订单不为待发货！");
         return;
       }
       if (this.currentTableRowSelected.hdStatus !== miniHdStatus.SEND_OUT) {
-        this.$Message.error('该订单海鼎发送没有成功！');
+        this.$Message.error("该订单海鼎发送没有成功！");
         return;
       }
       this.modifyStoreInOrder();
@@ -887,7 +1022,9 @@ export default {
     },
     deliverOrder() {
       if (!this.currentTableRowSelected) {
-        this.$Message.error('请用鼠标左键点击选择下方表格一行门店自提订单数据,才能进行调货处理');
+        this.$Message.error(
+          "请用鼠标左键点击选择下方表格一行门店自提订单数据,才能进行调货处理"
+        );
         return;
       }
       this.transferModalView = true;
@@ -902,55 +1039,72 @@ export default {
     },
     handleView(params) {
       this.loading = true;
-      getOrder({ orderCode: params.row.code }).then(res => {
-        this.orderDetail = res;
-        if (this.orderDetail != null && this.orderDetail.deliverTime != '' && this.orderDetail.deliverTime != null) {
-          this.orderDetail.deliverTime = JSON.parse(this.orderDetail.deliverTime);
-        }
-        this.loading = false;
-        this.tempModalType = this.modalType.view;
-        this.modalView = true;
-      }).catch(() => {
-        this.loading = false;
-      });
+      getOrder({ orderCode: params.row.code })
+        .then(res => {
+          this.orderDetail = res;
+          if (
+            this.orderDetail != null &&
+            this.orderDetail.deliverTime != "" &&
+            this.orderDetail.deliverTime != null
+          ) {
+            this.orderDetail.deliverTime = JSON.parse(
+              this.orderDetail.deliverTime
+            );
+          }
+          this.loading = false;
+          this.tempModalType = this.modalType.view;
+          this.modalView = true;
+        })
+        .catch(() => {
+          this.loading = false;
+        });
     },
     getTableData() {
       this.loading = true;
-      getOrderPages(this.searchRowData).then(res => {
-        this.tableData = res.rows;
-        this.total = res.total;
-        this.loading = false;
-        this.clearSearchLoading = false;
-        this.searchLoading = false;
-      }).catch(() => {
-        this.loading = false;
-        this.clearSearchLoading = false;
-        this.searchLoading = false;
-      });
+      getOrderPages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.rows;
+          this.total = res.total;
+          this.loading = false;
+          this.clearSearchLoading = false;
+          this.searchLoading = false;
+        })
+        .catch(() => {
+          this.loading = false;
+          this.clearSearchLoading = false;
+          this.searchLoading = false;
+        });
     },
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
-      this.searchRowData.rows = this.total > 5000 ? 5000: this.total;
+      this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
       getOrderPages(this.searchRowData).then(res => {
         const tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 10;
         // 表格数据导出字段翻译
-        let _this= this;
+        let _this = this;
         tableData.forEach(item => {
           const obj = _this.storeList.find(x => item.storeId === x.storeId);
-          item['code'] = item['code'] + '';
-          item['apply'] = appTypeConvert(item['apply']).label;
-          item['storeId'] = obj && obj.storeName? obj.storeName : item['storeId']; // 如果找不到就显示门店Id
-          item['totalAmount'] = (item['totalAmount'] / 100.00).toFixed(2);
-          item['couponAmount'] = (item['couponAmount'] / 100.00).toFixed(2);
-          item['amountPayable'] = (item['amountPayable'] / 100.00).toFixed(2);
-          item['orderType'] = orderTypeConvert(item['orderType']).label;
-          item['deliverStatus'] = thirdDeliverStatusConvert(item['deliverStatus']).label;
-          item['orderStatus'] = miniOrderStatusConvert(item['orderStatus']).label;
-          item['hdStatus']= miniHdStatusConvert(item['hdStatus']).label;
-          item['receivingWay'] = receivingWayConvert(item['receivingWay']).label;
-          item['status'] = miniOrderStatusConvert(item['status']).label;
+          item["code"] = item["code"] + "";
+          item["apply"] = appTypeConvert(item["apply"]).label;
+          item["storeId"] =
+            obj && obj.storeName ? obj.storeName : item["storeId"]; // 如果找不到就显示门店Id
+          item["totalAmount"] = (item["totalAmount"] / 100.0).toFixed(2);
+          item["couponAmount"] = (item["couponAmount"] / 100.0).toFixed(2);
+          item["amountPayable"] = (item["amountPayable"] / 100.0).toFixed(2);
+          item["orderType"] = orderTypeConvert(item["orderType"]).label;
+          item["deliverStatus"] = thirdDeliverStatusConvert(
+            item["deliverStatus"]
+          ).label;
+          item["orderStatus"] = miniOrderStatusConvert(
+            item["orderStatus"]
+          ).label;
+          item["hdStatus"] = miniHdStatusConvert(item["hdStatus"]).label;
+          item["receivingWay"] = receivingWayConvert(
+            item["receivingWay"]
+          ).label;
+          item["status"] = miniOrderStatusConvert(item["status"]).label;
         });
         this.$refs.tables.handleDownload({
           filename: `普通订单信息-${new Date().valueOf()}`,
@@ -959,27 +1113,29 @@ export default {
       });
     },
     getStore() {
-      getStorePages({ page: 1, rows: -1 }).then(res => {
-        this.storeList = res.rows;
-      }).catch(error => {
-        console.log(error);
-      });
+      getStorePages({ page: 1, rows: -1 })
+        .then(res => {
+          this.storeList = res.rows;
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     modifyStoreInOrder() {
       // TODO 未测试
-      modifyStoreInOrder(this.currentTableRowSelected).then(res => {
-        this.$Message.info('调货成功！');
-        this.transferModalView = false;
-      }).catch(error => {
-        console.log(error);
-      });
+      modifyStoreInOrder(this.currentTableRowSelected)
+        .then(res => {
+          this.$Message.info("调货成功！");
+          this.transferModalView = false;
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     resendToHd() {
       console.log(`current apply: ${this.tableDataSelected.apply}`);
-      if (this.tableDataSelected.apply!=='S_MALL') {
-        this.$Message.error(
-          '该功能只适用于拼团小程序'
-        );
+      if (this.tableDataSelected.apply !== "S_MALL") {
+        this.$Message.error("该功能只适用于拼团小程序");
         return;
       }
       // TODO 未测试
@@ -988,12 +1144,14 @@ export default {
         this.tableDataSelected.filter(value => {
           tempDeleteList.push(value.id);
         });
-        const ids = tempDeleteList.join(',');
-        resendToHd({ ids: ids }).then(res => {
-          this.$Message.info('海鼎重发成功');
-        }).catch(error => {
-          console.log(error);
-        });
+        const ids = tempDeleteList.join(",");
+        resendToHd({ ids: ids })
+          .then(res => {
+            this.$Message.info("海鼎重发成功");
+          })
+          .catch(error => {
+            console.log(error);
+          });
       }
     },
     onSelectionAll(selection) {

@@ -1081,6 +1081,15 @@ export const asyncRouterMap = [
         },
         component: () => import('@/view/mini-program-manager/vip/privilege.vue')
       },
+      {
+        path: '/small-opensvip',
+        name: 'small-opensvip',
+        meta: {
+          icon: 'md-flash',
+          title: 'svip套餐'
+        },
+        component: () => import('@/view/mini-program-manager/vip/opensvip.vue')
+      },
     ]
   },
   {

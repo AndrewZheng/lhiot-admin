@@ -772,13 +772,73 @@ export const couponStatusEnum = [
 export const vipStatusEnum = [
   {
     label: 'SVIP会员',
-    value: 'SUPERVIP'
+    value: 'SVIP'
   },
   {
     label: '试用会员',
-    value: 'FREEVIP'
+    value: 'TRY_SVIP'
   }
 ];
+
+// svip套餐状态 (开启 ON,关闭 OFF,未开启 NOTOPEN,已结束 OVER))
+export const packageStatusEnum = [
+  {
+    label: '关闭',
+    value: "OFF"
+  },
+  {
+    label: '开启',
+    value: "ON"
+  },
+  // {
+  //   label: '已结束',
+  //   value: "OVER"
+  // },
+  // {
+  //   label: '未开启',
+  //   value: "NOTOPEN"
+  // }
+]
+
+
+// SVIP套餐类型对应枚举：套餐类型(月卡、MONTH_CARD 季卡、SEASON 年卡、YEAR_CARD)
+export const packageTypeEnum = [
+  {
+    label: '月卡',
+    value: 'MONTH_CARD'
+  },
+  {
+    label: '季卡',
+    value: 'SEASON'
+  },
+  {
+    label: '年卡',
+    value: 'YEAR_CARD'
+  }
+];
+
+export const userScopeEnum = [
+  {
+    label: '所有用户',
+    value: 'ALL'
+  },
+  {
+    label: '付费会员',
+    value: 'SVIP'
+  }
+];
+
+export const memberLimitEnum = [
+  {
+    label: '所有用户',
+    value: 'ALL'
+  },
+  {
+    label: '付费会员',
+    value: 'SVIP'
+  }
+];
+
 
 export const couponActivityTypeEnum = [
   {
@@ -788,6 +848,22 @@ export const couponActivityTypeEnum = [
   {
     label: '积分商城兑换',
     value: 'COUPON_CENTER_POINT'
+  }
+];
+
+//giftType礼包类型： BIRTHDAY_COUPON 生日券 FREIGHT_COUPON 运费券 OPEN_CARD_COUPON 开卡券
+export const giftTypeEnum = [
+  {
+    label: '生日券',
+    value: 'BIRTHDAY_COUPON'
+  },
+  {
+    label: '运费券',
+    value: 'FREIGHT_COUPON'
+  },
+  {
+    label: '开卡券',
+    value: 'OPEN_CARD_COUPON'
   }
 ];
 
@@ -848,18 +924,12 @@ export const vipCouponType = {
   FREE_SHIPPING_COUPON:'FREE_SHIPPING_COUPON'
 };
 
-// export const vipCouponTypeEnum = [
-//   {
-//     label: '免运费券',
-//     value: vipCouponType.FREE_SHIPPING_COUPON
-//   }
-// ];
-// 小程序优惠券类型(FULL_CUT_COUPON 满减券;DISCOUNT_COUPON 折扣券;CASH_COUPON 现金券;FREE_SHIPPING_COUPON免运费券)
+// 小程序优惠券类型(FULL_CUT_COUPON 满减券;DISCOUNT_COUPON 折扣券;CASH_COUPON 现金券;FREIGHT_COUPON运费券)
 export const couponType = {
   FULL_CUT_COUPON: 'FULL_CUT_COUPON',
   DISCOUNT_COUPON: 'DISCOUNT_COUPON',
   CASH_COUPON: 'CASH_COUPON',
-  FREE_SHIPPING_COUPON:'FREE_SHIPPING_COUPON'
+  FREIGHT_COUPON:'FREIGHT_COUPON'
 };
 
 export const couponTypeEnum = [
@@ -876,8 +946,8 @@ export const couponTypeEnum = [
     value: couponType.CASH_COUPON
   },
   {
-    label: '免运费券',
-    value: vipCouponType.FREE_SHIPPING_COUPON
+    label: '运费券',
+    value: couponType.FREIGHT_COUPON
   }
 ];
 
@@ -897,6 +967,7 @@ export const svipTypeEnum = [
     value: svipType.PROBATION_VIP
   }
 ];
+
 
 // 小程序应用类型 appType WXSMALL_SHOP 微信小程序; S_MALL 拼团小程序;
 

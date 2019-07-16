@@ -39,13 +39,25 @@
                 class="ptb2-5"
               >{{ item.label }}</Option>
             </Select>
+            <Select
+              v-model="searchRowData.userScope"
+              placeholder="用户范围"
+              style="padding-right: 5px;width: 100px"
+            >
+              <Option
+                v-for="(item,index) in userScopeEnum"
+                :value="item.value"
+                :key="index"
+                class="ptb2-5"
+              >{{ item.label }}</Option>
+            </Select>
             <Button
               :loading="searchLoading"
               class="search-btn mr5"
               type="primary"
               @click="handleSearch"
             >
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
               v-waves
@@ -54,7 +66,7 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除
+              <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
         </div>
@@ -66,7 +78,7 @@
             class="mr5"
             @click="addCouponTemplate"
           >
-            <Icon type="md-add"/>系统优惠券
+            <Icon type="md-add" />系统优惠券
           </Button>
           <Button
             v-waves
@@ -75,7 +87,7 @@
             class="mr5"
             @click="addHdCouponTemplate"
           >
-            <Icon type="md-add"/>海鼎优惠券
+            <Icon type="md-add" />海鼎优惠券
           </Button>
           <Poptip
             confirm
@@ -85,7 +97,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>批量删除
+              <Icon type="md-trash" />批量删除
             </Button>
           </Poptip>
         </div>
@@ -104,7 +116,7 @@
         </Row>
       </div>
     </Card>
-<!-- 查看 -->
+    <!-- 查看 -->
     <Modal v-model="modalView" :width="800" draggable scrollable :mask-closable="false">
       <p slot="header">
         <span>关联的优惠劵详情</span>
@@ -282,7 +294,7 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-<!-- 添加 -->
+    <!-- 添加 -->
     <Modal
       v-model="modalAdd"
       :width="1000"
@@ -337,7 +349,7 @@
                   type="primary"
                   @click="handleTemplateSearch"
                 >
-                  <Icon type="md-search"/>&nbsp;搜索
+                  <Icon type="md-search" />&nbsp;搜索
                 </Button>
                 <Button
                   v-waves
@@ -346,7 +358,7 @@
                   type="info"
                   @click="handleTemplateClear"
                 >
-                  <Icon type="md-refresh"/>&nbsp;清除
+                  <Icon type="md-refresh" />&nbsp;清除
                 </Button>
               </Row>
             </div>
@@ -400,6 +412,24 @@
             :rules="relationRuleInline"
             :label-width="80"
           >
+            <Row>
+              <i-col span="6">
+                <FormItem label="用户范围:" prop="userScope">
+                  <Select
+                    v-model="addRelationDetail.userScope"
+                    placeholder="用户范围"
+                    style="padding-right: 5px;width: 120px"
+                  >
+                    <Option
+                      v-for="(item,index) in userScopeEnum"
+                      :value="item.value"
+                      :key="index"
+                      class="ptb2-5"
+                    >{{ item.label }}</Option>
+                  </Select>
+                </FormItem>
+              </i-col>
+            </Row>
             <Row>
               <i-col span="6" v-if="tempModalType == 'addTemplate'">
                 <FormItem label="券有效期:" prop="useLimitType">
@@ -643,6 +673,22 @@
                 <Input v-model="addRelationDetail.couponName" clearable></Input>
               </FormItem>
             </i-col>
+            <i-col span="6">
+              <FormItem label="用户范围:" prop="userScope">
+                <Select
+                  v-model="addRelationDetail.userScope"
+                  placeholder="用户范围"
+                  style="padding-right: 5px;width: 120px"
+                >
+                  <Option
+                    v-for="(item,index) in userScopeEnum"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+            </i-col>
           </Row>
           <Row>
             <i-col span="6" v-if="addRelationDetail.source == 'SMALL'">
@@ -825,7 +871,7 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%">
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
   </div>
 </template>
@@ -850,14 +896,16 @@ import {
   couponStatusConvert,
   couponTypeConvert,
   couponScopeConvert,
-  couponUseLimitConvert
+  couponUseLimitConvert,
+  userScopeConvert
 } from "@/libs/converStatus";
 import {
   couponStatusEnum,
   couponTypeEnum,
   couponScopeEnum,
   couponUseLimitEnum,
-  validDateTypeEnum
+  validDateTypeEnum,
+  userScopeEnum
 } from "@/libs/enumerate";
 import {
   compareData,
@@ -889,6 +937,7 @@ const relationDetail = {
   useLimitType: null,
   hdActivityId: 0,
   validDateType: "FIXED_DATE",
+  userScope: "ALL",
   receiveLimit: 999,
   beginDay: 0,
   endDay: 0,
@@ -994,7 +1043,7 @@ const dataColumns = [
   {
     title: "优惠/折扣额度",
     key: "couponFee",
-    minWidth: 80,
+    minWidth: 50,
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
@@ -1007,7 +1056,7 @@ const dataColumns = [
   {
     title: "最小购买金额",
     key: "minBuyFee",
-    minWidth: 60,
+    minWidth: 40,
     render(h, params) {
       return h("div", fenToYuanDot2(params.row.minBuyFee));
     }
@@ -1071,6 +1120,20 @@ const dataColumns = [
     }
   },
   {
+    title: "用户范围",
+    key: "userScope",
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.userScope === "ALL") {
+        return <div>{userScopeConvert(row.userScope).label}</div>;
+      } else if (row.userScope === "SVIP") {
+        return <div>{userScopeConvert(row.userScope).label}</div>;
+      }
+      return <div>{row.userScope}</div>;
+    },
+    minWidth: 40
+  },
+  {
     title: "券使用限制",
     key: "useLimitType",
     minWidth: 40,
@@ -1092,7 +1155,7 @@ const dataColumns = [
   {
     title: "已兑换统计",
     key: "receiveCount",
-    minWidth: 40
+    minWidth: 20
   },
   {
     title: "创建时间",
@@ -1326,6 +1389,7 @@ export default {
         couponRules: [{ required: true, message: "请输入券使用规则" }],
         couponDetail: [{ required: true, message: "请输入券详情" }],
         couponReminderMsg: [{ required: true, message: "请输入券温馨提示" }],
+        userScope: [{ required: true, message: "请选择用户范围" }],
         points: [
           { required: true, message: "请输入兑换积分" },
           {
@@ -1381,6 +1445,7 @@ export default {
       couponStatusEnum,
       couponTypeEnum,
       couponScopeEnum,
+      userScopeEnum,
       couponUseLimitEnum,
       validDateTypeEnum,
       dataColumns: dataColumns,
@@ -1630,6 +1695,7 @@ export default {
       this.addRelationDetail.minBuyFee = couponTemplate.minBuyFee;
       this.addRelationDetail.couponStatus = couponTemplate.couponStatus;
       this.addRelationDetail.couponType = couponTemplate.couponType;
+      this.addRelationDetail.userScope = couponTemplate.userScope;
     },
     handleHdTemplateChange(currentRow, oldCurrentRow) {
       const startIndex = currentRow.useRule.indexOf("满");
@@ -1639,6 +1705,7 @@ export default {
       this.addRelationDetail.couponName = currentRow.couponName;
       this.addRelationDetail.couponType = currentRow.couponType;
       this.addRelationDetail.couponFee = currentRow.faceValue;
+      this.addRelationDetail.userScope = currentRow.userScope;
       if (currentRow.couponType === "DISCOUNT_COUPON") {
         const lastIndex = currentRow.couponName.indexOf("折");
         this.addRelationDetail.couponFee =

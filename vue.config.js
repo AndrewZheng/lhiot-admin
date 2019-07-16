@@ -39,12 +39,12 @@ module.exports = {
   devServer: {
     port: 80, // 端口号
     // host: 'localhost', // 本地，打包选这个
-    host: '192.168.1.134', // 本地ip，方便其他人通过ip访问
+    host: '192.168.1.169', // 本地ip，方便其他人通过ip访问
     https: false, // https:{type:Boolean}
     open: true, // 配置自动启动浏览器
     proxy: {
       '/api': {
-        target: 'http://172.16.10.194:5565', // 测试环境
+        target: 'http://172.16.10.196:5565', // 测试环境
         ws: true,
         logLevel: 'debug',
         changeOrigin: true,

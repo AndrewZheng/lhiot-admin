@@ -822,6 +822,104 @@ export const deleteRegisterGift = ({ ids }) => {
 };
 
 
+// ———————————— 1.7付费会员 ————————————— 
+//根据id查询付费会员礼包券配置
+export const getSvipGift = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-gift-coupon-setting/' + data.id,
+    data,
+    method: 'get'
+  });
+};
+
+//添加付费会员礼包券配置
+export const createSvipGift = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-gift-coupon-setting/create',
+    data,
+    method: 'post'
+  });
+};
+
+
+// 查询付费会员礼包券配置分页列表
+export const getSvipGiftPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-gift-coupon-setting/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+
+// {id}根据id更新付费会员礼包券配置
+export const editSvipGift = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-gift-coupon-setting/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+
+//根据ids删除付费会员礼包券配置
+export const deleteSvipGift = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-gift-coupon-setting/' + ids,
+    method: 'delete'
+  });
+};
+
+// ———————————— 1.7SVIP套餐 ————————————— 
+//根据id查询SVIP套餐
+export const getSvipPackage= (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-package/' + data.id,
+    data,
+    method: 'get'
+  });
+};
+
+//添加SVIP套餐
+export const createSvipPackage = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-package/create',
+    data,
+    method: 'post'
+  });
+};
+
+
+// 查询SVIP套餐分页列表
+export const getSvipPackagePages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-package/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+
+// 根据id更新SVIP套餐
+export const editSvipPackage = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-package/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+
+//根据ids删除SVIP套餐
+export const deleteSvipPackage = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-package/' + ids,
+    method: 'delete'
+  });
+};
+
 // ------------------------
 
 // 根据条件分页查询注册送礼活动与优惠券关联列表
@@ -901,6 +999,16 @@ export const getPaymentLogPages = (data) => {
     data,
     method: 'post',
     headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 根据条件分页查询支付日志金额总计
+export const getPaymentLogSum = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/payment-logs/fee/sum',
+    data,
+    method: 'post',
+    headers: { 'data': data.sum }
   });
 };
 

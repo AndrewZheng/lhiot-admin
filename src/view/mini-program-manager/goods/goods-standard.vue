@@ -79,7 +79,7 @@
               type="primary"
               @click="handleSearch"
             >
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
               v-waves
@@ -88,7 +88,7 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除
+              <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
         </div>
@@ -100,10 +100,10 @@
             type="primary"
             @click="goBack"
           >
-            <Icon type="ios-arrow-back"/>&nbsp;返回
+            <Icon type="ios-arrow-back" />&nbsp;返回
           </Button>
           <Button v-waves class="search-btn ml5 mr5" type="success" @click="handleCreateView">
-            <Icon type="md-add"/>&nbsp;添加
+            <Icon type="md-add" />&nbsp;添加
           </Button>
           <Poptip
             confirm
@@ -113,7 +113,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/> 批量删除
+              <Icon type="md-trash" />批量删除
             </Button>
           </Poptip>
         </div>
@@ -184,7 +184,7 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品主图:</i-col>
               <i-col span="16">
-                <img :src="productStandardDetail.baseImage" width="100" height="100">
+                <img :src="productStandardDetail.baseImage" width="100" height="100" />
               </i-col>
             </Row>
           </i-col>
@@ -217,7 +217,7 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">上架商品主图:</i-col>
               <i-col v-if="productStandardDetail.image" span="16">
-                <img :src="productStandardDetail.image" width="100" height="100">
+                <img :src="productStandardDetail.image" width="100" height="100" />
               </i-col>
             </Row>
           </i-col>
@@ -225,7 +225,7 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">上架商品详情图:</i-col>
               <i-col v-if="productStandardDetail.detailImage" span="16">
-                <img :src="productStandardDetail.detailImage" width="100" height="100">
+                <img :src="productStandardDetail.detailImage" width="100" height="100" />
               </i-col>
             </Row>
           </i-col>
@@ -272,6 +272,15 @@
             </Row>
           </i-col>
         </Row>
+        <Row>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">SVIP价格:</i-col>
+              <i-col span="16">{{ productStandardDetail.svipPrice | fenToYuanDot2Filters }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
@@ -297,7 +306,7 @@
                   :v-show="descriptionList"
                   class="demo-upload-list"
                 >
-                  <img :src="item">
+                  <img :src="item" />
                   <div class="demo-upload-list-cover">
                     <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                   </div>
@@ -349,7 +358,7 @@
           <Row>
             <i-col span="12">
               <FormItem v-if="productStandardDetail.baseImage" label="商品主图:">
-                <img :src="productStandardDetail.baseImage" width="100" height="100">
+                <img :src="productStandardDetail.baseImage" width="100" height="100" />
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -381,7 +390,7 @@
                 >
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url">
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -420,7 +429,7 @@
                 >
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url">
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveDetail(item)"></Icon>
@@ -498,6 +507,17 @@
           </Row>
           <Row>
             <i-col span="12">
+              <FormItem label="SVIP价格:" prop="svipPrice">
+                <InputNumber
+                  :min="0"
+                  :value="svipPriceComputed"
+                  @on-change="svipPriceInputNumberOnchange"
+                ></InputNumber>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
               <FormItem label="商品单位:" prop="unitId">
                 <Select v-model="productStandardDetail.unitId" @on-change="unitChange">
                   <Option
@@ -532,7 +552,7 @@
                 >
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url">
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMultiple(item)"></Icon>
@@ -596,6 +616,11 @@
             <i-col span="12">
               <FormItem label="售卖价格:">
                 <InputNumber :min="0" :value="salePriceComputed" disabled></InputNumber>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="SVIP价格:">
+                <InputNumber :min="0" :value="svipPriceComputed" disabled></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -672,7 +697,7 @@
                 type="primary"
                 @click="handleProductSearch"
               >
-                <Icon type="md-search"/>&nbsp;搜索
+                <Icon type="md-search" />&nbsp;搜索
               </Button>
               <Button
                 v-waves
@@ -681,7 +706,7 @@
                 type="info"
                 @click="handleProductClear"
               >
-                <Icon type="md-refresh"/>&nbsp;清除
+                <Icon type="md-refresh" />&nbsp;清除
               </Button>
             </Row>
           </div>
@@ -702,7 +727,7 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%">
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
 
     <Modal v-model="modalSort" title="图片排序" :mask-closable="false">
@@ -710,8 +735,20 @@
         <span>图片排序</span>
       </p>
       <div class="modal-content">
-        <drag-list :list1.sync="uploadListMultiple" :drop-con-class="dropConClass" @on-change="handleChange" class="clearfix">
-          <img :src="left.itemLeft.url"  slot="left" slot-scope="left" class="drag-item" width="80" height="80" />
+        <drag-list
+          :list1.sync="uploadListMultiple"
+          :drop-con-class="dropConClass"
+          @on-change="handleChange"
+          class="clearfix"
+        >
+          <img
+            :src="left.itemLeft.url"
+            slot="left"
+            slot-scope="left"
+            class="drag-item"
+            width="80"
+            height="80"
+          />
         </drag-list>
       </div>
       <div slot="footer">
@@ -724,7 +761,7 @@
 
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
-import DragList from '_c/drag-list';
+import DragList from "_c/drag-list";
 import IViewUpload from "_c/iview-upload";
 import _ from "lodash";
 import {
@@ -794,7 +831,8 @@ const productStandardDetail = {
   invNum: null,
   saleCount: null,
   positionName: null,
-  dbId: null
+  dbId: null,
+  svipPrice: null
 };
 
 const roleRowData = {
@@ -1000,7 +1038,7 @@ export default {
         },
         {
           title: "商品原价",
-          minWidth: 120,
+          minWidth: 60,
           key: "price",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.price);
@@ -1009,10 +1047,19 @@ export default {
         },
         {
           title: "售卖价格",
-          minWidth: 120,
+          minWidth: 60,
           key: "salePrice",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.salePrice);
+            return <div>{amount}</div>;
+          }
+        },
+        {
+          title: "SVIP价格",
+          minWidth: 60,
+          key: "svipPrice",
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(params.row.svipPrice);
             return <div>{amount}</div>;
           }
         },
@@ -1050,7 +1097,7 @@ export default {
         },
         {
           title: "商品排序",
-          minWidth: 100,
+          minWidth: 60,
           key: "rank"
         },
         {
@@ -1135,8 +1182,8 @@ export default {
         create: "create"
       },
       dropConClass: {
-        left: ['drop-box', 'left-drop-box'],
-        right: ['drop-box', 'right-drop-box']
+        left: ["drop-box", "left-drop-box"],
+        right: ["drop-box", "right-drop-box"]
       },
       tempModalType: "create",
       tableData: [],
@@ -1179,6 +1226,9 @@ export default {
     salePriceComputed() {
       return fenToYuanDot2Number(this.productStandardDetail.salePrice);
     },
+    svipPriceComputed() {
+      return fenToYuanDot2Number(this.productStandardDetail.svipPrice);
+    },
     discountPriceComputed() {
       return fenToYuanDot2Number(this.proStandardExpand.discountPrice);
     }
@@ -1204,6 +1254,9 @@ export default {
     },
     salePriceInputNumberOnchange(value) {
       this.productStandardDetail.salePrice = yuanToFenNumber(value);
+    },
+    svipPriceInputNumberOnchange(value) {
+      this.productStandardDetail.svipPrice = yuanToFenNumber(value);
     },
     searchMinPriceChange(value) {
       this.searchRowData.minPrice = yuanToFenNumber(this.searchMinPrice);
@@ -1238,9 +1291,7 @@ export default {
         this.proStandardExpand.discountRate = discountRate.substring(0, 3);
       }
     },
-    handleChange(){
-      
-    },
+    handleChange() {},
     handleDelete(params) {
       this.tableDataSelected = [];
       this.tableDataSelected.push(params.row);
@@ -1283,7 +1334,7 @@ export default {
     unitChange(value) {
       this.productStandardDetail.productUnit = value;
     },
-    handleImgSort(){
+    handleImgSort() {
       this.descriptionList = [];
       this.uploadListMultiple.forEach(item => {
         if (item.url) {
@@ -1292,10 +1343,10 @@ export default {
       });
       this.productStandardDetail.description = "";
       this.productStandardDetail.description = this.descriptionList.join(",");
-      console.log('after sort:', this.productStandardDetail.description);
+      console.log("after sort:", this.productStandardDetail.description);
       this.modalSort = false;
     },
-    handleImageSort(){
+    handleImageSort() {
       this.modalSort = true;
     },
     handleDiscountClose() {
@@ -1391,8 +1442,16 @@ export default {
             this.$Message.error("请输入售卖价格");
             return;
           }
+          if (!this.productStandardDetail.svipPrice) {
+            this.$Message.error("请输入SVIP价格");
+            return;
+          }
           if (this.productStandardDetail.salePrice < 0) {
             this.$Message.error("售卖价格不能小于0");
+            return;
+          }
+          if (this.productStandardDetail.svipPrice < 0) {
+            this.$Message.error("SVIP价格不能小于0");
             return;
           }
           if (
@@ -1400,6 +1459,13 @@ export default {
             this.productStandardDetail.price
           ) {
             this.$Message.error("售卖价格不能大于原价");
+            return;
+          }
+          if (
+            this.productStandardDetail.svipPrice >
+            this.productStandardDetail.salePrice
+          ) {
+            this.$Message.error("SVIP价格不能大于售卖价格");
             return;
           }
           if (this.tempModalType === this.modalType.create) {
