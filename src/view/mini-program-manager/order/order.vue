@@ -975,7 +975,7 @@ export default {
       });
     },
     resendToHd() {
-      console.log(`current apply: ${this.tableDataSelected.apply}`);
+      // console.log(`current apply:`, this.tableDataSelected);
       // TODO 未测试
       if (this.tableDataSelected.length > 0) {
         const tempDeleteList = [];
@@ -984,11 +984,16 @@ export default {
         });
         const ids = tempDeleteList.join(',');
         resendToHd({ ids: ids }).then(res => {
-          const { disqualification, failure } = res;
+          let { disqualification, failure } = res;
           if(failure.length === 0){
             this.$Message.info('海鼎重发成功');
           }else{
-            this.$Message.error('海鼎重发失败订单：', failure.join(','));
+            let lst= failure.join(',');
+            this.$Message.error({
+                content: `海鼎重发失败订单：${lst}`,
+                duration: 30,
+                closable: true
+            });
           }
         }).catch(error => {
           console.log(error);
