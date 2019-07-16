@@ -334,8 +334,8 @@
             <Col span="12">
               <Row span="24" align="middle" type="flex">
                 <FormItem label="链接目标:" prop="advertisementRelation">
-                  <Row v-if="advertisementDetail.linkType == 'EXTERNALLINK' || advertisementDetail.linkType == 'INTERNALLINK'">
-                    <Input v-model="advertisementDetail.advertisementRelation"></Input>
+                  <Row v-if="isTargetLink">
+                    <Input v-model="advertisementDetail.advertisementRelation" style="width:200px;"></Input>
                   </Row>
                   <Row v-else>
                     <Col span="24">
@@ -599,7 +599,8 @@ export default {
           columns: miniGoodsStandardColumns
         },
         { value: linkType.EXTERNALLINK, label: "外部链接" },
-        { value: linkType.INTERNALLINK, label: "内部链接" }
+        { value: linkType.INTERNALLINK, label: "内部链接" },
+        { value: linkType.TABLINK, label: "底部导航" }
       ],
       tempColumns: [],
       linkTypeEnum,
@@ -656,7 +657,7 @@ export default {
         },
         {
           title: "广告关联",
-          minWidth: 80,
+          minWidth: 120,
           key: "advertisementRelation"
         },
         {
@@ -754,6 +755,11 @@ export default {
     };
   },
   computed: {
+    isTargetLink(){
+      return this.advertisementDetail.linkType === 'EXTERNALLINK' || 
+      this.advertisementDetail.linkType === 'INTERNALLINK' || 
+      this.advertisementDetail.linkType === 'TABLINK'
+    },
     advertisementPositionComputed() {
       const tempObj = this.advertisementList.find(
         item => item.id === this.advertisementDetail.positionId

@@ -976,12 +976,6 @@ export default {
     },
     resendToHd() {
       console.log(`current apply: ${this.tableDataSelected.apply}`);
-      if (this.tableDataSelected.apply!=='S_MALL') {
-        this.$Message.error(
-          '该功能只适用于拼团小程序'
-        );
-        return;
-      }
       // TODO 未测试
       if (this.tableDataSelected.length > 0) {
         const tempDeleteList = [];
@@ -990,7 +984,12 @@ export default {
         });
         const ids = tempDeleteList.join(',');
         resendToHd({ ids: ids }).then(res => {
-          this.$Message.info('海鼎重发成功');
+          const { disqualification, failure } = res;
+          if(failure.length === 0){
+            this.$Message.info('海鼎重发成功');
+          }else{
+            this.$Message.error('海鼎重发失败订单：', failure.join(','));
+          }
         }).catch(error => {
           console.log(error);
         });
