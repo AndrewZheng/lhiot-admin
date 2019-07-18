@@ -89,7 +89,18 @@
           <i-col span="12">
             <Row>
               <i-col span="8">优惠券类型:</i-col>
-              <i-col span="16">{{ addRelationDetail.couponType | couponTypeFilter }}</i-col>
+              <i-col span="16" v-if="addRelationDetail.couponType === 'FULL_CUT_COUPON'">
+                <tag color="magenta">{{ "满减券" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponType === 'DISCOUNT_COUPON'">
+                <tag color="orange">{{ "折扣券" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponType === 'CASH_COUPON'">
+                <tag color="cyan">{{ "现金券" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponType === 'FREIGHT_COUPON'">
+                <tag color="cyan">{{ "运费券" }}</tag>
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -117,7 +128,13 @@
           <i-col span="12">
             <Row>
               <i-col span="8">优惠券状态:</i-col>
-              <i-col span="16">{{ addRelationDetail.couponStatus | couponStatusFilter }}</i-col>
+              <i-col span="16" v-if="addRelationDetail.couponStatus === 'VALID'">
+                <tag color="success">{{ "有效" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponStatus === 'INVALID'">
+                <tag color="error">{{ "无效" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponStatus === null">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -133,6 +150,12 @@
             <Row>
               <i-col span="8">券有效期类型:</i-col>
               <i-col span="16">{{ addRelationDetail.validDateType | validDateTypeFilter }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">发券总数:</i-col>
+              <i-col span="16">{{ addRelationDetail.couponLimit }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -172,21 +195,20 @@
             </Row>
           </i-col>
         </Row>
-
-        <Row class-name="mb20">
-          <i-col span="12">
-            <Row>
-              <i-col span="8">发券总数:</i-col>
-              <i-col span="16">{{ addRelationDetail.couponLimit }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
               <i-col span="8">券使用范围:</i-col>
-              <i-col span="16">{{ addRelationDetail.couponScope | couponScopeFilter }}</i-col>
+              <i-col span="16" v-if="addRelationDetail.couponScope === 'STORE'">
+                <tag color="magenta">{{ "门店" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponScope === 'SMALL'">
+                <tag color="cyan">{{ "商城" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponScope === 'STORE_AND_SMALL'">
+                <tag color="orange">{{ "全场通用" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponScope === null">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -320,7 +342,7 @@
             ref="addForm"
             :model="addRelationDetail"
             :rules="relationRuleInline"
-            :label-width="80"
+            :label-width="100"
           >
             <Row>
               <i-col span="6" v-if="tempModalType == 'addTemplate'">
@@ -344,7 +366,7 @@
                 v-if="addRelationDetail.validDateType=='UN_FIXED_DATE' && tempModalType=='addTemplate'"
               >
                 <i-col span="7">
-                  <FormItem label="发券后:" prop="beginDay" :label-width="70">
+                  <FormItem label="发放券后:" prop="beginDay">
                     <InputNumber
                       :min="0"
                       v-model="addRelationDetail.beginDay"
@@ -396,7 +418,12 @@
             <Row>
               <i-col span="6">
                 <FormItem label="发券总数:" prop="couponLimit">
-                  <InputNumber :min="0" v-model="addRelationDetail.couponLimit" label="限购数量"></InputNumber>
+                  <InputNumber
+                    :min="0"
+                    v-model="addRelationDetail.couponLimit"
+                    label="限购数量"
+                    style="padding-right: 5px;width: 120px"
+                  ></InputNumber>
                 </FormItem>
               </i-col>
               <i-col span="6" style="margin-right: 40px;">
@@ -404,7 +431,7 @@
                   label="券使用范围:"
                   prop="couponScope"
                   v-show="tempModalType=='addHdTemplate'"
-                  :label-width="100"
+                  :label-width="110"
                 >
                   <Select
                     v-model="addRelationDetail.couponScope"
@@ -425,7 +452,7 @@
                 <FormItem
                   label="券使用范围:"
                   prop="couponScope"
-                  :label-width="90"
+                  :label-width="112"
                   v-show="tempModalType=='addTemplate'"
                 >{{ addRelationDetail.couponScope | couponScopeFilter}}</FormItem>
               </i-col>
@@ -456,13 +483,13 @@
                   label="券使用限制:"
                   prop="useLimitType"
                   v-show="tempModalType=='addTemplate'"
-                  :label-width="93"
+                  :label-width="112"
                 >{{ addRelationDetail.useLimitType | couponUseLimitFilter }}</FormItem>
               </i-col>
             </Row>
             <Row>
               <i-col span="12">
-                <FormItem label="券使用规则：" prop="couponRules" :label-width="100">
+                <FormItem label="券使用规则:" prop="couponRules">
                   <Input
                     v-model="addRelationDetail.couponRules"
                     type="textarea"
@@ -528,7 +555,12 @@
           <Row>
             <i-col span="6">
               <FormItem label="　发券数量:" prop="couponLimit" :label-width="100">
-                <InputNumber :min="0" v-model="addRelationDetail.couponLimit" label="限购数量"></InputNumber>
+                <InputNumber
+                  :min="0"
+                  v-model="addRelationDetail.couponLimit"
+                  label="限购数量"
+                  style="padding-right: 5px;width: 115px"
+                ></InputNumber>
               </FormItem>
             </i-col>
           </Row>

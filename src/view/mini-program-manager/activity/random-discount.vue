@@ -67,7 +67,7 @@
               type="primary"
               @click="handleSearch"
             >
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
               v-waves
@@ -76,7 +76,7 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除
+              <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
         </div>
@@ -88,7 +88,7 @@
             class="mr5"
             @click="addRandomDiscount"
           >
-            <Icon type="md-add"/> 添加
+            <Icon type="md-add" />添加
           </Button>
           <Poptip
             confirm
@@ -98,7 +98,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/> 批量删除
+              <Icon type="md-trash" />批量删除
             </Button>
           </Poptip>
         </div>
@@ -134,7 +134,13 @@
           <i-col span="24">
             <Row>
               <i-col span="6">活动状态:</i-col>
-              <i-col span="18">{{ randomDiscountDetail.onOff | imageStatusFilter }}</i-col>
+              <i-col span="16" v-if="randomDiscountDetail.onOff === 'ON'">
+                <tag color="success">{{ "有效" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="randomDiscountDetail.onOff === 'OFF'">
+                <tag color="error">{{ "无效" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="randomDiscountDetail.onOff === null">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -205,7 +211,7 @@
         <i-col>{{ tempModalType===modalType.edit?'修改随机立减活动':'创建随机立减活动' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="randomDiscountDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="modalEdit" :model="randomDiscountDetail" :rules="ruleInline" :label-width="100">
           <Row>
             <Col span="18">
               <FormItem label="活动名称:" prop="activityName">
@@ -379,7 +385,7 @@ export default {
           align: "center"
         },
         {
-          title: "主键id",
+          title: "主键ID",
           key: "id"
         },
         {
@@ -411,11 +417,13 @@ export default {
         },
         {
           title: "活动开启时间",
-          key: "startTime"
+          key: "startTime",
+          width: 160
         },
         {
           title: "活动结束时间",
-          key: "endTime"
+          key: "endTime",
+          width: 160
         },
         {
           title: "最低立减金额",
@@ -431,11 +439,13 @@ export default {
         },
         {
           title: "创建时间",
-          key: "createTime"
+          key: "createTime",
+          width: 160
         },
         {
           title: "更新时间",
-          key: "updateTime"
+          key: "updateTime",
+          width: 160
         },
         {
           title: "操作",

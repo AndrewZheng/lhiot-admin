@@ -68,7 +68,7 @@
               type="primary"
               @click="handleSearch"
             >
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
               v-waves
@@ -77,13 +77,13 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除
+              <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addCoupon">
-            <Icon type="md-add"/> 添加
+            <Icon type="md-add" />添加
           </Button>
           <Poptip
             confirm
@@ -93,7 +93,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/> 批量删除
+              <Icon type="md-trash" />批量删除
             </Button>
           </Poptip>
         </div>
@@ -160,7 +160,13 @@
           <i-col span="24">
             <Row>
               <i-col span="6">活动开关:</i-col>
-              <i-col span="18">{{ couponDetail.ifEffective | couponStatusFilter }}</i-col>
+              <i-col span="16" v-if="couponDetail.ifEffective === 'VALID'">
+                <tag color="success">{{ "有效" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="couponDetail.ifEffective === 'INVALID'">
+                <tag color="error">{{ "无效" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="couponDetail.ifEffective === null">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -210,7 +216,7 @@
             <Row>
               <i-col span="6">宣传图片:</i-col>
               <i-col span="18">
-                <img :src="couponDetail.activityImage" style="width: 150px">
+                <img :src="couponDetail.activityImage" style="width: 150px" />
               </i-col>
             </Row>
           </i-col>
@@ -343,7 +349,7 @@
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url">
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -422,7 +428,7 @@
                         type="primary"
                         @click="handleTemplateSearch"
                       >
-                        <Icon type="md-search"/>&nbsp;搜索
+                        <Icon type="md-search" />&nbsp;搜索
                       </Button>
                       <Button
                         v-waves
@@ -431,7 +437,7 @@
                         type="info"
                         @click="handleTemplateClear"
                       >
-                        <Icon type="md-refresh"/>&nbsp;清除
+                        <Icon type="md-refresh" />&nbsp;清除
                       </Button>
                     </Row>
                   </div>
@@ -500,7 +506,7 @@
                         type="primary"
                         @click="addTempData('modalCreate')"
                       >
-                        <Icon type="md-add"/>&nbsp;关联优惠券模板
+                        <Icon type="md-add" />&nbsp;关联优惠券模板
                       </Button>
                     </i-col>
                   </Row>
@@ -528,7 +534,7 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%">
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
   </div>
 </template>
@@ -659,14 +665,14 @@ const templateRowData = {
 };
 
 // all表示查全部，manual（手工发券），behavior（行为发券），scmaction（分销领券），
-// trans（交易发券），applet（小程序发券），mbrgrade（会员等级发券）， 
+// trans（交易发券），applet（小程序发券），mbrgrade（会员等级发券），
 // recharge（充值发券），component（第三方发券），precision（精准发券）
 const hdTemplateRowData = {
   storeId: null,
   sortKey: null,
   desc: null,
   platformId: null,
-  activityTypes: ["applet"], 
+  activityTypes: ["applet"],
   activityId: null
 };
 

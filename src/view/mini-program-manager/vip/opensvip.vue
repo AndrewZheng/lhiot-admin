@@ -105,7 +105,15 @@
           <i-col span="12">
             <Row>
               <i-col span="8">套餐类型:</i-col>
-              <i-col span="16">{{ addRelationDetail.packageType | vipStatusFilter }}</i-col>
+              <i-col span="16" v-if="addRelationDetail.packageType==='YEAR_CARD'">
+                <tag color="orange">{{ "年卡" | vipStatusFilter }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.packageType==='MONTH_CARD'">
+                <tag color="magenta">{{ "月卡" | vipStatusFilter }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.packageType==='SEASON'">
+                <tag color="cyan">{{ "季卡" | vipStatusFilter }}</tag>
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -153,7 +161,13 @@
           <i-col span="12">
             <Row>
               <i-col span="8">活动状态:</i-col>
-              <i-col span="16">{{ addRelationDetail.state | vipStatusFilter }}</i-col>
+              <!-- <i-col span="16">{{ addRelationDetail.state | vipStatusFilter }}</i-col> -->
+              <i-col span="16" v-if="addRelationDetail.state==='ON'">
+                <tag color="success">{{ "开启" | vipStatusFilter }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.state==='OFF'">
+                <tag color="error">{{ "关闭" | vipStatusFilter }}</tag>
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -187,7 +201,7 @@
             ref="addForm"
             :model="addRelationDetail"
             :rules="distributionRuleInline"
-            :label-width="80"
+            :label-width="100"
           >
             <Row>
               <i-col span="6">
@@ -212,7 +226,7 @@
                 <FormItem
                   label="套餐名称:"
                   prop="packageName"
-                  style="padding-right: 5px;width: 200px;"
+                  style="padding-right: 5px;width: 220px;"
                   clearable
                 >
                   <Input v-model="addRelationDetail.packageName" placeholder="套餐名称"></Input>
@@ -222,52 +236,47 @@
             <Row>
               <i-col span="6">
                 <FormItem label="套餐周期:" prop="packageCycle">
-                  <InputNumber
-                    :min="0"
+                  <Input
                     v-model="addRelationDetail.packageCycle"
-                    label="套餐周期"
-                    style="padding-right: 5px;width: 115px;"
-                  ></InputNumber>
+                    style="padding-right: 5px;width: 120px;"
+                    placeholder="套餐周期"
+                  ></Input>
                 </FormItem>
               </i-col>
             </Row>
             <Row>
               <i-col span="6">
                 <FormItem label="套餐金额:" prop="packageAmount">
-                  <InputNumber
-                    :min="0"
+                  <Input
                     v-model="addRelationDetail.packageAmount"
-                    label="套餐金额"
-                    style="padding-right: 5px;width: 115px;"
-                  ></InputNumber>
+                    style="padding-right: 5px;width: 120px;"
+                    placeholder="套餐金额"
+                  ></Input>
                 </FormItem>
               </i-col>
             </Row>
             <Row>
               <i-col span="6">
-                <FormItem label="新用户优惠价:" prop="discountAmount" :label-width="104">
-                  <InputNumber
-                    :min="0"
+                <FormItem label="新用户优惠价:" prop="discountAmount">
+                  <Input
                     v-model="addRelationDetail.discountAmount"
-                    label="新用户优惠价"
-                    style="padding-right: 5px;width: 90px;"
-                  ></InputNumber>
+                    style="padding-right: 5px;width: 120px;"
+                    placeholder="新用户优惠价"
+                  ></Input>
                 </FormItem>
               </i-col>
             </Row>
             <Row>
               <i-col span="6">
                 <FormItem label="续费金额:" prop="renewalAmount">
-                  <InputNumber
-                    :min="0"
+                  <Input
                     v-model="addRelationDetail.renewalAmount"
-                    label="续费金额"
-                    style="padding-right: 5px;width: 115px;"
-                  ></InputNumber>
+                    style="padding-right: 5px;width: 120px;"
+                    placeholder="续费金额"
+                  ></Input>
                 </FormItem>
               </i-col>
             </Row>
-            <!-- =============== -->
             <Row>
               <i-col span="6">
                 <FormItem label="活动状态:" prop="state">
@@ -285,7 +294,7 @@
             </Row>
             <Row>
               <i-col span="12">
-                <FormItem label="套餐描述：" prop="packageDesc" :label-width="88">
+                <FormItem label="套餐描述:" prop="packageDesc">
                   <Input
                     v-model="addRelationDetail.packageDesc"
                     type="textarea"
@@ -313,7 +322,7 @@
           ref="editForm"
           :model="addRelationDetail"
           :rules="distributionRuleInline"
-          :label-width="80"
+          :label-width="100"
         >
           <Row>
             <i-col span="6">
@@ -338,7 +347,7 @@
               <FormItem
                 label="套餐名称:"
                 prop="packageName"
-                style="padding-right: 5px;width: 200px;"
+                style="padding-right: 5px;width: 220px;"
                 clearable
               >
                 <Input v-model="addRelationDetail.packageName" placeholder="套餐名称"></Input>
@@ -348,48 +357,44 @@
           <Row>
             <i-col span="6">
               <FormItem label="套餐周期:" prop="packageCycle">
-                <InputNumber
-                  :min="0"
+                <Input
                   v-model="addRelationDetail.packageCycle"
-                  label="套餐周期"
-                  style="padding-right: 5px;width: 115px;"
-                ></InputNumber>
+                  style="padding-right: 5px;width: 120px;"
+                  placeholder="套餐周期"
+                ></Input>
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="6">
               <FormItem label="套餐金额:" prop="packageAmount">
-                <InputNumber
-                  :min="0"
+                <Input
                   v-model="addRelationDetail.packageAmount"
-                  label="套餐金额"
-                  style="padding-right: 5px;width: 115px;"
-                ></InputNumber>
+                  style="padding-right: 5px;width: 120px;"
+                  placeholder="套餐金额"
+                ></Input>
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="6">
-              <FormItem label="新用户优惠价:" prop="discountAmount" :label-width="104">
-                <InputNumber
-                  :min="0"
+              <FormItem label="新用户优惠价:" prop="discountAmount">
+                <Input
                   v-model="addRelationDetail.discountAmount"
-                  label="新用户优惠价"
-                  style="padding-right: 5px;width: 90px;"
-                ></InputNumber>
+                  style="padding-right: 5px;width: 120px;"
+                  placeholder="新用户优惠价"
+                ></Input>
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="6">
               <FormItem label="续费金额:" prop="renewalAmount">
-                <InputNumber
-                  :min="0"
+                <Input
                   v-model="addRelationDetail.renewalAmount"
-                  label="续费金额"
-                  style="padding-right: 5px;width: 115px;"
-                ></InputNumber>
+                  style="padding-right: 5px;width: 120px;"
+                  placeholder="续费金额"
+                ></Input>
               </FormItem>
             </i-col>
           </Row>
@@ -410,7 +415,7 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="套餐描述：" prop="packageDesc" :label-width="88">
+              <FormItem label="套餐描述:" prop="packageDesc">
                 <Input
                   v-model="addRelationDetail.packageDesc"
                   type="textarea"
@@ -461,7 +466,9 @@ import {
   fenToYuanDot2Number,
   yuanToFenNumber,
   replaceByTag,
-  replaceByTab
+  replaceByTab,
+  addRnb,
+  addDay
 } from "@/libs/util";
 
 const relationDetail = {
@@ -513,7 +520,9 @@ const dataColumns = [
       } else if (row.packageType === "YEAR_CARD") {
         return (
           <div>
-            <tag color="Gold">{packageTypeConvert(row.packageType).label}</tag>
+            <tag color="orange">
+              {packageTypeConvert(row.packageType).label}
+            </tag>
           </div>
         );
       }
@@ -527,20 +536,36 @@ const dataColumns = [
   },
   {
     title: "套餐周期",
-    key: "packageCycle"
+    key: "packageCycle",
+    render(h, params, vm) {
+      const amount = addDay(params.row.packageAmount);
+      return <div>{amount}</div>;
+    }
   },
   {
     title: "套餐金额",
-    key: "packageAmount"
+    key: "packageAmount",
+    render(h, params, vm) {
+      const amount = addRnb(params.row.packageAmount);
+      return <div>{amount}</div>;
+    }
   },
   {
     title: "新用户优惠价",
     key: "discountAmount",
+    render(h, params, vm) {
+      const amount = addRnb(params.row.packageAmount);
+      return <div>{amount}</div>;
+    },
     minWidth: 40
   },
   {
     title: "续费金额",
-    key: "renewalAmount"
+    key: "renewalAmount",
+    render(h, params, vm) {
+      const amount = addRnb(params.row.packageAmount);
+      return <div>{amount}</div>;
+    }
   },
   {
     title: "套餐描述",

@@ -63,7 +63,7 @@
               type="primary"
               @click="handleSearch"
             >
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
               v-waves
@@ -72,13 +72,13 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除
+              <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
-            <Icon type="md-add"/> 添加
+            <Icon type="md-add" />添加
           </Button>
           <Button
             v-waves
@@ -87,7 +87,7 @@
             class="mr5"
             @click="handleDownload"
           >
-            <Icon type="md-download"/> 导出
+            <Icon type="md-download" />导出
           </Button>
         </div>
       </tables>
@@ -163,7 +163,7 @@
             <Row>
               <i-col span="6">活动banner:</i-col>
               <i-col span="18">
-                <img :src="teambuyDetail.banner" style="width: 100%">
+                <img :src="teambuyDetail.banner" style="width: 100%" />
               </i-col>
             </Row>
           </i-col>
@@ -297,10 +297,10 @@
           </i-col>
         </Row>
         <Row class-name="mb20">
-          <i-col span="24">
+          <i-col span="12">
             <Row>
-              <i-col span="4">关联门店:</i-col>
-              <i-col span="20">{{ relationStore }}</i-col>
+              <i-col span="6">关联门店:</i-col>
+              <i-col span="18">{{ relationStore }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -310,12 +310,12 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :z-index="1000" :width="720" :mask-closable="false">
+    <Modal v-model="modalEdit" :z-index="1000" :width="800" :mask-closable="false">
       <p slot="header">
         <i-col>{{ tempModalType === modalType.edit?'修改团购活动':'创建团购活动' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="teambuyDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="editForm" :model="teambuyDetail" :rules="ruleInline" :label-width="130">
           <Row v-show="tempModalType===modalType.edit">
             <i-col span="12">
               <FormItem label="团购ID:" prop="id">{{ teambuyDetail.id }}</FormItem>
@@ -327,12 +327,12 @@
           <Row>
             <i-col span="12">
               <FormItem label="活动名称:" prop="activityName">
-                <Input v-model="teambuyDetail.activityName"></Input>
+                <Input v-model="teambuyDetail.activityName" style="width: 200px"></Input>
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="活动类型:" prop="teamBuyType">
-                <Select v-model="teambuyDetail.teamBuyType">
+                <Select v-model="teambuyDetail.teamBuyType" style="width: 200px">
                   <Option
                     v-for="item in teamBuyTypeEnum"
                     :value="item.value"
@@ -347,12 +347,12 @@
           <Row>
             <i-col span="12">
               <FormItem label="活动内容:" prop="content">
-                <Input v-model="teambuyDetail.content"></Input>
+                <Input v-model="teambuyDetail.content" style="width: 200px"></Input>
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="活动状态:" prop="status">
-                <Select v-model="teambuyDetail.status">
+                <Select v-model="teambuyDetail.status" style="width: 200px">
                   <Option
                     v-for="item in activityStatus"
                     :value="item.value"
@@ -368,16 +368,16 @@
           <Row>
             <i-col span="12">
               <FormItem label="排序序号:" prop="rank">
-                <InputNumber :min="0" v-model="teambuyDetail.rank" style="width: 200px"></InputNumber>
+                <InputNumber  v-model="teambuyDetail.rank" style="width: 200px"></InputNumber>
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="活动banner 推荐使用尺寸为750*304(单位:px):" prop="banner">
+              <FormItem label="活动Banner 推荐尺寸750*304(单位:px):" prop="banner" :label-width="130">
                 <Input v-show="false" v-model="teambuyDetail.banner" style="width: auto"></Input>
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url">
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -395,7 +395,7 @@
                   @on-success="handleSuccessMain"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
-                      <Icon type="ios-camera" size="20"></Icon>
+                    <Icon type="ios-camera" size="20"></Icon>
                   </div>
                 </IViewUpload>
               </FormItem>
@@ -454,23 +454,23 @@
                   :min="0"
                   v-model="teambuyDetail.hour"
                   :readonly="tempModalType === modalType.edit"
-                  style="width: 70px"
+                  style="width: 60px"
                   @on-change="validSecondsChange"
-                ></InputNumber>时
+                ></InputNumber>&nbsp;时
                 <InputNumber
                   :min="0"
                   v-model="teambuyDetail.minute"
                   :readonly="tempModalType === modalType.edit"
-                  style="width: 70px"
+                  style="width: 60px"
                   @on-change="validSecondsChange"
-                ></InputNumber>分
+                ></InputNumber>&nbsp;分
                 <InputNumber
                   :min="0"
                   v-model="teambuyDetail.second"
                   :readonly="tempModalType === modalType.edit"
-                  style="width: 70px"
+                  style="width: 60px"
                   @on-change="validSecondsChange"
-                ></InputNumber>秒
+                ></InputNumber>&nbsp;秒
               </FormItem>
             </i-col>
           </Row>
@@ -482,7 +482,7 @@
             </i-col>
             <i-col span="12">
               <FormItem label="参团信息列表:" prop="joinInfoStatus">
-                <Select v-model="teambuyDetail.joinInfoStatus">
+                <Select v-model="teambuyDetail.joinInfoStatus" style="width: 200px">
                   <Option
                     v-for="item in teamBuyStatus"
                     :value="item.value"
@@ -498,7 +498,7 @@
           <Row>
             <i-col span="12">
               <FormItem label="是否模拟成团:" prop="robot">
-                <Select v-model="teambuyDetail.robot">
+                <Select v-model="teambuyDetail.robot" style="width: 200px">
                   <Option
                     v-for="item in teamBuyStatus"
                     :value="item.value"
@@ -512,14 +512,14 @@
             </i-col>
             <i-col span="12">
               <FormItem label="多少秒后虚位补齐:" prop="robotStartSecond">
-                <Input v-model="teambuyDetail.robotStartSecond"></Input>
+                <Input v-model="teambuyDetail.robotStartSecond" style="width: 200px"></Input>
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
               <FormItem label="商品规格:" prop="standardId">
-                <Input v-model="teambuyDetail.standardId" readonly="readonly">
+                <Input v-model="teambuyDetail.standardId" readonly="readonly" style="width: 200px">
                   <Button
                     v-show="tempModalType !== modalType.edit"
                     slot="append"
@@ -531,7 +531,7 @@
             </i-col>
             <i-col span="12">
               <FormItem label="规格描述:" prop="standardDesc">
-                <Input v-model="teambuyDetail.standardDesc"></Input>
+                <Input v-model="teambuyDetail.standardDesc" style="width: 200px"></Input>
               </FormItem>
             </i-col>
           </Row>
@@ -613,7 +613,7 @@
             </i-col>
             <i-col span="12">
               <FormItem label="红包活动设置:" prop="rewardActivitySetting">
-                <Select v-model="teambuyDetail.rewardActivitySetting">
+                <Select v-model="teambuyDetail.rewardActivitySetting" style="width: 200px">
                   <Option
                     v-for="item in rewardActivitySettingEnum"
                     :value="item.value"
@@ -628,7 +628,7 @@
           <Row>
             <i-col span="12">
               <FormItem label="关联门店:">
-                <Select v-model="teambuyDetail.relationStoreType">
+                <Select v-model="teambuyDetail.relationStoreType" style="width: 200px">
                   <Option
                     v-for="item in relationStoreTypeEnum"
                     :value="item.value"
@@ -671,10 +671,10 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%">
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
 
-    <Modal v-model="modalProduct" :width="1000" title="关联商品" footer-hide>
+    <Modal v-model="modalProduct" :width="1200" title="关联商品" footer-hide>
       <Card>
         <tables
           ref="products"
@@ -709,7 +709,7 @@
                 type="primary"
                 @click="handleProductSearch"
               >
-                <Icon type="md-search"/>&nbsp;搜索
+                <Icon type="md-search" />&nbsp;搜索
               </Button>
               <Button
                 v-waves
@@ -718,7 +718,7 @@
                 type="info"
                 @click="handleProductClear"
               >
-                <Icon type="md-refresh"/>&nbsp;清除
+                <Icon type="md-refresh" />&nbsp;清除
               </Button>
             </Row>
           </div>
@@ -1101,7 +1101,7 @@ export default {
         },
         {
           title: "成团有效时长",
-          minWidth: 100,
+          minWidth: 110,
           key: "validSeconds",
           render(h, params) {
             return <div>{secondsToDate(params.row.validSeconds)}</div>;
@@ -1120,7 +1120,7 @@ export default {
         },
         {
           title: "限购次数",
-          minWidth: 80,
+          minWidth: 90,
           key: "triesLimit"
         },
         {
@@ -1181,12 +1181,12 @@ export default {
         {
           title: "商品编号",
           key: "productCode",
-          minWidth: 100
+          minWidth: 130
         },
         {
           title: "商品名称",
           key: "productName",
-          minWidth: 100
+          minWidth: 150
         },
         {
           title: "商品规格",
@@ -1283,17 +1283,21 @@ export default {
     tourDiscountComputed() {
       return fenToYuanDot2Number(this.teambuyDetail.tourDiscount);
     },
-    relationStore(){
-      if(!this.teambuyDetail.storeIds){ return '全部门店'; }
-      let ids = this.teambuyDetail.storeIds.substring(1, this.teambuyDetail.storeIds.length-1).split('][');
-      let list= this.storeList;
-      let str= '';
-      if(list.length > 0){
+    relationStore() {
+      if (!this.teambuyDetail.storeIds) {
+        return "全部门店";
+      }
+      let ids = this.teambuyDetail.storeIds
+        .substring(1, this.teambuyDetail.storeIds.length - 1)
+        .split("][");
+      let list = this.storeList;
+      let str = "";
+      if (list.length > 0) {
         ids.forEach(id => {
           let item = list.find(item => item.storeId == id);
-          str += item.storeName + ',';
-        })
-        return str.substring(0,str.length-1);
+          str += item.storeName + ",";
+        });
+        return str.substring(0, str.length - 1);
       }
     }
   },
@@ -1374,12 +1378,15 @@ export default {
             _this.$Message.error("选择部分门店时必须选择至少一个门店!");
             return;
           }
-          if (_this.teambuyDetail.productNum < _this.teambuyDetail.fullUserNum) {
+          if (
+            _this.teambuyDetail.productNum < _this.teambuyDetail.fullUserNum
+          ) {
             _this.$Message.error("库存数量不能小于成团人数!");
             return;
           }
           if (
-            _this.teambuyDetail.tourDiscount >= _this.teambuyDetail.activityPrice
+            _this.teambuyDetail.tourDiscount >=
+            _this.teambuyDetail.activityPrice
           ) {
             _this.$Message.error("团长优惠不能大于等于活动金额!");
             return;
@@ -1398,19 +1405,31 @@ export default {
             return;
           }
           // 活动格式转换Formart
-          if(_this.teambuyDetail.startTime.indexOf('GMT') > 0){
-            _this.teambuyDetail.startTime = _this.$moment(_this.teambuyDetail.startTime).format('yyyy-MM-dd HH:mm:ss');
-            console.log('startTime after format', _this.teambuyDetail.startTime);
+          if (_this.teambuyDetail.startTime.indexOf("GMT") > 0) {
+            _this.teambuyDetail.startTime = _this
+              .$moment(_this.teambuyDetail.startTime)
+              .format("yyyy-MM-dd HH:mm:ss");
+            console.log(
+              "startTime after format",
+              _this.teambuyDetail.startTime
+            );
           }
 
-          if(_this.teambuyDetail.endTime.indexOf('GMT') > 0){
-            _this.teambuyDetail.endTime = _this.$moment(_this.teambuyDetail.endTime).format('yyyy-MM-dd HH:mm:ss');
-            console.log('endTime after format', _this.teambuyDetail.endTime);
+          if (_this.teambuyDetail.endTime.indexOf("GMT") > 0) {
+            _this.teambuyDetail.endTime = _this
+              .$moment(_this.teambuyDetail.endTime)
+              .format("yyyy-MM-dd HH:mm:ss");
+            console.log("endTime after format", _this.teambuyDetail.endTime);
           }
-          
-          if(_this.teambuyDetail.deliveryEndTime.indexOf('GMT') > 0){
-            _this.teambuyDetail.deliveryEndTime = _this.$moment(_this.teambuyDetail.deliveryEndTime).format('yyyy-MM-dd HH:mm:ss');
-            console.log('endTime after format', _this.teambuyDetail.deliveryEndTime);
+
+          if (_this.teambuyDetail.deliveryEndTime.indexOf("GMT") > 0) {
+            _this.teambuyDetail.deliveryEndTime = _this
+              .$moment(_this.teambuyDetail.deliveryEndTime)
+              .format("yyyy-MM-dd HH:mm:ss");
+            console.log(
+              "endTime after format",
+              _this.teambuyDetail.deliveryEndTime
+            );
           }
 
           if (_this.tempModalType === _this.modalType.create) {
@@ -1528,8 +1547,10 @@ export default {
       ) {
         this.showStoreList = true;
         this.teambuyDetail.relationStoreType = "PART";
-        const storeIds = this.teambuyDetail.storeIds.substring(1, this.teambuyDetail.storeIds.length-1).split('][');
-        console.log('storeIds before edit:', storeIds);
+        const storeIds = this.teambuyDetail.storeIds
+          .substring(1, this.teambuyDetail.storeIds.length - 1)
+          .split("][");
+        console.log("storeIds before edit:", storeIds);
         storeIds.forEach(element => {
           this.storeIds.push(parseInt(element));
         });
@@ -1592,18 +1613,18 @@ export default {
       this.teambuyDetail.banner = fileList[0].url;
     },
     startTimeChange(value, date) {
-      console.log('change start value:', value);
+      console.log("change start value:", value);
       this.teambuyDetail.startTime = value;
     },
     endTimeChange(value, date) {
-      console.log('change end value:', value);
+      console.log("change end value:", value);
       this.teambuyDetail.endTime = value;
     },
     createTimeStartChange(value, date) {
-      this.teambuyDetail.createTimeStart = value? value: null;
+      this.teambuyDetail.createTimeStart = value ? value : null;
     },
     createTimeEndChange(value, date) {
-      this.teambuyDetail.createTimeEnd = value? value: null;
+      this.teambuyDetail.createTimeEnd = value ? value : null;
     },
     deliveryEndTimeChange(value, date) {
       this.teambuyDetail.deliveryEndTime = value;
@@ -1670,16 +1691,16 @@ export default {
       if (data.length === this.storeList.length) {
         this.indeterminate = false;
         this.checkAll = true;
-        this.teambuyDetail.storeIds = ''; // 全选存空字符串
+        this.teambuyDetail.storeIds = ""; // 全选存空字符串
       } else if (data.length > 0) {
         this.indeterminate = true;
         this.checkAll = false;
-        this.teambuyDetail.storeIds = '[' + data.join('][') + ']';
-        console.log('storeIds before submit:', this.teambuyDetail.storeIds);
+        this.teambuyDetail.storeIds = "[" + data.join("][") + "]";
+        console.log("storeIds before submit:", this.teambuyDetail.storeIds);
       } else {
         this.indeterminate = false;
         this.checkAll = false;
-        this.teambuyDetail.storeIds = '';
+        this.teambuyDetail.storeIds = "";
       }
     },
     handleRelation() {

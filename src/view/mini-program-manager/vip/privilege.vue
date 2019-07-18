@@ -104,7 +104,16 @@
           <i-col span="12">
             <Row>
               <i-col span="8">优惠券类型:</i-col>
-              <i-col span="16">{{ addRelationDetail.couponType | couponTypeFilter }}</i-col>
+              <i-col span="16" v-if="addRelationDetail.couponType === 'FULL_CUT_COUPON'">
+                <tag color="magenta">{{ "满减券" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponType === 'DISCOUNT_COUPON'">
+                <tag color="orange">{{ "折扣券" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponType === 'CASH_COUPON'">
+                <tag color="cyan">{{ "现金券" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponType === null">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -113,10 +122,10 @@
             <Row>
               <i-col span="8">会员身份:</i-col>
               <i-col span="16" v-if="addRelationDetail.svipLevel==='SVIP'">
-                <tag color="orange">{{ addRelationDetail.svipLevel | vipStatusFilter }}</tag>
+                <tag color="gold">{{ addRelationDetail.svipLevel | vipStatusFilter }}</tag>
               </i-col>
               <i-col span="16" v-else>
-                <tag color="cyan">{{ addRelationDetail.svipLevel | vipStatusFilter }}</tag>
+                <tag color="green">{{ addRelationDetail.svipLevel | vipStatusFilter }}</tag>
               </i-col>
             </Row>
           </i-col>
@@ -141,7 +150,13 @@
           <i-col span="12">
             <Row>
               <i-col span="8">优惠券状态:</i-col>
-              <i-col span="16">{{ addRelationDetail.couponStatus | couponStatusFilter }}</i-col>
+              <i-col span="16" v-if="addRelationDetail.couponStatus === 'VALID'">
+                <tag color="success">{{ "有效" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponStatus === 'INVALID'">
+                <tag color="error">{{ "无效" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponStatus === null">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -163,7 +178,16 @@
           <i-col span="12">
             <Row>
               <i-col span="8">券使用范围:</i-col>
-              <i-col span="16">{{ addRelationDetail.couponScope | couponScopeFilter }}</i-col>
+              <i-col span="16" v-if="addRelationDetail.couponScope === 'STORE'">
+                <tag color="magenta">{{ "门店" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponScope === 'SMALL'">
+                <tag color="cyan">{{ "商城" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponScope === 'STORE_AND_SMALL'">
+                <tag color="orange">{{ "全场通用" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponScope === null">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -275,7 +299,7 @@
                   </Select>
                 </FormItem>
               </i-col>
-              <i-col span="6" v-if="tempModalType == 'addHdTemplate'">
+              <!-- <i-col span="6" v-if="tempModalType == 'addHdTemplate'">
                 <FormItem label="券状态:" prop="couponStatus">
                   <Select
                     v-model="addRelationDetail.couponStatus"
@@ -291,7 +315,7 @@
                     >{{ item.label }}</Option>
                   </Select>
                 </FormItem>
-              </i-col>
+              </i-col>-->
               <i-col span="6">
                 <FormItem label="礼包类型:" prop="giftType">
                   <Select
@@ -319,7 +343,7 @@
             </Row>
             <Row>
               <i-col span="12">
-                <FormItem label="使用规则：" prop="couponRules" :label-width="90">
+                <FormItem label="使用规则:" prop="couponRules">
                   <Input
                     v-model="addRelationDetail.couponRules"
                     type="textarea"
@@ -403,7 +427,7 @@
                 <Select
                   v-model="addRelationDetail.svipLevel"
                   placeholder="会员身份"
-                  style="padding-right: 5px;width: 120px"
+                  style="padding-right: 5px;width: 146px"
                 >
                   <Option
                     v-for="(item,index) in vipStatusEnum"
@@ -421,7 +445,7 @@
                 <Select
                   v-model="addRelationDetail.couponStatus"
                   placeholder="请选择"
-                  style="padding-right: 5px;width: 120px"
+                  style="padding-right: 5px;width: 146px"
                 >
                   <Option
                     v-for="(item,index) in couponStatusEnum"
@@ -435,7 +459,7 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="券使用规则：" prop="couponRules" :label-width="110">
+              <FormItem label="券使用规则:" prop="couponRules" :label-width="100">
                 <Input
                   v-model="addRelationDetail.couponRules"
                   type="textarea"
@@ -618,18 +642,6 @@ const dataColumns = [
             <tag color="cyan">{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
-      } else if (row.couponType === "FREE_SHIPPING_COUPON") {
-        return (
-          <div>
-            <tag color="cyan">{couponTypeConvert(row.couponType).label}</tag>
-          </div>
-        );
-      } else if (row.couponType === "FREE_SHIPPING_COUPON") {
-        return (
-          <div>
-            <tag color="cyan">{couponTypeConvert(row.couponType).label}</tag>
-          </div>
-        );
       }
       return <div>{row.couponType}</div>;
     },
@@ -643,13 +655,13 @@ const dataColumns = [
       if (row.svipLevel === "SVIP") {
         return (
           <div>
-            <tag color="orange">{vipTypeConvert(row.svipLevel).label}</tag>
+            <tag color="gold">{vipTypeConvert(row.svipLevel).label}</tag>
           </div>
         );
       } else if (row.svipLevel === "TRY_SVIP") {
         return (
           <div>
-            <tag color="cyan">{vipTypeConvert(row.svipLevel).label}</tag>
+            <tag color="green">{vipTypeConvert(row.svipLevel).label}</tag>
           </div>
         );
       }

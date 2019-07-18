@@ -221,14 +221,14 @@
                 <Input
                   v-model="advertisementDetail.advertisementName"
                   placeholder="广告名"
-                  style="width: 200px"
+                  style="width: 220px"
                 ></Input>
               </FormItem>
             </Col>
           </Row>
           <Row>
             <FormItem label="内容描述:" prop="contentDesc">
-              <Input v-model="advertisementDetail.contentDesc" placeholder="内容描述"></Input>
+              <Input v-model="advertisementDetail.contentDesc" placeholder="内容描述" style="width: 580px"></Input>
             </FormItem>
           </Row>
           <Row>
@@ -309,7 +309,7 @@
                   :min="0"
                   v-model="advertisementDetail.rankNo"
                   placeholder="广告序号"
-                  style="width: 200px"
+                  style="width: 220px"
                 ></InputNumber>
               </FormItem>
             </Col>
@@ -334,8 +334,8 @@
             <Col span="12">
               <Row span="24" align="middle" type="flex">
                 <FormItem label="链接目标:" prop="advertisementRelation">
-                  <Row v-if="advertisementDetail.linkType == 'EXTERNALLINK' || advertisementDetail.linkType == 'INTERNALLINK'">
-                    <Input v-model="advertisementDetail.advertisementRelation"></Input>
+                  <Row v-if="isTargetLink">
+                    <Input v-model="advertisementDetail.advertisementRelation" style="width:200px;"></Input>
                   </Row>
                   <Row v-else>
                     <Col span="24">
@@ -347,7 +347,7 @@
                           v-waves
                           slot="append"
                           :loading="searchModalTableLoading"
-                          class="search-btn mt-25"
+                          class="search-btn "
                           type="primary"
                           @click="searchAdvertisementRelation"
                         >
@@ -381,6 +381,7 @@
                     format="yyyy-MM-dd HH:mm:ss"
                     type="datetime"
                     placeholder="开始时间"
+                    style="width: 200px"
                     @on-change="startTimeChange"
                   />
                   <i class="mr5 ml5">-</i>
@@ -389,6 +390,7 @@
                     format="yyyy-MM-dd HH:mm:ss"
                     type="datetime"
                     placeholder="结束时间"
+                    style="width: 200px"
                     @on-change="endTimeChange"
                   />
                 </Row>
@@ -599,7 +601,8 @@ export default {
           columns: miniGoodsStandardColumns
         },
         { value: linkType.EXTERNALLINK, label: "外部链接" },
-        { value: linkType.INTERNALLINK, label: "内部链接" }
+        { value: linkType.INTERNALLINK, label: "内部链接" },
+        { value: linkType.TABLINK, label: "底部导航" }
       ],
       tempColumns: [],
       linkTypeEnum,
@@ -625,7 +628,7 @@ export default {
           title: "ID",
           key: "id",
           sortable: true,
-          minWidth: 80
+          minWidth: 70
         },
         {
           title: "链接类型",
@@ -656,7 +659,7 @@ export default {
         },
         {
           title: "广告关联",
-          minWidth: 80,
+          minWidth: 90,
           key: "advertisementRelation"
         },
         {
@@ -711,7 +714,7 @@ export default {
         },
         {
           title: "广告位置",
-          minWidth: 120,
+          minWidth: 145,
           key: "positionId",
           render: (h, params, vm) => {
             const { row } = params;
@@ -754,6 +757,11 @@ export default {
     };
   },
   computed: {
+    isTargetLink(){
+      return this.advertisementDetail.linkType === 'EXTERNALLINK' || 
+      this.advertisementDetail.linkType === 'INTERNALLINK' || 
+      this.advertisementDetail.linkType === 'TABLINK'
+    },
     advertisementPositionComputed() {
       const tempObj = this.advertisementList.find(
         item => item.id === this.advertisementDetail.positionId

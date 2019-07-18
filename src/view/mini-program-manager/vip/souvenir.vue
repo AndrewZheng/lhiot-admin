@@ -113,7 +113,19 @@
           <i-col span="12">
             <Row>
               <i-col span="8">优惠券类型:</i-col>
-              <i-col span="16">{{ addRelationDetail.couponType | couponTypeFilter }}</i-col>
+              <i-col span="16" v-if="addRelationDetail.couponType === 'FULL_CUT_COUPON'">
+                <tag color="magenta">{{ "满减券" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponType === 'DISCOUNT_COUPON'">
+                <tag color="orange">{{ "折扣券" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponType === 'CASH_COUPON'">
+                <tag color="cyan">{{ "现金券" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponType === 'FREIGHT_COUPON'">
+                <tag color="cyan">{{ "运费券" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponType === null">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -122,10 +134,10 @@
             <Row>
               <i-col span="8">会员身份:</i-col>
               <i-col span="16" v-if="addRelationDetail.svipLevel==='SVIP'">
-                <tag color="orange">{{ addRelationDetail.svipLevel | vipStatusFilter }}</tag>
+                <tag color="gold">{{ addRelationDetail.svipLevel | vipStatusFilter }}</tag>
               </i-col>
               <i-col span="16" v-else>
-                <tag color="cyan">{{ addRelationDetail.svipLevel | vipStatusFilter }}</tag>
+                <tag color="green">{{ addRelationDetail.svipLevel | vipStatusFilter }}</tag>
               </i-col>
             </Row>
           </i-col>
@@ -150,11 +162,20 @@
           <i-col span="12">
             <Row>
               <i-col span="8">优惠券状态:</i-col>
-              <i-col span="16">{{ addRelationDetail.couponStatus | couponStatusFilter }}</i-col>
+              <i-col span="16" v-if="addRelationDetail.couponStatus === 'VALID'">
+                <tag color="success">{{ "有效" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponStatus === 'INVALID'">
+                <tag color="error">{{ "无效" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponStatus === null">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
         </Row>
-        <Row class-name="mb20">
+        <Row
+          class-name="mb20"
+          v-show="addRelationDetail.validDateType=='UN_FIXED_DATE' && addRelationDetail.source == 'SMALL'"
+        >
           <i-col span="12">
             <Row>
               <i-col span="8">券有效期类型:</i-col>
@@ -200,7 +221,16 @@
           <i-col span="12">
             <Row>
               <i-col span="8">券使用范围:</i-col>
-              <i-col span="16">{{ addRelationDetail.couponScope | couponScopeFilter }}</i-col>
+              <i-col span="16" v-if="addRelationDetail.couponScope === 'STORE'">
+                <tag color="magenta">{{ "门店" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponScope === 'SMALL'">
+                <tag color="cyan">{{ "商城" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponScope === 'STORE_AND_SMALL'">
+                <tag color="orange">{{ "全场通用" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="addRelationDetail.couponScope === null">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -315,7 +345,7 @@
                 <FormItem label="会员身份:" prop="svipLevel">
                   <Select
                     v-model="addRelationDetail.svipLevel"
-                    placeholder="会员身份"
+                    placeholder="请选择"
                     style="padding-right: 5px;width: 120px"
                   >
                     <Option
@@ -344,11 +374,6 @@
                   </Select>
                 </FormItem>
               </i-col>
-              <!-- <i-col span="6">
-                <FormItem label="排序字段:" prop="rank">
-                  <InputNumber :min="0" v-model="addRelationDetail.rank" label></InputNumber>
-                </FormItem>
-              </i-col>-->
             </Row>
 
             <Row>
@@ -374,7 +399,7 @@
                 v-if="addRelationDetail.validDateType=='UN_FIXED_DATE' && tempModalType=='addTemplate'"
               >
                 <i-col span="7">
-                  <FormItem label="　发券后:" prop="beginDay">
+                  <FormItem label="发放券后:" prop="beginDay">
                     <InputNumber
                       :min="0"
                       v-model="addRelationDetail.beginDay"
@@ -448,7 +473,7 @@
                   </Select>
                 </FormItem>
               </i-col>
-              <i-col span="6" v-if="tempModalType == 'addHdTemplate'">
+              <!-- <i-col span="6" v-if="tempModalType == 'addHdTemplate'">
                 <FormItem label="优惠券状态:" prop="couponStatus" :label-width="92">
                   <Select
                     v-model="addRelationDetail.couponStatus"
@@ -463,7 +488,7 @@
                     >{{ item.label }}</Option>
                   </Select>
                 </FormItem>
-              </i-col>
+              </i-col>-->
               <i-col span="6">
                 <FormItem
                   label="券使用限制:"
@@ -545,7 +570,7 @@
               <FormItem label="优惠券名称:" prop="couponName" :label-width="100">
                 <Input
                   v-model="addRelationDetail.couponName"
-                  clearable　style="padding-right: 5px;width: 100px"
+                  clearable　style="padding-right: 5px;width: 120px"
                 ></Input>
               </FormItem>
             </i-col>
@@ -556,7 +581,7 @@
                 <Select
                   v-model="addRelationDetail.svipLevel"
                   placeholder="会员身份"
-                  style="padding-right: 5px;width: 100px"
+                  style="padding-right: 5px;width: 120px"
                 >
                   <Option
                     v-for="(item,index) in vipStatusEnum"
@@ -574,7 +599,7 @@
                 <Select
                   v-model="addRelationDetail.couponStatus"
                   placeholder="请选择"
-                  style="padding-right: 5px;width: 100px"
+                  style="padding-right: 5px;width: 120px"
                 >
                   <Option
                     v-for="(item,index) in couponStatusEnum"
@@ -598,7 +623,7 @@
                 <Select
                   v-model="addRelationDetail.couponScope"
                   placeholder="请选择"
-                  style="padding-right: 5px;width: 100px"
+                  style="padding-right: 5px;width: 120px"
                 >
                   <Option
                     v-for="(item,index) in couponScopeEnum"
@@ -606,7 +631,7 @@
                     :key="index"
                     :disabled="index==2"
                     class="ptb2-5"
-                    style="padding-left: 5px;width: 100px"
+                    style="padding-left: 5px;width: 120px"
                   >{{ item.label }}</Option>
                 </Select>
               </FormItem>
@@ -639,19 +664,19 @@
                   <InputNumber
                     :min="0"
                     v-model="addRelationDetail.beginDay"
-                    label="生效开始"
+                    label="发放券后"
                     style="width: 160px"
-                  ></InputNumber>
+                  ></InputNumber>&nbsp;天生效
                 </FormItem>
               </i-col>
               <i-col span="7">
-                <FormItem label="有效天数:" prop="endDay">
+                <FormItem label="有效天数:" prop="endDay" :label-width="100">
                   <InputNumber
                     :min="0"
                     v-model="addRelationDetail.endDay"
                     label="有效天数"
                     style="width: 160px"
-                  ></InputNumber>
+                  ></InputNumber>&nbsp;天
                 </FormItem>
               </i-col>
             </template>
@@ -686,7 +711,7 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="券使用规则：" prop="couponRules" :label-width="110">
+              <FormItem label="券使用规则:" prop="couponRules" :label-width="100">
                 <Input
                   v-model="addRelationDetail.couponRules"
                   type="textarea"
@@ -815,7 +840,6 @@ const templateRowData = {
   couponName: null,
   couponType: null,
   couponStatus: "VALID",
-  svipLevel: "SVIP",
   page: 1,
   rows: 5
 };
@@ -884,13 +908,13 @@ const dataColumns = [
       if (row.svipLevel === "SVIP") {
         return (
           <div>
-            <tag color="orange">{vipTypeConvert(row.svipLevel).label}</tag>
+            <tag color="gold">{vipTypeConvert(row.svipLevel).label}</tag>
           </div>
         );
       } else if (row.svipLevel === "TRY_SVIP") {
         return (
           <div>
-            <tag color="cyan">{vipTypeConvert(row.svipLevel).label}</tag>
+            <tag color="green">{vipTypeConvert(row.svipLevel).label}</tag>
           </div>
         );
       }
@@ -1531,6 +1555,8 @@ export default {
       this.addRelationDetail.couponName = currentRow.couponName;
       this.addRelationDetail.couponType = currentRow.couponType;
       this.addRelationDetail.couponFee = currentRow.faceValue;
+      this.addRelationDetail.validDateType = currentRow.validDateType;
+
       if (currentRow.couponType === "DISCOUNT_COUPON") {
         const lastIndex = currentRow.couponName.indexOf("折");
         this.addRelationDetail.couponFee =

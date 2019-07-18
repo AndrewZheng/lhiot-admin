@@ -23,7 +23,7 @@
           <Row>
             <i-col style="display: inline-block">¥</i-col>
             <InputNumber :min="0" :value="minOrderAmountComputed" placeholder="最小金额" class="search-input" style="width: 100px" @on-change="minOrderAmountChange"></InputNumber>
-            <i-col style="display: inline-block" class="">-¥</i-col>
+            <i-col style="display: inline-block" class="">-­­­­­­¥</i-col>
             <InputNumber :min="0" :value="maxOrderAmountComputed" placeholder="最大金额" class="search-input mr5" style="width: 100px" @on-change="maxOrderAmountChange"></InputNumber>
             <Select
               v-model="searchRowData.deliveryAtType"
@@ -385,7 +385,7 @@ export default {
           align: 'center'
         },
         {
-          title: 'Id',
+          title: 'ID',
           key: 'id'
         },
         {

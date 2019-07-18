@@ -77,7 +77,7 @@
         <span>{{ currentCategory.id == ''?'创建板块':'编辑板块' }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="currentCategory" :rules="ruleInline" :label-width="120">
+        <Form ref="modalEdit" :model="currentCategory" :rules="ruleInline" :label-width="130">
           <FormItem label="父级ID:">
             <i-col>{{ parentCategory.id }}</i-col>
           </FormItem>

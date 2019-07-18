@@ -636,7 +636,7 @@ export default {
           align: "center"
         },
         {
-          title: "id",
+          title: "ID",
           key: "id"
         },
         {

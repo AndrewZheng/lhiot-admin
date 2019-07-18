@@ -21,7 +21,7 @@
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
             <Icon type="md-add"/>
-            添加111
+            添加
           </Button>
           <Poptip
             confirm
@@ -100,13 +100,12 @@
         <Form ref="modalEdit" :model="systemCategoryDetail" :rules="ruleInline" :label-width="80">
           <Row>
             <Col span="12">
-            <FormItem label="父级分类id:" prop="parentId">
+            <FormItem label="父级分类ID:" prop="parentId">
               <!-- <InputNumber :min="0" v-model="systemCategoryDetail.parentId" placeholder="父级分类id"></InputNumber> -->
               <Cascader
                 :data="systemCategoryData"
                 v-model="defaultSystemCategoryData"
                 span="21"
-                style="width: 70%"
                 @on-change="systemCategoryChange"
               ></Cascader>
             </FormItem>

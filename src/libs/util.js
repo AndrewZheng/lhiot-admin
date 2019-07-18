@@ -794,6 +794,21 @@ export const fenToYuanDot2 = (number) => {
   return number;
 };
 
+// 加¥和天数
+export const addRnb = (number) => {
+  if (typeof number === 'number') {
+    return '¥' + (number).toFixed(2);
+  }
+  return number;
+};
+
+export const addDay = (number) => {
+  if (typeof number === 'number') {
+    return (number).toFixed(2) + " 天";
+  }
+  return number;
+};
+
 export const yuanToFenNumber = (value) => {
   if (typeof value === 'number') {
     return Math.round((value * 100));

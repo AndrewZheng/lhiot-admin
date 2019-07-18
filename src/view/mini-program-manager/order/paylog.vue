@@ -267,13 +267,13 @@ export default {
     return {
       columns: [
         {
-          title: "订单Id",
+          title: "订单ID",
           key: "orderId",
           width: 170,
           fixed: "left"
         },
         {
-          title: "用户Id",
+          title: "用户ID",
           key: "userId",
           width: 80
         },
@@ -352,7 +352,7 @@ export default {
         },
         {
           title: "第三方支付金额",
-          width: 120,
+          width: 130,
           key: "payFee",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.payFee);

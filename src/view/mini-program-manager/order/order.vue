@@ -1133,25 +1133,29 @@ export default {
         });
     },
     resendToHd() {
-      console.log(`current apply: ${this.tableDataSelected.apply}`);
-      if (this.tableDataSelected.apply !== "S_MALL") {
-        this.$Message.error("该功能只适用于拼团小程序");
-        return;
-      }
+      // console.log(`current apply:`, this.tableDataSelected);
       // TODO 未测试
       if (this.tableDataSelected.length > 0) {
         const tempDeleteList = [];
         this.tableDataSelected.filter(value => {
           tempDeleteList.push(value.id);
         });
-        const ids = tempDeleteList.join(",");
-        resendToHd({ ids: ids })
-          .then(res => {
-            this.$Message.info("海鼎重发成功");
-          })
-          .catch(error => {
-            console.log(error);
-          });
+        const ids = tempDeleteList.join(',');
+        resendToHd({ ids: ids }).then(res => {
+          let { disqualification, failure } = res;
+          if(failure.length === 0){
+            this.$Message.info('海鼎重发成功');
+          }else{
+            let lst= failure.join(',');
+            this.$Message.error({
+                content: `海鼎重发失败订单：${lst}`,
+                duration: 30,
+                closable: true
+            });
+          }
+        }).catch(error => {
+          console.log(error);
+        });
       }
     },
     onSelectionAll(selection) {

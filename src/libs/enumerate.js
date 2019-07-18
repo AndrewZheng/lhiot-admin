@@ -1545,7 +1545,7 @@ export const advertisementPositionTypeEnum = [
 
 // 小程序广告关联类别
 // GOODSINFO("商品详情"),STORELIVE("门店直播"),
-// AMUSEMENT("多娱"),EXTERNALLINK("外部链接"), INTERNALLINK('内部链接')
+// AMUSEMENT("多娱"),EXTERNALLINK("外部链接"), INTERNALLINK('内部链接') TABLINK('底部导航')
 // GAME("游戏"),INVITEACTIVE("邀请有礼"),FLASHACTIVE("抢购商品"),RECHARGE("充值页面"),STOCK("仓库")
 export const linkType = {
   GOODSINFO: 'GOODSINFO',
@@ -1557,6 +1557,7 @@ export const linkType = {
   FLASHACTIVE: 'FLASHACTIVE',
   RECHARGE: 'RECHARGE',
   STOCK: 'STOCK',
+  TABLINK: 'TABLINK',
   INTERNALLINK: 'INTERNALLINK'
 };
 
@@ -1572,6 +1573,10 @@ export const linkTypeEnum = [
   {
     label: '多娱',
     value: linkType.AMUSEMENT
+  },
+  {
+    label: '底部导航',
+    value: linkType.TABLINK
   },
   {
     label: '内部链接',

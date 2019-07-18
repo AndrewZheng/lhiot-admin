@@ -220,14 +220,14 @@
 
           <Divider>关联优惠券后配置</Divider>
 
-          <Form ref="addForm" :model="addRelationDetail" :rules="ruleInline" :label-width="80">
+          <Form ref="addForm" :model="addRelationDetail" :rules="ruleInline" :label-width="100">
             <Row>
               <i-col span="6">
                 <FormItem label="用户范围:" prop="userScope">
                   <Select
                     v-model="addRelationDetail.userScope"
-                    placeholder="用户范围"
-                    style="padding-right: 5px;width: 120px"
+                    placeholder="请选择"
+                    style="padding-right: 5px;width: 165px"
                   >
                     <Option
                       v-for="(item,index) in userScopeEnum"
@@ -238,13 +238,17 @@
                   </Select>
                 </FormItem>
               </i-col>
+              <!-- <i-col span="6">
+                <FormItem label="优惠券名称:" prop="couponName" :label-width="140">
+                  <Input
+                    v-model="addRelationDetail.couponName"
+                    clearable
+                    style="padding-right: 5px;width: 165px"
+                  ></Input>
+                </FormItem>
+              </i-col> -->
             </Row>
             <Row>
-              <i-col span="6">
-                <FormItem label="优惠券名称:" prop="couponName" :label-width="100">
-                  <Input v-model="addRelationDetail.couponName" clearable></Input>
-                </FormItem>
-              </i-col>
               <i-col span="7" v-if="tempModalType=='addTemplate'">
                 <FormItem label="生效时间:" prop="effectiveStartTime">
                   <DatePicker
@@ -258,7 +262,7 @@
                 </FormItem>
               </i-col>
               <i-col span="7" v-if="tempModalType=='addTemplate'">
-                <FormItem label="失效时间:" prop="effectiveEndTime">
+                <FormItem label="　失效时间:" prop="effectiveEndTime">
                   <DatePicker
                     :value="addRelationDetail.effectiveEndTime"
                     format="yyyy-MM-dd HH:mm:ss"
@@ -271,7 +275,12 @@
               </i-col>
               <i-col span="4">
                 <FormItem label="发券总数:" prop="couponLimit">
-                  <InputNumber :min="0" v-model="addRelationDetail.couponLimit" label="限购数量"></InputNumber>
+                  <InputNumber
+                    :min="0"
+                    v-model="addRelationDetail.couponLimit"
+                    label="限购数量"
+                    style="padding-right: 5px;width: 160px"
+                  ></InputNumber>
                 </FormItem>
               </i-col>
             </Row>
@@ -281,7 +290,7 @@
                   <Select
                     v-model="addRelationDetail.couponScope"
                     placeholder="请选择"
-                    style="padding-right: 5px;width: 100px"
+                    style="padding-right: 5px;width: 165px"
                     clearable
                   >
                     <Option
@@ -304,12 +313,13 @@
                 <FormItem
                   label="券使用限制:"
                   prop="useLimitType"
+                  :label-width="140"
                   v-show="tempModalType=='addHdTemplate'"
                 >
                   <Select
                     v-model="addRelationDetail.useLimitType"
                     placeholder="请选择"
-                    style="padding-right: 5px;width: 120px"
+                    style="padding-right: 5px;width: 165px"
                     clearable
                     :disabled="tempModalType=='addHdTemplate'"
                   >
@@ -325,6 +335,7 @@
                 <FormItem
                   label="券使用限制:"
                   prop="useLimitType"
+                  :label-width="140"
                   v-show="tempModalType=='addTemplate'"
                 >{{ addRelationDetail.useLimitType | couponUseLimitFilter }}</FormItem>
               </i-col>
@@ -548,7 +559,8 @@ const relationDetail = {
   couponScope: null,
   useLimitType: null,
   hdActivityId: 0,
-  source: "SMALL" // 默认来源为系统优惠券
+  source: "SMALL" ,// 默认来源为系统优惠券
+  userScope: "ALL"
 };
 
 // 系统优惠券模板对象
@@ -645,21 +657,44 @@ const dataColumns = [
       }
       return <div>{row.couponType}</div>;
     },
-    minWidth: 40
+    minWidth: 50
   },
   {
     title: "券使用范围",
     key: "couponScope",
-    minWidth: 40,
+    minWidth: 50,
     render: (h, params, vm) => {
       const { row } = params;
-      return <div>{couponScopeConvert(row.couponScope).label}</div>;
+      if (row.couponScope === "STORE") {
+        return (
+          <div>
+            <tag color="magenta">
+              {couponScopeConvert(row.couponScope).label}
+            </tag>
+          </div>
+        );
+      } else if (row.couponScope === "STORE_AND_SMALL") {
+        return (
+          <div>
+            <tag color="orange">
+              {couponScopeConvert(row.couponScope).label}
+            </tag>
+          </div>
+        );
+      } else if (row.couponScope === "SMALL") {
+        return (
+          <div>
+            <tag color="cyan">{couponScopeConvert(row.couponScope).label}</tag>
+          </div>
+        );
+      }
+      return <div>{row.couponScope}</div>;
     }
   },
   {
     title: "券使用限制",
     key: "useLimitType",
-    minWidth: 60,
+    minWidth: 70,
     render: (h, params, vm) => {
       const { row } = params;
       return <div>{couponUseLimitConvert(row.useLimitType).label}</div>;
@@ -683,7 +718,7 @@ const dataColumns = [
   {
     title: "优惠/折扣额度",
     key: "couponFee",
-    minWidth: 60,
+    minWidth: 70,
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
@@ -696,7 +731,7 @@ const dataColumns = [
   {
     title: "最小购买金额",
     key: "minBuyFee",
-    minWidth: 60,
+    minWidth: 70,
     render(h, params) {
       return h("div", fenToYuanDot2(params.row.minBuyFee));
     }
@@ -704,7 +739,7 @@ const dataColumns = [
   {
     title: "优惠券状态",
     key: "couponStatus",
-    minWidth: 40,
+    minWidth: 50,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.couponStatus === "VALID") {
@@ -744,7 +779,7 @@ const dataColumns = [
   {
     title: "生效时间",
     key: "effectiveStartTime",
-    minWidth: 100,
+    minWidth: 60,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.source == "SMALL") {
@@ -757,7 +792,7 @@ const dataColumns = [
   {
     title: "失效时间",
     key: "effectiveEndTime",
-    minWidth: 100,
+    minWidth: 60,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.source == "SMALL") {
@@ -770,12 +805,12 @@ const dataColumns = [
   {
     title: "已领取统计",
     key: "receiveCount",
-    minWidth: 40
+    minWidth: 50
   },
   {
     title: "发券总数限制",
     key: "couponLimit",
-    minWidth: 50
+    minWidth: 60
   },
   {
     title: "操作",
@@ -1308,6 +1343,10 @@ export default {
       });
     },
     handleTemplateAdd() {
+      if (this.addRelationDetail.couponName == "") {
+        this.$Message.error("请先关联一张优惠券模板!");
+        return false;
+      }
       this.$refs.addForm.validate(valid => {
         if (valid) {
           if (

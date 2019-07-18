@@ -41,7 +41,7 @@
               type="primary"
               @click="handleSearch"
             >
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
               v-waves
@@ -50,7 +50,7 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除
+              <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
         </div>
@@ -62,7 +62,7 @@
             class="mr5"
             @click="addActivities"
           >
-            <Icon type="md-add"/> 添加
+            <Icon type="md-add" />添加
           </Button>
           <Poptip
             confirm
@@ -72,7 +72,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/> 批量删除
+              <Icon type="md-trash" />批量删除
             </Button>
           </Poptip>
         </div>
@@ -124,7 +124,12 @@
           <i-col span="24">
             <Row>
               <i-col span="6">活动状态:</i-col>
-              <i-col span="18">{{ activitiesDetail.onOff | imageStatusFilter }}</i-col>
+              <i-col span="18" v-if="activitiesDetail.onOff === 'ON'">
+                <tag color="success">{{ "开启" | imageStatusFilter }}</tag>
+              </i-col>
+              <i-col span="18" v-else-if="activitiesDetail.onOff === 'OFF'">
+                <tag color="error">{{ "关闭" | imageStatusFilter }}</tag>
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -147,7 +152,7 @@
         <i-col>{{ tempModalType===modalType.edit?'修改活动':'创建活动' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="activitiesDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="modalEdit" :model="activitiesDetail" :rules="ruleInline" :label-width="100">
           <Row>
             <Col span="18">
               <FormItem label="活动编码:" prop="activityCode">
@@ -232,7 +237,7 @@ export default {
   data() {
     return {
       ruleInline: {
-        activityCode: [{ required: true, message: "请输入活动编码1" }],
+        activityCode: [{ required: true, message: "请输入活动编码" }],
         activityName: [{ required: true, message: "请输入活动名称" }],
         onOff: [{ required: true, message: "请选择活动状态" }]
       },

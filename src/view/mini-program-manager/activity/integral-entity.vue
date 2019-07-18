@@ -284,7 +284,7 @@
             </Row>
             <Row>
               <i-col span="12">
-                <FormItem label="兑换说明：" prop="exchangeRemark" :label-width="100">
+                <FormItem label="兑换说明:" prop="exchangeRemark">
                   <Input
                     v-model="addRelationDetail.exchangeRemark"
                     type="textarea"
@@ -612,7 +612,7 @@ const proStandardColumns = [
   {
     title: "商品编号",
     key: "productCode",
-    minWidth: 100
+    minWidth: 120
   },
   {
     title: "商品名称",

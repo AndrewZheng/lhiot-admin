@@ -215,7 +215,7 @@ export default {
       },
       columns: [
         {
-          title: 'id',
+          title: 'ID',
           key: 'id',
           sortable: true,
           minWidth: 50

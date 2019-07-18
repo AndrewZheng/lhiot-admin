@@ -137,7 +137,19 @@
           <i-col span="24">
             <Row>
               <i-col span="6">优惠券类型:</i-col>
-              <i-col span="18">{{ couponTemplateDetail.couponType | couponTypeFilter }}</i-col>
+              <i-col span="16" v-if="couponTemplateDetail.couponType === 'FULL_CUT_COUPON'">
+                <tag color="magenta">{{ "满减券" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="couponTemplateDetail.couponType === 'DISCOUNT_COUPON'">
+                <tag color="orange">{{ "折扣券" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="couponTemplateDetail.couponType === 'CASH_COUPON'">
+                <tag color="cyan">{{ "现金券" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="couponTemplateDetail.couponType === 'FREIGHT_COUPON'">
+                <tag color="cyan">{{ "运费券" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="couponTemplateDetail.couponType === null">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -161,7 +173,13 @@
           <i-col span="24">
             <Row>
               <i-col span="6">优惠券状态:</i-col>
-              <i-col span="18">{{ couponTemplateDetail.couponStatus | couponStatusFilter }}</i-col>
+              <i-col span="16" v-if="couponTemplateDetail.couponStatus === 'VALID'">
+                <tag color="success">{{ "有效" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="couponTemplateDetail.couponStatus === 'INVALID'">
+                <tag color="error">{{ "无效" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="couponTemplateDetail.couponStatus === null">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -179,7 +197,16 @@
           <i-col span="24">
             <Row>
               <i-col span="6">使用范围:</i-col>
-              <i-col span="18">{{ couponTemplateDetail.couponScope | couponScopeFilter }}</i-col>
+              <i-col span="16" v-if="couponTemplateDetail.couponScope === 'STORE'">
+                <tag color="magenta">{{ "门店" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="couponTemplateDetail.couponScope === 'SMALL'">
+                <tag color="cyan">{{ "商城" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="couponTemplateDetail.couponScope === 'STORE_AND_SMALL'">
+                <tag color="orange">{{ "全场通用" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="couponTemplateDetail.couponScope === null">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -595,7 +622,8 @@ export default {
         },
         {
           title: "创建时间",
-          key: "createTime"
+          key: "createTime",
+          minWidth: 60
         },
         {
           title: "操作",
