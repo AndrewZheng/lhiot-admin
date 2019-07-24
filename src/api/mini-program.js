@@ -890,7 +890,6 @@ export const createSvipPackage = (data) => {
   });
 };
 
-
 // 查询SVIP套餐分页列表
 export const getSvipPackagePages = (data) => {
   return Vue.prototype.$http.request({
@@ -920,7 +919,63 @@ export const deleteSvipPackage = ({ ids }) => {
   });
 };
 
-// ------------------------
+// ———————————— 1.7版本 手动发券   ————————————— 
+
+//通过phones发放优惠券给对应用户
+export const handGrandCoupon = ({data}) =>{
+  return Vue.prototype.$http.request({
+    url: '/minapp/coupon-config-manage/send',
+    data,
+    method: 'post'
+  });
+};
+//根据id查询优惠券配置管理
+export const gitCouponPage= (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/coupon-config-manage/' + data.id,
+    data,
+    method: 'get'
+  });
+};
+
+//添添加优惠券配置管理
+export const createCouponPage = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/coupon-config-manage/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 查询优惠券配置管理分页列表
+export const getCouponPagess = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/coupon-config-manage/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+
+// 根据id更新优惠券配置管理
+export const editCouponPage = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/coupon-config-manage/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+
+// /minapp/coupon-config-manage/{ids}
+// 根据ids删除优惠券配置管理
+export const deleteCouponPage = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/coupon-config-manage/' + ids,
+    method: 'delete'
+  });
+};
 
 // 根据条件分页查询注册送礼活动与优惠券关联列表
 export const getRegisterRewardPages = (data) => {

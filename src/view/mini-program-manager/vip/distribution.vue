@@ -105,7 +105,7 @@
             <Row>
               <i-col span="8">优惠券类型:</i-col>
               <i-col span="16" v-if="addRelationDetail.couponType === 'FREIGHT_COUPON'">
-                <tag color="cyan">{{ "运费券" | couponTypeFilter }}</tag>
+                <tag color="blue">{{ "运费券" | couponTypeFilter }}</tag>
               </i-col>
             </Row>
           </i-col>
@@ -118,7 +118,7 @@
                 <tag color="gold">{{ addRelationDetail.svipLevel | vipStatusFilter }}</tag>
               </i-col>
               <i-col span="16" v-else>
-                <tag color="green">{{ addRelationDetail.svipLevel | vipStatusFilter }}</tag>
+                <tag color="silver">{{ addRelationDetail.svipLevel | vipStatusFilter }}</tag>
               </i-col>
             </Row>
           </i-col>
@@ -451,7 +451,7 @@
             </Row>
             <Row>
               <i-col span="12">
-                <FormItem label="券使用规则：" prop="couponRules" :label-width="110">
+                <FormItem label="券使用规则:" prop="couponRules" :label-width="103">
                   <Input
                     v-model="addRelationDetail.couponRules"
                     type="textarea"
@@ -768,7 +768,7 @@ const dataColumns = [
       if (row.couponType === "FREIGHT_COUPON") {
         return (
           <div>
-            <tag color="cyan">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color="blue">{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
       }
@@ -789,7 +789,7 @@ const dataColumns = [
       } else if (row.svipLevel === "TRY_SVIP") {
         return (
           <div>
-            <tag color="green">{vipTypeConvert(row.svipLevel).label}</tag>
+            <tag color="silver">{vipTypeConvert(row.svipLevel).label}</tag>
           </div>
         );
       }
@@ -1010,15 +1010,48 @@ export default {
         effectiveStartTime: [{ required: true, message: "请选择生效时间" }],
         effectiveEndTime: [{ required: true, message: "请选择失效时间" }],
         beginDay: [{ required: true, message: "请输入生效天数" }],
-        endDay: [{ required: true, message: "请输入失效天数" }],
         couponScope: [{ required: true, message: "请选择券使用范围" }],
         useLimitType: [{ required: true, message: "请选择券使用限制" }],
-        couponRules: [{ required: true, message: "请输入券使用规则" }],
         svipLevel: [{ required: true, message: "请选择会员身份" }],
         couponStatus: [{ required: true, message: "请选择优惠券状态" }],
-        couponName: [{ required: true, message: "请输入优惠券名称" }],
+        couponName: [
+          { required: true, message: "请输入优惠券名称" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (value.length > 20) {
+                errors.push(new Error("字数限制20字"));
+              }
+              callback(errors);
+            }
+          }
+        ],
         couponType: [{ required: true, message: "请选择优惠券类型" }],
         giftType: [{ required: true, message: "" }],
+        endDay: [
+          { required: true, message: "请输入失效天数" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-1-9]\d*$/.test(value)) {
+                errors.push(new Error("必须为非零整数"));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        couponRules: [
+          { required: false, message: "请输入券使用规则" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (value.length > 200) {
+                errors.push(new Error("字数限制200字"));
+              }
+              callback(errors);
+            }
+          }
+        ],
         points: [
           { required: true, message: "请输入兑换积分" },
           {
@@ -1097,7 +1130,7 @@ export default {
   },
   computed: {
     minBuyFeeComputed() {
-      return fenToYuanDot2Number(this.relationDetail.minBuyFee);
+      return fenToYuanDot2Number(this.addRelationDetail.minBuyFee);
     },
     systemCouponFixDate() {
       return (
@@ -1363,7 +1396,7 @@ export default {
       this.modalAdd = false;
     },
     minBuyFeeInputNumberOnchange(value) {
-      this.relationDetail.minBuyFee = yuanToFenNumber(value);
+      this.addRelationDetail.minBuyFee = yuanToFenNumber(value);
     },
     // 批量删除-单行删除内部也是调用此方法
     deleteTable(ids) {

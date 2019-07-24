@@ -125,7 +125,7 @@
                 <tag color="gold">{{ addRelationDetail.svipLevel | vipStatusFilter }}</tag>
               </i-col>
               <i-col span="16" v-else>
-                <tag color="green">{{ addRelationDetail.svipLevel | vipStatusFilter }}</tag>
+                <tag color="silver">{{ addRelationDetail.svipLevel | vipStatusFilter }}</tag>
               </i-col>
             </Row>
           </i-col>
@@ -575,7 +575,7 @@ const hdCouponTemplateDetail = {
   couponType: "",
   faceValue: 0,
   price: 0,
-  useRule: ""
+  useRule: "",
 };
 
 const roleRowData = {
@@ -593,7 +593,6 @@ const templateRowData = {
   rows: 5,
   svipLevel: "SVIP"
 };
-
 // all表示查全部，manual（手工发券），behavior（行为发券），scmaction（分销领券），
 // trans（交易发券），applet（小程序发券），mbrgrade（会员等级发券），
 // recharge（充值发券），component（第三方发券），precision（精准发券）
@@ -661,7 +660,7 @@ const dataColumns = [
       } else if (row.svipLevel === "TRY_SVIP") {
         return (
           <div>
-            <tag color="green">{vipTypeConvert(row.svipLevel).label}</tag>
+            <tag color="silver">{vipTypeConvert(row.svipLevel).label}</tag>
           </div>
         );
       }
@@ -992,14 +991,47 @@ export default {
         effectiveStartTime: [{ required: true, message: "请选择生效时间" }],
         effectiveEndTime: [{ required: true, message: "请选择失效时间" }],
         beginDay: [{ required: true, message: "请输入生效天数" }],
-        endDay: [{ required: true, message: "请输入失效天数" }],
+        endDay: [
+          { required: true, message: "请输入失效天数" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-1-9]\d*$/.test(value)) {
+                errors.push(new Error("必须为非零整数"));
+              }
+              callback(errors);
+            }
+          }
+        ],
         couponScope: [{ required: true, message: "请选择券使用范围" }],
-        couponRules: [{ required: true, message: "请输入券使用规则" }],
         couponDetail: [{ required: true, message: "请输入券详情" }],
         svipLevel: [{ required: true, message: "请选择会员身份" }],
         couponStatus: [{ required: true, message: "请选择优惠券状态" }],
-        couponName: [{ required: true, message: "请输入优惠券名称" }],
+        couponName: [
+          { required: true, message: "请输入优惠券名称" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (value.length > 20) {
+                errors.push(new Error("字数限制20字"));
+              }
+              callback(errors);
+            }
+          }
+        ],
         giftType: [{ required: true, message: "" }],
+        couponRules: [
+          { required: false, message: "请输入券使用规则" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (value.length > 200) {
+                errors.push(new Error("字数限制200字"));
+              }
+              callback(errors);
+            }
+          }
+        ],
         points: [
           { required: true, message: "请输入兑换积分" },
           {

@@ -109,7 +109,7 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
             <!-- 金额总计 -->
-            <div class="sum"> {{sum}}</div>
+            <div class="sum">金额总计：{{sum}}</div>
           </Row>
         </div>
       </tables>
@@ -244,8 +244,7 @@ const paymentLogDetail = {
   orderCode: "",
   startTime: null,
   endTime: null,
-  nickName: "",
-  sum: null
+  nickName: ""
 };
 
 const roleRowData = {
@@ -444,6 +443,7 @@ export default {
       this.modalView = true;
     },
     getTableData() {
+      let _this = this;
       getPaymentLogPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
@@ -458,24 +458,11 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
+      getPaymentLogSum(this.searchRowData).then(function(result) {
+        _this.sum = fenToYuanDot2(result);
+      });
     },
-    // 金额总计
-    getSum() {
-      getPaymentLogSum(this.searchRowData)
-        .then(res => {
-          this.tableData = res.sum;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch(error => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
-    },
+
     startTimeChange(value, date) {
       this.paymentLogDetail.startTime = value;
     },
@@ -488,12 +475,19 @@ export default {
 
 <style lang="scss" scoped>
 .sum {
-  float: right;
-  width: 200px;
-  height: 30px;
-  border: 1px solid #ccc;
+  float: left;
+  min-width: 125px;
+  height: 32px;
+  border: 1px solid #dcdee2;
   border-radius: 5px;
-  line-height: 30px;
-  padding-left: 15px;
+  line-height: 32px;
+  text-align: center;
+  padding: 0 10px;
+  margin-right: 5px;
+  color: red;
+  font-size: 14px
+}
+.sum:hover {
+  border: 1px solid #57a3f3;
 }
 </style>

@@ -804,7 +804,7 @@ export const addRnb = (number) => {
 
 export const addDay = (number) => {
   if (typeof number === 'number') {
-    return (number).toFixed(2) + " 天";
+    return (number) + " 天";
   }
   return number;
 };

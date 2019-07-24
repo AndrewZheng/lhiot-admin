@@ -442,11 +442,20 @@
           >
             <Row>
               <i-col span="6">
+                <FormItem label="优惠券名称:" prop="couponName">
+                  <Input
+                    v-model="addRelationDetail.couponName"
+                    clearable
+                    style="padding-right: 5px;width: 120px"
+                  ></Input>
+                </FormItem>
+              </i-col>
+              <i-col span="6">
                 <FormItem label="用户范围:" prop="userScope">
                   <Select
                     v-model="addRelationDetail.userScope"
                     placeholder="用户范围"
-                    style="padding-right: 5px;width: 120px"
+                    style="padding-right: 5px;width: 100px"
                   >
                     <Option
                       v-for="(item,index) in userScopeEnum"
@@ -521,7 +530,7 @@
                   </FormItem>
                 </i-col>
                 <i-col span="7">
-                  <FormItem label="失效时间:" prop="effectiveEndTime">
+                  <FormItem label="失效时间:" prop="effectiveEndTime" >
                     <DatePicker
                       :value="addRelationDetail.effectiveEndTime"
                       format="yyyy-MM-dd HH:mm:ss"
@@ -537,12 +546,12 @@
             <Row>
               <i-col span="6">
                 <FormItem label="兑换积分:" prop="points">
-                  <InputNumber :min="0" v-model="addRelationDetail.points" label="兑换积分"></InputNumber>
+                  <InputNumber :min="0" v-model="addRelationDetail.points" label="兑换积分" style="width: 115px"></InputNumber>
                 </FormItem>
               </i-col>
               <i-col span="6">
                 <FormItem label="促销积分:" prop="realPoints">
-                  <InputNumber :min="0" v-model="addRelationDetail.realPoints" label="促销积分"></InputNumber>
+                  <InputNumber :min="0" v-model="addRelationDetail.realPoints" label="促销积分" style="width: 95px"></InputNumber>
                 </FormItem>
               </i-col>
               <i-col span="6">
@@ -729,7 +738,7 @@
           </Row>
           <Row>
             <i-col span="6" v-if="addRelationDetail.source == 'SMALL'">
-              <FormItem label="券有效期:" prop="useLimitType" :label-width="100" >
+              <FormItem label="券有效期:" prop="useLimitType" :label-width="100">
                 <Select
                   v-model="addRelationDetail.validDateType"
                   placeholder="券有效期类型"
@@ -806,7 +815,11 @@
             </i-col>
             <i-col span="6">
               <FormItem label="促销积分:" prop="realPoints">
-                <InputNumber v-model="addRelationDetail.realPoints" label="促销积分" style="width: 160px"></InputNumber>
+                <InputNumber
+                  v-model="addRelationDetail.realPoints"
+                  label="促销积分"
+                  style="width: 160px"
+                ></InputNumber>
               </FormItem>
             </i-col>
             <i-col span="6">
@@ -1237,6 +1250,12 @@ const templateColumns = [
             <tag color="cyan">{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
+      } else if (row.couponType === "FREIGHT_COUPON") {
+        return (
+          <div>
+            <tag color="blue">{couponTypeConvert(row.couponType).label}</tag>
+          </div>
+        );
       }
       return <div>{row.couponType}</div>;
     }
@@ -1422,6 +1441,7 @@ export default {
         couponDetail: [{ required: true, message: "请输入券详情" }],
         couponReminderMsg: [{ required: true, message: "请输入券温馨提示" }],
         userScope: [{ required: true, message: "请选择用户范围" }],
+        couponName: [{ required: true, message: "请输入优惠券名称" }],
         points: [
           { required: true, message: "请输入兑换积分" },
           {

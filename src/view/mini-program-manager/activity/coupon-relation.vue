@@ -238,7 +238,7 @@
                   </Select>
                 </FormItem>
               </i-col>
-              <!-- <i-col span="6">
+              <i-col span="6">
                 <FormItem label="优惠券名称:" prop="couponName" :label-width="140">
                   <Input
                     v-model="addRelationDetail.couponName"
@@ -246,7 +246,7 @@
                     style="padding-right: 5px;width: 165px"
                   ></Input>
                 </FormItem>
-              </i-col> -->
+              </i-col>
             </Row>
             <Row>
               <i-col span="7" v-if="tempModalType=='addTemplate'">
@@ -342,7 +342,7 @@
             </Row>
             <Row>
               <i-col span="12">
-                <FormItem label="使用规则：" prop="couponRules">
+                <FormItem label="使用规则:" prop="couponRules">
                   <Input
                     v-model="addRelationDetail.couponRules"
                     type="textarea"
@@ -559,7 +559,7 @@ const relationDetail = {
   couponScope: null,
   useLimitType: null,
   hdActivityId: 0,
-  source: "SMALL" ,// 默认来源为系统优惠券
+  source: "SMALL", // 默认来源为系统优惠券
   userScope: "ALL"
 };
 
@@ -853,6 +853,12 @@ const templateColumns = [
         return (
           <div>
             <tag color="cyan">{couponTypeConvert(row.couponType).label}</tag>
+          </div>
+        );
+      } else if (row.couponType === "FREIGHT_COUPON") {
+        return (
+          <div>
+            <tag color="blue">{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
       }
@@ -1198,7 +1204,6 @@ export default {
       this.addRelationDetail.minBuyFee = currentRow.minBuyFee;
       this.addRelationDetail.couponStatus = currentRow.couponStatus;
       this.addRelationDetail.couponType = currentRow.couponType;
-      this.addRelationDetail.userScope = currentRow.userScope;
     },
     handleHdTemplateChange(currentRow, oldCurrentRow) {
       // 选中关联的优惠券模板冗余对应字段到配置对象中- 默认为最后选择的一条数据
@@ -1209,7 +1214,6 @@ export default {
       this.addRelationDetail.couponName = currentRow.couponName;
       this.addRelationDetail.couponType = currentRow.couponType;
       this.addRelationDetail.couponFee = currentRow.faceValue;
-      this.addRelationDetail.userScope = currentRow.userScope;
       if (currentRow.couponType === "DISCOUNT_COUPON") {
         const lastIndex = currentRow.couponName.indexOf("折");
         this.addRelationDetail.couponFee =

@@ -781,24 +781,49 @@ export const vipStatusEnum = [
 ];
 
 // svip套餐状态 (开启 ON,关闭 OFF,未开启 NOTOPEN,已结束 OVER))
+export const packageStatus = {
+  OFF: 'OFF',
+  ON: 'ON',
+  OVER:'OVER',
+  NOTOPEN:'NOTOPEN'
+}
+
 export const packageStatusEnum = [
-  {
+    {
     label: '关闭',
-    value: "OFF"
+    value: packageStatus.OFF
   },
   {
     label: '开启',
-    value: "ON"
+    value: packageStatus.ON
   },
-  // {
-  //   label: '已结束',
-  //   value: "OVER"
-  // },
-  // {
-  //   label: '未开启',
-  //   value: "NOTOPEN"
-  // }
+  {
+    label: '已结束',
+    value: packageStatus.OVER
+  },
+  {
+    label: '未开启',
+    value: packageStatus.NOTOPEN
+  }
 ]
+// export const packageStatusEnum = [
+//   {
+//     label: '关闭',
+//     value: "OFF"
+//   },
+//   {
+//     label: '开启',
+//     value: "ON"
+//   },
+//   // {
+//   //   label: '已结束',
+//   //   value: "OVER"
+//   // },
+//   // {
+//   //   label: '未开启',
+//   //   value: "NOTOPEN"
+//   // }
+// ]
 
 
 // SVIP套餐类型对应枚举：套餐类型(月卡、MONTH_CARD 季卡、SEASON 年卡、YEAR_CARD)

@@ -320,7 +320,7 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-
+    <!-- 添加 -->
     <Modal v-model="modalEdit" :mask-closable="false" :width="700">
       <p slot="header">
         <span>{{ productStandardDetail.id >0?'创建商品规格':'编辑商品规格' }}</span>
@@ -1440,10 +1440,6 @@ export default {
         if (valid) {
           if (!this.productStandardDetail.salePrice) {
             this.$Message.error("请输入售卖价格");
-            return;
-          }
-          if (!this.productStandardDetail.svipPrice) {
-            this.$Message.error("请输入SVIP价格");
             return;
           }
           if (this.productStandardDetail.salePrice < 0) {

@@ -346,7 +346,7 @@
           >
             <Row>
               <i-col span="6" v-if="tempModalType == 'addTemplate'">
-                <FormItem label="券有效期:" prop="useLimitType">
+                <FormItem label="券有效期:" prop="validDateType">
                   <Select
                     v-model="addRelationDetail.validDateType"
                     placeholder="券有效期类型"
@@ -1004,9 +1004,13 @@ const dataColumns = [
     minWidth: 50,
     render: (h, params, vm) => {
       const { row } = params;
-
-      if (row.source == "SMALL") {
+      if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
         return <div>{row.effectiveStartTime}</div>;
+      } else if (
+        row.source == "SMALL" &&
+        row.validDateType === "UN_FIXED_DATE"
+      ) {
+        return <div>{row.beginDay}</div>;
       } else {
         return <div>N/A</div>;
       }
@@ -1018,8 +1022,13 @@ const dataColumns = [
     minWidth: 50,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == "SMALL") {
+      if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
         return <div>{row.effectiveEndTime}</div>;
+      } else if (
+        row.source == "SMALL" &&
+        row.validDateType === "UN_FIXED_DATE"
+      ) {
+        return <div>{row.endDay}</div>;
       } else {
         return <div>N/A</div>;
       }
@@ -1076,6 +1085,12 @@ const templateColumns = [
         return (
           <div>
             <tag color="cyan">{couponTypeConvert(row.couponType).label}</tag>
+          </div>
+        );
+      } else if (row.couponType === "FREIGHT_COUPON") {
+        return (
+          <div>
+            <tag color="blue">{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
       }
@@ -1262,9 +1277,31 @@ export default {
         effectiveEndTime: [{ required: true, message: "请选择失效时间" }],
         couponStatus: [{ required: true, message: "请选择优惠券状态" }],
         couponType: [{ required: true, message: "请选择优惠券类型" }],
-        couponName: [{ required: true, message: "请输入优惠券名称" }],
+        couponName: [
+          { required: true, message: "请输入优惠券名称" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (value.length > 20) {
+                errors.push(new Error("字数限制20字"));
+              }
+              callback(errors);
+            }
+          }
+        ],
         couponScope: [{ required: true, message: "请选择券使用范围" }],
-        couponRules: [{ required: true, message: "请输入券使用规则" }],
+        couponRules: [
+          { required: true, message: "请输入券使用规则" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (value.length > 200) {
+                errors.push(new Error("字数限制200字"));
+              }
+              callback(errors);
+            }
+          }
+        ],
         couponLimit: [
           { required: true, message: "请输入发券限制数量" },
           {
@@ -1281,12 +1318,34 @@ export default {
       relationRuleInline: {
         effectiveStartTime: [{ required: true, message: "请选择生效时间" }],
         effectiveEndTime: [{ required: true, message: "请选择失效时间" }],
-        couponName: [{ required: true, message: "请输入优惠券名称" }],
+        couponName: [
+          { required: true, message: "请输入优惠券名称" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (value.length > 20) {
+                errors.push(new Error("字数限制20字"));
+              }
+              callback(errors);
+            }
+          }
+        ],
         couponStatus: [{ required: true, message: "请选择优惠券状态" }],
         couponType: [{ required: true, message: "请选择优惠券类型" }],
         couponScope: [{ required: true, message: "请选择券使用范围" }],
         useLimitType: [{ required: true, message: "请选择券使用限制" }],
-        couponRules: [{ required: true, message: "请输入券使用规则" }],
+        couponRules: [
+          { required: true, message: "请输入券使用规则" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (value.length > 200) {
+                errors.push(new Error("字数限制200字"));
+              }
+              callback(errors);
+            }
+          }
+        ],
         couponLimit: [
           { required: true, message: "请输入发券限制数量" },
           {

@@ -49,6 +49,12 @@ const mixin = {
       }
       return number;
     },
+    fenToYuanDot2Filterss(number) {
+      if (typeof number === 'number') {
+        return (number / 100.00).toFixed(2);
+      }
+      return number;
+    },
     fenToDiscountFilters(number) {
       if (typeof number === 'number') {
         return (number / 10.0).toFixed(1) + '折';

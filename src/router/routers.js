@@ -829,7 +829,16 @@ export const asyncRouterMap = [
           title: '限时抢购管理'
         },
         component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
-      },      
+      },   
+      {
+        path: '/small-hand-coupon',
+        name: 'small-hand-coupon',
+        meta: {
+          icon: 'ios-settings',
+          title: '手动发券管理'
+        },
+        component: () => import('@/view/mini-program-manager/activity/hand-coupon.vue')
+      },       
       {
         path: '/small-coupon-templates',
         name: 'small-coupon-templates',
@@ -1055,6 +1064,15 @@ export const asyncRouterMap = [
     component: Main,
     children: [
       {
+        path: '/small-opensvip',
+        name: 'small-opensvip',
+        meta: {
+          icon: 'md-flash',
+          title: 'svip套餐'
+        },
+        component: () => import('@/view/mini-program-manager/vip/opensvip.vue')
+      },
+      {
         path: '/small-souvenir',
         name: 'small-souvenir',
         meta: {
@@ -1062,15 +1080,6 @@ export const asyncRouterMap = [
           title: '开卡礼包'
         },
         component: () => import('@/view/mini-program-manager/vip/souvenir.vue')
-      },
-      {
-        path: '/small-distribution',
-        name: 'small-distribution',
-        meta: {
-          icon: 'md-bus',
-          title: '省心配送券活动'
-        },
-        component: () => import('@/view/mini-program-manager/vip/distribution.vue')
       },
       {
         path: '/small-privilege',
@@ -1082,13 +1091,13 @@ export const asyncRouterMap = [
         component: () => import('@/view/mini-program-manager/vip/privilege.vue')
       },
       {
-        path: '/small-opensvip',
-        name: 'small-opensvip',
+        path: '/small-distribution',
+        name: 'small-distribution',
         meta: {
-          icon: 'md-flash',
-          title: 'svip套餐'
+          icon: 'md-bus',
+          title: '省心配送券活动'
         },
-        component: () => import('@/view/mini-program-manager/vip/opensvip.vue')
+        component: () => import('@/view/mini-program-manager/vip/distribution.vue')
       },
     ]
   },

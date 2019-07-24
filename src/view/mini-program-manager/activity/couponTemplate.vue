@@ -147,7 +147,7 @@
                 <tag color="cyan">{{ "现金券" }}</tag>
               </i-col>
               <i-col span="16" v-else-if="couponTemplateDetail.couponType === 'FREIGHT_COUPON'">
-                <tag color="cyan">{{ "运费券" }}</tag>
+                <tag color="blue">{{ "运费券" }}</tag>
               </i-col>
               <i-col span="16" v-else-if="couponTemplateDetail.couponType === null">{{ "N/A" }}</i-col>
             </Row>
@@ -513,7 +513,7 @@ export default {
             } else if (row.couponType === "FREIGHT_COUPON") {
               return (
                 <div>
-                  <tag color="cyan">
+                  <tag color="blue">
                     {couponTypeConvert(row.couponType).label}
                   </tag>
                 </div>

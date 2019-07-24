@@ -590,9 +590,42 @@ export default {
   data() {
     return {
       ruleInline: {
-        activityName: [{ required: true, message: "请输入活动名称" }],
-        activityRule: [{ required: true, message: "请输入活动规则" }],
-        onOff: [{ required: true, message: "请选择活动状态" }],
+        activityName: [
+          { required: true, message: "请输入活动名称" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (value.length > 20) {
+                errors.push(new Error("字数限制20字"));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        activityRule: [
+          { required: true, message: "请输入活动规则" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (value.length > 200) {
+                errors.push(new Error("字数限制200字"));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        onOff: [
+          { required: true, message: "请选择活动状态" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (value.length > 200) {
+                errors.push(new Error("字数限制200字"));
+              }
+              callback(errors);
+            }
+          }
+        ],
         beginTime: [{ required: true, message: "请选择活动开始时间" }],
         endTime: [{ required: true, message: "请选择活动结束时间" }]
       },
