@@ -164,13 +164,13 @@
           <i-col span="12">
             <Row>
               <i-col span="8">已发放:</i-col>
-              <i-col span="16">{{ addRelationDetail.receiveCount }}</i-col>
+              <i-col span="16">{{ yetgrant }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
               <i-col span="8">已使用:</i-col>
-              <i-col span="16">{{ addRelationDetail.receiveCount }}</i-col>
+              <i-col span="16">{{ issued }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -488,6 +488,7 @@ import Tables from "_c/tables";
 import IViewUpload from "_c/iview-upload";
 import _ from "lodash";
 import {
+  getSvipGift,
   getSvipGiftPages,
   deleteSvipGift,
   createSvipGift,
@@ -575,7 +576,7 @@ const hdCouponTemplateDetail = {
   couponType: "",
   faceValue: 0,
   price: 0,
-  useRule: "",
+  useRule: ""
 };
 
 const roleRowData = {
@@ -1109,7 +1110,9 @@ export default {
       hdCouponTemplateData: [],
       couponTemplateTotal: 0,
       couponHdTemplateTotal: 0,
-      modalAdd: false
+      modalAdd: false,
+      yetgrant: "",
+      issued: ""
     };
   },
   computed: {
@@ -1239,6 +1242,17 @@ export default {
         })
         .finally(res => {
           this.tempTableLoading = false;
+        });
+    },
+    getSvipGift() {
+      getSvipGift(this.addRelationDetail)
+        .then(res => {
+          let couponDetail = res;
+          this.yetgrant = couponDetail.couponStatusTotal.TOTAL;
+          this.issued = couponDetail.couponStatusTotal.USED;
+        })
+        .catch(() => {
+          this.loading = false;
         });
     },
     replaceTextByTab() {
@@ -1415,6 +1429,7 @@ export default {
       this.addRelationDetail = _.cloneDeep(params.row);
       this.replaceTextByTab();
       this.modalView = true;
+      this.getSvipGift();
     },
     handleAddClose() {
       this.modalAdd = false;

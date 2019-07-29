@@ -827,11 +827,9 @@ export const deleteRegisterGift = ({ ids }) => {
 export const getSvipGift = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/svip-gift-coupon-setting/' + data.id,
-    data,
     method: 'get'
   });
 };
-
 //添加付费会员礼包券配置
 export const createSvipGift = (data) => {
   return Vue.prototype.$http.request({
@@ -910,7 +908,6 @@ export const editSvipPackage = (data) => {
   });
 };
 
-
 //根据ids删除SVIP套餐
 export const deleteSvipPackage = ({ ids }) => {
   return Vue.prototype.$http.request({
@@ -919,13 +916,12 @@ export const deleteSvipPackage = ({ ids }) => {
   });
 };
 
-// ———————————— 1.7版本 手动发券   ————————————— 
+// ————————————   1.7版本 手动发券   ————————————— 
 
 //通过phones发放优惠券给对应用户
-export const handGrandCoupon = ({data}) =>{
+export const handGrandCoupon = (data) =>{
   return Vue.prototype.$http.request({
-    url: '/minapp/coupon-config-manage/send',
-    data,
+    url: `/minapp/coupon-config-manage/send?phones=${data.phones}&id=${data.id}`,
     method: 'post'
   });
 };
@@ -1017,6 +1013,15 @@ export const editRegisterReward = (data) => {
 export const getOrderPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/orders/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+//查询订单用券信息
+export const getOrderCouponDetails = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/orders/coupon-use-info',
     data,
     method: 'post',
     headers: { 'page': data.page, 'rows': data.rows }

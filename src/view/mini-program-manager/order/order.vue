@@ -24,7 +24,7 @@
               v-model="searchRowData.orderCode"
               placeholder="订单编码"
               class="search-input mr5"
-              style="width: 100px"
+              style="width: 90px"
               clearable
             ></Input>
             <Input
@@ -37,7 +37,7 @@
             <Select
               v-model="searchRowData.apply"
               :clearable="true"
-              style="padding-right: 5px;width: 120px"
+              style="padding-right: 5px;width: 100px"
               placeholder="应用类型"
             >
               <Option
@@ -66,7 +66,7 @@
               v-model="searchRowData.receivingWay"
               class="search-col mr5"
               placeholder="提货方式"
-              style="width: 100px"
+              style="width: 90px"
               clearable
             >
               <Option
@@ -94,7 +94,7 @@
               v-model="searchRowData.hdStatus"
               class="search-col mr5"
               placeholder="海鼎状态"
-              style="width: 100px"
+              style="width: 80px"
               clearable
             >
               <Option
@@ -110,7 +110,7 @@
               type="datetime"
               placeholder="开始时间"
               class="mr5"
-              style="width: 160px"
+              style="width: 150px"
               @on-change="startTimeChange"
             />
             <i>-</i>
@@ -120,7 +120,7 @@
               type="datetime"
               placeholder="结束时间"
               class="mr5"
-              style="width: 160px"
+              style="width: 150px"
               @on-change="endTimeChange"
             />
             <Button
@@ -143,24 +143,32 @@
             </Button>
           </Row>
         </div>
-        <div slot="operations">
+        <div slot="operations" style="margin-left:-50px">
           <Button
             v-waves
             :loading="deliverOrderLoading"
-            class="search-btn mr5"
+            class="search-btn mr2"
             type="warning"
             @click="deliverOrder"
           >门店调货</Button>
-          <Button v-waves class="search-btn ml5 mr5" type="primary" @click="resendToHd">海鼎重发</Button>
+          <Button v-waves class="search-btn ml2 mr2" type="primary" @click="resendToHd">海鼎重发</Button>
           <!-- 多类型导出 -->
           <!-- <BookTypeOption v-model="exportType" class="mr5"/> -->
           <Button
             :loading="downloadLoading"
-            class="search-btn mr5"
+            class="search-btn mr2"
             type="primary"
             @click="handleDownload"
           >
             <Icon type="md-download" />导出
+          </Button>
+          <Button
+            :loading="downloadLoading"
+            class="search-btn"
+            type="primary"
+            @click="couponDetails"
+          >
+            <Icon type="md-search" />&nbsp;用券数据
           </Button>
           <!-- <Poptip
             confirm
@@ -188,7 +196,6 @@
         </Row>
       </div>
     </Card>
-
     <!--查看订单详情-->
     <Modal v-model="modalView" :width="750" :mask-closable="false">
       <p slot="header">
@@ -354,29 +361,29 @@
           style="background: lightgray;margin-bottom: 10px"
         >
           <Row>
-            <i-col span="24">
+            <i-col span="16">
               <Row class="mb10 pl10 pt5">
-                <i-col span="8">收货地址:</i-col>
-                <i-col span="16">
-                  {{ orderDetail.address +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+ orderDetail.receiveUser +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+
-                  orderDetail.contactPhone }}
-                </i-col>
+                <i-col span="4">收货地址:</i-col>
+                <i-col span="18">{{ shippingAddress }}</i-col>
               </Row>
             </i-col>
           </Row>
           <Row>
-            <i-col span="12">
+            <i-col span="16">
               <Row class-name="mb10">
-                <i-col span="8">配送时间段:</i-col>
+                <i-col span="4">配送时间段:</i-col>
                 <i-col
-                  span="16"
-                >{{ orderDetail.deliverTime.startTime + '- ' + orderDetail.deliverTime.endTime }}</i-col>
+                  span="18"
+                  class="pl10"
+                >{{ orderDetail.deliverTime.startTime + ' - ' + orderDetail.deliverTime.endTime }}</i-col>
               </Row>
             </i-col>
-            <i-col span="12">
-              <Row class-name="mb10">
-                <i-col span="8">配送状态:</i-col>
-                <i-col span="16">{{ orderDetail.deliverTime.status | deliverStatusFilter }}</i-col>
+          </Row>
+          <Row>
+            <i-col span="16">
+              <Row class-name="mb10 pl10">
+                <i-col span="4">配送状态:</i-col>
+                <i-col span="18">{{ orderDetail.deliverTime.status | deliverStatusFilter }}</i-col>
               </Row>
             </i-col>
           </Row>
@@ -404,7 +411,7 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-
+    <!-- 订单调货 -->
     <Modal v-model="transferModalView">
       <p slot="header">
         <span>订单调货</span>
@@ -488,6 +495,7 @@
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
 import {
+  getOrderCouponDetails,
   getOrderPages,
   getOrder,
   getStorePages,
@@ -591,6 +599,7 @@ export default {
       miniOrderStatus,
       miniHdStatusEnum,
       miniHdStatus,
+      shippingAddress: "",
       tempColumnsView: [
         {
           title: "配送方",
@@ -786,6 +795,21 @@ export default {
             const amount = fenToYuanDot2(params.row.amountPayable);
             return <div>{amount}</div>;
           }
+        },
+        {
+          title: "商品名称",
+          width: 150,
+          key: "productNames"
+        },
+        {
+          title: "活动名称",
+          width: 120,
+          key: "activityTeambuyContent"
+        },
+        {
+          title: "券名称",
+          width: 120,
+          key: "couponName"
         },
         {
           title: "提货类型",
@@ -1031,6 +1055,7 @@ export default {
     },
     onCurrentChange(currentRow, oldCurrentRow) {
       this.currentTableRowSelected = currentRow;
+      console.log(this.currentTableRowSelected)
     },
     resetSearchRowData() {
       this.clearSearchLoading = true;
@@ -1039,9 +1064,12 @@ export default {
     },
     handleView(params) {
       this.loading = true;
+
       getOrder({ orderCode: params.row.code })
         .then(res => {
           this.orderDetail = res;
+          let addresss = JSON.parse(this.orderDetail.address);
+          this.shippingAddress = addresss.address + addresss.detailedAddress;
           if (
             this.orderDetail != null &&
             this.orderDetail.deliverTime != "" &&
@@ -1058,6 +1086,11 @@ export default {
         .catch(() => {
           this.loading = false;
         });
+    },
+    couponDetails(params) {
+      this.turnToPage({
+        name: "small-order-coupon-details"
+      });
     },
     getTableData() {
       this.loading = true;
@@ -1140,22 +1173,24 @@ export default {
         this.tableDataSelected.filter(value => {
           tempDeleteList.push(value.id);
         });
-        const ids = tempDeleteList.join(',');
-        resendToHd({ ids: ids }).then(res => {
-          let { disqualification, failure } = res;
-          if(failure.length === 0){
-            this.$Message.info('海鼎重发成功');
-          }else{
-            let lst= failure.join(',');
-            this.$Message.error({
+        const ids = tempDeleteList.join(",");
+        resendToHd({ ids: ids })
+          .then(res => {
+            let { disqualification, failure } = res;
+            if (failure.length === 0) {
+              this.$Message.info("海鼎重发成功");
+            } else {
+              let lst = failure.join(",");
+              this.$Message.error({
                 content: `海鼎重发失败订单：${lst}`,
                 duration: 30,
                 closable: true
-            });
-          }
-        }).catch(error => {
-          console.log(error);
-        });
+              });
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
       }
     },
     onSelectionAll(selection) {

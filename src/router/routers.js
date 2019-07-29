@@ -200,6 +200,14 @@ export const constantRouterMap = [
           title: '活动关联优惠券模板'
         },
         component: () => import('@/view/mini-program-manager/vip/activities-associated.vue')
+      },{
+        path: 'small-order-coupon-details',
+        name: 'small-order-coupon-details',
+        meta: {
+          icon: 'md-menu',
+          title: '用券数据'
+        },
+        component: () => import('@/view/mini-program-manager/order/coupon-details.vue')
       }
     ]
   },

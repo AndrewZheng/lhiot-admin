@@ -484,10 +484,10 @@ export default {
   text-align: center;
   padding: 0 10px;
   margin-right: 5px;
-  color: red;
-  font-size: 14px
+  font-size: 14px;
 }
 .sum:hover {
   border: 1px solid #57a3f3;
+  color: red;
 }
 </style>

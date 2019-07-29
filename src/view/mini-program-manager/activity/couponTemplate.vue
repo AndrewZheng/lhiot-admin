@@ -157,7 +157,8 @@
           <i-col span="24">
             <Row>
               <i-col span="6">优惠金额:</i-col>
-              <i-col span="18">{{ couponTemplateDetail.couponFee | fenToYuanDot2Filters }}</i-col>
+              <i-col span="18" v-if="couponTemplateDetail.couponType==='FREIGHT_COUPON'">{{ "N/A" }}</i-col>
+              <i-col span="18" v-else>{{ couponTemplateDetail.couponFee | fenToYuanDot2Filters }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -241,7 +242,7 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-
+    <!-- 添加运费券模板 -->
     <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000">
       <p slot="header">
         <i-col>{{ tempModalType===modalType.edit?'修改优惠券模板':'创建优惠券模板' }}</i-col>
@@ -270,7 +271,7 @@
               </FormItem>
             </Col>
           </Row>
-          <Row>
+          <Row v-if="this.couponTemplateDetail.couponType!='FREIGHT_COUPON'">
             <Col span="18">
               <FormItem label="优惠金额:" prop="couponFee" :label-width="100">
                 <InputNumber
@@ -446,7 +447,7 @@ export default {
           { required: true, message: "请输入优惠金额" },
           {
             message: "必须为大于0的数字",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+            pattern: /([0-9]\d*(\.\d*[0-9])?)|(\d*[0-9])$/
           }
         ],
         minBuyFee: [
@@ -528,7 +529,9 @@ export default {
           minWidth: 60,
           render(h, params) {
             const { row } = params;
-            if (row.couponType === "DISCOUNT_COUPON") {
+            if (row.couponType === "FREIGHT_COUPON") {
+              return <div>N/A</div>;
+            } else if (row.couponType === "DISCOUNT_COUPON") {
               return (
                 <div>{fenToYuanDot2Number(row.couponFee) * 10 + "折"}</div>
               );
