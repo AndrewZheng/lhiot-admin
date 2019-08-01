@@ -14,6 +14,7 @@
         highlight-row
         search-place="top"
         @on-view="handleView"
+        @on-hand="handleReimburse"
         @on-current-change="onCurrentChange"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
@@ -80,7 +81,7 @@
               v-model="searchRowData.status"
               class="search-col mr5"
               placeholder="订单状态"
-              style="width: 100px"
+              style="width: 90px"
               clearable
             >
               <Option
@@ -94,7 +95,7 @@
               v-model="searchRowData.hdStatus"
               class="search-col mr5"
               placeholder="海鼎状态"
-              style="width: 80px"
+              style="width: 90px"
               clearable
             >
               <Option
@@ -362,8 +363,8 @@
         >
           <Row>
             <i-col span="16">
-              <Row class="mb10 pl10 pt5">
-                <i-col span="4">收货地址:</i-col>
+              <Row class="mb10 pt5">
+                <i-col span="6">收货地址:</i-col>
                 <i-col span="18">{{ shippingAddress }}</i-col>
               </Row>
             </i-col>
@@ -371,35 +372,65 @@
           <Row>
             <i-col span="16">
               <Row class-name="mb10">
-                <i-col span="4">配送时间段:</i-col>
+                <i-col span="6">配送时间段:</i-col>
                 <i-col
                   span="18"
-                  class="pl10"
                 >{{ orderDetail.deliverTime.startTime + ' - ' + orderDetail.deliverTime.endTime }}</i-col>
               </Row>
             </i-col>
           </Row>
           <Row>
             <i-col span="16">
-              <Row class-name="mb10 pl10">
-                <i-col span="4">配送状态:</i-col>
-                <i-col span="18">{{ orderDetail.deliverTime.status | deliverStatusFilter }}</i-col>
+              <Row class-name="mb10">
+                <i-col span="6">配送状态:</i-col>
+                <i-col
+                  span="18"
+                  v-if="orderDetail.deliverNote != null && deliveryStatus === 'TRANSFERING'"
+                >{{ "配送中" }}</i-col>
+                <i-col
+                  span="18"
+                  v-else-if="orderDetail.deliverNote != null && deliveryStatus === 'DONE'"
+                >{{ "配送完成" }}</i-col>
+                <i-col
+                  span="18"
+                  v-else-if="orderDetail.deliverNote != null && deliveryStatus === 'FAILURE'"
+                >{{ "配送失败" }}</i-col>
+                <i-col
+                  span="18"
+                  v-else-if="orderDetail.deliverNote != null && deliveryStatus === 'UNRECEIVE'"
+                >{{ "未接单" }}</i-col>
+                <i-col
+                  span="18"
+                  v-else-if="orderDetail.deliverNote != null && deliveryStatus === 'WAIT_GET'"
+                >{{ "待取货" }}</i-col>
+                <i-col span="8" v-else>{{ "N/A" }}</i-col>
               </Row>
             </i-col>
           </Row>
-          <Row>
-            <i-col span="12">
-              <Row class-name="mb10">
-                <i-col span="8">配送距离(km):</i-col>
-                <i-col span="16">{{ orderDetail.distance }}</i-col>
-              </Row>
-            </i-col>
-            <i-col span="12">
-              <Row class-name="mb10">
-                <i-col span="8">配送重量:</i-col>
-                <i-col span="16">{{ orderDetail.weight }}</i-col>
-              </Row>
-            </i-col>
+          <Row span="16" class-name="mb10">
+            <i-col span="4">配送距离(km):</i-col>
+            <i-col
+              span="8"
+              v-if="orderDetail.deliverNote != null && distance != null"
+            >{{ distance }}</i-col>
+            <i-col span="8" v-else>{{ "N/A" }}</i-col>
+            <i-col span="4">配送重量(kg):</i-col>
+            <i-col span="8" v-if="orderDetail.deliverNote != null && weight != null">{{ weight }}</i-col>
+            <i-col span="8" v-else>{{ "N/A" }}</i-col>
+          </Row>
+          <Row span="16" class-name="mb10">
+            <i-col span="4">配送员姓名:</i-col>
+            <i-col
+              span="8"
+              v-if="orderDetail.deliverNote != null && deliverName != null"
+            >{{ deliverName }}</i-col>
+            <i-col span="8" v-else>{{ "N/A" }}</i-col>
+            <i-col span="4">配送员电话:</i-col>
+            <i-col
+              span="8"
+              v-if="orderDetail.deliverNote != null && deliverPhone != null"
+            >{{ deliverPhone }}</i-col>
+            <i-col span="8" v-else>{{ "N/A" }}</i-col>
           </Row>
         </Row>
 
@@ -501,7 +532,9 @@ import {
   getStorePages,
   modifyStoreInOrder,
   resendToHd,
-  ordersRefund
+  ordersRefund,
+  refundWx,
+  refundPt
 } from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
@@ -600,6 +633,11 @@ export default {
       miniHdStatusEnum,
       miniHdStatus,
       shippingAddress: "",
+      deliveryStatus: "",
+      weight: "",
+      distance: "",
+      deliverName: "",
+      deliverPhone: "",
       tempColumnsView: [
         {
           title: "配送方",
@@ -960,7 +998,7 @@ export default {
           title: "操作",
           minWidth: 150,
           key: "handle",
-          options: ["view"]
+          options: ["view", "onHand"]
         }
       ],
       currentTableRowSelected: null,
@@ -1004,6 +1042,46 @@ export default {
         this.resetSearchRowData();
       });
     },
+    handleReimburse(params) {
+      if (params.row.orderStatus === "RETURNING") {
+        this.$Message.error("退货中订单不能操作退款");
+        return;
+      }
+      if (params.row.orderStatus === "ALREADY_RETURN") {
+        this.$Message.error("退货完成订单不能操作退款");
+        return;
+      }
+      if (params.row.orderStatus === "FAILURE") {
+        this.$Message.error("已失效的订单不能操作退款");
+        return;
+      }
+      if (params.row.orderType === "POINTS_BUYING") {
+        this.$Message.error("积分兑换的订单不能操作退款");
+        return;
+      }
+      if (params.row.apply === "S_MALL") {
+        refundPt({ orderCode: params.row.code })
+          .then(res => {
+            this.loading = false;
+            this.$Message.success("拼团小程序退款成功");
+            this.getTableData();
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+      } else if (params.row.apply === "WXSMALL_SHOP") {
+        refundWx({ orderCode: params.row.code })
+          .then(res => {
+            this.loading = false;
+            this.$Message.success("微信小程序退款成功");
+            this.getTableData();
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+      }
+    },
+
     handleSubmit() {
       if (!this.currentTableRowSelected) {
         this.$Message.error(
@@ -1055,7 +1133,7 @@ export default {
     },
     onCurrentChange(currentRow, oldCurrentRow) {
       this.currentTableRowSelected = currentRow;
-      console.log(this.currentTableRowSelected)
+      // console.log(this.currentTableRowSelected);
     },
     resetSearchRowData() {
       this.clearSearchLoading = true;
@@ -1064,12 +1142,30 @@ export default {
     },
     handleView(params) {
       this.loading = true;
-
       getOrder({ orderCode: params.row.code })
         .then(res => {
           this.orderDetail = res;
-          let addresss = JSON.parse(this.orderDetail.address);
-          this.shippingAddress = addresss.address + addresss.detailedAddress;
+          let addresss = "";
+          if (
+            this.orderDetail.receivingWay === "TO_THE_HOME" &&
+            this.orderDetail.receivingWay != null
+          ) {
+            if (this.orderDetail.address.substr(0, 1) === "{") {
+              addresss = JSON.parse(this.orderDetail.address);
+              this.shippingAddress =
+                addresss.address + addresss.detailedAddress;
+            }
+          }
+          if (
+            this.orderDetail.receivingWay === "TO_THE_HOME" &&
+            this.orderDetail.deliverNote != null
+          ) {
+            this.deliveryStatus = this.orderDetail.deliverNote.deliverStatus;
+            this.distance = this.orderDetail.deliverNote.distance;
+            this.weight = this.orderDetail.deliverNote.weight;
+            this.deliverName = this.orderDetail.deliverNote.deliverName;
+            this.deliverPhone = this.orderDetail.deliverNote.deliverPhone;
+          }
           if (
             this.orderDetail != null &&
             this.orderDetail.deliverTime != "" &&

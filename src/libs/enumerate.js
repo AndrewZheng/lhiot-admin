@@ -784,8 +784,8 @@ export const vipStatusEnum = [
 export const packageStatus = {
   OFF: 'OFF',
   ON: 'ON',
-  OVER:'OVER',
-  NOTOPEN:'NOTOPEN'
+  // OVER:'OVER',
+  // NOTOPEN:'NOTOPEN'
 }
 
 export const packageStatusEnum = [
@@ -797,14 +797,14 @@ export const packageStatusEnum = [
     label: '开启',
     value: packageStatus.ON
   },
-  {
-    label: '已结束',
-    value: packageStatus.OVER
-  },
-  {
-    label: '未开启',
-    value: packageStatus.NOTOPEN
-  }
+  // {
+  //   label: '已结束',
+  //   value: packageStatus.OVER
+  // },
+  // {
+  //   label: '未开启',
+  //   value: packageStatus.NOTOPEN
+  // }
 ]
 // export const packageStatusEnum = [
 //   {

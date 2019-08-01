@@ -523,7 +523,8 @@ import {
   fenToYuanDot2Number,
   yuanToFenNumber,
   replaceByTag,
-  replaceByTab
+  replaceByTab,
+  HdDiscount
 } from "@/libs/util";
 
 const relationDetail = {
@@ -676,7 +677,7 @@ const dataColumns = [
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{fenToYuanDot2Number(row.couponFee) * 10 + "折"}</div>;
+        return <div>{(row.couponFee) / 10 + "折"}</div>;
       } else {
         return <div>{fenToYuanDot2(params.row.couponFee)}</div>;
       }
@@ -796,91 +797,6 @@ const dataColumns = [
 ];
 
 const templateColumns = [
-  {
-    type: "index",
-    width: 60,
-    align: "center"
-  },
-  {
-    title: "优惠券名称",
-    key: "couponName",
-    minWidth: 80
-  },
-  {
-    title: "优惠券类型",
-    key: "couponType",
-    minWidth: 80,
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (row.couponType === "FULL_CUT_COUPON") {
-        return (
-          <div>
-            <tag color="magenta">{couponTypeConvert(row.couponType).label}</tag>
-          </div>
-        );
-      } else if (row.couponType === "DISCOUNT_COUPON") {
-        return (
-          <div>
-            <tag color="orange">{couponTypeConvert(row.couponType).label}</tag>
-          </div>
-        );
-      } else if (row.couponType === "CASH_COUPON") {
-        return (
-          <div>
-            <tag color="cyan">{couponTypeConvert(row.couponType).label}</tag>
-          </div>
-        );
-      }
-      return <div>{row.couponType}</div>;
-    }
-  },
-  {
-    title: "优惠/折扣金额",
-    key: "couponFee",
-    minWidth: 80,
-    render(h, params) {
-      const { row } = params;
-      if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{fenToYuanDot2Number(row.couponFee) * 10 + "折"}</div>;
-      } else {
-        return <div>{fenToYuanDot2(row.couponFee)}</div>;
-      }
-    }
-  },
-  {
-    title: "最小购买金额",
-    key: "minBuyFee",
-    minWidth: 80,
-    render(h, params) {
-      return <div>{fenToYuanDot2(params.row.minBuyFee)}</div>;
-    }
-  },
-  {
-    title: "优惠券状态",
-    key: "couponStatus",
-    minWidth: 80,
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (row.couponStatus === "VALID") {
-        return (
-          <div>
-            <tag color="success">
-              {couponStatusConvert(row.couponStatus).label}
-            </tag>
-          </div>
-        );
-      } else if (row.couponStatus === "INVALID") {
-        return (
-          <div>
-            <tag color="error">
-              {couponStatusConvert(row.couponStatus).label}
-            </tag>
-          </div>
-        );
-      }
-      return <div>{row.couponStatus}</div>;
-    }
-  }
 ];
 
 const hdTemplateColumns = [
@@ -938,8 +854,7 @@ const hdTemplateColumns = [
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        const lastIndex = row.couponName.indexOf("折");
-        const couponFee = row.couponName.substring(0, lastIndex + 1);
+        const couponFee = HdDiscount(params.row.discount);
         return <div>{couponFee}</div>;
       } else {
         return <div>{fenToYuanDot2(params.row.faceValue)}</div>;
@@ -1351,10 +1266,9 @@ export default {
       this.addRelationDetail.couponName = currentRow.couponName;
       this.addRelationDetail.couponType = currentRow.couponType;
       this.addRelationDetail.couponFee = currentRow.faceValue;
-      if (currentRow.couponType === "DISCOUNT_COUPON") {
-        const lastIndex = currentRow.couponName.indexOf("折");
+       if (currentRow.couponType === "DISCOUNT_COUPON") {
         this.addRelationDetail.couponFee =
-          parseFloat(currentRow.couponName.substring(0, lastIndex)) * 10;
+          parseFloat(currentRow.discount) * 100;
         console.log(
           "DISCOUNT_COUPON couponFee:",
           this.addRelationDetail.couponFee

@@ -775,7 +775,8 @@ import {
   fenToYuanDot2Number,
   yuanToFenNumber,
   replaceByTag,
-  replaceByTab
+  replaceByTab,
+  HdDiscount
 } from "@/libs/util";
 
 const relationDetail = {
@@ -863,10 +864,6 @@ const dataColumns = [
     align: "center"
   },
   {
-    title: "ID",
-    key: "id"
-  },
-  {
     title: "优惠券名称",
     key: "couponName",
     minWidth: 80
@@ -934,7 +931,7 @@ const dataColumns = [
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{fenToYuanDot2Number(row.couponFee) * 10 + "折"}</div>;
+        return <div>{(row.couponFee) / 10 + "折"}</div>;
       } else {
         return <div>{fenToYuanDot2(params.row.couponFee)}</div>;
       }
@@ -1202,8 +1199,7 @@ const hdTemplateColumns = [
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        const lastIndex = row.couponName.indexOf("折");
-        const couponFee = row.couponName.substring(0, lastIndex + 1);
+        const couponFee = HdDiscount(params.row.discount);
         return <div>{couponFee}</div>;
       } else {
         return <div>{fenToYuanDot2(params.row.faceValue)}</div>;
@@ -1236,7 +1232,7 @@ export default {
         effectiveStartTime: [{ required: true, message: "请选择生效时间" }],
         effectiveEndTime: [{ required: true, message: "请选择失效时间" }],
         beginDay: [{ required: true, message: "请输入生效天数" }],
-        couponScope: [{ required: true, message: "请选择券使用范围" }],
+        couponScope: [{ required: false, message: "请选择券使用范围" }],
         useLimitType: [{ required: true, message: "请选择券使用限制" }],
         couponDetail: [{ required: true, message: "请输入券详情" }],
         couponReminderMsg: [{ required: true, message: "请输入券温馨提示" }],
@@ -1607,11 +1603,9 @@ export default {
       this.addRelationDetail.couponType = currentRow.couponType;
       this.addRelationDetail.couponFee = currentRow.faceValue;
       this.addRelationDetail.validDateType = currentRow.validDateType;
-
       if (currentRow.couponType === "DISCOUNT_COUPON") {
-        const lastIndex = currentRow.couponName.indexOf("折");
         this.addRelationDetail.couponFee =
-          parseFloat(currentRow.couponName.substring(0, lastIndex)) * 10;
+          parseFloat(currentRow.discount) * 100;
         console.log(
           "DISCOUNT_COUPON couponFee:",
           this.addRelationDetail.couponFee

@@ -793,7 +793,13 @@ export const fenToYuanDot2 = (number) => {
   }
   return number;
 };
-
+//hd折扣
+export const HdDiscount = (number) => {
+  if (typeof number === 'number') {
+    return   (number * 10.00) + '折';
+  }
+  return number;
+};
 // 加¥和天数
 export const addRnb = (number) => {
   if (typeof number === 'number') {

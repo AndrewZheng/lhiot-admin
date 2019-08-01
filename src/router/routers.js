@@ -730,7 +730,7 @@ export const asyncRouterMap = [
         path: '/small-goods-standard',
         name: 'small-goods-standard',
         meta: {
-          icon: 'ios-basket',
+          icon: 'md-podium',
           title: '商品规格管理'
         },
         component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
@@ -748,7 +748,7 @@ export const asyncRouterMap = [
         path: '/small-goods-section-relation',
         name: 'small-goods-section-relation',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'md-keypad',
           title: '商品板块管理'
         },
         component: () => import('@/view/mini-program-manager/goods/goods-section.vue')
@@ -824,7 +824,7 @@ export const asyncRouterMap = [
         path: '/small-activity',
         name: 'small-activity',
         meta: {
-          icon: 'md-cube',
+          icon: 'ios-book',
           title: '统一活动管理'
         },
         component: () => import('@/view/mini-program-manager/activity/activities.vue')
@@ -833,7 +833,7 @@ export const asyncRouterMap = [
         path: '/small-activity-flashsale',
         name: 'small-activity-flashsale',
         meta: {
-          icon: 'ios-alarm',
+          icon: 'md-clock',
           title: '限时抢购管理'
         },
         component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
@@ -842,7 +842,7 @@ export const asyncRouterMap = [
         path: '/small-hand-coupon',
         name: 'small-hand-coupon',
         meta: {
-          icon: 'ios-settings',
+          icon: 'md-hand',
           title: '手动发券管理'
         },
         component: () => import('@/view/mini-program-manager/activity/hand-coupon.vue')
@@ -851,7 +851,7 @@ export const asyncRouterMap = [
         path: '/small-coupon-templates',
         name: 'small-coupon-templates',
         meta: {
-          icon: 'md-bookmarks',
+          icon: 'md-map',
           title: '优惠券模板管理'
         },
         component: () => import('@/view/mini-program-manager/activity/couponTemplate.vue')
@@ -860,7 +860,7 @@ export const asyncRouterMap = [
         path: '/small-activity-coupon',
         name: 'small-activity-coupon',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'md-pricetags',
           title: '优惠券活动管理'
         },
         component: () => import('@/view/mini-program-manager/activity/coupon.vue')
@@ -869,7 +869,7 @@ export const asyncRouterMap = [
         path: '/integral-coupon',
         name: 'integral-coupon',
         meta: {
-          icon: 'md-barcode',
+          icon: 'logo-xbox',
           title: '积分兑换券管理'
         },
         component: () => import('@/view/mini-program-manager/activity/integral-coupon.vue')
@@ -878,7 +878,7 @@ export const asyncRouterMap = [
         path: '/integral-entity',
         name: 'integral-entity',
         meta: {
-          icon: 'md-cube',
+          icon: 'md-filing',
           title: '积分兑换实物管理'
         },
         component: () => import('@/view/mini-program-manager/activity/integral-entity.vue')
@@ -914,7 +914,7 @@ export const asyncRouterMap = [
         path: '/small-activity-recharge',
         name: 'small-activity-recharge',
         meta: {
-          icon: 'md-cash',
+          icon: 'md-card',
           title: '充值活动管理'
         },
         component: () => import('@/view/mini-program-manager/activity/recharge.vue')
@@ -923,39 +923,10 @@ export const asyncRouterMap = [
         path: '/small-activity-random-discount',
         name: 'small-activity-random-discount',
         meta: {
-          icon: 'md-flash',
+          icon: 'md-remove-circle',
           title: '随机立减活动'
         },
         component: () => import('@/view/mini-program-manager/activity/random-discount.vue')
-      },
-    ]
-  },
-  {
-    path: '/small-orders',
-    name: 'small-orders',
-    meta: {
-      icon: 'md-menu',
-      title: '综合订单管理'
-    },
-    component: Main,
-    children: [
-      {
-        path: '/small-order',
-        name: 'small-order',
-        meta: {
-          icon: 'md-pricetags',
-          title: '订单管理'
-        },
-        component: () => import('@/view/mini-program-manager/order/order.vue')
-      },
-      {
-        path: '/small-paymentlogs',
-        name: 'small-paymentlogs',
-        meta: {
-          icon: 'logo-usd',
-          title: '鲜果币流水管理'
-        },
-        component: () => import('@/view/mini-program-manager/order/paylog.vue')
       },
     ]
   },
@@ -990,7 +961,7 @@ export const asyncRouterMap = [
         path: '/small-feedback',
         name: 'small-feedback',
         meta: {
-          icon: 'md-quote',
+          icon: 'md-chatboxes',
           title: '用户反馈'
         },
         component: () => import('@/view/mini-program-manager/content/feedback.vue')
@@ -1008,7 +979,7 @@ export const asyncRouterMap = [
         path: '/small-faq',
         name: 'small-faq',
         meta: {
-          icon: 'md-pricetag',
+          icon: 'md-barcode',
           title: 'FAQ管理'
         },
         component: () => import('@/view/mini-program-manager/content/faq.vue')
@@ -1017,7 +988,7 @@ export const asyncRouterMap = [
         path: '/small-advertisement-position',
         name: 'small-advertisement-position',
         meta: {
-          icon: 'md-radio',
+          icon: 'ios-easel',
           title: '广告位管理'
         },
         component: () => import('@/view/mini-program-manager/content/advertisement-position.vue')
@@ -1026,11 +997,87 @@ export const asyncRouterMap = [
         path: '/small-advertisement',
         name: 'small-advertisement',
         meta: {
-          icon: 'md-ionitron',
+          icon: 'ios-images',
           title: '广告管理'
         },
         component: () => import('@/view/mini-program-manager/content/advertisement.vue')
       }
+    ]
+  },
+  {
+    path: '/small-orders',
+    name: 'small-orders',
+    meta: {
+      icon: 'md-menu',
+      title: '综合订单管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/small-order',
+        name: 'small-order',
+        meta: {
+          icon: 'ios-paper',
+          title: '订单管理'
+        },
+        component: () => import('@/view/mini-program-manager/order/order.vue')
+      },
+      {
+        path: '/small-paymentlogs',
+        name: 'small-paymentlogs',
+        meta: {
+          icon: 'logo-usd',
+          title: '鲜果币流水管理'
+        },
+        component: () => import('@/view/mini-program-manager/order/paylog.vue')
+      },
+    ]
+  },
+  {
+    path: '/small-vip',
+    name: 'small-vip',
+    meta: {
+      icon: 'md-menu',
+      title: '付费会员管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/small-opensvip',
+        name: 'small-opensvip',
+        meta: {
+          icon: 'logo-skype',
+          title: 'svip套餐'
+        },
+        component: () => import('@/view/mini-program-manager/vip/opensvip.vue')
+      },
+      {
+        path: '/small-souvenir',
+        name: 'small-souvenir',
+        meta: {
+          icon: 'ios-basket',
+          title: '开卡礼包'
+        },
+        component: () => import('@/view/mini-program-manager/vip/souvenir.vue')
+      },
+      {
+        path: '/small-privilege',
+        name: 'small-privilege',
+        meta: {
+          icon: 'logo-pinterest',
+          title: '生日特权券活动'
+        },
+        component: () => import('@/view/mini-program-manager/vip/privilege.vue')
+      },
+      {
+        path: '/small-distribution',
+        name: 'small-distribution',
+        meta: {
+          icon: 'ios-car',
+          title: '省心配送券活动'
+        },
+        component: () => import('@/view/mini-program-manager/vip/distribution.vue')
+      },
     ]
   },
   {
@@ -1059,53 +1106,6 @@ export const asyncRouterMap = [
           title: '系统参数分类管理'
         },
         component: () => import('@/view/mini-program-manager/system/system-category.vue')
-      },
-    ]
-  },
-  {
-    path: '/small-vip',
-    name: 'small-vip',
-    meta: {
-      icon: 'md-menu',
-      title: '付费会员管理'
-    },
-    component: Main,
-    children: [
-      {
-        path: '/small-opensvip',
-        name: 'small-opensvip',
-        meta: {
-          icon: 'md-flash',
-          title: 'svip套餐'
-        },
-        component: () => import('@/view/mini-program-manager/vip/opensvip.vue')
-      },
-      {
-        path: '/small-souvenir',
-        name: 'small-souvenir',
-        meta: {
-          icon: 'md-basket',
-          title: '开卡礼包'
-        },
-        component: () => import('@/view/mini-program-manager/vip/souvenir.vue')
-      },
-      {
-        path: '/small-privilege',
-        name: 'small-privilege',
-        meta: {
-          icon: 'md-pricetag',
-          title: '生日特权券活动'
-        },
-        component: () => import('@/view/mini-program-manager/vip/privilege.vue')
-      },
-      {
-        path: '/small-distribution',
-        name: 'small-distribution',
-        meta: {
-          icon: 'md-bus',
-          title: '省心配送券活动'
-        },
-        component: () => import('@/view/mini-program-manager/vip/distribution.vue')
       },
     ]
   },

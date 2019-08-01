@@ -717,7 +717,7 @@
     <!-- 添加手机号码 -->
     <Modal v-model="modalPhones" :mask-closable="false" :width="700" title="手动发券">
       <p slot="header">
-        <span>手动发券</span>
+        <span>手动发券配置</span>
       </p>
       <Form ref="addPhones" :model="currentTableRowSelected" :label-width="130">
         <Row v-if="currentTableRowSelected">
@@ -934,7 +934,8 @@ import {
   fenToYuanDot2Number,
   yuanToFenNumber,
   replaceByTag,
-  replaceByTab
+  replaceByTab,
+  HdDiscount
 } from "@/libs/util";
 
 const relationDetail = {
@@ -1067,7 +1068,7 @@ const dataColumns = [
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{fenToYuanDot2Number(row.couponFee) * 10 + "折"}</div>;
+        return <div>{(row.couponFee) / 10 + "折"}</div>;
       } else {
         return <div>{fenToYuanDot2(params.row.couponFee)}</div>;
       }
@@ -1340,8 +1341,7 @@ const hdTemplateColumns = [
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        const lastIndex = row.couponName.indexOf("折");
-        const couponFee = row.couponName.substring(0, lastIndex + 1);
+        const couponFee = HdDiscount(params.row.discount);
         return <div>{couponFee}</div>;
       } else {
         return <div>{fenToYuanDot2(params.row.faceValue)}</div>;
@@ -1375,7 +1375,7 @@ export default {
         effectiveEndTime: [{ required: true, message: "请选择失效时间" }],
         beginDay: [{ required: true, message: "请输入生效天数" }],
         endDay: [{ required: true, message: "请输入失效天数" }],
-        couponScope: [{ required: true, message: "请选择券使用范围" }],
+        couponScope: [{ required: false, message: "请选择券使用范围" }],
         useLimitType: [{ required: true, message: "请选择券使用限制" }],
         couponRules: [{ required: true, message: "请输入券使用规则" }],
         couponStatus: [{ required: true, message: "请选择优惠券状态" }],
@@ -1695,10 +1695,9 @@ export default {
       this.addRelationDetail.couponType = currentRow.couponType;
       this.addRelationDetail.couponFee = currentRow.faceValue;
       this.addRelationDetail.couponStatus = "VALID";
-      if (currentRow.couponType === "DISCOUNT_COUPON") {
-        const lastIndex = currentRow.couponName.indexOf("折");
+     if (currentRow.couponType === "DISCOUNT_COUPON") {
         this.addRelationDetail.couponFee =
-          parseFloat(currentRow.couponName.substring(0, lastIndex)) * 10;
+          parseFloat(currentRow.discount) * 100;
         console.log(
           "DISCOUNT_COUPON couponFee:",
           this.addRelationDetail.couponFee

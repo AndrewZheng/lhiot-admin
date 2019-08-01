@@ -503,6 +503,38 @@ const btns = {
       }
     })]);
   },
+  //手动退款
+  onHand: (h, params, vm) => {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要退款?'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-hand', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'logo-usd',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
+  },
   // 邮费复制操作
   copy: (h, params, vm) => {
     return h('Button', {

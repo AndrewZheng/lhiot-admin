@@ -530,7 +530,7 @@
                   </FormItem>
                 </i-col>
                 <i-col span="7">
-                  <FormItem label="失效时间:" prop="effectiveEndTime" >
+                  <FormItem label="失效时间:" prop="effectiveEndTime">
                     <DatePicker
                       :value="addRelationDetail.effectiveEndTime"
                       format="yyyy-MM-dd HH:mm:ss"
@@ -546,12 +546,22 @@
             <Row>
               <i-col span="6">
                 <FormItem label="兑换积分:" prop="points">
-                  <InputNumber :min="0" v-model="addRelationDetail.points" label="兑换积分" style="width: 115px"></InputNumber>
+                  <InputNumber
+                    :min="0"
+                    v-model="addRelationDetail.points"
+                    label="兑换积分"
+                    style="width: 115px"
+                  ></InputNumber>
                 </FormItem>
               </i-col>
               <i-col span="6">
                 <FormItem label="促销积分:" prop="realPoints">
-                  <InputNumber :min="0" v-model="addRelationDetail.realPoints" label="促销积分" style="width: 95px"></InputNumber>
+                  <InputNumber
+                    :min="0"
+                    v-model="addRelationDetail.realPoints"
+                    label="促销积分"
+                    style="width: 95px"
+                  ></InputNumber>
                 </FormItem>
               </i-col>
               <i-col span="6">
@@ -959,7 +969,8 @@ import {
   fenToYuanDot2Number,
   yuanToFenNumber,
   replaceByTag,
-  replaceByTab
+  replaceByTab,
+  HdDiscount
 } from "@/libs/util";
 
 const relationDetail = {
@@ -1092,7 +1103,7 @@ const dataColumns = [
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{fenToYuanDot2Number(row.couponFee) * 10 + "折"}</div>;
+        return <div>{row.couponFee / 10 + "折"}</div>;
       } else {
         return <div>{fenToYuanDot2(params.row.couponFee)}</div>;
       }
@@ -1278,14 +1289,15 @@ const templateColumns = [
   // },
   {
     title: "优惠/折扣额度",
-    key: "couponFee",
+    key: "faceValue",
     minWidth: 80,
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{fenToYuanDot2Number(row.couponFee) * 10 + "折"}</div>;
+        const couponFee = HdDiscount(params.row.discount);
+        return <div>{couponFee}</div>;
       } else {
-        return <div>{fenToYuanDot2(row.couponFee)}</div>;
+        return <div>{fenToYuanDot2(params.row.faceValue)}</div>;
       }
     }
   },
@@ -1435,7 +1447,7 @@ export default {
         effectiveEndTime: [{ required: true, message: "请选择失效时间" }],
         beginDay: [{ required: true, message: "请输入生效天数" }],
         endDay: [{ required: true, message: "请输入失效天数" }],
-        couponScope: [{ required: true, message: "请选择券使用范围" }],
+        couponScope: [{ required: false, message: "请选择券使用范围" }],
         useLimitType: [{ required: true, message: "请选择券使用限制" }],
         couponRules: [{ required: true, message: "请输入券使用规则" }],
         couponDetail: [{ required: true, message: "请输入券详情" }],
@@ -1757,9 +1769,8 @@ export default {
       this.addRelationDetail.couponType = currentRow.couponType;
       this.addRelationDetail.couponFee = currentRow.faceValue;
       if (currentRow.couponType === "DISCOUNT_COUPON") {
-        const lastIndex = currentRow.couponName.indexOf("折");
         this.addRelationDetail.couponFee =
-          parseFloat(currentRow.couponName.substring(0, lastIndex)) * 10;
+          parseFloat(currentRow.discount) * 100;
         console.log(
           "DISCOUNT_COUPON couponFee:",
           this.addRelationDetail.couponFee

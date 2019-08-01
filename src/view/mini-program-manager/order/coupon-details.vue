@@ -65,7 +65,7 @@
           <Button
             :loading="downloadLoading"
             class="search-btn mr2"
-            type="primary"
+            type="warning"
             @click="handleDownload"
           >
             <Icon type="md-download" />导出数据

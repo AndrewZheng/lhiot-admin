@@ -1161,7 +1161,7 @@ export default {
         });
     },
     addCoupon() {
-      this.resetFields();
+      // this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.tempModalType = this.modalType.create;
         this.couponDetail = _.cloneDeep(couponDetail);
@@ -1197,6 +1197,7 @@ export default {
         });
     },
     handleView(params) {
+       this.modalView = true;
       // this.$refs.modalView.resetFields();
       // this.resetFields();
       this.tempModalType = this.modalType.view;
@@ -1205,10 +1206,10 @@ export default {
         /&/g,
         "\n"
       );
-      this.modalView = true;
+     
     },
     handleEdit(params) {
-      this.resetFields();
+      // this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.couponDetail = _.cloneDeep(params.row);
       this.couponDetail.activityRuel = this.couponDetail.activityRuel.replace(

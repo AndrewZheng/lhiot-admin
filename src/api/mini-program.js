@@ -191,6 +191,13 @@ export const getProStandardExpand = ({ id }) => {
   });
 };
 
+//根据code条码查询海鼎商品信息 
+export const getHdProductInfo = ({code}) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/product-standards/hd-product/' + code,
+    method: 'get'
+  });
+};
 export const modifyProStandardExpand = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-standard-expand/modify',
@@ -1051,7 +1058,21 @@ export const resendToHd = ({ ids }) => {
     method: 'put'
   });
 };
-
+ 
+// 微商城小程序--订单退货简化版 /minapp/orders/orders/specialRefund/simpe
+export const refundWx = ({orderCode}) =>{
+  return Vue.prototype.$http.request({
+    url: `/minapp/orders/orders/specialRefund/simpe?orderCode=${orderCode}`,
+    method: 'post'
+  });
+};
+// 拼团小程序--订单退货简化版 /minapp/orders/orders/refund/simpe
+export const refundPt = ({orderCode}) =>{
+  return Vue.prototype.$http.request({
+    url: `/minapp/orders/orders/refund/simpe?orderCode=${orderCode}`,
+    method: 'post'
+  });
+};
 // 根据条件分页查询支付列表
 export const getPaymentLogPages = (data) => {
   return Vue.prototype.$http.request({

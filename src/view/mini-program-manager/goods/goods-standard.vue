@@ -321,7 +321,7 @@
       </div>
     </Modal>
     <!-- 添加 -->
-    <Modal v-model="modalEdit" :mask-closable="false" :width="700">
+    <Modal v-model="modalEdit" :mask-closable="false" :width="900">
       <p slot="header">
         <span>{{ productStandardDetail.id >0?'创建商品规格':'编辑商品规格' }}</span>
       </p>
@@ -491,6 +491,26 @@
           </Row>
           <Row>
             <i-col span="12">
+              <FormItem label="商品单位:" prop="unitId">
+                <Select v-model="productStandardDetail.unitId" @on-change="unitChange">
+                  <Option
+                    v-for="(item,index) in unitsList"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="商品排序:" prop="rank">
+                <InputNumber :min="0" v-model="productStandardDetail.rank"></InputNumber>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
               <FormItem label="商品原价:" prop="price">
                 <InputNumber :min="0" :value="priceComputed" @on-change="priceInputNumberOnchange"></InputNumber>
               </FormItem>
@@ -515,25 +535,8 @@
                 ></InputNumber>
               </FormItem>
             </i-col>
-          </Row>
-          <Row>
             <i-col span="12">
-              <FormItem label="商品单位:" prop="unitId">
-                <Select v-model="productStandardDetail.unitId" @on-change="unitChange">
-                  <Option
-                    v-for="(item,index) in unitsList"
-                    :value="item.value"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px"
-                  >{{ item.label }}</Option>
-                </Select>
-              </FormItem>
-            </i-col>
-            <i-col span="12">
-              <FormItem label="商品排序:" prop="rank">
-                <InputNumber :min="0" v-model="productStandardDetail.rank"></InputNumber>
-              </FormItem>
+              <Button v-waves type="warning" @click="handleHdSvipPrice">海鼎价格参考</Button>
             </i-col>
           </Row>
           <Row>
@@ -578,7 +581,7 @@
               </FormItem>
             </i-col>
             <i-col span="12">
-              <Button v-waves type="primary" @click="handleImageSort">规格描述排序</Button>
+              <Button v-waves type="info" @click="handleImageSort">规格描述排序</Button>
             </i-col>
           </Row>
         </Form>
@@ -756,6 +759,101 @@
         <Button type="primary" @click="handleImgSort">确定</Button>
       </div>
     </Modal>
+    <!-- 海鼎会员价 -->
+    <Modal v-model="modalHdSvip" :width="800" draggable scrollable :mask-closable="false">
+      <p slot="header">
+        <span>海鼎SVIP价格参考</span>
+      </p>
+      <div class="modal-content">
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">商品名称:</i-col>
+              <i-col span="16">{{ HdSvipInfo.gname }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">商品状态:</i-col>
+              <i-col span="16">{{ HdSvipInfo.busname }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">商品编码:</i-col>
+              <i-col span="16">{{ HdSvipInfo.code }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">条码:</i-col>
+              <i-col span="16">{{ HdSvipInfo.code2 }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">商品描述:</i-col>
+              <i-col span="16">{{ HdSvipInfo.description }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">商品分类:</i-col>
+              <i-col span="16">{{ HdSvipInfo.sortcode }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">基础单位:</i-col>
+              <i-col span="16">{{ HdSvipInfo.munit }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">规格:</i-col>
+              <i-col span="16">{{ HdSvipInfo.qpcstr }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">海鼎售价:</i-col>
+              <i-col span="16">{{ HdSvipInfo.rtlprc }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">海鼎会员价:</i-col>
+              <i-col span="16">{{ HdSvipInfo.mbrprc }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">SVIP价格:</i-col>
+              <i-col span="16">{{ HdSvipInfo.svipprc }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">SVIP折扣:</i-col>
+              <i-col span="16">{{ HdSvipInfo.svipzk }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+      </div>
+      <div slot="footer">
+        <Button type="primary" @click="handleHdSvipClose">关闭</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -772,7 +870,8 @@ import {
   modifyProStandardExpand,
   editProductStandard,
   getProductUnits,
-  getProductPages
+  getProductPages,
+  getHdProductInfo
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -1195,6 +1294,7 @@ export default {
       modalView: false,
       modalEdit: false,
       modalDiscount: false,
+      modalHdSvip: false,
       modalProduct: false,
       modalSort: false,
       searchRowData: roleRowData,
@@ -1205,6 +1305,7 @@ export default {
       // 选中的行
       tableDataSelected: [],
       showBack: false,
+      HdSvipInfo: "",
       shelvesStatus: [
         {
           label: "上架",
@@ -1397,6 +1498,29 @@ export default {
         .catch(() => {
           this.modalDiscount = false;
         });
+    },
+    // 海鼎会员价查询
+    handleHdSvipPrice() {
+      // this.modalHdSvip = true;
+      //console.log(this.productStandardDetail.barcode)
+      if (!this.productStandardDetail.barcode) {
+        this.$Message.error("请先选择关联商品");
+        return;
+      }
+      this.loading = true;
+      let code = this.productStandardDetail.barcode;
+      getHdProductInfo({ code: code })
+        .then(res => {
+          this.HdSvipInfo = res;
+          this.loading = false;
+          this.modalHdSvip = true;
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+    },
+    handleHdSvipClose() {
+      this.modalHdSvip = false;
     },
     handleCreateView() {
       this.resetFields();

@@ -479,8 +479,7 @@ import {
   getSvipPackagePages,
   deleteSvipPackage,
   createSvipPackage,
-  editSvipPackage,
-  getCouponTemplatePages
+  editSvipPackage
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -832,35 +831,19 @@ export default {
           this.clearSearchLoading = false;
         });
     },
-    getTemplateTableData() {
-      getCouponTemplatePages(this.searchTemplateRowData)
-        .then(res => {
-          this.couponTemplateData = res.rows;
-          this.couponTemplateTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch(error => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
-    },
     changeProductPage(page) {
       this.searchTemplateRowData.page = page;
-      this.getTemplateTableData();
+      this.getSvipPackagePages();
     },
     changeProductPageSize(pageSize) {
       this.searchTemplateRowData.page = 1;
       this.searchTemplateRowData.rows = pageSize;
-      this.getTemplateTableData();
+      this.getSvipPackagePages();
     },
     handleTemplateSearch() {
       this.searchTemplateRowData.page = 1;
       this.searchLoading = true;
-      this.getTemplateTableData();
+      this.getSvipPackagePages();
     },
     handleTemplateClear() {
       this.clearSearchLoading = true;
@@ -944,27 +927,33 @@ export default {
         return;
       }
       this.$refs.addForm.validate(valid => {
+        console.log(this.$refs.addForm)
         if (valid) {
           _this.replaceTextByTag();
-          if (_this.tempModalType === "addTemplate") {
-            _this.createRelation();
-          }
+          _this.createRelation();
         } else {
           _this.$Message.error("请完善信息!");
         }
       });
     },
-    // handleTemplateChange(currentRow, oldCurrentRow) {
-    //   const couponTemplate = currentRow;
-    //   this.addRelationDetail.packageName = couponTemplate.packageName;
-    //   this.addRelationDetail.packageType = couponTemplate.packageType;
-    //   this.addRelationDetail.packageCycle = couponTemplate.packageCycle;
-    //   // this.addRelationDetail.packageAmount = couponTemplate.packageAmount;
-    //   this.addRelationDetail.discountAmount = couponTemplate.discountAmount;
-    //   this.addRelationDetail.renewalAmount = couponTemplate.renewalAmount;
-    //   this.addRelationDetail.packageDesc = couponTemplate.packageDesc;
-    //   this.addRelationDetail.couponStatus = couponTemplate.couponStatus;
-    // },
+    //  getSvipPackagePages(this.searchRowData).then(res => {
+    //   let svipPages = res.rows;
+    //   svipPages.forEach(item => {
+    // console.log(item.packageType)
+    // if (
+    //   // item.packageType.indexOf("SEASON") != null ||
+    //   // item.packageType.indexOf("YEAR_CARD") != -1 ||
+    //   // item.packageType.indexOf("MONTH_CARD") != -1
+    //   item.packageType.length >= 3
+    // ) {
+    //   this.$Message.error("相同的套餐类型配置只能开启1个");
+    //   return;
+    // } else {
+    //   this.tempModalType = "addTemplate";
+    //   this.modalAdd = true;
+    // }
+    // });
+    // });
     createRelation() {
       this.modalViewLoading = true;
       createSvipPackage(this.addRelationDetail)
@@ -992,10 +981,14 @@ export default {
           this.modalEdit = false;
         });
     },
-
     addPackageTemplate() {
-      this.getTemplateTableData();
-      this.tempModalType = "addTemplate";
+      getSvipPackagePages(this.searchRowData).then(res => {
+        let svipPages = res.rows;
+        //   svipPages.forEach(item => {
+        // console.log(item.packageType)
+        // });
+        console.log(svipPages)
+      });
       this.modalAdd = true;
     },
     handleView(params) {

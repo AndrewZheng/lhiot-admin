@@ -517,7 +517,8 @@ import {
   fenToYuanDot2Number,
   yuanToFenNumber,
   replaceByTag,
-  replaceByTab
+  replaceByTab,
+  HdDiscount
 } from "@/libs/util";
 
 // 优惠券活动对象
@@ -881,16 +882,16 @@ const templateColumns = [
   //     return <div>N/A</div>;
   //   }
   // },
-  {
+   {
     title: "优惠/折扣额度",
     key: "couponFee",
-    minWidth: 80,
+    minWidth: 50,
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{fenToYuanDot2Number(row.couponFee) * 10 + "折"}</div>;
+        return <div>{(row.couponFee) / 10 + "折"}</div>;
       } else {
-        return <div>{fenToYuanDot2(row.couponFee)}</div>;
+        return <div>{fenToYuanDot2(params.row.couponFee)}</div>;
       }
     }
   },
@@ -990,11 +991,10 @@ const hdTemplateColumns = [
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        const lastIndex = row.couponName.indexOf("折");
-        const couponFee = row.couponName.substring(0, lastIndex + 1);
+        const couponFee = HdDiscount(params.row.discount);
         return <div>{couponFee}</div>;
       } else {
-        return <div>{fenToYuanDot2(row.faceValue)}</div>;
+        return <div>{fenToYuanDot2(params.row.faceValue)}</div>;
       }
     }
   },
@@ -1215,9 +1215,8 @@ export default {
       this.addRelationDetail.couponType = currentRow.couponType;
       this.addRelationDetail.couponFee = currentRow.faceValue;
       if (currentRow.couponType === "DISCOUNT_COUPON") {
-        const lastIndex = currentRow.couponName.indexOf("折");
         this.addRelationDetail.couponFee =
-          parseFloat(currentRow.couponName.substring(0, lastIndex)) * 10;
+          parseFloat(currentRow.discount) * 100;
         console.log(
           "DISCOUNT_COUPON couponFee:",
           this.addRelationDetail.couponFee

@@ -603,25 +603,19 @@ export default {
             if (row.status === "VALID") {
               return (
                 <div>
-                  <tag color="success">
-                  有效
-                  </tag>
+                  <tag color="success">有效</tag>
                 </div>
               );
             } else if (row.status === "INVALID") {
               return (
                 <div>
-                  <tag color="error">
-                   失效
-                  </tag>
+                  <tag color="error">失效</tag>
                 </div>
               );
             } else if (row.status === "EXPIRE") {
               return (
                 <div>
-                  <tag color="primary">
-                   过期
-                  </tag>
+                  <tag color="primary">过期</tag>
                 </div>
               );
             }
@@ -774,7 +768,7 @@ export default {
         });
     },
     addShareReward() {
-      this.resetFields();
+      // this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.tempModalType = this.modalType.create;
         this.shareRewardDetail = _.cloneDeep(shareRewardDetail);
@@ -810,13 +804,13 @@ export default {
         });
     },
     handleView(params) {
+      this.modalView = true;
       this.resetFields();
       this.tempModalType = this.modalType.view;
       this.shareRewardDetail = _.cloneDeep(params.row);
-      this.modalView = true;
     },
     handleEdit(params) {
-      this.resetFields();
+      // this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.shareRewardDetail = _.cloneDeep(params.row);
       this.setDefaultUploadList(this.shareRewardDetail);
