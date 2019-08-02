@@ -726,7 +726,7 @@ export default {
           render(h, params, vm) {
             const amount = params.row.discountPrice / 100;
             const price = amount * params.row.productQty;
-            return <div>{"￥" + price}</div>;
+            return <div>{"￥" + price.toFixed(2)}</div>;
           }
         }
       ],
