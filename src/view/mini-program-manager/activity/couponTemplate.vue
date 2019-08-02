@@ -801,12 +801,6 @@ export default {
       this.loading = true;
       this.editCouponTemplate();
     },
-    startTimeChange(value, date) {
-      this.couponTemplateDetail.startTime = value;
-    },
-    endTimeChange(value, date) {
-      this.couponTemplateDetail.endTime = value;
-    },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
       this.couponTemplateDetail.couponImage = null;
