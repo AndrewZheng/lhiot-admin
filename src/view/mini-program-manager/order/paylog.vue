@@ -16,6 +16,14 @@
       >
         <div slot="searchCondition">
           <Row>
+            <!-- 金额总计 -->
+            <div class="sum">
+              金额总计：&yen;{{ sum }} 元
+              <!-- <count-to :simplify="true" :delay="500" :end="sum" count-class="count-text" unit-class="unit-class">
+                  <span slot="left" class="slot-text">金额总计：&yen;{{sum }}&nbsp;</span>
+                  <span slot="right" class="slot-text">&nbsp;元</span>
+              </count-to> -->
+            </div>
             <DatePicker
               v-model="searchRowData.startTime"
               format="yyyy-MM-dd HH:mm:ss"
@@ -108,8 +116,6 @@
             >
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
-            <!-- 金额总计 -->
-            <div class="sum">金额总计：{{sum}}</div>
           </Row>
         </div>
       </tables>
@@ -208,11 +214,12 @@
 
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
+import CountTo from '_c/count-to';
 import _ from "lodash";
 import { getPaymentLogPages, getPaymentLogSum } from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
-import { fenToYuanDot2 } from "@/libs/util";
+import { fenToYuanDot2,fenToYuanDot2Number } from "@/libs/util";
 import {
   appTypeConvert,
   payTypeConvert,
@@ -248,6 +255,8 @@ const paymentLogDetail = {
 };
 
 const roleRowData = {
+  startTime: null,
+  endTime: null,
   sourceType: null,
   payType: null,
   payStep: null,
@@ -259,7 +268,8 @@ const roleRowData = {
 
 export default {
   components: {
-    Tables
+    Tables,
+    CountTo
   },
   mixins: [tableMixin, searchMixin],
   data() {
@@ -424,7 +434,7 @@ export default {
       payTypeEnum,
       payStepEnum,
       sourceTypeEnum,
-      sum: ""
+      sum: 0
     };
   },
   mounted() {
@@ -459,15 +469,16 @@ export default {
           this.clearSearchLoading = false;
         });
       getPaymentLogSum(this.searchRowData).then(function(result) {
-        _this.sum = fenToYuanDot2(result);
+        _this.sum = fenToYuanDot2Number(result);
       });
     },
-
     startTimeChange(value, date) {
       this.paymentLogDetail.startTime = value;
+      this.searchRowData.startTime = value;
     },
     endTimeChange(value, date) {
       this.paymentLogDetail.endTime = value;
+      this.searchRowData.endTime = value;
     }
   }
 };
@@ -475,7 +486,7 @@ export default {
 
 <style lang="scss" scoped>
 .sum {
-  float: left;
+  display: inline-block;
   min-width: 125px;
   height: 32px;
   border: 1px solid #dcdee2;
