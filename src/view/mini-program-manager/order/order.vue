@@ -163,14 +163,14 @@
           >
             <Icon type="md-download" />导出
           </Button>
-          <Button
+          <!-- <Button
             :loading="downloadLoading"
             class="search-btn"
             type="primary"
             @click="couponDetails"
           >
             <Icon type="md-search" />&nbsp;用券数据
-          </Button>
+          </Button> -->
           <!-- <Poptip
             confirm
             placement="bottom"
@@ -1186,11 +1186,11 @@ export default {
           this.loading = false;
         });
     },
-    couponDetails(params) {
-      this.turnToPage({
-        name: "small-order-coupon-details"
-      });
-    },
+    // couponDetails(params) {
+    //   this.turnToPage({
+    //     name: "small-order-coupon-details"
+    //   });
+    // },
     getTableData() {
       this.loading = true;
       getOrderPages(this.searchRowData)

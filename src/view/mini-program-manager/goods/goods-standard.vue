@@ -535,9 +535,9 @@
                 ></InputNumber>
               </FormItem>
             </i-col>
-            <i-col span="12">
+            <!-- <i-col span="12">
               <Button v-waves type="warning" @click="handleHdSvipPrice">海鼎价格参考</Button>
-            </i-col>
+            </i-col> -->
           </Row>
           <Row>
             <i-col span="12">

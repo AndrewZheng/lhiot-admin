@@ -468,6 +468,7 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
+      // 金额统计
       getPaymentLogSum(this.searchRowData).then(function(result) {
         _this.sum = fenToYuanDot2Number(result);
       });

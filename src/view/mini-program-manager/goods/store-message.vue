@@ -100,7 +100,7 @@
         </Row>
       </div>
     </Card>
-
+    <!-- 查看 -->
     <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
         <span>门店信息详情</span>
@@ -219,7 +219,7 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-
+    <!-- 修改 -->
     <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <span>门店基础信息</span>
