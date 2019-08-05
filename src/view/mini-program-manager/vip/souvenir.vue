@@ -793,7 +793,7 @@ const relationDetail = {
   couponLimit: 999,
   receiveCount: 0,
   couponRules: "",
-  couponScope: null,
+  couponScope: "STORE",
   useLimitType: null,
   hdActivityId: 0,
   validDateType: "UN_FIXED_DATE",
@@ -931,7 +931,7 @@ const dataColumns = [
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{(row.couponFee) / 10 + "折"}</div>;
+        return <div>{row.couponFee / 10 + "折"}</div>;
       } else {
         return <div>{fenToYuanDot2(params.row.couponFee)}</div>;
       }
@@ -1198,14 +1198,31 @@ const hdTemplateColumns = [
     minWidth: 80,
     render(h, params) {
       const { row } = params;
+      const disIndex = row.couponName.indexOf("折");
       if (row.couponType === "DISCOUNT_COUPON") {
-        const couponFee = HdDiscount(params.row.discount);
+        const couponFee =
+          parseFloat(row.couponName.substring(0, disIndex)) + "折";
         return <div>{couponFee}</div>;
       } else {
         return <div>{fenToYuanDot2(params.row.faceValue)}</div>;
       }
     }
   },
+  //HdDiscount版本
+  // {
+  //   title: "优惠/折扣额度",
+  //   key: "faceValue",
+  //   minWidth: 80,
+  //   render(h, params) {
+  //     const { row } = params;
+  //     if (row.couponType === "DISCOUNT_COUPON") {
+  //       const couponFee = HdDiscount(params.row.discount);
+  //       return <div>{couponFee}</div>;
+  //     } else {
+  //       return <div>{fenToYuanDot2(params.row.faceValue)}</div>;
+  //     }
+  //   }
+  // },
   {
     title: "最小购买金额",
     key: "useRule",
@@ -1603,9 +1620,19 @@ export default {
       this.addRelationDetail.couponType = currentRow.couponType;
       this.addRelationDetail.couponFee = currentRow.faceValue;
       this.addRelationDetail.validDateType = currentRow.validDateType;
+      //discount 版本
+      // if (currentRow.couponType === "DISCOUNT_COUPON") {
+      //   this.addRelationDetail.couponFee =
+      //     parseFloat(currentRow.discount) * 100;
+      //   console.log(
+      //     "DISCOUNT_COUPON couponFee:",
+      //     this.addRelationDetail.couponFee
+      //   );
+      // }
+      const disIndex = currentRow.couponName.indexOf("折");
       if (currentRow.couponType === "DISCOUNT_COUPON") {
         this.addRelationDetail.couponFee =
-          parseFloat(currentRow.discount) * 100;
+          parseFloat(currentRow.couponName.substring(0, disIndex)) * 10;
         console.log(
           "DISCOUNT_COUPON couponFee:",
           this.addRelationDetail.couponFee

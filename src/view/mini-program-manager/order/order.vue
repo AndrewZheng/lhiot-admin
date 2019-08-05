@@ -834,21 +834,21 @@ export default {
             return <div>{amount}</div>;
           }
         },
-        {
-          title: "商品名称",
-          width: 150,
-          key: "productNames"
-        },
-        {
-          title: "活动名称",
-          width: 120,
-          key: "activityTeambuyContent"
-        },
-        {
-          title: "券名称",
-          width: 120,
-          key: "couponName"
-        },
+        // {
+        //   title: "商品名称",
+        //   width: 150,
+        //   key: "productNames"
+        // },
+        // {
+        //   title: "活动名称",
+        //   width: 120,
+        //   key: "activityTeambuyContent"
+        // },
+        // {
+        //   title: "券名称",
+        //   width: 120,
+        //   key: "couponName"
+        // },
         {
           title: "提货类型",
           width: 120,
@@ -970,30 +970,30 @@ export default {
             }
           }
         },
-        // {
-        //   title: '海鼎备货时间',
-        //   width: 160,
-        //   key: 'hdStockAt',
-        //   sortable: true
-        // },
-        // {
-        //   title: '配送状态',
-        //   width: 160,
-        //   key: 'deliverStatus',
-        //   sortable: true
-        // },
-        // {
-        //   title: '配送距离(km)',
-        //   width: 160,
-        //   key: 'distance',
-        //   sortable: true
-        // },
-        // {
-        //   title: '配送重量(kg)',
-        //   width: 160,
-        //   key: 'weight',
-        //   sortable: true
-        // },
+        {
+          title: '海鼎备货时间',
+          width: 160,
+          key: 'hdStockAt',
+          sortable: true
+        },
+        {
+          title: '配送状态',
+          width: 160,
+          key: 'deliverStatus',
+          sortable: true
+        },
+        {
+          title: '配送距离(km)',
+          width: 160,
+          key: 'distance',
+          sortable: true
+        },
+        {
+          title: '配送重量(kg)',
+          width: 160,
+          key: 'weight',
+          sortable: true
+        },
         {
           title: "操作",
           minWidth: 150,
@@ -1151,9 +1151,12 @@ export default {
             this.orderDetail.receivingWay != null
           ) {
             if (this.orderDetail.address.substr(0, 1) === "{") {
+              console.log(this.orderDetail.address.substr(0, 1) === "{");
               addresss = JSON.parse(this.orderDetail.address);
               this.shippingAddress =
                 addresss.address + addresss.detailedAddress;
+            } else {
+              this.shippingAddress = this.orderDetail.address;
             }
           }
           if (

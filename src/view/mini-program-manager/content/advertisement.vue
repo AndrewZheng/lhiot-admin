@@ -200,7 +200,7 @@
       <div class="modal-content">
         <Form ref="modalEdit" :model="advertisementDetail" :rules="ruleInline" :label-width="80">
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="广告位置:" prop="positionId">
                 <Select
                   v-model="advertisementDetail.positionId"
@@ -215,8 +215,8 @@
                   >{{ item.description }}</Option>
                 </Select>
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem label="广告名:" prop="advertisementName">
                 <Input
                   v-model="advertisementDetail.advertisementName"
@@ -224,7 +224,7 @@
                   style="width: 220px"
                 ></Input>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
             <FormItem label="内容描述:" prop="contentDesc">
@@ -232,7 +232,7 @@
             </FormItem>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="广告类型:" prop="advertiseType">
                 <Select
                   v-model="advertisementDetail.advertiseType"
@@ -248,8 +248,8 @@
                   >{{ item.label }}</Option>
                 </Select>
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem
                 :label-width="80"
                 :label="advertisementDetail.advertiseType ===&quot;IMAGE&quot;?&quot;广告图片:建议尺寸 (xxx*xxx):&quot;:&quot;广告文字:&quot;"
@@ -283,10 +283,10 @@
                   </IViewUpload>
                 </div>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="广告状态:" prop="status">
                 <Select
                   v-model="advertisementDetail.status"
@@ -302,8 +302,8 @@
                   >{{ item.label }}</Option>
                 </Select>
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem label="广告序号:" prop="rankNo">
                 <InputNumber
                   :min="0"
@@ -312,10 +312,10 @@
                   style="width: 220px"
                 ></InputNumber>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="链接类型:" prop="linkType">
                 <Select
                   v-model="advertisementDetail.linkType"
@@ -330,15 +330,15 @@
                   >{{ item.label }}</Option>
                 </Select>
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <Row span="24" align="middle" type="flex">
                 <FormItem label="链接目标:" prop="advertisementRelation">
                   <Row v-if="isTargetLink">
                     <Input v-model="advertisementDetail.advertisementRelation" style="width:200px;"></Input>
                   </Row>
                   <Row v-else>
-                    <Col span="24">
+                    <i-col span="24">
                       <Input
                         v-model="advertisementDetail.advertisementRelationText"
                         :disabled="advertisementDetail.linkType !== 'EXTERNALLINK'"
@@ -354,14 +354,14 @@
                           <Icon type="md-search"/>&nbsp;搜索
                         </Button>
                       </Input>
-                    </Col>
+                    </i-col>
                   </Row>
                 </FormItem>
               </Row>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="24">
+            <i-col span="24">
               <FormItem label="有效时间:">
                 <Select
                   v-model="advertisementDetail.isPermanent"
@@ -395,7 +395,7 @@
                   />
                 </Row>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
         </Form>
       </div>
