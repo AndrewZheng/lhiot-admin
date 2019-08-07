@@ -953,6 +953,38 @@ const btns = {
         ])
       ]);
     }
+  },
+  //确认收货
+  onReceive: (h, params, vm) => {
+    return h('Poptip', {
+      props: {
+        confirm: true,
+        title: '确认要收货?'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        'on-ok': () => {
+          vm.$emit('on-receive', params);
+        }
+      }
+    }, [
+      h('Button', {
+        props: {
+          type: 'success',
+          size: 'small'
+        }
+      }, [
+        h('Icon', {
+          props: {
+            type: 'md-checkbox',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+    ]);
   }
 };
 export default btns;

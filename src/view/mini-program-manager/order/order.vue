@@ -15,6 +15,7 @@
         search-place="top"
         @on-view="handleView"
         @on-hand="handleReimburse"
+        @on-receive="handSureReceive"
         @on-current-change="onCurrentChange"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
@@ -534,7 +535,8 @@ import {
   resendToHd,
   ordersRefund,
   refundWx,
-  refundPt
+  refundPt,
+  sureReceive
 } from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
@@ -998,7 +1000,7 @@ export default {
           title: "操作",
           minWidth: 150,
           key: "handle",
-          options: ["view", "onHand"]
+          options: ["view", "onHand","onReceive"]
         }
       ],
       currentTableRowSelected: null,
@@ -1081,7 +1083,19 @@ export default {
           });
       }
     },
+    //确认收货
+    handSureReceive(params){
+      sureReceive({ orderId: params.row.id })
+      .then(res => {
+        this.loading = false;
+        this.$Message.success("确认收货成功");
+        this.getTableData();
+      })
+      .catch(() => {
+        this.loading = false;
+      });
 
+    },
     handleSubmit() {
       if (!this.currentTableRowSelected) {
         this.$Message.error(

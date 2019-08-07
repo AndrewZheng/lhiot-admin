@@ -191,7 +191,7 @@ export const getProStandardExpand = ({ id }) => {
   });
 };
 
-//根据code条码查询海鼎商品信息 
+//根据code条码查询海鼎商品信息
 export const getHdProductInfo = ({code}) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-standards/hd-product/' + code,
@@ -779,7 +779,7 @@ export const editRegister = (data) => {
 };
 
 
-// ———————————— 1.6版本注册送礼活动配置 ————————————— 
+// ———————————— 1.6版本注册送礼活动配置 —————————————
 //根据id查询注册送礼活动配置
 export const getRegisteredGiftPage = (data) => {
   return Vue.prototype.$http.request({
@@ -829,7 +829,7 @@ export const deleteRegisterGift = ({ ids }) => {
 };
 
 
-// ———————————— 1.7付费会员 ————————————— 
+// ———————————— 1.7付费会员 —————————————
 //根据id查询付费会员礼包券配置
 export const getSvipGift = (data) => {
   return Vue.prototype.$http.request({
@@ -876,7 +876,7 @@ export const deleteSvipGift = ({ ids }) => {
   });
 };
 
-// ———————————— 1.7SVIP套餐 ————————————— 
+// ———————————— 1.7SVIP套餐 —————————————
 //根据id查询SVIP套餐
 export const getSvipPackage= (data) => {
   return Vue.prototype.$http.request({
@@ -923,7 +923,7 @@ export const deleteSvipPackage = ({ ids }) => {
   });
 };
 
-// ————————————   1.7版本 手动发券   ————————————— 
+// ————————————   1.7版本 手动发券   —————————————
 
 //通过phones发放优惠券给对应用户
 export const handGrandCoupon = (data) =>{
@@ -1058,7 +1058,7 @@ export const resendToHd = ({ ids }) => {
     method: 'put'
   });
 };
- 
+
 // 微商城小程序--订单退货简化版 /minapp/orders/orders/specialRefund/simpe
 export const refundWx = ({orderCode}) =>{
   return Vue.prototype.$http.request({
@@ -1684,4 +1684,11 @@ export const ordersRefund = ({ endTime }) => {
     url: '/minapp/order-center/wxsmall/failure/orders/refund/' + endTime,
     method: 'get'
   })
-}
+};
+// 根据订单id收货 /minapp/orders/receive/{orderId}
+export const sureReceive = ({orderId}) =>{
+  return Vue.prototype.$http.request({
+    url:  '/minapp/orders/receive/' + orderId,
+    method: 'get'
+  });
+};
