@@ -1085,15 +1085,19 @@ export default {
     },
     //确认收货
     handSureReceive(params){
-      sureReceive({ orderId: params.row.id })
-      .then(res => {
-        this.loading = false;
-        this.$Message.success("确认收货成功");
-        this.getTableData();
-      })
-      .catch(() => {
-        this.loading = false;
-      });
+      if (params.row.orderStatus === "SEND_OUT" || params.row.orderStatus === "DISPATCHING") {
+        sureReceive({orderId: params.row.id})
+        .then(res => {
+          this.loading = false;
+          this.$Message.success("确认收货成功");
+          this.getTableData();
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+      }else{
+          this.$Message.error("只有已发货和配送中的订单才能操作收货");
+      }
 
     },
     handleSubmit() {
