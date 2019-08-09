@@ -116,6 +116,9 @@
               <Icon type="md-trash" />批量删除
             </Button>
           </Poptip>
+          <Button class="search-btn mr2" type="warning" @click="handleDownload">
+            <Icon type="md-download" />导出
+          </Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -535,9 +538,9 @@
                 ></InputNumber>
               </FormItem>
             </i-col>
-            <!-- <i-col span="12">
+            <i-col span="12">
               <Button v-waves type="warning" @click="handleHdSvipPrice">海鼎价格参考</Button>
-            </i-col> -->
+            </i-col>
           </Row>
           <Row>
             <i-col span="12">
@@ -668,7 +671,7 @@
     <Modal v-model="modalProduct" :width="1000" title="关联商品">
       <Card>
         <tables
-          ref="tables"
+          ref="dataTables"
           v-model="productData"
           :columns="productColumns"
           :loading="loading"
@@ -1558,6 +1561,28 @@ export default {
           this.modalViewLoading = false;
           this.modalEdit = false;
         });
+    },
+    // 下载
+    handleDownload() {
+      // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
+      this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      getProductStandardsPages(this.searchRowData).then(res => {
+        const tableData = res.rows;
+        // 恢复正常页数
+        this.searchRowData.rows = 10;
+        // 表格数据导出字段翻译 
+        let _this = this;
+        tableData.forEach(item => {
+          item["price"] = (item["price"] / 100.0).toFixed(2);
+          item["salePrice"] = (item["salePrice"] / 100.0).toFixed(2);
+          item["svipPrice"] = (item["svipPrice"] / 100.0).toFixed(2);
+          item["shelvesStatus"] = customPlanStatusConvert(item["shelvesStatus"]).label;
+        });
+        this.$refs.tables.handleDownload({
+          filename: `商品规格-${new Date().valueOf()}`,
+          data: tableData
+        });
+      });
     },
     handleSubmit(name) {
       this.$refs[name].validate(valid => {

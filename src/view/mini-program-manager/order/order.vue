@@ -164,14 +164,14 @@
           >
             <Icon type="md-download" />导出
           </Button>
-          <!-- <Button
+          <Button
             :loading="downloadLoading"
             class="search-btn"
             type="primary"
             @click="couponDetails"
           >
             <Icon type="md-search" />&nbsp;用券数据
-          </Button> -->
+          </Button>
           <!-- <Poptip
             confirm
             placement="bottom"
@@ -836,21 +836,21 @@ export default {
             return <div>{amount}</div>;
           }
         },
-        // {
-        //   title: "商品名称",
-        //   width: 150,
-        //   key: "productNames"
-        // },
-        // {
-        //   title: "活动名称",
-        //   width: 120,
-        //   key: "activityTeambuyContent"
-        // },
-        // {
-        //   title: "券名称",
-        //   width: 120,
-        //   key: "couponName"
-        // },
+        {
+          title: "商品名称",
+          width: 150,
+          key: "productNames"
+        },
+        {
+          title: "活动名称",
+          width: 120,
+          key: "activityTeambuyContent"
+        },
+        {
+          title: "券名称",
+          width: 120,
+          key: "couponName"
+        },
         {
           title: "提货类型",
           width: 120,
@@ -972,35 +972,35 @@ export default {
             }
           }
         },
-        {
-          title: '海鼎备货时间',
-          width: 160,
-          key: 'hdStockAt',
-          sortable: true
-        },
-        {
-          title: '配送状态',
-          width: 160,
-          key: 'deliverStatus',
-          sortable: true
-        },
-        {
-          title: '配送距离(km)',
-          width: 160,
-          key: 'distance',
-          sortable: true
-        },
-        {
-          title: '配送重量(kg)',
-          width: 160,
-          key: 'weight',
-          sortable: true
-        },
+        // {
+        //   title: '海鼎备货时间',
+        //   width: 160,
+        //   key: 'hdStockAt',
+        //   sortable: true
+        // },
+        // {
+        //   title: '配送状态',
+        //   width: 160,
+        //   key: 'deliverStatus',
+        //   sortable: true
+        // },
+        // {
+        //   title: '配送距离(km)',
+        //   width: 160,
+        //   key: 'distance',
+        //   sortable: true
+        // },
+        // {
+        //   title: '配送重量(kg)',
+        //   width: 160,
+        //   key: 'weight',
+        //   sortable: true
+        // },
         {
           title: "操作",
           minWidth: 150,
           key: "handle",
-          options: ["view", "onHand","onReceive"]
+          options: ["view", "onHand", "onReceive"]
         }
       ],
       currentTableRowSelected: null,
@@ -1084,21 +1084,23 @@ export default {
       }
     },
     //确认收货
-    handSureReceive(params){
-      if (params.row.orderStatus === "SEND_OUT" || params.row.orderStatus === "DISPATCHING") {
-        sureReceive({orderId: params.row.id})
-        .then(res => {
-          this.loading = false;
-          this.$Message.success("确认收货成功");
-          this.getTableData();
-        })
-        .catch(() => {
-          this.loading = false;
-        });
-      }else{
-          this.$Message.error("只有已发货和配送中的订单才能操作收货");
+    handSureReceive(params) {
+      if (
+        params.row.orderStatus === "SEND_OUT" ||
+        params.row.orderStatus === "DISPATCHING"
+      ) {
+        sureReceive({ orderId: params.row.id })
+          .then(res => {
+            this.loading = false;
+            this.$Message.success("确认收货成功");
+            this.getTableData();
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+      } else {
+        this.$Message.error("只有已发货和配送中的订单才能操作收货");
       }
-
     },
     handleSubmit() {
       if (!this.currentTableRowSelected) {
@@ -1204,11 +1206,11 @@ export default {
           this.loading = false;
         });
     },
-    // couponDetails(params) {
-    //   this.turnToPage({
-    //     name: "small-order-coupon-details"
-    //   });
-    // },
+    couponDetails(params) {
+      this.turnToPage({
+        name: "small-order-coupon-details"
+      });
+    },
     getTableData() {
       this.loading = true;
       getOrderPages(this.searchRowData)
