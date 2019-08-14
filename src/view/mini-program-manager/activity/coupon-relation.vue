@@ -247,6 +247,11 @@
                   ></Input>
                 </FormItem>
               </i-col>
+              <i-col span="6">
+                <FormItem label="排序字段:" prop="rank" :label-width="180">
+                  <InputNumber v-model="addRelationDetail.rank" label></InputNumber>
+                </FormItem>
+              </i-col>
             </Row>
             <Row>
               <i-col span="7" v-if="tempModalType=='addTemplate'">
@@ -561,7 +566,8 @@ const relationDetail = {
   useLimitType: null,
   hdActivityId: 0,
   source: "SMALL", // 默认来源为系统优惠券
-  userScope: "ALL"
+  userScope: "ALL",
+  rank:"0"
 };
 
 // 系统优惠券模板对象
@@ -812,6 +818,11 @@ const dataColumns = [
     title: "发券总数限制",
     key: "couponLimit",
     minWidth: 60
+  },
+  {
+    title: "排序",
+    minWidth: 20,
+    key: "rank"
   },
   {
     title: "操作",

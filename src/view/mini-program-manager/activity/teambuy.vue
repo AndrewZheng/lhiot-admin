@@ -172,21 +172,35 @@
           <i-col span="12">
             <Row>
               <i-col span="6">有效期起:</i-col>
-              <i-col span="18">{{ teambuyDetail.startTime }}</i-col>
+              <i-col span="18">
+                {{ this.teambuyDetail.startTime = this.$moment(
+                this.teambuyDetail.startTime
+                ).format("YYYY-MM-DD HH:mm:ss") }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
+              <!-- {{ teambuyDetail.endTime }} -->
               <i-col span="6">有效期止:</i-col>
-              <i-col span="18">{{ teambuyDetail.endTime }}</i-col>
+              <i-col span="18">
+                {{ this.teambuyDetail.endTime = this.$moment(
+                this.teambuyDetail.endTime
+                ).format("YYYY-MM-DD HH:mm:ss") }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
+              <!-- {{ teambuyDetail.deliveryEndTime }} -->
               <i-col span="6">提货截止时间:</i-col>
-              <i-col span="18">{{ teambuyDetail.deliveryEndTime }}</i-col>
+              <i-col span="18">
+                {{ this.teambuyDetail.deliveryEndTime = this.$moment(
+                this.teambuyDetail.deliveryEndTime
+                ).format("YYYY-MM-DD HH:mm:ss") }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -368,7 +382,7 @@
           <Row>
             <i-col span="12">
               <FormItem label="排序序号:" prop="rank">
-                <InputNumber  v-model="teambuyDetail.rank" style="width: 200px"></InputNumber>
+                <InputNumber v-model="teambuyDetail.rank" style="width: 200px"></InputNumber>
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -402,10 +416,29 @@
             </i-col>
           </Row>
           <Row>
+            <!-- :readonly="tempModalType === modalType.edit" -->
+            <!-- :readonly="tempModalType === modalType.edit" -->
+            <!-- :readonly="tempModalType === modalType.edit" -->
+            <!-- 
+                    <Row>
+              <Col span="18">
+                <FormItem label="有效期起:" prop="beginTime">
+                  <DatePicker
+                    v-model="registerDetail.beginTime"
+                    format="yyyy-MM-dd HH:mm:ss"
+                    type="datetime"
+                    placeholder="有效期起"
+                    class="search-input"
+                    style="width: 170px"
+                    @on-change="beginTimeChange"
+                  />
+                </FormItem>
+              </Col>
+            </Row>
+            -->
             <i-col span="12">
               <FormItem label="有效期起:" prop="startTime">
                 <DatePicker
-                  :readonly="tempModalType === modalType.edit"
                   v-model="teambuyDetail.startTime"
                   format="yyyy-MM-dd HH:mm:ss"
                   type="datetime"
@@ -419,7 +452,6 @@
             <i-col span="12">
               <FormItem label="有效期止:" prop="endTime">
                 <DatePicker
-                  :readonly="tempModalType === modalType.edit"
                   v-model="teambuyDetail.endTime"
                   format="yyyy-MM-dd HH:mm:ss"
                   type="datetime"
@@ -435,7 +467,6 @@
             <i-col span="12">
               <FormItem label="提货截止时间:" prop="deliveryEndTime">
                 <DatePicker
-                  :readonly="tempModalType === modalType.edit"
                   v-model="teambuyDetail.deliveryEndTime"
                   format="yyyy-MM-dd HH:mm:ss"
                   type="datetime"
@@ -1461,6 +1492,22 @@ export default {
     },
     editStore() {
       this.modalViewLoading = true;
+      if (this.teambuyDetail.startTime.indexOf("T") > -1) {
+        this.teambuyDetail.startTime = this.$moment(
+          this.teambuyDetail.startTime
+        ).format("YYYY-MM-DD HH:mm:ss");
+      }
+      if (this.teambuyDetail.endTime.indexOf("T") > -1) {
+        this.teambuyDetail.endTime = this.$moment(
+          this.teambuyDetail.endTime
+        ).format("YYYY-MM-DD HH:mm:ss");
+      }
+      if (this.teambuyDetail.deliveryEndTime.indexOf("T") > -1) {
+        this.teambuyDetail.deliveryEndTime = this.$moment(
+          this.teambuyDetail.deliveryEndTime
+        ).format("YYYY-MM-DD HH:mm:ss");
+      }
+
       editTeamBuy(this.teambuyDetail)
         .then(res => {
           this.modalEdit = false;
@@ -1615,10 +1662,20 @@ export default {
     startTimeChange(value, date) {
       console.log("change start value:", value);
       this.teambuyDetail.startTime = value;
+      if (this.teambuyDetail.startTime.indexOf("T") > -1) {
+        this.teambuyDetail.startTime = this.$moment(
+          this.teambuyDetail.startTime
+        ).format("YYYY-MM-DD HH:mm:ss");
+      }
     },
     endTimeChange(value, date) {
       console.log("change end value:", value);
       this.teambuyDetail.endTime = value;
+      if (this.teambuyDetail.endTime.indexOf("T") > -1) {
+        this.teambuyDetail.endTime = this.$moment(
+          this.teambuyDetail.endTime
+        ).format("YYYY-MM-DD HH:mm:ss");
+      }
     },
     createTimeStartChange(value, date) {
       this.teambuyDetail.createTimeStart = value ? value : null;
@@ -1628,6 +1685,11 @@ export default {
     },
     deliveryEndTimeChange(value, date) {
       this.teambuyDetail.deliveryEndTime = value;
+      if (this.teambuyDetail.deliveryEndTime.indexOf("T") > -1) {
+        this.teambuyDetail.deliveryEndTime = this.$moment(
+          this.teambuyDetail.deliveryEndTime
+        ).format("YYYY-MM-DD HH:mm:ss");
+      }
     },
     validSecondsChange() {
       const hour = this.teambuyDetail.hour * 60 * 60;

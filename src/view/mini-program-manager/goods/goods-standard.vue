@@ -1789,7 +1789,7 @@ export default {
         this.uploadListMultiple = descriptionImgArr;
       }
     },
-    handleRemoveMain(file) {
+    handleRemoveDetail(file) {
       this.$refs.uploadDetail.deleteFile(file);
       this.productStandardDetail.detailImage = null;
     },

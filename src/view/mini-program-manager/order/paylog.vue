@@ -22,7 +22,7 @@
               <!-- <count-to :simplify="true" :delay="500" :end="sum" count-class="count-text" unit-class="unit-class">
                   <span slot="left" class="slot-text">金额总计：&yen;{{sum }}&nbsp;</span>
                   <span slot="right" class="slot-text">&nbsp;元</span>
-              </count-to> -->
+              </count-to>-->
             </div>
             <DatePicker
               v-model="searchRowData.startTime"
@@ -85,7 +85,7 @@
                 style="padding-left: 5px"
               >{{ item.label }}</Option>
             </Select>
-            <Select
+            <Select 
               v-model="searchRowData.sourceType"
               placeholder="支付来源"
               style="padding-right: 5px;width: 100px"
@@ -110,11 +110,14 @@
             <Button
               v-waves
               :loading="clearSearchLoading"
-              class="search-btn"
+              class="search-btn mr5"
               type="info"
               @click="handleClear"
             >
               <Icon type="md-refresh" />&nbsp;清除
+            </Button>
+            <Button class="search-btn mr2" type="warning" @click="handleDownload">
+              <Icon type="md-download" />导出
             </Button>
           </Row>
         </div>
@@ -214,12 +217,12 @@
 
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
-import CountTo from '_c/count-to';
+import CountTo from "_c/count-to";
 import _ from "lodash";
 import { getPaymentLogPages, getPaymentLogSum } from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
-import { fenToYuanDot2,fenToYuanDot2Number } from "@/libs/util";
+import { fenToYuanDot2, fenToYuanDot2Number } from "@/libs/util";
 import {
   appTypeConvert,
   payTypeConvert,
@@ -325,6 +328,12 @@ export default {
               return (
                 <div>
                   <tag color="gold">{payTypeConvert(row.payType).label}</tag>
+                </div>
+              );
+            } else if (row.payType === "points") {
+              return (
+                <div>
+                  <tag color="pink">{payTypeConvert(row.payType).label}</tag>
                 </div>
               );
             } else {
@@ -443,6 +452,32 @@ export default {
   },
   created() {},
   methods: {
+    //导出
+    handleDownload() {
+      // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
+      this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      console.log(this.searchRowData.rows);
+      getPaymentLogPages(this.searchRowData).then(res => {
+        const tableData = res.rows;
+        // 恢复正常页数
+        this.searchRowData.rows = 10;
+        console.log(this.searchRowData.rows);
+        // 表格数据导出字段翻译
+        let _this = this;
+        tableData.forEach(item => {
+          item["app_type"] = appTypeConvert(item["app_type"]).label;
+          item["payType"] = payTypeConvert(item["payType"]).label;
+          item["sourceType"] = sourceTypeConvert(item["app_type"]).label;
+          item["payFee"] = (item["payFee"] / 100.0).toFixed(2);
+          item["payStep"] = payStepConvert(item["app_type"]).label;
+          item["bankType"] = bankTypeConvert(item["bankType"]).label;
+        });
+        _this.$refs.tables.handleDownload({
+          filename: `鲜果币流水信息-${new Date().valueOf()}`,
+          data: tableData
+        });
+      });
+    },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
       this.getTableData();

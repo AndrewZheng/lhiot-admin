@@ -147,7 +147,7 @@
           <Row>
             <Col span="20">
               <FormItem label="键:" prop="indexName">
-                <Input v-model="systemDetail.indexName" placeholder="键"></Input>
+                <Input v-model="systemDetail.indexName" placeholder="键" disabled="disabled"></Input>
               </FormItem>
             </Col>
           </Row>

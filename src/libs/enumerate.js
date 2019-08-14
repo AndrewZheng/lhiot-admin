@@ -998,7 +998,7 @@ export const svipTypeEnum = [
 
 export const appType = {
   WXSMALL_SHOP: 'WXSMALL_SHOP',
-  S_MALL: 'S_MALL'
+  S_MALL: 'S_MALL',
 };
 
 export const appTypeEnum = [
@@ -1009,14 +1009,15 @@ export const appTypeEnum = [
   {
     label: '拼团小程序',
     value: appType.S_MALL
-  }
+  },
 ];
 
 // 小程序支付类型 payType weixin 微信支付; balance 余额支付;
 
 export const payType = {
   weixin: 'weixin',
-  balance: 'balance'
+  balance: 'balance',
+  points: 'points'
 };
 
 export const payTypeEnum = [
@@ -1027,6 +1028,10 @@ export const payTypeEnum = [
   {
     label: '余额支付',
     value: payType.balance
+  },
+  {
+    label: '积分兑换',
+    value: payType.points
   }
 ];
 

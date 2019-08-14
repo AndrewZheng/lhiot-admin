@@ -547,6 +547,7 @@ import {
   orderStatusEnum,
   miniOrderTypeEnum,
   appTypeEnum,
+  payTypeEnum,
   miniOrderStatusEnum,
   miniOrderStatus,
   miniHdStatusEnum,
@@ -558,7 +559,8 @@ import {
   miniOrderStatusConvert,
   miniHdStatusConvert,
   receivingWayConvert,
-  appTypeConvert
+  appTypeConvert,
+  payTypeConvert
 } from "@/libs/converStatus";
 import BookTypeOption from "_c/book-type-option";
 
@@ -630,6 +632,7 @@ export default {
       receivingWayEnum,
       receivingWay,
       appTypeEnum,
+      payTypeEnum,
       miniOrderStatusEnum,
       miniOrderStatus,
       miniHdStatusEnum,
@@ -767,6 +770,29 @@ export default {
               );
             } else {
               return <div>{row.apply}</div>;
+            }
+          }
+        },
+        {
+          title: "支付类型",
+          width: 120,
+          key: "payType",
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.payType === "weixin") {
+              return (
+                <div>
+                  <tag color="success">{payTypeConvert(row.payType).label}</tag>
+                </div>
+              );
+            } else if (row.payType === "balance") {
+              return (
+                <div>
+                  <tag color="pink">{payTypeConvert(row.payType).label}</tag>
+                </div>
+              );
+            } else {
+              return <div>{"N/A"}</div>;
             }
           }
         },
@@ -1025,7 +1051,7 @@ export default {
     startTimeChange(value, date) {
       this.searchRowData.startTime = value;
     },
-    endTimeChange(value, date) {
+    endTimeChange(value, data) {
       this.searchRowData.endTime = value;
     },
     handleEditCloseTransferModalView() {
@@ -1230,6 +1256,7 @@ export default {
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      console.log(this.searchRowData.rows);
       getOrderPages(this.searchRowData).then(res => {
         const tableData = res.rows;
         // 恢复正常页数
@@ -1257,6 +1284,7 @@ export default {
             item["receivingWay"]
           ).label;
           item["status"] = miniOrderStatusConvert(item["status"]).label;
+          item["payType"] = payTypeConvert(item["payType"]).label;
         });
         this.$refs.tables.handleDownload({
           filename: `普通订单信息-${new Date().valueOf()}`,
@@ -1337,7 +1365,6 @@ export default {
   width: 150px;
   height: auto !important;
 }
-
 .add-image {
   line-height: 48px;
   vertical-align: text-bottom;

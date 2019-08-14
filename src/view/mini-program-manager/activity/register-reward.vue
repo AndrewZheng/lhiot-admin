@@ -84,7 +84,11 @@
           <i-col span="24">
             <Row>
               <i-col span="6">开始时间:</i-col>
-              <i-col span="18">{{ registerDetail.beginTime }}</i-col>
+              <i-col span="18">
+                {{ this.registerDetail.beginTime = this.$moment(
+                this.registerDetail.beginTime
+                ).format("YYYY-MM-DD HH:mm:ss") }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -92,7 +96,11 @@
           <i-col span="24">
             <Row>
               <i-col span="6">结束时间:</i-col>
-              <i-col span="18">{{ registerDetail.endTime }}</i-col>
+              <i-col span="18">
+                {{ this.registerDetail.endTime = this.$moment(
+                this.registerDetail.endTime
+                ).format("YYYY-MM-DD HH:mm:ss") }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -828,16 +836,25 @@ export default {
     editRegister() {
       this.modalViewLoading = true;
       // UTC通用时间标准 2019-06-19T16:00:00.000Z转换为正常格式
-      if (this.registerDetail.beginTime.indexOf("T") > -1) {
-        this.registerDetail.beginTime = this.$moment(
-          this.registerDetail.beginTime
-        ).format("YYYY-MM-DD HH:mm:ss");
-      }
-      if (this.registerDetail.endTime.indexOf("T") > -1) {
-        this.registerDetail.endTime = this.$moment(
-          this.registerDetail.endTime
-        ).format("YYYY-MM-DD HH:mm:ss");
-      }
+
+      this.registerDetail.beginTime = this.$moment(
+        this.registerDetail.beginTime
+      ).format("YYYY-MM-DD HH:mm:ss");
+
+      this.registerDetail.endTime = this.$moment(
+        this.registerDetail.endTime
+      ).format("YYYY-MM-DD HH:mm:ss");
+
+      // if (this.registerDetail.beginTime.indexOf("T") > -1) {
+      //   this.registerDetail.beginTime = this.$moment(
+      //     this.registerDetail.beginTime
+      //   ).format("YYYY-MM-DD HH:mm:ss");
+      // }
+      // if (this.registerDetail.endTime.indexOf("T") > -1) {
+      //   this.registerDetail.endTime = this.$moment(
+      //     this.registerDetail.endTime
+      //   ).format("YYYY-MM-DD HH:mm:ss");
+      // }
       editRegister(this.registerDetail)
         .then(res => {
           this.modalEdit = false;
