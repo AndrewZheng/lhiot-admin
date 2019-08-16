@@ -779,7 +779,16 @@ export const vipStatusEnum = [
     value: 'TRY_SVIP'
   }
 ];
-
+export const receiveTypeEnum = [
+  {
+    label: '自动领取',
+    value: 'AUTO'
+  },
+  {
+    label: '手动领取',
+    value: 'MANUAL'
+  }
+];
 // svip套餐状态 (开启 ON,关闭 OFF,未开启 NOTOPEN,已结束 OVER))
 export const packageStatus = {
   OFF: 'OFF',

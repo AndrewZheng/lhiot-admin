@@ -345,6 +345,24 @@
             :label-width="100"
           >
             <Row>
+              <i-col span="6">
+                <FormItem label="领券方式:" prop="receiveType">
+                  <Select
+                    v-model="addRelationDetail.receiveType"
+                    placeholder="请选择"
+                    style="padding-right: 5px;width: 100px"
+                  >
+                    <Option
+                      v-for="(item,index) in receiveTypeEnum"
+                      :value="item.value"
+                      :key="index"
+                      class="ptb2-5"
+                    >{{ item.label }}</Option>
+                  </Select>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row>
               <i-col span="6" v-if="tempModalType == 'addTemplate'">
                 <FormItem label="券有效期:" prop="validDateType">
                   <Select
@@ -545,6 +563,25 @@
             </i-col>
           </Row>
           <Divider>可修改部分</Divider>
+          <!-- 领券方式 -->
+          <Row>
+            <i-col span="6">
+              <FormItem label="领券方式:" prop="receiveType">
+                <Select
+                  v-model="addRelationDetail.receiveType"
+                  placeholder="请选择"
+                  style="padding-right: 5px;"
+                >
+                  <Option
+                    v-for="(item,index) in receiveTypeEnum"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+            </i-col>
+          </Row>
           <Row>
             <i-col span="6">
               <FormItem label="优惠券名称:" :label-width="100">
@@ -761,14 +798,16 @@ import {
   couponStatusConvert,
   couponTypeConvert,
   couponScopeConvert,
-  couponUseLimitConvert
+  couponUseLimitConvert,
+  receiveTypeConvert
 } from "@/libs/converStatus";
 import {
   couponStatusEnum,
   couponTypeEnum,
   couponScopeEnum,
   couponUseLimitEnum,
-  validDateTypeEnum
+  validDateTypeEnum,
+  receiveTypeEnum
 } from "@/libs/enumerate";
 import {
   compareData,
@@ -798,7 +837,8 @@ const couponDetail = {
   createTime: null,
   applicationType: null,
   activityImage: "",
-  activityUrl: ""
+  activityUrl: "",
+  receiveType: ""
 };
 
 // 关联的优惠券配置对象
@@ -820,7 +860,8 @@ const relationDetail = {
   source: "SMALL", // 默认来源为系统对象
   validDateType: "FIXED_DATE",
   beginDay: 0,
-  endDay: 0
+  endDay: 0,
+  receiveType: "MANUAL"
 };
 
 // 系统优惠券模板对象
@@ -1376,6 +1417,7 @@ export default {
           }
         ]
       },
+      receiveType: "",
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
@@ -1384,6 +1426,7 @@ export default {
       couponTypeEnum,
       validDateTypeEnum,
       couponScopeEnum,
+      receiveTypeEnum,
       couponUseLimitEnum,
       dataColumns: dataColumns,
       templateColumns: _.cloneDeep(templateColumns),
@@ -1704,6 +1747,7 @@ export default {
     },
     handleTemplateAdd() {
       let _this = this;
+      console.log(_this.addRelationDetail.receiveType);
       if (this.addRelationDetail.couponName == "") {
         this.$Message.error("请先关联一张优惠券模板!");
         return false;

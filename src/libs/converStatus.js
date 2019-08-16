@@ -32,6 +32,7 @@ import {
   couponActivityTypeEnum,
   couponStatusEnum,
   vipStatusEnum,
+  receiveTypeEnum,
   packageTypeEnum,
   packageStatusEnum,
   userScopeEnum,
@@ -216,6 +217,10 @@ export const couponTypeConvert = (value) => {
 
 export const vipTypeConvert = (value) => {
   return convertFunction(value, vipStatusEnum);
+}
+
+export const receiveTypeConvert = (value) => {
+  return convertFunction(value, receiveTypeEnum);
 }
 
 export const packageStatusConvert = (value) => {

@@ -414,6 +414,10 @@ export default {
     },
     // 编辑分类
     handleEdit(params) {
+      // if (!this.parentCategory.groupName) {
+      //   this.$Message.warning("请从左侧选择一个板块");
+      //   return;
+      // }
       // this.$refs.modalEdit.resetFields();
       this.resetFields();
       this.tempModalType = this.modalType.edit;

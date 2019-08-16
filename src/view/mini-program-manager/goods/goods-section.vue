@@ -52,7 +52,7 @@
                   type="primary"
                   @click="handleSearch"
                 >
-                  <Icon type="md-search" />&nbsp;搜索
+                  <Icon type="md-search" />&nbsp;搜索43534534252345234523452345234534
                 </Button>
                 <Button
                   v-waves
@@ -97,16 +97,18 @@
         </Card>
       </i-col>
     </Row>
-
+    <!-- 添加和修改 -->
     <Modal v-model="modalEdit" :mask-closable="false" :width="1000">
       <p slot="header">
         <span>{{ tempModalType == modalType.create? '添加板块商品':'编辑板块' }}</span>
       </p>
       <div class="modal-content">
         <Form ref="editForm" :model="productStandardRelation" :rules="ruleInline">
+          <!-- 编辑 -->
           <Row v-if="tempModalType == modalType.edit">
             <FormItem label="请选择要更换的商品板块:">
               <Cascader
+                :clearable="false"
                 :data="goodsSectionData"
                 v-model="defaultGoodsSectionData"
                 span="21"
@@ -115,6 +117,7 @@
               ></Cascader>
             </FormItem>
           </Row>
+          <!-- 添加 -->
           <Row v-if="tempModalType == modalType.create">
             <FormItem>
               <tables
@@ -468,7 +471,6 @@ const productColumns = [
     align: "center"
   }
 ];
-
 export default {
   components: {
     Tables,
@@ -754,7 +756,7 @@ export default {
       this.defaultGoodsSectionData = selectedData;
     },
     hanldeProductClear() {
-      this.searchProductRowData = _.cloneDeep(productRowData); 
+      this.searchProductRowData = _.cloneDeep(productRowData);
       this.getProductTableData();
     },
     changeProductPage(page) {

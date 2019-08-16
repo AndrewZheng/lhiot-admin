@@ -1220,7 +1220,7 @@ const dataColumns = [
   },
   {
     title: "操作",
-    minWidth: 80,
+    minWidth: 90,
     key: "handle",
     options: ["couponStatus", "view", "edit", "delete"]
   }
