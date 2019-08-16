@@ -164,14 +164,14 @@
           >
             <Icon type="md-download" />导出
           </Button>
-          <Button
+          <!-- <Button
             :loading="downloadLoading"
             class="search-btn"
             type="primary"
             @click="couponDetails"
           >
             <Icon type="md-search" />&nbsp;用券数据
-          </Button>
+          </Button> -->
           <!-- <Poptip
             confirm
             placement="bottom"
@@ -862,21 +862,21 @@ export default {
             return <div>{amount}</div>;
           }
         },
-        {
-          title: "商品名称",
-          width: 150,
-          key: "productNames"
-        },
-        {
-          title: "活动名称",
-          width: 120,
-          key: "activityTeambuyContent"
-        },
-        {
-          title: "券名称",
-          width: 120,
-          key: "couponName"
-        },
+        // {
+        //   title: "商品名称",
+        //   width: 150,
+        //   key: "productNames"
+        // },
+        // {
+        //   title: "活动名称",
+        //   width: 120,
+        //   key: "activityTeambuyContent"
+        // },
+        // {
+        //   title: "券名称",
+        //   width: 120,
+        //   key: "couponName"
+        // },
         {
           title: "提货类型",
           width: 120,
