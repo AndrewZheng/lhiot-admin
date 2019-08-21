@@ -52,7 +52,7 @@
                   type="primary"
                   @click="handleSearch"
                 >
-                  <Icon type="md-search" />&nbsp;搜索11
+                  <Icon type="md-search" />&nbsp;搜索
                 </Button>
                 <Button
                   v-waves
@@ -119,7 +119,7 @@
               <Cascader
                 :data="goodsSectionData"
                 change-on-select
-                element-id="plate"
+                size="large"
                 v-model="defaultGoodsSectionData"
                 span="21"
                 style="width: 70%"
@@ -877,15 +877,6 @@ export default {
         this.productStandardRelation.productSectionId = null;
       }
       this.defaultGoodsSectionData = selectedData;
-    },
-    changeChecked(node, parent, type) {
-      // node.checked = type == 0 ? true : false;
-      // if (node.children && node.children.length) {
-      //   node.children.forEach(item => {
-      //     clearChecked(item, node, type);
-      //   });
-      // }
-      console.log("123");
     },
     hanldeProductClear() {
       this.searchProductRowData = _.cloneDeep(productRowData);
