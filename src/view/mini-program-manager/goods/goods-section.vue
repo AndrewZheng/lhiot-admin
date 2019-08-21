@@ -52,7 +52,7 @@
                   type="primary"
                   @click="handleSearch"
                 >
-                  <Icon type="md-search" />&nbsp;搜索43534534252345234523452345234534
+                  <Icon type="md-search" />&nbsp;搜索11
                 </Button>
                 <Button
                   v-waves
@@ -80,6 +80,15 @@
                   <Icon type="md-trash" />批量删除
                 </Button>
               </Poptip>
+              <Button
+                v-waves
+                :loading="clearSearchLoading"
+                type="warning"
+                @click="handleBack"
+                class="mr5"
+              >
+                <Icon type="ios-arrow-back" />&nbsp;返回所有板块
+              </Button>
             </div>
           </tables>
           <div style="margin: 10px;overflow: hidden">
@@ -97,7 +106,7 @@
         </Card>
       </i-col>
     </Row>
-    <!-- 添加和修改 -->
+    <!-- 添加 -->
     <Modal v-model="modalEdit" :mask-closable="false" :width="1000">
       <p slot="header">
         <span>{{ tempModalType == modalType.create? '添加板块商品':'编辑板块' }}</span>
@@ -108,8 +117,9 @@
           <Row v-if="tempModalType == modalType.edit">
             <FormItem label="请选择要更换的商品板块:">
               <Cascader
-                :clearable="false"
                 :data="goodsSectionData"
+                change-on-select
+                element-id="plate"
                 v-model="defaultGoodsSectionData"
                 span="21"
                 style="width: 70%"
@@ -207,6 +217,7 @@ import {
 } from "@/api/mini-program";
 import { buildMenu, convertTree, convertTreeCategory } from "@/libs/util";
 import CommonIcon from "_c/common-icon";
+import uploadMixin from "@/mixins/uploadMixin";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -290,98 +301,92 @@ const productRowData = {
   rows: 10
 };
 
-const dataColunms = [
-  {
-    type: "selection",
-    width: 60,
-    align: "center",
-    fixed: "left"
-  },
-  {
-    title: "商品条码",
-    key: "barcode",
-    sortable: true,
-    align: "center"
-  },
-  {
-    title: "商品编号",
-    key: "productCode",
-    sortable: true,
-    align: "center",
-    width: 150
-  },
-  {
-    title: "商品名称",
-    key: "productName",
-    sortable: true,
-    align: "center"
-  },
-  {
-    title: "商品规格",
-    key: "specification",
-    sortable: true,
-    align: "center"
-  },
-  {
-    title: "商品单位",
-    key: "productUnit",
-    sortable: true,
-    align: "center"
-  },
-  {
-    title: "商品价格",
-    key: "price",
-    sortable: true,
-    align: "center",
-    render(h, params, vm) {
-      const amount = fenToYuanDot2(params.row.price);
-      return <div>{amount}</div>;
-    }
-  },
-  {
-    title: "商品状态",
-    key: "shelvesStatus",
-    sortable: true,
-    align: "center",
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (row.shelvesStatus === "VALID") {
-        return (
-          <div>
-            <tag color="success">
-              {customPlanStatusConvert(row.shelvesStatus).label}
-            </tag>
-          </div>
-        );
-      } else if (row.shelvesStatus === "INVALID") {
-        return (
-          <div>
-            <tag color="error">
-              {customPlanStatusConvert(row.shelvesStatus).label}
-            </tag>
-          </div>
-        );
-      } else {
-        return (
-          <div>
-            <tag color="primary">N/A</tag>
-          </div>
-        );
-      }
-    }
-  },
-  {
-    title: "排序",
-    key: "productSectionRank",
-    sortable: true,
-    align: "center"
-  },
-  {
-    title: "操作",
-    key: "handle",
-    options: ["exchange", "edit", "delete"]
-  }
-];
+// const dataColunms = [
+//   {
+//     type: "selection",
+//     width: 60,
+//     align: "center",
+//     fixed: "left"
+//   },
+//   {
+//     title: "商品条码",
+//     key: "barcode",
+//     align: "center"
+//   },
+//   {
+//     title: "商品编号",
+//     key: "productCode",
+//     align: "center",
+//     width: 150
+//   },
+//   {
+//     title: "商品名称",
+//     key: "productName",
+//     align: "center"
+//   },
+//   {
+//     title: "商品规格",
+//     key: "specification",
+//     align: "center"
+//   },
+//   {
+//     title: "商品单位",
+//     key: "productUnit",
+//     align: "center"
+//   },
+//   {
+//     title: "商品价格",
+//     key: "price",
+//     align: "center",
+//     render(h, params, vm) {
+//       const amount = fenToYuanDot2(params.row.price);
+//       return <div>{amount}</div>;
+//     }
+//   },
+//   {
+//     title: "商品状态",
+//     key: "shelvesStatus",
+//     align: "center",
+//     render: (h, params, vm) => {
+//       const { row } = params;
+//       if (row.shelvesStatus === "VALID") {
+//         return (
+//           <div>
+//             <tag color="success">
+//               {customPlanStatusConvert(row.shelvesStatus).label}
+//             </tag>
+//           </div>
+//         );
+//       } else if (row.shelvesStatus === "INVALID") {
+//         return (
+//           <div>
+//             <tag color="error">
+//               {customPlanStatusConvert(row.shelvesStatus).label}
+//             </tag>
+//           </div>
+//         );
+//       } else {
+//         return (
+//           <div>
+//             <tag color="primary">N/A</tag>
+//           </div>
+//         );
+//       }
+//     }
+//   },
+//   {
+//     title: "排序",
+//     key: "productSectionRank",
+//     sortable: "custom",
+//     sortNumber: 0,
+//     align: "center"
+//   },
+//   {
+//     title: "操作",
+//     key: "handle",
+//     options: ["exchange", "edit", "delete"]
+//   }
+// ];
 
 const productColumns = [
   {
@@ -503,7 +508,91 @@ export default {
       },
       appTypeEnum,
       menuData: [],
-      columns: dataColunms,
+      columns: [
+        {
+          type: "selection",
+          width: 60,
+          align: "center",
+          fixed: "left"
+        },
+        {
+          title: "商品条码",
+          key: "barcode",
+          align: "center"
+        },
+        {
+          title: "商品编号",
+          key: "productCode",
+          align: "center",
+          width: 150
+        },
+        {
+          title: "商品名称",
+          key: "productName",
+          align: "center"
+        },
+        {
+          title: "商品规格",
+          key: "specification",
+          align: "center"
+        },
+        {
+          title: "商品单位",
+          key: "productUnit",
+          align: "center"
+        },
+        {
+          title: "商品价格",
+          key: "price",
+          align: "center",
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(params.row.price);
+            return <div>{amount}</div>;
+          }
+        },
+        {
+          title: "商品状态",
+          key: "shelvesStatus",
+          align: "center",
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.shelvesStatus === "VALID") {
+              return (
+                <div>
+                  <tag color="success">
+                    {customPlanStatusConvert(row.shelvesStatus).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.shelvesStatus === "INVALID") {
+              return (
+                <div>
+                  <tag color="error">
+                    {customPlanStatusConvert(row.shelvesStatus).label}
+                  </tag>
+                </div>
+              );
+            } else {
+              return (
+                <div>
+                  <tag color="primary">N/A</tag>
+                </div>
+              );
+            }
+          }
+        },
+        {
+          title: "排序",
+          key: "productSectionRank",
+          sortable: "true",
+          align: "center"
+        },
+        {
+          title: "操作",
+          key: "handle",
+          options: ["exchange", "edit", "delete"]
+        }
+      ],
       productColumns: productColumns,
       modalEdit: false,
       modalChange: false,
@@ -520,7 +609,15 @@ export default {
       goodsSectionData: [],
       defaultGoodsSectionData: [41],
       productData: [],
-      productTotal: 0
+      productTotal: 0,
+      //排序字段
+      orderKey: [],
+      // 排序类别（asc，desc）
+      orderType: [],
+      //排序的字段顺序（从0开始）（设置样式时使用）
+      sortIndex: [],
+      // 排序类别（asc，desc，normal）（设置样式时使用）
+      sortType: []
     };
   },
   computed: {},
@@ -528,6 +625,32 @@ export default {
     this.initMenuList();
   },
   methods: {
+    handleSearch() {
+      this.searchRowData.page = 1;
+      this.searchLoading = true;
+      this.getTableData();
+    },
+    handleClear() {
+      // 重置数据
+      this.resetSearchRowData();
+      this.page = 1;
+      this.pageSize = 10;
+      this.clearSearchLoading = true;
+      this.handleSearch();
+    },
+    handleExport(filename) {
+      this.searchRowData.page = 1;
+      this.searchLoading = true;
+      this.getTableData();
+      this.$refs.tables.exportCsv({
+        // filename: `table-${new Date().valueOf()}.csv`
+        filename: filename + "-" + new Date().valueOf() + ".csv"
+      });
+    },
+    handleBack() {
+      this.currentCategory.sectionName = "所有板块";
+      this.handleClear();
+    },
     renderContent(h, { root, node, data }) {
       if (data.type == "PARENT") {
         return (
@@ -755,6 +878,15 @@ export default {
       }
       this.defaultGoodsSectionData = selectedData;
     },
+    changeChecked(node, parent, type) {
+      // node.checked = type == 0 ? true : false;
+      // if (node.children && node.children.length) {
+      //   node.children.forEach(item => {
+      //     clearChecked(item, node, type);
+      //   });
+      // }
+      console.log("123");
+    },
     hanldeProductClear() {
       this.searchProductRowData = _.cloneDeep(productRowData);
       this.getProductTableData();
@@ -767,6 +899,18 @@ export default {
       this.searchProductRowData.page = 1;
       this.searchProductRowData.rows = pageSize;
       this.getProductTableData();
+    },
+    // changePageSize(pageSize) {
+    //   pageSize = this.total;
+    //   this.searchRowData.page = 1;
+    //   this.searchRowData.rows = pageSize;
+    //   this.getTableData();
+    // },
+    sortChanged(pageSize) {
+      pageSize = this.total;
+      this.searchRowData.page = 1;
+      this.searchRowData.rows = pageSize;
+      this.getTableData();
     }
   }
 };
