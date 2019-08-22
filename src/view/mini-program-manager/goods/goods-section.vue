@@ -52,7 +52,7 @@
                   type="primary"
                   @click="handleSearch"
                 >
-                  <Icon type="md-search" />&nbsp;搜索
+                  <Icon type="md-search" />&nbsp;搜索1
                 </Button>
                 <Button
                   v-waves
@@ -701,6 +701,7 @@ export default {
       }
       this.$refs.editForm.resetFields();
       this.getProductTableData();
+      console.log(this.currentSectionId)
       this.currentStandard.currentSectionId = this.currentSectionId;
       this.productStandardRelation.productSectionId = this.currentSectionId;
       this.tempModalType = this.modalType.create;
@@ -891,13 +892,7 @@ export default {
       this.searchProductRowData.rows = pageSize;
       this.getProductTableData();
     },
-    // changePageSize(pageSize) {
-    //   pageSize = this.total;
-    //   this.searchRowData.page = 1;
-    //   this.searchRowData.rows = pageSize;
-    //   this.getTableData();
-    // },
-    sortChanged(pageSize) {
+    changePageSize(pageSize) {
       pageSize = this.total;
       this.searchRowData.page = 1;
       this.searchRowData.rows = pageSize;

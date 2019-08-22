@@ -80,7 +80,7 @@
             type="primary"
             @click="handleSearch"
           >
-            <Icon type="md-search"/>&nbsp;搜索
+            <Icon type="md-search" />&nbsp;搜索
           </Button>
           <Button
             v-waves
@@ -89,12 +89,12 @@
             type="info"
             @click="handleClear"
           >
-            <Icon type="md-refresh"/>&nbsp;清除
+            <Icon type="md-refresh" />&nbsp;清除
           </Button>
         </div>
         <div slot="operations">
           <Button v-waves type="success" class="mr5" @click="createTableRow">
-            <Icon type="md-add"/> 添加
+            <Icon type="md-add" />添加
           </Button>
           <Poptip
             confirm
@@ -104,7 +104,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/> 批量删除
+              <Icon type="md-trash" />批量删除
             </Button>
           </Poptip>
         </div>
@@ -259,7 +259,7 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%">
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
   </div>
 </template>
@@ -296,7 +296,7 @@ const advertisementPositionDetail = {
   description: "",
   postionName: "",
   timeLimited: null,
-  applicationType: null,
+  applicationType: "S_MALL",
   positionType: null
 };
 
@@ -390,18 +390,10 @@ export default {
           minWidth: 120,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.applicationType === "WXSMALL_SHOP") {
+            if (row.applicationType === "S_MALL") {
               return (
                 <div>
                   <tag color="green">
-                    {appTypeConvert(row.applicationType).label}
-                  </tag>
-                </div>
-              );
-            } else if (row.applicationType === "S_MALL") {
-              return (
-                <div>
-                  <tag color="gold">
                     {appTypeConvert(row.applicationType).label}
                   </tag>
                 </div>
