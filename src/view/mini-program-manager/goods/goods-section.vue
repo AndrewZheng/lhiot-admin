@@ -52,7 +52,7 @@
                   type="primary"
                   @click="handleSearch"
                 >
-                  <Icon type="md-search" />&nbsp;搜索1
+                  <Icon type="md-search" />&nbsp;搜索
                 </Button>
                 <Button
                   v-waves
@@ -279,7 +279,8 @@ const currentCategory = {
 const roleRowData = {
   productName: null,
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx: "product_section_rank",
 };
 
 const relationData = {
@@ -701,7 +702,7 @@ export default {
       }
       this.$refs.editForm.resetFields();
       this.getProductTableData();
-      console.log(this.currentSectionId)
+      console.log(this.currentSectionId);
       this.currentStandard.currentSectionId = this.currentSectionId;
       this.productStandardRelation.productSectionId = this.currentSectionId;
       this.tempModalType = this.modalType.create;

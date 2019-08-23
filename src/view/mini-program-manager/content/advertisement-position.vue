@@ -52,7 +52,7 @@
             placeholder="应用类型"
           >
             <Option
-              v-for="item in appTypeEnum"
+              v-for="item in appTypesEnum"
               :value="item.value"
               :key="`search-col-${item.value}`"
               class="ml15 mt10"
@@ -226,7 +226,7 @@
               clearable
             >
               <Option
-                v-for="(item,index) in appTypeEnum"
+                v-for="(item,index) in appTypesEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
@@ -280,12 +280,12 @@ import searchMixin from "@/mixins/searchMixin.js";
 import deleteMixin from "@/mixins/deleteMixin.js";
 import uploadMixin from "@/mixins/uploadMixin";
 import {
-  appTypeEnum,
+  appTypesEnum,
   timeLimitedEnum,
   advertisementPositionTypeEnum
 } from "@/libs/enumerate";
 import {
-  appTypeConvert,
+  appTypesConvert,
   timeLimitedConvert,
   advertisementPositionTypeConvert
 } from "@/libs/converStatus";
@@ -325,7 +325,7 @@ export default {
         applicationType: [{ required: true, message: "请选择应用类型" }],
         positionType: [{ required: true, message: "请选择广告位类型" }]
       },
-      appTypeEnum,
+      appTypesEnum,
       timeLimitedEnum,
       advertisementPositionTypeEnum,
       columns: [
@@ -394,7 +394,7 @@ export default {
               return (
                 <div>
                   <tag color="green">
-                    {appTypeConvert(row.applicationType).label}
+                    {appTypesConvert(row.applicationType).label}
                   </tag>
                 </div>
               );

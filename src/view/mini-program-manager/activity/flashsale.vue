@@ -486,7 +486,9 @@ const roleRowData = {
   edBeginTime: null,
   edFinishTime: null,
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx: "start_time",
+  sort: "desc"
 };
 
 const relationRowData = {

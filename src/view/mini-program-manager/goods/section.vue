@@ -192,7 +192,8 @@ const currentCategory = {
 const roleRowData = {
   sectionName: null,
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx:"rank_no"
 };
 
 const dataColumns = [

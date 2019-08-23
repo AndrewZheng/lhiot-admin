@@ -1006,10 +1006,26 @@ export const svipTypeEnum = [
 // 小程序应用类型 appType WXSMALL_SHOP 微信小程序; S_MALL 拼团小程序;
 
 export const appType = {
+  WXSMALL_SHOP: 'WXSMALL_SHOP',
   S_MALL: 'S_MALL',
 };
 
 export const appTypeEnum = [
+  {
+    label: '微信小程序',
+    value: appType.WXSMALL_SHOP
+  },
+  {
+    label: '拼团小程序',
+    value: appType.S_MALL
+  },
+];
+
+export const appTypes = {
+  S_MALL: 'S_MALL',
+};
+
+export const appTypesEnum = [
   {
     label: '小程序',
     value: appType.S_MALL
