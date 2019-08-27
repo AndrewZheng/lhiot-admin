@@ -212,7 +212,7 @@ export const getProductStandardsPages = (data) => {
     url: '/minapp/product-standards/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows, 'sidx': data.sidx, 'sort': data.sort }
+    headers: { 'page': data.page, 'rows': data.rows}
   });
 };
 
@@ -337,7 +337,7 @@ export const getCouponTemplateRelationPages = (data) => {
     url: '/minapp/coupon-template-relations/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: { 'page': data.page, 'rows': data.rows, 'sidx': data.sidx, 'sort': data.sort }
   });
 };
 
@@ -531,7 +531,7 @@ export const getFlashsalePages = (data) => {
     url: '/minapp/activity-flashsales/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows, 'sidx': data.sidx, 'sort': data.sort }
+    headers: { 'page': data.page, 'rows': data.rows}
   });
 };
 
@@ -639,7 +639,7 @@ export const getCouponTemplatePages = (data) => {
     url: '/minapp/coupon-templates/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows, 'sidx': data.sidx, 'sort': data.sort }
+    headers: { 'page': data.page, 'rows': data.rows}
   });
 };
 

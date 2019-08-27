@@ -613,7 +613,9 @@ const roleRowData = {
   // effectiveStartTime: null,
   // effectiveEndTime: null,
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx: "rank",
+  sort: "asc"
 };
 
 const templateRowData = {
@@ -826,6 +828,11 @@ const dataColumns = [
     title: "发券总数限制",
     key: "couponLimit",
     minWidth: 60
+  },
+  {
+    title: "排序",
+    key: "rank",
+    minWidth: 30
   },
   {
     title: "操作",

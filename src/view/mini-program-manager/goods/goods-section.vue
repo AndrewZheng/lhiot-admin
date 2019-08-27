@@ -52,7 +52,7 @@
                   type="primary"
                   @click="handleSearch"
                 >
-                  <Icon type="md-search" />&nbsp;搜索
+                  <Icon type="md-search" />&nbsp;搜索1
                 </Button>
                 <Button
                   v-waves
@@ -611,14 +611,6 @@ export default {
       defaultGoodsSectionData: [41],
       productData: [],
       productTotal: 0,
-      //排序字段
-      orderKey: [],
-      // 排序类别（asc，desc）
-      orderType: [],
-      //排序的字段顺序（从0开始）（设置样式时使用）
-      sortIndex: [],
-      // 排序类别（asc，desc，normal）（设置样式时使用）
-      sortType: []
     };
   },
   computed: {},
@@ -714,6 +706,7 @@ export default {
         return;
       }
       const { row } = params;
+      console.log(row)
       this.productStandardRelation.id = row.id;
       this.productStandardRelation.productStandardIds = row.productStandardId;
       this.productStandardRelation.productSectionRank = row.productSectionRank;

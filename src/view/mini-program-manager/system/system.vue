@@ -119,7 +119,11 @@
               <i-col span="4">描述:</i-col>
               <i-col span="20">
                 {{ systemDetail.description }}
-                <img v-if="showImage" :src="systemDetail.description" width="70%" />
+                <img
+                  v-if="showImage"
+                  :src="systemDetail.description"
+                  width="70%"
+                />
               </i-col>
             </Row>
           </i-col>
@@ -144,10 +148,17 @@
       </p>
       <div class="modal-content">
         <Form ref="modalEdit" :model="systemDetail" :rules="ruleInline" :label-width="80">
-          <Row>
+          <Row v-if="tempModalType===modalType.edit">
             <Col span="20">
               <FormItem label="键:" prop="indexName">
-                <Input v-model="systemDetail.indexName" placeholder="键" disabled="disabled"></Input>
+                <Input v-model="systemDetail.indexName" placeholder="键" disabled></Input>
+              </FormItem>
+            </Col>
+          </Row>
+          <Row v-else-if="tempModalType===modalType.create">
+            <Col span="20">
+              <FormItem label="键:" prop="indexName">
+                <Input v-model="systemDetail.indexName" placeholder="键"></Input>
               </FormItem>
             </Col>
           </Row>
@@ -313,6 +324,7 @@ export default {
       ],
       systemCategoryData: [],
       defaultSystemCategoryData: [41],
+      box: "",
       systemCategoriesTreeList: [],
       defaultListMain: [],
       uploadListMain: [],
@@ -344,7 +356,8 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          console.log(this.indexValue);
+          console.log(this.systemDetail.indexValue);
+          console.log(this.systemDetail.categoryId);
           this.systemDetail.indexValue = this.systemDetail.indexValue.replace(
             /\n|\r/g,
             "&"
@@ -522,6 +535,7 @@ export default {
         this.systemDetail.categoryId = null;
       }
       this.defaultSystemCategoryData = selectedData;
+      this.box = selectedData;
     },
     findGroupId(id) {
       const obj = this.systemCategoriesTreeList.find(item => {

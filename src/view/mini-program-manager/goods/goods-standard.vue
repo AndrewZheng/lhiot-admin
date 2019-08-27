@@ -947,7 +947,6 @@ const roleRowData = {
   maxPrice: "",
   page: 1,
   rows: 10,
-  sidx:"rank"
 };
 
 const productDetail = {
