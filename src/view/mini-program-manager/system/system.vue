@@ -34,6 +34,18 @@
               style="width: auto"
               clearable
             ></Input>
+            <Cascader
+              :data="systemCategoryData"
+              v-model="defaultSystemCategoryData"
+              class="search-col"
+              @on-change="systemCategoryChange1"
+            ></Cascader>
+            <!-- <Cascader
+              :data="systemCategoryData"
+              v-model="defaultSystemCategoryData"
+              span="21"
+              @on-change="systemCategoryChange"
+            ></Cascader>-->
             <Button
               :searchLoading="searchLoading"
               class="search-btn mr5"
@@ -324,7 +336,6 @@ export default {
       ],
       systemCategoryData: [],
       defaultSystemCategoryData: [41],
-      box: "",
       systemCategoriesTreeList: [],
       defaultListMain: [],
       uploadListMain: [],
@@ -535,7 +546,15 @@ export default {
         this.systemDetail.categoryId = null;
       }
       this.defaultSystemCategoryData = selectedData;
-      this.box = selectedData;
+    },
+    // 选择分类搜索
+    systemCategoryChange1(value, selectedData) {
+      if (selectedData.length > 0) {
+        this.searchRowData.categoryId = selectedData[selectedData.length - 1].id;
+      } else {
+        this.searchRowData.categoryId = null;
+      }
+      this.defaultSystemCategoryData = selectedData;
     },
     findGroupId(id) {
       const obj = this.systemCategoriesTreeList.find(item => {
