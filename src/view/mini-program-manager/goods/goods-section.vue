@@ -52,7 +52,7 @@
                   type="primary"
                   @click="handleSearch"
                 >
-                  <Icon type="md-search" />&nbsp;搜索43534534252345234523452345234534
+                  <Icon type="md-search" />&nbsp;搜索
                 </Button>
                 <Button
                   v-waves

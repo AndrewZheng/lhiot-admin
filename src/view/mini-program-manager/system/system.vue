@@ -34,6 +34,18 @@
               style="width: auto"
               clearable
             ></Input>
+            <Cascader
+              :data="systemCategoryData"
+              v-model="defaultSystemCategoryData"
+              class="search-col"
+              @on-change="systemCategoryChange1"
+            ></Cascader>
+            <!-- <Cascader
+              :data="systemCategoryData"
+              v-model="defaultSystemCategoryData"
+              span="21"
+              @on-change="systemCategoryChange"
+            ></Cascader>-->
             <Button
               :searchLoading="searchLoading"
               class="search-btn mr5"
@@ -119,7 +131,11 @@
               <i-col span="4">描述:</i-col>
               <i-col span="20">
                 {{ systemDetail.description }}
-                <img v-if="showImage" :src="systemDetail.description" width="70%" />
+                <img
+                  v-if="showImage"
+                  :src="systemDetail.description"
+                  width="70%"
+                />
               </i-col>
             </Row>
           </i-col>
@@ -144,10 +160,17 @@
       </p>
       <div class="modal-content">
         <Form ref="modalEdit" :model="systemDetail" :rules="ruleInline" :label-width="80">
-          <Row>
+          <Row v-if="tempModalType===modalType.edit">
             <Col span="20">
               <FormItem label="键:" prop="indexName">
-                <Input v-model="systemDetail.indexName" placeholder="键" disabled="disabled"></Input>
+                <Input v-model="systemDetail.indexName" placeholder="键" disabled></Input>
+              </FormItem>
+            </Col>
+          </Row>
+          <Row v-else-if="tempModalType===modalType.create">
+            <Col span="20">
+              <FormItem label="键:" prop="indexName">
+                <Input v-model="systemDetail.indexName" placeholder="键"></Input>
               </FormItem>
             </Col>
           </Row>
@@ -344,7 +367,8 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          console.log(this.indexValue);
+          console.log(this.systemDetail.indexValue);
+          console.log(this.systemDetail.categoryId);
           this.systemDetail.indexValue = this.systemDetail.indexValue.replace(
             /\n|\r/g,
             "&"
@@ -520,6 +544,15 @@ export default {
         this.systemDetail.categoryId = selectedData[selectedData.length - 1].id;
       } else {
         this.systemDetail.categoryId = null;
+      }
+      this.defaultSystemCategoryData = selectedData;
+    },
+    // 选择分类搜索
+    systemCategoryChange1(value, selectedData) {
+      if (selectedData.length > 0) {
+        this.searchRowData.categoryId = selectedData[selectedData.length - 1].id;
+      } else {
+        this.searchRowData.categoryId = null;
       }
       this.defaultSystemCategoryData = selectedData;
     },
