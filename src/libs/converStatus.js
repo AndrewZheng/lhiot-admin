@@ -13,6 +13,7 @@ import {
   orderTypeEnum,
   positionTypeEnum,
   receivingWayEnum,
+  isAllRefundEnum,
   relationTypeEnum,
   settlementStatusEnum,
   thirdDelieverStatusEnum,
@@ -42,6 +43,7 @@ import {
   couponUseLimitEnum,
   giftTypeEnum,
   appTypeEnum,
+  appTypesEnum,
   payTypeEnum,
   payStepEnum,
   sourceTypeEnum,
@@ -97,6 +99,10 @@ export const thirdDeliverStatusConvert = (value) => {
 
 export const receivingWayConvert = (value) => {
   return convertFunction(value, receivingWayEnum);
+};
+
+export const isAllRefundConvert = (value) => {
+  return convertFunction(value, isAllRefundEnum);
 };
 
 export const orderStatusConvert = (value) => {
@@ -241,6 +247,10 @@ export const memberLimitConvert = (value) => {
 
 export const appTypeConvert = (value) => {
   return convertFunction(value, appTypeEnum);
+}
+
+export const appTypesConvert = (value) => {
+  return convertFunction(value, appTypesEnum);
 }
 
 export const payTypeConvert = (value) => {

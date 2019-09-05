@@ -164,14 +164,14 @@
           >
             <Icon type="md-download" />导出
           </Button>
-          <!-- <Button
+          <Button
             :loading="downloadLoading"
             class="search-btn"
             type="primary"
             @click="couponDetails"
           >
             <Icon type="md-search" />&nbsp;用券数据
-          </Button> -->
+          </Button>
           <!-- <Poptip
             confirm
             placement="bottom"
@@ -199,7 +199,7 @@
       </div>
     </Card>
     <!--查看订单详情-->
-    <Modal v-model="modalView" :width="750" :mask-closable="false">
+    <Modal v-model="modalView" :width="800" :mask-closable="false">
       <p slot="header">
         <span>查看订单详情</span>
       </p>
@@ -540,7 +540,7 @@ import {
 } from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
-import { fenToYuanDot2 } from "@/libs/util";
+import { fenToYuanDot2, fenToYuanDot2Number } from "@/libs/util";
 import {
   receivingWayEnum,
   receivingWay,
@@ -551,7 +551,8 @@ import {
   miniOrderStatusEnum,
   miniOrderStatus,
   miniHdStatusEnum,
-  miniHdStatus
+  miniHdStatus,
+  isAllRefundEnum
 } from "@/libs/enumerate";
 import {
   orderTypeConvert,
@@ -560,7 +561,8 @@ import {
   miniHdStatusConvert,
   receivingWayConvert,
   appTypeConvert,
-  payTypeConvert
+  payTypeConvert,
+  isAllRefundConvert
 } from "@/libs/converStatus";
 import BookTypeOption from "_c/book-type-option";
 
@@ -582,6 +584,7 @@ const orderDetail = {
   orderStatus: null,
   address: "",
   reason: "",
+  isAllRefund: "",
   createAt: null,
   receiveUser: "",
   contactPhone: "",
@@ -631,6 +634,7 @@ export default {
       orderStatus: orderStatusEnum,
       receivingWayEnum,
       receivingWay,
+      isAllRefundEnum,
       appTypeEnum,
       payTypeEnum,
       miniOrderStatusEnum,
@@ -733,7 +737,31 @@ export default {
             const price = amount * params.row.productQty;
             return <div>{"￥" + price.toFixed(2)}</div>;
           }
+        },
+        {
+          title: "是否退款",
+          width: 120,
+          key: "refundStatus",
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.refundStatus === "REFUND") {
+              return <div>已退款</div>;
+            } else if (row.refundStatus === "NOT_REFUND") {
+              return <div>未退款</div>;
+            } else {
+              return <div>N/A</div>;
+            }
+          }
         }
+        // {
+        //   title: "退款金额",
+        //   width: 100,
+        //   key: "refundFee",
+        //   render(h, params, vm) {
+        //     const refund = fenToYuanDot2(params.row.refundFee);
+        //     return <div>{refund}</div>;
+        //   }
+        // }
       ],
       columns: [
         {
@@ -902,6 +930,34 @@ export default {
             } else {
               return <div>{row.receivingWay}</div>;
             }
+          }
+        },
+        {
+          title: "是否退款",
+          width: 120,
+          key: "isAllRefund",
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.isAllRefund === "NO") {
+              return (
+                <div>
+                  <tag color="cyan">
+                    {isAllRefundConvert(row.isAllRefund).label}
+                  </tag>
+                </div>
+              );
+            } else {
+              return <div>N/A</div>;
+            }
+          }
+        },
+        {
+          title: "退款金额",
+          width: 100,
+          key: "refundFee",
+          render(h, params, vm) {
+            const refund = fenToYuanDot2(params.row.refundFee);
+            return <div>{refund}</div>;
           }
         },
         {
@@ -1135,8 +1191,7 @@ export default {
         );
         return;
       }
-
-      if (!this.currentTableRowSelected.apply != "S_MALL") {
+      if (this.currentTableRowSelected.apply != "S_MALL") {
         this.$Message.error("该功能只适用于拼团小程序");
         return;
       }
@@ -1256,7 +1311,6 @@ export default {
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      console.log(this.searchRowData.rows);
       getOrderPages(this.searchRowData).then(res => {
         const tableData = res.rows;
         // 恢复正常页数
@@ -1272,6 +1326,7 @@ export default {
           item["totalAmount"] = (item["totalAmount"] / 100.0).toFixed(2);
           item["couponAmount"] = (item["couponAmount"] / 100.0).toFixed(2);
           item["amountPayable"] = (item["amountPayable"] / 100.0).toFixed(2);
+          item["refundFee"] = (item["refundFee"] / 100.0).toFixed(2);
           item["orderType"] = orderTypeConvert(item["orderType"]).label;
           item["deliverStatus"] = thirdDeliverStatusConvert(
             item["deliverStatus"]
@@ -1285,6 +1340,7 @@ export default {
           ).label;
           item["status"] = miniOrderStatusConvert(item["status"]).label;
           item["payType"] = payTypeConvert(item["payType"]).label;
+          item["isAllRefund"] = isAllRefundConvert(item["isAllRefund"]).label;
         });
         this.$refs.tables.handleDownload({
           filename: `普通订单信息-${new Date().valueOf()}`,

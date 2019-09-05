@@ -32,6 +32,17 @@ export const receivingWayEnum = [
     value: receivingWay.TO_THE_HOME
   }
 ];
+//是否退款
+export const isAllRefund = {
+  NO: 'NO'
+};
+export const isAllRefundEnum = [
+  {
+    label: '部分退款',
+    value: isAllRefund.NO
+  }
+];
+
 
 // 订单状态
 // WAIT_PAYMENT-待支付
@@ -1017,6 +1028,17 @@ export const appTypeEnum = [
   },
   {
     label: '拼团小程序',
+    value: appType.S_MALL
+  },
+];
+
+export const appTypes = {
+  S_MALL: 'S_MALL',
+};
+
+export const appTypesEnum = [
+  {
+    label: '小程序',
     value: appType.S_MALL
   },
 ];
