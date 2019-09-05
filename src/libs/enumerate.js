@@ -32,6 +32,17 @@ export const receivingWayEnum = [
     value: receivingWay.TO_THE_HOME
   }
 ];
+//是否退款
+export const isAllRefund = {
+  NO: 'NO'
+};
+export const isAllRefundEnum = [
+  {
+    label: '部分退款',
+    value: isAllRefund.NO
+  }
+];
+
 
 // 订单状态
 // WAIT_PAYMENT-待支付

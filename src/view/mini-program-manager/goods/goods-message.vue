@@ -272,7 +272,7 @@
                   :data="goodsCategoryData"
                   v-model="defaultGoodsCategoryData"
                   span="21"
-                  style="width: 70%"
+                  style="width: 100%"
                   @on-change="goodsCategoryChange"
                 ></Cascader>
               </FormItem>
@@ -329,7 +329,7 @@
             </Col>-->
             <Col span="12">
               <FormItem label="基础重量(kg):" prop="baseQty">
-                <InputNumber :min="0" v-model="productDetail.baseQty" placeholder="基础重量"></InputNumber>
+                <InputNumber v-model="productDetail.baseQty" placeholder="基础重量"></InputNumber>
               </FormItem>
             </Col>
             <Col span="12">
