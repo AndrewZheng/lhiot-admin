@@ -938,12 +938,23 @@ export default {
           key: "isAllRefund",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.isAllRefund === "NO") {
+            if (
+              row.isAllRefund === "NO" &&
+              row.orderStatus === "ALREADY_RETURN"
+            ) {
               return (
                 <div>
                   <tag color="cyan">
                     {isAllRefundConvert(row.isAllRefund).label}
                   </tag>
+                </div>
+              );
+            } else if (
+              row.orderStatus === "ALREADY_RETURN"
+            ) {
+              return (
+                <div>
+                  <tag color="blue">全部退款</tag>
                 </div>
               );
             } else {
