@@ -949,9 +949,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (
-              row.orderStatus === "ALREADY_RETURN"
-            ) {
+            } else if (row.orderStatus === "ALREADY_RETURN") {
               return (
                 <div>
                   <tag color="blue">全部退款</tag>
@@ -1206,7 +1204,6 @@ export default {
         this.$Message.error("该功能只适用于拼团小程序");
         return;
       }
-
       if (
         !this.currentTableRowSelected.storeId ||
         !this.currentTableRowSelected.newStoreId

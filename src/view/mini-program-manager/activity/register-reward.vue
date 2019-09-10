@@ -170,6 +170,22 @@
                 </FormItem>
               </Col>
             </Row>
+            <!-- 领券方式 -->
+            <Row>
+              <Col span="18">
+                <FormItem label="领券方式:" prop="receiveType">
+                  <Select v-model="registerDetail.receiveType" clearable style="width: 170px">
+                    <Option
+                      v-for="(item,index) in receiveTypeEnum"
+                      :value="item.value"
+                      :key="index"
+                      class="ptb2-5"
+                      style="padding-left: 5px;width: 170px"
+                    >{{ item.label }}</Option>
+                  </Select>
+                </FormItem>
+              </Col>
+            </Row>
             <Row>
               <Col span="18">
                 <FormItem label="有效期起:" prop="beginTime">
@@ -244,12 +260,14 @@ import {
   couponStatusConvert,
   couponTypeConvert,
   imageStatusConvert,
-  couponScopeConvert
+  couponScopeConvert,
+  receiveTypeConvert
 } from "@/libs/converStatus";
 import {
   couponStatusEnum,
   couponTypeEnum,
-  imageStatusEnum
+  imageStatusEnum,
+  receiveTypeEnum
 } from "@/libs/enumerate";
 import {
   compareData,
@@ -271,7 +289,8 @@ const registerDetail = {
   activityRule: "",
   createTime: null,
   updateTime: null,
-  createBy: ""
+  createBy: "",
+  receiveType: "MANUAL"
 };
 
 const relationDetail = {
@@ -670,6 +689,7 @@ export default {
       couponStatusEnum,
       couponTypeEnum,
       imageStatusEnum,
+      receiveTypeEnum,
       columns: [
         {
           type: "selection",
