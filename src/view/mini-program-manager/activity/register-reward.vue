@@ -80,6 +80,14 @@
             </Row>
           </i-col>
         </Row>
+        <!-- <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">领券方式:</i-col>
+              <i-col span="18">{{ registerDetail.receiveType | imageStatusFilter }}</i-col>
+            </Row>
+          </i-col>
+        </Row> -->
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
@@ -170,6 +178,22 @@
                 </FormItem>
               </Col>
             </Row>
+            <!-- 领券方式 -->
+            <Row>
+              <Col span="18">
+                <FormItem label="领券方式:" prop="receiveType">
+                  <Select v-model="registerDetail.receiveType" clearable style="width: 170px">
+                    <Option
+                      v-for="(item,index) in receiveTypeEnum"
+                      :value="item.value"
+                      :key="index"
+                      class="ptb2-5"
+                      style="padding-left: 5px;width: 170px"
+                    >{{ item.label }}</Option>
+                  </Select>
+                </FormItem>
+              </Col>
+            </Row>
             <Row>
               <Col span="18">
                 <FormItem label="有效期起:" prop="beginTime">
@@ -244,12 +268,14 @@ import {
   couponStatusConvert,
   couponTypeConvert,
   imageStatusConvert,
-  couponScopeConvert
+  couponScopeConvert,
+  receiveTypeConvert
 } from "@/libs/converStatus";
 import {
   couponStatusEnum,
   couponTypeEnum,
-  imageStatusEnum
+  imageStatusEnum,
+  receiveTypeEnum
 } from "@/libs/enumerate";
 import {
   compareData,
@@ -271,7 +297,8 @@ const registerDetail = {
   activityRule: "",
   createTime: null,
   updateTime: null,
-  createBy: ""
+  createBy: "",
+  receiveType: "MANUAL"
 };
 
 const relationDetail = {
@@ -288,12 +315,13 @@ const relationDetail = {
   effectiveDay: 0,
   createTime: null,
   createBy: "",
-  couponTemplateIds: ""
+  couponTemplateIds: "",
+  receiveType: "MANUAL"
 };
 
 const roleRowData = {
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 const relationRowData = {
@@ -635,7 +663,8 @@ export default {
           }
         ],
         beginTime: [{ required: true, message: "请选择活动开始时间" }],
-        endTime: [{ required: true, message: "请选择活动结束时间" }]
+        endTime: [{ required: true, message: "请选择活动结束时间" }],
+        receiveType: [{ required: true, message: "请选择活动结束时间" }]
       },
       relationRuleInline: {
         issuedNum: [
@@ -670,6 +699,7 @@ export default {
       couponStatusEnum,
       couponTypeEnum,
       imageStatusEnum,
+      receiveTypeEnum,
       columns: [
         {
           type: "selection",
