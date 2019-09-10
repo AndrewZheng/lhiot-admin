@@ -761,14 +761,14 @@ import {
   couponStatusConvert,
   couponTypeConvert,
   couponScopeConvert,
-  couponUseLimitConvert,
+  couponUseLimitConvert
 } from "@/libs/converStatus";
 import {
   couponStatusEnum,
   couponTypeEnum,
   couponScopeEnum,
   couponUseLimitEnum,
-  validDateTypeEnum,
+  validDateTypeEnum
 } from "@/libs/enumerate";
 import {
   compareData,
@@ -798,7 +798,7 @@ const couponDetail = {
   createTime: null,
   applicationType: null,
   activityImage: "",
-  activityUrl: "",
+  activityUrl: ""
 };
 
 // 关联的优惠券配置对象
@@ -820,7 +820,7 @@ const relationDetail = {
   source: "SMALL", // 默认来源为系统对象
   validDateType: "FIXED_DATE",
   beginDay: 0,
-  endDay: 0,
+  endDay: 0
 };
 
 // 系统优惠券模板对象
@@ -843,12 +843,22 @@ const hdCouponTemplateDetail = {
   activityRegisterId: 0,
   beginDate: null,
   endDate: null,
+  couponFee: 0,
   couponName: "",
   couponRemark: "",
   couponType: "",
   faceValue: 0,
   price: 0,
-  useRule: ""
+  useRule: "",
+  couponLimit: 0,
+  couponRules: "",
+  couponScope: null,
+  couponStatus: null,
+  minBuyFee: 0,
+  receiveCount: 0,
+  source: "HD",
+  useLimitType: null,
+  validDateType: "FIXED_DATE"
 };
 
 const roleRowData = {
