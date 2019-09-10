@@ -80,6 +80,14 @@
             </Row>
           </i-col>
         </Row>
+        <!-- <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">领券方式:</i-col>
+              <i-col span="18">{{ registerDetail.receiveType | imageStatusFilter }}</i-col>
+            </Row>
+          </i-col>
+        </Row> -->
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
@@ -654,7 +662,8 @@ export default {
           }
         ],
         beginTime: [{ required: true, message: "请选择活动开始时间" }],
-        endTime: [{ required: true, message: "请选择活动结束时间" }]
+        endTime: [{ required: true, message: "请选择活动结束时间" }],
+        receiveType: [{ required: true, message: "请选择活动结束时间" }]
       },
       relationRuleInline: {
         issuedNum: [
