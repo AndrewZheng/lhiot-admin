@@ -647,6 +647,7 @@ export default {
       distance: "",
       deliverName: "",
       deliverPhone: "",
+      orderState: "",
       tempColumnsView: [
         {
           title: "配送方",
@@ -743,8 +744,13 @@ export default {
           width: 120,
           key: "refundStatus",
           render: (h, params, vm) => {
+            const orderStates = this.orderState;
             const { row } = params;
-            if (row.refundStatus === "REFUND") {
+            if (row.refundStatus === "REFUND" && orderStates === "FAILURE") {
+              return <div>未退款</div>;
+            } else if (row.refundStatus === "REFUND" && orderStates === "RETURNING") {
+              return <div>退款中</div>;
+            } else if (row.refundStatus === "REFUND" && orderStates === "ALREADY_RETURN") {
               return <div>已退款</div>;
             } else if (row.refundStatus === "NOT_REFUND") {
               return <div>未退款</div>;
@@ -1260,7 +1266,7 @@ export default {
             this.orderDetail.receivingWay != null
           ) {
             if (this.orderDetail.address.substr(0, 1) === "{") {
-              console.log(this.orderDetail.address.substr(0, 1) === "{");
+              // console.log(this.orderDetail.address.substr(0, 1) === "{");
               addresss = JSON.parse(this.orderDetail.address);
               this.shippingAddress =
                 addresss.address + addresss.detailedAddress;
@@ -1290,6 +1296,8 @@ export default {
           this.loading = false;
           this.tempModalType = this.modalType.view;
           this.modalView = true;
+          this.orderState = this.orderDetail.orderStatus;
+          console.log(this.orderState);
         })
         .catch(() => {
           this.loading = false;
