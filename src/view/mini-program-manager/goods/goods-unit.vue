@@ -94,7 +94,7 @@
                 v-model="unitDetail.splitStatus"
                 class="search-col mr5"
                 placeholder="是否可拆分"
-                style="width:100px"
+                style="width:200px"
                 clearable
               >
                 <Option

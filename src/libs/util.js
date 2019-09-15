@@ -790,6 +790,9 @@ export const compareData = (date1, date2) => {
 export const fenToYuanDot2 = (number) => {
   if (typeof number === 'number') {
     return '¥' + (number / 100.00).toFixed(2);
+  } else if (typeof number === 'string') {
+    return '¥' + (parseInt(number) / 100.00).toFixed(2);
+    
   }
   return number;
 };

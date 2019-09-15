@@ -178,7 +178,7 @@ const btns = {
     const {
       row
     } = params;
-    if (row.shelfStatus === 'ON' || row.onOff === 'ON' || row.state === 'ON') {
+    if (row.shelfStatus === 'ON' || row.onOff === 'ON' || row.state === 'ON' || row.couponStatus === 'VALID') {
       return h('Poptip', {
         props: {
           confirm: true,

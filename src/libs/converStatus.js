@@ -13,6 +13,7 @@ import {
   orderTypeEnum,
   positionTypeEnum,
   receivingWayEnum,
+  isAllRefundEnum,
   relationTypeEnum,
   settlementStatusEnum,
   thirdDelieverStatusEnum,
@@ -98,6 +99,10 @@ export const thirdDeliverStatusConvert = (value) => {
 
 export const receivingWayConvert = (value) => {
   return convertFunction(value, receivingWayEnum);
+};
+
+export const isAllRefundConvert = (value) => {
+  return convertFunction(value, isAllRefundEnum);
 };
 
 export const orderStatusConvert = (value) => {

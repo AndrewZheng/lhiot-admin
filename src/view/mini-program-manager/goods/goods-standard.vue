@@ -1053,15 +1053,15 @@ export default {
         ],
         barcode: [
           { required: true, message: "请输入商品条码" },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[0-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为整数"));
-              }
-              callback(errors);
-            }
-          }
+          // {
+          //   validator(rule, value, callback, source, options) {
+          //     const errors = [];
+          //     if (!/^[0-9]\d*$/.test(value)) {
+          //       errors.push(new Error("必须为整数"));
+          //     }
+          //     callback(errors);
+          //   }
+          // }
         ],
         specificationQty: [
           { required: true, message: "请输入安全库存" },
