@@ -885,7 +885,7 @@ export const couponActivityTypeEnum = [
   }
 ];
 
-//giftType礼包类型： BIRTHDAY_COUPON 生日券 FREIGHT_COUPON 运费券 OPEN_CARD_COUPON 开卡券
+// giftType礼包类型： BIRTHDAY_COUPON 生日券 FREIGHT_COUPON 运费券 OPEN_CARD_COUPON 开卡券
 export const giftTypeEnum = [
   {
     label: '生日券',
