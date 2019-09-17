@@ -1288,16 +1288,15 @@ const templateColumns = [
   //   }
   // },
   {
-    title: "优惠/折扣额度",
-    key: "faceValue",
+    title: "优惠/折扣金额",
+    key: "couponFee",
     minWidth: 80,
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        const couponFee = HdDiscount(params.row.discount);
-        return <div>{couponFee}</div>;
+        return <div>{fenToYuanDot2Number(row.couponFee) * 10 + "折"}</div>;
       } else {
-        return <div>{fenToYuanDot2(params.row.faceValue)}</div>;
+        return <div>{fenToYuanDot2(row.couponFee)}</div>;
       }
     }
   },
