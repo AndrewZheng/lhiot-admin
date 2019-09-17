@@ -14,6 +14,7 @@
         border
         @on-delete="handleDelete"
         @on-edit="handleEdit"
+        @on-sale="switchStatus"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
@@ -613,7 +614,9 @@ const roleRowData = {
   // effectiveStartTime: null,
   // effectiveEndTime: null,
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx: "rank",
+  sort: "asc"
 };
 
 const templateRowData = {
@@ -828,10 +831,16 @@ const dataColumns = [
     minWidth: 60
   },
   {
+    title: "排序",
+    key: "rank",
+    minWidth: 30
+  },
+  {
     title: "操作",
     minWidth: 80,
     key: "handle",
-    options: ["edit", "delete"]
+    // options: ["edit", "delete"]
+    options: ["onSale", "edit"]
   }
 ];
 
@@ -1151,6 +1160,24 @@ export default {
         );
       }
       this.modalEdit = true;
+    },
+    switchStatus(params) {
+      this.addRelationDetail = _.cloneDeep(params.row);
+      //有效 VALID 无效 INVALID
+      if (params.row.couponStatus === "VALID") {
+        this.addRelationDetail.couponStatus= "INVALID";
+      } else {
+        this.addRelationDetail.couponStatus = "VALID";
+      }
+      this.loading = true;
+      editCouponTemplateRelation(this.addRelationDetail)
+      .then(res => {
+        this.getRelationTableData();
+        this.loading = false;
+      })
+      .finally(res => {
+        this.loading = false;
+      });
     },
     goBack() {
       this.turnToPage("small-activity-coupon");
