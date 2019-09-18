@@ -1005,6 +1005,26 @@ export const asyncRouterMap = [
     ]
   },
   {
+    path: '/small-member',
+    name: 'small-member',
+    meta: {
+      icon: 'md-menu',
+      title: '会员中心'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/member-phone',
+        name: 'member-phone',
+        meta: {
+          icon: 'md-tablet-portrait',
+          title: '换绑手机'
+        },
+        component: () => import('@/view/mini-program-manager/member/member-phone.vue')
+      },
+    ]
+  },
+  {
     path: '/small-orders',
     name: 'small-orders',
     meta: {
