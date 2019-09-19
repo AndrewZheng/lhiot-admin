@@ -1095,6 +1095,7 @@ export default {
         // },
         {
           title: "操作",
+          fixed: 'right',
           minWidth: 150,
           key: "handle",
           options: ["view", "onHand", "onReceive"]

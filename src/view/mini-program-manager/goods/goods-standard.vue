@@ -538,9 +538,9 @@
                 ></InputNumber>
               </FormItem>
             </i-col>
-            <!-- <i-col span="12">
+            <i-col span="12">
               <Button v-waves type="warning" @click="handleHdSvipPrice">海鼎价格参考</Button>
-            </i-col> -->
+            </i-col>
           </Row>
           <Row>
             <i-col span="12">
@@ -946,7 +946,7 @@ const roleRowData = {
   minPrice: "",
   maxPrice: "",
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 const productDetail = {
@@ -1053,15 +1053,15 @@ export default {
         ],
         barcode: [
           { required: true, message: "请输入商品条码" },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[0-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为整数"));
-              }
-              callback(errors);
-            }
-          }
+          // {
+          //   validator(rule, value, callback, source, options) {
+          //     const errors = [];
+          //     if (!/^[0-9]\d*$/.test(value)) {
+          //       errors.push(new Error("必须为整数"));
+          //     }
+          //     callback(errors);
+          //   }
+          // }
         ],
         specificationQty: [
           { required: true, message: "请输入安全库存" },

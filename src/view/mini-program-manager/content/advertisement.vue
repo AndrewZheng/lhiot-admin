@@ -366,6 +366,7 @@
                 <Select
                   v-model="advertisementDetail.isPermanent"
                   style="width: 200px"
+                  disabled
                   @on-change="advertiseTimeChange"
                 >
                   <Option
@@ -613,7 +614,6 @@ export default {
         { label: "无效", value: "INVALID" }
       ],
       validityTimeList: [
-        { label: "永久有效", value: "ON" },
         { label: "定时生效", value: "OFF" }
       ],
       columns: [

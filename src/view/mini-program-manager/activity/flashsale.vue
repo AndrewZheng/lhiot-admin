@@ -486,7 +486,7 @@ const roleRowData = {
   edBeginTime: null,
   edFinishTime: null,
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 const relationRowData = {

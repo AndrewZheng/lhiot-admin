@@ -71,6 +71,9 @@
                   <Icon type="md-trash" />批量删除
                 </Button>
               </Poptip>
+              <Button v-waves :loading="clearSearchLoading" type="warning" @click="handleBack">
+                <Icon type="ios-arrow-back" />&nbsp;返回全部板块
+              </Button>
             </div>
           </tables>
           <div style="margin: 10px;overflow: hidden">
@@ -100,7 +103,9 @@
             <i-col>{{ parentCategory.id }}</i-col>
           </FormItem>
           <FormItem label="父级名称:">
-            <i-col>{{ parentCategory.groupName?parentCategory.groupName:'全部板块' }}</i-col>
+            <i-col
+              style="color:red;font-weight:bold;"
+            >{{ parentCategory.groupName?parentCategory.groupName:'全部板块' }}</i-col>
           </FormItem>
           <FormItem label="板块名称:" prop="sectionName">
             <Input v-model="currentCategory.sectionName"></Input>
@@ -138,7 +143,10 @@
               </div>
             </IViewUpload>
           </FormItem>
-        </Form>
+        </Form>*Tips：如果添加
+        <b style="color:red">父级板块</b>&nbsp;,板块位置英文描述需添加
+        <b style="color:red">-F</b>&nbsp;后缀,如
+        <b style="color:red">XXXX-F</b>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
@@ -161,10 +169,10 @@ import {
 } from "@/api/mini-program";
 import { buildMenu, convertTree } from "@/libs/util";
 import CommonIcon from "_c/common-icon";
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import uploadMixin from "@/mixins/uploadMixin";
 import IViewUpload from "_c/iview-upload";
 import { appTypeEnum } from "@/libs/enumerate";
 import { appTypeConvert } from "@/libs/converStatus";
@@ -184,7 +192,8 @@ const currentCategory = {
 const roleRowData = {
   sectionName: null,
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx:"rank_no"
 };
 
 const dataColumns = [
@@ -198,21 +207,18 @@ const dataColumns = [
   {
     title: "板块ID",
     key: "id",
-    sortable: true,
     align: "center",
     minWidth: 150
   },
   {
     title: "板块名称",
     key: "sectionName",
-    sortable: true,
     align: "center",
     minWidth: 150
   },
   {
     title: "板块图片",
     key: "sectionImg",
-    sortable: true,
     align: "center",
     minWidth: 150,
     render: (h, params, vm) => {
@@ -224,7 +230,6 @@ const dataColumns = [
   {
     title: "位置英文描述",
     key: "positionName",
-    sortable: true,
     align: "center",
     minWidth: 150
   },
@@ -256,7 +261,12 @@ export default {
       menuData: [],
       ruleInline: {
         sectionName: [{ required: true, message: "请输入板块名称" }],
-        positionName: [{ required: true, message: "请输入板块位置英文描述:" }],
+        positionName: [
+          {
+            required: true,
+            message: "请输入板块位置英文描述,父级板块需添加 -F 后缀,如 XXXX-F"
+          }
+        ],
         sectionImg: [{ required: true, message: "请上传上板块图片" }],
         rankNo: [
           { required: true, message: "请输入板块排序" },
@@ -283,11 +293,16 @@ export default {
       searchRowData: this._.cloneDeep(roleRowData),
       treeData: this._.cloneDeep(currentCategory),
       uploadListMain: [],
-      defaultListMain: []
+      defaultListMain: [],
+      //查看
+      imageSize: 2048,
+      imgUploadViewItem: "",
+      uploadVisible: false
     };
   },
   created() {
     this.initMenuList();
+    this.parentCategory.groupName = "全部版块";
   },
   methods: {
     renderContent(h, { root, node, data }) {
@@ -374,6 +389,10 @@ export default {
         }
       });
     },
+    handleRemoveMain(file) {
+      this.$refs.uploadMain.deleteFile(file);
+      this.currentCategory.sectionImg = null;
+    },
     handleEditClose() {
       this.modalEdit = false;
     },
@@ -414,16 +433,35 @@ export default {
     },
     // 编辑分类
     handleEdit(params) {
-      // if (!this.parentCategory.groupName) {
-      //   this.$Message.warning("请从左侧选择一个板块");
-      //   return;
-      // }
-      // this.$refs.modalEdit.resetFields();
+      if (
+        params.row.positionName.indexOf("F") == -1 &&
+        this.parentCategory.groupName === "全部版块"
+      ) {
+        this.$Message.warning("请从左侧选择一个板块");
+        return;
+      }
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.currentCategory = _.cloneDeep(params.row);
       this.setDefaultUploadList(params.row);
       this.modalEdit = true;
+    },
+    handleBack() {
+      this.parentCategory.groupName = "全部版块";
+      this.handleClear();
+    },
+    handleSearch() {
+      this.searchRowData.page = 1;
+      this.searchLoading = true;
+      this.getTableData();
+    },
+    handleClear() {
+      // 重置数据
+      this.resetSearchRowData();
+      this.page = 1;
+      this.pageSize = 10;
+      this.clearSearchLoading = true;
+      this.handleSearch();
     },
     getTableData() {
       this.loading = true;

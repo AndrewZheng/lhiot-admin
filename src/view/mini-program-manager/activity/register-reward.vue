@@ -87,7 +87,7 @@
               <i-col span="18">{{ registerDetail.receiveType | imageStatusFilter }}</i-col>
             </Row>
           </i-col>
-        </Row> -->
+        </Row>-->
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
@@ -315,13 +315,14 @@ const relationDetail = {
   effectiveDay: 0,
   createTime: null,
   createBy: "",
-  couponTemplateIds: "",
-  receiveType: "MANUAL"
+  couponTemplateIds: ""
 };
 
 const roleRowData = {
   page: 1,
   rows: 10,
+  sidx: "begin_time",
+  sort: "desc"
 };
 
 const relationRowData = {
