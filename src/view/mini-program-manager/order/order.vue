@@ -26,14 +26,14 @@
               v-model="searchRowData.orderCode"
               placeholder="订单编码"
               class="search-input mr5"
-              style="width: 90px"
+              style="width: 150px"
               clearable
             ></Input>
             <Input
               v-model="searchRowData.phone"
               placeholder="用户手机号"
               class="search-input mr5"
-              style="width: 100px"
+              style="width: 110px"
               clearable
             ></Input>
             <Select
