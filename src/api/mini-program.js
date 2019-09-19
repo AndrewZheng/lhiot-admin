@@ -603,7 +603,7 @@ export const getCouponPages = (data) => {
     url: '/minapp/activity-coupons/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: { 'page': data.page, 'rows': data.rows, 'sidx': data.sidx, 'sort': data.sort }
   });
 };
 
@@ -748,7 +748,7 @@ export const getRegisterPages = (data) => {
     url: '/minapp/activity-registers/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: { 'page': data.page, 'rows': data.rows, 'sidx': data.sidx, 'sort': data.sort }
   });
 };
 

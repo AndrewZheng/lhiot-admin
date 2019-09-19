@@ -1177,7 +1177,7 @@ const dataColumns = [
   {
     title: "生效时间",
     key: "effectiveStartTime",
-    minWidth: 80,
+    minWidth: 90,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
@@ -1197,11 +1197,11 @@ const dataColumns = [
   {
     title: "失效时间",
     key: "effectiveEndTime",
-    minWidth: 80,
+    minWidth: 90,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
-        return <div>{row.effectiveStartTime}</div>;
+        return <div>{row.effectiveEndTime}</div>;
       } else if (
         row.source == "SMALL" &&
         row.validDateType === "UN_FIXED_DATE"
