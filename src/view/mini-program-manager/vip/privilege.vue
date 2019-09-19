@@ -613,12 +613,14 @@ const dataColumns = [
   {
     type: "selection",
     width: 60,
-    align: "center"
+    align: "center",
+    fixed: "left"
   },
   {
     title: "优惠券名称",
     key: "couponName",
-    minWidth: 80
+    width: 140,
+    fixed: "left"
   },
   {
     title: "优惠券类型",
@@ -646,7 +648,7 @@ const dataColumns = [
       }
       return <div>{row.couponType}</div>;
     },
-    minWidth: 40
+    width: 100
   },
   {
     title: "会员身份",
@@ -668,12 +670,12 @@ const dataColumns = [
       }
       return <div>{row.svipLevel}</div>;
     },
-    minWidth: 40
+    width: 100
   },
   {
     title: "优惠/折扣额度",
     key: "couponFee",
-    minWidth: 50,
+    width: 120,
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
@@ -686,7 +688,7 @@ const dataColumns = [
   {
     title: "最小购买金额",
     key: "minBuyFee",
-    minWidth: 60,
+    width: 110,
     render(h, params) {
       return h("div", fenToYuanDot2(params.row.minBuyFee));
     }
@@ -694,7 +696,7 @@ const dataColumns = [
   {
     title: "优惠券状态",
     key: "couponStatus",
-    minWidth: 30,
+    width: 100,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.couponStatus === "VALID") {
@@ -720,7 +722,7 @@ const dataColumns = [
   {
     title: "券使用范围",
     key: "couponScope",
-    minWidth: 40,
+    width: 100,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.couponScope === "STORE") {
@@ -752,7 +754,7 @@ const dataColumns = [
   {
     title: "券使用限制(门店/商品)",
     key: "useLimitType",
-    minWidth: 80,
+    width: 180,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.useLimitType === "HD_ALL") {
@@ -771,7 +773,7 @@ const dataColumns = [
   {
     title: "来源",
     key: "source",
-    minWidth: 40,
+    width: 80,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.source === "SMALL") {
@@ -784,14 +786,55 @@ const dataColumns = [
     }
   },
   {
+    title: "生效时间",
+    key: "effectiveStartTime",
+    width: 160,
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
+        return <div>{row.effectiveStartTime}</div>;
+      } else if (
+        row.source == "SMALL" &&
+        row.validDateType === "UN_FIXED_DATE"
+      ) {
+        return <div>{row.beginDay}</div>;
+      } else if (row.source == "HD") {
+        return <div>{row.effectiveStartTime}</div>;
+      } else {
+        return <div>N/A</div>;
+      }
+    }
+  },
+  {
+    title: "失效时间",
+    key: "effectiveEndTime",
+    width: 160,
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
+        return <div>{row.effectiveEndTime}</div>;
+      } else if (
+        row.source == "SMALL" &&
+        row.validDateType === "UN_FIXED_DATE"
+      ) {
+        return <div>{row.endDay}</div>;
+      } else if (row.source == "HD") {
+        return <div>{row.effectiveEndTime}</div>;
+      } else {
+        return <div>N/A</div>;
+      }
+    }
+  },
+  {
     title: "创建时间",
     key: "createTime",
-    minWidth: 80
+    width: 160
   },
   {
     title: "操作",
-    minWidth: 100,
+    width: 200,
     key: "handle",
+    fixed: "right",
     options: ["couponStatus", "view", "edit", "delete"]
   }
 ];
@@ -887,6 +930,16 @@ const hdTemplateColumns = [
       const minBuyFee = useRule.slice(startIndex + 1, endIndex);
       return <div>{fenToYuanDot2(minBuyFee * 100)}</div>;
     }
+  },
+  {
+    title: "生效时间",
+    key: "beginDate",
+    minWidth: 50
+  },
+  {
+    title: "失效时间",
+    key: "endDate",
+    minWidth: 50
   }
   // {
   //   title: '用券条件',

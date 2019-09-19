@@ -752,6 +752,7 @@ const dataColumns = [
   {
     title: "优惠券类型",
     key: "couponType",
+    minWidth: 20,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.couponType === "FREIGHT_COUPON") {
@@ -810,6 +811,7 @@ const dataColumns = [
   {
     title: "优惠券状态",
     key: "couponStatus",
+    minWidth: 20,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.couponStatus === "VALID") {
@@ -835,7 +837,7 @@ const dataColumns = [
   {
     title: "券使用范围",
     key: "couponScope",
-    minWidth: 40,
+    minWidth: 30,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.couponScope === "STORE") {
@@ -886,7 +888,7 @@ const dataColumns = [
   {
     title: "来源",
     key: "source",
-    minWidth: 30,
+    minWidth: 10,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.source === "SMALL") {
@@ -899,9 +901,49 @@ const dataColumns = [
     }
   },
   {
+    title: "生效时间",
+    key: "effectiveStartTime",
+    width: 100,
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
+        return <div>{row.effectiveStartTime}</div>;
+      } else if (
+        row.source == "SMALL" &&
+        row.validDateType === "UN_FIXED_DATE"
+      ) {
+        return <div>{row.beginDay}</div>;
+      } else if (row.source == "HD") {
+        return <div>{row.effectiveStartTime}</div>;
+      } else {
+        return <div>N/A</div>;
+      }
+    }
+  },
+  {
+    title: "失效时间",
+    key: "effectiveEndTime",
+    width: 100,
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
+        return <div>{row.effectiveEndTime}</div>;
+      } else if (
+        row.source == "SMALL" &&
+        row.validDateType === "UN_FIXED_DATE"
+      ) {
+        return <div>{row.endDay}</div>;
+      } else if (row.source == "HD") {
+        return <div>{row.effectiveEndTime}</div>;
+      } else {
+        return <div>N/A</div>;
+      }
+    }
+  },
+  {
     title: "创建时间",
     key: "createTime",
-    minWidth: 60
+    minWidth: 70
   },
   {
     title: "操作",
@@ -984,6 +1026,16 @@ const templateColumns = [
       }
       return <div>{row.couponStatus}</div>;
     }
+  },
+  {
+    title: "生效时间",
+    key: "beginDate",
+    minWidth: 50
+  },
+  {
+    title: "失效时间",
+    key: "endDate",
+    minWidth: 50
   }
 ];
 

@@ -893,8 +893,8 @@ const hdTemplateRowData = {
 const dataColumns = [
   {
     type: "selection",
-    width: 60,
-    align: "center"
+    width: 50,
+    
   },
   {
     title: "优惠券名称",
@@ -1012,7 +1012,7 @@ const dataColumns = [
   {
     title: "生效时间",
     key: "effectiveStartTime",
-    minWidth: 50,
+    width: 160,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
@@ -1022,6 +1022,8 @@ const dataColumns = [
         row.validDateType === "UN_FIXED_DATE"
       ) {
         return <div>{row.beginDay}</div>;
+      } else if (row.source == "HD") {
+        return <div>{row.effectiveStartTime}</div>;
       } else {
         return <div>N/A</div>;
       }
@@ -1030,7 +1032,7 @@ const dataColumns = [
   {
     title: "失效时间",
     key: "effectiveEndTime",
-    minWidth: 50,
+    width: 160,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
@@ -1040,6 +1042,8 @@ const dataColumns = [
         row.validDateType === "UN_FIXED_DATE"
       ) {
         return <div>{row.endDay}</div>;
+      } else if (row.source == "HD") {
+        return <div>{row.effectiveEndTime}</div>;
       } else {
         return <div>N/A</div>;
       }
@@ -1268,6 +1272,16 @@ const hdTemplateColumns = [
       const minBuyFee = useRule.slice(startIndex + 1, endIndex);
       return <div>{fenToYuanDot2(minBuyFee * 100)}</div>;
     }
+  },
+  {
+    title: "生效时间",
+    key: "beginDate",
+    minWidth: 50
+  },
+  {
+    title: "失效时间",
+    key: "endDate",
+    minWidth: 50
   }
   // {
   //   title: '用券条件',

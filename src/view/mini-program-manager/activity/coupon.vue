@@ -647,7 +647,9 @@ const roleRowData = {
   activityName: null,
   activityType: "COUPON_CENTER_ACTIVITY",
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx: "begin_time",
+  sort: "desc"
 };
 
 const relationRowData = {
@@ -1197,7 +1199,7 @@ export default {
         });
     },
     handleView(params) {
-       this.modalView = true;
+      this.modalView = true;
       // this.$refs.modalView.resetFields();
       // this.resetFields();
       this.tempModalType = this.modalType.view;
@@ -1206,7 +1208,6 @@ export default {
         /&/g,
         "\n"
       );
-     
     },
     handleEdit(params) {
       // this.resetFields();
