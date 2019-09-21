@@ -1025,37 +1025,37 @@ const hdTemplateColumns = [
       return <div>{couponUseLimitConvert(row.useLimitType).label}</div>;
     }
   },
-  {
-    title: "优惠/折扣额度",
-    key: "faceValue",
-    minWidth: 80,
-    render(h, params) {
-      const { row } = params;
-      const disIndex = row.couponName.indexOf("折");
-      if (row.couponType === "DISCOUNT_COUPON") {
-        const couponFee =
-          parseFloat(row.couponName.substring(0, disIndex)) + "折";
-        return <div>{couponFee}</div>;
-      } else {
-        return <div>{fenToYuanDot2(params.row.faceValue)}</div>;
-      }
-    }
-  },
-  //HdDiscount版本
   // {
   //   title: "优惠/折扣额度",
   //   key: "faceValue",
   //   minWidth: 80,
   //   render(h, params) {
   //     const { row } = params;
+  //     const disIndex = row.couponName.indexOf("折");
   //     if (row.couponType === "DISCOUNT_COUPON") {
-  //       const couponFee = HdDiscount(params.row.discount);
+  //       const couponFee =
+  //         parseFloat(row.couponName.substring(0, disIndex)) + "折";
   //       return <div>{couponFee}</div>;
   //     } else {
   //       return <div>{fenToYuanDot2(params.row.faceValue)}</div>;
   //     }
   //   }
   // },
+  //HdDiscount版本
+  {
+    title: "优惠/折扣额度",
+    key: "faceValue",
+    minWidth: 80,
+    render(h, params) {
+      const { row } = params;
+      if (row.couponType === "DISCOUNT_COUPON") {
+        const couponFee = HdDiscount(params.row.discount);
+        return <div>{couponFee}</div>;
+      } else {
+        return <div>{fenToYuanDot2(params.row.faceValue)}</div>;
+      }
+    }
+  },
   {
     title: "最小购买金额",
     key: "useRule",
@@ -1302,23 +1302,23 @@ export default {
       this.addRelationDetail.couponName = currentRow.couponName;
       this.addRelationDetail.couponType = currentRow.couponType;
       this.addRelationDetail.couponFee = currentRow.faceValue;
-      // if (currentRow.couponType === "DISCOUNT_COUPON") {
-      //   this.addRelationDetail.couponFee =
-      //     parseFloat(currentRow.discount) * 100;
-      //   console.log(
-      //     "DISCOUNT_COUPON couponFee:",
-      //     this.addRelationDetail.couponFee
-      //   );
-      // }
-      const disIndex = currentRow.couponName.indexOf("折");
       if (currentRow.couponType === "DISCOUNT_COUPON") {
         this.addRelationDetail.couponFee =
-          parseFloat(currentRow.couponName.substring(0, disIndex)) * 10;
+          parseFloat(currentRow.discount) * 100;
         console.log(
           "DISCOUNT_COUPON couponFee:",
           this.addRelationDetail.couponFee
         );
       }
+      // const disIndex = currentRow.couponName.indexOf("折");
+      // if (currentRow.couponType === "DISCOUNT_COUPON") {
+      //   this.addRelationDetail.couponFee =
+      //     parseFloat(currentRow.couponName.substring(0, disIndex)) * 10;
+      //   console.log(
+      //     "DISCOUNT_COUPON couponFee:",
+      //     this.addRelationDetail.couponFee
+      //   );
+      // }
       this.addRelationDetail.hdActivityId = currentRow.activityId;
       this.addRelationDetail.minBuyFee = minBuyFee * 100;
       this.addRelationDetail.couponStatus = "VALID"; // 海鼎券默认为有效状态
