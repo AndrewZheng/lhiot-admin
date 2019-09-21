@@ -508,7 +508,8 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要退款?'
+          title: '确认要退款?',
+          placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
         },
         style: {
           marginRight: '5px'
@@ -959,10 +960,11 @@ const btns = {
     return h('Poptip', {
       props: {
         confirm: true,
-        title: '确认要收货?'
+        title: '确认要收货?',
+        placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
       },
       style: {
-        marginRight: '5px'
+        marginRight: '5px',
       },
       on: {
         'on-ok': () => {
@@ -974,7 +976,7 @@ const btns = {
         props: {
           type: 'success',
           size: 'small'
-        }
+        },
       }, [
         h('Icon', {
           props: {
