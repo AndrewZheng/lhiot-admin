@@ -896,21 +896,21 @@ export default {
             return <div>{amount}</div>;
           }
         },
-        // {
-        //   title: "商品名称",
-        //   width: 150,
-        //   key: "productNames"
-        // },
-        // {
-        //   title: "活动名称",
-        //   width: 120,
-        //   key: "activityTeambuyContent"
-        // },
-        // {
-        //   title: "券名称",
-        //   width: 120,
-        //   key: "couponName"
-        // },
+        {
+          title: "商品名称",
+          width: 150,
+          key: "productNames"
+        },
+        {
+          title: "活动名称",
+          width: 120,
+          key: "activityTeambuyContent"
+        },
+        {
+          title: "券名称",
+          width: 120,
+          key: "couponName"
+        },
         {
           title: "提货类型",
           width: 120,
