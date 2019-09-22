@@ -617,7 +617,7 @@ const roleRowData = {
   // effectiveEndTime: null,
   page: 1,
   rows: 10,
-  sidx: "rank",
+  sidx: "rank"
 };
 
 const templateRowData = {
@@ -856,7 +856,6 @@ const dataColumns = [
     title: "操作",
     minWidth: 120,
     key: "handle",
-    fixed: "right",
     // options: ["edit", "delete"]
     options: ["onSale", "edit"]
   }

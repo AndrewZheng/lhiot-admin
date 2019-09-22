@@ -1264,7 +1264,6 @@ const dataColumns = [
     title: "操作",
     width: 180,
     key: "handle",
-    fixed: "right",
     options: ["couponStatus", "view", "edit", "delete"]
   }
 ];
