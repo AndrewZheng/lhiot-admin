@@ -182,7 +182,8 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要下架?'
+          title: '确认要下架?',
+         // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
         },
         style: {
           marginRight: '5px'
@@ -314,7 +315,7 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要下架该优惠券吗?'
+          title: '确认要下架该优惠券吗?',
         },
         style: {
           marginRight: '5px'
