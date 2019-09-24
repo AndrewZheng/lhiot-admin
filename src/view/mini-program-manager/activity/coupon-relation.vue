@@ -823,6 +823,9 @@ const dataColumns = [
     minWidth: 160,
     render: (h, params, vm) => {
       const { row } = params;
+      //封装函数 取当前函数 取出失效时间与当前时间对比 重构函数 传入是否失效标识
+      // row,'end_time'
+      // endTimeFlag
       if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
         return <div>{row.effectiveEndTime}</div>;
       } else if (

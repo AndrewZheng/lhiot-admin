@@ -510,7 +510,7 @@ const btns = {
         props: {
           confirm: true,
           title: '确认要退款?',
-          placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
+          // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
         },
         style: {
           marginRight: '5px'
@@ -962,7 +962,7 @@ const btns = {
       props: {
         confirm: true,
         title: '确认要收货?',
-        placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
+        // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
       },
       style: {
         marginRight: '5px',
