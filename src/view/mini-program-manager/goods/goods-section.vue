@@ -887,7 +887,6 @@ export default {
       this.getProductTableData();
     },
     changePageSize(pageSize) {
-      pageSize = this.total;
       this.searchRowData.page = 1;
       this.searchRowData.rows = pageSize;
       this.getTableData();
