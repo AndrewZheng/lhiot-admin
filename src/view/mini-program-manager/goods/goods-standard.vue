@@ -54,7 +54,21 @@
                 v-for="item in shelvesStatus"
                 :value="item.value"
                 :key="item.value"
-                class="ml15 mt10"
+                class="ml15 mt10 mr15"
+              >{{ item.label }}</Option>
+            </Select>
+            <Select
+              v-model="searchRowData.expandType"
+              class="ml5"
+              placeholder="商品类型"
+              style="width:100px"
+              clearable
+            >
+              <Option
+                v-for="item in expandTypeEnum"
+                :value="item.value"
+                :key="item.value"
+                class="ml15 mt10 mr15"
               >{{ item.label }}</Option>
             </Select>
             <InputNumber
@@ -594,7 +608,7 @@
         <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')">确定</Button>
       </div>
     </Modal>
-
+    <!-- 折扣配置 -->
     <Modal v-model="modalDiscount" :mask-closable="false" :width="700" title="折扣配置">
       <p slot="header">
         <span>折扣配置</span>
@@ -627,6 +641,30 @@
             <i-col span="12">
               <FormItem label="SVIP价格:">
                 <InputNumber :min="0" :value="svipPriceComputed" disabled></InputNumber>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
+              <FormItem label="商品类型:" prop="expandType" :label-width="100">
+                <Select
+                  v-model="proStandardExpand.expandType"
+                  placeholder="请选择"
+                  style="padding-right: 5px;width: 120px"
+                >
+                  <Option
+                    v-for="(item,index) in expandTypeEnum"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                    style="padding-left: 5px;width: 100px"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="商品库存:" prop="limitQty">
+                <InputNumber v-model="proStandardExpand.limitQty"></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -886,9 +924,11 @@ import {
   fenToYuanDot2Number,
   yuanToFenNumber
 } from "@/libs/util";
+import { expandTypeEnum } from "@/libs/enumerate";
 import {
   customPlanStatusConvert,
-  productStatusConvert
+  productStatusConvert,
+  expandTypeConvert
 } from "@/libs/converStatus";
 
 const productStandardDetail = {
@@ -946,7 +986,7 @@ const roleRowData = {
   minPrice: "",
   maxPrice: "",
   page: 1,
-  rows: 10,
+  rows: 10
 };
 
 const productDetail = {
@@ -969,7 +1009,8 @@ const productDetail = {
   description: "",
   unitName: "",
   groupName: "",
-  createUser: ""
+  createUser: "",
+  expandType: ""
 };
 
 const productRowData = {
@@ -987,7 +1028,9 @@ const proStandardExpand = {
   discountRate: 0,
   limitNum: 0,
   standardId: 0,
-  startNum: 0
+  startNum: 0,
+  expandType: "DISCOUNT_PRODUCT",
+  limitQty: 0
 };
 
 export default {
@@ -1007,6 +1050,7 @@ export default {
       uploadListMain: [],
       uploadListDetail: [],
       uploadListMultiple: [],
+      expandTypeEnum,
       ruleValidate: {
         limitNum: [
           { required: false, message: "请输入限购份数", trigger: "blur" }
@@ -1052,7 +1096,7 @@ export default {
           }
         ],
         barcode: [
-          { required: true, message: "请输入商品条码" },
+          { required: true, message: "请输入商品条码" }
           // {
           //   validator(rule, value, callback, source, options) {
           //     const errors = [];
@@ -1104,19 +1148,19 @@ export default {
         {
           type: "selection",
           key: "",
-          minWidth: 60,
+          minWidth: 50,
           align: "center",
           fixed: "left"
         },
         {
           title: "规格ID",
           key: "id",
-          minWidth: 80
+          minWidth: 50
         },
         {
           title: "商品条码",
           key: "barcode",
-          minWidth: 80
+          minWidth: 70
         },
         {
           title: "商品编号",
@@ -1131,11 +1175,11 @@ export default {
         {
           title: "商品规格",
           key: "specification",
-          minWidth: 100
+          minWidth: 80
         },
         {
           title: "商品单位",
-          minWidth: 100,
+          minWidth: 80,
           key: "productUnit"
         },
         {
@@ -1166,8 +1210,46 @@ export default {
           }
         },
         {
-          title: "商品状态",
+          title: "商品类型",
           minWidth: 100,
+          key: "expandType",
+          render: (h, params, vm) => {
+            const { row } = params;
+
+            if (row.productStandardExpand != null) {
+              if (row.productStandardExpand.expandType == "DISCOUNT_PRODUCT") {
+                return (
+                  <div>
+                    <tag color="magenta">
+                      {
+                        expandTypeConvert(row.productStandardExpand.expandType)
+                          .label
+                      }
+                    </tag>
+                  </div>
+                );
+              } else if (
+                row.productStandardExpand.expandType == "PULL_NEW_PRODUCT"
+              ) {
+                return (
+                  <div>
+                    <tag color="orange">
+                      {
+                        expandTypeConvert(row.productStandardExpand.expandType)
+                          .label
+                      }
+                    </tag>
+                  </div>
+                );
+              }
+            } else {
+              return <div>N/A</div>;
+            }
+          }
+        },
+        {
+          title: "商品状态",
+          minWidth: 80,
           key: "shelvesStatus",
           render: (h, params, vm) => {
             const { row } = params;
@@ -1488,6 +1570,8 @@ export default {
       this.productStandardDetail = this._.cloneDeep(params.row);
       // 先清除上次请求的数据
       this.proStandardExpand = proStandardExpand;
+      this.proStandardExpand.limitQty = this.productStandardDetail.limitQty;
+      this.productStandardDetail.expandType = proStandardExpand.expandType;
       // 请求数据展示
       getProStandardExpand({
         id: this.productStandardDetail.id
@@ -1570,13 +1654,15 @@ export default {
         const tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 10;
-        // 表格数据导出字段翻译 
+        // 表格数据导出字段翻译
         let _this = this;
         tableData.forEach(item => {
           item["price"] = (item["price"] / 100.0).toFixed(2);
           item["salePrice"] = (item["salePrice"] / 100.0).toFixed(2);
           item["svipPrice"] = (item["svipPrice"] / 100.0).toFixed(2);
-          item["shelvesStatus"] = customPlanStatusConvert(item["shelvesStatus"]).label;
+          item["shelvesStatus"] = customPlanStatusConvert(
+            item["shelvesStatus"]
+          ).label;
         });
         this.$refs.tables.handleDownload({
           filename: `商品规格-${new Date().valueOf()}`,
@@ -1639,6 +1725,7 @@ export default {
     },
     updateProStandardExpand() {
       this.proStandardExpand.standardId = this.productStandardDetail.id;
+      // this.proStandardExpand.limitQty = this.productStandardDetail.limitQty;
       this.modalViewLoading = true;
       // 新增或修改
       modifyProStandardExpand({
@@ -1649,6 +1736,7 @@ export default {
           this.modalDiscount = false;
           this.modalViewLoading = false;
           this.$Message.success(msg);
+          this.getTableData();
         })
         .catch(() => {
           this.modalDiscount = false;
@@ -1683,7 +1771,7 @@ export default {
     },
     getTableData() {
       // 获取商品页面传过来的商品信息
-      console.log("this.$route.name:", this.$route.name);
+      // console.log("this.$route.name:", this.$route.name);
       if (this.$route.name === "small-goods-relation-standard") {
         const goodsStandard = getSmallGoodsStandard();
         console.log("standard from cookie:", goodsStandard);

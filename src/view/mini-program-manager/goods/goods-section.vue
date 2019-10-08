@@ -222,8 +222,12 @@ import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 import deleteMixin from "@/mixins/deleteMixin.js";
 import { fenToYuanDot2 } from "@/libs/util";
-import { customPlanStatusConvert, appTypeConvert } from "@/libs/converStatus";
-import { appTypeEnum } from "@/libs/enumerate";
+import {
+  customPlanStatusConvert,
+  appTypeConvert,
+  expandTypeConvert
+} from "@/libs/converStatus";
+import { appTypeEnum, expandTypeEnum } from "@/libs/enumerate";
 
 const productStandardDetail = {
   applyType: "",
@@ -280,7 +284,7 @@ const roleRowData = {
   productName: null,
   page: 1,
   rows: 10,
-  sidx: "product_section_rank",
+  sidx: "product_section_rank"
 };
 
 const relationData = {
@@ -393,7 +397,7 @@ const productColumns = [
   {
     type: "selection",
     key: "",
-    width: 50,
+    width: 60,
     align: "center",
     fixed: "left"
   },
@@ -435,6 +439,37 @@ const productColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
+    }
+  },
+  {
+    title: "商品类型",
+    minWidth: 120,
+    key: "expandType",
+    align: "center",
+    render: (h, params, vm) => {
+      const { row } = params;
+
+      if (row.productStandardExpand != null) {
+        if (row.productStandardExpand.expandType == "DISCOUNT_PRODUCT") {
+          return (
+            <div>
+              <tag color="magenta">
+                {expandTypeConvert(row.productStandardExpand.expandType).label}
+              </tag>
+            </div>
+          );
+        } else if (row.productStandardExpand.expandType == "PULL_NEW_PRODUCT") {
+          return (
+            <div>
+              <tag color="orange">
+                {expandTypeConvert(row.productStandardExpand.expandType).label}
+              </tag>
+            </div>
+          );
+        }
+      } else {
+        return <div>N/A</div>;
+      }
     }
   },
   {
@@ -508,6 +543,7 @@ export default {
         rank: [{ required: true, message: "请输入商品排序" }]
       },
       appTypeEnum,
+      expandTypeEnum,
       menuData: [],
       columns: [
         {
@@ -610,7 +646,7 @@ export default {
       goodsSectionData: [],
       defaultGoodsSectionData: [41],
       productData: [],
-      productTotal: 0,
+      productTotal: 0
     };
   },
   computed: {},
@@ -706,7 +742,7 @@ export default {
         return;
       }
       const { row } = params;
-      console.log(row)
+      console.log(row);
       this.productStandardRelation.id = row.id;
       this.productStandardRelation.productStandardIds = row.productStandardId;
       this.productStandardRelation.productSectionRank = row.productSectionRank;

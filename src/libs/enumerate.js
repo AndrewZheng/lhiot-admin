@@ -912,6 +912,18 @@ export const giftTypeEnum = [
   }
 ];
 
+//折扣商品类型 DISCOUNT_PRODUCT(“折扣商品”), PULL_NEW_PRODUCT(“老拉新商品”)
+export const expandTypeEnum = [
+  {
+    label: '折扣商品',
+    value: 'DISCOUNT_PRODUCT'
+  },
+  {
+    label: '老拉新商品',
+    value: 'PULL_NEW_PRODUCT'
+  }
+];
+
 // 小程序优惠券使用限制 SMALL_ALL("小程序全场券"),PART_GOODS("部分商品券"),PART_STORES("部分门店券")，HD_ALL("海鼎全场券");
 export const couponUseLimitEnum = [
   {
