@@ -1005,6 +1005,35 @@ export const asyncRouterMap = [
     ]
   },
   {
+    path: '/small-member',
+    name: 'small-member',
+    meta: {
+      icon: 'md-menu',
+      title: '会员中心'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/small-phones',
+        name: 'small-phones',
+        meta: {
+          icon: 'ios-paper',
+          title: '换绑手机'
+        },
+        component: () => import('@/view/mini-program-manager/member/phones.vue')
+      },
+      {
+        path: '/small-data-statistics',
+        name: 'small-data-statistics',
+        meta: {
+          icon: 'ios-paper',
+          title: '数据埋点统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/data-statistics.vue')
+      },
+    ]
+  },
+  {
     path: '/small-orders',
     name: 'small-orders',
     meta: {
