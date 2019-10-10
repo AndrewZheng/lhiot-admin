@@ -828,7 +828,14 @@ export const deleteRegisterGift = ({ ids }) => {
   });
 };
 
-
+//会员中心数据埋点统计 /minapp/data-total 邀请有礼数据统计
+export const dataStatistics  = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/data-total',
+    data,
+    method: 'get'
+  });
+};
 // ———————————— 1.7付费会员 —————————————
 //根据id查询付费会员礼包券配置
 export const getSvipGift = (data) => {
