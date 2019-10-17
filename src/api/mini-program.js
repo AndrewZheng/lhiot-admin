@@ -191,6 +191,13 @@ export const getProStandardExpand = ({ id }) => {
   });
 };
 
+//根据code条码查询海鼎商品信息
+export const getHdProductInfo = ({code}) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/product-standards/hd-product/' + code,
+    method: 'get'
+  });
+};
 export const modifyProStandardExpand = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/product-standard-expand/modify',
@@ -205,7 +212,7 @@ export const getProductStandardsPages = (data) => {
     url: '/minapp/product-standards/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: { 'page': data.page, 'rows': data.rows}
   });
 };
 
@@ -241,7 +248,7 @@ export const getProductSectionPages = (data) => {
     url: '/minapp/product-sections/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: { 'page': data.page, 'rows': data.rows, 'sidx': data.sidx, 'sort': data.sort}
   });
 };
 
@@ -294,7 +301,7 @@ export const getProductSectionRelationPages = (data) => {
     url: '/minapp/product-section-relations/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: { 'page': data.page, 'rows': data.rows, 'sidx': data.sidx, 'sort': data.sort }
   });
 };
 
@@ -330,7 +337,7 @@ export const getCouponTemplateRelationPages = (data) => {
     url: '/minapp/coupon-template-relations/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: { 'page': data.page, 'rows': data.rows, 'sidx': data.sidx, 'sort': data.sort }
   });
 };
 
@@ -369,6 +376,8 @@ export const getHdCouponActivitiesPages = (data) => {
     headers: { 'page': data.page, 'rows': data.rows }
   });
 };
+
+
 
 // ———————————— 活动管理 —————————————
 
@@ -522,7 +531,7 @@ export const getFlashsalePages = (data) => {
     url: '/minapp/activity-flashsales/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: { 'page': data.page, 'rows': data.rows}
   });
 };
 
@@ -594,7 +603,7 @@ export const getCouponPages = (data) => {
     url: '/minapp/activity-coupons/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: { 'page': data.page, 'rows': data.rows, 'sidx': data.sidx, 'sort': data.sort }
   });
 };
 
@@ -630,7 +639,7 @@ export const getCouponTemplatePages = (data) => {
     url: '/minapp/coupon-templates/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: { 'page': data.page, 'rows': data.rows}
   });
 };
 
@@ -732,13 +741,14 @@ export const editShareRewardSetting = (data) => {
   });
 };
 
+// 原先注册送礼后台接口
 // 根据条件分页查询注册送礼活动列表
 export const getRegisterPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/activity-registers/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: { 'page': data.page, 'rows': data.rows, 'sidx': data.sidx, 'sort': data.sort }
   });
 };
 
@@ -765,6 +775,215 @@ export const editRegister = (data) => {
     url: '/minapp/activity-registers/' + data.id,
     data,
     method: 'put'
+  });
+};
+
+
+// ———————————— 1.6版本注册送礼活动配置 —————————————
+//根据id查询注册送礼活动配置
+export const getRegisteredGiftPage = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-register-setting/' + data.id,
+    data,
+    method: 'get'
+  });
+};
+
+//添加注册送礼活动配置 /minapp/activity-register-setting/create
+export const createRegisterGift = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-register-setting/create',
+    data,
+    method: 'post'
+  });
+};
+
+
+// 查询注册送礼活动配置分页列表 minapp/activity-register-setting/create
+export const getRegisteredGiftPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-register-setting/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+
+// 根据id更新注册送礼活动配置 /minapp/activity-register-setting/update/{id}
+export const editRegisterGift = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-register-setting/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+
+// 根据ids删除注册送礼活动配置  /minapp/activity-register-setting/{ids}
+export const deleteRegisterGift = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/activity-register-setting/' + ids,
+    method: 'delete'
+  });
+};
+
+//会员中心数据埋点统计 /minapp/data-total 邀请有礼数据统计
+export const dataStatistics  = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/data-total',
+    data,
+    method: 'get'
+  });
+};
+// ———————————— 1.7付费会员 —————————————
+//根据id查询付费会员礼包券配置
+export const getSvipGift = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-gift-coupon-setting/' + data.id,
+    method: 'get'
+  });
+};
+//添加付费会员礼包券配置
+export const createSvipGift = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-gift-coupon-setting/create',
+    data,
+    method: 'post'
+  });
+};
+
+
+// 查询付费会员礼包券配置分页列表
+export const getSvipGiftPages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-gift-coupon-setting/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+
+// {id}根据id更新付费会员礼包券配置
+export const editSvipGift = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-gift-coupon-setting/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+
+//根据ids删除付费会员礼包券配置
+export const deleteSvipGift = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-gift-coupon-setting/' + ids,
+    method: 'delete'
+  });
+};
+
+// ———————————— 1.7SVIP套餐 —————————————
+//根据id查询SVIP套餐
+export const getSvipPackage= (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-package/' + data.id,
+    data,
+    method: 'get'
+  });
+};
+
+//添加SVIP套餐
+export const createSvipPackage = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-package/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 查询SVIP套餐分页列表
+export const getSvipPackagePages = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-package/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+
+// 根据id更新SVIP套餐
+export const editSvipPackage = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-package/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+//根据ids删除SVIP套餐
+export const deleteSvipPackage = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/svip-package/' + ids,
+    method: 'delete'
+  });
+};
+
+// ————————————   1.7版本 手动发券   —————————————
+
+//通过phones发放优惠券给对应用户
+export const handGrandCoupon = (data) =>{
+  return Vue.prototype.$http.request({
+    url: `/minapp/coupon-config-manage/send?phones=${data.phones}&id=${data.id}`,
+    method: 'post'
+  });
+};
+//根据id查询优惠券配置管理
+export const gitCouponPage= (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/coupon-config-manage/' + data.id,
+    data,
+    method: 'get'
+  });
+};
+
+//添添加优惠券配置管理
+export const createCouponPage = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/coupon-config-manage/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 查询优惠券配置管理分页列表
+export const getCouponPagess = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/coupon-config-manage/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+
+// 根据id更新优惠券配置管理
+export const editCouponPage = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/coupon-config-manage/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+
+// /minapp/coupon-config-manage/{ids}
+// 根据ids删除优惠券配置管理
+export const deleteCouponPage = ({ ids }) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/coupon-config-manage/' + ids,
+    method: 'delete'
   });
 };
 
@@ -803,11 +1022,20 @@ export const editRegisterReward = (data) => {
     method: 'put'
   });
 };
-
+// ------------------------------------
 // 根据条件分页查询商城小程序订单列表
 export const getOrderPages = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/orders/pages',
+    data,
+    method: 'post',
+    headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+//查询订单用券信息
+export const getOrderCouponDetails = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/orders/coupon-use-info',
     data,
     method: 'post',
     headers: { 'page': data.page, 'rows': data.rows }
@@ -838,6 +1066,20 @@ export const resendToHd = ({ ids }) => {
   });
 };
 
+// 微商城小程序--订单退货简化版 /minapp/orders/orders/specialRefund/simpe
+export const refundWx = ({orderCode}) =>{
+  return Vue.prototype.$http.request({
+    url: `/minapp/orders/orders/specialRefund/simpe?orderCode=${orderCode}`,
+    method: 'post'
+  });
+};
+// 拼团小程序--订单退货简化版 /minapp/orders/orders/refund/simpe
+export const refundPt = ({orderCode}) =>{
+  return Vue.prototype.$http.request({
+    url: `/minapp/orders/orders/refund/simpe?orderCode=${orderCode}`,
+    method: 'post'
+  });
+};
 // 根据条件分页查询支付列表
 export const getPaymentLogPages = (data) => {
   return Vue.prototype.$http.request({
@@ -845,6 +1087,16 @@ export const getPaymentLogPages = (data) => {
     data,
     method: 'post',
     headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+// 根据条件分页查询支付日志金额总计
+export const getPaymentLogSum = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/payment-logs/fee/sum',
+    data,
+    method: 'post',
+    headers: { 'data': data.sum }
   });
 };
 
@@ -1439,4 +1691,11 @@ export const ordersRefund = ({ endTime }) => {
     url: '/minapp/order-center/wxsmall/failure/orders/refund/' + endTime,
     method: 'get'
   })
-}
+};
+// 根据订单id收货 /minapp/orders/receive/{orderId}
+export const sureReceive = ({orderId}) =>{
+  return Vue.prototype.$http.request({
+    url:  '/minapp/orders/receive/' + orderId,
+    method: 'get'
+  });
+};

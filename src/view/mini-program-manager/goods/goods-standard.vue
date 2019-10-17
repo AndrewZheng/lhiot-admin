@@ -54,7 +54,21 @@
                 v-for="item in shelvesStatus"
                 :value="item.value"
                 :key="item.value"
-                class="ml15 mt10"
+                class="ml15 mt10 mr15"
+              >{{ item.label }}</Option>
+            </Select>
+            <Select
+              v-model="searchRowData.expandType"
+              class="ml5"
+              placeholder="商品类型"
+              style="width:100px"
+              clearable
+            >
+              <Option
+                v-for="item in expandTypeEnum"
+                :value="item.value"
+                :key="item.value"
+                class="ml15 mt10 mr15"
               >{{ item.label }}</Option>
             </Select>
             <InputNumber
@@ -79,7 +93,7 @@
               type="primary"
               @click="handleSearch"
             >
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
               v-waves
@@ -88,7 +102,7 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除
+              <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
         </div>
@@ -100,10 +114,10 @@
             type="primary"
             @click="goBack"
           >
-            <Icon type="ios-arrow-back"/>&nbsp;返回
+            <Icon type="ios-arrow-back" />&nbsp;返回
           </Button>
           <Button v-waves class="search-btn ml5 mr5" type="success" @click="handleCreateView">
-            <Icon type="md-add"/>&nbsp;添加
+            <Icon type="md-add" />&nbsp;添加
           </Button>
           <Poptip
             confirm
@@ -113,9 +127,12 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/> 批量删除
+              <Icon type="md-trash" />批量删除
             </Button>
           </Poptip>
+          <Button class="search-btn mr2" type="warning" @click="handleDownload">
+            <Icon type="md-download" />导出
+          </Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -184,7 +201,7 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品主图:</i-col>
               <i-col span="16">
-                <img :src="productStandardDetail.baseImage" width="100" height="100">
+                <img :src="productStandardDetail.baseImage" width="100" height="100" />
               </i-col>
             </Row>
           </i-col>
@@ -217,7 +234,7 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">上架商品主图:</i-col>
               <i-col v-if="productStandardDetail.image" span="16">
-                <img :src="productStandardDetail.image" width="100" height="100">
+                <img :src="productStandardDetail.image" width="100" height="100" />
               </i-col>
             </Row>
           </i-col>
@@ -225,7 +242,7 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">上架商品详情图:</i-col>
               <i-col v-if="productStandardDetail.detailImage" span="16">
-                <img :src="productStandardDetail.detailImage" width="100" height="100">
+                <img :src="productStandardDetail.detailImage" width="100" height="100" />
               </i-col>
             </Row>
           </i-col>
@@ -272,6 +289,15 @@
             </Row>
           </i-col>
         </Row>
+        <Row>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">SVIP价格:</i-col>
+              <i-col span="16">{{ productStandardDetail.svipPrice | fenToYuanDot2Filters }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
@@ -297,7 +323,7 @@
                   :v-show="descriptionList"
                   class="demo-upload-list"
                 >
-                  <img :src="item">
+                  <img :src="item" />
                   <div class="demo-upload-list-cover">
                     <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                   </div>
@@ -311,8 +337,8 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-
-    <Modal v-model="modalEdit" :mask-closable="false" :width="700">
+    <!-- 添加 -->
+    <Modal v-model="modalEdit" :mask-closable="false" :width="900">
       <p slot="header">
         <span>{{ productStandardDetail.id >0?'创建商品规格':'编辑商品规格' }}</span>
       </p>
@@ -349,7 +375,7 @@
           <Row>
             <i-col span="12">
               <FormItem v-if="productStandardDetail.baseImage" label="商品主图:">
-                <img :src="productStandardDetail.baseImage" width="100" height="100">
+                <img :src="productStandardDetail.baseImage" width="100" height="100" />
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -381,7 +407,7 @@
                 >
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url">
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -420,7 +446,7 @@
                 >
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url">
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveDetail(item)"></Icon>
@@ -482,22 +508,6 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="商品原价:" prop="price">
-                <InputNumber :min="0" :value="priceComputed" @on-change="priceInputNumberOnchange"></InputNumber>
-              </FormItem>
-            </i-col>
-            <i-col span="12">
-              <FormItem label="售卖价格:" prop="salePrice">
-                <InputNumber
-                  :min="0"
-                  :value="salePriceComputed"
-                  @on-change="salePriceInputNumberOnchange"
-                ></InputNumber>
-              </FormItem>
-            </i-col>
-          </Row>
-          <Row>
-            <i-col span="12">
               <FormItem label="商品单位:" prop="unitId">
                 <Select v-model="productStandardDetail.unitId" @on-change="unitChange">
                   <Option
@@ -518,6 +528,36 @@
           </Row>
           <Row>
             <i-col span="12">
+              <FormItem label="商品原价:" prop="price">
+                <InputNumber :min="0" :value="priceComputed" @on-change="priceInputNumberOnchange"></InputNumber>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="售卖价格:" prop="salePrice">
+                <InputNumber
+                  :min="0"
+                  :value="salePriceComputed"
+                  @on-change="salePriceInputNumberOnchange"
+                ></InputNumber>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
+              <FormItem label="SVIP价格:" prop="svipPrice">
+                <InputNumber
+                  :min="0"
+                  :value="svipPriceComputed"
+                  @on-change="svipPriceInputNumberOnchange"
+                ></InputNumber>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <Button v-waves type="warning" @click="handleHdSvipPrice">海鼎价格参考</Button>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
               <FormItem label="规格描述(推荐宽度为750px，高度自适应):" prop="description">
                 <Input
                   v-show="false"
@@ -532,7 +572,7 @@
                 >
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url">
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMultiple(item)"></Icon>
@@ -558,7 +598,7 @@
               </FormItem>
             </i-col>
             <i-col span="12">
-              <Button v-waves type="primary" @click="handleImageSort">规格描述排序</Button>
+              <Button v-waves type="info" @click="handleImageSort">规格描述排序</Button>
             </i-col>
           </Row>
         </Form>
@@ -568,7 +608,7 @@
         <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')">确定</Button>
       </div>
     </Modal>
-
+    <!-- 折扣配置 -->
     <Modal v-model="modalDiscount" :mask-closable="false" :width="700" title="折扣配置">
       <p slot="header">
         <span>折扣配置</span>
@@ -596,6 +636,35 @@
             <i-col span="12">
               <FormItem label="售卖价格:">
                 <InputNumber :min="0" :value="salePriceComputed" disabled></InputNumber>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="SVIP价格:">
+                <InputNumber :min="0" :value="svipPriceComputed" disabled></InputNumber>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
+              <FormItem label="商品类型:" prop="expandType" :label-width="100">
+                <Select
+                  v-model="proStandardExpand.expandType"
+                  placeholder="请选择"
+                  style="padding-right: 5px;width: 120px"
+                >
+                  <Option
+                    v-for="(item,index) in expandTypeEnum"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                    style="padding-left: 5px;width: 100px"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="商品库存:" prop="limitQty">
+                <InputNumber v-model="proStandardExpand.limitQty"></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -640,7 +709,7 @@
     <Modal v-model="modalProduct" :width="1000" title="关联商品">
       <Card>
         <tables
-          ref="tables"
+          ref="dataTables"
           v-model="productData"
           :columns="productColumns"
           :loading="loading"
@@ -672,7 +741,7 @@
                 type="primary"
                 @click="handleProductSearch"
               >
-                <Icon type="md-search"/>&nbsp;搜索
+                <Icon type="md-search" />&nbsp;搜索
               </Button>
               <Button
                 v-waves
@@ -681,7 +750,7 @@
                 type="info"
                 @click="handleProductClear"
               >
-                <Icon type="md-refresh"/>&nbsp;清除
+                <Icon type="md-refresh" />&nbsp;清除
               </Button>
             </Row>
           </div>
@@ -702,7 +771,7 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%">
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
 
     <Modal v-model="modalSort" title="图片排序" :mask-closable="false">
@@ -710,8 +779,20 @@
         <span>图片排序</span>
       </p>
       <div class="modal-content">
-        <drag-list :list1.sync="uploadListMultiple" :drop-con-class="dropConClass" @on-change="handleChange" class="clearfix">
-          <img :src="left.itemLeft.url"  slot="left" slot-scope="left" class="drag-item" width="80" height="80" />
+        <drag-list
+          :list1.sync="uploadListMultiple"
+          :drop-con-class="dropConClass"
+          @on-change="handleChange"
+          class="clearfix"
+        >
+          <img
+            :src="left.itemLeft.url"
+            slot="left"
+            slot-scope="left"
+            class="drag-item"
+            width="80"
+            height="80"
+          />
         </drag-list>
       </div>
       <div slot="footer">
@@ -719,12 +800,107 @@
         <Button type="primary" @click="handleImgSort">确定</Button>
       </div>
     </Modal>
+    <!-- 海鼎会员价 -->
+    <Modal v-model="modalHdSvip" :width="800" draggable scrollable :mask-closable="false">
+      <p slot="header">
+        <span>海鼎SVIP价格参考</span>
+      </p>
+      <div class="modal-content">
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">商品名称:</i-col>
+              <i-col span="16">{{ HdSvipInfo.gname }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">商品状态:</i-col>
+              <i-col span="16">{{ HdSvipInfo.busname }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">商品编码:</i-col>
+              <i-col span="16">{{ HdSvipInfo.code }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">条码:</i-col>
+              <i-col span="16">{{ HdSvipInfo.code2 }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">商品描述:</i-col>
+              <i-col span="16">{{ HdSvipInfo.description }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">商品分类:</i-col>
+              <i-col span="16">{{ HdSvipInfo.sortcode }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">基础单位:</i-col>
+              <i-col span="16">{{ HdSvipInfo.munit }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">规格:</i-col>
+              <i-col span="16">{{ HdSvipInfo.qpcstr }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">海鼎售价:</i-col>
+              <i-col span="16">{{ HdSvipInfo.rtlprc }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">海鼎会员价:</i-col>
+              <i-col span="16">{{ HdSvipInfo.mbrprc }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">SVIP价格:</i-col>
+              <i-col span="16">{{ HdSvipInfo.svipprc }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">SVIP折扣:</i-col>
+              <i-col span="16">{{ HdSvipInfo.svipzk }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+      </div>
+      <div slot="footer">
+        <Button type="primary" @click="handleHdSvipClose">关闭</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
-import DragList from '_c/drag-list';
+import DragList from "_c/drag-list";
 import IViewUpload from "_c/iview-upload";
 import _ from "lodash";
 import {
@@ -735,7 +911,8 @@ import {
   modifyProStandardExpand,
   editProductStandard,
   getProductUnits,
-  getProductPages
+  getProductPages,
+  getHdProductInfo
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -747,9 +924,11 @@ import {
   fenToYuanDot2Number,
   yuanToFenNumber
 } from "@/libs/util";
+import { expandTypeEnum } from "@/libs/enumerate";
 import {
   customPlanStatusConvert,
-  productStatusConvert
+  productStatusConvert,
+  expandTypeConvert
 } from "@/libs/converStatus";
 
 const productStandardDetail = {
@@ -794,7 +973,8 @@ const productStandardDetail = {
   invNum: null,
   saleCount: null,
   positionName: null,
-  dbId: null
+  dbId: null,
+  svipPrice: null
 };
 
 const roleRowData = {
@@ -829,7 +1009,8 @@ const productDetail = {
   description: "",
   unitName: "",
   groupName: "",
-  createUser: ""
+  createUser: "",
+  expandType: ""
 };
 
 const productRowData = {
@@ -847,7 +1028,9 @@ const proStandardExpand = {
   discountRate: 0,
   limitNum: 0,
   standardId: 0,
-  startNum: 0
+  startNum: 0,
+  expandType: "DISCOUNT_PRODUCT",
+  limitQty: 0
 };
 
 export default {
@@ -867,6 +1050,7 @@ export default {
       uploadListMain: [],
       uploadListDetail: [],
       uploadListMultiple: [],
+      expandTypeEnum,
       ruleValidate: {
         limitNum: [
           { required: false, message: "请输入限购份数", trigger: "blur" }
@@ -912,16 +1096,16 @@ export default {
           }
         ],
         barcode: [
-          { required: true, message: "请输入商品条码" },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[0-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为整数"));
-              }
-              callback(errors);
-            }
-          }
+          { required: true, message: "请输入商品条码" }
+          // {
+          //   validator(rule, value, callback, source, options) {
+          //     const errors = [];
+          //     if (!/^[0-9]\d*$/.test(value)) {
+          //       errors.push(new Error("必须为整数"));
+          //     }
+          //     callback(errors);
+          //   }
+          // }
         ],
         specificationQty: [
           { required: true, message: "请输入安全库存" },
@@ -964,19 +1148,19 @@ export default {
         {
           type: "selection",
           key: "",
-          minWidth: 60,
+          minWidth: 50,
           align: "center",
           fixed: "left"
         },
         {
           title: "规格ID",
           key: "id",
-          minWidth: 80
+          minWidth: 50
         },
         {
           title: "商品条码",
           key: "barcode",
-          minWidth: 80
+          minWidth: 70
         },
         {
           title: "商品编号",
@@ -991,16 +1175,16 @@ export default {
         {
           title: "商品规格",
           key: "specification",
-          minWidth: 100
+          minWidth: 80
         },
         {
           title: "商品单位",
-          minWidth: 100,
+          minWidth: 80,
           key: "productUnit"
         },
         {
           title: "商品原价",
-          minWidth: 120,
+          minWidth: 60,
           key: "price",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.price);
@@ -1009,7 +1193,7 @@ export default {
         },
         {
           title: "售卖价格",
-          minWidth: 120,
+          minWidth: 60,
           key: "salePrice",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.salePrice);
@@ -1017,8 +1201,55 @@ export default {
           }
         },
         {
-          title: "商品状态",
+          title: "SVIP价格",
+          minWidth: 60,
+          key: "svipPrice",
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(params.row.svipPrice);
+            return <div>{amount}</div>;
+          }
+        },
+        {
+          title: "商品类型",
           minWidth: 100,
+          key: "expandType",
+          render: (h, params, vm) => {
+            const { row } = params;
+
+            if (row.productStandardExpand != null) {
+              if (row.productStandardExpand.expandType == "DISCOUNT_PRODUCT") {
+                return (
+                  <div>
+                    <tag color="magenta">
+                      {
+                        expandTypeConvert(row.productStandardExpand.expandType)
+                          .label
+                      }
+                    </tag>
+                  </div>
+                );
+              } else if (
+                row.productStandardExpand.expandType == "PULL_NEW_PRODUCT"
+              ) {
+                return (
+                  <div>
+                    <tag color="orange">
+                      {
+                        expandTypeConvert(row.productStandardExpand.expandType)
+                          .label
+                      }
+                    </tag>
+                  </div>
+                );
+              }
+            } else {
+              return <div>N/A</div>;
+            }
+          }
+        },
+        {
+          title: "商品状态",
+          minWidth: 80,
           key: "shelvesStatus",
           render: (h, params, vm) => {
             const { row } = params;
@@ -1050,7 +1281,7 @@ export default {
         },
         {
           title: "商品排序",
-          minWidth: 100,
+          minWidth: 60,
           key: "rank"
         },
         {
@@ -1135,8 +1366,8 @@ export default {
         create: "create"
       },
       dropConClass: {
-        left: ['drop-box', 'left-drop-box'],
-        right: ['drop-box', 'right-drop-box']
+        left: ["drop-box", "left-drop-box"],
+        right: ["drop-box", "right-drop-box"]
       },
       tempModalType: "create",
       tableData: [],
@@ -1148,6 +1379,7 @@ export default {
       modalView: false,
       modalEdit: false,
       modalDiscount: false,
+      modalHdSvip: false,
       modalProduct: false,
       modalSort: false,
       searchRowData: roleRowData,
@@ -1158,6 +1390,7 @@ export default {
       // 选中的行
       tableDataSelected: [],
       showBack: false,
+      HdSvipInfo: "",
       shelvesStatus: [
         {
           label: "上架",
@@ -1178,6 +1411,9 @@ export default {
     },
     salePriceComputed() {
       return fenToYuanDot2Number(this.productStandardDetail.salePrice);
+    },
+    svipPriceComputed() {
+      return fenToYuanDot2Number(this.productStandardDetail.svipPrice);
     },
     discountPriceComputed() {
       return fenToYuanDot2Number(this.proStandardExpand.discountPrice);
@@ -1204,6 +1440,9 @@ export default {
     },
     salePriceInputNumberOnchange(value) {
       this.productStandardDetail.salePrice = yuanToFenNumber(value);
+    },
+    svipPriceInputNumberOnchange(value) {
+      this.productStandardDetail.svipPrice = yuanToFenNumber(value);
     },
     searchMinPriceChange(value) {
       this.searchRowData.minPrice = yuanToFenNumber(this.searchMinPrice);
@@ -1238,9 +1477,7 @@ export default {
         this.proStandardExpand.discountRate = discountRate.substring(0, 3);
       }
     },
-    handleChange(){
-      
-    },
+    handleChange() {},
     handleDelete(params) {
       this.tableDataSelected = [];
       this.tableDataSelected.push(params.row);
@@ -1283,7 +1520,7 @@ export default {
     unitChange(value) {
       this.productStandardDetail.productUnit = value;
     },
-    handleImgSort(){
+    handleImgSort() {
       this.descriptionList = [];
       this.uploadListMultiple.forEach(item => {
         if (item.url) {
@@ -1292,10 +1529,10 @@ export default {
       });
       this.productStandardDetail.description = "";
       this.productStandardDetail.description = this.descriptionList.join(",");
-      console.log('after sort:', this.productStandardDetail.description);
+      console.log("after sort:", this.productStandardDetail.description);
       this.modalSort = false;
     },
-    handleImageSort(){
+    handleImageSort() {
       this.modalSort = true;
     },
     handleDiscountClose() {
@@ -1333,6 +1570,8 @@ export default {
       this.productStandardDetail = this._.cloneDeep(params.row);
       // 先清除上次请求的数据
       this.proStandardExpand = proStandardExpand;
+      this.proStandardExpand.limitQty = this.productStandardDetail.limitQty;
+      this.productStandardDetail.expandType = proStandardExpand.expandType;
       // 请求数据展示
       getProStandardExpand({
         id: this.productStandardDetail.id
@@ -1346,6 +1585,29 @@ export default {
         .catch(() => {
           this.modalDiscount = false;
         });
+    },
+    // 海鼎会员价查询
+    handleHdSvipPrice() {
+      // this.modalHdSvip = true;
+      //console.log(this.productStandardDetail.barcode)
+      if (!this.productStandardDetail.barcode) {
+        this.$Message.error("请先选择关联商品");
+        return;
+      }
+      this.loading = true;
+      let code = this.productStandardDetail.barcode;
+      getHdProductInfo({ code: code })
+        .then(res => {
+          this.HdSvipInfo = res;
+          this.loading = false;
+          this.modalHdSvip = true;
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+    },
+    handleHdSvipClose() {
+      this.modalHdSvip = false;
     },
     handleCreateView() {
       this.resetFields();
@@ -1384,6 +1646,30 @@ export default {
           this.modalEdit = false;
         });
     },
+    // 下载
+    handleDownload() {
+      // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
+      this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      getProductStandardsPages(this.searchRowData).then(res => {
+        const tableData = res.rows;
+        // 恢复正常页数
+        this.searchRowData.rows = 10;
+        // 表格数据导出字段翻译
+        let _this = this;
+        tableData.forEach(item => {
+          item["price"] = (item["price"] / 100.0).toFixed(2);
+          item["salePrice"] = (item["salePrice"] / 100.0).toFixed(2);
+          item["svipPrice"] = (item["svipPrice"] / 100.0).toFixed(2);
+          item["shelvesStatus"] = customPlanStatusConvert(
+            item["shelvesStatus"]
+          ).label;
+        });
+        this.$refs.tables.handleDownload({
+          filename: `商品规格-${new Date().valueOf()}`,
+          data: tableData
+        });
+      });
+    },
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
@@ -1395,11 +1681,22 @@ export default {
             this.$Message.error("售卖价格不能小于0");
             return;
           }
+          if (this.productStandardDetail.svipPrice < 0) {
+            this.$Message.error("SVIP价格不能小于0");
+            return;
+          }
           if (
             this.productStandardDetail.salePrice >
             this.productStandardDetail.price
           ) {
             this.$Message.error("售卖价格不能大于原价");
+            return;
+          }
+          if (
+            this.productStandardDetail.svipPrice >
+            this.productStandardDetail.salePrice
+          ) {
+            this.$Message.error("SVIP价格不能大于售卖价格");
             return;
           }
           if (this.tempModalType === this.modalType.create) {
@@ -1428,6 +1725,7 @@ export default {
     },
     updateProStandardExpand() {
       this.proStandardExpand.standardId = this.productStandardDetail.id;
+      // this.proStandardExpand.limitQty = this.productStandardDetail.limitQty;
       this.modalViewLoading = true;
       // 新增或修改
       modifyProStandardExpand({
@@ -1438,6 +1736,7 @@ export default {
           this.modalDiscount = false;
           this.modalViewLoading = false;
           this.$Message.success(msg);
+          this.getTableData();
         })
         .catch(() => {
           this.modalDiscount = false;
@@ -1472,7 +1771,7 @@ export default {
     },
     getTableData() {
       // 获取商品页面传过来的商品信息
-      console.log("this.$route.name:", this.$route.name);
+      // console.log("this.$route.name:", this.$route.name);
       if (this.$route.name === "small-goods-relation-standard") {
         const goodsStandard = getSmallGoodsStandard();
         console.log("standard from cookie:", goodsStandard);
@@ -1578,7 +1877,7 @@ export default {
         this.uploadListMultiple = descriptionImgArr;
       }
     },
-    handleRemoveMain(file) {
+    handleRemoveDetail(file) {
       this.$refs.uploadDetail.deleteFile(file);
       this.productStandardDetail.detailImage = null;
     },

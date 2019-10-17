@@ -32,6 +32,17 @@ export const receivingWayEnum = [
     value: receivingWay.TO_THE_HOME
   }
 ];
+//是否退款
+export const isAllRefund = {
+  NO: 'NO'
+};
+export const isAllRefundEnum = [
+  {
+    label: '部分退款',
+    value: isAllRefund.NO
+  }
+];
+
 
 // 订单状态
 // WAIT_PAYMENT-待支付
@@ -769,6 +780,110 @@ export const couponStatusEnum = [
 //   label: '过期',
 //   value: 'EXPIRE'
 // }
+export const vipStatusEnum = [
+  {
+    label: 'SVIP会员',
+    value: 'SVIP'
+  },
+  {
+    label: '试用会员',
+    value: 'TRY_SVIP'
+  }
+];
+export const receiveTypeEnum = [
+  {
+    label: '自动领取',
+    value: 'AUTO'
+  },
+  {
+    label: '手动领取',
+    value: 'MANUAL'
+  }
+];
+// svip套餐状态 (开启 ON,关闭 OFF,未开启 NOTOPEN,已结束 OVER))
+export const packageStatus = {
+  OFF: 'OFF',
+  ON: 'ON',
+  // OVER:'OVER',
+  // NOTOPEN:'NOTOPEN'
+}
+
+export const packageStatusEnum = [
+    {
+    label: '关闭',
+    value: packageStatus.OFF
+  },
+  {
+    label: '开启',
+    value: packageStatus.ON
+  },
+  // {
+  //   label: '已结束',
+  //   value: packageStatus.OVER
+  // },
+  // {
+  //   label: '未开启',
+  //   value: packageStatus.NOTOPEN
+  // }
+]
+// export const packageStatusEnum = [
+//   {
+//     label: '关闭',
+//     value: "OFF"
+//   },
+//   {
+//     label: '开启',
+//     value: "ON"
+//   },
+//   // {
+//   //   label: '已结束',
+//   //   value: "OVER"
+//   // },
+//   // {
+//   //   label: '未开启',
+//   //   value: "NOTOPEN"
+//   // }
+// ]
+
+
+// SVIP套餐类型对应枚举：套餐类型(月卡、MONTH_CARD 季卡、SEASON 年卡、YEAR_CARD)
+export const packageTypeEnum = [
+  {
+    label: '月卡',
+    value: 'MONTH_CARD'
+  },
+  {
+    label: '季卡',
+    value: 'SEASON'
+  },
+  {
+    label: '年卡',
+    value: 'YEAR_CARD'
+  }
+];
+
+export const userScopeEnum = [
+  {
+    label: '所有用户',
+    value: 'ALL'
+  },
+  {
+    label: '付费会员',
+    value: 'SVIP'
+  }
+];
+
+export const memberLimitEnum = [
+  {
+    label: '所有用户',
+    value: 'ALL'
+  },
+  {
+    label: '付费会员',
+    value: 'SVIP'
+  }
+];
+
 
 export const couponActivityTypeEnum = [
   {
@@ -778,6 +893,34 @@ export const couponActivityTypeEnum = [
   {
     label: '积分商城兑换',
     value: 'COUPON_CENTER_POINT'
+  }
+];
+
+//giftType礼包类型： BIRTHDAY_COUPON 生日券 FREIGHT_COUPON 运费券 OPEN_CARD_COUPON 开卡券
+export const giftTypeEnum = [
+  {
+    label: '生日券',
+    value: 'BIRTHDAY_COUPON'
+  },
+  {
+    label: '运费券',
+    value: 'FREIGHT_COUPON'
+  },
+  {
+    label: '开卡券',
+    value: 'OPEN_CARD_COUPON'
+  }
+];
+
+//折扣商品类型 DISCOUNT_PRODUCT(“折扣商品”), PULL_NEW_PRODUCT(“老拉新商品”)
+export const expandTypeEnum = [
+  {
+    label: '折扣商品',
+    value: 'DISCOUNT_PRODUCT'
+  },
+  {
+    label: '老拉新商品',
+    value: 'PULL_NEW_PRODUCT'
   }
 ];
 
@@ -834,12 +977,16 @@ export const couponScopeEnum = [
     value: couponScope.SMALL
   }
 ];
+export const vipCouponType = {
+  FREE_SHIPPING_COUPON:'FREE_SHIPPING_COUPON'
+};
 
-// 小程序优惠券类型(FULL_CUT_COUPON 满减券;DISCOUNT_COUPON 折扣券;CASH_COUPON 现金券)
+// 小程序优惠券类型(FULL_CUT_COUPON 满减券;DISCOUNT_COUPON 折扣券;CASH_COUPON 现金券;FREIGHT_COUPON运费券)
 export const couponType = {
   FULL_CUT_COUPON: 'FULL_CUT_COUPON',
   DISCOUNT_COUPON: 'DISCOUNT_COUPON',
-  CASH_COUPON: 'CASH_COUPON'
+  CASH_COUPON: 'CASH_COUPON',
+  FREIGHT_COUPON:'FREIGHT_COUPON'
 };
 
 export const couponTypeEnum = [
@@ -854,14 +1001,36 @@ export const couponTypeEnum = [
   {
     label: '现金券',
     value: couponType.CASH_COUPON
+  },
+  {
+    label: '运费券',
+    value: couponType.FREIGHT_COUPON
   }
 ];
+
+// 小程序SVIP身份识别(SUPER_VIP svip   PROBATION_VIP  试用vip)
+export const svipType = {
+  SUPER_VIP: 'SUPER_VIP',
+  PROBATION_VIP: 'PROBATION_VIP',
+};
+
+export const svipTypeEnum = [
+  {
+    label: 'SVIP会员',
+    value: svipType.SUPER_VIP
+  },
+  {
+    label: '试用会员',
+    value: svipType.PROBATION_VIP
+  }
+];
+
 
 // 小程序应用类型 appType WXSMALL_SHOP 微信小程序; S_MALL 拼团小程序;
 
 export const appType = {
   WXSMALL_SHOP: 'WXSMALL_SHOP',
-  S_MALL: 'S_MALL'
+  S_MALL: 'S_MALL',
 };
 
 export const appTypeEnum = [
@@ -872,14 +1041,26 @@ export const appTypeEnum = [
   {
     label: '拼团小程序',
     value: appType.S_MALL
-  }
+  },
+];
+
+export const appTypes = {
+  S_MALL: 'S_MALL',
+};
+
+export const appTypesEnum = [
+  {
+    label: '小程序',
+    value: appType.S_MALL
+  },
 ];
 
 // 小程序支付类型 payType weixin 微信支付; balance 余额支付;
 
 export const payType = {
   weixin: 'weixin',
-  balance: 'balance'
+  balance: 'balance',
+  points: 'points'
 };
 
 export const payTypeEnum = [
@@ -890,6 +1071,10 @@ export const payTypeEnum = [
   {
     label: '余额支付',
     value: payType.balance
+  },
+  {
+    label: '积分兑换',
+    value: payType.points
   }
 ];
 
@@ -1432,7 +1617,9 @@ export const advertisementPositionTypeEnum = [
 ];
 
 // 小程序广告关联类别
-// GOODSINFO("商品详情"),STORELIVE("门店直播"),AMUSEMENT("多娱"),EXTERNALLINK("外部链接"),GAME("游戏"),INVITEACTIVE("邀请有礼"),FLASHACTIVE("抢购商品"),RECHARGE("充值页面"),STOCK("仓库")
+// GOODSINFO("商品详情"),STORELIVE("门店直播"),
+// AMUSEMENT("多娱"),EXTERNALLINK("外部链接"), INTERNALLINK('内部链接') TABLINK('底部导航')
+// GAME("游戏"),INVITEACTIVE("邀请有礼"),FLASHACTIVE("抢购商品"),RECHARGE("充值页面"),STOCK("仓库")
 export const linkType = {
   GOODSINFO: 'GOODSINFO',
   STORELIVE: 'STORELIVE',
@@ -1442,7 +1629,9 @@ export const linkType = {
   INVITEACTIVE: 'INVITEACTIVE',
   FLASHACTIVE: 'FLASHACTIVE',
   RECHARGE: 'RECHARGE',
-  STOCK: 'STOCK'
+  STOCK: 'STOCK',
+  TABLINK: 'TABLINK',
+  INTERNALLINK: 'INTERNALLINK'
 };
 
 export const linkTypeEnum = [
@@ -1457,6 +1646,14 @@ export const linkTypeEnum = [
   {
     label: '多娱',
     value: linkType.AMUSEMENT
+  },
+  {
+    label: '底部导航',
+    value: linkType.TABLINK
+  },
+  {
+    label: '内部链接',
+    value: linkType.INTERNALLINK
   },
   {
     label: '外部链接',
@@ -1571,17 +1768,12 @@ export const miniHdStatusEnum = [
 // 小程序订单类型 SHOPPING("导购订单"),SELF_BUYING("自购订单"),TEAM_BUYING("团购订单"),PICKING("提货订单");
 
 export const miniOrderType = {
-  SHOPPING: 'SHOPPING',
   SELF_BUYING: 'SELF_BUYING',
   TEAM_BUYING: 'TEAM_BUYING',
-  PICKING: 'PICKING'
+  POINTS_BUYING: 'POINTS_BUYING'
 };
 
 export const miniOrderTypeEnum = [
-  {
-    label: '导购订单',
-    value: miniOrderType.SHOPPING
-  },
   {
     label: '自购订单',
     value: miniOrderType.SELF_BUYING
@@ -1591,8 +1783,8 @@ export const miniOrderTypeEnum = [
     value: miniOrderType.TEAM_BUYING
   },
   {
-    label: '提货订单',
-    value: miniOrderType.PICKING
+    label: '积分兑换订单',
+    value: miniOrderType.POINTS_BUYING
   }
 ];
 

@@ -29,7 +29,7 @@
     "js-cookie": "^2.2.0",
     "jszip": "^3.1.5",
     "lockr": "^0.8.4",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.13",
     "moment": "^2.22.2",
     "simplemde": "^1.11.2",
     "sortablejs": "^1.7.0",

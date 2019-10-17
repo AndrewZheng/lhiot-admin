@@ -68,7 +68,7 @@
               type="primary"
               @click="handleSearch"
             >
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
               v-waves
@@ -77,13 +77,13 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除
+              <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
-            <Icon type="md-add"/>添加
+            <Icon type="md-add" />添加
           </Button>
         </div>
       </tables>
@@ -100,7 +100,7 @@
         </Row>
       </div>
     </Card>
-
+    <!-- 查看 -->
     <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
         <span>门店信息详情</span>
@@ -151,6 +151,20 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
+              <i-col span="6">开始时间:</i-col>
+              <i-col span="18">{{ storeDetail.beginTime | storeStatusFilters }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="6">结束时间:</i-col>
+              <i-col span="18">{{ storeDetail.endTime | storeStatusFilters}}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
               <i-col span="6">位置经度:</i-col>
               <i-col span="18">{{ storeDetail.storeCoordy }}</i-col>
             </Row>
@@ -181,7 +195,7 @@
             <Row>
               <i-col span="3">商品主图:</i-col>
               <i-col span="21">
-                <img :src="storeDetail.storeImage" style="width: 300px">
+                <img :src="storeDetail.storeImage" style="width: 300px" />
               </i-col>
             </Row>
           </i-col>
@@ -205,7 +219,7 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-
+    <!-- 修改 -->
     <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <span>门店基础信息</span>
@@ -274,6 +288,28 @@
           </Row>
           <Row>
             <i-col span="12">
+              <FormItem label="开始时间:" prop="beginTime">
+                <DatePicker
+                  v-model="storeDetail.beginTime"
+                  type="time"
+                  placeholder="请选择"
+                  class="search-input"
+                />
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="结束时间:" prop="endTime">
+                <DatePicker
+                  v-model="storeDetail.endTime"
+                  type="time"
+                  placeholder="请选择"
+                  class="search-input"
+                />
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
               <FormItem label="位置经度:" prop="storeCoordy">
                 <Input v-model="storeDetail.storeCoordy"></Input>
               </FormItem>
@@ -312,7 +348,7 @@
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>
-                    <img :src="item.url">
+                    <img :src="item.url" />
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                       <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -330,7 +366,7 @@
                 @on-success="handleSuccessMain"
               >
                 <div slot="content" style="width:58px;height:58px;line-height:58px">
-                    <Icon type="ios-camera" size="20"></Icon>
+                  <Icon type="ios-camera" size="20"></Icon>
                 </div>
               </IViewUpload>
             </FormItem>
@@ -351,7 +387,7 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%">
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
   </div>
 </template>
@@ -441,6 +477,8 @@ export default {
         storeStatus: [{ required: true, message: "请选择门店状态" }],
         storeArea: [{ required: true, message: "请选择门店区域" }],
         storeFlagship: [{ required: true, message: "请选择旗舰店" }],
+        beginTime: [{ required: true, message: "请选择开始时间" }],
+        endTime: [{ required: true, message: "请选择结束时间" }],
         storeCoordy: [
           {
             required: true,
@@ -543,6 +581,16 @@ export default {
               </div>
             );
           }
+        },
+        {
+          title: "开始时间",
+          minWidth: 150,
+          key: "beginTime"
+        },
+        {
+          title: "结束时间",
+          minWidth: 150,
+          key: "endTime"
         },
         {
           title: "联系方式",

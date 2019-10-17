@@ -178,11 +178,12 @@ const btns = {
     const {
       row
     } = params;
-    if (row.shelfStatus === 'ON' || row.onOff === 'ON') {
+    if (row.shelfStatus === 'ON' || row.onOff === 'ON' || row.state === 'ON' || row.couponStatus === 'VALID') {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要下架?'
+          title: '确认要下架?',
+         // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
         },
         style: {
           marginRight: '5px'
@@ -314,7 +315,7 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要下架该优惠券吗?'
+          title: '确认要下架该优惠券吗?',
         },
         style: {
           marginRight: '5px'
@@ -502,6 +503,39 @@ const btns = {
         color: '#fff'
       }
     })]);
+  },
+  //手动退款
+  onHand: (h, params, vm) => {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要退款?',
+          // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-hand', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'logo-usd',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
   },
   // 邮费复制操作
   copy: (h, params, vm) => {
@@ -921,6 +955,39 @@ const btns = {
         ])
       ]);
     }
+  },
+  //确认收货
+  onReceive: (h, params, vm) => {
+    return h('Poptip', {
+      props: {
+        confirm: true,
+        title: '确认要收货?',
+        // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
+      },
+      style: {
+        marginRight: '5px',
+      },
+      on: {
+        'on-ok': () => {
+          vm.$emit('on-receive', params);
+        }
+      }
+    }, [
+      h('Button', {
+        props: {
+          type: 'success',
+          size: 'small'
+        },
+      }, [
+        h('Icon', {
+          props: {
+            type: 'md-checkbox',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+    ]);
   }
 };
 export default btns;

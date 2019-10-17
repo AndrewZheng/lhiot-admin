@@ -13,6 +13,7 @@ import {
   orderTypeEnum,
   positionTypeEnum,
   receivingWayEnum,
+  isAllRefundEnum,
   relationTypeEnum,
   settlementStatusEnum,
   thirdDelieverStatusEnum,
@@ -31,10 +32,19 @@ import {
   rewardActivitySettingEnum,
   couponActivityTypeEnum,
   couponStatusEnum,
+  vipStatusEnum,
+  receiveTypeEnum,
+  packageTypeEnum,
+  packageStatusEnum,
+  userScopeEnum,
+  memberLimitEnum,
   couponTypeEnum,
   couponScopeEnum,
   couponUseLimitEnum,
+  giftTypeEnum,
+  expandTypeEnum,
   appTypeEnum,
+  appTypesEnum,
   payTypeEnum,
   payStepEnum,
   sourceTypeEnum,
@@ -48,7 +58,7 @@ import {
   YesNoEnum,
   yesNoEnum,
   deliverStatusEnum,
-  validDateTypeEnum
+  validDateTypeEnum,
 } from './enumerate';
 
 const convertFunction = (value, list) => {
@@ -90,6 +100,10 @@ export const thirdDeliverStatusConvert = (value) => {
 
 export const receivingWayConvert = (value) => {
   return convertFunction(value, receivingWayEnum);
+};
+
+export const isAllRefundConvert = (value) => {
+  return convertFunction(value, isAllRefundEnum);
 };
 
 export const orderStatusConvert = (value) => {
@@ -196,6 +210,14 @@ export const couponUseLimitConvert = (value) => {
   return convertFunction(value, couponUseLimitEnum);
 }
 
+export const giftTypeConvert = (value) => {
+  return convertFunction(value, giftTypeEnum);
+}
+
+export const expandTypeConvert = (value) => {
+  return convertFunction(value, expandTypeEnum);
+}
+
 export const validDateTypeConvert = (value) => {
   return convertFunction(value, validDateTypeEnum);
 }
@@ -204,8 +226,36 @@ export const couponTypeConvert = (value) => {
   return convertFunction(value, couponTypeEnum);
 }
 
+export const vipTypeConvert = (value) => {
+  return convertFunction(value, vipStatusEnum);
+}
+
+export const receiveTypeConvert = (value) => {
+  return convertFunction(value, receiveTypeEnum);
+}
+
+export const packageStatusConvert = (value) => {
+  return convertFunction(value, packageStatusEnum);
+}
+
+export const packageTypeConvert = (value) => {
+  return convertFunction(value, packageTypeEnum);
+}
+
+export const userScopeConvert = (value) => {
+  return convertFunction(value, userScopeEnum);
+}
+
+export const memberLimitConvert = (value) => {
+  return convertFunction(value, memberLimitEnum);
+}
+
 export const appTypeConvert = (value) => {
   return convertFunction(value, appTypeEnum);
+}
+
+export const appTypesConvert = (value) => {
+  return convertFunction(value, appTypesEnum);
 }
 
 export const payTypeConvert = (value) => {

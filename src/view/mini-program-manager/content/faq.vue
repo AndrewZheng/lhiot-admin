@@ -192,7 +192,7 @@
             ></Input>
           </FormItem>
           <FormItem label="序号:" prop="rankNo">
-            <InputNumber :min="0" v-model="faq.rankNo" placeholder="序号"></InputNumber>
+            <InputNumber :min="0" v-model="faq.rankNo" placeholder="序号" style="padding-right: 5px;width: 95px"></InputNumber>
           </FormItem>
           <FormItem label="应用类型:" prop="applicationType">
             <Select
@@ -318,7 +318,7 @@ export default {
           tooltip: true
         },
         {
-          title: "faq分类id",
+          title: "FAQ分类ID",
           key: "faqCategoryId",
           align: "center",
           minWidth: 70

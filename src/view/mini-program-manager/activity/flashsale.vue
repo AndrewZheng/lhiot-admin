@@ -65,7 +65,7 @@
               type="primary"
               @click="handleSearch"
             >
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
               v-waves
@@ -74,13 +74,13 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除
+              <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addFlashsale">
-            <Icon type="md-add"/> 添加
+            <Icon type="md-add" />添加
           </Button>
           <Poptip
             confirm
@@ -90,7 +90,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/> 批量删除
+              <Icon type="md-trash" />批量删除
             </Button>
           </Poptip>
         </div>
@@ -150,7 +150,12 @@
           <i-col span="24">
             <Row>
               <i-col span="6">活动状态:</i-col>
-              <i-col span="18">{{ flashsaleDetail.onOff | imageStatusFilter }}</i-col>
+              <i-col span="18" v-if="flashsaleDetail.onOff === 'ON'">
+                <tag color="success">{{ "开启" | imageStatusFilter }}</tag>
+              </i-col>
+              <i-col span="18" v-else-if="flashsaleDetail.onOff === 'OFF'">
+                <tag color="error">{{ "关闭" | imageStatusFilter }}</tag>
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -259,7 +264,7 @@
                       type="primary"
                       @click="handleProductSearch"
                     >
-                      <Icon type="md-search"/>&nbsp;搜索
+                      <Icon type="md-search" />&nbsp;搜索
                     </Button>
                     <Button
                       v-waves
@@ -268,7 +273,7 @@
                       type="info"
                       @click="handleProductClear"
                     >
-                      <Icon type="md-refresh"/>&nbsp;清除
+                      <Icon type="md-refresh" />&nbsp;清除
                     </Button>
                   </Row>
                 </div>
@@ -343,7 +348,7 @@
                       type="primary"
                       @click="addTempData('modalCreate')"
                     >
-                      <Icon type="md-add"/>&nbsp;关联商品
+                      <Icon type="md-add" />&nbsp;关联商品
                     </Button>
                   </i-col>
                 </Row>
@@ -365,7 +370,12 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')" v-if="tempModalType == modalType.edit || tempModalType == modalType.create">确定 </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('editForm')"
+          v-if="tempModalType == modalType.edit || tempModalType == modalType.create"
+        >确定</Button>
       </div>
     </Modal>
   </div>
@@ -476,7 +486,7 @@ const roleRowData = {
   edBeginTime: null,
   edFinishTime: null,
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 const relationRowData = {
@@ -819,7 +829,7 @@ export default {
             }
             return (
               <div>
-                <tag color="primary">{row.onOff? row.onOff : 'N/A'}</tag>
+                <tag color="primary">{row.onOff ? row.onOff : "N/A"}</tag>
               </div>
             );
           }
@@ -1046,7 +1056,7 @@ export default {
     },
     addTempData(name) {
       // 先验证是否已经关联的商品
-      if (this.relationProducts.length > 0 ) {
+      if (this.relationProducts.length > 0) {
         this.$Message.errors("限时抢购目前只能关联一个商品");
         return false;
       }

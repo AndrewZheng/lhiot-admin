@@ -790,6 +790,30 @@ export const compareData = (date1, date2) => {
 export const fenToYuanDot2 = (number) => {
   if (typeof number === 'number') {
     return '¥' + (number / 100.00).toFixed(2);
+  } else if (typeof number === 'string') {
+    return '¥' + (parseInt(number) / 100.00).toFixed(2);
+    
+  }
+  return number;
+};
+//hd折扣
+export const HdDiscount = (number) => {
+  if (typeof number === 'number') {
+    return   (number * 10.00) + '折';
+  }
+  return number;
+};
+// 加¥和天数
+export const addRnb = (number) => {
+  if (typeof number === 'number') {
+    return '¥' + (number).toFixed(2);
+  }
+  return number;
+};
+
+export const addDay = (number) => {
+  if (typeof number === 'number') {
+    return (number) + " 天";
   }
   return number;
 };

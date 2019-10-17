@@ -200,7 +200,7 @@
       <div class="modal-content">
         <Form ref="modalEdit" :model="advertisementDetail" :rules="ruleInline" :label-width="80">
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="广告位置:" prop="positionId">
                 <Select
                   v-model="advertisementDetail.positionId"
@@ -215,24 +215,24 @@
                   >{{ item.description }}</Option>
                 </Select>
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem label="广告名:" prop="advertisementName">
                 <Input
                   v-model="advertisementDetail.advertisementName"
                   placeholder="广告名"
-                  style="width: 200px"
+                  style="width: 220px"
                 ></Input>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
             <FormItem label="内容描述:" prop="contentDesc">
-              <Input v-model="advertisementDetail.contentDesc" placeholder="内容描述"></Input>
+              <Input v-model="advertisementDetail.contentDesc" placeholder="内容描述" style="width: 580px"></Input>
             </FormItem>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="广告类型:" prop="advertiseType">
                 <Select
                   v-model="advertisementDetail.advertiseType"
@@ -248,8 +248,8 @@
                   >{{ item.label }}</Option>
                 </Select>
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem
                 :label-width="80"
                 :label="advertisementDetail.advertiseType ===&quot;IMAGE&quot;?&quot;广告图片:建议尺寸 (xxx*xxx):&quot;:&quot;广告文字:&quot;"
@@ -283,10 +283,10 @@
                   </IViewUpload>
                 </div>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="广告状态:" prop="status">
                 <Select
                   v-model="advertisementDetail.status"
@@ -302,20 +302,20 @@
                   >{{ item.label }}</Option>
                 </Select>
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <FormItem label="广告序号:" prop="rankNo">
                 <InputNumber
                   :min="0"
                   v-model="advertisementDetail.rankNo"
                   placeholder="广告序号"
-                  style="width: 200px"
+                  style="width: 220px"
                 ></InputNumber>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="12">
+            <i-col span="12">
               <FormItem label="链接类型:" prop="linkType">
                 <Select
                   v-model="advertisementDetail.linkType"
@@ -330,43 +330,43 @@
                   >{{ item.label }}</Option>
                 </Select>
               </FormItem>
-            </Col>
-            <Col span="12">
+            </i-col>
+            <i-col span="12">
               <Row span="24" align="middle" type="flex">
                 <FormItem label="链接目标:" prop="advertisementRelation">
-                  <Row v-if="advertisementDetail.linkType != 'EXTERNALLINK'">
-                    <Col span="18">
+                  <Row v-if="isTargetLink">
+                    <Input v-model="advertisementDetail.advertisementRelation" style="width:200px;"></Input>
+                  </Row>
+                  <Row v-else>
+                    <i-col span="24">
                       <Input
                         v-model="advertisementDetail.advertisementRelationText"
                         :disabled="advertisementDetail.linkType !== 'EXTERNALLINK'"
-                      ></Input>
-                    </Col>
-                    <Col span="5">
-                      <Button
-                        v-waves
-                        :loading="searchModalTableLoading"
-                        class="search-btn mt-25"
-                        style="margin-left: 15px"
-                        type="primary"
-                        @click="searchAdvertisementRelation"
                       >
-                        <Icon type="md-search"/>&nbsp;搜索
-                      </Button>
-                    </Col>
-                  </Row>
-                  <Row v-else>
-                    <Input v-model="advertisementDetail.advertisementRelation"></Input>
+                        <Button
+                          v-waves
+                          slot="append"
+                          :loading="searchModalTableLoading"
+                          class="search-btn "
+                          type="primary"
+                          @click="searchAdvertisementRelation"
+                        >
+                          <Icon type="md-search"/>&nbsp;搜索
+                        </Button>
+                      </Input>
+                    </i-col>
                   </Row>
                 </FormItem>
               </Row>
-            </Col>
+            </i-col>
           </Row>
           <Row>
-            <Col span="24">
+            <i-col span="24">
               <FormItem label="有效时间:">
                 <Select
                   v-model="advertisementDetail.isPermanent"
                   style="width: 200px"
+                  disabled
                   @on-change="advertiseTimeChange"
                 >
                   <Option
@@ -382,6 +382,7 @@
                     format="yyyy-MM-dd HH:mm:ss"
                     type="datetime"
                     placeholder="开始时间"
+                    style="width: 200px"
                     @on-change="startTimeChange"
                   />
                   <i class="mr5 ml5">-</i>
@@ -390,11 +391,12 @@
                     format="yyyy-MM-dd HH:mm:ss"
                     type="datetime"
                     placeholder="结束时间"
+                    style="width: 200px"
                     @on-change="endTimeChange"
                   />
                 </Row>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
         </Form>
       </div>
@@ -599,7 +601,9 @@ export default {
           api: getProductStandardsPages,
           columns: miniGoodsStandardColumns
         },
-        { value: linkType.EXTERNALLINK, label: "外部链接" }
+        { value: linkType.EXTERNALLINK, label: "外部链接" },
+        { value: linkType.INTERNALLINK, label: "内部链接" },
+        { value: linkType.TABLINK, label: "底部导航" }
       ],
       tempColumns: [],
       linkTypeEnum,
@@ -610,7 +614,6 @@ export default {
         { label: "无效", value: "INVALID" }
       ],
       validityTimeList: [
-        { label: "永久有效", value: "ON" },
         { label: "定时生效", value: "OFF" }
       ],
       columns: [
@@ -625,7 +628,7 @@ export default {
           title: "ID",
           key: "id",
           sortable: true,
-          minWidth: 80
+          minWidth: 70
         },
         {
           title: "链接类型",
@@ -656,7 +659,7 @@ export default {
         },
         {
           title: "广告关联",
-          minWidth: 80,
+          minWidth: 90,
           key: "advertisementRelation"
         },
         {
@@ -711,7 +714,7 @@ export default {
         },
         {
           title: "广告位置",
-          minWidth: 120,
+          minWidth: 145,
           key: "positionId",
           render: (h, params, vm) => {
             const { row } = params;
@@ -754,6 +757,11 @@ export default {
     };
   },
   computed: {
+    isTargetLink(){
+      return this.advertisementDetail.linkType === 'EXTERNALLINK' || 
+      this.advertisementDetail.linkType === 'INTERNALLINK' || 
+      this.advertisementDetail.linkType === 'TABLINK'
+    },
     advertisementPositionComputed() {
       const tempObj = this.advertisementList.find(
         item => item.id === this.advertisementDetail.positionId
@@ -821,10 +829,6 @@ export default {
         }
         this.advertisementDetail.content = this.tempImage;
       }
-      // 切换成图片
-
-      // 切换成文字
-      // if (value) ;
     },
     deleteTable(ids) {
       this.loading = true;
@@ -1047,8 +1051,6 @@ export default {
         this.advertisementDetail.advertisementRelationText = row.name;
       }
       this.advertisementDetail.advertisementRelation = row.id;
-      console.log(row);
-      console.log(index);
       this.relationTargetShow = false;
     },
     changeRelationPage(page) {
@@ -1084,7 +1086,6 @@ export default {
       this.editTableRow();
     },
     relationTextChange(event) {
-      debugger;
       this.advertisementDetail.advertisementRelation = event;
     }
   }

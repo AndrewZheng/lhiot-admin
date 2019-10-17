@@ -75,28 +75,31 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
+              <i-col span="6">活动规则:</i-col>
+              <i-col span="18">
+                <Input
+                  :v-if="registerDetail.activityRule"
+                  :rows="6"
+                  :value="registerDetail.activityRule"
+                  type="textarea"
+                ></Input>
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
               <i-col span="6">活动状态:</i-col>
               <i-col span="18">{{ registerDetail.onOff | imageStatusFilter }}</i-col>
             </Row>
           </i-col>
         </Row>
-        <!-- <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">领券方式:</i-col>
-              <i-col span="18">{{ registerDetail.receiveType | imageStatusFilter }}</i-col>
-            </Row>
-          </i-col>
-        </Row>-->
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
               <i-col span="6">开始时间:</i-col>
-              <i-col span="18">
-                {{ this.registerDetail.beginTime = this.$moment(
-                this.registerDetail.beginTime
-                ).format("YYYY-MM-DD HH:mm:ss") }}
-              </i-col>
+              <i-col span="18">{{ registerDetail.beginTime }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -104,11 +107,7 @@
           <i-col span="24">
             <Row>
               <i-col span="6">结束时间:</i-col>
-              <i-col span="18">
-                {{ this.registerDetail.endTime = this.$moment(
-                this.registerDetail.endTime
-                ).format("YYYY-MM-DD HH:mm:ss") }}
-              </i-col>
+              <i-col span="18">{{ registerDetail.endTime }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -128,21 +127,6 @@
             </Row>
           </i-col>
         </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">活动规则:</i-col>
-              <i-col span="18">
-                <Input
-                  :v-if="registerDetail.activityRule"
-                  :rows="6"
-                  :value="registerDetail.activityRule"
-                  type="textarea"
-                ></Input>
-              </i-col>
-            </Row>
-          </i-col>
-        </Row>
       </div>
       <div slot="footer">
         <Button type="primary" @click="handleClose">关闭</Button>
@@ -159,7 +143,19 @@
             <Row>
               <Col span="18">
                 <FormItem label="活动名称:" prop="activityName">
-                  <Input v-model="registerDetail.activityName" style="width: 170px"></Input>
+                  <Input v-model="registerDetail.activityName"></Input>
+                </FormItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col span="18">
+                <FormItem label="活动规则:" prop="activityRule">
+                  <Input
+                    v-model="registerDetail.activityRule"
+                    :rows="6"
+                    placeholder="活动规则"
+                    type="textarea"
+                  ></Input>
                 </FormItem>
               </Col>
             </Row>
@@ -169,22 +165,6 @@
                   <Select v-model="registerDetail.onOff" clearable style="width: 170px">
                     <Option
                       v-for="(item,index) in imageStatusEnum"
-                      :value="item.value"
-                      :key="index"
-                      class="ptb2-5"
-                      style="padding-left: 5px;width: 170px"
-                    >{{ item.label }}</Option>
-                  </Select>
-                </FormItem>
-              </Col>
-            </Row>
-            <!-- 领券方式 -->
-            <Row>
-              <Col span="18">
-                <FormItem label="领券方式:" prop="receiveType">
-                  <Select v-model="registerDetail.receiveType" clearable style="width: 170px">
-                    <Option
-                      v-for="(item,index) in receiveTypeEnum"
                       :value="item.value"
                       :key="index"
                       class="ptb2-5"
@@ -224,18 +204,6 @@
                 </FormItem>
               </Col>
             </Row>
-            <Row>
-              <Col span="18">
-                <FormItem label="活动规则:" prop="activityRule">
-                  <Input
-                    v-model="registerDetail.activityRule"
-                    :rows="6"
-                    placeholder="活动规则"
-                    type="textarea"
-                  ></Input>
-                </FormItem>
-              </Col>
-            </Row>
           </Form>
         </Row>
       </div>
@@ -255,10 +223,10 @@ import {
   deleteRegister,
   createRegister,
   editRegister,
-  deleteRegisterGift,
-  getRegisteredGiftPages,
-  editRegisterGift,
-  createRegisterGift,
+  deleteRegisterReward,
+  getRegisterRewardPages,
+  editRegisterReward,
+  createRegisterReward,
   getCouponTemplatePages
 } from "@/api/mini-program";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -268,21 +236,19 @@ import {
   couponStatusConvert,
   couponTypeConvert,
   imageStatusConvert,
-  couponScopeConvert,
-  receiveTypeConvert
+  couponScopeConvert
 } from "@/libs/converStatus";
 import {
   couponStatusEnum,
   couponTypeEnum,
-  imageStatusEnum,
-  receiveTypeEnum
+  imageStatusEnum
 } from "@/libs/enumerate";
 import {
   compareData,
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber,
-  setSmallCouponActivity
+  setSmallCouponActivity,
 } from "@/libs/util";
 
 const registerDetail = {
@@ -297,8 +263,7 @@ const registerDetail = {
   activityRule: "",
   createTime: null,
   updateTime: null,
-  createBy: "",
-  receiveType: "MANUAL"
+  createBy: ""
 };
 
 const relationDetail = {
@@ -320,9 +285,7 @@ const relationDetail = {
 
 const roleRowData = {
   page: 1,
-  rows: 10,
-  sidx: "begin_time",
-  sort: "desc"
+  rows: 10
 };
 
 const relationRowData = {
@@ -627,45 +590,11 @@ export default {
   data() {
     return {
       ruleInline: {
-        activityName: [
-          { required: true, message: "请输入活动名称" },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (value.length > 20) {
-                errors.push(new Error("字数限制20字"));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        activityRule: [
-          { required: true, message: "请输入活动规则" },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (value.length > 200) {
-                errors.push(new Error("字数限制200字"));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        onOff: [
-          { required: true, message: "请选择活动状态" },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (value.length > 200) {
-                errors.push(new Error("字数限制200字"));
-              }
-              callback(errors);
-            }
-          }
-        ],
+        activityName: [{ required: true, message: "请输入活动名称" }],
+        activityRule: [{ required: true, message: "请输入活动规则" }],
+        onOff: [{ required: true, message: "请选择活动状态" }],
         beginTime: [{ required: true, message: "请选择活动开始时间" }],
-        endTime: [{ required: true, message: "请选择活动结束时间" }],
-        receiveType: [{ required: true, message: "请选择活动结束时间" }]
+        endTime: [{ required: true, message: "请选择活动结束时间" }]
       },
       relationRuleInline: {
         issuedNum: [
@@ -700,7 +629,6 @@ export default {
       couponStatusEnum,
       couponTypeEnum,
       imageStatusEnum,
-      receiveTypeEnum,
       columns: [
         {
           type: "selection",
@@ -708,7 +636,7 @@ export default {
           align: "center"
         },
         {
-          title: "ID",
+          title: "id",
           key: "id"
         },
         {
@@ -729,7 +657,7 @@ export default {
           key: "endTime"
         },
         {
-          title: "活动状态",
+          title: "优惠券状态",
           key: "onOff",
           render: (h, params, vm) => {
             const { row } = params;
@@ -842,16 +770,6 @@ export default {
     },
     createRegister() {
       this.modalViewLoading = true;
-      if (this.registerDetail.beginTime.indexOf("T") > -1) {
-        this.registerDetail.beginTime = this.$moment(
-          this.registerDetail.beginTime
-        ).format("YYYY-MM-DD HH:mm:ss");
-      }
-      if (this.registerDetail.endTime.indexOf("T") > -1) {
-        this.registerDetail.endTime = this.$moment(
-          this.registerDetail.endTime
-        ).format("YYYY-MM-DD HH:mm:ss");
-      }
       createRegister(this.registerDetail)
         .then(res => {
           this.modalViewLoading = false;
@@ -867,25 +785,16 @@ export default {
     editRegister() {
       this.modalViewLoading = true;
       // UTC通用时间标准 2019-06-19T16:00:00.000Z转换为正常格式
-
-      this.registerDetail.beginTime = this.$moment(
-        this.registerDetail.beginTime
-      ).format("YYYY-MM-DD HH:mm:ss");
-
-      this.registerDetail.endTime = this.$moment(
-        this.registerDetail.endTime
-      ).format("YYYY-MM-DD HH:mm:ss");
-
-      // if (this.registerDetail.beginTime.indexOf("T") > -1) {
-      //   this.registerDetail.beginTime = this.$moment(
-      //     this.registerDetail.beginTime
-      //   ).format("YYYY-MM-DD HH:mm:ss");
-      // }
-      // if (this.registerDetail.endTime.indexOf("T") > -1) {
-      //   this.registerDetail.endTime = this.$moment(
-      //     this.registerDetail.endTime
-      //   ).format("YYYY-MM-DD HH:mm:ss");
-      // }
+      if (this.registerDetail.beginTime.indexOf("T") > -1) {
+        this.registerDetail.beginTime = this.$moment(
+          this.registerDetail.beginTime
+        ).format("YYYY-MM-DD HH:mm:ss");
+      }
+      if (this.registerDetail.endTime.indexOf("T") > -1) {
+        this.registerDetail.endTime = this.$moment(
+          this.registerDetail.endTime
+        ).format("YYYY-MM-DD HH:mm:ss");
+      }
       editRegister(this.registerDetail)
         .then(res => {
           this.modalEdit = false;
@@ -1010,7 +919,7 @@ export default {
             ","
           );
           if (activityRegisterId === 0 || activityRegisterId === "") {
-            this.$Message.error("注册送礼优惠券活动不能为空!");
+            this.$Message.error("注册送优惠券活动不能为空!");
             return;
           } else if (
             couponTemplateIds.length === 0 ||
@@ -1050,7 +959,7 @@ export default {
       this.tempTableLoading = true;
       // 如果前端没有剩余数量字段,则初始化剩余数量=商品数量
       // row.remainCount = row.goodsLimit;
-      editRegisterGift(row)
+      editRegisterReward(row)
         .then(res => {
           this.getRelationTableData();
         })
@@ -1063,7 +972,7 @@ export default {
     },
     modalHandleDelete(params) {
       this.tempTableLoading = true;
-      deleteRegisterGift({ ids: params.row.id })
+      deleteRegisterReward({ ids: params.row.id })
         .then(res => {
           this.relationDatas = this.relationDatas.filter(
             (item, index) => index !== params.row.initRowIndex
@@ -1105,7 +1014,7 @@ export default {
     },
     createRelation() {
       this.modalViewLoading = true;
-      createRegisterGift(this.addRelationDetail)
+      createRegisterReward(this.addRelationDetail)
         .then(res => {
           this.modalViewLoading = false;
           this.modalRelation = false;
@@ -1140,7 +1049,7 @@ export default {
       this.addRelationDetail.effectiveEndTime = value;
     },
     getRelationTableData() {
-      getRegisteredGiftPages(this.searchRelationRowData)
+      getRegisterRewardPages(this.searchRelationRowData)
         .then(res => {
           // 设置行是否可编辑
           if (res.rows.length !== 0) {

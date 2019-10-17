@@ -15,7 +15,7 @@ class HttpRequest {
   getInsideConfig() {
     const defaultOps = {
       baseURL: this.baseUrl,
-      timeout: 10000,
+      timeout: 30000,
       headers: {
         'content-type': 'application/json'
       },

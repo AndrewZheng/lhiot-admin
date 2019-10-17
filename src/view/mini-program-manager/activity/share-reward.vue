@@ -67,7 +67,7 @@
               type="primary"
               @click="handleSearch"
             >
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
               v-waves
@@ -76,7 +76,7 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除
+              <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
         </div>
@@ -88,7 +88,7 @@
             class="mr5"
             @click="addShareReward"
           >
-            <Icon type="md-add"/> 添加
+            <Icon type="md-add" />添加
           </Button>
           <Poptip
             confirm
@@ -98,7 +98,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/> 批量删除
+              <Icon type="md-trash" />批量删除
             </Button>
           </Poptip>
         </div>
@@ -150,7 +150,16 @@
           <i-col span="24">
             <Row>
               <i-col span="6">活动状态:</i-col>
-              <i-col span="18">{{ shareRewardDetail.status | couponStatusFilter }}</i-col>
+              <i-col span="16" v-if="shareRewardDetail.status === 'VALID'">
+                <tag color="success">{{ "有效" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="shareRewardDetail.status === 'INVALID'">
+                <tag color="error">{{ "无效" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="shareRewardDetail.status === 'EXPIRE'">
+                <tag color="primary">{{ "过期" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="shareRewardDetail.status === null">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -167,7 +176,7 @@
             <Row>
               <i-col span="6">分享图片:</i-col>
               <i-col span="18">
-                <img :src="shareRewardDetail.shareImageUrl" width="80%">
+                <img :src="shareRewardDetail.shareImageUrl" width="80%" />
               </i-col>
             </Row>
           </i-col>
@@ -218,7 +227,7 @@
       </p>
       <div class="modal-content">
         <Row v-if="tempModalType == modalType.edit || tempModalType == modalType.create">
-          <Form ref="modalEdit" :model="shareRewardDetail" :rules="ruleInline" :label-width="80">
+          <Form ref="modalEdit" :model="shareRewardDetail" :rules="ruleInline" :label-width="100">
             <Row>
               <Col span="18">
                 <FormItem label="活动标题:" prop="name">
@@ -284,7 +293,7 @@
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url">
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -302,7 +311,7 @@
                   @on-success="handleSuccessMain"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
-                      <Icon type="ios-camera" size="20"></Icon>
+                    <Icon type="ios-camera" size="20"></Icon>
                   </div>
                 </IViewUpload>
               </FormItem>
@@ -352,7 +361,7 @@
           >
             <Row>
               <Col span="8">
-                <FormItem label="最小使用金额:" prop="price">
+                <FormItem label="最小使用金额:" prop="price" :label-width="90">
                   <InputNumber
                     :min="0"
                     :value="priceComputed"
@@ -362,7 +371,7 @@
                 </FormItem>
               </Col>
               <Col span="8">
-                <FormItem label="红包金额:" prop="minPrice">
+                <FormItem label="红包金额:" prop="minPrice" :label-width="90">
                   <InputNumber
                     :min="0"
                     :value="minPriceComputed"
@@ -380,10 +389,10 @@
                   type="primary"
                   @click="addTempData('modalCreate')"
                 >
-                  <Icon type="md-add"/>&nbsp;添加配置
+                  <Icon type="md-add" />&nbsp;添加配置
                 </Button>
               </Col>
-            </Row>说明：红包最少配置两个，取红包金额最大的作为最大红包，其他红包随机产生
+            </Row>*Tips：红包最少配置两个，取红包金额最大的作为最大红包，其他红包随机产生
           </Form>
 
           <Divider orientation="center">已配置参数</Divider>
@@ -573,15 +582,18 @@ export default {
         // },
         {
           title: "活动标题",
-          key: "name"
+          key: "name",
+          minWidth: 50
         },
         {
           title: "活动开启时间",
-          key: "startTime"
+          key: "startTime",
+          width: 110
         },
         {
           title: "活动结束时间",
-          key: "endTime"
+          key: "endTime",
+          width: 110
         },
         {
           title: "活动状态",
@@ -591,25 +603,19 @@ export default {
             if (row.status === "VALID") {
               return (
                 <div>
-                  <tag color="success">
-                    {couponStatusConvert(row.status).label}
-                  </tag>
+                  <tag color="success">有效</tag>
                 </div>
               );
             } else if (row.status === "INVALID") {
               return (
                 <div>
-                  <tag color="error">
-                    {couponStatusConvert(row.status).label}
-                  </tag>
+                  <tag color="error">失效</tag>
                 </div>
               );
             } else if (row.status === "EXPIRE") {
               return (
                 <div>
-                  <tag color="primary">
-                    {couponStatusConvert(row.status).label}
-                  </tag>
+                  <tag color="primary">过期</tag>
                 </div>
               );
             }
@@ -618,11 +624,13 @@ export default {
                 <tag color="primary">{row.status}</tag>
               </div>
             );
-          }
+          },
+          minWidth: 30
         },
         {
           title: "分享标题",
-          key: "shareName"
+          key: "shareName",
+          minWidth: 60
         },
         {
           title: "分享图片",
@@ -631,7 +639,8 @@ export default {
             const { row } = params;
             const str = <img src={row.shareImageUrl} width="100%" />;
             return <div>{str}</div>;
-          }
+          },
+          width: 100
         },
         {
           title: "红包个数",
@@ -652,19 +661,22 @@ export default {
         {
           title: "活动规则描述",
           key: "activityRuleDesc",
-          tooltip: true
+          tooltip: true,
+          minWidth: 40
         },
         {
-          title: "创建人名称",
-          key: "userName"
+          title: "创建人",
+          key: "userName",
+          minWidth: 30
         },
         {
           title: "创建时间",
-          key: "createTime"
+          key: "createTime",
+          width: 110
         },
         {
           title: "操作",
-          minWidth: 80,
+          minWidth: 90,
           key: "handle",
           options: ["view", "edit", "delete", "settings"]
         }
@@ -756,7 +768,7 @@ export default {
         });
     },
     addShareReward() {
-      this.resetFields();
+      // this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.tempModalType = this.modalType.create;
         this.shareRewardDetail = _.cloneDeep(shareRewardDetail);
@@ -792,13 +804,13 @@ export default {
         });
     },
     handleView(params) {
+      this.modalView = true;
       this.resetFields();
       this.tempModalType = this.modalType.view;
       this.shareRewardDetail = _.cloneDeep(params.row);
-      this.modalView = true;
     },
     handleEdit(params) {
-      this.resetFields();
+      // this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.shareRewardDetail = _.cloneDeep(params.row);
       this.setDefaultUploadList(this.shareRewardDetail);

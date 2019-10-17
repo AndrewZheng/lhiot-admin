@@ -7,7 +7,7 @@ import {
   rewardActivitySettingConvert, couponStatusConvert, couponTypeConvert, appTypeConvert, bankTypeConvert,
   timeLimitedConvert, advertisementPositionTypeConvert, couponScopeConvert, advertisementLinkTypeConvert,
   miniOrderStatusConvert, miniHdStatusConvert, miniOrderTypeConvert, yesNoConvert, deliverStatusConvert,
-  couponUseLimitConvert, validDateTypeConvert, storeStatusConvert
+  couponUseLimitConvert, validDateTypeConvert, storeStatusConvert,vipTypeConvert
 } from '../libs/converStatus';
 
 const mixin = {
@@ -46,6 +46,12 @@ const mixin = {
     fenToYuanDot2Filters(number) {
       if (typeof number === 'number') {
         return '¥' + (number / 100.00).toFixed(2);
+      }
+      return number;
+    },
+    fenToYuanDot2Filterss(number) {
+      if (typeof number === 'number') {
+        return (number / 100.00).toFixed(2);
       }
       return number;
     },
@@ -154,6 +160,10 @@ const mixin = {
     // 小程序优惠券状态
     couponTypeFilter(type) {
       return couponTypeConvert(type).label;
+    },
+    // 小程序会员状态
+    vipStatusFilter(type) {
+      return vipTypeConvert(type).label;
     },
     // 小程序应用类型
     appTypeFilter(type) {
