@@ -1765,14 +1765,14 @@ export default {
       //     this.addRelationDetail.couponFee
       //   );
       // }
-       if (currentRow.couponType === "DISCOUNT_COUPON") {
-          this.addRelationDetail.couponFee =
-            parseFloat(currentRow.discount) * 100;
-          console.log(
-            "DISCOUNT_COUPON couponFee:",
-            this.addRelationDetail.couponFee
-          );
-        }
+      if (currentRow.couponType === "DISCOUNT_COUPON") {
+        this.addRelationDetail.couponFee =
+          parseFloat(currentRow.discount) * 100;
+        console.log(
+          "DISCOUNT_COUPON couponFee:",
+          this.addRelationDetail.couponFee
+        );
+      }
       this.addRelationDetail.hdActivityId = currentRow.activityId;
       this.addRelationDetail.minBuyFee = minBuyFee * 100;
       this.addRelationDetail.effectiveStartTime = currentRow.beginDate;

@@ -289,7 +289,7 @@
           <Row>
             <i-col span="12">
               <FormItem label="开始时间:" prop="beginTime">
-                <DatePicker
+                <TimePicker
                   v-model="storeDetail.beginTime"
                   type="time"
                   placeholder="请选择"
@@ -299,7 +299,7 @@
             </i-col>
             <i-col span="12">
               <FormItem label="结束时间:" prop="endTime">
-                <DatePicker
+                <TimePicker
                   v-model="storeDetail.endTime"
                   type="time"
                   placeholder="请选择"

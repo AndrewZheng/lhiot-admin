@@ -25,12 +25,14 @@
             search-place="top"
             @on-exchange="handleEdit"
             @on-edit="handleEdit"
+            @on-view="handleView"
             @on-delete="handleDelete"
             @on-select-all="onSelectionAll"
             @on-selection-change="onRelationSelectionChange"
           >
             <div slot="searchCondition">
               <Row>
+                <!--  @on-view="handleView" -->
                 <!-- <Input
                   v-model="searchRowData.sectionName"
                   placeholder="板块名称"
@@ -107,7 +109,7 @@
       </i-col>
     </Row>
     <!-- 添加 -->
-    <Modal v-model="modalEdit" :mask-closable="false" :width="1000">
+    <Modal v-model="modalEdit" :mask-closable="false" :width="1200">
       <p slot="header">
         <span>{{ tempModalType == modalType.create? '添加板块商品':'编辑板块' }}</span>
       </p>
@@ -201,6 +203,58 @@
         <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')">确认</Button>
       </div>
     </Modal>
+    <!-- 查看 -->
+    <Modal v-model="modalView" :width="800" draggable scrollable :mask-closable="false">
+      <p slot="header">
+        <span>折扣商品价格展示</span>
+      </p>
+      <div class="modal-content">
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">商品类型:</i-col>
+              <i-col span="16" v-if="discount.expandType === 'DISCOUNT_PRODUCT'">
+                <tag color="magenta">{{ "折扣商品" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="discount.expandType === 'PULL_NEW_PRODUCT'">
+                <tag color="orange">{{ "老拉新商品" }}</tag>
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">折扣价:</i-col>
+              <i-col span="16">{{ discount.discountPrice }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">折扣率:</i-col>
+              <i-col span="16">{{ discount.discountRate+"折" }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">起购份数:</i-col>
+              <i-col span="16">{{ discount.startNum }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">限购份数:</i-col>
+              <i-col span="16">{{ discount.limitNum }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+      </div>
+      <div slot="footer">
+        <Button type="primary" @click="handleViewClose">关闭</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -213,7 +267,8 @@ import {
   deleteProductSectionRelation,
   getProductStandardsPages,
   editProductSectionRelation,
-  getProductSectionTree
+  getProductSectionTree,
+  getProStandardExpand
 } from "@/api/mini-program";
 import { buildMenu, convertTree, convertTreeCategory } from "@/libs/util";
 import CommonIcon from "_c/common-icon";
@@ -295,6 +350,7 @@ const relationData = {
 };
 
 const productRowData = {
+  productStandardId: "",
   productId: "",
   barcode: "",
   productCode: "",
@@ -303,7 +359,8 @@ const productRowData = {
   minPrice: "",
   maxPrice: "",
   page: 1,
-  rows: 10
+  rows: 10,
+  expandType: ""
 };
 
 // const dataColunms = [
@@ -442,6 +499,22 @@ const productColumns = [
     }
   },
   {
+    title: "折扣价格",
+    key: "discountPrice",
+    minWidth: 80,
+    align: "center",
+    render(h, params, vm) {
+      if (params.row.productStandardExpand) {
+        const amount = fenToYuanDot2(
+          params.row.productStandardExpand.discountPrice
+        );
+        return <div>{amount}</div>;
+      } else {
+        return <div>N/A</div>;
+      }
+    }
+  },
+  {
     title: "商品类型",
     minWidth: 120,
     key: "expandType",
@@ -468,7 +541,12 @@ const productColumns = [
           );
         }
       } else {
-        return <div>N/A</div>;
+        return (
+          <div>
+            {" "}
+            <tag color="cyan">{"普通商品"}</tag>
+          </div>
+        );
       }
     }
   },
@@ -545,6 +623,7 @@ export default {
       appTypeEnum,
       expandTypeEnum,
       menuData: [],
+      discount: [],
       columns: [
         {
           type: "selection",
@@ -627,7 +706,8 @@ export default {
         {
           title: "操作",
           key: "handle",
-          options: ["exchange", "edit", "delete"]
+          width: 200,
+          options: ["view", "exchange", "edit", "delete"]
         }
       ],
       productColumns: productColumns,
@@ -637,6 +717,7 @@ export default {
       modalEditLoading: false,
       currentParentName: "",
       currentSectionId: 0,
+      currentSectionCode: "",
       currentStandard: _.cloneDeep(productStandardDetail),
       currentCategory: _.cloneDeep(currentCategory),
       searchRowData: _.cloneDeep(roleRowData),
@@ -666,6 +747,9 @@ export default {
       this.pageSize = 10;
       this.clearSearchLoading = true;
       this.handleSearch();
+    },
+    handleViewClose() {
+      this.modalView = false;
     },
     handleExport(filename) {
       this.searchRowData.page = 1;
@@ -723,10 +807,20 @@ export default {
       this.searchRowData = _.cloneDeep(roleRowData);
       this.getTableData();
     },
+    // 添加商品
     addProSection() {
       if (!this.currentSectionId) {
         this.$Message.warning("请先从左侧选择一个板块");
         return;
+      }
+      if (this.currentSectionCode === "PULL_NEW") {
+        this.searchProductRowData.expandType = "PULL_NEW_PRODUCT";
+      } else if (this.currentSectionCode === "ZKSP") {
+        this.searchProductRowData.expandType = "DISCOUNT_PRODUCT";
+      } else if (this.currentSectionCode === "SVIP") {
+        this.searchProductRowData.expandType = "";
+      } else {
+        this.searchProductRowData.expandType = "IGNORE_TYPE";
       }
       this.$refs.editForm.resetFields();
       this.getProductTableData();
@@ -782,6 +876,23 @@ export default {
         }
       });
     },
+    handleView(params) {
+      getProStandardExpand({
+        id: params.row.productStandardId
+      }).then(res => {
+        this.discount = res;
+
+        if (!res) {
+          this.modalView = false;
+          this.$Message.error("当前商品不是活动商品");
+        } else {
+          this.discount.discountPrice = fenToYuanDot2(
+            this.discount.discountPrice
+          );
+          this.modalView = true;
+        }
+      });
+    },
     handleEditClose() {
       this.modalEdit = false;
     },
@@ -825,6 +936,10 @@ export default {
           this.productData = res.rows;
           this.productTotal = res.total;
         }
+        // console.log(
+        //   "折扣商品页面",
+        //   res.rows[0].productStandardExpand.discountPrice
+        // );
       });
     },
     // 初始化商品菜单列表
@@ -860,6 +975,7 @@ export default {
       this.currentCategory.id = data.id;
       this.currentCategory.sectionName = data.title;
       this.currentSectionId = data.id;
+      this.currentSectionCode = data.code;
       this.searchRowData.productSectionId = data.id;
       this.searchRowData.page = 1;
       // 获取新数据

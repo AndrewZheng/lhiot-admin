@@ -135,7 +135,7 @@
         </Row>
       </div>
     </Card>
-
+<!-- 
     <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
         <span>机器人详情</span>
@@ -211,7 +211,7 @@
       <div slot="footer">
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
-    </Modal>
+    </Modal> -->
   </div>
 </template>
 
@@ -491,6 +491,7 @@ export default {
       let _this = this;
       getPaymentLogPages(this.searchRowData)
         .then(res => {
+          console.log("12312312",res)
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;

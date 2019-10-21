@@ -145,12 +145,12 @@
             </Button>
           </Row>
         </div>
-        <div slot="operations" style="margin-left:-50px">
+        <div slot="operations" style="margin-left:-30px">
           <Button
             v-waves
             :loading="deliverOrderLoading"
             class="search-btn mr2"
-            type="warning"
+            type="primary"
             @click="deliverOrder"
           >门店调货</Button>
           <Button v-waves class="search-btn ml2 mr2" type="primary" @click="resendToHd">海鼎重发</Button>
@@ -159,7 +159,7 @@
           <Button
             :loading="downloadLoading"
             class="search-btn mr2"
-            type="primary"
+            type="warning"
             @click="handleDownload"
           >
             <Icon type="md-download" />导出
@@ -171,6 +171,9 @@
             @click="couponDetails"
           >
             <Icon type="md-search" />&nbsp;用券数据
+          </Button>
+          <Button :loading="downloadLoading" class="search-btn mt5" type="warning" @click="monthOrder">
+            <Icon type="md-download" />&nbsp;跨月订单导出
           </Button>
           <!-- <Poptip
             confirm
@@ -748,9 +751,15 @@ export default {
             const { row } = params;
             if (row.refundStatus === "REFUND" && orderStates === "FAILURE") {
               return <div>未退款</div>;
-            } else if (row.refundStatus === "REFUND" && orderStates === "RETURNING") {
+            } else if (
+              row.refundStatus === "REFUND" &&
+              orderStates === "RETURNING"
+            ) {
               return <div>退款中</div>;
-            } else if (row.refundStatus === "REFUND" && orderStates === "ALREADY_RETURN") {
+            } else if (
+              row.refundStatus === "REFUND" &&
+              orderStates === "ALREADY_RETURN"
+            ) {
               return <div>已退款</div>;
             } else if (row.refundStatus === "NOT_REFUND") {
               return <div>未退款</div>;
@@ -1308,6 +1317,11 @@ export default {
         name: "small-order-coupon-details"
       });
     },
+    monthOrder(params) {
+      this.turnToPage({
+        name: "small-order-month-orders"
+      });
+    },
     getTableData() {
       this.loading = true;
       getOrderPages(this.searchRowData)
@@ -1364,6 +1378,48 @@ export default {
         });
       });
     },
+    // //跨月订单导出
+    // orderDownload() {
+    //   // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
+    //   this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+    //   monthOrderPages(this.searchRowData).then(res => {
+    //     // console.log("数据",res.rows)
+    //     const tableData = res;
+    //     // 恢复正常页数
+    //     this.searchRowData.rows = 10;
+    //     // 表格数据导出字段翻译
+    //     let _this = this;
+    //     tableData.forEach(item => {
+    //       const obj = _this.storeList.find(x => item.storeId === x.storeId);
+    //       item["code"] = item["code"] + "";
+    //       item["apply"] = appTypeConvert(item["apply"]).label;
+    //       item["storeId"] =
+    //         obj && obj.storeName ? obj.storeName : item["storeId"]; // 如果找不到就显示门店Id
+    //       item["totalAmount"] = (item["totalAmount"] / 100.0).toFixed(2);
+    //       item["couponAmount"] = (item["couponAmount"] / 100.0).toFixed(2);
+    //       item["amountPayable"] = (item["amountPayable"] / 100.0).toFixed(2);
+    //       item["refundFee"] = (item["refundFee"] / 100.0).toFixed(2);
+    //       item["orderType"] = orderTypeConvert(item["orderType"]).label;
+    //       item["deliverStatus"] = thirdDeliverStatusConvert(
+    //         item["deliverStatus"]
+    //       ).label;
+    //       item["orderStatus"] = miniOrderStatusConvert(
+    //         item["orderStatus"]
+    //       ).label;
+    //       item["hdStatus"] = miniHdStatusConvert(item["hdStatus"]).label;
+    //       item["receivingWay"] = receivingWayConvert(
+    //         item["receivingWay"]
+    //       ).label;
+    //       item["status"] = miniOrderStatusConvert(item["status"]).label;
+    //       item["payType"] = payTypeConvert(item["payType"]).label;
+    //       item["isAllRefund"] = isAllRefundConvert(item["isAllRefund"]).label;
+    //     });
+    //     this.$refs.tables.orderDownload({
+    //       filename: `普通订单信息-${new Date().valueOf()}`,
+    //       data: tableData
+    //     });
+    //   });
+    // },
     getStore() {
       getStorePages({ page: 1, rows: -1 })
         .then(res => {
