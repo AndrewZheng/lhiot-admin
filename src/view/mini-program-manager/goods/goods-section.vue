@@ -212,6 +212,12 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
+              <i-col span="8">商品名称:</i-col>
+              <i-col span="16">{{ discount.productName }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
               <i-col span="8">商品类型:</i-col>
               <i-col span="16" v-if="discount.expandType === 'DISCOUNT_PRODUCT'">
                 <tag color="magenta">{{ "折扣商品" }}</tag>
@@ -224,6 +230,20 @@
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
+            <Row>
+              <i-col span="8">商品原价:</i-col>
+              <i-col span="16">{{ discount.price }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">售卖价格:</i-col>
+              <i-col span="16">{{ discount.salePrice }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12" style="color:red">
             <Row>
               <i-col span="8">折扣价:</i-col>
               <i-col span="16">{{ discount.discountPrice }}</i-col>
@@ -362,93 +382,6 @@ const productRowData = {
   rows: 10,
   expandType: ""
 };
-
-// const dataColunms = [
-//   {
-//     type: "selection",
-//     width: 60,
-//     align: "center",
-//     fixed: "left"
-//   },
-//   {
-//     title: "商品条码",
-//     key: "barcode",
-//     align: "center"
-//   },
-//   {
-//     title: "商品编号",
-//     key: "productCode",
-//     align: "center",
-//     width: 150
-//   },
-//   {
-//     title: "商品名称",
-//     key: "productName",
-//     align: "center"
-//   },
-//   {
-//     title: "商品规格",
-//     key: "specification",
-//     align: "center"
-//   },
-//   {
-//     title: "商品单位",
-//     key: "productUnit",
-//     align: "center"
-//   },
-//   {
-//     title: "商品价格",
-//     key: "price",
-//     align: "center",
-//     render(h, params, vm) {
-//       const amount = fenToYuanDot2(params.row.price);
-//       return <div>{amount}</div>;
-//     }
-//   },
-//   {
-//     title: "商品状态",
-//     key: "shelvesStatus",
-//     align: "center",
-//     render: (h, params, vm) => {
-//       const { row } = params;
-//       if (row.shelvesStatus === "VALID") {
-//         return (
-//           <div>
-//             <tag color="success">
-//               {customPlanStatusConvert(row.shelvesStatus).label}
-//             </tag>
-//           </div>
-//         );
-//       } else if (row.shelvesStatus === "INVALID") {
-//         return (
-//           <div>
-//             <tag color="error">
-//               {customPlanStatusConvert(row.shelvesStatus).label}
-//             </tag>
-//           </div>
-//         );
-//       } else {
-//         return (
-//           <div>
-//             <tag color="primary">N/A</tag>
-//           </div>
-//         );
-//       }
-//     }
-//   },
-//   {
-//     title: "排序",
-//     key: "productSectionRank",
-//     sortable: "custom",
-//     sortNumber: 0,
-//     align: "center"
-//   },
-//   {
-//     title: "操作",
-//     key: "handle",
-//     options: ["exchange", "edit", "delete"]
-//   }
-// ];
 
 const productColumns = [
   {
@@ -836,7 +769,6 @@ export default {
         return;
       }
       const { row } = params;
-      console.log(row);
       this.productStandardRelation.id = row.id;
       this.productStandardRelation.productStandardIds = row.productStandardId;
       this.productStandardRelation.productSectionRank = row.productSectionRank;
@@ -889,6 +821,9 @@ export default {
           this.discount.discountPrice = fenToYuanDot2(
             this.discount.discountPrice
           );
+          this.discount.productName = params.row.productName;
+          this.discount.price = fenToYuanDot2(params.row.price);
+          this.discount.salePrice = fenToYuanDot2(params.row.salePrice);
           this.modalView = true;
         }
       });

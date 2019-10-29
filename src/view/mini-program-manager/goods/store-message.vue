@@ -201,6 +201,16 @@
           </i-col>
         </Row>
         <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="3">门店微信:</i-col>
+              <i-col span="21">
+                <img :src="storeDetail.wxImage" style="width: 300px" />
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
           <i-col span="12">
             <Row>
               <i-col span="8">直播时间起:</i-col>
@@ -342,6 +352,7 @@
               </FormItem>
             </i-col>
           </Row>
+          <!-- 门店店照 -->
           <Row>
             <FormItem label="推荐使用尺寸为400X225(单位:px):" prop="storeImage">
               <Input v-show="false" v-model="storeDetail.storeImage" style="width: auto"></Input>
@@ -371,6 +382,40 @@
               </IViewUpload>
             </FormItem>
           </Row>
+          <!-- 门店微信 -->
+          <Row>
+            <i-col span="12">
+              <FormItem label="门店微信" prop="wxImage">
+                <Input v-show="false" v-model="storeDetail.wxImage" style="width: auto"></Input>
+                <div v-for="item in uploadwxImageList" :key="item.url" class="demo-upload-list">
+                  <template v-if="item.status === 'finished'">
+                    <div>
+                      <img :src="item.url" />
+                      <div class="demo-upload-list-cover">
+                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                        <Icon type="ios-trash-outline" @click.native="handleRemoveWxImage(item)"></Icon>
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                  </template>
+                </div>
+                <IViewUpload
+                  ref="uploadWxImage"
+                  :default-list="defaultWxImageList"
+                  :image-size="imageSize"
+                  :max-num="1"
+                  @on-success="handleSuccessWxImage"
+                >
+                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                    <Icon type="ios-camera" size="20"></Icon>
+                  </div>
+                </IViewUpload>
+              </FormItem>
+            </i-col>
+          </Row>
+          <!-- ========================== -->
           <Row align="middle" type="flex">
             <i-col span="24">
               <FormItem label="直播地址:">
@@ -438,7 +483,8 @@ const storeDetail = {
   tapeUrl: "",
   storeCoordx: null,
   storeCoordy: null,
-  coordinateType: null
+  coordinateType: null,
+  wxImage: ""
 };
 
 const roleRowData = {
@@ -506,7 +552,9 @@ export default {
         storeAddress: [{ required: true, message: "请填写门店地址" }]
       },
       defaultListMain: [],
+      defaultWxImageList: [],
       uploadListMain: [],
+      uploadwxImageList: [],
       areaList: [],
       flagShipList: [],
       columns: [
@@ -663,7 +711,9 @@ export default {
       this.$refs.modalEdit.resetFields();
       this.$refs.uploadMain.clearFileList();
       this.uploadListMain = [];
+      this.uploadwxImageList = [];
       this.storeDetail.storeImage = null;
+      this.storeDetail.wxImage = null;
     },
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
@@ -753,6 +803,14 @@ export default {
         this.$refs.uploadMain.setDefaultFileList(mainImgArr);
         this.uploadListMain = mainImgArr;
       }
+      if (res.wxImage != null) {
+        const map = { status: "finished", url: "url" };
+        const detailImgArr = [];
+        map.url = res.wxImage;
+        detailImgArr.push(map);
+        this.$refs.uploadWxImage.setDefaultFileList(detailImgArr);
+        this.uploadwxImageList = detailImgArr;
+      }
     },
     handleView(params) {
       this.resetFields();
@@ -798,11 +856,22 @@ export default {
       this.$refs.uploadMain.deleteFile(file);
       this.storeDetail.storeImage = null;
     },
+    handleRemoveWxImage(file) {
+      this.$refs.uploadWxImage.deleteFile(file);
+      this.storeDetail.wxImage = null;
+    },
     // 商品主图
     handleSuccessMain(response, file, fileList) {
       this.uploadListMain = fileList;
       this.storeDetail.storeImage = null;
       this.storeDetail.storeImage = fileList[0].url;
+      console.log("商品主图", file);
+    },
+    handleSuccessWxImage(response, file, fileList) {
+      this.uploadwxImageList = fileList;
+      this.storeDetail.wxImage = null;
+      this.storeDetail.wxImage = fileList[0].url;
+      console.log("商品主图1", file);
     }
   }
 };

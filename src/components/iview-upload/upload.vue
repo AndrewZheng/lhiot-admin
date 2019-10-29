@@ -20,7 +20,7 @@
 
 <script type="text/ecmascript-6">
 export default {
-  name: 'IViewUpload',
+  name: "IViewUpload",
   props: {
     maxNum: {
       type: Number,
@@ -83,7 +83,8 @@ export default {
       }
       file.url = response.fileUrl;
       file.name = file.name;
-      this.$emit('on-success', response, file, fileList);
+      file.fileDir = `image/${file.name}`;
+      this.$emit("on-success", response, file, fileList);
     },
     // 上传之前的校验
     handleBeforeUpload(file) {
@@ -92,15 +93,18 @@ export default {
     // 文件格式校验
     handleFormatError(file) {
       this.$Notice.warning({
-        title: 'The file format is incorrect',
-        desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
+        title: "The file format is incorrect",
+        desc:
+          "File format of " +
+          file.name +
+          " is incorrect, please select jpg or png."
       });
     },
     // 文件大小校验
     handleMaxSize(file) {
       this.$Notice.warning({
-        title: 'Exceeding file size limit',
-        desc: 'File  ' + file.name + ' is too large, no more than 2M.'
+        title: "Exceeding file size limit",
+        desc: "File  " + file.name + " is too large, no more than 2M."
       });
     },
     // 图片宽高校验
@@ -122,7 +126,9 @@ export default {
               // reject();
               resolve();
             } else if (!check) {
-              self.$Notice.error({ title: '请上传的图片最多不能超过' + num + '张' });
+              self.$Notice.error({
+                title: "请上传的图片最多不能超过" + num + "张"
+              });
               reject();
             } else {
               resolve();
@@ -139,5 +145,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>
