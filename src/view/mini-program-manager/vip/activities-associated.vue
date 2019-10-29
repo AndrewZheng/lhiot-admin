@@ -798,7 +798,8 @@ const couponDetail = {
   createTime: null,
   applicationType: null,
   activityImage: "",
-  activityUrl: ""
+  activityUrl: "",
+  hdActivityId: ""
 };
 
 // 关联的优惠券配置对象
@@ -820,7 +821,8 @@ const relationDetail = {
   source: "SMALL", // 默认来源为系统对象
   validDateType: "FIXED_DATE",
   beginDay: 0,
-  endDay: 0
+  endDay: 0,
+  hdActivityId: ""
 };
 
 // 系统优惠券模板对象
@@ -858,7 +860,8 @@ const hdCouponTemplateDetail = {
   receiveCount: 0,
   source: "HD",
   useLimitType: null,
-  validDateType: "FIXED_DATE"
+  validDateType: "FIXED_DATE",
+  hdActivityId: ""
 };
 
 const roleRowData = {
@@ -893,8 +896,7 @@ const hdTemplateRowData = {
 const dataColumns = [
   {
     type: "selection",
-    width: 50,
-    
+    width: 50
   },
   {
     title: "优惠券名称",
@@ -1590,6 +1592,8 @@ export default {
       this.addRelationDetail.couponName = currentRow.couponName;
       this.addRelationDetail.couponType = currentRow.couponType;
       this.addRelationDetail.couponFee = currentRow.faceValue;
+      this.addRelationDetail.hdActivityId = currentRow.activityId;
+      console.log("海鼎ID", this.addRelationDetail.hdActivityId);
       if (currentRow.couponType === "DISCOUNT_COUPON") {
         this.addRelationDetail.couponFee =
           parseFloat(currentRow.discount) * 100;
@@ -1607,7 +1611,7 @@ export default {
       //     this.addRelationDetail.couponFee
       //   );
       // }
-      this.addRelationDetail.hdActivityId = currentRow.activityRegisterId;
+
       this.addRelationDetail.minBuyFee = minBuyFee * 100;
       this.addRelationDetail.couponStatus = "VALID"; // 海鼎券默认为有效状态
       this.addRelationDetail.effectiveStartTime = currentRow.beginDate; //海鼎活动开始时间

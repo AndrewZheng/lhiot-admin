@@ -1213,6 +1213,7 @@ export default {
           title: "商品类型",
           minWidth: 100,
           key: "expandType",
+          align: "center",
           render: (h, params, vm) => {
             const { row } = params;
 

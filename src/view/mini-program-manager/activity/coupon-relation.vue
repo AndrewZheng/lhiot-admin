@@ -376,9 +376,31 @@
       <div class="modal-content">
         <Form ref="editForm" :model="addRelationDetail" :rules="ruleInline" :label-width="100">
           <Row>
+            <i-col span="6">
+              <FormItem label="用户范围:" prop="userScope">
+                <Select
+                  v-model="addRelationDetail.userScope"
+                  placeholder="请选择"
+                  style="padding-right: 5px;width: 165px"
+                >
+                  <Option
+                    v-for="(item,index) in userScopeEnum"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+            </i-col>npm
+          </Row>
+          <Row>
             <i-col span="12">
               <FormItem label="优惠券名称:">
-                <Input v-model="addRelationDetail.couponName" clearable></Input>
+                <Input
+                  v-model="addRelationDetail.couponName"
+                  clearable
+                  style="padding-right: 5px;width: 165px"
+                ></Input>
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -791,6 +813,8 @@ const dataColumns = [
       if (row.userScope === "ALL") {
         return <div>{userScopeConvert(row.userScope).label}</div>;
       } else if (row.userScope === "SVIP") {
+        return <div>{userScopeConvert(row.userScope).label}</div>;
+      } else if (row.userScope === "THIRD") {
         return <div>{userScopeConvert(row.userScope).label}</div>;
       }
       return <div>{row.userScope}</div>;
