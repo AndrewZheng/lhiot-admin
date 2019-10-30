@@ -13,7 +13,6 @@
         border
         highlight-row
         search-place="top"
-        @on-delete="handleDelete"
         @on-view="handleView"
         @on-edit="handleEdit"
         @on-current-change="onCurrentChange"
@@ -21,6 +20,7 @@
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
+        <!--  @on-delete="handleDelete" -->
         <div slot="searchCondition">
           <Row>
             <Input
@@ -42,7 +42,19 @@
                 class="ptb2-5"
               >{{ item.label }}</Option>
             </Select>
-
+            <Select
+              v-model="searchRowData.couponBusinessType"
+              placeholder="发券类型"
+              style="padding-right: 5px;width: 120px"
+              @on-change="handCouponType"
+            >
+              <Option
+                v-for="(item,index) in activityClassify"
+                :value="item.indexName"
+                :key="index"
+                class="ptb2-5"
+              >{{ item.indexValue }}</Option>
+            </Select>
             <Button
               :loading="searchLoading"
               class="search-btn mr5"
@@ -82,9 +94,10 @@
             <Icon type="md-add" />海鼎优惠券
           </Button>
           <Button class="mr5" @click="onRelevance" type="primary">
-            <Icon type="md-add" />手动发券
+            <Icon type="md-add" />
+            {{hdCouponType}}
           </Button>
-          <Poptip
+          <!-- <Poptip
             confirm
             placement="bottom"
             style="width: 100px"
@@ -94,7 +107,7 @@
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
             </Button>
-          </Poptip>
+          </Poptip>-->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -906,7 +919,8 @@ import {
   editCouponPage,
   handGrandCoupon,
   getCouponTemplatePages,
-  getHdCouponActivitiesPages
+  getHdCouponActivitiesPages,
+  getSystemParameter
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -935,7 +949,8 @@ import {
   yuanToFenNumber,
   replaceByTag,
   replaceByTab,
-  HdDiscount
+  HdDiscount,
+  compareCouponData
 } from "@/libs/util";
 
 const relationDetail = {
@@ -961,8 +976,8 @@ const relationDetail = {
   endDay: 0,
   rank: 0,
   phones: "",
-  couponBusinessType: "MANUAL_SEND",
-  couponStatus: "VALID"
+  couponStatus: "VALID",
+  couponBusinessType: ""
 };
 const couponTemplateDetail = {
   id: 0,
@@ -1201,14 +1216,22 @@ const dataColumns = [
     render: (h, params, vm) => {
       const { row } = params;
       if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
-        return <div>{row.effectiveEndTime}</div>;
+        if (!compareCouponData(row.effectiveEndTime)) {
+          return <div style="color:red">{row.effectiveEndTime + "已过期"}</div>;
+        } else {
+          return <div>{row.effectiveEndTime}</div>;
+        }
       } else if (
         row.source == "SMALL" &&
         row.validDateType === "UN_FIXED_DATE"
       ) {
         return <div>{row.endDay}</div>;
       } else if (row.source == "HD") {
-        return <div>{row.effectiveEndTime}</div>;
+        if (!compareCouponData(row.effectiveEndTime)) {
+          return <div style="color:red">{row.effectiveEndTime + "已过期"}</div>;
+        } else {
+          return <div>{row.effectiveEndTime}</div>;
+        }
       } else {
         return <div>N/A</div>;
       }
@@ -1223,7 +1246,7 @@ const dataColumns = [
     title: "操作",
     minWidth: 110,
     key: "handle",
-    options: ["couponStatus", "view", "edit", "delete"]
+    options: ["couponStatus", "view", "edit"]
   }
 ];
 
@@ -1472,7 +1495,9 @@ export default {
       hdCouponTemplateData: [],
       couponTemplateTotal: 0,
       couponHdTemplateTotal: 0,
-      modalAdd: false
+      modalAdd: false,
+      activityClassify: [],
+      hdCouponType: "手动发券"
     };
   },
   computed: {
@@ -1495,6 +1520,7 @@ export default {
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
+    this.getSystemParameters();
   },
   methods: {
     statusChange(params) {
@@ -1505,6 +1531,35 @@ export default {
         this.addRelationDetail.couponStatus = "VALID";
       }
       this.editCouponPage();
+    },
+    handCouponType(value, date) {
+      let item = this.activityClassify;
+      for (let i = 0; i < item.length; i++) {
+        if (value === item[i].indexName) {
+          this.hdCouponType = item[i].indexValue;
+        }
+      }
+    },
+    handleTemplateAdd() {
+      this.addRelationDetail.couponBusinessType = this.searchRowData.couponBusinessType;
+      let _this = this;
+      if (this.addRelationDetail.couponName == "") {
+        this.$Message.error("请先关联一张优惠券模板!");
+        return false;
+      }
+      this.$refs.addForm.validate(valid => {
+        if (valid) {
+          _this.extraValidator();
+          _this.replaceTextByTag();
+          if (_this.tempModalType === "addTemplate") {
+            _this.createRelation();
+          } else if (_this.tempModalType === "addHdTemplate") {
+            _this.createHdRelation();
+          }
+        } else {
+          _this.$Message.error("请完善信息!");
+        }
+      });
     },
     handleModalAdd(isShow) {
       // 先清除对象
@@ -1587,6 +1642,16 @@ export default {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
+        });
+    },
+    getSystemParameters() {
+      let code = "SEND_COUPON_TYPE";
+      getSystemParameter(code)
+        .then(res => {
+          this.activityClassify = res.systemSettings;
+        })
+        .catch(error => {
+          console.log(error);
         });
     },
     getTemplateTableData() {
@@ -1719,26 +1784,7 @@ export default {
         }
       });
     },
-    handleTemplateAdd() {
-      let _this = this;
-      if (this.addRelationDetail.couponName == "") {
-        this.$Message.error("请先关联一张优惠券模板!");
-        return false;
-      }
-      this.$refs.addForm.validate(valid => {
-        if (valid) {
-          _this.extraValidator();
-          _this.replaceTextByTag();
-          if (_this.tempModalType === "addTemplate") {
-            _this.createRelation();
-          } else if (_this.tempModalType === "addHdTemplate") {
-            _this.createHdRelation();
-          }
-        } else {
-          _this.$Message.error("请完善信息!");
-        }
-      });
-    },
+
     handleTemplateChange(currentRow, oldCurrentRow) {
       const couponTemplate = currentRow;
       this.addRelationDetail.couponName = couponTemplate.couponName;
@@ -1765,14 +1811,14 @@ export default {
       //     this.addRelationDetail.couponFee
       //   );
       // }
-       if (currentRow.couponType === "DISCOUNT_COUPON") {
-          this.addRelationDetail.couponFee =
-            parseFloat(currentRow.discount) * 100;
-          console.log(
-            "DISCOUNT_COUPON couponFee:",
-            this.addRelationDetail.couponFee
-          );
-        }
+      if (currentRow.couponType === "DISCOUNT_COUPON") {
+        this.addRelationDetail.couponFee =
+          parseFloat(currentRow.discount) * 100;
+        console.log(
+          "DISCOUNT_COUPON couponFee:",
+          this.addRelationDetail.couponFee
+        );
+      }
       this.addRelationDetail.hdActivityId = currentRow.activityId;
       this.addRelationDetail.minBuyFee = minBuyFee * 100;
       this.addRelationDetail.effectiveStartTime = currentRow.beginDate;
@@ -1829,6 +1875,8 @@ export default {
         });
     },
     addCouponTemplate() {
+      // this.relationDetail.couponBusinessType = this.searchRowData.couponBusinessType;
+      // console.log("搜索条件", this.relationDetail.couponBusinessType);
       this.getTemplateTableData();
       this.tempModalType = "addTemplate";
       this.modalAdd = true;

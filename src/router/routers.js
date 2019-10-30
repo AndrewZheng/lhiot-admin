@@ -208,7 +208,16 @@ export const constantRouterMap = [
           title: '用券数据'
         },
         component: () => import('@/view/mini-program-manager/order/coupon-details.vue')
+      },{
+        path: 'small-order-month-orders',
+        name: 'small-order-month-orders',
+        meta: {
+          icon: 'md-menu',
+          title: '跨月订单'
+        },
+        component: () => import('@/view/mini-program-manager/order/month-orders.vue')
       }
+      
     ]
   },
 ];
@@ -843,7 +852,7 @@ export const asyncRouterMap = [
         name: 'small-hand-coupon',
         meta: {
           icon: 'md-hand',
-          title: '手动发券管理'
+          title: '统一发券管理'
         },
         component: () => import('@/view/mini-program-manager/activity/hand-coupon.vue')
       },       
@@ -1009,7 +1018,7 @@ export const asyncRouterMap = [
     name: 'small-member',
     meta: {
       icon: 'md-menu',
-      title: '会员中心'
+      title: '会员数据中心'
     },
     component: Main,
     children: [
@@ -1017,8 +1026,8 @@ export const asyncRouterMap = [
         path: '/small-phones',
         name: 'small-phones',
         meta: {
-          icon: 'ios-paper',
-          title: '换绑手机'
+          icon: 'md-phone-portrait',
+          title: '换绑会员手机'
         },
         component: () => import('@/view/mini-program-manager/member/phones.vue')
       },
@@ -1026,8 +1035,8 @@ export const asyncRouterMap = [
         path: '/small-data-statistics',
         name: 'small-data-statistics',
         meta: {
-          icon: 'ios-paper',
-          title: '数据埋点统计'
+          icon: 'ios-stats',
+          title: '邀请有礼数据统计'
         },
         component: () => import('@/view/mini-program-manager/member/data-statistics.vue')
       },

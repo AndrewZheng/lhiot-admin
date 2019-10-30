@@ -12,7 +12,6 @@
         searchable
         border
         search-place="top"
-        @on-delete="handleDelete"
         @on-view="handleView"
         @on-edit="handleEdit"
         @on-sale="onOff"
@@ -20,6 +19,7 @@
         @on-selection-change="onSelectionChange"
         @on-relevance="onRelevance"
       >
+        <!--  @on-delete="handleDelete" -->
         <div slot="searchCondition">
           <Row>
             <DatePicker
@@ -82,7 +82,7 @@
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addFlashsale">
             <Icon type="md-add" />添加
           </Button>
-          <Poptip
+          <!-- <Poptip
             confirm
             placement="bottom"
             style="width: 100px"
@@ -92,7 +92,7 @@
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
             </Button>
-          </Poptip>
+          </Poptip>-->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -486,7 +486,7 @@ const roleRowData = {
   edBeginTime: null,
   edFinishTime: null,
   page: 1,
-  rows: 10,
+  rows: 10
 };
 
 const relationRowData = {
@@ -838,7 +838,8 @@ export default {
           title: "操作",
           minWidth: 80,
           key: "handle",
-          options: ["onSale", "view", "edit", "delete", "settings"]
+          //"delete",
+          options: ["onSale", "view", "edit", "settings"]
         }
       ],
       relationColumns: [
@@ -942,11 +943,11 @@ export default {
       this.modalEdit = true;
     },
     // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
-    },
+    // handleDelete(params) {
+    //   this.tableDataSelected = [];
+    //   this.tableDataSelected.push(params.row);
+    //   this.deleteTable(params.row.id);
+    // },
     deleteTable(ids) {
       this.loading = true;
       deleteFlashsale({

@@ -62,6 +62,18 @@
               style="width: 150px"
               @on-change="endTimeChange"
             />
+            <Select
+              v-model="searchRowData.activityType"
+              placeholder="活动类型"
+              style="padding-right: 5px;width: 120px"
+            >
+              <Option
+                v-for="(item,index) in activityClassify"
+                :value="item.indexName"
+                :key="index"
+                class="ptb2-5"
+              >{{ item.indexValue }}</Option>
+            </Select>
             <Button
               :loading="searchLoading"
               class="search-btn mr5"
@@ -553,7 +565,8 @@ import {
   createCouponTemplateRelation,
   editCouponTemplateRelation,
   getCouponTemplatePages,
-  getHdCouponActivitiesPages
+  getHdCouponActivitiesPages,
+  getSystemParameter
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -595,7 +608,8 @@ const couponDetail = {
   createTime: null,
   applicationType: null,
   activityImage: "",
-  activityUrl: ""
+  activityUrl: "",
+  activityType: ""
 };
 
 const relationDetail = {
@@ -975,6 +989,7 @@ export default {
       couponTypeEnum,
       couponScopeEnum,
       couponActivityTypeEnum,
+      activityClassify: [],
       columns: [
         {
           type: "selection",
@@ -995,13 +1010,13 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             if (row.activityType === "COUPON_CENTER_ACTIVITY") {
-              return (
-                <div>{couponActivityTypeConvert(row.activityType).label}</div>
-              );
-            } else if (row.activityType === "COUPON_CENTER_POINT") {
-              return (
-                <div>{couponActivityTypeConvert(row.activityType).label}</div>
-              );
+              return <div>{"领券中心"}</div>;
+            } else if (row.activityType === "SVIP_COUPON_CENTER_ACTIVITY") {
+              return <div>{"SVIP领券中心"}</div>;
+            } else if (row.activityType === "THIRD_COUPON_ACTIVITY") {
+              return <div>{"第三方发券"}</div>;
+            } else if (row.activityType === "SHARE_COUPON_ACTIVITY") {
+              return <div>{"分享领券"}</div>;
             } else {
               return <div>N/A</div>;
             }
@@ -1089,6 +1104,7 @@ export default {
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
+    this.getSystemParameters();
   },
   created() {},
   methods: {
@@ -1103,6 +1119,7 @@ export default {
       this.couponDetail.storeImage = null;
     },
     handleSubmit(name) {
+      this.couponDetail.activityType = this.searchRowData.activityType;
       this.$refs[name].validate(valid => {
         if (valid) {
           if (
@@ -1224,6 +1241,7 @@ export default {
       getCouponPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
+          // console.log("打印返回数据", res);
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
@@ -1234,6 +1252,16 @@ export default {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
+        });
+    },
+    getSystemParameters() {
+      let code = "ACTIVITY_COUPON_TYPE";
+      getSystemParameter(code)
+        .then(res => {
+          this.activityClassify = res.systemSettings;
+        })
+        .catch(error => {
+          console.log(error);
         });
     },
     onOff(params) {

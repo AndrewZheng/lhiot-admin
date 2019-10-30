@@ -11,7 +11,6 @@
         editable
         searchable
         border
-        @on-delete="handleDelete"
         @on-view="handleView"
         @on-edit="handleEdit"
         @coupon-status="statusChange"
@@ -89,7 +88,7 @@
           >
             <Icon type="md-add" />海鼎优惠券
           </Button>
-          <Poptip
+          <!-- <Poptip
             confirm
             placement="bottom"
             style="width: 100px"
@@ -99,7 +98,7 @@
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
             </Button>
-          </Poptip>
+          </Poptip>-->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -970,7 +969,8 @@ import {
   yuanToFenNumber,
   replaceByTag,
   replaceByTab,
-  HdDiscount
+  HdDiscount,
+  compareCouponData
 } from "@/libs/util";
 
 const relationDetail = {
@@ -1242,14 +1242,22 @@ const dataColumns = [
     render: (h, params, vm) => {
       const { row } = params;
       if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
-        return <div>{row.effectiveEndTime}</div>;
+        if (!compareCouponData(row.effectiveEndTime)) {
+          return <div style="color:red">{row.effectiveEndTime + "已过期"}</div>;
+        } else {
+          return <div>{row.effectiveEndTime}</div>;
+        }
       } else if (
         row.source == "SMALL" &&
         row.validDateType === "UN_FIXED_DATE"
       ) {
         return <div>{row.endDay}</div>;
       } else if (row.source == "HD") {
-        return <div>{row.effectiveEndTime}</div>;
+        if (!compareCouponData(row.effectiveEndTime)) {
+          return <div style="color:red">{row.effectiveEndTime + "已过期"}</div>;
+        } else {
+          return <div>{row.effectiveEndTime}</div>;
+        }
       } else {
         return <div>N/A</div>;
       }
@@ -1264,7 +1272,7 @@ const dataColumns = [
     title: "操作",
     width: 180,
     key: "handle",
-    options: ["couponStatus", "view", "edit", "delete"]
+    options: ["couponStatus", "view", "edit"]
   }
 ];
 
@@ -1933,27 +1941,27 @@ export default {
     },
     minBuyFeeInputNumberOnchange(value) {
       this.relationDetail.minBuyFee = yuanToFenNumber(value);
-    },
-    // 批量删除-单行删除内部也是调用此方法
-    deleteTable(ids) {
-      this.tempTableLoading = true;
-      deleteCouponExchange({ ids })
-        .then(res => {
-          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-          if (
-            this.tableData.length == this.tableDataSelected.length &&
-            this.searchRowData.page === totalPage &&
-            this.searchRowData.page !== 1
-          ) {
-            this.searchRowData.page -= 1;
-          }
-          this.tableDataSelected = [];
-          this.getTableData();
-        })
-        .finally(res => {
-          this.tempTableLoading = false;
-        });
     }
+    // 批量删除-单行删除内部也是调用此方法
+    // deleteTable(ids) {
+    //   this.tempTableLoading = true;
+    //   deleteCouponExchange({ ids })
+    //     .then(res => {
+    //       const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+    //       if (
+    //         this.tableData.length == this.tableDataSelected.length &&
+    //         this.searchRowData.page === totalPage &&
+    //         this.searchRowData.page !== 1
+    //       ) {
+    //         this.searchRowData.page -= 1;
+    //       }
+    //       this.tableDataSelected = [];
+    //       this.getTableData();
+    //     })
+    //     .finally(res => {
+    //       this.tempTableLoading = false;
+    //     });
+    // }
   }
 };
 </script>

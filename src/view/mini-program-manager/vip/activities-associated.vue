@@ -12,7 +12,6 @@
         editable
         searchable
         border
-        @on-delete="handleDelete"
         @on-edit="handleEdit"
         @coupon-status="statusChange"
         @on-select-all="onSelectionAll"
@@ -47,7 +46,7 @@
           >
             <Icon type="md-add" />海鼎优惠券
           </Button>
-          <Poptip
+          <!-- <Poptip
             confirm
             placement="bottom"
             style="width: 100px"
@@ -57,7 +56,7 @@
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
             </Button>
-          </Poptip>
+          </Poptip>-->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -778,7 +777,8 @@ import {
   yuanToFenNumber,
   replaceByTag,
   replaceByTab,
-  HdDiscount
+  HdDiscount,
+  compareCouponData
 } from "@/libs/util";
 
 // 优惠券活动对象
@@ -798,7 +798,8 @@ const couponDetail = {
   createTime: null,
   applicationType: null,
   activityImage: "",
-  activityUrl: ""
+  activityUrl: "",
+  hdActivityId: ""
 };
 
 // 关联的优惠券配置对象
@@ -820,7 +821,8 @@ const relationDetail = {
   source: "SMALL", // 默认来源为系统对象
   validDateType: "FIXED_DATE",
   beginDay: 0,
-  endDay: 0
+  endDay: 0,
+  hdActivityId: ""
 };
 
 // 系统优惠券模板对象
@@ -858,7 +860,8 @@ const hdCouponTemplateDetail = {
   receiveCount: 0,
   source: "HD",
   useLimitType: null,
-  validDateType: "FIXED_DATE"
+  validDateType: "FIXED_DATE",
+  hdActivityId: ""
 };
 
 const roleRowData = {
@@ -893,8 +896,7 @@ const hdTemplateRowData = {
 const dataColumns = [
   {
     type: "selection",
-    width: 50,
-    
+    width: 50
   },
   {
     title: "优惠券名称",
@@ -1036,14 +1038,22 @@ const dataColumns = [
     render: (h, params, vm) => {
       const { row } = params;
       if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
-        return <div>{row.effectiveEndTime}</div>;
+        if (!compareCouponData(row.effectiveEndTime)) {
+          return <div style="color:red">{row.effectiveEndTime + "已过期"}</div>;
+        } else {
+          return <div>{row.effectiveEndTime}</div>;
+        }
       } else if (
         row.source == "SMALL" &&
         row.validDateType === "UN_FIXED_DATE"
       ) {
         return <div>{row.endDay}</div>;
       } else if (row.source == "HD") {
-        return <div>{row.effectiveEndTime}</div>;
+        if (!compareCouponData(row.effectiveEndTime)) {
+          return <div style="color:red">{row.effectiveEndTime + "已过期"}</div>;
+        } else {
+          return <div>{row.effectiveEndTime}</div>;
+        }
       } else {
         return <div>N/A</div>;
       }
@@ -1063,7 +1073,7 @@ const dataColumns = [
     title: "操作",
     minWidth: 120,
     key: "handle",
-    options: ["couponStatus", "view", "edit", "delete"]
+    options: ["couponStatus", "view", "edit"]
   }
 ];
 
@@ -1590,6 +1600,8 @@ export default {
       this.addRelationDetail.couponName = currentRow.couponName;
       this.addRelationDetail.couponType = currentRow.couponType;
       this.addRelationDetail.couponFee = currentRow.faceValue;
+      this.addRelationDetail.hdActivityId = currentRow.activityId;
+      console.log("海鼎ID", this.addRelationDetail.hdActivityId);
       if (currentRow.couponType === "DISCOUNT_COUPON") {
         this.addRelationDetail.couponFee =
           parseFloat(currentRow.discount) * 100;
@@ -1607,7 +1619,7 @@ export default {
       //     this.addRelationDetail.couponFee
       //   );
       // }
-      this.addRelationDetail.hdActivityId = currentRow.activityRegisterId;
+
       this.addRelationDetail.minBuyFee = minBuyFee * 100;
       this.addRelationDetail.couponStatus = "VALID"; // 海鼎券默认为有效状态
       this.addRelationDetail.effectiveStartTime = currentRow.beginDate; //海鼎活动开始时间
@@ -1794,27 +1806,27 @@ export default {
     },
     handleAddClose() {
       this.modalAdd = false;
-    },
-    // 批量删除-单行删除内部也是调用此方法
-    deleteTable(ids) {
-      this.tempTableLoading = true;
-      deleteRegisterGift({ ids })
-        .then(res => {
-          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-          if (
-            this.tableData.length == this.tableDataSelected.length &&
-            this.searchRowData.page === totalPage &&
-            this.searchRowData.page !== 1
-          ) {
-            this.searchRowData.page -= 1;
-          }
-          this.tableDataSelected = [];
-          this.getRelationTableData();
-        })
-        .finally(res => {
-          this.tempTableLoading = false;
-        });
     }
+    // 批量删除-单行删除内部也是调用此方法
+    // deleteTable(ids) {
+    //   this.tempTableLoading = true;
+    //   deleteRegisterGift({ ids })
+    //     .then(res => {
+    //       const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+    //       if (
+    //         this.tableData.length == this.tableDataSelected.length &&
+    //         this.searchRowData.page === totalPage &&
+    //         this.searchRowData.page !== 1
+    //       ) {
+    //         this.searchRowData.page -= 1;
+    //       }
+    //       this.tableDataSelected = [];
+    //       this.getRelationTableData();
+    //     })
+    //     .finally(res => {
+    //       this.tempTableLoading = false;
+    //     });
+    // }
   }
 };
 </script>

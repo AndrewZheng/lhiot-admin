@@ -870,7 +870,7 @@ export const userScopeEnum = [
   {
     label: '付费会员',
     value: 'SVIP'
-  }
+  },
 ];
 
 export const memberLimitEnum = [

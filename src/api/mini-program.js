@@ -1,5 +1,5 @@
 import Vue from 'vue';
-
+import qs from 'qs'
 // 查询商品分类树结构
 export const getProductCategoriesTree = () => {
   return Vue.prototype.$http.request({
@@ -831,11 +831,20 @@ export const deleteRegisterGift = ({ ids }) => {
 //会员中心数据埋点统计 /minapp/data-total 邀请有礼数据统计
 export const dataStatistics  = (data) => {
   return Vue.prototype.$http.request({
-    url: '/minapp/data-total',
-    data,
-    method: 'get'
+    url: `/minapp/data-total?beginDate=${data.beginDate}&endDate=${data.endDate}&dateGroup=${data.dateGroup}`,
+    method: 'get',
+    headers: { 'page': data.page, 'rows': data.rows}
   });
 };
+
+///手动修改手机号绑定海鼎会员ID 
+export const handPhones  = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/user/phone/member-number?oldPhone=${data.oldPhone}&newPhone=${data.newPhone}`,
+    method: 'post',
+  });
+};
+
 // ———————————— 1.7付费会员 —————————————
 //根据id查询付费会员礼包券配置
 export const getSvipGift = (data) => {
@@ -1032,6 +1041,15 @@ export const getOrderPages = (data) => {
     headers: { 'page': data.page, 'rows': data.rows }
   });
 };
+//查询跨月订单退款数据 startTime=2019-09-01&endTime=2019-10-01
+export const monthOrderPages  = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/orders/cross-month-refund/query?startTime=${data.startTime}&endTime=${data.endTime}`,
+    method: 'get',
+    headers: { 'page': data.page, 'rows': data.rows}
+  });
+};
+
 //查询订单用券信息
 export const getOrderCouponDetails = (data) => {
   return Vue.prototype.$http.request({
@@ -1390,6 +1408,14 @@ export const getSystemSettingCategoryPages = (data) => {
     data,
     method: 'post',
     headers: { 'page': data.page, 'rows': data.rows }
+  });
+};
+
+//根据系统分类code查询系统设置参数
+export const getSystemParameter = (code) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/system-setting-categories/find-by/' + code,
+    method: 'get'
   });
 };
 

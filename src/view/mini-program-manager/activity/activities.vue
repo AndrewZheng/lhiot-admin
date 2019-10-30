@@ -12,8 +12,8 @@
         searchable
         border
         search-place="top"
-        @on-delete="handleDelete"
         @on-view="handleView"
+        @on-delete="handleDelete"
         @on-edit="handleEdit"
         @on-sale="onOff"
         @on-select-all="onSelectionAll"
