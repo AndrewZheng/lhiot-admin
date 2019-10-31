@@ -709,27 +709,33 @@ export default {
         },
         {
           title: "ID",
+          align: "center",
           key: "id"
         },
         {
           title: "活动名称",
+          align: "center",
           key: "activityName"
         },
         {
           title: "活动规则",
           key: "activityRule",
+          align: "center",
           tooltips: true
         },
         {
           title: "开始时间",
+          align: "center",
           key: "beginTime"
         },
         {
           title: "结束时间",
+          align: "center",
           key: "endTime"
         },
         {
           title: "活动状态",
+          align: "center",
           key: "onOff",
           render: (h, params, vm) => {
             const { row } = params;
@@ -753,10 +759,12 @@ export default {
         },
         {
           title: "创建人",
+          align: "center",
           key: "createBy"
         },
         {
           title: "操作",
+          align: "center",
           minWidth: 80,
           key: "handle",
           options: ["onSale", "view", "edit", "delete", "settings"]
@@ -768,6 +776,7 @@ export default {
           title: "操作",
           minWidth: 80,
           key: "handle",
+          align: "center",
           options: ["inlineEdit", "delete"]
         }
       ],

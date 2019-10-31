@@ -49,7 +49,7 @@
                   type="primary"
                   @click="handleSearch"
                 >
-                  <Icon type="md-search"/>&nbsp;搜索
+                  <Icon type="md-search" />&nbsp;搜索
                 </Button>
                 <Button
                   v-waves
@@ -58,7 +58,7 @@
                   type="info"
                   @click="handleClear"
                 >
-                  <Icon type="md-refresh"/>&nbsp;清除
+                  <Icon type="md-refresh" />&nbsp;清除
                 </Button>
               </Row>
             </div>
@@ -70,7 +70,7 @@
                 class="mr5"
                 @click="addProduct"
               >
-                <Icon type="md-add"/>添加
+                <Icon type="md-add" />添加
               </Button>
               <Button
                 v-waves
@@ -79,7 +79,7 @@
                 class="mr5"
                 @click="handleDownload"
               >
-                <Icon type="md-download"/>导出
+                <Icon type="md-download" />导出
               </Button>
             </div>
           </tables>
@@ -198,7 +198,7 @@
               <i-col span="3">商品主图:</i-col>
               <i-col v-show="productDetail.image" span="21">
                 <div class="demo-upload-list">
-                  <img :src="productDetail.image">
+                  <img :src="productDetail.image" />
                   <div class="demo-upload-list-cover">
                     <Icon
                       type="ios-eye-outline"
@@ -344,7 +344,7 @@
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>
-                    <img :src="item.url">
+                    <img :src="item.url" />
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                       <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -362,7 +362,7 @@
                 @on-success="handleSuccessMain"
               >
                 <div slot="content" style="width:58px;height:58px;line-height:58px">
-                    <Icon type="ios-camera" size="20"></Icon>
+                  <Icon type="ios-camera" size="20"></Icon>
                 </div>
               </IViewUpload>
             </FormItem>
@@ -423,7 +423,7 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%">
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
   </div>
 </template>
@@ -546,11 +546,13 @@ export default {
           title: "ID",
           key: "id",
           minWidth: 80,
+          align: "center",
           fixed: "left"
         },
         {
           title: "商品图片",
           key: "image",
+          align: "center",
           minWidth: 120,
           render: (h, params, vm) => {
             const { row } = params;
@@ -560,18 +562,21 @@ export default {
         },
         {
           title: "商品编码",
+          align: "center",
           key: "productCode",
           sortable: true,
           minWidth: 140
         },
         {
           title: "商品名称",
+          align: "center",
           sortable: true,
           key: "productName",
           minWidth: 120
         },
         {
           title: "商品类别",
+          align: "center",
           key: "groupId",
           minWidth: 120,
           render: (h, params) => {
@@ -587,22 +592,26 @@ export default {
         },
         {
           title: "产地编码",
+          align: "center",
           minWidth: 120,
           sortable: true,
           key: "sourceCode"
         },
         {
           title: "基础单位",
+          align: "center",
           minWidth: 90,
           key: "unitName"
         },
         {
           title: "基础重量(kg)",
+          align: "center",
           minWidth: 90,
           key: "baseQty"
         },
         {
           title: "商品状态",
+          align: "center",
           minWidth: 90,
           key: "status",
           render: (h, params, vm) => {
@@ -633,6 +642,7 @@ export default {
         },
         {
           title: "操作",
+          align: "center",
           minWidth: 150,
           key: "handle",
           options: ["view", "edit", "settings"]

@@ -165,7 +165,7 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :width="1000" :z-index="1000" :mask-closable="false">
+    <Modal v-model="modalEdit" :width="600" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <i-col>{{ tempModalType==modalType.edit?'修改限时抢购活动':(tempModalType==modalType.create?'创建限时抢购活动': '限时抢购活动和商品关联') }}</i-col>
       </p>
@@ -790,10 +790,12 @@ export default {
         },
         {
           title: "活动ID",
+          align: "center",
           key: "id"
         },
         {
           title: "活动名称",
+          align: "center",
           render: (h, params, vm) => {
             const str = "限时抢购";
             return <div>{str}</div>;
@@ -801,14 +803,17 @@ export default {
         },
         {
           title: "活动开始时间",
+          align: "center",
           key: "startTime"
         },
         {
           title: "活动结束时间",
+          align: "center",
           key: "endTime"
         },
         {
           title: "活动状态",
+          align: "center",
           key: "onOff",
           render: (h, params, vm) => {
             const { row } = params;
@@ -836,6 +841,7 @@ export default {
         },
         {
           title: "操作",
+          align: "center",
           minWidth: 80,
           key: "handle",
           //"delete",

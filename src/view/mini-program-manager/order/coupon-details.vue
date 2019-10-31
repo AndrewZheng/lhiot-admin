@@ -169,28 +169,33 @@ export default {
           title: "订单编号",
           key: "code",
           minWidth: 80,
+          align: "center",
           sortable: true
         },
         {
           title: "门店名称",
-
+          align: "center",
           key: "storeName"
         },
         {
           title: "用户名称",
+          align: "center",
           key: "nickname"
         },
         {
           title: "券名称",
+          align: "center",
           key: "couponName"
         },
         {
           title: "用券时间",
+          align: "center",
           key: "useTime",
           minWidth: 80
         },
         {
           title: "订单金额",
+          align: "center",
           key: "totalAmount",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.totalAmount);
@@ -199,6 +204,7 @@ export default {
         },
         {
           title: "优惠金额",
+          align: "center",
           key: "couponAmount",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.couponAmount);
@@ -207,6 +213,7 @@ export default {
         },
         {
           title: "应付金额",
+          align: "center",
           key: "amountPayable",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.amountPayable);
@@ -215,6 +222,7 @@ export default {
         },
         {
           title: "来源",
+          align: "center",
           key: "source",
           render: (h, params, vm) => {
             const { row } = params;

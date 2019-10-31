@@ -33,7 +33,7 @@
               type="primary"
               @click="handleSearch"
             >
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
               v-waves
@@ -42,13 +42,13 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除
+              <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
-            <Icon type="md-add"/> 添加
+            <Icon type="md-add" />添加
           </Button>
           <Poptip
             confirm
@@ -58,7 +58,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/> 批量删除
+              <Icon type="md-trash" />批量删除
             </Button>
           </Poptip>
         </div>
@@ -143,7 +143,7 @@
             <Row>
               <i-col span="6">用户头像:</i-col>
               <i-col span="18">
-                <img :src="robotDetail.avater" style="width: 150px">
+                <img :src="robotDetail.avater" style="width: 150px" />
               </i-col>
             </Row>
           </i-col>
@@ -210,7 +210,7 @@
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>
-                    <img :src="item.url">
+                    <img :src="item.url" />
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                       <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -228,7 +228,7 @@
                 @on-success="handleSuccessMain"
               >
                 <div slot="content" style="width:58px;height:58px;line-height:58px">
-                    <Icon type="ios-camera" size="20"></Icon>
+                  <Icon type="ios-camera" size="20"></Icon>
                 </div>
               </IViewUpload>
             </FormItem>
@@ -242,7 +242,7 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%">
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
   </div>
 </template>
@@ -319,30 +319,37 @@ export default {
         },
         {
           title: "门店ID",
+          align: "center",
           key: "storeId"
         },
         {
           title: "门店名称",
+          align: "center",
           key: "storeName"
         },
         {
           title: "用户ID",
+          align: "center",
           key: "userId"
         },
         {
           title: "收货人",
+          align: "center",
           key: "receiverName"
         },
         {
           title: "联系方式",
+          align: "center",
           key: "receiverMobile"
         },
         {
           title: "用户昵称",
+          align: "center",
           key: "nickName"
         },
         {
           title: "用户头像",
+          align: "center",
           key: "avater",
           render: (h, params, vm) => {
             const { row } = params;
@@ -353,6 +360,7 @@ export default {
         {
           title: "操作",
           minWidth: 80,
+          align: "center",
           key: "handle",
           options: ["view", "edit", "delete"]
         }

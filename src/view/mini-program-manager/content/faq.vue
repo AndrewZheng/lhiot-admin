@@ -60,7 +60,7 @@
                   type="primary"
                   @click="handleSearch"
                 >
-                  <Icon type="md-search"/>&nbsp;搜索
+                  <Icon type="md-search" />&nbsp;搜索
                 </Button>
                 <Button
                   v-waves
@@ -69,13 +69,13 @@
                   type="info"
                   @click="handleClear"
                 >
-                  <Icon type="md-refresh"/>&nbsp;清除
+                  <Icon type="md-refresh" />&nbsp;清除
                 </Button>
               </Row>
             </div>
             <div slot="operations">
               <Button v-waves type="success" class="mr5" @click="createTableRow">
-                <Icon type="md-add"/> 添加
+                <Icon type="md-add" />添加
               </Button>
               <Poptip
                 confirm
@@ -85,7 +85,7 @@
                 @on-ok="poptipOk"
               >
                 <Button type="error" class="mr5">
-                  <Icon type="md-trash"/> 批量删除
+                  <Icon type="md-trash" />批量删除
                 </Button>
               </Poptip>
             </div>
@@ -192,7 +192,12 @@
             ></Input>
           </FormItem>
           <FormItem label="序号:" prop="rankNo">
-            <InputNumber :min="0" v-model="faq.rankNo" placeholder="序号" style="padding-right: 5px;width: 95px"></InputNumber>
+            <InputNumber
+              :min="0"
+              v-model="faq.rankNo"
+              placeholder="序号"
+              style="padding-right: 5px;width: 95px"
+            ></InputNumber>
           </FormItem>
           <FormItem label="应用类型:" prop="applicationType">
             <Select
@@ -332,12 +337,14 @@ export default {
         },
         {
           title: "创建时间",
+          align: "center",
           key: "createTime",
           sortable: true,
           minWidth: 160
         },
         {
           title: "创建人",
+          align: "center",
           key: "createUser",
           sortable: true,
           minWidth: 80
@@ -373,6 +380,7 @@ export default {
         },
         {
           title: "操作",
+          align: "center",
           key: "handle",
           minWidth: 120,
           options: ["view", "edit", "delete"]

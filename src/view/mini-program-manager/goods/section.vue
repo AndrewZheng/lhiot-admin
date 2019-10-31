@@ -193,7 +193,7 @@ const roleRowData = {
   sectionName: null,
   page: 1,
   rows: 10,
-  sidx:"rank_no"
+  sidx: "rank_no"
 };
 
 const dataColumns = [
@@ -243,6 +243,7 @@ const dataColumns = [
   {
     title: "操作",
     key: "handle",
+    align: "center",
     minWidth: 150,
     options: ["edit", "delete"]
   }

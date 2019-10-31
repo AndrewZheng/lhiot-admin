@@ -1067,11 +1067,13 @@ const dataColumns = [
   {
     title: "优惠券名称",
     key: "couponName",
+    align: "center",
     width: 150,
     fixed: "left"
   },
   {
     title: "优惠券类型",
+    align: "center",
     key: "couponType",
     render: (h, params, vm) => {
       const { row } = params;
@@ -1100,6 +1102,7 @@ const dataColumns = [
   },
   {
     title: "优惠/折扣额度",
+    align: "center",
     key: "couponFee",
     width: 120,
     render(h, params) {
@@ -1113,6 +1116,7 @@ const dataColumns = [
   },
   {
     title: "最小购买金额",
+    align: "center",
     key: "minBuyFee",
     width: 120,
     render(h, params) {
@@ -1121,6 +1125,7 @@ const dataColumns = [
   },
   {
     title: "优惠券状态",
+    align: "center",
     key: "couponStatus",
     width: 100,
     render: (h, params, vm) => {
@@ -1147,6 +1152,7 @@ const dataColumns = [
   },
   {
     title: "券使用范围",
+    align: "center",
     key: "couponScope",
     width: 100,
     render: (h, params, vm) => {
@@ -1179,6 +1185,7 @@ const dataColumns = [
   },
   {
     title: "用户范围",
+    align: "center",
     key: "userScope",
     render: (h, params, vm) => {
       const { row } = params;
@@ -1193,6 +1200,7 @@ const dataColumns = [
   },
   {
     title: "券使用限制",
+    align: "center",
     key: "useLimitType",
     width: 110,
     render: (h, params, vm) => {
@@ -1212,11 +1220,13 @@ const dataColumns = [
   },
   {
     title: "已兑换统计",
+    align: "center",
     key: "receiveCount",
     width: 120
   },
   {
     title: "生效时间",
+    align: "center",
     key: "effectiveStartTime",
     width: 160,
     render: (h, params, vm) => {
@@ -1237,6 +1247,7 @@ const dataColumns = [
   },
   {
     title: "失效时间",
+    align: "center",
     key: "effectiveEndTime",
     width: 160,
     render: (h, params, vm) => {
@@ -1265,11 +1276,13 @@ const dataColumns = [
   },
   {
     title: "创建时间",
+    align: "center",
     key: "createTime",
     width: 160
   },
   {
     title: "操作",
+    align: "center",
     width: 180,
     key: "handle",
     options: ["couponStatus", "view", "edit"]
@@ -1285,11 +1298,13 @@ const templateColumns = [
   {
     title: "优惠券名称",
     key: "couponName",
+    align: "center",
     minWidth: 80
   },
   {
     title: "优惠券类型",
     key: "couponType",
+    align: "center",
     minWidth: 80,
     render: (h, params, vm) => {
       const { row } = params;
@@ -1339,6 +1354,7 @@ const templateColumns = [
   // },
   {
     title: "优惠/折扣金额",
+    align: "center",
     key: "couponFee",
     minWidth: 80,
     render(h, params) {
@@ -1352,6 +1368,7 @@ const templateColumns = [
   },
   {
     title: "最小购买金额",
+    align: "center",
     key: "minBuyFee",
     minWidth: 80,
     render(h, params) {
@@ -1361,6 +1378,7 @@ const templateColumns = [
   {
     title: "优惠券状态",
     key: "couponStatus",
+    align: "center",
     minWidth: 80,
     render: (h, params, vm) => {
       const { row } = params;
@@ -1394,11 +1412,13 @@ const hdTemplateColumns = [
   },
   {
     title: "优惠券名称",
+    align: "center",
     key: "couponName",
     minWidth: 80
   },
   {
     title: "优惠券类型",
+    align: "center",
     key: "couponType",
     minWidth: 80,
     render: (h, params, vm) => {
@@ -1427,6 +1447,7 @@ const hdTemplateColumns = [
   },
   {
     title: "券使用限制",
+    align: "center",
     key: "useLimitType",
     minWidth: 80,
     render: (h, params, vm) => {
@@ -1453,6 +1474,7 @@ const hdTemplateColumns = [
   //HdDiscount版本
   {
     title: "优惠/折扣额度",
+    align: "center",
     key: "faceValue",
     minWidth: 80,
     render(h, params) {
@@ -1468,6 +1490,7 @@ const hdTemplateColumns = [
   },
   {
     title: "最小购买金额",
+    align: "center",
     key: "useRule",
     minWidth: 80,
     render(h, params, vm) {
@@ -1481,11 +1504,13 @@ const hdTemplateColumns = [
   {
     title: "生效时间",
     key: "beginDate",
+    align: "center",
     minWidth: 50
   },
   {
     title: "失效时间",
     key: "endDate",
+    align: "center",
     minWidth: 50
   }
   // {

@@ -582,21 +582,25 @@ export default {
         // },
         {
           title: "活动标题",
+          align: "center",
           key: "name",
           minWidth: 50
         },
         {
           title: "活动开启时间",
+          align: "center",
           key: "startTime",
           width: 110
         },
         {
           title: "活动结束时间",
+          align: "center",
           key: "endTime",
           width: 110
         },
         {
           title: "活动状态",
+          align: "center",
           key: "status",
           render: (h, params, vm) => {
             const { row } = params;
@@ -629,11 +633,13 @@ export default {
         },
         {
           title: "分享标题",
+          align: "center",
           key: "shareName",
           minWidth: 60
         },
         {
           title: "分享图片",
+          align: "center",
           key: "shareImageUrl",
           render: (h, params, vm) => {
             const { row } = params;
@@ -644,38 +650,46 @@ export default {
         },
         {
           title: "红包个数",
+          align: "center",
           key: "rewardCount"
         },
         {
           title: "最大红包开始位置",
+          align: "center",
           key: "rewardPositionStart"
         },
         {
           title: "最大红包结束位置",
+          align: "center",
           key: "rewardPositionEnd"
         },
         {
           title: "红包有效时间",
+          align: "center",
           key: "rewardEffectiveTime"
         },
         {
           title: "活动规则描述",
+          align: "center",
           key: "activityRuleDesc",
           tooltip: true,
           minWidth: 40
         },
         {
           title: "创建人",
+          align: "center",
           key: "userName",
           minWidth: 30
         },
         {
           title: "创建时间",
+          align: "center",
           key: "createTime",
           width: 110
         },
         {
           title: "操作",
+          align: "center",
           minWidth: 90,
           key: "handle",
           options: ["view", "edit", "delete", "settings"]

@@ -248,24 +248,23 @@
               </i-col>
             </Row>
             <Row>
-              
-                <i-col span="6">
-                  <FormItem label="用户范围:" prop="memberLimitType">
-                    <Select
-                      v-model="addRelationDetail.memberLimitType"
-                      placeholder="用户范围"
-                      style="padding-right: 5px;width: 100px"
-                    >
-                      <Option
-                        v-for="(item,index) in memberLimitEnum"
-                        :value="item.value"
-                        :key="index"
-                        class="ptb2-5"
-                      >{{ item.label }}</Option>
-                    </Select>
-                  </FormItem>
-                </i-col>
-          
+              <i-col span="6">
+                <FormItem label="用户范围:" prop="memberLimitType">
+                  <Select
+                    v-model="addRelationDetail.memberLimitType"
+                    placeholder="用户范围"
+                    style="padding-right: 5px;width: 100px"
+                  >
+                    <Option
+                      v-for="(item,index) in memberLimitEnum"
+                      :value="item.value"
+                      :key="index"
+                      class="ptb2-5"
+                    >{{ item.label }}</Option>
+                  </Select>
+                </FormItem>
+              </i-col>
+
               <i-col span="6">
                 <FormItem label="每人限兑:" prop="receiveLimit">
                   <InputNumber :min="0" v-model="addRelationDetail.receiveLimit" label="限兑数量"></InputNumber>
@@ -528,22 +527,26 @@ const dataColumns = [
   },
   {
     title: "商品条码",
+    align: "center",
     key: "barcode",
     minWidth: 80
   },
   {
     title: "商品名称",
+    align: "center",
     key: "productName",
     minWidth: 80
   },
   {
     title: "商品规格",
+    align: "center",
     key: "standardQty",
     minWidth: 80
   },
   {
     title: "商品状态",
     key: "status",
+    align: "center",
     minWidth: 30,
     render: (h, params, vm) => {
       const { row } = params;
@@ -566,6 +569,7 @@ const dataColumns = [
   },
   {
     title: "用户范围",
+    align: "center",
     key: "memberLimitType",
     render: (h, params, vm) => {
       const { row } = params;
@@ -580,11 +584,13 @@ const dataColumns = [
   },
   {
     title: "创建时间",
+    align: "center",
     key: "createTime",
     minWidth: 80
   },
   {
     title: "操作",
+    align: "center",
     minWidth: 80,
     key: "handle",
     options: ["proStatus", "edit", "delete"]
@@ -601,36 +607,43 @@ const proStandardColumns = [
   },
   {
     title: "规格ID",
+    align: "center",
     key: "id",
     minWidth: 80
   },
   {
     title: "商品条码",
     key: "barcode",
+    align: "center",
     minWidth: 80
   },
   {
     title: "商品编号",
+    align: "center",
     key: "productCode",
     minWidth: 120
   },
   {
     title: "商品名称",
+    align: "center",
     key: "productName",
     minWidth: 100
   },
   {
     title: "商品规格",
+    align: "center",
     key: "specification",
     minWidth: 100
   },
   {
     title: "商品单位",
+    align: "center",
     minWidth: 100,
     key: "productUnit"
   },
   {
     title: "商品原价",
+    align: "center",
     minWidth: 120,
     key: "price",
     render(h, params, vm) {
@@ -641,6 +654,7 @@ const proStandardColumns = [
   {
     title: "售卖价格",
     minWidth: 120,
+    align: "center",
     key: "salePrice",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.salePrice);
@@ -650,6 +664,7 @@ const proStandardColumns = [
   {
     title: "商品状态",
     minWidth: 100,
+    align: "center",
     key: "shelvesStatus",
     render: (h, params, vm) => {
       const { row } = params;

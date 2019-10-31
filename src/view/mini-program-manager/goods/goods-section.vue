@@ -638,6 +638,7 @@ export default {
         },
         {
           title: "操作",
+          align: "center",
           key: "handle",
           width: 200,
           options: ["view", "exchange", "edit", "delete"]

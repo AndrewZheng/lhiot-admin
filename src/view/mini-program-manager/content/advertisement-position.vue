@@ -346,18 +346,22 @@ export default {
         },
         {
           title: "ID",
+          align: "center",
           key: "id"
         },
         {
           title: "广告位描述",
+          align: "center",
           key: "description"
         },
         {
           title: "广告位英文名",
+          align: "center",
           key: "postionName"
         },
         {
           title: "时间限制",
+          align: "center",
           key: "timeLimited",
           render: (h, params, vm) => {
             const { row } = params;
@@ -406,6 +410,7 @@ export default {
         {
           title: "广告位类型",
           key: "positionType",
+          align: "center",
           render: (h, params, vm) => {
             const { row } = params;
             if (row.positionType === "WORD") {
@@ -440,6 +445,7 @@ export default {
         {
           title: "操作",
           key: "handle",
+          align: "center",
           minWidth: 120,
           options: ["view", "edit", "delete"]
         }

@@ -41,7 +41,7 @@
             >{{ item.description }}</Option>
           </Select>
           <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch">
-            <Icon type="md-search"/>&nbsp;搜索
+            <Icon type="md-search" />&nbsp;搜索
           </Button>
           <Button
             v-waves
@@ -50,13 +50,12 @@
             type="info"
             @click="handleClear"
           >
-            <Icon type="md-refresh"/>&nbsp;清除
+            <Icon type="md-refresh" />&nbsp;清除
           </Button>
         </div>
         <div slot="operations">
           <Button v-waves type="success" class="mr5" @click="addChildren">
-            <Icon type="md-add"/>
-            添加
+            <Icon type="md-add" />添加
           </Button>
           <Poptip
             confirm
@@ -66,8 +65,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>
-              批量删除
+              <Icon type="md-trash" />批量删除
             </Button>
           </Poptip>
         </div>
@@ -118,7 +116,7 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">广告图:</i-col>
               <i-col span="16">
-                <img :src="advertisementDetail.imageUrl" style="width: 100%;height: auto">
+                <img :src="advertisementDetail.imageUrl" style="width: 100%;height: auto" />
               </i-col>
             </Row>
           </i-col>
@@ -228,7 +226,11 @@
           </Row>
           <Row>
             <FormItem label="内容描述:" prop="contentDesc">
-              <Input v-model="advertisementDetail.contentDesc" placeholder="内容描述" style="width: 580px"></Input>
+              <Input
+                v-model="advertisementDetail.contentDesc"
+                placeholder="内容描述"
+                style="width: 580px"
+              ></Input>
             </FormItem>
           </Row>
           <Row>
@@ -260,7 +262,7 @@
                   <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                     <template v-if="item.status === 'finished'">
                       <div>
-                        <img :src="item.url">
+                        <img :src="item.url" />
                         <div class="demo-upload-list-cover">
                           <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                           <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -278,7 +280,7 @@
                     @on-success="handleSuccessMain"
                   >
                     <div slot="content" style="width:58px;height:58px;line-height:58px">
-                        <Icon type="ios-camera" size="20"></Icon>
+                      <Icon type="ios-camera" size="20"></Icon>
                     </div>
                   </IViewUpload>
                 </div>
@@ -347,11 +349,11 @@
                           v-waves
                           slot="append"
                           :loading="searchModalTableLoading"
-                          class="search-btn "
+                          class="search-btn"
                           type="primary"
                           @click="searchAdvertisementRelation"
                         >
-                          <Icon type="md-search"/>&nbsp;搜索
+                          <Icon type="md-search" />&nbsp;搜索
                         </Button>
                       </Input>
                     </i-col>
@@ -407,9 +409,9 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%">
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
-    
+
     <Modal :mask-closable="false" :width="1200" v-model="relationTargetShow" title="关联商品规格">
       <div class="modal-content">
         Tips：点击要选择的行
@@ -444,7 +446,7 @@
                 type="primary"
                 @click="handleRelationSearch"
               >
-                <Icon type="md-search"/>&nbsp;搜索
+                <Icon type="md-search" />&nbsp;搜索
               </Button>
               <Button
                 v-waves
@@ -453,7 +455,7 @@
                 type="info"
                 @click="handleProductClear"
               >
-                <Icon type="md-refresh"/>&nbsp;清除
+                <Icon type="md-refresh" />&nbsp;清除
               </Button>
             </Row>
           </div>
@@ -613,9 +615,7 @@ export default {
         { label: "有效", value: "VALID" },
         { label: "无效", value: "INVALID" }
       ],
-      validityTimeList: [
-        { label: "定时生效", value: "OFF" }
-      ],
+      validityTimeList: [{ label: "定时生效", value: "OFF" }],
       columns: [
         {
           type: "selection",
@@ -626,12 +626,14 @@ export default {
         },
         {
           title: "ID",
+          align: "center",
           key: "id",
           sortable: true,
           minWidth: 70
         },
         {
           title: "链接类型",
+          align: "center",
           minWidth: 100,
           key: "linkType",
           render: (h, params, vm) => {
@@ -649,6 +651,7 @@ export default {
         // },
         {
           title: "图片",
+          align: "center",
           width: 120,
           key: "imageUrl",
           render: (h, params, vm) => {
@@ -659,21 +662,25 @@ export default {
         },
         {
           title: "广告关联",
+          align: "center",
           minWidth: 90,
           key: "advertisementRelation"
         },
         {
           title: "广告名称",
+          align: "center",
           minWidth: 150,
           key: "advertisementName"
         },
         {
           title: "创建时间",
+          align: "center",
           minWidth: 160,
           key: "createTime"
         },
         {
           title: "当前状态",
+          align: "center",
           minWidth: 90,
           key: "status",
           render: (h, params, vm) => {
@@ -704,16 +711,19 @@ export default {
         },
         {
           title: "生效时间",
+          align: "center",
           minWidth: 160,
           key: "validTime"
         },
         {
           title: "失效时间",
+          align: "center",
           minWidth: 160,
           key: "invalidTime"
         },
         {
           title: "广告位置",
+          align: "center",
           minWidth: 145,
           key: "positionId",
           render: (h, params, vm) => {
@@ -730,17 +740,20 @@ export default {
         },
         {
           title: "创建人",
+          align: "center",
           minWidth: 150,
           key: "createUser"
         },
         {
           title: "内容描述",
+          align: "center",
           minWidth: 150,
           key: "contentDesc",
           tooltip: true
         },
         {
           title: "操作",
+          align: "center",
           minWidth: 200,
           key: "handle",
           options: ["customOnSale", "view", "edit", "delete"]
@@ -757,10 +770,12 @@ export default {
     };
   },
   computed: {
-    isTargetLink(){
-      return this.advertisementDetail.linkType === 'EXTERNALLINK' || 
-      this.advertisementDetail.linkType === 'INTERNALLINK' || 
-      this.advertisementDetail.linkType === 'TABLINK'
+    isTargetLink() {
+      return (
+        this.advertisementDetail.linkType === "EXTERNALLINK" ||
+        this.advertisementDetail.linkType === "INTERNALLINK" ||
+        this.advertisementDetail.linkType === "TABLINK"
+      );
     },
     advertisementPositionComputed() {
       const tempObj = this.advertisementList.find(

@@ -66,6 +66,7 @@
               v-model="searchRowData.activityType"
               placeholder="活动类型"
               style="padding-right: 5px;width: 120px"
+              @on-change="handCouponType"
             >
               <Option
                 v-for="(item,index) in activityClassify"
@@ -998,14 +999,17 @@ export default {
         },
         {
           title: "活动编号",
+          align: "center",
           key: "id"
         },
         {
           title: "活动名称",
+          align: "center",
           key: "activityName"
         },
         {
           title: "活动类型",
+          align: "center",
           key: "activityType",
           render: (h, params, vm) => {
             const { row } = params;
@@ -1024,6 +1028,7 @@ export default {
         },
         {
           title: "活动状态",
+          align: "center",
           key: "ifEffective",
           render: (h, params, vm) => {
             const { row } = params;
@@ -1054,22 +1059,27 @@ export default {
         },
         {
           title: "活动开始时间",
+          align: "center",
           key: "beginTime"
         },
         {
           title: "活动结束时间",
+          align: "center",
           key: "endTime"
         },
         {
           title: "创建人",
+          align: "center",
           key: "createUser"
         },
         {
           title: "创建时间",
+          align: "center",
           key: "createTime"
         },
         {
           title: "操作",
+          align: "center",
           minWidth: 80,
           key: "handle",
           options: ["customOnSale", "view", "edit", "delete", "settings"]
@@ -1079,6 +1089,7 @@ export default {
         ...relationTempColumns,
         {
           title: "操作",
+          align: "center",
           minWidth: 80,
           key: "handle",
           options: ["inlineEdit", "delete"]
@@ -1117,6 +1128,11 @@ export default {
       this.$refs.uploadMain.clearFileList();
       this.uploadListMain = [];
       this.couponDetail.storeImage = null;
+    },
+    handCouponType() {
+      this.searchRowData.page = 1;
+      this.searchLoading = true;
+      this.getTableData();
     },
     handleSubmit(name) {
       this.couponDetail.activityType = this.searchRowData.activityType;

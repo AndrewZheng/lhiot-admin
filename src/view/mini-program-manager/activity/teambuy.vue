@@ -1057,12 +1057,14 @@ export default {
           title: "活动名称",
           key: "activityName",
           sortable: true,
+          align: "center",
           fixed: "left",
           minWidth: 150,
           tooltip: true
         },
         {
           title: "活动状态",
+          align: "center",
           key: "status",
           minWidth: 90,
           render: (h, params) => {
@@ -1101,16 +1103,19 @@ export default {
         },
         {
           title: "有效期起",
+          align: "center",
           minWidth: 160,
           key: "startTime"
         },
         {
           title: "有效期止",
+          align: "center",
           minWidth: 160,
           key: "endTime"
         },
         {
           title: "商品库存",
+          align: "center",
           minWidth: 100,
           key: "productNum"
         },
@@ -1118,12 +1123,14 @@ export default {
           title: "活动价",
           minWidth: 100,
           key: "activityPrice",
+          align: "center",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.activityPrice)}</div>;
           }
         },
         {
           title: "团长优惠",
+          align: "center",
           minWidth: 100,
           key: "tourDiscount",
           render(h, params) {
@@ -1132,6 +1139,7 @@ export default {
         },
         {
           title: "成团有效时长",
+          align: "center",
           minWidth: 110,
           key: "validSeconds",
           render(h, params) {
@@ -1140,22 +1148,26 @@ export default {
         },
         {
           title: "提货截至时间",
+          align: "center",
           minWidth: 160,
           key: "deliveryEndTime"
         },
         {
           title: "规格描述",
+          align: "center",
           minWidth: 120,
           key: "standardDesc",
           tooltip: true
         },
         {
           title: "限购次数",
+          align: "center",
           minWidth: 90,
           key: "triesLimit"
         },
         {
           title: "是否模拟成团",
+          align: "center",
           minWidth: 120,
           key: "robot",
           render: (h, params) => {
@@ -1187,6 +1199,7 @@ export default {
         {
           title: "操作",
           minWidth: 120,
+          align: "center",
           key: "handle",
           options: ["view", "edit"]
         }
@@ -1201,36 +1214,43 @@ export default {
         // },
         {
           title: "规格ID",
+          align: "center",
           key: "id",
           minWidth: 80
         },
         {
           title: "商品条码",
           key: "barcode",
+          align: "center",
           minWidth: 80
         },
         {
           title: "商品编号",
           key: "productCode",
+          align: "center",
           minWidth: 130
         },
         {
           title: "商品名称",
+          align: "center",
           key: "productName",
           minWidth: 150
         },
         {
           title: "商品规格",
+          align: "center",
           key: "specification",
           minWidth: 100
         },
         {
           title: "商品单位",
+          align: "center",
           minWidth: 100,
           key: "productUnit"
         },
         {
           title: "商品原价",
+          align: "center",
           minWidth: 120,
           key: "price",
           render(h, params, vm) {
@@ -1240,6 +1260,7 @@ export default {
         },
         {
           title: "优惠价格",
+          align: "center",
           minWidth: 120,
           key: "salePrice",
           render(h, params, vm) {
@@ -1249,6 +1270,7 @@ export default {
         },
         {
           title: "商品状态",
+          align: "center",
           minWidth: 100,
           key: "shelvesStatus",
           render: (h, params, vm) => {
@@ -1281,6 +1303,7 @@ export default {
         },
         {
           title: "商品排序",
+          align: "center",
           minWidth: 100,
           key: "rank"
         }
