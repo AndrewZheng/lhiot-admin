@@ -784,6 +784,12 @@ export const compareData = (date1, date2) => {
   return oDate1.getTime() > oDate2.getTime();
 };
 
+export const compareCouponData = (date) => {
+  let time1 = new Date(date).getTime();
+  let time2 = new Date().getTime();
+  return time1 > time2;
+};
+
 /**
  * 计算分转元 保留两位小数
  */

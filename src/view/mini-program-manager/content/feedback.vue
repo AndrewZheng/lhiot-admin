@@ -22,16 +22,14 @@
             class="search-input mr5"
             style="width: 150px"
             clearable
-          >
-          </Input>
+          ></Input>
           <Input
             v-model="searchRowData.content"
             placeholder="内容"
             class="search-input mr5"
             style="width: 150px"
             clearable
-          >
-          </Input>
+          ></Input>
           <Select
             v-model="searchRowData.status"
             class="search-col"
@@ -46,11 +44,23 @@
               class="ml15 mt10"
             >{{ item.label }}</Option>
           </Select>
-          <Button v-waves :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
-            <Icon type="md-search"/>&nbsp;搜索
+          <Button
+            v-waves
+            :loading="searchLoading"
+            class="search-btn mr5"
+            type="primary"
+            @click="handleSearch"
+          >
+            <Icon type="md-search" />&nbsp;搜索
           </Button>
-          <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-            <Icon type="md-refresh"/>&nbsp;清除
+          <Button
+            v-waves
+            :loading="clearSearchLoading"
+            class="search-btn"
+            type="info"
+            @click="handleClear"
+          >
+            <Icon type="md-refresh" />&nbsp;清除
           </Button>
         </div>
       </tables>
@@ -168,39 +178,39 @@
       <!--
       <div slot="footer">
         <Button type="primary" @click="handleClose">关闭</Button>
-      </div> -->
+      </div>-->
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import _ from 'lodash';
-import { getFeedbackPages, editFeedback } from '@/api/mini-program';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import { appTypeConvert } from '@/libs/converStatus';
+import Tables from "_c/tables";
+import _ from "lodash";
+import { getFeedbackPages, editFeedback } from "@/api/mini-program";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import { appTypeConvert } from "@/libs/converStatus";
 
 const feedbackDetail = {
   id: 0,
-  title: '',
-  content: '',
-  backMessage: '',
+  title: "",
+  content: "",
+  backMessage: "",
   createTime: null,
   feedbackTime: null,
-  userId: '',
+  userId: "",
   applicationType: null,
-  backEditor: '',
+  backEditor: "",
   status: null
 };
 
 const roleRowData = {
   applicationType: null,
-  content: '',
+  content: "",
   page: 1,
   rows: 10,
   status: null,
-  title: ''
+  title: ""
 };
 
 export default {
@@ -211,87 +221,109 @@ export default {
   data() {
     return {
       ruleInline: {
-        backMessage: [{ required: true, message: '回复内容不能为空' }]
+        backMessage: [{ required: true, message: "回复内容不能为空" }]
       },
       columns: [
         {
-          title: 'ID',
-          key: 'id',
+          title: "ID",
+          align: "center",
+          key: "id",
           sortable: true,
           minWidth: 50
         },
         {
-          title: '标题',
+          title: "标题",
+          align: "center",
           width: 150,
-          key: 'title',
+          key: "title",
           tooltip: true
         },
         {
-          title: '内容',
+          title: "内容",
+          align: "center",
           width: 170,
-          key: 'content',
+          key: "content",
           tooltip: true
         },
         {
-          title: '反馈用户',
+          title: "反馈用户",
+          align: "center",
           width: 185,
-          key: 'userId'
+          key: "userId"
         },
         {
-          title: '创建时间',
+          title: "创建时间",
+          align: "center",
           width: 185,
-          key: 'createTime',
+          key: "createTime",
           sortable: true
         },
         {
-          title: '反馈状态',
+          title: "反馈状态",
+          align: "center",
           width: 120,
-          key: 'status',
+          key: "status",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.status === 'UNREPLY') {
-              return <tag color='warning'>{'未回复'}</tag>;
-            } else if (row.status === 'REPLY') {
-              return <tag color='primary'>{'已回复'}</tag>;
-            } else if (row.status === 'READED') {
-              return <tag color='success'>{'已读'}</tag>;
+            if (row.status === "UNREPLY") {
+              return <tag color="warning">{"未回复"}</tag>;
+            } else if (row.status === "REPLY") {
+              return <tag color="primary">{"已回复"}</tag>;
+            } else if (row.status === "READED") {
+              return <tag color="success">{"已读"}</tag>;
             } else {
               return row.status;
             }
           }
         },
         {
-          title: '回复人',
+          title: "回复人",
+          align: "center",
           width: 100,
-          key: 'backEditor',
+          key: "backEditor",
           tooltip: true
         },
         {
-          title: '回复内容',
+          title: "回复内容",
+          align: "center",
           width: 170,
-          key: 'backMessage',
+          key: "backMessage",
           tooltip: true
         },
         {
-          title: '应用类型',
+          title: "应用类型",
+          align: "center",
           width: 160,
-          key: 'applicationType',
+          key: "applicationType",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.applicationType === 'WXSMALL_SHOP') {
-              return <div><tag color='green'>{appTypeConvert(row.applicationType).label}</tag></div>;
-            } else if (row.applicationType === 'S_MALL') {
-              return <div><tag color='gold'>{appTypeConvert(row.applicationType).label}</tag></div>;
+            if (row.applicationType === "WXSMALL_SHOP") {
+              return (
+                <div>
+                  <tag color="green">
+                    {appTypeConvert(row.applicationType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.applicationType === "S_MALL") {
+              return (
+                <div>
+                  <tag color="gold">
+                    {appTypeConvert(row.applicationType).label}
+                  </tag>
+                </div>
+              );
             } else {
               return <div>{row.applicationType}</div>;
             }
           }
         },
         {
-          title: '操作',
+          title: "操作",
+          align: "center",
           minWidth: 150,
-          key: 'handle',
-          options: ['view', 'feedback']
+          key: "handle",
+          options: ["view", "feedback"]
         }
       ],
       feedbackDetail: _.cloneDeep(feedbackDetail),
@@ -300,24 +332,22 @@ export default {
       // 反馈状态（UNREPLY-未回复，REPLY-已回复且用户未读，READED-已读）
       feedbackStatus: [
         {
-          label: '未回复',
-          value: 'UNREPLY'
+          label: "未回复",
+          value: "UNREPLY"
         },
         {
-          label: '已回复',
-          value: 'REPLY'
+          label: "已回复",
+          value: "REPLY"
         },
         {
-          label: '已读',
-          value: 'READED'
-        }]
+          label: "已读",
+          value: "READED"
+        }
+      ]
     };
   },
-  computed: {
-
-  },
-  mounted() {
-  },
+  computed: {},
+  mounted() {},
   created() {
     this.getTableData();
   },
@@ -336,13 +366,15 @@ export default {
       editFeedback({
         id: this.feedbackDetail.id,
         backMessage: this.feedbackDetail.backMessage
-      }).then(res => {
-        this.$Message.success('回复成功!');
-        this.getTableData();
-      }).finally(res => {
-        this.modalView = false;
-        this.feedbackLoading = false;
-      });
+      })
+        .then(res => {
+          this.$Message.success("回复成功!");
+          this.getTableData();
+        })
+        .finally(res => {
+          this.modalView = false;
+          this.feedbackLoading = false;
+        });
     },
     handleView(params) {
       this.tempModalType = this.modalType.view;
@@ -350,32 +382,34 @@ export default {
       this.modalView = true;
     },
     getTableData() {
-      getFeedbackPages(this.searchRowData).then(res => {
-        this.tableData = res.rows;
-        this.total = res.total;
-        this.loading = false;
-        this.searchLoading = false;
-        this.clearSearchLoading = false;
-      }).catch(error => {
-        console.log(error);
-        this.loading = false;
-        this.searchLoading = false;
-        this.clearSearchLoading = false;
-      });
+      getFeedbackPages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.rows;
+          this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-  .img {
-    width: 150px;
-    height: auto !important;
-  }
+.img {
+  width: 150px;
+  height: auto !important;
+}
 
-  .add-image {
-    line-height: 48px;
-    vertical-align: text-bottom;
-    margin-right: 10px;
-  }
+.add-image {
+  line-height: 48px;
+  vertical-align: text-bottom;
+  margin-right: 10px;
+}
 </style>

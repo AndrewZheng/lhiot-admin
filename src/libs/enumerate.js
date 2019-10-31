@@ -871,10 +871,6 @@ export const userScopeEnum = [
     label: '付费会员',
     value: 'SVIP'
   },
-  {
-    label: '第三方用户',
-    value: 'THIRD'
-  }
 ];
 
 export const memberLimitEnum = [

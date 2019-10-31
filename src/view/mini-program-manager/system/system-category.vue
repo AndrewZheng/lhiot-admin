@@ -178,18 +178,22 @@ export default {
         },
         {
           title: "ID",
+          align: "center",
           key: "id"
         },
         {
           title: "分类code",
+          align: "center",
           key: "categoriesCode"
         },
         {
           title: "分类名称",
+          align: "center",
           key: "categoriesName"
         },
         {
           title: "操作",
+          align: "center",
           key: "handle",
           options: ["view", "edit", "delete"]
         }

@@ -27,7 +27,7 @@
             class="mr5"
             @click="addSystemSetting"
           >
-            <Icon type="md-add"/>添加
+            <Icon type="md-add" />添加
           </Button>
           <!-- <Poptip
             confirm
@@ -419,10 +419,12 @@ export default {
         },
         {
           title: "键",
+          align: "center",
           key: "indexName"
         },
         {
           title: "左侧主标题",
+          align: "center",
           key: "indexValue",
           render: (h, params) => {
             const { row } = params;
@@ -431,6 +433,7 @@ export default {
         },
         {
           title: "左侧副标题",
+          align: "center",
           key: "indexValue",
           render: (h, params) => {
             const { row } = params;
@@ -439,6 +442,7 @@ export default {
         },
         {
           title: "右侧主标题",
+          align: "center",
           key: "indexValue",
           render: (h, params) => {
             const { row } = params;
@@ -447,6 +451,7 @@ export default {
         },
         {
           title: "右侧副标题",
+          align: "center",
           key: "indexValue",
           render: (h, params) => {
             const { row } = params;
@@ -455,10 +460,12 @@ export default {
         },
         {
           title: "描述",
+          align: "center",
           key: "description"
         },
         {
           title: "操作",
+          align: "center",
           minWidth: 80,
           key: "handle",
           options: ["view", "edit", "delete"]

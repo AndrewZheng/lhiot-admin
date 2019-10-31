@@ -561,16 +561,19 @@ export default {
         {
           title: "门店编码",
           key: "storeCode",
+          align: "center",
           sortable: true,
           minWidth: 150
         },
         {
           title: "门店名称",
+          align: "center",
           key: "storeName",
           minWidth: 150
         },
         {
           title: "所属区域",
+          align: "center",
           minWidth: 150,
           key: "storeArea",
           render: (h, params, vm) => {
@@ -587,6 +590,7 @@ export default {
         },
         {
           title: "区域旗舰店",
+          align: "center",
           minWidth: 150,
           key: "storeFlagship",
           render: (h, params, vm) => {
@@ -602,6 +606,7 @@ export default {
         },
         {
           title: "门店状态",
+          align: "center",
           minWidth: 150,
           key: "storeStatus",
           render: (h, params, vm) => {
@@ -632,21 +637,25 @@ export default {
         },
         {
           title: "开始时间",
+          align: "center",
           minWidth: 150,
           key: "beginTime"
         },
         {
           title: "结束时间",
+          align: "center",
           minWidth: 150,
           key: "endTime"
         },
         {
           title: "联系方式",
+          align: "center",
           minWidth: 150,
           key: "storePhone"
         },
         {
           title: "门店类型",
+          align: "center",
           minWidth: 150,
           render: (h, params) => {
             const { row } = params;
@@ -672,6 +681,7 @@ export default {
         },
         {
           title: "操作",
+          align: "center",
           minWidth: 230,
           key: "handle",
           options: ["onStoreStatus", "view", "edit", "delete"]

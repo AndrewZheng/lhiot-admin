@@ -421,7 +421,7 @@ const couponTemplateDetail = {
   createUser: "",
   createTime: null,
   couponRules: "",
-  couponScope: null,
+  couponScope: null
 };
 
 const roleRowData = {
@@ -429,7 +429,7 @@ const roleRowData = {
   couponType: null,
   couponStatus: null,
   page: 1,
-  rows: 10,
+  rows: 10
 };
 
 export default {
@@ -475,15 +475,18 @@ export default {
         },
         {
           title: "模板ID",
+          align: "center",
           key: "id",
           maxWidth: 80
         },
         {
           title: "优惠券名称",
+          align: "center",
           key: "couponName"
         },
         {
           title: "优惠券类型",
+          align: "center",
           key: "couponType",
           render: (h, params, vm) => {
             const { row } = params;
@@ -525,6 +528,7 @@ export default {
         },
         {
           title: "优惠/折扣额度",
+          align: "center",
           key: "couponFee",
           minWidth: 60,
           render(h, params) {
@@ -542,6 +546,7 @@ export default {
         },
         {
           title: "最小购买金额",
+          align: "center",
           key: "minBuyFee",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.minBuyFee)}</div>;
@@ -549,6 +554,7 @@ export default {
         },
         {
           title: "优惠券状态",
+          align: "center",
           key: "couponStatus",
           render: (h, params, vm) => {
             const { row } = params;
@@ -574,6 +580,7 @@ export default {
         },
         {
           title: "优惠券图片",
+          align: "center",
           key: "couponImage",
           render: (h, params, vm) => {
             const { row } = params;
@@ -583,6 +590,7 @@ export default {
         },
         {
           title: "使用范围",
+          align: "center",
           key: "couponScope",
           render: (h, params, vm) => {
             const { row } = params;
@@ -621,15 +629,18 @@ export default {
         }, */
         {
           title: "创建人",
+          align: "center",
           key: "createUser"
         },
         {
           title: "创建时间",
+          align: "center",
           key: "createTime",
           minWidth: 60
         },
         {
           title: "操作",
+          align: "center",
           minWidth: 80,
           key: "handle",
           options: ["couponStatus", "view", "edit", "delete"]

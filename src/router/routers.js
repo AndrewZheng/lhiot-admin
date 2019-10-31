@@ -852,7 +852,7 @@ export const asyncRouterMap = [
         name: 'small-hand-coupon',
         meta: {
           icon: 'md-hand',
-          title: '手动发券管理'
+          title: '统一发券管理'
         },
         component: () => import('@/view/mini-program-manager/activity/hand-coupon.vue')
       },       

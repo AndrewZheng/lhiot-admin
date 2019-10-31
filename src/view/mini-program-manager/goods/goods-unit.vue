@@ -32,7 +32,7 @@
             type="primary"
             @click="handleSearch"
           >
-            <Icon type="md-search"/>&nbsp;搜索
+            <Icon type="md-search" />&nbsp;搜索
           </Button>
           <Button
             v-waves
@@ -41,13 +41,12 @@
             type="info"
             @click="handleClear"
           >
-            <Icon type="md-refresh"/>&nbsp;清除
+            <Icon type="md-refresh" />&nbsp;清除
           </Button>
         </div>
         <div slot="operations">
           <Button v-waves type="success" class="mr5" @click="handleAdd">
-            <Icon type="md-add"/>
-            添加
+            <Icon type="md-add" />添加
           </Button>
           <Poptip
             confirm
@@ -57,8 +56,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>
-              批量删除
+              <Icon type="md-trash" />批量删除
             </Button>
           </Poptip>
         </div>
@@ -77,7 +75,7 @@
       </div>
     </Card>
 
-    <Modal v-model="modalEdit" :mask-closable="false" >
+    <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
         <span>{{ unitDetail.id == ''?'创建商品单位':'编辑商品单位' }}</span>
       </p>
@@ -117,27 +115,30 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import _ from 'lodash';
-import { getProductUnitsPages, editProductUnits, delProductUnits, createProductUnits } from '@/api/mini-program';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
-
+import Tables from "_c/tables";
+import _ from "lodash";
 import {
-  splitConvert
-} from '@/libs/converStatus';
+  getProductUnitsPages,
+  editProductUnits,
+  delProductUnits,
+  createProductUnits
+} from "@/api/mini-program";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import deleteMixin from "@/mixins/deleteMixin.js";
+
+import { splitConvert } from "@/libs/converStatus";
 
 const unitDetail = {
-  id: '',
+  id: "",
   splitStatus: null,
-  unitName: ''
+  unitName: ""
 };
 
 const roleRowData = {
-  id: '',
+  id: "",
   splitStatus: null,
-  unitName: '',
+  unitName: "",
   page: 1,
   rows: 10
 };
@@ -149,48 +150,52 @@ export default {
   data() {
     return {
       ruleInline: {
-        splitStatus: { required: true, message: '请填写是否可拆分' },
-        unitName: { required: true, message: '请填写单位名称' }
+        splitStatus: { required: true, message: "请填写是否可拆分" },
+        unitName: { required: true, message: "请填写单位名称" }
       },
       columns: [
         {
-          type: 'selection',
-          key: '',
+          type: "selection",
+          key: "",
           width: 60,
-          align: 'center'
+          align: "center"
         },
         {
-          title: '编号',
-          key: 'id'
+          title: "编号",
+          align: "center",
+          key: "id"
         },
         {
-          title: '单位名称',
-          key: 'unitName'
+          title: "单位名称",
+          align: "center",
+          key: "unitName"
         },
         {
-          title: '是否可拆分',
-          key: 'splitStatus',
+          title: "是否可拆分",
+          align: "center",
+          key: "splitStatus",
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{splitConvert(row.splitStatus).label}</div>;
           }
         },
         {
-          title: '操作',
-          key: 'handle',
-          options: ['edit', 'delete']
+          title: "操作",
+          align: "center",
+          key: "handle",
+          options: ["edit", "delete"]
         }
       ],
       modalViewLoading: false,
       clearSearchLoading: false,
       splitStatus: [
         {
-          label: '是',
-          value: 'SEPARABLE'
+          label: "是",
+          value: "SEPARABLE"
         },
         {
-          label: '否',
-          value: 'NO_SEPARABLE'
+          label: "否",
+          value: "NO_SEPARABLE"
         }
       ],
       searchRowData: this._.cloneDeep(roleRowData),
@@ -214,7 +219,7 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error('请完善商品单位信息!');
+          this.$Message.error("请完善商品单位信息!");
         }
       });
     },
@@ -228,13 +233,14 @@ export default {
       });
     },
     createTableRow() {
-      createProductUnits(this.unitDetail).then(res => {
-      }).finally(res => {
-        this.modalEditLoading = false;
-        this.modalEdit = false;
-        this.getTableData();
-        this.resetFields();
-      });
+      createProductUnits(this.unitDetail)
+        .then(res => {})
+        .finally(res => {
+          this.modalEditLoading = false;
+          this.modalEdit = false;
+          this.getTableData();
+          this.resetFields();
+        });
     },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
@@ -265,18 +271,23 @@ export default {
       this.loading = true;
       delProductUnits({
         ids
-      }).then(res => {
-        const totalPage = Math.ceil(this.total / this.pageSize);
-        if (this.tableData.length === this.tableDataSelected.length && this.page === totalPage && this.page !== 1) {
-          this.page -= 1;
-        }
-        this.tableDataSelected = [];
-        this.getTableData();
-        this.loading = false;
-      }
-      ).catch(() => {
-        this.loading = false;
-      });
+      })
+        .then(res => {
+          const totalPage = Math.ceil(this.total / this.pageSize);
+          if (
+            this.tableData.length === this.tableDataSelected.length &&
+            this.page === totalPage &&
+            this.page !== 1
+          ) {
+            this.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.getTableData();
+          this.loading = false;
+        })
+        .catch(() => {
+          this.loading = false;
+        });
     }
   }
 };

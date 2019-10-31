@@ -536,10 +536,12 @@ const dataColumns = [
   {
     type: "selection",
     width: 60,
+    align: "center",
     align: "center"
   },
   {
     title: "套餐类型",
+    align: "center",
     key: "packageType",
     render: (h, params, vm) => {
       const { row } = params;
@@ -574,10 +576,12 @@ const dataColumns = [
   },
   {
     title: "套餐名称",
+    align: "center",
     key: "packageName"
   },
   {
     title: "套餐周期",
+    align: "center",
     key: "packageCycle",
     render(h, params, vm) {
       const amount = addDay(params.row.packageCycle);
@@ -587,6 +591,7 @@ const dataColumns = [
   {
     title: "套餐金额",
     key: "packageAmount",
+    align: "center",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.packageAmount);
       return <div>{amount}</div>;
@@ -594,6 +599,7 @@ const dataColumns = [
   },
   {
     title: "新用户优惠价",
+    align: "center",
     key: "discountAmount",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.discountAmount);
@@ -603,6 +609,7 @@ const dataColumns = [
   },
   {
     title: "续费金额",
+    align: "center",
     key: "renewalAmount",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.renewalAmount);
@@ -611,6 +618,7 @@ const dataColumns = [
   },
   {
     title: "套餐描述",
+    align: "center",
     key: "packageDesc"
   },
   // {
@@ -636,6 +644,7 @@ const dataColumns = [
   // },
   {
     title: "活动状态",
+    align: "center",
     key: "state",
     render: (h, params, vm) => {
       const { row } = params;
@@ -657,21 +666,25 @@ const dataColumns = [
   },
   {
     title: "创建时间",
+    align: "center",
     key: "createTime",
     minWidth: 70
   },
   {
     title: "修改时间",
+    align: "center",
     key: "updateTime",
     minWidth: 70
   },
   {
     title: "创建人",
+    align: "center",
     minWidth: 30,
     key: "createUser"
   },
   {
     title: "操作",
+    align: "center",
     minWidth: 80,
     key: "handle",
     options: ["onSale", "view", "edit", "delete"]

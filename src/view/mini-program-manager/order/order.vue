@@ -172,7 +172,12 @@
           >
             <Icon type="md-search" />&nbsp;用券数据
           </Button>
-          <Button :loading="downloadLoading" class="search-btn mt5" type="warning" @click="monthOrder">
+          <Button
+            :loading="downloadLoading"
+            class="search-btn mt5"
+            type="warning"
+            @click="monthOrder"
+          >
             <Icon type="md-download" />&nbsp;跨月订单导出
           </Button>
           <!-- <Poptip
@@ -791,10 +796,12 @@ export default {
           key: "code",
           sortable: true,
           width: 170,
-          fixed: "left"
+          fixed: "left",
+          align: "center"
         },
         {
           title: "应用类型",
+          align: "center",
           key: "apply",
           width: 120,
           render: (h, params, vm) => {
@@ -818,6 +825,7 @@ export default {
         },
         {
           title: "支付类型",
+          align: "center",
           width: 120,
           key: "payType",
           render: (h, params, vm) => {
@@ -841,21 +849,25 @@ export default {
         },
         {
           title: "创建时间",
+          align: "center",
           width: 160,
           key: "createAt"
         },
         {
           title: "订单用户",
+          align: "center",
           width: 120,
           key: "receiveUser"
         },
         {
           title: "手机号码",
+          align: "center",
           width: 120,
           key: "contactPhone"
         },
         {
           title: "下单门店",
+          align: "center",
           width: 120,
           key: "storeId",
           render: (h, params) => {
@@ -871,6 +883,7 @@ export default {
         },
         {
           title: "订单总价",
+          align: "center",
           width: 120,
           key: "totalAmount",
           render(h, params, vm) {
@@ -880,6 +893,7 @@ export default {
         },
         {
           title: "优惠金额",
+          align: "center",
           width: 120,
           key: "couponAmount",
           render(h, params, vm) {
@@ -889,6 +903,7 @@ export default {
         },
         {
           title: "运费",
+          align: "center",
           width: 120,
           key: "deliveryAmount",
           render(h, params, vm) {
@@ -898,6 +913,7 @@ export default {
         },
         {
           title: "应付金额",
+          align: "center",
           width: 120,
           key: "amountPayable",
           render(h, params, vm) {
@@ -905,11 +921,7 @@ export default {
             return <div>{amount}</div>;
           }
         },
-        {
-          title: "商品名称",
-          width: 150,
-          key: "productNames"
-        },
+        { align: "center", title: "商品名称", width: 150, key: "productNames" },
         {
           title: "活动名称",
           width: 120,
@@ -917,11 +929,13 @@ export default {
         },
         {
           title: "券名称",
+          align: "center",
           width: 120,
           key: "couponName"
         },
         {
           title: "提货类型",
+          align: "center",
           width: 120,
           key: "receivingWay",
           render: (h, params, vm) => {
@@ -949,6 +963,7 @@ export default {
         },
         {
           title: "是否退款",
+          align: "center",
           width: 120,
           key: "isAllRefund",
           render: (h, params, vm) => {
@@ -977,6 +992,7 @@ export default {
         },
         {
           title: "退款金额",
+          align: "center",
           width: 100,
           key: "refundFee",
           render(h, params, vm) {
@@ -986,6 +1002,7 @@ export default {
         },
         {
           title: "订单状态",
+          align: "center",
           width: 120,
           key: "orderStatus",
           render: (h, params, vm) => {
@@ -1045,6 +1062,7 @@ export default {
         },
         {
           title: "海鼎状态",
+          align: "center",
           width: 120,
           key: "hdStatus",
           render: (h, params, vm) => {
@@ -1105,6 +1123,7 @@ export default {
         {
           title: "操作",
           minWidth: 180,
+          align: "center",
           key: "handle",
           options: ["view", "onHand", "onReceive"]
         }

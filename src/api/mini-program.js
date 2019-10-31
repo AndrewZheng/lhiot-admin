@@ -1411,6 +1411,14 @@ export const getSystemSettingCategoryPages = (data) => {
   });
 };
 
+//根据系统分类code查询系统设置参数
+export const getSystemParameter = (code) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/system-setting-categories/find-by/' + code,
+    method: 'get'
+  });
+};
+
 // 查询系统参数分类位详情
 export const getSystemSettingCategory = ({ id }) => {
   return Vue.prototype.$http.request({

@@ -170,26 +170,31 @@ export default {
           key: "code",
           minWidth: 170,
           sortable: true,
+          align: "center",
           fixed: "left"
         },
         {
           title: "门店名称",
           minWidth: 90,
+          align: "center",
           key: "storeName"
         },
         {
           title: "用户名称",
+          align: "center",
           minWidth: 90,
           key: "receiveUser"
         },
         {
           title: "联系方式",
+          align: "center",
           minWidth: 120,
           key: "contactPhone"
         },
         {
           title: "订单金额",
           minWidth: 90,
+          align: "center",
           key: "totalAmount",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.totalAmount);
@@ -198,6 +203,7 @@ export default {
         },
         {
           title: "券金额",
+          align: "center",
           minWidth: 80,
           key: "couponAmount",
           render(h, params, vm) {
@@ -207,6 +213,7 @@ export default {
         },
         {
           title: "支付金额",
+          align: "center",
           minWidth: 90,
           key: "amountPayable",
           render(h, params, vm) {
@@ -216,6 +223,7 @@ export default {
         },
         {
           title: "是否退款",
+          align: "center",
           width: 120,
           key: "isAllRefund",
           render: (h, params, vm) => {
@@ -241,6 +249,7 @@ export default {
         },
         {
           title: "退款金额",
+          align: "center",
           minWidth: 90,
           key: "refundFee",
           render(h, params, vm) {
@@ -251,6 +260,7 @@ export default {
         {
           title: "配送费",
           minWidth: 80,
+          align: "center",
           key: "deliveryAmount",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.deliveryAmount);
@@ -260,6 +270,7 @@ export default {
         {
           title: "应用类型",
           key: "applyType",
+          align: "center",
           width: 120,
           render: (h, params, vm) => {
             const { row } = params;
@@ -282,6 +293,7 @@ export default {
         },
         {
           title: "订单状态",
+          align: "center",
           width: 120,
           key: "status",
           render: (h, params, vm) => {
@@ -337,6 +349,7 @@ export default {
         },
         {
           title: "海鼎状态",
+          align: "center",
           width: 100,
           key: "hdStatus",
           render: (h, params, vm) => {
@@ -372,6 +385,7 @@ export default {
         },
         {
           title: "提货类型",
+          align: "center",
           width: 120,
           key: "receivingWay",
           render: (h, params, vm) => {
@@ -400,6 +414,7 @@ export default {
         {
           title: "支付类型",
           width: 120,
+          align: "center",
           key: "payType",
           render: (h, params, vm) => {
             const { row } = params;

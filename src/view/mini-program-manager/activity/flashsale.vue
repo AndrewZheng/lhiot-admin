@@ -12,7 +12,6 @@
         searchable
         border
         search-place="top"
-        @on-delete="handleDelete"
         @on-view="handleView"
         @on-edit="handleEdit"
         @on-sale="onOff"
@@ -20,6 +19,7 @@
         @on-selection-change="onSelectionChange"
         @on-relevance="onRelevance"
       >
+        <!--  @on-delete="handleDelete" -->
         <div slot="searchCondition">
           <Row>
             <DatePicker
@@ -82,7 +82,7 @@
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addFlashsale">
             <Icon type="md-add" />添加
           </Button>
-          <Poptip
+          <!-- <Poptip
             confirm
             placement="bottom"
             style="width: 100px"
@@ -92,7 +92,7 @@
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
             </Button>
-          </Poptip>
+          </Poptip>-->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -165,7 +165,7 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :width="1000" :z-index="1000" :mask-closable="false">
+    <Modal v-model="modalEdit" :width="600" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <i-col>{{ tempModalType==modalType.edit?'修改限时抢购活动':(tempModalType==modalType.create?'创建限时抢购活动': '限时抢购活动和商品关联') }}</i-col>
       </p>
@@ -486,7 +486,7 @@ const roleRowData = {
   edBeginTime: null,
   edFinishTime: null,
   page: 1,
-  rows: 10,
+  rows: 10
 };
 
 const relationRowData = {
@@ -790,10 +790,12 @@ export default {
         },
         {
           title: "活动ID",
+          align: "center",
           key: "id"
         },
         {
           title: "活动名称",
+          align: "center",
           render: (h, params, vm) => {
             const str = "限时抢购";
             return <div>{str}</div>;
@@ -801,14 +803,17 @@ export default {
         },
         {
           title: "活动开始时间",
+          align: "center",
           key: "startTime"
         },
         {
           title: "活动结束时间",
+          align: "center",
           key: "endTime"
         },
         {
           title: "活动状态",
+          align: "center",
           key: "onOff",
           render: (h, params, vm) => {
             const { row } = params;
@@ -836,9 +841,11 @@ export default {
         },
         {
           title: "操作",
+          align: "center",
           minWidth: 80,
           key: "handle",
-          options: ["onSale", "view", "edit", "delete", "settings"]
+          //"delete",
+          options: ["onSale", "view", "edit", "settings"]
         }
       ],
       relationColumns: [
@@ -942,11 +949,11 @@ export default {
       this.modalEdit = true;
     },
     // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
-    },
+    // handleDelete(params) {
+    //   this.tableDataSelected = [];
+    //   this.tableDataSelected.push(params.row);
+    //   this.deleteTable(params.row.id);
+    // },
     deleteTable(ids) {
       this.loading = true;
       deleteFlashsale({

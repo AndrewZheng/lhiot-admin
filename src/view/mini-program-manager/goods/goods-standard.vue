@@ -1154,36 +1154,43 @@ export default {
         },
         {
           title: "规格ID",
+          align: "center",
           key: "id",
           minWidth: 50
         },
         {
           title: "商品条码",
+          align: "center",
           key: "barcode",
           minWidth: 70
         },
         {
           title: "商品编号",
           key: "productCode",
+          align: "center",
           minWidth: 100
         },
         {
           title: "商品名称",
+          align: "center",
           key: "productName",
           minWidth: 100
         },
         {
           title: "商品规格",
+          align: "center",
           key: "specification",
           minWidth: 80
         },
         {
           title: "商品单位",
+          align: "center",
           minWidth: 80,
           key: "productUnit"
         },
         {
           title: "商品原价",
+          align: "center",
           minWidth: 60,
           key: "price",
           render(h, params, vm) {
@@ -1193,6 +1200,7 @@ export default {
         },
         {
           title: "售卖价格",
+          align: "center",
           minWidth: 60,
           key: "salePrice",
           render(h, params, vm) {
@@ -1202,6 +1210,7 @@ export default {
         },
         {
           title: "SVIP价格",
+          align: "center",
           minWidth: 60,
           key: "svipPrice",
           render(h, params, vm) {
@@ -1252,6 +1261,7 @@ export default {
           title: "商品状态",
           minWidth: 80,
           key: "shelvesStatus",
+          align: "center",
           render: (h, params, vm) => {
             const { row } = params;
             if (row.shelvesStatus === "VALID") {
@@ -1282,11 +1292,13 @@ export default {
         },
         {
           title: "商品排序",
+          align: "center",
           minWidth: 60,
           key: "rank"
         },
         {
           title: "操作",
+          align: "center",
           minWidth: 180,
           key: "handle",
           options: ["customOnSale", "view", "edit", "discount", "delete"]
@@ -1296,6 +1308,7 @@ export default {
         {
           title: "商品图片",
           key: "image",
+          align: "center",
           minWidth: 120,
           render: (h, params, vm) => {
             const { row } = params;
@@ -1307,31 +1320,37 @@ export default {
           title: "商品编码",
           key: "productCode",
           sortable: true,
+          align: "center",
           minWidth: 140
         },
         {
           title: "商品名称",
+          align: "center",
           sortable: true,
           key: "productName",
           minWidth: 120
         },
         {
           title: "商品类别",
+          align: "center",
           key: "groupName",
           minWidth: 120
         },
         {
           title: "基础单位",
+          align: "center",
           minWidth: 90,
           key: "unitName"
         },
         {
           title: "基础重量(kg)",
+          align: "center",
           minWidth: 90,
           key: "baseQty"
         },
         {
           title: "商品状态",
+          align: "center",
           minWidth: 90,
           key: "status",
           render: (h, params, vm) => {

@@ -11,7 +11,6 @@
         editable
         searchable
         border
-        @on-delete="handleDelete"
         @on-view="handleView"
         @on-edit="handleEdit"
         @coupon-status="statusChange"
@@ -61,7 +60,7 @@
           >
             <Icon type="md-add" />海鼎优惠券
           </Button>
-          <Poptip
+          <!-- <Poptip
             confirm
             placement="bottom"
             style="width: 100px"
@@ -71,7 +70,7 @@
             <Button type="error" class="mr5">
               <Icon type="md-trash" />删除
             </Button>
-          </Poptip>
+          </Poptip> -->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -620,11 +619,13 @@ const dataColumns = [
     title: "优惠券名称",
     key: "couponName",
     width: 140,
+    align: "center",
     fixed: "left"
   },
   {
     title: "优惠券类型",
     key: "couponType",
+    align: "center",
     render: (h, params, vm) => {
       const { row } = params;
       if (row.couponType === "FULL_CUT_COUPON") {
@@ -652,6 +653,7 @@ const dataColumns = [
   },
   {
     title: "会员身份",
+    align: "center",
     key: "svipLevel",
     render: (h, params, vm) => {
       const { row } = params;
@@ -674,6 +676,7 @@ const dataColumns = [
   },
   {
     title: "优惠/折扣额度",
+    align: "center",
     key: "couponFee",
     width: 120,
     render(h, params) {
@@ -687,6 +690,7 @@ const dataColumns = [
   },
   {
     title: "最小购买金额",
+    align: "center",
     key: "minBuyFee",
     width: 110,
     render(h, params) {
@@ -695,6 +699,7 @@ const dataColumns = [
   },
   {
     title: "优惠券状态",
+    align: "center",
     key: "couponStatus",
     width: 100,
     render: (h, params, vm) => {
@@ -721,6 +726,7 @@ const dataColumns = [
   },
   {
     title: "券使用范围",
+    align: "center",
     key: "couponScope",
     width: 100,
     render: (h, params, vm) => {
@@ -753,6 +759,7 @@ const dataColumns = [
   },
   {
     title: "券使用限制(门店/商品)",
+    align: "center",
     key: "useLimitType",
     width: 180,
     render: (h, params, vm) => {
@@ -773,6 +780,7 @@ const dataColumns = [
   {
     title: "来源",
     key: "source",
+    align: "center",
     width: 80,
     render: (h, params, vm) => {
       const { row } = params;
@@ -787,6 +795,7 @@ const dataColumns = [
   },
   {
     title: "生效时间",
+    align: "center",
     key: "effectiveStartTime",
     width: 160,
     render: (h, params, vm) => {
@@ -808,6 +817,7 @@ const dataColumns = [
   {
     title: "失效时间",
     key: "effectiveEndTime",
+    align: "center",
     width: 160,
     render: (h, params, vm) => {
       const { row } = params;
@@ -827,15 +837,16 @@ const dataColumns = [
   },
   {
     title: "创建时间",
+    align: "center",
     key: "createTime",
     width: 160
   },
   {
     title: "操作",
     width: 200,
+    align: "center",
     key: "handle",
-    fixed: "right",
-    options: ["couponStatus", "view", "edit", "delete"]
+    options: ["couponStatus", "view", "edit"]
   }
 ];
 
@@ -850,10 +861,12 @@ const hdTemplateColumns = [
   {
     title: "优惠券名称",
     key: "couponName",
+    align: "center",
     minWidth: 80
   },
   {
     title: "优惠券类型",
+    align: "center",
     key: "couponType",
     minWidth: 80,
     render: (h, params, vm) => {
@@ -882,6 +895,7 @@ const hdTemplateColumns = [
   },
   {
     title: "券使用限制",
+    align: "center",
     key: "useLimitType",
     minWidth: 80,
     render: (h, params, vm) => {
@@ -907,6 +921,7 @@ const hdTemplateColumns = [
   // },
   {
     title: "优惠/折扣额度",
+    align: "center",
     key: "faceValue",
     minWidth: 80,
     render(h, params) {
@@ -921,6 +936,7 @@ const hdTemplateColumns = [
   },
   {
     title: "最小购买金额",
+    align: "center",
     key: "useRule",
     minWidth: 80,
     render(h, params, vm) {
@@ -933,11 +949,13 @@ const hdTemplateColumns = [
   },
   {
     title: "生效时间",
+    align: "center",
     key: "beginDate",
     minWidth: 50
   },
   {
     title: "失效时间",
+    align: "center",
     key: "endDate",
     minWidth: 50
   }

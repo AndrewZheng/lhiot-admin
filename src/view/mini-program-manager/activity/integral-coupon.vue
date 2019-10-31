@@ -11,7 +11,6 @@
         editable
         searchable
         border
-        @on-delete="handleDelete"
         @on-view="handleView"
         @on-edit="handleEdit"
         @coupon-status="statusChange"
@@ -89,7 +88,7 @@
           >
             <Icon type="md-add" />海鼎优惠券
           </Button>
-          <Poptip
+          <!-- <Poptip
             confirm
             placement="bottom"
             style="width: 100px"
@@ -99,7 +98,7 @@
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
             </Button>
-          </Poptip>
+          </Poptip>-->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -970,7 +969,8 @@ import {
   yuanToFenNumber,
   replaceByTag,
   replaceByTab,
-  HdDiscount
+  HdDiscount,
+  compareCouponData
 } from "@/libs/util";
 
 const relationDetail = {
@@ -1067,11 +1067,13 @@ const dataColumns = [
   {
     title: "优惠券名称",
     key: "couponName",
+    align: "center",
     width: 150,
     fixed: "left"
   },
   {
     title: "优惠券类型",
+    align: "center",
     key: "couponType",
     render: (h, params, vm) => {
       const { row } = params;
@@ -1100,6 +1102,7 @@ const dataColumns = [
   },
   {
     title: "优惠/折扣额度",
+    align: "center",
     key: "couponFee",
     width: 120,
     render(h, params) {
@@ -1113,6 +1116,7 @@ const dataColumns = [
   },
   {
     title: "最小购买金额",
+    align: "center",
     key: "minBuyFee",
     width: 120,
     render(h, params) {
@@ -1121,6 +1125,7 @@ const dataColumns = [
   },
   {
     title: "优惠券状态",
+    align: "center",
     key: "couponStatus",
     width: 100,
     render: (h, params, vm) => {
@@ -1147,6 +1152,7 @@ const dataColumns = [
   },
   {
     title: "券使用范围",
+    align: "center",
     key: "couponScope",
     width: 100,
     render: (h, params, vm) => {
@@ -1179,6 +1185,7 @@ const dataColumns = [
   },
   {
     title: "用户范围",
+    align: "center",
     key: "userScope",
     render: (h, params, vm) => {
       const { row } = params;
@@ -1193,6 +1200,7 @@ const dataColumns = [
   },
   {
     title: "券使用限制",
+    align: "center",
     key: "useLimitType",
     width: 110,
     render: (h, params, vm) => {
@@ -1212,11 +1220,13 @@ const dataColumns = [
   },
   {
     title: "已兑换统计",
+    align: "center",
     key: "receiveCount",
     width: 120
   },
   {
     title: "生效时间",
+    align: "center",
     key: "effectiveStartTime",
     width: 160,
     render: (h, params, vm) => {
@@ -1237,19 +1247,28 @@ const dataColumns = [
   },
   {
     title: "失效时间",
+    align: "center",
     key: "effectiveEndTime",
     width: 160,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
-        return <div>{row.effectiveEndTime}</div>;
+        if (!compareCouponData(row.effectiveEndTime)) {
+          return <div style="color:red">{row.effectiveEndTime + "已过期"}</div>;
+        } else {
+          return <div>{row.effectiveEndTime}</div>;
+        }
       } else if (
         row.source == "SMALL" &&
         row.validDateType === "UN_FIXED_DATE"
       ) {
         return <div>{row.endDay}</div>;
       } else if (row.source == "HD") {
-        return <div>{row.effectiveEndTime}</div>;
+        if (!compareCouponData(row.effectiveEndTime)) {
+          return <div style="color:red">{row.effectiveEndTime + "已过期"}</div>;
+        } else {
+          return <div>{row.effectiveEndTime}</div>;
+        }
       } else {
         return <div>N/A</div>;
       }
@@ -1257,14 +1276,16 @@ const dataColumns = [
   },
   {
     title: "创建时间",
+    align: "center",
     key: "createTime",
     width: 160
   },
   {
     title: "操作",
+    align: "center",
     width: 180,
     key: "handle",
-    options: ["couponStatus", "view", "edit", "delete"]
+    options: ["couponStatus", "view", "edit"]
   }
 ];
 
@@ -1277,11 +1298,13 @@ const templateColumns = [
   {
     title: "优惠券名称",
     key: "couponName",
+    align: "center",
     minWidth: 80
   },
   {
     title: "优惠券类型",
     key: "couponType",
+    align: "center",
     minWidth: 80,
     render: (h, params, vm) => {
       const { row } = params;
@@ -1331,6 +1354,7 @@ const templateColumns = [
   // },
   {
     title: "优惠/折扣金额",
+    align: "center",
     key: "couponFee",
     minWidth: 80,
     render(h, params) {
@@ -1344,6 +1368,7 @@ const templateColumns = [
   },
   {
     title: "最小购买金额",
+    align: "center",
     key: "minBuyFee",
     minWidth: 80,
     render(h, params) {
@@ -1353,6 +1378,7 @@ const templateColumns = [
   {
     title: "优惠券状态",
     key: "couponStatus",
+    align: "center",
     minWidth: 80,
     render: (h, params, vm) => {
       const { row } = params;
@@ -1386,11 +1412,13 @@ const hdTemplateColumns = [
   },
   {
     title: "优惠券名称",
+    align: "center",
     key: "couponName",
     minWidth: 80
   },
   {
     title: "优惠券类型",
+    align: "center",
     key: "couponType",
     minWidth: 80,
     render: (h, params, vm) => {
@@ -1419,6 +1447,7 @@ const hdTemplateColumns = [
   },
   {
     title: "券使用限制",
+    align: "center",
     key: "useLimitType",
     minWidth: 80,
     render: (h, params, vm) => {
@@ -1445,6 +1474,7 @@ const hdTemplateColumns = [
   //HdDiscount版本
   {
     title: "优惠/折扣额度",
+    align: "center",
     key: "faceValue",
     minWidth: 80,
     render(h, params) {
@@ -1460,6 +1490,7 @@ const hdTemplateColumns = [
   },
   {
     title: "最小购买金额",
+    align: "center",
     key: "useRule",
     minWidth: 80,
     render(h, params, vm) {
@@ -1473,11 +1504,13 @@ const hdTemplateColumns = [
   {
     title: "生效时间",
     key: "beginDate",
+    align: "center",
     minWidth: 50
   },
   {
     title: "失效时间",
     key: "endDate",
+    align: "center",
     minWidth: 50
   }
   // {
@@ -1933,27 +1966,27 @@ export default {
     },
     minBuyFeeInputNumberOnchange(value) {
       this.relationDetail.minBuyFee = yuanToFenNumber(value);
-    },
-    // 批量删除-单行删除内部也是调用此方法
-    deleteTable(ids) {
-      this.tempTableLoading = true;
-      deleteCouponExchange({ ids })
-        .then(res => {
-          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-          if (
-            this.tableData.length == this.tableDataSelected.length &&
-            this.searchRowData.page === totalPage &&
-            this.searchRowData.page !== 1
-          ) {
-            this.searchRowData.page -= 1;
-          }
-          this.tableDataSelected = [];
-          this.getTableData();
-        })
-        .finally(res => {
-          this.tempTableLoading = false;
-        });
     }
+    // 批量删除-单行删除内部也是调用此方法
+    // deleteTable(ids) {
+    //   this.tempTableLoading = true;
+    //   deleteCouponExchange({ ids })
+    //     .then(res => {
+    //       const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+    //       if (
+    //         this.tableData.length == this.tableDataSelected.length &&
+    //         this.searchRowData.page === totalPage &&
+    //         this.searchRowData.page !== 1
+    //       ) {
+    //         this.searchRowData.page -= 1;
+    //       }
+    //       this.tableDataSelected = [];
+    //       this.getTableData();
+    //     })
+    //     .finally(res => {
+    //       this.tempTableLoading = false;
+    //     });
+    // }
   }
 };
 </script>

@@ -307,28 +307,34 @@ export default {
         {
           title: "ID",
           key: "id",
+          align: "center",
           width: 80
         },
         {
           title: "键",
+          align: "center",
           key: "indexName"
         },
         {
           title: "值",
+          align: "center",
           key: "indexValue",
           type: "html"
         },
         {
           title: "描述",
+          align: "center",
           key: "description"
         },
         {
           title: "分类ID",
+          align: "center",
           key: "categoryId",
           width: 80
         },
         {
           title: "操作",
+          align: "center",
           width: 180,
           key: "handle",
           options: ["view", "edit", "delete"]
