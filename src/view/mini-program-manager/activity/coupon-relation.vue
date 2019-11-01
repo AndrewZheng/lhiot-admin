@@ -63,6 +63,10 @@
               <Icon type="md-refresh"/>&nbsp;清除
             </Button>
           </Row>-->
+          <div class="ml15 mt10" v-show="activityCouponType==='SHARE_COUPON_ACTIVITY'">
+            <b style="color:red">*</b> 排序字段设置
+            <b style="color:red">-1</b>为系统默认券
+          </div>
         </div>
         <div slot="operations">
           <Button
@@ -674,7 +678,7 @@ const dataColumns = [
     title: "优惠券名称",
     key: "couponName",
     align: "center",
-    minWidth: 150,
+    minWidth: 140,
     fixed: "left"
   },
   {
@@ -819,7 +823,7 @@ const dataColumns = [
     title: "生效时间",
     align: "center",
     key: "effectiveStartTime",
-    minWidth: 160,
+    minWidth: 165,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
@@ -840,7 +844,7 @@ const dataColumns = [
     title: "失效时间",
     align: "center",
     key: "effectiveEndTime",
-    minWidth: 160,
+    minWidth: 165,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
@@ -1194,7 +1198,8 @@ export default {
       couponTemplateData: [],
       hdCouponTemplateData: [],
       couponTemplateTotal: 0,
-      couponHdTemplateTotal: 0
+      couponHdTemplateTotal: 0,
+      activityCouponType: ""
     };
   },
   computed: {
@@ -1258,6 +1263,7 @@ export default {
       // 获取优惠券活动页面传过来的优惠券活动信息
       if (this.$route.name === "small-activity-relation-coupon") {
         const couponActivity = getSmallCouponActivity();
+        this.activityCouponType = couponActivity.activityType;
         // console.log('couponActivity from cookie: ', couponActivity);
         if (couponActivity) {
           // 给商品规格的商品和搜索条件赋值

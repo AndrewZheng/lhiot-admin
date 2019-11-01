@@ -16,7 +16,7 @@ const BASE_URL = process.env.NODE_ENV === 'production' ?
   '/';
 
 module.exports = {
-  publicPath: BASE_URL,
+  baseUrl: BASE_URL,
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: false,

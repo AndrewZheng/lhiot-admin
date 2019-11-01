@@ -11,12 +11,14 @@
         editable
         searchable
         border
+        highlight-row
         search-place="top"
         @on-view="handleView"
         @on-edit="handleEdit"
         @on-discount="handleDiscount"
         @on-delete="handleDelete"
         @custom-on-sale="customOnSale"
+        @on-current-change="onCurrentChange"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
@@ -663,7 +665,7 @@
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="商品库存:" prop="limitQty">
+              <FormItem label="最低库存:" prop="limitQty">
                 <InputNumber v-model="proStandardExpand.limitQty"></InputNumber>
               </FormItem>
             </i-col>
@@ -1629,15 +1631,39 @@ export default {
     handleHdSvipClose() {
       this.modalHdSvip = false;
     },
+    // 选中当前数据
+    onCurrentChange(currentRow, oldCurrentRow) {
+      this.currentTableRowSelected = currentRow;
+    },
     handleCreateView() {
       this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.productStandardDetail = _.cloneDeep(productStandardDetail);
       }
+      // 复制数据
+      if (this.currentTableRowSelected) {
+        // console.log("当前选中数据", this.currentTableRowSelected);
+        this.currentTableRowSelected.productId = null;
+        // this.currentTableRowSelected.baseProductName = null;
+        // this.currentTableRowSelected.groupName = null;
+        // this.currentTableRowSelected.baseUnit = null;
+        // this.currentTableRowSelected.productCode = null;
+        // this.currentTableRowSelected.baseBarcode = null;
+        // this.currentTableRowSelected.baseImage = null;
+        // this.currentTableRowSelected.baseProductDescription = null;
+        this.currentTableRowSelected.image = null;
+        this.currentTableRowSelected.detailImage = null;
+        this.currentTableRowSelected.barcode = null;
+        this.currentTableRowSelected.price = null;
+        this.currentTableRowSelected.salePrice = null;
+        this.currentTableRowSelected.productStandardExpand = null;
+        // console.log("当前选中数据", this.currentTableRowSelected);
+        this.productStandardDetail = _.cloneDeep(this.currentTableRowSelected);
+      }
       this.tempModalType = this.modalType.create;
       this.productStandardDetail.description = null;
-      this.productStandardDetail.standardQty = 0;
-      this.productStandardDetail.rank = 0;
+      // this.productStandardDetail.standardQty = 0;
+      // this.productStandardDetail.rank = 0;
       this.setDefaultUploadList(this.productStandardDetail);
       this.modalEdit = true;
     },
