@@ -110,10 +110,8 @@ export default {
       }
     };
   },
-  mounted() {
-    //
-  },
-
+  mounted() {},
+  methods: {}
 };
 </script>
 

@@ -1040,7 +1040,9 @@ const templateRowData = {
   couponType: null,
   couponStatus: "VALID",
   page: 1,
-  rows: 5
+  rows: 5,
+  sidx: "create_time",
+  sort: "desc"
 };
 
 // all表示查全部，manual（手工发券），behavior（行为发券），scmaction（分销领券），
@@ -1401,6 +1403,12 @@ const templateColumns = [
       }
       return <div>{row.couponStatus}</div>;
     }
+  },
+  {
+    title: "创建时间",
+    align: "center",
+    minWidth: 120,
+    key: "createTime"
   }
 ];
 
