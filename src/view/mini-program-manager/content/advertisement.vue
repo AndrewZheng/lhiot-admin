@@ -663,7 +663,7 @@ export default {
         {
           title: "广告关联",
           align: "center",
-          minWidth: 90,
+          minWidth: 110,
           key: "advertisementRelation"
         },
         {
@@ -675,13 +675,13 @@ export default {
         {
           title: "创建时间",
           align: "center",
-          minWidth: 160,
+          minWidth: 170,
           key: "createTime"
         },
         {
           title: "当前状态",
           align: "center",
-          minWidth: 90,
+          minWidth: 100,
           key: "status",
           render: (h, params, vm) => {
             const { row } = params;
@@ -712,19 +712,19 @@ export default {
         {
           title: "生效时间",
           align: "center",
-          minWidth: 160,
+          minWidth: 170,
           key: "validTime"
         },
         {
           title: "失效时间",
           align: "center",
-          minWidth: 160,
+          minWidth: 170,
           key: "invalidTime"
         },
         {
           title: "广告位置",
           align: "center",
-          minWidth: 145,
+          minWidth: 160,
           key: "positionId",
           render: (h, params, vm) => {
             const { row } = params;

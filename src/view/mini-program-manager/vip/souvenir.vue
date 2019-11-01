@@ -843,7 +843,9 @@ const templateRowData = {
   couponType: null,
   couponStatus: "VALID",
   page: 1,
-  rows: 5
+  rows: 5,
+  sidx: "create_time",
+  sort: "desc"
 };
 
 const hdTemplateRowData = {
@@ -1201,6 +1203,12 @@ const templateColumns = [
       }
       return <div>{row.couponStatus}</div>;
     }
+  },
+  {
+    title: "创建时间",
+    align: "center",
+    minWidth: 120,
+    key: "createTime"
   }
 ];
 
