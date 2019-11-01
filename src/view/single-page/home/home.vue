@@ -28,13 +28,17 @@
     <Row style="margin-top: 20px;">
       <Card shadow>
         <!-- <example style="height: 310px;" /> -->
-        <img src="http://resource.shuiguoshule.com.cn/product_image/2019-07-31/sgv7qBdSKI7ZrH5JU2kB.jpg" style="height: 300px;width:100%;" >
+        <img
+          src="http://resource.shuiguoshule.com.cn/product_image/2019-07-31/sgv7qBdSKI7ZrH5JU2kB.jpg"
+          style="height: 300px;width:100%;"
+        />
       </Card>
     </Row>
   </div>
 </template>
 
 <script>
+import { getTotalOrders } from "@/api/mini-program";
 import InforCard from "_c/info-card";
 import CountTo from "_c/count-to";
 import { ChartPie, ChartBar } from "_c/charts";
@@ -69,7 +73,12 @@ export default {
           count: 168,
           color: "#ff9900"
         },
-        { title: "总添加人数", icon: "md-person-add", count: 98998, color: "#9A66E4" },
+        {
+          title: "总添加人数",
+          icon: "md-person-add",
+          count: 98998,
+          color: "#9A66E4"
+        },
         {
           title: "昨日新访问人数",
           icon: "md-git-network",
@@ -91,7 +100,7 @@ export default {
         { value: 1400, name: "小程序历史列表" }
       ],
       barData: {
-        "未知": 0,
+        未知: 0,
         "17岁以下": 4,
         "18-24岁": 157,
         "25-29岁": 255,
@@ -103,7 +112,8 @@ export default {
   },
   mounted() {
     //
-  }
+  },
+
 };
 </script>
 

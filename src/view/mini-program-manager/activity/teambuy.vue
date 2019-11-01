@@ -11,10 +11,14 @@
         editable
         searchable
         border
+        highlight-row
         search-place="top"
         @on-delete="handleDelete"
         @on-view="handleView"
         @on-edit="handleEdit"
+        @on-current-change="onCurrentChange"
+        @on-select-all="onSelectionAll"
+        @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
           <Row>
@@ -75,6 +79,9 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
+          <div class="ml15 mt10">
+            <i style="color:red">*</i> 选中单条数据再点击添加,可复制当前数据
+          </div>
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
@@ -1054,6 +1061,12 @@ export default {
       storeIds: [],
       columns: [
         {
+          type: "selection",
+          width: 60,
+          align: "center",
+          fixed: "left"
+        },
+        {
           title: "活动名称",
           key: "activityName",
           sortable: true,
@@ -1318,6 +1331,8 @@ export default {
       showStoreList: false,
       indeterminate: false,
       checkAll: false,
+      currentTableRowSelected: null,
+      tableDataSelected: [],
       searchRowData: _.cloneDeep(roleRowData),
       searchProductRowData: _.cloneDeep(productRowData),
       productDetail: _.cloneDeep(productStandardDetail),
@@ -1542,12 +1557,45 @@ export default {
           this.modalViewLoading = false;
         });
     },
+    //选取一条数据
+    onCurrentChange(currentRow, oldCurrentRow) {
+      this.currentTableRowSelected = currentRow;
+      // console.log("当前数据", this.currentTableRowSelected);
+    },
     addStore() {
       this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.tempModalType = this.modalType.create;
         this.teambuyDetail = _.cloneDeep(teambuyDetail);
       }
+      if (this.currentTableRowSelected) {
+        var secondTime = parseInt(this.currentTableRowSelected.validSeconds);
+        var minuteTime = 0;
+        var hourTime = 0;
+        if (secondTime >= 60) {
+          minuteTime = parseInt(secondTime / 60);
+          secondTime = parseInt(secondTime % 60);
+          if (minuteTime >= 60) {
+            hourTime = parseInt(minuteTime / 60);
+            minuteTime = parseInt(minuteTime % 60);
+          }
+        }
+        this.currentTableRowSelected.id = null;
+        this.currentTableRowSelected.createTime = null;
+        this.currentTableRowSelected.standardId = null;
+        this.currentTableRowSelected.originalPrice = null;
+        this.currentTableRowSelected.banner = null;
+        this.currentTableRowSelected.status = null;
+        this.currentTableRowSelected.rank = null;
+        this.currentTableRowSelected.activityPrice = null;
+        this.currentTableRowSelected.singleTeambuyPrice = null;
+        this.currentTableRowSelected.relationStoreType = "ALL";
+        this.currentTableRowSelected.hour = hourTime;
+        this.currentTableRowSelected.minute = minuteTime;
+        this.currentTableRowSelected.second = secondTime;
+        this.teambuyDetail = _.cloneDeep(this.currentTableRowSelected);
+      }
+
       this.getStore();
       this.modalEdit = true;
     },
@@ -1833,6 +1881,22 @@ export default {
       this.pageSize = 10;
       this.clearSearchLoading = true;
       this.handleProductSearch();
+    },
+    onSelectionAll(selection) {
+      this.tableDataSelected = selection;
+      if (selection.length === 1) {
+        this.currentTableRowSelected = selection[0];
+      } else {
+        this.currentTableRowSelected = null;
+      }
+    },
+    onSelectionChange(selection) {
+      this.tableDataSelected = selection;
+      if (selection.length === 1) {
+        this.currentTableRowSelected = selection[0];
+      } else {
+        this.currentTableRowSelected = null;
+      }
     }
   }
 };
