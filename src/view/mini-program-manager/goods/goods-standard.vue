@@ -107,6 +107,9 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
+          <div class="ml15 mt10">
+            <i style="color:red">*</i> 选中单条数据再点击添加,可复制当前数据
+          </div>
         </div>
         <div slot="operations">
           <Button
