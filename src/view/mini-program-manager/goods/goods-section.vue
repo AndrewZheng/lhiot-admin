@@ -476,7 +476,6 @@ const productColumns = [
       } else {
         return (
           <div>
-            {" "}
             <tag color="cyan">{"普通商品"}</tag>
           </div>
         );
