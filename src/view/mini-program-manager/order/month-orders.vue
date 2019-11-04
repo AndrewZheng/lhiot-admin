@@ -15,7 +15,7 @@
         search-place="top"
       >
         <div slot="searchCondition">
-          <Row>
+          <!-- <Row>
             <DatePicker
               v-model="searchRowData.startTime"
               format="yyyy-MM-dd HH:mm:ss"
@@ -53,7 +53,7 @@
             >
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
-          </Row>
+          </Row> -->
         </div>
         <div slot="operations" style="margin-left:-50px">
           <Button v-waves class="search-btn ml5 mr5" type="primary" @click="goBack">
@@ -515,7 +515,7 @@ export default {
           item["status"] = miniOrderStatusConvert(item["status"]).label;
         });
         this.$refs.tables.handleDownload({
-          filename: `用券数据信息-${new Date().valueOf()}`,
+          filename: `跨月退款订单数据-${new Date().valueOf()}`,
           data: tableData
         });
       });

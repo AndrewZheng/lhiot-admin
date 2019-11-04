@@ -175,10 +175,10 @@
           <Button
             :loading="downloadLoading"
             class="search-btn mt5"
-            type="warning"
+            type="primary"
             @click="monthOrder"
           >
-            <Icon type="md-download" />&nbsp;跨月订单导出
+            <Icon type="md-search" />&nbsp;跨月退款订单
           </Button>
           <!-- <Poptip
             confirm
