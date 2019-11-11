@@ -58,7 +58,7 @@ import {
   YesNoEnum,
   yesNoEnum,
   deliverStatusEnum,
-  validDateTypeEnum,
+  validDateTypeEnum
 } from './enumerate';
 
 const convertFunction = (value, list) => {
