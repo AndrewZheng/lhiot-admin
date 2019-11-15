@@ -226,7 +226,7 @@ const roleRowData = {
   activityCode: null,
   activityName: null,
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 export default {

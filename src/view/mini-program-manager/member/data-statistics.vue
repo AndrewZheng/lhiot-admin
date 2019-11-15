@@ -189,7 +189,6 @@ export default {
     getTableData() {
       let _this = this;
       //稍后优化传昨天的时间
-
       let date = new Date();
       date.setDate(date.getDate() - 1);
       var year = date.getFullYear();

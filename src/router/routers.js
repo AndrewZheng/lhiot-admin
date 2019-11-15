@@ -1027,7 +1027,7 @@ export const asyncRouterMap = [
         name: 'small-phones',
         meta: {
           icon: 'md-phone-portrait',
-          title: '换绑会员手机'
+          title: '换绑会员手机号'
         },
         component: () => import('@/view/mini-program-manager/member/phones.vue')
       },
@@ -1036,9 +1036,18 @@ export const asyncRouterMap = [
         name: 'small-data-statistics',
         meta: {
           icon: 'ios-stats',
-          title: '邀请有礼数据统计'
+          title: '邀请有礼活动分析'
         },
         component: () => import('@/view/mini-program-manager/member/data-statistics.vue')
+      },
+      {
+        path: '/small-amount',
+        name: 'small-amount',
+        meta: {
+          icon: 'logo-usd',
+          title: '邀请有礼用户汇总'
+        },
+        component: () => import('@/view/mini-program-manager/member/amount.vue')
       },
     ]
   },

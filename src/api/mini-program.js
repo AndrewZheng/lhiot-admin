@@ -569,7 +569,7 @@ export const getActivitiesPages = (data) => {
     method: 'post',
     headers: {
       'page': data.page,
-      'rows': data.rows
+      'rows': data.rows,
     }
   });
 };
@@ -947,14 +947,41 @@ export const deleteRegisterGift = ({
   });
 };
 
-// 会员中心数据埋点统计 /minapp/data-total 邀请有礼数据统计
+// 会员中心数据埋点统计 /minapp/data-total 邀请有礼数据统计 
 export const dataStatistics = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/data-total?beginDate=${data.beginDate}&endDate=${data.endDate}&dateGroup=${data.dateGroup}`,
+    url: `/minapp/invite/data-total?beginDate=${data.beginDate}&endDate=${data.endDate}&dateGroup=${data.dateGroup}`,
     method: 'get',
     headers: {
       'page': data.page,
       'rows': data.rows
+    }
+  });
+};
+
+//minapp/invite/base-total邀请有礼基础数据统计
+export const basicsDataStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/invite/base-total?beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    // url: `/minapp/invite/data-total?beginDate=${data.beginDate}&endDate=${data.endDate}&dateGroup=${data.dateGroup}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// /minapp/invite/user/invite-total 邀请有礼用户数据统计
+export const userDataStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `minapp/invite/user/invite-total?nickName=${data.nickName}&phone=${data.phone}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
     }
   });
 };

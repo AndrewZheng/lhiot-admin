@@ -120,6 +120,15 @@
             </Row>
           </i-col>
         </Row>
+        <!-- 图片链接 -->
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="4">图片地址:</i-col>
+              <i-col span="20">{{ imageDetail.imageUrl }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
       </div>
       <div slot="footer">
         <Button type="primary" @click="handleClose">关闭</Button>
