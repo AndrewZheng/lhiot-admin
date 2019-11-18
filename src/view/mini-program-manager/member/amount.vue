@@ -444,6 +444,7 @@ export default {
       this.searchRowData.page = 1;
       this.searchLoading = true;
       this.getTableData();
+      console.log("1")
     }
   }
 };
