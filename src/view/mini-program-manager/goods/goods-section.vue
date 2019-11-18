@@ -689,7 +689,6 @@ export default {
       this.searchLoading = true;
       this.getTableData();
       this.$refs.tables.exportCsv({
-        // filename: `table-${new Date().valueOf()}.csv`
         filename: filename + "-" + new Date().valueOf() + ".csv"
       });
     },
@@ -898,9 +897,7 @@ export default {
       this.loading = true;
       // 展开当前节点
       if (typeof data.expand === "undefined") {
-        // this.$set(data, 'expend', true);
         this.$set(data, "expend", false);
-        // if (data.children) {
         if (data.children) {
           this.expandChildren(data.children);
         }
@@ -919,9 +916,7 @@ export default {
     expandChildren(array) {
       array.forEach(item => {
         if (typeof item.expand === "undefined") {
-          // this.$set(item, 'expend', true);
           this.$set(item, "expend", false);
-          // } else {
         } else {
           item.expand = !item.expand;
         }
