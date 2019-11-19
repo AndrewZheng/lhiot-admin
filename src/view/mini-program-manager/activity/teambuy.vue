@@ -857,12 +857,14 @@ const teambuyDetail = {
 };
 
 const roleRowData = {
-  status: null,
+  status: "on",
   activityName: null,
   createTimeStart: null,
   createTimeEnd: null,
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx: "rank",
+  sort: "asc"
 };
 
 const productStandardDetail = {
@@ -1060,12 +1062,12 @@ export default {
       storeList: [],
       storeIds: [],
       columns: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center",
-          fixed: "left"
-        },
+        // {
+        //   type: "selection",
+        //   width: 60,
+        //   align: "center",
+        //   fixed: "left"
+        // },
         {
           title: "活动名称",
           key: "activityName",
@@ -1129,12 +1131,12 @@ export default {
         {
           title: "商品库存",
           align: "center",
-          minWidth: 100,
+          minWidth: 90,
           key: "productNum"
         },
         {
           title: "活动价",
-          minWidth: 100,
+          minWidth: 80,
           key: "activityPrice",
           align: "center",
           render(h, params) {
@@ -1144,7 +1146,7 @@ export default {
         {
           title: "团长优惠",
           align: "center",
-          minWidth: 100,
+          minWidth: 90,
           key: "tourDiscount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.tourDiscount)}</div>;
@@ -1177,6 +1179,12 @@ export default {
           align: "center",
           minWidth: 90,
           key: "triesLimit"
+        },
+        {
+          title: "排序",
+          align: "center",
+          minWidth: 80,
+          key: "rank"
         },
         {
           title: "是否模拟成团",
