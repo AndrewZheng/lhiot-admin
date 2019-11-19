@@ -43,7 +43,12 @@
                   @on-change="endTimeChange"
                 />
               </div>
-              <Button class="search-btn mr5" type="primary" @click="handleSearch1">
+              <Button
+                class="search-btn mr5"
+                type="primary"
+                @click="handleSearch1"
+                v-show="mark===true"
+              >
                 <Icon type="md-search" />&nbsp;搜索
               </Button>
             </Row>
@@ -54,82 +59,84 @@
         </tables>
       </Card>
     </div>
-    <Card>
-      <tables
-        ref="tables"
-        v-model="tableData"
-        :columns="columns"
-        :loading="loading"
-        :search-area-column="18"
-        :operate-area-column="6"
-        editable
-        searchable
-        border
-        search-place="top"
-      >
-        <div slot="searchCondition">
-          <Row>
-            <Input
-              v-model="searchRowData.nickName"
-              placeholder="用户昵称"
-              class="search-input mr5"
-              style="width: auto"
-              clearable
-            ></Input>
-            <Input
-              v-model="searchRowData.phone"
-              placeholder="手机号码"
-              class="search-input mr5"
-              style="width: auto"
-              clearable
-            ></Input>
-            <Select
-              v-model="searchRowData.sidx"
-              placeholder="排序"
-              style="padding-right: 5px;width: 100px"
-              clearable
-            >
-              <Option
-                v-for="(item,index) in rankType"
-                :value="item.value"
-                :key="index"
-                class="ptb2-5"
-                style="padding-left: 5px;width: 100px"
-              >{{ item.label }}</Option>
-            </Select>
-            <Button
-              :loading="searchLoading"
-              class="search-btn mr5"
-              type="primary"
-              @click="handleSearch"
-            >
-              <Icon type="md-search" />&nbsp;搜索
-            </Button>
-            <Button
-              v-waves
-              :loading="clearSearchLoading"
-              class="search-btn"
-              type="info"
-              @click="handleClear"
-            >
-              <Icon type="md-refresh" />&nbsp;清除
-            </Button>
+    <div>
+      <Card>
+        <tables
+          ref="tables"
+          v-model="tableData"
+          :columns="columns"
+          :loading="loading"
+          :search-area-column="18"
+          :operate-area-column="6"
+          editable
+          searchable
+          border
+          search-place="top"
+        >
+          <div slot="searchCondition">
+            <Row>
+              <Input
+                v-model="searchRowData.nickName"
+                placeholder="用户昵称"
+                class="search-input mr5"
+                style="width: auto"
+                clearable
+              ></Input>
+              <Input
+                v-model="searchRowData.phone"
+                placeholder="手机号码"
+                class="search-input mr5"
+                style="width: auto"
+                clearable
+              ></Input>
+              <Select
+                v-model="searchRowData.sidx"
+                placeholder="排序"
+                style="padding-right: 5px;width: 100px"
+                clearable
+              >
+                <Option
+                  v-for="(item,index) in rankType"
+                  :value="item.value"
+                  :key="index"
+                  class="ptb2-5"
+                  style="padding-left: 5px;width: 100px"
+                >{{ item.label }}</Option>
+              </Select>
+              <Button
+                :loading="searchLoading"
+                class="search-btn mr5"
+                type="primary"
+                @click="handleSearch"
+              >
+                <Icon type="md-search" />&nbsp;搜索
+              </Button>
+              <Button
+                v-waves
+                :loading="clearSearchLoading"
+                class="search-btn"
+                type="info"
+                @click="handleClear"
+              >
+                <Icon type="md-refresh" />&nbsp;清除
+              </Button>
+            </Row>
+          </div>
+        </tables>
+        <div style="margin: 10px;overflow: hidden">
+          <Row type="flex" justify="end">
+            <Page
+              :total="total"
+              :current="searchRowData.page"
+              show-sizer
+              show-total
+              @on-change="changePage"
+              @on-page-size-change="changePageSize"
+            ></Page>
           </Row>
         </div>
-      </tables>
-      <div style="margin: 10px;overflow: hidden">
-        <Row type="flex" justify="end">
-          <Page
-            :total="total"
-            :current="searchRowData.page"
-            show-sizer
-            show-total
-            @on-change="changePage"
-            @on-page-size-change="changePageSize"
-          ></Page>
-        </Row>
-      </div>
-    </Card>
+      </Card>
+    </div>
   </div>
 </template>
 
@@ -318,7 +325,7 @@ export default {
     this.searchRowData1 = _.cloneDeep(roleRowData1);
     this.getTableData();
     this.getTableData1();
-    this.handleSearch();
+    // this.handleSearch();
   },
   created() {},
   methods: {
@@ -393,7 +400,7 @@ export default {
         .then(res => {
           //   console.log("接受数据", res);
           this.inviteData.push(res);
-          this.total = res.total;
+          // this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -444,7 +451,7 @@ export default {
       this.searchRowData.page = 1;
       this.searchLoading = true;
       this.getTableData();
-      console.log("1")
+      console.log("1");
     }
   }
 };

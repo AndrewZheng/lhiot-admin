@@ -176,6 +176,20 @@
             </Row>
           </i-col>
         </Row>
+        <!-- <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="6">企业微信ID:</i-col>
+              <i-col span="18">{{ storeDetail.enterpriseWxId }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="6">门店类型:</i-col>
+              <i-col span="18">{{ storeDetail.storeType }}</i-col>
+            </Row>
+          </i-col>
+        </Row> -->
         <Row class-name="mb20">
           <i-col span="3">门店地址:</i-col>
           <i-col span="21">{{ storeDetail.storeAddress }}</i-col>
@@ -332,6 +346,11 @@
           </Row>
           <Row>
             <i-col span="12">
+              <FormItem label="企业微信ID:" prop="enterpriseWxId">
+                <Input v-model="storeDetail.enterpriseWxId"></Input>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
               <FormItem :label-width="85" label="门店类型:" prop="storeType">
                 <Select v-model="storeDetail.storeType">
                   <Option
@@ -484,7 +503,8 @@ const storeDetail = {
   storeCoordx: null,
   storeCoordy: null,
   coordinateType: null,
-  wxImage: ""
+  wxImage: "",
+  enterpriseWxId: ""
 };
 
 const roleRowData = {
@@ -562,8 +582,7 @@ export default {
           title: "门店编码",
           key: "storeCode",
           align: "center",
-          sortable: true,
-          minWidth: 150
+          minWidth: 100
         },
         {
           title: "门店名称",
@@ -572,9 +591,15 @@ export default {
           minWidth: 150
         },
         {
+          title: "企业微信ID",
+          key: "enterpriseWxId",
+          align: "center",
+          minWidth: 130
+        },
+        {
           title: "所属区域",
           align: "center",
-          minWidth: 150,
+          minWidth: 90,
           key: "storeArea",
           render: (h, params, vm) => {
             const { row } = params;
@@ -591,7 +616,7 @@ export default {
         {
           title: "区域旗舰店",
           align: "center",
-          minWidth: 150,
+          minWidth: 130,
           key: "storeFlagship",
           render: (h, params, vm) => {
             const { row } = params;
@@ -607,7 +632,7 @@ export default {
         {
           title: "门店状态",
           align: "center",
-          minWidth: 150,
+          minWidth: 120,
           key: "storeStatus",
           render: (h, params, vm) => {
             const { row } = params;
@@ -636,27 +661,27 @@ export default {
           }
         },
         {
-          title: "开始时间",
+          title: "营业时间(起)",
           align: "center",
-          minWidth: 150,
+          minWidth: 130,
           key: "beginTime"
         },
         {
-          title: "结束时间",
+          title: "营业时间(止)",
           align: "center",
-          minWidth: 150,
+          minWidth: 130,
           key: "endTime"
         },
         {
           title: "联系方式",
           align: "center",
-          minWidth: 150,
+          minWidth: 140,
           key: "storePhone"
         },
         {
           title: "门店类型",
           align: "center",
-          minWidth: 150,
+          minWidth: 140,
           render: (h, params) => {
             const { row } = params;
             if (row.storeType === "FLAGSHIP_STORE") {

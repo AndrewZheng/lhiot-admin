@@ -950,7 +950,6 @@ export const deleteRegisterGift = ({
 
 // 会员中心数据埋点统计 /minapp/data-total 邀请有礼数据统计 
 export const dataStatistics = (data) => {
-<<<<<<< HEAD
   return Vue.prototype.$http.request({
     url: `/minapp/invite/data-total?beginDate=${data.beginDate}&endDate=${data.endDate}&dateGroup=${data.dateGroup}`,
     method: 'get',
@@ -966,10 +965,6 @@ export const basicsDataStatistics = (data) => {
   return Vue.prototype.$http.request({
     url: `/minapp/invite/base-total?beginDate=${data.beginDate}&endDate=${data.endDate}`,
     // url: `/minapp/invite/data-total?beginDate=${data.beginDate}&endDate=${data.endDate}&dateGroup=${data.dateGroup}`,
-=======
-  return $http.request({
-    url: `/minapp/data-total?beginDate=${data.beginDate}&endDate=${data.endDate}&dateGroup=${data.dateGroup}`,
->>>>>>> ca02506d0e3649c83a9e5d81f1fbfab6bcca1bc7
     method: 'get',
     headers: {
       'page': data.page,
