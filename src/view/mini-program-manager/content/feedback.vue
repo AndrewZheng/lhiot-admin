@@ -210,7 +210,9 @@ const roleRowData = {
   page: 1,
   rows: 10,
   status: null,
-  title: ""
+  title: "",
+  sidx: "create_time",
+  sort: "desc"
 };
 
 export default {
@@ -228,7 +230,6 @@ export default {
           title: "ID",
           align: "center",
           key: "id",
-          sortable: true,
           minWidth: 50
         },
         {
@@ -241,7 +242,7 @@ export default {
         {
           title: "内容",
           align: "center",
-          width: 170,
+          width: 300,
           key: "content",
           tooltip: true
         },

@@ -272,7 +272,7 @@ export default {
       ],
       dataColumns: [
         {
-          title: "奖励金额",
+          title: "奖励总金额",
           key: "allAmount",
           align: "center",
           render(h, params) {
@@ -280,7 +280,7 @@ export default {
           }
         },
         {
-          title: "提现金额",
+          title: "已提现总金额",
           key: "outAmount",
           align: "center",
           render(h, params) {
@@ -288,7 +288,7 @@ export default {
           }
         },
         {
-          title: "可提现金额",
+          title: "可提现总金额",
           key: "canOutAmount",
           align: "center",
           render(h, params) {
@@ -296,7 +296,7 @@ export default {
           }
         },
         {
-          title: "待入账金额",
+          title: "待入账总金额",
           align: "center",
           key: "waitAmount",
           render(h, params) {
@@ -304,12 +304,12 @@ export default {
           }
         },
         {
-          title: "参与人数",
+          title: "参与总人数",
           align: "center",
           key: "joinUser"
         },
         {
-          title: "邀请人数",
+          title: "邀请总人数",
           align: "center",
           key: "inviteUser"
         }

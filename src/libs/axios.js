@@ -118,6 +118,13 @@ class HttpRequest {
           router.push({
             name: 'login'
           });
+        } else if (error.response.status === 402) { 
+          errorMsg = '页面已过期，请重新登录';
+          // 清除本地Token 然后重新登录
+          setToken('');
+          router.push({
+            name: 'login'
+          });
         } else if (error.response.status === 403) {
           errorMsg = '拒绝访问';
         } else if (error.response.status === 405) {
