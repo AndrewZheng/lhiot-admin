@@ -472,6 +472,22 @@ const productColumns = [
               </tag>
             </div>
           );
+        } else if (row.productStandardExpand.expandType == "SECKILL_PRODUCT") {
+          return (
+            <div>
+              <tag color="blue">
+                {expandTypeConvert(row.productStandardExpand.expandType).label}
+              </tag>
+            </div>
+          );
+        } else if (row.productStandardExpand.expandType == "ASSIST_PRODUCT") {
+          return (
+            <div>
+              <tag color="green">
+                {expandTypeConvert(row.productStandardExpand.expandType).label}
+              </tag>
+            </div>
+          );
         }
       } else {
         return (
@@ -749,6 +765,10 @@ export default {
         this.searchProductRowData.expandType = "PULL_NEW_PRODUCT";
       } else if (this.currentSectionCode === "ZKSP") {
         this.searchProductRowData.expandType = "DISCOUNT_PRODUCT";
+      } else if (this.currentSectionCode === "SECKILL") {
+        this.searchProductRowData.expandType = "SECKILL_PRODUCT";
+      } else if (this.currentSectionCode === "ASSIST") {
+        this.searchProductRowData.expandType = "ASSIST_PRODUCT";
       } else if (this.currentSectionCode === "SVIP") {
         this.searchProductRowData.expandType = "";
       } else {

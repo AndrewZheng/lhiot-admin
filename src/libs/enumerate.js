@@ -921,6 +921,14 @@ export const expandTypeEnum = [
   {
     label: '老拉新商品',
     value: 'PULL_NEW_PRODUCT'
+  },
+  {
+    label: '限时秒杀商品',
+    value: 'SECKILL_PRODUCT'
+  },
+  {
+    label: '助力商品',
+    value: 'ASSIST_PRODUCT'
   }
 ];
 

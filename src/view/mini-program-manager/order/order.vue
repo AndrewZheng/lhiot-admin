@@ -36,6 +36,13 @@
               style="width: 110px"
               clearable
             ></Input>
+            <Input
+              v-model="searchRowData.productName"
+              placeholder="商品名称"
+              class="search-input mr5"
+              style="width: 150px"
+              clearable
+            ></Input>
             <Select
               v-model="searchRowData.apply"
               :clearable="true"
@@ -106,43 +113,65 @@
                 class="ptb2-5"
               >{{ item.label }}</Option>
             </Select>
-            <DatePicker
-              v-model="searchRowData.startTime"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetime"
-              placeholder="开始时间"
-              class="mr5"
-              style="width: 150px"
-              @on-change="startTimeChange"
-            />
-            <i>-</i>
-            <DatePicker
-              v-model="searchRowData.endTime"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetime"
-              placeholder="结束时间"
-              class="mr5"
-              style="width: 150px"
-              @on-change="endTimeChange"
-            />
-            <Button
-              v-waves
-              :loading="searchLoading"
-              class="search-btn ml5"
-              type="primary"
-              @click="handleSearch"
-            >
-              <Icon type="md-search" />&nbsp;搜索
-            </Button>
-            <Button
-              v-waves
-              :loading="clearSearchLoading"
-              class="search-btn"
-              type="info"
-              @click="handleClear"
-            >
-              <Icon type="md-refresh" />&nbsp;清除
-            </Button>
+            <div style="margin-top:5px">
+              <DatePicker
+                v-model="searchRowData.startTime"
+                format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="开始时间"
+                class="mr5"
+                style="width: 150px"
+                @on-change="startTimeChange"
+              />
+              <i>-</i>
+              <DatePicker
+                v-model="searchRowData.endTime"
+                format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="结束时间"
+                class="mr20"
+                style="width: 150px"
+                @on-change="endTimeChange"
+              />
+              <!-- 提货时间 -->
+              <DatePicker
+                v-model="searchRowData.recieveStartTime"
+                format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="提货时间起"
+                class="mr5"
+                style="width: 150px"
+                @on-change="recieveStartTimeChange"
+              />
+              <i>-</i>
+              <DatePicker
+                v-model="searchRowData.recieveEndTime"
+                format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="提货时间止"
+                class="mr5"
+                style="width: 150px"
+                @on-change="recieveEndTimeChange"
+              />
+              <Button
+                v-waves
+                :loading="searchLoading"
+                class="search-btn ml5"
+                type="primary"
+                @click="handleSearch"
+              >
+                <Icon type="md-search" />&nbsp;搜索
+              </Button>
+              <Button
+                v-waves
+                :loading="clearSearchLoading"
+                class="search-btn"
+                type="info"
+                @click="handleClear"
+              >
+                <Icon type="md-refresh" />&nbsp;清除
+              </Button>
+            </div>
           </Row>
         </div>
         <div slot="operations" style="margin-left:-30px">
@@ -594,6 +623,7 @@ const orderDetail = {
   reason: "",
   isAllRefund: "",
   createAt: null,
+  recieveTime: "",
   receiveUser: "",
   contactPhone: "",
   remark: "",
@@ -621,7 +651,10 @@ const roleRowData = {
   startTime: null,
   endTime: null,
   page: 1,
-  rows: 10
+  rows: 10,
+  recieveStartTime: null,
+  recieveEndTime: null,
+  productNames: ""
 };
 
 export default {
@@ -854,6 +887,12 @@ export default {
           key: "createAt"
         },
         {
+          title: "提货时间",
+          align: "center",
+          width: 160,
+          key: "recieveTime"
+        },
+        {
           title: "订单用户",
           align: "center",
           width: 120,
@@ -865,6 +904,7 @@ export default {
           width: 120,
           key: "contactPhone"
         },
+        { align: "center", title: "商品名称", width: 150, key: "productNames" },
         {
           title: "下单门店",
           align: "center",
@@ -1153,6 +1193,13 @@ export default {
     endTimeChange(value, data) {
       this.searchRowData.endTime = value;
     },
+    //提货时间
+    recieveStartTimeChange(value, date) {
+      this.searchRowData.recieveStartTime = value;
+    },
+    recieveEndTimeChange(value, data) {
+      this.searchRowData.recieveEndTime = value;
+    },
     handleEditCloseTransferModalView() {
       this.transferModalView = false;
     },
@@ -1227,6 +1274,7 @@ export default {
         this.$Message.error("只有已发货和配送中的订单才能操作收货");
       }
     },
+    // 门店调货
     handleSubmit() {
       if (!this.currentTableRowSelected) {
         this.$Message.error(
@@ -1390,6 +1438,7 @@ export default {
           item["status"] = miniOrderStatusConvert(item["status"]).label;
           item["payType"] = payTypeConvert(item["payType"]).label;
           item["isAllRefund"] = isAllRefundConvert(item["isAllRefund"]).label;
+          item["recieveTime"] = item["recieveTime"];
         });
         this.$refs.tables.handleDownload({
           filename: `普通订单信息-${new Date().valueOf()}`,
@@ -1397,48 +1446,6 @@ export default {
         });
       });
     },
-    // //跨月订单导出
-    // orderDownload() {
-    //   // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
-    //   this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-    //   monthOrderPages(this.searchRowData).then(res => {
-    //     // console.log("数据",res.rows)
-    //     const tableData = res;
-    //     // 恢复正常页数
-    //     this.searchRowData.rows = 10;
-    //     // 表格数据导出字段翻译
-    //     let _this = this;
-    //     tableData.forEach(item => {
-    //       const obj = _this.storeList.find(x => item.storeId === x.storeId);
-    //       item["code"] = item["code"] + "";
-    //       item["apply"] = appTypeConvert(item["apply"]).label;
-    //       item["storeId"] =
-    //         obj && obj.storeName ? obj.storeName : item["storeId"]; // 如果找不到就显示门店Id
-    //       item["totalAmount"] = (item["totalAmount"] / 100.0).toFixed(2);
-    //       item["couponAmount"] = (item["couponAmount"] / 100.0).toFixed(2);
-    //       item["amountPayable"] = (item["amountPayable"] / 100.0).toFixed(2);
-    //       item["refundFee"] = (item["refundFee"] / 100.0).toFixed(2);
-    //       item["orderType"] = orderTypeConvert(item["orderType"]).label;
-    //       item["deliverStatus"] = thirdDeliverStatusConvert(
-    //         item["deliverStatus"]
-    //       ).label;
-    //       item["orderStatus"] = miniOrderStatusConvert(
-    //         item["orderStatus"]
-    //       ).label;
-    //       item["hdStatus"] = miniHdStatusConvert(item["hdStatus"]).label;
-    //       item["receivingWay"] = receivingWayConvert(
-    //         item["receivingWay"]
-    //       ).label;
-    //       item["status"] = miniOrderStatusConvert(item["status"]).label;
-    //       item["payType"] = payTypeConvert(item["payType"]).label;
-    //       item["isAllRefund"] = isAllRefundConvert(item["isAllRefund"]).label;
-    //     });
-    //     this.$refs.tables.orderDownload({
-    //       filename: `普通订单信息-${new Date().valueOf()}`,
-    //       data: tableData
-    //     });
-    //   });
-    // },
     getStore() {
       getStorePages({ page: 1, rows: -1 })
         .then(res => {
@@ -1450,6 +1457,7 @@ export default {
     },
     modifyStoreInOrder() {
       // TODO 未测试
+      // console.log("数据",this.currentTableRowSelected.newStoreId)
       modifyStoreInOrder(this.currentTableRowSelected)
         .then(res => {
           this.$Message.info("调货成功！");
@@ -1468,20 +1476,19 @@ export default {
           tempDeleteList.push(value.id);
         });
         const ids = tempDeleteList.join(",");
-        resendToHd({ ids: ids })
-          .then(res => {
-            let { disqualification, failure } = res;
-            if (failure.length === 0) {
-              this.$Message.info("海鼎重发成功");
-            } else {
-              let lst = failure.join(",");
-              this.$Message.error({
-                content: `海鼎重发失败订单：${lst}`,
-                duration: 30,
-                closable: true
-              });
-            }
-          })
+        resendToHd({ ids: ids }).then(res => {
+          let { disqualification, failure } = res;
+          if (failure.length === 0) {
+            this.$Message.info("海鼎重发成功");
+          } else {
+            let lst = failure.join(",");
+            this.$Message.error({
+              content: `海鼎重发失败订单：${lst}`,
+              duration: 30,
+              closable: true
+            });
+          }
+        });
       }
     },
     onSelectionAll(selection) {

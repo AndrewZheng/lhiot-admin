@@ -93,9 +93,9 @@
           >
             <Icon type="md-add" />海鼎优惠券
           </Button>
-          <Button class="mr5" @click="onRelevance" type="primary">
+          <Button class="mr5" @click="onRelevance" type="primary" v-if="hdCouponType==='手动发券'">
             <Icon type="md-add" />
-            {{hdCouponType}}
+            {{"手动发券"}}
           </Button>
           <!-- <Poptip
             confirm
@@ -1633,8 +1633,6 @@ export default {
       }
       if (this.hdCouponType === "手动发券") {
         this.modalPhones = true;
-      } else if (this.hdCouponType === "测试发券") {
-        alert("调取测试发券模板");
       }
     },
     handlePhonesClose() {

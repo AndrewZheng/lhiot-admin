@@ -1213,16 +1213,16 @@ export default {
             return <div>{amount}</div>;
           }
         },
-        {
-          title: "SVIP价格",
-          align: "center",
-          minWidth: 60,
-          key: "svipPrice",
-          render(h, params, vm) {
-            const amount = fenToYuanDot2(params.row.svipPrice);
-            return <div>{amount}</div>;
-          }
-        },
+        // {
+        //   title: "SVIP价格",
+        //   align: "center",
+        //   minWidth: 60,
+        //   key: "svipPrice",
+        //   render(h, params, vm) {
+        //     const amount = fenToYuanDot2(params.row.svipPrice);
+        //     return <div>{amount}</div>;
+        //   }
+        // },
         {
           title: "商品类型",
           minWidth: 100,
@@ -1249,6 +1249,32 @@ export default {
                 return (
                   <div>
                     <tag color="orange">
+                      {
+                        expandTypeConvert(row.productStandardExpand.expandType)
+                          .label
+                      }
+                    </tag>
+                  </div>
+                );
+              } else if (
+                row.productStandardExpand.expandType == "SECKILL_PRODUCT"
+              ) {
+                return (
+                  <div>
+                    <tag color="blue">
+                      {
+                        expandTypeConvert(row.productStandardExpand.expandType)
+                          .label
+                      }
+                    </tag>
+                  </div>
+                );
+              } else if (
+                row.productStandardExpand.expandType == "ASSIST_PRODUCT"
+              ) {
+                return (
+                  <div>
+                    <tag color="green">
                       {
                         expandTypeConvert(row.productStandardExpand.expandType)
                           .label
@@ -1643,7 +1669,9 @@ export default {
       this.currentTableRowSelected = currentRow;
     },
     handleCreateView() {
-      this.resetFields();
+      // this.resetFields();
+      this.defaultListMultiple = [];
+      this.uploadListMultiple = [];
       if (this.tempModalType !== this.modalType.create) {
         this.productStandardDetail = _.cloneDeep(productStandardDetail);
       }
@@ -1754,6 +1782,7 @@ export default {
           }
           if (this.tempModalType === this.modalType.create) {
             this.createStandard();
+            this.currentTableRowSelected = null;
           } else if (this.tempModalType === this.modalType.edit) {
             this.editProductStandard();
           }

@@ -1,7 +1,7 @@
 <template>
   <div class="m-role">
     <Card>
-      <h4>邀请有礼活动数据埋点统计</h4>
+      <h4>助力抢爆品活动数据埋点统计</h4>
       <tables
         ref="tables"
         v-model="tableData"
@@ -81,21 +81,18 @@
 import Tables from "_c/tables";
 import CountTo from "_c/count-to";
 import _ from "lodash";
-import { dataStatistics } from "@/api/mini-program";
+import { assistStatistics } from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 
 const dataStatisticsDetail = {
-  id: 0,
-  buyRate: "", //购买转化率
-  inviteUserNum: 0, //通过邀请用户量
-  notButtonNum: 0, //未触发邀请量
-  orderUserNum: 0, //发生购买用户量
-  pvNum: 0, //页面访问量
-  quitRate: null, //邀请按钮跳出率
-  uvNum: null, //用户访问量
-  beginDate: null,
-  endDate: null
+  beginDate: "",
+  buyNum: "",
+  endDate: "",
+  id: "",
+  pvNum: "",
+  totalDate: "",
+  uvNum: ""
 };
 
 const roleRowData = {
@@ -129,45 +126,29 @@ export default {
           }
         },
         {
-          title: "用户访问量",
-          key: "uvNum",
-          align: "center"
-        },
-        {
-          title: "页面访问量",
+          title: "助力抢爆品活动页面访问量",
           key: "pvNum",
           align: "center"
         },
         {
-          title: "通过邀请用户量",
-          align: "center",
-          key: "inviteUserNum"
+          title: "助力抢爆品用户访问量",
+          key: "uvNum",
+          align: "center"
         },
         {
-          title: "未触发邀请量",
+          title: "分享链接进入新用户数量",
+          align: "center",
+          key: "newUserNum"
+        },
+        {
+          title: "没有触发我要抢按钮的数量",
           align: "center",
           key: "notButtonNum"
         },
         {
-          title: "邀请按钮跳出率",
+          title: "拉新用户购买用户数量",
           align: "center",
-          key: "quitRate",
-          render(h, params) {
-            return h("div", params.row.quitRate + "%");
-          }
-        },
-        {
-          title: "发生购买用户量",
-          align: "center",
-          key: "orderUserNum"
-        },
-        {
-          title: "购买转化率",
-          key: "buyRate",
-          align: "center",
-          render(h, params) {
-            return h("div", params.row.buyRate + "%");
-          }
+          key: "newUserNum"
         },
         {
           title: "开始日期",
@@ -209,7 +190,7 @@ export default {
         this.searchRowData.beginDate = yesterday;
         this.searchRowData.endDate = yesterday;
       }
-      dataStatistics(this.searchRowData)
+      assistStatistics(this.searchRowData)
         .then(res => {
           this.tableData = res;
           this.loading = false;

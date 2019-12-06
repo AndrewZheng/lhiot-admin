@@ -545,7 +545,7 @@ export default {
         {
           title: "ID",
           key: "id",
-          minWidth: 80,
+          minWidth: 60,
           align: "center",
           fixed: "left"
         },

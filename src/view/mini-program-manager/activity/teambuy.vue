@@ -26,6 +26,7 @@
               v-model="searchRowData.status"
               placeholder="活动状态"
               style="padding-right: 5px;width: 100px"
+              @on-change="activityStatusChange"
               clearable
             >
               <Option
@@ -43,20 +44,27 @@
               style="width: auto"
               clearable
             ></Input>
+            <Input
+              v-model="searchRowData.content"
+              placeholder="活动内容"
+              class="search-input mr5"
+              style="width: auto"
+              clearable
+            ></Input>
             <DatePicker
-              v-model="searchRowData.createTimeStart"
+              v-model="searchRowData.startTimeBegin"
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
-              placeholder="创建时间起"
+              placeholder="有效时间起"
               class="mr5"
               style="width: 160px"
               @on-change="createTimeStartChange"
             />
             <i>-</i>
             <DatePicker
-              v-model="searchRowData.createTimeEnd"
+              v-model="searchRowData.startTimeEnd"
               format="yyyy-MM-dd HH:mm:ss"
-              placeholder="创建时间止"
+              placeholder="有效时间止"
               class="mr5"
               style="width: 160px"
               @on-change="createTimeEndChange"
@@ -853,18 +861,20 @@ const teambuyDetail = {
   hour: null,
   minute: null,
   second: null,
-  relationStoreType: "ALL"
+  relationStoreType: "ALL",
+  content: ""
 };
 
 const roleRowData = {
   status: "on",
   activityName: null,
-  createTimeStart: null,
-  createTimeEnd: null,
+  startTimeBegin: null,
+  startTimeEnd: null,
   page: 1,
   rows: 10,
   sidx: "rank",
-  sort: "asc"
+  sort: "asc",
+  content: ""
 };
 
 const productStandardDetail = {
@@ -1071,11 +1081,9 @@ export default {
         {
           title: "活动名称",
           key: "activityName",
-          sortable: true,
           align: "center",
           fixed: "left",
-          minWidth: 150,
-          tooltip: true
+          minWidth: 200
         },
         {
           title: "活动状态",
@@ -1115,6 +1123,12 @@ export default {
               </div>
             );
           }
+        },
+        {
+          title: "活动内容",
+          align: "center",
+          minWidth: 160,
+          key: "content"
         },
         {
           title: "有效期起",
@@ -1713,6 +1727,10 @@ export default {
       });
     },
     getTableData() {
+      if (!this.searchRowData.status) {
+        this.searchRowData.sidx = "start_time";
+        this.searchRowData.sort = "desc";
+      }
       getTeamBuyPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
@@ -1757,10 +1775,10 @@ export default {
       }
     },
     createTimeStartChange(value, date) {
-      this.teambuyDetail.createTimeStart = value ? value : null;
+      this.teambuyDetail.startTimeBegin = value ? value : null;
     },
     createTimeEndChange(value, date) {
-      this.teambuyDetail.createTimeEnd = value ? value : null;
+      this.teambuyDetail.startTimeEnd = value ? value : null;
     },
     deliveryEndTimeChange(value, date) {
       this.teambuyDetail.deliveryEndTime = value;
@@ -1768,6 +1786,12 @@ export default {
         this.teambuyDetail.deliveryEndTime = this.$moment(
           this.teambuyDetail.deliveryEndTime
         ).format("YYYY-MM-DD HH:mm:ss");
+      }
+    },
+    activityStatusChange(value, date) {
+      if (value === "expire" || value === "off") {
+        this.searchRowData.sidx = "start_time";
+        this.searchRowData.sort = "desc";
       }
     },
     validSecondsChange() {

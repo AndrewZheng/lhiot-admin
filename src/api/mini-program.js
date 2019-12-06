@@ -604,7 +604,7 @@ export const editActivities = (data) => {
     method: 'put'
   });
 };
-
+// ================================老限时抢购
 // 根据条件分页查询限时抢购列表
 export const getFlashsalePages = (data) => {
   return $http.request({
@@ -684,6 +684,267 @@ export const editFlashsaleProductRelation = (data) => {
     url: '/minapp/activity-flashsale-product-relations/' + data.id,
     data,
     method: 'put'
+  });
+};
+
+//=========================新限时秒杀
+// 根据条件分页查询限时秒杀列表
+export const getSeckillPages = (data) => {
+  return $http.request({
+    url: '/minapp/activity-seckill/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 根据限时抢购Ids删除限时秒杀
+export const deleteSeckill = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/activity-seckill/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加限时秒杀
+export const createSeckill = (data) => {
+  return $http.request({
+    url: '/minapp/activity-seckill/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改限时秒杀
+export const editSeckill = (data) => {
+  return $http.request({
+    url: '/minapp/activity-seckill/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询限时抢购商品关联列表
+export const getSeckillProductRelationPages = (data) => {
+  return $http.request({
+    url: '/minapp/activity-seckill-product-relation/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 根据限时抢购商品关联Ids删除限时抢购商品关联
+export const deleteSeckillProductRelation = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/activity-seckill-product-relation/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加限时抢购商品关联 
+export const createSeckillProductRelation = (data) => {
+  return $http.request({
+    url: '/minapp/activity-seckill-product-relation/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改限时抢购商品关联
+export const editSeckillProductRelation = (data) => {
+  return $http.request({
+    url: '/minapp/activity-seckill-product-relation/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+//限时抢购数据统计
+// 会员中心限时秒杀数据埋点统计 /minapp/activity-seckill/data-total 数据埋点统计 
+export const seckillStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/activity-seckill/data-total?beginDate=${data.beginDate}&endDate=${data.endDate}&dateGroup=${data.dateGroup}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// /minapp/activity-seckill/user/seckill-total 限时抢购秒杀单品数据统计 ?standardId=17
+export const singleSeckillStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/activity-seckill/prod/seckill-total?standardId=${data.standardId}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// /minapp/activity-seckill/user/seckill-total 限时抢购用户数据统计
+export const userSeckillStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/activity-seckill/user/seckill-total?nickName=${data.nickName}&phone=${data.phone}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+//=========================助力抢爆品
+// 根据条件分页查询助力抢爆品列表
+export const getAssistPages = (data) => {
+  return $http.request({
+    url: '/minapp/activity-assist/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 根据助力抢爆品Ids删除限时秒杀 /minapp/activity-assist/{ids}
+export const deleteAssist = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/activity-assist/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加助力抢爆品
+export const createAssist = (data) => {
+  return $http.request({
+    url: '/minapp/activity-assist/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改助力抢爆品 /minapp/activity-assist/update/{id}
+export const editAssist = (data) => {
+  return $http.request({
+    url: '/minapp/activity-assist/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询助力抢爆品商品关联列表
+export const getAssistProductRelationPages = (data) => {
+  return $http.request({
+    url: '/minapp/activity-assist-relation/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 根据助力抢爆品商品关联Ids删除限时抢购商品关联 /minapp/activity-assist-relation/{ids}
+export const deleteAssistProductRelation = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/activity-assist-relation/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加助力抢爆品商品关联 
+export const createAssistProductRelation = (data) => {
+  return $http.request({
+    url: '/minapp/activity-assist-relation/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改助力抢爆品商品关联/minapp/activity-assist-relation/update/{id}
+export const editAssistProductRelation = (data) => {
+  return $http.request({
+    url: '/minapp/activity-assist-relation/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+//助力抢爆品数据统计
+// 会员中心助力抢爆品数据埋点统计 /minapp/activity-assist/data-total 助力抢爆品埋点数据统计 
+export const assistStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/activity-assist/data-total?beginDate=${data.beginDate}&endDate=${data.endDate}&dateGroup=${data.dateGroup}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// /minapp/activity-assist/prod/assist-total   助力抢爆品单品数据统计
+export const singleAssistStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/activity-assist/prod/assist-total?standardId=${data.standardId}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// /minapp/activity-assist/user/assist-total  助力抢爆品用户数据统计
+export const userAssistStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/activity-assist/user/assist-total?nickName=${data.nickName}&phone=${data.phone}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// /minapp/activity-assist/user/assist-total  助力抢爆品基础数据统计
+export const assistDataStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/activity-assist/base-total?beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    // url: `/minapp/invite/data-total?beginDate=${data.beginDate}&endDate=${data.endDate}&dateGroup=${data.dateGroup}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
@@ -1247,10 +1508,10 @@ export const getOrder = ({
   });
 };
 
-// 海鼎订单调货
+// 海鼎订单调货  /minapp/orders/{id}/store
 export const modifyStoreInOrder = (data) => {
   return $http.request({
-    url: '/minapp/orders/' + data.id + '?storeId=' + data.storeId,
+    url: '/minapp/orders/' + data.id+'/store'+ '?storeId=' + data.newStoreId,
     method: 'put'
   });
 };

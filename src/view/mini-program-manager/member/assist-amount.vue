@@ -2,7 +2,7 @@
   <div class="m-role">
     <div style="margin-bottom:30px">
       <Card>
-        <h4>邀请有礼活动基础数据分析</h4>
+        <h4>助力抢爆品活动基础数据分析</h4>
         <tables
           v-model="inviteData"
           :columns="dataColumns"
@@ -60,9 +60,20 @@
         </tables>
       </Card>
     </div>
-    <div>
-      <Card>
-        <h4>邀请有礼活动用户数据统计</h4>
+    <div style="position: relative;">
+      <div class="tabChange">
+        <b
+          data-index="user"
+          @click="assistDataChange"
+          :class=" topStatus=='user' ? 'hot' : '' "
+        >用户数据分析</b>
+        <b
+          data-index="product"
+          @click="assistDataChange"
+          :class=" topStatus=='product' ? 'hot' : '' "
+        >单品数据分析</b>
+      </div>
+      <Card v-show="topStatus==='user'">
         <tables
           ref="tables"
           v-model="tableData"
@@ -94,7 +105,7 @@
               <Select
                 v-model="searchRowData.sidx"
                 placeholder="排序"
-                style="padding-right: 5px;width: 100px"
+                style="padding-right: 5px;width: 120px"
                 clearable
               >
                 <Option
@@ -122,9 +133,9 @@
               >
                 <Icon type="md-refresh" />&nbsp;清除
               </Button>
-              <Button class="search-btn mr2" type="warning" @click="handleDownload">
+              <!-- <Button class="search-btn mr2" type="warning" @click="handleDownload">
                 <Icon type="md-download" />导出数据
-              </Button>
+              </Button>-->
             </Row>
           </div>
         </tables>
@@ -141,6 +152,54 @@
           </Row>
         </div>
       </Card>
+      <Card v-show="topStatus==='product'">
+        <tables
+          ref="tables1"
+          v-model="tableData2"
+          :columns="columns2"
+          :loading="loading"
+          :search-area-column="18"
+          :operate-area-column="6"
+          editable
+          searchable
+          border
+          search-place="top"
+        >
+          <div slot="searchCondition">
+            <Row>
+              <Select
+                v-model="searchRowData2.sidx"
+                placeholder="排序"
+                style="padding-right: 5px;width: 130px"
+                @on-change="handRankType"
+              >
+                <Option
+                  v-for="(item,index) in rankType2"
+                  :value="item.value"
+                  :key="index"
+                  class="ptb2-5"
+                  style="padding-left: 5px;width: 100px"
+                >{{ item.label }}</Option>
+              </Select>
+              <!-- <Button class="search-btn mr2" type="warning" @click="handleDownload">
+                <Icon type="md-download" />导出数据
+              </Button>-->
+            </Row>
+          </div>
+        </tables>
+        <div style="margin: 10px;overflow: hidden">
+          <Row type="flex" justify="end">
+            <Page
+              :total="totalPage"
+              :current="searchRowData2.page"
+              show-sizer
+              show-total
+              @on-change="changePage"
+              @on-page-size-change="changePageSize"
+            ></Page>
+          </Row>
+        </div>
+      </Card>
     </div>
   </div>
 </template>
@@ -149,9 +208,9 @@
 import Tables from "_c/tables";
 import _ from "lodash";
 import {
-  userDataStatistics,
-  dataStatistics,
-  basicsDataStatistics
+  userAssistStatistics,
+  assistDataStatistics,
+  singleAssistStatistics
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -182,7 +241,7 @@ const roleRowData = {
   phone: "",
   page: 1,
   rows: 10,
-  sidx: "all_amount",
+  sidx: "invite_assist_user",
   sort: "desc"
 };
 
@@ -193,6 +252,14 @@ const roleRowData1 = {
   //   dateGroup: false
 };
 
+const roleRowData2 = {
+  standardId: "",
+  page: 1,
+  rows: 10,
+  sidx: "buy_count",
+  sort: "desc"
+};
+
 export default {
   components: {
     Tables
@@ -201,28 +268,41 @@ export default {
   data() {
     return {
       mark: false,
+      topStatus: "user",
       button: "今日",
       inviteData: [],
+      tableData2: [],
+      totalPage: 0,
       rankType: [
         {
-          label: "奖励总金额",
-          value: "all_amount"
+          label: "邀请助力人数",
+          value: "invite_assist_user"
         },
         {
-          label: "邀请人数",
-          value: "invite_count"
+          label: "助力参与数量",
+          value: "assist_join_count"
         },
         {
-          label: "待入账金额",
-          value: "wait_amount"
+          label: "助力成功数量",
+          value: "assist_success_count"
         },
         {
-          label: "可提现金额",
-          value: "can_out_amount"
+          label: "购买总数量",
+          value: "buy_count"
+        }
+      ],
+      rankType2: [
+        {
+          label: "助力总次数",
+          value: "assist_count"
         },
         {
-          label: "已提现金额",
-          value: "all_out_amount"
+          label: "助力成功总次数",
+          value: "assist_success_count"
+        },
+        {
+          label: "购买总数量",
+          value: "buy_count"
         }
       ],
       // 袁木
@@ -238,90 +318,179 @@ export default {
           key: "phone"
         },
         {
-          title: "奖励总金额",
+          title: "邀请助力人数",
           align: "center",
-          key: "allAmount",
-          render(h, params) {
-            return <div>{fenToYuanDot2(params.row.allAmount)}</div>;
-          }
+          key: "inviteAssistUser"
         },
         {
-          title: "邀请人数",
+          title: "助力参与数量",
           align: "center",
-          key: "inviteCount",
+          key: "assistJoinCount",
           minWidth: 60
         },
         {
-          title: "待入账金额",
+          title: "助力成功数量",
           align: "center",
-          key: "waitAmount",
-          render(h, params) {
-            return <div>{fenToYuanDot2(params.row.waitAmount)}</div>;
-          }
+          key: "assistSuccessCount"
         },
         {
-          title: "可提现金额",
+          title: "购买总数量",
           align: "center",
-          key: "canOutAmount",
-          render(h, params) {
-            return <div>{fenToYuanDot2(params.row.canOutAmount)}</div>;
-          }
-        },
-        {
-          title: "已提现金额",
-          align: "center",
-          key: "allOutAmount",
-          render(h, params) {
-            return <div>{fenToYuanDot2(params.row.allOutAmount)}</div>;
-          }
+          key: "buyCount"
         }
       ],
       dataColumns: [
         {
-          title: "奖励总金额",
-          key: "allAmount",
+          title: "助力商品总数",
+          key: "assistProd",
+          align: "center"
+        },
+        {
+          title: "助力成功商品总数",
+          key: "assistSuccessProd",
+          align: "center"
+        },
+        {
+          title: "助力成功率",
+          key: "assistSuccessRate",
           align: "center",
           render(h, params) {
-            return <div>{fenToYuanDot2(params.row.allAmount)}</div>;
+            return h("div", params.row.assistSuccessRate + "%");
           }
         },
         {
-          title: "已提现总金额",
-          key: "outAmount",
-          align: "center",
-          render(h, params) {
-            return <div>{fenToYuanDot2(params.row.outAmount)}</div>;
-          }
-        },
-        {
-          title: "可提现总金额",
-          key: "canOutAmount",
-          align: "center",
-          render(h, params) {
-            return <div>{fenToYuanDot2(params.row.canOutAmount)}</div>;
-          }
-        },
-        {
-          title: "待入账总金额",
-          align: "center",
-          key: "waitAmount",
-          render(h, params) {
-            return <div>{fenToYuanDot2(params.row.waitAmount)}</div>;
-          }
-        },
-        {
-          title: "参与总人数",
+          title: "发起助力总人数",
           align: "center",
           key: "joinUser"
         },
         {
-          title: "邀请总人数",
+          title: "被邀请助力总人数",
           align: "center",
-          key: "inviteUser"
+          key: "assistUser"
+        },
+        {
+          title: "购买商品总数",
+          align: "center",
+          key: "buyProd"
+        }
+      ],
+      columns2: [
+        {
+          title: "类型",
+          align: "center",
+          key: "type",
+
+          render(h, params) {
+            const { row } = params;
+            if (row.type === "COUPON") {
+              return (
+                <div>
+                  <tag color="orange">{"优惠券"}</tag>
+                </div>
+              );
+            } else if (row.type === "PROD") {
+              return (
+                <div>
+                  <tag color="blue">{"商品"}</tag>
+                </div>
+              );
+            }
+          }
+        },
+        {
+          title: "商品规格ID",
+          align: "center",
+          key: "standardId",
+          render(h, params) {
+            const { row } = params;
+            if (row.standardId != null) {
+              return <div>{row.standardId}</div>;
+            } else {
+              return <div>{"N/A"}</div>;
+            }
+          }
+        },
+        {
+          title: "商品条码",
+          align: "center",
+          key: "barcode",
+          render(h, params) {
+            const { row } = params;
+            if (row.barcode != null) {
+              return <div>{row.barcode}</div>;
+            } else {
+              return <div>{"N/A"}</div>;
+            }
+          }
+        },
+        {
+          title: "商品名称",
+          align: "center",
+          key: "productName",
+          render(h, params) {
+            const { row } = params;
+            if (row.productName != null) {
+              return <div>{row.productName}</div>;
+            } else {
+              return <div>{"N/A"}</div>;
+            }
+          }
+        },
+        {
+          title: "券配置ID",
+          align: "center",
+          key: "couponConfigId",
+          render(h, params) {
+            const { row } = params;
+            if (row.couponConfigId != null) {
+              return <div>{row.couponConfigId}</div>;
+            } else {
+              return <div>{"N/A"}</div>;
+            }
+          }
+        },
+        {
+          title: "优惠券名称",
+          align: "center",
+          key: "couponName",
+          render(h, params) {
+            const { row } = params;
+            if (row.couponName != null) {
+              return <div>{row.couponName}</div>;
+            } else {
+              return <div>{"N/A"}</div>;
+            }
+          }
+        },
+        {
+          title: "助力总次数",
+          align: "center",
+          key: "assistCount"
+        },
+        {
+          title: "助力成功总次数",
+          align: "center",
+          key: "assistSuccessCount",
+          minWidth: 60
+        },
+        {
+          title: "助力成功率",
+          align: "center",
+          key: "assistSuccessRate",
+          render(h, params) {
+            return h("div", params.row.assistSuccessRate + "%");
+          }
+        },
+        {
+          title: "购买总数量",
+          align: "center",
+          key: "buyCount",
+          minWidth: 60
         }
       ],
       searchRowData: _.cloneDeep(roleRowData),
       searchRowData1: _.cloneDeep(roleRowData1),
+      searchRowData2: _.cloneDeep(roleRowData2),
       couponTemplateDetail: _.cloneDeep(couponTemplateDetail)
     };
   },
@@ -329,8 +498,10 @@ export default {
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
     this.searchRowData1 = _.cloneDeep(roleRowData1);
+    this.searchRowData2 = _.cloneDeep(roleRowData2);
     this.getTableData();
     this.getTableData1();
+    this.getTableData2();
     // this.handleSearch();
   },
   created() {},
@@ -340,7 +511,7 @@ export default {
       this.getTableData();
     },
     getTableData() {
-      userDataStatistics(this.searchRowData)
+      userAssistStatistics(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
@@ -402,7 +573,17 @@ export default {
         this.searchRowData1.beginDate = toMonth;
         this.searchRowData1.endDate = today;
       }
-      basicsDataStatistics(this.searchRowData1)
+      let date1 = new Date();
+      date1.setDate(date.getDate() - 1);
+      var year1 = date.getFullYear();
+      var month1 = date.getMonth() + 1;
+      var day1 = date.getDate();
+      var yesterday1 = `${year1}-${month1}-${day1}`;
+      if (this.button === "今日") {
+        this.searchRowData1.beginDate = yesterday1;
+        this.searchRowData1.endDate = yesterday1;
+      }
+      assistDataStatistics(this.searchRowData1)
         .then(res => {
           //   console.log("接受数据", res);
           this.inviteData.push(res);
@@ -417,10 +598,31 @@ export default {
           this.clearSearchLoading = false;
         });
     },
+    getTableData2() {
+      singleAssistStatistics(this.searchRowData2)
+        .then(res => {
+          this.tableData2 = res.rows;
+          this.totalPage = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
     handleSearch1() {
       //   this.searchLoading = true;
       this.inviteData = [];
       this.getTableData1();
+    },
+    handRankType() {
+      this.searchRowData2.page = 1;
+      this.searchLoading = true;
+      this.getTableData2();
     },
     timeChange(value) {
       if (value === "今日") {
@@ -455,7 +657,7 @@ export default {
     },
     handleSearch() {
       this.searchRowData.page = 1;
-      this.searchLoading = true;
+      // this.searchLoading = true;
       this.getTableData();
     },
     // 导出数据
@@ -483,6 +685,14 @@ export default {
           data: tableData
         });
       });
+    },
+    assistDataChange(e) {
+      let index = e.currentTarget.dataset.index;
+      if (this.topStatus === index) {
+        return;
+      }
+      this.topStatus = index;
+      // console.log("数据", this.topStatus);
     }
   }
 };
@@ -490,5 +700,33 @@ export default {
 <style lang="scss" scoped>
 .mark {
   display: inline-block;
+}
+.tabChange {
+  height: 50px;
+  width: 230px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  bottom: -5px;
+  left: 0;
+  background: rgb(245, 247, 249);
+  border: 1px solid rgb(232, 234, 236);
+  border-radius: 10px 10px 0 0;
+  b {
+    display: block;
+    width: 113px;
+    height: 48px;
+    cursor: pointer;
+    line-height: 50px;
+    text-align: center;
+    border-radius: 10px 10px 0 0;
+  }
+}
+.hot {
+  display: inline-block;
+  // color: red;
+  background-color: #fff;
 }
 </style>

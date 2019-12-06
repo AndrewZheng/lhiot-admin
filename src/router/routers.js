@@ -217,7 +217,6 @@ export const constantRouterMap = [
         },
         component: () => import('@/view/mini-program-manager/order/month-orders.vue')
       }
-      
     ]
   },
 ];
@@ -838,15 +837,15 @@ export const asyncRouterMap = [
         },
         component: () => import('@/view/mini-program-manager/activity/activities.vue')
       },
-      {
-        path: '/small-activity-flashsale',
-        name: 'small-activity-flashsale',
-        meta: {
-          icon: 'md-clock',
-          title: '限时抢购管理'
-        },
-        component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
-      },   
+      // {
+      //   path: '/small-activity-flashsale',
+      //   name: 'small-activity-flashsale',
+      //   meta: {
+      //     icon: 'md-clock',
+      //     title: '限时抢购管理'
+      //   },
+      //   component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
+      // },   
       {
         path: '/small-hand-coupon',
         name: 'small-hand-coupon',
@@ -936,6 +935,24 @@ export const asyncRouterMap = [
           title: '随机立减活动'
         },
         component: () => import('@/view/mini-program-manager/activity/random-discount.vue')
+      },
+      {
+        path: '/small-activity-seckill-product',
+        name: 'small-activity-seckill-product',
+        meta: {
+          icon: 'ios-alarm',
+          title: '限时秒杀活动'
+        },
+        component: () => import('@/view/mini-program-manager/activity/seckill-product.vue')
+      },
+      {
+        path: '/small-activity-assist-product',
+        name: 'small-activity-assist-product',
+        meta: {
+          icon: 'md-contacts',
+          title: '助力抢爆品活动'
+        },
+        component: () => import('@/view/mini-program-manager/activity/assist-product.vue')
       },
     ]
   },
@@ -1048,6 +1065,42 @@ export const asyncRouterMap = [
           title: '邀请有礼用户汇总'
         },
         component: () => import('@/view/mini-program-manager/member/amount.vue')
+      },
+      {
+        path: '/small-seckill-statistics',
+        name: 'small-seckill-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '限时秒杀活动分析'
+        },
+        component: () => import('@/view/mini-program-manager/member/seckill-statistics.vue')
+      },
+      {
+        path: '/small-seckill-amount',
+        name: 'small-seckill-amount',
+        meta: {
+          icon: 'logo-usd',
+          title: '限时秒杀活动数据汇总'
+        },
+        component: () => import('@/view/mini-program-manager/member/seckill-amount.vue')
+      },
+      {
+        path: '/small-assist-statistics',
+        name: 'small-assist-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '助力抢爆品活动分析'
+        },
+        component: () => import('@/view/mini-program-manager/member/assist-statistics.vue')
+      },
+      {
+        path: '/small-assist-amount',
+        name: 'small-assist-amount',
+        meta: {
+          icon: 'logo-usd',
+          title: '助力抢爆品活动数据汇总'
+        },
+        component: () => import('@/view/mini-program-manager/member/assist-amount.vue')
       },
     ]
   },
