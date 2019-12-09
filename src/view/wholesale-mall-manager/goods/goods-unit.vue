@@ -80,35 +80,20 @@
         <span>{{ unitDetail.id == ''?'创建商品单位':'编辑商品单位' }}</span>
       </p>
       <div class="modal-content" style="margin-top: 20px">
-        <Form ref="modalEdit" :label-width="100" :model="unitDetail" :rules="ruleInline">
+        <Form ref="editForm" :label-width="100" :model="unitDetail" :rules="ruleInline">
           <Row>
+            <FormItem label="单位编码:" prop="unitCode">
+              <Input v-model="unitDetail.unitCode" placeholder="请输入单位编码" style="width: 200px"></Input>
+            </FormItem>
             <FormItem label="单位名称:" prop="unitName">
               <Input v-model="unitDetail.unitName" placeholder="请输入单位名称" style="width: 200px"></Input>
-            </FormItem>
-          </Row>
-          <Row>
-            <FormItem label="是否可拆分:" prop="splitStatus">
-              <Select
-                v-model="unitDetail.splitStatus"
-                class="search-col mr5"
-                placeholder="是否可拆分"
-                style="width:200px"
-                clearable
-              >
-                <Option
-                  v-for="item in splitStatus"
-                  :value="item.value"
-                  :key="item.value"
-                  class="ptb2-5"
-                >{{ item.label }}</Option>
-              </Select>
             </FormItem>
           </Row>
         </Form>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')">确定</Button>
       </div>
     </Modal>
   </div>
@@ -122,7 +107,7 @@ import {
   editProductUnits,
   delProductUnits,
   createProductUnits
-} from "@/api/mini-program";
+} from "@/api/wholesale";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -130,18 +115,17 @@ import deleteMixin from "@/mixins/deleteMixin.js";
 import { splitConvert } from "@/libs/converStatus";
 
 const unitDetail = {
-  id: "",
-  splitStatus: null,
+  id: 0,
+  unitCode: "",
   unitName: ""
 };
 
 const roleRowData = {
-  id: "",
-  splitStatus: null,
   unitName: "",
   page: 1,
   rows: 10
 };
+
 export default {
   components: {
     Tables
@@ -150,7 +134,7 @@ export default {
   data() {
     return {
       ruleInline: {
-        splitStatus: { required: true, message: "请填写是否可拆分" },
+        unitCode: { required: true, message: "请填写单位编码" },
         unitName: { required: true, message: "请填写单位名称" }
       },
       columns: [
@@ -166,18 +150,14 @@ export default {
           key: "id"
         },
         {
+          title: "单位编码",
+          align: "center",
+          key: "unitCode"
+        },
+        {
           title: "单位名称",
           align: "center",
           key: "unitName"
-        },
-        {
-          title: "是否可拆分",
-          align: "center",
-          key: "splitStatus",
-          render: (h, params, vm) => {
-            const { row } = params;
-            return <div>{splitConvert(row.splitStatus).label}</div>;
-          }
         },
         {
           title: "操作",
@@ -208,7 +188,7 @@ export default {
   },
   methods: {
     resetFields() {
-      this.$refs.modalEdit.resetFields();
+      this.$refs.editForm.resetFields();
     },
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
@@ -252,7 +232,6 @@ export default {
     },
     getTableData() {
       getProductUnitsPages(this.searchRowData).then(res => {
-        // this.tableData = res.array;
         this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;
@@ -261,7 +240,7 @@ export default {
       });
     },
     handleAdd() {
-      this.$refs.modalEdit.resetFields();
+      this.$refs.editForm.resetFields();
       this.tempModalType = this.modalType.create;
       this.unitDetail = unitDetail;
       this.modalEdit = true;

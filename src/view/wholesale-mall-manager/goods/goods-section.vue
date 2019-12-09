@@ -280,7 +280,8 @@
 
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
-import _ from "lodash";
+import CommonIcon from "_c/common-icon";
+
 import {
   getProductSectionRelationPages,
   createProductSectionRelation,
@@ -290,19 +291,18 @@ import {
   getProductSectionTree,
   getProStandardExpand
 } from "@/api/mini-program";
-import { buildMenu, convertTree, convertTreeCategory } from "@/libs/util";
-import CommonIcon from "_c/common-icon";
+import { buildMenu, convertTree, convertTreeCategory,fenToYuanDot2 } from "@/libs/util";
+
 import uploadMixin from "@/mixins/uploadMixin";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 import deleteMixin from "@/mixins/deleteMixin.js";
-import { fenToYuanDot2 } from "@/libs/util";
+
 import {
   customPlanStatusConvert,
   appTypeConvert,
   expandTypeConvert
 } from "@/libs/converStatus";
-import { appTypeEnum, expandTypeEnum } from "@/libs/enumerate";
 
 const productStandardDetail = {
   applyType: "",
@@ -552,8 +552,6 @@ export default {
         ],
         rank: [{ required: true, message: "请输入商品排序" }]
       },
-      appTypeEnum,
-      expandTypeEnum,
       menuData: [],
       discount: [],
       columns: [

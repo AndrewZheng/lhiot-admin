@@ -111,6 +111,7 @@ export const getStorePages = (data) => {
     }
   });
 };
+
 // 根据id删除门店
 export const deleteStore = ({
   ids
@@ -572,7 +573,7 @@ export const getActivitiesPages = (data) => {
     method: 'post',
     headers: {
       'page': data.page,
-      'rows': data.rows,
+      'rows': data.rows
     }
   });
 };
@@ -950,7 +951,7 @@ export const deleteRegisterGift = ({
   });
 };
 
-// 会员中心数据埋点统计 /minapp/data-total 邀请有礼数据统计 
+// 会员中心数据埋点统计 /minapp/data-total 邀请有礼数据统计
 export const dataStatistics = (data) => {
   return Vue.prototype.$http.request({
     url: `/minapp/invite/data-total?beginDate=${data.beginDate}&endDate=${data.endDate}&dateGroup=${data.dateGroup}`,
@@ -962,7 +963,7 @@ export const dataStatistics = (data) => {
   });
 };
 
-//minapp/invite/base-total邀请有礼基础数据统计
+// minapp/invite/base-total邀请有礼基础数据统计
 export const basicsDataStatistics = (data) => {
   return Vue.prototype.$http.request({
     url: `/minapp/invite/base-total?beginDate=${data.beginDate}&endDate=${data.endDate}`,

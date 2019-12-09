@@ -223,8 +223,28 @@ export const constantRouterMap = [
         component: () => import('@/view/mini-program-manager/order/month-orders.vue')
       }
       
-    ]
+    ],
   },
+  {
+    path: '/wholesale-manager-detail',
+    name: 'wholesale-manager-detail',
+    meta: {
+      icon: 'md-menu',
+      title: '批发小程序跳转页面集合'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'wholesale-goods-relation-standard',
+        name: 'wholesale-goods-relation-standard',
+        meta: {
+          icon: 'md-menu',
+          title: '商品关联规格'
+        },
+        component: () => import('@/view/wholesale-mall-manager/goods/goods-standard.vue')
+      }
+    ]
+  }
 ];
 
 export const asyncRouterMap = [

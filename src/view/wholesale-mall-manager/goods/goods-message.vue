@@ -30,14 +30,21 @@
             <div slot="searchCondition">
               <Row>
                 <Input
-                  v-model="searchRowData.productCode"
+                  v-model="searchRowData.baseBar"
+                  placeholder="基础条码"
+                  class="search-input mr5"
+                  style="width: auto"
+                  clearable
+                ></Input>
+                <Input
+                  v-model="searchRowData.goodsCode"
                   placeholder="商品编码"
                   class="search-input mr5"
                   style="width: auto"
                   clearable
                 ></Input>
                 <Input
-                  v-model="searchRowData.productName"
+                  v-model="searchRowData.goodsName"
                   placeholder="商品名称"
                   class="search-input mr5"
                   style="width: auto"
@@ -108,13 +115,13 @@
           <i-col span="12">
             <Row>
               <i-col span="6">商品编码:</i-col>
-              <i-col span="18">{{ productDetail.productCode }}</i-col>
+              <i-col span="18">{{ productDetail.goodsCode }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
               <i-col span="8">商品名称:</i-col>
-              <i-col span="16">{{ productDetail.productName }}</i-col>
+              <i-col span="16">{{ productDetail.goodsName }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -122,21 +129,13 @@
           <i-col span="12">
             <Row>
               <i-col span="6">商品分类:</i-col>
-              <i-col span="18">{{ findGroupName(productDetail.groupId) }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="12">
-            <Row>
-              <i-col span="6">产地编码:</i-col>
-              <i-col span="18">{{ productDetail.sourceCode }}</i-col>
+              <i-col span="18">{{ findGroupName(productDetail.categoryId) }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">商品状态:</i-col>
-              <i-col span="16">{{ productDetail.status|productStatusFilter }}</i-col>
+              <i-col span="8">安全库存:</i-col>
+              <i-col span="16">{{ productDetail.stockLimit }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -150,59 +149,37 @@
           <i-col span="12">
             <Row>
               <i-col span="8">基础条码:</i-col>
-              <i-col span="16">{{ productDetail.baseBarcode }}</i-col>
+              <i-col span="16">{{ productDetail.baseBar }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
-          <!-- <i-col span="12">
-            <Row>
-              <i-col span="6">海鼎skuid:</i-col>
-              <i-col span="18">{{ productDetail.hdSkuid }}</i-col>
-            </Row>
-          </i-col>-->
           <i-col span="12">
             <Row>
-              <i-col span="8">基础重量:</i-col>
-              <i-col span="16">{{ productDetail.baseQty }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <!-- 小程序商品不需要大小图标 -->
-        <!-- <Row class-name="mb20">
-          <i-col span="12">
-            <Row>
-              <i-col span="6">小图标:</i-col>
-              <i-col span="18">
-                <img :src="productDetail.smallImage">
-              </i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row >
-              <i-col span="8">大图标:</i-col>
-              <i-col v-show="productDetail.smallImage" span="16">
+              <i-col span="8">商品主图:</i-col>
+              <i-col v-show="productDetail.goodsImage" span="16">
                 <div class="demo-upload-list">
-                  <img :src="productDetail.largeImage">
+                  <img :src="productDetail.goodsImage" />
                   <div class="demo-upload-list-cover">
-                    <Icon type="ios-eye-outline" @click.native="handleUploadView(productDetail.largeImage)"></Icon>
+                    <Icon
+                      type="ios-eye-outline"
+                      @click.native="handleUploadView(productDetail.goodsImage)"
+                    ></Icon>
                   </div>
                 </div>
               </i-col>
             </Row>
           </i-col>
-        </Row>-->
-        <Row class-name="mb20">
-          <i-col span="24">
+          <i-col span="12">
             <Row>
-              <i-col span="3">商品主图:</i-col>
-              <i-col v-show="productDetail.image" span="21">
+              <i-col span="8">服务保障图:</i-col>
+              <i-col v-show="productDetail.otherImage" span="16">
                 <div class="demo-upload-list">
-                  <img :src="productDetail.image" />
+                  <img :src="productDetail.otherImage" />
                   <div class="demo-upload-list-cover">
                     <Icon
                       type="ios-eye-outline"
-                      @click.native="handleUploadView(productDetail.image)"
+                      @click.native="handleUploadView(productDetail.otherImage)"
                     ></Icon>
                   </div>
                 </div>
@@ -210,34 +187,29 @@
             </Row>
           </i-col>
         </Row>
-        <!-- 小程序没有视频封面和视频 -->
-        <!-- <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="3">视频封面:</i-col>
-              <i-col v-show="productDetail.videoImage" span="21">
-                <div class="demo-upload-list">
-                  <img :src="productDetail.videoImage">
-                  <div class="demo-upload-list-cover">
-                    <Icon type="ios-eye-outline" @click.native="handleUploadView(productDetail.videoImage)"></Icon>
-                  </div>
+        <Row>
+          <i-col span="4">商品详情图：</i-col>
+          <i-col span="20">
+            <div
+              v-for="item in descriptionList"
+              :key="item"
+              :v-show="productDetail.goodsImages"
+              class="demo-upload-list"
+            >
+              <div>
+                <img :src="item" />
+                <div class="demo-upload-list-cover">
+                  <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                 </div>
-            </Row>
+              </div>
+            </div>
           </i-col>
-        </Row>-->
-        <!-- <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="3">商品视频:</i-col>
-              <i-col span="21">{{ productDetail.videoUrl }}</i-col>
-            </Row>
-          </i-col>
-        </Row>-->
+        </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
               <i-col span="3">商品描述:</i-col>
-              <i-col span="21">{{ productDetail.description }}</i-col>
+              <i-col span="21">{{ productDetail.goodsDes }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -252,22 +224,22 @@
         <span>{{ productDetail.id == ''?'创建基础商品信息':'编辑基础商品信息' }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="productDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="editForm" :model="productDetail" :rules="ruleInline" :label-width="80">
           <Row>
             <Col span="12">
-              <FormItem label="商品编码:" prop="productCode">
-                <Input v-model="productDetail.productCode" placeholder="商品编码"></Input>
+              <FormItem label="商品编码:" prop="goodsCode">
+                <Input v-model="productDetail.goodsCode" placeholder="商品编码(不必填)"></Input>
               </FormItem>
             </Col>
             <Col span="12">
-              <FormItem label="商品名称:" prop="productName">
-                <Input v-model="productDetail.productName" placeholder="商品名称"></Input>
+              <FormItem label="商品名称:" prop="goodsName">
+                <Input v-model="productDetail.goodsName" placeholder="商品名称"></Input>
               </FormItem>
             </Col>
           </Row>
           <Row>
-            <Col span="24">
-              <FormItem label="商品分类:" prop="groupId">
+            <Col span="12">
+              <FormItem label="商品分类:" prop="categoryId">
                 <Cascader
                   :data="goodsCategoryData"
                   v-model="defaultGoodsCategoryData"
@@ -277,34 +249,16 @@
                 ></Cascader>
               </FormItem>
             </Col>
-          </Row>
-          <Row>
             <Col span="12">
-              <FormItem label="商品状态:" prop="status">
-                <Select :value="productDetail.status" @on-change="statusChange">
-                  <Option
-                    v-for="(item,index) in productStatus"
-                    :value="item.value"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px"
-                  >
-                    {{ item.label
-                    }}
-                  </Option>
-                </Select>
-              </FormItem>
-            </Col>
-            <Col span="12">
-              <FormItem label="产地编码:" prop="sourceCode">
-                <Input v-model="productDetail.sourceCode" placeholder="产地编码"></Input>
+              <FormItem label="安全库存:" prop="stockLimit">
+                <InputNumber v-model="productDetail.stockLimit" placeholder="安全库存"></InputNumber>
               </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-              <FormItem label="基础单位:" prop="unitId">
-                <Select :value="productDetail.unitId" @on-change="uniteChange">
+              <FormItem label="基础单位:" prop="baseUnit">
+                <Select :value="productDetail.baseUnit" @on-change="uniteChange">
                   <Option
                     v-for="(item,index) in unitsList"
                     :value="item.value"
@@ -316,114 +270,157 @@
               </FormItem>
             </Col>
             <Col span="12">
-              <FormItem label="基础条码:" prop="baseBarcode">
-                <Input v-model="productDetail.baseBarcode" placeholder="基础条码"></Input>
+              <FormItem label="基础条码:" prop="baseBar">
+                <Input v-model="productDetail.baseBar" placeholder="基础条码"></Input>
               </FormItem>
             </Col>
           </Row>
           <Row>
-            <!-- <Col span="12">
-            <FormItem label="海鼎skuid:" prop="hdSkuid">
-              <Input v-model="productDetail.hdSkuid" placeholder="海鼎skuid"></Input>
-            </FormItem>
-            </Col>-->
-            <Col span="12">
-              <FormItem label="基础重量(kg):" prop="baseQty">
-                <InputNumber v-model="productDetail.baseQty" placeholder="基础重量"></InputNumber>
-              </FormItem>
-            </Col>
-            <Col span="12">
-              <FormItem label="最低库存:" prop="limitQty">
-                <InputNumber v-model="productDetail.limitQty" placeholder="最低库存"></InputNumber>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <FormItem label="商品主图:建议尺寸;400x400(单位:px):" prop="image">
-              <Input v-show="false" v-model="productDetail.image" style="width: auto"></Input>
-              <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
-                <template v-if="item.status === 'finished'">
-                  <div>
-                    <img :src="item.url" />
-                    <div class="demo-upload-list-cover">
-                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                      <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+            <i-col span="12">
+              <FormItem label="商品主图:建议尺寸;400x400(单位:px):" prop="goodsImage">
+                <Input v-show="false" v-model="productDetail.goodsImage" style="width: auto"></Input>
+                <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+                  <template v-if="item.status === 'finished'">
+                    <div>
+                      <img :src="item.url" />
+                      <div class="demo-upload-list-cover">
+                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                      </div>
                     </div>
-                  </div>
-                </template>
-                <template v-else>
-                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                </template>
-              </div>
-              <IViewUpload
-                ref="uploadMain"
-                :default-list="defaultListMain"
-                :image-size="imageSize"
-                @on-success="handleSuccessMain"
-              >
-                <div slot="content" style="width:58px;height:58px;line-height:58px">
-                  <Icon type="ios-camera" size="20"></Icon>
+                  </template>
+                  <template v-else>
+                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                  </template>
                 </div>
-              </IViewUpload>
-            </FormItem>
+                <IViewUpload
+                  ref="uploadMain"
+                  :default-list="defaultListMain"
+                  :image-size="imageSize"
+                  @on-success="handleSuccessMain"
+                >
+                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                    <Icon type="ios-camera" size="20"></Icon>
+                  </div>
+                </IViewUpload>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="服务保障图:建议尺寸;400x400(单位:px)" prop="otherImage">
+                <Input v-show="false" v-model="productDetail.otherImage" style="width: auto"></Input>
+                <div
+                  v-for="item in uploadListDetail"
+                  :key="item.url"
+                  :v-show="productDetail.otherImage"
+                  class="demo-upload-list"
+                >
+                  <template v-if="item.status === 'finished'">
+                    <div>
+                      <img :src="item.url" />
+                      <div class="demo-upload-list-cover">
+                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                        <Icon type="ios-trash-outline" @click.native="handleRemoveDetail(item)"></Icon>
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                  </template>
+                </div>
+                <IViewUpload
+                  ref="uploadDetail"
+                  :default-list="defaultListDetail"
+                  :image-size="imageSize"
+                  :max-num="1"
+                  @on-success="handleSuccessDetail"
+                >
+                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                    <Icon type="ios-camera" size="20"></Icon>
+                  </div>
+                </IViewUpload>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
+              <FormItem label="规格描述(推荐宽度为750px，高度自适应):" prop="goodsImages">
+                <Input v-show="false" v-model="productDetail.goodsImages" style="width: auto"></Input>
+                <div
+                  v-for="item in uploadListMultiple"
+                  :key="item.url"
+                  :v-show="productDetail.goodsImages"
+                  class="demo-upload-list"
+                >
+                  <template v-if="item.status === 'finished'">
+                    <div>
+                      <img :src="item.url" />
+                      <div class="demo-upload-list-cover">
+                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                        <Icon type="ios-trash-outline" @click.native="handleRemoveMultiple(item)"></Icon>
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                  </template>
+                </div>
+                <IViewUpload
+                  ref="uploadMultiple"
+                  :default-list="defaultListMultiple"
+                  :image-size="imageSize"
+                  :max-num="10"
+                  multiple
+                  @on-success="handleSuccessMultiple"
+                >
+                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                    <Icon type="ios-camera" size="20"></Icon>
+                  </div>
+                </IViewUpload>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <Button v-waves type="info" @click="modalSort = true">规格描述排序</Button>
+            </i-col>
           </Row>
           <Row>
             <i-col span="24">
-              <FormItem label="商品描述:" prop="description">
-                <Input v-model="productDetail.description" placeholder="商品名称" type="textarea"></Input>
+              <FormItem label="商品描述:" prop="goodsDes">
+                <Input v-model="productDetail.goodsDes" placeholder="商品名称" type="textarea"></Input>
               </FormItem>
             </i-col>
           </Row>
         </Form>
-        <!--
-        <Divider orientation="center">商品规格</Divider>
-        <Form ref="innerModalEdit" :model="productDetail.productSpecification" :rules="ruleInline">
-          <Row>
-            <Col span="12">
-            <FormItem :label-width="80" label="规格单位:" prop="packagingUnit">
-              <Select :value="productDetail.productSpecification.packagingUnit" @on-change="uniteChange">
-                <Option
-                  v-for="(item,index) in unitsList"
-                  :value="item.value"
-                  :key="index"
-                  class="ptb2-5"
-                  style="padding-left: 5px">{{ item.label }}
-                </Option>
-              </Select>
-            </FormItem>
-              </Col>
-            <Col span="12">
-            <FormItem :label-width="80" label="规格条码:" prop="barcode">
-              <Input v-model="productDetail.productSpecification.barcode"></Input>
-            </FormItem>
-              </Col>
-          </Row>
-          <Row>
-            <Col span="12">
-            <FormItem :label-width="80" label="安全库存:" prop="limitInventory">
-              <Input
-                v-if="productDetail.productSpecification"
-                v-model="productDetail.productSpecification.limitInventory"></Input>
-            </FormItem>
-              </Col>
-            <Col span="12">
-            <FormItem :label-width="80" label="重量(kg):" prop="weight">
-              <Input
-                v-if="productDetail.productSpecification"
-                v-model="productDetail.productSpecification.weight"></Input>
-            </FormItem>
-              </Col>
-          </Row>
-        </Form>-->
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button @click="modalEdit=false">关闭</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')">确定</Button>
       </div>
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%" />
+    </Modal>
+
+    <Modal v-model="modalSort" title="图片排序" :mask-closable="false">
+      <p slot="header">
+        <span>图片排序</span>
+      </p>
+      <div class="modal-content">
+        <drag-list :list1.sync="uploadListMultiple" :drop-con-class="dropConClass" class="clearfix">
+          <img
+            :src="left.itemLeft.url"
+            slot="left"
+            slot-scope="left"
+            class="drag-item"
+            width="80"
+            height="80"
+          />
+        </drag-list>
+      </div>
+      <div slot="footer">
+        <Button @click="modalSort=false">关闭</Button>
+        <Button type="primary" @click="handleImgSort">确定</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -431,7 +428,8 @@
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
 import IViewUpload from "_c/iview-upload";
-import _ from "lodash";
+import DragList from "_c/drag-list";
+
 import {
   createProduct,
   deleteProduct,
@@ -440,7 +438,7 @@ import {
   getProductPages,
   getProductCategoriesTree,
   getProductUnits
-} from "@/api/mini-program";
+} from "@/api/wholesale";
 import {
   buildMenu,
   convertTreeCategory,
@@ -452,35 +450,29 @@ import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
-import { productStatusConvert } from "@/libs/converStatus";
 
 const productDetail = {
   id: 0,
-  productCode: "",
-  productName: "",
-  groupId: 0,
-  sourceCode: "",
-  image: "",
-  smallImage: "",
-  largeImage: "",
-  status: null,
-  unitId: 0,
-  baseBarcode: "",
-  hdSkuid: "",
-  videoUrl: "",
-  videoImage: "",
-  baseQty: 0,
-  limitQty: 0,
-  description: "",
+  goodsCode: "",
+  goodsName: "",
+  goodsImage: "",
+  goodsDes: "",
+  categoryId: 0,
+  stockLimit: 0,
   unitName: "",
   groupName: "",
-  createUser: ""
+  baseBar: "",
+  baseUnit: "", // 默认千克
+  goodsDes: "",
+  goodsImages: "",
+  otherImage: ""
 };
 
 const roleRowData = {
-  groupId: null,
-  productCode: null,
-  productName: null,
+  categoryId: null,
+  goodsCode: null,
+  goodsName: null,
+  baseBar: null,
   page: 1,
   rows: 10
 };
@@ -488,59 +480,47 @@ const roleRowData = {
 export default {
   components: {
     Tables,
-    IViewUpload
+    IViewUpload,
+    DragList
   },
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
     return {
-      ruleInline: {
-        productCode: [{ required: true, message: "请输入商品编码" }],
-        productName: [{ required: true, message: "请输入商品名称" }],
-        status: [{ required: true, message: "请选择商品状态" }],
-        unitId: [{ required: true, message: "请选择商品单位" }],
-        baseBarcode: [{ required: true, message: "请输入基础条码" }],
-        description: [{ required: true, message: "请输入商品描述" }],
-        groupId: [{ required: true, message: "请选择商品分类" }],
-        image: [{ required: true, message: "请上传商品主图" }],
-        packagingUnit: [{ required: true, message: "请选择规格单位" }],
-        barcode: [
-          { required: true, message: "请输入规格条码" },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[0-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        limitQty: [{ required: true, message: "请输入安全库存" }],
-        baseQty: [
-          { required: true, message: "请输入重量" },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/.test(value)) {
-                errors.push(new Error("必须为大于0的数字"));
-              }
-              callback(errors);
-            }
-          }
-        ]
-      },
       menuData: [],
+      descriptionList: [],
+      uploadListMain: [],
+      uploadListDetail: [],
+      uploadListMultiple: [],
       defaultListMultiple: [],
       defaultListMain: [],
-      defaultListSecond: [],
-      uploadListMain: [],
-      // uploadListSecond: [],
-      // uploadListMultiple: [],
+      defaultListDetail: [],
       goodsCategoryData: [],
-      defaultGoodsCategoryData: [41],
+      defaultGoodsCategoryData: [],
       proCategoryTreeList: [],
-      tempSubImg: [],
       unitsList: [],
+      modalSort: false,
+      createLoading: false,
+      modalViewLoading: false,
+      exportExcelLoading: false,
+      searchRowData: _.cloneDeep(roleRowData),
+      productDetail: _.cloneDeep(productDetail),
+      currentGroupId: 0,
+      currentName: "全部分类",
+      dropConClass: {
+        left: ["drop-box", "left-drop-box"],
+        right: ["drop-box", "right-drop-box"]
+      },
+      ruleInline: {
+        goodsCode: [{ required: false, message: "请输入商品编码" }],
+        goodsName: [{ required: true, message: "请输入商品名称" }],
+        baseUnit: [{ required: true, message: "请选择商品单位" }],
+        baseBar: [{ required: true, message: "请输入基础条码" }],
+        goodsDes: [{ required: true, message: "请输入商品描述" }],
+        categoryId: [{ required: true, message: "请选择商品分类" }],
+        goodsImage: [{ required: true, message: "请上传商品主图" }],
+        otherImage: [{ required: true, message: "请上传服务保障图" }],
+        stockLimit: [{ required: true, message: "请输入安全库存" }]
+      },
       columns: [
         {
           title: "ID",
@@ -551,51 +531,44 @@ export default {
         },
         {
           title: "商品图片",
-          key: "image",
+          key: "goodsImage",
           align: "center",
           minWidth: 120,
           render: (h, params, vm) => {
             const { row } = params;
-            const str = <img src={row.image} height="60" width="60" />;
+            const str = <img src={row.goodsImage} height="60" width="60" />;
             return <div>{str}</div>;
           }
-        },
-        {
-          title: "商品编码",
-          align: "center",
-          key: "productCode",
-          sortable: true,
-          minWidth: 140
         },
         {
           title: "商品名称",
           align: "center",
           sortable: true,
-          key: "productName",
+          key: "goodsName",
           minWidth: 120
         },
         {
           title: "商品类别",
           align: "center",
-          key: "groupId",
+          key: "categoryId",
           minWidth: 120,
           render: (h, params) => {
             const { row } = params;
             const obj = this.proCategoryTreeList.find(
-              item => row.groupId === item.id
+              item => row.categoryId === item.id
             );
             if (obj) {
               return h("span", obj.title);
             }
-            return h("span", row.groupId);
+            return h("span", row.categoryId);
           }
         },
         {
-          title: "产地编码",
+          title: "基础条码",
           align: "center",
-          minWidth: 120,
+          key: "baseBar",
           sortable: true,
-          key: "sourceCode"
+          minWidth: 140
         },
         {
           title: "基础单位",
@@ -604,61 +577,18 @@ export default {
           key: "unitName"
         },
         {
-          title: "基础重量(kg)",
+          title: "安全库存",
           align: "center",
           minWidth: 90,
-          key: "baseQty"
-        },
-        {
-          title: "商品状态",
-          align: "center",
-          minWidth: 90,
-          key: "status",
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.status === "NORMAL") {
-              return (
-                <div>
-                  <tag color="success">
-                    {productStatusConvert(row.status).label}
-                  </tag>
-                </div>
-              );
-            } else if (row.status === "STOP_MINING") {
-              return (
-                <div>
-                  <tag color="error">
-                    {productStatusConvert(row.status).label}
-                  </tag>
-                </div>
-              );
-            }
-            return (
-              <div>
-                <tag color="primary">{row.status}</tag>
-              </div>
-            );
-          }
+          key: "stockLimit"
         },
         {
           title: "操作",
-          align: "center",
           minWidth: 150,
           key: "handle",
           options: ["view", "edit", "settings"]
         }
-      ],
-      createLoading: false,
-      modalViewLoading: false,
-      exportExcelLoading: false,
-      searchRowData: _.cloneDeep(roleRowData),
-      productDetail: _.cloneDeep(productDetail),
-      productStatus: [
-        { label: "正常", value: "NORMAL" },
-        { label: "停采", value: "STOP_MINING" }
-      ],
-      currentGroupId: 0,
-      currentName: "全部分类"
+      ]
     };
   },
   created() {
@@ -673,9 +603,9 @@ export default {
   methods: {
     getProductUnits() {
       getProductUnits().then(res => {
-        res.array.forEach(value => {
+        res.forEach(value => {
           const map = { label: "label", value: "value" };
-          map.value = value.id;
+          map.value = value.unitCode;
           map.label = value.unitName;
           this.unitsList.push(map);
           this.createLoading = false;
@@ -688,9 +618,9 @@ export default {
       getProductCategoriesTree()
         .then(res => {
           this.proCategoryTreeList = [];
-          if (res && res.array.length > 0) {
-            this.proCategoryTreeList = res.array;
-            const menuList = buildMenu(res.array);
+          if (res && res.length > 0) {
+            this.proCategoryTreeList = res;
+            const menuList = buildMenu(res);
             const map = {
               id: "id",
               title: "title",
@@ -705,20 +635,30 @@ export default {
         });
       this.getTableData();
     },
+    resetRowData() {
+      this.productDetail = _.cloneDeep(productDetail);
+    },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
       this.getTableData();
     },
+    resetFields() {
+      this.$refs.editForm.resetFields();
+      this.$refs.uploadMain.clearFileList();
+      // 图片上传列表清除
+      this.uploadListMain = [];
+      this.uploadListDetail = [];
+      this.uploadListMultiple = [];
+    },
     handleDownload() {
       this.exportExcelLoading = true;
-      // 导出不带分页搜索条件
+      //TODO：测试导出不带分页搜索条件 目前默认导出10条
       this.searchRowData.rows = null;
       getProductPages(this.searchRowData).then(res => {
         const tableData = res.rows;
         // 表格数据导出字段翻译
         tableData.forEach(item => {
-          item["groupId"] = item["groupName"];
-          item["status"] = item["status"] === "NORMAL" ? "正常" : "停采";
+          item["categoryId"] = item["groupName"];
         });
         this.$refs.tables.handleDownload({
           filename: `商品基础信息-${new Date().valueOf()}`,
@@ -727,21 +667,8 @@ export default {
         this.exportExcelLoading = false;
       });
     },
-    resetFields() {
-      this.$refs.modalEdit.resetFields();
-      // this.$refs.innerModalEdit.resetFields();
-      this.$refs.uploadMain.clearFileList();
-      // this.$refs.uploadSecond.clearFileList();
-      // this.$refs.uploadMultiple.clearFileList();
-      this.uploadListMain = [];
-      // this.uploadListSecond = [];
-      // this.uploadListMultiple = [];
-      this.productDetail.image = null;
-      // this.productDetail.subImg = null;
-      // this.productDetail.detailImg = null;
-    },
-    handleSubmit(name1) {
-      this.$refs[name1].validate(valid => {
+    handleSubmit(name) {
+      this.$refs[name].validate(valid => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -757,7 +684,6 @@ export default {
     },
     createProduct() {
       this.modalViewLoading = true;
-      // this.productDetail.productSpecification.specificationQty = 1;
       createProduct({
         ...this.productDetail
       })
@@ -780,6 +706,7 @@ export default {
         .then(res => {
           this.modalEdit = false;
           this.modalViewLoading = false;
+          this.$Message.success("修改成功!");
           this.getTableData();
         })
         .catch(() => {
@@ -790,9 +717,10 @@ export default {
     // 选择分类
     goodsCategoryChange(value, selectedData) {
       if (selectedData.length > 0) {
-        this.productDetail.groupId = selectedData[selectedData.length - 1].id;
+        this.productDetail.categoryId =
+          selectedData[selectedData.length - 1].id;
       } else {
-        this.productDetail.groupId = null;
+        this.productDetail.categoryId = null;
       }
       this.defaultGoodsCategoryData = selectedData;
     },
@@ -828,53 +756,55 @@ export default {
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
-      if (res.image != null) {
+      if (res.goodsImage != null) {
         const map = { status: "finished", url: "url" };
         const mainImgArr = [];
-        map.url = res.image;
+        map.url = res.goodsImage;
         mainImgArr.push(map);
         this.$refs.uploadMain.setDefaultFileList(mainImgArr);
         this.uploadListMain = mainImgArr;
       }
-      // if (res.subImg != null) {
-      //   const subImgArr = [];
-      //   res.subImg.forEach(value => {
-      //     const innerMapSub = { status: 'finished', url: 'url' };
-      //     innerMapSub.url = value;
-      //     subImgArr.push(innerMapSub);
-      //   });
-      //   this.$refs.uploadSecond.setDefaultFileList(subImgArr);
-      //   this.uploadListSecond = subImgArr;
-      // }
-      // if (res.detailImg != null) {
-      //   const detailImgArr = [];
-      //   res.detailImg.forEach(value => {
-      //     const innerMapDetailImg = { status: 'finished', url: 'url' };
-      //     innerMapDetailImg.url = value;
-      //     detailImgArr.push(innerMapDetailImg);
-      //   });
-      //   this.$refs.uploadMultiple.setDefaultFileList(detailImgArr);
-      //   this.uploadListMultiple = detailImgArr;
-      // }
+
+      if (res.otherImage != null) {
+        const map = { status: "finished", url: "url" };
+        const detailImgArr = [];
+        map.url = res.otherImage;
+        detailImgArr.push(map);
+        this.$refs.uploadDetail.setDefaultFileList(detailImgArr);
+        this.uploadListDetail = detailImgArr;
+      }
+
+      if (res.goodsImages != null) {
+        const descriptionImgArr = [];
+        const descriptionArr = res.goodsImages.split(",");
+        descriptionArr.forEach(value => {
+          const innerMapDetailImg = { status: "finished", url: "url" };
+          innerMapDetailImg.url = value;
+          descriptionImgArr.push(innerMapDetailImg);
+        });
+        this.$refs.uploadMultiple.setDefaultFileList(descriptionImgArr);
+        this.uploadListMultiple = descriptionImgArr;
+      }
+    },
+    handleImgSort() {
+      this.descriptionList = [];
+      this.uploadListMultiple.forEach(item => {
+        if (item.url) {
+          this.descriptionList.push(item.url);
+        }
+      });
+      this.productDetail.goodsImages = "";
+      this.productDetail.goodsImages = this.descriptionList.join(",");
+      console.log("after sort:", this.productDetail.goodsImages);
+      this.modalSort = false;
     },
     handleView(params) {
-      // this.resetFields();
       this.tempModalType = this.modalType.view;
-      this.loading = true;
-      getProduct({
-        id: params.row.id
-      })
-        .then(res => {
-          this.productDetail = res;
-          console.log("pro detail: ", res);
-          this.loading = false;
-          this.modalView = true;
-        })
-        .catch(error => {
-          console.log(error);
-          this.loading = false;
-          this.modalView = true;
-        });
+      this.productDetail = _.cloneDeep(params.row);
+      if (this.productDetail.goodsImages) {
+        this.descriptionList = this.productDetail.goodsImages.split(",");
+      }
+      this.modalView = true;
     },
     handleEdit(params) {
       this.resetFields();
@@ -888,12 +818,11 @@ export default {
           this.productDetail = res;
           this.setDefaultUploadList(res);
           this.defaultGoodsCategoryData = [];
-          this.findGroupId(this.productDetail.groupId);
+          this.findGroupId(this.productDetail.categoryId);
           this.defaultGoodsCategoryData.reverse();
           this.modalEdit = true;
         })
         .catch(error => {
-          console.log(error);
           this.loading = false;
           this.modalEdit = true;
         });
@@ -924,7 +853,7 @@ export default {
         name: "small-goods-relation-standard",
         // name: 'small-goods-raltion-standard',
         params: { productId: params.row.id, unitsList: this.unitsList }
-        // params: { id: params.row.id, unitsList: this.unitsList, productName: params.row.productName }
+        // params: { id: params.row.id, unitsList: this.unitsList, goodsName: params.row.goodsName }
       });
     },
     getTableData() {
@@ -937,7 +866,6 @@ export default {
           this.clearSearchLoading = false;
         })
         .catch(error => {
-          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -960,7 +888,10 @@ export default {
       // this.uploadListMain = []
       this.productDetail.mainImg = null;
     },
-
+    handleRemoveDetail(file) {
+      this.$refs.uploadDetail.deleteFile(file);
+      this.productDetail.otherImage = null;
+    },
     handleRemoveMultiple(file) {
       this.$refs.uploadMultiple.deleteFile(file);
       const index = this.productDetail.detailImg.indexOf(file.url);
@@ -975,17 +906,34 @@ export default {
     // 商品主图
     handleSuccessMain(response, file, fileList) {
       this.uploadListMain = fileList;
-      this.productDetail.image = null;
-      this.productDetail.image = fileList[0].url;
+      this.productDetail.goodsImage = null;
+      this.productDetail.goodsImage = fileList[0].url;
     },
-    statusChange(value) {
-      this.productDetail.status = value;
+    // 上架服务保障图
+    handleSuccessDetail(response, file, fileList) {
+      this.uploadListDetail = fileList;
+      this.productDetail.otherImage = null;
+      this.productDetail.otherImage = fileList[0].url;
+    },
+    // 上架规格描述图
+    handleSuccessMultiple(response, file, fileList) {
+      this.uploadListMultiple = fileList;
+      this.descriptionList = [];
+      fileList.forEach(value => {
+        if (value.url) {
+          this.descriptionList.push(value.url);
+        }
+      });
+      this.productDetail.goodsImages = "";
+      this.productDetail.goodsImages = this.descriptionList.join(",");
+      console.log(this.productDetail.goodsImages);
+      console.log(JSON.stringify(this.productDetail.goodsImages));
     },
     // 初始化商品菜单列表
     initMenuList() {
       getProductCategoriesTree().then(res => {
-        if (res && res.array.length > 0) {
-          const menuList = buildMenu(res.array);
+        if (res && res.length > 0) {
+          const menuList = buildMenu(res);
           const map = {
             title: "title",
             children: "children"
@@ -1042,7 +990,6 @@ export default {
       if (typeof data.expand === "undefined") {
         // this.$set(data, 'expend', true);
         this.$set(data, "expend", false);
-        // if (data.children) {
         if (data.children) {
           this.expandChildren(data.children);
         }
@@ -1051,7 +998,7 @@ export default {
       }
       this.currentName = data.title;
       this.currentGroupId = data.id;
-      this.searchRowData.groupId = data.id;
+      this.searchRowData.categoryId = data.id;
       // 获取新数据
       this.getTableData();
     },
@@ -1060,7 +1007,6 @@ export default {
         if (typeof item.expand === "undefined") {
           // this.$set(item, 'expend', true);
           this.$set(item, "expend", false);
-          // } else {
         } else {
           item.expand = !item.expand;
         }
@@ -1069,11 +1015,8 @@ export default {
         }
       });
     },
-    resetRowData() {
-      this.productDetail = this._.cloneDeep(productDetail);
-    },
     uniteChange(value) {
-      this.productDetail.unitId = value;
+      this.productDetail.baseUnit = value;
     }
   }
 };

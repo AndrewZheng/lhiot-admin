@@ -94,8 +94,17 @@ class HttpRequest {
       const { data, status } = res;
       // 后续再做修改
       if (status < 400) {
-        if (data == '' || data) {
-          return data;
+        if (typeof data.success === 'undefined') {
+          if (data == '' || data) {
+            return data;
+          }
+        } else {
+          if (data.success) {
+            return data.datas;
+          } else {
+            Vue.prototype.$Message.info(data.msg);
+            return Promise.reject(res);
+          }
         }
       } else {
         Vue.prototype.$Message.info(data.message);
@@ -118,7 +127,7 @@ class HttpRequest {
           router.push({
             name: 'login'
           });
-        } else if (error.response.status === 402) { 
+        } else if (error.response.status === 402) {
           errorMsg = '页面已过期，请重新登录';
           // 清除本地Token 然后重新登录
           setToken('');

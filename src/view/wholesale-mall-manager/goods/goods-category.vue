@@ -10,7 +10,7 @@
             当前选中：
             <span
               class="brand-red font-sm"
-            >{{ parentCategory.groupName? parentCategory.groupName: '所有父级分类' }}</span>
+            >{{ parentCategory.categoryName? parentCategory.categoryName: '父级分类' }}</span>
           </h6>
           <tables
             ref="tables"
@@ -31,7 +31,7 @@
             <div slot="searchCondition">
               <Row>
                 <Input
-                  v-model="searchRowData.groupName"
+                  v-model="searchRowData.categoryName"
                   placeholder="分类名称"
                   class="search-input mr5"
                   style="width: auto"
@@ -57,8 +57,17 @@
               </Row>
             </div>
             <div slot="operations">
+              <Button
+                v-waves
+                :loading="clearSearchLoading"
+                type="warning"
+                @click="handleBack"
+                class="mr5"
+              >
+                <Icon type="ios-arrow-back" />&nbsp;返回父级分类
+              </Button>
               <Button v-waves type="success" class="mr5" @click="createParentRow">
-                <Icon type="md-add" />添加一级分类
+                <Icon type="md-add" />添加父分类
               </Button>
               <Button v-waves type="success" class="mr5" @click="createSonRow">
                 <Icon type="md-add" />添加子分类
@@ -98,21 +107,51 @@
         <i-col>{{ tempModalType===modalType.edit?'修改商品分类':'创建商品分类' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form :label-width="100">
-          <FormItem v-show="addSon" label="父级ID:">
-            <i-col>{{ parentCategory.id }}</i-col>
+        <Form ref="editForm" :label-width="100"  :rules="ruleInline" :model="currentCategory">
+          <FormItem label="父级ID:"  prop="parentId">
+            <i-col>{{ currentCategory.parentId }}</i-col>
           </FormItem>
-          <FormItem v-show="addSon" label="父级分类:">
-            <i-col>{{ parentCategory.groupName }}</i-col>
+          <FormItem label="父级分类:">
+             <i-col>{{ parentCategory.categoryName }}</i-col>
           </FormItem>
-          <FormItem label="子分类名:">
-            <Input v-model="currentCategory.groupName" placeholder="子分类名"></Input>
+          <FormItem label="分类名称:" prop="categoryName">
+            <Input v-model="currentCategory.categoryName" placeholder="分类名称" style="width:150"></Input>
+          </FormItem>
+          <FormItem label="分类排序:" prop="rank">
+            <Input v-model="currentCategory.rank" placeholder="分类排序" style="width:80"></Input>
+          </FormItem>
+          <FormItem label="分类图标:建议尺寸;400x400(单位:px):" prop="image" v-show="!addSon">
+            <Input v-show="false" v-model="currentCategory.image" style="width: auto"></Input>
+            <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+              <template v-if="item.status === 'finished'">
+                <div>
+                  <img :src="item.url" />
+                  <div class="demo-upload-list-cover">
+                    <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                    <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                  </div>
+                </div>
+              </template>
+              <template v-else>
+                <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+              </template>
+            </div>
+            <IViewUpload
+              ref="uploadMain"
+              :default-list="defaultListMain"
+              :image-size="imageSize"
+              @on-success="handleSuccessMain"
+            >
+              <div slot="content" style="width:58px;height:58px;line-height:58px">
+                <Icon type="ios-camera" size="20"></Icon>
+              </div>
+            </IViewUpload>
           </FormItem>
         </Form>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="asyncEditOK">确定</Button>
+        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit('editForm')">确定</Button>
       </div>
     </Modal>
   </div>
@@ -120,16 +159,18 @@
 
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
-import _ from "lodash";
+import IViewUpload from "_c/iview-upload";
+
 import {
   createProductCategories,
   delProductCategories,
   getProductCategoriesPages,
   getProductCategoriesTree,
   editProductCategories
-} from "@/api/mini-program";
+} from "@/api/wholesale";
 import { buildMenu, convertTree } from "@/libs/util";
 import CommonIcon from "_c/common-icon";
+import uploadMixin from "@/mixins/uploadMixin";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -137,11 +178,18 @@ import deleteMixin from "@/mixins/deleteMixin.js";
 const currentCategory = {
   id: 0,
   parentId: 0,
-  groupName: ""
+  categoryCode: "",
+  categoryName: "",
+  image: "",
+  levels: 0,
+  parentCategoryCode: "",
+  parentCategoryName: "",
+  rank: 0
 };
 
 const roleRowData = {
   parentId: 0,
+  categoryName: "",
   page: 1,
   rows: 10
 };
@@ -149,12 +197,28 @@ const roleRowData = {
 export default {
   components: {
     Tables,
+    IViewUpload,
     CommonIcon
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin, searchMixin, deleteMixin,uploadMixin],
   data() {
     return {
       menuData: [],
+      uploadListMain: [],
+      defaultListMain: [],
+      addSon: false,
+      modalEdit: false,
+      modalViewLoading: false,
+      modalEditLoading: false,
+      clearSearchLoading: false,
+      currentParentName: "",
+      currentParentId: 0,
+      currentCategory: _.cloneDeep(currentCategory),
+      parentCategory: _.cloneDeep(currentCategory),
+      searchRowData: _.cloneDeep(roleRowData),
+      ruleInline: {
+        categoryName: { required: true, message: "请填写单位名称" },
+      },
       columns: [
         {
           type: "selection",
@@ -172,10 +236,9 @@ export default {
         },
         {
           title: "分类名",
-          key: "groupName",
+          key: "categoryName",
           sortable: true,
           align: "center",
-
           minWidth: 150
         },
         {
@@ -186,22 +249,40 @@ export default {
           options: ["edit", "delete"]
         }
       ],
-      modalEdit: false,
-      modalViewLoading: false,
-      modalEditLoading: false,
-      clearSearchLoading: false,
-      currentParentName: "",
-      currentParentId: 0,
-      currentCategory: this._.cloneDeep(currentCategory),
-      parentCategory: this._.cloneDeep(currentCategory),
-      searchRowData: this._.cloneDeep(roleRowData),
-      addSon: false
     };
   },
   created() {
     this.initMenuList();
   },
   methods: {
+    // 初始化商品菜单列表
+    initMenuList() {
+      getProductCategoriesTree().then(res => {
+        if (res && res.length > 0) {
+          const menuList = buildMenu(res);
+          const map = {
+            title: "title",
+            children: "children"
+          };
+          this.menuData = convertTree(menuList, map, true);
+          if (this.menuData.length > 0) {
+            this.getTableData();
+          }
+        }
+      });
+    },
+    getTableData() {
+      this.loading = true;
+      getProductCategoriesPages(this.searchRowData).then(res => {
+        if (this.menuData.length > 0) {
+          this.tableData = res.rows;
+          this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        }
+      });
+    },
     renderContent(h, { root, node, data }) {
       if (data.type == "PARENT") {
         return (
@@ -240,16 +321,17 @@ export default {
       }
     },
     createSonRow() {
+      this.addSon = true;
       if (!this.parentCategory.id) {
         this.$Message.warning("请从左侧选择一个父分类");
         return;
       }
       this.resetRowData();
       if (this.tempModalType !== this.modalType.create) {
-        this.currentCategory = this._.cloneDeep(currentCategory);
+        this.currentCategory = _.cloneDeep(currentCategory);
       }
-      this.addSon = true;
       this.currentCategory.parentId = this.parentCategory.id;
+      this.currentCategory.parentCategoryName = this.parentCategory.categoryName;
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
     },
@@ -257,25 +339,31 @@ export default {
       this.addSon = false;
       this.resetRowData();
       if (this.tempModalType !== this.modalType.create) {
-        this.currentCategory = this._.cloneDeep(currentCategory);
+        this.currentCategory = _.cloneDeep(currentCategory);
       }
       this.currentCategory.parentId = 0;
+      this.currentCategory.parentCategoryName="父级分类";
+      this.parentCategory.categoryName= "父级分类";
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
     },
     resetRowData() {
-      this.currentCategory = this._.cloneDeep(currentCategory);
+      this.currentCategory = _.cloneDeep(currentCategory);
     },
-    asyncEditOK() {
-      if (!this.currentCategory.groupName) {
-        this.$Message.warning("请输入子分类");
-        return;
-      }
-      if (this.tempModalType === this.modalType.create) {
-        this.createProductCategories();
-      } else if (this.tempModalType === this.modalType.edit) {
-        this.editProductCategories();
-      }
+    handleSubmit(name) {
+      this.$refs[name].validate(valid => {
+        if (valid) {
+          if (this.tempModalType === this.modalType.create) {
+            // 添加状态
+            this.createProductCategories();
+          } else if (this.tempModalType === this.modalType.edit) {
+            // 编辑状态
+            this.editProductCategories();
+          }
+        } else {
+          this.$Message.error("请完善信息!");
+        }
+      });
     },
     createProductCategories() {
       this.modalEditLoading = true;
@@ -300,6 +388,13 @@ export default {
     handleEditClose() {
       this.modalEdit = false;
     },
+    handleBack() {
+      this.parentCategory.id = 0;
+      this.parentCategory.categoryName= "父级分类";
+      this.clearSearchLoading = true;
+      this.searchRowData = _.cloneDeep(roleRowData);
+      this.getTableData();
+    },
     // 删除
     deleteTable(ids) {
       this.loading = true;
@@ -322,43 +417,33 @@ export default {
           this.loading = false;
         });
     },
+     // 设置编辑商品的图片列表
+    setDefaultUploadList(res) {
+      if (res.image != null) {
+        const map = { status: "finished", url: "url" };
+        const mainImgArr = [];
+        map.url = res.image;
+        mainImgArr.push(map);
+        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+        this.uploadListMain = mainImgArr;
+      }
+    },
+    handleRemoveMain(file) {
+      this.$refs.uploadMain.deleteFile(file);
+      this.currentCategory.image = "";
+    },
+    // 商品主图
+    handleSuccessMain(response, file, fileList) {
+      this.uploadListMain = fileList;
+      this.currentCategory.image = "";
+      this.currentCategory.image = fileList[0].url;
+    },
     // 编辑分类
     handleEdit(params) {
-      // this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.edit;
       this.currentCategory = _.cloneDeep(params.row);
       this.modalEdit = true;
     },
-    getTableData() {
-      this.loading = true;
-      getProductCategoriesPages(this.searchRowData).then(res => {
-        if (this.menuData.length > 0) {
-          // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        }
-      });
-    },
-    // 初始化商品菜单列表
-    initMenuList() {
-      getProductCategoriesTree().then(res => {
-        if (res && res.array.length > 0) {
-          const menuList = buildMenu(res.array);
-          const map = {
-            title: "title",
-            children: "children"
-          };
-          this.menuData = convertTree(menuList, map, true);
-          if (this.menuData.length > 0) {
-            this.getTableData();
-          }
-        }
-      });
-    },
-
     handleClick({ root, node, data }) {
       this.loading = true;
       // 递归展开当前节点
@@ -374,9 +459,8 @@ export default {
       } else {
         this.$set(data, "selected", !data.selected);
       }
-
       this.parentCategory.id = data.id;
-      this.parentCategory.groupName = data.title;
+      this.parentCategory.categoryName = data.title;
       this.currentParentId = data.id;
       this.searchRowData.parentId = data.id;
       // 获取新数据
@@ -396,7 +480,9 @@ export default {
     },
     resetSearchRowData() {
       this.clearSearchLoading = true;
-      this.searchRowData = this._.cloneDeep(roleRowData);
+      this.searchRowData = _.cloneDeep(roleRowData);
+      // 防止选择子分类，清除对象后未保留当前父分类查询
+      this.searchRowData.parentId = this.currentParentId;
       this.getTableData();
     }
   }
