@@ -1040,6 +1040,15 @@ export const asyncRouterMap = [
     component: Main,
     children: [
       {
+        path: '/small-system-data-statistics',
+        name: 'small-system-data-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '系统数据统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/system-data-statistics.vue')
+      },
+      {
         path: '/small-phones',
         name: 'small-phones',
         meta: {

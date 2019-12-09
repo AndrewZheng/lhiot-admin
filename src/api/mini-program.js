@@ -948,6 +948,18 @@ export const assistDataStatistics = (data) => {
   });
 };
 
+//基础数据统计 系统数据统计 minapp/system/data-total/main   
+export const systemDataStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/system/data-total/main?beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
 // 根据条件分页查询优惠券列表
 export const getCouponPages = (data) => {
   return $http.request({
