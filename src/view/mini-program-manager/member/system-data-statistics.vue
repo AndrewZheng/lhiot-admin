@@ -116,12 +116,32 @@ export default {
         {
           title: "新用户完成首单数量",
           key: "newUserOrderNum",
-          align: "center"
+          align: "center",
+          render(h, params) {
+            if (isNaN(params.row.newUserOrderNum / params.row.newUser)) {
+              return h("div", "0%");
+            } else {
+              return h(
+                "div",
+                params.row.newUserOrderNum / params.row.newUser + "%"
+              );
+            }
+          }
         },
         {
           title: "新用户复购数量",
           align: "center",
-          key: "newUserReOrderNum"
+          key: "newUserReOrderNum",
+          render(h, params) {
+            if (isNaN(params.row.newUserReOrderNum / params.row.newUser)) {
+              return h("div", "0%");
+            } else {
+              return h(
+                "div",
+                params.row.newUserReOrderNum / params.row.newUser + "%"
+              );
+            }
+          }
         },
         {
           title: "开始日期",
@@ -216,7 +236,6 @@ export default {
         });
     },
     handleSearch1() {
-      //   this.searchLoading = true;
       this.inviteData = [];
       this.getTableData1();
     },
