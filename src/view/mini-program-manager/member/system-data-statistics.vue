@@ -116,6 +116,16 @@ export default {
         {
           title: "新用户完成首单数量",
           key: "newUserOrderNum",
+          align: "center"
+        },
+        {
+          title: "新用户复购数量",
+          align: "center",
+          key: "newUserReOrderNum"
+        },
+        {
+          title: "新用户转化率",
+          key: "newUserOrderNum",
           align: "center",
           render(h, params) {
             if (isNaN(params.row.newUserOrderNum / params.row.newUser)) {
@@ -129,7 +139,7 @@ export default {
           }
         },
         {
-          title: "新用户复购数量",
+          title: "新用复购率",
           align: "center",
           key: "newUserReOrderNum",
           render(h, params) {
