@@ -479,6 +479,7 @@
                       type="primary"
                       style="margin-left: 50px;"
                       @click="addTempData('modalCreate')"
+                      v-show="this.proFlag===true"
                     >
                       <Icon type="md-add" />&nbsp;关联秒杀商品/券
                     </Button>
@@ -1632,7 +1633,8 @@ export default {
       activitiesProductDetail: {},
       activitiesCouponDetail: {},
       modalRelevanceView: false,
-      modalRelevanceEdit: false
+      modalRelevanceEdit: false,
+      proFlag: true
     };
   },
   computed: {},
@@ -1737,7 +1739,7 @@ export default {
         .then(res => {
           this.modalEdit = false;
           this.modalViewLoading = false;
-           this.$Message.success("修改成功!");
+          this.$Message.success("修改成功!");
           this.getTableData();
         })
         .catch(() => {
@@ -2001,6 +2003,19 @@ export default {
       let mark = [];
       mark.push(currentRow);
       if (this.addRelationDetail.type === "PROD") {
+        let activityProducts = this.relationProducts;
+        let standardIds = [];
+        for (var item = 0; item < activityProducts.length; item++) {
+          standardIds.push(activityProducts[item].standardId);
+        }
+        if (
+          standardIds.indexOf(currentRow.productStandardExpand.standardId) != -1
+        ) {
+          this.proFlag = false;
+          this.$Message.error("活动商品已存在");
+        } else {
+          this.proFlag = true;
+        }
         this.addRelationDetail.standardId = mark
           .map(item => item.id.toString())
           .join(",");
@@ -2009,6 +2024,17 @@ export default {
         this.addRelationDetail.couponConfigId = null;
         this.addRelationDetail.productStandard = couponTemplate;
       } else if (this.addRelationDetail.type === "COUPON") {
+        let activityProducts = this.relationProducts;
+        let couponIds = [];
+        for (var item = 0; item < activityProducts.length; item++) {
+          couponIds.push(activityProducts[item].couponConfigId);
+        }
+        if (couponIds.indexOf(currentRow.id) != -1) {
+          this.proFlag = false;
+          this.$Message.error("活动优惠券已存在");
+        } else {
+          this.proFlag = true;
+        }
         this.addRelationDetail.couponConfigId = mark
           .map(item => item.id.toString())
           .join(",");

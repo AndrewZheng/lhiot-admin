@@ -673,7 +673,7 @@
               </FormItem>
             </i-col>
           </Row>
-          <Row>
+          <Row v-if="this.proStandardExpand.expandType==='DISCOUNT_PRODUCT'">
             <i-col span="12">
               <FormItem label="限购份数:" prop="limitNum">
                 <Input v-model="proStandardExpand.limitNum"></Input>
@@ -687,17 +687,17 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="折扣价:">
+              <FormItem label="活动价:">
                 <InputNumber
                   :min="0"
                   :max="salePriceComputed > 0? salePriceComputed: priceComputed"
                   :value="discountPriceComputed"
                   @on-change="calDiscountRate"
                 ></InputNumber>
-                <div>（以售卖价格优先计算折扣率）</div>
+                <div v-if="this.proStandardExpand.expandType==='DISCOUNT_PRODUCT'">（以售卖价格优先计算折扣率）</div>
               </FormItem>
             </i-col>
-            <i-col span="12">
+            <i-col span="12" v-if="this.proStandardExpand.expandType==='DISCOUNT_PRODUCT'">
               <FormItem label="折扣率:" prop="discountRate">
                 <Input v-model="proStandardExpand.discountRate" readonly></Input>
               </FormItem>
@@ -1064,7 +1064,7 @@ export default {
           { required: false, message: "请输入起购份数", trigger: "blur" }
         ],
         discountPrice: [
-          { required: true, message: "请输入折扣价格", trigger: "change" }
+          { required: true, message: "请输入活动价格", trigger: "change" }
         ],
         discountRate: [
           { required: false, message: "请计算折扣率", trigger: "change" }
@@ -1792,12 +1792,23 @@ export default {
       });
     },
     handleSubmitDiscount() {
-      // 校验某些字段
       this.$refs.modalDiscount.validate(valid => {
         if (valid) {
-          if (this.proStandardExpand.limitNum <= 0) {
-            this.$Message.warning("请输入合法的数字");
+          if (this.proStandardExpand.discountPrice <= 0) {
+            this.$Message.warning("活动价不能为0");
             return false;
+          }
+          if (this.proStandardExpand.expandType === "DISCOUNT_PRODUCT") {
+            if (this.proStandardExpand.limitNum <= 0) {
+              this.$Message.warning("限购份数不能为0");
+              return false;
+            }
+            if (
+              this.proStandardExpand.startNum > this.proStandardExpand.limitNum
+            ) {
+              this.$Message.warning("起购份数不能大于限购份数");
+              return false;
+            }
           }
           this.updateProStandardExpand();
         } else {

@@ -433,6 +433,7 @@
                       type="primary"
                       style="margin-left: 50px;"
                       @click="addTempData('modalCreate')"
+                      v-show="this.proFlag===true"
                     >
                       <Icon type="md-add" />&nbsp;关联秒杀商品
                     </Button>
@@ -1053,7 +1054,8 @@ export default {
       addRelationDetail: _.cloneDeep(relationDetail),
       productDetail: _.cloneDeep(productDetail),
       products: [],
-      productTotal: 0
+      productTotal: 0,
+      proFlag: true
     };
   },
   computed: {},
@@ -1370,7 +1372,24 @@ export default {
         .map(item => item.id.toString())
         .join(",");
     },
+    // 选中商品
     handleTemplateChange(currentRow, oldCurrentRow) {
+      // console.log("活动商品列表", this.relationProducts);
+      // console.log("选中商品列表", currentRow.productStandardExpand.standardId);
+      let activityProducts = this.relationProducts;
+      let standardIds = [];
+      for (var item = 0; item < activityProducts.length; item++) {
+        standardIds.push(activityProducts[item].standardId);
+      }
+      if (
+        standardIds.indexOf(currentRow.productStandardExpand.standardId) != -1
+      ) {
+        this.proFlag = false;
+        this.$Message.error("活动商品已存在");
+      } else {
+        this.proFlag = true;
+      }
+
       const couponTemplate = currentRow;
       let mark = [];
       mark.push(currentRow);
