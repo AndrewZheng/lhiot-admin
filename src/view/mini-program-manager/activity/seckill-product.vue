@@ -162,7 +162,7 @@
               <i-col span="18">{{ activitySeckillDetail.userActivitySurplus }}</i-col>
             </Row>
           </i-col>
-        </Row> -->
+        </Row>-->
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
@@ -1086,25 +1086,22 @@ export default {
             this.$Message.error("开始时间不能大于结束时间!");
             return;
           }
+          if (
+            this.activitySeckillDetail.beginTime.toString().indexOf("T") > -1
+          ) {
+            this.activitySeckillDetail.beginTime = this.$moment(
+              this.activitySeckillDetail.beginTime
+            ).format("YYYY-MM-DD HH:mm:ss");
+          }
+          if (this.activitySeckillDetail.endTime.toString().indexOf("T") > -1) {
+            this.activitySeckillDetail.endTime = this.$moment(
+              this.activitySeckillDetail.endTime
+            ).format("YYYY-MM-DD HH:mm:ss");
+          }
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
             this.createSeckill();
           } else if (this.tempModalType === this.modalType.edit) {
-            // 编辑状态
-            if (
-              this.activitySeckillDetail.beginTime.toString().indexOf("T") > -1
-            ) {
-              this.activitySeckillDetail.beginTime = this.$moment(
-                this.activitySeckillDetail.beginTime
-              ).format("YYYY-MM-DD HH:mm:ss");
-            }
-            if (
-              this.activitySeckillDetail.beginTime.toString().indexOf("T") > -1
-            ) {
-              this.activitySeckillDetail.endTime = this.$moment(
-                this.activitySeckillDetail.endTime
-              ).format("YYYY-MM-DD HH:mm:ss");
-            }
             this.editSeckill();
           }
         } else {

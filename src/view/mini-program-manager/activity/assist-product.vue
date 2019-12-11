@@ -1687,6 +1687,16 @@ export default {
             this.$Message.error("开始时间不能大于结束时间!");
             return;
           }
+          if (this.flashsaleDetail.beginTime.toString().indexOf("T") > -1) {
+            this.flashsaleDetail.beginTime = this.$moment(
+              this.flashsaleDetail.beginTime
+            ).format("YYYY-MM-DD HH:mm:ss");
+          }
+          if (this.flashsaleDetail.endTime.toString().indexOf("T") > -1) {
+            this.flashsaleDetail.endTime = this.$moment(
+              this.flashsaleDetail.endTime
+            ).format("YYYY-MM-DD HH:mm:ss");
+          }
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
             this.createAssist();
@@ -1727,6 +1737,7 @@ export default {
         .then(res => {
           this.modalEdit = false;
           this.modalViewLoading = false;
+           this.$Message.success("修改成功!");
           this.getTableData();
         })
         .catch(() => {
