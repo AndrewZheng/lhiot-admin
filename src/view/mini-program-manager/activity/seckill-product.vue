@@ -155,14 +155,14 @@
             </Row>
           </i-col>
         </Row>
-        <Row class-name="mb20">
+        <!-- <Row class-name="mb20">
           <i-col span="24">
             <Row>
               <i-col span="6">活动个人剩余份数:</i-col>
               <i-col span="18">{{ activitySeckillDetail.userActivitySurplus }}</i-col>
             </Row>
           </i-col>
-        </Row>
+        </Row> -->
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
@@ -448,6 +448,7 @@
             v-model="relationProducts"
             :loading="tempTableLoading"
             border
+            @on-sale="switchStatus"
             @on-delete="modalHandleDelete"
             @on-inline-edit="modalHandleEdit"
             @on-inline-save="modalHandleSave"
@@ -745,6 +746,33 @@ const relationTempColumns = [
         return h("div", params.row.userLimit);
       }
     }
+  },
+  {
+    title: "商品状态",
+    align: "center",
+    key: "status",
+    minWidth: 100,
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.status === "ON") {
+        return (
+          <div>
+            <tag color="success">{"上架"}</tag>
+          </div>
+        );
+      } else if (row.status === "OFF") {
+        return (
+          <div>
+            <tag color="error">{"下架"}</tag>
+          </div>
+        );
+      }
+      return (
+        <div>
+          <tag color="primary">{row.status}</tag>
+        </div>
+      );
+    }
   }
 ];
 
@@ -844,39 +872,6 @@ const productColumns = [
           </div>
         );
       }
-    }
-  },
-  {
-    title: "商品状态",
-    minWidth: 100,
-    key: "shelvesStatus",
-    align: "center",
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (row.shelvesStatus === "VALID") {
-        return (
-          <div>
-            <tag color="success">
-              {customPlanStatusConvert(row.shelvesStatus).label}
-            </tag>
-          </div>
-        );
-      } else if (row.shelvesStatus === "INVALID") {
-        return (
-          <div>
-            <tag color="error">
-              {customPlanStatusConvert(row.shelvesStatus).label}
-            </tag>
-          </div>
-        );
-      }
-      return (
-        <div>
-          <tag color="primary">
-            {customPlanStatusConvert(row.shelvesStatus).label}
-          </tag>
-        </div>
-      );
     }
   },
   {
@@ -1021,11 +1016,11 @@ export default {
           align: "center",
           key: "userActivityLimit"
         },
-        {
-          title: "活动个人剩余份数",
-          align: "center",
-          key: "userActivitySurplus"
-        },
+        // {
+        //   title: "活动个人剩余份数",
+        //   align: "center",
+        //   key: "userActivitySurplus"
+        // },
         {
           title: "操作",
           align: "center",
@@ -1040,9 +1035,9 @@ export default {
         {
           title: "操作",
           align: "center",
-          minWidth: 100,
+          minWidth: 140,
           key: "handle",
-          options: ["inlineEdit", "delete"]
+          options: ["onSale", "inlineEdit", "delete"]
         }
       ],
       productColumns: _.cloneDeep(productColumns),
@@ -1411,6 +1406,26 @@ export default {
           this.modalViewLoading = false;
           this.modalEdit = false;
         });
+    },
+    //上下架
+    switchStatus(params) {
+      // this.relationProducts.status = this._.cloneDeep(params.row.status);
+      if (params.row.status === "ON") {
+        params.row.status = "OFF";
+      } else {
+        params.row.status = "ON";
+      }
+      this.loading = true;
+      // console.log("上下架", params.row);
+      editSeckillProductRelation(params.row)
+        .then(res => {
+          this.getRelationTableData();
+        })
+        .finally(res => {
+          this.tempTableLoading = false;
+        });
+      this.tempTableLoading = false;
+      this.$set(params.row, "isEdit", false);
     }
   }
 };

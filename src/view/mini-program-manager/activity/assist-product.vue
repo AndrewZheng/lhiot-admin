@@ -494,6 +494,7 @@
             v-model="relationProducts"
             :loading="tempTableLoading"
             border
+            @on-sale="switchStatus"
             @on-delete="modalHandleDelete"
             @on-view="handleRelevanceView"
             @on-edit="handleRelevanceEdit"
@@ -1178,6 +1179,33 @@ const relationTempColumns = [
     //     return h("div", params.row.validHour);
     //   }
     // }
+  },
+  {
+    title: "商品/券状态",
+    align: "center",
+    key: "status",
+    minWidth: 100,
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.status === "ON") {
+        return (
+          <div>
+            <tag color="success">{"上架"}</tag>
+          </div>
+        );
+      } else if (row.status === "OFF") {
+        return (
+          <div>
+            <tag color="error">{"下架"}</tag>
+          </div>
+        );
+      }
+      return (
+        <div>
+          <tag color="primary">{row.status}</tag>
+        </div>
+      );
+    }
   }
 ];
 
@@ -1280,39 +1308,6 @@ const productColumns = [
     }
   },
   {
-    title: "商品状态",
-    minWidth: 100,
-    key: "shelvesStatus",
-    align: "center",
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (row.shelvesStatus === "VALID") {
-        return (
-          <div>
-            <tag color="success">
-              {customPlanStatusConvert(row.shelvesStatus).label}
-            </tag>
-          </div>
-        );
-      } else if (row.shelvesStatus === "INVALID") {
-        return (
-          <div>
-            <tag color="error">
-              {customPlanStatusConvert(row.shelvesStatus).label}
-            </tag>
-          </div>
-        );
-      }
-      return (
-        <div>
-          <tag color="primary">
-            {customPlanStatusConvert(row.shelvesStatus).label}
-          </tag>
-        </div>
-      );
-    }
-  },
-  {
     title: "排序",
     key: "rank",
     minWidth: 60,
@@ -1387,33 +1382,6 @@ const couponColumns = [
     minWidth: 80,
     render(h, params) {
       return <div>{fenToYuanDot2(params.row.minBuyFee)}</div>;
-    }
-  },
-  {
-    title: "优惠券状态",
-    key: "couponStatus",
-    align: "center",
-    minWidth: 80,
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (row.couponStatus === "VALID") {
-        return (
-          <div>
-            <tag color="success">
-              {couponStatusConvert(row.couponStatus).label}
-            </tag>
-          </div>
-        );
-      } else if (row.couponStatus === "INVALID") {
-        return (
-          <div>
-            <tag color="error">
-              {couponStatusConvert(row.couponStatus).label}
-            </tag>
-          </div>
-        );
-      }
-      return <div>{row.couponStatus}</div>;
     }
   },
   {
@@ -1637,9 +1605,9 @@ export default {
         {
           title: "操作",
           align: "center",
-          minWidth: 100,
+          minWidth: 150,
           key: "handle",
-          options: ["view", "edit", "delete"]
+          options: ["onSale", "view", "edit", "delete"]
         }
       ],
       productColumns: _.cloneDeep(productColumns),
@@ -2109,6 +2077,26 @@ export default {
         .finally(res => {
           this.tempTableLoading = false;
         });
+    },
+    //上下架
+    switchStatus(params) {
+      // this.relationProducts.status = this._.cloneDeep(params.row.status);
+      if (params.row.status === "ON") {
+        params.row.status = "OFF";
+      } else {
+        params.row.status = "ON";
+      }
+      this.loading = true;
+      // console.log("上下架", params.row);
+      editAssistProductRelation(params.row)
+        .then(res => {
+          this.getRelationTableData();
+        })
+        .finally(res => {
+          this.tempTableLoading = false;
+        });
+      this.tempTableLoading = false;
+      this.$set(params.row, "isEdit", false);
     }
   }
 };
