@@ -379,12 +379,12 @@
                 </Row>-->
                 <Row>
                   <i-col span="5">
-                    <FormItem label="限购总数:" prop="activityLimit">
+                    <FormItem label="商品库存总数:" prop="activityLimit">
                       <Input
                         :min="0"
                         v-model="addRelationDetail.activityLimit"
                         class="ml20"
-                        label="限购总数"
+                        label="商品库存总数"
                         style="padding-right: 5px;width: 100px"
                       ></Input>
                     </FormItem>
@@ -697,7 +697,7 @@ const relationTempColumns = [
     }
   },
   {
-    title: "限购总数",
+    title: "商品库存总数",
     key: "activityLimit",
     align: "center",
     minWidth: 100,
@@ -901,7 +901,7 @@ export default {
       },
       relationRuleInline: {
         activityLimit: [
-          { required: true, message: "请输入商品限购总数" },
+          { required: true, message: "请输入商品库存总数" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
@@ -1038,7 +1038,7 @@ export default {
           align: "center",
           minWidth: 140,
           key: "handle",
-          options: ["onSale", "inlineEdit", "delete"]
+          options: ["onSale", "inlineEdit"]
         }
       ],
       productColumns: _.cloneDeep(productColumns),
@@ -1276,7 +1276,7 @@ export default {
             Number(this.addRelationDetail.userLimit) >
             Number(this.addRelationDetail.activityLimit)
           ) {
-            this.$Message.error("每人限购数量不能大于限购总数量");
+            this.$Message.error("每人限购数量不能大于商品库存总数");
             return;
           }
 
@@ -1302,7 +1302,7 @@ export default {
         this.$Message.error("请输入非0数");
         return;
       } else if (Number(row.userLimit) > Number(row.activityLimit)) {
-        this.$Message.error("每人限购数量不能大于限购总数量");
+        this.$Message.error("每人限购数量不能大于商品库存总数");
         return;
       }
       this.tempTableLoading = true;

@@ -199,7 +199,7 @@ export default {
     const that = this;
     const { imgFormat, langType, langExt, width, height } = that;
     let isSupported = true;
-    const allowImgFormat = ["jpg", "png"];
+    const allowImgFormat = ["jpg", "png","gif"];
     const tempImgFormat =
       allowImgFormat.indexOf(imgFormat) === -1 ? "jpg" : imgFormat;
     const lang = language[langType] ? language[langType] : language["en"];

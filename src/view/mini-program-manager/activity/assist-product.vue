@@ -392,12 +392,12 @@
               >
                 <Row>
                   <i-col span="5">
-                    <FormItem label="限购总数:" prop="activityLimit">
+                    <FormItem label="商品库存总数:" prop="activityLimit">
                       <Input
                         :min="0"
                         v-model="addRelationDetail.activityLimit"
                         class="ml10"
-                        label="限购总数"
+                        label="商品库存总数"
                         style="padding-right: 5px;width: 100px"
                       ></Input>
                     </FormItem>
@@ -720,12 +720,12 @@
         >
           <Row>
             <i-col span="5">
-              <FormItem label="限购总数:" prop="activityLimit">
+              <FormItem label="商品库存总数:" prop="activityLimit">
                 <Input
                   :min="0"
                   v-model="addRelationDetail.activityLimit"
                   class="ml10"
-                  label="限购总数"
+                  label="商品库存总数"
                   style="padding-right: 5px;width: 100px"
                 ></Input>
               </FormItem>
@@ -1104,7 +1104,7 @@ const relationTempColumns = [
     // }
   },
   {
-    title: "限购总数",
+    title: "商品库存总数",
     key: "activityLimit",
     align: "center",
     minWidth: 100
@@ -1456,7 +1456,7 @@ export default {
       },
       relationRuleInline: {
         activityLimit: [
-          { required: true, message: "请输入商品限购总数" },
+          { required: true, message: "请输入商品库存总数" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
@@ -1608,7 +1608,7 @@ export default {
           align: "center",
           minWidth: 150,
           key: "handle",
-          options: ["onSale", "view", "edit", "delete"]
+          options: ["onSale", "view", "edit"]
         }
       ],
       productColumns: _.cloneDeep(productColumns),

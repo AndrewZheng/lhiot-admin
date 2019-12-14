@@ -112,7 +112,7 @@ export default {
     format: {
       type: Array,
       default() {
-        return ['jpg', 'jpeg', 'png'];
+        return ['jpg', 'jpeg', 'png', 'gif'];
       }
     },
     maxSize: {
