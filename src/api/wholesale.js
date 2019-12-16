@@ -4,7 +4,7 @@ const $http = Vue.prototype.$http;
 /* -------------------------
  * 商品分类管理
  * -------------------------
-*/
+ */
 // 查询商品分类树结构
 export const getProductCategoriesTree = () => {
   return $http.request({
@@ -57,7 +57,7 @@ export const editProductCategories = (data) => {
 /* -------------------------
  * 商品单位管理
  * -------------------------
-*/
+ */
 // 根据条件分页查询商品单位列表
 export const getProductUnitsPages = (data) => {
   return $http.request({
@@ -110,7 +110,7 @@ export const editProductUnits = (data) => {
 /* -------------------------
  * 商品信息管理
  * -------------------------
-*/
+ */
 // 根据条件分页查询商品信息列表
 export const getProductPages = (data) => {
   return $http.request({
@@ -165,7 +165,7 @@ export const createProduct = (data) => {
 /* -------------------------
  * 商品关键字管理
  * -------------------------
-*/
+ */
 // 根据条件分页查询商品关键字列表
 export const getKeywordsPages = (data) => {
   return $http.request({
@@ -220,7 +220,7 @@ export const createKeywords = (data) => {
 /* -------------------------
  * 板块管理
  * -------------------------
-*/
+ */
 // 根据条件分页查询板块信息列表
 export const getProductSectionPages = (data) => {
   return $http.request({
@@ -282,6 +282,20 @@ export const getProductSectionTree = () => {
   });
 };
 
+/* -------------------------
+ * 商品板块管理
+ * -------------------------
+ */
+// 查询
+export const getPlateGoodsDetail = ({
+  id
+}) => {
+  return $http.request({
+    url: '/wholesale-small/plate-goods/' + id,
+    method: 'get'
+  });
+};
+
 // 根据条件分页查询板块和商品关联信息列表
 export const getProductSectionRelationPages = (data) => {
   return $http.request({
@@ -297,10 +311,10 @@ export const getProductSectionRelationPages = (data) => {
   });
 };
 
-// 创建板块和商品之间的关联
+// 批量创建板块和商品之间的关联
 export const createProductSectionRelation = (data) => {
   return $http.request({
-    url: '/minapp/product-section-relations/',
+    url: '/wholesale-small/plate-goods/creates',
     data,
     method: 'post'
   });
@@ -311,29 +325,23 @@ export const deleteProductSectionRelation = ({
   ids
 }) => {
   return $http.request({
-    url: '/minapp/product-section-relations/' + ids,
+    url: '/wholesale-small/plate-goods/' + ids,
     method: 'delete'
   });
 };
 
-// 修改板块和商品的关联
+// 批量修改板块和商品的关联
 export const editProductSectionRelation = (data) => {
   return $http.request({
-    url: '/minapp/product-section-relations/' + data.id,
+    url: '/wholesale-small/plate-goods/updates',
     data,
     method: 'put'
   });
 };
-
-/* -------------------------
- * 商品板块管理
- * -------------------------
-*/
-
 /* -------------------------
  * 商品规格管理
  * -------------------------
-*/
+ */
 // 根据商品规格id查询扩展信息
 export const getProStandardExpand = ({
   id
@@ -399,6 +407,373 @@ export const createProductStandard = (data) => {
 export const editProductStandard = (data) => {
   return $http.request({
     url: '/wholesale-small/goods-standard/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+/* -------------------------
+ * 商品区间价格管理
+ * -------------------------
+ */
+// 根据条件分页查询商品规格信息列表
+export const getGoodsPriceRegionPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/goods-price-region/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 根据商品规格Ids删除商品规格
+export const deleteGoodsPriceRegion = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/wholesale-small/goods-price-region/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加商品规格
+export const createGoodsPriceRegion = (data) => {
+  return $http.request({
+    url: '/wholesale-small/goods-price-region/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改商品规格
+export const editGoodsPriceRegion = (data) => {
+  return $http.request({
+    url: '/wholesale-small/goods-price-region/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+/* -------------------------
+ * 会员管理
+ * -------------------------
+ */
+// 根据条件分页查询用户信息列表
+export const getUserPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/user/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+export const deleteUser = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/wholesale-small/user/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加商品规格
+export const createUser = (data) => {
+  return $http.request({
+    url: '/wholesale-small/user/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改商品规格
+export const editUser = (data) => {
+  return $http.request({
+    url: '/wholesale-small/user/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+/* -------------------------
+ * 订单管理
+ * -------------------------
+ */
+export const getOrderPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/order/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+export const getOrder = ({
+  id
+}) => {
+  return $http.request({
+    url: '/wholesale-small/order/' + id,
+    method: 'get'
+  });
+};
+
+/* -------------------------
+ * 活动管理
+ * -------------------------
+ */
+// 根据条件分页查询活动信息列表
+export const getActivityPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/activity/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+export const deletActivity = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/wholesale-small/activity/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加商品规格
+export const createActivity = (data) => {
+  return $http.request({
+    url: '/wholesale-small/activity/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改商品规格
+export const editActivity = (data) => {
+  return $http.request({
+    url: '/wholesale-small/activity/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+/* -------------------------
+ * 优惠券模板管理
+ * -------------------------
+ */
+export const getCouponTemplatePages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/coupon-plate/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+export const deletCouponTemplate = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/wholesale-small/coupon-plate/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加商品规格
+export const createCouponTemplate = (data) => {
+  return $http.request({
+    url: '/wholesale-small/coupon-plate/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改商品规格
+export const editCouponTemplate = (data) => {
+  return $http.request({
+    url: '/wholesale-small/coupon-plate/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+/* -------------------------
+ * 优惠券管理
+ * -------------------------
+ */
+export const getCouponPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/coupon-entity/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+export const deletCoupon = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/wholesale-small/coupon-entity/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加商品规格
+export const createCoupon = (data) => {
+  return $http.request({
+    url: '/wholesale-small/coupon-entity/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改商品规格
+export const editCoupon = (data) => {
+  return $http.request({
+    url: '/wholesale-small/coupon-entity/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+/* -------------------------
+ * 优惠券配置管理
+ * -------------------------
+ */
+export const getCouponConfigPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/coupon-config/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+export const deleteCouponConfig = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/wholesale-small/coupon-config/' + ids,
+    method: 'delete'
+  });
+};
+
+export const createCouponConfig = (data) => {
+  return $http.request({
+    url: '/wholesale-small/coupon-config/create',
+    data,
+    method: 'post'
+  });
+};
+
+export const editCouponConfig = (data) => {
+  return $http.request({
+    url: '/wholesale-small/coupon-config/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+/* -------------------------
+ * 注册送礼配置管理
+ * -------------------------
+ */
+export const getRewardConfigPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/reward-config/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+export const deleteRewardConfig = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/wholesale-small/reward-config/' + ids,
+    method: 'delete'
+  });
+};
+
+export const createRewardConfig = (data) => {
+  return $http.request({
+    url: '/wholesale-small/reward-config/create',
+    data,
+    method: 'post'
+  });
+};
+
+export const editRewardConfig = (data) => {
+  return $http.request({
+    url: '/wholesale-small/reward-config/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+/* -------------------------
+ * 限时抢购配置管理
+ * -------------------------
+ */
+export const getFlashsaleGoodsPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/flashsale-goods/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+export const deleteFlashsaleGoods = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/wholesale-small/flashsale-goods/' + ids,
+    method: 'delete'
+  });
+};
+
+export const createFlashsaleGoods = (data) => {
+  return $http.request({
+    url: '/wholesale-small/flashsale-goods/create',
+    data,
+    method: 'post'
+  });
+};
+
+export const editFlashsaleGoods = (data) => {
+  return $http.request({
+    url: '/wholesale-small/flashsale-goods/update/' + data.id,
     data,
     method: 'put'
   });

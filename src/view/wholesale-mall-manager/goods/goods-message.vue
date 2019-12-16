@@ -442,7 +442,7 @@ import {
 import {
   buildMenu,
   convertTreeCategory,
-  setSmallGoodsStandard,
+  setWholesaleGoods,
   convertTree
 } from "@/libs/util";
 import CommonIcon from "_c/common-icon";
@@ -845,15 +845,11 @@ export default {
       }
     },
     handleSetting(params) {
-      // console.log('setGoodsStandard:' + JSON.stringify(params.row));
       var rows = params.row;
-      rows.unitsList = this.unitsList;
-      setSmallGoodsStandard(rows);
+      setWholesaleGoods(rows);
       this.turnToPage({
-        name: "small-goods-relation-standard",
-        // name: 'small-goods-raltion-standard',
+        name: "wholesale-goods-relation-standard", 
         params: { productId: params.row.id, unitsList: this.unitsList }
-        // params: { id: params.row.id, unitsList: this.unitsList, goodsName: params.row.goodsName }
       });
     },
     getTableData() {

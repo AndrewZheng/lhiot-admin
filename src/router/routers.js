@@ -242,6 +242,24 @@ export const constantRouterMap = [
           title: '商品关联规格'
         },
         component: () => import('@/view/wholesale-mall-manager/goods/goods-standard.vue')
+      },
+      {
+        path: '/wholesale-register-reward',
+        name: 'wholesale-register-reward',
+        meta: {
+          icon: 'md-basket',
+          title: '注册送礼配置'
+        },
+        component: () => import('@/view/wholesale-mall-manager/activity/register-reward.vue')
+      },
+      {
+        path: '/wholesale-flashsale',
+        name: 'wholesale-flashsale',
+        meta: {
+          icon: 'md-basket',
+          title: '限时抢购配置'
+        },
+        component: () => import('@/view/wholesale-mall-manager/activity/flashsale.vue')
       }
     ]
   }

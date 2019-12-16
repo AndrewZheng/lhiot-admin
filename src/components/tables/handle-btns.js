@@ -56,8 +56,6 @@ const btns = {
       on: {
         'on-ok': () => {
           vm.$emit('on-delete', params);
-          // 页面验证 删除成功则刷新表格内容
-          // vm.$emit('input', params.tableData.filter((item, index) => index !== params.row.initRowIndex));
         }
       }
     }, [
@@ -173,17 +171,16 @@ const btns = {
       }
     })]);
   },
-  // 商品上下架操作
   onSale: (h, params, vm) => {
     const {
       row
     } = params;
-    if (row.shelfStatus === 'ON' || row.onOff === 'ON' || row.state === 'ON' || row.couponStatus === 'VALID') {
+    if (row.shelfStatus === 'ON' || row.onOff === 'ON' || row.state === 'ON' || row.couponStatus === 'VALID' || row.vaild === 'yes') {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要下架?',
-         // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
+          title: row.vaild === 'yes' ? '确认要关闭活动吗?' : '确认要下架吗?',
+          placement: params.index === 0 ? 'right' : 'top'
         },
         style: {
           marginRight: '5px'
@@ -213,7 +210,8 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要上架吗?'
+          title: row.vaild === 'no' ? '确认要开启活动吗?' : '确认要上架吗?',
+          placement: params.index === 0 ? 'right' : 'top'
         },
         style: {
           marginRight: '5px'
@@ -315,7 +313,7 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要下架该优惠券吗?',
+          title: '确认要下架该优惠券吗?'
         },
         style: {
           marginRight: '5px'
@@ -504,38 +502,38 @@ const btns = {
       }
     })]);
   },
-  //手动退款
+  // 手动退款
   onHand: (h, params, vm) => {
-      return h('Poptip', {
+    return h('Poptip', {
+      props: {
+        confirm: true,
+        title: '确认要退款?'
+        // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        'on-ok': () => {
+          vm.$emit('on-hand', params);
+        }
+      }
+    }, [
+      h('Button', {
         props: {
-          confirm: true,
-          title: '确认要退款?',
-          // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
-        },
-        style: {
-          marginRight: '5px'
-        },
-        on: {
-          'on-ok': () => {
-            vm.$emit('on-hand', params);
-          }
+          type: 'error',
+          size: 'small'
         }
       }, [
-        h('Button', {
+        h('Icon', {
           props: {
-            type: 'error',
-            size: 'small'
+            type: 'logo-usd',
+            size: 16,
+            color: '#fff'
           }
-        }, [
-          h('Icon', {
-            props: {
-              type: 'logo-usd',
-              size: 16,
-              color: '#fff'
-            }
-          })
-        ])
-      ]);
+        })
+      ])
+    ]);
   },
   // 邮费复制操作
   copy: (h, params, vm) => {
@@ -956,16 +954,16 @@ const btns = {
       ]);
     }
   },
-  //确认收货
+  // 确认收货
   onReceive: (h, params, vm) => {
     return h('Poptip', {
       props: {
         confirm: true,
-        title: '确认要收货?',
+        title: '确认要收货?'
         // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
       },
       style: {
-        marginRight: '5px',
+        marginRight: '5px'
       },
       on: {
         'on-ok': () => {
@@ -977,7 +975,7 @@ const btns = {
         props: {
           type: 'success',
           size: 'small'
-        },
+        }
       }, [
         h('Icon', {
           props: {

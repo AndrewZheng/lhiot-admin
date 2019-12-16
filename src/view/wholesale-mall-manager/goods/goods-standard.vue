@@ -15,12 +15,10 @@
         search-place="top"
         @on-view="handleView"
         @on-edit="handleEdit"
-        @on-discount="handleDiscount"
+        @on-discount="handleRegin"
         @on-delete="handleDelete"
-        @custom-on-sale="customOnSale"
-        @on-current-change="onCurrentChange"
-        @on-select-all="onSelectionAll"
-        @on-selection-change="onSelectionChange"
+        @custom-on-sale="handlePublish"
+        @on-selection-change="handleSelectionChange"
       >
         <div slot="searchCondition">
           <Row v-show="!showBack">
@@ -100,9 +98,9 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
-          <div class="ml15 mt10">
+          <!-- <div class="ml15 mt10">
             <i style="color:red">*</i> 选中单条数据再点击添加,可复制当前数据
-          </div>
+          </div> -->
         </div>
         <div slot="operations">
           <Button
@@ -114,7 +112,7 @@
           >
             <Icon type="ios-arrow-back" />&nbsp;返回
           </Button>
-          <Button v-waves class="search-btn ml5 mr5" type="success" @click="handleCreateView">
+          <Button v-waves class="search-btn ml5 mr5" type="success" @click="handleCreate">
             <Icon type="md-add" />&nbsp;添加
           </Button>
           <Poptip
@@ -162,7 +160,7 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品名称:</i-col>
-              <i-col span="16">{{ productStandardDetail.baseProductName }}</i-col>
+              <i-col span="16">{{ productStandardDetail.goodsName }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -275,7 +273,7 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="modalView = false">关闭</Button>
       </div>
     </Modal>
 
@@ -307,18 +305,13 @@
             </i-col>
           </Row>
           <Row>
-            <!-- <i-col span="12">
-              <FormItem label="商品编码:">{{ productStandardDetail.goodsCode }}</FormItem>
-            </i-col> -->
-            <i-col span="12">
-              <FormItem label="商品条码:">{{ productStandardDetail.barCode }}</FormItem>
-            </i-col>
-          </Row>
-          <Row>
             <i-col span="12">
               <FormItem v-if="productStandardDetail.goodsImage" label="商品主图:">
                 <img :src="productStandardDetail.goodsImage" width="100" height="100" />
               </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="商品条码:">{{ productStandardDetail.barCode }}</FormItem>
             </i-col>
           </Row>
           <Divider orientation="center">规格信息</Divider>
@@ -329,8 +322,19 @@
               </FormItem>
             </i-col>
             <i-col span="12">
+              <FormItem label="商品条码:" prop="barCode">
+                <Input v-model="productStandardDetail.barCode"></Input>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
               <FormItem label="上架商品主图:建议尺寸;400x400(单位:px):" prop="goodsImage">
-                <Input v-show="false" v-model="productStandardDetail.goodsImage" style="width: auto"></Input>
+                <Input
+                  v-show="false"
+                  v-model="productStandardDetail.goodsImage"
+                  style="width: auto"
+                ></Input>
                 <div
                   v-for="item in uploadListMain"
                   :key="item.url"
@@ -363,47 +367,23 @@
                 </IViewUpload>
               </FormItem>
             </i-col>
+            <i-col span="12">
+              <FormItem label="规格描述:" prop="standardDesc">
+                <Input
+                  v-model="productStandardDetail.standardDesc"
+                  type="textarea"
+                  :autosize="{minRows: 2,maxRows: 6}"
+                  placeholder="请输入规格描述..."
+                />
+              </FormItem>
+            </i-col>
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="商品条码:" prop="barCode">
-                <Input v-model="productStandardDetail.barCode"></Input>
-              </FormItem>
-            </i-col>
-            <i-col span="12">
-              <FormItem label="商品状态:" prop="vaild">
+              <FormItem label="商品状态:" prop="vaild" style="width:200px;">
                 <Select v-model="productStandardDetail.vaild">
                   <Option
                     v-for="(item,index) in vaild"
-                    :value="item.value"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px"
-                  >
-                    {{ item.label }}
-                  </Option>
-                </Select>
-              </FormItem>
-            </i-col>
-          </Row>
-          <Row>
-            <i-col span="12">
-              <FormItem label="商品规格:" prop="standardDesc">
-                <Input v-model="productStandardDetail.standardDesc"></Input>
-              </FormItem>
-            </i-col>
-            <i-col span="12">
-              <FormItem label="数量/重量:" prop="weight">
-                <InputNumber :min="0" v-model="productStandardDetail.weight"></InputNumber>
-              </FormItem>
-            </i-col>
-          </Row>
-          <Row>
-            <i-col span="12">
-              <FormItem label="商品单位:" prop="unitCode">
-                <Select v-model="productStandardDetail.unitCode" @on-change="unitChange">
-                  <Option
-                    v-for="(item,index) in unitsList"
                     :value="item.value"
                     :key="index"
                     class="ptb2-5"
@@ -413,43 +393,97 @@
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="商品排序:" prop="rank">
-                <InputNumber :min="0" v-model="productStandardDetail.rank"></InputNumber>
+              <Row>
+                <i-col span="12">
+                  <FormItem label="商品单位:" prop="unitCode" style="width:180px;">
+                    <Select v-model="productStandardDetail.unitCode" @on-change="unitChange">
+                      <Option
+                        v-for="(item,index) in unitsList"
+                        :value="item.value"
+                        :key="index"
+                        class="ptb2-5"
+                        style="padding-left: 5px"
+                      >{{ item.label }}</Option>
+                    </Select>
+                  </FormItem>
+                </i-col>
+                <i-col span="12">
+                  <FormItem label="是否VIP:" prop="isVip" style="width:180px;">
+                    <Select v-model="productStandardDetail.isVip">
+                      <Option
+                        v-for="(item,index) in vipEnum"
+                        :value="item.value"
+                        :key="index"
+                        class="ptb2-5"
+                        style="padding-left: 5px"
+                      >{{ item.label }}</Option>
+                    </Select>
+                  </FormItem>
+                </i-col>
+              </Row>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
+              <FormItem label="数量/重量:" prop="weight">
+                <InputNumber :min="0" v-model="productStandardDetail.weight"></InputNumber>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="商品净重:" prop="netWeight">
+                <InputNumber :min="0" v-model="productStandardDetail.netWeight"></InputNumber>
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
               <FormItem label="商品原价:" prop="price">
-                <InputNumber :min="0" :value="priceComputed" @on-change="priceInputNumberOnchange"></InputNumber>
+                <InputNumber :min="0" :value="priceComputed" @on-change="priceOnchange"></InputNumber>
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="商品进货价:" prop="purchasePrice">
-                <InputNumber :min="0" :value="purchasePriceComputed" @on-change="purchasePriceOnchange"></InputNumber>
+                <InputNumber
+                  :min="0"
+                  :value="purchasePriceComputed"
+                  @on-change="purchasePriceOnchange"
+                ></InputNumber>
               </FormItem>
             </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
+              <FormItem label="商品规格:" prop="standard">
+                <Input v-model="productStandardDetail.standard"></Input>
+              </FormItem>
+            </i-col>
+            <!-- <i-col span="12">
+              <FormItem label="商品排序:" prop="rank">
+                <InputNumber :min="0" v-model="productStandardDetail.rank"></InputNumber>
+              </FormItem>
+            </i-col> -->
           </Row>
         </Form>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')">确定</Button>
+        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">确定</Button>
       </div>
     </Modal>
-    
+
+    <!-- 关联商品弹窗-->
     <Modal v-model="modalProduct" :width="1000" title="关联商品">
       <Card>
         <tables
           ref="dataTables"
           v-model="productData"
           :columns="productColumns"
-          :loading="loading"
+          :loading="loadingProduct"
           editable
           searchable
           border
           search-place="top"
-          @on-row-click="onRowClick"
+          @on-row-click="handleGoodsRelation"
         >
           <div slot="searchCondition">
             <Row>
@@ -502,6 +536,113 @@
       </Card>
     </Modal>
 
+    <!-- 价格区间弹窗-->
+    <Modal v-model="modalRegion" title="区间价格管理" :width="1200">
+      <Card>
+        <tables
+          ref="dataTables"
+          v-model="priceRegionData"
+          :columns="regionColumns"
+          :loading="loadingRegion"
+          :search-area-column="18"
+          :operate-area-column="6"
+          editable
+          searchable
+          border
+          highlight-row
+          search-place="top"
+          @on-edit="handleEditRegion"
+          @on-delete="handleDeleteRegion"
+        >
+          <div slot="searchCondition">
+            <i-col span="12">{{ productStandardDetail.goodsName }}--区间价格设置</i-col>
+          </div>
+          <div slot="operations">
+            <Button v-waves class="search-btn ml5 mr5" type="success" @click="handleRegionAdd">
+              <Icon type="md-add" />&nbsp;添加
+            </Button>
+            <Poptip
+              confirm
+              placement="bottom"
+              style="width: 100px"
+              title="您确认删除选中的内容吗?"
+              @on-ok="handleBatchDel"
+            >
+              <Button type="error" class="mr5">
+                <Icon type="md-trash" />批量删除
+              </Button>
+            </Poptip>
+          </div>
+        </tables>
+        <div style="margin: 10px;overflow: hidden">
+          <Row type="flex" justify="end">
+            <Page
+              :total="regionTotal"
+              :current="priceRegionRowData.page"
+              show-sizer
+              show-total
+              @on-change="changePriceRegionPage"
+              @on-page-size-change="changePriceRegionPageSize"
+            ></Page>
+          </Row>
+        </div>
+      </Card>
+    </Modal>
+
+    <!-- 价格区间的创建或修改-->
+    <Modal v-model="modalEditRegion" :mask-closable="false">
+      <p slot="header">
+        <span>{{ goodsPriceRegion.id ===0 ? '创建商品区间价格':'编辑商品区间价格' }}</span>
+      </p>
+      <div class="modal-content">
+        <Form
+          ref="editRegionForm"
+          :model="goodsPriceRegion"
+          :rules="ruleInlineRegion"
+          :label-width="100"
+        >
+          <Row>
+            <i-col span="12">
+              <FormItem label="商品名称:">{{ productStandardDetail.goodsName }}</FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="商品价格:" prop="price">
+                <InputNumber :min="0" :value="reginPriceComputed" @on-change="reginPriceOnchange"></InputNumber>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
+              <FormItem label="最低购买:" prop="minQuantity" style="width:200px">
+                <Input v-model="goodsPriceRegion.minQuantity"></Input>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="最高购买:" prop="maxQuantity" style="width:200px">
+                <Input v-model="goodsPriceRegion.maxQuantity"></Input>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
+              <FormItem label="规格数量描述:" prop="standardDes">
+                <Input v-model="goodsPriceRegion.standardDes"></Input>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="商品排序:" prop="reorder">
+                <InputNumber :min="0" v-model="goodsPriceRegion.reorder"></InputNumber>
+              </FormItem>
+            </i-col>
+          </Row>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button @click="modalEditRegion = false">关闭</Button>
+        <Button :loading="modalEditLoading" type="primary" @click="handleSubmitRegin">确定</Button>
+      </div>
+    </Modal>
+
     <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
@@ -513,54 +654,45 @@ import Tables from "_c/tables";
 import DragList from "_c/drag-list";
 import IViewUpload from "_c/iview-upload";
 import {
-  createProductStandard,
-  deleteProductStandard,
-  getProStandardExpand,
-  getProductStandardsPages,
-  modifyProStandardExpand,
-  editProductStandard,
-  getProductUnits,
   getProductPages,
-  getHdProductInfo
+  getProductStandardsPages,
+  getGoodsPriceRegionPages,
+  getProStandardExpand,
+  getProductUnits,
+  createProductStandard,
+  createGoodsPriceRegion,
+  deleteProductStandard,
+  deleteGoodsPriceRegion,
+  editProductStandard,
+  editGoodsPriceRegion,
+  modifyProStandardExpand
 } from "@/api/wholesale";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 import {
-  getSmallGoodsStandard,
+  getWholesaleGoods,
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber
 } from "@/libs/util";
-import {
-  customPlanStatusConvert,
-} from "@/libs/converStatus";
+import { customPlanStatusConvert } from "@/libs/converStatus";
 
 const productStandardDetail = {
-  barCode: "", 
-  baseUnitName: "", 
-  categoryName: "", 
+  barCode: "",
+  baseUnitName: "",
+  categoryName: "",
   goodsCode: "",
   goodsId: 0,
-  goodsImage: "",
+  goodsImage: null,
   goodsName: "",
-  goodsPriceRegionList: [
-    {
-      goodsStandardId: 0,
-      id: 0,
-      maxQuantity: 0,
-      minQuantity: 0,
-      price: 0,
-      reorder: 0,
-      standardDes: ""
-    }
-  ], // 商品价格区间
+  goodsPriceRegionList: [], // 商品价格区间
   goodsUnit: "",
   hdSkuId: "",
   id: 0,
   isVip: "",
-  netWeight: 0,// 商品净重
+  netWeight: 0, // 商品净重
   price: 0,
   purchasePrice: 0,
   standard: "",
@@ -568,8 +700,8 @@ const productStandardDetail = {
   unitCode: "",
   vaild: "",
   weight: 0,
-  rank: 0,// 先保留后续扩展
-  baseProductName: "",// 先保留可扩展
+  rank: 0, // 先保留后续扩展
+  baseProductName: "" // 先保留可扩展
 };
 
 const roleRowData = {
@@ -589,11 +721,16 @@ const productDetail = {
   goodsCode: "",
   goodsName: "",
   goodsImage: "",
+  otherImage: "",
+  goodsImages: "",
+  goodsDes: "",
   unitCode: 0,
+  categoryId: 0,
+  stockLimit: 0,
   baseBar: "",
-  hdSkuId: "",
+  baseUnit: "",
   unitName: "",
-  categoryName: "",
+  categoryName: ""
 };
 
 const productRowData = {
@@ -605,14 +742,256 @@ const productRowData = {
   rows: 10
 };
 
-const proStandardExpand = {
-  id: null,
-  discountPrice: 0,
-  discountRate: 0,
-  limitNum: 0,
-  standardId: 0,
-  startNum: 0
+const priceRegionRowData = {
+  goodsStandardId: 0,
+  page: 1,
+  rows: 10
 };
+
+const goodsPriceRegion = {
+  id: 0,
+  goodsStandardId: 0,
+  minQuantity: 0,
+  maxQuantity: 0,
+  price: 0,
+  reorder: 0, // 排序
+  standardDes: "" //价格区间描述
+};
+
+const standardColumns = [
+  {
+    type: "selection",
+    key: "",
+    minWidth: 50,
+    align: "center",
+    fixed: "left"
+  },
+  {
+    title: "规格ID",
+    align: "center",
+    key: "id",
+    minWidth: 50
+  },
+  {
+    title: "商品条码",
+    align: "center",
+    key: "barCode",
+    minWidth: 70
+  },
+  {
+    title: "商品名称",
+    align: "center",
+    key: "goodsName",
+    minWidth: 100
+  },
+  {
+    title: "商品图片",
+    key: "goodsImage",
+    align: "center",
+    minWidth: 120,
+    render: (h, params, vm) => {
+      const { row } = params;
+      const str = <img src={row.goodsImage} height="60" width="60" />;
+      return <div>{str}</div>;
+    }
+  },
+  {
+    title: "商品规格",
+    align: "center",
+    key: "standardDesc",
+    minWidth: 80
+  },
+  {
+    title: "商品单位",
+    align: "center",
+    minWidth: 80,
+    key: "goodsUnit"
+  },
+  {
+    title: "商品原价",
+    align: "center",
+    minWidth: 60,
+    key: "price",
+    render(h, params, vm) {
+      const amount = fenToYuanDot2(params.row.price);
+      return <div>{amount}</div>;
+    }
+  },
+  {
+    title: "进货价",
+    align: "center",
+    minWidth: 60,
+    key: "purchasePrice",
+    render(h, params, vm) {
+      const amount = fenToYuanDot2(params.row.purchasePrice);
+      return <div>{amount}</div>;
+    }
+  },
+  {
+    title: "是否VIP",
+    minWidth: 80,
+    key: "isVip",
+    align: "center",
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.isVip === "yes") {
+        return (
+          <div>
+            <tag color="warning">VIP</tag>
+          </div>
+        );
+      } else if (row.isVip === "no") {
+        return (
+          <div>
+            <tag color="primary">普通</tag>
+          </div>
+        );
+      }
+      return (
+        <div>
+          <tag color="primary">N/A</tag>
+        </div>
+      );
+    }
+  },
+  {
+    title: "商品状态",
+    minWidth: 80,
+    key: "vaild",
+    align: "center",
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.vaild === "yes") {
+        return (
+          <div>
+            <tag color="success">上架</tag>
+          </div>
+        );
+      } else if (row.vaild === "no") {
+        return (
+          <div>
+            <tag color="error">下架</tag>
+          </div>
+        );
+      }
+      return (
+        <div>
+          <tag color="primary">N/A</tag>
+        </div>
+      );
+    }
+  },
+  // {
+  //   title: "商品排序",
+  //   align: "center",
+  //   minWidth: 60,
+  //   key: "rank"
+  // },
+  {
+    title: "操作",
+    align: "center",
+    minWidth: 180,
+    key: "handle",
+    options: ["customOnSale", "view", "edit", "discount", "delete"]
+  }
+];
+
+const productColumns = [
+  {
+    title: "商品图片",
+    key: "goodsImage",
+    align: "center",
+    minWidth: 120,
+    render: (h, params, vm) => {
+      const { row } = params;
+      const str = <img src={row.goodsImage} height="60" width="60" />;
+      return <div>{str}</div>;
+    }
+  },
+  {
+    title: "基础条码",
+    align: "center",
+    sortable: true,
+    key: "baseBar",
+    minWidth: 80
+  },
+  {
+    title: "商品名称",
+    align: "center",
+    sortable: true,
+    key: "goodsName",
+    minWidth: 120
+  },
+  {
+    title: "商品类别",
+    align: "center",
+    key: "categoryName",
+    minWidth: 120
+  },
+  {
+    title: "基础单位",
+    align: "center",
+    minWidth: 90,
+    key: "unitName"
+  }
+];
+
+const goodsPriceRegionColumns = [
+  {
+    type: "selection",
+    key: "",
+    minWidth: 50,
+    align: "center",
+    fixed: "left"
+  },
+  {
+    title: "规格ID",
+    align: "center",
+    key: "goodsStandardId",
+    minWidth: 50
+  },
+  {
+    title: "商品价格",
+    key: "price",
+    align: "center",
+    minWidth: 100,
+    render(h, params, vm) {
+      const amount = fenToYuanDot2(params.row.price);
+      return <div>{amount}</div>;
+    }
+  },
+  {
+    title: "最低购买数量",
+    align: "center",
+    key: "minQuantity",
+    minWidth: 120
+  },
+  {
+    title: "最低购买数量",
+    align: "center",
+    key: "maxQuantity",
+    minWidth: 120
+  },
+  {
+    title: "排序",
+    align: "center",
+    key: "reorder",
+    minWidth: 80
+  },
+  {
+    title: "规格数量描述",
+    align: "center",
+    key: "standardDes",
+    minWidth: 150
+  },
+  {
+    title: "操作",
+    align: "center",
+    minWidth: 180,
+    key: "handle",
+    options: ["edit", "delete"]
+  }
+];
 
 export default {
   components: {
@@ -623,15 +1002,42 @@ export default {
   mixins: [uploadMixin, deleteMixin, searchMixin, tableMixin],
   data() {
     return {
+      productTotal: 0,
+      regionTotal: 0,
       unitsList: [],
       descriptionList: [],
       defaultListMain: [],
-      defaultListMultiple: [],
-      defaultListDetail: [],
       uploadListMain: [],
-      uploadListDetail: [],
-      uploadListMultiple: [],
-      vipEnum:[
+      productData: [],
+      priceRegionData: [],
+      tableDataSelected: [],
+      regionTableDataSelected: [],
+      modalEditLoading: false,
+      modalDiscount: false,
+      modalProduct: false,
+      modalSort: false,
+      modalRegion: false,
+      modalEditRegion: false,
+      loadingProduct: false,
+      loadingRegion: false,
+      showBack: false,
+      searchRowData: _.cloneDeep(roleRowData),
+      priceRegionRowData: _.cloneDeep(priceRegionRowData),
+      searchProductRowData: _.cloneDeep(productRowData),
+      productStandardDetail: _.cloneDeep(productStandardDetail),
+      productDetail: _.cloneDeep(productDetail),
+      goodsPriceRegion: _.cloneDeep(goodsPriceRegion),
+      columns: standardColumns,
+      productColumns: productColumns,
+      regionColumns: goodsPriceRegionColumns,
+      searchMinPrice: null,
+      searchMaxPrice: null,
+      currentTableRowSelected: null,
+      dropConClass: {
+        left: ["drop-box", "left-drop-box"],
+        right: ["drop-box", "right-drop-box"]
+      },
+      vipEnum: [
         {
           label: "是",
           value: "yes"
@@ -641,18 +1047,66 @@ export default {
           value: "no"
         }
       ],
-      ruleValidate: {
-        limitNum: [
-          { required: false, message: "请输入限购份数", trigger: "blur" }
+      vaild: [
+        {
+          label: "上架",
+          value: "yes"
+        },
+        {
+          label: "下架",
+          value: "no"
+        }
+      ],
+      ruleInlineRegion: {
+        goodsStandardId: [
+          { required: true, message: "请先选择规格商品" },
+          {
+            message: "请先选择规格商品",
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+          }
         ],
-        startNum: [
-          { required: false, message: "请输入起购份数", trigger: "blur" }
+        price: [
+          { required: true, message: "请输入商品价格" },
+          {
+            message: "必须为大于0的数字",
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+          }
         ],
-        discountPrice: [
-          { required: true, message: "请输入折扣价格", trigger: "change" }
+        reorder: [
+          { required: false, message: "请输入商品排序" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-1-9]\d*$/.test(value)) {
+                errors.push(new Error("必须为非零整数"));
+              }
+              callback(errors);
+            }
+          }
         ],
-        discountRate: [
-          { required: false, message: "请计算折扣率", trigger: "change" }
+        minQuantity: [
+          { required: true, message: "请输入最低购买数量" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[0-9]\d*$/.test(value)) {
+                errors.push(new Error("必须为非零整数"));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        maxQuantity: [
+          { required: true, message: "请输入最高购买数量" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[0-9]\d*$/.test(value)) {
+                errors.push(new Error("必须为非零整数"));
+              }
+              callback(errors);
+            }
+          }
         ]
       },
       ruleInline: {
@@ -663,12 +1117,11 @@ export default {
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
-        goodsName: [{ required: true, message: "请选择上架商品名称" }],
+        goodsName: [{ required: true, message: "请输入上架商品名称" }],
         goodsImage: [{ required: true, message: "请上传上架商品主图" }],
-        availableStatus: [{ required: true, message: "请选择商品分类" }],
         unitCode: [{ required: true, message: "请选择商品单位" }],
         vaild: [{ required: true, message: "请选择商品状态" }],
-        standardDesc: [{ required: true, message: "请输入商品规格" }],
+        standardDesc: [{ required: true, message: "请输入规格描述" }],
         price: [
           { required: true, message: "请输入商品价格" },
           {
@@ -676,31 +1129,26 @@ export default {
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
+        purchasePrice: [
+          { required: true, message: "请输入商品进货价" },
+          {
+            message: "必须为大于0的数字",
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+          }
+        ],
         barCode: [{ required: true, message: "请输入商品条码" }],
-        specificationQty: [
-          { required: true, message: "请输入安全库存" },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[1-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        rank: [
-          { required: false, message: "请输入商品排序" },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[1-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
-              }
-              callback(errors);
-            }
-          }
-        ],
+        // rank: [
+        //   { required: false, message: "请输入商品排序" },
+        //   {
+        //     validator(rule, value, callback, source, options) {
+        //       const errors = [];
+        //       if (!/^[-1-9]\d*$/.test(value)) {
+        //         errors.push(new Error("必须为非零整数"));
+        //       }
+        //       callback(errors);
+        //     }
+        //   }
+        // ],
         weight: [
           { required: true, message: "请输入重量" },
           {
@@ -712,256 +1160,31 @@ export default {
               callback(errors);
             }
           }
+        ],
+        netWeight: [
+          { required: false, message: "请输入商品净重" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/.test(value)) {
+                errors.push(new Error("必须为大于0的数字"));
+              }
+              callback(errors);
+            }
+          }
         ]
-      },
-      columns: [
-        {
-          type: "selection",
-          key: "",
-          minWidth: 50,
-          align: "center",
-          fixed: "left"
-        },
-        {
-          title: "规格ID",
-          align: "center",
-          key: "id",
-          minWidth: 50
-        },
-        {
-          title: "商品条码",
-          align: "center",
-          key: "barCode",
-          minWidth: 70
-        },
-        {
-          title: "商品名称",
-          align: "center",
-          key: "goodsName",
-          minWidth: 100
-        },
-        {
-          title: "商品图片",
-          key: "goodsImage",
-          align: "center",
-          minWidth: 120,
-          render: (h, params, vm) => {
-            const { row } = params;
-            const str = <img src={row.goodsImage} height="60" width="60" />;
-            return <div>{str}</div>;
-          }
-        },
-        {
-          title: "商品规格",
-          align: "center",
-          key: "standardDesc",
-          minWidth: 80
-        },
-        {
-          title: "商品单位",
-          align: "center",
-          minWidth: 80,
-          key: "goodsUnit"
-        },
-        {
-          title: "商品原价",
-          align: "center",
-          minWidth: 60,
-          key: "price",
-          render(h, params, vm) {
-            const amount = fenToYuanDot2(params.row.price);
-            return <div>{amount}</div>;
-          }
-        },
-        {
-          title: "进货价",
-          align: "center",
-          minWidth: 60,
-          key: "purchasePrice",
-          render(h, params, vm) {
-            const amount = fenToYuanDot2(params.row.purchasePrice);
-            return <div>{amount}</div>;
-          }
-        },
-        {
-          title: "是否VIP",
-          minWidth: 80,
-          key: "isVip",
-          align: "center",
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.isVip === "yes") {
-              return (
-                <div>
-                  <tag color="warning">
-                    VIP
-                  </tag>
-                </div>
-              );
-            } else if (row.isVip === "no") {
-              return (
-                <div>
-                  <tag color="primary">
-                    普通
-                  </tag>
-                </div>
-              );
-            }
-            return (
-              <div>
-                <tag color="primary">
-                  N/A
-                </tag>
-              </div>
-            );
-          }
-        },
-        {
-          title: "商品状态",
-          minWidth: 80,
-          key: "vaild",
-          align: "center",
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.vaild === "yes") {
-              return (
-                <div>
-                  <tag color="success">
-                    上架
-                  </tag>
-                </div>
-              );
-            } else if (row.vaild === "no") {
-              return (
-                <div>
-                  <tag color="error">
-                    下架
-                  </tag>
-                </div>
-              );
-            }
-            return (
-              <div>
-                <tag color="primary">
-                  N/A
-                </tag>
-              </div>
-            );
-          }
-        },
-        // {
-        //   title: "商品排序",
-        //   align: "center",
-        //   minWidth: 60,
-        //   key: "rank"
-        // },
-        {
-          title: "操作",
-          align: "center",
-          minWidth: 180,
-          key: "handle",
-          options: ["customOnSale", "view", "edit", "discount", "delete"]
-        }
-      ],
-      productColumns: [
-        {
-          title: "商品图片",
-          key: "goodsImage",
-          align: "center",
-          minWidth: 120,
-          render: (h, params, vm) => {
-            const { row } = params;
-            const str = <img src={row.goodsImage} height="60" width="60" />;
-            return <div>{str}</div>;
-          }
-        },
-        {
-          title: "基础条码",
-          align: "center",
-          sortable: true,
-          key: "baseBar",
-          minWidth: 80
-        },
-        {
-          title: "商品名称",
-          align: "center",
-          sortable: true,
-          key: "goodsName",
-          minWidth: 120
-        },
-        {
-          title: "商品类别",
-          align: "center",
-          key: "categoryName",
-          minWidth: 120
-        },
-        {
-          title: "基础单位",
-          align: "center",
-          minWidth: 90,
-          key: "unitName"
-        }
-      ],
-      modalType: {
-        view: "view",
-        edit: "edit",
-        create: "create"
-      },
-      dropConClass: {
-        left: ["drop-box", "left-drop-box"],
-        right: ["drop-box", "right-drop-box"]
-      },
-      tempModalType: "create",
-      tableData: [],
-      total: 0,
-      productData: [],
-      productTotal: 0,
-      loading: true,
-      modalViewLoading: false,
-      modalView: false,
-      modalEdit: false,
-      modalDiscount: false,
-      modalHdSvip: false,
-      modalProduct: false,
-      modalSort: false,
-      searchRowData: roleRowData,
-      searchProductRowData: productRowData,
-      productStandardDetail: productStandardDetail,
-      proStandardExpand: proStandardExpand,
-      productDetail: productDetail,
-      // 选中的行
-      tableDataSelected: [],
-      showBack: false,
-      HdSvipInfo: "",
-      vaild: [
-        {
-          label: "上架",
-          value: "yes"
-        },
-        {
-          label: "下架",
-          value: "no"
-        }
-      ],
-      searchMinPrice: null,
-      searchMaxPrice: null
+      }
     };
   },
   computed: {
+    reginPriceComputed() {
+      return fenToYuanDot2Number(this.goodsPriceRegion.price);
+    },
     priceComputed() {
       return fenToYuanDot2Number(this.productStandardDetail.price);
     },
     purchasePriceComputed() {
       return fenToYuanDot2Number(this.productStandardDetail.purchasePrice);
-    },
-    salePriceComputed() {
-      return fenToYuanDot2Number(this.productStandardDetail.salePrice);
-    },
-    svipPriceComputed() {
-      return fenToYuanDot2Number(this.productStandardDetail.svipPrice);
-    },
-    discountPriceComputed() {
-      return fenToYuanDot2Number(this.proStandardExpand.discountPrice);
     }
   },
   created() {
@@ -972,17 +1195,15 @@ export default {
     this.getProductUnits();
   },
   methods: {
-    priceInputNumberOnchange(value) {
+    // 变化函数
+    priceOnchange(value) {
       this.productStandardDetail.price = yuanToFenNumber(value);
     },
+    reginPriceOnchange(value) {
+      this.goodsPriceRegion.price = yuanToFenNumber(value);
+    },
     purchasePriceOnchange(value) {
-      this.productStandardDetail.purchasePrice= yuanToFenNumber(value);
-    },
-    salePriceInputNumberOnchange(value) {
-      this.productStandardDetail.salePrice = yuanToFenNumber(value);
-    },
-    svipPriceInputNumberOnchange(value) {
-      this.productStandardDetail.svipPrice = yuanToFenNumber(value);
+      this.productStandardDetail.purchasePrice = yuanToFenNumber(value);
     },
     searchMinPriceChange(value) {
       this.searchRowData.minPrice = yuanToFenNumber(this.searchMinPrice);
@@ -990,24 +1211,157 @@ export default {
     searchMaxPriceChange(value) {
       this.searchRowData.maxPrice = yuanToFenNumber(this.searchMaxPrice);
     },
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
+    unitChange(value) {
+      this.productStandardDetail.goodsUnit = value;
     },
-    poptipOk() {
-      if (this.tableDataSelected.length < 1) {
-        this.$Message.warning("请选中要删除的行");
-        return;
+    // 数据查询
+    getTableData() {
+      // 获取基础商品页面传过来的商品信息
+      if (this.$route.name === "wholesale-goods-relation-standard") {
+        const goods = getWholesaleGoods();
+        if (goods) {
+          // 给商品规格的商品和搜索条件赋值
+          this.searchRowData.goodsId = goods.id;
+          this.productDetail = _.cloneDeep(goods);
+          this.productStandardDetail.goodsId = goods.id;
+          this.productStandardDetail.baseUnitName = goods.unitName;
+          this.productStandardDetail.barCode = goods.baseBar;
+          this.productStandardDetail.baseProductName = goods.goodsName;
+          this.productStandardDetail.goodsName = goods.goodsName; // 默认先读取以前的商品名称
+          this.productStandardDetail.goodsImage = goods.goodsImage;
+          this.productStandardDetail.categoryName = goods.categoryName;
+        }
+      } else {
+        // 清楚上次的查询条件
+        this.searchRowData.goodsId = 0;
       }
-      const tempDeleteList = [];
-      this.tableDataSelected.filter(value => {
-        tempDeleteList.push(value.id);
-      });
-      const strTempDelete = tempDeleteList.join(",");
-      this.deleteTable(strTempDelete);
+      getProductStandardsPages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.rows;
+          this.total = res.total;
+        })
+        .finally(() => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
     },
-    // 删除
+    getProductTableData() {
+      getProductPages(this.searchProductRowData)
+        .then(res => {
+          this.productData = res.rows;
+          this.productTotal = res.total;
+        })
+        .finally(() => {
+          this.loadingProduct = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    getPriceRegionTableData() {
+      getGoodsPriceRegionPages(this.priceRegionRowData)
+        .then(res => {
+          this.priceRegionData = res.rows;
+          this.regionTotal = res.total;
+        })
+        .finally(error => {
+          this.loadingRegion = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    getProductUnits() {
+      getProductUnits().then(res => {
+        res.forEach(value => {
+          const map = { label: "label", value: "value" };
+          map.value = value.unitCode;
+          map.label = value.unitName;
+          this.unitsList.push(map);
+          this.createLoading = false;
+        });
+      });
+    },
+    // 创建或修改相关函数
+    createPriceRegion() {
+      this.modalEditLoading = true;
+      createGoodsPriceRegion({
+        ...this.goodsPriceRegion
+      })
+        .then(res => {
+          this.$Message.success("创建成功!");
+          this.getPriceRegionTableData();
+        })
+        .finally(() => {
+          this.modalEditLoading = false;
+          this.modalEditRegion = false;
+        });
+    },
+    editPriceRegion() {
+      this.modalEditLoading = true;
+      editGoodsPriceRegion({
+        ...this.goodsPriceRegion
+      })
+        .then(res => {
+          this.$Message.success("修改成功");
+          this.getPriceRegionTableData();
+        })
+        .finally(() => {
+          this.modalEditRegion = false;
+          this.modalEditLoading = false;
+        });
+    },
+    createProductStandard() {
+      this.modalEditLoading = true;
+      createProductStandard({
+        ...this.productStandardDetail
+      })
+        .then(res => {
+          this.$Message.success("创建成功!");
+          this.getTableData();
+        })
+        .finally(() => {
+          this.modalEditLoading = false;
+          this.modalEdit = false;
+        });
+    },
+    editProductStandard() {
+      this.modalEditLoading = true;
+      editProductStandard({
+        ...this.productStandardDetail
+      })
+        .then(res => {
+          this.getTableData();
+        })
+        .finally(() => {
+          this.modalEdit = false;
+          this.modalEditLoading = false;
+        });
+    },
+    // 数据删除
+    deleteRegionTable(ids) {
+      this.loadingRegion = true;
+      deleteGoodsPriceRegion({
+        ids
+      })
+        .then(res => {
+          const totalPage = Math.ceil(
+            this.regionTotal / this.priceRegionRowData.rows
+          );
+          if (
+            this.priceRegionData.length ==
+              this.regionTableDataSelected.length &&
+            this.priceRegionRowData.page === totalPage &&
+            this.priceRegionRowData.page !== 1
+          ) {
+            this.priceRegionRowData.page -= 1;
+          }
+          this.regionTableDataSelected = [];
+          this.getPriceRegionTableData();
+        })
+        .finally(() => {
+          this.loadingRegion = false;
+        });
+    },
     deleteTable(ids) {
       this.loading = true;
       deleteProductStandard({
@@ -1029,131 +1383,172 @@ export default {
           this.loading = false;
         });
     },
-    unitChange(value) {
-      this.productStandardDetail.goodsUnit = value;
-    },
-    handleDiscountClose() {
-      this.modalDiscount = false;
-      // 清楚掉表单数据
-      this.$refs.modalDiscount.resetFields();
-    },
-    handleClose() {
-      this.modalView = false;
-    },
+    // 表格中操作按钮相关函数
     handleView(params) {
       this.tempModalType = this.modalType.view;
-      this.productStandardDetail = this._.cloneDeep(params.row);
+      this.productStandardDetail = _.cloneDeep(params.row);
       this.modalView = true;
     },
     handleEdit(params) {
       this.tempModalType = this.modalType.edit;
-      this.productStandardDetail = this._.cloneDeep(params.row);
+      this.productStandardDetail = _.cloneDeep(params.row);
       this.setDefaultUploadList(params.row);
       this.$refs.editForm.resetFields();
       this.modalEdit = true;
     },
-    handleDiscount(params) {
-      // 展示折扣配置弹窗
-      this.productStandardDetail = this._.cloneDeep(params.row);
-      // 先清除上次请求的数据
-      this.proStandardExpand = proStandardExpand;
-      // 请求数据展示
-      getProStandardExpand({
-        id: this.productStandardDetail.id
-      })
-        .then(res => {
-          if (res && res.id > 0) {
-            this.proStandardExpand = res;
-          }
-          this.modalDiscount = true;
-        })
-        .catch(() => {
-          this.modalDiscount = false;
-        });
+    handleEditRegion(params) {
+      this.goodsPriceRegion = _.cloneDeep(params.row);
+      this.$refs.editRegionForm.resetFields();
+      this.modalEditRegion = true;
     },
-    // 海鼎会员价查询
-    handleHdSvipPrice() {
-      // this.modalHdSvip = true;
-      //console.log(this.productStandardDetail.barCode)
-      if (!this.productStandardDetail.barCode) {
-        this.$Message.error("请先选择关联商品");
-        return;
-      }
-      this.loading = true;
-      let code = this.productStandardDetail.barCode;
-      getHdProductInfo({ code: code })
-        .then(res => {
-          this.HdSvipInfo = res;
-          this.loading = false;
-          this.modalHdSvip = true;
-        })
-        .catch(() => {
-          this.loading = false;
-        });
+    handleDeleteRegion(params) {
+      this.regionTableDataSelected = [];
+      this.regionTableDataSelected.push(params.row);
+      this.deleteRegionTable(params.row.id);
     },
-    handleHdSvipClose() {
-      this.modalHdSvip = false;
-    },
-    // 选中当前数据
-    onCurrentChange(currentRow, oldCurrentRow) {
-      this.currentTableRowSelected = currentRow;
-    },
-    handleCreateView() {
-      this.resetFields();
+    handleCreate() {
       if (this.tempModalType !== this.modalType.create) {
+        this.uploadListMain= [];
+        this.$refs.editForm.resetFields();
         this.productStandardDetail = _.cloneDeep(productStandardDetail);
       }
-      // 复制数据
+      // 复制选中的数据
       if (this.currentTableRowSelected) {
-        // console.log("当前选中数据", this.currentTableRowSelected);
-        this.currentTableRowSelected.goodsId = null;
-        // this.currentTableRowSelected.baseProductName = null;
-        // this.currentTableRowSelected.categoryName = null;
-        // this.currentTableRowSelected.baseUnitName = null;
-        // this.currentTableRowSelected.goodsCode = null;
-        // this.currentTableRowSelected.barCode = null;
-        // this.currentTableRowSelected.goodsImage = null;
-        this.currentTableRowSelected.goodsImage = null;
-        this.currentTableRowSelected.barCode = null;
-        this.currentTableRowSelected.price = null;
-        this.currentTableRowSelected.salePrice = null;
-        this.currentTableRowSelected.productStandardExpand = null;
-        // console.log("当前选中数据", this.currentTableRowSelected);
         this.productStandardDetail = _.cloneDeep(this.currentTableRowSelected);
       }
       this.tempModalType = this.modalType.create;
-     
-      // this.productStandardDetail.weight = 0;
-      // this.productStandardDetail.rank = 0;
       this.setDefaultUploadList(this.productStandardDetail);
       this.modalEdit = true;
     },
-    resetFields() {
-      // 表单重置
-      this.$refs.editForm.resetFields();
-      // 图片上传列表清除
-      this.uploadListMain = [];
-      this.uploadListDetail = [];
-      this.uploadListMultiple = [];
+    handleSubmit() {
+      this.$refs.editForm.validate(valid => {
+        if (valid) {
+          if (this.tempModalType === this.modalType.create) {
+            this.createProductStandard();
+          } else if (this.tempModalType === this.modalType.edit) {
+            this.editProductStandard();
+          }
+        } else {
+          this.$Message.error("请完善信息!");
+        }
+      });
     },
-    createStandard() {
-      this.modalViewLoading = true;
-      createProductStandard({
-        goodsId: this.$route.params.id,
-        ...this.productStandardDetail
-      })
+    handleSubmitRegin() {
+      // 把规格ID赋值给goodsPriceRegion
+      this.goodsPriceRegion.goodsStandardId = this.productStandardDetail.id;
+      this.$refs.editRegionForm.validate(valid => {
+        if (valid) {
+          if (this.goodsPriceRegion.id === 0) {
+            this.createPriceRegion();
+          } else {
+            this.editPriceRegion();
+          }
+        } else {
+          this.$Message.error("请完善信息!");
+        }
+      });
+    },
+    handlePublish(params) {
+      const rowData = _.cloneDeep(params.row);
+      rowData.vaild = rowData.vaild === "yes"?"no":"yes";
+      this.loading = true;
+      editProductStandard(rowData)
         .then(res => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success("操作成功!");
           this.getTableData();
         })
-        .catch(() => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
+        .finally(res => {
+          this.loading = false;
         });
     },
-    // 下载
+    handleBatchDel() {
+      if (this.regionTableDataSelected.length < 1) {
+        this.$Message.warning("请选中要删除的行");
+        return;
+      }
+      const tempDeleteList = [];
+      this.regionTableDataSelected.filter(value => {
+        tempDeleteList.push(value.id);
+      });
+      const strTempDelete = tempDeleteList.join(",");
+      this.deleteRegionTable(strTempDelete);
+    },
+    handleRegin(params) {
+      // 展示区间价格维护弹窗
+      this.productStandardDetail = _.cloneDeep(params.row);
+      this.priceRegionRowData.goodsStandardId = this.productStandardDetail.id;
+      this.getPriceRegionTableData();
+      this.modalRegion = true;
+    },
+    handleSelectionChange(selection) {
+      this.tableDataSelected = selection;
+    },
+    onCurrentChange(currentRow, oldCurrentRow) {
+      this.currentTableRowSelected = currentRow;
+    },
+    onSelectionAll(selection) {
+      this.tableDataSelected = selection;
+    },
+    resetSearchRowData() {
+      this.searchRowData = _.cloneDeep(roleRowData);
+    },
+    resetSearchProductRowData() {
+      this.searchProductRowData = _.cloneDeep(productRowData);
+      this.getProductTableData();
+    },
+    handleRegionAdd() {
+      // 因为新增或修改由id是否为0判断
+      this.goodsPriceRegion.id = 0;
+      this.$refs.editRegionForm.resetFields();
+      this.modalEditRegion = true;
+    },
+    handleRelation() {
+      this.getProductTableData();
+      this.modalProduct = true;
+    },
+    changeProductPage(page) {
+      this.searchProductRowData.page = page;
+      this.getProductTableData();
+    },
+    changeProductPageSize(pageSize) {
+      this.searchProductRowData.page = 1;
+      this.searchProductRowData.rows = pageSize;
+      this.getProductTableData();
+    },
+    changePriceRegionPage(page) {
+      this.priceRegionRowData.page = page;
+      this.getPriceRegionTableData();
+    },
+    changePriceRegionPageSize(pageSize) {
+      this.searchProductRowData.page = 1;
+      this.searchProductRowData.rows = pageSize;
+      this.getPriceRegionTableData();
+    },
+    handleProductSearch() {
+      this.searchProductRowData.page = 1;
+      this.searchLoading = true;
+      this.getProductTableData();
+    },
+    handleProductClear() {
+      // 重置商品搜索数据
+      this.resetSearchProductRowData();
+      this.clearSearchLoading = true;
+      this.handleProductSearch();
+    },
+    handleGoodsRelation(row, index) {
+      // 给基础商品信息赋值
+      this.productStandardDetail.goodsId = row.id;
+      this.productStandardDetail.baseProductName = row.goodsName;
+      this.productStandardDetail.categoryName = row.categoryName;
+      this.productStandardDetail.baseUnitName = row.unitName;
+      this.productStandardDetail.barCode = row.baseBar; // 商品对象的条码和规格对象里条码不一致
+      // 给要关联的规格信息设置默认值，用户可以选择修改
+      this.productStandardDetail.goodsName = row.goodsName;
+      this.productStandardDetail.goodsImage = row.goodsImage;
+      this.productStandardDetail.vaild = "no"; //默认是未上架的
+      this.setDefaultUploadList(this.productStandardDetail);
+      this.modalProduct = false;
+    },
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
@@ -1167,9 +1562,7 @@ export default {
           item["price"] = (item["price"] / 100.0).toFixed(2);
           item["salePrice"] = (item["salePrice"] / 100.0).toFixed(2);
           item["svipPrice"] = (item["svipPrice"] / 100.0).toFixed(2);
-          item["vaild"] = customPlanStatusConvert(
-            item["vaild"]
-          ).label;
+          item["vaild"] = customPlanStatusConvert(item["vaild"]).label;
         });
         this.$refs.tables.handleDownload({
           filename: `商品规格-${new Date().valueOf()}`,
@@ -1177,166 +1570,16 @@ export default {
         });
       });
     },
-    handleSubmit(name) {
-      this.$refs[name].validate(valid => {
-        if (valid) {
-          if (!this.productStandardDetail.salePrice) {
-            this.$Message.error("请输入售卖价格");
-            return;
-          }
-          if (this.productStandardDetail.salePrice < 0) {
-            this.$Message.error("售卖价格不能小于0");
-            return;
-          }
-          if (this.productStandardDetail.svipPrice < 0) {
-            this.$Message.error("SVIP价格不能小于0");
-            return;
-          }
-          if (
-            this.productStandardDetail.salePrice >
-            this.productStandardDetail.price
-          ) {
-            this.$Message.error("售卖价格不能大于原价");
-            return;
-          }
-          if (
-            this.productStandardDetail.svipPrice >
-            this.productStandardDetail.salePrice
-          ) {
-            this.$Message.error("SVIP价格不能大于售卖价格");
-            return;
-          }
-          if (this.tempModalType === this.modalType.create) {
-            this.createStandard();
-          } else if (this.tempModalType === this.modalType.edit) {
-            this.editProductStandard();
-          }
-        } else {
-          this.$Message.error("请完善信息!");
-        }
-      });
-    },
-    handleSubmitDiscount() {
-      // 校验某些字段
-      this.$refs.modalDiscount.validate(valid => {
-        if (valid) {
-          if (this.proStandardExpand.limitNum <= 0) {
-            this.$Message.warning("请输入合法的数字");
-            return false;
-          }
-          this.updateProStandardExpand();
-        } else {
-          this.$Message.error("请完善信息!");
-        }
-      });
-    },
-    updateProStandardExpand() {
-      this.proStandardExpand.standardId = this.productStandardDetail.id;
-      this.modalViewLoading = true;
-      // 新增或修改
-      modifyProStandardExpand({
-        ...this.proStandardExpand
-      })
-        .then(res => {
-          const msg = this.proStandardExpand.id ? "修改成功!" : "创建成功";
-          this.modalDiscount = false;
-          this.modalViewLoading = false;
-          this.$Message.success(msg);
-          this.getTableData();
-        })
-        .catch(() => {
-          this.modalDiscount = false;
-          this.modalViewLoading = false;
-        });
-    },
-    editProductStandard() {
-      this.modalViewLoading = true;
-      editProductStandard({
-        ...this.productStandardDetail
-      })
-        .then(res => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-          // this.productStandardDetail = productStandardDetail;
-          // this.productStandardDetail.goodsId = this.$route.params.id;
-          this.getTableData();
-        })
-        .catch(() => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-        });
-    },
-    changePage(page) {
-      this.searchRowData.page = page;
-      this.getTableData();
-    },
-    changePageSize(pageSize) {
-      this.searchRowData.page = 1;
-      this.searchRowData.rows = pageSize;
-      this.getTableData();
-    },
-    getProductUnits(){
-      getProductUnits().then(res => {
-        res.forEach(value => {
-          const map = { label: "label", value: "value" };
-          map.value = value.unitCode;
-          map.label = value.unitName;
-          this.unitsList.push(map);
-          this.createLoading = false;
-        });
-      });
-    },
-    getTableData() {
-      // 获取商品页面传过来的商品信息
-      // console.log("this.$route.name:", this.$route.name);
-      if (this.$route.name === "wholesale-goods-relation-standard") {
-        const goodsStandard = getSmallGoodsStandard();
-        console.log("standard from cookie:", goodsStandard);
-        if (goodsStandard != null && goodsStandard !== "") {
-          // 给商品规格的商品和搜索条件赋值
-          this.searchRowData.goodsId = goodsStandard.id;
-          this.productStandardDetail = this._.cloneDeep(goodsStandard);
-          this.productStandardDetail.goodsId = goodsStandard.id;
-          this.productStandardDetail.baseUnitName = goodsStandard.unitName;
-          this.productStandardDetail.baseProductName =
-            goodsStandard.goodsName;
-          this.productStandardDetail.goodsImage = goodsStandard.goodsImage;
-        }
-      } else {
-        // 清楚上次的查询条件
-        this.searchRowData.goodsId = "";
-      }
-
-      getProductStandardsPages(this.searchRowData)
-        .then(res => {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch(() => {
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
-    },
-    onSelectionAll(selection) {
-      this.tableDataSelected = selection;
-    },
-    onSelectionChange(selection) {
-      this.tableDataSelected = selection;
-    },
-    statusChange(value) {
-      this.productStandardDetail.vaild = value;
-    },
-    // 上架商品主图
+     // 图片上传相关函数
     handleSuccessMain(response, file, fileList) {
       this.uploadListMain = fileList;
       this.productStandardDetail.goodsImage = null;
       this.productStandardDetail.goodsImage = fileList[0].url;
     },
-    // 设置编辑图片列表
+    handleRemoveMain(file) {
+      this.$refs.uploadMain.deleteFile(file);
+      this.productStandardDetail.goodsImage = null;
+    },
     setDefaultUploadList(res) {
       if (res.goodsImage != null) {
         const map = { status: "finished", url: "url" };
@@ -1347,35 +1590,9 @@ export default {
         this.uploadListMain = mainImgArr;
       }
     },
-
-    handleRemoveMain(file) {
-      this.$refs.uploadMain.deleteFile(file);
-      this.productStandardDetail.goodsImage = null;
-    },
-    customOnSale(params) {
-      const rowData = this._.cloneDeep(params.row);
-      if (params.row.vaild === "yes") {
-        rowData.vaild = "no";
-      } else {
-        rowData.vaild = "yes";
-      }
-      this.loading = true;
-      editProductStandard(rowData)
-        .then(res => {
-          this.$Message.success("修改成功!");
-        })
-        .finally(res => {
-          this.loading = false;
-          this.modalViewLoading = false;
-          this.getTableData();
-          this.modalEdit = false;
-        });
-    },
+    // 其他函数
     goBack() {
-      this.turnToPage("small-goods-info");
-    },
-    resetSearchRowData() {
-      this.searchRowData = _.cloneDeep(roleRowData);
+      this.turnToPage("wholesale-goods-info");
     },
     findUnit(unitCode) {
       if (this.unitsList != null) {
@@ -1384,66 +1601,6 @@ export default {
           return obj.label;
         }
       }
-    },
-    handleRelation() {
-      this.getProductTableData();
-      this.modalProduct = true;
-    },
-    getProductTableData() {
-      getProductPages(this.searchProductRowData)
-        .then(res => {
-          this.productData = res.rows;
-          this.productTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch(error => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
-    },
-    changeProductPage(page) {
-      this.searchProductRowData.page = page;
-      this.getProductTableData();
-    },
-    changeProductPageSize(pageSize) {
-      this.searchProductRowData.page = 1;
-      this.searchProductRowData.rows = pageSize;
-      this.getProductTableData();
-    },
-    handleProductSearch() {
-      this.searchProductRowData.page = 1;
-      this.searchLoading = true;
-      this.getProductTableData();
-    },
-    resetSearchProductRowData() {
-      this.searchProductRowData = _.cloneDeep(productRowData);
-      this.getProductTableData();
-    },
-    handleProductClear() {
-      // 重置商品搜索数据
-      this.resetSearchProductRowData();
-      this.page = 1;
-      this.pageSize = 10;
-      this.clearSearchLoading = true;
-      this.handleProductSearch();
-    },
-    onRowClick(row, index) {
-      // 给基础商品信息赋值
-      this.productStandardDetail.goodsId = row.id;
-      this.productStandardDetail.baseProductName = row.goodsName;
-      this.productStandardDetail.categoryName = row.categoryName;
-      this.productStandardDetail.baseUnitName = row.unitName;
-      this.productStandardDetail.barCode = row.baseBar;// 商品对象的条码和规格对象里条码不一致
-      // 给要关联的规格信息设置默认值，用户可以选择修改
-      this.productStandardDetail.goodsName = row.goodsName;
-      this.productStandardDetail.goodsImage = row.goodsImage;
-      this.productStandardDetail.vaild = "no"; //默认是未上架的
-      this.setDefaultUploadList(this.productStandardDetail);
-      this.modalProduct = false;
     }
   }
 };

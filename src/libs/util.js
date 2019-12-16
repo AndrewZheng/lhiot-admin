@@ -8,7 +8,8 @@ export const TOKEN_KEY = 'token';
 export const IF_REMEMBER = 'if_remember'
 export const GOODS_STANDARD = 'goodsStandard';
 export const SMAL_GOODS_STANDARD = 'smallGoodsStandard';
-export const WHOLESALE_GOODS_STANDARD = 'wholesaleGoodsStandard';
+export const WHOLESALE_GOODS = 'wholesaleGoods';
+export const WHOLESALE_ACTIVITY = 'wholesaleActivity';
 export const SMALL_COUPON_ACTIVITY = 'smallCouponActivity';
 export const ARTICLE = 'article';
 export const LHIOT_TOKEN = 'lhiot_token';
@@ -35,8 +36,26 @@ export const getSmallGoodsStandard = () => {
   return JSON.parse(Cookies.get(SMAL_GOODS_STANDARD));
 };
 
-export const getWholesaleGoodsStandard = () => {
-  return JSON.parse(Cookies.get(WHOLESALE_GOODS_STANDARD));
+export const setWholesaleGoods = (goods) => {
+  const string = JSON.stringify(goods);
+  Cookies.set(WHOLESALE_GOODS, string, {
+    expires: config.cookieExpires || 1
+  });
+};
+
+export const getWholesaleGoods = () => {
+  return JSON.parse(Cookies.get(WHOLESALE_GOODS));
+};
+
+export const setActivity = (activity) => {
+  const string = JSON.stringify(activity);
+  Cookies.set(WHOLESALE_ACTIVITY, string, {
+    expires: config.cookieExpires || 1
+  });
+};
+
+export const getActivity = () => {
+  return JSON.parse(Cookies.get(WHOLESALE_ACTIVITY));
 };
 
 export const setSmallCouponActivity = (smallCouponActivity) => {

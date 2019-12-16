@@ -58,7 +58,20 @@ import {
   YesNoEnum,
   yesNoEnum,
   deliverStatusEnum,
-  validDateTypeEnum
+  validDateTypeEnum,
+  // 批发商城小程序
+  userStatusEnum,
+  userTypeEnum,
+  sexEnum,
+  wholesalePayTypeEnum,
+  wholesaleOrderStatusEnum,
+  payStatusEnum,
+  wholesaleHdStatusEnum,
+  activityTypeEnum,
+  activityStatusEnum,
+  couponTemplateTypeEnum,
+  couponUseStatusEnum,
+  couponFromEnum
 } from './enumerate';
 
 const convertFunction = (value, list) => {
@@ -72,6 +85,54 @@ const convertFunction = (value, list) => {
       label: value || 'N/A'
     };
   }
+};
+
+export const couponFromConvert = (value) => {
+  return convertFunction(value, couponFromEnum);
+};
+
+export const couponUseStatusConvert = (value) => {
+  return convertFunction(value, couponUseStatusEnum);
+};
+
+export const couponTemplateTypeConvert = (value) => {
+  return convertFunction(value, couponTemplateTypeEnum);
+};
+
+export const activityStatusConvert = (value) => {
+  return convertFunction(value, activityStatusEnum);
+};
+
+export const activityTypeConvert = (value) => {
+  return convertFunction(value, activityTypeEnum);
+};
+
+export const payStatusConvert = (value) => {
+  return convertFunction(value, payStatusEnum);
+};
+
+export const wholesaleHdStatusConvert = (value) => {
+  return convertFunction(value, wholesaleHdStatusEnum);
+};
+
+export const wholesaleOrderStatusConvert = (value) => {
+  return convertFunction(value, wholesaleOrderStatusEnum);
+};
+
+export const wholesalePayTypeConvert = (value) => {
+  return convertFunction(value, wholesalePayTypeEnum);
+};
+
+export const sexConvert = (value) => {
+  return convertFunction(value, sexEnum);
+};
+
+export const userTypeConvert = (value) => {
+  return convertFunction(value, userTypeEnum);
+};
+
+export const userStatusConvert = (value) => {
+  return convertFunction(value, userStatusEnum);
 };
 
 export const customOrderStatusConvert = (value) => {

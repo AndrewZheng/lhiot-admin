@@ -336,6 +336,28 @@ export default {
           break;
       }
     },
+    handleCustomDownload(params){
+      params.columns.forEach(item => {
+          this.exportTitle.push(item['title']);
+          this.exportKey.push(item['key']);
+      });
+      switch (this.exportType) {
+        case 'xlsx':
+          this.exportExcel(params);
+          break;
+        case 'csv':
+          this.exportCsv({
+            filename: params.filename
+          });
+          break;
+        case 'zip':
+          this.exportZip(params);
+          break;
+        default:
+          this.exportExcel(params);
+          break;
+      }
+    },
     clearCurrentRow() {
       this.$refs.tablesMain.clearCurrentRow();
     },
