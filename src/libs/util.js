@@ -803,6 +803,19 @@ export const fenToYuanDot2 = (number) => {
   return number;
 };
 
+/**
+ * 计算转化率
+ */
+export const percent = (number) => {
+  if (typeof number === 'number') {
+    return  (number * 100.00).toFixed(2) + '%';
+  } else if (typeof number === 'string') {
+    return  (number * 100.00).toFixed(2) + '%';
+    
+  }
+  return number;
+};
+
 export const gitTime = (time) => {
   let date = new Date(time)
    var y = date.getFullYear(); 

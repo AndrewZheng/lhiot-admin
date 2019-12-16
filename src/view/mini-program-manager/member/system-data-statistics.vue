@@ -74,7 +74,8 @@ import searchMixin from "@/mixins/searchMixin.js";
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber
+  yuanToFenNumber,
+  percent
 } from "@/libs/util";
 
 const couponTemplateDetail = {
@@ -133,7 +134,7 @@ export default {
             } else {
               return h(
                 "div",
-                params.row.newUserOrderNum / params.row.newUser + "%"
+                percent(params.row.newUserOrderNum / params.row.newUser)
               );
             }
           }
@@ -148,7 +149,7 @@ export default {
             } else {
               return h(
                 "div",
-                params.row.newUserReOrderNum / params.row.newUser + "%"
+                percent(params.row.newUserReOrderNum / params.row.newUser)
               );
             }
           }
