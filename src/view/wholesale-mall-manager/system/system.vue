@@ -135,7 +135,7 @@
                   v-if="showImage"
                   :src="systemDetail.description"
                   width="70%"
-                />
+                >
               </i-col>
             </Row>
           </i-col>
@@ -162,69 +162,69 @@
         <Form ref="modalEdit" :model="systemDetail" :rules="ruleInline" :label-width="80">
           <Row v-if="tempModalType===modalType.edit">
             <Col span="20">
-              <FormItem label="键:" prop="indexName">
-                <Input v-model="systemDetail.indexName" placeholder="键" disabled></Input>
-              </FormItem>
+            <FormItem label="键:" prop="indexName">
+              <Input v-model="systemDetail.indexName" placeholder="键" disabled></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row v-else-if="tempModalType===modalType.create">
             <Col span="20">
-              <FormItem label="键:" prop="indexName">
-                <Input v-model="systemDetail.indexName" placeholder="键"></Input>
-              </FormItem>
+            <FormItem label="键:" prop="indexName">
+              <Input v-model="systemDetail.indexName" placeholder="键"></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="20">
-              <FormItem label="值:" prop="indexValue">
-                <Input v-model="systemDetail.indexValue" :rows="6" type="textarea" placeholder="值"></Input>
-              </FormItem>
+            <FormItem label="值:" prop="indexValue">
+              <Input v-model="systemDetail.indexValue" :rows="6" type="textarea" placeholder="值"></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="20">
-              <FormItem label="描述:" prop="description">
-                <Input v-model="systemDetail.description" type="textarea" placeholder="描述"></Input>
-                <template v-if="showImage">
-                  <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
-                    <template v-if="item.status === 'finished'">
-                      <div>
-                        <img :src="item.url" />
-                        <div class="demo-upload-list-cover">
-                          <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                          <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
-                        </div>
+            <FormItem label="描述:" prop="description">
+              <Input v-model="systemDetail.description" type="textarea" placeholder="描述"></Input>
+              <template v-if="showImage">
+                <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+                  <template v-if="item.status === 'finished'">
+                    <div>
+                      <img :src="item.url" >
+                      <div class="demo-upload-list-cover">
+                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
                       </div>
-                    </template>
-                    <template v-else>
-                      <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                    </template>
-                  </div>
-                </template>
-                <IViewUpload
-                  ref="uploadMain"
-                  :default-list="defaultListMain"
-                  :image-size="imageSize"
-                  @on-success="handleSuccessMain"
-                >
-                  <div slot="content" style="width:58px;height:58px;line-height:58px">
-                    <Icon type="ios-camera" size="20"></Icon>
-                  </div>
-                </IViewUpload>
-              </FormItem>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                  </template>
+                </div>
+              </template>
+              <IViewUpload
+                ref="uploadMain"
+                :default-list="defaultListMain"
+                :image-size="imageSize"
+                @on-success="handleSuccessMain"
+              >
+                <div slot="content" style="width:58px;height:58px;line-height:58px">
+                  <Icon type="ios-camera" size="20"></Icon>
+                </div>
+              </IViewUpload>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="20">
-              <FormItem label="分类ID:" prop="categoryId">
-                <!-- <InputNumber :min="0" v-model="systemDetail.categoryId" placeholder="分类id"></InputNumber> -->
-                <Cascader
-                  :data="systemCategoryData"
-                  v-model="defaultSystemCategoryData"
-                  span="21"
-                  @on-change="systemCategoryChange"
-                ></Cascader>
-              </FormItem>
+            <FormItem label="分类ID:" prop="categoryId">
+              <!-- <InputNumber :min="0" v-model="systemDetail.categoryId" placeholder="分类id"></InputNumber> -->
+              <Cascader
+                :data="systemCategoryData"
+                v-model="defaultSystemCategoryData"
+                span="21"
+                @on-change="systemCategoryChange"
+              ></Cascader>
+            </FormItem>
             </Col>
           </Row>
         </Form>
@@ -236,33 +236,33 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" />
+      <img :src="imgUploadViewItem" style="width: 100%" >
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import IViewUpload from "_c/iview-upload";
-import _ from "lodash";
+import Tables from '_c/tables';
+import IViewUpload from '_c/iview-upload';
+
 import {
   deleteSystemSetting,
   getSystemSettingPages,
   editSystemSetting,
   createSystemSetting,
   getSystemSettingCategoryTree
-} from "@/api/mini-program";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { buildMenu, convertTreeCategory, convertTree } from "@/libs/util";
+} from '@/api/wholesale';
+import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import { buildMenu, convertTreeCategory, convertTree } from '@/libs/util';
 
 const systemDetail = {
   id: 0,
-  indexName: "",
-  indexValue: "",
-  description: "",
+  indexName: '',
+  indexValue: '',
+  description: '',
   categoryId: 0
 };
 
@@ -289,55 +289,55 @@ export default {
   data() {
     return {
       ruleInline: {
-        indexName: [{ required: true, message: "请输入键" }],
-        indexValue: [{ required: true, message: "请输入值" }],
+        indexName: [{ required: true, message: '请输入键' }],
+        indexValue: [{ required: true, message: '请输入值' }],
         categoryId: [
-          { required: true, message: "请选择分类" },
-          { message: "必须为非零整数", pattern: /^[1-9]\d*$/ }
+          { required: true, message: '请选择分类' },
+          { message: '必须为非零整数', pattern: /^[1-9]\d*$/ }
         ],
-        description: [{ required: true, message: "请输入描述" }]
+        description: [{ required: true, message: '请输入描述' }]
       },
       columns: [
         {
-          type: "selection",
+          type: 'selection',
           width: 60,
-          align: "center",
-          fixed: "left"
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: "ID",
-          key: "id",
-          align: "center",
+          title: 'ID',
+          key: 'id',
+          align: 'center',
           width: 80
         },
         {
-          title: "键",
-          align: "center",
-          key: "indexName"
+          title: '键',
+          align: 'center',
+          key: 'indexName'
         },
         {
-          title: "值",
-          align: "center",
-          key: "indexValue",
-          type: "html"
+          title: '值',
+          align: 'center',
+          key: 'indexValue',
+          type: 'html'
         },
         {
-          title: "描述",
-          align: "center",
-          key: "description"
+          title: '描述',
+          align: 'center',
+          key: 'description'
         },
         {
-          title: "分类ID",
-          align: "center",
-          key: "categoryId",
+          title: '分类ID',
+          align: 'center',
+          key: 'categoryId',
           width: 80
         },
         {
-          title: "操作",
-          align: "center",
+          title: '操作',
+          align: 'center',
           width: 180,
-          key: "handle",
-          options: ["view", "edit", "delete"]
+          key: 'handle',
+          options: ['view', 'edit', 'delete']
         }
       ],
       systemCategoryData: [],
@@ -377,17 +377,17 @@ export default {
           console.log(this.systemDetail.categoryId);
           this.systemDetail.indexValue = this.systemDetail.indexValue.replace(
             /\n|\r/g,
-            "&"
+            '&'
           );
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createStore();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editStore();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -397,7 +397,7 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
@@ -459,7 +459,7 @@ export default {
       this.tempModalType = this.modalType.view;
       this.systemDetail = _.cloneDeep(params.row);
       if (this.systemDetail.description != null) {
-        this.showImage = this.systemDetail.description.indexOf("http") != -1;
+        this.showImage = this.systemDetail.description.indexOf('http') != -1;
       }
       this.modalView = true;
     },
@@ -468,7 +468,7 @@ export default {
       this.tempModalType = this.modalType.edit;
       this.systemDetail = _.cloneDeep(params.row);
       if (this.systemDetail.description != null) {
-        this.showImage = this.systemDetail.description.indexOf("http") != -1;
+        this.showImage = this.systemDetail.description.indexOf('http') != -1;
       }
       this.setDefaultUploadList(this.systemDetail);
       this.defaultGoodsCategoryData = [];
@@ -485,7 +485,7 @@ export default {
               element.indexValue =
                 element.indexValue == null
                   ? null
-                  : element.indexValue.replace(/&/g, "\n");
+                  : element.indexValue.replace(/&/g, '\n');
               // element.indexValue = element.indexValue.replace(/&/g, /\n/g);
             });
           }
@@ -518,14 +518,14 @@ export default {
           if (res && res.array.length > 0) {
             this.systemCategoriesTreeList = res.array;
             const menuList = buildMenu(res.array);
-            console.log("menuList from server:", menuList);
+            console.log('menuList from server:', menuList);
             const map = {
-              id: "id",
-              title: "title",
-              children: "children"
+              id: 'id',
+              title: 'title',
+              children: 'children'
             };
             this.systemCategoryData = convertTreeCategory(menuList, map, true);
-            console.log("menuList after covert:", this.systemCategoryData);
+            console.log('menuList after covert:', this.systemCategoryData);
             this.createLoading = false;
           }
         })
@@ -536,7 +536,7 @@ export default {
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.description != null) {
-        const map = { status: "finished", url: "url" };
+        const map = { status: 'finished', url: 'url' };
         const mainImgArr = [];
         map.url = res.description;
         mainImgArr.push(map);

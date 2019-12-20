@@ -80,15 +80,10 @@
           </Row>
         </div>
         <div slot="operations">
-           <Button
-            v-waves
-            type="success"
-            class="mr5"
-            @click="handleSendCoupon"
-          >
-            <Icon type="md-add" /> 手动发券
+          <Button v-waves type="success" class="mr5" @click="handleSendCoupon">
+            <Icon type="md-add" />手动发券
           </Button>
-          <Poptip
+          <!-- <Poptip
             confirm
             placement="bottom"
             style="width: 100px"
@@ -98,7 +93,7 @@
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
             </Button>
-          </Poptip>
+          </Poptip> -->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -114,68 +109,436 @@
         </Row>
       </div>
     </Card>
+
+    <!-- 关联优惠券配置 -->
+    <Modal v-model="modalEdit" :width="1300" :z-index="1000" :mask-closable="false" title="关联优惠券配置">
+      <div class="modal-content">
+        <Card>
+          <tables
+            ref="tables"
+            v-model="configTableData"
+            :columns="configColumns"
+            :loading="loadingConfig"
+            :search-area-column="18"
+            :operate-area-column="6"
+            editable
+            searchable
+            border
+            search-place="top"
+            @on-select-all="onConfigSelectionAll"
+            @on-selection-change="onConfigSelectionChange"
+          >
+            <div slot="searchCondition">
+              <Row>
+                <Input
+                  v-model="searchConfigRowData.couponName"
+                  placeholder="优惠券名称"
+                  class="search-input mr5"
+                  style="width: auto"
+                  clearable
+                ></Input>
+                <Select
+                  v-model="searchConfigRowData.couponType"
+                  class="search-col mr5"
+                  placeholder="发放类型"
+                  style="width: 150px"
+                  clearable
+                >
+                  <Option
+                    v-for="item in couponFromEnum"
+                    :value="item.value"
+                    :key="item.value"
+                    class="ptb2-5"
+                  >{{ item.label }}</Option>
+                </Select>
+                <Button
+                  :loading="searchLoading"
+                  class="search-btn mr5"
+                  type="primary"
+                  @click="handleConfigSearch"
+                >
+                  <Icon type="md-search" />&nbsp;搜索
+                </Button>
+                <Button
+                  v-waves
+                  :loading="clearSearchLoading"
+                  class="search-btn"
+                  type="info"
+                  @click="handleConfigClear"
+                >
+                  <Icon type="md-refresh" />&nbsp;清除
+                </Button>
+              </Row>
+            </div>
+          </tables>
+          <div style="margin: 10px;overflow: hidden">
+            <Row type="flex" justify="end">
+              <Page
+                :total="configTotal"
+                :current="searchConfigRowData.page"
+                show-sizer
+                show-total
+                @on-change="changeConfigPage"
+                @on-page-size-change="changeConfigPageSize"
+              ></Page>
+            </Row>
+          </div>
+        </Card>
+
+        <Divider orientation="center">填写发送对象手机号</Divider>
+
+        <Row class="mt10">
+          <i-col span="2">用户手机号:</i-col>
+          <i-col span="22">
+            <Input
+              v-model="sendPhones"
+              :autosize="{minRows: 3,maxRows: 8}"
+              type="textarea"
+              placeholder="多个用户请使用','分割要发送的手机号"
+            ></Input>
+            <div class="ml15 brand-red">* 使用英文输入法逗号分割要发送的手机号，发放数量为1张</div>
+          </i-col>
+        </Row>
+        <Row v-show="sendFailPhones.length > 0" class="mt10">
+          <i-col span="2">发送失败手机号：</i-col>
+          <i-col span="22" class="brand-red">{{ sendFailPhones.join(',') }}</i-col>
+        </Row>
+      </div>
+      <div slot="footer">
+        <Button @click="handleEditClose">关闭</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   getCouponPages,
-  deletCoupon,
-  editCoupon,
-  createCoupon
-} from "@/api/wholesale";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+  getCouponConfigPages,
+  sendCouponByPhones,
+  deletCoupon
+} from '@/api/wholesale';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import {
   couponTemplateTypeEnum,
   activityStatusEnum,
   couponUseStatusEnum,
   couponFromEnum
-} from "@/libs/enumerate";
+} from '@/libs/enumerate';
 import {
   userStatusConvert,
   couponUseStatusConvert,
   couponFromConvert
-} from "@/libs/converStatus";
+} from '@/libs/converStatus';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber
-} from "@/libs/util";
+} from '@/libs/util';
 
 const couponDetail = {
   id: 0,
   fullFee: 0,
   couponFee: 0,
-  couponName: "",
-  couponType: "", // allgoods-全品类 singlegoods-单品
-  addressDetail: "",
+  couponName: '',
+  couponType: '', // allgoods-全品类 singlegoods-单品
+  addressDetail: '',
   couponConfigId: 0,
-  couponFrom: "",
-  couponStatus: "",
-  effectiveTime: "",
-  failureTime: "",
-  getTime: "",
+  couponFrom: '',
+  couponStatus: '',
+  effectiveTime: '',
+  failureTime: '',
+  getTime: '',
   isValidate: false,
-  phone: "",
-  shopName: "",
-  useTime: "",
+  phone: '',
+  shopName: '',
+  useTime: '',
   userId: 0,
-  userName: "",
-  userStatus: ""
+  userName: '',
+  userStatus: ''
 };
 
 const roleRowData = {
-  couponStatus: "",
-  couponName: "",
-  couponFrom: "",
-  phone:"",
+  couponStatus: '',
+  couponName: '',
+  couponFrom: '',
+  phone: '',
   page: 1,
   rows: 10
 };
+
+const couponConfig = {
+  id: 0,
+  vaild: '',
+  endTime: null,
+  startTime: null,
+  couponFee: 0,
+  couponName: '',
+  couponType: '',
+  fullFee: 0,
+  couponDes: '',
+  couponId: 0, // 优惠券模板id
+  effectiveTime: '',
+  failureTime: '',
+  plateType: '', // allgoods-全品类 singlegoods-单品类
+  vaildDays: 0
+};
+
+const configRoleRowData = {
+  couponName: '',
+  couponType: '',
+  page: 1,
+  rows: 10
+};
+
+const configColumns = [
+  {
+    type: 'selection',
+    width: 60,
+    align: 'center'
+  },
+  {
+    title: 'ID',
+    align: 'center',
+    key: 'id',
+    maxWidth: 80
+  },
+  {
+    title: '优惠券名称',
+    align: 'center',
+    key: 'couponName',
+    minWidth: 120
+  },
+  {
+    title: '满减金额',
+    align: 'center',
+    minWidth: 60,
+    key: 'fullFee',
+    render(h, params, vm) {
+      const amount = fenToYuanDot2(params.row.fullFee);
+      return <div>{amount}</div>;
+    }
+  },
+  {
+    title: '优惠金额',
+    align: 'center',
+    minWidth: 60,
+    key: 'couponFee',
+    render(h, params, vm) {
+      const amount = fenToYuanDot2(params.row.couponFee);
+      return <div>{amount}</div>;
+    }
+  },
+  {
+    title: '发放类型',
+    align: 'center',
+    minWidth: 80,
+    key: 'couponType',
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.couponType === 'artificial') {
+        return (
+          <div>
+            <tag color='primary'>{couponFromConvert(row.couponType).label}</tag>
+          </div>
+        );
+      } else if (row.couponType === 'activity') {
+        return (
+          <div>
+            <tag color='pink'>{couponFromConvert(row.couponType).label}</tag>
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <tag color='primary'>N/A</tag>
+          </div>
+        );
+      }
+    }
+  },
+  {
+    title: '生效时间',
+    align: 'center',
+    key: 'effectiveTime',
+    minWidth: 80
+  },
+  {
+    title: '失效时间',
+    align: 'center',
+    key: 'failureTime',
+    minWidth: 80
+  },
+  {
+    title: '有效天数',
+    align: 'center',
+    key: 'vaildDays',
+    minWidth: 60
+  }
+];
+
+const couponColumns = [
+  {
+    type: 'selection',
+    width: 60,
+    align: 'center'
+  },
+  {
+    title: 'ID',
+    align: 'center',
+    key: 'id',
+    maxWidth: 80
+  },
+  {
+    title: '店铺名称',
+    align: 'center',
+    key: 'shopName',
+    minWidth: 100
+  },
+  {
+    title: '用户名称',
+    align: 'center',
+    key: 'userName'
+  },
+  {
+    title: '用户电话',
+    align: 'center',
+    key: 'phone',
+    minWidth: 40
+  },
+  {
+    title: '用户状态',
+    align: 'center',
+    key: 'userStatus',
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.userStatus === 'certified') {
+        return (
+          <div>
+            <tag color='success'>{userStatusConvert(row.userStatus).label}</tag>
+          </div>
+        );
+      } else if (row.userStatus === 'locking') {
+        return (
+          <div>
+            <tag color='error'>{userStatusConvert(row.userStatus).label}</tag>
+          </div>
+        );
+      } else if (row.userStatus === 'unaudited') {
+        return (
+          <div>
+            <tag color='warning'>{userStatusConvert(row.userStatus).label}</tag>
+          </div>
+        );
+      }
+      return (
+        <div>
+          <tag color='primary'>{userStatusConvert(row.userStatus).label}</tag>
+        </div>
+      );
+    }
+  },
+  {
+    title: '优惠券名称',
+    align: 'center',
+    key: 'couponName',
+    minWidth: 80
+  },
+  {
+    title: '优惠金额',
+    align: 'center',
+    minWidth: 60,
+    key: 'couponFee',
+    render(h, params, vm) {
+      const amount = fenToYuanDot2(params.row.couponFee);
+      return <div>{amount}</div>;
+    }
+  },
+  {
+    title: '优惠券来源',
+    align: 'center',
+    key: 'couponFrom',
+    minWidth: 60,
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.couponFrom === 'artificial') {
+        return (
+          <div>
+            <tag color='primary'>{couponFromConvert(row.couponFrom).label}</tag>
+          </div>
+        );
+      } else if (row.couponFrom === 'activity') {
+        return (
+          <div>
+            <tag color='pink'>{couponFromConvert(row.couponFrom).label}</tag>
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <tag color='primary'>N/A</tag>
+          </div>
+        );
+      }
+    }
+  },
+  {
+    title: '获取时间',
+    align: 'center',
+    key: 'getTime',
+    minWidth: 80
+  },
+  {
+    title: '使用状态',
+    align: 'center',
+    key: 'couponStatus',
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.couponStatus === 'used') {
+        return (
+          <div>
+            <tag color='error'>
+              {couponUseStatusConvert(row.couponStatus).label}
+            </tag>
+          </div>
+        );
+      } else if (row.couponStatus === 'expired') {
+        return (
+          <div>
+            <tag color='default'>
+              {couponUseStatusConvert(row.couponStatus).label}
+            </tag>
+          </div>
+        );
+      } else if (row.couponStatus === 'unused') {
+        return (
+          <div>
+            <tag color='primary'>
+              {couponUseStatusConvert(row.couponStatus).label}
+            </tag>
+          </div>
+        );
+      }
+    }
+  },
+  {
+    title: '使用时间',
+    align: 'center',
+    key: 'useTime',
+    minWidth: 80
+  }
+  // {
+  //   title: '操作',
+  //   minWidth: 80,
+  //   key: 'handle',
+  //   options: ['']
+  // }
+];
 
 export default {
   components: {
@@ -184,179 +547,29 @@ export default {
   mixins: [deleteMixin, tableMixin, searchMixin],
   data() {
     return {
+      configTotal: 0,
+      couponConfigIds: '',
+      sendPhones: '',
       couponFromEnum,
       activityStatusEnum,
       couponUseStatusEnum,
       couponTemplateTypeEnum,
+      areaList: [],
+      sendFailPhones: [],
       defaultListMain: [],
       uploadListMain: [],
-      areaList: [],
+      configTableData: [],
+      templatePageOpts: [5, 10],
       createLoading: false,
       modalViewLoading: false,
+      loadingConfig: false,
       searchRowData: _.cloneDeep(roleRowData),
       couponDetail: _.cloneDeep(couponDetail),
-      columns: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
-          title: "ID",
-          align: "center",
-          key: "id",
-          maxWidth: 80
-        },
-        {
-          title: "店铺名称",
-          align: "center",
-          key: "shopName",
-          minWidth: 100
-        },
-        {
-          title: "用户名称",
-          align: "center",
-          key: "userName"
-        },
-        {
-          title: "用户电话",
-          align: "center",
-          key: "phone",
-          minWidth: 40
-        },
-        {
-          title: "用户状态",
-          align: "center",
-          key: "userStatus",
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.userStatus === "certified") {
-              return (
-                <div>
-                  <tag color="success">
-                    {userStatusConvert(row.userStatus).label}
-                  </tag>
-                </div>
-              );
-            } else if (row.userStatus === "locking") {
-              return (
-                <div>
-                  <tag color="error">
-                    {userStatusConvert(row.userStatus).label}
-                  </tag>
-                </div>
-              );
-            } else if (row.userStatus === "unaudited") {
-              return (
-                <div>
-                  <tag color="warning">
-                    {userStatusConvert(row.userStatus).label}
-                  </tag>
-                </div>
-              );
-            }
-            return (
-              <div>
-                <tag color="primary">
-                  {userStatusConvert(row.userStatus).label}
-                </tag>
-              </div>
-            );
-          }
-        },
-        {
-          title: "优惠券名称",
-          align: "center",
-          key: "couponName",
-          minWidth: 80
-        },
-        {
-          title: "优惠券来源",
-          align: "center",
-          key: "couponFrom",
-          minWidth: 60,
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.couponFrom === "artificial") {
-              return (
-                <div>
-                  <tag color="primary">{ couponFromConvert(row.couponFrom).label }</tag>
-                </div>
-              );
-            } else if (row.couponFrom === "activity") {
-              return (
-                <div>
-                  <tag color="pink">{ couponFromConvert(row.couponFrom).label }</tag>
-                </div>
-              );
-            } else {
-              return (
-                <div>
-                  <tag color="primary">N/A</tag>
-                </div>
-              );
-            }
-          }
-        },
-        {
-          title: "获取时间",
-          align: "center",
-          key: "getTime",
-          minWidth: 80
-        },
-        {
-          title: "使用状态",
-          align: "center",
-          key: "couponStatus",
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.couponStatus === "used") {
-              return (
-                <div>
-                  <tag color="error">
-                    {couponUseStatusConvert(row.couponStatus).label}
-                  </tag>
-                </div>
-              );
-            } else if (row.couponStatus === "expired") {
-              return (
-                <div>
-                  <tag color="default">
-                    {couponUseStatusConvert(row.couponStatus).label}
-                  </tag>
-                </div>
-              );
-            } else if (row.couponStatus === "unused") {
-              return (
-                <div>
-                  <tag color="primary">
-                    {couponUseStatusConvert(row.couponStatus).label}
-                  </tag>
-                </div>
-              );
-            }
-          }
-        },
-        {
-          title: "使用时间",
-          align: "center",
-          key: "useTime",
-          minWidth: 80
-        },
-        {
-          title: "操作",
-          minWidth: 80,
-          key: "handle",
-          options: ["delete"]
-        }
-      ]
+      configColumns: _.cloneDeep(configColumns),
+      searchConfigRowData: _.cloneDeep(configRoleRowData),
+      columns: couponColumns
     };
   },
-  mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData);
-    this.getTableData();
-  },
-  created() {},
   computed: {
     couponFeeComputed() {
       return fenToYuanDot2Number(this.couponDetail.couponFee);
@@ -365,6 +578,11 @@ export default {
       return fenToYuanDot2Number(this.couponDetail.fullFee);
     }
   },
+  mounted() {
+    this.searchRowData = _.cloneDeep(roleRowData);
+    this.getTableData();
+  },
+  created() {},
   methods: {
     // 变化函数
     fullFeeOnchange(value) {
@@ -373,80 +591,75 @@ export default {
     couponFeeOnchange(value) {
       this.couponDetail.couponFee = yuanToFenNumber(value);
     },
+    onConfigSelectionChange(selection) {
+      if (selection.length > 1) {
+        this.$Message.warning('最多选择一张优惠券');
+        return;
+      }
+      this.couponConfigIds = selection
+        .map(item => item.id.toString())
+        .join(',');
+    },
+    onConfigSelectionAll(selection) {
+      if (selection.length > 1) {
+        this.$Message.warning('最多选择一张优惠券');
+        return;
+      }
+      this.couponConfigIds = selection
+        .map(item => item.id.toString())
+        .join(',');
+    },
     getTableData() {
       getCouponPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
-    handleSendCoupon(){
-      // TODO:待实现
+    getConfigTableData() {
+      this.loadingConfig = true;
+      getCouponConfigPages(this.searchConfigRowData)
+        .then(res => {
+          this.configTableData = res.rows;
+          this.configTotal = res.total;
+        })
+        .finally(() => {
+          this.loadingConfig = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
     },
-    handleEdit(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.couponDetail = _.cloneDeep(params.row);
+    handleSendCoupon() {
+      // 清空上次发送的记录
+      this.couponConfigIds = '';
+      this.sendPhones = '';
+      this.sendFailPhones = [];
+      this.getConfigTableData();
       this.modalEdit = true;
     },
     handleSubmit() {
-      this.$refs.editForm.validate(valid => {
-        if (valid) {
-          if (this.tempModalType === this.modalType.create) {
-            this.createCoupon();
-          } else if (this.tempModalType === this.modalType.edit) {
-            this.editCoupon();
+      console.log('couponConfigIds:', this.couponConfigIds);
+      console.log('sendPhones:', this.sendPhones);
+      // 手动发券确认
+      sendCouponByPhones({
+        id: this.couponConfigIds,
+        phones: this.sendPhones
+      })
+        .then(res => {
+          if (res && res.fail.length > 0) {
+            this.$Message.info('部分用户未发放成功');
+            this.sendFailPhones = res.fail;
+          } else {
+            this.modalEdit = false;
+            this.$Message.info('发放成功');
           }
-        } else {
-          this.$Message.error("请完善信息!");
-        }
-      });
-    },
-    createCoupon() {
-      this.modalViewLoading = true;
-      createCoupon(this.couponDetail)
-        .then(res => {
-          this.$Message.success("创建成功!");
           this.getTableData();
         })
-        .finally(() => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-        });
-    },
-    editCoupon() {
-      this.modalViewLoading = true;
-      editCoupon(this.couponDetail)
-        .then(res => {
-          this.getTableData();
-        })
-        .finally(() => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-        });
-    },
-    startTimeChange(value, date) {
-      console.log("beginTime:", value);
-      this.searchRowData.startTime = value;
-    },
-    endTimeChange(value, data) {
-      console.log("endTime:", value);
-      this.searchRowData.endTime = value;
-    },
-    handleStartTimeChange(value, date) {
-      this.couponDetail.startTime = value;
-    },
-    handleEndTimeChange(value, data) {
-      this.couponDetail.endTime = value;
     },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
@@ -478,6 +691,25 @@ export default {
           console.log(err);
           this.loading = false;
         });
+    },
+    changeConfigPage(page) {
+      this.searchConfigRowData.page = page;
+      this.getConfigTableData();
+    },
+    changeConfigPageSize(pageSize) {
+      this.searchConfigRowData.page = 1;
+      this.searchConfigRowData.rows = pageSize;
+      this.getConfigTableData();
+    },
+    handleConfigSearch() {
+      this.searchConfigRowData.page = 1;
+      this.searchLoading = true;
+      this.getConfigTableData();
+    },
+    handleConfigClear() {
+      this.clearSearchLoading = true;
+      this.searchConfigRowData = _.cloneDeep(configRoleRowData);
+      this.handleConfigSearch();
     }
   }
 };

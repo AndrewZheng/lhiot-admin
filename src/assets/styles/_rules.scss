@@ -12,6 +12,21 @@
   padding: 1px 5px 2px !important;
 }
 
+.ivu-poptip-confirm{
+  .ivu-poptip-body{
+    .ivu-icon {
+      font-size: 16px;
+      color: #ff9900;
+      line-height: 18px;
+      position: absolute;
+      left: 15px;
+    }
+  }
+  .ivu-poptip-body-message{
+     padding-left:10px;
+  }
+}
+
 @media only screen and (max-width:320px) {
   html {
       font-size: 9px !important;

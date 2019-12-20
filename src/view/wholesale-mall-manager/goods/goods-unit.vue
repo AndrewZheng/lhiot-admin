@@ -93,35 +93,32 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')">确定</Button>
+        <Button :loading="loadingSubmit" type="primary" @click="handleSubmit">确定</Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
 import {
   getProductUnitsPages,
   editProductUnits,
   delProductUnits,
   createProductUnits
-} from "@/api/wholesale";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
-
-import { splitConvert } from "@/libs/converStatus";
+} from '@/api/wholesale';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
 
 const unitDetail = {
   id: 0,
-  unitCode: "",
-  unitName: ""
+  unitCode: '',
+  unitName: ''
 };
 
 const roleRowData = {
-  unitName: "",
+  unitName: '',
   page: 1,
   rows: 10
 };
@@ -133,103 +130,50 @@ export default {
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
     return {
+      ids: [],
+      loadingSubmit: false,
+      clearSearchLoading: false,
+      searchRowData: this._.cloneDeep(roleRowData),
+      unitDetail: this._.cloneDeep(unitDetail),
       ruleInline: {
-        unitCode: { required: true, message: "请填写单位编码" },
-        unitName: { required: true, message: "请填写单位名称" }
+        unitCode: { required: true, message: '请填写单位编码' },
+        unitName: { required: true, message: '请填写单位名称' }
       },
       columns: [
         {
-          type: "selection",
-          key: "",
+          type: 'selection',
+          key: '',
           width: 60,
-          align: "center"
+          align: 'center'
         },
         {
-          title: "编号",
-          align: "center",
-          key: "id"
+          title: '编号',
+          align: 'center',
+          key: 'id'
         },
         {
-          title: "单位编码",
-          align: "center",
-          key: "unitCode"
+          title: '单位编码',
+          align: 'center',
+          key: 'unitCode'
         },
         {
-          title: "单位名称",
-          align: "center",
-          key: "unitName"
+          title: '单位名称',
+          align: 'center',
+          key: 'unitName'
         },
         {
-          title: "操作",
-          align: "center",
-          key: "handle",
-          options: ["edit", "delete"]
+          title: '操作',
+          align: 'center',
+          key: 'handle',
+          options: ['edit', 'delete']
         }
-      ],
-      modalViewLoading: false,
-      clearSearchLoading: false,
-      splitStatus: [
-        {
-          label: "是",
-          value: "SEPARABLE"
-        },
-        {
-          label: "否",
-          value: "NO_SEPARABLE"
-        }
-      ],
-      searchRowData: this._.cloneDeep(roleRowData),
-      unitDetail: this._.cloneDeep(unitDetail),
-      ids: []
+      ]
     };
   },
   created() {
     this.getTableData();
   },
   methods: {
-    resetFields() {
-      this.$refs.editForm.resetFields();
-    },
-    handleSubmit(name) {
-      this.$refs[name].validate(valid => {
-        if (valid) {
-          if (this.tempModalType === this.modalType.create) {
-            this.createTableRow();
-          } else if (this.tempModalType === this.modalType.edit) {
-            this.editTableRow();
-          }
-        } else {
-          this.$Message.error("请完善商品单位信息!");
-        }
-      });
-    },
-    editTableRow() {
-      this.modalViewLoading = true;
-      editProductUnits(this.unitDetail).then(res => {
-        this.modalViewLoading = false;
-        this.modalEdit = false;
-        this.getTableData();
-        this.resetFields();
-      });
-    },
-    createTableRow() {
-      createProductUnits(this.unitDetail)
-        .then(res => {})
-        .finally(res => {
-          this.modalEditLoading = false;
-          this.modalEdit = false;
-          this.getTableData();
-          this.resetFields();
-        });
-    },
-    resetSearchRowData() {
-      this.searchRowData = _.cloneDeep(roleRowData);
-    },
-    handleEdit(params) {
-      this.tempModalType = this.modalType.edit;
-      this.unitDetail = this._.cloneDeep(params.row);
-      this.modalEdit = true;
-    },
     getTableData() {
       getProductUnitsPages(this.searchRowData).then(res => {
         this.tableData = res.rows;
@@ -239,13 +183,57 @@ export default {
         this.clearSearchLoading = false;
       });
     },
+    handleEdit(params) {
+      this.$refs.editForm.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.unitDetail = this._.cloneDeep(params.row);
+      this.modalEdit = true;
+    },
     handleAdd() {
       this.$refs.editForm.resetFields();
       this.tempModalType = this.modalType.create;
       this.unitDetail = unitDetail;
       this.modalEdit = true;
     },
-    // 删除
+    handleSubmit() {
+      this.$refs.editForm.validate(valid => {
+        if (valid) {
+          if (this.isCreate) {
+            this.createTableRow();
+          } else if (this.isEdit) {
+            this.editTableRow();
+          }
+        } else {
+          this.$Message.error('请完善商品单位信息!');
+        }
+      });
+    },
+    editTableRow() {
+      this.loadingSubmit = true;
+      editProductUnits(this.unitDetail)
+        .then(res => {
+          this.modalEdit = false;
+          this.$Message.info('修改成功！')
+          this.getTableData();
+        }).finally(() => {
+          this.loadingSubmit = false;
+        });
+    },
+    createTableRow() {
+      this.loadingSubmit = true;
+      createProductUnits(this.unitDetail)
+        .then(res => {
+          this.modalEdit = false;
+          this.$Message.info('创建成功！')
+          this.getTableData();
+        })
+        .finally(() => {
+          this.loadingSubmit = false;
+        });
+    },
+    resetSearchRowData() {
+      this.searchRowData = _.cloneDeep(roleRowData);
+    },
     deleteTable(ids) {
       this.loading = true;
       delProductUnits({
@@ -262,9 +250,8 @@ export default {
           }
           this.tableDataSelected = [];
           this.getTableData();
-          this.loading = false;
         })
-        .catch(() => {
+        .finally(() => {
           this.loading = false;
         });
     }

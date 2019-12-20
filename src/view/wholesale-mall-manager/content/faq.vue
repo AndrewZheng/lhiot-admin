@@ -6,7 +6,12 @@
       </i-col>
       <i-col span="20" order="3">
         <Card>
-          <h6>当前选中：{{ parentCategory.categoryName }}</h6>
+          <h6>
+            当前选中：
+            <span
+              class="brand-red font-sm"
+            >{{ parentCategory.categoryName?parentCategory.categoryName:'全部分类' }}</span>
+          </h6>
           <tables
             ref="tables"
             v-model="tableData"
@@ -33,27 +38,25 @@
                   style="width: auto"
                   clearable
                 ></Input>
-                <Input
-                  v-model="searchRowData.content"
-                  placeholder="内容"
+                <DatePicker
+                  v-model="searchRowData.regBeginTime"
+                  format="yyyy-MM-dd HH:mm:ss"
+                  type="datetime"
+                  placeholder="创建时间起"
+                  class="search-input"
+                  style="width: 150px"
+                  @on-change="beginTimeChange"
+                />
+                <i>-</i>
+                <DatePicker
+                  v-model="searchRowData.regEndTime"
+                  format="yyyy-MM-dd HH:mm:ss"
+                  type="datetime"
+                  placeholder="创建时间止"
                   class="search-input mr5"
-                  style="width: auto"
-                  clearable
-                ></Input>
-                <Select
-                  v-model="searchRowData.applicationType"
-                  placeholder="应用类型"
-                  style="padding-right: 5px;width: 100px"
-                  clearable
-                >
-                  <Option
-                    v-for="(item,index) in appTypeEnum"
-                    :value="item.value"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px"
-                  >{{ item.label }}</Option>
-                </Select>
+                  style="width: 150px"
+                  @on-change="endTimeChange"
+                />
                 <Button
                   :loading="loading"
                   class="search-btn mr5"
@@ -74,6 +77,15 @@
               </Row>
             </div>
             <div slot="operations">
+              <Button
+                v-waves
+                :loading="clearSearchLoading"
+                type="warning"
+                class="mr5"
+                @click="handleBack"
+              >
+                <Icon type="ios-arrow-back" />&nbsp;返回全部分类
+              </Button>
               <Button v-waves type="success" class="mr5" @click="createTableRow">
                 <Icon type="md-add" />添加
               </Button>
@@ -112,58 +124,52 @@
       </p>
       <div class="modal-content">
         <Row class-name="mb20">
-          <i-col span="24">
+          <i-col span="12">
             <Row>
               <i-col span="6">主键ID:</i-col>
-              <i-col span="18">{{ faq.id }}</i-col>
+              <i-col span="18">{{ faqDetail.id }}</i-col>
             </Row>
           </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">标题:</i-col>
-              <i-col span="18">{{ faq.title }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">内容:</i-col>
-              <i-col span="18">{{ faq.content }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
+          <i-col span="12">
             <Row>
               <i-col span="6">序号:</i-col>
-              <i-col span="18">{{ faq.rankNo }}</i-col>
+              <i-col span="18">{{ faqDetail.rankNum }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
-          <i-col span="24">
+          <i-col span="12">
             <Row>
-              <i-col span="6">应用类型:</i-col>
-              <i-col span="18">{{ faq.applicationType | appTypeFilter }}</i-col>
+              <i-col span="6">标题:</i-col>
+              <i-col span="18">{{ faqDetail.title }}</i-col>
             </Row>
           </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
+          <i-col span="12">
             <Row>
-              <i-col span="6">创建时间:</i-col>
-              <i-col span="18">{{ faq.createTime }}</i-col>
+              <i-col span="6">链接地址:</i-col>
+              <i-col span="18">{{ faqDetail.linkUrl }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
-          <i-col span="24">
+          <i-col span="12">
             <Row>
               <i-col span="6">创建人:</i-col>
-              <i-col span="18">{{ faq.createUser }}</i-col>
+              <i-col span="18">{{ faqDetail.createPerson }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="6">创建时间:</i-col>
+              <i-col span="18">{{ faqDetail.createTime }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="4">内容:</i-col>
+              <i-col span="20" v-html="faqDetail.content"></i-col>
             </Row>
           </i-col>
         </Row>
@@ -179,42 +185,25 @@
         <span>{{ tempModalType===modalType.edit?'修改FAQ':'创建FAQ' }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :label-width="100" :model="faq" :rules="ruleInline">
+        <Form ref="modalEdit" :label-width="100" :model="faqDetail" :rules="ruleInline">
           <FormItem label="标题:" prop="title">
-            <Input v-model="faq.title" placeholder="标题"></Input>
+            <Input v-model="faqDetail.title" placeholder="标题"></Input>
           </FormItem>
           <FormItem label="内容:" prop="content">
             <Input
-              v-model="faq.content"
+              v-model="faqDetail.content"
               :autosize="{minRows: 4,maxRows: 10}"
               placeholder="内容"
               type="textarea"
             ></Input>
           </FormItem>
-          <FormItem label="序号:" prop="rankNo">
+          <FormItem label="序号:" prop="rankNum">
             <InputNumber
               :min="0"
-              v-model="faq.rankNo"
+              v-model="faqDetail.rankNum"
               placeholder="序号"
               style="padding-right: 5px;width: 95px"
             ></InputNumber>
-          </FormItem>
-          <FormItem label="应用类型:" prop="applicationType">
-            <Select
-              v-model="faq.applicationType"
-              placeholder="应用类型"
-              style="padding-right: 5px;width: 100px"
-              clearable
-              @on-change="uniteChange"
-            >
-              <Option
-                v-for="(item,index) in appTypeEnum"
-                :value="item.value"
-                :key="index"
-                class="ptb2-5"
-                style="padding-left: 5px"
-              >{{ item.label }}</Option>
-            </Select>
           </FormItem>
         </Form>
       </div>
@@ -227,40 +216,41 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import CommonIcon from '_c/common-icon';
+
 import {
-  createFaq,
-  deleteFaq,
   getFaqPages,
   getFaqCategoriesTree,
+  createFaq,
+  deleteFaq,
   editFaq
-} from "@/api/mini-program";
-import { buildMenu, convertTree } from "@/libs/util";
-import CommonIcon from "_c/common-icon";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import { appTypeEnum } from "@/libs/enumerate";
-import { appTypeConvert } from "@/libs/converStatus";
+} from '@/api/wholesale';
+import { buildMenu, convertTree } from '@/libs/util';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import { faqStatusEnum } from '@/libs/enumerate';
+import { faqStatusConvert } from '@/libs/converStatus';
 
-const faq = {
+const faqDetail = {
   id: 0,
-  title: "",
-  content: "",
+  title: '',
+  content: '',
   faqCategoryId: 0,
-  rankNo: 0,
+  rankNum: 0,
   createTime: null,
-  createUser: "",
-  applicationType: null,
-  createTimeBegin: null,
-  createTimeEnd: null
+  createPerson: '',
+  regBeginTime: null,
+  regEndTime: null,
+  faqStatus: '', // unpublished-未发布 published-已发布
+  linkUrl: ''
 };
 
 const roleRowData = {
-  title: "",
-  content: "",
-  applicationType: null,
+  faqCategoryId: null,
+  title: '',
+  content: '',
   page: 1,
   rows: 10
 };
@@ -273,127 +263,135 @@ export default {
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
     return {
+      menuData: [],
+      faqCategoryTreeList: [],
+      faqStatusEnum,
+      modalEdit: false,
+      modalViewLoading: false,
+      modalEditLoading: false,
+      currentParentName: '',
+      currentParentId: 0,
+      faqDetail: _.cloneDeep(faqDetail),
+      parentCategory: this._.cloneDeep(faqDetail),
+      searchRowData: this._.cloneDeep(roleRowData),
       ruleInline: {
-        title: { required: true, message: "请输入FAQ标题" },
-        content: { required: true, message: "请输入FAQ内容" },
-        rankNo: [
-          { required: true, message: "请输入序号" },
+        title: { required: true, message: '请输入FAQ标题' },
+        content: { required: true, message: '请输入FAQ内容' },
+        rankNum: [
+          { required: true, message: '请输入序号' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[0-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为整数"));
+                errors.push(new Error('必须为整数'));
               }
               callback(errors);
             }
           }
         ],
-        applicationType: { required: true, message: "请选择应用类型" }
+        applicationType: { required: true, message: '请选择应用类型' }
       },
-      menuData: [],
-      appTypeEnum,
       columns: [
         {
-          type: "selection",
-          key: "",
+          type: 'selection',
+          key: '',
           width: 60,
-          align: "center",
-          fixed: "left"
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: "ID",
-          key: "id",
+          title: 'ID',
+          key: 'id',
           sortable: true,
-          align: "center",
+          align: 'center',
+          minWidth: 60
+        },
+        {
+          title: '问题类型',
+          key: 'faqCategoryId',
+          align: 'center',
+          minWidth: 70,
+          render: (h, params) => {
+            const { row } = params;
+            const obj = this.faqCategoryTreeList.find(
+              item => row.faqCategoryId === item.id
+            );
+            if (obj) {
+              return h('span', obj.faqCategoryName);
+            }
+            return h('span', row.faqCategoryId);
+          }
+        },
+        {
+          title: '标题',
+          key: 'title',
+          align: 'center',
+          minWidth: 150
+        },
+        // {
+        //   title: '内容',
+        //   key: 'content',
+        //   sortable: true,
+        //   align: 'center',
+        //   minWidth: 150,
+        //   tooltip: true
+        // },
+        {
+          title: '创建人',
+          align: 'center',
+          key: 'createPerson',
+          sortable: true,
           minWidth: 80
         },
         {
-          title: "标题",
-          key: "title",
-          sortable: true,
-          align: "center",
-          minWidth: 150
-        },
-        {
-          title: "内容",
-          key: "content",
-          sortable: true,
-          align: "center",
-          minWidth: 150,
-          tooltip: true
-        },
-        {
-          title: "FAQ分类ID",
-          key: "faqCategoryId",
-          align: "center",
-          minWidth: 70
-        },
-        {
-          title: "序号",
-          key: "rankNo",
-          sortable: true,
-          align: "center",
-          minWidth: 50
-        },
-        {
-          title: "创建时间",
-          align: "center",
-          key: "createTime",
+          title: '创建时间',
+          align: 'center',
+          key: 'createTime',
           sortable: true,
           minWidth: 160
         },
         {
-          title: "创建人",
-          align: "center",
-          key: "createUser",
+          title: '序号',
+          key: 'rankNum',
           sortable: true,
-          minWidth: 80
+          align: 'center',
+          minWidth: 50
         },
         {
-          title: "应用类型",
-          key: "applicationType",
-          sortable: true,
-          align: "center",
-          minWidth: 120,
+          title: '发布状态',
+          key: 'faqStatus',
+          align: 'center',
+          minWidth: 80,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.applicationType === "WXSMALL_SHOP") {
+            if (row.faqStatus === 'unpublished') {
               return (
                 <div>
-                  <tag color="green">
-                    {appTypeConvert(row.applicationType).label}
-                  </tag>
+                  <tag color='success'>{faqStatusConvert(row.faqStatus).label }</tag>
                 </div>
               );
-            } else if (row.applicationType === "S_MALL") {
+            } else if (row.faqStatus === 'published') {
               return (
                 <div>
-                  <tag color="gold">
-                    {appTypeConvert(row.applicationType).label}
-                  </tag>
+                  <tag color='error'>{faqStatusConvert(row.faqStatus).label }</tag>
                 </div>
               );
-            } else {
-              return <div>{row.applicationType}</div>;
             }
+            return (
+              <div>
+                <tag color='primary'>N/A</tag>
+              </div>
+            );
           }
         },
         {
-          title: "操作",
-          align: "center",
-          key: "handle",
+          title: '操作',
+          align: 'center',
+          key: 'handle',
           minWidth: 120,
-          options: ["view", "edit", "delete"]
+          options: ['view', 'edit', 'delete']
         }
-      ],
-      modalEdit: false,
-      modalViewLoading: false,
-      modalEditLoading: false,
-      currentParentName: "",
-      currentParentId: 0,
-      faq: this._.cloneDeep(faq),
-      parentCategory: this._.cloneDeep(faq),
-      searchRowData: this._.cloneDeep(roleRowData)
+      ]
     };
   },
   created() {
@@ -401,18 +399,18 @@ export default {
   },
   methods: {
     renderContent(h, { root, node, data }) {
-      if (data.type == "PARENT") {
+      if (data.type == 'PARENT') {
         return (
           <div
             style={{
-              display: "inline-block",
-              width: "100%",
-              fontSize: "14px",
-              cursor: "pointer"
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
             }}
           >
             <span>
-              <CommonIcon type="ios-folder" class="mr10" />
+              <CommonIcon type='ios-folder' class='mr10' />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -423,31 +421,33 @@ export default {
         return (
           <div
             style={{
-              display: "inline-block",
-              width: "100%",
-              fontSize: "14px",
-              cursor: "pointer"
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
             }}
           >
             <span>
-              <CommonIcon type="ios-paper" class="mr10" />
+              <CommonIcon type='ios-paper' class='mr10' />
             </span>
-            <span>{data.title}</span>
+            <span onClick={() => this.handleClick({ root, node, data })}>
+              {data.title}
+            </span>
           </div>
         );
       }
     },
     createTableRow() {
       if (this.tempModalType !== this.modalType.create) {
-        this.faq = this._.cloneDeep(faq);
+        this.faqDetail = this._.cloneDeep(faqDetail);
       }
-      this.faq.faqCategoryId = this.currentParentId;
+      this.faqDetail.faqCategoryId = this.currentParentId;
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
     },
     resetFields() {
       this.$refs.modalEdit.resetFields();
-      this.faq = _.cloneDeep(faq);
+      this.faqDetail = _.cloneDeep(faqDetail);
     },
     asyncEditOK(name) {
       this.$refs[name].validate(valid => {
@@ -455,12 +455,12 @@ export default {
           this.modalEditLoading = true;
           this.modalViewLoading = true;
           if (!this.parentCategory.id) {
-            this.faq.faqCategoryId = 0;
+            this.faqDetail.faqCategoryId = 0;
           } else {
-            this.faq.faqCategoryId = this.parentCategory.id;
+            this.faqDetail.faqCategoryId = this.parentCategory.id;
           }
-          if (this.tempModalType === this.modalType.create) {
-            createFaq(this.faq)
+          if (this.isCreate) {
+            createFaq(this.faqDetail)
               .then(res => {})
               .finally(res => {
                 this.initMenuList();
@@ -468,8 +468,8 @@ export default {
                 this.modalEdit = false;
                 this.resetFields();
               });
-          } else if (this.tempModalType === this.modalType.edit) {
-            editFaq(this.faq)
+          } else if (this.isEdit) {
+            editFaq(this.faqDetail)
               .then(res => {})
               .finally(res => {
                 this.initMenuList();
@@ -479,7 +479,7 @@ export default {
               });
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -509,7 +509,7 @@ export default {
     handleEdit(params) {
       // this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.edit;
-      this.faq = _.cloneDeep(params.row);
+      this.faqDetail = _.cloneDeep(params.row);
       this.modalEdit = true;
     },
     getTableData() {
@@ -527,11 +527,13 @@ export default {
     // 初始化商品菜单列表
     initMenuList() {
       getFaqCategoriesTree().then(res => {
-        if (res && res.array.length > 0) {
-          const menuList = buildMenu(res.array);
+        this.faqCategoryTreeList = [];
+        if (res && res.length > 0) {
+          this.faqCategoryTreeList = res;
+          const menuList = buildMenu(res);
           const map = {
-            title: "title",
-            children: "children"
+            title: 'faqCategoryName',
+            children: 'children'
           };
           this.menuData = convertTree(menuList, map, true);
           if (this.menuData.length > 0) {
@@ -540,14 +542,11 @@ export default {
         }
       });
     },
-
     handleClick({ root, node, data }) {
       this.loading = true;
       // 展开当前节点
-      if (typeof data.expand === "undefined") {
-        // this.$set(data, 'expend', true);
-        this.$set(data, "expend", false);
-        // if (data.children) {
+      if (typeof data.expand === 'undefined') {
+        this.$set(data, 'expend', false);
         if (data.children) {
           this.expandChildren(data.children);
         }
@@ -557,15 +556,15 @@ export default {
       this.parentCategory.id = data.id;
       this.parentCategory.categoryName = data.title;
       this.currentParentId = data.id;
-      this.searchRowData.parentId = data.id;
+      this.searchRowData.faqCategoryId = data.id;
       // 获取新数据
       this.getTableData();
     },
     expandChildren(array) {
       array.forEach(item => {
-        if (typeof item.expand === "undefined") {
+        if (typeof item.expand === 'undefined') {
           // this.$set(item, 'expend', true);
-          this.$set(item, "expend", false);
+          this.$set(item, 'expend', false);
           // } else {
         } else {
           item.expand = !item.expand;
@@ -575,6 +574,23 @@ export default {
         }
       });
     },
+    findGroupId(id) {
+      const obj = this.faqCategoryTreeList.find(item => {
+        return item.id === id;
+      });
+      this.defaultGoodsCategoryData.push(id);
+      if (obj && obj.parentid !== 0) {
+        this.findGroupId(obj.parentid);
+      }
+    },
+    findGroupName(id) {
+      if (this.faqCategoryTreeList.length > 0) {
+        const obj = this.faqCategoryTreeList.find(item => item.id === id);
+        if (obj) {
+          return obj.faqCategoryName;
+        }
+      }
+    },
     resetSearchRowData() {
       this.clearSearchLoading = true;
       this.searchRowData = this._.cloneDeep(roleRowData);
@@ -582,11 +598,23 @@ export default {
     },
     handleView(params) {
       this.tempModalType = this.modalType.view;
-      this.faq = _.cloneDeep(params.row);
+      this.faqDetail = _.cloneDeep(params.row);
       this.modalView = true;
     },
+    handleBack() {
+      this.parentCategory.id = 0;
+      this.parentCategory.categoryName = '全部分类';
+      this.searchRowData = _.cloneDeep(roleRowData);
+      this.getTableData();
+    },
     uniteChange(value) {
-      this.faq.applicationType = value;
+      this.faqDetail.applicationType = value;
+    },
+    beginTimeChange(value, date) {
+      this.faqDetail.regBeginTime = value;
+    },
+    endTimeChange(value, date) {
+      this.faqDetail.regEndTime = value;
     }
   }
 };

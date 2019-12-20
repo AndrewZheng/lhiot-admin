@@ -544,10 +544,10 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createAdvertisementPosition();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editAdvertisementPosition();
           }

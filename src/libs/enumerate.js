@@ -2609,3 +2609,68 @@ export const couponFromEnum = [{
 }
 ];
 
+export const layoutEnum = [{
+  label: '横向布局',
+  value: 'xlayout'
+},
+{
+  label: '纵向布局',
+  value: 'ylayout'
+},
+{
+  label: '滚动布局',
+  value: 'roll'
+},
+{
+  label: '推荐列表',
+  value: 'list'
+}
+]
+
+export const advPositionEnum = [{
+  label: '首页弹窗',
+  value: 'poppup'
+},
+{
+  label: '顶部轮播图',
+  value: 'top'
+},
+{
+  label: '限时抢购',
+  value: 'flashsale'
+},
+{
+  label: '底部banner图',
+  value: 'bottom'
+}
+]
+
+export const faqStatusEnum = [{
+  label: '未发布',
+  value: 'unpublished'
+},
+{
+  label: '已发布',
+  value: 'published'
+}
+]
+
+export const articleTypeEnum = [{
+  label: '每日精选',
+  value: 'perday'
+},
+{
+  label: '行业趋势',
+  value: 'industry'
+}
+]
+
+export const createTypeEnum = [{
+  label: '原创文章',
+  value: 'original'
+},
+{
+  label: '转载文章',
+  value: 'reprint'
+}
+]

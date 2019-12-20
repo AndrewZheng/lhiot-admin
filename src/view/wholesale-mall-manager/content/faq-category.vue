@@ -6,7 +6,7 @@
       </i-col>
       <i-col span="18" order="3">
         <Card>
-          <h6>当前选中：{{ parentCategory.categoryName }}</h6>
+          <h6>当前选中：<span class="brand-red font-sm">{{ parentCategory.faqCategoryName?parentCategory.faqCategoryName:'全部分类' }}</span></h6>
           <tables
             ref="tables"
             v-model="tableData"
@@ -26,7 +26,7 @@
             <div slot="searchCondition">
               <Row>
                 <Input
-                  v-model="searchRowData.categoryName"
+                  v-model="searchRowData.faqCategoryName"
                   placeholder="分类名称"
                   class="search-input mr5"
                   style="width: auto"
@@ -89,55 +89,54 @@
         <span>编辑商品分类</span>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :label-width="100" :model="faqCategory" :rules="ruleInline">
+        <Form ref="editFrom" :label-width="100" :model="faqCategory" :rules="ruleInline">
           <FormItem label="父级ID:">
             <i-col>{{ parentCategory.id }}</i-col>
           </FormItem>
           <FormItem label="父级分类:">
-            <i-col>{{ parentCategory.categoryName }}</i-col>
+            <i-col>{{ parentCategory.faqCategoryName?parentCategory.faqCategoryName:'全部分类' }}</i-col>
           </FormItem>
-          <FormItem label="子分类名:" prop="categoryName">
-            <Input v-model="faqCategory.categoryName" placeholder="子分类名"></Input>
-          </FormItem>
-          <FormItem label="子分类英文名:" prop="categoryEnName">
-            <Input v-model="faqCategory.categoryEnName" placeholder="子分类英文名"></Input>
+          <FormItem label="子分类名:" prop="faqCategoryName">
+            <Input v-model="faqCategory.faqCategoryName" placeholder="子分类名"></Input>
           </FormItem>
         </Form>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="asyncEditOK('modalEdit')">确定</Button>
+        <Button :loading="modalEditLoading" type="primary" @click="handleSumbit('editFrom')">确定</Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import CommonIcon from '_c/common-icon';
+
 import {
   createFaqCategories,
   deleteFaqCategories,
   getFaqCategoriesPages,
   getFaqCategoriesTree,
   editFaqCategories
-} from "@/api/mini-program";
-import { buildMenu, convertTree } from "@/libs/util";
-import CommonIcon from "_c/common-icon";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
+} from '@/api/wholesale';
+import { buildMenu, convertTree } from '@/libs/util';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
 
 const faqCategory = {
   id: 0,
   parentId: 0,
-  categoryName: "",
-  categoryEnName: "",
-  faqs: null
+  faqCategoryName: '',
+  faqs: null,
+  createPerson: '',
+  createTime: ''
 };
 
 const roleRowData = {
   parentId: 0,
+  faqCategoryName: '',
   page: 1,
   rows: 10
 };
@@ -150,82 +149,116 @@ export default {
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
     return {
-      ruleInline: {
-        categoryName: { required: true, message: "请填写FAQ分类中文名称" },
-        categoryEnName: { required: true, message: "请填写FAQ分类英文名称" }
-      },
       menuData: [],
-      columns: [
-        {
-          type: "selection",
-          key: "",
-          width: 60,
-          align: "center",
-          fixed: "left"
-        },
-        {
-          title: "分类ID",
-          key: "id",
-          sortable: true,
-          align: "center",
-          minWidth: 150
-        },
-        {
-          title: "父级ID",
-          key: "parentId",
-          sortable: true,
-          align: "center",
-          minWidth: 150
-        },
-        {
-          title: "分类名称",
-          key: "categoryName",
-          sortable: true,
-          align: "center",
-          minWidth: 150
-        },
-        {
-          title: "分类英文名称",
-          key: "categoryEnName",
-          sortable: true,
-          align: "center",
-          minWidth: 150
-        },
-        {
-          title: "操作",
-          align: "center",
-          key: "handle",
-          minWidth: 150,
-          options: ["edit", "delete"]
-        }
-      ],
       modalEdit: false,
       modalViewLoading: false,
       modalEditLoading: false,
-      currentParentName: "",
-      currentParentId: 0,
       faqCategory: this._.cloneDeep(faqCategory),
       parentCategory: this._.cloneDeep(faqCategory),
-      searchRowData: this._.cloneDeep(roleRowData)
+      searchRowData: this._.cloneDeep(roleRowData),
+      ruleInline: {
+        faqCategoryName: { required: true, message: '请输入分类名称' }
+      },
+      columns: [
+        {
+          type: 'selection',
+          key: '',
+          width: 60,
+          align: 'center',
+          fixed: 'left'
+        },
+        {
+          title: '分类ID',
+          key: 'id',
+          sortable: true,
+          align: 'center',
+          minWidth: 150
+        },
+        {
+          title: '分类名称',
+          key: 'faqCategoryName',
+          sortable: true,
+          align: 'center',
+          minWidth: 150
+        },
+        {
+          title: '创建时间',
+          key: 'createTime',
+          sortable: true,
+          align: 'center',
+          minWidth: 150
+        },
+        {
+          title: '操作',
+          align: 'center',
+          key: 'handle',
+          minWidth: 150,
+          options: ['edit', 'delete']
+        }
+      ]
     };
   },
   created() {
     this.initMenuList();
   },
   methods: {
+    getTableData() {
+      this.loading = true;
+      getFaqCategoriesPages(this.searchRowData).then(res => {
+        if (this.menuData.length > 0) {
+          this.tableData = res.rows;
+          this.total = res.total;
+          this.loading = false;
+          this.clearSearchLoading = false;
+        }
+      });
+    },
+    // 初始化商品菜单列表
+    initMenuList() {
+      getFaqCategoriesTree().then(res => {
+        if (res && res.length > 0) {
+          const menuList = buildMenu(res);
+          const map = {
+            title: 'faqCategoryName',
+            children: 'children'
+          };
+          this.menuData = convertTree(menuList, map, true);
+          if (this.menuData.length > 0) {
+            this.getTableData();
+          }
+        }
+      });
+    },
+    handleClick({ root, node, data }) {
+      this.loading = true;
+      // 展开当前节点
+      if (typeof data.expand === 'undefined') {
+        this.$set(data, 'expend', false);
+        if (data.children) {
+          this.expandChildren(data.children);
+        }
+      } else {
+        // data.expand = !data.expand;
+      }
+      this.searchRowData.parentId = data.id;
+      this.parentCategory.id = data.id;
+      this.parentCategory.faqCategoryName = data.title;
+      // 获取新数据
+      this.getTableData();
+    },
     renderContent(h, { root, node, data }) {
-      if (data.type == "PARENT") {
+      if (data.type == 'PARENT') {
         return (
           <div
             style={{
-              display: "inline-block",
-              width: "100%",
-              fontSize: "14px",
-              cursor: "pointer"
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
             }}
           >
             <span>
-              <CommonIcon type="ios-folder" class="mr10" />
+              <CommonIcon type='ios-folder' class='mr10' />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -236,30 +269,55 @@ export default {
         return (
           <div
             style={{
-              display: "inline-block",
-              width: "100%",
-              fontSize: "14px",
-              cursor: "pointer"
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
             }}
           >
             <span>
-              <CommonIcon type="ios-paper" class="mr10" />
+              <CommonIcon type='ios-paper' class='mr10' />
             </span>
             <span>{data.title}</span>
           </div>
         );
       }
     },
+    expandChildren(array) {
+      array.forEach(item => {
+        if (typeof item.expand === 'undefined') {
+          // this.$set(item, 'expend', true);
+          this.$set(item, 'expend', false);
+          // } else {
+        } else {
+          item.expand = !item.expand;
+        }
+        if (item.children) {
+          this.expandChildren(item.children);
+        }
+      });
+    },
+    // 编辑分类
+    handleEdit(params) {
+      this.$refs.editFrom.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.faqCategory = _.cloneDeep(params.row);
+      this.modalEdit = true;
+    },
+    resetSearchRowData() {
+      this.clearSearchLoading = true;
+      this.searchRowData = this._.cloneDeep(roleRowData);
+      this.getTableData();
+    },
     createTableRow() {
       if (this.tempModalType !== this.modalType.create) {
         this.faqCategory = this._.cloneDeep(faqCategory);
       }
-      this.faqCategory.currentParentId = this.currentParentId;
+      this.faqCategory.parentId = this.parentCategory.id;
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
     },
-
-    asyncEditOK(name) {
+    handleSumbit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
           this.modalEditLoading = true;
@@ -269,7 +327,7 @@ export default {
           } else {
             this.faqCategory.parentId = this.parentCategory.id;
           }
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             createFaqCategories(this.faqCategory)
               .then(res => {})
               .finally(res => {
@@ -277,7 +335,7 @@ export default {
                 this.modalEditLoading = false;
                 this.modalEdit = false;
               });
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             editFaqCategories(this.faqCategory)
               .then(res => {})
               .finally(res => {
@@ -287,12 +345,9 @@ export default {
               });
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
-    },
-    handleEditClose() {
-      this.modalEdit = false;
     },
     // 删除
     deleteTable(ids) {
@@ -315,81 +370,6 @@ export default {
         .catch(() => {
           this.loading = false;
         });
-    },
-    // 编辑分类
-    handleEdit(params) {
-      // this.$refs.modalEdit.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.faqCategory = _.cloneDeep(params.row);
-      this.modalEdit = true;
-    },
-    getTableData() {
-      this.loading = true;
-      getFaqCategoriesPages(this.searchRowData).then(res => {
-        if (this.menuData.length > 0) {
-          // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.clearSearchLoading = false;
-        }
-      });
-    },
-    // 初始化商品菜单列表
-    initMenuList() {
-      getFaqCategoriesTree().then(res => {
-        if (res && res.array.length > 0) {
-          const menuList = buildMenu(res.array);
-          const map = {
-            title: "title",
-            children: "children"
-          };
-          this.menuData = convertTree(menuList, map, true);
-          if (this.menuData.length > 0) {
-            this.getTableData();
-          }
-        }
-      });
-    },
-
-    handleClick({ root, node, data }) {
-      this.loading = true;
-      // 展开当前节点
-      if (typeof data.expand === "undefined") {
-        // this.$set(data, 'expend', true);
-        this.$set(data, "expend", false);
-        // if (data.children) {
-        if (data.children) {
-          this.expandChildren(data.children);
-        }
-      } else {
-        // data.expand = !data.expand;
-      }
-      this.parentCategory.id = data.id;
-      this.parentCategory.categoryName = data.title;
-      this.currentParentId = data.id;
-      this.searchRowData.parentId = data.id;
-      // 获取新数据
-      this.getTableData();
-    },
-    expandChildren(array) {
-      array.forEach(item => {
-        if (typeof item.expand === "undefined") {
-          // this.$set(item, 'expend', true);
-          this.$set(item, "expend", false);
-          // } else {
-        } else {
-          item.expand = !item.expand;
-        }
-        if (item.children) {
-          this.expandChildren(item.children);
-        }
-      });
-    },
-    resetSearchRowData() {
-      this.clearSearchLoading = true;
-      this.searchRowData = this._.cloneDeep(roleRowData);
-      this.getTableData();
     }
   }
 };

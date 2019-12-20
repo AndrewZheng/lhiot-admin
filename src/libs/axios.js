@@ -91,7 +91,11 @@ class HttpRequest {
     // 响应拦截
     instance.interceptors.response.use(res => {
       this.destory(url);
-      const { data, status } = res;
+      // 导出
+      const { data, status, headers } = res;
+      if (headers['content-type'] === 'application/vnd.ms-excel;charset=UTF-8') {
+        return res.data;
+      }
       // 后续再做修改
       if (status < 400) {
         if (typeof data.success === 'undefined') {

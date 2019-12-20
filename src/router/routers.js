@@ -260,6 +260,24 @@ export const constantRouterMap = [
           title: '限时抢购配置'
         },
         component: () => import('@/view/wholesale-mall-manager/activity/flashsale.vue')
+      },
+      {
+        path: '/wholesale-article-edit',
+        name: 'wholesale-article-edit',
+        meta: {
+          icon: 'md-basket',
+          title: '文章编辑'
+        },
+        component: () => import('@/view/wholesale-mall-manager/content/article-edit.vue')
+      },
+      {
+        path: '/wholesale-salesman-store-analysis',
+        name: 'wholesale-salesman-store-analysis',
+        meta: {
+          icon: 'md-analytics',
+          title: '业务员门店业绩分析'
+        },
+        component: () => import('@/view/wholesale-mall-manager/user/salesman-store-analysis.vue')
       }
     ]
   }

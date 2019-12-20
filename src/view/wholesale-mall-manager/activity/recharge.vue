@@ -601,10 +601,10 @@ export default {
             this.$Message.error("结束时间必须大于开始时间!");
             return;
           }
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createRecharge();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editRecharge();
           }

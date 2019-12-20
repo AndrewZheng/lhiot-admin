@@ -13,86 +13,26 @@
         border
         search-place="top"
         @on-delete="handleDelete"
-        @on-edit="handleEdit"
+        @on-view="handleView"
+        @on-analytics="handleAnalysis"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
           <Input
             v-model="searchRowData.phone"
-            placeholder="用户电话"
+            placeholder="业务员电话"
             class="search-input mr5"
             style="width: 100px"
             clearable
           ></Input>
           <Input
             v-model="searchRowData.userName"
-            placeholder="用户姓名"
+            placeholder="业务员姓名"
             class="search-input mr5"
             style="width: 100px"
             clearable
           ></Input>
-          <!-- <Select
-            v-model="searchRowData.userType"
-            class="search-col mr5"
-            placeholder="用户类型"
-            style="width:100px"
-            clearable
-          >
-            <Option
-              v-for="item in userTypeEnum"
-              :value="item.value"
-              :key="item.value"
-              class="ptb2-5"
-            >{{ item.label }}</Option>
-          </Select> -->
-          <Select
-            v-model="searchRowData.userStatus"
-            class="search-col mr5"
-            placeholder="用户状态"
-            style="width:100px"
-            clearable
-          >
-            <Option
-              v-for="item in userStatusEnum"
-              :value="item.value"
-              :key="item.value"
-              class="ptb2-5"
-            >{{ item.label }}</Option>
-          </Select>
-          <!-- <Select
-            v-model="searchRowData.salesUserId"
-            class="search-col mr5"
-            placeholder="业务员"
-            style="width:100px"
-            clearable
-          >
-            <Option
-              v-for="item in salesManList"
-              :value="item.id"
-              :key="item.id"
-              class="ptb2-5"
-            >{{ item.UserName }}</Option>
-          </Select> -->
-          <DatePicker
-            v-model="searchRowData.regBeginTime"
-            format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
-            placeholder="开始时间起"
-            class="search-input"
-            style="width: 150px"
-            @on-change="beginTimeChange"
-          />
-          <i>-</i>
-          <DatePicker
-            v-model="searchRowData.regEndTime"
-            format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
-            placeholder="开始时间止"
-            class="search-input mr5"
-            style="width: 150px"
-            @on-change="endTimeChange"
-          />
           <Button
             v-waves
             :searchLoading="searchLoading"
@@ -113,7 +53,7 @@
           </Button>
         </div>
         <div slot="operations">
-          <Button
+          <!-- <Button
             v-waves
             :loading="exportExcelLoading"
             type="primary"
@@ -121,7 +61,7 @@
             @click="handleDownload"
           >
             <Icon type="md-download" />导出
-          </Button>
+          </Button> -->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -144,11 +84,8 @@
 import Tables from '_c/tables';
 import _ from 'lodash';
 import {
-  getUserAnalysisPages,
-  getAllSalesman,
-  editUser,
-  deleteUser,
-  createUser
+  getPerformancePages,
+  getAllSalesman
 } from '@/api/wholesale';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
@@ -161,40 +98,29 @@ import {
 } from '@/libs/util';
 import { userStatusEnum, sexEnum, userTypeEnum } from '@/libs/enumerate';
 import {
-  userTypeConvert,
   userStatusConvert,
   sexConvert
 } from '@/libs/converStatus';
 
 const userAnalysis = {
-  accumulative: '',
-  addressDetail: '',
-  balance: '',
-  city: '',
-  id: 0,
-  lastCreateTime: '',
-  lastMonth: '',
-  nickName: '',
-  phone: '',
-  profilePhoto: '',
-  registerTime: '',
-  saleUserName: '',
-  sex: '',
-  shopName: '',
-  thisMonth: '',
-  userName: '',
-  userStatus: ''
+  newShopNumTotal: 0,
+  openId: '',
+  perMonthNewShopNum: 0,
+  perMonthPerformance: '',
+  performanceTotal: '',
+  salesUserId: 0,
+  salesUserStatus: '',
+  salesmanName: '',
+  salesmanPhone: '',
+  thisMonthNewShopNum: 0,
+  thisMonthPerformance: '',
+  unionId: '',
+  userType: ''
 };
 
 const roleRowData = {
   userName: '',
   phone: '',
-  userType: '',
-  regBeginTime: null,
-  regEndTime: null,
-  salesUserId: '7',
-  userStatus: '',
-  salesUserStatus: '',
   page: 1,
   rows: 10
 };
@@ -218,119 +144,99 @@ export default {
       userAnalysis: _.cloneDeep(userAnalysis),
       columns: [
         {
-          type: 'selection',
-          key: '',
-          width: 60,
-          align: 'center'
-        },
-        {
-          title: '编号',
+          title: '业务员姓名',
           align: 'center',
-          key: 'id',
-          minWidth: 40
-        },
-        {
-          title: '门店名称',
-          align: 'center',
-          key: 'shopName',
-          minWidth: 100
-        },
-        {
-          title: '店长姓名',
-          align: 'center',
-          key: 'userName',
+          key: 'salesmanName',
           minWidth: 60
         },
         {
           title: '手机号码',
           align: 'center',
-          key: 'phone',
+          key: 'salesmanPhone',
           minWidth: 80
         },
         {
-          title: '注册时间',
+          title: '上月业绩',
           align: 'center',
-          key: 'registerTime',
-          minWidth: 100
+          key: 'perMonthPerformance',
+          minWidth: 80,
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(
+              params.row.perMonthPerformance
+            );
+            return <div>{amount}</div>;
+          }
         },
-        // {
-        //   title: "用户类型",
-        //   align: "center",
-        //   key: "userType",
-        //   minWidth: 60,
-        //   render: (h, params, vm) => {
-        //     const { row } = params;
-        //     if (row.userType === "consumer") {
-        //       return (
-        //         <div>
-        //           <tag color="primary">
-        //             {userTypeConvert(row.userType).label}
-        //           </tag>
-        //         </div>
-        //       );
-        //     } else if (row.userType === "sale") {
-        //       return (
-        //         <div>
-        //           <tag color="warning">
-        //             {userTypeConvert(row.userType).label}
-        //           </tag>
-        //         </div>
-        //       );
-        //     }
-        //   }
-        // },
         {
-          title: '上月消费/频次',
+          title: '本月业绩',
           align: 'center',
-          key: 'lastMonth',
+          key: 'thisMonthPerformance',
+          minWidth: 80,
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(
+              params.row.thisMonthPerformance
+            );
+            return <div>{amount}</div>;
+          }
+        },
+        {
+          title: '累计业绩',
+          align: 'center',
+          key: 'performanceTotal',
+          minWidth: 80,
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(
+              params.row.performanceTotal
+            );
+            return <div>{amount}</div>;
+          }
+        },
+        {
+          title: '上月招募人数',
+          align: 'center',
+          key: 'perMonthNewShopNum',
           minWidth: 80
         },
         {
-          title: '本月消费/频次',
+          title: '本月招募人数',
           align: 'center',
-          key: 'thisMonth',
+          key: 'thisMonthNewShopNum',
           minWidth: 80
         },
         {
-          title: '累计消费/频次',
+          title: '累计招募人数',
           align: 'center',
-          key: 'accumulative',
+          key: 'newShopNumTotal',
           minWidth: 80
         },
         {
-          title: '最近消费时间',
+          title: '业务员状态',
           align: 'center',
-          key: 'lastCreateTime',
-          minWidth: 100
-        },
-        {
-          title: '用户状态',
-          align: 'center',
-          key: 'userStatus',
+          key: 'salesUserStatus',
           minWidth: 60,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.userStatus === 'certified') {
+            if (row.salesUserStatus === 'certified') {
               return (
                 <div>
                   <tag color='success'>
-                    {userStatusConvert(row.userStatus).label}
+                    {userStatusConvert(row.salesUserStatus).label}
                   </tag>
                 </div>
               );
-            } else if (row.userStatus === 'locking') {
+            } else if (row.salesUserStatus === 'locking') {
               return (
                 <div>
                   <tag color='error'>
-                    {userStatusConvert(row.userStatus).label}
+                    {userStatusConvert(row.salesUserStatus).label}
                   </tag>
                 </div>
               );
-            } else if (row.userStatus === 'unaudited') {
+            } else if (row.salesUserStatus === 'unaudited') {
               return (
                 <div>
                   <tag color='warning'>
-                    {userStatusConvert(row.userStatus).label}
+                    {userStatusConvert(row.salesUserStatus).label}
                   </tag>
                 </div>
               );
@@ -338,17 +244,18 @@ export default {
             return (
               <div>
                 <tag color='primary'>
-                  {userStatusConvert(row.userStatus).label}
+                  {userStatusConvert(row.salesUserStatus).label}
                 </tag>
               </div>
             );
           }
         },
         {
-          title: '所属业务员',
+          title: '操作',
           align: 'center',
-          key: 'saleUserName',
-          minWidth: 60
+          minWidth: 100,
+          key: 'handle',
+          options: ['view', 'analytics']
         }
       ]
     };
@@ -368,9 +275,10 @@ export default {
   mounted() {},
   methods: {
     getTableData() {
-      getUserAnalysisPages(this.searchRowData).then(res => {
+      getPerformancePages(this.searchRowData).then(res => {
         this.tableData = res.rows;
         this.total = res.total;
+      }).finally(() => {
         this.loading = false;
         this.searchLoading = false;
         this.clearSearchLoading = false;
@@ -379,7 +287,6 @@ export default {
     getAllSalesman() {
       getAllSalesman().then(res => {
         this.salesManList = res;
-        // console.log('salesManList:', this.salesManList);
       });
     },
     beginTimeChange(value, date) {
@@ -391,45 +298,22 @@ export default {
     resetFields() {
       this.$refs.editForm.resetFields();
     },
-    handleSubmit() {
-      this.$refs.editForm.validate(valid => {
-        if (valid) {
-          if (this.isCreate) {
-            this.createTableRow();
-          } else if (this.isEdit) {
-            this.editTableRow();
-          }
-        } else {
-          this.$Message.error('请完善商品单位信息!');
-        }
-      });
-    },
-    editTableRow() {
-      this.modalViewLoading = true;
-      editUser(this.userAnalysis).then(res => {
-        this.modalViewLoading = false;
-        this.modalEdit = false;
-        this.getTableData();
-        this.resetFields();
-      });
-    },
-    createTableRow() {
-      createUser(this.userAnalysis)
-        .then(res => {})
-        .finally(res => {
-          this.modalEditLoading = false;
-          this.modalEdit = false;
-          this.getTableData();
-          this.resetFields();
-        });
-    },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
     },
-    handleEdit(params) {
-      this.tempModalType = this.modalType.edit;
-      this.userAnalysis = _.cloneDeep(params.row);
-      this.modalEdit = true;
+    handleView(params) {
+      this.turnToPage({
+        name: 'wholesale-order',
+        query: { id: params.row.salesUserId,
+          salesmanName: params.row.salesmanName }
+      })
+    },
+    handleAnalysis(params) {
+      this.turnToPage({
+        name: 'wholesale-salesman-store-analysis',
+        query: { id: params.row.salesUserId,
+          salesmanName: params.row.salesmanName }
+      })
     },
     handleAdd() {
       this.$refs.editForm.resetFields();
@@ -437,33 +321,10 @@ export default {
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
     },
-    // 删除
-    deleteTable(ids) {
-      this.loading = true;
-      deleteUser({
-        ids
-      })
-        .then(res => {
-          const totalPage = Math.ceil(this.total / this.pageSize);
-          if (
-            this.tableData.length === this.tableDataSelected.length &&
-            this.page === totalPage &&
-            this.page !== 1
-          ) {
-            this.page -= 1;
-          }
-          this.tableDataSelected = [];
-          this.getTableData();
-          this.loading = false;
-        })
-        .catch(() => {
-          this.loading = false;
-        });
-    },
     handleDownload() {
       this.exportExcelLoading = true;
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      getUserAnalysisPages(this.searchRowData)
+      getPerformancePages(this.searchRowData)
         .then(res => {
           const tableData = res.rows;
           // 恢复正常页数

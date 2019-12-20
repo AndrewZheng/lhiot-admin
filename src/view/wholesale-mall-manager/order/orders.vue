@@ -1,6 +1,11 @@
 <template>
   <div class="m-role">
     <Card>
+      <Row v-show="isSalesmanAnalysis">
+        <i-col span="24" class="brand-red font-sm">
+          {{ salesmanName }}--旗下门店订单信息明细
+        </i-col>
+      </Row>
       <tables
         ref="tables"
         v-model="tableData"
@@ -118,6 +123,15 @@
           </Row>
         </div>
         <div slot="operations" style="margin-left:-30px">
+          <Button
+            v-waves
+            v-show="isSalesmanAnalysis"
+            type="warning"
+            class="mr5"
+            @click="handleBack"
+          >
+            <Icon type="ios-arrow-back" />&nbsp;返回
+          </Button>
           <Button v-waves class="search-btn ml2 mr2" type="info" @click="resendToHd">海鼎重发</Button>
           <Button
             :loading="downloadLoading"
@@ -131,7 +145,7 @@
             :loading="downloadLoading"
             class="search-btn mr2"
             type="success"
-            @click="handleDownload"
+            @click="handleExport('ORDER_GOODS')"
           >
             <Icon type="md-download" />导出订单商品
           </Button>
@@ -139,7 +153,7 @@
             :loading="downloadLoading"
             class="search-btn mr2"
             type="success"
-            @click="handleDownload"
+            @click="handleExport('DELIVERY_NOTE')"
           >
             <Icon type="md-download" />导出配送单
           </Button>
@@ -207,7 +221,7 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="6">支付类型:</i-col>
-              <i-col span="18">{{ orderDetail.settlementType | wholeslaePayTypeFilter}}</i-col>
+              <i-col span="18">{{ orderDetail.settlementType | wholeslaePayTypeFilter }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -227,7 +241,7 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="6">优惠金额:</i-col>
-              <i-col span="18">{{ orderDetail.discountFee | fenToYuanDot2Filters}}</i-col>
+              <i-col span="18">{{ orderDetail.discountFee | fenToYuanDot2Filters }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -327,21 +341,21 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import BookTypeOption from "_c/book-type-option";
+import Tables from '_c/tables';
+import BookTypeOption from '_c/book-type-option';
 
-import { getOrderPages, getOrder, resendToHd } from "@/api/wholesale";
+import { getOrderPages, getOrder, resendToHd, exportOrder } from '@/api/wholesale';
 
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { fenToYuanDot2, fenToYuanDot2Number } from "@/libs/util";
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import { fenToYuanDot2, fenToYuanDot2Number, download } from '@/libs/util';
 import {
   orderStatusEnum,
   payStatusEnum,
   payTypeEnum,
   wholesaleOrderStatusEnum,
   wholesaleHdStatusEnum
-} from "@/libs/enumerate";
+} from '@/libs/enumerate';
 import {
   orderTypeConvert,
   thirdDeliverStatusConvert,
@@ -351,48 +365,49 @@ import {
   receivingWayConvert,
   isAllRefundConvert,
   payStatusConvert
-} from "@/libs/converStatus";
+} from '@/libs/converStatus';
 
 const orderDetail = {
-  afterSaleTime: "",
-  afterStatus: "",
-  checkStatus: "",
-  createTime: "",
-  currentOrderStatus: "",
-  deliveryAddress: "",
+  afterSaleTime: '',
+  afterStatus: '',
+  checkStatus: '',
+  createTime: '',
+  currentOrderStatus: '',
+  deliveryAddress: '',
   deliveryFee: 0,
-  deliveryTime: "",
+  deliveryTime: '',
   discountFee: 0,
-  hdCode: "",
-  hdStatus: "",
+  hdCode: '',
+  hdStatus: '',
   id: 0,
-  invoiceStatus: "",
-  notHdStatus: "",
-  orderCode: "",
+  invoiceStatus: '',
+  notHdStatus: '',
+  orderCode: '',
   orderCoupon: 0,
   orderGoodsList: [],
-  orderStatus: "",
+  orderStatus: '',
   orderStatusIn: [],
-  payStatus: "",
+  payStatus: '',
   payableFee: 0,
-  receiveTime: "",
-  remarks: "",
+  receiveTime: '',
+  remarks: '',
   salesmanId: 0,
-  settlementType: "",
+  settlementType: '',
   supplements: [],
   totalFee: 0,
   userId: 0,
   createTimeBegin: null,
-  createTimeEnd: null,
+  createTimeEnd: null
 };
 
 const roleRowData = {
-  orderCode: "",
-  phone: "",
-  orderStatus: "",
-  settlementType: "",
-  payStatus: "",
-  hdStatus: "",
+  salesmanId: null,
+  orderCode: '',
+  phone: '',
+  orderStatus: '',
+  settlementType: '',
+  payStatus: '',
+  hdStatus: '',
   createTimeBegin: null,
   createTimeEnd: null,
   page: 1,
@@ -403,101 +418,101 @@ const goodsDetail = {
   discountGoodsPrice: 0,
   flash: 0,
   goodsId: 0,
-  goodsImage: "",
-  goodsName: "",
+  goodsImage: '',
+  goodsName: '',
   goodsPrice: 0,
   goodsStandardId: 0,
-  hdSkuId: "",
+  hdSkuId: '',
   id: 0,
   orderId: 0,
-  paymentTime: "",
+  paymentTime: '',
   purchasePrice: 0,
   quanity: 0,
-  refundStatus: "",
-  standard: "",
+  refundStatus: '',
+  standard: '',
   standardWeight: 0,
-  unitName: "",
+  unitName: '',
   userId: 0
 };
 
 const deliveryInfo = {
   id: 0,
   sex: null,
-  phone: "",
-  address: "",
-  city: "",
-  isDefault: "",
+  phone: '',
+  address: '',
+  city: '',
+  isDefault: '',
   userId: 0,
-  name: ""
+  name: ''
 };
 
 const orderColumns = [
   {
-    type: "selection",
-    key: "",
+    type: 'selection',
+    key: '',
     width: 60,
-    align: "center",
-    fixed: "left"
+    align: 'center',
+    fixed: 'left'
   },
   {
-    title: "订单编号",
-    key: "orderCode",
+    title: '订单编号',
+    key: 'orderCode',
     sortable: true,
     width: 170,
-    fixed: "left",
-    align: "center"
+    fixed: 'left',
+    align: 'center'
   },
   {
-    title: "创建时间",
-    align: "center",
+    title: '创建时间',
+    align: 'center',
     width: 160,
-    key: "createTime"
+    key: 'createTime'
   },
   {
-    title: "订单总价",
-    align: "center",
+    title: '订单总价',
+    align: 'center',
     width: 120,
-    key: "totalFee",
+    key: 'totalFee',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.totalFee);
       return <div>{amount}</div>;
     }
   },
   {
-    title: "优惠金额",
-    align: "center",
+    title: '优惠金额',
+    align: 'center',
     width: 120,
-    key: "discountFee",
+    key: 'discountFee',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.discountFee);
       return <div>{amount}</div>;
     }
   },
   {
-    title: "应付金额",
-    align: "center",
+    title: '应付金额',
+    align: 'center',
     width: 120,
-    key: "payableFee",
+    key: 'payableFee',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.payableFee);
       return <div>{amount}</div>;
     }
   },
   {
-    title: "配送费",
-    align: "center",
+    title: '配送费',
+    align: 'center',
     width: 120,
-    key: "deliveryFee",
+    key: 'deliveryFee',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.deliveryFee);
-      return <div>{amount ? amount : "N/A"}</div>;
+      return <div>{amount || 'N/A'}</div>;
     }
   },
   {
-    title: "实付金额",
-    align: "center",
+    title: '实付金额',
+    align: 'center',
     width: 120,
-    key: "payableFee",
+    key: 'payableFee',
     render(h, params, vm) {
       const amount = fenToYuanDot2(
         params.row.payableFee + params.row.deliveryFee
@@ -506,104 +521,104 @@ const orderColumns = [
     }
   },
   {
-    title: "支付类型",
-    align: "center",
+    title: '支付类型',
+    align: 'center',
     width: 120,
-    key: "settlementType",
+    key: 'settlementType',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.settlementType === "wechat") {
+      if (row.settlementType === 'wechat') {
         return (
           <div>
-            <tag color="success">
+            <tag color='success'>
               {wholesalePayTypeConvert(row.settlementType).label}
             </tag>
           </div>
         );
-      } else if (row.settlementType === "balance") {
+      } else if (row.settlementType === 'balance') {
         return (
           <div>
-            <tag color="primary">
+            <tag color='primary'>
               {wholesalePayTypeConvert(row.settlementType).label}
             </tag>
           </div>
         );
-      } else if (row.settlementType === "offline") {
+      } else if (row.settlementType === 'offline') {
         return (
           <div>
-            <tag color="warning">
+            <tag color='warning'>
               {wholesalePayTypeConvert(row.settlementType).label}
             </tag>
           </div>
         );
       } else {
-        return <div>{"N/A"}</div>;
+        return <div>{'N/A'}</div>;
       }
     }
   },
   {
-    title: "门店名称",
-    align: "center",
+    title: '门店名称',
+    align: 'center',
     minWidth: 150,
-    key: "shopName"
+    key: 'shopName'
   },
   {
-    title: "店长名称",
-    align: "center",
+    title: '店长名称',
+    align: 'center',
     width: 120,
-    key: "userName"
+    key: 'userName'
   },
   {
-    title: "店长手机",
-    align: "center",
+    title: '店长手机',
+    align: 'center',
     width: 120,
-    key: "phone"
+    key: 'phone'
   },
   {
-    title: "订单状态",
-    align: "center",
+    title: '订单状态',
+    align: 'center',
     width: 120,
-    key: "orderStatus",
+    key: 'orderStatus',
     render: (h, params, vm) => {
       const { row } = params;
       if (
-        row.orderStatus === "unpaid" ||
-        row.orderStatus === "paying" ||
-        row.orderStatus === "undelivery"
+        row.orderStatus === 'unpaid' ||
+        row.orderStatus === 'paying' ||
+        row.orderStatus === 'undelivery'
       ) {
         return (
           <div>
-            <tag color="default">
+            <tag color='default'>
               {wholesaleOrderStatusConvert(row.orderStatus).label}
             </tag>
           </div>
         );
       } else if (
-        row.orderStatus === "delivery" ||
-        row.orderStatus === "unrefunded"
+        row.orderStatus === 'delivery' ||
+        row.orderStatus === 'unrefunded'
       ) {
         return (
           <div>
-            <tag color="primary">
+            <tag color='primary'>
               {wholesaleOrderStatusConvert(row.orderStatus).label}
             </tag>
           </div>
         );
-      } else if (row.orderStatus === "failed") {
+      } else if (row.orderStatus === 'failed') {
         return (
           <div>
-            <tag color="error">
+            <tag color='error'>
               {wholesaleOrderStatusConvert(row.orderStatus).label}
             </tag>
           </div>
         );
       } else if (
-        row.orderStatus === "received" ||
-        row.orderStatus === "refunded"
+        row.orderStatus === 'received' ||
+        row.orderStatus === 'refunded'
       ) {
         return (
           <div>
-            <tag color="success">
+            <tag color='success'>
               {wholesaleOrderStatusConvert(row.orderStatus).label}
             </tag>
           </div>
@@ -614,22 +629,22 @@ const orderColumns = [
     }
   },
   {
-    title: "海鼎状态",
-    align: "center",
+    title: '海鼎状态',
+    align: 'center',
     width: 120,
-    key: "hdStatus",
+    key: 'hdStatus',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.hdStatus === "success") {
+      if (row.hdStatus === 'success') {
         return (
           <div>
-            <tag color="success">成功</tag>
+            <tag color='success'>成功</tag>
           </div>
         );
-      } else if (row.hdStatus === "failed") {
+      } else if (row.hdStatus === 'failed') {
         return (
           <div>
-            <tag color="error">失败</tag>
+            <tag color='error'>失败</tag>
           </div>
         );
       } else {
@@ -638,99 +653,99 @@ const orderColumns = [
     }
   },
   {
-    title: "操作",
+    title: '操作',
     minWidth: 180,
-    align: "center",
-    fixed: "right",
-    key: "handle",
-    options: ["view"]
+    align: 'center',
+    fixed: 'right',
+    key: 'handle',
+    options: ['view']
   }
 ];
 
 const goodsColumns = [
   {
-    title: "商品编号",
-    key: "goodsId"
+    title: '商品编号',
+    key: 'goodsId'
   },
   {
-    title: "商品名称",
-    key: "goodsName"
+    title: '商品名称',
+    key: 'goodsName'
   },
   {
-    title: "商品图片",
-    key: "goodsImage",
-    align: "center",
+    title: '商品图片',
+    key: 'goodsImage',
+    align: 'center',
     maxWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
-      const str = <img src={row.goodsImage} height="60" width="60" />;
+      const str = <img src={row.goodsImage} height='60' width='60' />;
       return <div>{str}</div>;
     }
   },
   {
-    title: "商品规格",
-    key: "standard"
+    title: '商品规格',
+    key: 'standard'
   },
   {
-    title: "购买数量",
-    key: "quanity"
+    title: '购买数量',
+    key: 'quanity'
   },
   {
-    title: "商品单位",
-    key: "unitName"
+    title: '商品单位',
+    key: 'unitName'
   },
   {
-    title: "商品单价",
-    key: "goodsPrice",
+    title: '商品单价',
+    key: 'goodsPrice',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.goodsPrice);
       return <div>{amount}</div>;
     }
   },
   {
-    title: "进货价",
-    key: "purchasePrice",
+    title: '进货价',
+    key: 'purchasePrice',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.purchasePrice);
       return <div>{amount}</div>;
     }
   },
   {
-    title: "是否限时抢购",
-    key: "flash",
+    title: '是否限时抢购',
+    key: 'flash',
     render(h, params, vm) {
       if (params.row.flash === 0) {
         return (
           <div>
-            <tag color="success">普通商品</tag>
+            <tag color='success'>普通商品</tag>
           </div>
         );
       } else if (params.row.flash === 1) {
         return (
           <div>
-            <tag color="error">限时抢购</tag>
+            <tag color='error'>限时抢购</tag>
           </div>
         );
       }
     }
   },
   {
-    title: "退货状态",
+    title: '退货状态',
     minWidth: 80,
-    key: "refundStatus",
-    align: "center",
+    key: 'refundStatus',
+    align: 'center',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.refundStatus === "yes") {
+      if (row.refundStatus === 'yes') {
         return (
           <div>
-            <tag color="error">已退货</tag>
+            <tag color='error'>已退货</tag>
           </div>
         );
       } else {
         return (
           <div>
-            <tag color="success">未退货</tag>
+            <tag color='success'>未退货</tag>
           </div>
         );
       }
@@ -753,24 +768,32 @@ export default {
       wholesaleHdStatusEnum,
       goodsColumns,
       columns: orderColumns,
+      salesmanName: '',
       currentTableRowSelected: null,
       deliveryInfo: _.cloneDeep(deliveryInfo),
       searchRowData: _.cloneDeep(roleRowData),
       orderDetail: _.cloneDeep(orderDetail),
       downloadLoading: false,
-      tableDataSelected: []
+      currentSaleUserId: 0,
+      exportType: '', // ORDER_GOODS,DELIVERY_NOTE
+      tableDataSelected: [],
+      selectedOrderCodes: ''
     };
-  },
-  created() {
-    this.getTableData();
   },
   computed: {
     address() {
-      let city = this.deliveryInfo.city
-        ? this.deliveryInfo.city.replace(new RegExp("/", "gm"), "")
-        : "";
+      const city = this.deliveryInfo.city
+        ? this.deliveryInfo.city.replace(new RegExp('/', 'gm'), '')
+        : '';
       return city + this.deliveryInfo.address;
+    },
+    isSalesmanAnalysis() {
+      return this.$route.query.id > 0;
     }
+  },
+  created() {
+    this.salesmanName = this.$route.query.salesmanName ? this.$route.query.salesmanName : 'N/A';
+    this.getTableData();
   },
   methods: {
     orderStatusesOnChange(value) {
@@ -791,7 +814,7 @@ export default {
     },
     handleRefund() {
       if (!this.searchRowData.createTimeEnd) {
-        this.$Message.error("请先选择结束时间，再手动退款");
+        this.$Message.error('请先选择结束时间，再手动退款');
         return false;
       }
       // 处理手动退款
@@ -800,33 +823,33 @@ export default {
       });
     },
     handleReimburse(params) {
-      if (params.row.orderStatus === "RETURNING") {
-        this.$Message.error("退货中订单不能操作退款");
+      if (params.row.orderStatus === 'RETURNING') {
+        this.$Message.error('退货中订单不能操作退款');
         return;
       }
-      if (params.row.orderStatus === "ALREADY_RETURN") {
-        this.$Message.error("退货完成订单不能操作退款");
+      if (params.row.orderStatus === 'ALREADY_RETURN') {
+        this.$Message.error('退货完成订单不能操作退款');
         return;
       }
-      if (params.row.orderStatus === "FAILURE") {
-        this.$Message.error("已失效的订单不能操作退款");
+      if (params.row.orderStatus === 'FAILURE') {
+        this.$Message.error('已失效的订单不能操作退款');
         return;
       }
-      if (params.row.apply === "S_MALL") {
+      if (params.row.apply === 'S_MALL') {
         refundPt({ orderCode: params.row.orderCode })
           .then(res => {
             this.loading = false;
-            this.$Message.success("拼团小程序退款成功");
+            this.$Message.success('拼团小程序退款成功');
             this.getTableData();
           })
           .catch(() => {
             this.loading = false;
           });
-      } else if (params.row.apply === "WXSMALL_SHOP") {
+      } else if (params.row.apply === 'WXSMALL_SHOP') {
         refundWx({ orderCode: params.row.orderCode })
           .then(res => {
             this.loading = false;
-            this.$Message.success("微信小程序退款成功");
+            this.$Message.success('微信小程序退款成功');
             this.getTableData();
           })
           .catch(() => {
@@ -834,36 +857,32 @@ export default {
           });
       }
     },
-    //确认收货
+    // 确认收货
     handSureReceive(params) {
       if (
-        params.row.orderStatus === "SEND_OUT" ||
-        params.row.orderStatus === "DISPATCHING"
+        params.row.orderStatus === 'SEND_OUT' ||
+        params.row.orderStatus === 'DISPATCHING'
       ) {
         sureReceive({ orderId: params.row.id })
           .then(res => {
             this.loading = false;
-            this.$Message.success("确认收货成功");
+            this.$Message.success('确认收货成功');
             this.getTableData();
           })
           .catch(() => {
             this.loading = false;
           });
       } else {
-        this.$Message.error("只有已发货和配送中的订单才能操作收货");
+        this.$Message.error('只有已发货和配送中的订单才能操作收货');
       }
     },
     handleSubmit() {
       if (!this.currentTableRowSelected) {
         this.$Message.error(
-          "请用鼠标左键点击选择下方表格一行订单数据,才能进行调货处理"
+          '请用鼠标左键点击选择下方表格一行订单数据,才能进行调货处理'
         );
         return;
       }
-      // if (this.currentTableRowSelected.hdStatus !== miniHdStatus.SEND_OUT) {
-      //   this.$Message.error("该订单海鼎发送没有成功！");
-      //   return;
-      // }
       this.modifyStoreInOrder();
       this.currentTableRowSelected = null;
     },
@@ -882,7 +901,7 @@ export default {
           this.orderDetail = res;
           // {"id":6,"sex":null,"phone":"15292269133","address":"望城坡","city":"湖南省/长沙市/岳麓区","isDefault":"yes","userId":4,"name":"刘梅"}
           if (this.orderDetail.deliveryAddress) {
-            let deliveryInfo = JSON.parse(this.orderDetail.deliveryAddress);
+            const deliveryInfo = JSON.parse(this.orderDetail.deliveryAddress);
             this.deliveryInfo = _.cloneDeep(deliveryInfo);
           }
           this.tempModalType = this.modalType.view;
@@ -894,6 +913,10 @@ export default {
     },
     getTableData() {
       this.loading = true;
+      // 如果从业务员业绩明细过来查看的按业务员ID过滤订单
+      if (this.isSalesmanAnalysis) {
+        this.searchRowData.salesmanId = this.$route.query.id;
+      }
       getOrderPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
@@ -916,23 +939,22 @@ export default {
         // 恢复正常页数
         this.searchRowData.rows = 10;
         // 表格数据导出字段翻译
-        let _this = this;
         tableData.forEach(item => {
-          item["orderCode"] = item["orderCode"] + "";
-          item["totalAmount"] = (item["totalAmount"] / 100.0).toFixed(2);
-          item["couponAmount"] = (item["couponAmount"] / 100.0).toFixed(2);
-          item["amountPayable"] = (item["amountPayable"] / 100.0).toFixed(2);
-          item["refundFee"] = (item["refundFee"] / 100.0).toFixed(2);
-          item["deliverStatus"] = thirdDeliverStatusConvert(
-            item["deliverStatus"]
+          item['orderCode'] = item['orderCode'] + '';
+          item['totalAmount'] = (item['totalAmount'] / 100.0).toFixed(2);
+          item['couponAmount'] = (item['couponAmount'] / 100.0).toFixed(2);
+          item['amountPayable'] = (item['amountPayable'] / 100.0).toFixed(2);
+          item['refundFee'] = (item['refundFee'] / 100.0).toFixed(2);
+          item['deliverStatus'] = thirdDeliverStatusConvert(
+            item['deliverStatus']
           ).label;
-          item["orderStatus"] = wholesaleOrderStatusConvert(
-            item["orderStatus"]
+          item['orderStatus'] = wholesaleOrderStatusConvert(
+            item['orderStatus']
           ).label;
-          item["hdStatus"] = miniHdStatusConvert(item["hdStatus"]).label;
-          item["status"] = wholesaleOrderStatusConvert(item["status"]).label;
-          item["payType"] = wholesalePayTypeConvert(item["payType"]).label;
-          item["isAllRefund"] = isAllRefundConvert(item["isAllRefund"]).label;
+          item['hdStatus'] = miniHdStatusConvert(item['hdStatus']).label;
+          item['status'] = wholesaleOrderStatusConvert(item['status']).label;
+          item['payType'] = wholesalePayTypeConvert(item['payType']).label;
+          item['isAllRefund'] = isAllRefundConvert(item['isAllRefund']).label;
         });
         this.$refs.tables.handleDownload({
           filename: `普通订单信息-${new Date().valueOf()}`,
@@ -940,19 +962,39 @@ export default {
         });
       });
     },
+    handleExport(name) {
+      if (name === 'ORDER_GOODS') {
+        // 导出订单商品
+        exportOrder({
+          exportType: name,
+          searchParam: this.searchRowData
+        }).then(res => {
+          download(res, `订单商品信息-${new Date().valueOf()}`);
+        });
+      } else {
+        // 导出配送单
+        const orderCodes = { orderCodes: this.selectedOrderCodes };
+        exportOrder({
+          exportType: name,
+          searchParam: orderCodes
+        }).then(res => {
+          download(res, `配送单-${new Date().valueOf()}`);
+        });
+      }
+    },
     resendToHd() {
       if (this.tableDataSelected.length > 0) {
         const tempDeleteList = [];
         this.tableDataSelected.filter(value => {
           tempDeleteList.push(value.id);
         });
-        const ids = tempDeleteList.join(",");
+        const ids = tempDeleteList.join(',');
         resendToHd({ ids: ids }).then(res => {
-          let { disqualification, failure } = res;
+          const { disqualification, failure } = res;
           if (failure.length === 0) {
-            this.$Message.info("海鼎重发成功");
+            this.$Message.info('海鼎重发成功');
           } else {
-            let lst = failure.join(",");
+            const lst = failure.join(',');
             this.$Message.error({
               content: `海鼎重发失败订单：${lst}`,
               duration: 30,
@@ -964,19 +1006,16 @@ export default {
     },
     onSelectionAll(selection) {
       this.tableDataSelected = selection;
-      if (selection.length === 1) {
-        this.currentTableRowSelected = selection[0];
-      } else {
-        this.currentTableRowSelected = null;
-      }
+      this.selectedOrderCodes = selection.map(item => item.orderCode.toString()).join(',');
     },
     onSelectionChange(selection) {
       this.tableDataSelected = selection;
-      if (selection.length === 1) {
-        this.currentTableRowSelected = selection[0];
-      } else {
-        this.currentTableRowSelected = null;
-      }
+      this.selectedOrderCodes = selection.map(item => item.orderCode.toString()).join(',');
+    },
+    handleBack() {
+      this.turnToPage({
+        name: 'wholesale-salesman-analysis'
+      });
     }
   }
 };

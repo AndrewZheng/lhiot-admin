@@ -71,7 +71,12 @@ import {
   activityStatusEnum,
   couponTemplateTypeEnum,
   couponUseStatusEnum,
-  couponFromEnum
+  couponFromEnum,
+  advPositionEnum,
+  faqStatusEnum,
+  articleTypeEnum,
+  createTypeEnum,
+  layoutEnum
 } from './enumerate';
 
 const convertFunction = (value, list) => {
@@ -85,6 +90,26 @@ const convertFunction = (value, list) => {
       label: value || 'N/A'
     };
   }
+};
+
+export const layoutConvert = (value) => {
+  return convertFunction(value, layoutEnum);
+};
+
+export const articleTypeConvert = (value) => {
+  return convertFunction(value, articleTypeEnum);
+};
+
+export const createTypeConvert = (value) => {
+  return convertFunction(value, createTypeEnum);
+};
+
+export const faqStatusConvert = (value) => {
+  return convertFunction(value, faqStatusEnum);
+};
+
+export const advPositionConvert = (value) => {
+  return convertFunction(value, advPositionEnum);
 };
 
 export const couponFromConvert = (value) => {

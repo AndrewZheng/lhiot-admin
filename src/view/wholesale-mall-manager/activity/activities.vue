@@ -130,7 +130,7 @@
       </p>
       <div class="modal-content">
         <Form ref="editForm" :model="activityDetail" :rules="ruleInline" :label-width="100">
-           <Row>
+          <Row>
             <i-col span="12">
               <FormItem label="活动类型:" prop="activityType" style="width:260px;">
                 <Select v-model="activityDetail.activityType">
@@ -144,7 +144,7 @@
                 </Select>
               </FormItem>
             </i-col>
-             <i-col span="12">
+            <i-col span="12">
               <FormItem label="活动状态:" prop="vaild" style="width:260px;">
                 <Select v-model="activityDetail.vaild">
                   <Option
@@ -161,27 +161,27 @@
           <Row>
             <i-col span="12">
               <FormItem label="开始时间:" prop="startTime">
-                  <DatePicker
-                    :value="activityDetail.startTime"
-                    format="yyyy-MM-dd HH:mm:ss"
-                    type="datetime"
-                    placeholder="生效时间"
-                    style="width: 160px"
-                    @on-change="handleStartTimeChange"
-                  />
-                </FormItem>
+                <DatePicker
+                  :value="activityDetail.startTime"
+                  format="yyyy-MM-dd HH:mm:ss"
+                  type="datetime"
+                  placeholder="生效时间"
+                  style="width: 160px"
+                  @on-change="handleStartTimeChange"
+                />
+              </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="结束时间:" prop="endTime">
-                  <DatePicker
-                    :value="activityDetail.endTime"
-                    format="yyyy-MM-dd HH:mm:ss"
-                    type="datetime"
-                    placeholder="结束时间"
-                    style="width: 160px"
-                    @on-change="handleEndTimeChange"
-                  />
-                </FormItem>
+                <DatePicker
+                  :value="activityDetail.endTime"
+                  format="yyyy-MM-dd HH:mm:ss"
+                  type="datetime"
+                  placeholder="结束时间"
+                  style="width: 160px"
+                  @on-change="handleEndTimeChange"
+                />
+              </FormItem>
             </i-col>
           </Row>
           <Row>
@@ -194,9 +194,10 @@
           <Row>
             <i-col span="20">
               <FormItem label="活动描述:" prop="activityDesc">
-                <Input v-model="activityDetail.activityDesc"
-                  type="textarea"
+                <Input
+                  v-model="activityDetail.activityDesc"
                   :autosize="{minRows: 2,maxRows: 6}"
+                  type="textarea"
                   placeholder="请输入活动描述...">
                 </Input>
               </FormItem>
@@ -213,28 +214,28 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   deletActivity,
   getActivityPages,
   editActivity,
   createActivity
-} from "@/api/wholesale";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { activityStatusConvert, activityTypeConvert } from "@/libs/converStatus";
-import { activityTypeEnum, activityStatusEnum } from "@/libs/enumerate";
-import { setActivity } from "@/libs/util";
+} from '@/api/wholesale';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import { activityStatusConvert, activityTypeConvert } from '@/libs/converStatus';
+import { activityTypeEnum, activityStatusEnum } from '@/libs/enumerate';
+import { setActivity } from '@/libs/util';
 
 const activityDetail = {
   id: 0,
-  activityCode: "",
-  activityDesc: "",
-  activityType: "",
-  linkUrl: "",
-  vaild: "",
+  activityCode: '',
+  activityDesc: '',
+  activityType: '',
+  linkUrl: '',
+  vaild: '',
   endTime: null,
   startTime: null
 };
@@ -242,7 +243,7 @@ const activityDetail = {
 const roleRowData = {
   activityCode: null,
   activityDesc: null,
-  vaild:'',
+  vaild: '',
   endTime: null,
   startTime: null,
   page: 1,
@@ -266,103 +267,103 @@ export default {
       searchRowData: _.cloneDeep(roleRowData),
       activityDetail: _.cloneDeep(activityDetail),
       ruleInline: {
-        activityType: [{ required: true, message: "请选择活动类型" }],
-        startTime: [{ required: true, message: "请选择开始时间" }],
-        endTime: [{ required: true, message: "请选择结束时间" }],
-        vaild: [{ required: true, message: "请选择活动状态" }]
+        activityType: [{ required: true, message: '请选择活动类型' }],
+        startTime: [{ required: true, message: '请选择开始时间' }],
+        endTime: [{ required: true, message: '请选择结束时间' }],
+        vaild: [{ required: true, message: '请选择活动状态' }]
       },
       columns: [
         {
-          type: "selection",
+          type: 'selection',
           width: 60,
-          align: "center"
+          align: 'center'
         },
         {
-          title: "活动ID",
-          align: "center",
-          key: "id",
+          title: '活动ID',
+          align: 'center',
+          key: 'id',
           maxWidth: 80
         },
         {
-          title: "活动类型",
-          align: "center",
-          key: "activityType",
+          title: '活动类型',
+          align: 'center',
+          key: 'activityType',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.activityType === "flashsale") {
+            if (row.activityType === 'flashsale') {
               return (
                 <div>
-                  <tag color="primary">限时抢购</tag>
+                  <tag color='primary'>限时抢购</tag>
                 </div>
               );
-            } else if (row.activityType === "registration") {
+            } else if (row.activityType === 'registration') {
               return (
                 <div>
-                  <tag color="pink">注册送礼</tag>
+                  <tag color='pink'>注册送礼</tag>
                 </div>
               );
             } else {
               return (
                 <div>
-                  <tag color="primary">N/A</tag>
+                  <tag color='primary'>N/A</tag>
                 </div>
               );
             }
           }
         },
         {
-          title: "开始时间",
-          align: "center",
-          key: "startTime",
+          title: '开始时间',
+          align: 'center',
+          key: 'startTime'
         },
         {
-          title: "结束时间",
-          align: "center",
-          key: "endTime",
+          title: '结束时间',
+          align: 'center',
+          key: 'endTime'
         },
         {
-          title: "活动链接",
-          align: "center",
-          key: "linkUrl",
+          title: '活动链接',
+          align: 'center',
+          key: 'linkUrl',
           minWidth: 150
         },
         {
-          title: "活动描述",
-          align: "center",
-          key: "activityDesc"
+          title: '活动描述',
+          align: 'center',
+          key: 'activityDesc'
         },
         {
-          title: "活动状态",
-          align: "center",
-          key: "vaild",
+          title: '活动状态',
+          align: 'center',
+          key: 'vaild',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.vaild === "yes") {
+            if (row.vaild === 'yes') {
               return (
                 <div>
-                  <tag color="success">有效</tag>
+                  <tag color='success'>有效</tag>
                 </div>
               );
-            } else if (row.vaild === "no") {
+            } else if (row.vaild === 'no') {
               return (
                 <div>
-                  <tag color="error">无效</tag>
+                  <tag color='error'>无效</tag>
                 </div>
               );
             }
             return (
               <div>
-                <tag color="primary">N/A</tag>
+                <tag color='primary'>N/A</tag>
               </div>
             );
           }
         },
         {
-          title: "操作",
-          align: "center",
+          title: '操作',
+          align: 'center',
           minWidth: 80,
-          key: "handle",
-          options: ["onSale", "edit", "delete","settings"]
+          key: 'handle',
+          options: ['onSale', 'edit', 'delete', 'settings']
         }
       ]
     };
@@ -391,9 +392,9 @@ export default {
     },
     handleSetting(params) {
       setActivity(params.row);
-      let name = params.row.activityType==='flashsale'? "wholesale-flashsale": "wholesale-register-reward";
+      const name = params.row.activityType === 'flashsale' ? 'wholesale-flashsale' : 'wholesale-register-reward';
       this.turnToPage({
-        name, 
+        name,
         params: { activityId: params.row.id }
       });
     },
@@ -413,19 +414,19 @@ export default {
     },
     handleStatus(params) {
       this.activityDetail = _.cloneDeep(params.row);
-      this.activityDetail.vaild = params.row.vaild === "yes"? "no": "yes";
+      this.activityDetail.vaild = params.row.vaild === 'yes' ? 'no' : 'yes';
       this.editActivity();
     },
     handleSubmit() {
       this.$refs.editForm.validate(valid => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             this.createActivity();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             this.editActivity();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -433,7 +434,7 @@ export default {
       this.modalViewLoading = true;
       createActivity(this.activityDetail)
         .then(res => {
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .finally(() => {

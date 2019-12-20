@@ -44,7 +44,7 @@ module.exports = {
     open: true, // 配置自动启动浏览器
     proxy: {
       '/api': {
-        target: 'http://172.16.10.196:5565', // 196开发环境 194测试环境 203新测试环境
+        target: 'http://172.16.10.194:5565', // 196开发环境 194测试环境 203新测试环境
         ws: true,
         logLevel: 'debug',
         changeOrigin: true,

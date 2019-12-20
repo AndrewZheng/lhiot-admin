@@ -713,9 +713,9 @@ export default {
     handleSubmit() {
       this.$refs.editForm.validate(valid => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             this.createCouponConfig();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             this.editCouponConfig();
           }
         } else {

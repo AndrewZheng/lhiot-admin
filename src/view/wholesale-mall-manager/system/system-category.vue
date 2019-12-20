@@ -106,16 +106,16 @@
           </Row>-->
           <Row>
             <Col span="12">
-              <FormItem label="分类名称:" prop="categoriesName">
-                <Input v-model="systemCategoryDetail.categoriesName" placeholder="分类名称"></Input>
-              </FormItem>
+            <FormItem label="分类名称:" prop="categoriesName">
+              <Input v-model="systemCategoryDetail.categoriesName" placeholder="分类名称"></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-              <FormItem label="分类code:" prop="categoriesCode">
-                <Input v-model="systemCategoryDetail.categoriesCode" placeholder="分类code"></Input>
-              </FormItem>
+            <FormItem label="分类code:" prop="categoriesCode">
+              <Input v-model="systemCategoryDetail.categoriesCode" placeholder="分类code"></Input>
+            </FormItem>
             </Col>
           </Row>
         </Form>
@@ -129,25 +129,24 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
 import {
   deleteSystemSettingCategory,
   getSystemSettingCategoryPages,
   editSystemSettingCategory,
   createSystemSettingCategory,
   getSystemSettingCategoryTree
-} from "@/api/mini-program";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { buildMenu, convertTreeCategory, convertTree } from "@/libs/util";
+} from '@/api/wholesale';
+import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import { buildMenu, convertTreeCategory, convertTree } from '@/libs/util';
 
 const systemCategoryDetail = {
   id: 0,
   parentId: 0,
-  categoriesName: ""
+  categoriesName: ''
 };
 
 const roleRowData = {
@@ -166,36 +165,36 @@ export default {
         // parentId: [
         //   { required: true, message: '输入父级分类id' }
         // ],
-        categoriesName: [{ required: true, message: "请输入分类名称" }],
-        categoriesCode: [{ required: true, message: "请输入分类名code" }]
+        categoriesName: [{ required: true, message: '请输入分类名称' }],
+        categoriesCode: [{ required: true, message: '请输入分类名code' }]
       },
       columns: [
         {
-          type: "selection",
+          type: 'selection',
           width: 60,
-          align: "center",
-          fixed: "left"
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: "ID",
-          align: "center",
-          key: "id"
+          title: 'ID',
+          align: 'center',
+          key: 'id'
         },
         {
-          title: "分类code",
-          align: "center",
-          key: "categoriesCode"
+          title: '分类code',
+          align: 'center',
+          key: 'categoriesCode'
         },
         {
-          title: "分类名称",
-          align: "center",
-          key: "categoriesName"
+          title: '分类名称',
+          align: 'center',
+          key: 'categoriesName'
         },
         {
-          title: "操作",
-          align: "center",
-          key: "handle",
-          options: ["view", "edit", "delete"]
+          title: '操作',
+          align: 'center',
+          key: 'handle',
+          options: ['view', 'edit', 'delete']
         }
       ],
       systemCategoryData: [],
@@ -224,15 +223,15 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createStore();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editStore();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -242,7 +241,7 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
@@ -334,12 +333,12 @@ export default {
             this.systemCategoriesTreeList = res.array;
             const menuList = buildMenu(res.array);
             const map = {
-              id: "id",
-              title: "title",
-              children: "children"
+              id: 'id',
+              title: 'title',
+              children: 'children'
             };
             this.systemCategoryData = convertTreeCategory(menuList, map, true);
-            console.log("cate after convert", this.systemCategoryData);
+            console.log('cate after convert', this.systemCategoryData);
             this.createLoading = false;
           }
         })
@@ -350,7 +349,7 @@ export default {
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.description != null) {
-        const map = { status: "finished", url: "url" };
+        const map = { status: 'finished', url: 'url' };
         const mainImgArr = [];
         map.url = res.description;
         mainImgArr.push(map);

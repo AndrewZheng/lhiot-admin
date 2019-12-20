@@ -244,7 +244,7 @@ const btns = {
     const {
       row
     } = params;
-    if (row.status === 'VALID' || row.shelvesStatus === 'VALID' || row.ifEffective === 'VALID') {
+    if (row.status === 'VALID' || row.shelvesStatus === 'VALID' || row.ifEffective === 'VALID' || row.vaild === 'yes') {
       return h('Poptip', {
         props: {
           confirm: true,
@@ -986,6 +986,96 @@ const btns = {
         })
       ])
     ]);
+  },
+  analytics: (h, params, vm) => {
+    return h('Button', {
+      props: {
+        type: 'primary',
+        size: 'small'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        click: () => {
+          vm.$emit('on-analytics', params);
+        }
+      }
+    }, [h('Icon', {
+      props: {
+        type: 'md-analytics',
+        size: 16,
+        color: '#fff'
+      }
+    })]);
+  },
+  setVip: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.isVip === 'no') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要将此用户升级为VIP吗?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-set-vip', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'ios-ribbon',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
+    } else {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要将此VIP用户变为普通用户吗?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-set-vip', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'ios-ribbon-outline',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
+    }
   }
 };
 export default btns;

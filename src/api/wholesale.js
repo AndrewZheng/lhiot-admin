@@ -163,6 +163,61 @@ export const createProduct = (data) => {
 };
 
 /* -------------------------
+ * 新品需求管理
+ * -------------------------
+ */
+// 根据条件分页查询商品信息列表
+export const getDemandGoodsPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/demand-goods/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 根据商品Ids删除商品
+export const deleteDemandGoods = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/wholesale-small/demand-goods/' + ids,
+    method: 'delete'
+  });
+};
+
+// 根据Id查找商品
+export const getDemandGoods = ({
+  id
+}) => {
+  return $http.request({
+    url: '/wholesale-small/demand-goods/' + id,
+    method: 'get'
+  });
+};
+
+// 修改商品
+export const editDemandGoods = (data) => {
+  return $http.request({
+    url: '/wholesale-small/demand-goods/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 添加商品
+export const createDemandGoods = (data) => {
+  return $http.request({
+    url: '/wholesale-small/demand-goods/create',
+    data,
+    method: 'post'
+  });
+};
+
+/* -------------------------
  * 商品关键字管理
  * -------------------------
  */
@@ -474,6 +529,59 @@ export const getUserPages = (data) => {
   });
 };
 
+export const getUserAnalysisPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/user/user-analys',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+export const getPerformancePages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/user/sales/performance',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+}
+
+export const getPerformanceShopPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/user/sales/performance-shop',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+}
+
+// 门店转让
+export const storeAssign = (data) => {
+  return $http.request({
+    url: '/wholesale-small/user/sales/assgin/shop',
+    data,
+    method: 'post'
+  });
+}
+
+// 查询所有业务员
+export const getAllSalesman = () => {
+  return $http.request({
+    url: '/wholesale-small/user/sales-users',
+    method: 'get'
+  });
+}
+
 export const deleteUser = ({
   ids
 }) => {
@@ -517,11 +625,31 @@ export const getOrderPages = (data) => {
   });
 };
 
+export const getOrderGoodsToday = (data) => {
+  return $http.request({
+    url: '/wholesale-small/order/order-goods-today',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
 export const getOrder = ({
   id
 }) => {
   return $http.request({
     url: '/wholesale-small/order/' + id,
+    method: 'get'
+  });
+};
+
+// 无前端页面的通用后台导出API
+export const exportOrder = (data) => {
+  return $http.request({
+    url: '/wholesale-small/export/' + data.exportType + '?searchParam=' + JSON.stringify(data.searchParam),
     method: 'get'
   });
 };
@@ -628,6 +756,15 @@ export const getCouponPages = (data) => {
     }
   });
 };
+
+// 手动发放优惠券
+export const sendCouponByPhones = (data) => {
+  return $http.request({
+    url: '/wholesale-small/coupon-entity/coupon-config-manage/send',
+    data,
+    method: 'post'
+  });
+}
 
 export const deletCoupon = ({
   ids
@@ -774,6 +911,428 @@ export const createFlashsaleGoods = (data) => {
 export const editFlashsaleGoods = (data) => {
   return $http.request({
     url: '/wholesale-small/flashsale-goods/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+/* -------------------------
+ * 广告位管理
+ * -------------------------
+ */
+export const getAdvertisementPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/advertisement/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+export const deleteAdvertisement = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/wholesale-small/advertisement/' + ids,
+    method: 'delete'
+  });
+};
+
+export const createAdvertisement = (data) => {
+  return $http.request({
+    url: '/wholesale-small/advertisement/create',
+    data,
+    method: 'post'
+  });
+};
+
+export const editAdvertisement = (data) => {
+  return $http.request({
+    url: '/wholesale-small/advertisement/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+/* -------------------------
+ * 常见问题分类管理
+ * -------------------------
+ */
+// 查询FAQ分类树结构
+export const getFaqCategoriesTree = () => {
+  return $http.request({
+    url: '/wholesale-small/faq-category/tree',
+    method: 'get'
+  });
+};
+
+// 根据条件分页查询FAQ分类信息列表
+export const getFaqCategoriesPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/faq-category/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 添加FAQ分类
+export const createFaqCategories = (data) => {
+  return $http.request({
+    url: '/wholesale-small/faq-category/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Ids删除FAQ分类
+export const deleteFaqCategories = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/wholesale-small/faq-category' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改FAQ分类
+export const editFaqCategories = (data) => {
+  return $http.request({
+    url: '/wholesale-small/faq-category/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+/* -------------------------
+ * 常见问题管理
+ * -------------------------
+ */
+// 根据条件分页查询FAQ信息列表
+export const getFaqPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/faq/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 添加FAQ
+export const createFaq = (data) => {
+  return $http.request({
+    url: '/wholesale-small/faq/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Ids删除FAQ
+export const deleteFaq = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/wholesale-small/faq/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改FAQ
+export const editFaq = (data) => {
+  return $http.request({
+    url: '/wholesale-small/faq/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+/* -------------------------
+ * 文章管理
+ * -------------------------
+ */
+export const getArticlesPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/article/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 添加FAQ
+export const createArticle = (data) => {
+  return $http.request({
+    url: '/wholesale-small/article/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Ids删除FAQ
+export const deleteArticle = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/wholesale-small/article/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改FAQ
+export const editArticle = (data) => {
+  return $http.request({
+    url: '/wholesale-small/article/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+export const getArticle = ({ id }) => {
+  return $http.request({
+    url: '/wholesale-small/article/' + id,
+    method: 'get'
+  });
+};
+
+/* -------------------------
+ * 邮费管理
+ * -------------------------
+ */
+// 根据条件分页查询邮费模板列表
+export const getDeliveryFeeConfigPages = (data) => {
+  return $http.request({
+    url: '/minapp/delivery-fee-configs/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 查询邮费模板位详情
+export const getDeliveryFeeConfig = ({
+  id
+}) => {
+  return $http.request({
+    url: '/minapp/delivery-fee-configs/' + id,
+    method: 'get'
+  });
+};
+
+// 添加邮费模板
+export const createDeliveryFeeConfig = (data) => {
+  return $http.request({
+    url: '/minapp/delivery-fee-configs/',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Ids删除邮费模板
+export const deleteDeliveryFeeConfig = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/delivery-fee-configs/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改邮费模板
+export const editDeliveryFeeConfig = (data) => {
+  return $http.request({
+    url: '/minapp/delivery-fee-configs/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询邮费规则列表
+export const getDeliveryFeeConfigRulePages = (data) => {
+  return $http.request({
+    url: '/minapp/delivery-fee-config-rules/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 查询邮费规则位详情
+export const getDeliveryFeeConfigRule = ({
+  id
+}) => {
+  return $http.request({
+    url: '/minapp/delivery-fee-config-rules/' + id,
+    method: 'get'
+  });
+};
+
+// 添加邮费规则
+export const createDeliveryFeeConfigRule = (data) => {
+  return $http.request({
+    url: '/minapp/delivery-fee-config-rules/',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Ids删除邮费规则
+export const deleteDeliveryFeeConfigRule = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/delivery-fee-config-rules/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改邮费规则
+export const editDeliveryFeeConfigRule = (data) => {
+  return $http.request({
+    url: '/minapp/delivery-fee-config-rules/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+/* -------------------------
+ * 系统参数分类管理
+ * -------------------------
+ */
+// 查询系统参数分类树结构
+export const getSystemSettingCategoryTree = () => {
+  return $http.request({
+    url: '/wholesale-small/system-setting-category/tree',
+    method: 'get'
+  });
+};
+
+// 根据条件分页查询系统参数分类列表
+export const getSystemSettingCategoryPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/system-setting-category/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 根据系统分类code查询系统设置参数
+export const getSystemParameter = (code) => {
+  return $http.request({
+    url: '/wholesale-small/system-setting-category/find-by/' + code,
+    method: 'get'
+  });
+};
+
+// 查询系统参数分类位详情
+export const getSystemSettingCategory = ({
+  id
+}) => {
+  return $http.request({
+    url: '/wholesale-small/system-setting-category/' + id,
+    method: 'get'
+  });
+};
+
+// 添加系统参数分类
+export const createSystemSettingCategory = (data) => {
+  return $http.request({
+    url: '/wholesale-small/system-setting-category/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Ids删除系统参数分类
+export const deleteSystemSettingCategory = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/wholesale-small/system-setting-category/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改系统参数分类
+export const editSystemSettingCategory = (data) => {
+  return $http.request({
+    url: '/wholesale-small/system-setting-category/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+/* -------------------------
+ * 系统参数管理
+ * -------------------------
+ */
+// 根据条件分页查询系统参数列表
+export const getSystemSettingPages = (data) => {
+  return $http.request({
+    url: '/minapp/system-settings/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 查询系统参数位详情
+export const getSystemSetting = ({
+  id
+}) => {
+  return $http.request({
+    url: '/minapp/system-settings/' + id,
+    method: 'get'
+  });
+};
+
+// 添加系统参数
+export const createSystemSetting = (data) => {
+  return $http.request({
+    url: '/minapp/system-settings/',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据Ids删除系统参数
+export const deleteSystemSetting = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/system-settings/' + ids,
+    method: 'delete'
+  });
+};
+
+// 修改系统参数
+export const editSystemSetting = (data) => {
+  return $http.request({
+    url: '/minapp/system-settings/' + data.id,
     data,
     method: 'put'
   });
