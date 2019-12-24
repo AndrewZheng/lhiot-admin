@@ -481,7 +481,7 @@
                       @click="addTempData('modalCreate')"
                       v-show="this.proFlag===true"
                     >
-                      <Icon type="md-add" />&nbsp;关联秒杀商品/券
+                      <Icon type="md-add" />&nbsp;关联助力商品/券
                     </Button>
                   </i-col>
                 </Row>
@@ -939,7 +939,7 @@ const relationRowData = {
   id: null,
   activityId: null,
   page: 1,
-  rows: 10
+  rows: 100
 };
 
 const productRowData = {

@@ -187,6 +187,7 @@
             </Row>
           </div>
         </tables>
+        <!-- 彭旭 -->
         <div style="margin: 10px;overflow: hidden">
           <Row type="flex" justify="end">
             <Page
@@ -194,8 +195,8 @@
               :current="searchRowData2.page"
               show-sizer
               show-total
-              @on-change="changePage"
-              @on-page-size-change="changePageSize"
+              @on-change="changePage2"
+              @on-page-size-change="changePageSize2"
             ></Page>
           </Row>
         </div>
@@ -693,6 +694,15 @@ export default {
       }
       this.topStatus = index;
       // console.log("数据", this.topStatus);
+    },
+    changePage2(page) {
+      this.searchRowData2.page = page;
+      this.getTableData2();
+    },
+    changePageSize2(pageSize) {
+      this.searchRowData2.page = 1;
+      this.searchRowData2.rows = pageSize;
+      this.getTableData2();
     }
   }
 };

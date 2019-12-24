@@ -158,8 +158,8 @@
               :current="searchRowData1.page"
               show-sizer
               show-total
-              @on-change="changePage"
-              @on-page-size-change="changePageSize"
+              @on-change="changePage2"
+              @on-page-size-change="changePageSize2"
             ></Page>
           </Row>
         </div>
@@ -380,6 +380,15 @@ export default {
       }
       this.topStatus = index;
       // console.log("数据", this.topStatus);
+    },
+    changePage2(page) {
+      this.searchRowData1.page = page;
+      this.getTableData1();
+    },
+    changePageSize2(pageSize) {
+      this.searchRowData1.page = 1;
+      this.searchRowData1.rows = pageSize;
+      this.getTableData1();
     }
     // 导出数据
     // handleDownload() {
