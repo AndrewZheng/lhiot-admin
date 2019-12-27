@@ -2561,6 +2561,10 @@ export const activityTypeEnum = [{
 {
   label: '注册送礼',
   value: 'registration'
+},
+{
+  label: '充值活动',
+  value: 'recharge'
 }
 ];
 
@@ -2599,13 +2603,22 @@ export const couponUseStatusEnum = [{
 }
 ];
 
+// artificial-手动发券，registration-注册送礼,recharge-充值活动 flashsale-限时抢购
 export const couponFromEnum = [{
   label: '手动发券',
   value: 'artificial'
 },
 {
-  label: '活动送券',
-  value: 'activity'
+  label: '注册送礼',
+  value: 'registration'
+},
+{
+  label: '充值活动',
+  value: 'recharge'
+},
+{
+  label: '限时抢购',
+  value: 'flashsale'
 }
 ];
 
@@ -2672,5 +2685,23 @@ export const createTypeEnum = [{
 {
   label: '转载文章',
   value: 'reprint'
+}
+]
+
+export const showTypeEnum = [{
+  label: '常态',
+  value: 'normal'
+},
+{
+  label: '列表',
+  value: 'list'
+},
+{
+  label: '对象',
+  value: 'map'
+},
+{
+  label: '时间',
+  value: 'time'
 }
 ]

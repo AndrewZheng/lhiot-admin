@@ -356,15 +356,14 @@
 </template>
 
 <script type='text/ecmascript-6'>
+import Tables from '_c/tables';
+import CommonIcon from '_c/common-icon';
+import BookTypeOption from '_c/book-type-option';
+import UploadExcel from '_c/excel';
 import { getMenuData, getOperateData } from '@/api/data';
 import { getMenuList } from '@/api/system';
 import { buildMenu, getNewTagList, convertTree, changeObjKeyName } from '@/libs/util';
 import { mapMutations } from 'vuex';
-import Tables from '_c/tables';
-import CommonIcon from '_c/common-icon';
-import _ from 'lodash';
-import BookTypeOption from '_c/book-type-option';
-import UploadExcel from '_c/excel';
 
 const menuColumns = [
   {
@@ -482,10 +481,8 @@ const operateColumns2 = [
 ];
 
 const menuRowData = {
-  // id: 0,
   id: '',
   parentid: 0,
-  // sort: 0,
   sort: '',
   code: '',
   name: '',

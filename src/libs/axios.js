@@ -6,15 +6,17 @@ import { setToken } from '@/libs/util';
 import _ from 'lodash';
 
 class HttpRequest {
-  constructor(baseUrl = '', centerType = '') {
+  constructor(baseUrl = '', centerType = '', responseType = 'json') {
     this.baseUrl = baseUrl;
     this.centerType = centerType;
+    this.responseType = responseType;
     this.queue = {};
   }
 
   getInsideConfig() {
     const defaultOps = {
       baseURL: this.baseUrl,
+      responseType: 'json',
       timeout: 30000,
       headers: {
         'content-type': 'application/json'
@@ -23,7 +25,8 @@ class HttpRequest {
     };
 
     const imsServiceOps = _.merge({}, defaultOps, {
-      baseURL: this.baseUrl
+      baseURL: this.baseUrl,
+      response: this.responseType
     });
 
     // 后端微服务有需求再扩展
@@ -93,15 +96,17 @@ class HttpRequest {
       this.destory(url);
       // 导出
       const { data, status, headers } = res;
+      console.log('res frombackend: ', res);
       if (headers['content-type'] === 'application/vnd.ms-excel;charset=UTF-8') {
         return res.data;
       }
       // 后续再做修改
       if (status < 400) {
+        if (status === 204) {
+          return data;
+        }
         if (typeof data.success === 'undefined') {
-          if (data == '' || data) {
-            return data;
-          }
+          return data;
         } else {
           if (data.success) {
             return data.datas;

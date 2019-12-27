@@ -51,7 +51,7 @@
               >{{ item.label }}</Option>
             </Select>
             <Select
-              v-model="searchRowData.vipEnum"
+              v-model="searchRowData.isVip"
               class="ml5 mr5"
               placeholder="是否VIP商品"
               style="width:120px"
@@ -709,6 +709,7 @@ const roleRowData = {
   goodsCode: '',
   goodsName: '',
   vaild: '',
+  isVip: '',
   minPrice: '',
   maxPrice: '',
   page: 1,
@@ -1476,6 +1477,10 @@ export default {
       // 展示区间价格维护弹窗
       this.productStandardDetail = _.cloneDeep(params.row);
       this.priceRegionRowData.goodsStandardId = this.productStandardDetail.id;
+      if (this.productStandardDetail.isVip === 'yes') {
+        this.$Message.warning('Vip商品不允许添加区间价');
+        return;
+      }
       this.getPriceRegionTableData();
       this.modalRegion = true;
     },

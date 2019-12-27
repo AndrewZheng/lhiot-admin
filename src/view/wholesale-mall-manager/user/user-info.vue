@@ -14,6 +14,7 @@
         search-place="top"
         @on-delete="handleDelete"
         @on-edit="handleEdit"
+        @on-audit="hanldeAudit"
         @on-set-vip="handleSetVip"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
@@ -184,7 +185,7 @@
               </FormItem>
             </i-col>
           </Row>
-          <Row v-show="userDetail.userType!=='sale'">
+          <Row>
             <i-col span="12">
               <FormItem label="用户状态:" prop="userStatus">
                 <Select v-model="userDetail.userStatus" style="width: 200px">
@@ -243,13 +244,13 @@ import {
   getUserPages,
   editUser,
   deleteUser,
+  auditUser,
   createUser
 } from '@/api/wholesale';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import {
-  getWholesaleGoods,
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber
@@ -293,6 +294,214 @@ const roleRowData = {
   rows: 10
 };
 
+const userColumns = [
+  {
+    type: 'selection',
+    key: '',
+    width: 60,
+    fixed: 'left',
+    align: 'center'
+  },
+  {
+    title: '编号',
+    align: 'center',
+    key: 'id',
+    fixed: 'left',
+    maxWidth: 80
+  },
+  {
+    title: '门店名称',
+    align: 'center',
+    key: 'shopName',
+    fixed: 'left',
+    minWidth: 100
+  },
+  {
+    title: '店长姓名',
+    align: 'center',
+    key: 'userName'
+  },
+  {
+    title: '手机号码',
+    align: 'center',
+    key: 'phone',
+    minWidth: 60
+  },
+  // {
+  //   title: "微信头像",
+  //   key: "profilePhoto",
+  //   align: "center",
+  //   maxWidth: 100,
+  //   render: (h, params, vm) => {
+  //     const { row } = params;
+  //     const str = <img src={row.profilePhoto} height="60" width="60" />;
+  //     return <div>{str}</div>;
+  //   }
+  // },
+  {
+    title: '注册时间',
+    align: 'center',
+    key: 'registerTime',
+    minWidth: 80
+  },
+  {
+    title: '用户余额',
+    align: 'center',
+    key: 'balance',
+    render(h, params, vm) {
+      const amount = fenToYuanDot2(params.row.balance);
+      return <div>{amount}</div>;
+    }
+  },
+  {
+    title: '是否VIP',
+    align: 'center',
+    key: 'isVip',
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.isVip === 'yes') {
+        return (
+          <div>
+            <tag color='gold'>
+                    VIP
+            </tag>
+          </div>
+        );
+      } else if (row.isVip === 'no') {
+        return (
+          <div>
+            <tag color='primary'>
+                    普通用户
+            </tag>
+          </div>
+        );
+      }
+    }
+  },
+  {
+    title: '用户类型',
+    align: 'center',
+    key: 'userType',
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.userType === 'consumer') {
+        return (
+          <div>
+            <tag color='primary'>
+              {userTypeConvert(row.userType).label}
+            </tag>
+          </div>
+        );
+      } else if (row.userType === 'sale') {
+        return (
+          <div>
+            <tag color='warning'>
+              {userTypeConvert(row.userType).label}
+            </tag>
+          </div>
+        );
+      }
+    }
+  },
+  {
+    title: '用户状态',
+    align: 'center',
+    key: 'userStatus',
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.userStatus === 'certified') {
+        return (
+          <div>
+            <tag color='success'>
+              {userStatusConvert(row.userStatus).label}
+            </tag>
+          </div>
+        );
+      } else if (row.userStatus === 'locking') {
+        return (
+          <div>
+            <tag color='error'>
+              {userStatusConvert(row.userStatus).label}
+            </tag>
+          </div>
+        );
+      } else if (row.userStatus === 'unaudited') {
+        return (
+          <div>
+            <tag color='warning'>
+              {userStatusConvert(row.userStatus).label}
+            </tag>
+          </div>
+        );
+      }
+      return (
+        <div>
+          <tag color='primary'>
+            {userStatusConvert(row.userStatus).label}
+          </tag>
+        </div>
+      );
+    }
+  },
+  {
+    title: '业务员状态',
+    align: 'center',
+    key: 'salesUserStatus',
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.salesUserStatus === 'certified') {
+        return (
+          <div>
+            <tag color='success'>
+              {userStatusConvert(row.salesUserStatus).label}
+            </tag>
+          </div>
+        );
+      } else if (row.salesUserStatus === 'locking') {
+        return (
+          <div>
+            <tag color='error'>
+              {userStatusConvert(row.salesUserStatus).label}
+            </tag>
+          </div>
+        );
+      } else if (row.salesUserStatus === 'unaudited') {
+        return (
+          <div>
+            <tag color='warning'>
+              {userStatusConvert(row.salesUserStatus).label}
+            </tag>
+          </div>
+        );
+      }
+      return (
+        <div>
+          {userStatusConvert(row.salesUserStatus).label}
+        </div>
+      );
+    }
+  },
+  {
+    title: '所属业务员',
+    align: 'center',
+    key: 'saleUserName',
+    maxWidth: 100
+  },
+  {
+    title: '邀请码',
+    align: 'center',
+    key: 'inviteCode',
+    maxWidth: 100
+  },
+  {
+    title: '操作',
+    align: 'center',
+    key: 'handle',
+    minWidth: 60,
+    options: ['setVip', 'edit', 'saleAudit']
+  }
+]
+
 export default {
   components: {
     Tables
@@ -309,212 +518,7 @@ export default {
       exportExcelLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       userDetail: _.cloneDeep(userDetail),
-      columns: [
-        {
-          type: 'selection',
-          key: '',
-          width: 60,
-          fixed: 'left',
-          align: 'center'
-        },
-        {
-          title: '编号',
-          align: 'center',
-          key: 'id',
-          fixed: 'left',
-          maxWidth: 80
-        },
-        {
-          title: '门店名称',
-          align: 'center',
-          key: 'shopName',
-          fixed: 'left',
-          minWidth: 100
-        },
-        {
-          title: '店长姓名',
-          align: 'center',
-          key: 'userName'
-        },
-        {
-          title: '手机号码',
-          align: 'center',
-          key: 'phone',
-          minWidth: 60
-        },
-        // {
-        //   title: "微信头像",
-        //   key: "profilePhoto",
-        //   align: "center",
-        //   maxWidth: 100,
-        //   render: (h, params, vm) => {
-        //     const { row } = params;
-        //     const str = <img src={row.profilePhoto} height="60" width="60" />;
-        //     return <div>{str}</div>;
-        //   }
-        // },
-        {
-          title: '注册时间',
-          align: 'center',
-          key: 'registerTime',
-          minWidth: 80
-        },
-        {
-          title: '用户余额',
-          align: 'center',
-          key: 'balance',
-          render(h, params, vm) {
-            const amount = fenToYuanDot2(params.row.balance);
-            return <div>{amount}</div>;
-          }
-        },
-        {
-          title: '是否VIP',
-          align: 'center',
-          key: 'isVip',
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.isVip === 'yes') {
-              return (
-                <div>
-                  <tag color='gold'>
-                    VIP
-                  </tag>
-                </div>
-              );
-            } else if (row.isVip === 'no') {
-              return (
-                <div>
-                  <tag color='primary'>
-                    普通用户
-                  </tag>
-                </div>
-              );
-            }
-          }
-        },
-        {
-          title: '用户类型',
-          align: 'center',
-          key: 'userType',
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.userType === 'consumer') {
-              return (
-                <div>
-                  <tag color='primary'>
-                    {userTypeConvert(row.userType).label}
-                  </tag>
-                </div>
-              );
-            } else if (row.userType === 'sale') {
-              return (
-                <div>
-                  <tag color='warning'>
-                    {userTypeConvert(row.userType).label}
-                  </tag>
-                </div>
-              );
-            }
-          }
-        },
-        {
-          title: '用户状态',
-          align: 'center',
-          key: 'userStatus',
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.userStatus === 'certified') {
-              return (
-                <div>
-                  <tag color='success'>
-                    {userStatusConvert(row.userStatus).label}
-                  </tag>
-                </div>
-              );
-            } else if (row.userStatus === 'locking') {
-              return (
-                <div>
-                  <tag color='error'>
-                    {userStatusConvert(row.userStatus).label}
-                  </tag>
-                </div>
-              );
-            } else if (row.userStatus === 'unaudited') {
-              return (
-                <div>
-                  <tag color='warning'>
-                    {userStatusConvert(row.userStatus).label}
-                  </tag>
-                </div>
-              );
-            }
-            return (
-              <div>
-                <tag color='primary'>
-                  {userStatusConvert(row.userStatus).label}
-                </tag>
-              </div>
-            );
-          }
-        },
-        {
-          title: '业务员状态',
-          align: 'center',
-          key: 'salesUserStatus',
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.salesUserStatus === 'certified') {
-              return (
-                <div>
-                  <tag color='success'>
-                    {userStatusConvert(row.salesUserStatus).label}
-                  </tag>
-                </div>
-              );
-            } else if (row.salesUserStatus === 'locking') {
-              return (
-                <div>
-                  <tag color='error'>
-                    {userStatusConvert(row.salesUserStatus).label}
-                  </tag>
-                </div>
-              );
-            } else if (row.salesUserStatus === 'unaudited') {
-              return (
-                <div>
-                  <tag color='warning'>
-                    {userStatusConvert(row.salesUserStatus).label}
-                  </tag>
-                </div>
-              );
-            }
-            return (
-              <div>
-                {userStatusConvert(row.salesUserStatus).label}
-              </div>
-            );
-          }
-        },
-        {
-          title: '所属业务员',
-          align: 'center',
-          key: 'saleUserName',
-          maxWidth: 100
-        },
-        {
-          title: '邀请码',
-          align: 'center',
-          key: 'inviteCode',
-          maxWidth: 100
-        },
-        {
-          title: '操作',
-          align: 'center',
-          key: 'handle',
-          options: ['setVip', 'edit']
-        }
-      ]
+      columns: userColumns
     };
   },
   computed: {
@@ -555,6 +559,18 @@ export default {
       }
       this.userDetail.isVip = params.row.isVip === 'yes' ? 'no' : 'yes';
       this.editTableRow();
+    },
+    hanldeAudit({ params, checkStatus }) {
+      if (params.row.userType === 'consumer') {
+        this.$Message.info('该用户为普通用户，操作无效');
+        return;
+      }
+      auditUser({
+        id: params.row.id,
+        checkStatus
+      }).then(res => {
+        this.$Message.info('审核成功');
+      });
     },
     handleSubmit() {
       this.$refs.editForm.validate(valid => {

@@ -472,16 +472,10 @@ const couponColumns = [
             <tag color='primary'>{couponFromConvert(row.couponFrom).label}</tag>
           </div>
         );
-      } else if (row.couponFrom === 'activity') {
-        return (
-          <div>
-            <tag color='pink'>{couponFromConvert(row.couponFrom).label}</tag>
-          </div>
-        );
       } else {
         return (
           <div>
-            <tag color='primary'>N/A</tag>
+            <tag color='pink'>{couponFromConvert(row.couponFrom).label}</tag>
           </div>
         );
       }

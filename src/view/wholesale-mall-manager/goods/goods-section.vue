@@ -342,7 +342,7 @@ const relationColumns = [
     key: 'goodsUnitName'
   },
   {
-    title: '商品原价',
+    title: '商品价格',
     align: 'center',
     minWidth: 60,
     key: 'price',
@@ -471,7 +471,7 @@ const standardColumns = [
     key: 'goodsUnit'
   },
   {
-    title: '商品原价',
+    title: '商品价格',
     align: 'center',
     minWidth: 60,
     key: 'price',
@@ -631,9 +631,7 @@ export default {
       this.$refs.editForm.resetFields();
       this.searchProductRowData = _.cloneDeep(productRowData);
       // VIP专区只能关联VIP商品，添加isVip过滤条件
-      if (this.currentTreeTitleCode === 'vip') {
-        this.searchProductRowData.isVip = 'yes';
-      }
+      this.searchProductRowData.isVip = this.currentTreeTitleCode === 'vip' ? 'yes' : 'no';
       this.getProductTableData();
       this.goodsStandardRelation.plateId = this.currentCategory.id;
       this.tempModalType = this.modalType.create;

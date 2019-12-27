@@ -13,6 +13,11 @@
 <script>
 import { mapActions, mapMutations } from 'vuex';
 import { PcLockr, enums } from '@/util/';
+import {
+  getSystemHomeName,
+  setTagNavListInLocalstorage,
+  getTagNavListFromLocalstorage
+} from '@/libs/util';
 
 export default {
   name: 'System',
@@ -35,9 +40,13 @@ export default {
       required: true
     }
   },
-  computed: {},
+  computed: {
+    tagNavList() {
+      return this.$store.state.app.tagNavList;
+    }
+  },
   methods: {
-    ...mapMutations(['setCurrentSystem']),
+    ...mapMutations(['setCurrentSystem', 'setTagNavList']),
     ...mapActions(['handleLogOut', 'getRouteListById']),
     switchSystem(item) {
       const obj = JSON.parse(item);
@@ -47,13 +56,21 @@ export default {
         PcLockr.delete(enums.SYSTEM);
       }
       PcLockr.set(enums.SYSTEM, item);
+      const name = getSystemHomeName();
+      const tagNavList = this.tagNavList.length > 0 ? this.tagNavList : getTagNavListFromLocalstorage();
+      const tagNav = tagNavList.find(item => item.name === name);
+      if (tagNav) {
+        const newTagNavList = [];
+        newTagNavList.push(tagNav);
+        this.setTagNavList(newTagNavList);
+      }
       // 更新systemName
       this.setCurrentSystem(this.systemList);
       // 分发Action根据选择的系统id重新生成左边的菜单
       this.getRouteListById(obj.id).then(() => {
         this.$router.addRoutes(this.$store.getters.getActualRouter);
         this.$router.push({
-          name: 'home'
+          name: name
         });
       });
     }

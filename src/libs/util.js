@@ -2,6 +2,7 @@ import Cookies from 'js-cookie';
 // cookie保存的天数
 import config from '@/config';
 import { forEach, hasOneOf, objEqual } from '@/libs/tools';
+import { PcLockr, enums } from '@/util/';
 import _ from 'lodash';
 
 export const TOKEN_KEY = 'token';
@@ -732,15 +733,11 @@ export const getParent = (tree, map, id) => {
   // 遍历 tree
   tree.forEach((item) => {
     const children = item[map.children];
-    console.log('一');
     // 如果有子节点，递归
     if (children.length > 0) {
       // count = count + 1;
-      console.log('二');
       getParent(children, map, id);
-      console.log('三');
     } else {
-      console.log('四');
       // if (count > 0) {
       //   // disabled: true,
       //   if (!find) {
@@ -756,7 +753,6 @@ export const getParent = (tree, map, id) => {
       // }
     }
   });
-  console.log('五');
   return parentIds;
 };
 
@@ -904,7 +900,7 @@ export const replaceByTab = (value) => {
 
 export const download = (data, name) => {
   const content = data;
-  const blob = new Blob([content]);
+  const blob = new Blob([content], { type: 'application/vnd.ms-excel' });
   const fileName = name;
   if ('download' in document.createElement('a')) { // 非IE下载
     const elink = document.createElement('a');
@@ -915,7 +911,20 @@ export const download = (data, name) => {
     elink.click();
     URL.revokeObjectURL(elink.href); // 释放URL 对象
     document.body.removeChild(elink);
+    console.log('download excel:', fileName);
   } else { // IE10+下载
     navigator.msSaveBlob(blob, fileName)
   }
+}
+
+// 根据当前系统获取应该跳转的home页面的routerName
+export const getSystemHomeName = () => {
+  let name = 'home';
+  if (PcLockr.get(enums.SYSTEM) != null) {
+    const currentSystem = JSON.parse(PcLockr.get(enums.SYSTEM));
+    name = currentSystem.code.split('_')[0] + '-home';
+    name = name === 'manager-home' ? 'home' : name; // 如果是综合管理系统还是跳转公共首页
+    console.log('current system home: ', name);
+  }
+  return name;
 }

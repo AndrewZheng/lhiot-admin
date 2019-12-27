@@ -75,6 +75,43 @@ const btns = {
       ])
     ]);
   },
+  saleAudit: (h, params, vm) => {
+    return h('Poptip', {
+      props: {
+        confirm: true,
+        title: '该业务员资质已核实，是否通过业务员申请?',
+        placement: params.index === 0 ? 'right' : 'top',
+        'ok-text': '通过',
+        'cancel-text': '拒绝'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        'on-ok': () => {
+          vm.$emit('on-audit', { params, checkStatus: 'agree' });
+        },
+        'on-cancel': () => {
+          vm.$emit('on-audit', { params, checkStatus: 'reject' });
+        }
+      }
+    }, [
+      h('Button', {
+        props: {
+          type: 'primary',
+          size: 'small'
+        }
+      }, [
+        h('Icon', {
+          props: {
+            type: 'logo-buffer',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+    ]);
+  },
   relation: (h, params, vm) => {
     return h('Button', {
       props: {

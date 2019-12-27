@@ -336,10 +336,10 @@ export default {
           break;
       }
     },
-    handleCustomDownload(params){
+    handleCustomDownload(params) {
       params.columns.forEach(item => {
-          this.exportTitle.push(item['title']);
-          this.exportKey.push(item['key']);
+        this.exportTitle.push(item['title']);
+        this.exportKey.push(item['key']);
       });
       switch (this.exportType) {
         case 'xlsx':

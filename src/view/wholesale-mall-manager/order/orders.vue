@@ -303,7 +303,7 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="6">收货人:</i-col>
-              <i-col span="18">{{ deliveryInfo.name }}</i-col>
+              <i-col span="18">{{ deliveryInfo.contactsName }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -357,14 +357,10 @@ import {
   wholesaleHdStatusEnum
 } from '@/libs/enumerate';
 import {
-  orderTypeConvert,
   thirdDeliverStatusConvert,
   wholesalePayTypeConvert,
   wholesaleOrderStatusConvert,
-  miniHdStatusConvert,
-  receivingWayConvert,
-  isAllRefundConvert,
-  payStatusConvert
+  miniHdStatusConvert
 } from '@/libs/converStatus';
 
 const orderDetail = {
@@ -439,11 +435,11 @@ const deliveryInfo = {
   id: 0,
   sex: null,
   phone: '',
-  address: '',
-  city: '',
+  addressDetail: '',
+  addressArea: '',
   isDefault: '',
   userId: 0,
-  name: ''
+  contactsName: ''
 };
 
 const orderColumns = [
@@ -782,10 +778,10 @@ export default {
   },
   computed: {
     address() {
-      const city = this.deliveryInfo.city
-        ? this.deliveryInfo.city.replace(new RegExp('/', 'gm'), '')
+      const addressArea = this.deliveryInfo.addressArea
+        ? this.deliveryInfo.addressArea.replace(new RegExp('/', 'gm'), '')
         : '';
-      return city + this.deliveryInfo.address;
+      return addressArea + this.deliveryInfo.addressDetail;
     },
     isSalesmanAnalysis() {
       return this.$route.query.id > 0;
@@ -812,16 +808,6 @@ export default {
       this.searchRowData.createTimeEnd = value;
       this.orderDetail.createTimeEnd = value;
     },
-    handleRefund() {
-      if (!this.searchRowData.createTimeEnd) {
-        this.$Message.error('请先选择结束时间，再手动退款');
-        return false;
-      }
-      // 处理手动退款
-      ordersRefund({ createTimeEnd: this.searchRowData.createTimeEnd }).then(res => {
-        this.resetSearchRowData();
-      });
-    },
     handleReimburse(params) {
       if (params.row.orderStatus === 'RETURNING') {
         this.$Message.error('退货中订单不能操作退款');
@@ -834,27 +820,6 @@ export default {
       if (params.row.orderStatus === 'FAILURE') {
         this.$Message.error('已失效的订单不能操作退款');
         return;
-      }
-      if (params.row.apply === 'S_MALL') {
-        refundPt({ orderCode: params.row.orderCode })
-          .then(res => {
-            this.loading = false;
-            this.$Message.success('拼团小程序退款成功');
-            this.getTableData();
-          })
-          .catch(() => {
-            this.loading = false;
-          });
-      } else if (params.row.apply === 'WXSMALL_SHOP') {
-        refundWx({ orderCode: params.row.orderCode })
-          .then(res => {
-            this.loading = false;
-            this.$Message.success('微信小程序退款成功');
-            this.getTableData();
-          })
-          .catch(() => {
-            this.loading = false;
-          });
       }
     },
     // 确认收货
@@ -899,7 +864,7 @@ export default {
       getOrder({ id: params.row.id })
         .then(res => {
           this.orderDetail = res;
-          // {"id":6,"sex":null,"phone":"15292269133","address":"望城坡","city":"湖南省/长沙市/岳麓区","isDefault":"yes","userId":4,"name":"刘梅"}
+          // {"id":"94","sex":null,"phone":"18802733447","addressArea":"长沙市","addressDetail":"麓谷企业广场F3栋-万达","isDefault":"yes","userId":"96","contactsName":"周亮"}
           if (this.orderDetail.deliveryAddress) {
             const deliveryInfo = JSON.parse(this.orderDetail.deliveryAddress);
             this.deliveryInfo = _.cloneDeep(deliveryInfo);
@@ -954,7 +919,6 @@ export default {
           item['hdStatus'] = miniHdStatusConvert(item['hdStatus']).label;
           item['status'] = wholesaleOrderStatusConvert(item['status']).label;
           item['payType'] = wholesalePayTypeConvert(item['payType']).label;
-          item['isAllRefund'] = isAllRefundConvert(item['isAllRefund']).label;
         });
         this.$refs.tables.handleDownload({
           filename: `普通订单信息-${new Date().valueOf()}`,
@@ -969,7 +933,19 @@ export default {
           exportType: name,
           searchParam: this.searchRowData
         }).then(res => {
-          download(res, `订单商品信息-${new Date().valueOf()}`);
+          const tableData = res.rows;
+          const tableColumns = res.columns;
+          // 表格数据导出字段翻译
+          // tableData.forEach(item => {
+          //   item['orderCode'] = item['orderCode'] + '';
+          //   item['goodsPrice'] = (item['totalAmount'] / 100.0).toFixed(2);
+          //   item['sumPrice'] = (item['couponAmount'] / 100.0).toFixed(2);
+          // });
+          this.$refs.tables.handleCustomDownload({
+            filename: `订单商品信息-${new Date().valueOf()}`,
+            data: tableData,
+            columns: tableColumns
+          });
         });
       } else {
         // 导出配送单
@@ -978,7 +954,17 @@ export default {
           exportType: name,
           searchParam: orderCodes
         }).then(res => {
-          download(res, `配送单-${new Date().valueOf()}`);
+          const tableData = res.rows;
+          const tableColumns = res.columns;
+          console.log('tableColumns: ', tableColumns);
+          // tableData.forEach(item => {
+          //   item['orderCode'] = item['orderCode'] + '';
+          // });
+          this.$refs.tables.handleCustomDownload({
+            filename: `配送单-${new Date().valueOf()}`,
+            data: tableData,
+            columns: tableColumns
+          });
         });
       }
     },

@@ -76,7 +76,8 @@ import {
   faqStatusEnum,
   articleTypeEnum,
   createTypeEnum,
-  layoutEnum
+  layoutEnum,
+  showTypeEnum
 } from './enumerate';
 
 const convertFunction = (value, list) => {
@@ -90,6 +91,10 @@ const convertFunction = (value, list) => {
       label: value || 'N/A'
     };
   }
+};
+
+export const showTypeConvert = (value) => {
+  return convertFunction(value, showTypeEnum);
 };
 
 export const layoutConvert = (value) => {

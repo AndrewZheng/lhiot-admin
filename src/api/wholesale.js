@@ -48,7 +48,7 @@ export const delProductCategories = ({
 // 修改商品分类
 export const editProductCategories = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods-category/',
+    url: '/wholesale-small/goods-category/update/' + data.id,
     data,
     method: 'put'
   });
@@ -591,7 +591,6 @@ export const deleteUser = ({
   });
 };
 
-// 添加商品规格
 export const createUser = (data) => {
   return $http.request({
     url: '/wholesale-small/user/create',
@@ -600,12 +599,19 @@ export const createUser = (data) => {
   });
 };
 
-// 修改商品规格
 export const editUser = (data) => {
   return $http.request({
     url: '/wholesale-small/user/update/' + data.id,
     data,
     method: 'put'
+  });
+};
+
+// 审核业务员
+export const auditUser = (data) => {
+  return $http.request({
+    url: `/wholesale-small/user/check/${data.id}?checkStatus=${data.checkStatus}`,
+    method: 'post'
   });
 };
 
@@ -649,8 +655,9 @@ export const getOrder = ({
 // 无前端页面的通用后台导出API
 export const exportOrder = (data) => {
   return $http.request({
-    url: '/wholesale-small/export/' + data.exportType + '?searchParam=' + JSON.stringify(data.searchParam),
-    method: 'get'
+    url: '/wholesale-small/export/' + data.exportType,
+    data: data.searchParam,
+    method: 'post'
   });
 };
 
@@ -1155,7 +1162,7 @@ export const deleteDeliveryFeeConfig = ({
 // 修改邮费模板
 export const editDeliveryFeeConfig = (data) => {
   return $http.request({
-    url: '/minapp/delivery-fee-configs/' + data.id,
+    url: '/minapp/delivery-fee-configs/update' + data.id,
     data,
     method: 'put'
   });
@@ -1206,7 +1213,7 @@ export const deleteDeliveryFeeConfigRule = ({
 // 修改邮费规则
 export const editDeliveryFeeConfigRule = (data) => {
   return $http.request({
-    url: '/minapp/delivery-fee-config-rules/' + data.id,
+    url: '/minapp/delivery-fee-config-rules/update' + data.id,
     data,
     method: 'put'
   });
@@ -1290,7 +1297,7 @@ export const editSystemSettingCategory = (data) => {
 // 根据条件分页查询系统参数列表
 export const getSystemSettingPages = (data) => {
   return $http.request({
-    url: '/minapp/system-settings/pages',
+    url: '/wholesale-small/system-setting/pages',
     data,
     method: 'post',
     headers: {
@@ -1305,7 +1312,7 @@ export const getSystemSetting = ({
   id
 }) => {
   return $http.request({
-    url: '/minapp/system-settings/' + id,
+    url: '/wholesale-small/system-setting/' + id,
     method: 'get'
   });
 };
@@ -1313,7 +1320,7 @@ export const getSystemSetting = ({
 // 添加系统参数
 export const createSystemSetting = (data) => {
   return $http.request({
-    url: '/minapp/system-settings/',
+    url: '/wholesale-small/system-setting/',
     data,
     method: 'post'
   });
@@ -1324,7 +1331,7 @@ export const deleteSystemSetting = ({
   ids
 }) => {
   return $http.request({
-    url: '/minapp/system-settings/' + ids,
+    url: '/wholesale-small/system-setting/' + ids,
     method: 'delete'
   });
 };
@@ -1332,8 +1339,25 @@ export const deleteSystemSetting = ({
 // 修改系统参数
 export const editSystemSetting = (data) => {
   return $http.request({
-    url: '/minapp/system-settings/' + data.id,
+    url: '/wholesale-small/system-setting/update/' + data.id,
     data,
     method: 'put'
   });
 };
+
+/* -------------------------
+ * 数据统计相关
+ * -------------------------
+ */
+export const getAnalysisDatas = (data) => {
+  return $http.request({
+    url: '/wholesale-small/data/statistics',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+

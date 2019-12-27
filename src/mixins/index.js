@@ -38,7 +38,8 @@ import {
   wholesaleOrderStatusConvert,
   payStatusConvert,
   wholesalePayTypeConvert,
-  advPositionConvert
+  advPositionConvert,
+  showTypeConvert
 } from '../libs/converStatus';
 
 const mixin = {
@@ -251,6 +252,9 @@ const mixin = {
     },
     advPositionFilter(value) {
       return advPositionConvert(value).label;
+    },
+    showTypeFilter(value) {
+      return showTypeConvert(value).label;
     }
   },
   computed: {

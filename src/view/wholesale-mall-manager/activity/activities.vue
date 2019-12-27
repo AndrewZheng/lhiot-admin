@@ -302,6 +302,12 @@ export default {
                   <tag color='pink'>注册送礼</tag>
                 </div>
               );
+            } else if (row.activityType === 'recharge') {
+              return (
+                <div>
+                  <tag color='green'>充值活动</tag>
+                </div>
+              );
             } else {
               return (
                 <div>
@@ -392,9 +398,20 @@ export default {
     },
     handleSetting(params) {
       setActivity(params.row);
-      const name = params.row.activityType === 'flashsale' ? 'wholesale-flashsale' : 'wholesale-register-reward';
+      let pageName = 'wholesale-activity';
+      switch (params.row.activityType) {
+        case 'flashsale':
+          pageName = 'wholesale-flashsale';
+          break;
+        case 'registration':
+          pageName = 'wholesale-register-reward';
+          break;
+        case 'recharge':
+          pageName = 'wholesale-recharge';
+          break;
+      }
       this.turnToPage({
-        name,
+        name: pageName,
         params: { activityId: params.row.id }
       });
     },
