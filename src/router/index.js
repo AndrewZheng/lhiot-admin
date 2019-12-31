@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import iView from 'iview';
+import iView from 'view-design';
 import store from '@/store';
 import { constantRouterMap } from './routers';
 import { getToken, getNamesByRouters, getSystemHomeName } from '@/libs/util';

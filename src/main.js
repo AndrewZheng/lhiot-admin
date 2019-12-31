@@ -5,15 +5,14 @@ import router from './router';
 import store from './store';
 import Mixin from './mixins';
 import filters from './filters';
-import iView from 'iview';
+import iView from 'view-design';
 import i18n from '@/locale';
 import config from '@/config';
 import importDirective from '@/directive';
 import axiosPlugin from '@/libs/api.request';
 import { enums, PcEncrypt } from '@/util/';
 
-
-import 'iview/dist/styles/iview.css';
+import 'view-design/dist/styles/iview.css';
 import './index.less';
 import 'assets/icons/iconfont.css';
 import './assets/iconfont/iconfont.css';

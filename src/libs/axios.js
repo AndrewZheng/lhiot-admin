@@ -96,16 +96,17 @@ class HttpRequest {
       this.destory(url);
       // 导出
       const { data, status, headers } = res;
-      console.log('res frombackend: ', res);
+      // console.log('res frombackend: ', res);
       if (headers['content-type'] === 'application/vnd.ms-excel;charset=UTF-8') {
         return res.data;
       }
       // 后续再做修改
       if (status < 400) {
-        if (status === 204) {
+        // 204返回no centent 则data为null
+        if (status === 204 || data === '') {
           return data;
         }
-        if (typeof data.success === 'undefined') {
+        if (data && typeof data.success === 'undefined') {
           return data;
         } else {
           if (data.success) {

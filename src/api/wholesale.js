@@ -661,6 +661,14 @@ export const exportOrder = (data) => {
   });
 };
 
+// 手动发送海鼎
+export const sendHdManual = ({ orderCode }) => {
+  return $http.request({
+    url: '/wholesale-small/order/send-to-sock?orderCode=' + orderCode,
+    method: 'put'
+  });
+};
+
 /* -------------------------
  * 活动管理
  * -------------------------

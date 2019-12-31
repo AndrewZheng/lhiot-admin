@@ -21,6 +21,7 @@
         @on-view="handleView"
         @on-hand="handleReimburse"
         @on-receive="handSureReceive"
+        @on-send-hd="sendHdManual"
         @on-current-change="onCurrentChange"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
@@ -132,7 +133,7 @@
           >
             <Icon type="ios-arrow-back" />&nbsp;返回
           </Button>
-          <Button v-waves class="search-btn ml2 mr2" type="info" @click="resendToHd">海鼎重发</Button>
+          <Button v-waves class="search-btn ml2 mr2" type="info" @click="sendHdManual">海鼎重发</Button>
           <Button
             :loading="downloadLoading"
             class="search-btn mr2"
@@ -344,7 +345,7 @@
 import Tables from '_c/tables';
 import BookTypeOption from '_c/book-type-option';
 
-import { getOrderPages, getOrder, resendToHd, exportOrder } from '@/api/wholesale';
+import { getOrderPages, getOrder, sendHdManual, exportOrder } from '@/api/wholesale';
 
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
@@ -454,6 +455,7 @@ const orderColumns = [
     title: '订单编号',
     key: 'orderCode',
     sortable: true,
+    resizable: true,
     width: 170,
     fixed: 'left',
     align: 'center'
@@ -650,11 +652,12 @@ const orderColumns = [
   },
   {
     title: '操作',
-    minWidth: 180,
+    minWidth: 120,
+    resizable: true,
     align: 'center',
     fixed: 'right',
     key: 'handle',
-    options: ['view']
+    options: ['view', 'sendHd']
   }
 ];
 
@@ -957,9 +960,6 @@ export default {
           const tableData = res.rows;
           const tableColumns = res.columns;
           console.log('tableColumns: ', tableColumns);
-          // tableData.forEach(item => {
-          //   item['orderCode'] = item['orderCode'] + '';
-          // });
           this.$refs.tables.handleCustomDownload({
             filename: `配送单-${new Date().valueOf()}`,
             data: tableData,
@@ -968,26 +968,17 @@ export default {
         });
       }
     },
-    resendToHd() {
+    sendHdManual() {
+      if (this.tableDataSelected.length > 1) {
+        this.$Message.warn('目前只支持单笔订单重发海鼎');
+        return;
+      }
+
       if (this.tableDataSelected.length > 0) {
-        const tempDeleteList = [];
-        this.tableDataSelected.filter(value => {
-          tempDeleteList.push(value.id);
-        });
-        const ids = tempDeleteList.join(',');
-        resendToHd({ ids: ids }).then(res => {
-          const { disqualification, failure } = res;
-          if (failure.length === 0) {
+        sendHdManual({ orderCode: this.selectedOrderCodes })
+          .then(res => {
             this.$Message.info('海鼎重发成功');
-          } else {
-            const lst = failure.join(',');
-            this.$Message.error({
-              content: `海鼎重发失败订单：${lst}`,
-              duration: 30,
-              closable: true
-            });
-          }
-        });
+          });
       }
     },
     onSelectionAll(selection) {

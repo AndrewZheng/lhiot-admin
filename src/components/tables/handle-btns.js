@@ -572,6 +572,38 @@ const btns = {
       ])
     ]);
   },
+  sendHd: (h, params, vm) => {
+    return h('Poptip', {
+      props: {
+        confirm: true,
+        title: '确认要重新发送海鼎吗?',
+        placement: params.index === 0 || params.index === 1 ? 'left' : 'top'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        'on-ok': () => {
+          vm.$emit('on-send-hd', params);
+        }
+      }
+    }, [
+      h('Button', {
+        props: {
+          type: 'primary',
+          size: 'small'
+        }
+      }, [
+        h('Icon', {
+          props: {
+            type: 'ios-paper-plane',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+    ]);
+  },
   // 邮费复制操作
   copy: (h, params, vm) => {
     return h('Button', {

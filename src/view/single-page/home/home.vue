@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Row :gutter="20">
+    <!-- <Row :gutter="20">
       <i-col
         v-for="(infor, i) in inforCardData"
         :key="`infor-${i}`"
@@ -12,8 +12,9 @@
           <p>{{ infor.title }}</p>
         </infor-card>
       </i-col>
-    </Row>
-    <Row :gutter="20" style="margin-top: 20px;">
+    </Row> -->
+
+    <!-- <Row :gutter="20" style="margin-top: 20px;">
       <i-col span="8">
         <Card shadow>
           <chart-pie :value="pieData" style="height: 300px;width:100%;" text="用户访问来源"></chart-pie>
@@ -24,6 +25,11 @@
           <chart-bar :value="barData" style="height: 300px;width:100%;" text="每周用户活跃量" />
         </Card>
       </i-col>
+    </Row> -->
+    <Row>
+      <Card shadow>
+        <span class="welcome">欢迎，管理者! 祝你今日工作愉快!</span>
+      </Card>
     </Row>
     <Row style="margin-top: 20px;">
       <Card shadow>
@@ -117,6 +123,10 @@ export default {
 
 <style lang="less">
 .count-style {
+  font-size: 40px;
+}
+
+.welcome{
   font-size: 40px;
 }
 </style>

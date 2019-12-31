@@ -131,7 +131,7 @@
           <Row v-if="isCreate">
             <FormItem>
               <tables
-                ref="tables"
+                ref="dataTables"
                 :columns="standardColumns"
                 v-model="goodsStandardData"
                 search-place="top"
@@ -631,7 +631,7 @@ export default {
       this.$refs.editForm.resetFields();
       this.searchProductRowData = _.cloneDeep(productRowData);
       // VIP专区只能关联VIP商品，添加isVip过滤条件
-      this.searchProductRowData.isVip = this.currentTreeTitleCode === 'vip' ? 'yes' : 'no';
+      this.searchProductRowData.isVip = this.currentTreeTitleCode.indexOf('VIP') < 0 ? 'no' : 'yes';
       this.getProductTableData();
       this.goodsStandardRelation.plateId = this.currentCategory.id;
       this.tempModalType = this.modalType.create;
@@ -798,27 +798,34 @@ export default {
     handleProductSearch() {
       this.getProductTableData();
     },
+    onSelectionAll(selection) {
+      this.goodsStandardRelation.goodsStandardIds = selection.map(item => item.id.toString()).join(',');
+    },
     onSelectionChange(selection) {
       this.goodsStandardRelation.goodsStandardIds = selection.map(item => item.id.toString()).join(',');
     },
     onRelationSelectionAll(selection) {
+      console.log('selectDatas all:', selection);
       this.goodsStandardRelation.goodsStandardIds = selection
         .map(item => item.standardId.toString())
         .join(',');
       this.goodsStandardRelation.relationIds = selection
         .map(item => item.id.toString())
         .join(',');
-      console.log('goodsStandardIds:', this.goodsStandardRelation.relationIds);
+      this.tableDataSelected = selection;
+      console.log('goodsStandardIds:', this.goodsStandardRelation.goodsStandardIds);
       console.log('relationIds:', this.goodsStandardRelation.relationIds);
     },
     onRelationSelectionChange(selection) {
+      console.log('selectDatas:', selection);
       this.goodsStandardRelation.goodsStandardIds = selection
         .map(item => item.standardId.toString())
         .join(',');
       this.goodsStandardRelation.relationIds = selection
         .map(item => item.id.toString())
         .join(',');
-      console.log('goodsStandardIds:', this.goodsStandardRelation.relationIds);
+      this.tableDataSelected = selection;
+      console.log('goodsStandardIds:', this.goodsStandardRelation.goodsStandardIds);
       console.log('relationIds:', this.goodsStandardRelation.relationIds);
     },
     // 选择分类

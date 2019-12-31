@@ -281,7 +281,7 @@
     <!-- 编辑 -->
     <Modal v-model="modalEdit" :mask-closable="false" :width="900">
       <p slot="header">
-        <span>{{ productStandardDetail.id ===0 ? '创建商品规格':'编辑商品规格' }}</span>
+        <span>{{ isCreate ? '创建商品规格':'编辑商品规格' }}</span>
       </p>
       <div class="modal-content">
         <Form ref="editForm" :model="productStandardDetail" :rules="ruleInline" :label-width="100">
@@ -408,7 +408,7 @@
                     </Select>
                   </FormItem>
                 </i-col>
-                <i-col span="12">
+                <i-col v-show="isCreate" span="12">
                   <FormItem label="是否VIP:" prop="isVip" style="width:180px;">
                     <Select v-model="productStandardDetail.isVip">
                       <Option
@@ -432,7 +432,7 @@
             </i-col>
             <i-col span="12">
               <FormItem label="商品净重:" prop="netWeight">
-                <InputNumber :min="0" v-model="productStandardDetail.netWeight"></InputNumber>
+                <InputNumber v-model="productStandardDetail.netWeight"></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -1116,6 +1116,7 @@ export default {
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
+        isVip: [{ required: true, message: '请选择商品的类型' }],
         goodsName: [{ required: true, message: '请输入上架商品名称' }],
         goodsImage: [{ required: true, message: '请上传上架商品主图' }],
         unitCode: [{ required: true, message: '请选择商品单位' }],

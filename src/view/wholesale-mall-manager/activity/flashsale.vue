@@ -104,8 +104,8 @@
                     class="ptb2-5"
                   >{{ item.label }}</Option>
                 </Select>
-                <Select
-                  v-model="searchConfigRowData.vipEnum"
+                <!-- <Select
+                  v-model="searchConfigRowData.isVip"
                   class="ml5"
                   placeholder="是否VIP商品"
                   style="width:100px"
@@ -117,7 +117,7 @@
                     :key="item.value"
                     class="ptb2-5"
                   >{{ item.label }}</Option>
-                </Select>
+                </Select> -->
                 <Button
                   :loading="searchLoading"
                   class="search-btn mr5"
@@ -299,6 +299,7 @@ const standardRoleRowData = {
   barCode: '',
   goodsCode: '',
   goodsName: '',
+  isVip: 'no',
   vaild: '',
   page: 1,
   rows: 5
