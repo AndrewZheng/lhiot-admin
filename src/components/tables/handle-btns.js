@@ -56,8 +56,6 @@ const btns = {
       on: {
         'on-ok': () => {
           vm.$emit('on-delete', params);
-          // 页面验证 删除成功则刷新表格内容
-          // vm.$emit('input', params.tableData.filter((item, index) => index !== params.row.initRowIndex));
         }
       }
     }, [
@@ -70,6 +68,43 @@ const btns = {
         h('Icon', {
           props: {
             type: 'md-trash',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+    ]);
+  },
+  saleAudit: (h, params, vm) => {
+    return h('Poptip', {
+      props: {
+        confirm: true,
+        title: '该业务员资质已核实，是否通过业务员申请?',
+        placement: params.index === 0 ? 'right' : 'top',
+        'ok-text': '通过',
+        'cancel-text': '拒绝'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        'on-ok': () => {
+          vm.$emit('on-audit', { params, checkStatus: 'agree' });
+        },
+        'on-cancel': () => {
+          vm.$emit('on-audit', { params, checkStatus: 'reject' });
+        }
+      }
+    }, [
+      h('Button', {
+        props: {
+          type: 'primary',
+          size: 'small'
+        }
+      }, [
+        h('Icon', {
+          props: {
+            type: 'logo-buffer',
             size: 16,
             color: '#fff'
           }
@@ -126,7 +161,7 @@ const btns = {
       row
     } = params;
     // 父级菜单不显示修改权限按钮
-    if (row.type == 'PARENT') {
+    if (row.type === 'PARENT') {
       return '';
     } else {
       return h('Button', {
@@ -173,17 +208,16 @@ const btns = {
       }
     })]);
   },
-  // 商品上下架操作
   onSale: (h, params, vm) => {
     const {
       row
     } = params;
-    if (row.shelfStatus === 'ON' || row.onOff === 'ON' || row.state === 'ON' || row.couponStatus === 'VALID' || row.status === 'ON') {
+    if (row.shelfStatus === 'ON' || row.onOff === 'ON' || row.state === 'ON' || row.couponStatus === 'VALID' || row.status === 'ON' || row.vaild === 'yes') {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要下架?',
-         // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
+          title: row.vaild === 'yes' ? '确认要关闭活动吗?' : '确认要下架吗?',
+          placement: params.index === 0 ? 'right' : 'top'
         },
         style: {
           marginRight: '5px'
@@ -213,7 +247,8 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要上架吗?'
+          title: row.vaild === 'no' ? '确认要开启活动吗?' : '确认要上架吗?',
+          placement: params.index === 0 ? 'right' : 'top'
         },
         style: {
           marginRight: '5px'
@@ -246,7 +281,7 @@ const btns = {
     const {
       row
     } = params;
-    if (row.status === 'VALID' || row.shelvesStatus === 'VALID' || row.ifEffective === 'VALID') {
+    if (row.status === 'VALID' || row.shelvesStatus === 'VALID' || row.ifEffective === 'VALID' || row.vaild === 'yes') {
       return h('Poptip', {
         props: {
           confirm: true,
@@ -315,7 +350,7 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要下架该优惠券吗?',
+          title: '确认要下架该优惠券吗?'
         },
         style: {
           marginRight: '5px'
@@ -504,38 +539,70 @@ const btns = {
       }
     })]);
   },
-  //手动退款
+  // 手动退款
   onHand: (h, params, vm) => {
-      return h('Poptip', {
+    return h('Poptip', {
+      props: {
+        confirm: true,
+        title: '确认要退款?'
+        // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        'on-ok': () => {
+          vm.$emit('on-hand', params);
+        }
+      }
+    }, [
+      h('Button', {
         props: {
-          confirm: true,
-          title: '确认要退款?',
-          // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
-        },
-        style: {
-          marginRight: '5px'
-        },
-        on: {
-          'on-ok': () => {
-            vm.$emit('on-hand', params);
-          }
+          type: 'error',
+          size: 'small'
         }
       }, [
-        h('Button', {
+        h('Icon', {
           props: {
-            type: 'error',
-            size: 'small'
+            type: 'logo-usd',
+            size: 16,
+            color: '#fff'
           }
-        }, [
-          h('Icon', {
-            props: {
-              type: 'logo-usd',
-              size: 16,
-              color: '#fff'
-            }
-          })
-        ])
-      ]);
+        })
+      ])
+    ]);
+  },
+  sendHd: (h, params, vm) => {
+    return h('Poptip', {
+      props: {
+        confirm: true,
+        title: '确认要重新发送海鼎吗?',
+        placement: params.index === 0 || params.index === 1 ? 'left' : 'top'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        'on-ok': () => {
+          vm.$emit('on-send-hd', params);
+        }
+      }
+    }, [
+      h('Button', {
+        props: {
+          type: 'primary',
+          size: 'small'
+        }
+      }, [
+        h('Icon', {
+          props: {
+            type: 'ios-paper-plane',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+    ]);
   },
   // 邮费复制操作
   copy: (h, params, vm) => {
@@ -795,7 +862,7 @@ const btns = {
   settlementRefund: (h, params, vm) => {
     const { row } = params;
     // 薪资已过期显示退款按钮
-    if (row.settlementStatus == 'EXPIRED') {
+    if (row.settlementStatus === 'EXPIRED') {
       return h('Poptip', {
         props: {
           confirm: true,
@@ -836,7 +903,7 @@ const btns = {
   settlementEdit: (h, params, vm) => {
     const { row } = params;
     // 除了薪资未审核的其他不显示修改权限按钮
-    if (row.settlementStatus == 'UNSETTLED') {
+    if (row.settlementStatus === 'UNSETTLED') {
       return h('Button', {
         props: {
           type: 'warning',
@@ -864,7 +931,7 @@ const btns = {
   feedback: (h, params, vm) => {
     const { row } = params;
     // 除了未回复的其他不显示修改按钮
-    if (row.status == 'UNREPLY') {
+    if (row.status === 'UNREPLY') {
       return h('Button', {
         props: {
           type: 'warning',
@@ -894,7 +961,7 @@ const btns = {
     const {
       row
     } = params;
-    if (row.status == 'DISABLED' || row.storeStatus == 'DISABLED') {
+    if (row.status === 'DISABLED' || row.storeStatus === 'DISABLED') {
       return h('Poptip', {
         props: {
           confirm: true,
@@ -956,16 +1023,16 @@ const btns = {
       ]);
     }
   },
-  //确认收货
+  // 确认收货
   onReceive: (h, params, vm) => {
     return h('Poptip', {
       props: {
         confirm: true,
-        title: '确认要收货?',
+        title: '确认要收货?'
         // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
       },
       style: {
-        marginRight: '5px',
+        marginRight: '5px'
       },
       on: {
         'on-ok': () => {
@@ -977,7 +1044,7 @@ const btns = {
         props: {
           type: 'success',
           size: 'small'
-        },
+        }
       }, [
         h('Icon', {
           props: {
@@ -988,6 +1055,96 @@ const btns = {
         })
       ])
     ]);
+  },
+  analytics: (h, params, vm) => {
+    return h('Button', {
+      props: {
+        type: 'primary',
+        size: 'small'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        click: () => {
+          vm.$emit('on-analytics', params);
+        }
+      }
+    }, [h('Icon', {
+      props: {
+        type: 'md-analytics',
+        size: 16,
+        color: '#fff'
+      }
+    })]);
+  },
+  setVip: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.isVip === 'no') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要将此用户升级为VIP吗?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-set-vip', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'ios-ribbon',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
+    } else {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          title: '确认要将此VIP用户变为普通用户吗?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-set-vip', params);
+          }
+        }
+      }, [
+        h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'ios-ribbon-outline',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ]);
+    }
   }
 };
 export default btns;

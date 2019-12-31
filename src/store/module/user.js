@@ -100,7 +100,6 @@ const actions = {
         console.log('res from backend: ', res.XSessionId);
         commit('setToken', res.XSessionId);
         console.log('step 1');
-        // commit('setToken', res.token);
         resolve();
       }).catch(err => {
         reject(err);
@@ -136,7 +135,7 @@ const actions = {
     });
   },
   getRouteListById({ state, commit }, pid) {
-    console.log('pid: ', pid);
+    console.log('system id: ', pid);
     return new Promise((resolve, reject) => {
       getRouterById(pid).then(res => {
         if (res && res.array && res.array.length > 0) {

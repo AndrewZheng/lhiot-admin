@@ -2,20 +2,17 @@ import Cookies from 'js-cookie';
 // cookie保存的天数
 import config from '@/config';
 import { forEach, hasOneOf, objEqual } from '@/libs/tools';
+import { PcLockr, enums } from '@/util/';
 import _ from 'lodash';
 
 export const TOKEN_KEY = 'token';
-
 export const IF_REMEMBER = 'if_remember'
-
 export const GOODS_STANDARD = 'goodsStandard';
-
 export const SMAL_GOODS_STANDARD = 'smallGoodsStandard';
-
+export const WHOLESALE_GOODS = 'wholesaleGoods';
+export const WHOLESALE_ACTIVITY = 'wholesaleActivity';
 export const SMALL_COUPON_ACTIVITY = 'smallCouponActivity';
-
 export const ARTICLE = 'article';
-
 export const LHIOT_TOKEN = 'lhiot_token';
 
 export const setGoodsStandard = (goodsStandard) => {
@@ -38,6 +35,28 @@ export const setSmallGoodsStandard = (smallGoodsStandard) => {
 
 export const getSmallGoodsStandard = () => {
   return JSON.parse(Cookies.get(SMAL_GOODS_STANDARD));
+};
+
+export const setWholesaleGoods = (goods) => {
+  const string = JSON.stringify(goods);
+  Cookies.set(WHOLESALE_GOODS, string, {
+    expires: config.cookieExpires || 1
+  });
+};
+
+export const getWholesaleGoods = () => {
+  return JSON.parse(Cookies.get(WHOLESALE_GOODS));
+};
+
+export const setActivity = (activity) => {
+  const string = JSON.stringify(activity);
+  Cookies.set(WHOLESALE_ACTIVITY, string, {
+    expires: config.cookieExpires || 1
+  });
+};
+
+export const getActivity = () => {
+  return JSON.parse(Cookies.get(WHOLESALE_ACTIVITY));
 };
 
 export const setSmallCouponActivity = (smallCouponActivity) => {
@@ -551,7 +570,7 @@ export const buildMenu = (array, ckey, isFind = true) => {
       }
     }
   });
-  // console.log('menuData parent level: ', menuData);
+
   const findChildren = (parentArr) => {
     if (Array.isArray(parentArr) && parentArr.length) {
       parentArr.forEach((parentNode) => {
@@ -714,15 +733,11 @@ export const getParent = (tree, map, id) => {
   // 遍历 tree
   tree.forEach((item) => {
     const children = item[map.children];
-    console.log('一');
     // 如果有子节点，递归
     if (children.length > 0) {
       // count = count + 1;
-      console.log('二');
       getParent(children, map, id);
-      console.log('三');
     } else {
-      console.log('四');
       // if (count > 0) {
       //   // disabled: true,
       //   if (!find) {
@@ -738,7 +753,6 @@ export const getParent = (tree, map, id) => {
       // }
     }
   });
-  console.log('五');
   return parentIds;
 };
 
@@ -785,8 +799,8 @@ export const compareData = (date1, date2) => {
 };
 
 export const compareCouponData = (date) => {
-  let time1 = new Date(date).getTime();
-  let time2 = new Date().getTime();
+  const time1 = new Date(date).getTime();
+  const time2 = new Date().getTime();
   return time1 > time2;
 };
 
@@ -798,7 +812,6 @@ export const fenToYuanDot2 = (number) => {
     return '¥' + (number / 100.00).toFixed(2);
   } else if (typeof number === 'string') {
     return '¥' + (parseInt(number) / 100.00).toFixed(2);
-    
   }
   return number;
 };
@@ -817,25 +830,25 @@ export const percent = (number) => {
 };
 
 export const gitTime = (time) => {
-  let date = new Date(time)
-   var y = date.getFullYear(); 
-   var m = date.getMonth() + 1;  
-       m = m < 10 ? ('0' + m) : m;  
-   var d = date.getDate();  
-       d = d < 10 ? ('0' + d) : d;  
-   var h = date.getHours();  
-       h=h < 10 ? ('0' + h) : h;  
-   var minute = date.getMinutes();  
-       minute = minute < 10 ? ('0' + minute) : minute;  
-   var second=date.getSeconds();  
-       second=second < 10 ? ('0' + second) : second;  
-   return y + '-' + m + '-' + d+' '+h+':'+minute+':'+second; 
+  const date = new Date(time)
+  var y = date.getFullYear();
+  var m = date.getMonth() + 1;
+  m = m < 10 ? ('0' + m) : m;
+  var d = date.getDate();
+  d = d < 10 ? ('0' + d) : d;
+  var h = date.getHours();
+  h = h < 10 ? ('0' + h) : h;
+  var minute = date.getMinutes();
+  minute = minute < 10 ? ('0' + minute) : minute;
+  var second = date.getSeconds();
+  second = second < 10 ? ('0' + second) : second;
+  return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
 };
 
-//hd折扣
+// hd折扣
 export const HdDiscount = (number) => {
   if (typeof number === 'number') {
-    return   (number * 10.00) + '折';
+    return (number * 10.00) + '折';
   }
   return number;
 };
@@ -849,7 +862,7 @@ export const addRnb = (number) => {
 
 export const addDay = (number) => {
   if (typeof number === 'number') {
-    return (number) + " 天";
+    return (number) + ' 天';
   }
   return number;
 };
@@ -896,4 +909,35 @@ export const replaceByTag = (value, tag = '&') => {
 export const replaceByTab = (value) => {
   if (!value) { return value; }
   return value.replace(/&/g, '\n');
+}
+
+export const download = (data, name) => {
+  const content = data;
+  const blob = new Blob([content], { type: 'application/vnd.ms-excel' });
+  const fileName = name;
+  if ('download' in document.createElement('a')) { // 非IE下载
+    const elink = document.createElement('a');
+    elink.download = fileName;
+    elink.style.display = 'none';
+    elink.href = URL.createObjectURL(blob);
+    document.body.appendChild(elink);
+    elink.click();
+    URL.revokeObjectURL(elink.href); // 释放URL 对象
+    document.body.removeChild(elink);
+    console.log('download excel:', fileName);
+  } else { // IE10+下载
+    navigator.msSaveBlob(blob, fileName)
+  }
+}
+
+// 根据当前系统获取应该跳转的home页面的routerName
+export const getSystemHomeName = () => {
+  let name = 'home';
+  if (PcLockr.get(enums.SYSTEM) != null) {
+    const currentSystem = JSON.parse(PcLockr.get(enums.SYSTEM));
+    name = currentSystem.code.split('_')[0] + '-home';
+    name = name === 'manager-home' ? 'home' : name; // 如果是综合管理系统还是跳转公共首页
+    console.log('current system home: ', name);
+  }
+  return name;
 }

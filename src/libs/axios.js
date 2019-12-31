@@ -6,15 +6,17 @@ import { setToken } from '@/libs/util';
 import _ from 'lodash';
 
 class HttpRequest {
-  constructor(baseUrl = '', centerType = '') {
+  constructor(baseUrl = '', centerType = '', responseType = 'json') {
     this.baseUrl = baseUrl;
     this.centerType = centerType;
+    this.responseType = responseType;
     this.queue = {};
   }
 
   getInsideConfig() {
     const defaultOps = {
       baseURL: this.baseUrl,
+      responseType: 'json',
       timeout: 30000,
       headers: {
         'content-type': 'application/json'
@@ -23,7 +25,8 @@ class HttpRequest {
     };
 
     const imsServiceOps = _.merge({}, defaultOps, {
-      baseURL: this.baseUrl
+      baseURL: this.baseUrl,
+      response: this.responseType
     });
 
     // 后端微服务有需求再扩展
@@ -91,11 +94,27 @@ class HttpRequest {
     // 响应拦截
     instance.interceptors.response.use(res => {
       this.destory(url);
-      const { data, status } = res;
+      // 导出
+      const { data, status, headers } = res;
+      // console.log('res frombackend: ', res);
+      if (headers['content-type'] === 'application/vnd.ms-excel;charset=UTF-8') {
+        return res.data;
+      }
       // 后续再做修改
       if (status < 400) {
-        if (data == '' || data) {
+        // 204返回no centent 则data为null
+        if (status === 204 || data === '') {
           return data;
+        }
+        if (data && typeof data.success === 'undefined') {
+          return data;
+        } else {
+          if (data.success) {
+            return data.datas;
+          } else {
+            Vue.prototype.$Message.info(data.msg);
+            return Promise.reject(res);
+          }
         }
       } else {
         Vue.prototype.$Message.info(data.message);
@@ -118,7 +137,7 @@ class HttpRequest {
           router.push({
             name: 'login'
           });
-        } else if (error.response.status === 402) { 
+        } else if (error.response.status === 402) {
           errorMsg = '页面已过期，请重新登录';
           // 清除本地Token 然后重新登录
           setToken('');

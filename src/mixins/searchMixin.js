@@ -13,7 +13,7 @@ const minxin = {
     },
     handleClear() {
       // 重置数据
-      this.searchRowData.expandType=null;
+      this.searchRowData.expandType = null;
       this.resetSearchRowData();
       this.page = 1;
       this.pageSize = 10;

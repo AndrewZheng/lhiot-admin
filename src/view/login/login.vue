@@ -24,7 +24,9 @@
 <script>
 import LoginForm from '_c/login-form';
 import { mapActions } from 'vuex';
+import { getSystemHomeName } from '@/libs/util';
 import maxLogo from '@/assets/images/lhiot_logo.jpg';
+
 export default {
   components: {
     LoginForm
@@ -42,8 +44,10 @@ export default {
     ]),
     handleSubmit({ account, password }) {
       this.handleLogin({ account, password }).then(res => {
+        const name = getSystemHomeName();
+        console.log('homeName after login:', name);
         this.$router.push({
-          name: 'home'
+          name
         });
       });
     }

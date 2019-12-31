@@ -28,10 +28,6 @@ export const getUserInfo = (token) => {
 };
 
 export const logout = (token) => {
-  // return Vue.prototype.$http.request({
-  //   url: 'logout',
-  //   method: 'post'
-  // });
   return Vue.prototype.$http.request({
     url: '/admin/sessions',
     method: 'delete'

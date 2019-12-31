@@ -2,7 +2,7 @@ import {
   getBreadCrumbList,
   setTagNavListInLocalstorage,
   getTagNavListFromLocalstorage,
-
+  getSystemHomeName,
   getHomeRoute,
   getNextRoute,
   routeHasExist,
@@ -33,7 +33,6 @@ const state = {
 };
 
 const getters = {
-
   systemCurrent: (state) => {
     if (!state.systemCurrent) {
       state.systemCurrent = PcLockr.get(enums.SYSTEM) ? JSON.parse(PcLockr.get(enums.SYSTEM)) : {};
@@ -86,7 +85,7 @@ const mutations = {
     if (!routeHasExist(state.tagNavList, router)) {
       if (type === 'push') state.tagNavList.push(router);
       else {
-        if (router.name === 'home') state.tagNavList.unshift(router);
+        if (router.name === getSystemHomeName()) state.tagNavList.unshift(router);
         else state.tagNavList.splice(1, 0, router);
       }
       setTagNavListInLocalstorage([...state.tagNavList]);

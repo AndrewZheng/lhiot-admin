@@ -62,7 +62,7 @@ import System from './components/system';
 import Fullscreen from './components/fullscreen';
 import Language from './components/language';
 import { mapMutations, mapActions } from 'vuex';
-import { getNewTagList, getNextRoute, routeEqual } from '@/libs/util';
+import { getNewTagList, getNextRoute, routeEqual, getSystemHomeName } from '@/libs/util';
 import minLogo from '@/assets/images/logo-min.jpg';
 import maxLogo from '@/assets/images/lhiot_logo.jpg';
 import './main.less';
@@ -147,7 +147,8 @@ export default {
     },
     handleCloseTag(res, type, route) {
       if (type === 'all') {
-        this.turnToPage('home');
+        const name = getSystemHomeName();
+        this.turnToPage(name);
       } else if (routeEqual(this.$route, route)) {
         if (type !== 'others') {
           const nextRoute = getNextRoute(this.tagNavList, route);
