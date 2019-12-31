@@ -1259,12 +1259,13 @@ export default {
     handSureReceive(params) {
       if (
         params.row.orderStatus === "SEND_OUT" ||
-        params.row.orderStatus === "DISPATCHING"
+        params.row.orderStatus === "DISPATCHING" ||
+        params.row.orderStatus === "RETURNING"
       ) {
         sureReceive({ orderId: params.row.id })
           .then(res => {
             this.loading = false;
-            this.$Message.success("确认收货成功");
+            this.$Message.success("操作成功");
             this.getTableData();
           })
           .catch(() => {
@@ -1507,6 +1508,7 @@ export default {
         this.currentTableRowSelected = null;
       }
     }
+ 
   }
 };
 </script>
