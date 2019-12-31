@@ -18,7 +18,7 @@ const miniMallRouter = [
         title: '首页',
         notCache: true
       },
-      component: () => import('@/view/single-page/home')
+      component: () => import('@/view/mini-program-manager/single-page/home')
     }]
   },
   {
