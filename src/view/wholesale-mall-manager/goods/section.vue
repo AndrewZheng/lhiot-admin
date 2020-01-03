@@ -127,7 +127,7 @@
               >{{ item.label }}</Option>
             </Select>
           </FormItem>
-          <FormItem label="板块图片:建议尺寸;790x338(单位:px):" prop="plateImage">
+          <FormItem label="板块图片:建议尺寸;750x338(单位:px):" prop="plateImage">
             <Input v-show="false" v-model="currentCategory.plateImage" style="width: auto"></Input>
             <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
               <template v-if="item.status === 'finished'">

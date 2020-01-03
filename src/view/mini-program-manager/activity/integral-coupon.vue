@@ -293,6 +293,18 @@
           </i-col>
         </Row>
         <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">最高优惠金额:</i-col>
+              <i-col
+                span="16"
+                v-if="addRelationDetail.maxDiscountFee!=null"
+              >{{addRelationDetail.maxDiscountFee | fenToYuanDot2Filters }}</i-col>
+              <i-col span="16" v-else>{{ "N/A" }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
           <i-col span="20">
             <Row>
               <i-col span="5">券详情:</i-col>
@@ -622,6 +634,13 @@
                     >{{ item.label }}</Option>
                   </Select>
                 </FormItem>
+              </i-col>
+              <i-col span="6">
+                <FormItem
+                  label="最高优惠金额:"
+                  prop="maxDiscountFee"
+                  :label-width="100"
+                >{{ addRelationDetail.maxDiscountFee | fenToYuanDot2Filters }}</FormItem>
               </i-col>
             </Row>
             <Row>
@@ -996,6 +1015,7 @@ const relationDetail = {
   userScope: "ALL",
   receiveLimit: 999,
   beginDay: 0,
+  maxDiscountFee: "",
   endDay: 0,
   rank: 0, // 排序字段
   points: 0,
@@ -1123,6 +1143,21 @@ const dataColumns = [
     width: 120,
     render(h, params) {
       return h("div", fenToYuanDot2(params.row.minBuyFee));
+    }
+  },
+  {
+    title: "最高优惠金额",
+    align: "center",
+    key: "maxDiscountFee",
+    width: 120,
+    render(h, params) {
+      const { row } = params;
+      if (row.maxDiscountFee != null) {
+        return <div>{fenToYuanDot2(row.maxDiscountFee)}</div>;
+      } else {
+        return <div>{"N/A"}</div>;
+      }
+      return <div>{fenToYuanDot2(row.maxDiscountFee)}</div>;
     }
   },
   {
@@ -1868,6 +1903,7 @@ export default {
       this.addRelationDetail.minBuyFee = couponTemplate.minBuyFee;
       this.addRelationDetail.couponStatus = couponTemplate.couponStatus;
       this.addRelationDetail.couponType = couponTemplate.couponType;
+      this.addRelationDetail.maxDiscountFee = currentRow.maxDiscountFee;
     },
     handleHdTemplateChange(currentRow, oldCurrentRow) {
       const startIndex = currentRow.useRule.indexOf("满");
@@ -1877,6 +1913,7 @@ export default {
       this.addRelationDetail.couponName = currentRow.couponName;
       this.addRelationDetail.couponType = currentRow.couponType;
       this.addRelationDetail.couponFee = currentRow.faceValue;
+      this.addRelationDetail.maxDiscountFee = currentRow.maxDiscountFee;
       if (currentRow.couponType === "DISCOUNT_COUPON") {
         this.addRelationDetail.couponFee =
           parseFloat(currentRow.discount) * 100;

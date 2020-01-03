@@ -173,6 +173,14 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
+              <i-col span="6">最高优惠金额:</i-col>
+              <i-col span="18">{{ couponTemplateDetail.maxDiscountFee | fenToYuanDot2Filters }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
               <i-col span="6">优惠券状态:</i-col>
               <i-col span="16" v-if="couponTemplateDetail.couponStatus === 'VALID'">
                 <tag color="success">{{ "有效" }}</tag>
@@ -295,6 +303,18 @@
               </FormItem>
             </Col>
           </Row>
+          <!-- <Row v-if="this.couponTemplateDetail.couponType=='DISCOUNT_COUPON'">
+            <Col span="18">
+              <FormItem label="最高优惠金额:" prop="maxDiscountFee" :label-width="100">
+                <InputNumber
+                  :min="0"
+                  :value="maxDiscountFeeComputed"
+                  placeholder="最高优惠金额"
+                  @on-change="maxDiscountFeeInputNumberOnchange"
+                ></InputNumber>
+              </FormItem>
+            </Col>
+          </Row> -->
           <Row>
             <Col span="18">
               <FormItem label="优惠券状态:" prop="couponStatus" :label-width="100">
@@ -419,6 +439,7 @@ const couponTemplateDetail = {
   couponStatus: null,
   couponImage: "",
   createUser: "",
+  maxDiscountFee: null,
   createTime: null,
   couponRules: "",
   couponScope: null
@@ -454,6 +475,13 @@ export default {
         ],
         minBuyFee: [
           { required: true, message: "请输入最小购买金额" },
+          {
+            message: "必须为大于0的数字",
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+          }
+        ],
+        maxDiscountFee: [
+          { required: true, message: "请输入最高优惠金额" },
           {
             message: "必须为大于0的数字",
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
@@ -538,9 +566,7 @@ export default {
             if (row.couponType === "FREIGHT_COUPON") {
               return <div>N/A</div>;
             } else if (row.couponType === "DISCOUNT_COUPON") {
-              return (
-                <div>{fenToYuanDot2Number(row.couponFee) * 10 + "折"}</div>
-              );
+              return <div>{row.couponFee / 10 + "折"}</div>;
             } else {
               return <div>{fenToYuanDot2(row.couponFee)}</div>;
             }
@@ -552,6 +578,14 @@ export default {
           key: "minBuyFee",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.minBuyFee)}</div>;
+          }
+        },
+        {
+          title: "最高优惠金额",
+          align: "center",
+          key: "maxDiscountFee",
+          render(h, params) {
+            return <div>{fenToYuanDot2(params.row.maxDiscountFee)}</div>;
           }
         },
         {
@@ -660,6 +694,9 @@ export default {
     },
     minBuyFeeComputed() {
       return fenToYuanDot2Number(this.couponTemplateDetail.minBuyFee);
+    },
+    maxDiscountFeeComputed() {
+      return fenToYuanDot2Number(this.couponTemplateDetail.maxDiscountFee);
     }
   },
   mounted() {
@@ -840,6 +877,9 @@ export default {
     },
     minBuyFeeInputNumberOnchange(value) {
       this.couponTemplateDetail.minBuyFee = yuanToFenNumber(value);
+    },
+    maxDiscountFeeInputNumberOnchange(value) {
+      this.couponTemplateDetail.maxDiscountFee = yuanToFenNumber(value);
     }
   }
 };

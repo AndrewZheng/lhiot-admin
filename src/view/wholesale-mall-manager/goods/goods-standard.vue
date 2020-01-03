@@ -330,7 +330,7 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="上架商品主图:建议尺寸;400x400(单位:px):" prop="goodsImage">
+              <FormItem label="上架商品主图:建议尺寸;750x750(单位:px):" prop="goodsImage">
                 <Input
                   v-show="false"
                   v-model="productStandardDetail.goodsImage"
@@ -538,7 +538,7 @@
     </Modal>
 
     <!-- 价格区间弹窗-->
-    <Modal v-model="modalRegion" :width="1500" :z-index="1000" title="区间价格管理">
+    <Modal v-model="modalRegion" :width="1200" :z-index="1000" title="区间价格管理">
       <Card>
         <tables
           ref="dataTables"

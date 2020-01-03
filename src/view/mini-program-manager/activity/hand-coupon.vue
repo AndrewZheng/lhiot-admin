@@ -174,7 +174,18 @@
             </Row>
           </i-col>
         </Row>
-
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">最高优惠金额:</i-col>
+              <i-col
+                span="16"
+                v-if="addRelationDetail.maxDiscountFee!=null"
+              >{{ "¥"+addRelationDetail.maxDiscountFee }}</i-col>
+              <i-col span="16" v-else>{{ "N/A" }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
@@ -394,6 +405,13 @@
                   ></Input>
                 </FormItem>
               </i-col>
+              <i-col span="6">
+                <FormItem
+                  label="最高优惠金额:"
+                  prop="maxDiscountFee"
+                  :label-width="100"
+                >{{ addRelationDetail.maxDiscountFee | fenToYuanDot2Filters }}</FormItem>
+              </i-col>
             </Row>
 
             <Row>
@@ -574,6 +592,12 @@
                 :label-width="100"
               >{{ addRelationDetail.minBuyFee | fenToYuanDot2Filters }}</FormItem>
             </i-col>
+            <!-- <i-col span="12">
+              <Row>
+                <i-col span="8">最高优惠金额:</i-col>
+                <i-col span="16">{{ "¥"+addRelationDetail.maxDiscountFee.toFixed(2) }}</i-col>
+              </Row>
+            </i-col>-->
           </Row>
 
           <Divider>可修改部分</Divider>
@@ -974,6 +998,7 @@ const relationDetail = {
   receiveLimit: 0,
   beginDay: 0,
   endDay: 0,
+  maxDiscountFee: "",
   rank: 0,
   phones: "",
   couponStatus: "VALID",
@@ -1101,6 +1126,21 @@ const dataColumns = [
     minWidth: 40,
     render(h, params) {
       return h("div", fenToYuanDot2(params.row.minBuyFee));
+    }
+  },
+  {
+    title: "最高优惠金额",
+    align: "center",
+    key: "maxDiscountFee",
+    minWidth: 40,
+    render(h, params) {
+      const { row } = params;
+      if (row.maxDiscountFee != null) {
+        return <div>{"¥" + row.maxDiscountFee.toFixed(2)}</div>;
+      } else {
+        return <div>{"N/A"}</div>;
+      }
+      return <div>{row.maxDiscountFee}</div>;
     }
   },
   {
@@ -1496,6 +1536,7 @@ export default {
         couponRules: [{ required: true, message: "请输入券使用规则" }],
         couponStatus: [{ required: true, message: "请选择优惠券状态" }],
         couponName: [{ required: true, message: "请输入优惠券名称" }]
+        // maxDiscountFee: [{ required: true, message: "最高优惠金额" }]
       },
       defaultListMain: [],
       uploadListMain: [],
@@ -1829,6 +1870,7 @@ export default {
       this.addRelationDetail.minBuyFee = couponTemplate.minBuyFee;
       this.addRelationDetail.couponStatus = couponTemplate.couponStatus;
       this.addRelationDetail.couponType = couponTemplate.couponType;
+      this.addRelationDetail.maxDiscountFee = currentRow.maxDiscountFee;
     },
     handleHdTemplateChange(currentRow, oldCurrentRow) {
       const startIndex = currentRow.useRule.indexOf("满");
@@ -1857,6 +1899,7 @@ export default {
         );
       }
       this.addRelationDetail.hdActivityId = currentRow.activityId;
+      this.addRelationDetail.maxDiscountFee = currentRow.maxDiscountFee;
       this.addRelationDetail.minBuyFee = minBuyFee * 100;
       this.addRelationDetail.effectiveStartTime = currentRow.beginDate;
       this.addRelationDetail.effectiveEndTime = currentRow.endDate;

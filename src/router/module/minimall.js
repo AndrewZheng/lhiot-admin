@@ -237,15 +237,15 @@ const miniMallRouter = [
       },
       component: () => import('@/view/mini-program-manager/activity/register-reward.vue')
     },
-    {
-      path: '/small-activity-recharge',
-      name: 'small-activity-recharge',
-      meta: {
-        icon: 'md-card',
-        title: '充值活动管理'
-      },
-      component: () => import('@/view/mini-program-manager/activity/recharge.vue')
-    },
+    // {
+    //   path: '/small-activity-recharge',
+    //   name: 'small-activity-recharge',
+    //   meta: {
+    //     icon: 'md-card',
+    //     title: '充值活动管理'
+    //   },
+    //   component: () => import('@/view/mini-program-manager/activity/recharge.vue')
+    // },
     {
       path: '/small-activity-random-discount',
       name: 'small-activity-random-discount',
@@ -254,7 +254,25 @@ const miniMallRouter = [
         title: '随机立减活动'
       },
       component: () => import('@/view/mini-program-manager/activity/random-discount.vue')
-    }]
+    },
+    {
+      path: '/small-activity-seckill-product',
+      name: 'small-activity-seckill-product',
+      meta: {
+        icon: 'ios-alarm',
+        title: '限时秒杀活动'
+      },
+      component: () => import('@/view/mini-program-manager/activity/seckill-product.vue')
+    },
+    {
+      path: '/small-activity-assist-product',
+      name: 'small-activity-assist-product',
+      meta: {
+        icon: 'md-contacts',
+        title: '助力抢爆品活动'
+      },
+      component: () => import('@/view/mini-program-manager/activity/assist-product.vue')
+    },]
   },
   {
     path: '/small-content',
@@ -338,33 +356,80 @@ const miniMallRouter = [
       title: '会员数据中心'
     },
     component: Main,
-    children: [{
-      path: '/small-phones',
-      name: 'small-phones',
-      meta: {
-        icon: 'md-phone-portrait',
-        title: '换绑会员手机号'
+    children: [
+      {
+        path: '/small-system-data-statistics',
+        name: 'small-system-data-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '系统数据统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/system-data-statistics.vue')
       },
-      component: () => import('@/view/mini-program-manager/member/phones.vue')
-    },
-    {
-      path: '/small-data-statistics',
-      name: 'small-data-statistics',
-      meta: {
-        icon: 'ios-stats',
-        title: '邀请有礼活动分析'
+      {
+        path: '/small-phones',
+        name: 'small-phones',
+        meta: {
+          icon: 'md-phone-portrait',
+          title: '换绑会员手机号'
+        },
+        component: () => import('@/view/mini-program-manager/member/phones.vue')
       },
-      component: () => import('@/view/mini-program-manager/member/data-statistics.vue')
-    },
-    {
-      path: '/small-amount',
-      name: 'small-amount',
-      meta: {
-        icon: 'logo-usd',
-        title: '邀请有礼用户汇总'
+      {
+        path: '/small-data-statistics',
+        name: 'small-data-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '邀请有礼活动分析'
+        },
+        component: () => import('@/view/mini-program-manager/member/data-statistics.vue')
       },
-      component: () => import('@/view/mini-program-manager/member/amount.vue')
-    }]
+      {
+        path: '/small-amount',
+        name: 'small-amount',
+        meta: {
+          icon: 'logo-usd',
+          title: '邀请有礼用户汇总'
+        },
+        component: () => import('@/view/mini-program-manager/member/amount.vue')
+      },
+      {
+        path: '/small-seckill-statistics',
+        name: 'small-seckill-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '限时秒杀活动分析'
+        },
+        component: () => import('@/view/mini-program-manager/member/seckill-statistics.vue')
+      },
+      {
+        path: '/small-seckill-amount',
+        name: 'small-seckill-amount',
+        meta: {
+          icon: 'logo-usd',
+          title: '限时秒杀活动数据汇总'
+        },
+        component: () => import('@/view/mini-program-manager/member/seckill-amount.vue')
+      },
+      {
+        path: '/small-assist-statistics',
+        name: 'small-assist-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '助力抢爆品活动分析'
+        },
+        component: () => import('@/view/mini-program-manager/member/assist-statistics.vue')
+      },
+      {
+        path: '/small-assist-amount',
+        name: 'small-assist-amount',
+        meta: {
+          icon: 'logo-usd',
+          title: '助力抢爆品活动数据汇总'
+        },
+        component: () => import('@/view/mini-program-manager/member/assist-amount.vue')
+      },
+    ]
   },
   {
     path: '/small-orders',

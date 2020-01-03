@@ -992,12 +992,7 @@ const relationTempColumns = [
         );
       } else if (row.type === "COUPON") {
         if (row.couponConfigManage.couponType === "DISCOUNT_COUPON") {
-          return (
-            <div>
-              {fenToYuanDot2Number(row.couponConfigManage.couponFee) * 10 +
-                "折"}
-            </div>
-          );
+          return <div>{row.couponConfigManage.couponFee / 10 + "折"}</div>;
         } else {
           return <div>{fenToYuanDot2(row.couponConfigManage.couponFee)}</div>;
         }
@@ -1370,7 +1365,7 @@ const couponColumns = [
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{fenToYuanDot2Number(row.couponFee) * 10 + "折"}</div>;
+        return <div>{row.couponFee / 10 + "折"}</div>;
       } else {
         return <div>{fenToYuanDot2(row.couponFee)}</div>;
       }
@@ -1383,6 +1378,21 @@ const couponColumns = [
     minWidth: 80,
     render(h, params) {
       return <div>{fenToYuanDot2(params.row.minBuyFee)}</div>;
+    }
+  },
+  {
+    title: "最高优惠金额",
+    align: "center",
+    key: "maxDiscountFee",
+    minWidth: 40,
+    render(h, params) {
+      const { row } = params;
+      if (row.maxDiscountFee != null) {
+        return <div>{fenToYuanDot2(row.maxDiscountFee)}</div>;
+      } else {
+        return <div>{"N/A"}</div>;
+      }
+      return <div>{fenToYuanDot2(row.maxDiscountFee)}</div>;
     }
   },
   {

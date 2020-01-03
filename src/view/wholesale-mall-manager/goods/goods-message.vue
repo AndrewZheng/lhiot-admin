@@ -285,7 +285,7 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="商品主图:建议尺寸;400x400(单位:px):" prop="goodsImage">
+              <FormItem label="商品主图:建议尺寸;750x750(单位:px):" prop="goodsImage">
                 <Input v-show="false" v-model="productDetail.goodsImage" style="width: auto"></Input>
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
@@ -314,7 +314,7 @@
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="服务保障图:建议尺寸;400x400(单位:px)" prop="otherImage">
+              <FormItem label="服务保障图:建议尺寸;710x500(单位:px)" prop="otherImage">
                 <Input v-show="false" v-model="productDetail.otherImage" style="width: auto"></Input>
                 <div
                   v-for="item in uploadListDetail"
@@ -351,7 +351,7 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="规格描述(推荐宽度为750px，高度自适应):" prop="goodsImages">
+              <FormItem label="规格描述(推荐宽度为710px，高度自适应):" prop="goodsImages">
                 <Input v-show="false" v-model="productDetail.goodsImages" style="width: auto"></Input>
                 <div
                   v-for="item in uploadListMultiple"
@@ -531,7 +531,7 @@ export default {
         categoryId: [{ required: true, message: '请选择商品分类' }],
         goodsImage: [{ required: true, message: '请上传商品主图' }],
         goodsImages: [{ required: true, message: '请上传商品详情图' }],
-        otherImage: [{ required: true, message: '请上传服务保障图' }],
+        // otherImage: [{ required: true, message: '请上传服务保障图' }],
         stockLimit: [{ required: true, message: '请输入安全库存' }]
       },
       columns: [
