@@ -1242,7 +1242,7 @@ const productColumns = [
     align: "center"
   },
   {
-    title: "秒杀价格",
+    title: "助力价格",
     key: "price",
     minWidth: 80,
     align: "center",
@@ -2068,6 +2068,7 @@ export default {
           this.modalEdit = false;
           this.$Message.success("创建成功!");
           this.getRelationTableData();
+          this.topStatus = "PROD";
         })
         .catch(() => {
           this.modalViewLoading = false;

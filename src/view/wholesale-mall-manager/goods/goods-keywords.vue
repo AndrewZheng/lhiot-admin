@@ -307,7 +307,7 @@ const roleRowData = {
 
 const productStandardDetail = {
   barCode: '',
-  baseUnitName: '',
+  unitName: '',
   categoryName: '',
   goodsCode: '',
   goodsId: 0,

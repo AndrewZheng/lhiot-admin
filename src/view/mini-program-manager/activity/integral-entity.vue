@@ -179,7 +179,7 @@
                 <FormItem label="基础重量:" prop="baseQty">{{ addRelationDetail.baseQty }}</FormItem>
               </i-col>
               <i-col span="6">
-                <FormItem label="基础单位:" prop="baseUnitName">{{ addRelationDetail.baseUnitName }}</FormItem>
+                <FormItem label="基础单位:" prop="unitName">{{ addRelationDetail.unitName }}</FormItem>
               </i-col>
             </Row>
             <Row>
@@ -432,7 +432,7 @@ import {
 
 const relationDetail = {
   baseQty: 0,
-  baseUnitName: "",
+  unitName: "",
   description: "",
   detailImage: null,
   entityLimit: 999,
@@ -977,7 +977,7 @@ export default {
     handleChange(row, index) {
       // 关联选择相关规格的商品
       this.addRelationDetail.baseQty = row.baseQty;
-      this.addRelationDetail.baseUnitName = row.baseUnit;
+      this.addRelationDetail.unitName = row.baseUnit;
       this.addRelationDetail.description = row.description;
       this.addRelationDetail.detailImage = row.detailImage;
       this.addRelationDetail.image = row.image;

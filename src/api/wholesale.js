@@ -524,7 +524,7 @@ export const getUserPages = (data) => {
     method: 'post',
     headers: {
       'page': data.page,
-      'rows': data.rows
+      'rows': data.rows,
     }
   });
 };
@@ -626,7 +626,9 @@ export const getOrderPages = (data) => {
     method: 'post',
     headers: {
       'page': data.page,
-      'rows': data.rows
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
     }
   });
 };

@@ -43,6 +43,7 @@ import {
   couponUseLimitEnum,
   giftTypeEnum,
   expandTypeEnum,
+  pfExpandTypeEnum,
   appTypeEnum,
   appTypesEnum,
   payTypeEnum,
@@ -307,6 +308,10 @@ export const giftTypeConvert = (value) => {
 
 export const expandTypeConvert = (value) => {
   return convertFunction(value, expandTypeEnum);
+}
+
+export const pfExpandTypeConvert = (value) => {
+  return convertFunction(value, pfExpandTypeEnum);
 }
 
 export const validDateTypeConvert = (value) => {

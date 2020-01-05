@@ -1622,24 +1622,27 @@ export default {
     },
     handleDiscount(params) {
       // 展示折扣配置弹窗
+      console.log("lzsb", params.row.productStandardExpand);
       this.productStandardDetail = this._.cloneDeep(params.row);
       // 先清除上次请求的数据
       this.proStandardExpand = proStandardExpand;
       this.proStandardExpand.limitQty = this.productStandardDetail.limitQty;
       this.productStandardDetail.expandType = proStandardExpand.expandType;
       // 请求数据展示
-      getProStandardExpand({
-        id: this.productStandardDetail.id
-      })
-        .then(res => {
-          if (res && res.id > 0) {
-            this.proStandardExpand = res;
-          }
-          this.modalDiscount = true;
-        })
-        .catch(() => {
-          this.modalDiscount = false;
-        });
+      this.modalDiscount = true;
+      // getProStandardExpand({
+      //   id: this.productStandardDetail.id
+      // })
+      //   .then(res => {
+      //     console.log("lzsb", res);
+      //     // if (res && res.id > 0) {
+      //       this.proStandardExpand = res;
+      //     // }
+      //     this.modalDiscount = true;
+      //   })
+      //   .catch(() => {
+      //     this.modalDiscount = false;
+      //   });
     },
     // 海鼎会员价查询
     handleHdSvipPrice() {

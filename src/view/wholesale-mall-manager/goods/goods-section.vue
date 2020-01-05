@@ -58,23 +58,13 @@
               </Row>
             </div>
             <div slot="operations">
-              <Button
-                v-waves
-                type="info"
-                class="mr5"
-                @click="handleBack"
-              >
+              <Button v-waves type="info" class="mr5" @click="handleBack">
                 <Icon type="ios-arrow-back" />&nbsp;返回所有板块
               </Button>
               <Button v-waves type="success" class="mr5" @click="handleCreate">
-                <Icon type="md-add" /> 添加
+                <Icon type="md-add" />添加
               </Button>
-              <Button
-                v-waves
-                type="primary"
-                class="mr5"
-                @click="handleExchange"
-              >
+              <Button v-waves type="primary" class="mr5" @click="handleExchange">
                 <Icon type="md-repeat" />&nbsp;批量更换
               </Button>
               <Poptip
@@ -85,7 +75,7 @@
                 @on-ok="poptipOk"
               >
                 <Button type="error" class="mr5">
-                  <Icon type="md-trash" /> 批量删除
+                  <Icon type="md-trash" />批量删除
                 </Button>
               </Poptip>
             </div>
@@ -114,7 +104,7 @@
       <div class="modal-content">
         <Form ref="editForm" :model="goodsStandardRelation" :rules="ruleInline">
           <!-- 编辑 -->
-          <Row v-if="isEdit">
+          <Row v-if="isEdit&&currentCategory.plateName.indexOf('vip')==-1">
             <FormItem label="请选择要更换的商品板块:" style="width:400px">
               <Cascader
                 :data="goodsSectionData"
@@ -140,7 +130,7 @@
                 border
                 @on-select-all="onSelectionAll"
                 @on-selection-change="onSelectionChange"
-              >d
+              >
                 <div slot="searchCondition">
                   <Row>
                     <Input
@@ -203,13 +193,12 @@
         <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确认</Button>
       </div>
     </Modal>
-
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import CommonIcon from '_c/common-icon';
+import Tables from "_c/tables";
+import CommonIcon from "_c/common-icon";
 import {
   getProductSectionRelationPages,
   createProductSectionRelation,
@@ -217,37 +206,44 @@ import {
   getProductStandardsPages,
   editProductSectionRelation,
   getProductSectionTree
-} from '@/api/wholesale';
-import { buildMenu, convertTree, convertTreeCategory, fenToYuanDot2 } from '@/libs/util';
-import uploadMixin from '@/mixins/uploadMixin';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
+} from "@/api/wholesale";
+import {
+  buildMenu,
+  convertTree,
+  convertTreeCategory,
+  fenToYuanDot2
+} from "@/libs/util";
+import uploadMixin from "@/mixins/uploadMixin";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import { pfExpandTypeConvert } from "@/libs/converStatus";
+import { pfExpandTypeEnum } from "@/libs/enumerate";
 
 const goodsSectionRelation = {
-  barCode: '',
-  baseUnitName: '',
-  categoryName: '',
-  goodsCode: '',
+  barCode: "",
+  unitName: "",
+  categoryName: "",
+  goodsCode: "",
   goodsId: 0,
   goodsImage: null,
-  goodsName: '',
+  goodsName: "",
   goodsPriceRegionList: [], // 商品价格区间
-  goodsUnit: '',
-  hdSkuId: '',
+  goodsUnit: "",
+  hdSkuId: "",
   id: 0,
-  isVip: '',
+  isVip: "",
   netWeight: 0, // 商品净重
   price: 0,
   purchasePrice: 0,
-  standard: '',
-  standardDesc: '',
-  unitCode: '',
-  vaild: '',
+  standard: "",
+  standardDesc: "",
+  unitCode: "",
+  vaild: "",
   weight: 0,
   rank: 0, // 先保留后续扩展
-  baseProductName: '', // 先保留可扩展
-  goodsUnitName: '',
+  baseProductName: "", // 先保留可扩展
+  goodsUnit: "",
   standardId: 0
 };
 
@@ -256,29 +252,29 @@ const currentCategory = {
   rank: 0,
   levels: 0,
   parentId: 0,
-  plateName: '',
-  plateImage: '',
-  layout: '', // tile-平铺布局 roll-滚动布局 list-列表-用于推荐商品
-  parentPlateName: '',
+  plateName: "",
+  plateImage: "",
+  layout: "", // tile-平铺布局 roll-滚动布局 list-列表-用于推荐商品
+  parentPlateName: "",
   channelGoods: []
 };
 
 const roleRowData = {
   plateId: null,
   goodsStandardId: null,
-  goodsName: '',
+  goodsName: "",
   page: 1,
   rows: 10,
   sidx: null,
-  sort: 'rank'
+  sort: "rank"
 };
 
 const relationData = {
   id: 0,
   rank: 0,
   plateId: 0,
-  relationIds: '',
-  goodsStandardIds: ''
+  relationIds: "",
+  goodsStandardIds: ""
 };
 
 const productRowData = {
@@ -286,250 +282,262 @@ const productRowData = {
   goodsCode: null,
   goodsName: null,
   barCode: null,
-  isVip: '',
+  goodsType: "",
   page: 1,
   rows: 5
 };
 
 const relationColumns = [
   {
-    type: 'selection',
-    key: '',
+    type: "selection",
+    key: "",
     minWidth: 50,
-    align: 'center',
-    fixed: 'left'
+    align: "center",
+    fixed: "left"
   },
   {
-    title: '关联ID',
-    align: 'center',
+    title: "关联ID",
+    align: "center",
     sortable: true,
-    key: 'id',
+    key: "id",
     minWidth: 80
   },
   {
-    title: '商品条码',
-    align: 'center',
-    key: 'barCode',
+    title: "商品条码",
+    align: "center",
+    key: "barCode",
     minWidth: 70
   },
   {
-    title: '商品名称',
-    align: 'center',
-    key: 'goodsName',
+    title: "商品名称",
+    align: "center",
+    key: "goodsName",
     minWidth: 120
   },
   {
-    title: '商品图片',
-    key: 'goodsImage',
-    align: 'center',
+    title: "商品图片",
+    key: "goodsImage",
+    align: "center",
     minWidth: 80,
     render: (h, params, vm) => {
       const { row } = params;
-      const str = <img src={row.goodsImage} height='60' width='60' />;
+      const str = <img src={row.goodsImage} height="60" width="60" />;
       return <div>{str}</div>;
     }
   },
   {
-    title: '商品规格',
-    align: 'center',
-    key: 'standardDesc',
+    title: "商品规格",
+    align: "center",
+    key: "standardDesc",
     minWidth: 80
   },
   {
-    title: '商品单位',
-    align: 'center',
+    title: "商品单位",
+    align: "center",
     minWidth: 80,
-    key: 'goodsUnitName'
+    key: "goodsUnit"
   },
   {
-    title: '商品价格',
-    align: 'center',
+    title: "商品价格",
+    align: "center",
     minWidth: 60,
-    key: 'price',
+    key: "price",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
     }
   },
   {
-    title: '是否VIP',
+    title: "商品类型",
     minWidth: 80,
-    key: 'isVip',
-    align: 'center',
+    key: "goodsType",
+    align: "center",
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.isVip === 'yes') {
+      if (row.goodsType == "NORMAL") {
         return (
           <div>
-            <tag color='warning'>VIP</tag>
+            <tag color="cyan">{pfExpandTypeConvert(row.goodsType).label}</tag>
           </div>
         );
-      } else if (row.isVip === 'no') {
+      } else if (row.goodsType == "VIP") {
         return (
           <div>
-            <tag color='primary'>普通</tag>
+            <tag color="orange">{pfExpandTypeConvert(row.goodsType).label}</tag>
           </div>
         );
+      } else if (row.goodsType == "FLASHSALE") {
       }
       return (
         <div>
-          <tag color='primary'>N/A</tag>
+          <tag color="blue">{pfExpandTypeConvert(row.goodsType).label}</tag>
+        </div>
+      );
+      return (
+        <div>
+          <tag color="primary">N/A</tag>
         </div>
       );
     }
   },
   {
-    title: '商品状态',
+    title: "商品状态",
     minWidth: 80,
-    key: 'vaild',
-    align: 'center',
+    key: "vaild",
+    align: "center",
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.vaild === 'yes') {
+      if (row.vaild === "yes") {
         return (
           <div>
-            <tag color='success'>上架</tag>
+            <tag color="success">上架</tag>
           </div>
         );
-      } else if (row.vaild === 'no') {
+      } else if (row.vaild === "no") {
         return (
           <div>
-            <tag color='error'>下架</tag>
+            <tag color="error">下架</tag>
           </div>
         );
       }
       return (
         <div>
-          <tag color='primary'>N/A</tag>
+          <tag color="primary">N/A</tag>
         </div>
       );
     }
   },
   {
-    title: '商品排序',
-    align: 'center',
+    title: "商品排序",
+    align: "center",
     sortable: true,
     minWidth: 80,
-    key: 'rank'
+    key: "rank"
   },
   {
-    title: '操作',
-    align: 'center',
+    title: "操作",
+    align: "center",
     minWidth: 180,
-    key: 'handle',
-    options: ['exchange', 'edit', 'delete']
+    key: "handle",
+    options: ["exchange", "edit", "delete"]
   }
 ];
 
 const standardColumns = [
   {
-    type: 'selection',
-    key: '',
+    type: "selection",
+    key: "",
     minWidth: 50,
-    align: 'center',
-    fixed: 'left'
+    align: "center",
+    fixed: "left"
   },
   {
-    title: '规格ID',
-    align: 'center',
-    key: 'id',
+    title: "规格ID",
+    align: "center",
+    key: "id",
     minWidth: 50
   },
   {
-    title: '商品条码',
-    align: 'center',
-    key: 'barCode',
+    title: "商品条码",
+    align: "center",
+    key: "barCode",
     minWidth: 70
   },
   {
-    title: '商品名称',
-    align: 'center',
-    key: 'goodsName',
+    title: "商品名称",
+    align: "center",
+    key: "goodsName",
     minWidth: 120
   },
   {
-    title: '商品图片',
-    key: 'goodsImage',
-    align: 'center',
+    title: "商品图片",
+    key: "goodsImage",
+    align: "center",
     minWidth: 80,
     render: (h, params, vm) => {
       const { row } = params;
-      const str = <img src={row.goodsImage} height='60' width='60' />;
+      const str = <img src={row.goodsImage} height="60" width="60" />;
       return <div>{str}</div>;
     }
   },
   {
-    title: '商品规格',
-    align: 'center',
-    key: 'standardDesc',
+    title: "商品规格",
+    align: "center",
+    key: "standardDesc",
     minWidth: 80
   },
   {
-    title: '商品单位',
-    align: 'center',
+    title: "商品单位",
+    align: "center",
     minWidth: 80,
-    key: 'goodsUnit'
+    key: "goodsUnit"
   },
   {
-    title: '商品价格',
-    align: 'center',
+    title: "商品价格",
+    align: "center",
     minWidth: 60,
-    key: 'price',
+    key: "price",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
     }
   },
   {
-    title: '是否VIP',
+    title: "商品类型",
     minWidth: 80,
-    key: 'isVip',
-    align: 'center',
+    key: "goodsType",
+    align: "center",
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.isVip === 'yes') {
+      if (row.goodsType == "NORMAL") {
         return (
           <div>
-            <tag color='warning'>VIP</tag>
+            <tag color="cyan">{pfExpandTypeConvert(row.goodsType).label}</tag>
           </div>
         );
-      } else if (row.isVip === 'no') {
+      } else if (row.goodsType == "VIP") {
         return (
           <div>
-            <tag color='primary'>普通</tag>
+            <tag color="orange">{pfExpandTypeConvert(row.goodsType).label}</tag>
           </div>
         );
+      } else if (row.goodsType == "FLASHSALE") {
       }
       return (
         <div>
-          <tag color='primary'>N/A</tag>
+          <tag color="blue">{pfExpandTypeConvert(row.goodsType).label}</tag>
+        </div>
+      );
+      return (
+        <div>
+          <tag color="primary">N/A</tag>
         </div>
       );
     }
   },
   {
-    title: '商品状态',
+    title: "商品状态",
     minWidth: 80,
-    key: 'vaild',
-    align: 'center',
+    key: "vaild",
+    align: "center",
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.vaild === 'yes') {
+      if (row.vaild === "yes") {
         return (
           <div>
-            <tag color='success'>上架</tag>
+            <tag color="success">上架</tag>
           </div>
         );
-      } else if (row.vaild === 'no') {
+      } else if (row.vaild === "no") {
         return (
           <div>
-            <tag color='error'>下架</tag>
+            <tag color="error">下架</tag>
           </div>
         );
       }
       return (
         <div>
-          <tag color='primary'>N/A</tag>
+          <tag color="primary">N/A</tag>
         </div>
       );
     }
@@ -545,10 +553,11 @@ export default {
   data() {
     return {
       ruleInline: {
-        rank: [{ required: false, message: '请输入板块商品排序' }]
+        rank: [{ required: false, message: "请输入板块商品排序" }]
       },
       menuData: [],
       discount: [],
+      pfExpandTypeEnum,
       goodsStandardData: [],
       goodsSectionData: [],
       defaultGoodsSectionData: [],
@@ -559,8 +568,8 @@ export default {
       modalChange: false,
       modalViewLoading: false,
       modalEditLoading: false,
-      currentParentName: '',
-      currentTreeTitleCode: '',
+      currentParentName: "",
+      currentTreeTitleCode: "",
       productTotal: 0,
       goodsSectionRelation: _.cloneDeep(goodsSectionRelation),
       currentCategory: _.cloneDeep(currentCategory),
@@ -575,22 +584,22 @@ export default {
   },
   methods: {
     handleBack() {
-      this.currentCategory.plateName = '所有板块';
+      this.currentCategory.plateName = "所有板块";
       this.handleClear();
     },
     renderContent(h, { root, node, data }) {
-      if (data.type == 'PARENT') {
+      if (data.type == "PARENT") {
         return (
           <div
             style={{
-              display: 'inline-block',
-              width: '100%',
-              fontSize: '14px',
-              cursor: 'pointer'
+              display: "inline-block",
+              width: "100%",
+              fontSize: "14px",
+              cursor: "pointer"
             }}
           >
             <span>
-              <CommonIcon type='ios-folder' class='mr10' />
+              <CommonIcon type="ios-folder" class="mr10" />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -601,14 +610,14 @@ export default {
         return (
           <div
             style={{
-              display: 'inline-block',
-              width: '100%',
-              fontSize: '14px',
-              cursor: 'pointer'
+              display: "inline-block",
+              width: "100%",
+              fontSize: "14px",
+              cursor: "pointer"
             }}
           >
             <span>
-              <CommonIcon type='ios-paper' class='mr10' />
+              <CommonIcon type="ios-paper" class="mr10" />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -625,13 +634,18 @@ export default {
     },
     handleCreate() {
       if (!this.currentCategory.id) {
-        this.$Message.warning('请先从左侧选择一个板块');
+        this.$Message.warning("请先从左侧选择一个板块");
         return;
       }
       this.$refs.editForm.resetFields();
       this.searchProductRowData = _.cloneDeep(productRowData);
       // VIP专区只能关联VIP商品，添加isVip过滤条件
-      this.searchProductRowData.isVip = this.currentTreeTitleCode.indexOf('VIP') < 0 ? 'no' : 'yes';
+      if (this.currentTreeTitleCode.indexOf("VIP") > -1) {
+        this.searchProductRowData.goodsType = "VIP";
+      } else {
+        this.searchProductRowData.goodsType = "NORMAL";
+      }
+
       this.getProductTableData();
       this.goodsStandardRelation.plateId = this.currentCategory.id;
       this.tempModalType = this.modalType.create;
@@ -639,7 +653,7 @@ export default {
     },
     handleEdit(params) {
       if (!this.currentCategory.id || this.currentCategory.id == 0) {
-        this.$Message.warning('请从左侧选择一个板块');
+        this.$Message.warning("请从左侧选择一个板块");
         return;
       }
       const { row } = params;
@@ -654,11 +668,11 @@ export default {
       this.$refs.editForm.validate(valid => {
         if (valid) {
           if (!this.goodsStandardRelation.plateId) {
-            this.$Message.warning('商品板块id不能为空');
+            this.$Message.warning("商品板块id不能为空");
             return;
           }
           if (!this.goodsStandardRelation.goodsStandardIds) {
-            this.$Message.warning('请选择一条商品信息');
+            this.$Message.warning("请选择一条商品信息");
             return;
           }
           if (this.isCreate) {
@@ -671,13 +685,12 @@ export default {
             );
           } else if (this.isEdit) {
             // 更新传递的是 relationIds
-            editProductSectionRelation(this.goodsStandardRelation).then(
-              res => {
-                this.initMenuList();
-                this.modalEditLoading = false;
-                this.modalEdit = false;
-              }
-            );
+            console.log("板块", this.goodsStandardRelation);
+            editProductSectionRelation(this.goodsStandardRelation).then(res => {
+              this.initMenuList();
+              this.modalEditLoading = false;
+              this.modalEdit = false;
+            });
           }
         }
       });
@@ -690,11 +703,11 @@ export default {
     handleExchange() {
       // 批量更换板块商品
       if (!this.currentCategory.id || this.currentCategory.id === 0) {
-        this.$Message.warning('请从左侧选择一个板块');
+        this.$Message.warning("请从左侧选择一个板块");
         return;
       }
       if (!this.goodsStandardRelation.relationIds) {
-        this.$Message.warning('请从至少选择一个板块商品更换');
+        this.$Message.warning("请从至少选择一个板块商品更换");
         return;
       }
       this.defaultGoodsSectionData = [];
@@ -751,8 +764,8 @@ export default {
         if (res && res.length > 0) {
           const menuList = buildMenu(res);
           const map = {
-            title: 'title',
-            children: 'children'
+            title: "title",
+            children: "children"
           };
           this.menuData = convertTree(menuList, map, true);
           this.goodsSectionData = convertTreeCategory(menuList, map, true);
@@ -765,8 +778,8 @@ export default {
     handleClick({ root, node, data }) {
       this.loading = true;
       // 展开当前节点
-      if (typeof data.expand === 'undefined') {
-        this.$set(data, 'expend', false);
+      if (typeof data.expand === "undefined") {
+        this.$set(data, "expend", false);
         if (data.children) {
           this.expandChildren(data.children);
         }
@@ -779,14 +792,14 @@ export default {
       this.currentCategory.plateName = data.title;
       this.goodsStandardRelation.plateId = data.id;
       this.currentTreeTitleCode = data.titleCode;
-      console.log('titleCode: ', this.currentTreeTitleCode);
+      console.log("titleCode: ", this.currentTreeTitleCode);
       // 获取新数据
       this.getTableData();
     },
     expandChildren(array) {
       array.forEach(item => {
-        if (typeof item.expand === 'undefined') {
-          this.$set(item, 'expend', false);
+        if (typeof item.expand === "undefined") {
+          this.$set(item, "expend", false);
         } else {
           item.expand = !item.expand;
         }
@@ -799,43 +812,60 @@ export default {
       this.getProductTableData();
     },
     onSelectionAll(selection) {
-      this.goodsStandardRelation.goodsStandardIds = selection.map(item => item.id.toString()).join(',');
+      this.goodsStandardRelation.goodsStandardIds = selection
+        .map(item => item.id.toString())
+        .join(",");
     },
     onSelectionChange(selection) {
-      this.goodsStandardRelation.goodsStandardIds = selection.map(item => item.id.toString()).join(',');
+      this.goodsStandardRelation.goodsStandardIds = selection
+        .map(item => item.id.toString())
+        .join(",");
     },
     onRelationSelectionAll(selection) {
-      console.log('selectDatas all:', selection);
+      console.log("selectDatas all:", selection);
       this.goodsStandardRelation.goodsStandardIds = selection
         .map(item => item.standardId.toString())
-        .join(',');
+        .join(",");
       this.goodsStandardRelation.relationIds = selection
         .map(item => item.id.toString())
-        .join(',');
+        .join(",");
       this.tableDataSelected = selection;
-      console.log('goodsStandardIds:', this.goodsStandardRelation.goodsStandardIds);
-      console.log('relationIds:', this.goodsStandardRelation.relationIds);
+      console.log(
+        "goodsStandardIds:",
+        this.goodsStandardRelation.goodsStandardIds
+      );
+      console.log("relationIds:", this.goodsStandardRelation.relationIds);
     },
     onRelationSelectionChange(selection) {
-      console.log('selectDatas:', selection);
+      console.log("selectDatas:", selection);
       this.goodsStandardRelation.goodsStandardIds = selection
         .map(item => item.standardId.toString())
-        .join(',');
+        .join(",");
       this.goodsStandardRelation.relationIds = selection
         .map(item => item.id.toString())
-        .join(',');
+        .join(",");
       this.tableDataSelected = selection;
-      console.log('goodsStandardIds:', this.goodsStandardRelation.goodsStandardIds);
-      console.log('relationIds:', this.goodsStandardRelation.relationIds);
+      console.log(
+        "goodsStandardIds:",
+        this.goodsStandardRelation.goodsStandardIds
+      );
+      console.log("relationIds:", this.goodsStandardRelation.relationIds);
     },
     // 选择分类
     goodsSectionChange(value, selectedData) {
-      if (selectedData.length > 0) {
-        this.goodsStandardRelation.plateId = selectedData[selectedData.length - 1].id;
-      } else {
-        this.goodsStandardRelation.plateId = null;
-      }
-      this.defaultGoodsSectionData = selectedData;
+      // console.log("数据", selectedData);
+      // if (selectedData[0].titleCode == "BKGL322") {
+      //   this.$Message.warning("普通商品不允许更换到VIP板块");
+      //   // return;
+      // } else {
+        if (selectedData.length > 0) {
+          this.goodsStandardRelation.plateId =
+            selectedData[selectedData.length - 1].id;
+        } else {
+          this.goodsStandardRelation.plateId = null;
+        }
+        this.defaultGoodsSectionData = selectedData;
+      // }
     },
     hanldeProductClear() {
       this.searchProductRowData = _.cloneDeep(productRowData);

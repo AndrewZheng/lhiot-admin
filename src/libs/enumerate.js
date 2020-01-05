@@ -885,6 +885,21 @@ export const expandTypeEnum = [
   }
 ];
 
+export const pfExpandTypeEnum = [
+  {
+    label: '普通商品',
+    value: 'NORMAL'
+  },
+  {
+    label: 'vip商品',
+    value: 'VIP'
+  },
+  {
+    label: '限时抢购商品',
+    value: 'FLASHSALE'
+  },
+];
+
 // 小程序优惠券使用限制 SMALL_ALL("小程序全场券"),PART_GOODS("部分商品券"),PART_STORES("部分门店券")，HD_ALL("海鼎全场券");
 export const couponUseLimitEnum = [{
   label: '小程序全场券',
