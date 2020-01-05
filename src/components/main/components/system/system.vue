@@ -46,7 +46,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setCurrentSystem', 'setTagNavList']),
+    ...mapMutations(['setBreadCrumb', 'setCurrentSystem', 'setTagNavList']),
     ...mapActions(['handleLogOut', 'getRouteListById']),
     switchSystem(item) {
       const obj = JSON.parse(item);
@@ -72,6 +72,8 @@ export default {
         this.$router.push({
           name: name
         });
+        console.log('setBreadCrumb:', this.$route);
+        this.setBreadCrumb(this.$route);
       });
     }
   }

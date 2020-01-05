@@ -286,7 +286,16 @@ export const getHomeRoute = routers => {
       const res = getHomeRoute(item.children);
       if (res.name) return res;
     } else {
-      if (item.name === 'home') homeRoute = item;
+      // 获取子系统独立的首页
+      if (PcLockr.get(enums.SYSTEM) != null) {
+        let sname = 'home';
+        const currentSystem = JSON.parse(PcLockr.get(enums.SYSTEM));
+        sname = currentSystem.code.split('_')[0] + '-home';
+        sname = sname === 'manager-home' ? 'home' : sname; // 如果是综合管理系统还是跳转公共首页
+        if (item.name === sname) homeRoute = item;
+      } else {
+        if (item.name === 'home') homeRoute = item;
+      }
     }
   }
   return homeRoute;
@@ -821,10 +830,9 @@ export const fenToYuanDot2 = (number) => {
  */
 export const percent = (number) => {
   if (typeof number === 'number') {
-    return  (number * 100.00).toFixed(2) + '%';
+    return (number * 100.00).toFixed(2) + '%';
   } else if (typeof number === 'string') {
-    return  (number * 100.00).toFixed(2) + '%';
-    
+    return (number * 100.00).toFixed(2) + '%';
   }
   return number;
 };
