@@ -352,7 +352,16 @@ export default {
         {
           title: "结束时间",
           align: "center",
-          key: "endTime"
+          key: "endTime",
+          width: "220",
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (!compareCouponData(row.endTime)) {
+              return <div style="color:red">{row.endTime + "　已过期"}</div>;
+            } else {
+              return <div>{row.endTime}</div>;
+            }
+          }
         },
         {
           title: "活动链接",
