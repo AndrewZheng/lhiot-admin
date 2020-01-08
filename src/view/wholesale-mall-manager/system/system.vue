@@ -251,7 +251,7 @@
           <template v-if="hasParamRule">
             <Row v-for="(item,index) in paramObjectList" :key="index" type="flex" justify="start" class="mt10">
               <i-col span="10">
-                <Row v-for="(objKey,index) in keys" :key="index" type="flex" justify="start">
+                <Row v-for="(objKey,sindex) in keys" :key="sindex" type="flex" justify="start">
                   <i-col span="12 mt5">
                     <Input v-model="item[objKey]" style="width:300px;" @on-change="handleInputChange">
                     <span slot="prepend">{{ findKeyName(objKey) }}</span>
@@ -263,7 +263,7 @@
                 <Button v-waves size="small" type="primary" class="mr5" @click="handleAddParam">
                   <Icon type="md-add" />
                 </Button>
-                <Button v-waves size="small" type="error" class="mr5" @click="handleDelParam(index)">
+                <Button v-waves v-show="index>0" size="small" type="error" class="mr5" @click="handleDelParam(index)">
                   <Icon type="md-trash" />
                 </Button>
               </i-col>
@@ -452,7 +452,7 @@ export default {
   },
   computed: {
     hasParamRule() {
-      return this.systemDetail.showType === 'list' && this.systemDetail.paramRuleSetting;
+      return this.systemDetail.showType === 'list' && this.systemDetail.paramRuleSetting != null;
     },
     noParamRule() {
       return this.systemDetail.showType === 'list' && !this.systemDetail.paramRuleSetting;
@@ -540,6 +540,9 @@ export default {
       this.tableDataSelected = [];
       this.tableDataSelected.push(params.row);
       this.deleteTable(params.row.id);
+    },
+    handleInputChange() {
+      this.systemDetail.indexValue = JSON.stringify(this.paramObjectList);
     },
     handleAddParam() {
       // 添加参数对象
