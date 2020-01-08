@@ -577,7 +577,7 @@ const btns = {
       props: {
         confirm: true,
         title: '确认要重新发送海鼎吗?',
-        placement: params.index === 0 || params.index === 1 ? 'left' : 'top'
+        placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top'
       },
       style: {
         marginRight: '5px'

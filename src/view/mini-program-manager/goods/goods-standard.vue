@@ -16,12 +16,12 @@
         @on-view="handleView"
         @on-edit="handleEdit"
         @on-discount="handleDiscount"
-        @on-delete="handleDelete"
         @custom-on-sale="customOnSale"
         @on-current-change="onCurrentChange"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
+        <!--   @on-delete="handleDelete" -->
         <div slot="searchCondition">
           <Row v-show="!showBack">
             <Input
@@ -124,7 +124,7 @@
           <Button v-waves class="search-btn ml5 mr5" type="success" @click="handleCreateView">
             <Icon type="md-add" />&nbsp;添加
           </Button>
-          <Poptip
+          <!-- <Poptip
             confirm
             placement="bottom"
             style="width: 100px"
@@ -134,7 +134,7 @@
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
             </Button>
-          </Poptip>
+          </Poptip> -->
           <Button class="search-btn mr2" type="warning" @click="handleDownload">
             <Icon type="md-download" />导出
           </Button>
@@ -1336,7 +1336,7 @@ export default {
           align: "center",
           minWidth: 180,
           key: "handle",
-          options: ["customOnSale", "view", "edit", "discount", "delete"]
+          options: ["customOnSale", "view", "edit", "discount"]
         }
       ],
       productColumns: [
@@ -1622,7 +1622,6 @@ export default {
     },
     handleDiscount(params) {
       // 展示折扣配置弹窗
-      console.log("lzsb", params.row.productStandardExpand);
       this.productStandardDetail = this._.cloneDeep(params.row);
       // 先清除上次请求的数据
       this.proStandardExpand = proStandardExpand;
@@ -1630,19 +1629,19 @@ export default {
       this.productStandardDetail.expandType = proStandardExpand.expandType;
       // 请求数据展示
       this.modalDiscount = true;
-      // getProStandardExpand({
-      //   id: this.productStandardDetail.id
-      // })
-      //   .then(res => {
-      //     console.log("lzsb", res);
-      //     // if (res && res.id > 0) {
-      //       this.proStandardExpand = res;
-      //     // }
-      //     this.modalDiscount = true;
-      //   })
-      //   .catch(() => {
-      //     this.modalDiscount = false;
-      //   });
+      console.log("id", this.productStandardDetail.id);
+      getProStandardExpand({
+        id: this.productStandardDetail.id
+      })
+        .then(res => {
+          console.log("1");
+          this.proStandardExpand = res;
+          this.modalDiscount = true;
+        })
+        .catch(() => {
+          console.log("2");
+          this.modalDiscount = true;
+        });
     },
     // 海鼎会员价查询
     handleHdSvipPrice() {
@@ -1821,6 +1820,7 @@ export default {
     },
     updateProStandardExpand() {
       this.proStandardExpand.standardId = this.productStandardDetail.id;
+      console.log("id", this.productStandardDetail.id);
       // this.proStandardExpand.limitQty = this.productStandardDetail.limitQty;
       this.modalViewLoading = true;
       // 新增或修改

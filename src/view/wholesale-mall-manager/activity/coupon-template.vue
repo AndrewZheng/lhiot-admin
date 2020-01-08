@@ -14,10 +14,10 @@
         search-place="top"
         @on-edit="handleEdit"
         @on-sale="handleStatus"
-        @on-delete="handleDelete"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
+        <!--  @on-delete="handleDelete" -->
         <div slot="searchCondition">
           <Row>
             <Input
@@ -78,7 +78,7 @@
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="handleCreate">
             <Icon type="md-add" />添加
           </Button>
-          <Poptip
+          <!-- <Poptip
             confirm
             placement="bottom"
             style="width: 100px"
@@ -88,7 +88,7 @@
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
             </Button>
-          </Poptip>
+          </Poptip> -->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -148,14 +148,14 @@
           </Row>
           <Row>
             <i-col span="12">
-                <FormItem label="满减金额:" prop="fullFee">
+              <FormItem label="满减金额:" prop="fullFee">
                 <InputNumber :min="0" :value="fullFeeComputed" @on-change="fullFeeOnchange"></InputNumber>
-                </FormItem>
+              </FormItem>
             </i-col>
             <i-col span="12">
-                <FormItem label="优惠金额:" prop="couponFee">
-                    <InputNumber :min="0" :value="couponFeeComputed" @on-change="couponFeeOnchange"></InputNumber>
-                </FormItem>
+              <FormItem label="优惠金额:" prop="couponFee">
+                <InputNumber :min="0" :value="couponFeeComputed" @on-change="couponFeeOnchange"></InputNumber>
+              </FormItem>
             </i-col>
           </Row>
         </Form>
@@ -240,17 +240,19 @@ export default {
       ruleInline: {
         couponType: [{ required: true, message: "请选择活动类型" }],
         couponFee: [
-        { required: true, message: "请输入优惠金额" },
-        {
+          { required: true, message: "请输入优惠金额" },
+          {
             message: "必须为大于0的数字",
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-        }],
+          }
+        ],
         fullFee: [
-        { required: true, message: "请输入满减金额" },
-        {
+          { required: true, message: "请输入满减金额" },
+          {
             message: "必须为大于0的数字",
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-        }],
+          }
+        ],
         vaild: [{ required: true, message: "请选择活动状态" }]
       },
       columns: [
@@ -349,7 +351,7 @@ export default {
           align: "center",
           minWidth: 80,
           key: "handle",
-          options: ["onSale", "edit", "delete"]
+          options: ["onSale", "edit",]
         }
       ]
     };
@@ -359,7 +361,7 @@ export default {
     this.getTableData();
   },
   created() {},
-  computed:{
+  computed: {
     couponFeeComputed() {
       return fenToYuanDot2Number(this.couponTemplate.couponFee);
     },

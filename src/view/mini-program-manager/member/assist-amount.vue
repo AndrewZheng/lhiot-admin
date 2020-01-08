@@ -133,9 +133,6 @@
               >
                 <Icon type="md-refresh" />&nbsp;清除
               </Button>
-              <!-- <Button class="search-btn mr2" type="warning" @click="handleDownload">
-                <Icon type="md-download" />导出数据
-              </Button>-->
             </Row>
           </div>
         </tables>
@@ -181,9 +178,9 @@
                   style="padding-left: 5px;width: 100px"
                 >{{ item.label }}</Option>
               </Select>
-              <!-- <Button class="search-btn mr2" type="warning" @click="handleDownload">
+              <Button class="search-btn mr2" type="warning" @click="handleDownload">
                 <Icon type="md-download" />导出数据
-              </Button>-->
+              </Button>
             </Row>
           </div>
         </tables>
@@ -375,6 +372,7 @@ export default {
           key: "buyProd"
         }
       ],
+      //导出数据
       columns2: [
         {
           title: "类型",
@@ -664,26 +662,24 @@ export default {
     // 导出数据
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
-      this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      userDataStatistics(this.searchRowData).then(res => {
-        const tableData = res.rows;
+      this.searchRowData2.rows = this.total > 5000 ? 5000 : this.total;
+      singleAssistStatistics(this.searchRowData2).then(res => {
+        const tableData2 = res.rows;
         // 恢复正常页数
-        this.searchRowData.rows = 10;
+        this.searchRowData2.rows = 10;
         // 表格数据导出字段翻译
         let _this = this;
-        tableData.forEach(item => {
-          // const obj = _this.storeList.find(x => item.storeId === x.storeId);
-          item["nickName"] = item["nickName"] + "";
-          item["phone"] = item["phone"] + "";
-          item["allAmount"] = (item["allAmount"] / 100.0).toFixed(2);
-          item["inviteCount"] = item["inviteCount"] + "";
-          item["waitAmount"] = (item["waitAmount"] / 100.0).toFixed(2);
-          item["canOutAmount"] = (item["canOutAmount"] / 100.0).toFixed(2);
-          item["allOutAmount"] = (item["allOutAmount"] / 100.0).toFixed(2);
+        tableData2.forEach(item => {
+          if (item["type"] == "COUPON") {
+            item["type"] = "优惠券";
+          } else if (item["type"] == "PROD") {
+            item["type"] = "商品";
+          }
+          item["couponConfigId"] = Number(item["couponConfigId"]);
         });
-        this.$refs.tables.handleDownload({
-          filename: `邀请有礼数据统计-${new Date().valueOf()}`,
-          data: tableData
+        this.$refs.tables1.handleDownload({
+          filename: `助力抢爆品单品数据统计-${new Date().valueOf()}`,
+          data: tableData2
         });
       });
     },

@@ -882,6 +882,10 @@ export const expandTypeEnum = [
   {
     label: '助力商品',
     value: 'ASSIST_PRODUCT'
+  },
+  {
+    label: '普通商品',
+    value: 'ORDINARY_PRODUCT'
   }
 ];
 

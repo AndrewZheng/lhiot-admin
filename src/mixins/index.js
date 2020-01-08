@@ -25,6 +25,7 @@ import {
   timeLimitedConvert,
   advertisementPositionTypeConvert,
   couponScopeConvert,
+  activityTypeConvert,
   advertisementLinkTypeConvert,
   miniOrderStatusConvert,
   wholesaleHdStatusConvert,
@@ -180,6 +181,10 @@ const mixin = {
     // 小程序优惠券使用范围
     couponScopeFilter(status) {
       return couponScopeConvert(status).label;
+    },
+    // 批发商城活动类型
+    pfActivityTypeFilter(status) {
+      return activityTypeConvert(status).label;
     },
     // 小程序优惠券有效期类型
     validDateTypeFilter(status) {

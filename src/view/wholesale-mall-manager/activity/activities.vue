@@ -14,11 +14,11 @@
         search-place="top"
         @on-edit="handleEdit"
         @on-sale="handleStatus"
-        @on-delete="handleDelete"
         @on-relevance="handleSetting"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
+        <!-- @on-delete="handleDelete" -->
         <div slot="searchCondition">
           <Row>
             <Select
@@ -91,7 +91,7 @@
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="handleCreate">
             <Icon type="md-add" />添加
           </Button>
-          <Poptip
+          <!-- <Poptip
             confirm
             placement="bottom"
             style="width: 100px"
@@ -101,7 +101,7 @@
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
             </Button>
-          </Poptip>
+          </Poptip>-->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -126,7 +126,12 @@
         <Form ref="editForm" :model="activityDetail" :rules="ruleInline" :label-width="100">
           <Row>
             <i-col span="12">
-              <FormItem label="活动类型:" prop="activityType" style="width:260px;">
+              <FormItem
+                label="活动类型:"
+                prop="activityType"
+                style="width:260px;"
+                v-show="tempModalType===modalType.create"
+              >
                 <Select v-model="activityDetail.activityType">
                   <Option
                     v-for="(item,index) in activityTypeEnum"
@@ -137,6 +142,11 @@
                   >{{ item.label }}</Option>
                 </Select>
               </FormItem>
+              <FormItem
+                label="活动类型:"
+                prop="activityType"
+                v-show="tempModalType===modalType.edit"
+              >{{ activityDetail.activityType | pfActivityTypeFilter}}</FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="活动状态:" prop="vaild" style="width:260px;">
@@ -154,7 +164,7 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="开始时间:" prop="startTime">
+              <FormItem label="开始时间:" prop="startTime" v-show="tempModalType===modalType.create">
                 <DatePicker
                   :value="activityDetail.startTime"
                   format="yyyy-MM-dd HH:mm:ss"
@@ -164,9 +174,19 @@
                   @on-change="handleStartTimeChange"
                 />
               </FormItem>
+              <FormItem label="开始时间:" prop="startTime" v-show="tempModalType===modalType.edit">
+                <DatePicker
+                  :value="activityDetail.startTime"
+                  format="yyyy-MM-dd HH:mm:ss"
+                  type="datetime"
+                  placeholder="生效时间"
+                  style="width: 160px"
+                  disabled
+                />
+              </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="结束时间:" prop="endTime">
+              <FormItem label="结束时间:" prop="endTime" v-show="tempModalType===modalType.create">
                 <DatePicker
                   :value="activityDetail.endTime"
                   format="yyyy-MM-dd HH:mm:ss"
@@ -174,6 +194,16 @@
                   placeholder="结束时间"
                   style="width: 160px"
                   @on-change="handleEndTimeChange"
+                />
+              </FormItem>
+              <FormItem label="结束时间:" prop="endTime" v-show="tempModalType===modalType.edit">
+                <DatePicker
+                  :value="activityDetail.endTime"
+                  format="yyyy-MM-dd HH:mm:ss"
+                  type="datetime"
+                  placeholder="结束时间"
+                  style="width: 160px"
+                  disabled
                 />
               </FormItem>
             </i-col>
@@ -366,7 +396,7 @@ export default {
           align: "center",
           minWidth: 80,
           key: "handle",
-          options: ["onSale", "edit", "delete", "settings"]
+          options: ["onSale", "edit", "settings"]
         }
       ]
     };
@@ -425,10 +455,10 @@ export default {
       this.modalEdit = true;
     },
     handleEdit(params) {
-      if (params.row.vaild == "yes") {
-        this.$Message.error("活动有效期内不允许修改!");
-        return;
-      }
+      // if (params.row.vaild == "yes") {
+      //   this.$Message.error("活动有效期内不允许修改!");
+      //   return;
+      // }
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.activityDetail = _.cloneDeep(params.row);

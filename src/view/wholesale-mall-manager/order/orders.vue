@@ -131,7 +131,7 @@
           >
             <Icon type="ios-arrow-back" />&nbsp;返回
           </Button>
-          <Button v-waves class="search-btn ml2 mr2" type="info" @click="sendHdManual">海鼎重发</Button>
+          <!-- <Button v-waves class="search-btn ml2 mr2" type="info" @click="sendHdManual">海鼎重发</Button> -->
           <Button
             :loading="downloadLoading"
             class="search-btn mr2"
@@ -657,7 +657,7 @@ const orderColumns = [
   },
   {
     title: "操作",
-    minWidth: 120,
+    minWidth: 150,
     resizable: true,
     align: "center",
     fixed: "right",
