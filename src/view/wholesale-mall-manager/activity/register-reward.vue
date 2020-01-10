@@ -184,7 +184,8 @@ import {
   fenToYuanDot2Number,
   yuanToFenNumber,
   setSmallCouponActivity,
-  getActivity
+  getActivity,
+  compareCouponData
 } from "@/libs/util";
 
 const rewardConfig = {
@@ -218,6 +219,7 @@ const couponConfig = {
 const configRoleRowData = {
   couponName: "",
   couponType: "",
+  couponConfigvaild: "yes",
   page: 1,
   rows: 10
 };
@@ -288,8 +290,8 @@ const configColumns = [
   {
     title: "发放类型",
     align: "center",
-    minWidth: 80,
     key: "couponType",
+    minWidth: 70,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.couponType === "artificial") {
@@ -304,6 +306,18 @@ const configColumns = [
             <tag color="pink">{couponFromConvert(row.couponType).label}</tag>
           </div>
         );
+      } else if (row.couponType === "registration") {
+        return (
+          <div>
+            <tag color="orange">{couponFromConvert(row.couponType).label}</tag>
+          </div>
+        );
+      } else if (row.couponType === "flashsale") {
+        return (
+          <div>
+            <tag color="cyan">{couponFromConvert(row.couponType).label}</tag>
+          </div>
+        );
       } else {
         return (
           <div>
@@ -313,23 +327,82 @@ const configColumns = [
       }
     }
   },
+  // {
+  //   title: "生效时间",
+  //   align: "center",
+  //   key: "effectiveTime",
+  //   minWidth: 80
+  // },
+  // {
+  //   title: "失效时间",
+  //   align: "center",
+  //   key: "failureTime",
+  //   minWidth: 80
+  // },
   {
     title: "生效时间",
     align: "center",
     key: "effectiveTime",
-    minWidth: 80
+    width: 180,
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.vaildDays) {
+        return <div>{"N/A"}</div>;
+      } else {
+        return <div>{row.effectiveTime}</div>;
+      }
+    }
   },
   {
     title: "失效时间",
     align: "center",
     key: "failureTime",
-    minWidth: 80
+    width: 220,
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.vaildDays) {
+        return <div>{"N/A"}</div>;
+      } else {
+        if (!compareCouponData(row.failureTime)) {
+          return <div style="color:red">{row.failureTime + "　已过期"}</div>;
+        } else {
+          return <div>{row.failureTime}</div>;
+        }
+      }
+    }
   },
   {
     title: "有效天数",
     align: "center",
     key: "vaildDays",
     minWidth: 60
+  },
+  {
+    title: "优惠券状态",
+    minWidth: 80,
+    align: "center",
+    key: "vaild",
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.couponConfigvaild === "yes") {
+        return (
+          <div>
+            <tag color="success">有效</tag>
+          </div>
+        );
+      } else if (row.couponConfigvaild === "no") {
+        return (
+          <div>
+            <tag color="error">无效</tag>
+          </div>
+        );
+      }
+      return (
+        <div>
+          <tag color="primary">N/A</tag>
+        </div>
+      );
+    }
   }
 ];
 
@@ -631,7 +704,7 @@ export default {
       if (activity) {
         this.activityDetail = _.cloneDeep(activity);
         this.searchRowData.activityId = activity.id;
-        this.rewardConfig.activityId= activity.id;
+        this.rewardConfig.activityId = activity.id;
       }
       getRewardConfigPages(this.searchRowData)
         .then(res => {
@@ -804,7 +877,7 @@ export default {
     },
     goBack() {
       this.turnToPage("wholesale-activity");
-    },
+    }
   }
 };
 </script>

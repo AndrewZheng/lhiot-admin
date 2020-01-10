@@ -13,7 +13,7 @@
         border
         search-place="top"
         @on-edit="handleEdit"
-        @on-delete="handleDelete"
+        @on-sale="handleStatus"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
@@ -54,6 +54,20 @@
                 class="ptb2-5"
               >{{ item.label }}</Option>
             </Select>
+            <Select
+              v-model="searchRowData.couponConfigvaild"
+              class="search-col mr5"
+              placeholder="优惠券状态"
+              style="width: 150px"
+              clearable
+            >
+              <Option
+                v-for="item in activityStatusEnum"
+                :value="item.value"
+                :key="item.value"
+                class="ptb2-5"
+              >{{ item.label }}</Option>
+            </Select>
             <Button
               :loading="searchLoading"
               class="search-btn mr5"
@@ -77,7 +91,7 @@
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="handleCreate">
             <Icon type="md-add" />添加
           </Button>
-          <Poptip
+          <!-- <Poptip
             confirm
             placement="bottom"
             style="width: 100px"
@@ -87,7 +101,7 @@
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
             </Button>
-          </Poptip>
+          </Poptip>-->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -254,6 +268,7 @@
                 placeholder="优惠券状态"
                 style="width: 150px"
                 clearable
+                disabled
               >
                 <Option
                   v-for="item in activityStatusEnum"
@@ -327,7 +342,8 @@ import {
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber
+  yuanToFenNumber,
+  compareCouponData
 } from "@/libs/util";
 
 const couponConfig = {
@@ -348,7 +364,7 @@ const couponConfig = {
 };
 
 const roleRowData = {
-  vaild: "",
+  couponConfigvaild: "",
   endTime: null,
   startTime: null,
   page: 1,
@@ -372,7 +388,7 @@ const couponTemplate = {
 const tempRoleRowData = {
   activityCode: null,
   activityDesc: null,
-  vaild: "",
+  vaild: "yes",
   endTime: null,
   startTime: null,
   page: 1,
@@ -559,6 +575,7 @@ export default {
           title: "发放类型",
           align: "center",
           key: "couponType",
+          minWidth: 60,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.couponType === "artificial") {
@@ -606,13 +623,35 @@ export default {
           title: "生效时间",
           align: "center",
           key: "effectiveTime",
-          minWidth: 80
+          minWidth: 80,
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.vaildDays) {
+              return <div>{"N/A"}</div>;
+            } else {
+              return <div>{row.effectiveTime}</div>;
+            }
+          }
         },
         {
           title: "失效时间",
           align: "center",
           key: "failureTime",
-          minWidth: 80
+          width: 220,
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.vaildDays) {
+              return <div>{"N/A"}</div>;
+            } else {
+              if (!compareCouponData(row.failureTime)) {
+                return (
+                  <div style="color:red">{row.failureTime + "　已过期"}</div>
+                );
+              } else {
+                return <div>{row.failureTime}</div>;
+              }
+            }
+          }
         },
         {
           title: "有效天数",
@@ -621,11 +660,37 @@ export default {
           maxWidth: 100
         },
         {
+          title: "优惠券状态",
+          align: "center",
+          key: "couponConfigvaild",
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.couponConfigvaild === "yes") {
+              return (
+                <div>
+                  <tag color="success">有效</tag>
+                </div>
+              );
+            } else if (row.couponConfigvaild === "no") {
+              return (
+                <div>
+                  <tag color="error">无效</tag>
+                </div>
+              );
+            }
+            return (
+              <div>
+                <tag color="primary">N/A</tag>
+              </div>
+            );
+          }
+        },
+        {
           title: "操作",
           align: "center",
           minWidth: 80,
           key: "handle",
-          options: ["edit", "delete"]
+          options: ["onSale", "edit"]
         }
       ]
     };
@@ -703,7 +768,8 @@ export default {
     },
     handleStatus(params) {
       this.couponConfig = _.cloneDeep(params.row);
-      this.couponConfig.vaild = params.row.vaild === "yes" ? "no" : "yes";
+      this.couponConfig.couponConfigvaild =
+        params.row.couponConfigvaild === "yes" ? "no" : "yes";
       this.editCouponConfig();
     },
     handleRelation() {

@@ -274,7 +274,9 @@ const roleRowData = {
   endTime: null,
   startTime: null,
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx: "endTime",
+  sort: "desc"
 };
 
 export default {
@@ -363,12 +365,12 @@ export default {
             }
           }
         },
-        {
-          title: "活动链接",
-          align: "center",
-          key: "linkUrl",
-          minWidth: 150
-        },
+        // {
+        //   title: "活动链接",
+        //   align: "center",
+        //   key: "linkUrl",
+        //   minWidth: 150
+        // },
         {
           title: "活动描述",
           align: "center",
