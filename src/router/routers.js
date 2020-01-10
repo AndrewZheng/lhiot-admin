@@ -45,7 +45,7 @@ export const constantRouterMap = [
         title: '首页',
         notCache: true
       },
-      component: () => import('@/view/single-page/home')
+      component: () => import('@/view/basic-manager/single-page/home')
     }]
   },
   {
@@ -97,7 +97,7 @@ export const constantRouterMap = [
           icon: 'md-add',
           title: '导入EXCEL'
         },
-        component: () => import('@/view/excel/upload-excel.vue')
+        component: () => import('@/view/basic-manager/excel/upload-excel.vue')
       },
       {
         path: 'export-excel',
@@ -106,7 +106,7 @@ export const constantRouterMap = [
           icon: 'md-download',
           title: '导出EXCEL'
         },
-        component: () => import('@/view/excel/export-excel.vue')
+        component: () => import('@/view/basic-manager/excel/export-excel.vue')
       }
     ]
   },

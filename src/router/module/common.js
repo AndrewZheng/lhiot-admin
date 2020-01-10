@@ -35,7 +35,7 @@ const commonRouter = [
         icon: 'md-trending-up',
         title: '数字渐变'
       },
-      component: () => import('@/view/components/count-to/count-to.vue')
+      component: () => import('@/view/basic-manager/components/count-to/count-to.vue')
     },
     {
       path: 'drag_list_page',
@@ -44,7 +44,7 @@ const commonRouter = [
         icon: 'ios-infinite',
         title: '拖拽列表'
       },
-      component: () => import('@/view/components/drag-list/drag-list.vue')
+      component: () => import('@/view/basic-manager/components/drag-list/drag-list.vue')
     },
     {
       path: 'tables_page',
@@ -53,7 +53,7 @@ const commonRouter = [
         icon: 'md-grid',
         title: '多功能表格'
       },
-      component: () => import('@/view/components/tables/tables.vue')
+      component: () => import('@/view/basic-manager/components/tables/tables.vue')
     },
     {
       path: 'split_pane_page',
@@ -62,7 +62,7 @@ const commonRouter = [
         icon: 'md-pause',
         title: '分割窗口'
       },
-      component: () => import('@/view/components/split-pane/split-pane.vue')
+      component: () => import('@/view/basic-manager/components/split-pane/split-pane.vue')
     },
     {
       path: 'markdown_page',
@@ -71,7 +71,7 @@ const commonRouter = [
         icon: 'logo-markdown',
         title: 'Markdown编辑器'
       },
-      component: () => import('@/view/components/markdown/markdown.vue')
+      component: () => import('@/view/basic-manager/components/markdown/markdown.vue')
     },
     {
       path: 'editor_page',
@@ -80,7 +80,7 @@ const commonRouter = [
         icon: 'ios-create',
         title: '富文本编辑器'
       },
-      component: () => import('@/view/components/editor/editor.vue')
+      component: () => import('@/view/basic-manager/components/editor/editor.vue')
     },
     {
       path: 'tinymce_editor_page',
@@ -89,7 +89,7 @@ const commonRouter = [
         icon: 'ios-create',
         title: 'Tinymce编辑器'
       },
-      component: () => import('@/view/components/tinymce-editor/tinymce-editor.vue')
+      component: () => import('@/view/basic-manager/components/tinymce-editor/tinymce-editor.vue')
     },
     {
       path: 'icons_page',
@@ -99,7 +99,7 @@ const commonRouter = [
         title: '自定义图标'
       },
       component: () =>
-          import('@/view/components/icons/icons.vue')
+          import('@/view/basic-manager/components/icons/icons.vue')
     }
     ]
   },
@@ -118,7 +118,7 @@ const commonRouter = [
         icon: 'md-add',
         title: '导入EXCEL'
       },
-      component: () => import('@/view/excel/upload-excel.vue')
+      component: () => import('@/view/basic-manager/excel/upload-excel.vue')
     },
     {
       path: 'export-excel',
@@ -127,7 +127,7 @@ const commonRouter = [
         icon: 'md-download',
         title: '导出EXCEL'
       },
-      component: () => import('@/view/excel/export-excel.vue')
+      component: () => import('@/view/basic-manager/excel/export-excel.vue')
     }
     ]
   },
@@ -146,7 +146,7 @@ const commonRouter = [
         icon: 'md-menu',
         title: '菜单管理'
       },
-      component: () => import('@/view/system/menu/menu.vue')
+      component: () => import('@/view/basic-manager/system/menu/menu.vue')
     },
     // {
     //   path: 'config',
@@ -164,7 +164,7 @@ const commonRouter = [
     //     icon: 'md-build',
     //     title: '权限管理'
     //   },
-    //   component: () => import('@/view/system/permission/permission.vue')
+    //   component: () => import('@/view/basic-manager/system/permission/permission.vue')
     // },
     {
       path: 'role',
@@ -173,7 +173,7 @@ const commonRouter = [
         icon: 'md-people',
         title: '角色管理'
       },
-      component: () => import('@/view/system/role/role.vue')
+      component: () => import('@/view/basic-manager/system/role/role.vue')
     },
     {
       path: 'user',
@@ -182,7 +182,7 @@ const commonRouter = [
         icon: 'md-person',
         title: '用户管理'
       },
-      component: () => import('@/view/system/user/user.vue')
+      component: () => import('@/view/basic-manager/system/user/user.vue')
     }
     ]
   },

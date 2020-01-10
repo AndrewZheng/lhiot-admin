@@ -268,7 +268,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
+import Tables from '_c/tables';
 import {
   getDictionaryPages,
   getDictionary,
@@ -278,48 +278,48 @@ import {
   createDictionaryEntry,
   deleteDictionaryEntry,
   editDictionaryEntry
-} from "@/api/basic";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
+} from '@/api/basic';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
 
 const dictionaryDetail = {
   children: [null],
-  code: "",
-  description: "",
+  code: '',
+  description: '',
   entries: [
     {
-      attach: "",
-      code: "",
-      dictCode: "",
+      attach: '',
+      code: '',
+      dictCode: '',
       id: 0,
-      name: "",
+      name: '',
       sort: 1
     }
   ],
   id: 0,
-  name: "",
+  name: '',
   parentId: 0
 };
 
 const entry = {
-  attach: "",
-  code: "",
-  dictCode: "",
+  attach: '',
+  code: '',
+  dictCode: '',
   id: 0,
-  name: "",
+  name: '',
   sort: 1
 };
 
 const commonTempColumns = [
   {
-    title: "字典项名称",
-    key: "name",
+    title: '字典项名称',
+    key: 'name',
     minWidth: 100,
     render: (h, params) => {
       if (params.row.isEdit) {
-        return h("div", [
-          h("Input", {
+        return h('div', [
+          h('Input', {
             props: {
               value: params.row.name
             },
@@ -331,23 +331,23 @@ const commonTempColumns = [
           })
         ]);
       } else {
-        return h("div", params.row.name);
+        return h('div', params.row.name);
       }
     }
   },
   {
-    title: "字典项编码",
-    key: "code",
+    title: '字典项编码',
+    key: 'code',
     minWidth: 100
   },
   {
-    title: "排序",
-    key: "sort",
+    title: '排序',
+    key: 'sort',
     minWidth: 100,
     render: (h, params) => {
       if (params.row.isEdit) {
-        return h("div", [
-          h("InputNumber", {
+        return h('div', [
+          h('InputNumber', {
             props: {
               value: params.row.sort
             },
@@ -361,18 +361,18 @@ const commonTempColumns = [
           })
         ]);
       } else {
-        return h("div", params.row.sort);
+        return h('div', params.row.sort);
       }
     }
   },
   {
-    title: "附加参数",
-    key: "attach",
+    title: '附加参数',
+    key: 'attach',
     minWidth: 100,
     render: (h, params) => {
       if (params.row.isEdit) {
-        return h("div", [
-          h("Input", {
+        return h('div', [
+          h('Input', {
             props: {
               value: params.row.attach
             },
@@ -384,7 +384,7 @@ const commonTempColumns = [
           })
         ]);
       } else {
-        return h("div", params.row.attach);
+        return h('div', params.row.attach);
       }
     }
   }
@@ -392,7 +392,7 @@ const commonTempColumns = [
 
 const roleRowData = {
   includeChildren: true,
-  dictionaryCode: "",
+  dictionaryCode: '',
   page: 1,
   rows: 10
 };
@@ -405,21 +405,21 @@ export default {
   data() {
     return {
       ruleInline: {
-        name: [{ required: true, message: "请填写字典名称" }],
-        code: [{ required: true, message: "请填写字典编码" }],
-        description: [{ required: true, message: "请填写字典描述" }]
+        name: [{ required: true, message: '请填写字典名称' }],
+        code: [{ required: true, message: '请填写字典编码' }],
+        description: [{ required: true, message: '请填写字典描述' }]
       },
       ruleInEntry: {
-        dictCode: [{ required: true, message: "请填写字典编码" }],
-        code: [{ required: true, message: "请填写字典项编码" }],
-        name: [{ required: true, message: "请填写字典项名称" }],
+        dictCode: [{ required: true, message: '请填写字典编码' }],
+        code: [{ required: true, message: '请填写字典项编码' }],
+        name: [{ required: true, message: '请填写字典项名称' }],
         sort: [
-          { required: true, message: "请输入序号" },
+          { required: true, message: '请输入序号' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[0-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为整数"));
+                errors.push(new Error('必须为整数'));
               }
               callback(errors);
             }
@@ -429,51 +429,51 @@ export default {
       tempColumnsView: [
         ...commonTempColumns,
         {
-          title: "操作",
+          title: '操作',
           minWidth: 100,
-          key: "handle",
-          options: ["inlineEdit", "delete"]
+          key: 'handle',
+          options: ['inlineEdit', 'delete']
         }
       ],
       columns: [
         {
-          title: "id",
-          key: "id",
+          title: 'id',
+          key: 'id',
           minWidth: 100
         },
         {
-          title: "父级id",
-          key: "parentId",
+          title: '父级id',
+          key: 'parentId',
           minWidth: 100
         },
         {
-          title: "字典名称",
-          key: "name",
+          title: '字典名称',
+          key: 'name',
           minWidth: 150
         },
         {
-          title: "字典编码",
-          key: "code",
+          title: '字典编码',
+          key: 'code',
           minWidth: 150
         },
         {
-          title: "字典描述",
-          key: "description",
+          title: '字典描述',
+          key: 'description',
           minWidth: 150
         },
         {
-          title: "操作",
+          title: '操作',
           minWidth: 200,
-          key: "handle",
-          options: ["view", "edit", "delete", "relevance"]
+          key: 'handle',
+          options: ['view', 'edit', 'delete', 'relevance']
         }
       ],
       options: [
         {
-          title: "操作",
+          title: '操作',
           minWidth: 80,
-          key: "handle",
-          options: ["delete"]
+          key: 'handle',
+          options: ['delete']
         }
       ],
       modalViewLoading: false,
@@ -539,7 +539,7 @@ export default {
           }
           console.log(JSON.stringify(this.dictionaryDetail));
         } else {
-          this.$Message.error("请完善字典信息!");
+          this.$Message.error('请完善字典信息!');
         }
       });
     },
@@ -551,9 +551,9 @@ export default {
           this.modalViewLoading = false;
           this.loading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
-          this.$refs["modalEdit"].resetFields();
+          this.$refs['modalEdit'].resetFields();
         })
         .catch(() => {
           this.modalViewLoading = false;
@@ -568,10 +568,10 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.loading = false;
-          this.$Message.success("编辑成功!");
+          this.$Message.success('编辑成功!');
           this.modalEdit = false;
           this.getTableData();
-          this.$refs["modalEdit"].resetFields();
+          this.$refs['modalEdit'].resetFields();
         })
         .catch(res => {
           this.modalViewLoading = false;
@@ -617,7 +617,7 @@ export default {
         });
     },
     remoteMethod(query) {
-      if (query !== "") {
+      if (query !== '') {
         this.handleSearchAutoComplete(query);
       } else {
         this.optionsDictionary = [];
@@ -626,9 +626,9 @@ export default {
     handleSearchAutoComplete(value) {
       this.dictionaryLoading = true;
       getDictionaryPages({
-        page: "1",
-        rows: "5",
-        dictionaryCode: value + ""
+        page: '1',
+        rows: '5',
+        dictionaryCode: value + ''
       }).then(res => {
         if (res.array.length > 0) {
           this.optionsDictionary.length = 0;
@@ -655,7 +655,7 @@ export default {
           createDictionaryEntry(this.entry)
             .then(res => {
               this.modalEntriesLoading = false;
-              this.$Message.success("创建成功!");
+              this.$Message.success('创建成功!');
               this.getTableData();
               const obj = this._.cloneDeep(this.entry);
               obj.isEdit = false;
@@ -670,12 +670,12 @@ export default {
               this.loading = false;
             });
         } else {
-          this.$Message.error("请完善字典信息!");
+          this.$Message.error('请完善字典信息!');
         }
       });
     },
     modalHandleEdit(params) {
-      this.$set(params.row, "isEdit", true);
+      this.$set(params.row, 'isEdit', true);
       this.beforeEditEntry = this._.cloneDeep(params.row);
     },
     // 行内编辑保存
@@ -689,7 +689,7 @@ export default {
           this.tempTableLoading = true;
           editDictionaryEntry(params.row)
             .then(res => {
-              this.$Message.success("修改成功!");
+              this.$Message.success('修改成功!');
               this.getTableData();
             })
             .catch(() => {
@@ -697,13 +697,13 @@ export default {
             })
             .finally(res => {
               this.tempTableLoading = false;
-              this.$set(params.row, "isEdit", false);
+              this.$set(params.row, 'isEdit', false);
             });
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       } else {
-        this.$set(params.row, "isEdit", false);
+        this.$set(params.row, 'isEdit', false);
       }
     },
     modalHandleDelete(params) {
@@ -714,7 +714,7 @@ export default {
       })
         .then(res => {
           this.tempTableLoading = false;
-          this.$Message.success("删除成功!");
+          this.$Message.success('删除成功!');
           this.dictionaryDetail.entries = params.tableData.filter(
             (item, index) => index !== params.row.initRowIndex
           );
