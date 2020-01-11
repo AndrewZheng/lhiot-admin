@@ -129,7 +129,7 @@
                   v-if="showImage"
                   :src="systemDetail.description"
                   width="70%"
-                >
+                />
               </i-col>
             </Row>
           </i-col>
@@ -182,17 +182,28 @@
           <Row>
             <i-col span="12">
               <FormItem label="值:" prop="indexValue">
-                <Input v-model="systemDetail.indexValue" :rows="6" :readonly="hasParamRule || noParamRule || systemDetail.showType==='time'" type="textarea" placeholder="值"></Input>
+                <Input
+                  v-model="systemDetail.indexValue"
+                  :rows="6"
+                  :readonly="hasParamRule || noParamRule || systemDetail.showType==='time'"
+                  type="textarea"
+                  placeholder="值"
+                ></Input>
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="描述:" prop="description">
-                <Input v-model="systemDetail.description" :rows="3" type="textarea" placeholder="描述"></Input>
+                <Input
+                  v-model="systemDetail.description"
+                  :rows="3"
+                  type="textarea"
+                  placeholder="描述"
+                ></Input>
                 <template v-if="showImage">
                   <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                     <template v-if="item.status === 'finished'">
                       <div>
-                        <img :src="item.url" >
+                        <img :src="item.url" />
                         <div class="demo-upload-list-cover">
                           <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                           <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -216,7 +227,6 @@
                 </IViewUpload>
               </FormItem>
             </i-col>
-
           </Row>
           <Row>
             <i-col span="12">
@@ -244,17 +254,28 @@
                   style="width: 168px"
                   confirm
                   @on-change="handleTimeChange"
-                  @on-clear="handleTimeClear"></TimePicker>
+                  @on-clear="handleTimeClear"
+                ></TimePicker>
               </FormItem>
             </i-col>
           </Row>
           <template v-if="hasParamRule">
-            <Row v-for="(item,index) in paramObjectList" :key="index" type="flex" justify="start" class="mt10">
+            <Row
+              v-for="(item,index) in paramObjectList"
+              :key="index"
+              type="flex"
+              justify="start"
+              class="mt10"
+            >
               <i-col span="10">
                 <Row v-for="(objKey,sindex) in keys" :key="sindex" type="flex" justify="start">
                   <i-col span="12 mt5">
-                    <Input v-model="item[objKey]" style="width:300px;" @on-change="handleInputChange">
-                    <span slot="prepend">{{ findKeyName(objKey) }}</span>
+                    <Input
+                      v-model="item[objKey]"
+                      style="width:300px;"
+                      @on-change="handleInputChange"
+                    >
+                      <span slot="prepend">{{ findKeyName(objKey) }}</span>
                     </Input>
                   </i-col>
                 </Row>
@@ -263,17 +284,31 @@
                 <Button v-waves size="small" type="primary" class="mr5" @click="handleAddParam">
                   <Icon type="md-add" />
                 </Button>
-                <Button v-waves v-show="index>0" size="small" type="error" class="mr5" @click="handleDelParam(index)">
+                <Button
+                  v-waves
+                  v-show="index>0"
+                  size="small"
+                  type="error"
+                  class="mr5"
+                  @click="handleDelParam(index)"
+                >
                   <Icon type="md-trash" />
                 </Button>
               </i-col>
             </Row>
           </template>
           <template v-else-if="noParamRule">
-            <Row v-for="(item,index) in paramObjectList" v-show="paramObjectList.length>0" :key="index" type="flex" justify="start" class="mt10">
+            <Row
+              v-for="(item,index) in paramObjectList"
+              v-show="paramObjectList.length>0"
+              :key="index"
+              type="flex"
+              justify="start"
+              class="mt10"
+            >
               <i-col span="9">
                 <Input :value="item" style="width:300px;" @on-change="handleItemChange">
-                <span slot="prepend">列表项</span>
+                  <span slot="prepend">列表项</span>
                 </Input>
               </i-col>
               <i-col span="12 mt5">
@@ -285,7 +320,7 @@
             <Row type="flex" justify="start" class="mt10">
               <i-col span="9">
                 <Input v-model="newItem" style="width:300px;" @on-change="handleItemChange">
-                <span slot="prepend">列表项</span>
+                  <span slot="prepend">列表项</span>
                 </Input>
               </i-col>
               <i-col span="12">
@@ -304,14 +339,14 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" >
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
+import Tables from "_c/tables";
+import IViewUpload from "_c/iview-upload";
 
 import {
   deleteSystemSetting,
@@ -319,24 +354,24 @@ import {
   editSystemSetting,
   createSystemSetting,
   getSystemSettingCategoryTree
-} from '@/api/wholesale';
-import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import { showTypeEnum } from '@/libs/enumerate';
-import { showTypeConvert } from '@/libs/converStatus';
+} from "@/api/wholesale";
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import { showTypeEnum } from "@/libs/enumerate";
+import { showTypeConvert } from "@/libs/converStatus";
 
-import { buildMenu, convertTreeCategory, convertTree } from '@/libs/util';
+import { buildMenu, convertTreeCategory, convertTree } from "@/libs/util";
 
 const systemDetail = {
   id: 0,
-  indexName: '',
-  indexValue: '',
-  description: '',
+  indexName: "",
+  indexValue: "",
+  description: "",
   categoryId: 0,
-  paramRuleSetting: '',
-  showType: '',
+  paramRuleSetting: "",
+  showType: "",
   orderTimeSpan: []
 };
 
@@ -372,7 +407,7 @@ export default {
       paramObjectList: [],
       paramObject: {},
       keys: [],
-      newItem: '',
+      newItem: "",
       showImage: false,
       createLoading: false,
       modalViewLoading: false,
@@ -380,60 +415,60 @@ export default {
       searchTreeRowData: _.cloneDeep(categoryRowData),
       systemDetail: _.cloneDeep(systemDetail),
       ruleInline: {
-        showType: [{ required: true, message: '请选择参数类型' }],
-        indexName: [{ required: true, message: '请输入键' }],
-        indexValue: [{ required: true, message: '请输入值' }],
-        categoryId: [
-          { required: true, message: '请选择分类' },
-          { message: '必须为非零整数', pattern: /^[1-9]\d*$/ }
-        ],
-        description: [{ required: true, message: '请输入描述' }]
+        showType: [{ required: true, message: "请选择参数类型" }],
+        indexName: [{ required: true, message: "请输入键" }],
+        indexValue: [{ required: true, message: "请输入值" }],
+        // categoryId: [
+        //   { required: true, message: "请选择分类" },
+        //   { message: "必须为非零整数", pattern: /^[1-9]\d*$/ }
+        // ],
+        description: [{ required: true, message: "请输入描述" }]
       },
       columns: [
         {
-          type: 'selection',
+          type: "selection",
           width: 60,
-          align: 'center',
-          fixed: 'left'
+          align: "center",
+          fixed: "left"
         },
         {
-          title: 'ID',
-          key: 'id',
-          align: 'center',
+          title: "ID",
+          key: "id",
+          align: "center",
           width: 80
         },
         {
-          title: '键',
-          align: 'center',
-          key: 'indexName'
+          title: "键",
+          align: "center",
+          key: "indexName"
         },
         {
-          title: '值',
-          align: 'center',
-          key: 'indexValue',
-          type: 'html'
+          title: "值",
+          align: "center",
+          key: "indexValue",
+          type: "html"
         },
         {
-          title: '描述',
-          align: 'center',
-          key: 'description'
+          title: "描述",
+          align: "center",
+          key: "description"
         },
         {
-          title: '分类ID',
-          align: 'center',
-          key: 'categoryId',
+          title: "分类ID",
+          align: "center",
+          key: "categoryId",
           width: 80
         },
         {
-          title: '参数类型',
-          align: 'center',
-          key: 'showType',
+          title: "参数类型",
+          align: "center",
+          key: "showType",
           minWidth: 60,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.showType === 'normal') {
+            if (row.showType === "normal") {
               return <div>{showTypeConvert(row.showType).label}</div>;
-            } else if (row.showType === 'list') {
+            } else if (row.showType === "list") {
               return <div>{showTypeConvert(row.showType).label}</div>;
             } else {
               return <div>{showTypeConvert(row.showType).label}</div>;
@@ -441,21 +476,27 @@ export default {
           }
         },
         {
-          title: '操作',
-          align: 'center',
+          title: "操作",
+          align: "center",
           width: 180,
-          key: 'handle',
-          options: ['view', 'edit', 'delete']
+          key: "handle",
+          options: ["view", "edit", "delete"]
         }
       ]
     };
   },
   computed: {
     hasParamRule() {
-      return this.systemDetail.showType === 'list' && this.systemDetail.paramRuleSetting != null;
+      return (
+        this.systemDetail.showType === "list" &&
+        this.systemDetail.paramRuleSetting != null
+      );
     },
     noParamRule() {
-      return this.systemDetail.showType === 'list' && !this.systemDetail.paramRuleSetting;
+      return (
+        this.systemDetail.showType === "list" &&
+        !this.systemDetail.paramRuleSetting
+      );
     }
   },
   mounted() {
@@ -486,7 +527,7 @@ export default {
           console.log(this.systemDetail.categoryId);
           this.systemDetail.indexValue = this.systemDetail.indexValue.replace(
             /\n|\r/g,
-            '&'
+            "&"
           );
           if (this.isCreate) {
             // 添加状态
@@ -496,7 +537,7 @@ export default {
             this.editStore();
           }
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
     },
@@ -506,7 +547,7 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success('创建成功!');
+          this.$Message.success("创建成功!");
           this.getTableData();
         })
         .catch(() => {
@@ -541,14 +582,14 @@ export default {
       this.tableDataSelected.push(params.row);
       this.deleteTable(params.row.id);
     },
-    handleInputChange() {
+    handleInputChange(value) {
       this.systemDetail.indexValue = JSON.stringify(this.paramObjectList);
     },
     handleAddParam() {
       // 添加参数对象
       const obj = {};
       this.keys.forEach(key => {
-        obj[key] = '';
+        obj[key] = "";
       });
       this.paramObjectList.push(obj);
       this.systemDetail.indexValue = JSON.stringify(this.paramObjectList);
@@ -560,26 +601,26 @@ export default {
     },
     handleAddItem() {
       this.paramObjectList.push(this.newItem);
-      this.newItem = '';
-      this.systemDetail.indexValue = this.paramObjectList.join(',');
+      this.newItem = "";
+      this.systemDetail.indexValue = this.paramObjectList.join(",");
     },
     handleDelItem(index) {
       // 删除参数对象
       this.paramObjectList.splice(index, 1);
-      this.systemDetail.indexValue = this.paramObjectList.join(',');
+      this.systemDetail.indexValue = this.paramObjectList.join(",");
     },
     handleItemChange() {
-      this.systemDetail.indexValue = this.paramObjectList.join(',');
+      this.systemDetail.indexValue = this.paramObjectList.join(",");
     },
     handleTimeChange(timerange) {
       // ["09:00", "09:00"]
-      console.log('time:', timerange);
+      console.log("time:", timerange);
       this.systemDetail.orderTimeSpan = timerange;
-      this.systemDetail.indexValue = timerange.join('-');
+      this.systemDetail.indexValue = timerange.join("-");
     },
     handleTimeClear() {
       this.systemDetail.orderTimeSpan = [];
-      this.systemDetail.indexValue = '';
+      this.systemDetail.indexValue = "";
     },
     deleteTable(ids) {
       this.loading = true;
@@ -608,7 +649,7 @@ export default {
       this.tempModalType = this.modalType.view;
       this.systemDetail = _.cloneDeep(params.row);
       if (this.systemDetail.description != null) {
-        this.showImage = this.systemDetail.description.indexOf('http') != -1;
+        this.showImage = this.systemDetail.description.indexOf("http") != -1;
       }
       this.modalView = true;
     },
@@ -617,13 +658,19 @@ export default {
       this.systemDetail.orderTimeSpan = [];
       this.tempModalType = this.modalType.edit;
       this.systemDetail = _.cloneDeep(params.row);
+      console.log("数据", this.systemDetail);
       if (this.systemDetail.description != null) {
-        this.showImage = this.systemDetail.description.indexOf('http') != -1;
+        this.showImage = this.systemDetail.description.indexOf("http") != -1;
       }
       // 编辑时反填时间信息
-      if (this.systemDetail.showType === 'time' && this.systemDetail.indexValue) {
-        this.systemDetail.orderTimeSpan = this.systemDetail.indexValue.split('-');
-        console.log('timespan', this.systemDetail.orderTimeSpan);
+      if (
+        this.systemDetail.showType === "time" &&
+        this.systemDetail.indexValue
+      ) {
+        this.systemDetail.orderTimeSpan = this.systemDetail.indexValue.split(
+          "-"
+        );
+        console.log("timespan", this.systemDetail.orderTimeSpan);
       }
       // 如果有参数配置参考则读取
       if (this.hasParamRule) {
@@ -640,7 +687,7 @@ export default {
       }
 
       if (this.noParamRule && this.systemDetail.indexValue) {
-        this.paramObjectList = this.systemDetail.indexValue.split(',');
+        this.paramObjectList = this.systemDetail.indexValue.split(",");
       }
 
       this.setDefaultUploadList(this.systemDetail);
@@ -651,7 +698,7 @@ export default {
     },
     findKeyName(key) {
       if (this.paramRuleSetting.length > 0) {
-        return this.paramRuleSetting.find(item => item['key'] === key).name;
+        return this.paramRuleSetting.find(item => item["key"] === key).name;
       }
     },
     getTableData() {
@@ -663,7 +710,7 @@ export default {
               element.indexValue =
                 element.indexValue == null
                   ? null
-                  : element.indexValue.replace(/&/g, '\n');
+                  : element.indexValue.replace(/&/g, "\n");
               // element.indexValue = element.indexValue.replace(/&/g, /\n/g);
             });
           }
@@ -696,14 +743,14 @@ export default {
           if (res && res.array.length > 0) {
             this.systemCategoriesTreeList = res.array;
             const menuList = buildMenu(res.array);
-            console.log('menuList from server:', menuList);
+            console.log("menuList from server:", menuList);
             const map = {
-              id: 'id',
-              title: 'title',
-              children: 'children'
+              id: "id",
+              title: "title",
+              children: "children"
             };
             this.systemCategoryData = convertTreeCategory(menuList, map, true);
-            console.log('menuList after covert:', this.systemCategoryData);
+            console.log("menuList after covert:", this.systemCategoryData);
             this.createLoading = false;
           }
         })
@@ -714,7 +761,7 @@ export default {
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.description != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.description;
         mainImgArr.push(map);

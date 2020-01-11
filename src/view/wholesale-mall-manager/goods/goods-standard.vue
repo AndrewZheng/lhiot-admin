@@ -693,7 +693,7 @@ const productStandardDetail = {
   goodsPriceRegionList: [], // 商品价格区间
   goodsUnit: "",
   hdSkuId: "",
-  id: 0,
+  id: null,
   goodsType: "NORMAL",
   netWeight: 0, // 商品净重
   price: 0,
@@ -1342,6 +1342,7 @@ export default {
         ...this.productStandardDetail
       })
         .then(res => {
+          this.$Message.success("修改成功");
           this.getTableData();
         })
         .finally(() => {

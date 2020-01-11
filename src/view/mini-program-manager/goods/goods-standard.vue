@@ -1644,12 +1644,15 @@ export default {
       this.proStandardExpand = proStandardExpand;
       this.proStandardExpand.limitQty = this.productStandardDetail.limitQty;
       this.productStandardDetail.expandType = proStandardExpand.expandType;
+      this.proStandardExpand.discountPrice = 0;
+
       // 请求数据展示
       this.modalDiscount = true;
       getProStandardExpand({
         id: this.productStandardDetail.id
       })
         .then(res => {
+          res.expandType = this.productStandardDetail.productType;
           this.proStandardExpand = res;
           this.modalDiscount = true;
         })

@@ -588,12 +588,12 @@ export default {
       this.assginSalesUserId = selection[0].id.toString();
     },
     changeUserPage(page) {
-      this.searchProductRowData.page = page;
+      this.searchUserRowData.page = page;
       this.getUserTableData();
     },
     changeUserPageSize(pageSize) {
-      this.searchProductRowData.page = 1;
-      this.searchProductRowData.rows = pageSize;
+      this.searchUserRowData.page = 1;
+      this.searchUserRowData.rows = pageSize;
       this.getUserTableData();
     },
     handleProductSearch() {

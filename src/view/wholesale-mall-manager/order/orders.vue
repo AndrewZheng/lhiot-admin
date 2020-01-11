@@ -707,10 +707,10 @@ const goodsColumns = [
     }
   },
   {
-    title: "进货价",
-    key: "purchasePrice",
+    title: "折扣价",
+    key: "discountGoodsPrice",
     render(h, params, vm) {
-      const amount = fenToYuanDot2(params.row.purchasePrice);
+      const amount = fenToYuanDot2(params.row.discountGoodsPrice);
       return <div>{amount}</div>;
     }
   },
@@ -803,7 +803,6 @@ export default {
   },
   methods: {
     orderStatusesOnChange(value) {
-      console.log(value);
       if (value.length === 0) {
         this.searchRowData.orderStatuses = null;
       }
@@ -860,9 +859,6 @@ export default {
       }
       this.modifyStoreInOrder();
       this.currentTableRowSelected = null;
-    },
-    onCurrentChange(currentRow, oldCurrentRow) {
-      this.currentTableRowSelected = currentRow;
     },
     resetSearchRowData() {
       this.clearSearchLoading = true;
@@ -1003,6 +999,13 @@ export default {
       this.turnToPage({
         name: "wholesale-salesman-analysis"
       });
+    },
+    onCurrentChange(currentRow, oldCurrentRow) {
+      let selection = [];
+      selection.push(currentRow);
+      this.tableDataSelected = selection;
+      this.currentTableRowSelected = currentRow;
+      this.selectedOrderCodes = this.currentTableRowSelected.orderCode;
     }
   }
 };

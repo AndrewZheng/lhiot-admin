@@ -85,6 +85,9 @@
             >
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
+            <div class="ml15 mt10">
+              <i style="color:red">*</i> 设置活动时间后,不可修改
+            </div>
           </Row>
         </div>
         <div slot="operations">
@@ -257,7 +260,6 @@ import { activityTypeEnum, activityStatusEnum } from "@/libs/enumerate";
 import { setActivity, compareCouponData } from "@/libs/util";
 
 const activityDetail = {
-  id: 0,
   activityCode: "",
   activityDesc: "",
   activityType: "",

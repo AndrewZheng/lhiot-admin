@@ -462,6 +462,11 @@ export default {
           }
         },
         {
+          title: "需助力人数",
+          align: "center",
+          key: "allPeopleNumber"
+        },
+        {
           title: "助力总次数",
           align: "center",
           key: "assistCount"
