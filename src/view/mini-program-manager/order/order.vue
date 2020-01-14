@@ -1164,6 +1164,7 @@ export default {
           title: "操作",
           minWidth: 180,
           align: "center",
+          fixed: "right",
           key: "handle",
           options: ["view", "onHand", "onReceive"]
         }
@@ -1508,7 +1509,6 @@ export default {
         this.currentTableRowSelected = null;
       }
     }
- 
   }
 };
 </script>

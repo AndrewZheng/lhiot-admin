@@ -1320,6 +1320,7 @@ const dataColumns = [
   {
     title: "操作",
     align: "center",
+    fixed: "right",
     width: 180,
     key: "handle",
     options: ["couponStatus", "view", "edit"]

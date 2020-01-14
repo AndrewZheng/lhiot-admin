@@ -447,7 +447,7 @@ const deliveryInfo = {
   userId: 0,
   contactsName: ""
 };
-
+// px1
 const orderColumns = [
   {
     type: "selection",
@@ -515,7 +515,7 @@ const orderColumns = [
     title: "实付金额",
     align: "center",
     width: 120,
-    key: "payableFee",
+    key: "payableFee1",
     render(h, params, vm) {
       const amount = fenToYuanDot2(
         params.row.payableFee + params.row.deliveryFee
@@ -657,7 +657,7 @@ const orderColumns = [
   },
   {
     title: "操作",
-    minWidth: 150,
+    minWidth: 120,
     resizable: true,
     align: "center",
     fixed: "right",
@@ -902,6 +902,7 @@ export default {
           this.searchLoading = false;
         });
     },
+    // px1
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
@@ -912,19 +913,29 @@ export default {
         // 表格数据导出字段翻译
         tableData.forEach(item => {
           item["orderCode"] = item["orderCode"] + "";
-          item["totalAmount"] = (item["totalAmount"] / 100.0).toFixed(2);
-          item["couponAmount"] = (item["couponAmount"] / 100.0).toFixed(2);
-          item["amountPayable"] = (item["amountPayable"] / 100.0).toFixed(2);
-          item["refundFee"] = (item["refundFee"] / 100.0).toFixed(2);
+          item["totalFee"] = (item["totalFee"] / 100.0).toFixed(2);
+          item["discountFee"] = (item["discountFee"] / 100.0).toFixed(2);
+          item["payableFee"] = (item["payableFee"] / 100.0).toFixed(2);
+          item["deliveryFee"] = (item["deliveryFee"] / 100.0).toFixed(2);
           item["deliverStatus"] = thirdDeliverStatusConvert(
             item["deliverStatus"]
           ).label;
           item["orderStatus"] = wholesaleOrderStatusConvert(
             item["orderStatus"]
           ).label;
-          item["hdStatus"] = miniHdStatusConvert(item["hdStatus"]).label;
-          item["status"] = wholesaleOrderStatusConvert(item["status"]).label;
-          item["payType"] = wholesalePayTypeConvert(item["payType"]).label;
+          item["settlementType"] = wholesalePayTypeConvert(
+            item["settlementType"]
+          ).label;
+          if (item["hdStatus"] === "success") {
+            item["hdStatus"] = "成功";
+          } else if (item["hdStatus"] === "failed") {
+            item["hdStatus"] = "失败";
+          } else {
+            item["hdStatus"] = "N/A";
+          }
+          item["payableFee1"] = (
+            Number(item["deliveryFee"]) + Number(item["payableFee"])
+          ).toFixed(2);
         });
         this.$refs.tables.handleDownload({
           filename: `普通订单信息-${new Date().valueOf()}`,
