@@ -413,7 +413,8 @@ const roleRowData = {
   page: 1,
   rows: 10,
   sidx: "createTime",
-  sort: "desc"
+  sort: "desc",
+  orderCodes: ""
 };
 
 const goodsDetail = {
@@ -945,10 +946,12 @@ export default {
     },
     handleExport(name) {
       if (name === "ORDER_GOODS") {
+        console.log("数据", this.selectedOrderCodes);
+        this.searchRowData.orderCodes = this.selectedOrderCodes;
         // 导出订单商品
         exportOrder({
           exportType: name,
-          searchParam: this.searchRowData
+          searchParam: this.searchRowData,
         }).then(res => {
           const tableData = res.rows;
           const tableColumns = res.columns;
@@ -1005,6 +1008,7 @@ export default {
       this.selectedOrderCodes = selection
         .map(item => item.orderCode.toString())
         .join(",");
+      console.log("订单code", this.selectedOrderCodes);
     },
     handleBack() {
       this.turnToPage({
