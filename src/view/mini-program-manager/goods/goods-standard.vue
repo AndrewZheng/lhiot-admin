@@ -1645,6 +1645,9 @@ export default {
       this.proStandardExpand.limitQty = this.productStandardDetail.limitQty;
       this.productStandardDetail.expandType = proStandardExpand.expandType;
       this.proStandardExpand.discountPrice = 0;
+      // this.productStandardDetail.productStandardExpand.expandType =
+      //   params.row.productType;
+      console.log("shuju", this.productStandardDetail.productStandardExpand);
 
       // 请求数据展示
       this.modalDiscount = true;
@@ -1812,6 +1815,7 @@ export default {
       });
     },
     handleSubmitDiscount() {
+      this.proStandardExpand.expandType = this.productStandardDetail.productType;
       this.$refs.modalDiscount.validate(valid => {
         if (valid) {
           if (this.proStandardExpand.discountPrice <= 0) {

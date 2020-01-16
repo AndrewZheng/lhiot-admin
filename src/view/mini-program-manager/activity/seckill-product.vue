@@ -650,10 +650,11 @@ const relationTempColumns = [
     minWidth: 100,
     align: "center",
     render(h, params) {
+      const { row } = params;
       return (
         <div>
           {fenToYuanDot2(
-            params.row.productStandard.productStandardExpand.discountPrice
+            row.productStandard.productStandardExpand.discountPrice
           )}
         </div>
       );
