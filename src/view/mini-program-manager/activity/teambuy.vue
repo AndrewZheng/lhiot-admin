@@ -1549,6 +1549,7 @@ export default {
         .catch(() => {
           this.modalViewLoading = false;
           this.modalEdit = false;
+          this.getTableData();
         });
     },
     editStore() {
@@ -1568,15 +1569,15 @@ export default {
           this.teambuyDetail.deliveryEndTime
         ).format("YYYY-MM-DD HH:mm:ss");
       }
-
       editTeamBuy(this.teambuyDetail)
         .then(res => {
+          this.getTableData();
           this.modalEdit = false;
           this.modalViewLoading = false;
-          this.getTableData();
         })
         .catch(() => {
           this.modalEdit = false;
+          this.getTableData();
           this.modalViewLoading = false;
         });
     },

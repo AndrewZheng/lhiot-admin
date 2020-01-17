@@ -1212,6 +1212,12 @@ const productColumns = [
     align: "center"
   },
   {
+    title: "规格id",
+    key: "id",
+    minWidth: 60,
+    align: "center"
+  },
+  {
     title: "商品条码",
     key: "barcode",
     minWidth: 70,
