@@ -705,6 +705,7 @@ export default {
         id: this.couponConfigIds,
         phones: this.sendPhones
       }).then(res => {
+        console.log("result", res);
         if (res && res.fail.length > 0) {
           this.$Message.info("部分用户未发放成功");
           this.sendFailPhones = res.fail;
