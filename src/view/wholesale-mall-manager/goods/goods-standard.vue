@@ -212,7 +212,7 @@
             </Row>
           </i-col>
         </Row>
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+        <!-- <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">上架商品主图:</i-col>
@@ -221,7 +221,7 @@
               </i-col>
             </Row>
           </i-col>
-        </Row>
+        </Row> -->
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
@@ -329,7 +329,7 @@
             </i-col>
           </Row>
           <Row>
-            <i-col span="12">
+            <i-col v-show="false" span="12">
               <FormItem label="上架商品主图:建议尺寸;750x750(单位:px):" prop="goodsImage">
                 <Input
                   v-show="false"
@@ -1130,7 +1130,7 @@ export default {
         ],
         isVip: [{ required: true, message: '请选择商品的类型' }],
         standardGoodsName: [{ required: true, message: '请输入上架商品名称' }],
-        goodsImage: [{ required: true, message: '请上传上架商品主图' }],
+        goodsImage: [{ required: false, message: '请上传上架商品主图' }],
         unitCode: [{ required: true, message: '请选择商品单位' }],
         vaild: [{ required: true, message: '请选择商品状态' }],
         standard: [{ required: true, message: '请输入规格描述' }],
