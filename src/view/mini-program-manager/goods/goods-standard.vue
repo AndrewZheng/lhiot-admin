@@ -546,22 +546,30 @@
               </FormItem>
             </i-col>
           </Row>
-          <Row v-if="this.clickFlag==true">
+          <Row>
+            <!--   -->
             <i-col span="12">
               <FormItem label="商品类型:" prop="productType" :label-width="100">
                 <Select
                   v-model="productStandardDetail.productType"
                   placeholder="请选择"
                   style="padding-right: 5px;width: 120px"
+                  @on-change="productTypeChange"
                 >
                   <Option
                     v-for="(item,index) in expandTypeEnum"
                     :value="item.value"
                     :key="index"
+                    :disabled="clickFlag==false"
                     class="ptb2-5"
                     style="padding-left: 5px;width: 100px"
                   >{{ item.label }}</Option>
                 </Select>
+              </FormItem>
+            </i-col>
+            <i-col span="12" v-show="productStandardDetail.productType==='ORDINARY_PRODUCT'">
+              <FormItem label="起购份数:" prop="startNum">
+                <InputNumber :min="0" v-model="productStandardDetail.startNum"></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -974,6 +982,7 @@ const productStandardDetail = {
   productUnit: "",
   price: 0,
   salePrice: 0,
+  startNum: 1,
   rank: 0,
   description: null,
   shelvesStatus: null,
@@ -1478,6 +1487,9 @@ export default {
     },
     salePriceComputed() {
       return fenToYuanDot2Number(this.productStandardDetail.salePrice);
+    },
+    svipPriceComputed() {
+      return fenToYuanDot2Number(this.productStandardDetail.svipPrice);
     },
     svipPriceComputed() {
       return fenToYuanDot2Number(this.productStandardDetail.svipPrice);
@@ -2114,6 +2126,11 @@ export default {
         row.status === "NORMAL" ? "VALID" : "INVALID";
       this.setDefaultUploadList(this.productStandardDetail);
       this.modalProduct = false;
+    },
+    productTypeChange(value) {
+      if (value != "ORDINARY_PRODUCT") {
+        this.productStandardDetail.startNum = 1;
+      }
     }
   }
 };

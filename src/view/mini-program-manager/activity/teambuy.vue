@@ -493,6 +493,35 @@
               </FormItem>
             </i-col>
             <i-col span="12">
+              <FormItem
+                label="提货开始时间:"
+                prop="deliveryStartTime"
+                v-if="tempModalType===modalType.create||groupStatus==='off'"
+              >
+                <DatePicker
+                  v-model="teambuyDetail.deliveryStartTime"
+                  format="yyyy-MM-dd HH:mm:ss"
+                  type="datetime"
+                  placeholder="提货开始时间"
+                  class="search-input"
+                  style="width: 200px"
+                  @on-change="deliveryStartTimeChange"
+                />
+              </FormItem>
+              <FormItem
+                v-else
+                label="提货开始时间:"
+                prop="deliveryStartTime"
+              >{{ teambuyDetail.deliveryStartTime | couponScopeFilter }}</FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
+              <FormItem label="成团人数:" prop="fullUserNum">
+                <InputNumber :min="0" v-model="teambuyDetail.fullUserNum" style="width: 200px"></InputNumber>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
               <FormItem label="成团有效时长:" prop="validSeconds">
                 <!-- TODO 后期插件修改 -->
                 <!-- <TimePicker type="time" placeholder="成团有效时长" style="width: 200px" @on-change=""></TimePicker> -->
@@ -522,8 +551,17 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="成团人数:" prop="fullUserNum">
-                <InputNumber :min="0" v-model="teambuyDetail.fullUserNum" style="width: 200px"></InputNumber>
+              <FormItem label="是否模拟成团:" prop="robot">
+                <Select v-model="teambuyDetail.robot" style="width: 200px">
+                  <Option
+                    v-for="item in teamBuyStatus"
+                    :value="item.value"
+                    :key="item.value"
+                    :disabled="item.value=='expire'"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                  >{{ item.label }}</Option>
+                </Select>
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -543,27 +581,6 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="是否模拟成团:" prop="robot">
-                <Select v-model="teambuyDetail.robot" style="width: 200px">
-                  <Option
-                    v-for="item in teamBuyStatus"
-                    :value="item.value"
-                    :key="item.value"
-                    :disabled="item.value=='expire'"
-                    class="ptb2-5"
-                    style="padding-left: 5px"
-                  >{{ item.label }}</Option>
-                </Select>
-              </FormItem>
-            </i-col>
-            <i-col span="12">
-              <FormItem label="多少秒后虚位补齐:" prop="robotStartSecond">
-                <Input v-model="teambuyDetail.robotStartSecond" style="width: 200px"></Input>
-              </FormItem>
-            </i-col>
-          </Row>
-          <Row>
-            <i-col span="12">
               <FormItem label="商品规格:" prop="standardId">
                 <Input v-model="teambuyDetail.standardId" readonly="readonly" style="width: 200px">
                   <Button
@@ -576,8 +593,13 @@
               </FormItem>
             </i-col>
             <i-col span="12">
+              <FormItem label="多少秒后虚位补齐:" prop="robotStartSecond">
+                <Input v-model="teambuyDetail.robotStartSecond" style="width: 200px"></Input>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
               <FormItem label="规格描述:" prop="standardDesc">
-                <Input v-model="teambuyDetail.standardDesc" style="width: 200px"></Input>
+                <Input v-model="teambuyDetail.standardDesc" style="width: 585px"></Input>
               </FormItem>
             </i-col>
           </Row>
@@ -843,6 +865,7 @@ const teambuyDetail = {
   startTime: null,
   endTime: null,
   deliveryEndTime: null,
+  deliveryStartTime: null,
   banner: "",
   totalNum: 0,
   activityPrice: null,
@@ -1068,6 +1091,7 @@ export default {
       teamBuyTypeEnum,
       rewardActivitySettingEnum,
       relationStoreTypeEnum,
+      groupStatus: "",
       flagShipList: [],
       storeList: [],
       storeIds: [],
@@ -1669,9 +1693,11 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      this.groupStatus = "";
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.teambuyDetail = _.cloneDeep(params.row);
+      this.groupStatus = this.teambuyDetail.status;
       this.setDefaultUploadList(this.teambuyDetail);
       if (this.teambuyDetail.validSeconds > 0) {
         this.teambuyDetail.hour = parseInt(
@@ -1787,6 +1813,14 @@ export default {
       if (this.teambuyDetail.deliveryEndTime.indexOf("T") > -1) {
         this.teambuyDetail.deliveryEndTime = this.$moment(
           this.teambuyDetail.deliveryEndTime
+        ).format("YYYY-MM-DD HH:mm:ss");
+      }
+    },
+    deliveryStartTimeChange(value, date) {
+      this.teambuyDetail.deliveryStartTime = value;
+      if (this.teambuyDetail.deliveryStartTime.indexOf("T") > -1) {
+        this.teambuyDetail.deliveryStartTime = this.$moment(
+          this.teambuyDetail.deliveryStartTime
         ).format("YYYY-MM-DD HH:mm:ss");
       }
     },

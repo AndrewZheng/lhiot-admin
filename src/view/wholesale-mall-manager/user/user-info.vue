@@ -6,11 +6,12 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="16"
-        :operate-area-column="6"
+        :search-area-column="19"
+        :operate-area-column="5"
         editable
         searchable
         border
+        highlight-row
         search-place="top"
         @on-delete="handleDelete"
         @on-edit="handleEdit"
@@ -151,7 +152,10 @@
               <FormItem label="门店名称:" prop="shopName">{{ userDetail.shopName }}</FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="店长名称:" prop="userName">{{ userDetail.userName }}</FormItem>
+              <!-- <FormItem label="店长名称:" prop="userName">{{ userDetail.userName }}</FormItem> -->
+              <FormItem label="店长名称:" prop="userName" style="width: 240px">
+                <Input v-model="userDetail.userName"></Input>
+              </FormItem>
             </i-col>
           </Row>
           <Row>
@@ -208,7 +212,27 @@
           </Row>
           <Row>
             <i-col span="24">
-              <FormItem label="详细地址:" prop="addressDetail">{{ userDetail.addressDetail }}</FormItem>
+              <FormItem label="区域:" prop="city">
+                <Input
+                  v-model="userDetail.city"
+                  :autosize="{minRows: 2,maxRows: 6}"
+                  type="textarea"
+                  style="width: 400px"
+                ></Input>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="24">
+              <!-- <FormItem label="详细地址:" prop="addressDetail">{{ userDetail.addressDetail }}</FormItem> -->
+              <FormItem label="详细地址:" prop="addressDetail">
+                <Input
+                  v-model="userDetail.addressDetail"
+                  :autosize="{minRows: 2,maxRows: 6}"
+                  type="textarea"
+                  style="width: 400px"
+                ></Input>
+              </FormItem>
             </i-col>
           </Row>
         </Form>
@@ -297,25 +321,26 @@ const userColumns = [
     align: "center",
     key: "id",
     fixed: "left",
-    maxWidth: 80
+    width: 100
   },
   {
     title: "门店名称",
     align: "center",
     key: "shopName",
     fixed: "left",
-    minWidth: 100
+    width: 180
   },
   {
     title: "店长姓名",
     align: "center",
-    key: "userName"
+    key: "userName",
+    width: 100
   },
   {
     title: "手机号码",
     align: "center",
     key: "phone",
-    minWidth: 60
+    width: 150
   },
   // {
   //   title: "微信头像",
@@ -332,12 +357,13 @@ const userColumns = [
     title: "注册时间",
     align: "center",
     key: "registerTime",
-    minWidth: 80
+    width: 200
   },
   {
     title: "用户余额",
     align: "center",
     key: "balance",
+    width: 120,
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.balance);
       return <div>{amount}</div>;
@@ -347,6 +373,7 @@ const userColumns = [
     title: "是否VIP",
     align: "center",
     key: "isVip",
+    width: 150,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.isVip === "yes") {
@@ -368,6 +395,7 @@ const userColumns = [
     title: "用户类型",
     align: "center",
     key: "userType",
+    width: 150,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.userType === "consumer") {
@@ -389,6 +417,7 @@ const userColumns = [
     title: "用户状态",
     align: "center",
     key: "userStatus",
+    width: 150,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.userStatus === "certified") {
@@ -421,6 +450,7 @@ const userColumns = [
     title: "业务员状态",
     align: "center",
     key: "salesUserStatus",
+    width: 150,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.salesUserStatus === "certified") {
@@ -455,19 +485,20 @@ const userColumns = [
     title: "所属业务员",
     align: "center",
     key: "saleUserName",
-    maxWidth: 100
+    width: 120
   },
   {
     title: "邀请码",
     align: "center",
     key: "inviteCode",
-    maxWidth: 100
+    width: 100
   },
   {
     title: "操作",
     align: "center",
     key: "handle",
-    minWidth: 60,
+    fixed: "right",
+    width: 180,
     options: ["setVip", "edit", "saleAudit"]
   }
 ];
@@ -540,6 +571,7 @@ export default {
         checkStatus
       }).then(res => {
         this.$Message.info("审核成功");
+        this.getTableData();
       });
     },
     handleSubmit() {

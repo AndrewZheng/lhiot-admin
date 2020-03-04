@@ -1393,6 +1393,20 @@ export default {
     },
     getTableData() {
       this.loading = true;
+      if (
+        this.searchRowData.startTime == null ||
+        this.searchRowData.endTime == null
+      ) {
+        let date = new Date();
+        date.setDate(date.getDate());
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var start = `${year}-${month}-${day} 00:00:00`;
+        var end = `${year}-${month}-${day} 23:59:59`;
+        this.searchRowData.startTime = start;
+        this.searchRowData.endTime = end;
+      }
       getOrderPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;

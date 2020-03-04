@@ -206,7 +206,7 @@ export default {
       currentParentId: 0,
       faqCategory: this._.cloneDeep(faqCategory),
       parentCategory: this._.cloneDeep(faqCategory),
-      searchRowData: this._.cloneDeep(roleRowData)
+      searchRowData: this._.cloneDeep(roleRowData),
     };
   },
   created() {
