@@ -396,12 +396,12 @@ export default {
           align: 'center',
           key: 'performanceTotalStr',
           minWidth: 80,
-          render(h, params, vm) {
-            const amount = fenToYuanDot2(
-              params.row.performanceTotalStr
-            );
-            return <div>{amount}</div>;
-          }
+          // render(h, params, vm) {
+          //   const amount = fenToYuanDot2(
+          //     params.row.performanceTotalStr
+          //   );
+          //   return <div>{amount}</div>;
+          // }
         },
         {
           title: '注册时间',

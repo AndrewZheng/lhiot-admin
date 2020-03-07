@@ -368,16 +368,6 @@
                 </IViewUpload>
               </FormItem>
             </i-col>-->
-            <i-col span="12">
-              <FormItem label="规格描述:" prop="standardDesc">
-                <Input
-                  v-model="productStandardDetail.standardDesc"
-                  :autosize="{minRows: 2,maxRows: 6}"
-                  type="textarea"
-                  placeholder="请输入规格描述..."
-                ></Input>
-              </FormItem>
-            </i-col>
           </Row>
           <Row>
             <i-col span="12">
@@ -456,6 +446,16 @@
             <i-col span="12">
               <FormItem label="商品规格:" prop="standard">
                 <Input v-model="productStandardDetail.standard"></Input>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="规格描述:" prop="standardDesc">
+                <Input
+                  v-model="productStandardDetail.standardDesc"
+                  :autosize="{minRows: 2,maxRows: 6}"
+                  type="textarea"
+                  placeholder="请输入规格描述..."
+                ></Input>
               </FormItem>
             </i-col>
             <!-- <i-col span="12">

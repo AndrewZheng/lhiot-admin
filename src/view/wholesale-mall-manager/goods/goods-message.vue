@@ -285,7 +285,7 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="商品主图:建议尺寸;750x750(单位:px):" prop="goodsImage">
+              <FormItem label="商品主图:建议尺寸;690x690(单位:px):" prop="goodsImage">
                 <Input v-show="false" v-model="productDetail.goodsImage" style="width: auto"></Input>
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
@@ -314,7 +314,7 @@
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="服务保障图:建议尺寸;710x500(单位:px)" prop="otherImage">
+              <FormItem label="服务保障图:建议尺寸;710x250(单位:px)" prop="otherImage">
                 <Input v-show="false" v-model="productDetail.otherImage" style="width: auto"></Input>
                 <div
                   v-for="item in uploadListDetail"

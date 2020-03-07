@@ -328,7 +328,7 @@ const relationColumns = [
   {
     title: "商品规格",
     align: "center",
-    key: "standardDesc",
+    key: "standard",
     minWidth: 80
   },
   {

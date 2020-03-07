@@ -326,29 +326,29 @@ export default {
     getTableData() {
       this.loading = true;
       getFaqCategoriesPages(this.searchRowData).then(res => {
-        if (this.menuData.length > 0) {
+        // if (this.menuData.length > 0) {
           // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.clearSearchLoading = false;
-        }
+        // }
       });
     },
     // 初始化商品菜单列表
     initMenuList() {
       getFaqCategoriesTree().then(res => {
-        if (res && res.array.length > 0) {
+        // if (res && res.array.length > 0) {
           const menuList = buildMenu(res.array);
           const map = {
             title: "title",
             children: "children"
           };
           this.menuData = convertTree(menuList, map, true);
-          if (this.menuData.length > 0) {
+          // if (this.menuData.length > 0) {
             this.getTableData();
-          }
-        }
+          // }
+        // }
       });
     },
 

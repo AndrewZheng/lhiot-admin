@@ -875,13 +875,13 @@ export default {
     getTableData() {
       this.loading = true;
       getProductSectionRelationPages(this.searchRowData).then(res => {
-        if (this.menuData.length > 0) {
+        // if (this.menuData.length > 0) {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
-        }
+        // }
       });
     },
     getProductTableData() {
@@ -899,7 +899,7 @@ export default {
     // 初始化商品菜单列表
     initMenuList() {
       getProductSectionTree(this.treeData).then(res => {
-        if (res && res.array.length > 0) {
+        // if (res && res.array.length > 0) {
           const menuList = buildMenu(res.array);
           const map = {
             title: "title",
@@ -907,10 +907,10 @@ export default {
           };
           this.menuData = convertTree(menuList, map, true);
           this.goodsSectionData = convertTreeCategory(menuList, map, true);
-          if (this.menuData.length > 0) {
+          // if (this.menuData.length > 0) {
             this.getTableData();
-          }
-        }
+        //   }
+        // }
       });
     },
     handleClick({ root, node, data }) {

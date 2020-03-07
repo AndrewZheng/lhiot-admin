@@ -684,7 +684,7 @@ export default {
     },
     getProductCategoriesTree() {
       this.loading = true;
-      this.createLoading = true;
+      // this.createLoading = true;
       getProductCategoriesTree()
         .then(res => {
           this.proCategoryTreeList = [];
