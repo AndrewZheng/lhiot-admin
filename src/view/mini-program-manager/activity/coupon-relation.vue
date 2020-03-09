@@ -797,7 +797,7 @@ const dataColumns = [
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{fenToYuanDot2Number(row.couponFee) * 10 + "折"}</div>;
+        return <div>{row.couponFee / 10 + "折"}</div>;
       } else {
         return <div>{fenToYuanDot2(row.couponFee)}</div>;
       }
@@ -820,7 +820,7 @@ const dataColumns = [
     render(h, params) {
       const { row } = params;
       if (row.maxDiscountFee != null) {
-        return <div>{"¥" + row.maxDiscountFee/100}</div>;
+        return <div>{"¥" + row.maxDiscountFee / 100}</div>;
       } else {
         return <div>{"N/A"}</div>;
       }

@@ -586,7 +586,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.couponType === "activity") {
+            } else if (row.couponType === "recharge") {
               return (
                 <div>
                   <tag color="pink">

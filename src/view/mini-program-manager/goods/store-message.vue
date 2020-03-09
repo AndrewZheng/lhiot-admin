@@ -494,7 +494,7 @@ const storeDetail = {
   storeImage: "",
   storeArea: "",
   storeStatus: "",
-  storeFlagship: null,
+  storeFlagship: "",
   storeType: null,
   videoUrl: "",
   beginAt: "",

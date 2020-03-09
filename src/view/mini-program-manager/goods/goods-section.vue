@@ -876,11 +876,11 @@ export default {
       this.loading = true;
       getProductSectionRelationPages(this.searchRowData).then(res => {
         // if (this.menuData.length > 0) {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
+        this.tableData = res.rows;
+        this.total = res.total;
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
         // }
       });
     },
@@ -900,15 +900,15 @@ export default {
     initMenuList() {
       getProductSectionTree(this.treeData).then(res => {
         // if (res && res.array.length > 0) {
-          const menuList = buildMenu(res.array);
-          const map = {
-            title: "title",
-            children: "children"
-          };
-          this.menuData = convertTree(menuList, map, true);
-          this.goodsSectionData = convertTreeCategory(menuList, map, true);
-          // if (this.menuData.length > 0) {
-            this.getTableData();
+        const menuList = buildMenu(res.array);
+        const map = {
+          title: "title",
+          children: "children"
+        };
+        this.menuData = convertTree(menuList, map, true);
+        this.goodsSectionData = convertTreeCategory(menuList, map, true);
+        // if (this.menuData.length > 0) {
+        this.getTableData();
         //   }
         // }
       });

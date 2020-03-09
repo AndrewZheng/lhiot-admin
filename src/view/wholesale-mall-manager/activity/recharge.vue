@@ -675,6 +675,7 @@ export default {
       couponTypeEnum,
       imageStatusEnum,
       receiveTypeEnum,
+      activityStatus: "",
       columns: rewardColumns,
       relationColumns: [
         ...relationTempColumns,
@@ -728,6 +729,7 @@ export default {
         this.activityDetail = _.cloneDeep(activity);
         this.searchRowData.activityId = activity.id;
         this.rewardConfig.activityId = activity.id;
+        this.activityStatus = activity.vaild;
       }
       getRewardConfigPages(this.searchRowData)
         .then(res => {
@@ -751,6 +753,10 @@ export default {
       });
     },
     handleCreate() {
+      if (this.activityStatus === "yes") {
+        this.$Message.error("活动有效期内不允删除!");
+        return;
+      }
       if (this.tempModalType !== this.modalType.create) {
         this.tempModalType = this.modalType.create;
         this.rewardConfig = _.cloneDeep(rewardConfig);
@@ -900,6 +906,31 @@ export default {
     },
     handleBack() {
       this.turnToPage("wholesale-activity");
+    },
+    handleDelete(params) {
+      if (this.activityStatus === "yes") {
+        this.$Message.error("活动有效期内不允删除!");
+        return;
+      }
+      this.tableDataSelected = [];
+      this.tableDataSelected.push(params.row);
+      this.deleteTable(params.row.id);
+    },
+    poptipOk() {
+      if (this.tableDataSelected.length < 1) {
+        this.$Message.warning("请选中要删除的行");
+        return;
+      }
+      if (this.activityStatus === "yes") {
+        this.$Message.error("活动有效期内不允删除!");
+        return;
+      }
+      const tempDeleteList = [];
+      this.tableDataSelected.filter(value => {
+        tempDeleteList.push(value.id);
+      });
+      const strTempDelete = tempDeleteList.join(",");
+      this.deleteTable(strTempDelete);
     }
   }
 };

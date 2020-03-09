@@ -501,7 +501,10 @@
           <Row>
             <i-col span="12">
               <FormItem label="商品规格:" prop="specification">
-                <Input v-model="productStandardDetail.specification"></Input>
+                <Input
+                  v-model="productStandardDetail.specification"
+                  @on-blur="productStandardChange"
+                ></Input>
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -547,7 +550,7 @@
             </i-col>
           </Row>
           <Row>
-            <!--   -->
+            <!--  @on-change="productTypeChange" -->
             <i-col span="12">
               <FormItem label="商品类型:" prop="productType" :label-width="100">
                 <Select
@@ -2130,6 +2133,25 @@ export default {
     productTypeChange(value) {
       if (value != "ORDINARY_PRODUCT") {
         this.productStandardDetail.startNum = 1;
+      }
+    },
+    productStandardChange(value) {
+      console.log(
+        "商品规格",
+        Number(this.productStandardDetail.specification.split("*")[0]) *
+          Number(this.productStandardDetail.specification.split("*")[1])
+      );
+      if (
+        Number(
+          this.productStandardDetail.specification.split("*")[0] > 0 &&
+            Number(this.productStandardDetail.specification.split("*")[1] > 0)
+        )
+      ) {
+        this.productStandardDetail.standardQty =
+          this.productStandardDetail.specification.split("*")[0] *
+          this.productStandardDetail.specification.split("*")[1];
+      } else {
+        this.productStandardDetail.standardQty = 1;
       }
     }
   }

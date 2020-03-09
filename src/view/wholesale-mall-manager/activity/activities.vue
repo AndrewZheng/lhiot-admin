@@ -437,10 +437,10 @@ export default {
         });
     },
     handleSetting(params) {
-      if (params.row.vaild == "yes") {
-        this.$Message.error("活动有效期内不允许修改!");
-        return;
-      }
+      // if (params.row.vaild == "yes") {
+      //   this.$Message.error("活动有效期内不允许修改!");
+      //   return;
+      // }
       setActivity(params.row);
       let pageName = "wholesale-activity";
       switch (params.row.activityType) {

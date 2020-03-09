@@ -5,7 +5,7 @@
         v-for="(infor, i) in inforCardData"
         :key="`infor-${i}`"
         span="4"
-        style="height: 120px;"
+        style="height: 120px;minWidth:380px;"
       >
         <infor-card :color="infor.color" :icon="infor.icon" :icon-size="36" shadow>
           <count-to :end="infor.count" count-class="count-style" />
