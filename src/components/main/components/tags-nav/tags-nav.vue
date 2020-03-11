@@ -32,7 +32,7 @@
             ref="tagsPageOpened"
             :key="`tag-nav-${index}`"
             :name="item.name"
-            :closable="item.name !== 'home'"
+            :closable="item.name != systemHomeName"
             :color="isCurrentTag(item) ? 'primary' : 'default'"
             type="dot"
             @on-close="handleClose(item)"
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { showTitle, routeEqual } from '@/libs/util';
+import { showTitle, routeEqual, getSystemHomeName } from '@/libs/util';
 import beforeClose from '@/router/before-close';
 export default {
   name: 'TagsNav',
@@ -75,7 +75,8 @@ export default {
       menuList: {
         others: '关闭其他',
         all: '关闭所有'
-      }
+      },
+      systemHomeName: ''
     };
   },
   computed: {
@@ -98,6 +99,7 @@ export default {
   },
   mounted() {
     setTimeout(() => {
+      this.systemHomeName = getSystemHomeName();
       this.getTagElementByName(this.$route.name);
     }, 200);
   },
@@ -130,11 +132,11 @@ export default {
     handleTagsOption(type) {
       if (type === 'all') {
         // 关闭所有，除了home
-        const res = this.list.filter(item => item.name === 'home');
+        const res = this.list.filter(item => item.name === this.systemHomeName);
         this.$emit('on-close', res, 'all');
       } else if (type === 'others') {
         // 关闭除当前页和home页的其他页
-        const res = this.list.filter(item => routeEqual(this.currentRouteObj, item) || item.name === 'home');
+        const res = this.list.filter(item => routeEqual(this.currentRouteObj, item) || item.name === this.systemHomeName);
         this.$emit('on-close', res, 'others', this.currentRouteObj);
         setTimeout(() => {
           this.getTagElementByName(this.currentRouteObj.name);
@@ -193,7 +195,7 @@ export default {
       });
     },
     contextMenu(item, e) {
-      if (item.name === 'home') {
+      if (item.name === this.systemHomeName) {
         return;
       }
       this.visible = true;

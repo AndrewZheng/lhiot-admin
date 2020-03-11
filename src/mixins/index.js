@@ -1,13 +1,46 @@
 import {
   customOrderStatusConvert,
-  customPeriodConvert, customPlanStatusConvert,
-  deliveryTypeCustomConvert, doctorLevelConvert, doctorStatusConvert, hotConvert, onSaleStatusConvert,
-  orderStatusConvert, orderTypeConvert, receivingWayConvert, settlementStatusConvert, feedbackStatusConvert,
-  productStatusConvert, imageStatusConvert, imageTypeConvert, teamBuyStatusConvert, teamBuyTypeConvert,
-  rewardActivitySettingConvert, couponStatusConvert, couponTypeConvert, appTypeConvert, bankTypeConvert,
-  timeLimitedConvert, advertisementPositionTypeConvert, couponScopeConvert, advertisementLinkTypeConvert,
-  miniOrderStatusConvert, miniHdStatusConvert, miniOrderTypeConvert, yesNoConvert, deliverStatusConvert,
-  couponUseLimitConvert, validDateTypeConvert, storeStatusConvert,vipTypeConvert
+  customPeriodConvert,
+  customPlanStatusConvert,
+  deliveryTypeCustomConvert,
+  doctorLevelConvert,
+  doctorStatusConvert,
+  hotConvert,
+  onSaleStatusConvert,
+  orderStatusConvert,
+  orderTypeConvert,
+  receivingWayConvert,
+  settlementStatusConvert,
+  feedbackStatusConvert,
+  productStatusConvert,
+  imageStatusConvert,
+  imageTypeConvert,
+  teamBuyStatusConvert,
+  teamBuyTypeConvert,
+  rewardActivitySettingConvert,
+  couponStatusConvert,
+  couponTypeConvert,
+  appTypeConvert,
+  bankTypeConvert,
+  timeLimitedConvert,
+  advertisementPositionTypeConvert,
+  couponScopeConvert,
+  activityTypeConvert,
+  advertisementLinkTypeConvert,
+  miniOrderStatusConvert,
+  wholesaleHdStatusConvert,
+  miniOrderTypeConvert,
+  yesNoConvert,
+  deliverStatusConvert,
+  couponUseLimitConvert,
+  validDateTypeConvert,
+  storeStatusConvert,
+  vipTypeConvert,
+  wholesaleOrderStatusConvert,
+  payStatusConvert,
+  wholesalePayTypeConvert,
+  advPositionConvert,
+  showTypeConvert
 } from '../libs/converStatus';
 
 const mixin = {
@@ -149,6 +182,10 @@ const mixin = {
     couponScopeFilter(status) {
       return couponScopeConvert(status).label;
     },
+    // 批发商城活动类型
+    pfActivityTypeFilter(status) {
+      return activityTypeConvert(status).label;
+    },
     // 小程序优惠券有效期类型
     validDateTypeFilter(status) {
       return validDateTypeConvert(status).label;
@@ -191,7 +228,7 @@ const mixin = {
     },
     // 小程序海鼎状态
     miniHdStatusFilter(status) {
-      return miniHdStatusConvert(status).label;
+      return wholesaleHdStatusConvert(status).label;
     },
     // 小程序订单类型
     miniOrderTypeFilter(type) {
@@ -203,6 +240,26 @@ const mixin = {
     // 小程序订单配送状态
     deliverStatusFilter(status) {
       return deliverStatusConvert(status).label;
+    },
+    // 批发小程序订单状态
+    wholesaleOrderStatusFilter(status) {
+      return wholesaleOrderStatusConvert(status).label;
+    },
+    // 批发小程序海鼎状态
+    wholesaleHdStatusFilter(status) {
+      return wholesaleHdStatusConvert(status).label;
+    },
+    wholeslaePayTypeFilter(type) {
+      return wholesalePayTypeConvert(type).label;
+    },
+    payStatusFilter(status) {
+      return payStatusConvert(status).label;
+    },
+    advPositionFilter(value) {
+      return advPositionConvert(value).label;
+    },
+    showTypeFilter(value) {
+      return showTypeConvert(value).label;
     }
   },
   computed: {
@@ -215,7 +272,11 @@ const mixin = {
   },
   methods: {
     turnToPage(route) {
-      let { name, params, query } = {};
+      let {
+        name,
+        params,
+        query
+      } = {};
       if (typeof route === 'string') name = route;
       else {
         name = route.name;

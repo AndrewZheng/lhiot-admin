@@ -48,6 +48,20 @@
               >{{ item.areaName }}</Option>
             </Select>
             <Select
+              v-model="searchRowData.storeStatus"
+              placeholder="营业状态"
+              style="padding-right: 5px;width: 100px"
+              clearable
+            >
+              <Option
+                v-for="(item,index) in storeStatusEnum"
+                :value="item.value"
+                :key="index"
+                class="ptb2-5"
+                style="padding-left: 5px;width: 100px"
+              >{{ item.label }}</Option>
+            </Select>
+            <Select
               v-if="applicationType == null"
               v-model="searchRowData.applicationType"
               placeholder="应用类型"
@@ -176,6 +190,20 @@
             </Row>
           </i-col>
         </Row>
+        <!-- <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="6">企业微信ID:</i-col>
+              <i-col span="18">{{ storeDetail.enterpriseWxId }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="6">门店类型:</i-col>
+              <i-col span="18">{{ storeDetail.storeType }}</i-col>
+            </Row>
+          </i-col>
+        </Row>-->
         <Row class-name="mb20">
           <i-col span="3">门店地址:</i-col>
           <i-col span="21">{{ storeDetail.storeAddress }}</i-col>
@@ -196,6 +224,16 @@
               <i-col span="3">商品主图:</i-col>
               <i-col span="21">
                 <img :src="storeDetail.storeImage" style="width: 300px" />
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="3">门店微信:</i-col>
+              <i-col span="21">
+                <img :src="storeDetail.wxImage" style="width: 300px" />
               </i-col>
             </Row>
           </i-col>
@@ -289,7 +327,7 @@
           <Row>
             <i-col span="12">
               <FormItem label="开始时间:" prop="beginTime">
-                <DatePicker
+                <TimePicker
                   v-model="storeDetail.beginTime"
                   type="time"
                   placeholder="请选择"
@@ -299,7 +337,7 @@
             </i-col>
             <i-col span="12">
               <FormItem label="结束时间:" prop="endTime">
-                <DatePicker
+                <TimePicker
                   v-model="storeDetail.endTime"
                   type="time"
                   placeholder="请选择"
@@ -322,6 +360,11 @@
           </Row>
           <Row>
             <i-col span="12">
+              <FormItem label="企业微信ID:" prop="enterpriseWxId">
+                <Input v-model="storeDetail.enterpriseWxId"></Input>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
               <FormItem :label-width="85" label="门店类型:" prop="storeType">
                 <Select v-model="storeDetail.storeType">
                   <Option
@@ -342,6 +385,7 @@
               </FormItem>
             </i-col>
           </Row>
+          <!-- 门店店照 -->
           <Row>
             <FormItem label="推荐使用尺寸为400X225(单位:px):" prop="storeImage">
               <Input v-show="false" v-model="storeDetail.storeImage" style="width: auto"></Input>
@@ -371,6 +415,40 @@
               </IViewUpload>
             </FormItem>
           </Row>
+          <!-- 门店微信 -->
+          <Row>
+            <i-col span="12">
+              <FormItem label="门店微信" prop="wxImage">
+                <Input v-show="false" v-model="storeDetail.wxImage" style="width: auto"></Input>
+                <div v-for="item in uploadwxImageList" :key="item.url" class="demo-upload-list">
+                  <template v-if="item.status === 'finished'">
+                    <div>
+                      <img :src="item.url" />
+                      <div class="demo-upload-list-cover">
+                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                        <Icon type="ios-trash-outline" @click.native="handleRemoveWxImage(item)"></Icon>
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                  </template>
+                </div>
+                <IViewUpload
+                  ref="uploadWxImage"
+                  :default-list="defaultWxImageList"
+                  :image-size="imageSize"
+                  :max-num="1"
+                  @on-success="handleSuccessWxImage"
+                >
+                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                    <Icon type="ios-camera" size="20"></Icon>
+                  </div>
+                </IViewUpload>
+              </FormItem>
+            </i-col>
+          </Row>
+          <!-- ========================== -->
           <Row align="middle" type="flex">
             <i-col span="24">
               <FormItem label="直播地址:">
@@ -430,7 +508,7 @@ const storeDetail = {
   storeImage: "",
   storeArea: "",
   storeStatus: "",
-  storeFlagship: null,
+  storeFlagship: "",
   storeType: null,
   videoUrl: "",
   beginAt: "",
@@ -438,13 +516,16 @@ const storeDetail = {
   tapeUrl: "",
   storeCoordx: null,
   storeCoordy: null,
-  coordinateType: null
+  coordinateType: null,
+  wxImage: "",
+  enterpriseWxId: ""
 };
 
 const roleRowData = {
   storeCode: null,
   storeName: null,
   storeArea: null,
+  storeStatus: null,
   page: 1,
   rows: 10
 };
@@ -506,24 +587,34 @@ export default {
         storeAddress: [{ required: true, message: "请填写门店地址" }]
       },
       defaultListMain: [],
+      defaultWxImageList: [],
       uploadListMain: [],
+      uploadwxImageList: [],
       areaList: [],
       flagShipList: [],
       columns: [
         {
           title: "门店编码",
           key: "storeCode",
-          sortable: true,
-          minWidth: 150
+          align: "center",
+          minWidth: 100
         },
         {
           title: "门店名称",
+          align: "center",
           key: "storeName",
           minWidth: 150
         },
         {
+          title: "企业微信ID",
+          key: "enterpriseWxId",
+          align: "center",
+          minWidth: 130
+        },
+        {
           title: "所属区域",
-          minWidth: 150,
+          align: "center",
+          minWidth: 90,
           key: "storeArea",
           render: (h, params, vm) => {
             const { row } = params;
@@ -539,7 +630,8 @@ export default {
         },
         {
           title: "区域旗舰店",
-          minWidth: 150,
+          align: "center",
+          minWidth: 130,
           key: "storeFlagship",
           render: (h, params, vm) => {
             const { row } = params;
@@ -554,7 +646,8 @@ export default {
         },
         {
           title: "门店状态",
-          minWidth: 150,
+          align: "center",
+          minWidth: 120,
           key: "storeStatus",
           render: (h, params, vm) => {
             const { row } = params;
@@ -583,23 +676,27 @@ export default {
           }
         },
         {
-          title: "开始时间",
-          minWidth: 150,
+          title: "营业时间(起)",
+          align: "center",
+          minWidth: 130,
           key: "beginTime"
         },
         {
-          title: "结束时间",
-          minWidth: 150,
+          title: "营业时间(止)",
+          align: "center",
+          minWidth: 130,
           key: "endTime"
         },
         {
           title: "联系方式",
-          minWidth: 150,
+          align: "center",
+          minWidth: 140,
           key: "storePhone"
         },
         {
           title: "门店类型",
-          minWidth: 150,
+          align: "center",
+          minWidth: 140,
           render: (h, params) => {
             const { row } = params;
             if (row.storeType === "FLAGSHIP_STORE") {
@@ -624,6 +721,7 @@ export default {
         },
         {
           title: "操作",
+          align: "center",
           minWidth: 230,
           key: "handle",
           options: ["onStoreStatus", "view", "edit", "delete"]
@@ -663,7 +761,9 @@ export default {
       this.$refs.modalEdit.resetFields();
       this.$refs.uploadMain.clearFileList();
       this.uploadListMain = [];
+      this.uploadwxImageList = [];
       this.storeDetail.storeImage = null;
+      this.storeDetail.wxImage = null;
     },
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
@@ -753,6 +853,14 @@ export default {
         this.$refs.uploadMain.setDefaultFileList(mainImgArr);
         this.uploadListMain = mainImgArr;
       }
+      if (res.wxImage != null) {
+        const map = { status: "finished", url: "url" };
+        const detailImgArr = [];
+        map.url = res.wxImage;
+        detailImgArr.push(map);
+        this.$refs.uploadWxImage.setDefaultFileList(detailImgArr);
+        this.uploadwxImageList = detailImgArr;
+      }
     },
     handleView(params) {
       this.resetFields();
@@ -798,11 +906,22 @@ export default {
       this.$refs.uploadMain.deleteFile(file);
       this.storeDetail.storeImage = null;
     },
+    handleRemoveWxImage(file) {
+      this.$refs.uploadWxImage.deleteFile(file);
+      this.storeDetail.wxImage = null;
+    },
     // 商品主图
     handleSuccessMain(response, file, fileList) {
       this.uploadListMain = fileList;
       this.storeDetail.storeImage = null;
       this.storeDetail.storeImage = fileList[0].url;
+      console.log("商品主图", file);
+    },
+    handleSuccessWxImage(response, file, fileList) {
+      this.uploadwxImageList = fileList;
+      this.storeDetail.wxImage = null;
+      this.storeDetail.wxImage = fileList[0].url;
+      console.log("商品主图1", file);
     }
   }
 };

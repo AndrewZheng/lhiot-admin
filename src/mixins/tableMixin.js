@@ -17,6 +17,14 @@ const mixin = {
       tempModalType: 'create'
     };
   },
+  computed: {
+    isCreate() {
+      return this.tempModalType === this.modalType.create;
+    },
+    isEdit() {
+      return this.tempModalType === this.modalType.edit;
+    }
+  },
   methods: {
     changePage(page) {
       this.searchRowData.page = page;
@@ -33,6 +41,19 @@ const mixin = {
     handleClose() {
       this.loading = false;
       this.modalView = false;
+    },
+    // 获取分类树展开函数
+    expandChildren(array) {
+      array.forEach(item => {
+        if (typeof item.expand === 'undefined') {
+          this.$set(item, 'expend', false);
+        } else {
+          item.expand = !item.expand;
+        }
+        if (item.children) {
+          this.expandChildren(item.children);
+        }
+      });
     }
   }
 };

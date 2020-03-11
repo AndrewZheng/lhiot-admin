@@ -11,12 +11,13 @@
         editable
         searchable
         border
+        highlight-row
         search-place="top"
         @on-view="handleView"
         @on-edit="handleEdit"
         @on-discount="handleDiscount"
-        @on-delete="handleDelete"
         @custom-on-sale="customOnSale"
+        @on-current-change="onCurrentChange"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
@@ -58,7 +59,7 @@
               >{{ item.label }}</Option>
             </Select>
             <Select
-              v-model="searchRowData.expandType"
+              v-model="searchRowData.productType"
               class="ml5"
               placeholder="商品类型"
               style="width:100px"
@@ -105,6 +106,9 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
+          <div class="ml15 mt10">
+            <i style="color:red">*</i> 选中单条数据再点击添加,可复制当前数据
+          </div>
         </div>
         <div slot="operations">
           <Button
@@ -119,7 +123,7 @@
           <Button v-waves class="search-btn ml5 mr5" type="success" @click="handleCreateView">
             <Icon type="md-add" />&nbsp;添加
           </Button>
-          <Poptip
+          <!-- <Poptip
             confirm
             placement="bottom"
             style="width: 100px"
@@ -129,7 +133,7 @@
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
             </Button>
-          </Poptip>
+          </Poptip>-->
           <Button class="search-btn mr2" type="warning" @click="handleDownload">
             <Icon type="md-download" />导出
           </Button>
@@ -340,7 +344,7 @@
     <!-- 添加 -->
     <Modal v-model="modalEdit" :mask-closable="false" :width="900">
       <p slot="header">
-        <span>{{ productStandardDetail.id >0?'创建商品规格':'编辑商品规格' }}</span>
+        <span>{{ this.clickFlag==false?'编辑商品规格':'创建商品规格' }}</span>
       </p>
       <div class="modal-content">
         <Form ref="editForm" :model="productStandardDetail" :rules="ruleInline" :label-width="100">
@@ -497,7 +501,10 @@
           <Row>
             <i-col span="12">
               <FormItem label="商品规格:" prop="specification">
-                <Input v-model="productStandardDetail.specification"></Input>
+                <Input
+                  v-model="productStandardDetail.specification"
+                  @on-blur="productStandardChange"
+                ></Input>
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -539,6 +546,33 @@
                   :value="salePriceComputed"
                   @on-change="salePriceInputNumberOnchange"
                 ></InputNumber>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <!--  @on-change="productTypeChange" -->
+            <i-col span="12">
+              <FormItem label="商品类型:" prop="productType" :label-width="100">
+                <Select
+                  v-model="productStandardDetail.productType"
+                  placeholder="请选择"
+                  style="padding-right: 5px;width: 120px"
+                  @on-change="productTypeChange"
+                >
+                  <Option
+                    v-for="(item,index) in expandTypeEnum"
+                    :value="item.value"
+                    :key="index"
+                    :disabled="clickFlag==false"
+                    class="ptb2-5"
+                    style="padding-left: 5px;width: 100px"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+            </i-col>
+            <i-col span="12" v-show="productStandardDetail.productType==='ORDINARY_PRODUCT'">
+              <FormItem label="起购份数:" prop="startNum">
+                <InputNumber :min="0" v-model="productStandardDetail.startNum"></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -646,29 +680,36 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="商品类型:" prop="expandType" :label-width="100">
-                <Select
-                  v-model="proStandardExpand.expandType"
-                  placeholder="请选择"
-                  style="padding-right: 5px;width: 120px"
+              <Row style="margin-left:36px">
+                <i-col span="5">商品类型:</i-col>
+                <i-col span="16" v-if="productStandardDetail.productType === 'DISCOUNT_PRODUCT'">
+                  <tag color="magenta">{{ "折扣商品" }}</tag>
+                </i-col>
+                <i-col
+                  span="16"
+                  v-else-if="productStandardDetail.productType === 'PULL_NEW_PRODUCT'"
                 >
-                  <Option
-                    v-for="(item,index) in expandTypeEnum"
-                    :value="item.value"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px;width: 100px"
-                  >{{ item.label }}</Option>
-                </Select>
-              </FormItem>
+                  <tag color="orange">{{ "老拉新商品" }}</tag>
+                </i-col>
+                <i-col
+                  span="16"
+                  v-else-if="productStandardDetail.productType === 'SECKILL_PRODUCT'"
+                >
+                  <tag color="blue">{{ "限时秒杀商品" }}</tag>
+                </i-col>
+                <i-col span="16" v-else-if="productStandardDetail.productType === 'ASSIST_PRODUCT'">
+                  <tag color="green">{{ "助力抢爆品商品" }}</tag>
+                </i-col>
+                <i-col span="16" v-else-if="productStandardDetail.productType === null">{{ "N/A" }}</i-col>
+              </Row>
             </i-col>
             <i-col span="12">
-              <FormItem label="商品库存:" prop="limitQty">
+              <FormItem label="最低库存:" prop="limitQty">
                 <InputNumber v-model="proStandardExpand.limitQty"></InputNumber>
               </FormItem>
             </i-col>
           </Row>
-          <Row>
+          <Row v-if="this.productStandardDetail.productType==='DISCOUNT_PRODUCT'">
             <i-col span="12">
               <FormItem label="限购份数:" prop="limitNum">
                 <Input v-model="proStandardExpand.limitNum"></Input>
@@ -682,17 +723,19 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="折扣价:">
+              <FormItem label="活动价:">
                 <InputNumber
                   :min="0"
                   :max="salePriceComputed > 0? salePriceComputed: priceComputed"
                   :value="discountPriceComputed"
                   @on-change="calDiscountRate"
                 ></InputNumber>
-                <div>（以售卖价格优先计算折扣率）</div>
+                <div
+                  v-if="this.productStandardDetail.productType==='DISCOUNT_PRODUCT'"
+                >（以售卖价格优先计算折扣率）</div>
               </FormItem>
             </i-col>
-            <i-col span="12">
+            <i-col span="12" v-if="this.productStandardDetail.productType==='DISCOUNT_PRODUCT'">
               <FormItem label="折扣率:" prop="discountRate">
                 <Input v-model="proStandardExpand.discountRate" readonly></Input>
               </FormItem>
@@ -935,12 +978,14 @@ const productStandardDetail = {
   id: 0,
   productId: 0,
   barcode: "",
+  productType: "",
   specification: "",
   standardQty: 0,
   unitId: 0,
   productUnit: "",
   price: 0,
   salePrice: 0,
+  startNum: 1,
   rank: 0,
   description: null,
   shelvesStatus: null,
@@ -981,6 +1026,7 @@ const roleRowData = {
   productId: "",
   barcode: "",
   productCode: "",
+  productType: "",
   productName: "",
   shelvesStatus: null,
   minPrice: "",
@@ -1029,7 +1075,7 @@ const proStandardExpand = {
   limitNum: 0,
   standardId: 0,
   startNum: 0,
-  expandType: "DISCOUNT_PRODUCT",
+  // expandType: "DISCOUNT_PRODUCT",
   limitQty: 0
 };
 
@@ -1051,6 +1097,7 @@ export default {
       uploadListDetail: [],
       uploadListMultiple: [],
       expandTypeEnum,
+      clickFlag: "",
       ruleValidate: {
         limitNum: [
           { required: false, message: "请输入限购份数", trigger: "blur" }
@@ -1059,7 +1106,7 @@ export default {
           { required: false, message: "请输入起购份数", trigger: "blur" }
         ],
         discountPrice: [
-          { required: true, message: "请输入折扣价格", trigger: "change" }
+          { required: true, message: "请输入活动价格", trigger: "change" }
         ],
         discountRate: [
           { required: false, message: "请计算折扣率", trigger: "change" }
@@ -1078,6 +1125,7 @@ export default {
         image: [{ required: true, message: "请上传上架商品主图" }],
         availableStatus: [{ required: true, message: "请选择商品分类" }],
         unitId: [{ required: true, message: "请选择商品单位" }],
+        productType: [{ required: true, message: "请选择商品类型" }],
         productDescription: [{ required: true, message: "请输入上架商品描述" }],
         shelvesStatus: [{ required: true, message: "请选择商品状态" }],
         specification: [{ required: true, message: "请输入商品规格" }],
@@ -1154,36 +1202,43 @@ export default {
         },
         {
           title: "规格ID",
+          align: "center",
           key: "id",
           minWidth: 50
         },
         {
           title: "商品条码",
+          align: "center",
           key: "barcode",
           minWidth: 70
         },
         {
           title: "商品编号",
           key: "productCode",
+          align: "center",
           minWidth: 100
         },
         {
           title: "商品名称",
+          align: "center",
           key: "productName",
           minWidth: 100
         },
         {
           title: "商品规格",
+          align: "center",
           key: "specification",
           minWidth: 80
         },
         {
           title: "商品单位",
+          align: "center",
           minWidth: 80,
           key: "productUnit"
         },
         {
           title: "商品原价",
+          align: "center",
           minWidth: 60,
           key: "price",
           render(h, params, vm) {
@@ -1193,6 +1248,7 @@ export default {
         },
         {
           title: "售卖价格",
+          align: "center",
           minWidth: 60,
           key: "salePrice",
           render(h, params, vm) {
@@ -1200,50 +1256,63 @@ export default {
             return <div>{amount}</div>;
           }
         },
-        {
-          title: "SVIP价格",
-          minWidth: 60,
-          key: "svipPrice",
-          render(h, params, vm) {
-            const amount = fenToYuanDot2(params.row.svipPrice);
-            return <div>{amount}</div>;
-          }
-        },
+        // {
+        //   title: "SVIP价格",
+        //   align: "center",
+        //   minWidth: 60,
+        //   key: "svipPrice",
+        //   render(h, params, vm) {
+        //     const amount = fenToYuanDot2(params.row.svipPrice);
+        //     return <div>{amount}</div>;
+        //   }
+        // },
         {
           title: "商品类型",
           minWidth: 100,
-          key: "expandType",
+          key: "productType",
+          align: "center",
           render: (h, params, vm) => {
             const { row } = params;
-
-            if (row.productStandardExpand != null) {
-              if (row.productStandardExpand.expandType == "DISCOUNT_PRODUCT") {
-                return (
-                  <div>
-                    <tag color="magenta">
-                      {
-                        expandTypeConvert(row.productStandardExpand.expandType)
-                          .label
-                      }
-                    </tag>
-                  </div>
-                );
-              } else if (
-                row.productStandardExpand.expandType == "PULL_NEW_PRODUCT"
-              ) {
-                return (
-                  <div>
-                    <tag color="orange">
-                      {
-                        expandTypeConvert(row.productStandardExpand.expandType)
-                          .label
-                      }
-                    </tag>
-                  </div>
-                );
-              }
-            } else {
-              return <div>N/A</div>;
+            if (row.productType == "DISCOUNT_PRODUCT") {
+              return (
+                <div>
+                  <tag color="magenta">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.productType == "PULL_NEW_PRODUCT") {
+              return (
+                <div>
+                  <tag color="orange">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.productType == "SECKILL_PRODUCT") {
+              return (
+                <div>
+                  <tag color="blue">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.productType == "ASSIST_PRODUCT") {
+              return (
+                <div>
+                  <tag color="green">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.productType == "ORDINARY_PRODUCT") {
+              return (
+                <div>
+                  <tag color="cyan">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
             }
           }
         },
@@ -1251,6 +1320,7 @@ export default {
           title: "商品状态",
           minWidth: 80,
           key: "shelvesStatus",
+          align: "center",
           render: (h, params, vm) => {
             const { row } = params;
             if (row.shelvesStatus === "VALID") {
@@ -1281,20 +1351,23 @@ export default {
         },
         {
           title: "商品排序",
+          align: "center",
           minWidth: 60,
           key: "rank"
         },
         {
           title: "操作",
+          align: "center",
           minWidth: 180,
           key: "handle",
-          options: ["customOnSale", "view", "edit", "discount", "delete"]
+          options: ["customOnSale", "view", "edit", "discount"]
         }
       ],
       productColumns: [
         {
           title: "商品图片",
           key: "image",
+          align: "center",
           minWidth: 120,
           render: (h, params, vm) => {
             const { row } = params;
@@ -1306,31 +1379,37 @@ export default {
           title: "商品编码",
           key: "productCode",
           sortable: true,
+          align: "center",
           minWidth: 140
         },
         {
           title: "商品名称",
+          align: "center",
           sortable: true,
           key: "productName",
           minWidth: 120
         },
         {
           title: "商品类别",
+          align: "center",
           key: "groupName",
           minWidth: 120
         },
         {
           title: "基础单位",
+          align: "center",
           minWidth: 90,
           key: "unitName"
         },
         {
           title: "基础重量(kg)",
+          align: "center",
           minWidth: 90,
           key: "baseQty"
         },
         {
           title: "商品状态",
+          align: "center",
           minWidth: 90,
           key: "status",
           render: (h, params, vm) => {
@@ -1411,6 +1490,9 @@ export default {
     },
     salePriceComputed() {
       return fenToYuanDot2Number(this.productStandardDetail.salePrice);
+    },
+    svipPriceComputed() {
+      return fenToYuanDot2Number(this.productStandardDetail.svipPrice);
     },
     svipPriceComputed() {
       return fenToYuanDot2Number(this.productStandardDetail.svipPrice);
@@ -1554,6 +1636,7 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      this.clickFlag = false;
       this.tempModalType = this.modalType.edit;
       this.productStandardDetail = this._.cloneDeep(params.row);
       if (this.productStandardDetail.description != null) {
@@ -1566,24 +1649,33 @@ export default {
       this.modalEdit = true;
     },
     handleDiscount(params) {
+      if (params.row.productType == "ORDINARY_PRODUCT") {
+        this.$Message.error("普通商品不允许配置");
+        return;
+      }
       // 展示折扣配置弹窗
       this.productStandardDetail = this._.cloneDeep(params.row);
       // 先清除上次请求的数据
       this.proStandardExpand = proStandardExpand;
       this.proStandardExpand.limitQty = this.productStandardDetail.limitQty;
       this.productStandardDetail.expandType = proStandardExpand.expandType;
+      this.proStandardExpand.discountPrice = 0;
+      // this.productStandardDetail.productStandardExpand.expandType =
+      //   params.row.productType;
+      console.log("shuju", this.productStandardDetail.productStandardExpand);
+
       // 请求数据展示
+      this.modalDiscount = true;
       getProStandardExpand({
         id: this.productStandardDetail.id
       })
         .then(res => {
-          if (res && res.id > 0) {
-            this.proStandardExpand = res;
-          }
+          res.expandType = this.productStandardDetail.productType;
+          this.proStandardExpand = res;
           this.modalDiscount = true;
         })
         .catch(() => {
-          this.modalDiscount = false;
+          this.modalDiscount = true;
         });
     },
     // 海鼎会员价查询
@@ -1609,15 +1701,42 @@ export default {
     handleHdSvipClose() {
       this.modalHdSvip = false;
     },
+    // 选中当前数据
+    onCurrentChange(currentRow, oldCurrentRow) {
+      this.currentTableRowSelected = currentRow;
+    },
     handleCreateView() {
-      this.resetFields();
+      this.clickFlag = true;
+      // this.resetFields();
+      this.defaultListMultiple = [];
+      this.uploadListMultiple = [];
       if (this.tempModalType !== this.modalType.create) {
         this.productStandardDetail = _.cloneDeep(productStandardDetail);
       }
+      // 复制数据
+      if (this.currentTableRowSelected) {
+        // console.log("当前选中数据", this.currentTableRowSelected);
+        this.currentTableRowSelected.productId = null;
+        // this.currentTableRowSelected.baseProductName = null;
+        // this.currentTableRowSelected.groupName = null;
+        // this.currentTableRowSelected.baseUnit = null;
+        // this.currentTableRowSelected.productCode = null;
+        // this.currentTableRowSelected.baseBarcode = null;
+        // this.currentTableRowSelected.baseImage = null;
+        // this.currentTableRowSelected.baseProductDescription = null;
+        this.currentTableRowSelected.image = null;
+        this.currentTableRowSelected.detailImage = null;
+        this.currentTableRowSelected.barcode = null;
+        this.currentTableRowSelected.price = null;
+        this.currentTableRowSelected.salePrice = null;
+        this.currentTableRowSelected.productStandardExpand = null;
+        // console.log("当前选中数据", this.currentTableRowSelected);
+        this.productStandardDetail = _.cloneDeep(this.currentTableRowSelected);
+      }
       this.tempModalType = this.modalType.create;
       this.productStandardDetail.description = null;
-      this.productStandardDetail.standardQty = 0;
-      this.productStandardDetail.rank = 0;
+      // this.productStandardDetail.standardQty = 0;
+      // this.productStandardDetail.rank = 0;
       this.setDefaultUploadList(this.productStandardDetail);
       this.modalEdit = true;
     },
@@ -1701,6 +1820,7 @@ export default {
           }
           if (this.tempModalType === this.modalType.create) {
             this.createStandard();
+            this.currentTableRowSelected = null;
           } else if (this.tempModalType === this.modalType.edit) {
             this.editProductStandard();
           }
@@ -1710,12 +1830,24 @@ export default {
       });
     },
     handleSubmitDiscount() {
-      // 校验某些字段
+      this.proStandardExpand.expandType = this.productStandardDetail.productType;
       this.$refs.modalDiscount.validate(valid => {
         if (valid) {
-          if (this.proStandardExpand.limitNum <= 0) {
-            this.$Message.warning("请输入合法的数字");
+          if (this.proStandardExpand.discountPrice <= 0) {
+            this.$Message.warning("活动价不能为0");
             return false;
+          }
+          if (this.proStandardExpand.expandType === "DISCOUNT_PRODUCT") {
+            if (this.proStandardExpand.limitNum <= 0) {
+              this.$Message.warning("限购份数不能为0");
+              return false;
+            }
+            if (
+              this.proStandardExpand.startNum > this.proStandardExpand.limitNum
+            ) {
+              this.$Message.warning("起购份数不能大于限购份数");
+              return false;
+            }
           }
           this.updateProStandardExpand();
         } else {
@@ -1997,6 +2129,30 @@ export default {
         row.status === "NORMAL" ? "VALID" : "INVALID";
       this.setDefaultUploadList(this.productStandardDetail);
       this.modalProduct = false;
+    },
+    productTypeChange(value) {
+      if (value != "ORDINARY_PRODUCT") {
+        this.productStandardDetail.startNum = 1;
+      }
+    },
+    productStandardChange(value) {
+      console.log(
+        "商品规格",
+        Number(this.productStandardDetail.specification.split("*")[0]) *
+          Number(this.productStandardDetail.specification.split("*")[1])
+      );
+      if (
+        Number(
+          this.productStandardDetail.specification.split("*")[0] > 0 &&
+            Number(this.productStandardDetail.specification.split("*")[1] > 0)
+        )
+      ) {
+        this.productStandardDetail.standardQty =
+          this.productStandardDetail.specification.split("*")[0] *
+          this.productStandardDetail.specification.split("*")[1];
+      } else {
+        this.productStandardDetail.standardQty = 1;
+      }
     }
   }
 };

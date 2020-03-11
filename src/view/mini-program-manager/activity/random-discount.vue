@@ -381,20 +381,24 @@ export default {
       columns: [
         {
           type: "selection",
+          align: "center",
           width: 60,
           align: "center"
         },
         {
           title: "主键ID",
+          align: "center",
           key: "id"
         },
         {
           title: "活动名称",
+          align: "center",
           key: "activityName"
         },
         {
           title: "活动状态",
           key: "onOff",
+          align: "center",
           render: (h, params, vm) => {
             const { row } = params;
             if (row.onOff === "ON") {
@@ -417,38 +421,46 @@ export default {
         },
         {
           title: "活动开启时间",
+          align: "center",
           key: "startTime",
           width: 160
         },
         {
           title: "活动结束时间",
+          align: "center",
           key: "endTime",
           width: 160
         },
         {
           title: "最低立减金额",
+          align: "center",
           key: "minFee"
         },
         {
           title: "最高立减金额",
+          align: "center",
           key: "maxFee"
         },
         {
           title: "创建人",
+          align: "center",
           key: "createUser"
         },
         {
           title: "创建时间",
+          align: "center",
           key: "createTime",
           width: 160
         },
         {
           title: "更新时间",
+          align: "center",
           key: "updateTime",
           width: 160
         },
         {
           title: "操作",
+          align: "center",
           minWidth: 80,
           key: "handle",
           options: ["onSale", "view", "edit", "delete"]

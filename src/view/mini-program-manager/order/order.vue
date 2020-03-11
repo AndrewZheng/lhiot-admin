@@ -36,6 +36,13 @@
               style="width: 110px"
               clearable
             ></Input>
+            <Input
+              v-model="searchRowData.productName"
+              placeholder="商品名称"
+              class="search-input mr5"
+              style="width: 150px"
+              clearable
+            ></Input>
             <Select
               v-model="searchRowData.apply"
               :clearable="true"
@@ -106,51 +113,73 @@
                 class="ptb2-5"
               >{{ item.label }}</Option>
             </Select>
-            <DatePicker
-              v-model="searchRowData.startTime"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetime"
-              placeholder="开始时间"
-              class="mr5"
-              style="width: 150px"
-              @on-change="startTimeChange"
-            />
-            <i>-</i>
-            <DatePicker
-              v-model="searchRowData.endTime"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetime"
-              placeholder="结束时间"
-              class="mr5"
-              style="width: 150px"
-              @on-change="endTimeChange"
-            />
-            <Button
-              v-waves
-              :loading="searchLoading"
-              class="search-btn ml5"
-              type="primary"
-              @click="handleSearch"
-            >
-              <Icon type="md-search" />&nbsp;搜索
-            </Button>
-            <Button
-              v-waves
-              :loading="clearSearchLoading"
-              class="search-btn"
-              type="info"
-              @click="handleClear"
-            >
-              <Icon type="md-refresh" />&nbsp;清除
-            </Button>
+            <div style="margin-top:5px">
+              <DatePicker
+                v-model="searchRowData.startTime"
+                format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="开始时间"
+                class="mr5"
+                style="width: 150px"
+                @on-change="startTimeChange"
+              />
+              <i>-</i>
+              <DatePicker
+                v-model="searchRowData.endTime"
+                format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="结束时间"
+                class="mr20"
+                style="width: 150px"
+                @on-change="endTimeChange"
+              />
+              <!-- 提货时间 -->
+              <DatePicker
+                v-model="searchRowData.recieveStartTime"
+                format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="提货时间起"
+                class="mr5"
+                style="width: 150px"
+                @on-change="recieveStartTimeChange"
+              />
+              <i>-</i>
+              <DatePicker
+                v-model="searchRowData.recieveEndTime"
+                format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="提货时间止"
+                class="mr5"
+                style="width: 150px"
+                @on-change="recieveEndTimeChange"
+              />
+              <Button
+                v-waves
+                :loading="searchLoading"
+                class="search-btn ml5"
+                type="primary"
+                @click="handleSearch"
+              >
+                <Icon type="md-search" />&nbsp;搜索
+              </Button>
+              <Button
+                v-waves
+                :loading="clearSearchLoading"
+                class="search-btn"
+                type="info"
+                @click="handleClear"
+              >
+                <Icon type="md-refresh" />&nbsp;清除
+              </Button>
+            </div>
           </Row>
         </div>
-        <div slot="operations" style="margin-left:-50px">
+        <div slot="operations" style="margin-left:-30px">
           <Button
             v-waves
             :loading="deliverOrderLoading"
             class="search-btn mr2"
-            type="warning"
+            type="primary"
             @click="deliverOrder"
           >门店调货</Button>
           <Button v-waves class="search-btn ml2 mr2" type="primary" @click="resendToHd">海鼎重发</Button>
@@ -159,7 +188,7 @@
           <Button
             :loading="downloadLoading"
             class="search-btn mr2"
-            type="primary"
+            type="warning"
             @click="handleDownload"
           >
             <Icon type="md-download" />导出
@@ -171,6 +200,14 @@
             @click="couponDetails"
           >
             <Icon type="md-search" />&nbsp;用券数据
+          </Button>
+          <Button
+            :loading="downloadLoading"
+            class="search-btn mt5"
+            type="primary"
+            @click="monthOrder"
+          >
+            <Icon type="md-search" />&nbsp;跨月退款订单
           </Button>
           <!-- <Poptip
             confirm
@@ -586,6 +623,7 @@ const orderDetail = {
   reason: "",
   isAllRefund: "",
   createAt: null,
+  recieveTime: "",
   receiveUser: "",
   contactPhone: "",
   remark: "",
@@ -613,7 +651,10 @@ const roleRowData = {
   startTime: null,
   endTime: null,
   page: 1,
-  rows: 10
+  rows: 10,
+  recieveStartTime: null,
+  recieveEndTime: null,
+  productNames: ""
 };
 
 export default {
@@ -748,9 +789,15 @@ export default {
             const { row } = params;
             if (row.refundStatus === "REFUND" && orderStates === "FAILURE") {
               return <div>未退款</div>;
-            } else if (row.refundStatus === "REFUND" && orderStates === "RETURNING") {
+            } else if (
+              row.refundStatus === "REFUND" &&
+              orderStates === "RETURNING"
+            ) {
               return <div>退款中</div>;
-            } else if (row.refundStatus === "REFUND" && orderStates === "ALREADY_RETURN") {
+            } else if (
+              row.refundStatus === "REFUND" &&
+              orderStates === "ALREADY_RETURN"
+            ) {
               return <div>已退款</div>;
             } else if (row.refundStatus === "NOT_REFUND") {
               return <div>未退款</div>;
@@ -782,10 +829,12 @@ export default {
           key: "code",
           sortable: true,
           width: 170,
-          fixed: "left"
+          fixed: "left",
+          align: "center"
         },
         {
           title: "应用类型",
+          align: "center",
           key: "apply",
           width: 120,
           render: (h, params, vm) => {
@@ -809,6 +858,7 @@ export default {
         },
         {
           title: "支付类型",
+          align: "center",
           width: 120,
           key: "payType",
           render: (h, params, vm) => {
@@ -832,21 +882,32 @@ export default {
         },
         {
           title: "创建时间",
+          align: "center",
           width: 160,
           key: "createAt"
         },
         {
+          title: "提货时间",
+          align: "center",
+          width: 160,
+          key: "recieveTime"
+        },
+        {
           title: "订单用户",
+          align: "center",
           width: 120,
           key: "receiveUser"
         },
         {
           title: "手机号码",
+          align: "center",
           width: 120,
           key: "contactPhone"
         },
+        { align: "center", title: "商品名称", width: 150, key: "productNames" },
         {
           title: "下单门店",
+          align: "center",
           width: 120,
           key: "storeId",
           render: (h, params) => {
@@ -862,6 +923,7 @@ export default {
         },
         {
           title: "订单总价",
+          align: "center",
           width: 120,
           key: "totalAmount",
           render(h, params, vm) {
@@ -871,6 +933,7 @@ export default {
         },
         {
           title: "优惠金额",
+          align: "center",
           width: 120,
           key: "couponAmount",
           render(h, params, vm) {
@@ -880,6 +943,7 @@ export default {
         },
         {
           title: "运费",
+          align: "center",
           width: 120,
           key: "deliveryAmount",
           render(h, params, vm) {
@@ -889,6 +953,7 @@ export default {
         },
         {
           title: "应付金额",
+          align: "center",
           width: 120,
           key: "amountPayable",
           render(h, params, vm) {
@@ -896,11 +961,7 @@ export default {
             return <div>{amount}</div>;
           }
         },
-        {
-          title: "商品名称",
-          width: 150,
-          key: "productNames"
-        },
+        { align: "center", title: "商品名称", width: 150, key: "productNames" },
         {
           title: "活动名称",
           width: 120,
@@ -908,11 +969,13 @@ export default {
         },
         {
           title: "券名称",
+          align: "center",
           width: 120,
           key: "couponName"
         },
         {
           title: "提货类型",
+          align: "center",
           width: 120,
           key: "receivingWay",
           render: (h, params, vm) => {
@@ -940,6 +1003,7 @@ export default {
         },
         {
           title: "是否退款",
+          align: "center",
           width: 120,
           key: "isAllRefund",
           render: (h, params, vm) => {
@@ -968,6 +1032,7 @@ export default {
         },
         {
           title: "退款金额",
+          align: "center",
           width: 100,
           key: "refundFee",
           render(h, params, vm) {
@@ -977,6 +1042,7 @@ export default {
         },
         {
           title: "订单状态",
+          align: "center",
           width: 120,
           key: "orderStatus",
           render: (h, params, vm) => {
@@ -1036,6 +1102,7 @@ export default {
         },
         {
           title: "海鼎状态",
+          align: "center",
           width: 120,
           key: "hdStatus",
           render: (h, params, vm) => {
@@ -1096,6 +1163,8 @@ export default {
         {
           title: "操作",
           minWidth: 180,
+          align: "center",
+          fixed: "right",
           key: "handle",
           options: ["view", "onHand", "onReceive"]
         }
@@ -1124,6 +1193,13 @@ export default {
     },
     endTimeChange(value, data) {
       this.searchRowData.endTime = value;
+    },
+    //提货时间
+    recieveStartTimeChange(value, date) {
+      this.searchRowData.recieveStartTime = value;
+    },
+    recieveEndTimeChange(value, data) {
+      this.searchRowData.recieveEndTime = value;
     },
     handleEditCloseTransferModalView() {
       this.transferModalView = false;
@@ -1184,12 +1260,13 @@ export default {
     handSureReceive(params) {
       if (
         params.row.orderStatus === "SEND_OUT" ||
-        params.row.orderStatus === "DISPATCHING"
+        params.row.orderStatus === "DISPATCHING" ||
+        params.row.orderStatus === "RETURNING"
       ) {
         sureReceive({ orderId: params.row.id })
           .then(res => {
             this.loading = false;
-            this.$Message.success("确认收货成功");
+            this.$Message.success("操作成功");
             this.getTableData();
           })
           .catch(() => {
@@ -1199,6 +1276,7 @@ export default {
         this.$Message.error("只有已发货和配送中的订单才能操作收货");
       }
     },
+    // 门店调货
     handleSubmit() {
       if (!this.currentTableRowSelected) {
         this.$Message.error(
@@ -1308,8 +1386,27 @@ export default {
         name: "small-order-coupon-details"
       });
     },
+    monthOrder(params) {
+      this.turnToPage({
+        name: "small-order-month-orders"
+      });
+    },
     getTableData() {
       this.loading = true;
+      if (
+        this.searchRowData.startTime == null ||
+        this.searchRowData.endTime == null
+      ) {
+        let date = new Date();
+        date.setDate(date.getDate());
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var start = `${year}-${month}-${day} 00:00:00`;
+        var end = `${year}-${month}-${day} 23:59:59`;
+        this.searchRowData.startTime = start;
+        this.searchRowData.endTime = end;
+      }
       getOrderPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
@@ -1357,6 +1454,7 @@ export default {
           item["status"] = miniOrderStatusConvert(item["status"]).label;
           item["payType"] = payTypeConvert(item["payType"]).label;
           item["isAllRefund"] = isAllRefundConvert(item["isAllRefund"]).label;
+          item["recieveTime"] = item["recieveTime"];
         });
         this.$refs.tables.handleDownload({
           filename: `普通订单信息-${new Date().valueOf()}`,
@@ -1375,6 +1473,7 @@ export default {
     },
     modifyStoreInOrder() {
       // TODO 未测试
+      // console.log("数据",this.currentTableRowSelected.newStoreId)
       modifyStoreInOrder(this.currentTableRowSelected)
         .then(res => {
           this.$Message.info("调货成功！");
@@ -1393,23 +1492,19 @@ export default {
           tempDeleteList.push(value.id);
         });
         const ids = tempDeleteList.join(",");
-        resendToHd({ ids: ids })
-          .then(res => {
-            let { disqualification, failure } = res;
-            if (failure.length === 0) {
-              this.$Message.info("海鼎重发成功");
-            } else {
-              let lst = failure.join(",");
-              this.$Message.error({
-                content: `海鼎重发失败订单：${lst}`,
-                duration: 30,
-                closable: true
-              });
-            }
-          })
-          .catch(error => {
-            console.log(error);
-          });
+        resendToHd({ ids: ids }).then(res => {
+          let { disqualification, failure } = res;
+          if (failure.length === 0) {
+            this.$Message.info("海鼎重发成功");
+          } else {
+            let lst = failure.join(",");
+            this.$Message.error({
+              content: `海鼎重发失败订单：${lst}`,
+              duration: 30,
+              closable: true
+            });
+          }
+        });
       }
     },
     onSelectionAll(selection) {

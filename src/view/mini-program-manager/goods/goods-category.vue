@@ -43,7 +43,7 @@
                   type="primary"
                   @click="handleSearch"
                 >
-                  <Icon type="md-search"/>&nbsp;搜索
+                  <Icon type="md-search" />&nbsp;搜索
                 </Button>
                 <Button
                   v-waves
@@ -52,16 +52,16 @@
                   type="info"
                   @click="handleClear"
                 >
-                  <Icon type="md-refresh"/>&nbsp;清除
+                  <Icon type="md-refresh" />&nbsp;清除
                 </Button>
               </Row>
             </div>
             <div slot="operations">
               <Button v-waves type="success" class="mr5" @click="createParentRow">
-                <Icon type="md-add"/> 添加一级分类
+                <Icon type="md-add" />添加一级分类
               </Button>
               <Button v-waves type="success" class="mr5" @click="createSonRow">
-                <Icon type="md-add"/> 添加子分类
+                <Icon type="md-add" />添加子分类
               </Button>
               <Poptip
                 confirm
@@ -71,7 +71,7 @@
                 @on-ok="poptipOk"
               >
                 <Button type="error" class="mr5">
-                  <Icon type="md-trash"/> 批量删除
+                  <Icon type="md-trash" />批量删除
                 </Button>
               </Poptip>
             </div>
@@ -180,6 +180,7 @@ export default {
         },
         {
           title: "操作",
+          align: "center",
           key: "handle",
           minWidth: 150,
           options: ["edit", "delete"]
@@ -331,30 +332,33 @@ export default {
     getTableData() {
       this.loading = true;
       getProductCategoriesPages(this.searchRowData).then(res => {
-        if (this.menuData.length > 0) {
+        // if (this.menuData.length > 0) {
           // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
-        }
+        // }
       });
     },
     // 初始化商品菜单列表
     initMenuList() {
       getProductCategoriesTree().then(res => {
-        if (res && res.array.length > 0) {
+        console.log("进去树列表");
+        console.log("数据",res);
+        // if (res && res.array.length > 0) {
+          console.log("树状列表数据");
           const menuList = buildMenu(res.array);
           const map = {
             title: "title",
             children: "children"
           };
           this.menuData = convertTree(menuList, map, true);
-          if (this.menuData.length > 0) {
+          // if (this.menuData.length > 0) {
             this.getTableData();
-          }
-        }
+        //   }
+        // }
       });
     },
 

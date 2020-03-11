@@ -25,12 +25,14 @@
             search-place="top"
             @on-exchange="handleEdit"
             @on-edit="handleEdit"
+            @on-view="handleView"
             @on-delete="handleDelete"
             @on-select-all="onSelectionAll"
             @on-selection-change="onRelationSelectionChange"
           >
             <div slot="searchCondition">
               <Row>
+                <!--  @on-view="handleView" -->
                 <!-- <Input
                   v-model="searchRowData.sectionName"
                   placeholder="板块名称"
@@ -107,7 +109,7 @@
       </i-col>
     </Row>
     <!-- 添加 -->
-    <Modal v-model="modalEdit" :mask-closable="false" :width="1000">
+    <Modal v-model="modalEdit" :mask-closable="false" :width="1200">
       <p slot="header">
         <span>{{ tempModalType == modalType.create? '添加板块商品':'编辑板块' }}</span>
       </p>
@@ -201,6 +203,78 @@
         <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')">确认</Button>
       </div>
     </Modal>
+    <!-- 查看 -->
+    <Modal v-model="modalView" :width="800" draggable scrollable :mask-closable="false">
+      <p slot="header">
+        <span>折扣商品价格展示</span>
+      </p>
+      <div class="modal-content">
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">商品名称:</i-col>
+              <i-col span="16">{{ discount.productName }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">商品类型:</i-col>
+              <i-col span="16" v-if="discount.expandType === 'DISCOUNT_PRODUCT'">
+                <tag color="magenta">{{ "折扣商品" }}</tag>
+              </i-col>
+              <i-col span="16" v-else-if="discount.expandType === 'PULL_NEW_PRODUCT'">
+                <tag color="orange">{{ "老拉新商品" }}</tag>
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">商品原价:</i-col>
+              <i-col span="16">{{ discount.price }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">售卖价格:</i-col>
+              <i-col span="16">{{ discount.salePrice }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12" style="color:red">
+            <Row>
+              <i-col span="8">折扣价:</i-col>
+              <i-col span="16">{{ discount.discountPrice }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">折扣率:</i-col>
+              <i-col span="16">{{ discount.discountRate+"折" }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">起购份数:</i-col>
+              <i-col span="16">{{ discount.startNum }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">限购份数:</i-col>
+              <i-col span="16">{{ discount.limitNum }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+      </div>
+      <div slot="footer">
+        <Button type="primary" @click="handleViewClose">关闭</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -213,7 +287,8 @@ import {
   deleteProductSectionRelation,
   getProductStandardsPages,
   editProductSectionRelation,
-  getProductSectionTree
+  getProductSectionTree,
+  getProStandardExpand
 } from "@/api/mini-program";
 import { buildMenu, convertTree, convertTreeCategory } from "@/libs/util";
 import CommonIcon from "_c/common-icon";
@@ -295,6 +370,7 @@ const relationData = {
 };
 
 const productRowData = {
+  productStandardId: "",
   productId: "",
   barcode: "",
   productCode: "",
@@ -303,95 +379,9 @@ const productRowData = {
   minPrice: "",
   maxPrice: "",
   page: 1,
-  rows: 10
+  rows: 10,
+  expandType: ""
 };
-
-// const dataColunms = [
-//   {
-//     type: "selection",
-//     width: 60,
-//     align: "center",
-//     fixed: "left"
-//   },
-//   {
-//     title: "商品条码",
-//     key: "barcode",
-//     align: "center"
-//   },
-//   {
-//     title: "商品编号",
-//     key: "productCode",
-//     align: "center",
-//     width: 150
-//   },
-//   {
-//     title: "商品名称",
-//     key: "productName",
-//     align: "center"
-//   },
-//   {
-//     title: "商品规格",
-//     key: "specification",
-//     align: "center"
-//   },
-//   {
-//     title: "商品单位",
-//     key: "productUnit",
-//     align: "center"
-//   },
-//   {
-//     title: "商品价格",
-//     key: "price",
-//     align: "center",
-//     render(h, params, vm) {
-//       const amount = fenToYuanDot2(params.row.price);
-//       return <div>{amount}</div>;
-//     }
-//   },
-//   {
-//     title: "商品状态",
-//     key: "shelvesStatus",
-//     align: "center",
-//     render: (h, params, vm) => {
-//       const { row } = params;
-//       if (row.shelvesStatus === "VALID") {
-//         return (
-//           <div>
-//             <tag color="success">
-//               {customPlanStatusConvert(row.shelvesStatus).label}
-//             </tag>
-//           </div>
-//         );
-//       } else if (row.shelvesStatus === "INVALID") {
-//         return (
-//           <div>
-//             <tag color="error">
-//               {customPlanStatusConvert(row.shelvesStatus).label}
-//             </tag>
-//           </div>
-//         );
-//       } else {
-//         return (
-//           <div>
-//             <tag color="primary">N/A</tag>
-//           </div>
-//         );
-//       }
-//     }
-//   },
-//   {
-//     title: "排序",
-//     key: "productSectionRank",
-//     sortable: "custom",
-//     sortNumber: 0,
-//     align: "center"
-//   },
-//   {
-//     title: "操作",
-//     key: "handle",
-//     options: ["exchange", "edit", "delete"]
-//   }
-// ];
 
 const productColumns = [
   {
@@ -442,6 +432,22 @@ const productColumns = [
     }
   },
   {
+    title: "折扣价格",
+    key: "discountPrice",
+    minWidth: 80,
+    align: "center",
+    render(h, params, vm) {
+      if (params.row.productStandardExpand) {
+        const amount = fenToYuanDot2(
+          params.row.productStandardExpand.discountPrice
+        );
+        return <div>{amount}</div>;
+      } else {
+        return <div>N/A</div>;
+      }
+    }
+  },
+  {
     title: "商品类型",
     minWidth: 120,
     key: "expandType",
@@ -466,9 +472,29 @@ const productColumns = [
               </tag>
             </div>
           );
+        } else if (row.productStandardExpand.expandType == "SECKILL_PRODUCT") {
+          return (
+            <div>
+              <tag color="blue">
+                {expandTypeConvert(row.productStandardExpand.expandType).label}
+              </tag>
+            </div>
+          );
+        } else if (row.productStandardExpand.expandType == "ASSIST_PRODUCT") {
+          return (
+            <div>
+              <tag color="green">
+                {expandTypeConvert(row.productStandardExpand.expandType).label}
+              </tag>
+            </div>
+          );
         }
       } else {
-        return <div>N/A</div>;
+        return (
+          <div>
+            <tag color="cyan">{"普通商品"}</tag>
+          </div>
+        );
       }
     }
   },
@@ -545,6 +571,7 @@ export default {
       appTypeEnum,
       expandTypeEnum,
       menuData: [],
+      discount: [],
       columns: [
         {
           type: "selection",
@@ -626,8 +653,10 @@ export default {
         },
         {
           title: "操作",
+          align: "center",
           key: "handle",
-          options: ["exchange", "edit", "delete"]
+          width: 200,
+          options: ["view", "exchange", "edit", "delete"]
         }
       ],
       productColumns: productColumns,
@@ -637,6 +666,7 @@ export default {
       modalEditLoading: false,
       currentParentName: "",
       currentSectionId: 0,
+      currentSectionCode: "",
       currentStandard: _.cloneDeep(productStandardDetail),
       currentCategory: _.cloneDeep(currentCategory),
       searchRowData: _.cloneDeep(roleRowData),
@@ -667,12 +697,14 @@ export default {
       this.clearSearchLoading = true;
       this.handleSearch();
     },
+    handleViewClose() {
+      this.modalView = false;
+    },
     handleExport(filename) {
       this.searchRowData.page = 1;
       this.searchLoading = true;
       this.getTableData();
       this.$refs.tables.exportCsv({
-        // filename: `table-${new Date().valueOf()}.csv`
         filename: filename + "-" + new Date().valueOf() + ".csv"
       });
     },
@@ -723,10 +755,24 @@ export default {
       this.searchRowData = _.cloneDeep(roleRowData);
       this.getTableData();
     },
+    // 添加商品
     addProSection() {
       if (!this.currentSectionId) {
         this.$Message.warning("请先从左侧选择一个板块");
         return;
+      }
+      if (this.currentSectionCode === "PULL_NEW") {
+        this.searchProductRowData.expandType = "PULL_NEW_PRODUCT";
+      } else if (this.currentSectionCode === "ZKSP") {
+        this.searchProductRowData.expandType = "DISCOUNT_PRODUCT";
+      } else if (this.currentSectionCode === "SECKILL") {
+        this.searchProductRowData.expandType = "SECKILL_PRODUCT";
+      } else if (this.currentSectionCode === "ASSIST") {
+        this.searchProductRowData.expandType = "ASSIST_PRODUCT";
+      } else if (this.currentSectionCode === "SVIP") {
+        this.searchProductRowData.expandType = "";
+      } else {
+        this.searchProductRowData.expandType = "IGNORE_TYPE";
       }
       this.$refs.editForm.resetFields();
       this.getProductTableData();
@@ -742,7 +788,6 @@ export default {
         return;
       }
       const { row } = params;
-      console.log(row);
       this.productStandardRelation.id = row.id;
       this.productStandardRelation.productStandardIds = row.productStandardId;
       this.productStandardRelation.productSectionRank = row.productSectionRank;
@@ -782,6 +827,26 @@ export default {
         }
       });
     },
+    handleView(params) {
+      getProStandardExpand({
+        id: params.row.productStandardId
+      }).then(res => {
+        this.discount = res;
+
+        if (!res) {
+          this.modalView = false;
+          this.$Message.error("当前商品不是活动商品");
+        } else {
+          this.discount.discountPrice = fenToYuanDot2(
+            this.discount.discountPrice
+          );
+          this.discount.productName = params.row.productName;
+          this.discount.price = fenToYuanDot2(params.row.price);
+          this.discount.salePrice = fenToYuanDot2(params.row.salePrice);
+          this.modalView = true;
+        }
+      });
+    },
     handleEditClose() {
       this.modalEdit = false;
     },
@@ -810,13 +875,13 @@ export default {
     getTableData() {
       this.loading = true;
       getProductSectionRelationPages(this.searchRowData).then(res => {
-        if (this.menuData.length > 0) {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        }
+        // if (this.menuData.length > 0) {
+        this.tableData = res.rows;
+        this.total = res.total;
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
+        // }
       });
     },
     getProductTableData() {
@@ -825,32 +890,34 @@ export default {
           this.productData = res.rows;
           this.productTotal = res.total;
         }
+        // console.log(
+        //   "折扣商品页面",
+        //   res.rows[0].productStandardExpand.discountPrice
+        // );
       });
     },
     // 初始化商品菜单列表
     initMenuList() {
       getProductSectionTree(this.treeData).then(res => {
-        if (res && res.array.length > 0) {
-          const menuList = buildMenu(res.array);
-          const map = {
-            title: "title",
-            children: "children"
-          };
-          this.menuData = convertTree(menuList, map, true);
-          this.goodsSectionData = convertTreeCategory(menuList, map, true);
-          if (this.menuData.length > 0) {
-            this.getTableData();
-          }
-        }
+        // if (res && res.array.length > 0) {
+        const menuList = buildMenu(res.array);
+        const map = {
+          title: "title",
+          children: "children"
+        };
+        this.menuData = convertTree(menuList, map, true);
+        this.goodsSectionData = convertTreeCategory(menuList, map, true);
+        // if (this.menuData.length > 0) {
+        this.getTableData();
+        //   }
+        // }
       });
     },
     handleClick({ root, node, data }) {
       this.loading = true;
       // 展开当前节点
       if (typeof data.expand === "undefined") {
-        // this.$set(data, 'expend', true);
         this.$set(data, "expend", false);
-        // if (data.children) {
         if (data.children) {
           this.expandChildren(data.children);
         }
@@ -860,6 +927,7 @@ export default {
       this.currentCategory.id = data.id;
       this.currentCategory.sectionName = data.title;
       this.currentSectionId = data.id;
+      this.currentSectionCode = data.code;
       this.searchRowData.productSectionId = data.id;
       this.searchRowData.page = 1;
       // 获取新数据
@@ -868,9 +936,7 @@ export default {
     expandChildren(array) {
       array.forEach(item => {
         if (typeof item.expand === "undefined") {
-          // this.$set(item, 'expend', true);
           this.$set(item, "expend", false);
-          // } else {
         } else {
           item.expand = !item.expand;
         }

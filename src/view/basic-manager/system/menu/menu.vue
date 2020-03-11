@@ -138,6 +138,7 @@
     <Modal
       v-model="modalEdit"
       :mask-closable="false"
+      :width="750"
     >
       <p slot="header">
         <span>{{ rowData.id==''?'创建菜单':'编辑菜单' }}</span>
@@ -147,13 +148,13 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="4">类型</i-col>
-              <i-col span="12"><Input v-model="menuType" placeholder="" readonly></Input></i-col>
+              <i-col span="20"><Input v-model="menuType" placeholder="" readonly></Input></i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="4">名称</i-col>
-              <i-col span="12"><Input v-model="rowData.name" placeholder="" clearable></Input></i-col>
+              <i-col span="20"><Input v-model="rowData.name" placeholder="" clearable></Input></i-col>
             </Row>
           </i-col>
         </Row>
@@ -161,13 +162,13 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="4">编码</i-col>
-              <i-col span="12"><Input v-model="rowData.code" placeholder="" clearable></Input></i-col>
+              <i-col span="20"><Input v-model="rowData.code" placeholder="" clearable></Input></i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="4">排序</i-col>
-              <i-col span="12"><Input v-model="rowData.sort" placeholder="" clearable></Input></i-col>
+              <i-col span="20"><Input v-model="rowData.sort" placeholder="" clearable></Input></i-col>
             </Row>
           </i-col>
         </Row>
@@ -355,15 +356,14 @@
 </template>
 
 <script type='text/ecmascript-6'>
+import Tables from '_c/tables';
+import CommonIcon from '_c/common-icon';
+import BookTypeOption from '_c/book-type-option';
+import UploadExcel from '_c/excel';
 import { getMenuData, getOperateData } from '@/api/data';
 import { getMenuList } from '@/api/system';
 import { buildMenu, getNewTagList, convertTree, changeObjKeyName } from '@/libs/util';
 import { mapMutations } from 'vuex';
-import Tables from '_c/tables';
-import CommonIcon from '_c/common-icon';
-import _ from 'lodash';
-import BookTypeOption from '_c/book-type-option';
-import UploadExcel from '_c/excel';
 
 const menuColumns = [
   {
@@ -371,7 +371,7 @@ const menuColumns = [
     key: 'id',
     sortable: true,
     fixed: 'left',
-    minWidth: 80,
+    maxWidth: 80,
     render: (h, params, vm) => {
       const { row } = params;
       return h('span', row.id + '');
@@ -390,7 +390,7 @@ const menuColumns = [
       return <span>{str}</span>;
     }
   },
-  { title: '排序', key: 'sort', width: 50, editable: false, maxWidth: 100 },
+  { title: '排序', key: 'sort', editable: false, maxWidth: 75 },
   {
     title: '操作',
     key: 'handle',
@@ -481,10 +481,8 @@ const operateColumns2 = [
 ];
 
 const menuRowData = {
-  // id: 0,
   id: '',
   parentid: 0,
-  // sort: 0,
   sort: '',
   code: '',
   name: '',

@@ -1,8 +1,9 @@
 import Vue from 'vue';
+const $http = Vue.prototype.$http;
 
 // 查询商品分类树结构
 export const getProductCategoriesTree = () => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-categories/tree',
     method: 'get'
   });
@@ -10,17 +11,20 @@ export const getProductCategoriesTree = () => {
 
 // 根据条件分页查询商品分类信息列表
 export const getProductCategoriesPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-categories/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 添加商品分类
 export const createProductCategories = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-categories/',
     data,
     method: 'post'
@@ -28,8 +32,10 @@ export const createProductCategories = (data) => {
 };
 
 // 根据Ids删除商品分类
-export const delProductCategories = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const delProductCategories = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/product-categories/' + ids,
     method: 'delete'
   });
@@ -37,7 +43,7 @@ export const delProductCategories = ({ ids }) => {
 
 // 修改商品分类
 export const editProductCategories = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-categories/',
     data,
     method: 'put'
@@ -46,17 +52,20 @@ export const editProductCategories = (data) => {
 
 // 根据条件分页查询商品单位列表
 export const getProductUnitsPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-units/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 根据条件分页查询商品单位列表
 export const getProductUnits = () => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-units/',
     method: 'get'
   });
@@ -64,7 +73,7 @@ export const getProductUnits = () => {
 
 // 添加商品单位
 export const createProductUnits = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-units/',
     data,
     method: 'post'
@@ -72,8 +81,10 @@ export const createProductUnits = (data) => {
 };
 
 // 根据Ids删除商品单位
-export const delProductUnits = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const delProductUnits = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/product-units/' + ids,
     method: 'delete'
   });
@@ -81,7 +92,7 @@ export const delProductUnits = ({ ids }) => {
 
 // 修改商品单位
 export const editProductUnits = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-units/',
     data,
     method: 'put'
@@ -90,24 +101,32 @@ export const editProductUnits = (data) => {
 
 // 根据位置查询门店所有列表根据距离排序
 export const getStorePages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/stores/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
+
 // 根据id删除门店
-export const deleteStore = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteStore = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/stores/' + ids,
     method: 'delete'
   });
 };
 
 // 根据id查询门店
-export const getStoreDetail = ({ id }) => {
-  return Vue.prototype.$http.request({
+export const getStoreDetail = ({
+  id
+}) => {
+  return $http.request({
     url: '/minapp/stores/' + id,
     method: 'get'
   });
@@ -115,7 +134,7 @@ export const getStoreDetail = ({ id }) => {
 
 // 查询所有门店区域
 export const getStoreAreas = () => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/stores/store-areas',
     method: 'get'
   });
@@ -123,7 +142,7 @@ export const getStoreAreas = () => {
 
 // 根据id更新门店 /stores/{id}
 export const editStore = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/stores/',
     data,
     method: 'put'
@@ -132,7 +151,7 @@ export const editStore = (data) => {
 
 // 添加门店
 export const createStore = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/stores/',
     data,
     method: 'post'
@@ -141,25 +160,32 @@ export const createStore = (data) => {
 
 // 根据条件分页查询商品信息列表
 export const getProductPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/products/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 根据商品Ids删除商品
-export const deleteProduct = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteProduct = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/products/' + ids,
     method: 'delete'
   });
 };
 
 // 根据Id查找商品
-export const getProduct = ({ id }) => {
-  return Vue.prototype.$http.request({
+export const getProduct = ({
+  id
+}) => {
+  return $http.request({
     url: '/minapp/products/' + id,
     method: 'get'
   });
@@ -167,7 +193,7 @@ export const getProduct = ({ id }) => {
 
 // 修改商品
 export const editProduct = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/products/',
     data,
     method: 'put'
@@ -176,7 +202,7 @@ export const editProduct = (data) => {
 
 // 添加商品
 export const createProduct = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/products/',
     data,
     method: 'post'
@@ -184,22 +210,26 @@ export const createProduct = (data) => {
 };
 
 // 根据商品规格id查询扩展信息(传值stadardId)
-export const getProStandardExpand = ({ id }) => {
-  return Vue.prototype.$http.request({
+export const getProStandardExpand = ({
+  id
+}) => {
+  return $http.request({
     url: '/minapp/product-standard-expand/standard/' + id,
     method: 'get'
   });
 };
 
-//根据code条码查询海鼎商品信息
-export const getHdProductInfo = ({code}) => {
-  return Vue.prototype.$http.request({
+// 根据code条码查询海鼎商品信息
+export const getHdProductInfo = ({
+  code
+}) => {
+  return $http.request({
     url: '/minapp/product-standards/hd-product/' + code,
     method: 'get'
   });
 };
 export const modifyProStandardExpand = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-standard-expand/modify',
     data,
     method: 'post'
@@ -208,17 +238,22 @@ export const modifyProStandardExpand = (data) => {
 
 // 根据条件分页查询商品规格信息列表(传值productId)
 export const getProductStandardsPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-standards/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows}
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 根据商品规格Ids删除商品规格
-export const deleteProductStandard = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteProductStandard = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/product-standards/' + ids,
     method: 'delete'
   });
@@ -226,7 +261,7 @@ export const deleteProductStandard = ({ ids }) => {
 
 // 添加商品规格
 export const createProductStandard = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-standards/',
     data,
     method: 'post'
@@ -235,7 +270,7 @@ export const createProductStandard = (data) => {
 
 // / 修改商品规格
 export const editProductStandard = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-standards/' + data.id,
     data,
     method: 'put'
@@ -244,25 +279,34 @@ export const editProductStandard = (data) => {
 
 // 根据条件分页查询板块信息列表(传值productId)
 export const getProductSectionPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-sections/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows, 'sidx': data.sidx, 'sort': data.sort}
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
   });
 };
 
 // 根据板块Ids删除板块
-export const deleteProductSection = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteProductSection = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/product-sections/' + ids,
     method: 'delete'
   });
 };
 
 // 根据板块Ids判断当前分类信息是否可以删除
-export const deleteProductSectionValidation = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteProductSectionValidation = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/product-sections/whetherdelete/' + ids,
     method: 'get'
   });
@@ -270,7 +314,7 @@ export const deleteProductSectionValidation = ({ ids }) => {
 
 // 添加板块
 export const createProductSection = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-sections/',
     data,
     method: 'post'
@@ -279,7 +323,7 @@ export const createProductSection = (data) => {
 
 //  修改板块
 export const editProductSection = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-sections/' + data.id,
     data,
     method: 'put'
@@ -288,7 +332,7 @@ export const editProductSection = (data) => {
 
 // 查询商品分类树结构
 export const getProductSectionTree = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-sections/tree',
     data,
     method: 'post'
@@ -297,17 +341,22 @@ export const getProductSectionTree = (data) => {
 
 // 根据条件分页查询板块和商品关联信息列表
 export const getProductSectionRelationPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-section-relations/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows, 'sidx': data.sidx, 'sort': data.sort }
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
   });
 };
 
 // 创建板块和商品之间的关联
 export const createProductSectionRelation = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-section-relations/',
     data,
     method: 'post'
@@ -315,8 +364,10 @@ export const createProductSectionRelation = (data) => {
 };
 
 // 根据商品板块Ids删除板块和商品的关联
-export const deleteProductSectionRelation = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteProductSectionRelation = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/product-section-relations/' + ids,
     method: 'delete'
   });
@@ -324,7 +375,7 @@ export const deleteProductSectionRelation = ({ ids }) => {
 
 // 修改板块和商品的关联
 export const editProductSectionRelation = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/product-section-relations/' + data.id,
     data,
     method: 'put'
@@ -333,17 +384,22 @@ export const editProductSectionRelation = (data) => {
 
 // 根据条件分页查询优惠券活动和优惠券模板关联信息列表
 export const getCouponTemplateRelationPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/coupon-template-relations/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows, 'sidx': data.sidx, 'sort': data.sort }
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
   });
 };
 
 // 创建优惠券活动和优惠券模板之间的关联
 export const createCouponTemplateRelation = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/coupon-template-relations/',
     data,
     method: 'post'
@@ -351,8 +407,10 @@ export const createCouponTemplateRelation = (data) => {
 };
 
 // 根据商品板块Ids删除优惠券活动和优惠券模板的关联
-export const deleteCouponTemplateRelation = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteCouponTemplateRelation = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/coupon-template-relations/' + ids,
     method: 'delete'
   });
@@ -360,7 +418,7 @@ export const deleteCouponTemplateRelation = ({ ids }) => {
 
 // 修改优惠券活动和优惠券模板的关联
 export const editCouponTemplateRelation = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/coupon-template-relations/' + data.id,
     data,
     method: 'put'
@@ -369,31 +427,37 @@ export const editCouponTemplateRelation = (data) => {
 
 // 根据条件分页查询优惠券活动和海鼎优惠券活动关联信息列表
 export const getHdCouponActivitiesPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/hd-coupon-activities',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
-
-
 
 // ———————————— 活动管理 —————————————
 
 // 根据条件分页查询拼团机器人列表
 export const getRobotPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/robots/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 根据拼团机器人Ids删除拼团机器人
-export const deleteRobot = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteRobot = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/robots/' + ids,
     method: 'delete'
   });
@@ -401,7 +465,7 @@ export const deleteRobot = ({ ids }) => {
 
 // 添加拼团机器人
 export const createRobot = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/robots/',
     data,
     method: 'post'
@@ -410,7 +474,7 @@ export const createRobot = (data) => {
 
 // 修改拼团机器人
 export const editRobot = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/robots/' + data.id,
     data,
     method: 'put'
@@ -419,17 +483,22 @@ export const editRobot = (data) => {
 
 // 根据条件分页查询图片管理列表
 export const getImagePages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-images/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 根据图片管理Ids删除图片管理
-export const deleteImage = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteImage = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/activity-images/' + ids,
     method: 'delete'
   });
@@ -437,7 +506,7 @@ export const deleteImage = ({ ids }) => {
 
 // 添加图片管理
 export const createImage = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-images/',
     data,
     method: 'post'
@@ -446,7 +515,7 @@ export const createImage = (data) => {
 
 // 修改图片管理
 export const editImage = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-images/' + data.id,
     data,
     method: 'put'
@@ -455,17 +524,24 @@ export const editImage = (data) => {
 
 // 根据条件分页查询拼团活动管理列表
 export const getTeamBuyPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-team-buys/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
   });
 };
 
 // 根据拼团活动管理Ids删除拼团活动管理
-export const deleteTeamBuy = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteTeamBuy = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/activity-team-buys/' + ids,
     method: 'delete'
   });
@@ -473,7 +549,7 @@ export const deleteTeamBuy = ({ ids }) => {
 
 // 添加拼团活动管理
 export const createTeamBuy = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-team-buys/',
     data,
     method: 'post'
@@ -482,7 +558,7 @@ export const createTeamBuy = (data) => {
 
 // 修改拼团活动管理
 export const editTeamBuy = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-team-buys/' + data.id,
     data,
     method: 'put'
@@ -491,17 +567,22 @@ export const editTeamBuy = (data) => {
 
 // 根据条件分页查询拼团活动管理列表
 export const getActivitiesPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activities/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 根据拼团活动管理Ids删除拼团活动管理
-export const deleteActivities = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteActivities = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/activities/' + ids,
     method: 'delete'
   });
@@ -509,7 +590,7 @@ export const deleteActivities = ({ ids }) => {
 
 // 添加拼团活动管理
 export const createActivities = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activities/',
     data,
     method: 'post'
@@ -518,26 +599,31 @@ export const createActivities = (data) => {
 
 // 修改拼团活动管理
 export const editActivities = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activities/' + data.id,
     data,
     method: 'put'
   });
 };
-
+// ================================老限时抢购
 // 根据条件分页查询限时抢购列表
 export const getFlashsalePages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-flashsales/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows}
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 根据限时抢购Ids删除限时抢购
-export const deleteFlashsale = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteFlashsale = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/activity-flashsales/' + ids,
     method: 'delete'
   });
@@ -545,7 +631,7 @@ export const deleteFlashsale = ({ ids }) => {
 
 // 添加限时抢购
 export const createFlashsale = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-flashsales/',
     data,
     method: 'post'
@@ -554,7 +640,7 @@ export const createFlashsale = (data) => {
 
 // 修改限时抢购
 export const editFlashsale = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-flashsales/' + data.id,
     data,
     method: 'put'
@@ -563,17 +649,22 @@ export const editFlashsale = (data) => {
 
 // 根据条件分页查询限时抢购商品关联列表
 export const getFlashsaleProductRelationPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-flashsale-product-relations/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 根据限时抢购商品关联Ids删除限时抢购商品关联
-export const deleteFlashsaleProductRelation = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteFlashsaleProductRelation = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/activity-flashsale-product-relations/' + ids,
     method: 'delete'
   });
@@ -581,7 +672,7 @@ export const deleteFlashsaleProductRelation = ({ ids }) => {
 
 // 添加限时抢购商品关联
 export const createFlashsaleProductRelation = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-flashsale-product-relations/',
     data,
     method: 'post'
@@ -590,26 +681,306 @@ export const createFlashsaleProductRelation = (data) => {
 
 // 修改限时抢购商品关联
 export const editFlashsaleProductRelation = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-flashsale-product-relations/' + data.id,
     data,
     method: 'put'
   });
 };
 
+//=========================新限时秒杀
+// 根据条件分页查询限时秒杀列表
+export const getSeckillPages = (data) => {
+  return $http.request({
+    url: '/minapp/activity-seckill/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 根据限时抢购Ids删除限时秒杀
+export const deleteSeckill = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/activity-seckill/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加限时秒杀
+export const createSeckill = (data) => {
+  return $http.request({
+    url: '/minapp/activity-seckill/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改限时秒杀
+export const editSeckill = (data) => {
+  return $http.request({
+    url: '/minapp/activity-seckill/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询限时抢购商品关联列表
+export const getSeckillProductRelationPages = (data) => {
+  return $http.request({
+    url: '/minapp/activity-seckill-product-relation/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 根据限时抢购商品关联Ids删除限时抢购商品关联
+export const deleteSeckillProductRelation = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/activity-seckill-product-relation/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加限时抢购商品关联 
+export const createSeckillProductRelation = (data) => {
+  return $http.request({
+    url: '/minapp/activity-seckill-product-relation/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改限时抢购商品关联
+export const editSeckillProductRelation = (data) => {
+  return $http.request({
+    url: '/minapp/activity-seckill-product-relation/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+//限时抢购数据统计
+// 会员中心限时秒杀数据埋点统计 /minapp/activity-seckill/data-total 数据埋点统计 
+export const seckillStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/activity-seckill/data-total?beginDate=${data.beginDate}&endDate=${data.endDate}&dateGroup=${data.dateGroup}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// /minapp/activity-seckill/user/seckill-total 限时抢购秒杀单品数据统计 ?standardId=17
+export const singleSeckillStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/activity-seckill/prod/seckill-total?standardId=${data.standardId}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// /minapp/activity-seckill/user/seckill-total 限时抢购用户数据统计
+export const userSeckillStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/activity-seckill/user/seckill-total?nickName=${data.nickName}&phone=${data.phone}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+//=========================助力抢爆品
+// 根据条件分页查询助力抢爆品列表
+export const getAssistPages = (data) => {
+  return $http.request({
+    url: '/minapp/activity-assist/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 根据助力抢爆品Ids删除限时秒杀 /minapp/activity-assist/{ids}
+export const deleteAssist = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/activity-assist/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加助力抢爆品
+export const createAssist = (data) => {
+  return $http.request({
+    url: '/minapp/activity-assist/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改助力抢爆品 /minapp/activity-assist/update/{id}
+export const editAssist = (data) => {
+  return $http.request({
+    url: '/minapp/activity-assist/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 根据条件分页查询助力抢爆品商品关联列表
+export const getAssistProductRelationPages = (data) => {
+  return $http.request({
+    url: '/minapp/activity-assist-relation/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 根据助力抢爆品商品关联Ids删除限时抢购商品关联 /minapp/activity-assist-relation/{ids}
+export const deleteAssistProductRelation = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/activity-assist-relation/' + ids,
+    method: 'delete'
+  });
+};
+
+// 添加助力抢爆品商品关联 
+export const createAssistProductRelation = (data) => {
+  return $http.request({
+    url: '/minapp/activity-assist-relation/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 修改助力抢爆品商品关联/minapp/activity-assist-relation/update/{id}
+export const editAssistProductRelation = (data) => {
+  return $http.request({
+    url: '/minapp/activity-assist-relation/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+//助力抢爆品数据统计
+// 会员中心助力抢爆品数据埋点统计 /minapp/activity-assist/data-total 助力抢爆品埋点数据统计 
+export const assistStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/activity-assist/data-total?beginDate=${data.beginDate}&endDate=${data.endDate}&dateGroup=${data.dateGroup}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// /minapp/activity-assist/prod/assist-total   助力抢爆品单品数据统计
+export const singleAssistStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/activity-assist/prod/assist-total?standardId=${data.standardId}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// /minapp/activity-assist/user/assist-total  助力抢爆品用户数据统计
+export const userAssistStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/activity-assist/user/assist-total?nickName=${data.nickName}&phone=${data.phone}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// /minapp/activity-assist/user/assist-total  助力抢爆品基础数据统计
+export const assistDataStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/activity-assist/base-total?beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    // url: `/minapp/invite/data-total?beginDate=${data.beginDate}&endDate=${data.endDate}&dateGroup=${data.dateGroup}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+//基础数据统计 系统数据统计 minapp/system/data-total/main   
+export const systemDataStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/system/data-total/main?beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
 // 根据条件分页查询优惠券列表
 export const getCouponPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-coupons/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows, 'sidx': data.sidx, 'sort': data.sort }
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
   });
 };
 
 // 根据优惠券Ids删除优惠券
-export const deleteCoupon = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteCoupon = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/activity-coupons/' + ids,
     method: 'delete'
   });
@@ -617,7 +988,7 @@ export const deleteCoupon = ({ ids }) => {
 
 // 添加优惠券
 export const createCoupon = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-coupons/',
     data,
     method: 'post'
@@ -626,7 +997,7 @@ export const createCoupon = (data) => {
 
 // 修改优惠券
 export const editCoupon = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-coupons/' + data.id,
     data,
     method: 'put'
@@ -635,17 +1006,24 @@ export const editCoupon = (data) => {
 
 // 根据条件分页查询优惠券模板列表
 export const getCouponTemplatePages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/coupon-templates/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows}
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
   });
 };
 
 // 根据优惠券模板Ids删除优惠券模板
-export const deleteCouponTemplate = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteCouponTemplate = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/coupon-templates/' + ids,
     method: 'delete'
   });
@@ -653,7 +1031,7 @@ export const deleteCouponTemplate = ({ ids }) => {
 
 // 添加优惠券模板
 export const createCouponTemplate = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/coupon-templates/',
     data,
     method: 'post'
@@ -662,7 +1040,7 @@ export const createCouponTemplate = (data) => {
 
 // 修改优惠券模板
 export const editCouponTemplate = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/coupon-templates/' + data.id,
     data,
     method: 'put'
@@ -671,17 +1049,22 @@ export const editCouponTemplate = (data) => {
 
 // 根据条件分页查询分享红包列表
 export const getShareRewardPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-share-rewards/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 根据分享红包Ids删除分享红包
-export const deleteShareReward = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteShareReward = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/activity-share-rewards/' + ids,
     method: 'delete'
   });
@@ -689,7 +1072,7 @@ export const deleteShareReward = ({ ids }) => {
 
 // 添加分享红包
 export const createShareReward = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-share-rewards/',
     data,
     method: 'post'
@@ -698,7 +1081,7 @@ export const createShareReward = (data) => {
 
 // 修改分享红包
 export const editShareReward = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-share-rewards/' + data.id,
     data,
     method: 'put'
@@ -707,17 +1090,22 @@ export const editShareReward = (data) => {
 
 // 根据条件分页查询分享红包配置列表
 export const getShareRewardSettingPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-share-reward-settings/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 根据分享红包配置Ids删除分享红包配置
-export const deleteShareRewardSetting = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteShareRewardSetting = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/activity-share-reward-settings/' + ids,
     method: 'delete'
   });
@@ -725,7 +1113,7 @@ export const deleteShareRewardSetting = ({ ids }) => {
 
 // 添加分享红包配置
 export const createShareRewardSetting = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-share-reward-settings/',
     data,
     method: 'post'
@@ -734,7 +1122,7 @@ export const createShareRewardSetting = (data) => {
 
 // 修改分享红包配置
 export const editShareRewardSetting = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-share-reward-settings/' + data.id,
     data,
     method: 'put'
@@ -744,17 +1132,24 @@ export const editShareRewardSetting = (data) => {
 // 原先注册送礼后台接口
 // 根据条件分页查询注册送礼活动列表
 export const getRegisterPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-registers/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows, 'sidx': data.sidx, 'sort': data.sort }
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
   });
 };
 
 // 根据注册送礼活动Ids删除注册送礼活动
-export const deleteRegister = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteRegister = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/activity-registers/' + ids,
     method: 'delete'
   });
@@ -762,7 +1157,7 @@ export const deleteRegister = ({ ids }) => {
 
 // 添加注册送礼活动
 export const createRegister = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-registers/',
     data,
     method: 'post'
@@ -771,131 +1166,173 @@ export const createRegister = (data) => {
 
 // 修改注册送礼活动
 export const editRegister = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-registers/' + data.id,
     data,
     method: 'put'
   });
 };
 
-
 // ———————————— 1.6版本注册送礼活动配置 —————————————
-//根据id查询注册送礼活动配置
+// 根据id查询注册送礼活动配置
 export const getRegisteredGiftPage = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-register-setting/' + data.id,
     data,
     method: 'get'
   });
 };
 
-//添加注册送礼活动配置 /minapp/activity-register-setting/create
+// 添加注册送礼活动配置 /minapp/activity-register-setting/create
 export const createRegisterGift = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-register-setting/create',
     data,
     method: 'post'
   });
 };
 
-
 // 查询注册送礼活动配置分页列表 minapp/activity-register-setting/create
 export const getRegisteredGiftPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-register-setting/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
-
 // 根据id更新注册送礼活动配置 /minapp/activity-register-setting/update/{id}
 export const editRegisterGift = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-register-setting/update/' + data.id,
     data,
     method: 'put'
   });
 };
 
-
 // 根据ids删除注册送礼活动配置  /minapp/activity-register-setting/{ids}
-export const deleteRegisterGift = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteRegisterGift = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/activity-register-setting/' + ids,
     method: 'delete'
   });
 };
 
-//会员中心数据埋点统计 /minapp/data-total 邀请有礼数据统计
-export const dataStatistics  = (data) => {
+// 会员中心数据埋点统计 /minapp/data-total 邀请有礼数据统计
+export const dataStatistics = (data) => {
   return Vue.prototype.$http.request({
-    url: '/minapp/data-total',
-    data,
-    method: 'get'
+    url: `/minapp/invite/data-total?beginDate=${data.beginDate}&endDate=${data.endDate}&dateGroup=${data.dateGroup}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
-// ———————————— 1.7付费会员 —————————————
-//根据id查询付费会员礼包券配置
-export const getSvipGift = (data) => {
+
+// minapp/invite/base-total邀请有礼基础数据统计
+export const basicsDataStatistics = (data) => {
   return Vue.prototype.$http.request({
+    url: `/minapp/invite/base-total?beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    // url: `/minapp/invite/data-total?beginDate=${data.beginDate}&endDate=${data.endDate}&dateGroup=${data.dateGroup}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// /minapp/invite/user/invite-total 邀请有礼用户数据统计
+export const userDataStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `minapp/invite/user/invite-total?nickName=${data.nickName}&phone=${data.phone}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// /手动修改手机号绑定海鼎会员ID
+export const handPhones = (data) => {
+  return $http.request({
+    url: `/minapp/user/phone/member-number?oldPhone=${data.oldPhone}&newPhone=${data.newPhone}`,
+    method: 'post'
+  });
+};
+
+// ———————————— 1.7付费会员 —————————————
+// 根据id查询付费会员礼包券配置
+export const getSvipGift = (data) => {
+  return $http.request({
     url: '/minapp/svip-gift-coupon-setting/' + data.id,
     method: 'get'
   });
 };
-//添加付费会员礼包券配置
+// 添加付费会员礼包券配置
 export const createSvipGift = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/svip-gift-coupon-setting/create',
     data,
     method: 'post'
   });
 };
 
-
 // 查询付费会员礼包券配置分页列表
 export const getSvipGiftPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/svip-gift-coupon-setting/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
-
 // {id}根据id更新付费会员礼包券配置
 export const editSvipGift = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/svip-gift-coupon-setting/update/' + data.id,
     data,
     method: 'put'
   });
 };
 
-
-//根据ids删除付费会员礼包券配置
-export const deleteSvipGift = ({ ids }) => {
-  return Vue.prototype.$http.request({
+// 根据ids删除付费会员礼包券配置
+export const deleteSvipGift = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/svip-gift-coupon-setting/' + ids,
     method: 'delete'
   });
 };
 
 // ———————————— 1.7SVIP套餐 —————————————
-//根据id查询SVIP套餐
-export const getSvipPackage= (data) => {
-  return Vue.prototype.$http.request({
+// 根据id查询SVIP套餐
+export const getSvipPackage = (data) => {
+  return $http.request({
     url: '/minapp/svip-package/' + data.id,
     data,
     method: 'get'
   });
 };
 
-//添加SVIP套餐
+// 添加SVIP套餐
 export const createSvipPackage = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/svip-package/create',
     data,
     method: 'post'
@@ -904,27 +1341,31 @@ export const createSvipPackage = (data) => {
 
 // 查询SVIP套餐分页列表
 export const getSvipPackagePages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/svip-package/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
-
 // 根据id更新SVIP套餐
 export const editSvipPackage = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/svip-package/update/' + data.id,
     data,
     method: 'put'
   });
 };
 
-//根据ids删除SVIP套餐
-export const deleteSvipPackage = ({ ids }) => {
-  return Vue.prototype.$http.request({
+// 根据ids删除SVIP套餐
+export const deleteSvipPackage = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/svip-package/' + ids,
     method: 'delete'
   });
@@ -932,25 +1373,26 @@ export const deleteSvipPackage = ({ ids }) => {
 
 // ————————————   1.7版本 手动发券   —————————————
 
-//通过phones发放优惠券给对应用户
-export const handGrandCoupon = (data) =>{
-  return Vue.prototype.$http.request({
+// 通过phones发放优惠券给对应用户
+export const handGrandCoupon = (data) => {
+  return $http.request({
     url: `/minapp/coupon-config-manage/send?phones=${data.phones}&id=${data.id}`,
     method: 'post'
   });
 };
-//根据id查询优惠券配置管理
-export const gitCouponPage= (data) => {
-  return Vue.prototype.$http.request({
+
+// 根据id查询优惠券配置管理
+export const gitCouponPage = (data) => {
+  return $http.request({
     url: '/minapp/coupon-config-manage/' + data.id,
     data,
     method: 'get'
   });
 };
 
-//添添加优惠券配置管理
+// 添添加优惠券配置管理
 export const createCouponPage = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/coupon-config-manage/create',
     data,
     method: 'post'
@@ -959,29 +1401,32 @@ export const createCouponPage = (data) => {
 
 // 查询优惠券配置管理分页列表
 export const getCouponPagess = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/coupon-config-manage/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
-
 // 根据id更新优惠券配置管理
 export const editCouponPage = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/coupon-config-manage/update/' + data.id,
     data,
     method: 'put'
   });
 };
 
-
 // /minapp/coupon-config-manage/{ids}
 // 根据ids删除优惠券配置管理
-export const deleteCouponPage = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteCouponPage = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/coupon-config-manage/' + ids,
     method: 'delete'
   });
@@ -989,17 +1434,22 @@ export const deleteCouponPage = ({ ids }) => {
 
 // 根据条件分页查询注册送礼活动与优惠券关联列表
 export const getRegisterRewardPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-register-rewards/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 根据注册送礼活动与优惠券关联Ids删除注册送礼活动与优惠券关联
-export const deleteRegisterReward = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteRegisterReward = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/activity-register-rewards/' + ids,
     method: 'delete'
   });
@@ -1007,7 +1457,7 @@ export const deleteRegisterReward = ({ ids }) => {
 
 // 添加注册送礼活动与优惠券关联
 export const createRegisterReward = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-register-rewards/',
     data,
     method: 'post'
@@ -1016,7 +1466,7 @@ export const createRegisterReward = (data) => {
 
 // 修改注册送礼活动与优惠券关联
 export const editRegisterReward = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-register-rewards/' + data.id,
     data,
     method: 'put'
@@ -1025,94 +1475,131 @@ export const editRegisterReward = (data) => {
 // ------------------------------------
 // 根据条件分页查询商城小程序订单列表
 export const getOrderPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/orders/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
-//查询订单用券信息
+
+// 查询跨月订单退款数据 startTime=2019-09-01&endTime=2019-10-01
+export const monthOrderPages = (data) => {
+  return $http.request({
+    url: `/minapp/orders/cross-month-refund/query?startTime=${data.startTime}&endTime=${data.endTime}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 查询订单用券信息
 export const getOrderCouponDetails = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/orders/coupon-use-info',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 根据条件分页查询商城小程序详情
-export const getOrder = ({ orderCode }) => {
-  return Vue.prototype.$http.request({
+export const getOrder = ({
+  orderCode
+}) => {
+  return $http.request({
     url: '/minapp/orders/' + orderCode,
     method: 'get'
   });
 };
 
-// 海鼎订单调货
+// 海鼎订单调货  /minapp/orders/{id}/store
 export const modifyStoreInOrder = (data) => {
-  return Vue.prototype.$http.request({
-    url: '/minapp/orders/' + data.id + '?storeId=' + data.storeId,
+  return $http.request({
+    url: '/minapp/orders/' + data.id+'/store'+ '?storeId=' + data.newStoreId,
     method: 'put'
   });
 };
 
 // 手动发送海鼎
-export const resendToHd = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const resendToHd = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/orders/hd?ids=' + ids,
     method: 'put'
   });
 };
 
 // 微商城小程序--订单退货简化版 /minapp/orders/orders/specialRefund/simpe
-export const refundWx = ({orderCode}) =>{
-  return Vue.prototype.$http.request({
+export const refundWx = ({
+  orderCode
+}) => {
+  return $http.request({
     url: `/minapp/orders/orders/specialRefund/simpe?orderCode=${orderCode}`,
     method: 'post'
   });
 };
 // 拼团小程序--订单退货简化版 /minapp/orders/orders/refund/simpe
-export const refundPt = ({orderCode}) =>{
-  return Vue.prototype.$http.request({
+export const refundPt = ({
+  orderCode
+}) => {
+  return $http.request({
     url: `/minapp/orders/orders/refund/simpe?orderCode=${orderCode}`,
     method: 'post'
   });
 };
 // 根据条件分页查询支付列表
 export const getPaymentLogPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/payment-logs/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 根据条件分页查询支付日志金额总计
 export const getPaymentLogSum = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/payment-logs/fee/sum',
     data,
     method: 'post',
-    headers: { 'data': data.sum }
+    headers: {
+      'data': data.sum
+    }
   });
 };
 
 // 根据条件分页查询用户反馈列表
 export const getFeedbackPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/feedbacks/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
   });
 };
 
 // 修改用户反馈
 export const editFeedback = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/feedbacks/' + data.id,
     data,
     method: 'put'
@@ -1121,7 +1608,7 @@ export const editFeedback = (data) => {
 
 // 查询FAQ分类树结构
 export const getFaqCategoriesTree = () => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/faq-categories/tree',
     method: 'get'
   });
@@ -1129,17 +1616,20 @@ export const getFaqCategoriesTree = () => {
 
 // 根据条件分页查询FAQ分类信息列表
 export const getFaqCategoriesPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/faq-categories/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 添加FAQ分类
 export const createFaqCategories = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/faq-categories/',
     data,
     method: 'post'
@@ -1147,8 +1637,10 @@ export const createFaqCategories = (data) => {
 };
 
 // 根据Ids删除FAQ分类
-export const deleteFaqCategories = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteFaqCategories = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/faq-categories/' + ids,
     method: 'delete'
   });
@@ -1156,7 +1648,7 @@ export const deleteFaqCategories = ({ ids }) => {
 
 // 修改FAQ分类
 export const editFaqCategories = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/faq-categories/' + data.id,
     data,
     method: 'put'
@@ -1165,17 +1657,20 @@ export const editFaqCategories = (data) => {
 
 // 根据条件分页查询FAQ信息列表
 export const getFaqPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/faqs/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 添加FAQ
 export const createFaq = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/faqs/',
     data,
     method: 'post'
@@ -1183,8 +1678,10 @@ export const createFaq = (data) => {
 };
 
 // 根据Ids删除FAQ
-export const deleteFaq = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteFaq = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/faqs/' + ids,
     method: 'delete'
   });
@@ -1192,7 +1689,7 @@ export const deleteFaq = ({ ids }) => {
 
 // 修改FAQ
 export const editFaq = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/faqs/' + data.id,
     data,
     method: 'put'
@@ -1201,17 +1698,22 @@ export const editFaq = (data) => {
 
 // 根据条件分页查询广告位列表
 export const getAdvertisementPositionPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/advertisement-positions/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 查询广告位详情
-export const getAdvertisementPosition = ({ id }) => {
-  return Vue.prototype.$http.request({
+export const getAdvertisementPosition = ({
+  id
+}) => {
+  return $http.request({
     url: '/minapp/advertisement-positions/' + id,
     method: 'get'
   });
@@ -1219,7 +1721,7 @@ export const getAdvertisementPosition = ({ id }) => {
 
 // 添加广告位
 export const createAdvertisementPosition = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/advertisement-positions/',
     data,
     method: 'post'
@@ -1227,8 +1729,10 @@ export const createAdvertisementPosition = (data) => {
 };
 
 // 根据Ids删除广告位
-export const deleteAdvertisementPosition = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteAdvertisementPosition = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/advertisement-positions/' + ids,
     method: 'delete'
   });
@@ -1236,7 +1740,7 @@ export const deleteAdvertisementPosition = ({ ids }) => {
 
 // 修改广告位
 export const editAdvertisementPosition = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/advertisement-positions/' + data.id,
     data,
     method: 'put'
@@ -1245,17 +1749,20 @@ export const editAdvertisementPosition = (data) => {
 
 // 根据条件分页查询广告列表
 export const getAdvertisementPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/advertisements/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 查询广告位详情
 export const getAdvertisement = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/advertisements/' + data.id + '?flag=' + data.flag,
     method: 'get'
   });
@@ -1263,7 +1770,7 @@ export const getAdvertisement = (data) => {
 
 // 添加广告
 export const createAdvertisement = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/advertisements/',
     data,
     method: 'post'
@@ -1271,8 +1778,10 @@ export const createAdvertisement = (data) => {
 };
 
 // 根据Ids删除广告
-export const deleteAdvertisement = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteAdvertisement = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/advertisements/' + ids,
     method: 'delete'
   });
@@ -1280,7 +1789,7 @@ export const deleteAdvertisement = ({ ids }) => {
 
 // 修改广告
 export const editAdvertisement = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/advertisements/' + data.id,
     data,
     method: 'put'
@@ -1289,17 +1798,22 @@ export const editAdvertisement = (data) => {
 
 // 根据条件分页查询邮费模板列表
 export const getDeliveryFeeConfigPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/delivery-fee-configs/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 查询邮费模板位详情
-export const getDeliveryFeeConfig = ({ id }) => {
-  return Vue.prototype.$http.request({
+export const getDeliveryFeeConfig = ({
+  id
+}) => {
+  return $http.request({
     url: '/minapp/delivery-fee-configs/' + id,
     method: 'get'
   });
@@ -1307,7 +1821,7 @@ export const getDeliveryFeeConfig = ({ id }) => {
 
 // 添加邮费模板
 export const createDeliveryFeeConfig = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/delivery-fee-configs/',
     data,
     method: 'post'
@@ -1315,8 +1829,10 @@ export const createDeliveryFeeConfig = (data) => {
 };
 
 // 根据Ids删除邮费模板
-export const deleteDeliveryFeeConfig = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteDeliveryFeeConfig = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/delivery-fee-configs/' + ids,
     method: 'delete'
   });
@@ -1324,7 +1840,7 @@ export const deleteDeliveryFeeConfig = ({ ids }) => {
 
 // 修改邮费模板
 export const editDeliveryFeeConfig = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/delivery-fee-configs/' + data.id,
     data,
     method: 'put'
@@ -1333,17 +1849,22 @@ export const editDeliveryFeeConfig = (data) => {
 
 // 根据条件分页查询邮费规则列表
 export const getDeliveryFeeConfigRulePages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/delivery-fee-config-rules/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 查询邮费规则位详情
-export const getDeliveryFeeConfigRule = ({ id }) => {
-  return Vue.prototype.$http.request({
+export const getDeliveryFeeConfigRule = ({
+  id
+}) => {
+  return $http.request({
     url: '/minapp/delivery-fee-config-rules/' + id,
     method: 'get'
   });
@@ -1351,7 +1872,7 @@ export const getDeliveryFeeConfigRule = ({ id }) => {
 
 // 添加邮费规则
 export const createDeliveryFeeConfigRule = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/delivery-fee-config-rules/',
     data,
     method: 'post'
@@ -1359,8 +1880,10 @@ export const createDeliveryFeeConfigRule = (data) => {
 };
 
 // 根据Ids删除邮费规则
-export const deleteDeliveryFeeConfigRule = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteDeliveryFeeConfigRule = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/delivery-fee-config-rules/' + ids,
     method: 'delete'
   });
@@ -1368,7 +1891,7 @@ export const deleteDeliveryFeeConfigRule = ({ ids }) => {
 
 // 修改邮费规则
 export const editDeliveryFeeConfigRule = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/delivery-fee-config-rules/' + data.id,
     data,
     method: 'put'
@@ -1377,7 +1900,7 @@ export const editDeliveryFeeConfigRule = (data) => {
 
 // 查询系统参数分类树结构
 export const getSystemSettingCategoryTree = () => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/system-setting-categories/tree',
     method: 'get'
   });
@@ -1385,17 +1908,30 @@ export const getSystemSettingCategoryTree = () => {
 
 // 根据条件分页查询系统参数分类列表
 export const getSystemSettingCategoryPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/system-setting-categories/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+// 根据系统分类code查询系统设置参数
+export const getSystemParameter = (code) => {
+  return $http.request({
+    url: '/minapp/system-setting-categories/find-by/' + code,
+    method: 'get'
   });
 };
 
 // 查询系统参数分类位详情
-export const getSystemSettingCategory = ({ id }) => {
-  return Vue.prototype.$http.request({
+export const getSystemSettingCategory = ({
+  id
+}) => {
+  return $http.request({
     url: '/minapp/system-setting-categories/' + id,
     method: 'get'
   });
@@ -1403,7 +1939,7 @@ export const getSystemSettingCategory = ({ id }) => {
 
 // 添加系统参数分类
 export const createSystemSettingCategory = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/system-setting-categories/',
     data,
     method: 'post'
@@ -1411,8 +1947,10 @@ export const createSystemSettingCategory = (data) => {
 };
 
 // 根据Ids删除系统参数分类
-export const deleteSystemSettingCategory = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteSystemSettingCategory = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/system-setting-categories/' + ids,
     method: 'delete'
   });
@@ -1420,7 +1958,7 @@ export const deleteSystemSettingCategory = ({ ids }) => {
 
 // 修改系统参数分类
 export const editSystemSettingCategory = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/system-setting-categories/' + data.id,
     data,
     method: 'put'
@@ -1429,17 +1967,22 @@ export const editSystemSettingCategory = (data) => {
 
 // 根据条件分页查询系统参数列表
 export const getSystemSettingPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/system-settings/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 查询系统参数位详情
-export const getSystemSetting = ({ id }) => {
-  return Vue.prototype.$http.request({
+export const getSystemSetting = ({
+  id
+}) => {
+  return $http.request({
     url: '/minapp/system-settings/' + id,
     method: 'get'
   });
@@ -1447,7 +1990,7 @@ export const getSystemSetting = ({ id }) => {
 
 // 添加系统参数
 export const createSystemSetting = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/system-settings/',
     data,
     method: 'post'
@@ -1455,8 +1998,10 @@ export const createSystemSetting = (data) => {
 };
 
 // 根据Ids删除系统参数
-export const deleteSystemSetting = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteSystemSetting = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/system-settings/' + ids,
     method: 'delete'
   });
@@ -1464,7 +2009,7 @@ export const deleteSystemSetting = ({ ids }) => {
 
 // 修改系统参数
 export const editSystemSetting = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/system-settings/' + data.id,
     data,
     method: 'put'
@@ -1473,17 +2018,22 @@ export const editSystemSetting = (data) => {
 
 // 根据条件分页查询充值返利活动列表
 export const getRechargePages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-recharges/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 查询充值返利活动位详情
-export const getRecharge = ({ id }) => {
-  return Vue.prototype.$http.request({
+export const getRecharge = ({
+  id
+}) => {
+  return $http.request({
     url: '/minapp/activity-recharges/' + id,
     method: 'get'
   });
@@ -1491,7 +2041,7 @@ export const getRecharge = ({ id }) => {
 
 // 添加充值返利活动
 export const createRecharge = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-recharges/',
     data,
     method: 'post'
@@ -1499,8 +2049,10 @@ export const createRecharge = (data) => {
 };
 
 // 根据Ids删除充值返利活动
-export const deleteRecharge = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteRecharge = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/activity-recharges/' + ids,
     method: 'delete'
   });
@@ -1508,7 +2060,7 @@ export const deleteRecharge = ({ ids }) => {
 
 // 修改充值返利活动
 export const editRecharge = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-recharges/' + data.id,
     data,
     method: 'put'
@@ -1517,17 +2069,22 @@ export const editRecharge = (data) => {
 
 // 根据条件分页查询充值返利规则列表
 export const getRechargeRulePages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-recharge-rules/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 查询充值返利规则位详情
-export const getRechargeRule = ({ id }) => {
-  return Vue.prototype.$http.request({
+export const getRechargeRule = ({
+  id
+}) => {
+  return $http.request({
     url: '/minapp/activity-recharge-rules/' + id,
     method: 'get'
   });
@@ -1535,7 +2092,7 @@ export const getRechargeRule = ({ id }) => {
 
 // 添加充值返利规则
 export const createRechargeRule = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-recharge-rules/',
     data,
     method: 'post'
@@ -1543,8 +2100,10 @@ export const createRechargeRule = (data) => {
 };
 
 // 根据Ids删除充值返利规则
-export const deleteRechargeRule = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteRechargeRule = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/activity-recharge-rules/' + ids,
     method: 'delete'
   });
@@ -1552,7 +2111,7 @@ export const deleteRechargeRule = ({ ids }) => {
 
 // 修改充值返利规则
 export const editRechargeRule = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-recharge-rules/' + data.id,
     data,
     method: 'put'
@@ -1561,17 +2120,22 @@ export const editRechargeRule = (data) => {
 
 // 根据条件分页查询随机立减活动列表
 export const getRandomDiscountPages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-random-discounts/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 查询随机立减活动位详情
-export const getRandomDiscount = ({ id }) => {
-  return Vue.prototype.$http.request({
+export const getRandomDiscount = ({
+  id
+}) => {
+  return $http.request({
     url: '/minapp/activity-random-discounts/' + id,
     method: 'get'
   });
@@ -1579,7 +2143,7 @@ export const getRandomDiscount = ({ id }) => {
 
 // 添加随机立减活动
 export const createRandomDiscount = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-random-discounts/',
     data,
     method: 'post'
@@ -1587,8 +2151,10 @@ export const createRandomDiscount = (data) => {
 };
 
 // 根据Ids删除随机立减活动
-export const deleteRandomDiscount = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteRandomDiscount = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/activity-random-discounts/' + ids,
     method: 'delete'
   });
@@ -1596,7 +2162,7 @@ export const deleteRandomDiscount = ({ ids }) => {
 
 // 修改随机立减活动
 export const editRandomDiscount = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/activity-random-discounts/' + data.id,
     data,
     method: 'put'
@@ -1604,22 +2170,26 @@ export const editRandomDiscount = (data) => {
 };
 
 // 积分兑换优惠券相关接口 CRUD
-export const getCouponExchange = ({ id }) => {
-  return Vue.prototype.$http.request({
+export const getCouponExchange = ({
+  id
+}) => {
+  return $http.request({
     url: '/minapp/points-exchange-coupon-setting/' + id,
     method: 'get'
   });
 };
 
-export const deleteCouponExchange = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteCouponExchange = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/points-exchange-coupon-setting/' + ids,
     method: 'delete'
   });
 };
 
 export const createCouponExchange = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/points-exchange-coupon-setting/create',
     data,
     method: 'post'
@@ -1627,7 +2197,7 @@ export const createCouponExchange = (data) => {
 };
 
 export const editCouponExchange = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/points-exchange-coupon-setting/update/' + data.id,
     data,
     method: 'put'
@@ -1636,31 +2206,38 @@ export const editCouponExchange = (data) => {
 
 // 根据条件分页查询积分兑换优惠券列表
 export const getCouponExchangePages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/points-exchange-coupon-setting/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 积分兑换实物相关接口 CRUD
-export const getEntityExchange = ({ id }) => {
-  return Vue.prototype.$http.request({
+export const getEntityExchange = ({
+  id
+}) => {
+  return $http.request({
     url: '/minapp/points-exchange-entity-setting/' + id,
     method: 'get'
   });
 };
 
-export const deleteEntityExchange = ({ ids }) => {
-  return Vue.prototype.$http.request({
+export const deleteEntityExchange = ({
+  ids
+}) => {
+  return $http.request({
     url: '/minapp/points-exchange-entity-setting/' + ids,
     method: 'delete'
   });
 };
 
 export const createEntityExchange = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/points-exchange-entity-setting/create',
     data,
     method: 'post'
@@ -1668,7 +2245,7 @@ export const createEntityExchange = (data) => {
 };
 
 export const editEntityExchange = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/points-exchange-entity-setting/update/' + data.id,
     data,
     method: 'PUT'
@@ -1677,25 +2254,32 @@ export const editEntityExchange = (data) => {
 
 // 根据条件分页查询积分兑换优惠券列表
 export const getEntityExchangePages = (data) => {
-  return Vue.prototype.$http.request({
+  return $http.request({
     url: '/minapp/points-exchange-entity-setting/pages',
     data,
     method: 'post',
-    headers: { 'page': data.page, 'rows': data.rows }
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
   });
 };
 
 // 未成团、未发送海鼎、未退款的订单手动退款
-export const ordersRefund = ({ endTime }) => {
-  return Vue.prototype.$http.request({
+export const ordersRefund = ({
+  endTime
+}) => {
+  return $http.request({
     url: '/minapp/order-center/wxsmall/failure/orders/refund/' + endTime,
     method: 'get'
   })
 };
 // 根据订单id收货 /minapp/orders/receive/{orderId}
-export const sureReceive = ({orderId}) =>{
-  return Vue.prototype.$http.request({
-    url:  '/minapp/orders/receive/' + orderId,
+export const sureReceive = ({
+  orderId
+}) => {
+  return $http.request({
+    url: '/minapp/orders/receive/' + orderId,
     method: 'get'
   });
 };

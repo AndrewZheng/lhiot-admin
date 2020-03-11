@@ -193,7 +193,7 @@ const roleRowData = {
   sectionName: null,
   page: 1,
   rows: 10,
-  sidx:"rank_no"
+  sidx: "rank_no"
 };
 
 const dataColumns = [
@@ -243,6 +243,7 @@ const dataColumns = [
   {
     title: "操作",
     key: "handle",
+    align: "center",
     minWidth: 150,
     options: ["edit", "delete"]
   }
@@ -466,30 +467,30 @@ export default {
     getTableData() {
       this.loading = true;
       getProductSectionPages(this.searchRowData).then(res => {
-        if (this.menuData.length > 0) {
+        // if (this.menuData.length > 0) {
           // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
-        }
+        // }
       });
     },
     // 初始化商品菜单列表
     initMenuList() {
       getProductSectionTree(this.treeData).then(res => {
-        if (res && res.array.length > 0) {
+        // if (res && res.array.length > 0) {
           const menuList = buildMenu(res.array);
           const map = {
             title: "title",
             children: "children"
           };
           this.menuData = convertTree(menuList, map, true);
-          if (this.menuData.length > 0) {
+          // if (this.menuData.length > 0) {
             this.getTableData();
-          }
-        }
+          // }
+        // }
       });
     },
 

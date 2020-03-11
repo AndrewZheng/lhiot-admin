@@ -135,7 +135,7 @@
         </Row>
       </div>
     </Card>
-
+<!-- 
     <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
         <span>机器人详情</span>
@@ -211,7 +211,7 @@
       <div slot="footer">
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
-    </Modal>
+    </Modal> -->
   </div>
 </template>
 
@@ -282,16 +282,19 @@ export default {
           title: "订单ID",
           key: "orderId",
           width: 170,
+          align: "center",
           fixed: "left"
         },
         {
           title: "用户ID",
           key: "userId",
+          align: "center",
           width: 80
         },
         {
           title: "应用类型",
           key: "app_type",
+          align: "center",
           width: 120,
           render: (h, params, vm) => {
             const { row } = params;
@@ -316,6 +319,7 @@ export default {
           title: "支付类型",
           width: 120,
           key: "payType",
+          align: "center",
           render: (h, params, vm) => {
             const { row } = params;
             if (row.payType === "weixin") {
@@ -344,6 +348,7 @@ export default {
         {
           title: "支付来源",
           width: 120,
+          align: "center",
           key: "sourceType",
           render: (h, params, vm) => {
             const { row } = params;
@@ -372,6 +377,7 @@ export default {
           title: "第三方支付金额",
           width: 130,
           key: "payFee",
+          align: "center",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.payFee);
             return <div>{amount}</div>;
@@ -380,11 +386,13 @@ export default {
         {
           title: "第三方单号",
           key: "tradeId",
+          align: "center",
           width: 170
         },
         {
           title: "支付步骤",
           width: 100,
+          align: "center",
           key: "payStep",
           render: (h, params, vm) => {
             const { row } = params;
@@ -408,16 +416,19 @@ export default {
         {
           title: "签名时间",
           key: "signAt",
+          align: "center",
           width: 160
         },
         {
           title: "支付时间",
+          align: "center",
           key: "payAt",
           width: 160
         },
         {
           title: "银行类型",
           key: "bankType",
+          align: "center",
           width: 140,
           render: (h, params, vm) => {
             const { row } = params;
@@ -426,6 +437,7 @@ export default {
         },
         {
           title: "用户昵称",
+          align: "center",
           key: "nickName"
         }
         // {
@@ -491,6 +503,7 @@ export default {
       let _this = this;
       getPaymentLogPages(this.searchRowData)
         .then(res => {
+          console.log("12312312",res)
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
@@ -515,6 +528,7 @@ export default {
     endTimeChange(value, date) {
       this.paymentLogDetail.endTime = value;
       this.searchRowData.endTime = value;
+  
     }
   }
 };

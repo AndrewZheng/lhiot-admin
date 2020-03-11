@@ -167,7 +167,7 @@ export default {
         //   { required: true, message: '输入父级分类id' }
         // ],
         categoriesName: [{ required: true, message: "请输入分类名称" }],
-        categoriesCode: [{ required: true, message: "请输入分类名code" }]
+        categoriesCode: [{ required: false, message: "请输入分类名code" }]
       },
       columns: [
         {
@@ -178,18 +178,22 @@ export default {
         },
         {
           title: "ID",
+          align: "center",
           key: "id"
         },
         {
           title: "分类code",
+          align: "center",
           key: "categoriesCode"
         },
         {
           title: "分类名称",
+          align: "center",
           key: "categoriesName"
         },
         {
           title: "操作",
+          align: "center",
           key: "handle",
           options: ["view", "edit", "delete"]
         }

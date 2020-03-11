@@ -62,6 +62,19 @@
               style="width: 150px"
               @on-change="endTimeChange"
             />
+            <Select
+              v-model="searchRowData.activityType"
+              placeholder="活动类型"
+              style="padding-right: 5px;width: 120px"
+              @on-change="handCouponType"
+            >
+              <Option
+                v-for="(item,index) in activityClassify"
+                :value="item.indexName"
+                :key="index"
+                class="ptb2-5"
+              >{{ item.indexValue }}</Option>
+            </Select>
             <Button
               :loading="searchLoading"
               class="search-btn mr5"
@@ -553,7 +566,8 @@ import {
   createCouponTemplateRelation,
   editCouponTemplateRelation,
   getCouponTemplatePages,
-  getHdCouponActivitiesPages
+  getHdCouponActivitiesPages,
+  getSystemParameter
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -576,7 +590,8 @@ import {
   setSmallCouponActivity,
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber
+  yuanToFenNumber,
+  compareCouponData
 } from "@/libs/util";
 
 const couponDetail = {
@@ -595,7 +610,8 @@ const couponDetail = {
   createTime: null,
   applicationType: null,
   activityImage: "",
-  activityUrl: ""
+  activityUrl: "",
+  activityType: ""
 };
 
 const relationDetail = {
@@ -975,6 +991,7 @@ export default {
       couponTypeEnum,
       couponScopeEnum,
       couponActivityTypeEnum,
+      activityClassify: [],
       columns: [
         {
           type: "selection",
@@ -983,25 +1000,28 @@ export default {
         },
         {
           title: "活动编号",
+          align: "center",
           key: "id"
         },
         {
           title: "活动名称",
+          align: "center",
           key: "activityName"
         },
         {
           title: "活动类型",
+          align: "center",
           key: "activityType",
           render: (h, params, vm) => {
             const { row } = params;
             if (row.activityType === "COUPON_CENTER_ACTIVITY") {
-              return (
-                <div>{couponActivityTypeConvert(row.activityType).label}</div>
-              );
-            } else if (row.activityType === "COUPON_CENTER_POINT") {
-              return (
-                <div>{couponActivityTypeConvert(row.activityType).label}</div>
-              );
+              return <div>{"领券中心"}</div>;
+            } else if (row.activityType === "SVIP_COUPON_CENTER_ACTIVITY") {
+              return <div>{"SVIP领券中心"}</div>;
+            } else if (row.activityType === "THIRD_COUPON_ACTIVITY") {
+              return <div>{"第三方发券"}</div>;
+            } else if (row.activityType === "SHARE_COUPON_ACTIVITY") {
+              return <div>{"分享领券"}</div>;
             } else {
               return <div>N/A</div>;
             }
@@ -1009,6 +1029,7 @@ export default {
         },
         {
           title: "活动状态",
+          align: "center",
           key: "ifEffective",
           render: (h, params, vm) => {
             const { row } = params;
@@ -1039,22 +1060,35 @@ export default {
         },
         {
           title: "活动开始时间",
+          align: "center",
           key: "beginTime"
         },
         {
           title: "活动结束时间",
-          key: "endTime"
+          align: "center",
+          key: "endTime",
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (!compareCouponData(row.endTime)) {
+              return <div style="color:red">{row.endTime + "已过期"}</div>;
+            } else {
+              return <div>{row.endTime}</div>;
+            }
+          }
         },
         {
           title: "创建人",
+          align: "center",
           key: "createUser"
         },
         {
           title: "创建时间",
+          align: "center",
           key: "createTime"
         },
         {
           title: "操作",
+          align: "center",
           minWidth: 80,
           key: "handle",
           options: ["customOnSale", "view", "edit", "delete", "settings"]
@@ -1064,6 +1098,7 @@ export default {
         ...relationTempColumns,
         {
           title: "操作",
+          align: "center",
           minWidth: 80,
           key: "handle",
           options: ["inlineEdit", "delete"]
@@ -1089,6 +1124,7 @@ export default {
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
+    this.getSystemParameters();
   },
   created() {},
   methods: {
@@ -1102,7 +1138,13 @@ export default {
       this.uploadListMain = [];
       this.couponDetail.storeImage = null;
     },
+    handCouponType() {
+      this.searchRowData.page = 1;
+      this.searchLoading = true;
+      this.getTableData();
+    },
     handleSubmit(name) {
+      this.couponDetail.activityType = this.searchRowData.activityType;
       this.$refs[name].validate(valid => {
         if (valid) {
           if (
@@ -1151,6 +1193,12 @@ export default {
     },
     editCoupon() {
       this.modalViewLoading = true;
+      this.couponDetail.beginTime = this.$moment(
+        this.couponDetail.beginTime
+      ).format("YYYY-MM-DD HH:mm:ss");
+      this.couponDetail.endTime = this.$moment(
+        this.couponDetail.endTime
+      ).format("YYYY-MM-DD HH:mm:ss");
       editCoupon(this.couponDetail)
         .then(res => {
           this.modalEdit = false;
@@ -1224,6 +1272,7 @@ export default {
       getCouponPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
+          // console.log("打印返回数据", res);
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
@@ -1234,6 +1283,16 @@ export default {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
+        });
+    },
+    getSystemParameters() {
+      let code = "ACTIVITY_COUPON_TYPE";
+      getSystemParameter(code)
+        .then(res => {
+          this.activityClassify = res.systemSettings;
+        })
+        .catch(error => {
+          console.log(error);
         });
     },
     onOff(params) {
