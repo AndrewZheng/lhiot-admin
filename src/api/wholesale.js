@@ -525,8 +525,6 @@ export const getUserPages = (data) => {
     headers: {
       'page': data.page,
       'rows': data.rows,
-      'sidx': data.sidx,
-      'sort': data.sort
     }
   });
 };
@@ -773,7 +771,9 @@ export const getCouponPages = (data) => {
     method: 'post',
     headers: {
       'page': data.page,
-      'rows': data.rows
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
     }
   });
 };

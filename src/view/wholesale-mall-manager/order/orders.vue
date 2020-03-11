@@ -34,17 +34,24 @@
               clearable
             ></Input>
             <Input
+              v-model="searchRowData.userName"
+              placeholder="用户名"
+              class="search-input mr5"
+              style="width: 90px"
+              clearable
+            ></Input>
+            <Input
               v-model="searchRowData.phone"
               placeholder="用户手机号"
               class="search-input mr5"
-              style="width: 110px"
+              style="width: 105px"
               clearable
             ></Input>
             <Select
               v-model="searchRowData.payStatus"
               class="search-col mr5"
               placeholder="支付状态"
-              style="width: 90px"
+              style="width: 85px"
               clearable
             >
               <Option
@@ -58,7 +65,7 @@
               v-model="searchRowData.orderStatus"
               class="search-col mr5"
               placeholder="订单状态"
-              style="width: 90px"
+              style="width: 85px"
               clearable
             >
               <Option
@@ -72,7 +79,7 @@
               v-model="searchRowData.hdStatus"
               class="search-col mr5"
               placeholder="海鼎状态"
-              style="width: 90px"
+              style="width: 85px"
               clearable
             >
               <Option
@@ -414,7 +421,8 @@ const roleRowData = {
   rows: 10,
   sidx: "createTime",
   sort: "desc",
-  orderCodes: ""
+  orderCodes: "",
+  userName: ""
 };
 
 const goodsDetail = {

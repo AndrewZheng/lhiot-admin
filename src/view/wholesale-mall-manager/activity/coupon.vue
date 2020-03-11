@@ -270,7 +270,9 @@ const roleRowData = {
   couponFrom: "",
   phone: "",
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx: "getTime",
+  sort: "desc"
 };
 
 const couponConfig = {

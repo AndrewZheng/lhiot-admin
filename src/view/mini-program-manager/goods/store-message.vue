@@ -48,6 +48,20 @@
               >{{ item.areaName }}</Option>
             </Select>
             <Select
+              v-model="searchRowData.storeStatus"
+              placeholder="营业状态"
+              style="padding-right: 5px;width: 100px"
+              clearable
+            >
+              <Option
+                v-for="(item,index) in storeStatusEnum"
+                :value="item.value"
+                :key="index"
+                class="ptb2-5"
+                style="padding-left: 5px;width: 100px"
+              >{{ item.label }}</Option>
+            </Select>
+            <Select
               v-if="applicationType == null"
               v-model="searchRowData.applicationType"
               placeholder="应用类型"
@@ -189,7 +203,7 @@
               <i-col span="18">{{ storeDetail.storeType }}</i-col>
             </Row>
           </i-col>
-        </Row> -->
+        </Row>-->
         <Row class-name="mb20">
           <i-col span="3">门店地址:</i-col>
           <i-col span="21">{{ storeDetail.storeAddress }}</i-col>
@@ -511,6 +525,7 @@ const roleRowData = {
   storeCode: null,
   storeName: null,
   storeArea: null,
+  storeStatus: null,
   page: 1,
   rows: 10
 };
