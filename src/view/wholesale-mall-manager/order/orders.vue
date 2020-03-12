@@ -930,6 +930,7 @@ export default {
         // 表格数据导出字段翻译
         tableData.forEach(item => {
           item['orderCode'] = item['orderCode'] + '';
+          item['hdCode'] = item['hdCode'] + '';
           item['totalFee'] = (item['totalFee'] / 100.0).toFixed(2);
           item['discountFee'] = (item['discountFee'] / 100.0).toFixed(2);
           item['payableFee'] = (item['payableFee'] / 100.0).toFixed(2);

@@ -668,6 +668,7 @@ export default {
     resetFields() {
       this.$refs.editForm.resetFields();
       this.$refs.uploadMain.clearFileList();
+      this.resetRowData();
       // 图片上传列表清除
       this.uploadListMain = [];
       this.uploadListDetail = [];
