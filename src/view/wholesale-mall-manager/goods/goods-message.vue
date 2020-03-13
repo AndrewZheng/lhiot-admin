@@ -893,13 +893,18 @@ export default {
     },
     handleRemoveMultiple(file) {
       this.$refs.uploadMultiple.deleteFile(file);
-      const index = this.productDetail.detailImg.indexOf(file.url);
+      const index = this.productDetail.goodsImages.indexOf(file.url);
       if (index > -1) {
-        this.productDetail.detailImg.splice(index, 1);
+        if (this.productDetail.goodsImages) {
+          this.descriptionList = this.productDetail.goodsImages.split(',');
+        }
+        this.descriptionList = _.without(this.descriptionList, file.url);
+        this.productDetail.goodsImages = this.descriptionList.join(',');
       }
-      if (this.productDetail.detailImg.length === 0) {
+      if (this.productDetail.goodsImages.length === 0) {
         this.$refs.uploadMultiple.clearFileList();
-        this.productDetail.detailImg = null;
+        this.descriptionList = [];
+        this.productDetail.goodsImages = null;
       }
     },
     // 商品主图

@@ -953,7 +953,6 @@ export default {
       // this.uploadListMain = []
       this.productDetail.mainImg = null;
     },
-
     handleRemoveMultiple(file) {
       this.$refs.uploadMultiple.deleteFile(file);
       const index = this.productDetail.detailImg.indexOf(file.url);
