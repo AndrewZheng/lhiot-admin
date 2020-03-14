@@ -78,7 +78,8 @@ import {
   articleTypeEnum,
   createTypeEnum,
   layoutEnum,
-  showTypeEnum
+  showTypeEnum,
+  paymentFromEnum
 } from './enumerate';
 
 const convertFunction = (value, list) => {
@@ -92,6 +93,10 @@ const convertFunction = (value, list) => {
       label: value || 'N/A'
     };
   }
+};
+
+export const paymentFromConvert = (value) => {
+  return convertFunction(value, paymentFromEnum);
 };
 
 export const showTypeConvert = (value) => {

@@ -167,6 +167,15 @@ const wholesaleRouter = [
       component: () => import('@/view/wholesale-mall-manager/order/order-analysis.vue')
     },
     {
+      path: '/wholesale-payment-log',
+      name: 'wholesale-payment-log',
+      meta: {
+        icon: 'ios-eye',
+        title: '支付流水查询'
+      },
+      component: () => import('@/view/wholesale-mall-manager/order/payment-log.vue')
+    },
+    {
       path: '/wholesale-order-aftersale',
       name: 'wholesale-order-aftersale',
       meta: {

@@ -158,6 +158,67 @@ export const createStore = (data) => {
   });
 };
 
+/* -------------------------
+ * 门店区域管理
+ * -------------------------
+ */
+// 分页查询所有门店区域
+export const getStoreAreaPages = (data) => {
+  return $http.request({
+    url: '/minapp/area-store/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// 根据id更新门店区域
+export const editStoreArea = (data) => {
+  return $http.request({
+    url: '/minapp/area-store/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 添加门店区域
+export const createStoreArea = (data) => {
+  return $http.request({
+    url: '/minapp/area-store/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据id查询门店区域
+export const getStoreArea = ({
+  id
+}) => {
+  return $http.request({
+    url: '/minapp/area-store/' + id,
+    method: 'get'
+  });
+};
+
+// 根据id删除门店区域
+export const deleteStoreArea = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/area-store/' + ids,
+    method: 'delete'
+  });
+};
+
+/* -------------------------
+ * 商品管理
+ * -------------------------
+ */
 // 根据条件分页查询商品信息列表
 export const getProductPages = (data) => {
   return $http.request({
@@ -277,6 +338,10 @@ export const editProductStandard = (data) => {
   });
 };
 
+/* -------------------------
+ * 商品板块管理
+ * -------------------------
+ */
 // 根据条件分页查询板块信息列表(传值productId)
 export const getProductSectionPages = (data) => {
   return $http.request({
@@ -438,8 +503,10 @@ export const getHdCouponActivitiesPages = (data) => {
   });
 };
 
-// ———————————— 活动管理 —————————————
-
+/* -------------------------
+ * 活动管理
+ * -------------------------
+ */
 // 根据条件分页查询拼团机器人列表
 export const getRobotPages = (data) => {
   return $http.request({
@@ -688,7 +755,7 @@ export const editFlashsaleProductRelation = (data) => {
   });
 };
 
-//=========================新限时秒杀
+// =========================新限时秒杀
 // 根据条件分页查询限时秒杀列表
 export const getSeckillPages = (data) => {
   return $http.request({
@@ -753,7 +820,7 @@ export const deleteSeckillProductRelation = ({
   });
 };
 
-// 添加限时抢购商品关联 
+// 添加限时抢购商品关联
 export const createSeckillProductRelation = (data) => {
   return $http.request({
     url: '/minapp/activity-seckill-product-relation/create',
@@ -771,8 +838,8 @@ export const editSeckillProductRelation = (data) => {
   });
 };
 
-//限时抢购数据统计
-// 会员中心限时秒杀数据埋点统计 /minapp/activity-seckill/data-total 数据埋点统计 
+// 限时抢购数据统计
+// 会员中心限时秒杀数据埋点统计 /minapp/activity-seckill/data-total 数据埋点统计
 export const seckillStatistics = (data) => {
   return Vue.prototype.$http.request({
     url: `/minapp/activity-seckill/data-total?beginDate=${data.beginDate}&endDate=${data.endDate}&dateGroup=${data.dateGroup}`,
@@ -812,7 +879,7 @@ export const userSeckillStatistics = (data) => {
   });
 };
 
-//=========================助力抢爆品
+// =========================助力抢爆品
 // 根据条件分页查询助力抢爆品列表
 export const getAssistPages = (data) => {
   return $http.request({
@@ -877,7 +944,7 @@ export const deleteAssistProductRelation = ({
   });
 };
 
-// 添加助力抢爆品商品关联 
+// 添加助力抢爆品商品关联
 export const createAssistProductRelation = (data) => {
   return $http.request({
     url: '/minapp/activity-assist-relation/create',
@@ -895,8 +962,8 @@ export const editAssistProductRelation = (data) => {
   });
 };
 
-//助力抢爆品数据统计
-// 会员中心助力抢爆品数据埋点统计 /minapp/activity-assist/data-total 助力抢爆品埋点数据统计 
+// 助力抢爆品数据统计
+// 会员中心助力抢爆品数据埋点统计 /minapp/activity-assist/data-total 助力抢爆品埋点数据统计
 export const assistStatistics = (data) => {
   return Vue.prototype.$http.request({
     url: `/minapp/activity-assist/data-total?beginDate=${data.beginDate}&endDate=${data.endDate}&dateGroup=${data.dateGroup}`,
@@ -949,7 +1016,7 @@ export const assistDataStatistics = (data) => {
   });
 };
 
-//基础数据统计 系统数据统计 minapp/system/data-total/main   
+// 基础数据统计 系统数据统计 minapp/system/data-total/main
 export const systemDataStatistics = (data) => {
   return Vue.prototype.$http.request({
     url: `/minapp/system/data-total/main?beginDate=${data.beginDate}&endDate=${data.endDate}`,
@@ -1524,7 +1591,7 @@ export const getOrder = ({
 // 海鼎订单调货  /minapp/orders/{id}/store
 export const modifyStoreInOrder = (data) => {
   return $http.request({
-    url: '/minapp/orders/' + data.id+'/store'+ '?storeId=' + data.newStoreId,
+    url: '/minapp/orders/' + data.id + '/store' + '?storeId=' + data.newStoreId,
     method: 'put'
   });
 };

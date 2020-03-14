@@ -524,7 +524,7 @@ export const getUserPages = (data) => {
     method: 'post',
     headers: {
       'page': data.page,
-      'rows': data.rows,
+      'rows': data.rows
     }
   });
 };
@@ -622,6 +622,20 @@ export const auditUser = (data) => {
 export const getOrderPages = (data) => {
   return $http.request({
     url: '/wholesale-small/order/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+export const getPaymentLogPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/payment-log/pages',
     data,
     method: 'post',
     headers: {

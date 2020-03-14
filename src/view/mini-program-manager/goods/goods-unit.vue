@@ -115,30 +115,30 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   getProductUnitsPages,
   editProductUnits,
   delProductUnits,
   createProductUnits
-} from "@/api/mini-program";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
+} from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
 
-import { splitConvert } from "@/libs/converStatus";
+import { splitConvert } from '@/libs/converStatus';
 
 const unitDetail = {
-  id: "",
+  id: '',
   splitStatus: null,
-  unitName: ""
+  unitName: ''
 };
 
 const roleRowData = {
-  id: "",
+  id: '',
   splitStatus: null,
-  unitName: "",
+  unitName: '',
   page: 1,
   rows: 10
 };
@@ -150,52 +150,52 @@ export default {
   data() {
     return {
       ruleInline: {
-        splitStatus: { required: true, message: "请填写是否可拆分" },
-        unitName: { required: true, message: "请填写单位名称" }
+        splitStatus: { required: true, message: '请填写是否可拆分' },
+        unitName: { required: true, message: '请填写单位名称' }
       },
       columns: [
         {
-          type: "selection",
-          key: "",
+          type: 'selection',
+          key: '',
           width: 60,
-          align: "center"
+          align: 'center'
         },
         {
-          title: "编号",
-          align: "center",
-          key: "id"
+          title: '编号',
+          align: 'center',
+          key: 'id'
         },
         {
-          title: "单位名称",
-          align: "center",
-          key: "unitName"
+          title: '单位名称',
+          align: 'center',
+          key: 'unitName'
         },
         {
-          title: "是否可拆分",
-          align: "center",
-          key: "splitStatus",
+          title: '是否可拆分',
+          align: 'center',
+          key: 'splitStatus',
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{splitConvert(row.splitStatus).label}</div>;
           }
         },
         {
-          title: "操作",
-          align: "center",
-          key: "handle",
-          options: ["edit", "delete"]
+          title: '操作',
+          align: 'center',
+          key: 'handle',
+          options: ['edit', 'delete']
         }
       ],
       modalViewLoading: false,
       clearSearchLoading: false,
       splitStatus: [
         {
-          label: "是",
-          value: "SEPARABLE"
+          label: '是',
+          value: 'SEPARABLE'
         },
         {
-          label: "否",
-          value: "NO_SEPARABLE"
+          label: '否',
+          value: 'NO_SEPARABLE'
         }
       ],
       searchRowData: this._.cloneDeep(roleRowData),
@@ -219,7 +219,7 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error("请完善商品单位信息!");
+          this.$Message.error('请完善商品单位信息!');
         }
       });
     },

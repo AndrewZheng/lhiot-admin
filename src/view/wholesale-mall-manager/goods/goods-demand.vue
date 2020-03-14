@@ -249,10 +249,10 @@ export default {
         });
     },
     beginTimeChange(value, date) {
-      this.demandGoods.regBeginTime = value;
+      this.searchRowData.regBeginTime = value;
     },
     endTimeChange(value, date) {
-      this.demandGoods.regEndTime = value;
+      this.searchRowData.regEndTime = value;
     },
     resetFields() {
       this.$refs.editForm.resetFields();

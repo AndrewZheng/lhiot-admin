@@ -901,7 +901,7 @@ export const pfExpandTypeEnum = [
   {
     label: '限时抢购商品',
     value: 'FLASHSALE'
-  },
+  }
 ];
 
 // 小程序优惠券使用限制 SMALL_ALL("小程序全场券"),PART_GOODS("部分商品券"),PART_STORES("部分门店券")，HD_ALL("海鼎全场券");
@@ -2733,3 +2733,21 @@ export const showTypeEnum = [{
   value: 'time'
 }
 ]
+
+export const paymentFromEnum = [{
+  label: '充值',
+  value: 'recharge'
+},
+{
+  label: '订单',
+  value: 'order'
+},
+{
+  label: '发票',
+  value: 'invoice'
+},
+{
+  label: '账款',
+  value: 'debt'
+}
+];

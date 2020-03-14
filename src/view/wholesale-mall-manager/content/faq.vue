@@ -611,10 +611,10 @@ export default {
       this.faqDetail.applicationType = value;
     },
     beginTimeChange(value, date) {
-      this.faqDetail.regBeginTime = value;
+      this.searchRowData.regBeginTime = value;
     },
     endTimeChange(value, date) {
-      this.faqDetail.regEndTime = value;
+      this.searchRowData.regEndTime = value;
     }
   }
 };

@@ -414,10 +414,10 @@ export default {
       });
     },
     beginTimeChange(value, date) {
-      this.userAnalysis.regBeginTime = value;
+      this.searchRowData.regBeginTime = value;
     },
     endTimeChange(value, date) {
-      this.userAnalysis.regEndTime = value;
+      this.searchRowData.regEndTime = value;
     },
     resetFields() {
       this.$refs.editForm.resetFields();

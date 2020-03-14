@@ -91,6 +91,15 @@ const miniMallRouter = [
         title: '门店管理'
       },
       component: () => import('@/view/mini-program-manager/goods/store-message.vue')
+    },
+    {
+      path: '/small-store-area',
+      name: 'small-store-area',
+      meta: {
+        icon: 'ios-globe',
+        title: '门店区域管理'
+      },
+      component: () => import('@/view/mini-program-manager/goods/store-area.vue')
     }
     ]
   },
@@ -272,7 +281,7 @@ const miniMallRouter = [
         title: '助力抢爆品活动'
       },
       component: () => import('@/view/mini-program-manager/activity/assist-product.vue')
-    },]
+    }]
   },
   {
     path: '/small-content',
@@ -428,7 +437,7 @@ const miniMallRouter = [
           title: '助力抢爆品活动数据汇总'
         },
         component: () => import('@/view/mini-program-manager/member/assist-amount.vue')
-      },
+      }
     ]
   },
   {

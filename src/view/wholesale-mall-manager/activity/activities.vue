@@ -130,10 +130,10 @@
           <Row>
             <i-col span="12">
               <FormItem
+                v-show="tempModalType===modalType.create"
                 label="活动类型:"
                 prop="activityType"
                 style="width:260px;"
-                v-show="tempModalType===modalType.create"
               >
                 <Select v-model="activityDetail.activityType">
                   <Option
@@ -146,10 +146,10 @@
                 </Select>
               </FormItem>
               <FormItem
+                v-show="tempModalType===modalType.edit"
                 label="活动类型:"
                 prop="activityType"
-                v-show="tempModalType===modalType.edit"
-              >{{ activityDetail.activityType | pfActivityTypeFilter}}</FormItem>
+              >{{ activityDetail.activityType | pfActivityTypeFilter }}</FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="活动状态:" prop="vaild" style="width:260px;">
@@ -167,7 +167,7 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="开始时间:" prop="startTime" v-show="tempModalType===modalType.create">
+              <FormItem v-show="tempModalType===modalType.create" label="开始时间:" prop="startTime">
                 <DatePicker
                   :value="activityDetail.startTime"
                   format="yyyy-MM-dd HH:mm:ss"
@@ -177,7 +177,7 @@
                   @on-change="handleStartTimeChange"
                 />
               </FormItem>
-              <FormItem label="开始时间:" prop="startTime" v-show="tempModalType===modalType.edit">
+              <FormItem v-show="tempModalType===modalType.edit" label="开始时间:" prop="startTime">
                 <DatePicker
                   :value="activityDetail.startTime"
                   format="yyyy-MM-dd HH:mm:ss"
@@ -189,7 +189,7 @@
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="结束时间:" prop="endTime" v-show="tempModalType===modalType.create">
+              <FormItem v-show="tempModalType===modalType.create" label="结束时间:" prop="endTime">
                 <DatePicker
                   :value="activityDetail.endTime"
                   format="yyyy-MM-dd HH:mm:ss"
@@ -199,7 +199,7 @@
                   @on-change="handleEndTimeChange"
                 />
               </FormItem>
-              <FormItem label="结束时间:" prop="endTime" v-show="tempModalType===modalType.edit">
+              <FormItem v-show="tempModalType===modalType.edit" label="结束时间:" prop="endTime">
                 <DatePicker
                   :value="activityDetail.endTime"
                   format="yyyy-MM-dd HH:mm:ss"
@@ -241,30 +241,30 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   deletActivity,
   getActivityPages,
   editActivity,
   createActivity
-} from "@/api/wholesale";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+} from '@/api/wholesale';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import {
   activityStatusConvert,
   activityTypeConvert
-} from "@/libs/converStatus";
-import { activityTypeEnum, activityStatusEnum } from "@/libs/enumerate";
-import { setActivity, compareCouponData } from "@/libs/util";
+} from '@/libs/converStatus';
+import { activityTypeEnum, activityStatusEnum } from '@/libs/enumerate';
+import { setActivity, compareCouponData } from '@/libs/util';
 
 const activityDetail = {
-  activityCode: "",
-  activityDesc: "",
-  activityType: "",
-  linkUrl: "",
-  vaild: "",
+  activityCode: '',
+  activityDesc: '',
+  activityType: '',
+  linkUrl: '',
+  vaild: '',
   endTime: null,
   startTime: null
 };
@@ -272,13 +272,13 @@ const activityDetail = {
 const roleRowData = {
   activityCode: null,
   activityDesc: null,
-  vaild: "",
+  vaild: '',
   endTime: null,
   startTime: null,
   page: 1,
   rows: 10,
-  sidx: "endTime",
-  sort: "desc"
+  sidx: 'endTime',
+  sort: 'desc'
 };
 
 export default {
@@ -298,70 +298,70 @@ export default {
       searchRowData: _.cloneDeep(roleRowData),
       activityDetail: _.cloneDeep(activityDetail),
       ruleInline: {
-        activityType: [{ required: true, message: "请选择活动类型" }],
-        startTime: [{ required: true, message: "请选择开始时间" }],
-        endTime: [{ required: true, message: "请选择结束时间" }],
-        vaild: [{ required: true, message: "请选择活动状态" }]
+        activityType: [{ required: true, message: '请选择活动类型' }],
+        startTime: [{ required: true, message: '请选择开始时间' }],
+        endTime: [{ required: true, message: '请选择结束时间' }],
+        vaild: [{ required: true, message: '请选择活动状态' }]
       },
       columns: [
         {
-          type: "selection",
+          type: 'selection',
           width: 60,
-          align: "center"
+          align: 'center'
         },
         {
-          title: "活动ID",
-          align: "center",
-          key: "id",
+          title: '活动ID',
+          align: 'center',
+          key: 'id',
           maxWidth: 80
         },
         {
-          title: "活动类型",
-          align: "center",
-          key: "activityType",
+          title: '活动类型',
+          align: 'center',
+          key: 'activityType',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.activityType === "flashsale") {
+            if (row.activityType === 'flashsale') {
               return (
                 <div>
-                  <tag color="primary">限时抢购</tag>
+                  <tag color='primary'>限时抢购</tag>
                 </div>
               );
-            } else if (row.activityType === "registration") {
+            } else if (row.activityType === 'registration') {
               return (
                 <div>
-                  <tag color="pink">注册送礼</tag>
+                  <tag color='pink'>注册送礼</tag>
                 </div>
               );
-            } else if (row.activityType === "recharge") {
+            } else if (row.activityType === 'recharge') {
               return (
                 <div>
-                  <tag color="green">充值活动</tag>
+                  <tag color='green'>充值活动</tag>
                 </div>
               );
             } else {
               return (
                 <div>
-                  <tag color="primary">N/A</tag>
+                  <tag color='primary'>N/A</tag>
                 </div>
               );
             }
           }
         },
         {
-          title: "开始时间",
-          align: "center",
-          key: "startTime"
+          title: '开始时间',
+          align: 'center',
+          key: 'startTime'
         },
         {
-          title: "结束时间",
-          align: "center",
-          key: "endTime",
-          width: "220",
+          title: '结束时间',
+          align: 'center',
+          key: 'endTime',
+          width: '220',
           render: (h, params, vm) => {
             const { row } = params;
             if (!compareCouponData(row.endTime)) {
-              return <div style="color:red">{row.endTime + "　已过期"}</div>;
+              return <div style='color:red'>{row.endTime + '　已过期'}</div>;
             } else {
               return <div>{row.endTime}</div>;
             }
@@ -374,42 +374,42 @@ export default {
         //   minWidth: 150
         // },
         {
-          title: "活动描述",
-          align: "center",
-          key: "activityDesc"
+          title: '活动描述',
+          align: 'center',
+          key: 'activityDesc'
         },
         {
-          title: "活动状态",
-          align: "center",
-          key: "vaild",
+          title: '活动状态',
+          align: 'center',
+          key: 'vaild',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.vaild === "yes") {
+            if (row.vaild === 'yes') {
               return (
                 <div>
-                  <tag color="success">有效</tag>
+                  <tag color='success'>有效</tag>
                 </div>
               );
-            } else if (row.vaild === "no") {
+            } else if (row.vaild === 'no') {
               return (
                 <div>
-                  <tag color="error">无效</tag>
+                  <tag color='error'>无效</tag>
                 </div>
               );
             }
             return (
               <div>
-                <tag color="primary">N/A</tag>
+                <tag color='primary'>N/A</tag>
               </div>
             );
           }
         },
         {
-          title: "操作",
-          align: "center",
+          title: '操作',
+          align: 'center',
           minWidth: 80,
-          key: "handle",
-          options: ["onSale", "edit", "settings"]
+          key: 'handle',
+          options: ['onSale', 'edit', 'settings']
         }
       ]
     };
@@ -442,16 +442,16 @@ export default {
       //   return;
       // }
       setActivity(params.row);
-      let pageName = "wholesale-activity";
+      let pageName = 'wholesale-activity';
       switch (params.row.activityType) {
-        case "flashsale":
-          pageName = "wholesale-flashsale";
+        case 'flashsale':
+          pageName = 'wholesale-flashsale';
           break;
-        case "registration":
-          pageName = "wholesale-register-reward";
+        case 'registration':
+          pageName = 'wholesale-register-reward';
           break;
-        case "recharge":
-          pageName = "wholesale-recharge";
+        case 'recharge':
+          pageName = 'wholesale-recharge';
           break;
       }
       this.turnToPage({
@@ -479,7 +479,7 @@ export default {
     },
     handleStatus(params) {
       this.activityDetail = _.cloneDeep(params.row);
-      this.activityDetail.vaild = params.row.vaild === "yes" ? "no" : "yes";
+      this.activityDetail.vaild = params.row.vaild === 'yes' ? 'no' : 'yes';
       this.editActivity();
     },
     handleSubmit() {
@@ -491,7 +491,7 @@ export default {
             this.editActivity();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -499,7 +499,7 @@ export default {
       this.modalViewLoading = true;
       createActivity(this.activityDetail)
         .then(res => {
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .finally(() => {
@@ -519,11 +519,11 @@ export default {
         });
     },
     startTimeChange(value, date) {
-      console.log("beginTime:", value);
+      console.log('beginTime:', value);
       this.searchRowData.startTime = value;
     },
     endTimeChange(value, data) {
-      console.log("endTime:", value);
+      console.log('endTime:', value);
       this.searchRowData.endTime = value;
     },
     handleStartTimeChange(value, date) {
