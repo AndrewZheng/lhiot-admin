@@ -114,7 +114,17 @@
               >{{ item.label }}</Option>
             </Select>
             <div style="margin-top:5px">
+              <RadioGroup
+                v-model="button"
+                type="button"
+                @on-change="timeChange"
+                style="float:left;margin-right:5px"
+              >
+                <Radio label="今日"></Radio>
+                <Radio label="自定义时间"></Radio>
+              </RadioGroup>
               <DatePicker
+                v-show="mark===true"
                 v-model="searchRowData.startTime"
                 format="yyyy-MM-dd HH:mm:ss"
                 type="datetime"
@@ -123,8 +133,9 @@
                 style="width: 150px"
                 @on-change="startTimeChange"
               />
-              <i>-</i>
+              <i v-show="mark===true">-</i>
               <DatePicker
+                v-show="mark===true"
                 v-model="searchRowData.endTime"
                 format="yyyy-MM-dd HH:mm:ss"
                 type="datetime"
@@ -665,6 +676,9 @@ export default {
   mixins: [tableMixin, searchMixin],
   data() {
     return {
+      mark: false,
+      button: "今日",
+      num: 0,
       deliverNoteList: [],
       haiDingStatus: [],
       storeList: [],
@@ -1182,17 +1196,17 @@ export default {
     this.getStore();
   },
   methods: {
+    handleSearch() {
+      this.num++;
+      this.searchRowData.page = 1;
+      this.searchLoading = true;
+      this.getTableData();
+    },
     orderStatusesOnChange(value) {
       console.log(value);
       if (value.length === 0) {
         this.searchRowData.orderStatuses = null;
       }
-    },
-    startTimeChange(value, date) {
-      this.searchRowData.startTime = value;
-    },
-    endTimeChange(value, data) {
-      this.searchRowData.endTime = value;
     },
     //提货时间
     recieveStartTimeChange(value, date) {
@@ -1392,21 +1406,26 @@ export default {
       });
     },
     getTableData() {
+      console.log("num", this.num);
       this.loading = true;
-      if (
-        this.searchRowData.startTime == null ||
-        this.searchRowData.endTime == null
-      ) {
-        let date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var start = `${year}-${month}-${day} 00:00:00`;
-        var end = `${year}-${month}-${day} 23:59:59`;
+      let date = new Date();
+      date.setDate(date.getDate());
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      var day = date.getDate();
+      var day1 = date.getDate() + 1;
+      var start = `${year}-${month}-${day} 00:00:00`;
+      var end = `${year}-${month}-${day} 23:59:59`;
+      if (this.button === "今日") {
         this.searchRowData.startTime = start;
         this.searchRowData.endTime = end;
       }
+      this.searchRowData.startTime = this.$moment(
+        this.searchRowData.startTime
+      ).format("YYYY-MM-DD HH:mm:ss");
+      this.searchRowData.endTime = this.$moment(
+        this.searchRowData.endTime
+      ).format("YYYY-MM-DD HH:mm:ss");
       getOrderPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
@@ -1414,12 +1433,33 @@ export default {
           this.loading = false;
           this.clearSearchLoading = false;
           this.searchLoading = false;
+          if (this.num < 2) {
+            this.handleSearch();
+          }
         })
         .catch(() => {
           this.loading = false;
           this.clearSearchLoading = false;
           this.searchLoading = false;
         });
+    },
+    timeChange(value) {
+      if (value === "今日") {
+        this.mark = false;
+        this.getTableData();
+      } else if (value === "自定义时间") {
+        this.mark = true;
+        this.searchRowData.startTime = "";
+        this.searchRowData.endTime = "";
+      }
+    },
+    startTimeChange(value, date) {
+      this.button = "自定义时间";
+      this.searchRowData.startTime = value;
+    },
+    endTimeChange(value, date) {
+      this.button = "自定义时间";
+      this.searchRowData.endTime = value;
     },
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条

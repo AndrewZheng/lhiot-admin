@@ -492,7 +492,7 @@
                 />
               </FormItem>
             </i-col>
-            <i-col span="12">
+            <!-- <i-col span="12">
               <FormItem
                 label="提货开始时间:"
                 prop="deliveryStartTime"
@@ -513,7 +513,7 @@
                 label="提货开始时间:"
                 prop="deliveryStartTime"
               >{{ teambuyDetail.deliveryStartTime | couponScopeFilter }}</FormItem>
-            </i-col>
+            </i-col> -->
           </Row>
           <Row>
             <i-col span="12">
