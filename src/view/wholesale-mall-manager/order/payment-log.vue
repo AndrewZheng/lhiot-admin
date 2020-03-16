@@ -102,7 +102,16 @@
             </Button>
           </Row>
         </div>
-        <div slot="operations"></div>
+        <div slot="operations">
+          <Button
+            :loading="downloadLoading"
+            class="search-btn mr2"
+            type="primary"
+            @click="handleDownload"
+          >
+            <Icon type="md-download" />导出
+          </Button>
+        </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
@@ -175,6 +184,7 @@ export default {
     return {
       paymentFromEnum,
       wholesalePayTypeEnum,
+      downloadLoading: false,
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(rowData),
@@ -346,12 +356,35 @@ export default {
     startTimeChange(value, date) {
       console.log('beginTime:', value);
       this.searchRowData.paymentTimeBegin = value;
-      this.paymentLog.paymentTimeBegin = value;
     },
     endTimeChange(value, data) {
       console.log('endTime:', value);
       this.searchRowData.paymentTimeEnd = value;
-      this.paymentLog.paymentTimeEnd = value;
+    },
+    handleDownload() {
+      // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
+      this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      getPaymentLogPages(this.searchRowData).then(res => {
+        const tableData = res.rows;
+        // 恢复正常页数
+        this.searchRowData.rows = 10;
+        // 表格数据导出字段翻译
+        tableData.forEach(item => {
+          item['orderCode'] = item['orderCode'] + '';
+          item['transactionId'] = item['transactionId'] + '';
+          item['totalFee'] = (item['totalFee'] / 100.0).toFixed(2);
+          item['paymentFrom'] = paymentFromConvert(
+            item['paymentFrom']
+          ).label;
+          item['paymentType'] = wholesalePayTypeConvert(
+            item['paymentType']
+          ).label;
+        });
+        this.$refs.tables.handleDownload({
+          filename: `支付流水-${new Date().valueOf()}`,
+          data: tableData
+        });
+      });
     }
   }
 };
