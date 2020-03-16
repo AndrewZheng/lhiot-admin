@@ -344,7 +344,7 @@
     <!-- 添加 -->
     <Modal v-model="modalEdit" :mask-closable="false" :width="900">
       <p slot="header">
-        <span>{{ this.clickFlag==false?'编辑商品规格':'创建商品规格' }}</span>
+        <span>{{ clickFlag==false?'编辑商品规格':'创建商品规格' }}</span>
       </p>
       <div class="modal-content">
         <Form ref="editForm" :model="productStandardDetail" :rules="ruleInline" :label-width="100">
@@ -709,7 +709,7 @@
               </FormItem>
             </i-col>
           </Row>
-          <Row v-if="this.productStandardDetail.productType==='DISCOUNT_PRODUCT'">
+          <Row v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'">
             <i-col span="12">
               <FormItem label="限购份数:" prop="limitNum">
                 <Input v-model="proStandardExpand.limitNum"></Input>
@@ -731,11 +731,11 @@
                   @on-change="calDiscountRate"
                 ></InputNumber>
                 <div
-                  v-if="this.productStandardDetail.productType==='DISCOUNT_PRODUCT'"
+                  v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'"
                 >（以售卖价格优先计算折扣率）</div>
               </FormItem>
             </i-col>
-            <i-col v-if="this.productStandardDetail.productType==='DISCOUNT_PRODUCT'" span="12">
+            <i-col v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'" span="12">
               <FormItem label="折扣率:" prop="discountRate">
                 <Input v-model="proStandardExpand.discountRate" readonly></Input>
               </FormItem>
@@ -1490,9 +1490,6 @@ export default {
     },
     salePriceComputed() {
       return fenToYuanDot2Number(this.productStandardDetail.salePrice);
-    },
-    svipPriceComputed() {
-      return fenToYuanDot2Number(this.productStandardDetail.svipPrice);
     },
     svipPriceComputed() {
       return fenToYuanDot2Number(this.productStandardDetail.svipPrice);
