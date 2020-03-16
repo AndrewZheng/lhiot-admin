@@ -28,8 +28,9 @@
             @on-view="handleView"
             @on-delete="handleDelete"
             @on-select-all="onSelectionAll"
-            @on-selection-change="onRelationSelectionChange"
+            @on-selection-change="onSelectionChange"
           >
+            <!--             @on-selection-change="onRelationSelectionChange" -->
             <div slot="searchCondition">
               <Row>
                 <!--  @on-view="handleView" -->
@@ -446,6 +447,12 @@ const productColumns = [
         return <div>N/A</div>;
       }
     }
+  },
+  {
+    title: "起购份数",
+    key: "startNum",
+    minWidth: 80,
+    align: "center"
   },
   {
     title: "商品类型",
@@ -954,10 +961,10 @@ export default {
         .join(",");
     },
     onRelationSelectionChange(selection) {
-      if (selection.length > 1) {
-        this.$Message.warning("最多选择一条商品记录");
-        return;
-      }
+      // if (selection.length > 1) {
+      //   this.$Message.warning("最多选择一条商品记录");
+      //   return;
+      // }
       this.productStandardRelation.productStandardIds = selection
         .map(item => item.productStandardId.toString())
         .join(",");

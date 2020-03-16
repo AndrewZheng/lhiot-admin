@@ -1450,12 +1450,19 @@ export default {
       });
     },
     handleSubmitRegin() {
-      // 把规格ID赋值给goodsPriceRegion
+      // 把规格ID赋值给goodsPriceRegion  goodsPriceRegion.maxQuantity minQuantity
       this.goodsPriceRegion.goodsStandardId = this.productStandardDetail.id;
       this.$refs.editRegionForm.validate(valid => {
         if (valid) {
           if (this.goodsPriceRegion.price > this.productStandardDetail.price) {
             this.$Message.error("区间价不能高于商品原价!");
+            return;
+          }
+          if (
+            this.goodsPriceRegion.maxQuantity >
+            this.productStandardDetail.minQuantity
+          ) {
+            this.$Message.error("最低购买份数不能高于最高购买份数!");
             return;
           }
           if (this.goodsPriceRegion.id === 0) {
