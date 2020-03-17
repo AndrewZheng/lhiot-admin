@@ -179,7 +179,7 @@
                 <FormItem label="基础重量:" prop="baseQty">{{ addRelationDetail.baseQty }}</FormItem>
               </i-col>
               <i-col span="6">
-                <FormItem label="基础单位:" prop="unitName">{{ addRelationDetail.unitName }}</FormItem>
+                <FormItem label="基础单位:" prop="baseUnitName">{{ addRelationDetail.baseUnitName }}</FormItem>
               </i-col>
             </Row>
             <Row>
@@ -452,7 +452,7 @@ const relationDetail = {
   standardQty: 0,
   status: "VALID",
   unitId: 0,
-  unitName: null,
+  baseUnitName: null,
   barcode: "", // inherit
   specification: ""
 };
@@ -977,7 +977,7 @@ export default {
     handleChange(row, index) {
       // 关联选择相关规格的商品
       this.addRelationDetail.baseQty = row.baseQty;
-      this.addRelationDetail.unitName = row.baseUnit;
+      this.addRelationDetail.baseUnitName = row.baseUnit;
       this.addRelationDetail.description = row.description;
       this.addRelationDetail.detailImage = row.detailImage;
       this.addRelationDetail.image = row.image;
