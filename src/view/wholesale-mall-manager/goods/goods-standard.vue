@@ -618,11 +618,11 @@
                 <Input v-model="goodsPriceRegion.minQuantity"></Input>
               </FormItem>
             </i-col>
-            <!-- <i-col span="12">
+            <i-col span="12">
               <FormItem label="最高购买:" prop="maxQuantity" style="width:200px">
                 <Input v-model="goodsPriceRegion.maxQuantity"></Input>
               </FormItem>
-            </i-col>-->
+            </i-col>
           </Row>
           <Row>
             <i-col span="12">
@@ -757,7 +757,7 @@ const goodsPriceRegion = {
   id: 0,
   goodsStandardId: 0,
   minQuantity: 0,
-  // maxQuantity: 0,
+  maxQuantity: 0,
   price: 0,
   reorder: 0, // 排序
   standardDes: "" // 价格区间描述
@@ -976,12 +976,12 @@ const goodsPriceRegionColumns = [
     key: "minQuantity",
     minWidth: 120
   },
-  // {
-  //   title: "最高购买数量",
-  //   align: "center",
-  //   key: "maxQuantity",
-  //   minWidth: 120
-  // },
+  {
+    title: "最高购买数量",
+    align: "center",
+    key: "maxQuantity",
+    minWidth: 120
+  },
   {
     title: "排序",
     align: "center",
@@ -1106,19 +1106,19 @@ export default {
               callback(errors);
             }
           }
+        ],
+        maxQuantity: [
+          { required: true, message: "请输入最高购买数量" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[0-9]\d*$/.test(value)) {
+                errors.push(new Error("必须为非零整数"));
+              }
+              callback(errors);
+            }
+          }
         ]
-        // maxQuantity: [
-        //   { required: true, message: "请输入最高购买数量" },
-        //   {
-        //     validator(rule, value, callback, source, options) {
-        //       const errors = [];
-        //       if (!/^[0-9]\d*$/.test(value)) {
-        //         errors.push(new Error("必须为非零整数"));
-        //       }
-        //       callback(errors);
-        //     }
-        //   }
-        // ]
       },
       ruleInline: {
         goodsId: [
@@ -1458,19 +1458,25 @@ export default {
             this.$Message.error("区间价不能高于商品原价!");
             return;
           }
-          if (this.priceRegionData.length > 0) {
-            for (let i = 0; i < this.priceRegionData.length; i++) {
-              if (
-                this.priceRegionData[i].minQuantity ==
-                this.goodsPriceRegion.minQuantity
-              ) {
-                this.$Message.error("当前存在相同最小购买份数!");
-              }
-            }
-
+          if (
+            this.goodsPriceRegion.maxQuantity <
+            this.goodsPriceRegion.minQuantity
+          ) {
+            this.$Message.error("最高起购份数不能小于最低起购份数!");
             return;
           }
-          return;
+          //后期发版 屏蔽最高购买份数
+          // if (this.priceRegionData.length > 0) {
+          //   for (let i = 0; i < this.priceRegionData.length; i++) {
+          //     if (
+          //       this.priceRegionData[i].minQuantity ==
+          //       this.goodsPriceRegion.minQuantity
+          //     ) {
+          //       this.$Message.error("当前存在相同最小购买份数!");
+          //       return;
+          //     }
+          //   }
+          // }
           if (this.goodsPriceRegion.id === 0) {
             this.createPriceRegion();
           } else {
