@@ -1098,7 +1098,7 @@ const btns = {
       }
     }, [
       h('Tooltip', {
-        props: { placement: 'top',transfer:true,content:"手动退款" },
+        props: { placement: 'top',transfer:true,content:"确认收货" },
       }, [
         h('Button', {
           props: {

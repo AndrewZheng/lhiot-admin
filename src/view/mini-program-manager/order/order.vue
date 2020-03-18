@@ -346,7 +346,17 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">海鼎状态:</i-col>
-              <i-col span="16">{{ orderDetail.hdStatus | miniHdStatusFilter }}</i-col>
+              <!-- <i-col span="16">{{ orderDetail.hdStatus | miniHdStatusFilter }}</i-col> -->
+              <i-col v-if="orderDetail.hdStatus === 'NOT_SEND'" span="16">
+                <tag color="warning">{{ "未发送" }}</tag>
+              </i-col>
+              <i-col v-else-if="orderDetail.hdStatus === 'SEND_OUT'" span="16">
+                <tag color="success">{{ "成功" }}</tag>
+              </i-col>
+              <i-col v-else-if="orderDetail.hdStatus === 'SEND_FAILURE'" span="16">
+                <tag color="error">{{ "失败" }}</tag>
+              </i-col>
+              <i-col v-else-if="orderDetail.hdStatus === null" span="16">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
         </Row>
