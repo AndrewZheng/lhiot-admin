@@ -355,6 +355,15 @@
             </Row>
             <Row>
               <i-col span="12">
+                <FormItem
+                  label="最高优惠金额:"
+                  prop="maxDiscountFee"
+                  :label-width="100"
+                >{{ addRelationDetail.maxDiscountFee | fenToYuanDot2Filters }}</FormItem>
+              </i-col>
+            </Row>
+            <Row>
+              <i-col span="12">
                 <FormItem label="使用规则:" prop="couponRules">
                   <Input
                     v-model="addRelationDetail.couponRules"
@@ -445,6 +454,14 @@
                 label="使用范围:"
                 prop="couponScope"
               >{{ addRelationDetail.couponScope | couponScopeFilter }}</FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
+              <FormItem
+                label="最高优惠金额:"
+                prop="maxDiscountFee"
+              >{{"¥"+(addRelationDetail.maxDiscountFee)/100}}</FormItem>
             </i-col>
           </Row>
           <Row>
@@ -583,6 +600,7 @@ const couponDetail = {
   applicationType: null,
   activityImage: "",
   activityUrl: "",
+  maxDiscountFee: "",
   rank: 0 // 排序字段
 };
 
@@ -779,7 +797,7 @@ const dataColumns = [
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{fenToYuanDot2Number(row.couponFee) * 10 + "折"}</div>;
+        return <div>{row.couponFee / 10 + "折"}</div>;
       } else {
         return <div>{fenToYuanDot2(row.couponFee)}</div>;
       }
@@ -792,6 +810,21 @@ const dataColumns = [
     minWidth: 120,
     render(h, params) {
       return h("div", fenToYuanDot2(params.row.minBuyFee));
+    }
+  },
+  {
+    title: "最高优惠金额",
+    align: "center",
+    key: "maxDiscountFee",
+    minWidth: 120,
+    render(h, params) {
+      const { row } = params;
+      if (row.maxDiscountFee != null) {
+        return <div>{"¥" + row.maxDiscountFee / 100}</div>;
+      } else {
+        return <div>{"N/A"}</div>;
+      }
+      return <div>{row.maxDiscountFee}</div>;
     }
   },
   {
@@ -1342,6 +1375,7 @@ export default {
       this.addRelationDetail.minBuyFee = currentRow.minBuyFee;
       this.addRelationDetail.couponStatus = currentRow.couponStatus;
       this.addRelationDetail.couponType = currentRow.couponType;
+      this.addRelationDetail.maxDiscountFee = currentRow.maxDiscountFee;
       // svip默认展示付费会员
       if (this.$route.name === "small-activity-relation-coupon") {
         const couponActivity = getSmallCouponActivity();
@@ -1361,6 +1395,7 @@ export default {
       this.addRelationDetail.couponName = currentRow.couponName;
       this.addRelationDetail.couponType = currentRow.couponType;
       this.addRelationDetail.couponFee = currentRow.faceValue;
+      this.addRelationDetail.maxDiscountFee = currentRow.maxDiscountFee;
       this.addRelationDetail.userScope = "SVIP";
       if (currentRow.couponType === "DISCOUNT_COUPON") {
         this.addRelationDetail.couponFee =

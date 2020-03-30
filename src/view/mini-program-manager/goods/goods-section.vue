@@ -28,8 +28,9 @@
             @on-view="handleView"
             @on-delete="handleDelete"
             @on-select-all="onSelectionAll"
-            @on-selection-change="onRelationSelectionChange"
+            @on-selection-change="onSelectionChange"
           >
+            <!--             @on-selection-change="onRelationSelectionChange" -->
             <div slot="searchCondition">
               <Row>
                 <!--  @on-view="handleView" -->
@@ -448,6 +449,12 @@ const productColumns = [
     }
   },
   {
+    title: "起购份数",
+    key: "startNum",
+    minWidth: 80,
+    align: "center"
+  },
+  {
     title: "商品类型",
     minWidth: 120,
     key: "expandType",
@@ -468,6 +475,22 @@ const productColumns = [
           return (
             <div>
               <tag color="orange">
+                {expandTypeConvert(row.productStandardExpand.expandType).label}
+              </tag>
+            </div>
+          );
+        } else if (row.productStandardExpand.expandType == "SECKILL_PRODUCT") {
+          return (
+            <div>
+              <tag color="blue">
+                {expandTypeConvert(row.productStandardExpand.expandType).label}
+              </tag>
+            </div>
+          );
+        } else if (row.productStandardExpand.expandType == "ASSIST_PRODUCT") {
+          return (
+            <div>
+              <tag color="green">
                 {expandTypeConvert(row.productStandardExpand.expandType).label}
               </tag>
             </div>
@@ -689,7 +712,6 @@ export default {
       this.searchLoading = true;
       this.getTableData();
       this.$refs.tables.exportCsv({
-        // filename: `table-${new Date().valueOf()}.csv`
         filename: filename + "-" + new Date().valueOf() + ".csv"
       });
     },
@@ -750,6 +772,10 @@ export default {
         this.searchProductRowData.expandType = "PULL_NEW_PRODUCT";
       } else if (this.currentSectionCode === "ZKSP") {
         this.searchProductRowData.expandType = "DISCOUNT_PRODUCT";
+      } else if (this.currentSectionCode === "SECKILL") {
+        this.searchProductRowData.expandType = "SECKILL_PRODUCT";
+      } else if (this.currentSectionCode === "ASSIST") {
+        this.searchProductRowData.expandType = "ASSIST_PRODUCT";
       } else if (this.currentSectionCode === "SVIP") {
         this.searchProductRowData.expandType = "";
       } else {
@@ -856,13 +882,13 @@ export default {
     getTableData() {
       this.loading = true;
       getProductSectionRelationPages(this.searchRowData).then(res => {
-        if (this.menuData.length > 0) {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        }
+        // if (this.menuData.length > 0) {
+        this.tableData = res.rows;
+        this.total = res.total;
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
+        // }
       });
     },
     getProductTableData() {
@@ -880,27 +906,25 @@ export default {
     // 初始化商品菜单列表
     initMenuList() {
       getProductSectionTree(this.treeData).then(res => {
-        if (res && res.array.length > 0) {
-          const menuList = buildMenu(res.array);
-          const map = {
-            title: "title",
-            children: "children"
-          };
-          this.menuData = convertTree(menuList, map, true);
-          this.goodsSectionData = convertTreeCategory(menuList, map, true);
-          if (this.menuData.length > 0) {
-            this.getTableData();
-          }
-        }
+        // if (res && res.array.length > 0) {
+        const menuList = buildMenu(res.array);
+        const map = {
+          title: "title",
+          children: "children"
+        };
+        this.menuData = convertTree(menuList, map, true);
+        this.goodsSectionData = convertTreeCategory(menuList, map, true);
+        // if (this.menuData.length > 0) {
+        this.getTableData();
+        //   }
+        // }
       });
     },
     handleClick({ root, node, data }) {
       this.loading = true;
       // 展开当前节点
       if (typeof data.expand === "undefined") {
-        // this.$set(data, 'expend', true);
         this.$set(data, "expend", false);
-        // if (data.children) {
         if (data.children) {
           this.expandChildren(data.children);
         }
@@ -919,9 +943,7 @@ export default {
     expandChildren(array) {
       array.forEach(item => {
         if (typeof item.expand === "undefined") {
-          // this.$set(item, 'expend', true);
           this.$set(item, "expend", false);
-          // } else {
         } else {
           item.expand = !item.expand;
         }
@@ -939,10 +961,10 @@ export default {
         .join(",");
     },
     onRelationSelectionChange(selection) {
-      if (selection.length > 1) {
-        this.$Message.warning("最多选择一条商品记录");
-        return;
-      }
+      // if (selection.length > 1) {
+      //   this.$Message.warning("最多选择一条商品记录");
+      //   return;
+      // }
       this.productStandardRelation.productStandardIds = selection
         .map(item => item.productStandardId.toString())
         .join(",");

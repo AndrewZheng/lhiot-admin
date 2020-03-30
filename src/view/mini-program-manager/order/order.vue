@@ -36,6 +36,13 @@
               style="width: 110px"
               clearable
             ></Input>
+            <Input
+              v-model="searchRowData.productName"
+              placeholder="商品名称"
+              class="search-input mr5"
+              style="width: 150px"
+              clearable
+            ></Input>
             <Select
               v-model="searchRowData.apply"
               :clearable="true"
@@ -106,43 +113,76 @@
                 class="ptb2-5"
               >{{ item.label }}</Option>
             </Select>
-            <DatePicker
-              v-model="searchRowData.startTime"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetime"
-              placeholder="开始时间"
-              class="mr5"
-              style="width: 150px"
-              @on-change="startTimeChange"
-            />
-            <i>-</i>
-            <DatePicker
-              v-model="searchRowData.endTime"
-              format="yyyy-MM-dd HH:mm:ss"
-              type="datetime"
-              placeholder="结束时间"
-              class="mr5"
-              style="width: 150px"
-              @on-change="endTimeChange"
-            />
-            <Button
-              v-waves
-              :loading="searchLoading"
-              class="search-btn ml5"
-              type="primary"
-              @click="handleSearch"
-            >
-              <Icon type="md-search" />&nbsp;搜索
-            </Button>
-            <Button
-              v-waves
-              :loading="clearSearchLoading"
-              class="search-btn"
-              type="info"
-              @click="handleClear"
-            >
-              <Icon type="md-refresh" />&nbsp;清除
-            </Button>
+            <div style="margin-top:5px">
+              <RadioGroup
+                v-model="button"
+                type="button"
+                @on-change="timeChange"
+                style="float:left;margin-right:5px"
+              >
+                <Radio label="今日"></Radio>
+                <Radio label="自定义时间"></Radio>
+              </RadioGroup>
+              <DatePicker
+                v-show="mark===true"
+                v-model="searchRowData.startTime"
+                format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="开始时间"
+                class="mr5"
+                style="width: 150px"
+                @on-change="startTimeChange"
+              />
+              <i v-show="mark===true">-</i>
+              <DatePicker
+                v-show="mark===true"
+                v-model="searchRowData.endTime"
+                format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="结束时间"
+                class="mr20"
+                style="width: 150px"
+                @on-change="endTimeChange"
+              />
+              <!-- 提货时间 -->
+              <DatePicker
+                v-model="searchRowData.recieveStartTime"
+                format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="提货时间起"
+                class="mr5"
+                style="width: 150px"
+                @on-change="recieveStartTimeChange"
+              />
+              <i>-</i>
+              <DatePicker
+                v-model="searchRowData.recieveEndTime"
+                format="yyyy-MM-dd HH:mm:ss"
+                type="datetime"
+                placeholder="提货时间止"
+                class="mr5"
+                style="width: 150px"
+                @on-change="recieveEndTimeChange"
+              />
+              <Button
+                v-waves
+                :loading="searchLoading"
+                class="search-btn ml5"
+                type="primary"
+                @click="handleSearch"
+              >
+                <Icon type="md-search" />&nbsp;搜索
+              </Button>
+              <Button
+                v-waves
+                :loading="clearSearchLoading"
+                class="search-btn"
+                type="info"
+                @click="handleClear"
+              >
+                <Icon type="md-refresh" />&nbsp;清除
+              </Button>
+            </div>
           </Row>
         </div>
         <div slot="operations" style="margin-left:-30px">
@@ -306,7 +346,17 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="8">海鼎状态:</i-col>
-              <i-col span="16">{{ orderDetail.hdStatus | miniHdStatusFilter }}</i-col>
+              <!-- <i-col span="16">{{ orderDetail.hdStatus | miniHdStatusFilter }}</i-col> -->
+              <i-col v-if="orderDetail.hdStatus === 'NOT_SEND'" span="16">
+                <tag color="warning">{{ "未发送" }}</tag>
+              </i-col>
+              <i-col v-else-if="orderDetail.hdStatus === 'SEND_OUT'" span="16">
+                <tag color="success">{{ "成功" }}</tag>
+              </i-col>
+              <i-col v-else-if="orderDetail.hdStatus === 'SEND_FAILURE'" span="16">
+                <tag color="error">{{ "失败" }}</tag>
+              </i-col>
+              <i-col v-else-if="orderDetail.hdStatus === null" span="16">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -594,6 +644,7 @@ const orderDetail = {
   reason: "",
   isAllRefund: "",
   createAt: null,
+  recieveTime: "",
   receiveUser: "",
   contactPhone: "",
   remark: "",
@@ -621,7 +672,10 @@ const roleRowData = {
   startTime: null,
   endTime: null,
   page: 1,
-  rows: 10
+  rows: 10,
+  recieveStartTime: null,
+  recieveEndTime: null,
+  productNames: ""
 };
 
 export default {
@@ -632,6 +686,9 @@ export default {
   mixins: [tableMixin, searchMixin],
   data() {
     return {
+      mark: false,
+      button: "今日",
+      num: 0,
       deliverNoteList: [],
       haiDingStatus: [],
       storeList: [],
@@ -854,6 +911,12 @@ export default {
           key: "createAt"
         },
         {
+          title: "提货时间",
+          align: "center",
+          width: 160,
+          key: "recieveTime"
+        },
+        {
           title: "订单用户",
           align: "center",
           width: 120,
@@ -865,6 +928,7 @@ export default {
           width: 120,
           key: "contactPhone"
         },
+        { align: "center", title: "商品名称", width: 150, key: "productNames" },
         {
           title: "下单门店",
           align: "center",
@@ -1124,6 +1188,7 @@ export default {
           title: "操作",
           minWidth: 180,
           align: "center",
+          fixed: "right",
           key: "handle",
           options: ["view", "onHand", "onReceive"]
         }
@@ -1141,17 +1206,24 @@ export default {
     this.getStore();
   },
   methods: {
+    handleSearch() {
+      this.num++;
+      this.searchRowData.page = 1;
+      this.searchLoading = true;
+      this.getTableData();
+    },
     orderStatusesOnChange(value) {
       console.log(value);
       if (value.length === 0) {
         this.searchRowData.orderStatuses = null;
       }
     },
-    startTimeChange(value, date) {
-      this.searchRowData.startTime = value;
+    //提货时间
+    recieveStartTimeChange(value, date) {
+      this.searchRowData.recieveStartTime = value;
     },
-    endTimeChange(value, data) {
-      this.searchRowData.endTime = value;
+    recieveEndTimeChange(value, data) {
+      this.searchRowData.recieveEndTime = value;
     },
     handleEditCloseTransferModalView() {
       this.transferModalView = false;
@@ -1212,12 +1284,13 @@ export default {
     handSureReceive(params) {
       if (
         params.row.orderStatus === "SEND_OUT" ||
-        params.row.orderStatus === "DISPATCHING"
+        params.row.orderStatus === "DISPATCHING" ||
+        params.row.orderStatus === "RETURNING"
       ) {
         sureReceive({ orderId: params.row.id })
           .then(res => {
             this.loading = false;
-            this.$Message.success("确认收货成功");
+            this.$Message.success("操作成功");
             this.getTableData();
           })
           .catch(() => {
@@ -1227,6 +1300,7 @@ export default {
         this.$Message.error("只有已发货和配送中的订单才能操作收货");
       }
     },
+    // 门店调货
     handleSubmit() {
       if (!this.currentTableRowSelected) {
         this.$Message.error(
@@ -1342,7 +1416,26 @@ export default {
       });
     },
     getTableData() {
+      console.log("num", this.num);
       this.loading = true;
+      let date = new Date();
+      date.setDate(date.getDate());
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      var day = date.getDate();
+      var day1 = date.getDate() + 1;
+      var start = `${year}-${month}-${day} 00:00:00`;
+      var end = `${year}-${month}-${day} 23:59:59`;
+      if (this.button === "今日") {
+        this.searchRowData.startTime = start;
+        this.searchRowData.endTime = end;
+      }
+      this.searchRowData.startTime = this.$moment(
+        this.searchRowData.startTime
+      ).format("YYYY-MM-DD HH:mm:ss");
+      this.searchRowData.endTime = this.$moment(
+        this.searchRowData.endTime
+      ).format("YYYY-MM-DD HH:mm:ss");
       getOrderPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
@@ -1350,12 +1443,33 @@ export default {
           this.loading = false;
           this.clearSearchLoading = false;
           this.searchLoading = false;
+          if (this.num < 2) {
+            this.handleSearch();
+          }
         })
         .catch(() => {
           this.loading = false;
           this.clearSearchLoading = false;
           this.searchLoading = false;
         });
+    },
+    timeChange(value) {
+      if (value === "今日") {
+        this.mark = false;
+        this.getTableData();
+      } else if (value === "自定义时间") {
+        this.mark = true;
+        this.searchRowData.startTime = "";
+        this.searchRowData.endTime = "";
+      }
+    },
+    startTimeChange(value, date) {
+      this.button = "自定义时间";
+      this.searchRowData.startTime = value;
+    },
+    endTimeChange(value, date) {
+      this.button = "自定义时间";
+      this.searchRowData.endTime = value;
     },
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
@@ -1390,6 +1504,7 @@ export default {
           item["status"] = miniOrderStatusConvert(item["status"]).label;
           item["payType"] = payTypeConvert(item["payType"]).label;
           item["isAllRefund"] = isAllRefundConvert(item["isAllRefund"]).label;
+          item["recieveTime"] = item["recieveTime"];
         });
         this.$refs.tables.handleDownload({
           filename: `普通订单信息-${new Date().valueOf()}`,
@@ -1450,6 +1565,7 @@ export default {
     },
     modifyStoreInOrder() {
       // TODO 未测试
+      // console.log("数据",this.currentTableRowSelected.newStoreId)
       modifyStoreInOrder(this.currentTableRowSelected)
         .then(res => {
           this.$Message.info("调货成功！");
@@ -1468,23 +1584,19 @@ export default {
           tempDeleteList.push(value.id);
         });
         const ids = tempDeleteList.join(",");
-        resendToHd({ ids: ids })
-          .then(res => {
-            let { disqualification, failure } = res;
-            if (failure.length === 0) {
-              this.$Message.info("海鼎重发成功");
-            } else {
-              let lst = failure.join(",");
-              this.$Message.error({
-                content: `海鼎重发失败订单：${lst}`,
-                duration: 30,
-                closable: true
-              });
-            }
-          })
-          .catch(error => {
-            console.log(error);
-          });
+        resendToHd({ ids: ids }).then(res => {
+          let { disqualification, failure } = res;
+          if (failure.length === 0) {
+            this.$Message.info("海鼎重发成功");
+          } else {
+            let lst = failure.join(",");
+            this.$Message.error({
+              content: `海鼎重发失败订单：${lst}`,
+              duration: 30,
+              closable: true
+            });
+          }
+        });
       }
     },
     onSelectionAll(selection) {

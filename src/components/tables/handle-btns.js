@@ -1,6 +1,9 @@
 const btns = {
   view: (h, params, vm) => {
-    return h('Button', {
+    return h('Tooltip', {
+      props: { placement: 'top',transfer:true,content:"查看" },
+    }, [
+    h('Button', {
       props: {
         type: 'info',
         size: 'small'
@@ -13,16 +16,21 @@ const btns = {
           vm.$emit('on-view', params);
         }
       }
-    }, [h('Icon', {
+    }, [
+    h('Icon', {
       props: {
         type: 'md-eye',
         size: 16,
         color: '#fff'
       }
-    })]);
+    })
+    ])]);
   },
   edit: (h, params, vm) => {
-    return h('Button', {
+    return h('Tooltip', {
+      props: { placement: 'top',transfer:true,content:"修改" },
+    }, [
+    h('Button', {
       props: {
         type: 'warning',
         size: 'small'
@@ -35,18 +43,22 @@ const btns = {
           vm.$emit('on-edit', params);
         }
       }
-    }, [h('Icon', {
+    }, [
+     h('Icon', {
       props: {
         type: 'md-create',
         size: 16,
         color: '#fff'
       }
-    })]);
+    })
+    ])
+  ]);
   },
   delete: (h, params, vm) => {
     return h('Poptip', {
       props: {
         confirm: true,
+        transfer:true,
         title: '你确定要删除吗?',
         placement: params.index === 0 ? 'right' : 'top'
       },
@@ -56,17 +68,18 @@ const btns = {
       on: {
         'on-ok': () => {
           vm.$emit('on-delete', params);
-          // 页面验证 删除成功则刷新表格内容
-          // vm.$emit('input', params.tableData.filter((item, index) => index !== params.row.initRowIndex));
         }
       }
     }, [
-      h('Button', {
+      h('Tooltip', {
+        props: { placement: 'top',transfer:true,content:"删除" },
+      }, [
+        h('Button', {
         props: {
           type: 'error',
           size: 'small'
         }
-      }, [
+        }, [
         h('Icon', {
           props: {
             type: 'md-trash',
@@ -74,8 +87,129 @@ const btns = {
             color: '#fff'
           }
         })
+        ])
       ])
     ]);
+  },
+  saleAudit: (h, params, vm) => {
+    return h('Poptip', {
+      props: {
+        confirm: true,
+        transfer:true,
+        title: '该业务员资质已核实，是否通过业务员申请?',
+        placement: params.index === 0 ? 'right' : 'top',
+        'ok-text': '通过',
+        'cancel-text': '拒绝'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        'on-ok': () => {
+          vm.$emit('on-audit', { params, checkStatus: 'agree' });
+        },
+        'on-cancel': () => {
+          vm.$emit('on-audit', { params, checkStatus: 'reject' });
+        }
+      }
+    }, [
+      h('Tooltip', {
+        props: { placement: 'top',transfer:true,content:"审核业务员" },
+      }, [
+        h('Button', {
+         props: {
+          type: 'primary',
+          size: 'small'
+        }
+        }, [
+        h('Icon', {
+         props: {
+            type: 'logo-buffer',
+            size: 16,
+            color: '#fff'
+          }
+        })
+        ])
+      ])
+    ]);
+  },
+  onUser: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.userType === 'consumer') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer:true,
+          title: '确认要将此用户转为业务员吗?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-user', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top',transfer:true,content:"转为业务员" },
+        }, [
+          h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+          }, [
+          h('Icon', {
+            props: {
+              type: 'md-repeat',
+              size: 16,
+              color: '#fff'
+            }
+          })
+          ])
+        ])
+      ]);
+    } else {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer:true,
+          title: '确认要将此业务员变为普通用户吗?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-user', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top',transfer:true,content:"转为普通用户" },
+        }, [
+          h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+          }, [
+          h('Icon', {
+            props: {
+              type: 'md-repeat',
+              size: 16,
+              color: '#fff'
+            }
+          })
+          ])
+        ])
+      ]);
+    }
   },
   relation: (h, params, vm) => {
     return h('Button', {
@@ -100,33 +234,39 @@ const btns = {
     })]);
   },
   exchange: (h, params, vm) => {
-    return h('Button', {
-      props: {
-        type: 'primary',
-        size: 'small'
-      },
-      style: {
-        marginRight: '5px'
-      },
-      on: {
-        click: () => {
-          vm.$emit('on-exchange', params);
+    return h('Tooltip', {
+      props: { placement: 'top',transfer:true,content:"更换" },
+    }, [
+      h('Button', {
+        props: {
+          type: 'primary',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-exchange', params);
+          }
         }
-      }
-    }, [h('Icon', {
-      props: {
-        type: 'md-repeat',
-        size: 16,
-        color: '#fff'
-      }
-    })]);
+      }, [
+        h('Icon', {
+          props: {
+            type: 'md-repeat',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+  ]);
   },
   permission: (h, params, vm) => {
     const {
       row
     } = params;
     // 父级菜单不显示修改权限按钮
-    if (row.type == 'PARENT') {
+    if (row.type === 'PARENT') {
       return '';
     } else {
       return h('Button', {
@@ -152,38 +292,44 @@ const btns = {
     }
   },
   discount: (h, params, vm) => {
-    return h('Button', {
-      props: {
-        type: 'primary',
-        size: 'small'
-      },
-      style: {
-        marginRight: '5px'
-      },
-      on: {
-        click: () => {
-          vm.$emit('on-discount', params);
+    return h('Tooltip', {
+    props: { placement: 'top',transfer:true,content:"折扣" },
+    }, [
+      h('Button', {
+        props: {
+          type: 'primary',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-discount', params);
+          }
         }
-      }
-    }, [h('Icon', {
-      props: {
-        type: 'md-pricetags',
-        size: 16,
-        color: '#fff'
-      }
-    })]);
+      }, [
+        h('Icon', {
+          props: {
+            type: 'md-pricetags',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+  ]);
   },
-  // 商品上下架操作
   onSale: (h, params, vm) => {
     const {
       row
     } = params;
-    if (row.shelfStatus === 'ON' || row.onOff === 'ON' || row.state === 'ON' || row.couponStatus === 'VALID') {
+    if (row.shelfStatus === 'ON' || row.onOff === 'ON' || row.state === 'ON' || row.couponStatus === 'VALID' || row.status === 'ON' || row.vaild === 'yes' || row.couponConfigvaild === 'yes') {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要下架?',
-         // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
+          transfer:true,
+          title: row.vaild === 'yes' ? '确认要关闭活动吗?' : '确认要下架吗?',
+          placement: params.index === 0 ? 'right' : 'top'
         },
         style: {
           marginRight: '5px'
@@ -213,7 +359,9 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要上架吗?'
+          transfer:true,
+          title: row.vaild === 'no' ? '确认要开启活动吗?' : '确认要上架吗?',
+          placement: params.index === 0 ? 'right' : 'top'
         },
         style: {
           marginRight: '5px'
@@ -246,10 +394,11 @@ const btns = {
     const {
       row
     } = params;
-    if (row.status === 'VALID' || row.shelvesStatus === 'VALID' || row.ifEffective === 'VALID') {
+    if (row.status === 'VALID' || row.shelvesStatus === 'VALID' || row.ifEffective === 'VALID' || row.vaild === 'yes') {
       return h('Poptip', {
         props: {
           confirm: true,
+          transfer:true,
           title: '确认要下架吗?'
         },
         style: {
@@ -280,6 +429,7 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
+          transfer:true,
           title: '确认要上架吗?'
         },
         style: {
@@ -315,7 +465,8 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要下架该优惠券吗?',
+          transfer:true,
+          title: '确认要下架该优惠券吗?'
         },
         style: {
           marginRight: '5px'
@@ -345,6 +496,7 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
+          transfer:true,
           title: '确认要上架该优惠券吗?'
         },
         style: {
@@ -380,6 +532,7 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
+          transfer:true,
           title: '确认要下架吗?'
         },
         style: {
@@ -410,6 +563,7 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
+          transfer:true,
           title: '确认要上架吗?'
         },
         style: {
@@ -483,43 +637,52 @@ const btns = {
     })]);
   },
   settings: (h, params, vm) => {
-    return h('Button', {
-      props: {
-        type: 'success',
-        size: 'small'
-      },
-      style: {
-        marginRight: '5px'
-      },
-      on: {
-        click: () => {
-          vm.$emit('on-relevance', params);
-        }
-      }
-    }, [h('Icon', {
-      props: {
-        type: 'md-settings',
-        size: 16,
-        color: '#fff'
-      }
-    })]);
-  },
-  //手动退款
-  onHand: (h, params, vm) => {
-      return h('Poptip', {
+    return h('Tooltip', {
+      props: { placement: 'top',transfer:true,content:"设置" },
+    }, [
+      h('Button', {
         props: {
-          confirm: true,
-          title: '确认要退款?',
-          // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
+          type: 'success',
+          size: 'small'
         },
         style: {
           marginRight: '5px'
         },
         on: {
-          'on-ok': () => {
-            vm.$emit('on-hand', params);
+          click: () => {
+            vm.$emit('on-relevance', params);
           }
         }
+      }, [
+        h('Icon', {
+          props: {
+            type: 'md-settings',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+  ]);
+  },
+  // 手动退款
+  onHand: (h, params, vm) => {
+    return h('Poptip', {
+      props: {
+        confirm: true,
+        transfer:true,
+        title: '确认要退款?'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        'on-ok': () => {
+          vm.$emit('on-hand', params);
+        }
+      }
+    }, [
+      h('Tooltip', {
+        props: { placement: 'top',transfer:true,content:"手动退款" },
       }, [
         h('Button', {
           props: {
@@ -527,15 +690,53 @@ const btns = {
             size: 'small'
           }
         }, [
-          h('Icon', {
-            props: {
-              type: 'logo-usd',
-              size: 16,
-              color: '#fff'
-            }
-          })
+        h('Icon', {
+          props: {
+            type: 'logo-usd',
+            size: 16,
+            color: '#fff'
+          }
+        })
         ])
-      ]);
+      ])
+    ]);
+  },
+  sendHd: (h, params, vm) => {
+    return h('Poptip', {
+      props: {
+        confirm: true,
+        transfer:true,
+        title: '确认要重新发送海鼎吗?',
+        placement: params.index === 0  ? 'left' : 'top'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        'on-ok': () => {
+          vm.$emit('on-send-hd', params);
+        }
+      }
+    }, [
+      h('Tooltip', {
+        props: { placement: 'top',transfer:true,content:"海鼎重发" },
+      }, [
+        h('Button', {
+          props: {
+            type: 'primary',
+            size: 'small'
+          }
+        }, [
+        h('Icon', {
+         props: {
+            type: 'ios-paper-plane',
+            size: 16,
+            color: '#fff'
+          }
+        })
+        ])
+      ])
+    ]);
   },
   // 邮费复制操作
   copy: (h, params, vm) => {
@@ -795,7 +996,7 @@ const btns = {
   settlementRefund: (h, params, vm) => {
     const { row } = params;
     // 薪资已过期显示退款按钮
-    if (row.settlementStatus == 'EXPIRED') {
+    if (row.settlementStatus === 'EXPIRED') {
       return h('Poptip', {
         props: {
           confirm: true,
@@ -836,7 +1037,7 @@ const btns = {
   settlementEdit: (h, params, vm) => {
     const { row } = params;
     // 除了薪资未审核的其他不显示修改权限按钮
-    if (row.settlementStatus == 'UNSETTLED') {
+    if (row.settlementStatus === 'UNSETTLED') {
       return h('Button', {
         props: {
           type: 'warning',
@@ -864,7 +1065,7 @@ const btns = {
   feedback: (h, params, vm) => {
     const { row } = params;
     // 除了未回复的其他不显示修改按钮
-    if (row.status == 'UNREPLY') {
+    if (row.status === 'UNREPLY') {
       return h('Button', {
         props: {
           type: 'warning',
@@ -894,7 +1095,7 @@ const btns = {
     const {
       row
     } = params;
-    if (row.status == 'DISABLED' || row.storeStatus == 'DISABLED') {
+    if (row.status === 'DISABLED' || row.storeStatus === 'DISABLED') {
       return h('Poptip', {
         props: {
           confirm: true,
@@ -956,12 +1157,13 @@ const btns = {
       ]);
     }
   },
-  //确认收货
+  // 确认收货
   onReceive: (h, params, vm) => {
     return h('Poptip', {
       props: {
         confirm: true,
-        title: '确认要收货?',
+        transfer:true,
+        title: '确认要收货?'
         // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
       },
       style: {
@@ -973,12 +1175,15 @@ const btns = {
         }
       }
     }, [
-      h('Button', {
-        props: {
-          type: 'success',
-          size: 'small'
-        },
+      h('Tooltip', {
+        props: { placement: 'top',transfer:true,content:"确认收货" },
       }, [
+        h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+        }, [
         h('Icon', {
           props: {
             type: 'md-checkbox',
@@ -986,8 +1191,159 @@ const btns = {
             color: '#fff'
           }
         })
+        ])
       ])
     ]);
+  },
+  analytics: (h, params, vm) => {
+    return h('Tooltip', {
+      props: { placement: 'top',transfer:true,content:"业绩分析" },
+    }, [
+      h('Button', {
+        props: {
+          type: 'primary',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-analytics', params);
+          }
+        }
+      }, [
+        h('Icon', {
+          props: {
+            type: 'md-analytics',
+            size: 16,
+            color: '#fff'
+          }
+        })
+      ])
+  ]);
+  },
+  //
+  // saleAudit: (h, params, vm) => {
+  //   return h('Poptip', {
+  //     props: {
+  //       confirm: true,
+  //       transfer:true,
+  //       title: '该业务员资质已核实，是否通过业务员申请?',
+  //       placement: params.index === 0 ? 'right' : 'top',
+  //       'ok-text': '通过',
+  //       'cancel-text': '拒绝'
+  //     },
+  //     style: {
+  //       marginRight: '5px'
+  //     },
+  //     on: {
+  //       'on-ok': () => {
+  //         vm.$emit('on-audit', { params, checkStatus: 'agree' });
+  //       },
+  //       'on-cancel': () => {
+  //         vm.$emit('on-audit', { params, checkStatus: 'reject' });
+  //       }
+  //     }
+  //   }, [
+  //     h('Tooltip', {
+  //       props: { placement: 'top',transfer:true,content:"审核业务员" },
+  //     }, [
+  //       h('Button', {
+  //        props: {
+  //         type: 'primary',
+  //         size: 'small'
+  //       }
+  //       }, [
+  //       h('Icon', {
+  //        props: {
+  //           type: 'logo-buffer',
+  //           size: 16,
+  //           color: '#fff'
+  //         }
+  //       })
+  //       ])
+  //     ])
+  //   ]);
+  // },
+  //
+  setVip: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.isVip === 'no') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer:true,
+          title: '确认要将此用户升级为VIP吗?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-set-vip', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top',transfer:true,content:"升级为VIP" },
+        }, [
+          h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+          }, [
+          h('Icon', {
+            props: {
+              type: 'ios-ribbon',
+              size: 16,
+              color: '#fff'
+            }
+          })
+          ])
+        ])
+      ]);
+    } else {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer:true,
+          title: '确认要将此VIP用户变为普通用户吗?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-set-vip', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top',transfer:true,content:"降级为普通用户" },
+        }, [
+          h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+          }, [
+          h('Icon', {
+            props: {
+              type: 'ios-ribbon-outline',
+              size: 16,
+              color: '#fff'
+            }
+          })
+          ])
+        ])
+      ]);
+    }
   }
 };
 export default btns;

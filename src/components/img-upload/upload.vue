@@ -59,7 +59,7 @@ export default {
   props: {
     action: {
       type: String,
-      default: 'https://resource.food-see.com/v1/upload/product_image'
+      default: 'http://resource.food-see.com/v1/upload/product_image'
     },
     headers: {
       type: Object,
@@ -112,7 +112,7 @@ export default {
     format: {
       type: Array,
       default() {
-        return ['jpg', 'jpeg', 'png'];
+        return ['jpg', 'jpeg', 'png', 'gif'];
       }
     },
     maxSize: {

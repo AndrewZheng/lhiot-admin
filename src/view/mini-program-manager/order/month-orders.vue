@@ -15,7 +15,7 @@
         search-place="top"
       >
         <div slot="searchCondition">
-          <!-- <Row>
+          <Row>
             <DatePicker
               v-model="searchRowData.startTime"
               format="yyyy-MM-dd HH:mm:ss"
@@ -53,7 +53,10 @@
             >
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
-          </Row> -->
+          </Row>
+          <div class="ml15 mt10">
+            <i style="color:red">*</i> 默认展示上月退款数据
+          </div>
         </div>
         <div slot="operations" style="margin-left:-50px">
           <Button v-waves class="search-btn ml5 mr5" type="primary" @click="goBack">
@@ -90,7 +93,7 @@ import Tables from "_c/tables";
 import { monthOrderPages } from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
-import { fenToYuanDot2 } from "@/libs/util";
+import { fenToYuanDot2, gitTime } from "@/libs/util";
 import {
   receivingWayEnum,
   receivingWay,
@@ -434,6 +437,26 @@ export default {
               return <div>{"N/A"}</div>;
             }
           }
+        },
+        {
+          title: "创建时间",
+          minWidth: 160,
+          align: "center",
+          key: "createAt",
+          render(h, params, vm) {
+            let createTime = gitTime(params.row.createAt);
+            return <div>{createTime}</div>;
+          }
+        },
+        {
+          title: "退款时间",
+          minWidth: 160,
+          align: "center",
+          key: "refundAt",
+          render(h, params, vm) {
+            let refundTime = gitTime(params.row.refundAt);
+            return <div>{refundTime}</div>;
+          }
         }
       ],
       currentTableRowSelected: null,
@@ -466,7 +489,7 @@ export default {
       this.loading = true;
       monthOrderPages(this.searchRowData)
         .then(res => {
-          this.tableData = res;
+          this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.clearSearchLoading = false;
@@ -482,7 +505,7 @@ export default {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
       monthOrderPages(this.searchRowData).then(res => {
-        const tableData = res;
+        const tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 10;
         // 表格数据导出字段翻译
@@ -512,7 +535,11 @@ export default {
           item["receivingWay"] = receivingWayConvert(
             item["receivingWay"]
           ).label;
+          item["createAt"] = gitTime(item["createAt"]);
+          item["createAt"] = gitTime(item["createAt"]);
+          item["refundAt"] = gitTime(item["refundAt"]);
           item["status"] = miniOrderStatusConvert(item["status"]).label;
+          // console.log("时间",item["refundAt"])
         });
         this.$refs.tables.handleDownload({
           filename: `跨月退款订单数据-${new Date().valueOf()}`,

@@ -1,6 +1,7 @@
 <template>
   <div class="m-role">
     <Card>
+      <h4>邀请有礼活动数据埋点统计</h4>
       <tables
         ref="tables"
         v-model="tableData"
@@ -15,7 +16,16 @@
       >
         <div slot="searchCondition">
           <Row>
-            <div style="float:left">
+            <RadioGroup
+              v-model="button"
+              type="button"
+              @on-change="timeChange"
+              style="float:left;margin-right:5px"
+            >
+              <Radio label="昨日"></Radio>
+              <Radio label="自定义时间"></Radio>
+            </RadioGroup>
+            <div style="float:left" v-show="mark===true">
               <DatePicker
                 v-model="searchRowData.beginDate"
                 format="yyyy-MM-dd"
@@ -48,7 +58,7 @@
             >
               <Icon type="md-search" />&nbsp;搜索
             </Button>
-            <Button
+            <!-- <Button
               v-waves
               :loading="clearSearchLoading"
               class="search-btn mr5"
@@ -56,7 +66,7 @@
               @click="handleClear"
             >
               <Icon type="md-refresh" />&nbsp;清除
-            </Button>
+            </Button>-->
           </Row>
           <div class="ml15 mt10">
             <i style="color:red">*</i> 默认展示昨天的数据
@@ -170,6 +180,8 @@ export default {
           align: "center"
         }
       ],
+      mark: false,
+      button: "昨日",
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
@@ -186,17 +198,14 @@ export default {
       this.searchRowData = _.cloneDeep(roleRowData);
       this.getTableData();
     },
-    getTableData() {
-      let _this = this;
-      //稍后优化传昨天的时间
-
+    getTableData(value) {
       let date = new Date();
       date.setDate(date.getDate() - 1);
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var yesterday = `${year}-${month}-${day}`;
-      if (this.searchRowData.beginDate === null) {
+      if (this.button === "昨日") {
         this.searchRowData.beginDate = yesterday;
         this.searchRowData.endDate = yesterday;
       }
@@ -214,11 +223,24 @@ export default {
           this.clearSearchLoading = false;
         });
     },
+    timeChange(value) {
+      if (value === "昨日") {
+        this.mark = false;
+        this.inviteData = [];
+        this.getTableData(value);
+      } else if (value === "自定义时间") {
+        this.mark = true;
+        this.searchRowData.beginDate = "";
+        this.searchRowData.endDate = "";
+      }
+    },
     startTimeChange(value, date) {
+      this.button = "自定义时间";
       this.dataStatisticsDetail.beginDate = value;
       this.searchRowData.beginDate = value;
     },
     endTimeChange(value, date) {
+      this.button = "自定义时间";
       this.dataStatisticsDetail.endDate = value;
       this.searchRowData.endDate = value;
     },

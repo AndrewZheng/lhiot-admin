@@ -590,7 +590,8 @@ import {
   setSmallCouponActivity,
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber
+  yuanToFenNumber,
+  compareCouponData
 } from "@/libs/util";
 
 const couponDetail = {
@@ -1065,7 +1066,15 @@ export default {
         {
           title: "活动结束时间",
           align: "center",
-          key: "endTime"
+          key: "endTime",
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (!compareCouponData(row.endTime)) {
+              return <div style="color:red">{row.endTime + "已过期"}</div>;
+            } else {
+              return <div>{row.endTime}</div>;
+            }
+          }
         },
         {
           title: "创建人",
@@ -1184,6 +1193,12 @@ export default {
     },
     editCoupon() {
       this.modalViewLoading = true;
+      this.couponDetail.beginTime = this.$moment(
+        this.couponDetail.beginTime
+      ).format("YYYY-MM-DD HH:mm:ss");
+      this.couponDetail.endTime = this.$moment(
+        this.couponDetail.endTime
+      ).format("YYYY-MM-DD HH:mm:ss");
       editCoupon(this.couponDetail)
         .then(res => {
           this.modalEdit = false;

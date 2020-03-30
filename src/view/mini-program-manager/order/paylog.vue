@@ -528,6 +528,7 @@ export default {
     endTimeChange(value, date) {
       this.paymentLogDetail.endTime = value;
       this.searchRowData.endTime = value;
+  
     }
   }
 };

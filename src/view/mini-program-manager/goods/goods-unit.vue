@@ -115,19 +115,19 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   getProductUnitsPages,
   editProductUnits,
   delProductUnits,
   createProductUnits
-} from "@/api/mini-program";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
+} from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
 
-import { splitConvert } from "@/libs/converStatus";
+import { splitConvert } from '@/libs/converStatus';
 
 const unitDetail = {
   id: "",
@@ -161,29 +161,29 @@ export default {
           align: "center"
         },
         {
-          title: "编号",
-          align: "center",
-          key: "id"
+          title: '编号',
+          align: 'center',
+          key: 'id'
         },
         {
-          title: "单位名称",
-          align: "center",
-          key: "unitName"
+          title: '单位名称',
+          align: 'center',
+          key: 'unitName'
         },
         {
-          title: "是否可拆分",
-          align: "center",
-          key: "splitStatus",
+          title: '是否可拆分',
+          align: 'center',
+          key: 'splitStatus',
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{splitConvert(row.splitStatus).label}</div>;
           }
         },
         {
-          title: "操作",
-          align: "center",
-          key: "handle",
-          options: ["edit", "delete"]
+          title: '操作',
+          align: 'center',
+          key: 'handle',
+          options: ['edit', 'delete']
         }
       ],
       modalViewLoading: false,

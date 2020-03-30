@@ -4,7 +4,7 @@
     :show-upload-list="showUploadList"
     :default-file-list="defaultList"
     :on-success="handleSuccess"
-    :format="['jpg','jpeg','png']"
+    :format="['jpg','jpeg','png','gif']"
     :max-size="imageSize"
     :on-format-error="handleFormatError"
     :on-exceeded-size="handleMaxSize"

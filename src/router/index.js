@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import { constantRouterMap } from './routers';
+import iView from 'view-design';
 import store from '@/store';
-import iView from 'iview';
+import { constantRouterMap } from './routers';
+import { getToken, getNamesByRouters, getSystemHomeName } from '@/libs/util';
 
-import { getToken, getNamesByRouters, getRemember } from '@/libs/util';
 Vue.use(Router);
 
 const router = new Router({
@@ -35,9 +35,11 @@ router.beforeEach((to, from, next) => {
   console.log('token:', token);
   if (token) {
     if (to.name === LOGIN_PAGE_NAME) {
-      // 已登录且要跳转的页面是登录页
+      // 已登录且要跳转的页面是登录页 每个子系统需要单独跳转到自身的首页
+      const name = getSystemHomeName();
       next({
-        name: 'home'
+        name,
+        replace: true
       });
     } else {
       console.log('hasGetInfo: ', store.getters.hasGetInfo);
@@ -45,12 +47,19 @@ router.beforeEach((to, from, next) => {
         store.dispatch('generateAllMenus').then(() => {
           console.log('getActualRouter: ', store.getters.getActualRouter);
           router.addRoutes(store.getters.getActualRouter);
-          next({ ...to,
-            replace: true
-          });
+          const sname = getSystemHomeName();
+          if (sname.indexOf('-home') > 0) {
+            next({
+              name: sname,
+              replace: true
+            })
+          } else {
+            next({ ...to,
+              replace: true
+            });
+          }
         });
       } else {
-        // 没有动态改变权限的需求可直接next()
         console.log('userPermission: ', store.getters.getUserPermission);
         if (hasPermission(store.getters.getUserPermission, to)) {
           next();

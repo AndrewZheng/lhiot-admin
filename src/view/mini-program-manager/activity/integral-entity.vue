@@ -432,7 +432,7 @@ import {
 
 const relationDetail = {
   baseQty: 0,
-  baseUnitName: "",
+  unitName: "",
   description: "",
   detailImage: null,
   entityLimit: 999,
@@ -452,7 +452,7 @@ const relationDetail = {
   standardQty: 0,
   status: "VALID",
   unitId: 0,
-  unitName: null,
+  baseUnitName: null,
   barcode: "", // inherit
   specification: ""
 };

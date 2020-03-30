@@ -2,7 +2,7 @@
   <div class="login-form">
     <Form ref="loginForm" :model="form" :rules="rules" @keydown.enter.native="handleSubmit">
       <FormItem prop="account">
-        <Input size="large" v-model="form.account" placeholder="请输入用户名">
+        <Input v-model="form.account" size="large" placeholder="请输入用户名">
         <span slot="prepend">
           <!--<Icon :size="35" type="ios-person"></Icon>-->
           <img src="../../../src/assets/images/zhanghao.png">
@@ -10,8 +10,8 @@
         </Input>
       </FormItem>
       <FormItem prop="password">
-        <Input v-show="false" prefix="ios-contact" placeholder="Enter name" style="width: auto" />
-        <Input size="large" v-model="form.password" type="password" placeholder="请输入密码">
+        <Input v-show="false" prefix="ios-contact" placeholder="Enter name" style="width: auto" ></Input>
+        <Input v-model="form.password" size="large" type="password" placeholder="请输入密码">
         <span slot="prepend">
           <img src="../../../src/assets/images/mima.png">
         </span>
@@ -91,6 +91,7 @@ export default {
 .checkImage{
   background-image: url('./check_able.png')
 }
+
 .login-form /deep/ .ivu-btn-primary{
   margin-top: 44px;
   width: 500px;
@@ -108,6 +109,7 @@ export default {
     font-stretch: normal;
     letter-spacing: 0px;
     color: #ffffff;
+    margin-bottom: 15px;
   }
 };
 .login-form /deep/ .ivu-input:last-child{
@@ -129,6 +131,7 @@ export default {
   box-shadow: 0px 10px 30px 0px
   rgba(21, 21, 21, 0.1);
 }
+
 .remember_password{
   cursor: pointer;
   display: flex;
