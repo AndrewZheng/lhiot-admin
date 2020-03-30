@@ -152,6 +152,7 @@
             type="primary"
             @click="handleDownload"
           >
+            <!-- 导出 -->
             <Icon type="md-download" />导出订单
           </Button>
           <Button
@@ -361,6 +362,7 @@ import BookTypeOption from "_c/book-type-option";
 
 import {
   getOrderPages,
+  exporGoodsStandard,
   getOrder,
   sendHdManual,
   exportOrder
@@ -897,7 +899,6 @@ export default {
       getOrder({ id: params.row.id })
         .then(res => {
           this.orderDetail = res;
-          // {"id":"94","sex":null,"phone":"18802733447","addressArea":"长沙市","addressDetail":"麓谷企业广场F3栋-万达","isDefault":"yes","userId":"96","contactsName":"周亮"}
           if (this.orderDetail.deliveryAddress) {
             const deliveryInfo = JSON.parse(this.orderDetail.deliveryAddress);
             this.deliveryInfo = _.cloneDeep(deliveryInfo);
@@ -929,22 +930,44 @@ export default {
           this.searchLoading = false;
         });
     },
-    // px1
+    // 导出
     handleDownload() {
+      var tableData;
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
       getOrderPages(this.searchRowData).then(res => {
-        const tableData = res.rows;
+        console.log("数据",res.rows)
+        tableData = res.rows;
         // 恢复正常页数
-        this.searchRowData.rows = 10;
+        this.searchRowData.rows = 20;
+        this.handleDown(tableData);
+      });
+    },
+    handleDown(tableData) {
+      exporGoodsStandard({
+        exportType: "ORDER_INFO"
+      }).then(res => {
+        const tableColumns = res;
         // 表格数据导出字段翻译
+        const _this = this;
         tableData.forEach(item => {
+          console.log("业务员",item["saleUserName"])
+          let deliveryAddress = JSON.parse(item["deliveryAddress"]);
           item["orderCode"] = item["orderCode"] + "";
           item["hdCode"] = item["hdCode"] + "";
+          item["addressArea"] = deliveryAddress.addressArea;
+          item["contactsPhone"] = deliveryAddress.phone;
+          item["contactsName"] = deliveryAddress.contactsName;
+          item["address"] =
+            deliveryAddress.addressArea + deliveryAddress.addressDetail;
           item["totalFee"] = (item["totalFee"] / 100.0).toFixed(2);
           item["discountFee"] = (item["discountFee"] / 100.0).toFixed(2);
           item["payableFee"] = (item["payableFee"] / 100.0).toFixed(2);
           item["deliveryFee"] = (item["deliveryFee"] / 100.0).toFixed(2);
+          item["refundFee"] = (item["refundFee"] / 100.0).toFixed(2);
+          item["actualPayFee"] = (
+            Number(item["payableFee"]) + Number(item["deliveryFee"])
+          ).toFixed(2);
           item["deliverStatus"] = thirdDeliverStatusConvert(
             item["deliverStatus"]
           ).label;
@@ -961,19 +984,26 @@ export default {
           } else {
             item["hdStatus"] = "N/A";
           }
+          if (item["payStatus"] === "paid") {
+            item["payStatus"] = "已支付";
+          } else if (item["hdStatus"] === "unpaid") {
+            item["payStatus"] = "未支付";
+          } else {
+            item["payStatus"] = "N/A";
+          }
           item["payableFee1"] = (
             Number(item["deliveryFee"]) + Number(item["payableFee"])
           ).toFixed(2);
         });
-        this.$refs.tables.handleDownload({
+        this.$refs.tables.handleCustomDownload({
           filename: `普通订单信息-${new Date().valueOf()}`,
-          data: tableData
+          data: tableData,
+          columns: tableColumns
         });
       });
     },
     handleExport(name) {
       if (name === "ORDER_GOODS") {
-        console.log("数据", this.selectedOrderCodes);
         this.searchRowData.orderCodes = this.selectedOrderCodes;
         // 导出订单商品
         exportOrder({

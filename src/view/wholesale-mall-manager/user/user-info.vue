@@ -16,11 +16,11 @@
         @on-delete="handleDelete"
         @on-edit="handleEdit"
         @on-audit="hanldeAudit"
+        @on-user="hanldeUser"
         @on-set-vip="handleSetVip"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
-        <!-- @on-user="hanldeUser" -->
         <div slot="searchCondition">
           <Input
             v-model="searchRowData.phone"
@@ -503,14 +503,13 @@ const userColumns = [
     key: "addressDetail",
     width: 300
   },
-  // "onUser"
   {
     title: "操作",
     align: "center",
     key: "handle",
     fixed: "right",
     width: 180,
-    options: ["setVip", "edit", "saleAudit"]
+    options: ["setVip", "edit", "saleAudit", "onUser"]
   }
 ];
 

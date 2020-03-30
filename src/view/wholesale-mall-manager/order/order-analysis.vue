@@ -134,12 +134,12 @@ export default {
           key: "baseBar",
           minWidth: 60
         },
-        // {
-        //   title: "商品分类",
-        //   align: "center",
-        //   key: "categoryName",
-        //   minWidth: 60
-        // },
+        {
+          title: "商品分类",
+          align: "center",
+          key: "categoryName",
+          minWidth: 60
+        },
         {
           title: "商品名称",
           align: "center",
@@ -152,12 +152,12 @@ export default {
           key: "standard",
           minWidth: 80
         },
-        // {
-        //   title: "商品单价",
-        //   align: "center",
-        //   key: "goodsPrice",
-        //   minWidth: 80
-        // },
+        {
+          title: "商品单价",
+          align: "center",
+          key: "goodsPrice",
+          minWidth: 80
+        },
         {
           title: "商品数量",
           align: "center",
@@ -176,12 +176,12 @@ export default {
           key: "netWeight",
           minWidth: 80
         },
-        // {
-        //   title: "商品总额",
-        //   align: "center",
-        //   key: "goodsSumPrice",
-        //   minWidth: 80
-        // }
+        {
+          title: "商品总额",
+          align: "center",
+          key: "goodsSumPrice",
+          minWidth: 80
+        }
       ]
     };
   },
