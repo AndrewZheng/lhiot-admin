@@ -614,7 +614,13 @@ export const auditUser = (data) => {
     method: 'post'
   });
 };
-
+// 会员类型切换
+export const changeUser = (data) => {
+  return $http.request({
+    url: `/wholesale-small/user/change/user-type/${data.id}?userType=${data.userType}`,
+    method: 'put'
+  });
+};
 /* -------------------------
  * 订单管理
  * -------------------------
@@ -676,7 +682,13 @@ export const exportOrder = (data) => {
     method: 'post'
   });
 };
-
+// /wholesale-small/export/cloumns/{exportType}
+export const exporGoodsStandard = (data) => {
+  return $http.request({
+    url: '/wholesale-small/export/cloumns/' + data.exportType,
+    method: 'get'
+  });
+};
 // 手动发送海鼎
 export const sendHdManual = ({ orderCode }) => {
   return $http.request({
@@ -1031,7 +1043,7 @@ export const deleteFaqCategories = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/faq-category' + ids,
+    url: '/wholesale-small/faq-category/' + ids,
     method: 'delete'
   });
 };
@@ -1348,7 +1360,7 @@ export const getSystemSetting = ({
 // 添加系统参数
 export const createSystemSetting = (data) => {
   return $http.request({
-    url: '/wholesale-small/system-setting/',
+    url: '/wholesale-small/system-setting/create',
     data,
     method: 'post'
   });

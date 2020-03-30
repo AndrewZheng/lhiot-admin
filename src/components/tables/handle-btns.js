@@ -133,6 +133,84 @@ const btns = {
       ])
     ]);
   },
+  onUser: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.userType === 'consumer') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer:true,
+          title: '确认要将此用户转为业务员吗?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-user', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top',transfer:true,content:"转为业务员" },
+        }, [
+          h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+          }, [
+          h('Icon', {
+            props: {
+              type: 'md-repeat',
+              size: 16,
+              color: '#fff'
+            }
+          })
+          ])
+        ])
+      ]);
+    } else {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer:true,
+          title: '确认要将此业务员变为普通用户吗?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-user', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top',transfer:true,content:"转为普通用户" },
+        }, [
+          h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+          }, [
+          h('Icon', {
+            props: {
+              type: 'md-repeat',
+              size: 16,
+              color: '#fff'
+            }
+          })
+          ])
+        ])
+      ]);
+    }
+  },
   relation: (h, params, vm) => {
     return h('Button', {
       props: {

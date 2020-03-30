@@ -94,6 +94,8 @@
           <Page
             :total="total"
             :current="page"
+            :page-size="searchRowData.rows"
+            :page-size-opts="templatePageOpts1"
             show-sizer
             show-total
             @on-change="changePage"
@@ -313,7 +315,7 @@ const roleRowData = {
   hotSearch: "",
   kwType: "",
   page: 1,
-  rows: 10
+  rows: 20
 };
 
 const productStandardDetail = {
@@ -348,7 +350,7 @@ const standardRoleRowData = {
   goodsName: "",
   goodsType: "",
   page: 1,
-  rows: 10,
+  rows: 20,
   vaild: ""
 };
 
@@ -551,7 +553,8 @@ export default {
       defaultGoodsCategoryData: [],
       proCategoryTreeList: [],
       productData: [],
-      templatePageOpts: [5, 10],
+      templatePageOpts: [20, 50],
+      templatePageOpts1: [20, 50],
       productTotal: 0,
       createLoading: false,
       modalProduct: false,

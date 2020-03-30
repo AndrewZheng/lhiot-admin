@@ -101,6 +101,8 @@
           <Page
             :total="total"
             :current="searchRowData.page"
+            :page-size="searchRowData.rows"
+            :page-size-opts="templatePageOpts"
             show-sizer
             show-total
             @on-change="changePage"
@@ -270,7 +272,7 @@ const roleRowData = {
   couponFrom: "",
   phone: "",
   page: 1,
-  rows: 10,
+  rows: 20,
   sidx: "getTime",
   sort: "desc"
 };
@@ -616,7 +618,7 @@ export default {
       defaultListMain: [],
       uploadListMain: [],
       configTableData: [],
-      templatePageOpts: [5, 10],
+      templatePageOpts: [20, 50],
       createLoading: false,
       modalViewLoading: false,
       loadingConfig: false,

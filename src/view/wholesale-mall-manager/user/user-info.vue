@@ -20,6 +20,7 @@
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
+        <!-- @on-user="hanldeUser" -->
         <div slot="searchCondition">
           <Input
             v-model="searchRowData.phone"
@@ -132,6 +133,8 @@
           <Page
             :total="total"
             :current="page"
+            :page-size="20"
+            :page-size-opts="templatePageOpts"
             show-sizer
             show-total
             @on-change="changePage"
@@ -253,6 +256,7 @@ import {
   editUser,
   deleteUser,
   auditUser,
+  changeUser,
   createUser
 } from "@/api/wholesale";
 import tableMixin from "@/mixins/tableMixin.js";
@@ -303,7 +307,7 @@ const roleRowData = {
   userStatus: "",
   salesUserStatus: "",
   page: 1,
-  rows: 10,
+  rows: 20,
   sidx: "registerTime",
   sort: "desc"
 };
@@ -321,14 +325,25 @@ const userColumns = [
     align: "center",
     key: "id",
     fixed: "left",
+    width: 70
+  },
+  {
+    title: "所属地区",
+    align: "center",
+    key: "city",
+    width: 180
+  },
+  {
+    title: "门店代码",
+    align: "center",
+    // key: "city",
     width: 100
   },
   {
     title: "门店名称",
     align: "center",
     key: "shopName",
-    fixed: "left",
-    width: 180
+    width: 140
   },
   {
     title: "店长姓名",
@@ -340,42 +355,19 @@ const userColumns = [
     title: "手机号码",
     align: "center",
     key: "phone",
-    width: 150
+    width: 120
   },
-  // {
-  //   title: "微信头像",
-  //   key: "profilePhoto",
-  //   align: "center",
-  //   maxWidth: 100,
-  //   render: (h, params, vm) => {
-  //     const { row } = params;
-  //     const str = <img src={row.profilePhoto} height="60" width="60" />;
-  //     return <div>{str}</div>;
-  //   }
-  // },
   {
     title: "注册时间",
     align: "center",
     key: "registerTime",
-    width: 200
-  },
-  {
-    title: "城市",
-    align: "center",
-    key: "city",
-    width: 180
-  },
-  {
-    title: "详细地址",
-    align: "center",
-    key: "addressDetail",
-    width: 300
+    width: 160
   },
   {
     title: "用户余额",
     align: "center",
     key: "balance",
-    width: 120,
+    width: 100,
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.balance);
       return <div>{amount}</div>;
@@ -385,7 +377,7 @@ const userColumns = [
     title: "是否VIP",
     align: "center",
     key: "isVip",
-    width: 150,
+    width: 120,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.isVip === "yes") {
@@ -407,7 +399,7 @@ const userColumns = [
     title: "用户类型",
     align: "center",
     key: "userType",
-    width: 150,
+    width: 120,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.userType === "consumer") {
@@ -429,7 +421,7 @@ const userColumns = [
     title: "用户状态",
     align: "center",
     key: "userStatus",
-    width: 150,
+    width: 120,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.userStatus === "certified") {
@@ -462,7 +454,7 @@ const userColumns = [
     title: "业务员状态",
     align: "center",
     key: "salesUserStatus",
-    width: 150,
+    width: 120,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.salesUserStatus === "certified") {
@@ -503,8 +495,15 @@ const userColumns = [
     title: "邀请码",
     align: "center",
     key: "inviteCode",
-    width: 100
+    width: 80
   },
+  {
+    title: "详细地址",
+    align: "center",
+    key: "addressDetail",
+    width: 300
+  },
+  // "onUser"
   {
     title: "操作",
     align: "center",
@@ -523,6 +522,7 @@ export default {
   data() {
     return {
       ids: [],
+      templatePageOpts: [20, 50],
       userStatusEnum,
       userTypeEnum,
       sexEnum,
@@ -583,6 +583,22 @@ export default {
         checkStatus
       }).then(res => {
         this.$Message.info("审核成功");
+        this.getTableData();
+      });
+    },
+    hanldeUser(params) {
+      console.log("转换会员类型", params.row.id);
+      let userType = "";
+      if (params.row.userType === "consumer") {
+        userType = "sale";
+      } else {
+        userType = "consumer";
+      }
+      changeUser({
+        id: params.row.id,
+        userType
+      }).then(res => {
+        this.$Message.info("转换会员类型成功");
         this.getTableData();
       });
     },
@@ -655,6 +671,7 @@ export default {
           this.loading = false;
         });
     },
+    // 导出
     handleDownload() {
       this.exportExcelLoading = true;
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;

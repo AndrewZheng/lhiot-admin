@@ -85,6 +85,8 @@
               <Page
                 :total="total"
                 :current="page"
+                :page-size="searchRowData.rows"
+                :page-size-opts="templatePageOpts"
                 show-sizer
                 show-total
                 @on-change="changePage"
@@ -173,7 +175,7 @@
                     :total="productTotal"
                     :current="searchProductRowData.page"
                     :page-size="searchProductRowData.rows"
-                    :page-size-opts="templatePageOpts"
+                    :page-size-opts="templatePageOpts1"
                     show-sizer
                     show-total
                     @on-change="changeProductPage"
@@ -264,7 +266,7 @@ const roleRowData = {
   goodsStandardId: null,
   goodsName: "",
   page: 1,
-  rows: 10,
+  rows: 20,
   sidx: null,
   sort: "rank"
 };
@@ -561,7 +563,8 @@ export default {
       goodsStandardData: [],
       goodsSectionData: [],
       defaultGoodsSectionData: [],
-      templatePageOpts: [5, 10, 20],
+      templatePageOpts: [20, 50],
+      templatePageOpts1: [5, 20, 50],
       columns: relationColumns,
       standardColumns,
       modalEdit: false,
@@ -858,13 +861,13 @@ export default {
       //   this.$Message.warning("普通商品不允许更换到VIP板块");
       //   // return;
       // } else {
-        if (selectedData.length > 0) {
-          this.goodsStandardRelation.plateId =
-            selectedData[selectedData.length - 1].id;
-        } else {
-          this.goodsStandardRelation.plateId = null;
-        }
-        this.defaultGoodsSectionData = selectedData;
+      if (selectedData.length > 0) {
+        this.goodsStandardRelation.plateId =
+          selectedData[selectedData.length - 1].id;
+      } else {
+        this.goodsStandardRelation.plateId = null;
+      }
+      this.defaultGoodsSectionData = selectedData;
       // }
     },
     hanldeProductClear() {

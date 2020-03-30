@@ -754,7 +754,7 @@ export default {
     },
     handleCreate() {
       if (this.activityStatus === "yes") {
-        this.$Message.error("活动有效期内不允删除!");
+        this.$Message.error("活动有效期内不允许添加新活动!");
         return;
       }
       if (this.tempModalType !== this.modalType.create) {

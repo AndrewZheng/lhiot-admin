@@ -64,6 +64,20 @@
                 class="ml15 mt10 mr15"
               >{{ item.label }}</Option>
             </Select>
+            <Select
+              v-model="searchRowData.isHasPriceRegion"
+              class="ml5 mr5"
+              placeholder="区间价状态"
+              style="width:90px"
+              clearable
+            >
+              <Option
+                v-for="item in hasPriceRegionList"
+                :value="item.value"
+                :key="item.value"
+                class="ml15 mt10 mr15"
+              >{{ item.label }}</Option>
+            </Select>
             <!-- <InputNumber
               v-model="searchMinPrice"
               placeholder="最低价格"
@@ -115,6 +129,14 @@
           <Button v-waves class="search-btn ml5 mr5" type="success" @click="handleCreate">
             <Icon type="md-add" />&nbsp;添加
           </Button>
+          <!-- <Button
+            :loading="downloadLoading"
+            class="search-btn mr2"
+            type="primary"
+            @click="handleDownload"
+          >
+            <Icon type="md-download" />导出商品规格
+          </Button> -->
           <!-- <Poptip
             confirm
             placement="bottom"
@@ -126,9 +148,6 @@
               <Icon type="md-trash" />批量删除
             </Button>
           </Poptip>-->
-          <!-- <Button class="search-btn mr2" type="primary" @click="handleDownload">
-            <Icon type="md-download" /> 导出
-          </Button>-->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -136,6 +155,8 @@
           <Page
             :total="total"
             :current="searchRowData.page"
+            :page-size="20"
+            :page-size-opts="templatePageOpts"
             show-sizer
             show-total
             @on-change="changePage"
@@ -664,7 +685,8 @@ import {
   deleteProductStandard,
   deleteGoodsPriceRegion,
   editProductStandard,
-  editGoodsPriceRegion
+  editGoodsPriceRegion,
+  exporGoodsStandard
 } from "@/api/wholesale";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -705,7 +727,8 @@ const productStandardDetail = {
   vaild: "",
   weight: 0,
   rank: 0, // 先保留后续扩展
-  baseGoodsName: "" // 先保留可扩展
+  baseGoodsName: "", // 先保留可扩展
+  isHasPriceRegion: ""
 };
 
 const roleRowData = {
@@ -718,7 +741,8 @@ const roleRowData = {
   minPrice: "",
   maxPrice: "",
   page: 1,
-  rows: 10
+  rows: 20,
+  isHasPriceRegion: ""
 };
 
 const productDetail = {
@@ -892,8 +916,35 @@ const standardColumns = [
       );
     }
   },
+  {
+    title: "是否有区间价",
+    minWidth: 80,
+    key: "isHasPriceRegion",
+    align: "center",
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.isHasPriceRegion === "yes") {
+        return (
+          <div>
+            <tag color="success">有</tag>
+          </div>
+        );
+      } else if (row.isHasPriceRegion === "no") {
+        return (
+          <div>
+            <tag color="error">无</tag>
+          </div>
+        );
+      }
+      return (
+        <div>
+          <tag color="primary">N/A</tag>
+        </div>
+      );
+    }
+  },
   // {
-  //   title: "商品排序",
+  //   title: "商品排序 ",
   //   align: "center",
   //   minWidth: 60,
   //   key: "rank"
@@ -1012,7 +1063,13 @@ export default {
   mixins: [uploadMixin, deleteMixin, searchMixin, tableMixin],
   data() {
     return {
+      templatePageOpts: [20, 50],
+      hasPriceRegionList: [
+        { label: "有", value: "no" },
+        { label: "无", value: "yes" }
+      ],
       productTotal: 0,
+      downloadLoading: false,
       regionTotal: 0,
       unitsList: [],
       descriptionList: [],
@@ -1458,13 +1515,13 @@ export default {
             this.$Message.error("区间价不能高于商品原价!");
             return;
           }
-          if (
-            this.goodsPriceRegion.maxQuantity <
-            this.goodsPriceRegion.minQuantity
-          ) {
-            this.$Message.error("最高起购份数不能小于最低起购份数!");
-            return;
-          }
+          // if (
+          //   this.goodsPriceRegion.maxQuantity <
+          //   this.goodsPriceRegion.minQuantity
+          // ) {
+          //   this.$Message.error("最高起购份数不能小于最低起购份数!");
+          //   return;
+          // }
           //后期发版 屏蔽最高购买份数
           // if (this.priceRegionData.length > 0) {
           //   for (let i = 0; i < this.priceRegionData.length; i++) {
@@ -1595,23 +1652,42 @@ export default {
       // this.setDefaultUploadList(this.productStandardDetail);
       this.modalProduct = false;
     },
+    // 导出
     handleDownload() {
-      // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
+      var tableData;
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
       getProductStandardsPages(this.searchRowData).then(res => {
-        const tableData = res.rows;
-        // 恢复正常页数
-        this.searchRowData.rows = 10;
+        tableData = res.rows;
+        this.searchRowData.rows = 20;
+        this.handleDown(tableData);
+      });
+    },
+    handleDown(tableData) {
+      exporGoodsStandard({
+        exportType: "GOODS_STANDARD"
+      }).then(res => {
+        const tableColumns = res;
         // 表格数据导出字段翻译
+        const _this = this;
         tableData.forEach(item => {
           item["price"] = (item["price"] / 100.0).toFixed(2);
           item["salePrice"] = (item["salePrice"] / 100.0).toFixed(2);
           item["svipPrice"] = (item["svipPrice"] / 100.0).toFixed(2);
-          item["vaild"] = customPlanStatusConvert(item["vaild"]).label;
+          if (item["vaild"] === "yes") {
+            item["vaild"] = "上架";
+          } else {
+            item["vaild"] = "下架";
+          }
+          if (item["goodsArea"] === "domestic") {
+            item["goodsArea"] = "国产";
+          } else if (item["goodsArea"] === "imported") {
+            item["goodsArea"] = "进口";
+          }
         });
-        this.$refs.tables.handleDownload({
+        this.$refs.tables.handleCustomDownload({
           filename: `商品规格-${new Date().valueOf()}`,
-          data: tableData
+          data: tableData,
+          columns: tableColumns
         });
       });
     },

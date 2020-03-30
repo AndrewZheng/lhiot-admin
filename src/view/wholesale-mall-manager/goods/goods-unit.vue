@@ -66,6 +66,8 @@
           <Page
             :total="total"
             :current="page"
+            :page-size="searchRowData.rows"
+            :page-size-opts="templatePageOpts"
             show-sizer
             show-total
             @on-change="changePage"
@@ -100,27 +102,27 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
+import Tables from "_c/tables";
 import {
   getProductUnitsPages,
   editProductUnits,
   delProductUnits,
   createProductUnits
-} from '@/api/wholesale';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
+} from "@/api/wholesale";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import deleteMixin from "@/mixins/deleteMixin.js";
 
 const unitDetail = {
   id: 0,
-  unitCode: '',
-  unitName: ''
+  unitCode: "",
+  unitName: ""
 };
 
 const roleRowData = {
-  unitName: '',
+  unitName: "",
   page: 1,
-  rows: 10
+  rows: 20
 };
 
 export default {
@@ -131,41 +133,42 @@ export default {
   data() {
     return {
       ids: [],
+      templatePageOpts: [20, 50],
       loadingSubmit: false,
       clearSearchLoading: false,
       searchRowData: this._.cloneDeep(roleRowData),
       unitDetail: this._.cloneDeep(unitDetail),
       ruleInline: {
-        unitCode: { required: true, message: '请填写单位编码' },
-        unitName: { required: true, message: '请填写单位名称' }
+        unitCode: { required: true, message: "请填写单位编码" },
+        unitName: { required: true, message: "请填写单位名称" }
       },
       columns: [
         {
-          type: 'selection',
-          key: '',
+          type: "selection",
+          key: "",
           width: 60,
-          align: 'center'
+          align: "center"
         },
         {
-          title: '编号',
-          align: 'center',
-          key: 'id'
+          title: "编号",
+          align: "center",
+          key: "id"
         },
         {
-          title: '单位编码',
-          align: 'center',
-          key: 'unitCode'
+          title: "单位编码",
+          align: "center",
+          key: "unitCode"
         },
         {
-          title: '单位名称',
-          align: 'center',
-          key: 'unitName'
+          title: "单位名称",
+          align: "center",
+          key: "unitName"
         },
         {
-          title: '操作',
-          align: 'center',
-          key: 'handle',
-          options: ['edit', 'delete']
+          title: "操作",
+          align: "center",
+          key: "handle",
+          options: ["edit", "delete"]
         }
       ]
     };
@@ -204,7 +207,7 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error('请完善商品单位信息!');
+          this.$Message.error("请完善商品单位信息!");
         }
       });
     },
@@ -213,9 +216,10 @@ export default {
       editProductUnits(this.unitDetail)
         .then(res => {
           this.modalEdit = false;
-          this.$Message.info('修改成功！')
+          this.$Message.info("修改成功！");
           this.getTableData();
-        }).finally(() => {
+        })
+        .finally(() => {
           this.loadingSubmit = false;
         });
     },
@@ -224,7 +228,7 @@ export default {
       createProductUnits(this.unitDetail)
         .then(res => {
           this.modalEdit = false;
-          this.$Message.info('创建成功！')
+          this.$Message.info("创建成功！");
           this.getTableData();
         })
         .finally(() => {

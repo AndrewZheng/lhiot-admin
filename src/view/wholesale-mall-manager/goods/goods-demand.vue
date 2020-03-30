@@ -86,6 +86,8 @@
           <Page
             :total="total"
             :current="page"
+            :page-size="searchRowData.rows"
+            :page-size-opts="templatePageOpts"
             show-sizer
             show-total
             @on-change="changePage"
@@ -98,42 +100,40 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
+import Tables from "_c/tables";
 import {
   getDemandGoodsPages,
   editDemandGoods,
   deleteDemandGoods,
   createDemandGoods
-} from '@/api/wholesale';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import {
-  fenToYuanDot2
-} from '@/libs/util';
+} from "@/api/wholesale";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import { fenToYuanDot2 } from "@/libs/util";
 
 const demandGoods = {
-  comments: '',
-  contactPhone: '',
-  createTime: '',
-  goodsBrand: '',
-  goodsName: '',
-  goodsStandard: '',
+  comments: "",
+  contactPhone: "",
+  createTime: "",
+  goodsBrand: "",
+  goodsName: "",
+  goodsStandard: "",
   id: 0,
   referencePrice: 0,
-  supplier: '',
+  supplier: "",
   userId: 0,
-  userName: '',
-  shopName: ''
+  userName: "",
+  shopName: ""
 };
 
 const roleRowData = {
-  userName: '',
-  contactPhone: '',
+  userName: "",
+  contactPhone: "",
   regBeginTime: null,
   regEndTime: null,
   page: 1,
-  rows: 10
+  rows: 20
 };
 
 export default {
@@ -144,6 +144,7 @@ export default {
   data() {
     return {
       ids: [],
+      templatePageOpts: [20, 50],
       salesManList: [],
       modalViewLoading: false,
       clearSearchLoading: false,
@@ -152,57 +153,57 @@ export default {
       demandGoods: _.cloneDeep(demandGoods),
       columns: [
         {
-          type: 'selection',
-          key: '',
+          type: "selection",
+          key: "",
           width: 60,
-          align: 'center'
+          align: "center"
         },
         {
-          title: '编号',
-          align: 'center',
-          key: 'id',
+          title: "编号",
+          align: "center",
+          key: "id",
           minWidth: 40
         },
         {
-          title: '门店名称',
-          align: 'center',
-          key: 'shopName',
+          title: "门店名称",
+          align: "center",
+          key: "shopName",
           minWidth: 100
         },
         {
-          title: '店长姓名',
-          align: 'center',
-          key: 'userName',
+          title: "店长姓名",
+          align: "center",
+          key: "userName",
           minWidth: 60
         },
         {
-          title: '手机号码',
-          align: 'center',
-          key: 'contactPhone',
+          title: "手机号码",
+          align: "center",
+          key: "contactPhone",
           minWidth: 80
         },
         {
-          title: '商品名称',
-          align: 'center',
-          key: 'goodsName',
+          title: "商品名称",
+          align: "center",
+          key: "goodsName",
           minWidth: 80
         },
         {
-          title: '商品品牌',
-          align: 'center',
-          key: 'goodsBrand',
+          title: "商品品牌",
+          align: "center",
+          key: "goodsBrand",
           minWidth: 80
         },
         {
-          title: '商品规格',
-          align: 'center',
-          key: 'goodsStandard',
+          title: "商品规格",
+          align: "center",
+          key: "goodsStandard",
           minWidth: 80
         },
         {
-          title: '参考价格',
-          align: 'center',
-          key: 'referencePrice',
+          title: "参考价格",
+          align: "center",
+          key: "referencePrice",
           minWidth: 80,
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.referencePrice);
@@ -210,21 +211,21 @@ export default {
           }
         },
         {
-          title: '供应商',
-          align: 'center',
-          key: 'supplier',
+          title: "供应商",
+          align: "center",
+          key: "supplier",
           minWidth: 100
         },
         {
-          title: '备注',
-          align: 'center',
-          key: 'comments',
+          title: "备注",
+          align: "center",
+          key: "comments",
           minWidth: 120
         },
         {
-          title: '提交时间',
-          align: 'center',
-          key: 'createTime',
+          title: "提交时间",
+          align: "center",
+          key: "createTime",
           minWidth: 100
         }
       ]
@@ -266,7 +267,7 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error('请完善商品单位信息!');
+          this.$Message.error("请完善商品单位信息!");
         }
       });
     },
@@ -325,7 +326,7 @@ export default {
           this.searchRowData.rows = 10;
           // 表格数据导出字段翻译
           tableData.forEach(item => {
-            item.referencePrice = (item.referencePrice / 100.0).toFixed(2)
+            item.referencePrice = (item.referencePrice / 100.0).toFixed(2);
           });
           this.$refs.tables.handleDownload({
             filename: `新品需求信息-${new Date().valueOf()}`,
@@ -341,5 +342,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>

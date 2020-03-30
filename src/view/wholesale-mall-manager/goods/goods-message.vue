@@ -42,7 +42,7 @@
                   class="search-input mr5"
                   style="width: auto"
                   clearable
-                ></Input> -->
+                ></Input>-->
                 <Input
                   v-model="searchRowData.goodsName"
                   placeholder="商品名称"
@@ -70,12 +70,7 @@
               </Row>
             </div>
             <div slot="operations">
-              <Button
-                v-waves
-                type="warning"
-                class="mr5"
-                @click="handleBack"
-              >
+              <Button v-waves type="warning" class="mr5" @click="handleBack">
                 <Icon type="ios-arrow-back" />&nbsp;返回全部分类
               </Button>
               <Button
@@ -103,6 +98,8 @@
               <Page
                 :total="total"
                 :current="searchRowData.page"
+                :page-size="20"
+                :page-size-opts="templatePageOpts"
                 show-sizer
                 show-total
                 @on-change="changePage"
@@ -167,7 +164,7 @@
               <i-col span="8">商品主图:</i-col>
               <i-col v-show="productDetail.goodsImage" span="16">
                 <div class="demo-upload-list">
-                  <img :src="productDetail.goodsImage" >
+                  <img :src="productDetail.goodsImage" />
                   <div class="demo-upload-list-cover">
                     <Icon
                       type="ios-eye-outline"
@@ -183,7 +180,7 @@
               <i-col span="8">服务保障图:</i-col>
               <i-col v-show="productDetail.otherImage" span="16">
                 <div class="demo-upload-list">
-                  <img :src="productDetail.otherImage" >
+                  <img :src="productDetail.otherImage" />
                   <div class="demo-upload-list-cover">
                     <Icon
                       type="ios-eye-outline"
@@ -205,7 +202,7 @@
               class="demo-upload-list"
             >
               <div>
-                <img :src="item" >
+                <img :src="item" />
                 <div class="demo-upload-list-cover">
                   <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                 </div>
@@ -216,8 +213,16 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="3">商品描述:</i-col>
+              <i-col span="3">商品特征:</i-col>
               <i-col span="21">{{ productDetail.goodsDes }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="3">售后标准:</i-col>
+              <i-col span="21">{{ productDetail.afterDes }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -238,7 +243,7 @@
               <FormItem label="商品编码:" prop="goodsCode">
                 <Input v-model="productDetail.goodsCode" placeholder="商品编码(不必填)"></Input>
               </FormItem>
-            </i-col> -->
+            </i-col>-->
             <i-col span="12">
               <FormItem label="商品名称:" prop="goodsName">
                 <Input v-model="productDetail.goodsName" placeholder="商品名称"></Input>
@@ -290,7 +295,7 @@
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" >
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -324,7 +329,7 @@
                 >
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" >
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveDetail(item)"></Icon>
@@ -361,7 +366,7 @@
                 >
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" >
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMultiple(item)"></Icon>
@@ -391,13 +396,53 @@
             </i-col>
           </Row>
           <Row>
+            <i-col span="12">
+              <FormItem label="区域:" prop="goodsArea">
+                <Select :value="productDetail.goodsArea" @on-change="goodsAreaChange">
+                  <Option
+                    v-for="(item,index) in goodsAreaList"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="品牌:" prop="goodsBrand">
+                <Input v-model="productDetail.goodsBrand" placeholder="品牌"></Input>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
+              <FormItem label="产地:" prop="placeOfOrigin">
+                <Input v-model="productDetail.placeOfOrigin" placeholder="产地"></Input>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
             <i-col span="24">
-              <FormItem label="商品描述:" prop="goodsDes">
+              <FormItem label="商品特征:" prop="goodsDes">
                 <Input
                   v-model="productDetail.goodsDes"
                   :autosize="{minRows: 6,maxRows: 15}"
-                  placeholder="请输入商品描述..."
-                  type="textarea"></Input>
+                  placeholder="请输入商品特征..."
+                  type="textarea"
+                ></Input>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="24">
+              <FormItem label="售后标准:" prop="afterDes">
+                <Input
+                  v-model="productDetail.afterDes"
+                  :autosize="{minRows: 6,maxRows: 15}"
+                  placeholder="请输入售后标准..."
+                  type="textarea"
+                ></Input>
               </FormItem>
             </i-col>
           </Row>
@@ -410,7 +455,7 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" >
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
 
     <Modal v-model="modalSort" :mask-closable="false" title="图片排序">
@@ -426,7 +471,7 @@
             class="drag-item"
             width="80"
             height="80"
-          >
+          />
         </drag-list>
       </div>
       <div slot="footer">
@@ -438,10 +483,10 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
-import DragList from '_c/drag-list';
-import CommonIcon from '_c/common-icon';
+import Tables from "_c/tables";
+import IViewUpload from "_c/iview-upload";
+import DragList from "_c/drag-list";
+import CommonIcon from "_c/common-icon";
 
 import {
   createProduct,
@@ -451,33 +496,37 @@ import {
   getProductPages,
   getProductCategoriesTree,
   getProductUnits
-} from '@/api/wholesale';
+} from "@/api/wholesale";
 import {
   buildMenu,
   convertTreeCategory,
   setWholesaleGoods,
   convertTree
-} from '@/libs/util';
+} from "@/libs/util";
 
-import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
 
 const productDetail = {
   id: 0,
-  goodsCode: '',
-  goodsName: '',
-  goodsImage: '',
-  goodsDes: '',
+  goodsCode: "",
+  goodsName: "",
+  goodsImage: "",
+  goodsDes: "",
   categoryId: 0,
   stockLimit: 0,
-  unitName: '',
-  groupName: '',
-  baseBar: '',
-  baseUnit: '', // 默认千克
-  goodsImages: '',
-  otherImage: ''
+  unitName: "",
+  groupName: "",
+  baseBar: "",
+  baseUnit: "", // 默认千克
+  goodsImages: "",
+  otherImage: "",
+  goodsArea: "",
+  goodsBrand: "",
+  placeOfOrigin: "",
+  afterDes: ""
 };
 
 const roleRowData = {
@@ -486,7 +535,7 @@ const roleRowData = {
   goodsName: null,
   baseBar: null,
   page: 1,
-  rows: 10
+  rows: 20
 };
 
 export default {
@@ -499,6 +548,7 @@ export default {
   data() {
     return {
       menuData: [],
+      templatePageOpts: [20, 50],
       descriptionList: [],
       uploadListMain: [],
       uploadListDetail: [],
@@ -517,53 +567,61 @@ export default {
       searchRowData: _.cloneDeep(roleRowData),
       productDetail: _.cloneDeep(productDetail),
       currentGroupId: 0,
-      currentName: '全部分类',
+      currentName: "全部分类",
       dropConClass: {
-        left: ['drop-box', 'left-drop-box'],
-        right: ['drop-box', 'right-drop-box']
+        left: ["drop-box", "left-drop-box"],
+        right: ["drop-box", "right-drop-box"]
       },
+      goodsAreaList: [
+        { label: "国产", value: "domestic" },
+        { label: "进口", value: "imported" }
+      ],
       ruleInline: {
-        goodsCode: [{ required: false, message: '请输入商品编码' }],
-        goodsName: [{ required: true, message: '请输入商品名称' }],
-        baseUnit: [{ required: true, message: '请选择商品单位' }],
-        baseBar: [{ required: true, message: '请输入基础条码' }],
-        goodsDes: [{ required: true, message: '请输入商品描述' }],
-        categoryId: [{ required: true, message: '请选择商品分类' }],
-        goodsImage: [{ required: true, message: '请上传商品主图' }],
-        goodsImages: [{ required: true, message: '请上传商品详情图' }],
+        goodsCode: [{ required: false, message: "请输入商品编码" }],
+        goodsName: [{ required: true, message: "请输入商品名称" }],
+        baseUnit: [{ required: true, message: "请选择商品单位" }],
+        baseBar: [{ required: true, message: "请输入基础条码" }],
+        goodsDes: [{ required: true, message: "请输入商品特诊" }],
+        afterDes: [{ required: true, message: "请输入售后标准" }],
+        goodsArea: [{ required: true, message: "请选择商品区域" }],
+        goodsBrand: [{ required: true, message: "请输入商品品牌" }],
+        placeOfOrigin: [{ required: true, message: "请输入商品产地" }],
+        categoryId: [{ required: true, message: "请选择商品分类" }],
+        goodsImage: [{ required: true, message: "请上传商品主图" }],
+        goodsImages: [{ required: true, message: "请上传商品详情图" }],
         // otherImage: [{ required: true, message: '请上传服务保障图' }],
-        stockLimit: [{ required: true, message: '请输入安全库存' }]
+        stockLimit: [{ required: true, message: "请输入安全库存" }]
       },
       columns: [
         {
-          title: 'ID',
-          key: 'id',
+          title: "ID",
+          key: "id",
           minWidth: 80,
-          align: 'center',
-          fixed: 'left'
+          align: "center",
+          fixed: "left"
         },
         {
-          title: '商品图片',
-          key: 'goodsImage',
-          align: 'center',
+          title: "商品图片",
+          key: "goodsImage",
+          align: "center",
           minWidth: 120,
           render: (h, params, vm) => {
             const { row } = params;
-            const str = <img src={row.goodsImage} height='60' width='60' />;
+            const str = <img src={row.goodsImage} height="60" width="60" />;
             return <div>{str}</div>;
           }
         },
         {
-          title: '商品名称',
-          align: 'center',
+          title: "商品名称",
+          align: "center",
           sortable: true,
-          key: 'goodsName',
+          key: "goodsName",
           minWidth: 120
         },
         {
-          title: '商品类别',
-          align: 'center',
-          key: 'categoryId',
+          title: "商品类别",
+          align: "center",
+          key: "categoryId",
           minWidth: 120,
           render: (h, params) => {
             const { row } = params;
@@ -571,35 +629,35 @@ export default {
               item => row.categoryId === item.id
             );
             if (obj) {
-              return h('span', obj.title);
+              return h("span", obj.title);
             }
-            return h('span', row.categoryId);
+            return h("span", row.categoryId);
           }
         },
         {
-          title: '基础条码',
-          align: 'center',
-          key: 'baseBar',
+          title: "基础条码",
+          align: "center",
+          key: "baseBar",
           sortable: true,
           minWidth: 140
         },
         {
-          title: '基础单位',
-          align: 'center',
+          title: "基础单位",
+          align: "center",
           minWidth: 90,
-          key: 'unitName'
+          key: "unitName"
         },
         {
-          title: '安全库存',
-          align: 'center',
+          title: "安全库存",
+          align: "center",
           minWidth: 90,
-          key: 'stockLimit'
+          key: "stockLimit"
         },
         {
-          title: '操作',
+          title: "操作",
           minWidth: 150,
-          key: 'handle',
-          options: ['view', 'edit', 'settings']
+          key: "handle",
+          options: ["view", "edit", "settings"]
         }
       ]
     };
@@ -629,7 +687,7 @@ export default {
     getProductUnits() {
       getProductUnits().then(res => {
         res.forEach(value => {
-          const map = { label: 'label', value: 'value' };
+          const map = { label: "label", value: "value" };
           map.value = value.unitCode;
           map.label = value.unitName;
           this.unitsList.push(map);
@@ -646,9 +704,9 @@ export default {
             this.proCategoryTreeList = res;
             const menuList = buildMenu(res);
             const map = {
-              id: 'id',
-              title: 'title',
-              children: 'children'
+              id: "id",
+              title: "title",
+              children: "children"
             };
             this.goodsCategoryData = convertTreeCategory(menuList, map, true);
           }
@@ -675,7 +733,7 @@ export default {
       this.uploadListMultiple = [];
     },
     handleBack() {
-      this.currentName = '全部分类';
+      this.currentName = "全部分类";
       this.handleClear();
     },
     handleCreate() {
@@ -690,7 +748,7 @@ export default {
       var rows = params.row;
       setWholesaleGoods(rows);
       this.turnToPage({
-        name: 'wholesale-goods-relation-standard',
+        name: "wholesale-goods-relation-standard",
         params: { productId: params.row.id, unitsList: this.unitsList }
       });
     },
@@ -701,16 +759,16 @@ export default {
           this.descriptionList.push(item.url);
         }
       });
-      this.productDetail.goodsImages = '';
-      this.productDetail.goodsImages = this.descriptionList.join(',');
-      console.log('after sort:', this.productDetail.goodsImages);
+      this.productDetail.goodsImages = "";
+      this.productDetail.goodsImages = this.descriptionList.join(",");
+      console.log("after sort:", this.productDetail.goodsImages);
       this.modalSort = false;
     },
     handleView(params) {
       this.tempModalType = this.modalType.view;
       this.productDetail = _.cloneDeep(params.row);
       if (this.productDetail.goodsImages) {
-        this.descriptionList = this.productDetail.goodsImages.split(',');
+        this.descriptionList = this.productDetail.goodsImages.split(",");
       }
       this.modalView = true;
     },
@@ -719,15 +777,14 @@ export default {
       this.tempModalType = this.modalType.edit;
       getProduct({
         id: params.row.id
-      })
-        .then(res => {
-          this.productDetail = res;
-          this.setDefaultUploadList(res);
-          this.defaultGoodsCategoryData = [];
-          this.findGroupId(this.productDetail.categoryId);
-          this.defaultGoodsCategoryData.reverse();
-          this.modalEdit = true;
-        })
+      }).then(res => {
+        this.productDetail = res;
+        this.setDefaultUploadList(res);
+        this.defaultGoodsCategoryData = [];
+        this.findGroupId(this.productDetail.categoryId);
+        this.defaultGoodsCategoryData.reverse();
+        this.modalEdit = true;
+      });
     },
     createProduct() {
       this.modalViewLoading = true;
@@ -736,7 +793,7 @@ export default {
       })
         .then(res => {
           this.modalEdit = false;
-          this.$Message.success('创建成功!');
+          this.$Message.success("创建成功!");
           this.getTableData();
         })
         .finally(() => {
@@ -750,7 +807,7 @@ export default {
       })
         .then(res => {
           this.modalEdit = false;
-          this.$Message.success('修改成功!');
+          this.$Message.success("修改成功!");
           this.getTableData();
         })
         .finally(() => {
@@ -766,7 +823,7 @@ export default {
             this.editProduct();
           }
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
     },
@@ -824,7 +881,7 @@ export default {
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.goodsImage != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.goodsImage;
         mainImgArr.push(map);
@@ -833,7 +890,7 @@ export default {
       }
 
       if (res.otherImage != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const detailImgArr = [];
         map.url = res.otherImage;
         detailImgArr.push(map);
@@ -843,9 +900,9 @@ export default {
 
       if (res.goodsImages != null) {
         const descriptionImgArr = [];
-        const descriptionArr = res.goodsImages.split(',');
+        const descriptionArr = res.goodsImages.split(",");
         descriptionArr.forEach(value => {
-          const innerMapDetailImg = { status: 'finished', url: 'url' };
+          const innerMapDetailImg = { status: "finished", url: "url" };
           innerMapDetailImg.url = value;
           descriptionImgArr.push(innerMapDetailImg);
         });
@@ -896,10 +953,10 @@ export default {
       const index = this.productDetail.goodsImages.indexOf(file.url);
       if (index > -1) {
         if (this.productDetail.goodsImages) {
-          this.descriptionList = this.productDetail.goodsImages.split(',');
+          this.descriptionList = this.productDetail.goodsImages.split(",");
         }
         this.descriptionList = _.without(this.descriptionList, file.url);
-        this.productDetail.goodsImages = this.descriptionList.join(',');
+        this.productDetail.goodsImages = this.descriptionList.join(",");
       }
       if (this.productDetail.goodsImages.length === 0) {
         this.$refs.uploadMultiple.clearFileList();
@@ -928,8 +985,8 @@ export default {
           this.descriptionList.push(value.url);
         }
       });
-      this.productDetail.goodsImages = '';
-      this.productDetail.goodsImages = this.descriptionList.join(',');
+      this.productDetail.goodsImages = "";
+      this.productDetail.goodsImages = this.descriptionList.join(",");
       console.log(this.productDetail.goodsImages);
       console.log(JSON.stringify(this.productDetail.goodsImages));
     },
@@ -939,8 +996,8 @@ export default {
         if (res && res.length > 0) {
           const menuList = buildMenu(res);
           const map = {
-            title: 'title',
-            children: 'children'
+            title: "title",
+            children: "children"
           };
           this.menuData = convertTree(menuList, map, true);
           if (this.menuData.length > 0) {
@@ -950,18 +1007,18 @@ export default {
       });
     },
     renderContent(h, { root, node, data }) {
-      if (data.type == 'PARENT') {
+      if (data.type == "PARENT") {
         return (
           <div
             style={{
-              display: 'inline-block',
-              width: '100%',
-              fontSize: '14px',
-              cursor: 'pointer'
+              display: "inline-block",
+              width: "100%",
+              fontSize: "14px",
+              cursor: "pointer"
             }}
           >
             <span>
-              <CommonIcon type='ios-folder' class='mr10' />
+              <CommonIcon type="ios-folder" class="mr10" />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -972,14 +1029,14 @@ export default {
         return (
           <div
             style={{
-              display: 'inline-block',
-              width: '100%',
-              fontSize: '14px',
-              cursor: 'pointer'
+              display: "inline-block",
+              width: "100%",
+              fontSize: "14px",
+              cursor: "pointer"
             }}
           >
             <span>
-              <CommonIcon type='ios-paper' class='mr10' />
+              <CommonIcon type="ios-paper" class="mr10" />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -991,9 +1048,9 @@ export default {
     handleClick({ root, node, data }) {
       this.loading = true;
       // 展开当前节点
-      if (typeof data.expand === 'undefined') {
+      if (typeof data.expand === "undefined") {
         // this.$set(data, 'expend', true);
-        this.$set(data, 'expend', false);
+        this.$set(data, "expend", false);
         if (data.children) {
           this.expandChildren(data.children);
         }
@@ -1008,6 +1065,9 @@ export default {
     },
     uniteChange(value) {
       this.productDetail.baseUnit = value;
+    },
+    goodsAreaChange(value) {
+      this.productDetail.goodsArea = value;
     }
   }
 };

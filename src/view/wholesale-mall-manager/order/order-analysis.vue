@@ -59,6 +59,8 @@
           <Page
             :total="total"
             :current="page"
+            :page-size="20"
+            :page-size-opts="templatePageOpts"
             show-sizer
             show-total
             @on-change="changePage"
@@ -73,9 +75,7 @@
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
 import _ from "lodash";
-import {
-  getOrderGoodsToday
-} from "@/api/wholesale";
+import { getOrderGoodsToday } from "@/api/wholesale";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -97,13 +97,16 @@ const goodsToday = {
   goodsWeight: 0,
   netWeight: 0,
   quanity: 0,
-  standard: ""
+  standard: "",
+  goodsSumPrice: "",
+  goodsPrice: "",
+  categoryName: ""
 };
 
 const roleRowData = {
   goodsName: "",
   page: 1,
-  rows: 10
+  rows: 20
 };
 
 export default {
@@ -114,6 +117,7 @@ export default {
   data() {
     return {
       ids: [],
+      templatePageOpts: [20, 50],
       salesManList: [],
       userStatusEnum,
       userTypeEnum,
@@ -125,27 +129,39 @@ export default {
       goodsToday: _.cloneDeep(goodsToday),
       columns: [
         {
+          title: "商品条码",
+          align: "center",
+          key: "baseBar",
+          minWidth: 60
+        },
+        // {
+        //   title: "商品分类",
+        //   align: "center",
+        //   key: "categoryName",
+        //   minWidth: 60
+        // },
+        {
           title: "商品名称",
           align: "center",
           key: "goodsName",
           minWidth: 100
         },
         {
-          title: "商品条码",
+          title: "商品规格",
           align: "center",
-          key: "baseBar",
-          minWidth: 60
+          key: "standard",
+          minWidth: 80
         },
+        // {
+        //   title: "商品单价",
+        //   align: "center",
+        //   key: "goodsPrice",
+        //   minWidth: 80
+        // },
         {
           title: "商品数量",
           align: "center",
           key: "quanity",
-          minWidth: 80
-        },
-        {
-          title: "商品规格",
-          align: "center",
-          key: "standard",
           minWidth: 80
         },
         {
@@ -159,7 +175,13 @@ export default {
           align: "center",
           key: "netWeight",
           minWidth: 80
-        }
+        },
+        // {
+        //   title: "商品总额",
+        //   align: "center",
+        //   key: "goodsSumPrice",
+        //   minWidth: 80
+        // }
       ]
     };
   },

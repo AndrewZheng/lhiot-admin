@@ -88,7 +88,7 @@
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
             </Button>
-          </Poptip> -->
+          </Poptip>-->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -96,6 +96,8 @@
           <Page
             :total="total"
             :current="searchRowData.page"
+            :page-size="searchRowData.rows"
+            :page-size-opts="templatePageOpts"
             show-sizer
             show-total
             @on-change="changePage"
@@ -217,7 +219,7 @@ const roleRowData = {
   endTime: null,
   startTime: null,
   page: 1,
-  rows: 10
+  rows: 20
 };
 
 export default {
@@ -228,6 +230,7 @@ export default {
   data() {
     return {
       activityTypeEnum,
+      templatePageOpts: [20, 50],
       activityStatusEnum,
       couponTemplateTypeEnum,
       defaultListMain: [],
@@ -351,7 +354,7 @@ export default {
           align: "center",
           minWidth: 80,
           key: "handle",
-          options: ["onSale", "edit",]
+          options: ["onSale", "edit"]
         }
       ]
     };

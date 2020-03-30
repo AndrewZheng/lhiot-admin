@@ -82,6 +82,8 @@
           <Page
             :total="total"
             :current="page"
+            :page-size="searchRowData.rows"
+            :page-size-opts="templatePageOpts"
             show-sizer
             show-total
             @on-change="changePage"
@@ -218,7 +220,7 @@ const roleRowData = {
   userName: "",
   phone: "",
   page: 1,
-  rows: 10
+  rows: 20
 };
 
 const userDetail = {
@@ -334,6 +336,7 @@ export default {
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
     return {
+      templatePageOpts: [20, 50],
       selectedUserIds: [],
       currentSalesId: null,
       assginSalesUserId: null,
@@ -529,7 +532,7 @@ export default {
       this.searchRowData = _.cloneDeep(roleRowData);
     },
     resetSearchUserRowData() {
-      this.searchUserRowData= _.cloneDeep(userRowData);
+      this.searchUserRowData = _.cloneDeep(userRowData);
     },
     handleAdd() {
       this.$refs.editForm.resetFields();

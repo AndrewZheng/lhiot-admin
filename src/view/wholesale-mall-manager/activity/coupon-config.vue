@@ -109,6 +109,8 @@
           <Page
             :total="total"
             :current="searchRowData.page"
+            :page-size="searchRowData.rows"
+            :page-size-opts="templatePageOpts"
             show-sizer
             show-total
             @on-change="changePage"
@@ -368,7 +370,7 @@ const roleRowData = {
   endTime: null,
   startTime: null,
   page: 1,
-  rows: 10
+  rows: 20
 };
 
 const couponTemplate = {
@@ -498,6 +500,7 @@ export default {
   data() {
     return {
       couponFromEnum,
+      templatePageOpts: [20, 50],
       activityTypeEnum,
       activityStatusEnum,
       couponTemplateTypeEnum,
