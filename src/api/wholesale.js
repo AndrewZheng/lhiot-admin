@@ -673,7 +673,14 @@ export const getOrder = ({
     method: 'get'
   });
 };
-
+// wholesale-small/order/print/order 
+export const getPrintOrder = (data) => {
+  return $http.request({
+    url: '/wholesale-small/order/print/order',
+    data,
+    method: 'post',
+  });
+};
 // 无前端页面的通用后台导出API
 export const exportOrder = (data) => {
   return $http.request({
