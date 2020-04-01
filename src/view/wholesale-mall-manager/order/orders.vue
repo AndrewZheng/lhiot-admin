@@ -175,7 +175,7 @@
             :loading="downloadLoading"
             class="search-btn mr2"
             type="success"
-            @click="previewPrinting"
+            @click="onlinePrinting"
           >
             <Icon type="md-download" />在线打印
           </Button>
@@ -362,14 +362,9 @@
       </div>
     </Modal>
     <!-- 在线打印 -->
-    <Modal
-      v-model="modalPrinting"
-      :width="1200"
-      :mask-closable="false"
-      :footer-hide="true"
-      @on-visible-change="handClose"
-    >
-      <table border="1" height="300" width="1000" cellspacing="0" cellpadding="0" align="center">
+
+    <div ref="printTable">
+      <table border="1" height="700" width="1000" cellspacing="0" cellpadding="0" align="center">
         <thead>
           <tr align="center">
             <th colspan="9" style="font-size:26px;">
@@ -377,74 +372,13 @@
                 src="http://resource.shuiguoshule.com.cn/product_image/2020-03-31/OVFftIF74gHs2Qa01dF2.png"
                 style="width:120px;height:39px;float:left;"
               />
-              <p style="margin-right:120px;">万翼果联销售单</p>
+              <p style="margin-right:120px;color:#232323">万翼果联销售单</p>
             </th>
           </tr>
         </thead>
-        <tbody>
-          <tr align="center">
-            <td colspan="2">门店代码</td>
-            <td>{{orderDetail.shopCode}}</td>
-            <td>订单号</td>
-            <td colspan="2">{{orderDetail.orderCode}}</td>
-            <td>海鼎编号</td>
-            <td colspan="2">{{orderDetail.hdCode}}</td>
-          </tr>
-          <tr align="center">
-            <td colspan="2">门店名称</td>
-            <td>{{ orderDetail.shopName }}</td>
-            <td>联系人</td>
-            <td colspan="2">{{ deliveryInfo.contactsName }}</td>
-            <td>联系电话</td>
-            <td colspan="2">{{ deliveryInfo.phone }}</td>
-          </tr>
-          <tr align="center">
-            <td colspan="2">联系地址</td>
-            <td colspan="7">{{ address }}</td>
-          </tr>
-          <tr align="center">
-            <td colspan="2">下单时间</td>
-            <td>{{ orderDetail.createTime }}</td>
-            <td>支付类型</td>
-            <td colspan="2">{{ orderDetail.settlementType=="balance"?"余额":"微信"}}</td>
-            <td>订单金额</td>
-            <td colspan="2">{{ orderDetail.totalFee | fenToYuanDot2Filters }}</td>
-          </tr>
-          <tr align="center">
-            <td colspan="2">配送费</td>
-            <td>{{ orderDetail.deliveryFee | fenToYuanDot2Filters }}</td>
-            <td>优惠金额</td>
-            <td colspan="2">{{ orderDetail.discountFee | fenToYuanDot2Filters }}</td>
-            <td>付款金额</td>
-            <td colspan="2">{{ orderDetail.payableFee | fenToYuanDot2Filters }}</td>
-          </tr>
-          <tr align="center">
-            <td colspan="2">客户备注</td>
-            <td colspan="7"></td>
-          </tr>
-          <tr align="center" style="backgroung:#ccc">
-            <td colspan="9">客户订单明细</td>
-          </tr>
-          <tr align="center">
-            <td>序号</td>
-            <td>基础条码</td>
-            <td>商品名称</td>
-            <td>商品规格</td>
-            <td>单位</td>
-            <td>数量</td>
-            <td>单价</td>
-            <td>金额</td>
-            <td>商品备注</td>
-          </tr>
-        </tbody>
+        <tbody id="tabInfo"></tbody>
         <tbody id="tab"></tbody>
-        <tr align="center">
-          <td colspan="5">小计</td>
-          <td>{{amount}}</td>
-          <td></td>
-          <td>{{sum | fenToYuanDot2Filters}}</td>
-          <td></td>
-        </tr>
+        <tbody id="tabTotal"></tbody>
         <tr align="left">
           <td colspan="9" style="height:60px">发货备注:</td>
         </tr>
@@ -457,7 +391,7 @@
           </tr>
         </tfoot>
       </table>
-    </Modal>
+    </div>
   </div>
 </template>
 
@@ -473,7 +407,7 @@ import {
   sendHdManual,
   exportOrder
 } from "@/api/wholesale";
-import getLodop from "@/assets/lodop/LodopFuncs.js";
+import getLodop from "@/mixins/LodopFuncs.js";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 import { fenToYuanDot2, fenToYuanDot2Number } from "@/libs/util";
@@ -946,12 +880,10 @@ export default {
       }
     },
     startTimeChange(value, date) {
-      console.log("beginTime:", value);
       this.searchRowData.createTimeBegin = value;
       this.orderDetail.createTimeBegin = value;
     },
     endTimeChange(value, data) {
-      console.log("endTime:", value);
       this.searchRowData.createTimeEnd = value;
       this.orderDetail.createTimeEnd = value;
     },
@@ -1045,7 +977,6 @@ export default {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
       getOrderPages(this.searchRowData).then(res => {
-        console.log("数据", res.rows);
         tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 20;
@@ -1060,7 +991,6 @@ export default {
         // 表格数据导出字段翻译
         const _this = this;
         tableData.forEach(item => {
-          console.log("业务员", item["saleUserName"]);
           let deliveryAddress = JSON.parse(item["deliveryAddress"]);
           item["orderCode"] = item["orderCode"] + "";
           item["hdCode"] = item["hdCode"] + "";
@@ -1142,7 +1072,6 @@ export default {
         }).then(res => {
           const tableData = res.rows;
           const tableColumns = res.columns;
-          console.log("tableColumns: ", tableColumns);
           this.$refs.tables.handleCustomDownload({
             filename: `配送单-${new Date().valueOf()}`,
             data: tableData,
@@ -1190,59 +1119,170 @@ export default {
     },
     //在线打印
     onlinePrinting() {
+      // console.log("xuanz",this.selectedOrderCodes)
       this.loading = true;
       var otab = document.getElementById("tab");
+      var otabInfo = document.getElementById("tabInfo");
+      var otabTotal = document.getElementById("tabTotal");
       let data = {};
+      var _this = this;
       getPrintOrder(data)
         .then(res => {
-          this.orderDetail = res[3];
-          let orderGoodsList = this.orderDetail.orderGoodsList;
-          if (this.orderDetail.deliveryAddress) {
-            const deliveryInfo = JSON.parse(this.orderDetail.deliveryAddress);
-            this.deliveryInfo = _.cloneDeep(deliveryInfo);
-          }
-          for (let i = 0; i < orderGoodsList.length; i++) {
-            let mark = i + 1;
-            var strHTML = "<tr align='center'>";
-            strHTML += "<td>" + mark + "</td>";
-            strHTML += "<td>" + orderGoodsList[i].baseBar + "</td>";
-            strHTML += "<td>" + orderGoodsList[i].goodsName + "</td>";
-            strHTML += "<td>" + orderGoodsList[i].standard + "</td>";
-            strHTML += "<td>" + orderGoodsList[i].unitName + "</td>";
-            strHTML += "<td>" + orderGoodsList[i].quanity + "</td>";
-            strHTML +=
-              "<td>" + fenToYuanDot2(orderGoodsList[i].goodsPrice) + "</td>";
-            strHTML +=
-              "<td>" + fenToYuanDot2(orderGoodsList[i].goodsSumPrice) + "</td>";
-            strHTML += "<td>" + "</td>";
-            strHTML += "</tr>";
-            this.amount += Number(orderGoodsList[i].quanity);
-            this.sum += Number(orderGoodsList[i].goodsSumPrice);
-            otab.innerHTML += strHTML;
-          }
-          this.modalPrinting = true;
+          this.$nextTick(() => {
+            for (let j = 0; j < res.length; j++) {
+              this.amount = 0;
+              this.sum = 0;
+              // 循环前先清理
+              _this.orderDetail = _.cloneDeep(orderDetail);
+              _this.orderDetail = _.cloneDeep(res[j]);
+              let orderGoodsList = _this.orderDetail.orderGoodsList;
+              let address = "";
+              if (_this.orderDetail.deliveryAddress) {
+                const deliveryInfo = JSON.parse(
+                  _this.orderDetail.deliveryAddress
+                );
+                const addressArea = deliveryInfo.addressArea
+                  ? deliveryInfo.addressArea.replace(new RegExp("/", "gm"), "")
+                  : "";
+                address = addressArea + deliveryInfo.addressDetail;
+                _this.deliveryInfo = _.cloneDeep(deliveryInfo);
+              }
+              if (_this.orderDetail.shopCode == null) {
+                _this.orderDetail.shopCode = "";
+              }
+              if (_this.orderDetail.hdCode == null) {
+                _this.orderDetail.hdCode = "";
+              }
+              if (_this.orderDetail.settlementType === "blance") {
+                _this.orderDetail.settlementType = "余额";
+              } else {
+                _this.orderDetail.settlementType = "微信支付";
+              }
+              var strData = "<tr align='center'>";
+              strData += '<td colspan="2">' + "门店代码" + "</td>";
+              strData += "<td>" + _this.orderDetail.shopCode + "</td>";
+              strData += "<td>" + "订单号" + "</td>";
+              strData +=
+                '<td colspan="2">' + _this.orderDetail.orderCode + "</td>";
+              strData += "<td>" + "海鼎编号" + "</td>";
+              strData +=
+                '<td colspan="2">' + _this.orderDetail.hdCode + "</td>";
+              strData += "</tr>";
+              strData += "<tr align='center'>";
+              strData += '<td colspan="2">' + "门店名称" + "</td>";
+              strData += "<td>" + _this.orderDetail.shopName + "</td>";
+              strData += "<td>" + "联系人" + "</td>";
+              strData +=
+                '<td colspan="2">' + _this.deliveryInfo.contactsName + "</td>";
+              strData += "<td>" + "联系电话" + "</td>";
+              strData +=
+                '<td colspan="2">' + _this.deliveryInfo.phone + "</td>";
+              strData += "</tr>";
+              strData += "<tr align='center'>";
+              strData += '<td colspan="2">' + "联系地址" + "</td>";
+              strData += '<td colspan="7">' + address + "</td>";
+              strData += "</tr>";
+              strData += "<tr align='center'>";
+              strData += '<td colspan="2">' + "下单时间" + "</td>";
+              strData += "<td>" + _this.orderDetail.createTime + "</td>";
+              strData += '<td colspan="2">' + "支付类型" + "</td>";
+              strData +=
+                '<td colspan="2">' + _this.orderDetail.settlementType + "</td>";
+              strData += "<td>" + "订单金额" + "</td>";
+              strData +=
+                '<td colspan="2">' +
+                fenToYuanDot2(_this.orderDetail.totalFee) +
+                "</td>";
+              strData += "</tr>";
+              strData += "<tr align='center'>";
+              strData += '<td colspan="2">' + "配送费" + "</td>";
+              strData +=
+                "<td>" + fenToYuanDot2(_this.orderDetail.deliveryFee) + "</td>";
+              strData += "<td>" + "优惠金额" + "</td>";
+              strData +=
+                '<td colspan="2">' +
+                fenToYuanDot2(_this.orderDetail.discountFee) +
+                "</td>";
+              strData += "<td>" + "付款金额" + "</td>";
+              strData +=
+                '<td colspan="2">' +
+                fenToYuanDot2(_this.orderDetail.payableFee) +
+                "</td>";
+              strData += "</tr>";
+              strData += "<tr align='center'>";
+              strData += '<td colspan="2">' + "客户备注" + "</td>";
+              strData += '<td colspan="7">' + "</td>";
+              strData += "</tr>";
+              strData += "<tr align='center' style='backgroung:#ccc'>";
+              strData += '<td colspan="9">' + "客户订单明细" + "</td>";
+              strData += "</tr>";
+              strData += "<tr align='center'>";
+              strData += "<td>" + "序号" + "</td>";
+              strData += "<td>" + "基础条码" + "</td>";
+              strData += "<td>" + "商品名称" + "</td>";
+              strData += "<td>" + "商品规格" + "</td>";
+              strData += "<td>" + "单位" + "</td>";
+              strData += "<td>" + "数量" + "</td>";
+              strData += "<td>" + "单价" + "</td>";
+              strData += "<td>" + "金额" + "</td>";
+              strData += "<td>" + "商品备注" + "</td>";
+              strData += "</tr>";
+              otabInfo.innerHTML += strData;
+              for (let i = 0; i < orderGoodsList.length; i++) {
+                let mark = i + 1;
+                var strHTML = "<tr align='center'>";
+                strHTML += "<td>" + mark + "</td>";
+                strHTML += "<td>" + orderGoodsList[i].baseBar + "</td>";
+                strHTML += "<td>" + orderGoodsList[i].goodsName + "</td>";
+                strHTML += "<td>" + orderGoodsList[i].standard + "</td>";
+                strHTML += "<td>" + orderGoodsList[i].unitName + "</td>";
+                strHTML += "<td>" + orderGoodsList[i].quanity + "</td>";
+                strHTML +=
+                  "<td>" +
+                  fenToYuanDot2(orderGoodsList[i].goodsPrice) +
+                  "</td>";
+                strHTML +=
+                  "<td>" +
+                  fenToYuanDot2(orderGoodsList[i].goodsSumPrice) +
+                  "</td>";
+                strHTML += "<td>" + "</td>";
+                strHTML += "</tr>";
+                _this.amount += Number(orderGoodsList[i].quanity);
+                _this.sum += Number(orderGoodsList[i].goodsSumPrice);
+                otab.innerHTML += strHTML;
+              }
+              var strTotal = "<tr align='center'>";
+              strTotal += '<td colspan="5">' + "小计" + "</td>";
+              strTotal += "<td>" + _this.amount + "</td>";
+              strTotal += "<td>" + "</td>";
+              strTotal += "<td>" + fenToYuanDot2(_this.sum) + "</td>";
+              strTotal += "<td>" + "</td>";
+              strTotal += "</tr>";
+              otabTotal.innerHTML += strTotal;
+              var ff = _this.$refs.printTable.innerHTML;
+              _this.previewPrinting(ff);
+            }
+          });
         })
         .finally(() => {
           this.loading = false;
         });
     },
-    previewPrinting() {
-      var LODOP = getLodop();
-      console.log("lodop", LODOP);
-      LODOP.ADD_PRINT_HTM(
-        26,
-        "5%",
-        "90%",
-        80,
-        // document.getElementById("div4").innerHTML
-        this.onlinePrinting()
-      );
-
-      LODOP.PREVIEW();
-    },
-    handClose(e) {
-      if (e === false) {
-      }
+    previewPrinting(ff) {
+      var LODOP; //声明为全局变量
+      LODOP = getLodop();
+      LODOP.ADD_PRINT_TABLE(26, "1%", "98%", "98%", ff);
+      LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", "Auto-Width");
+      // LODOP.PRINT();
+      // LODOP.PREVIEW();
+      LODOP.NewPageA();
+      LODOP.SET_PRINT_MODE("CATCH_PRINT_STATUS", true);
+      var otab = document.getElementById("tab");
+      var otabInfo = document.getElementById("tabInfo");
+      var otabTotal = document.getElementById("tabTotal");
+      otab.innerHTML = "";
+      otabInfo.innerHTML = "";
+      otabTotal.innerHTML = "";
     }
   }
 };

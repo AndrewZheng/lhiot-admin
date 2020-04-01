@@ -336,7 +336,7 @@ const userColumns = [
   {
     title: "门店代码",
     align: "center",
-    // key: "city",
+    key: "shopCode",
     width: 100
   },
   {

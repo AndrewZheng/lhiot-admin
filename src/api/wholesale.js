@@ -676,7 +676,7 @@ export const getOrder = ({
 // wholesale-small/order/print/order 
 export const getPrintOrder = (data) => {
   return $http.request({
-    url: '/wholesale-small/order/print/order',
+    url: '/wholesale-small/order/print/order'+data.orderCodes,
     data,
     method: 'post',
   });
