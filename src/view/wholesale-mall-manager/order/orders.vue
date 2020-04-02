@@ -134,6 +134,10 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
+          <div class="ml15 mt10" v-if="printFlag===true">
+            已完成打印
+            <i style="color:red">{{printNum}}</i> 条配送单
+          </div>
         </div>
         <div slot="operations" style="margin-left:-30px">
           <Button
@@ -175,9 +179,13 @@
             :loading="downloadLoading"
             class="search-btn mr2"
             type="success"
-            @click="onlinePrinting"
+            @click="onlinePrintingAffirm"
+            v-if="flag===true"
           >
             <Icon type="md-download" />在线打印
+          </Button>
+          <Button class="search-btn mr2" type="success" v-if="flag===false">
+            <Icon type="md-download" />正在打印中...
           </Button>
         </div>
       </tables>
@@ -361,10 +369,28 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
+    <!-- 确认打印弹框 -->
+    <Modal v-model="modalAffirm" :width="500" :mask-closable="false">
+      <p slot="header">
+        <span>在线打印配送单</span>
+      </p>
+      <div class="print">是否在线打印 {{printQuantity}} 条订单</div>
+      <div slot="footer">
+        <Button @click="handlePrintClose">关闭</Button>
+        <Button type="primary" @click="handlePrintSubmit">确定</Button>
+      </div>
+    </Modal>
     <!-- 在线打印 -->
-
-    <div ref="printTable">
-      <table border="1" height="700" width="1000" cellspacing="0" cellpadding="0" align="center">
+    <div ref="printTable" style="display:none">
+      <table
+        border="1"
+        height="700"
+        width="750"
+        cellspacing="0"
+        cellpadding="0"
+        align="center"
+        style="fontSize:12px"
+      >
         <thead>
           <tr align="center">
             <th colspan="9" style="font-size:26px;">
@@ -372,7 +398,7 @@
                 src="http://resource.shuiguoshule.com.cn/product_image/2020-03-31/OVFftIF74gHs2Qa01dF2.png"
                 style="width:120px;height:39px;float:left;"
               />
-              <p style="margin-right:120px;color:#232323">万翼果联销售单</p>
+              <p style="margin-right:120px;color:#666666">万翼果联销售单</p>
             </th>
           </tr>
         </thead>
@@ -507,7 +533,6 @@ const deliveryInfo = {
   userId: 0,
   contactsName: ""
 };
-// px1
 const orderColumns = [
   {
     type: "selection",
@@ -834,6 +859,8 @@ export default {
   data() {
     return {
       amount: 0,
+      printQuantity: 0,
+      modalAffirm: false,
       sum: 0,
       modalPrinting: false,
       templatePageOpts: [20, 50],
@@ -853,7 +880,10 @@ export default {
       currentSaleUserId: 0,
       exportType: "", // ORDER_GOODS,DELIVERY_NOTE
       tableDataSelected: [],
-      selectedOrderCodes: ""
+      selectedOrderCodes: "",
+      flag: true,
+      printFlag: null,
+      printNum: 0
     };
   },
   computed: {
@@ -1117,19 +1147,45 @@ export default {
       this.currentTableRowSelected = currentRow;
       this.selectedOrderCodes = this.currentTableRowSelected.orderCode;
     },
+    handlePrintClose() {
+      this.modalAffirm = false;
+    },
+    onlinePrintingAffirm() {
+      let data = {};
+      if (this.selectedOrderCodes) {
+        data = {
+          orderCodes: this.selectedOrderCodes
+        };
+      }
+      getPrintOrder(data)
+        .then(res => {
+          this.printQuantity = res.length;
+          this.printFlag = false;
+          this.modalAffirm = true;
+        })
+        .finally(() => {});
+    },
+    handlePrintSubmit() {
+      this.onlinePrinting();
+      this.modalAffirm = false;
+      this.flag = false;
+    },
     //在线打印
     onlinePrinting() {
-      // console.log("xuanz",this.selectedOrderCodes)
-      this.loading = true;
+      let data = {};
+      if (this.selectedOrderCodes) {
+        data = {
+          orderCodes: this.selectedOrderCodes
+        };
+      }
       var otab = document.getElementById("tab");
       var otabInfo = document.getElementById("tabInfo");
       var otabTotal = document.getElementById("tabTotal");
-      let data = {};
       var _this = this;
       getPrintOrder(data)
         .then(res => {
           this.$nextTick(() => {
-            for (let j = 0; j < res.length; j++) {
+            for (let j = 3; j < res.length; j++) {
               this.amount = 0;
               this.sum = 0;
               // 循环前先清理
@@ -1153,17 +1209,18 @@ export default {
               if (_this.orderDetail.hdCode == null) {
                 _this.orderDetail.hdCode = "";
               }
-              if (_this.orderDetail.settlementType === "blance") {
-                _this.orderDetail.settlementType = "余额";
-              } else {
-                _this.orderDetail.settlementType = "微信支付";
-              }
+              _this.orderDetail.settlementType =
+                _this.orderDetail.settlementType === "balance"
+                  ? "余额"
+                  : "微信支付";
               var strData = "<tr align='center'>";
               strData += '<td colspan="2">' + "门店代码" + "</td>";
               strData += "<td>" + _this.orderDetail.shopCode + "</td>";
               strData += "<td>" + "订单号" + "</td>";
               strData +=
-                '<td colspan="2">' + _this.orderDetail.orderCode + "</td>";
+                '<td colspan="2" style="padding:0 5px;">' +
+                _this.orderDetail.orderCode +
+                "</td>";
               strData += "<td>" + "海鼎编号" + "</td>";
               strData +=
                 '<td colspan="2">' + _this.orderDetail.hdCode + "</td>";
@@ -1253,28 +1310,34 @@ export default {
               }
               var strTotal = "<tr align='center'>";
               strTotal += '<td colspan="5">' + "小计" + "</td>";
-              strTotal += "<td>" + _this.amount + "</td>";
+              strTotal +=
+                "<td style='font-weight:bold;'>" + _this.amount + "</td>";
               strTotal += "<td>" + "</td>";
-              strTotal += "<td>" + fenToYuanDot2(_this.sum) + "</td>";
+              strTotal +=
+                "<td style='font-weight:bold;'>" +
+                fenToYuanDot2(_this.sum) +
+                "</td>";
               strTotal += "<td>" + "</td>";
               strTotal += "</tr>";
               otabTotal.innerHTML += strTotal;
-              var ff = _this.$refs.printTable.innerHTML;
-              _this.previewPrinting(ff);
+
+              var strBodyStyle =
+                "<style> table,td,th{ border: 1 solid #000000;border-collapse:collapse; } </style>";
+              var printHtml = strBodyStyle + _this.$refs.printTable.innerHTML;
+              _this.previewPrinting(printHtml);
+              _this.printNum = Number(j) + 1;
             }
           });
         })
-        .finally(() => {
-          this.loading = false;
-        });
+        .finally(() => {});
     },
-    previewPrinting(ff) {
+    previewPrinting(printHtml) {
       var LODOP; //声明为全局变量
       LODOP = getLodop();
-      LODOP.ADD_PRINT_TABLE(26, "1%", "98%", "98%", ff);
-      LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", "Auto-Width");
+      LODOP.ADD_PRINT_TABLE(10, "0%", "100%", "100%", printHtml);
+      // LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", "Auto-Width");
       // LODOP.PRINT();
-      // LODOP.PREVIEW();
+      LODOP.PREVIEW();
       LODOP.NewPageA();
       LODOP.SET_PRINT_MODE("CATCH_PRINT_STATUS", true);
       var otab = document.getElementById("tab");
@@ -1283,6 +1346,8 @@ export default {
       otab.innerHTML = "";
       otabInfo.innerHTML = "";
       otabTotal.innerHTML = "";
+      this.flag = true;
+      this.printFlag = true;
     }
   }
 };
@@ -1297,5 +1362,11 @@ export default {
   line-height: 48px;
   vertical-align: text-bottom;
   margin-right: 10px;
+}
+.print {
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
 }
 </style>
