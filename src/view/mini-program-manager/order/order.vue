@@ -1459,8 +1459,6 @@ export default {
         this.getTableData();
       } else if (value === "自定义时间") {
         this.mark = true;
-        this.searchRowData.startTime = "";
-        this.searchRowData.endTime = "";
       }
     },
     startTimeChange(value, date) {

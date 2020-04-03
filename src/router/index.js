@@ -42,6 +42,7 @@ router.beforeEach((to, from, next) => {
         replace: true
       });
     } else {
+      // debugger;
       console.log('hasGetInfo: ', store.getters.hasGetInfo);
       if (!store.getters.hasGetInfo) {
         store.dispatch('generateAllMenus').then(() => {

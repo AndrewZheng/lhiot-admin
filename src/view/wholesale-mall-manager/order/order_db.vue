@@ -384,7 +384,7 @@
     <div ref="printTable" style="display:none">
       <table
         border="1"
-        height="100%"
+        height="700"
         width="750"
         cellspacing="0"
         cellpadding="0"
@@ -393,7 +393,7 @@
       >
         <thead>
           <tr align="center">
-            <th colspan="9" style="font-size:26px;height:60px">
+            <th colspan="9" style="font-size:26px;">
               <img
                 src="http://resource.shuiguoshule.com.cn/product_image/2020-03-31/OVFftIF74gHs2Qa01dF2.png"
                 style="width:120px;height:39px;float:left;"
@@ -406,7 +406,7 @@
         <tbody id="tab"></tbody>
         <tbody id="tabTotal"></tbody>
         <tr align="left">
-          <td colspan="9" style="height:30px">发货备注:</td>
+          <td colspan="9" style="height:60px">发货备注:</td>
         </tr>
         <tfoot>
           <tr style="height:40px">
@@ -1185,7 +1185,7 @@ export default {
       getPrintOrder(data)
         .then(res => {
           this.$nextTick(() => {
-            for (let j = 6; j < res.length; j++) {
+            for (let j = 3; j < res.length; j++) {
               this.amount = 0;
               this.sum = 0;
               // 循环前先清理
@@ -1213,7 +1213,7 @@ export default {
                 _this.orderDetail.settlementType === "balance"
                   ? "余额"
                   : "微信支付";
-              var strData = "<tr align='center' style='height:30px;'>";
+              var strData = "<tr align='center'>";
               strData += '<td colspan="2">' + "门店代码" + "</td>";
               strData += "<td>" + _this.orderDetail.shopCode + "</td>";
               strData += "<td>" + "订单号" + "</td>";
@@ -1225,7 +1225,7 @@ export default {
               strData +=
                 '<td colspan="2">' + _this.orderDetail.hdCode + "</td>";
               strData += "</tr>";
-              strData += "<tr align='center' style='height:30px;'>";
+              strData += "<tr align='center'>";
               strData += '<td colspan="2">' + "门店名称" + "</td>";
               strData += "<td>" + _this.orderDetail.shopName + "</td>";
               strData += "<td>" + "联系人" + "</td>";
@@ -1235,11 +1235,11 @@ export default {
               strData +=
                 '<td colspan="2">' + _this.deliveryInfo.phone + "</td>";
               strData += "</tr>";
-              strData += "<tr align='center' style='height:30px;'>";
+              strData += "<tr align='center'>";
               strData += '<td colspan="2">' + "联系地址" + "</td>";
               strData += '<td colspan="7">' + address + "</td>";
               strData += "</tr>";
-              strData += "<tr align='center' style='height:30px;'>";
+              strData += "<tr align='center'>";
               strData += '<td colspan="2">' + "下单时间" + "</td>";
               strData += "<td>" + _this.orderDetail.createTime + "</td>";
               strData += '<td colspan="2">' + "支付类型" + "</td>";
@@ -1251,7 +1251,7 @@ export default {
                 fenToYuanDot2(_this.orderDetail.totalFee) +
                 "</td>";
               strData += "</tr>";
-              strData += "<tr align='center' style='height:30px;'>";
+              strData += "<tr align='center'>";
               strData += '<td colspan="2">' + "配送费" + "</td>";
               strData +=
                 "<td>" + fenToYuanDot2(_this.orderDetail.deliveryFee) + "</td>";
@@ -1266,15 +1266,14 @@ export default {
                 fenToYuanDot2(_this.orderDetail.payableFee) +
                 "</td>";
               strData += "</tr>";
-              strData += "<tr align='center' style='height:30px;'>";
+              strData += "<tr align='center'>";
               strData += '<td colspan="2">' + "客户备注" + "</td>";
               strData += '<td colspan="7">' + "</td>";
               strData += "</tr>";
-              strData +=
-                "<tr align='center' style='backgroung:#ccc;height:30px'>";
+              strData += "<tr align='center' style='backgroung:#ccc'>";
               strData += '<td colspan="9">' + "客户订单明细" + "</td>";
               strData += "</tr>";
-              strData += "<tr align='center' style='height:30px;'>";
+              strData += "<tr align='center'>";
               strData += "<td>" + "序号" + "</td>";
               strData += "<td>" + "基础条码" + "</td>";
               strData += "<td>" + "商品名称" + "</td>";
@@ -1288,7 +1287,7 @@ export default {
               otabInfo.innerHTML += strData;
               for (let i = 0; i < orderGoodsList.length; i++) {
                 let mark = i + 1;
-                var strHTML = "<tr align='center' style='height:30px;'>";
+                var strHTML = "<tr align='center'>";
                 strHTML += "<td>" + mark + "</td>";
                 strHTML += "<td>" + orderGoodsList[i].baseBar + "</td>";
                 strHTML += "<td>" + orderGoodsList[i].goodsName + "</td>";
@@ -1303,13 +1302,13 @@ export default {
                   "<td>" +
                   fenToYuanDot2(orderGoodsList[i].goodsSumPrice) +
                   "</td>";
-                strHTML += "<td>" + "　　　　　　　　　　　　" + "</td>";
+                strHTML += "<td>" + "</td>";
                 strHTML += "</tr>";
                 _this.amount += Number(orderGoodsList[i].quanity);
                 _this.sum += Number(orderGoodsList[i].goodsSumPrice);
                 otab.innerHTML += strHTML;
               }
-              var strTotal = "<tr align='center' style='height:30px;'>";
+              var strTotal = "<tr align='center'>";
               strTotal += '<td colspan="5">' + "小计" + "</td>";
               strTotal +=
                 "<td style='font-weight:bold;'>" + _this.amount + "</td>";
@@ -1321,8 +1320,9 @@ export default {
               strTotal += "<td>" + "</td>";
               strTotal += "</tr>";
               otabTotal.innerHTML += strTotal;
+
               var strBodyStyle =
-                "<style> table,thead,tfoot,tbody,tr,th,td{ border: 1px solid #232323 ;border-collapse:collapse; } </style>";
+                "<style> table,td,th{ border: 1 solid #000000;border-collapse:collapse; } </style>";
               var printHtml = strBodyStyle + _this.$refs.printTable.innerHTML;
               _this.previewPrinting(printHtml);
               _this.printNum = Number(j) + 1;
@@ -1334,14 +1334,11 @@ export default {
     previewPrinting(printHtml) {
       var LODOP; //声明为全局变量
       LODOP = getLodop();
-      LODOP.ADD_PRINT_TABLE(26, "1%", "98%", "98%", printHtml);
-      LODOP.SET_PRINT_STYLEA(0, "Horient", 2);
-      LODOP.SET_PRINT_PAGESIZE(3, 2400, 45, ""); //这里3表示纵向打印且纸高“按内容的高度”；1385表示纸宽138.5mm；45表示页底空白4.5mm
+      LODOP.ADD_PRINT_TABLE(10, "0%", "100%", "100%", printHtml);
       // LODOP.SET_PRINT_MODE("PRINT_PAGE_PERCENT", "Auto-Width");
       // LODOP.PRINT();
       LODOP.PREVIEW();
       LODOP.NewPageA();
-      0;
       LODOP.SET_PRINT_MODE("CATCH_PRINT_STATUS", true);
       var otab = document.getElementById("tab");
       var otabInfo = document.getElementById("tabInfo");
