@@ -395,7 +395,7 @@
               <Button v-waves type="info" @click="modalSort = true">规格描述排序</Button>
             </i-col>
           </Row>
-          <Row>
+          <!-- <Row>
             <i-col span="12">
               <FormItem label="区域:" prop="goodsArea">
                 <Select :value="productDetail.goodsArea" @on-change="goodsAreaChange">
@@ -421,20 +421,20 @@
                 <Input v-model="productDetail.placeOfOrigin" placeholder="产地"></Input>
               </FormItem>
             </i-col>
-          </Row>
+          </Row> -->
           <Row>
             <i-col span="24">
-              <FormItem label="商品特征:" prop="goodsDes">
+              <FormItem label="商品描述:" prop="goodsDes">
                 <Input
                   v-model="productDetail.goodsDes"
                   :autosize="{minRows: 6,maxRows: 15}"
-                  placeholder="请输入商品特征..."
+                  placeholder="请输入商品描述..."
                   type="textarea"
                 ></Input>
               </FormItem>
             </i-col>
           </Row>
-          <Row>
+          <!-- <Row>
             <i-col span="24">
               <FormItem label="售后标准:" prop="afterDes">
                 <Input
@@ -445,7 +445,7 @@
                 ></Input>
               </FormItem>
             </i-col>
-          </Row>
+          </Row> -->
         </Form>
       </div>
       <div slot="footer">
@@ -581,11 +581,11 @@ export default {
         goodsName: [{ required: true, message: "请输入商品名称" }],
         baseUnit: [{ required: true, message: "请选择商品单位" }],
         baseBar: [{ required: true, message: "请输入基础条码" }],
-        goodsDes: [{ required: true, message: "请输入商品特诊" }],
-        afterDes: [{ required: true, message: "请输入售后标准" }],
-        goodsArea: [{ required: true, message: "请选择商品区域" }],
-        goodsBrand: [{ required: true, message: "请输入商品品牌" }],
-        placeOfOrigin: [{ required: true, message: "请输入商品产地" }],
+        goodsDes: [{ required: true, message: "请输入商品描述" }],
+        // afterDes: [{ required: true, message: "请输入售后标准" }],
+        // goodsArea: [{ required: true, message: "请选择商品区域" }],
+        // goodsBrand: [{ required: true, message: "请输入商品品牌" }],
+        // placeOfOrigin: [{ required: true, message: "请输入商品产地" }],
         categoryId: [{ required: true, message: "请选择商品分类" }],
         goodsImage: [{ required: true, message: "请上传商品主图" }],
         goodsImages: [{ required: true, message: "请上传商品详情图" }],
