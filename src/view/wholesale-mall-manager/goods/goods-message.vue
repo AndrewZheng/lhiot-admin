@@ -421,7 +421,7 @@
                 <Input v-model="productDetail.placeOfOrigin" placeholder="产地"></Input>
               </FormItem>
             </i-col>
-          </Row> -->
+          </Row>-->
           <Row>
             <i-col span="24">
               <FormItem label="商品描述:" prop="goodsDes">
@@ -445,7 +445,7 @@
                 ></Input>
               </FormItem>
             </i-col>
-          </Row> -->
+          </Row>-->
         </Form>
       </div>
       <div slot="footer">
@@ -617,6 +617,22 @@ export default {
           sortable: true,
           key: "goodsName",
           minWidth: 120
+        },
+        //     this.couponDetail.activityRuel = this.couponDetail.activityRuel.replace(
+        //   /&/g,
+        //   "\n"
+        // );
+        {
+          title: "商品描述",
+          align: "center",
+          sortable: true,
+          key: "goodsDes",
+          width: 120,
+          tooltip: true
+          // render(h, params) {
+          //   let goodsDes = params.row.goodsDes.replace(/&/g, "\n");
+          //   return <div>{goodsDes}</div>;
+          // }
         },
         {
           title: "商品类别",
@@ -838,6 +854,7 @@ export default {
         // 表格数据导出字段翻译
         tableData.forEach(item => {
           item.categoryId = this.findGroupName(item.categoryId);
+          item.goodsImage = "";
         });
         this.$refs.tables.handleDownload({
           filename: `商品基础信息-${new Date().valueOf()}`,
