@@ -619,6 +619,14 @@ export default {
           minWidth: 120
         },
         {
+          title: "商品描述",
+          align: "center",
+          sortable: true,
+          key: "goodsDes",
+          width: 120,
+          tooltip: true
+        },
+        {
           title: "商品类别",
           align: "center",
           key: "categoryId",
@@ -838,6 +846,7 @@ export default {
         // 表格数据导出字段翻译
         tableData.forEach(item => {
           item.categoryId = this.findGroupName(item.categoryId);
+          item.goodsImage = "";
         });
         this.$refs.tables.handleDownload({
           filename: `商品基础信息-${new Date().valueOf()}`,
