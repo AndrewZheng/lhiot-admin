@@ -42,22 +42,27 @@ router.beforeEach((to, from, next) => {
         replace: true
       });
     } else {
-      // debugger;
       console.log('hasGetInfo: ', store.getters.hasGetInfo);
       if (!store.getters.hasGetInfo) {
         store.dispatch('generateAllMenus').then(() => {
           console.log('getActualRouter: ', store.getters.getActualRouter);
           router.addRoutes(store.getters.getActualRouter);
-          const sname = getSystemHomeName();
+          const sname = getSystemHomeNameNew(to.path);
           if (sname.indexOf('-home') > 0) {
             next({
               name: sname,
               replace: true
             })
           } else {
-            next({ ...to,
-              replace: true
-            });
+            if(to.path.indexOf('.exe') > 0){
+              next({ ...to,
+                replace: true
+              });
+            }else{
+              next({ ...to,
+                replace: true
+              });
+            }
           }
         });
       } else {
