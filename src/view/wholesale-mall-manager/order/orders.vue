@@ -415,8 +415,8 @@
           <tr style="height:40px">
             <td colspan="3">配送员签字:</td>
             <td colspan="2">司机签字:</td>
-            <td colspan="2">客户签字:</td>
-            <td colspan="3">仓库审核:</td>
+            <td colspan="3">客户签字:</td>
+            <td colspan="2">仓库审核:</td>
           </tr>
         </tfoot>
       </table>
@@ -436,7 +436,7 @@ import {
   sendHdManual,
   exportOrder
 } from "@/api/wholesale";
-import getLodop from "@/mixins/LodopFuncs.js";
+import getLodop from "@/assets/lodop/lodopFuncs.js";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 import { fenToYuanDot2, fenToYuanDot2Number } from "@/libs/util";
@@ -1218,12 +1218,10 @@ export default {
               strData += "<td>" + _this.orderDetail.shopCode + "</td>";
               strData += "<td>" + "订单号" + "</td>";
               strData +=
-                '<td colspan="2" style="padding:0 5px;">' +
-                _this.orderDetail.orderCode +
-                "</td>";
-              strData += "<td colspan='2'>" + "海鼎编号" + "</td>";
+                '<td colspan="3">' + _this.orderDetail.orderCode + "</td>";
+              strData += "<td>" + "海鼎编号" + "</td>";
               strData +=
-                '<td colspan="2">' + _this.orderDetail.hdCode + "</td>";
+                "<td colspan='2'>" + _this.orderDetail.hdCode + "</td>";
               strData += "</tr>";
               strData += "<tr align='center' style='height:30px;'>";
               strData += '<td colspan="2">' + "门店名称" + "</td>";
@@ -1277,14 +1275,14 @@ export default {
               strData += "<tr align='center' style='height:30px;'>";
               strData += "<td style='min-Width:40px'>" + "序号" + "</td>";
               strData += "<td style='min-Width:60px'>" + "基础条码" + "</td>";
-              strData += "<td style='min-Width:145px'>" + "商品名称" + "</td>";
-              strData += "<td style='min-Width:100px'>" + "商品规格" + "</td>";
-              strData += "<td style='min-Width:43px'>" + "数量" + "</td>";
-              strData += "<td style='min-Width:43px'>" + "单位" + "</td>";
-              strData += "<td style='min-Width:43px'>" + "重量" + "</td>";
-              strData += "<td style='min-Width:53px'>" + "单价" + "</td>";
+              strData += "<td style='min-Width:125px'>" + "商品名称" + "</td>";
+              strData += "<td style='min-Width:110px'>" + "商品规格" + "</td>";
+              strData += "<td style='min-Width:53px'>" + "出库参数" + "</td>";
+              strData += "<td style='min-Width:53px'>" + "单位" + "</td>";
+              strData += "<td style='min-Width:53px'>" + "数量" + "</td>";
+              strData += "<td style='min-Width:63px'>" + "单价" + "</td>";
               strData += "<td style='min-Width:73px'>" + "金额" + "</td>";
-              strData += "<td style='min-Width:140px'>" + "商品备注" + "</td>";
+              strData += "<td style='min-Width:70px'>" + "商品备注" + "</td>";
               strData += "</tr>";
               otabInfo.innerHTML += strData;
               for (let i = 0; i < orderGoodsList.length; i++) {
@@ -1294,9 +1292,10 @@ export default {
                 strHTML += "<td>" + orderGoodsList[i].baseBar + "</td>";
                 strHTML += "<td>" + orderGoodsList[i].goodsName + "</td>";
                 strHTML += "<td>" + orderGoodsList[i].standard + "</td>";
+                strHTML += "<td>" + orderGoodsList[i].standardWeight;
+                ("</td>");
+                strHTML += "<td>" + orderGoodsList[i].goodsUnit + "</td>";
                 strHTML += "<td>" + orderGoodsList[i].quanity + "</td>";
-                strHTML += "<td>" + orderGoodsList[i].unitName + "</td>";
-                strHTML += "<td>" + orderGoodsList[i].standardWeight + "</td>";
                 strHTML +=
                   "<td>" +
                   fenToYuanDot2(orderGoodsList[i].goodsPrice) +
@@ -1312,10 +1311,9 @@ export default {
                 otab.innerHTML += strHTML;
               }
               var strTotal = "<tr align='center' style='height:30px;'>";
-              strTotal += '<td colspan="5">' + "小计" + "</td>";
+              strTotal += '<td colspan="6">' + "小计" + "</td>";
               strTotal +=
                 "<td style='font-weight:bold;'>" + _this.amount + "</td>";
-              strTotal += "<td>" + "</td>";
               strTotal += "<td>" + "</td>";
               strTotal +=
                 "<td style='font-weight:bold;'>" +
@@ -1337,16 +1335,14 @@ export default {
     previewPrinting(printHtml) {
       var LODOP; //声明为全局变量
       LODOP = getLodop();
-      LODOP.ADD_PRINT_TABLE(26, "1%", "98%", "98%", printHtml);
+      LODOP.ADD_PRINT_HTM(26, "1%", "98%", "98%", printHtml);
       LODOP.SET_PRINT_STYLEA(0, "Horient", 2);
-      LODOP.SET_PRINT_PAGESIZE(3, 2410, 45, ""); //这里3表示纵向打印且纸高“按内容的高度”；1385表示纸宽138.5mm；45表示页底空白4.5mm
+      LODOP.SET_PRINT_PAGESIZE(3, 2400, 45, "");
       if (this.printQuantity == 1) {
-        console.log(1234566);
         LODOP.PREVIEW();
       }
       // LODOP.PRINT();
       LODOP.NewPageA();
-      0;
       LODOP.SET_PRINT_MODE("CATCH_PRINT_STATUS", true);
       var otab = document.getElementById("tab");
       var otabInfo = document.getElementById("tabInfo");

@@ -63,9 +63,9 @@
           >
             <Icon type="ios-arrow-back" />&nbsp;返回
           </Button>
-          <Button v-waves type="primary" class="mr5" @click="handleExchangeBatch">
+          <!-- <Button v-waves type="primary" class="mr5" @click="handleExchangeBatch">
             <Icon type="md-repeat" />&nbsp;批量转让
-          </Button>
+          </Button> -->
           <!-- <Button
             v-waves
             :loading="exportExcelLoading"
@@ -464,7 +464,7 @@ export default {
           align: "center",
           minWidth: 100,
           key: "handle",
-          options: ["exchange"]
+          // options: ["exchange"]
         }
       ]
     };
