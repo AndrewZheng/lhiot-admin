@@ -3,7 +3,7 @@ import Router from 'vue-router';
 import iView from 'view-design';
 import store from '@/store';
 import { constantRouterMap } from './routers';
-import { getToken, getNamesByRouters, getSystemHomeName } from '@/libs/util';
+import { getToken, getNamesByRouters, getSystemHomeName,getSystemHomeNameNew } from '@/libs/util';
 
 Vue.use(Router);
 
