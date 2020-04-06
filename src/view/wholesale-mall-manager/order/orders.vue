@@ -179,7 +179,7 @@
             :loading="downloadLoading"
             class="search-btn mr2"
             type="success"
-            @click="onlinePrintingAffirm"
+            @click="onlinePrinting"
             v-if="flag===true"
           >
             <Icon type="md-download" />在线打印
@@ -1177,6 +1177,7 @@ export default {
     },
     //在线打印
     onlinePrinting() {
+      this.flag = false;
       const data = { orderCodes: this.selectedOrderCodes };
       var otab = document.getElementById("tab");
       var otabInfo = document.getElementById("tabInfo");
@@ -1185,6 +1186,8 @@ export default {
       getPrintOrder(data)
         .then(res => {
           this.$nextTick(() => {
+            var LODOP; //声明为全局变量
+            LODOP = getLodop();
             for (let j = 0; j < res.length; j++) {
               this.amount = 0;
               this.sum = 0;
@@ -1325,25 +1328,22 @@ export default {
               var strBodyStyle =
                 "<style> table,thead,tfoot,tbody,tr,th,td{ border: 1px solid #232323;border-collapse:collapse;} </style>";
               var printHtml = strBodyStyle + _this.$refs.printTable.innerHTML;
+
               _this.previewPrinting(printHtml);
               _this.printNum = Number(j) + 1;
             }
+            LODOP.SET_PRINT_STYLEA(0, "Horient", 2);
+
+            LODOP.PREVIEW();
           });
         })
         .finally(() => {});
     },
     previewPrinting(printHtml) {
-      var LODOP; //声明为全局变量
-      LODOP = getLodop();
-      LODOP.ADD_PRINT_HTM(26, "1%", "98%", "98%", printHtml);
-      LODOP.SET_PRINT_STYLEA(0, "Horient", 2);
       LODOP.SET_PRINT_PAGESIZE(3, 2400, 45, "");
-      if (this.printQuantity == 1) {
-        LODOP.PREVIEW();
-      }
-      // LODOP.PRINT();
+      LODOP.SET_PRINT_STYLEA(0, "Horient", 2);
       LODOP.NewPageA();
-      LODOP.SET_PRINT_MODE("CATCH_PRINT_STATUS", true);
+      LODOP.ADD_PRINT_HTM(26, "1%", "98%", "98%", printHtml);
       var otab = document.getElementById("tab");
       var otabInfo = document.getElementById("tabInfo");
       var otabTotal = document.getElementById("tabTotal");

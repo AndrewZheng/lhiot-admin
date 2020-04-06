@@ -583,9 +583,9 @@ export default {
         baseBar: [{ required: true, message: "请输入基础条码" }],
         goodsDes: [{ required: true, message: "请输入商品特诊" }],
         afterDes: [{ required: true, message: "请输入售后标准" }],
-        goodsArea: [{ required: true, message: "请选择商品区域" }],
-        goodsBrand: [{ required: true, message: "请输入商品品牌" }],
-        placeOfOrigin: [{ required: true, message: "请输入商品产地" }],
+        // goodsArea: [{ required: true, message: "请选择商品区域" }],
+        // goodsBrand: [{ required: true, message: "请输入商品品牌" }],
+        // placeOfOrigin: [{ required: true, message: "请输入商品产地" }],
         categoryId: [{ required: true, message: "请选择商品分类" }],
         goodsImage: [{ required: true, message: "请上传商品主图" }],
         goodsImages: [{ required: true, message: "请上传商品详情图" }],
@@ -641,6 +641,33 @@ export default {
             }
             return h("span", row.categoryId);
           }
+        },
+        {
+          title: "商品区域",
+          align: "center",
+          minWidth: 90,
+          key: "goodsArea",
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.goodsArea === "imported") {
+              return <div>{"进口"}</div>;
+            } else if (row.goodsArea === "domestic") {
+              return <div>{"国产"}</div>;
+            }
+            return <div>{""}</div>;
+          }
+        },
+        {
+          title: "商品品牌",
+          align: "center",
+          minWidth: 90,
+          key: "goodsBrand"
+        },
+        {
+          title: "商品产地",
+          align: "center",
+          minWidth: 90,
+          key: "placeOfOrigin"
         },
         {
           title: "基础条码",
@@ -847,6 +874,13 @@ export default {
         tableData.forEach(item => {
           item.categoryId = this.findGroupName(item.categoryId);
           item.goodsImage = "";
+          if (item.goodsArea === "imported") {
+            item.goodsArea = "进口";
+          } else if (item.goodsArea === "domestic") {
+            item.goodsArea = "国产";
+          } else {
+            item.goodsArea = "";
+          }
         });
         this.$refs.tables.handleDownload({
           filename: `商品基础信息-${new Date().valueOf()}`,
