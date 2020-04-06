@@ -949,3 +949,17 @@ export const getSystemHomeName = () => {
   }
   return name;
 }
+// 根据当前系统获取应该跳转的home页面的routerName
+export const getSystemHomeNameNew = (toLodop) => {
+  if(toLodop != "" && toLodop.indexOf('.exe')>0){
+    return toLodop;
+  }
+  let name = 'home';
+  if (PcLockr.get(enums.SYSTEM) != null) {
+    const currentSystem = JSON.parse(PcLockr.get(enums.SYSTEM));
+    name = currentSystem.code.split('_')[0] + '-home';
+    name = name === 'manager-home' ? 'home' : name; // 如果是综合管理系统还是跳转公共首页
+    console.log('current system home: ', name);
+  }
+  return name;
+}
