@@ -118,7 +118,7 @@
             <Button
               v-waves
               :loading="searchLoading"
-              class="search-btn ml5"
+              class="search-btn ml5 mr5 mt5"
               type="primary"
               @click="handleSearch"
             >
@@ -127,7 +127,7 @@
             <Button
               v-waves
               :loading="clearSearchLoading"
-              class="search-btn"
+              class="search-btn mt5"
               type="info"
               @click="handleClear"
             >
@@ -369,28 +369,16 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-    <!-- 确认打印弹框 -->
-    <Modal v-model="modalAffirm" :width="500" :mask-closable="false">
-      <p slot="header">
-        <span>在线打印配送单</span>
-      </p>
-      <div class="print" v-if="printQuantity>0">是否在线打印 {{printQuantity}} 条配送单</div>
-      <div class="print" v-else>只能打印配送中与待发货的订单,当前没有可打印的配送单</div>
-      <div slot="footer">
-        <Button @click="handlePrintClose">关闭</Button>
-        <Button type="primary" @click="handlePrintSubmit">确定</Button>
-      </div>
-    </Modal>
     <!-- 在线打印 -->
     <div ref="printTable" style="display:none">
       <table
         border="1"
         height="100%"
-        width="100%"
+        width="800"
         cellspacing="0"
         cellpadding="0"
         align="center"
-        style="fontSize:12px"
+        style="fontSize:16px"
       >
         <thead>
           <tr align="center">
@@ -412,11 +400,11 @@
           </td>
         </tr>
         <tfoot>
-          <tr style="height:40px">
-            <td colspan="3">配送员签字:</td>
-            <td colspan="2">司机签字:</td>
-            <td colspan="3">客户签字:</td>
-            <td colspan="2">仓库审核:</td>
+          <tr style="height:40px;border: 0 solid red;border-collapse:collapse;">
+            <td colspan="3" style="border: 0 solid red;border-collapse:collapse;">配送员签字:</td>
+            <td colspan="2" style="border: 0 solid red;border-collapse:collapse;">司机签字:</td>
+            <td colspan="3" style="border: 0 solid red;border-collapse:collapse;">客户签字:</td>
+            <td colspan="2" style="border: 0 solid red;border-collapse:collapse;">仓库审核:</td>
           </tr>
         </tfoot>
       </table>
@@ -863,7 +851,6 @@ export default {
     return {
       amount: 0,
       printQuantity: 0,
-      modalAffirm: false,
       sum: 0,
       modalPrinting: false,
       templatePageOpts: [20, 50],
@@ -1150,33 +1137,17 @@ export default {
       this.currentTableRowSelected = currentRow;
       this.selectedOrderCodes = this.currentTableRowSelected.orderCode;
     },
-    handlePrintClose() {
-      this.modalAffirm = false;
-    },
-    onlinePrintingAffirm() {
-      if (this.tableDataSelected) {
-      }
-      const data = { orderCodes: this.selectedOrderCodes };
-      getPrintOrder(data)
-        .then(res => {
-          this.printQuantity = res.length;
-          this.printFlag = false;
-          this.modalAffirm = true;
-        })
-        .finally(() => {});
-    },
-    handlePrintSubmit() {
-      if (this.printQuantity == 0) {
-        this.modalAffirm = false;
-        return;
-      } else {
-        this.onlinePrinting();
-        this.modalAffirm = false;
-        this.flag = false;
-      }
-    },
     //在线打印
     onlinePrinting() {
+      if (this.tableDataSelected.length == 1) {
+        if (
+          this.tableDataSelected[0].orderStatus != "undelivery" &&
+          this.tableDataSelected[0].orderStatus != "delivery"
+        ) {
+          this.$Message.info("不是待发货或者配送中的订单");
+          return;
+        }
+      }
       this.flag = false;
       const data = { orderCodes: this.selectedOrderCodes };
       var otab = document.getElementById("tab");
@@ -1188,6 +1159,7 @@ export default {
           this.$nextTick(() => {
             var LODOP; //声明为全局变量
             LODOP = getLodop();
+            LODOP.PRINT_INIT("");
             for (let j = 0; j < res.length; j++) {
               this.amount = 0;
               this.sum = 0;
@@ -1275,7 +1247,8 @@ export default {
                 "<tr align='center' style='backgroung:#ccc;height:30px'>";
               strData += '<td colspan="10">' + "客户订单明细" + "</td>";
               strData += "</tr>";
-              strData += "<tr align='center' style='height:30px;'>";
+              strData +=
+                "<tr align='center' style='height:30px;background:#eeeeee'>";
               strData += "<td style='min-Width:40px'>" + "序号" + "</td>";
               strData += "<td style='min-Width:60px'>" + "基础条码" + "</td>";
               strData += "<td style='min-Width:125px'>" + "商品名称" + "</td>";
@@ -1295,8 +1268,7 @@ export default {
                 strHTML += "<td>" + orderGoodsList[i].baseBar + "</td>";
                 strHTML += "<td>" + orderGoodsList[i].goodsName + "</td>";
                 strHTML += "<td>" + orderGoodsList[i].standard + "</td>";
-                strHTML += "<td>" + orderGoodsList[i].standardWeight;
-                ("</td>");
+                strHTML += "<td>" + orderGoodsList[i].standardWeight + "</td>";
                 strHTML += "<td>" + orderGoodsList[i].goodsUnit + "</td>";
                 strHTML += "<td>" + orderGoodsList[i].quanity + "</td>";
                 strHTML +=
@@ -1307,7 +1279,7 @@ export default {
                   "<td>" +
                   fenToYuanDot2(orderGoodsList[i].goodsSumPrice) +
                   "</td>";
-                strHTML += "<td>" + "　　　　　　　　　　　　" + "</td>";
+                strHTML += "<td>" + "</td>";
                 strHTML += "</tr>";
                 _this.amount += Number(orderGoodsList[i].quanity);
                 _this.sum += Number(orderGoodsList[i].goodsSumPrice);
@@ -1326,24 +1298,26 @@ export default {
               strTotal += "</tr>";
               otabTotal.innerHTML += strTotal;
               var strBodyStyle =
-                "<style> table,thead,tfoot,tbody,tr,th,td{ border: 1px solid #232323;border-collapse:collapse;} </style>";
-              var printHtml = strBodyStyle + _this.$refs.printTable.innerHTML;
-
-              _this.previewPrinting(printHtml);
+                "<style> thead,tbody{ border: 1px solid #232323;border-collapse:collapse;}</style>";
+              var printHtml =
+                strBodyStyle +
+                "<body>" +
+                _this.$refs.printTable.innerHTML +
+                "</body>";
               _this.printNum = Number(j) + 1;
+              _this.previewPrinting(printHtml,LODOP);
             }
             LODOP.SET_PRINT_STYLEA(0, "Horient", 2);
-
             LODOP.PREVIEW();
           });
         })
         .finally(() => {});
     },
-    previewPrinting(printHtml) {
+    previewPrinting(printHtml,LODOP) {
       LODOP.SET_PRINT_PAGESIZE(3, 2400, 45, "");
       LODOP.SET_PRINT_STYLEA(0, "Horient", 2);
       LODOP.NewPageA();
-      LODOP.ADD_PRINT_HTM(26, "1%", "98%", "98%", printHtml);
+      LODOP.ADD_PRINT_HTM(26, 0, "98%", "98%", printHtml);
       var otab = document.getElementById("tab");
       var otabInfo = document.getElementById("tabInfo");
       var otabTotal = document.getElementById("tabTotal");

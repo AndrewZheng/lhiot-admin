@@ -501,7 +501,12 @@ const userColumns = [
     title: "详细地址",
     align: "center",
     key: "addressDetail",
-    width: 300
+    width: 300,
+    render(h, params, vm) {
+      const { row } = params;
+      let city = row.city.replace(/\//g, "");
+      return <div>{city + row.addressDetail}</div>;
+    }
   },
   {
     title: "操作",
@@ -688,6 +693,7 @@ export default {
               item["salesUserStatus"]
             ).label;
             item["balance"] = (item["balance"] / 100.0).toFixed(2);
+            item["addressDetail"] = item["city"] + item["addressDetail"];
           });
           this.$refs.tables.handleDownload({
             filename: `会员信息-${new Date().valueOf()}`,
