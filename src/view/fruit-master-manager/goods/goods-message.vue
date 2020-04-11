@@ -46,7 +46,7 @@
             confirm
             placement="bottom"
             title="您确认删除选中的内容吗?"
-            @on-ok="poptipOk"
+            @on-ok="handleBatchDel"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash"/>
@@ -406,9 +406,7 @@ import {
 } from '@/api/fruitermaster';
 import { buildMenu, convertTreeCategory } from '@/libs/util';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { setGoodsStandard } from '../../../libs/util';
 
 const productDetail = {
@@ -446,7 +444,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
       ruleInline: {
@@ -640,10 +638,10 @@ export default {
       this.$refs[name2].validate((innerValid) => {
         this.$refs[name1].validate((valid) => {
           if (valid && innerValid) {
-            if (this.tempModalType === this.modalType.create) {
+            if (this.isCreate) {
               // 添加状态
               this.createProduct();
-            } else if (this.tempModalType === this.modalType.edit) {
+            } else if (this.isEdit) {
               // 编辑状态
               this.editProduct();
             }

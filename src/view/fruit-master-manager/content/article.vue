@@ -78,7 +78,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="poptipOk"
+            @on-ok="handleBatchDel"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash"/>
@@ -172,9 +172,7 @@
 import Tables from '_c/tables';
 import _ from 'lodash';
 import { getArticlesPages, deleteArticle, editArticle } from '@/api/fruitermaster';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 import BookTypeOption from '_c/book-type-option';
 
@@ -213,7 +211,7 @@ export default {
     Tables,
     BookTypeOption
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
       modalViewLoading: false,

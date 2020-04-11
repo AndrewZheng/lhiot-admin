@@ -69,7 +69,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="poptipOk"
+            @on-ok="handleBatchDel"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash"/> 批量删除
@@ -150,38 +150,38 @@
         <Form ref="modalEdit" :model="activitiesDetail" :rules="ruleInline" :label-width="80">
           <Row>
             <Col span="18">
-              <FormItem label="活动编码:" prop="activityCode">
-                <Input v-model="activitiesDetail.activityCode"></Input>
-              </FormItem>
+            <FormItem label="活动编码:" prop="activityCode">
+              <Input v-model="activitiesDetail.activityCode"></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-              <FormItem label="活动名称:" prop="activityName">
-                <Input v-model="activitiesDetail.activityName"></Input>
-              </FormItem>
+            <FormItem label="活动名称:" prop="activityName">
+              <Input v-model="activitiesDetail.activityName"></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-              <FormItem label="活动状态:" prop="onOff">
-                <Select v-model="activitiesDetail.onOff" clearable>
-                  <Option
-                    v-for="(item,index) in imageStatusEnum"
-                    :value="item.value"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px;width: 100%"
-                  >{{ item.label }}</Option>
-                </Select>
-              </FormItem>
+            <FormItem label="活动状态:" prop="onOff">
+              <Select v-model="activitiesDetail.onOff" clearable>
+                <Option
+                  v-for="(item,index) in imageStatusEnum"
+                  :value="item.value"
+                  :key="index"
+                  class="ptb2-5"
+                  style="padding-left: 5px;width: 100%"
+                >{{ item.label }}</Option>
+              </Select>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-              <FormItem label="活动详情链接:" prop="activityUrl">
-                <Input v-model="activitiesDetail.activityUrl"></Input>
-              </FormItem>
+            <FormItem label="活动详情链接:" prop="activityUrl">
+              <Input v-model="activitiesDetail.activityUrl"></Input>
+            </FormItem>
             </Col>
           </Row>
         </Form>
@@ -195,26 +195,24 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   deleteActivities,
   getActivitiesPages,
   editActivities,
   createActivities
-} from "@/api/mini-program";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { imageStatusConvert } from "@/libs/converStatus";
-import { imageStatusEnum } from "@/libs/enumerate";
+} from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import { imageStatusConvert } from '@/libs/converStatus';
+import { imageStatusEnum } from '@/libs/enumerate';
 
 const activitiesDetail = {
   id: 0,
-  activityCode: "",
-  activityName: "",
-  onOff: "",
-  activityUrl: ""
+  activityCode: '',
+  activityName: '',
+  onOff: '',
+  activityUrl: ''
 };
 
 const roleRowData = {
@@ -228,13 +226,13 @@ export default {
   components: {
     Tables
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {
-        activityCode: [{ required: true, message: "请输入活动编码1" }],
-        activityName: [{ required: true, message: "请输入活动名称" }],
-        onOff: [{ required: true, message: "请选择活动状态" }]
+        activityCode: [{ required: true, message: '请输入活动编码1' }],
+        activityName: [{ required: true, message: '请输入活动名称' }],
+        onOff: [{ required: true, message: '请选择活动状态' }]
       },
       defaultListMain: [],
       uploadListMain: [],
@@ -242,58 +240,58 @@ export default {
       imageStatusEnum,
       columns: [
         {
-          type: "selection",
+          type: 'selection',
           width: 60,
-          align: "center"
+          align: 'center'
         },
         {
-          title: "活动ID",
-          key: "id"
+          title: '活动ID',
+          key: 'id'
         },
         {
-          title: "活动编码",
-          key: "activityCode"
+          title: '活动编码',
+          key: 'activityCode'
         },
         {
-          title: "活动名称",
-          key: "activityName"
+          title: '活动名称',
+          key: 'activityName'
         },
         {
-          title: "活动状态",
-          key: "onOff",
+          title: '活动状态',
+          key: 'onOff',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.onOff === "ON") {
+            if (row.onOff === 'ON') {
               return (
                 <div>
-                  <tag color="success">
+                  <tag color='success'>
                     {imageStatusConvert(row.onOff).label}
                   </tag>
                 </div>
               );
-            } else if (row.onOff === "OFF") {
+            } else if (row.onOff === 'OFF') {
               return (
                 <div>
-                  <tag color="error">{imageStatusConvert(row.onOff).label}</tag>
+                  <tag color='error'>{imageStatusConvert(row.onOff).label}</tag>
                 </div>
               );
             }
             return (
               <div>
-                <tag color="primary">{row.onOff}</tag>
+                <tag color='primary'>{row.onOff}</tag>
               </div>
             );
           }
         },
         {
-          title: "活动详情链接",
-          key: "activityUrl"
+          title: '活动详情链接',
+          key: 'activityUrl'
         },
         {
-          title: "操作",
+          title: '操作',
           minWidth: 80,
-          key: "handle",
-          options: ["onSale", "view", "edit", "delete"]
+          key: 'handle',
+          options: ['onSale', 'view', 'edit', 'delete']
         }
       ],
       createLoading: false,
@@ -301,7 +299,7 @@ export default {
       searchRowData: _.cloneDeep(roleRowData),
       activitiesDetail: _.cloneDeep(activitiesDetail)
     };
-  },
+  }
 //   mounted() {
 //     this.searchRowData = _.cloneDeep(roleRowData);
 //     this.getTableData();
@@ -321,10 +319,10 @@ export default {
 //     handleSubmit(name) {
 //       this.$refs[name].validate(valid => {
 //         if (valid) {
-//           if (this.tempModalType === this.modalType.create) {
+//           if (this.isCreate) {
 //             // 添加状态
 //             this.createActivities();
-//           } else if (this.tempModalType === this.modalType.edit) {
+//           } else if (this.isEdit) {
 //             // 编辑状态
 //             this.editActivities();
 //           }

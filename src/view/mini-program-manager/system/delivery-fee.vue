@@ -82,7 +82,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="poptipOk"
+            @on-ok="handleBatchDel"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
@@ -112,30 +112,30 @@
         <Form ref="modalEdit" :model="postageDetail" :rules="ruleInline">
           <Row span="24">
             <Col span="6">
-              <FormItem :label-width="100" label="金额范围:¥" prop="minOrderAmount">
-                <InputNumber
-                  :readonly="modalTypeComputed"
-                  :min="0"
-                  :value="postageDetailMinOrderAmount"
-                  placeholder="最小金额"
-                  class="search-input"
-                  style="width: 100px"
-                  @on-change="postageDetailMinOrderAmountChange"
-                ></InputNumber>
-              </FormItem>
+            <FormItem :label-width="100" label="金额范围:¥" prop="minOrderAmount">
+              <InputNumber
+                :readonly="modalTypeComputed"
+                :min="0"
+                :value="postageDetailMinOrderAmount"
+                placeholder="最小金额"
+                class="search-input"
+                style="width: 100px"
+                @on-change="postageDetailMinOrderAmountChange"
+              ></InputNumber>
+            </FormItem>
             </Col>
             <Col span="16">
-              <FormItem label="— ¥" prop="maxOrderAmount">
-                <InputNumber
-                  :readonly="modalTypeComputed"
-                  :min="0"
-                  :value="postageDetailMaxOrderAmount"
-                  placeholder="最大金额"
-                  class="search-input"
-                  style="width: 100px"
-                  @on-change="postageDetailMaxOrderAmountChange"
-                ></InputNumber>
-              </FormItem>
+            <FormItem label="— ¥" prop="maxOrderAmount">
+              <InputNumber
+                :readonly="modalTypeComputed"
+                :min="0"
+                :value="postageDetailMaxOrderAmount"
+                placeholder="最大金额"
+                class="search-input"
+                style="width: 100px"
+                @on-change="postageDetailMaxOrderAmountChange"
+              ></InputNumber>
+            </FormItem>
             </Col>
           </Row>
           <Row>
@@ -184,7 +184,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
+import Tables from '_c/tables';
 import {
   getDeliveryFeeConfigPages,
   createDeliveryFeeConfig,
@@ -194,32 +194,30 @@ import {
   createDeliveryFeeConfigRule,
   deleteDeliveryFeeConfigRule,
   editDeliveryFeeConfigRule
-} from "@/api/mini-program";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import { deliveryAtTypeConvert } from "@/libs/converStatus";
+} from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import { deliveryAtTypeConvert } from '@/libs/converStatus';
 import {
   deliveryAtTypeEnum,
   updateWay,
   deliveryAtType
-} from "@/libs/enumerate";
+} from '@/libs/enumerate';
 import {
   fenToYuanDot2Number,
   fenToYuanDot2,
   yuanToFenNumber
-} from "@/libs/util";
+} from '@/libs/util';
 
 const fruitMasterDetail = {
-  id: "",
+  id: '',
   name: 0,
-  phoneNumber: "",
-  extractingAmount: "",
-  settlementStatus: "",
-  creditCardNumbers: "",
-  headStatus: "",
-  applicationTime: "",
-  handlingTime: "2018-10-28"
+  phoneNumber: '',
+  extractingAmount: '',
+  settlementStatus: '',
+  creditCardNumbers: '',
+  headStatus: '',
+  applicationTime: '',
+  handlingTime: '2018-10-28'
 };
 
 const postageDetail = {
@@ -238,7 +236,7 @@ const postageDetail = {
   deliveryTime: null,
   createTime: null,
   updateTime: null,
-  createBy: "",
+  createBy: '',
   deleteIds: []
 };
 const deliveryRules = {
@@ -268,60 +266,60 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {
         minOrderAmount: [
-          { required: true, message: "请填写最小金额", type: "number" }
+          { required: true, message: '请填写最小金额', type: 'number' }
         ],
         maxOrderAmount: [
-          { required: true, message: "请填写最大金额", type: "number" }
+          { required: true, message: '请填写最大金额', type: 'number' }
         ],
-        deliveryAtType: [{ required: true, message: "请选择时间段" }],
-        deliveryRules: [{ required: true, message: "请添加运费信息" }]
+        deliveryAtType: [{ required: true, message: '请选择时间段' }],
+        deliveryRules: [{ required: true, message: '请添加运费信息' }]
       },
       deliveryAtTypeList: deliveryAtTypeEnum,
       minDeliveryAtTypeEnum: [
         {
-          label: "白天8:00-18:00",
-          value: "8:00-18:00"
+          label: '白天8:00-18:00',
+          value: '8:00-18:00'
         },
         {
-          label: "晚上18:00-22:00",
-          value: "18:00-22:00"
+          label: '晚上18:00-22:00',
+          value: '18:00-22:00'
         },
         {
-          label: "全天8:00-22:00",
-          value: "8:00-18:00,18:00-22:00"
+          label: '全天8:00-22:00',
+          value: '8:00-18:00,18:00-22:00'
         }
       ],
-      distanceList: ["0-3", "3-5"],
+      distanceList: ['0-3', '3-5'],
       postageRuleTableColumns: [
         {
-          title: "距离范围（Km）",
+          title: '距离范围（Km）',
           minWidth: 150,
-          align: "center",
+          align: 'center',
           render: (h, params, vm) => {
-            return h("div", [
+            return h('div', [
               h(
-                "Select",
+                'Select',
                 {
                   props: {
-                    value: params.row.minDistance == 0 ? "0-3" : "3-5",
+                    value: params.row.minDistance == 0 ? '0-3' : '3-5',
                     disabled: this.modalTypeComputed
                   },
                   on: {
-                    "on-change": e => {
+                    'on-change': e => {
                       console.log(vm);
-                      if (e == "0-3") {
+                      if (e == '0-3') {
                         this.postageDetail.deliveryRules[
                           params.row.initRowIndex
                         ].minDistance = 0;
                         this.postageDetail.deliveryRules[
                           params.row.initRowIndex
                         ].maxDistance = 3;
-                      } else if (e == "3-5") {
+                      } else if (e == '3-5') {
                         this.postageDetail.deliveryRules[
                           params.row.initRowIndex
                         ].minDistance = 3;
@@ -334,22 +332,22 @@ export default {
                 },
                 [
                   h(
-                    "Option",
+                    'Option',
                     {
                       props: {
-                        value: "0-3"
+                        value: '0-3'
                       }
                     },
-                    "0-3Km"
+                    '0-3Km'
                   ),
                   h(
-                    "Option",
+                    'Option',
                     {
                       props: {
-                        value: "3-5"
+                        value: '3-5'
                       }
                     },
-                    "3-5Km"
+                    '3-5Km'
                   )
                 ]
               )
@@ -357,20 +355,20 @@ export default {
           }
         },
         {
-          title: "首重（Kg）",
-          key: "updateAt",
+          title: '首重（Kg）',
+          key: 'updateAt',
           minWidth: 150,
-          align: "center",
+          align: 'center',
           render: (h, params) => {
-            return h("div", [
-              h("InputNumber", {
+            return h('div', [
+              h('InputNumber', {
                 props: {
                   value: params.row.firstWeight,
                   readonly: this.modalTypeComputed,
                   min: 0
                 },
                 on: {
-                  "on-change": e => {
+                  'on-change': e => {
                     if (!e) {
                       e = 0;
                     }
@@ -384,19 +382,19 @@ export default {
           }
         },
         {
-          title: "费用（元）",
+          title: '费用（元）',
           minWidth: 150,
-          align: "center",
+          align: 'center',
           render: (h, params) => {
-            return h("div", [
-              h("InputNumber", {
+            return h('div', [
+              h('InputNumber', {
                 props: {
                   value: fenToYuanDot2Number(params.row.firstFee),
                   readonly: this.modalTypeComputed,
                   min: 0
                 },
                 on: {
-                  "on-change": e => {
+                  'on-change': e => {
                     if (!e) {
                       e = 0;
                     }
@@ -410,19 +408,19 @@ export default {
           }
         },
         {
-          title: "续重（Kg）",
-          align: "center",
+          title: '续重（Kg）',
+          align: 'center',
           minWidth: 150,
           render: (h, params) => {
-            return h("div", [
-              h("InputNumber", {
+            return h('div', [
+              h('InputNumber', {
                 props: {
                   value: params.row.additionalWeight,
                   readonly: this.modalTypeComputed,
                   min: 0
                 },
                 on: {
-                  "on-change": e => {
+                  'on-change': e => {
                     if (!e) {
                       e = 0;
                     }
@@ -436,19 +434,19 @@ export default {
           }
         },
         {
-          title: "续费（元）",
-          align: "center",
+          title: '续费（元）',
+          align: 'center',
           minWidth: 150,
           render: (h, params) => {
-            return h("div", [
-              h("InputNumber", {
+            return h('div', [
+              h('InputNumber', {
                 props: {
                   value: fenToYuanDot2Number(params.row.additionalFee),
                   readonly: this.modalTypeComputed,
                   min: 0
                 },
                 on: {
-                  "on-change": e => {
+                  'on-change': e => {
                     if (!e) {
                       e = 0;
                     }
@@ -464,64 +462,64 @@ export default {
       ],
       columns: [
         {
-          type: "selection",
-          key: "",
+          type: 'selection',
+          key: '',
           minWidth: 60,
-          align: "center"
+          align: 'center'
         },
         {
-          title: "ID",
-          align: "center",
-          key: "id"
+          title: 'ID',
+          align: 'center',
+          key: 'id'
         },
         {
-          title: "金额范围",
-          align: "center",
-          key: "minOrderAmount",
+          title: '金额范围',
+          align: 'center',
+          key: 'minOrderAmount',
           minWidth: 180,
           render(h, params) {
             return (
               <div>
                 {fenToYuanDot2(params.row.minOrderAmount) +
-                  " - " +
+                  ' - ' +
                   fenToYuanDot2(params.row.maxOrderAmount)}
               </div>
             );
           }
         },
         {
-          title: "配送时间",
-          align: "center",
-          key: "deliveryTime",
+          title: '配送时间',
+          align: 'center',
+          key: 'deliveryTime',
           minWidth: 150
         },
         {
-          title: "更新时间",
-          key: "updateTime",
-          align: "center",
+          title: '更新时间',
+          key: 'updateTime',
+          align: 'center',
           minWidth: 150
         },
         {
-          title: "创建人",
-          align: "center",
-          key: "createBy",
+          title: '创建人',
+          align: 'center',
+          key: 'createBy',
           minWidth: 150
         },
         {
-          title: "操作",
-          align: "center",
+          title: '操作',
+          align: 'center',
           minWidth: 200,
-          key: "handle",
-          options: ["view", "edit", "delete", "copy"]
+          key: 'handle',
+          options: ['view', 'edit', 'delete', 'copy']
         }
       ],
       options: [
         {
-          title: "操作",
+          title: '操作',
           minWidth: 80,
-          align: "center",
-          key: "handle",
-          options: ["delete"]
+          align: 'center',
+          key: 'handle',
+          options: ['delete']
         }
       ],
       modalViewLoading: false,
@@ -581,7 +579,7 @@ export default {
         });
       }
       this.postageDetail = params.row;
-      console.log("postageDetail:" + JSON.stringify(this.postageDetail));
+      console.log('postageDetail:' + JSON.stringify(this.postageDetail));
       this.createTableRow();
     },
     deleteTable(ids) {
@@ -610,15 +608,15 @@ export default {
       // return;
       this.$refs[name].validate(valid => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createTableRow();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editTableRow();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -629,7 +627,7 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
@@ -655,17 +653,17 @@ export default {
       if (this.postageDetail.deliveryRules.length > 0) {
         const array = [];
         this.postageDetail.deliveryRules.forEach(item => {
-          array.push(item.minDistance + "-" + item.maxDistance);
+          array.push(item.minDistance + '-' + item.maxDistance);
         });
         console.log(array);
         console.log(this.array_diff(this.distanceList, array));
         const tempArray = this.array_diff(this.distanceList, array);
         if (tempArray.length === 0) {
-          this.$Message.error("不能添加相同距离范围的运费模板！");
+          this.$Message.error('不能添加相同距离范围的运费模板！');
           return;
         } else {
           const str = tempArray[0];
-          const strArray = str.split("-");
+          const strArray = str.split('-');
           const obj = this._.cloneDeep(deliveryRules);
           obj.minDistance = strArray[0];
           obj.maxDistance = strArray[1];
@@ -692,7 +690,7 @@ export default {
       return A;
     },
     postageRuleTableHandleDelete(params) {
-      if (this.tempModalType === this.modalType.create) {
+      if (this.isCreate) {
         this.postageDetail.deliveryRules = params.tableData.filter(
           (item, index) => index !== params.row.initRowIndex
         );
@@ -737,7 +735,7 @@ export default {
       this.postageDetail = this._.cloneDeep(params.row);
       if (this.postageDetail.deliveryRules.length !== 0) {
         this.postageDetail.deliveryRules.forEach(item => {
-          item.updateWay = "UPDATE";
+          item.updateWay = 'UPDATE';
         });
       }
       this.tempDetailList.length = 0;

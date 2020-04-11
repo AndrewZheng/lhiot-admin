@@ -19,23 +19,39 @@
       >
         <div slot="searchCondition">
           <Row>
-            <Input v-model="searchRowData.description" placeholder="套餐周期描述" class="search-input mr5" style="width: auto" clearable></Input>
-            <Button v-waves :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
-              <Icon type="md-search"/>&nbsp;搜索
+            <Input
+              v-model="searchRowData.description"
+              placeholder="套餐周期描述"
+              class="search-input mr5"
+              style="width: auto"
+              clearable
+            ></Input>
+            <Button
+              v-waves
+              :loading="searchLoading"
+              class="search-btn mr5"
+              type="primary"
+              @click="handleSearch"
+            >
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
-            <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-              <Icon type="md-refresh"/>&nbsp;清除条件
+            <Button
+              v-waves
+              :loading="clearSearchLoading"
+              class="search-btn"
+              type="info"
+              @click="handleClear"
+            >
+              <Icon type="md-refresh" />&nbsp;清除条件
             </Button>
           </Row>
         </div>
         <div slot="operations">
           <Button v-waves type="success" class="mr5" @click="handleAdd">
-            <Icon type="md-add"/>
-            创建
+            <Icon type="md-add" />创建
           </Button>
           <Button type="error" class="mr5" @click="handleDeleteBatch">
-            <Icon type="md-trash"/>
-            删除
+            <Icon type="md-trash" />删除
           </Button>
         </div>
       </tables>
@@ -47,15 +63,13 @@
             show-sizer
             show-total
             @on-change="changePage"
-            @on-page-size-change="changePageSize"></Page>
+            @on-page-size-change="changePageSize"
+          ></Page>
         </Row>
       </div>
     </Card>
 
-    <Modal
-      v-model="modalView"
-      :mask-closable="false"
-    >
+    <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
         <span>规格基础数据</span>
       </p>
@@ -81,7 +95,7 @@
             <Row>
               <i-col span="4">套餐规格配图:</i-col>
               <i-col span="20">
-                <img :src="rowData.image" style="width: 390px; height:160px">
+                <img :src="rowData.image" style="width: 390px; height:160px" >
               </i-col>
             </Row>
           </i-col>
@@ -92,11 +106,7 @@
       </div>
     </Modal>
 
-    <Modal
-      v-model="modalEdit"
-      :mask-closable="false"
-      :z-index="1000"
-    >
+    <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000">
       <p slot="header">
         <span>{{ tempModalType===modalType.edit ?'修改规格基础数据':'创建规格基础数据' }}</span>
       </p>
@@ -112,17 +122,22 @@
           <Row>
             <Col span="15">
             <FormItem label="套餐规格数量:" prop="quantity">
-              <InputNumber v-model="rowData.quantity" :min="1" placeholder="套餐规格数量" style="width:150px"></InputNumber>
+              <InputNumber
+                v-model="rowData.quantity"
+                :min="1"
+                placeholder="套餐规格数量"
+                style="width:150px"
+              ></InputNumber>
             </FormItem>
             </Col>
           </Row>
           <Row>
-            <FormItem label="套餐规格配图: 建议尺寸;400x400(单位:px):" prop="image" >
+            <FormItem label="套餐规格配图: 建议尺寸;400x400(单位:px):" prop="image">
               <Input v-show="false" v-model="rowData.image" style="width: auto"></Input>
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>
-                    <img :src="item.url">
+                    <img :src="item.url" >
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                       <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -140,9 +155,7 @@
                 @on-success="handleSuccessMain"
               >
                 <div slot="content">
-                  <Button type="primary">
-                    上传图片
-                  </Button>
+                  <Button type="primary">上传图片</Button>
                 </div>
               </IViewUpload>
             </FormItem>
@@ -151,26 +164,31 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit','innerModalEdit')">确定
-        </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit','innerModalEdit')"
+        >确定</Button>
       </div>
     </Modal>
 
     <Modal v-model="uploadVisible" title="View Image">
-      <img :src="imgUploadViewItem" style="width: 100%">
+      <img :src="imgUploadViewItem" style="width: 100%" >
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import { getCustomPlanSpecificationStandardsPages, deleteCustomPlanSpecificationStandard, addCustomPlanSpecificationStandard, editCustomPlanSpecificationStandard } from '@/api/fruitermaster';
-import deleteMixin from '@/mixins/deleteMixin.js';
+import {
+  getCustomPlanSpecificationStandardsPages,
+  deleteCustomPlanSpecificationStandard,
+  addCustomPlanSpecificationStandard,
+  editCustomPlanSpecificationStandard
+} from '@/api/fruitermaster';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
 
 const customPlanSpecificationStandard = {
   description: '',
@@ -190,7 +208,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
       modalViewLoading: false,
@@ -200,7 +218,10 @@ export default {
       ruleInline: {
         description: [{ required: true, message: '请填写描述' }],
         image: [{ required: true, message: '请上传图片' }],
-        quantity: [{ required: true, message: '请填写数量' }, { message: '必须为非零整数', pattern: /^[1-9]\d*$/ }]
+        quantity: [
+          { required: true, message: '请填写数量' },
+          { message: '必须为非零整数', pattern: /^[1-9]\d*$/ }
+        ]
       },
       columns: [
         {
@@ -220,7 +241,15 @@ export default {
           key: 'image',
           render: (h, params, vm) => {
             const { row } = params;
-            const str = <img src={row.image} style='margin-top:5px' height='100' width='250' margin-top='10px'/>;
+            const str = (
+              <img
+                src={row.image}
+                style='margin-top:5px'
+                height='100'
+                width='250'
+                margin-top='10px'
+              />
+            );
             return <div>{str}</div>;
           }
         },
@@ -256,28 +285,32 @@ export default {
   },
   methods: {
     handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
+      this.$refs[name].validate(valid => {
         if (valid) {
           if (this.rowData.id === 0) {
             this.modalViewLoading = true;
             this.loading = true;
-            addCustomPlanSpecificationStandard(this.rowData).then(res => {
-              this.$Message.success('创建成功!');
-              this.getTableData();
-              this.modalEdit = false;
-            }).finally(res => {
-              this.modalViewLoading = false;
-            });
+            addCustomPlanSpecificationStandard(this.rowData)
+              .then(res => {
+                this.$Message.success('创建成功!');
+                this.getTableData();
+                this.modalEdit = false;
+              })
+              .finally(res => {
+                this.modalViewLoading = false;
+              });
           } else {
             this.modalViewLoading = true;
             this.loading = true;
-            editCustomPlanSpecificationStandard(this.rowData).then(res => {
-              this.$Message.success('修改成功!');
-              this.getTableData();
-              this.modalEdit = false;
-            }).finally(res => {
-              this.modalViewLoading = false;
-            });
+            editCustomPlanSpecificationStandard(this.rowData)
+              .then(res => {
+                this.$Message.success('修改成功!');
+                this.getTableData();
+                this.modalEdit = false;
+              })
+              .finally(res => {
+                this.modalViewLoading = false;
+              });
           }
         } else {
           this.$Message.warn('请完善周套餐/月套餐信息');
@@ -336,47 +369,61 @@ export default {
       }
     },
     getTableData() {
-      getCustomPlanSpecificationStandardsPages(this.searchRowData).then(res => {
-        this.tableData = res.array;
-        this.total = res.total;
-      }).finally(res => {
-        this.loading = false;
-        this.searchLoading = false;
-        this.clearSearchLoading = false;
-      });
+      getCustomPlanSpecificationStandardsPages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.array;
+          this.total = res.total;
+        })
+        .finally(res => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
     },
     deleteTable(ids) {
       this.loading = true;
       deleteCustomPlanSpecificationStandard({
         ids
-      }).then(res => {
-        const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-        if (this.tableData.length === this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
-          this.searchRowData.page -= 1;
-        }
-        this.tableDataSelected = [];
-        this.getTableData();
-      }
-      ).catch(() => {
-        this.loading = false;
-      });
+      })
+        .then(res => {
+          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+          if (
+            this.tableData.length === this.tableDataSelected.length &&
+            this.searchRowData.page === totalPage &&
+            this.searchRowData.page !== 1
+          ) {
+            this.searchRowData.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.getTableData();
+        })
+        .catch(() => {
+          this.loading = false;
+        });
     },
     handleDeleteBatch() {
       if (this.ids.length !== 0) {
         const ids = this.ids;
         deleteCustomPlanSpecificationStandard({
           ids
-        }).then(res => {
-          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-          if (this.tableData.length === this.tableDataSelected.length && this.searchRowData.page === totalPage && this.searchRowData.page !== 1) {
-            this.searchRowData.page -= 1;
-          }
-          this.tableDataSelected = [];
-          this.getTableData();
-        }
-        ).catch(() => {
-          this.loading = false;
-        });
+        })
+          .then(res => {
+            const totalPage = Math.ceil(
+              this.total / this.searchRowData.pageSize
+            );
+            if (
+              this.tableData.length === this.tableDataSelected.length &&
+              this.searchRowData.page === totalPage &&
+              this.searchRowData.page !== 1
+            ) {
+              this.searchRowData.page -= 1;
+            }
+            this.tableDataSelected = [];
+            this.getTableData();
+          })
+          .catch(() => {
+            this.loading = false;
+          });
       } else {
         this.$Message.error('请至少选择一行记录');
       }
@@ -390,5 +437,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>
