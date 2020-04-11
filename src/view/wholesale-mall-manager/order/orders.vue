@@ -369,11 +369,10 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-    <!-- 在线打印 -->
+    <!-- 在线打印  height="100%"-->
     <div ref="printTable" style="display:none">
       <table
         border="1"
-        height="100%"
         width="800"
         cellspacing="0"
         cellpadding="0"
@@ -394,13 +393,13 @@
         <tbody id="tabInfo"></tbody>
         <tbody id="tab"></tbody>
         <tbody id="tabTotal"></tbody>
-        <tr style="height:120px;">
+        <tr style="height:80px;">
           <td colspan="10">
-            <p style="margin-top:-50px">发货备注:</p>
+            <p style="margin-top:-40px">发货备注:</p>
           </td>
         </tr>
         <tfoot>
-          <tr style="height:40px;border: 0 solid red;border-collapse:collapse;">
+          <tr style="height:50px;border: 0 solid red;border-collapse:collapse;">
             <td colspan="3" style="border: 0 solid red;border-collapse:collapse;">配送员签字:</td>
             <td colspan="2" style="border: 0 solid red;border-collapse:collapse;">司机签字:</td>
             <td colspan="3" style="border: 0 solid red;border-collapse:collapse;">客户签字:</td>
@@ -1139,12 +1138,12 @@ export default {
     },
     //在线打印
     onlinePrinting() {
-      if (this.tableDataSelected.length == 1) {
+      for (let i = 0; i < this.tableDataSelected.length; i++) {
         if (
-          this.tableDataSelected[0].orderStatus != "undelivery" &&
-          this.tableDataSelected[0].orderStatus != "delivery"
+          this.tableDataSelected[i].orderStatus != "undelivery" &&
+          this.tableDataSelected[i].orderStatus != "delivery"
         ) {
-          this.$Message.info("不是待发货或者配送中的订单");
+          this.$Message.info("选中的订单不是待发货或者配送中的订单");
           return;
         }
       }
@@ -1193,8 +1192,8 @@ export default {
               strData += "<td>" + _this.orderDetail.shopCode + "</td>";
               strData += "<td>" + "订单号" + "</td>";
               strData +=
-                '<td colspan="3">' + _this.orderDetail.orderCode + "</td>";
-              strData += "<td>" + "海鼎编号" + "</td>";
+                '<td colspan="2">' + _this.orderDetail.orderCode + "</td>";
+              strData += "<td colspan='2'>" + "海鼎编号" + "</td>";
               strData +=
                 "<td colspan='2'>" + _this.orderDetail.hdCode + "</td>";
               strData += "</tr>";
@@ -1203,8 +1202,8 @@ export default {
               strData += "<td>" + _this.orderDetail.shopName + "</td>";
               strData += "<td>" + "联系人" + "</td>";
               strData +=
-                '<td colspan="3">' + _this.deliveryInfo.contactsName + "</td>";
-              strData += "<td>" + "联系电话" + "</td>";
+                '<td colspan="2">' + _this.deliveryInfo.contactsName + "</td>";
+              strData += "<td colspan='2'>" + "联系电话" + "</td>";
               strData +=
                 '<td colspan="2">' + _this.deliveryInfo.phone + "</td>";
               strData += "</tr>";
@@ -1215,10 +1214,9 @@ export default {
               strData += "<tr align='center' style='height:30px;'>";
               strData += '<td colspan="2">' + "下单时间" + "</td>";
               strData += "<td>" + _this.orderDetail.createTime + "</td>";
-              strData += '<td colspan="2">' + "支付类型" + "</td>";
-              strData +=
-                '<td colspan="2">' + _this.orderDetail.settlementType + "</td>";
-              strData += "<td>" + "订单金额" + "</td>";
+              strData += "<td>" + "支付类型" + "</td>";
+              strData += "<td>" + _this.orderDetail.settlementType + "</td>";
+              strData += "<td colspan='3'>" + "订单金额" + "</td>";
               strData +=
                 '<td colspan="2">' +
                 fenToYuanDot2(_this.orderDetail.totalFee) +
@@ -1250,7 +1248,7 @@ export default {
               strData +=
                 "<tr align='center' style='height:30px;background:#eeeeee'>";
               strData += "<td style='min-Width:40px'>" + "序号" + "</td>";
-              strData += "<td style='min-Width:60px'>" + "基础条码" + "</td>";
+              strData += "<td style='min-Width:60px'>" + "条码" + "</td>";
               strData += "<td style='min-Width:125px'>" + "商品名称" + "</td>";
               strData += "<td style='min-Width:110px'>" + "商品规格" + "</td>";
               strData += "<td style='min-Width:53px'>" + "出库参数" + "</td>";
@@ -1268,7 +1266,10 @@ export default {
                 strHTML += "<td>" + orderGoodsList[i].baseBar + "</td>";
                 strHTML += "<td>" + orderGoodsList[i].goodsName + "</td>";
                 strHTML += "<td>" + orderGoodsList[i].standard + "</td>";
-                strHTML += "<td>" + orderGoodsList[i].standardWeight + "</td>";
+                strHTML +=
+                  "<td>" +
+                  orderGoodsList[i].standardWeight * orderGoodsList[i].quanity +
+                  "</td>";
                 strHTML += "<td>" + orderGoodsList[i].goodsUnit + "</td>";
                 strHTML += "<td>" + orderGoodsList[i].quanity + "</td>";
                 strHTML +=
@@ -1305,19 +1306,19 @@ export default {
                 _this.$refs.printTable.innerHTML +
                 "</body>";
               _this.printNum = Number(j) + 1;
-              _this.previewPrinting(printHtml,LODOP);
+              _this.previewPrinting(printHtml, LODOP);
             }
-            LODOP.SET_PRINT_STYLEA(0, "Horient", 2);
+            // LODOP.SET_PRINT_STYLEA(0, "Vorient", 2);
             LODOP.PREVIEW();
           });
         })
         .finally(() => {});
     },
-    previewPrinting(printHtml,LODOP) {
-      LODOP.SET_PRINT_PAGESIZE(3, 2400, 45, "");
-      LODOP.SET_PRINT_STYLEA(0, "Horient", 2);
+    previewPrinting(printHtml, LODOP) {
+      LODOP.SET_PRINT_PAGESIZE(1, 2400, 2794, "");
+      // LODOP.SET_PRINT_STYLEA(0, "Vorient", 2);
       LODOP.NewPageA();
-      LODOP.ADD_PRINT_HTM(26, 0, "98%", "98%", printHtml);
+      LODOP.ADD_PRINT_HTM(10, -10, "98%", "98%", printHtml);
       var otab = document.getElementById("tab");
       var otabInfo = document.getElementById("tabInfo");
       var otabTotal = document.getElementById("tabTotal");

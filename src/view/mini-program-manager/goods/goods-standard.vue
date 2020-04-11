@@ -730,9 +730,7 @@
                   :value="discountPriceComputed"
                   @on-change="calDiscountRate"
                 ></InputNumber>
-                <div
-                  v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'"
-                >（以售卖价格优先计算折扣率）</div>
+                <div v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'">（以售卖价格优先计算折扣率）</div>
               </FormItem>
             </i-col>
             <i-col v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'" span="12">
@@ -2122,7 +2120,6 @@ export default {
       this.productStandardDetail.baseBarcode = row.baseBarcode;
       this.productStandardDetail.baseImage = row.image;
       this.productStandardDetail.baseProductDescription = row.description;
-
       // 给要关联的规格信息设置默认值，用户可以选择修改
       this.productStandardDetail.productName = row.productName;
       this.productStandardDetail.productDescription = row.description;

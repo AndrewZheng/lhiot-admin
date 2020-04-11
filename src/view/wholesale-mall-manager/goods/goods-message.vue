@@ -356,7 +356,7 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="规格描述(推荐宽度为710px，高度自适应):" prop="goodsImages">
+              <FormItem label="商品详情图(推荐宽度为710px，高度自适应):" prop="goodsImages">
                 <Input v-show="false" v-model="productDetail.goodsImages" style="width: auto"></Input>
                 <div
                   v-for="item in uploadListMultiple"
