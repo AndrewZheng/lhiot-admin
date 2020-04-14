@@ -349,10 +349,9 @@
               </FormItem>
             </i-col>
           </Row>
-          <Row>
-  
+          <Row style="display:none">
             <i-col span="12">
-              <FormItem label="上架商品主图:建议尺寸;690x690(单位:px):" prop="image">
+              <FormItem label="上架商品主图:建议尺寸;690x690(单位:px):" prop="goodsImage">
                 <Input
                   v-show="false"
                   v-model="productStandardDetail.goodsImage"
@@ -1235,7 +1234,9 @@ export default {
         ],
         isVip: [{ required: true, message: "请选择商品的类型" }],
         standardGoodsName: [{ required: true, message: "请输入上架商品名称" }],
-        // goodsImage: [{ required: true, message: '请上传上架商品主图' }],
+        // goodsImage: [{ required: true, message: "请上传上架商品主图" }],
+        // image: [{ required: true, message: "请上传上架商品主图" }],
+        // goodsImages: [{ required: true, message: "请上传上架商品详情主图" }],
         unitCode: [{ required: true, message: "请选择商品单位" }],
         vaild: [{ required: true, message: "请选择商品状态" }],
         standard: [{ required: true, message: "请输入商品规格" }],
