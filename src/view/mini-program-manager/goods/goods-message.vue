@@ -360,9 +360,6 @@
                 ref="uploadMain"
                 :default-list="defaultListMain"
                 :image-size="imageSize"
-                groupType="base_image"
-                fileDir="product"
-                appType="min_app"
                 @on-success="handleSuccessMain"
               >
                 <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -403,8 +400,7 @@ import {
   getProduct,
   getProductPages,
   getProductCategoriesTree,
-  getProductUnits,
-  deletePicture
+  getProductUnits
 } from "@/api/mini-program";
 import {
   buildMenu,
@@ -499,9 +495,6 @@ export default {
       defaultListMain: [],
       defaultListSecond: [],
       uploadListMain: [],
-      oldPicture: [],
-      newPicture: [],
-      save: [],
       // uploadListSecond: [],
       // uploadListMultiple: [],
       goodsCategoryData: [],
@@ -707,14 +700,7 @@ export default {
       this.uploadListMain = [];
       this.productDetail.image = null;
     },
-    // ====
     handleSubmit(name1) {
-      if (this.oldPicture.length > 0) {
-        let urls = {
-          urls: this.oldPicture
-        };
-        this.deletePicture(urls);
-      }
       this.$refs[name1].validate(valid => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
@@ -728,24 +714,6 @@ export default {
           this.$Message.error("请完善信息!");
         }
       });
-    },
-    handleEditClose() {
-      if (this.newPicture.length > 0) {
-        let urls = {
-          urls: this.newPicture
-        };
-        this.deletePicture(urls);
-      }
-      this.oldPicture = [];
-      this.newPicture = [];
-      this.modalEdit = false;
-    },
-    deletePicture(urls) {
-      deletePicture({
-        urls
-      })
-        .then(res => {})
-        .catch(() => {});
     },
     createProduct() {
       this.modalViewLoading = true;
@@ -869,8 +837,6 @@ export default {
         });
     },
     handleEdit(params) {
-      this.save = [];
-      this.save.push(params.row.image);
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.loading = true;
@@ -970,8 +936,6 @@ export default {
       this.uploadListMain = fileList;
       this.productDetail.image = null;
       this.productDetail.image = fileList[0].url;
-      this.newPicture.push(fileList[0].url);
-      this.oldPicture = this.save;
     },
     statusChange(value) {
       this.productDetail.status = value;
