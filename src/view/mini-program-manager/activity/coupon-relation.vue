@@ -262,7 +262,76 @@
               </i-col>
             </Row>
             <Row>
-              <i-col span="7" v-if="tempModalType=='addTemplate'">
+              <i-col v-if="tempModalType == 'addTemplate'" span="6">
+                <FormItem label="券有效期:" prop="useLimitType">
+                  <Select
+                    v-model="addRelationDetail.validDateType"
+                    placeholder="券有效期类型"
+                    style="padding-right: 5px;width: 120px"
+                  >
+                    <Option
+                      v-for="(item,index) in validDateTypeEnum"
+                      :value="item.value"
+                      :key="index"
+                      class="ptb2-5"
+                      style="padding-left: 5px;width: 100px"
+                    >{{ item.label }}</Option>
+                  </Select>
+                </FormItem>
+              </i-col>
+              <template
+                v-if="addRelationDetail.validDateType=='UN_FIXED_DATE' && tempModalType=='addTemplate'"
+              >
+                <i-col span="7">
+                  <FormItem label="发放券后:" prop="beginDay">
+                    <InputNumber
+                      :min="0"
+                      v-model="addRelationDetail.beginDay"
+                      label="生效开始"
+                      style="width: 95px"
+                    ></InputNumber>&nbsp;天生效
+                  </FormItem>
+                </i-col>
+                <i-col span="7">
+                  <FormItem label="有效天数:" prop="endDay">
+                    <InputNumber
+                      :min="0"
+                      v-model="addRelationDetail.endDay"
+                      label="有效天数"
+                      style="width: 95px"
+                    ></InputNumber>&nbsp;天
+                  </FormItem>
+                </i-col>
+              </template>
+              <template
+                v-if="addRelationDetail.validDateType=='FIXED_DATE' && tempModalType=='addTemplate'"
+              >
+                <i-col span="7">
+                  <FormItem label="生效时间:" prop="effectiveStartTime">
+                    <DatePicker
+                      :value="addRelationDetail.effectiveStartTime"
+                      format="yyyy-MM-dd HH:mm:ss"
+                      type="datetime"
+                      placeholder="生效时间"
+                      style="width: 160px"
+                      @on-change="effectiveStartTimeChange"
+                    />
+                  </FormItem>
+                </i-col>
+                <i-col span="7">
+                  <FormItem label="失效时间:" prop="effectiveEndTime">
+                    <DatePicker
+                      :value="addRelationDetail.effectiveEndTime"
+                      format="yyyy-MM-dd HH:mm:ss"
+                      type="datetime"
+                      placeholder="结束时间"
+                      style="width: 160px"
+                      @on-change="effectiveEndTimeChange"
+                    />
+                  </FormItem>
+                </i-col>
+              </template>
+              <!-- <i-col span="7" v-if="tempModalType=='addTemplate'">
                 <FormItem label="生效时间:" prop="effectiveStartTime">
                   <DatePicker
                     :value="addRelationDetail.effectiveStartTime"
@@ -285,19 +354,19 @@
                     @on-change="effectiveEndTimeChange"
                   />
                 </FormItem>
-              </i-col>
+              </i-col>-->
+            </Row>
+            <Row>
               <i-col span="4">
                 <FormItem label="发券总数:" prop="couponLimit">
                   <InputNumber
                     :min="0"
                     v-model="addRelationDetail.couponLimit"
                     label="限购数量"
-                    style="padding-right: 5px;width: 160px"
+                    style="padding-right: 5px;width: 80px"
                   ></InputNumber>
                 </FormItem>
               </i-col>
-            </Row>
-            <Row>
               <i-col span="6">
                 <FormItem label="券使用范围:" prop="couponScope" v-show="tempModalType=='addHdTemplate'">
                   <Select
@@ -568,7 +637,8 @@ import {
   couponTypeEnum,
   couponScopeEnum,
   couponUseLimitEnum,
-  userScopeEnum
+  userScopeEnum,
+  validDateTypeEnum
 } from "@/libs/enumerate";
 import {
   compareData,
@@ -595,13 +665,18 @@ const couponDetail = {
   ifEffective: null,
   beginTime: null,
   endTime: null,
+  effectiveStartTime: "",
+  effectiveEndTime: "",
   createUser: "",
   createTime: null,
   applicationType: null,
   activityImage: "",
   activityUrl: "",
   maxDiscountFee: "",
-  rank: 0 // 排序字段
+  rank: 0, // 排序字段
+  validDateType: "FIXED_DATE",
+  beginDay: 0,
+  endDay: 0
 };
 
 // 关联的优惠券配置对象
@@ -614,8 +689,8 @@ const relationDetail = {
   minBuyFee: 0,
   couponStatus: null,
   couponImage: "",
-  effectiveStartTime: null,
-  effectiveEndTime: null,
+  effectiveStartTime: "",
+  effectiveEndTime: "",
   couponLimit: 0,
   receiveCount: 0,
   couponRules: "",
@@ -624,7 +699,10 @@ const relationDetail = {
   hdActivityId: 0,
   source: "SMALL", // 默认来源为系统优惠券
   userScope: "",
-  rank: 0 // 排序字段
+  rank: 0, // 排序字段
+  validDateType: "FIXED_DATE",
+  beginDay: 0,
+  endDay: 0
 };
 
 // 系统优惠券模板对象
@@ -856,9 +934,9 @@ const dataColumns = [
   },
   {
     title: "生效时间",
-    align: "center",
     key: "effectiveStartTime",
-    minWidth: 165,
+    align: "center",
+    minWidth: 160,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
@@ -877,9 +955,9 @@ const dataColumns = [
   },
   {
     title: "失效时间",
-    align: "center",
     key: "effectiveEndTime",
-    minWidth: 165,
+    align: "center",
+    minWidth: 160,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
@@ -1216,6 +1294,7 @@ export default {
       couponTypeEnum,
       couponScopeEnum,
       couponUseLimitEnum,
+      validDateTypeEnum,
       userScopeEnum,
       dataColumns: dataColumns,
       templateColumns: _.cloneDeep(templateColumns),
@@ -1448,7 +1527,6 @@ export default {
       this.modalViewLoading = true;
       // 添加的是系统券，填写来源为系统优惠券 默认券有效期类型
       this.addRelationDetail.source = "SMALL";
-      this.addRelationDetail.validDateType = "FIXED_DATE";
       this.addRelationDetail.activityCouponId = this.couponDetail.id;
       console.log("before create:", this.addRelationDetail);
       this.addRelationList.push(this.addRelationDetail);

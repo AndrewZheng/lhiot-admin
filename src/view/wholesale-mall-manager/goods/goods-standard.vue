@@ -350,7 +350,7 @@
             </i-col>
           </Row>
           <Row>
-            <!-- 主图 ==== -->
+  
             <i-col span="12">
               <FormItem label="上架商品主图:建议尺寸;690x690(单位:px):" prop="image">
                 <Input

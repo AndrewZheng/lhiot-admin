@@ -1,5 +1,17 @@
 import Vue from 'vue';
 const $http = Vue.prototype.$http;
+const $delHttp = Vue.prototype.$delHttp;
+
+// 删除图片
+export const deletePicture = ({
+  urls
+}) => {
+  return $delHttp.request({
+    url: '/v2/upload',
+    data:urls,
+    method: 'delete'
+  });
+};
 
 // 查询商品分类树结构
 export const getProductCategoriesTree = () => {
@@ -2348,5 +2360,13 @@ export const sureReceive = ({
   return $http.request({
     url: '/minapp/orders/receive/' + orderId,
     method: 'get'
+  });
+};
+export const sureMaituan = ({
+  orderCode
+}) => {
+  return $http.request({
+    url: '/minapp/orders/meituan/send/' + orderCode,
+    method: 'post',
   });
 };

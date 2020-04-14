@@ -355,10 +355,14 @@
                   <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
                 </template>
               </div>
+              <!-- ==== -->
               <IViewUpload
                 ref="uploadMain"
                 :default-list="defaultListMain"
                 :image-size="imageSize"
+                groupType="base_image"
+                fileDir="product"
+                appType="min_app"
                 @on-success="handleSuccessMain"
               >
                 <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -375,46 +379,6 @@
             </i-col>
           </Row>
         </Form>
-        <!--
-        <Divider orientation="center">商品规格</Divider>
-        <Form ref="innerModalEdit" :model="productDetail.productSpecification" :rules="ruleInline">
-          <Row>
-            <Col span="12">
-            <FormItem :label-width="80" label="规格单位:" prop="packagingUnit">
-              <Select :value="productDetail.productSpecification.packagingUnit" @on-change="uniteChange">
-                <Option
-                  v-for="(item,index) in unitsList"
-                  :value="item.value"
-                  :key="index"
-                  class="ptb2-5"
-                  style="padding-left: 5px">{{ item.label }}
-                </Option>
-              </Select>
-            </FormItem>
-              </Col>
-            <Col span="12">
-            <FormItem :label-width="80" label="规格条码:" prop="barcode">
-              <Input v-model="productDetail.productSpecification.barcode"></Input>
-            </FormItem>
-              </Col>
-          </Row>
-          <Row>
-            <Col span="12">
-            <FormItem :label-width="80" label="安全库存:" prop="limitInventory">
-              <Input
-                v-if="productDetail.productSpecification"
-                v-model="productDetail.productSpecification.limitInventory"></Input>
-            </FormItem>
-              </Col>
-            <Col span="12">
-            <FormItem :label-width="80" label="重量(kg):" prop="weight">
-              <Input
-                v-if="productDetail.productSpecification"
-                v-model="productDetail.productSpecification.weight"></Input>
-            </FormItem>
-              </Col>
-          </Row>
-        </Form>-->
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
@@ -439,7 +403,8 @@ import {
   getProduct,
   getProductPages,
   getProductCategoriesTree,
-  getProductUnits
+  getProductUnits,
+  deletePicture
 } from "@/api/mini-program";
 import {
   buildMenu,
@@ -534,6 +499,9 @@ export default {
       defaultListMain: [],
       defaultListSecond: [],
       uploadListMain: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       // uploadListSecond: [],
       // uploadListMultiple: [],
       goodsCategoryData: [],
@@ -739,7 +707,14 @@ export default {
       this.uploadListMain = [];
       this.productDetail.image = null;
     },
+    // ====
     handleSubmit(name1) {
+      if (this.oldPicture.length > 0) {
+        let urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs[name1].validate(valid => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
@@ -753,6 +728,24 @@ export default {
           this.$Message.error("请完善信息!");
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
     },
     createProduct() {
       this.modalViewLoading = true;
@@ -876,6 +869,8 @@ export default {
         });
     },
     handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.image);
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.loading = true;
@@ -975,6 +970,8 @@ export default {
       this.uploadListMain = fileList;
       this.productDetail.image = null;
       this.productDetail.image = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     statusChange(value) {
       this.productDetail.status = value;

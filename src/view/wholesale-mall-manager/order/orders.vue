@@ -1268,7 +1268,7 @@ export default {
                 strHTML += "<td>" + orderGoodsList[i].standard + "</td>";
                 strHTML +=
                   "<td>" +
-                  orderGoodsList[i].standardWeight * orderGoodsList[i].quanity +
+                  (orderGoodsList[i].standardWeight * orderGoodsList[i].quanity).toFixed(2) +
                   "</td>";
                 strHTML += "<td>" + orderGoodsList[i].goodsUnit + "</td>";
                 strHTML += "<td>" + orderGoodsList[i].quanity + "</td>";

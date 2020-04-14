@@ -29,10 +29,18 @@ class HttpRequest {
       response: this.responseType
     });
 
+    //删除图片
+    const delHttpOps = _.merge({}, defaultOps, {
+      baseURL: "http://test-resource.food-see.com",
+      response: this.responseType
+    });
+
     // 后端微服务有需求再扩展
     switch (this.centerType) {
       case 'IMS_SERVICE':
         return imsServiceOps;
+      case 'DEL_HTTP':
+        return delHttpOps;
       default:
         return defaultOps;
     }

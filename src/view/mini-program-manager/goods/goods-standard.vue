@@ -427,6 +427,9 @@
                   :default-list="defaultListMain"
                   :image-size="imageSize"
                   :max-num="1"
+                  groupType="base_image"
+                  fileDir="product"
+                  appType="min_app"
                   @on-success="handleSuccessMain"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -622,6 +625,9 @@
                   :default-list="defaultListMultiple"
                   :image-size="imageSize"
                   :max-num="10"
+                  groupType="base_image"
+                  fileDir="product"
+                  appType="min_app"
                   multiple
                   @on-success="handleSuccessMultiple"
                 >
@@ -953,7 +959,8 @@ import {
   editProductStandard,
   getProductUnits,
   getProductPages,
-  getHdProductInfo
+  getHdProductInfo,
+  deletePicture
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -1472,6 +1479,9 @@ export default {
       productDetail: productDetail,
       // 选中的行
       tableDataSelected: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       showBack: false,
       HdSvipInfo: "",
       shelvesStatus: [
@@ -1637,6 +1647,8 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.image);
       this.clickFlag = false;
       this.tempModalType = this.modalType.edit;
       this.productStandardDetail = this._.cloneDeep(params.row);
@@ -1790,7 +1802,14 @@ export default {
         });
       });
     },
+    // ====
     handleSubmit(name) {
+      if (this.oldPicture.length > 0) {
+        let urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs[name].validate(valid => {
         if (valid) {
           if (!this.productStandardDetail.salePrice) {
@@ -1829,6 +1848,27 @@ export default {
           this.$Message.error("请完善信息!");
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.modalEdit = false;
+      this.oldPicture = [];
+      this.newPicture = [];
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {
+          this.newPicture = [];
+          this.oldPicture = [];
+        })
+        .catch(() => {});
     },
     handleSubmitDiscount() {
       this.proStandardExpand.expandType = this.productStandardDetail.productType;
@@ -1963,11 +2003,15 @@ export default {
       this.uploadListMain = fileList;
       this.productStandardDetail.image = null;
       this.productStandardDetail.image = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     // 上架规格描述图
     handleSuccessMultiple(response, file, fileList) {
+      console.log(response);
       this.uploadListMultiple = fileList;
       this.descriptionList = [];
+      // this.newPicture = "";
       fileList.forEach(value => {
         if (value.url) {
           this.descriptionList.push(value.url);
@@ -1975,8 +2019,9 @@ export default {
       });
       this.productStandardDetail.description = "";
       this.productStandardDetail.description = this.descriptionList.join(",");
-      console.log(this.productStandardDetail.description);
-      console.log(JSON.stringify(this.productStandardDetail.description));
+
+      this.newPicture.push(response.fileUrl);
+      console.log("new图片", this.newPicture);
     },
     // 设置编辑图片列表
     setDefaultUploadList(res) {
@@ -2022,6 +2067,8 @@ export default {
       this.$refs.uploadMultiple.deleteFile(file);
       const index = this.descriptionList.indexOf(file.url);
       if (index > -1) {
+        this.oldPicture.push(this.descriptionList[index]);
+        console.log("删除的图片list", this.oldPicture);
         this.descriptionList.splice(index, 1);
         this.productStandardDetail.description = this.descriptionList.join(",");
       }

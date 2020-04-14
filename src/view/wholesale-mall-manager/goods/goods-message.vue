@@ -823,6 +823,7 @@ export default {
     },
     createProduct() {
       this.modalViewLoading = true;
+      this.productDetail.baseBar = this.productDetail.baseBar.trim();
       createProduct({
         ...this.productDetail
       })
@@ -837,6 +838,7 @@ export default {
     },
     editProduct() {
       this.modalViewLoading = true;
+      this.productDetail.baseBar = this.productDetail.baseBar.trim();
       editProduct({
         ...this.productDetail
       })
@@ -850,6 +852,7 @@ export default {
         });
     },
     handleSubmit() {
+      // this.productDetail.baseBar.trim();
       this.$refs.editForm.validate(valid => {
         if (valid) {
           if (this.isCreate) {
