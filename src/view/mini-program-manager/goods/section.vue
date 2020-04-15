@@ -136,6 +136,9 @@
               ref="uploadMain"
               :default-list="defaultListMain"
               :image-size="imageSize"
+              groupType="base_image"
+              fileDir="plate"
+              appType="lv_hang"
               @on-success="handleSuccessMain"
             >
               <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -165,7 +168,8 @@ import {
   getProductSectionPages,
   getProductSectionTree,
   editProductSection,
-  deleteProductSectionValidation
+  deleteProductSectionValidation,
+  deletePicture
 } from "@/api/mini-program";
 import { buildMenu, convertTree } from "@/libs/util";
 import CommonIcon from "_c/common-icon";
@@ -295,6 +299,9 @@ export default {
       treeData: this._.cloneDeep(currentCategory),
       uploadListMain: [],
       defaultListMain: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       //查看
       imageSize: 2048,
       imgUploadViewItem: "",
@@ -355,10 +362,12 @@ export default {
       this.modalEdit = true;
     },
     asyncEditOK(name) {
-      // if (!this.currentCategory.groupName) {
-      //   this.$Message.warning('请输入子分类');
-      //   return;
-      // }
+      if (this.oldPicture.length > 0) {
+        let urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       if (!this.parentCategory.id) {
         this.currentCategory.parentId = 0;
       } else {
@@ -390,12 +399,51 @@ export default {
         }
       });
     },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.modalEdit = false;
+      this.oldPicture = [];
+      this.newPicture = [];
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {
+          this.newPicture = [];
+          this.oldPicture = [];
+        })
+        .catch(() => {});
+    },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
       this.currentCategory.sectionImg = null;
     },
     handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
       this.modalEdit = false;
+      this.oldPicture = [];
+      this.newPicture = [];
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {
+          this.newPicture = [];
+          this.oldPicture = [];
+        })
+        .catch(() => {});
     },
     // 删除
     deleteTable(ids) {
@@ -441,6 +489,8 @@ export default {
         this.$Message.warning("请从左侧选择一个板块");
         return;
       }
+      this.save = [];
+      this.save.push(params.row.sectionImg);
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.currentCategory = _.cloneDeep(params.row);
@@ -468,12 +518,12 @@ export default {
       this.loading = true;
       getProductSectionPages(this.searchRowData).then(res => {
         // if (this.menuData.length > 0) {
-          // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
+        // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
+        this.tableData = res.rows;
+        this.total = res.total;
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
         // }
       });
     },
@@ -481,15 +531,15 @@ export default {
     initMenuList() {
       getProductSectionTree(this.treeData).then(res => {
         // if (res && res.array.length > 0) {
-          const menuList = buildMenu(res.array);
-          const map = {
-            title: "title",
-            children: "children"
-          };
-          this.menuData = convertTree(menuList, map, true);
-          // if (this.menuData.length > 0) {
-            this.getTableData();
-          // }
+        const menuList = buildMenu(res.array);
+        const map = {
+          title: "title",
+          children: "children"
+        };
+        this.menuData = convertTree(menuList, map, true);
+        // if (this.menuData.length > 0) {
+        this.getTableData();
+        // }
         // }
       });
     },
@@ -544,6 +594,8 @@ export default {
       this.uploadListMain = fileList;
       this.currentCategory.sectionImg = null;
       this.currentCategory.sectionImg = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     resetFields() {
       this.$refs.modalEdit.resetFields();

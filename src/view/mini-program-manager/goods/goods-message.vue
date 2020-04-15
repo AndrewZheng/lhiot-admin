@@ -362,7 +362,7 @@
                 :image-size="imageSize"
                 groupType="base_image"
                 fileDir="product"
-                appType="min_app"
+                appType="lv_hang"
                 @on-success="handleSuccessMain"
               >
                 <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -747,6 +747,25 @@ export default {
         .then(res => {})
         .catch(() => {});
     },
+    // 商品主图
+    handleSuccessMain(response, file, fileList) {
+      this.uploadListMain = fileList;
+      this.productDetail.image = null;
+      this.productDetail.image = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
+    },
+    // 设置编辑商品的图片列表
+    setDefaultUploadList(res) {
+      if (res.image != null) {
+        const map = { status: "finished", url: "url" };
+        const mainImgArr = [];
+        map.url = res.image;
+        mainImgArr.push(map);
+        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+        this.uploadListMain = mainImgArr;
+      }
+    },
     createProduct() {
       this.modalViewLoading = true;
       // this.productDetail.productSpecification.specificationQty = 1;
@@ -817,37 +836,6 @@ export default {
           console.log(err);
           this.loading = false;
         });
-    },
-    // 设置编辑商品的图片列表
-    setDefaultUploadList(res) {
-      if (res.image != null) {
-        const map = { status: "finished", url: "url" };
-        const mainImgArr = [];
-        map.url = res.image;
-        mainImgArr.push(map);
-        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
-        this.uploadListMain = mainImgArr;
-      }
-      // if (res.subImg != null) {
-      //   const subImgArr = [];
-      //   res.subImg.forEach(value => {
-      //     const innerMapSub = { status: 'finished', url: 'url' };
-      //     innerMapSub.url = value;
-      //     subImgArr.push(innerMapSub);
-      //   });
-      //   this.$refs.uploadSecond.setDefaultFileList(subImgArr);
-      //   this.uploadListSecond = subImgArr;
-      // }
-      // if (res.detailImg != null) {
-      //   const detailImgArr = [];
-      //   res.detailImg.forEach(value => {
-      //     const innerMapDetailImg = { status: 'finished', url: 'url' };
-      //     innerMapDetailImg.url = value;
-      //     detailImgArr.push(innerMapDetailImg);
-      //   });
-      //   this.$refs.uploadMultiple.setDefaultFileList(detailImgArr);
-      //   this.uploadListMultiple = detailImgArr;
-      // }
     },
     handleView(params) {
       // this.resetFields();

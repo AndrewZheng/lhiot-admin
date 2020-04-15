@@ -377,6 +377,9 @@
                   ref="uploadMain"
                   :default-list="defaultListMain"
                   :image-size="imageSize"
+                  groupType="activity_image"
+                  fileDir="activity"
+                  appType="lv_hang"
                   @on-success="handleSuccessMain"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -567,7 +570,8 @@ import {
   editCouponTemplateRelation,
   getCouponTemplatePages,
   getHdCouponActivitiesPages,
-  getSystemParameter
+  getSystemParameter,
+  deletePicture
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -992,6 +996,9 @@ export default {
       couponScopeEnum,
       couponActivityTypeEnum,
       activityClassify: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       columns: [
         {
           type: "selection",
@@ -1144,6 +1151,12 @@ export default {
       this.getTableData();
     },
     handleSubmit(name) {
+      if (this.oldPicture.length > 0) {
+        let urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.couponDetail.activityType = this.searchRowData.activityType;
       this.$refs[name].validate(valid => {
         if (valid) {
@@ -1176,6 +1189,24 @@ export default {
           this.$Message.error("请完善信息!");
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
     },
     createCoupon() {
       this.modalViewLoading = true;
@@ -1259,6 +1290,8 @@ export default {
     },
     handleEdit(params) {
       // this.resetFields();
+      this.save = [];
+      this.save.push(params.row.activityImage);
       this.tempModalType = this.modalType.edit;
       this.couponDetail = _.cloneDeep(params.row);
       this.couponDetail.activityRuel = this.couponDetail.activityRuel.replace(
@@ -1333,6 +1366,8 @@ export default {
       this.uploadListMain = fileList;
       this.couponDetail.activityImage = null;
       this.couponDetail.activityImage = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     handleSetting(params) {
       var rows = params.row;

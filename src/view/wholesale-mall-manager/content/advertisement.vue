@@ -130,7 +130,7 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">广告图:</i-col>
               <i-col span="16">
-                <img :src="advertisementDetail.advertmentImage" style="width: 100%;height: auto" >
+                <img :src="advertisementDetail.advertmentImage" style="width: 100%;height: auto" />
               </i-col>
             </Row>
           </i-col>
@@ -285,7 +285,7 @@
                 </FormItem>
               </Row>
             </i-col>
-          </Row> -->
+          </Row>-->
           <Row>
             <i-col span="12">
               <FormItem label="开始时间:">
@@ -324,7 +324,7 @@
                   <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                     <template v-if="item.status === 'finished'">
                       <div>
-                        <img :src="item.url" >
+                        <img :src="item.url" />
                         <div class="demo-upload-list-cover">
                           <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                           <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -339,6 +339,9 @@
                     ref="uploadMain"
                     :default-list="defaultListMain"
                     :image-size="imageSize"
+                    groupType="activity_image"
+                    fileDir="activity"
+                    appType="lv_hang"
                     @on-success="handleSuccessMain"
                   >
                     <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -358,7 +361,7 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" >
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
 
     <Modal :mask-closable="false" :width="1200" v-model="relationTargetShow" title="关联商品规格">
@@ -428,8 +431,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
+import Tables from "_c/tables";
+import IViewUpload from "_c/iview-upload";
 
 import {
   getAdvertisementPositionPages,
@@ -437,27 +440,28 @@ import {
   deleteAdvertisement,
   editAdvertisement,
   getAdvertisementPages,
-  getProductStandardsPages
-} from '@/api/wholesale';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import uploadMixin from '@/mixins/uploadMixin';
+  getProductStandardsPages,
+  deletePicture
+} from "@/api/wholesale";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import uploadMixin from "@/mixins/uploadMixin";
 
-import { compareData } from '@/libs/util';
+import { compareData } from "@/libs/util";
 import {
   linkType,
   linkTypeEnum,
   advPositionEnum,
   activityStatusEnum
-} from '@/libs/enumerate';
+} from "@/libs/enumerate";
 import {
   advPositionConvert,
   couponStatusConvert,
   activityStatusConvert,
   advertisementLinkTypeConvert
-} from '@/libs/converStatus';
-import { miniGoodsStandardColumns } from '@/libs/columns';
+} from "@/libs/converStatus";
+import { miniGoodsStandardColumns } from "@/libs/columns";
 
 const advertisementDetail = {
   id: 0,
@@ -466,22 +470,22 @@ const advertisementDetail = {
   createAt: null,
   positionId: 0,
   relationId: 0,
-  isPermanent: 'OFF',
+  isPermanent: "OFF",
   linkType: null, // 可扩展字段
   rankNo: 0, // 可扩展字段
-  advertisementRelation: '', // 可扩展字段
-  advertisementRelationText: '', // 可扩展字段
+  advertisementRelation: "", // 可扩展字段
+  advertisementRelationText: "", // 可扩展字段
   advertmentImage: null,
-  advertmentPosition: '', // poppup-首页弹窗 top-顶部轮播图 flashsale-限时抢购 bottom-底部banner图
-  linkUrl: '',
-  title: '',
-  vaild: ''
+  advertmentPosition: "", // poppup-首页弹窗 top-顶部轮播图 flashsale-限时抢购 bottom-底部banner图
+  linkUrl: "",
+  title: "",
+  vaild: ""
 };
 
 const roleRowData = {
-  title: '',
-  vaild: '',
-  advertmentPosition: '',
+  title: "",
+  vaild: "",
+  advertmentPosition: "",
   page: 1,
   rows: 10
 };
@@ -489,7 +493,7 @@ const roleRowData = {
 const relationRowData = {
   productCode: null,
   productName: null,
-  shelvesStatus: 'VALID',
+  shelvesStatus: "VALID",
   page: 1,
   rows: 10
 };
@@ -509,19 +513,22 @@ export default {
       relationTargetShow: false,
       selectDisable: true,
       advertisementList: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       ruleInline: {
-        title: [{ required: true, message: '请输入广告名称' }],
-        vaild: [{ required: true, message: '请选择广告状态' }],
-        linkType: [{ required: true, message: '请选择链接类型' }],
-        advertisementRelation: [{ required: true, message: '请填写链接目标' }],
-        positionId: [{ required: true, message: '请选择广告位置' }],
+        title: [{ required: true, message: "请输入广告名称" }],
+        vaild: [{ required: true, message: "请选择广告状态" }],
+        linkType: [{ required: true, message: "请选择链接类型" }],
+        advertisementRelation: [{ required: true, message: "请填写链接目标" }],
+        positionId: [{ required: true, message: "请选择广告位置" }],
         rankNo: [
-          { required: true, message: '请输入序号' },
+          { required: true, message: "请输入序号" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[0-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为整数'));
+                errors.push(new Error("必须为整数"));
               }
               callback(errors);
             }
@@ -531,50 +538,53 @@ export default {
       linkType: [
         {
           value: linkType.GOODSINFO,
-          label: '商品详情',
+          label: "商品详情",
           api: getProductStandardsPages,
           columns: miniGoodsStandardColumns
         },
         {
           value: linkType.INVITEACTIVE,
-          label: '邀请有礼',
+          label: "邀请有礼",
           api: getProductStandardsPages,
           columns: miniGoodsStandardColumns
         },
         {
           value: linkType.FLASHACTIVE,
-          label: '抢购商品',
+          label: "抢购商品",
           api: getProductStandardsPages,
           columns: miniGoodsStandardColumns
         },
         {
           value: linkType.RECHARGE,
-          label: '充值页面',
+          label: "充值页面",
           api: getProductStandardsPages,
           columns: miniGoodsStandardColumns
         },
-        { value: linkType.EXTERNALLINK, label: '外部链接' },
-        { value: linkType.INTERNALLINK, label: '内部链接' },
-        { value: linkType.TABLINK, label: '底部导航' }
+        { value: linkType.EXTERNALLINK, label: "外部链接" },
+        { value: linkType.INTERNALLINK, label: "内部链接" },
+        { value: linkType.TABLINK, label: "底部导航" }
       ],
       tempColumns: [],
       linkTypeEnum,
       tempModalTableData: [],
       relationTypeKeys: [],
-      vaild: [{ label: '有效', value: 'yes' }, { label: '无效', value: 'no' }],
-      validityTimeList: [{ label: '定时生效', value: 'OFF' }],
+      vaild: [
+        { label: "有效", value: "yes" },
+        { label: "无效", value: "no" }
+      ],
+      validityTimeList: [{ label: "定时生效", value: "OFF" }],
       columns: [
         {
-          type: 'selection',
-          key: '',
+          type: "selection",
+          key: "",
           width: 60,
-          align: 'center',
-          fixed: 'left'
+          align: "center",
+          fixed: "left"
         },
         {
-          title: 'ID',
-          align: 'center',
-          key: 'id',
+          title: "ID",
+          align: "center",
+          key: "id",
           sortable: true,
           minWidth: 70
         },
@@ -591,14 +601,14 @@ export default {
         //   }
         // },
         {
-          title: '图片',
-          align: 'center',
+          title: "图片",
+          align: "center",
           width: 140,
-          key: 'advertmentImage',
+          key: "advertmentImage",
           render: (h, params, vm) => {
             const { row } = params;
             const str = (
-              <img src={row.advertmentImage} height='60' width='100' />
+              <img src={row.advertmentImage} height="60" width="100" />
             );
             return <div>{str}</div>;
           }
@@ -610,36 +620,36 @@ export default {
         //   key: "advertisementRelation"
         // },
         {
-          title: '广告名称',
-          align: 'center',
+          title: "广告名称",
+          align: "center",
           minWidth: 150,
-          key: 'title'
+          key: "title"
         },
         {
-          title: '广告位置',
-          align: 'center',
+          title: "广告位置",
+          align: "center",
           minWidth: 160,
-          key: 'advertmentPosition',
+          key: "advertmentPosition",
           render: (h, params, vm) => {
             const { row } = params;
-            const str = 'M/A';
+            const str = "M/A";
             switch (row.advertmentPosition) {
-              case 'poppup':
+              case "poppup":
                 return (
                   <div>{advPositionConvert(row.advertmentPosition).label}</div>
                 );
                 break;
-              case 'top':
+              case "top":
                 return (
                   <div>{advPositionConvert(row.advertmentPosition).label}</div>
                 );
                 break;
-              case 'flashsale':
+              case "flashsale":
                 return (
                   <div>{advPositionConvert(row.advertmentPosition).label}</div>
                 );
                 break;
-              case 'bottom':
+              case "bottom":
                 return (
                   <div>{advPositionConvert(row.advertmentPosition).label}</div>
                 );
@@ -650,42 +660,42 @@ export default {
           }
         },
         {
-          title: '创建时间',
-          align: 'center',
+          title: "创建时间",
+          align: "center",
           minWidth: 170,
-          key: 'createAt'
+          key: "createAt"
         },
         {
-          title: '开始时间',
-          align: 'center',
+          title: "开始时间",
+          align: "center",
           minWidth: 170,
-          key: 'beginTime'
+          key: "beginTime"
         },
         {
-          title: '结束时间',
-          align: 'center',
+          title: "结束时间",
+          align: "center",
           minWidth: 170,
-          key: 'endTime'
+          key: "endTime"
         },
         {
-          title: '状态',
-          align: 'center',
+          title: "状态",
+          align: "center",
           minWidth: 100,
-          key: 'vaild',
+          key: "vaild",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.vaild === 'yes') {
+            if (row.vaild === "yes") {
               return (
                 <div>
-                  <tag color='success'>
+                  <tag color="success">
                     {activityStatusConvert(row.vaild).label}
                   </tag>
                 </div>
               );
-            } else if (row.vaild === 'no') {
+            } else if (row.vaild === "no") {
               return (
                 <div>
-                  <tag color='error'>
+                  <tag color="error">
                     {activityStatusConvert(row.vaild).label}
                   </tag>
                 </div>
@@ -693,17 +703,17 @@ export default {
             }
             return (
               <div>
-                <tag color='primary'>{row.vaild}</tag>
+                <tag color="primary">{row.vaild}</tag>
               </div>
             );
           }
         },
         {
-          title: '操作',
-          align: 'center',
+          title: "操作",
+          align: "center",
           minWidth: 200,
-          key: 'handle',
-          options: ['onSale', 'view', 'edit', 'delete']
+          key: "handle",
+          options: ["onSale", "view", "edit", "delete"]
         }
       ],
       defaultListMain: [],
@@ -719,9 +729,9 @@ export default {
   computed: {
     isTargetLink() {
       return (
-        this.advertisementDetail.linkType === 'EXTERNALLINK' ||
-        this.advertisementDetail.linkType === 'INTERNALLINK' ||
-        this.advertisementDetail.linkType === 'TABLINK'
+        this.advertisementDetail.linkType === "EXTERNALLINK" ||
+        this.advertisementDetail.linkType === "INTERNALLINK" ||
+        this.advertisementDetail.linkType === "TABLINK"
       );
     }
     // validityPeriodComputed() {
@@ -745,14 +755,14 @@ export default {
   methods: {
     advertiseTypeChange(value) {
       console.log(value);
-      if (value === 'TEXT') {
+      if (value === "TEXT") {
         if (this.$refs.uploadMain) {
           this.$refs.uploadMain.clearFileList();
         }
         this.uploadListMain = [];
-      } else if (value === 'IMAGE') {
+      } else if (value === "IMAGE") {
         if (this.tempImage != null) {
-          const map = { status: 'finished', url: 'url' };
+          const map = { status: "finished", url: "url" };
           const mainImgArr = [];
           map.url = this.tempImage;
           mainImgArr.push(map);
@@ -797,15 +807,21 @@ export default {
       this.advertisementDetail.endTime = value;
     },
     handleSubmit(name) {
+      if (this.oldPicture.length > 0) {
+        let urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs[name].validate(valid => {
         if (valid) {
-          if (this.advertisementDetail.isPermanent === 'OFF') {
-            if (this.advertisementDetail.beginTime === '') {
-              this.$Message.error('请填写开始时间!');
+          if (this.advertisementDetail.isPermanent === "OFF") {
+            if (this.advertisementDetail.beginTime === "") {
+              this.$Message.error("请填写开始时间!");
               return;
             }
-            if (this.advertisementDetail.endTime === '') {
-              this.$Message.error('请填写结束时间!');
+            if (this.advertisementDetail.endTime === "") {
+              this.$Message.error("请填写结束时间!");
               return;
             }
             if (
@@ -814,7 +830,7 @@ export default {
                 this.advertisementDetail.endTime
               )
             ) {
-              this.$Message.error('结束时间必须大于开始时间!');
+              this.$Message.error("结束时间必须大于开始时间!");
               return;
             }
           }
@@ -824,9 +840,27 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
     },
     editTableRow() {
       this.modalViewLoading = true;
@@ -844,7 +878,7 @@ export default {
       createAdvertisement(this.advertisementDetail).then(res => {
         this.modalViewLoading = false;
         this.modalEdit = false;
-        this.$Message.success('创建成功!');
+        this.$Message.success("创建成功!");
         this.resetFields();
         this.getTableData();
       });
@@ -852,9 +886,9 @@ export default {
     searchAdvertisementRelation() {
       if (
         this.advertisementDetail.linkType === null ||
-        this.advertisementDetail.linkType === ''
+        this.advertisementDetail.linkType === ""
       ) {
-        this.$Message.warning('请填写链接类型');
+        this.$Message.warning("请填写链接类型");
         return;
       }
       this.getRelationTable();
@@ -895,6 +929,8 @@ export default {
       this.advertisementDetail.advertmentImage = null;
       this.advertisementDetail.advertmentImage = fileList[0].url;
       this.tempImage = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     addChildren() {
       if (this.tempModalType !== this.modalType.create) {
@@ -913,6 +949,8 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.advertmentImage);
       this.$refs.editForm.resetFields();
       this.tempImage = null;
       this.tempModalType = this.modalType.edit;
@@ -922,7 +960,7 @@ export default {
     },
     setDefaultUploadList(res) {
       if (res.advertmentImage != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.advertmentImage;
         mainImgArr.push(map);
@@ -978,7 +1016,7 @@ export default {
     handleStatus(params) {
       this.advertisementDetail = _.cloneDeep(params.row);
       this.advertisementDetail.vaild =
-        params.row.vaild === 'yes' ? 'no' : 'yes';
+        params.row.vaild === "yes" ? "no" : "yes";
       this.editTableRow();
     },
     relationTextChange(event) {

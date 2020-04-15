@@ -350,9 +350,9 @@
             </i-col>
           </Row>
           <Row>
-  
+            <!-- 主图 ==== -->
             <i-col span="12">
-              <FormItem label="上架商品主图:建议尺寸;690x690(单位:px):" prop="image">
+              <FormItem label="上架商品主图:建议尺寸;690x690(单位:px):" prop="goodsImage">
                 <Input
                   v-show="false"
                   v-model="productStandardDetail.goodsImage"
@@ -382,6 +382,9 @@
                   :default-list="defaultListMain"
                   :image-size="imageSize"
                   :max-num="1"
+                  groupType="base_image"
+                  fileDir="product"
+                  appType="lv_hang"
                   @on-success="handleSuccessMain"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -422,6 +425,9 @@
                   :default-list="defaultListMultiple"
                   :image-size="imageSize"
                   :max-num="10"
+                  groupType="base_image"
+                  fileDir="product"
+                  appType="lv_hang"
                   multiple
                   @on-success="handleSuccessMultiple"
                 >
@@ -728,7 +734,8 @@ import {
   deleteGoodsPriceRegion,
   editProductStandard,
   editGoodsPriceRegion,
-  exporGoodsStandard
+  exporGoodsStandard,
+  deletePicture
 } from "@/api/wholesale";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -1118,7 +1125,9 @@ export default {
       productDetailsList: [],
       productDetailsList: [],
       defaultListMultiple: [],
-
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       // ====
       uploadListMain: [],
       defaultListMain: [],
@@ -1235,7 +1244,8 @@ export default {
         ],
         isVip: [{ required: true, message: "请选择商品的类型" }],
         standardGoodsName: [{ required: true, message: "请输入上架商品名称" }],
-        // goodsImage: [{ required: true, message: '请上传上架商品主图' }],
+        goodsImage: [{ required: true, message: "请上传上架商品主图" }],
+        goodsImages: [{ required: true, message: "请上传上架商品详情图" }],
         unitCode: [{ required: true, message: "请选择商品单位" }],
         vaild: [{ required: true, message: "请选择商品状态" }],
         standard: [{ required: true, message: "请输入商品规格" }],
@@ -1511,6 +1521,8 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.image);
       this.tempModalType = this.modalType.edit;
       this.uploadListMain = [];
       this.uploadListMultiple = [];
@@ -1544,6 +1556,12 @@ export default {
       this.modalEdit = true;
     },
     handleSubmit() {
+      if (this.oldPicture.length > 0) {
+        let urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs.editForm.validate(valid => {
         if (valid) {
           if (this.isCreate) {
@@ -1555,6 +1573,27 @@ export default {
           this.$Message.error("请完善信息!");
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.modalEdit = false;
+      this.oldPicture = [];
+      this.newPicture = [];
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {
+          this.newPicture = [];
+          this.oldPicture = [];
+        })
+        .catch(() => {});
     },
     handleSubmitRegin() {
       // 把规格ID赋值给goodsPriceRegion  goodsPriceRegion.maxQuantity minQuantity
@@ -1765,6 +1804,8 @@ export default {
       this.uploadListMain = fileList;
       this.productStandardDetail.goodsImage = null;
       this.productStandardDetail.goodsImage = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     // 上架规格描述图
     handleSuccessMultiple(response, file, fileList) {
@@ -1779,6 +1820,7 @@ export default {
       this.productStandardDetail.goodsImages = this.productDetailsList.join(
         ","
       );
+      this.newPicture.push(response.fileUrl);
       console.log(this.productStandardDetail.goodsImages);
       console.log(JSON.stringify(this.productStandardDetail.goodsImages));
     },
@@ -1786,6 +1828,7 @@ export default {
       this.$refs.uploadMultiple.deleteFile(file);
       const index = this.productDetailsList.indexOf(file.url);
       if (index > -1) {
+        this.oldPicture.push(this.descriptionList[index]);
         this.productDetailsList.splice(index, 1);
         this.productStandardDetail.goodsImages = this.productDetailsList.join(
           ","

@@ -30,7 +30,7 @@
             v-model="searchRowData.positionId"
             class="search-col mr5"
             placeholder="广告位置"
-            style="width: 150px"
+            style="width:150px"
             clearable
           >
             <Option
@@ -277,6 +277,9 @@
                     ref="uploadMain"
                     :default-list="defaultListMain"
                     :image-size="imageSize"
+                    groupType="activity_image"
+                    fileDir="activity"
+                    appType="lv_hang"
                     @on-success="handleSuccessMain"
                   >
                     <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -488,7 +491,8 @@ import {
   editAdvertisement,
   getAdvertisementPages,
   getAdvertisement,
-  getProductStandardsPages
+  getProductStandardsPages,
+  deletePicture
 } from "@/api/mini-program";
 import deleteMixin from "@/mixins/deleteMixin.js";
 import tableMixin from "@/mixins/tableMixin.js";
@@ -766,7 +770,10 @@ export default {
       searchRelationRowData: _.cloneDeep(relationRowData),
       tempContent: null,
       tempImage: null,
-      relationTotal: 0
+      relationTotal: 0,
+      oldPicture: [],
+      newPicture: [],
+      save: []
     };
   },
   computed: {
@@ -873,6 +880,12 @@ export default {
       this.advertisementDetail.invalidTime = value;
     },
     handleSubmit(name) {
+      if (this.oldPicture.length > 0) {
+        let urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs[name].validate(valid => {
         if (valid) {
           if (this.advertisementDetail.isPermanent === "OFF") {
@@ -918,6 +931,24 @@ export default {
           this.$Message.error("请完善信息!");
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
     },
     editTableRow() {
       this.modalViewLoading = true;
@@ -986,6 +1017,8 @@ export default {
       this.advertisementDetail.imageUrl = null;
       this.advertisementDetail.imageUrl = fileList[0].url;
       this.tempImage = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     addChildren() {
       if (this.tempModalType !== this.modalType.create) {
@@ -1004,6 +1037,8 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.imageUrl);
       this.$refs.modalEdit.resetFields();
       this.tempImage = null;
       this.loading = true;

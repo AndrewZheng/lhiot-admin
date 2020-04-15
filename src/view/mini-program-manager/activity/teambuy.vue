@@ -178,7 +178,7 @@
             <Row>
               <i-col span="6">活动banner:</i-col>
               <i-col span="18">
-                <img :src="teambuyDetail.banner" style="width: 100%" >
+                <img :src="teambuyDetail.banner" style="width: 100%" />
               </i-col>
             </Row>
           </i-col>
@@ -189,7 +189,7 @@
               <i-col span="6">有效期起:</i-col>
               <i-col span="18">
                 {{ this.teambuyDetail.startTime = this.$moment(
-                  this.teambuyDetail.startTime
+                this.teambuyDetail.startTime
                 ).format("YYYY-MM-DD HH:mm:ss") }}
               </i-col>
             </Row>
@@ -200,7 +200,7 @@
               <i-col span="6">有效期止:</i-col>
               <i-col span="18">
                 {{ this.teambuyDetail.endTime = this.$moment(
-                  this.teambuyDetail.endTime
+                this.teambuyDetail.endTime
                 ).format("YYYY-MM-DD HH:mm:ss") }}
               </i-col>
             </Row>
@@ -213,7 +213,7 @@
               <i-col span="6">提货截止时间:</i-col>
               <i-col span="18">
                 {{ this.teambuyDetail.deliveryEndTime = this.$moment(
-                  this.teambuyDetail.deliveryEndTime
+                this.teambuyDetail.deliveryEndTime
                 ).format("YYYY-MM-DD HH:mm:ss") }}
               </i-col>
             </Row>
@@ -356,7 +356,11 @@
           <Row>
             <i-col span="12">
               <FormItem label="活动名称:" prop="activityName">
-                <Input v-model="teambuyDetail.activityName" :readonly="teambuyDetail.status==='on'" style="width: 200px"></Input>
+                <Input
+                  v-model="teambuyDetail.activityName"
+                  :readonly="teambuyDetail.status==='on'"
+                  style="width: 200px"
+                ></Input>
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -406,7 +410,7 @@
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" >
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -421,6 +425,9 @@
                   ref="uploadMain"
                   :default-list="defaultListMain"
                   :image-size="imageSize"
+                  groupType="activity_image"
+                  fileDir="activity"
+                  appType="lv_hang"
                   @on-success="handleSuccessMain"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -513,7 +520,7 @@
                 label="提货开始时间:"
                 prop="deliveryStartTime"
               >{{ teambuyDetail.deliveryStartTime | couponScopeFilter }}</FormItem>
-            </i-col> -->
+            </i-col>-->
           </Row>
           <Row>
             <i-col span="12">
@@ -583,12 +590,12 @@
             <i-col span="12">
               <FormItem label="商品规格:" prop="standardId">
                 <Input v-model="teambuyDetail.standardId" readonly="readonly" style="width: 200px">
-                <Button
-                  v-show="tempModalType !== modalType.edit"
-                  slot="append"
-                  icon="ios-search"
-                  @click="handleRelation"
-                ></Button>
+                  <Button
+                    v-show="tempModalType !== modalType.edit"
+                    slot="append"
+                    icon="ios-search"
+                    @click="handleRelation"
+                  ></Button>
                 </Input>
               </FormItem>
             </i-col>
@@ -739,7 +746,7 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" >
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
 
     <Modal v-model="modalProduct" :width="1200" title="关联商品" footer-hide>
@@ -809,131 +816,132 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
+import Tables from "_c/tables";
+import IViewUpload from "_c/iview-upload";
+import _ from "lodash";
 import {
   deleteTeamBuy,
   getTeamBuyPages,
   editTeamBuy,
   createTeamBuy,
   getStorePages,
-  getProductStandardsPages
-} from '@/api/mini-program';
-import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
+  getProductStandardsPages,
+  deletePicture
+} from "@/api/mini-program";
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
 import {
   teamBuyStatusConvert,
   customPlanStatusConvert
-} from '@/libs/converStatus';
+} from "@/libs/converStatus";
 import {
   teamBuyStatusEnum,
   teamBuyTypeEnum,
   rewardActivitySettingEnum,
   relationStoreTypeEnum
-} from '@/libs/enumerate';
+} from "@/libs/enumerate";
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber,
   compareData,
   secondsToDate
-} from '@/libs/util';
+} from "@/libs/util";
 
 const teambuyDetail = {
   remainingProductNum: 0,
   triesLimit: 999, // 默认限购次数999
-  teamGuaranteeURL: '',
+  teamGuaranteeURL: "",
   storeId: 0,
-  storeIds: '',
+  storeIds: "",
   singleTeambuyPrice: null,
   originalPrice: null,
   saleQuantity: 0,
-  createTime: '',
-  teamBuyType: 'ORDINARY_TEAM', // 默认普通团
+  createTime: "",
+  teamBuyType: "ORDINARY_TEAM", // 默认普通团
   teamBuyNum: 0,
-  rewardActivitySetting: 'DISABLE', // 默认红包活动关闭
-  joinInfoStatus: 'on', // 默认参团信息列表状态开启
+  rewardActivitySetting: "DISABLE", // 默认红包活动关闭
+  joinInfoStatus: "on", // 默认参团信息列表状态开启
   teamResultEnum: null,
   id: 0,
-  activityName: '',
-  content: '',
-  status: 'off', // 默认活动关闭
+  activityName: "",
+  content: "",
+  status: "off", // 默认活动关闭
   rank: 0,
   startTime: null,
   endTime: null,
   deliveryEndTime: null,
   deliveryStartTime: null,
-  banner: '',
+  banner: "",
   totalNum: 0,
   activityPrice: null,
   tourDiscount: null,
   fullUserNum: 0,
   standardId: 0,
   validSeconds: null,
-  standardDesc: '',
+  standardDesc: "",
   fullTeambuyCount: 0,
-  robot: 'off', // 默认关闭模拟成团
+  robot: "off", // 默认关闭模拟成团
   teamBuys: null,
   productStandard: null,
-  leftTime: '',
+  leftTime: "",
   productNum: 0,
   robotStartSecond: 0,
   hour: null,
   minute: null,
   second: null,
-  relationStoreType: 'ALL',
-  content: ''
+  relationStoreType: "ALL",
+  content: ""
 };
 
 const roleRowData = {
-  status: 'on',
+  status: "on",
   activityName: null,
   startTimeBegin: null,
   startTimeEnd: null,
   page: 1,
   rows: 10,
-  sidx: 'rank',
-  sort: 'asc',
-  content: ''
+  sidx: "rank",
+  sort: "asc",
+  content: ""
 };
 
 const productStandardDetail = {
   id: 0,
   productId: 0,
-  barcode: '',
-  specification: '',
+  barcode: "",
+  specification: "",
   standardQty: 0,
   unitId: 0,
-  productUnit: '',
+  productUnit: "",
   price: 0,
   salePrice: 0,
   rank: 0,
   description: null,
   shelvesStatus: null,
-  applyType: '',
-  productName: '',
+  applyType: "",
+  productName: "",
   createUser: null,
   image: null,
-  productDescription: '',
-  productCode: '',
-  baseProductName: '',
-  baseProductDescription: '',
+  productDescription: "",
+  productCode: "",
+  baseProductName: "",
+  baseProductDescription: "",
   groupId: 0,
-  groupName: '',
-  sourceCode: '',
-  baseImage: '',
-  smallImage: '',
-  largeImage: '',
-  status: '',
+  groupName: "",
+  sourceCode: "",
+  baseImage: "",
+  smallImage: "",
+  largeImage: "",
+  status: "",
   baseUnitId: 0,
-  baseUnit: '',
-  baseBarcode: '',
-  hdSkuid: '',
-  videoUrl: '',
-  videoImage: '',
+  baseUnit: "",
+  baseBarcode: "",
+  hdSkuid: "",
+  videoUrl: "",
+  videoImage: "",
   baseQty: 0,
   limitQty: 0,
   queryStatus: null,
@@ -945,13 +953,13 @@ const productStandardDetail = {
 };
 
 const productRowData = {
-  productId: '',
-  barcode: '',
-  productCode: '',
-  productName: '',
-  shelvesStatus: 'VALID',
-  minPrice: '',
-  maxPrice: '',
+  productId: "",
+  barcode: "",
+  productCode: "",
+  productName: "",
+  shelvesStatus: "VALID",
+  minPrice: "",
+  maxPrice: "",
   page: 1,
   rows: 10
 };
@@ -966,135 +974,138 @@ export default {
     return {
       ruleInline: {
         rank: [
-          { required: true, message: '请输入排序序号' },
+          { required: true, message: "请输入排序序号" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
+                errors.push(new Error("必须为整数"));
               }
               callback(errors);
             }
           }
         ],
-        activityName: [{ required: true, message: '请输入活动名称' }],
-        teamBuyType: [{ required: true, message: '请选择活动类型' }],
-        content: [{ required: true, message: '请输入活动内容' }],
-        status: [{ required: true, message: '请选择活动状态' }],
-        banner: [{ required: true, message: '请上传活动banner ' }],
-        startTime: [{ required: true, message: '请输入有效期起' }],
-        endTime: [{ required: true, message: '请输入有效期止' }],
-        deliveryEndTime: [{ required: true, message: '请输入提货截止时间' }],
-        validSeconds: [{ required: true, message: '请输入成团有效时长' }],
+        activityName: [{ required: true, message: "请输入活动名称" }],
+        teamBuyType: [{ required: true, message: "请选择活动类型" }],
+        content: [{ required: true, message: "请输入活动内容" }],
+        status: [{ required: true, message: "请选择活动状态" }],
+        banner: [{ required: true, message: "请上传活动banner " }],
+        startTime: [{ required: true, message: "请输入有效期起" }],
+        endTime: [{ required: true, message: "请输入有效期止" }],
+        deliveryEndTime: [{ required: true, message: "请输入提货截止时间" }],
+        validSeconds: [{ required: true, message: "请输入成团有效时长" }],
         fullUserNum: [
-          { required: true, message: '请输入成团人数' },
+          { required: true, message: "请输入成团人数" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
+                errors.push(new Error("必须为整数"));
               }
               callback(errors);
             }
           }
         ],
-        joinInfoStatus: [{ required: true, message: '请选择参团信息列表状态' }],
-        robot: [{ required: true, message: '请选择是否模拟成团' }],
+        joinInfoStatus: [{ required: true, message: "请选择参团信息列表状态" }],
+        robot: [{ required: true, message: "请选择是否模拟成团" }],
         robotStartSecond: [
-          { required: true, message: '请填写状态多少秒:' },
+          { required: true, message: "请填写状态多少秒:" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
+                errors.push(new Error("必须为整数"));
               }
               callback(errors);
             }
           }
         ],
-        standardId: [{ required: true, message: '请选择商品规格' }],
-        standardDesc: [{ required: true, message: '请输入规格描述' }],
+        standardId: [{ required: true, message: "请选择商品规格" }],
+        standardDesc: [{ required: true, message: "请输入规格描述" }],
         originalPrice: [
-          { required: true, message: '请输入商品原价' },
+          { required: true, message: "请输入商品原价" },
           {
-            message: '必须为大于0的数字',
+            message: "必须为大于0的数字",
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
         activityPrice: [
-          { required: true, message: '请输入商品活动价' },
+          { required: true, message: "请输入商品活动价" },
           {
-            message: '必须为大于0的数字',
+            message: "必须为大于0的数字",
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
-        tourDiscount: [{ required: true, message: '请选择团长优惠' }],
+        tourDiscount: [{ required: true, message: "请选择团长优惠" }],
         triesLimit: [
-          { required: true, message: '请输入限购次数' },
+          { required: true, message: "请输入限购次数" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[-0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
+                errors.push(new Error("必须为整数"));
               }
               callback(errors);
             }
           }
         ],
         productNum: [
-          { required: true, message: '请选择库存数量' },
+          { required: true, message: "请选择库存数量" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[-0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
+                errors.push(new Error("必须为整数"));
               }
               callback(errors);
             }
           }
         ],
         saleQuantity: [
-          { required: true, message: '请输入已售份数' },
+          { required: true, message: "请输入已售份数" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[-0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
+                errors.push(new Error("必须为整数"));
               }
               callback(errors);
             }
           }
         ],
         singleTeambuyPrice: [
-          { required: true, message: '请输入单人团购价格' },
+          { required: true, message: "请输入单人团购价格" },
           {
-            message: '必须为大于0的数字',
+            message: "必须为大于0的数字",
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
         rewardActivitySetting: [
-          { required: true, message: '请选择红包活动设置' }
+          { required: true, message: "请选择红包活动设置" }
         ]
       },
       defaultListMain: [],
       uploadListMain: [],
       activityStatus: [
-        { label: '未开始', value: 'off' },
-        { label: '进行中', value: 'on' },
-        { label: '已结束', value: 'expire' }
+        { label: "未开始", value: "off" },
+        { label: "进行中", value: "on" },
+        { label: "已结束", value: "expire" }
       ],
       teamBuyStatus: [
-        { label: '关闭', value: 'off' },
-        { label: '开启', value: 'on' }
+        { label: "关闭", value: "off" },
+        { label: "开启", value: "on" }
       ],
       teamBuyStatusEnum,
       teamBuyTypeEnum,
       rewardActivitySettingEnum,
       relationStoreTypeEnum,
-      groupStatus: '',
+      groupStatus: "",
       flagShipList: [],
       storeList: [],
       storeIds: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       columns: [
         // {
         //   type: "selection",
@@ -1103,39 +1114,39 @@ export default {
         //   fixed: "left"
         // },
         {
-          title: '活动名称',
-          key: 'activityName',
-          align: 'center',
-          fixed: 'left',
+          title: "活动名称",
+          key: "activityName",
+          align: "center",
+          fixed: "left",
           minWidth: 200
         },
         {
-          title: '活动状态',
-          align: 'center',
-          key: 'status',
+          title: "活动状态",
+          align: "center",
+          key: "status",
           minWidth: 90,
           render: (h, params) => {
             const { row } = params;
-            if (row.status == 'on') {
+            if (row.status == "on") {
               return (
                 <div>
-                  <tag color='success'>
+                  <tag color="success">
                     {teamBuyStatusConvert(row.status).label}
                   </tag>
                 </div>
               );
-            } else if (row.status == 'off') {
+            } else if (row.status == "off") {
               return (
                 <div>
-                  <tag color='error'>
+                  <tag color="error">
                     {teamBuyStatusConvert(row.status).label}
                   </tag>
                 </div>
               );
-            } else if (row.status == 'expire') {
+            } else if (row.status == "expire") {
               return (
                 <div>
-                  <tag color='warning'>
+                  <tag color="warning">
                     {teamBuyStatusConvert(row.status).label}
                   </tag>
                 </div>
@@ -1143,106 +1154,106 @@ export default {
             }
             return (
               <div>
-                <tag color='primary'>{row.status}</tag>
+                <tag color="primary">{row.status}</tag>
               </div>
             );
           }
         },
         {
-          title: '活动内容',
-          align: 'center',
+          title: "活动内容",
+          align: "center",
           minWidth: 160,
-          key: 'content'
+          key: "content"
         },
         {
-          title: '有效期起',
-          align: 'center',
+          title: "有效期起",
+          align: "center",
           minWidth: 160,
-          key: 'startTime'
+          key: "startTime"
         },
         {
-          title: '有效期止',
-          align: 'center',
+          title: "有效期止",
+          align: "center",
           minWidth: 160,
-          key: 'endTime'
+          key: "endTime"
         },
         {
-          title: '商品库存',
-          align: 'center',
+          title: "商品库存",
+          align: "center",
           minWidth: 90,
-          key: 'productNum'
+          key: "productNum"
         },
         {
-          title: '活动价',
+          title: "活动价",
           minWidth: 80,
-          key: 'activityPrice',
-          align: 'center',
+          key: "activityPrice",
+          align: "center",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.activityPrice)}</div>;
           }
         },
         {
-          title: '团长优惠',
-          align: 'center',
+          title: "团长优惠",
+          align: "center",
           minWidth: 90,
-          key: 'tourDiscount',
+          key: "tourDiscount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.tourDiscount)}</div>;
           }
         },
         {
-          title: '成团有效时长',
-          align: 'center',
+          title: "成团有效时长",
+          align: "center",
           minWidth: 110,
-          key: 'validSeconds',
+          key: "validSeconds",
           render(h, params) {
             return <div>{secondsToDate(params.row.validSeconds)}</div>;
           }
         },
         {
-          title: '提货截至时间',
-          align: 'center',
+          title: "提货截至时间",
+          align: "center",
           minWidth: 160,
-          key: 'deliveryEndTime'
+          key: "deliveryEndTime"
         },
         {
-          title: '规格描述',
-          align: 'center',
+          title: "规格描述",
+          align: "center",
           minWidth: 120,
-          key: 'standardDesc',
+          key: "standardDesc",
           tooltip: true
         },
         {
-          title: '限购次数',
-          align: 'center',
+          title: "限购次数",
+          align: "center",
           minWidth: 90,
-          key: 'triesLimit'
+          key: "triesLimit"
         },
         {
-          title: '排序',
-          align: 'center',
+          title: "排序",
+          align: "center",
           minWidth: 80,
-          key: 'rank'
+          key: "rank"
         },
         {
-          title: '是否模拟成团',
-          align: 'center',
+          title: "是否模拟成团",
+          align: "center",
           minWidth: 120,
-          key: 'robot',
+          key: "robot",
           render: (h, params) => {
             const { row } = params;
-            if (row.robot === 'on') {
+            if (row.robot === "on") {
               return (
                 <div>
-                  <tag color='success'>
+                  <tag color="success">
                     {teamBuyStatusConvert(row.robot).label}
                   </tag>
                 </div>
               );
-            } else if (row.robot === 'off') {
+            } else if (row.robot === "off") {
               return (
                 <div>
-                  <tag color='error'>
+                  <tag color="error">
                     {teamBuyStatusConvert(row.robot).label}
                   </tag>
                 </div>
@@ -1250,18 +1261,18 @@ export default {
             }
             return (
               <div>
-                <tag color='primary'>{row.robot}</tag>
+                <tag color="primary">{row.robot}</tag>
               </div>
             );
           }
         },
         {
-          title: '操作',
+          title: "操作",
           minWidth: 120,
-          align: 'center',
-          fixed: 'right',
-          key: 'handle',
-          options: ['view', 'edit']
+          align: "center",
+          fixed: "right",
+          key: "handle",
+          options: ["view", "edit"]
         }
       ],
       productColumns: [
@@ -1273,80 +1284,80 @@ export default {
         //   fixed: "left"
         // },
         {
-          title: '规格ID',
-          align: 'center',
-          key: 'id',
+          title: "规格ID",
+          align: "center",
+          key: "id",
           minWidth: 80
         },
         {
-          title: '商品条码',
-          key: 'barcode',
-          align: 'center',
+          title: "商品条码",
+          key: "barcode",
+          align: "center",
           minWidth: 80
         },
         {
-          title: '商品编号',
-          key: 'productCode',
-          align: 'center',
+          title: "商品编号",
+          key: "productCode",
+          align: "center",
           minWidth: 130
         },
         {
-          title: '商品名称',
-          align: 'center',
-          key: 'productName',
+          title: "商品名称",
+          align: "center",
+          key: "productName",
           minWidth: 150
         },
         {
-          title: '商品规格',
-          align: 'center',
-          key: 'specification',
+          title: "商品规格",
+          align: "center",
+          key: "specification",
           minWidth: 100
         },
         {
-          title: '商品单位',
-          align: 'center',
+          title: "商品单位",
+          align: "center",
           minWidth: 100,
-          key: 'productUnit'
+          key: "productUnit"
         },
         {
-          title: '商品原价',
-          align: 'center',
+          title: "商品原价",
+          align: "center",
           minWidth: 120,
-          key: 'price',
+          key: "price",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.price);
             return <div>{amount}</div>;
           }
         },
         {
-          title: '优惠价格',
-          align: 'center',
+          title: "优惠价格",
+          align: "center",
           minWidth: 120,
-          key: 'salePrice',
+          key: "salePrice",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.salePrice);
             return <div>{amount}</div>;
           }
         },
         {
-          title: '商品状态',
-          align: 'center',
+          title: "商品状态",
+          align: "center",
           minWidth: 100,
-          key: 'shelvesStatus',
+          key: "shelvesStatus",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.shelvesStatus === 'VALID') {
+            if (row.shelvesStatus === "VALID") {
               return (
                 <div>
-                  <tag color='success'>
+                  <tag color="success">
                     {customPlanStatusConvert(row.shelvesStatus).label}
                   </tag>
                 </div>
               );
-            } else if (row.shelvesStatus === 'INVALID') {
+            } else if (row.shelvesStatus === "INVALID") {
               return (
                 <div>
-                  <tag color='error'>
+                  <tag color="error">
                     {customPlanStatusConvert(row.shelvesStatus).label}
                   </tag>
                 </div>
@@ -1354,7 +1365,7 @@ export default {
             }
             return (
               <div>
-                <tag color='primary'>
+                <tag color="primary">
                   {customPlanStatusConvert(row.shelvesStatus).label}
                 </tag>
               </div>
@@ -1362,10 +1373,10 @@ export default {
           }
         },
         {
-          title: '商品排序',
-          align: 'center',
+          title: "商品排序",
+          align: "center",
           minWidth: 100,
-          key: 'rank'
+          key: "rank"
         }
       ],
       productData: [],
@@ -1401,17 +1412,17 @@ export default {
     },
     relationStore() {
       if (!this.teambuyDetail.storeIds) {
-        return '全部门店';
+        return "全部门店";
       }
       const ids = this.teambuyDetail.storeIds
         .substring(1, this.teambuyDetail.storeIds.length - 1)
-        .split('][');
+        .split("][");
       const list = this.storeList;
-      let str = '';
+      let str = "";
       if (list.length > 0) {
         ids.forEach(id => {
           const item = list.find(item => item.storeId == id);
-          str += item.storeName + ',';
+          str += item.storeName + ",";
         });
         return str.substring(0, str.length - 1);
       }
@@ -1419,9 +1430,9 @@ export default {
   },
   watch: {
     numberInput(v) {
-      if (String(v).indexOf('.') > 0) this.teambuyDetail.hour = '';
+      if (String(v).indexOf(".") > 0) this.teambuyDetail.hour = "";
       this.$nextTick(() => {
-        this.testInput = String(v).replace(/\D/g, '');
+        this.testInput = String(v).replace(/\D/g, "");
       });
     }
   },
@@ -1444,13 +1455,19 @@ export default {
     },
     handleSubmit() {
       const _this = this;
+      if (_this.oldPicture.length > 0) {
+        let urls = {
+          urls: _this.oldPicture
+        };
+        _this.deletePicture(urls);
+      }
       this.$refs.editForm.validate(valid => {
         if (valid) {
           if (
-            _this.teambuyDetail.teamBuyType === 'OLD_AND_NEW' &&
+            _this.teambuyDetail.teamBuyType === "OLD_AND_NEW" &&
             _this.teambuyDetail.fullUserNum <= 1
           ) {
-            _this.$Message.error('老带新团成团人数必须大于1');
+            _this.$Message.error("老带新团成团人数必须大于1");
             return;
           }
           if (
@@ -1459,7 +1476,7 @@ export default {
               _this.teambuyDetail.endTime
             )
           ) {
-            _this.$Message.error('结束时间必须大于开始时间!');
+            _this.$Message.error("结束时间必须大于开始时间!");
             return;
           }
           if (
@@ -1468,14 +1485,14 @@ export default {
               _this.teambuyDetail.deliveryEndTime
             )
           ) {
-            _this.$Message.error('提货截止时间必须大于有效期止时间!');
+            _this.$Message.error("提货截止时间必须大于有效期止时间!");
             return;
           }
           if (
             _this.teambuyDetail.robotStartSecond >
             _this.teambuyDetail.validSeconds
           ) {
-            _this.$Message.error('虚位补齐时间不能超过成团有效时长!');
+            _this.$Message.error("虚位补齐时间不能超过成团有效时长!");
             return;
           }
           if (
@@ -1483,28 +1500,28 @@ export default {
               parseInt(_this.teambuyDetail.fullUserNum) !==
             0
           ) {
-            _this.$Message.error('商品份额必须被成团人数整除!');
+            _this.$Message.error("商品份额必须被成团人数整除!");
             return;
           }
           if (
-            _this.teambuyDetail.relationStoreType === 'PART' &&
+            _this.teambuyDetail.relationStoreType === "PART" &&
             (_this.teambuyDetail.storeIds == null ||
-              _this.teambuyDetail.storeIds === '')
+              _this.teambuyDetail.storeIds === "")
           ) {
-            _this.$Message.error('选择部分门店时必须选择至少一个门店!');
+            _this.$Message.error("选择部分门店时必须选择至少一个门店!");
             return;
           }
           if (
             _this.teambuyDetail.productNum < _this.teambuyDetail.fullUserNum
           ) {
-            _this.$Message.error('库存数量不能小于成团人数!');
+            _this.$Message.error("库存数量不能小于成团人数!");
             return;
           }
           if (
             _this.teambuyDetail.tourDiscount >=
             _this.teambuyDetail.activityPrice
           ) {
-            _this.$Message.error('团长优惠不能大于等于活动金额!');
+            _this.$Message.error("团长优惠不能大于等于活动金额!");
             return;
           }
           // if (this.teambuyDetail.activityPrice > this.teambuyDetail.originalPrice) {
@@ -1517,33 +1534,33 @@ export default {
           // }
           var numRe = new RegExp(/^[0-9]+$/);
           if (!numRe.test(_this.teambuyDetail.validSeconds)) {
-            _this.$Message.error('成团有效时长不能为小数');
+            _this.$Message.error("成团有效时长不能为小数");
             return;
           }
           // 活动格式转换Formart
-          if (_this.teambuyDetail.startTime.indexOf('GMT') > 0) {
+          if (_this.teambuyDetail.startTime.indexOf("GMT") > 0) {
             _this.teambuyDetail.startTime = _this
               .$moment(_this.teambuyDetail.startTime)
-              .format('yyyy-MM-dd HH:mm:ss');
+              .format("yyyy-MM-dd HH:mm:ss");
             console.log(
-              'startTime after format',
+              "startTime after format",
               _this.teambuyDetail.startTime
             );
           }
 
-          if (_this.teambuyDetail.endTime.indexOf('GMT') > 0) {
+          if (_this.teambuyDetail.endTime.indexOf("GMT") > 0) {
             _this.teambuyDetail.endTime = _this
               .$moment(_this.teambuyDetail.endTime)
-              .format('yyyy-MM-dd HH:mm:ss');
-            console.log('endTime after format', _this.teambuyDetail.endTime);
+              .format("yyyy-MM-dd HH:mm:ss");
+            console.log("endTime after format", _this.teambuyDetail.endTime);
           }
 
-          if (_this.teambuyDetail.deliveryEndTime.indexOf('GMT') > 0) {
+          if (_this.teambuyDetail.deliveryEndTime.indexOf("GMT") > 0) {
             _this.teambuyDetail.deliveryEndTime = _this
               .$moment(_this.teambuyDetail.deliveryEndTime)
-              .format('yyyy-MM-dd HH:mm:ss');
+              .format("yyyy-MM-dd HH:mm:ss");
             console.log(
-              'endTime after format',
+              "endTime after format",
               _this.teambuyDetail.deliveryEndTime
             );
           }
@@ -1556,9 +1573,27 @@ export default {
             _this.editStore();
           }
         } else {
-          _this.$Message.error('请完善信息!');
+          _this.$Message.error("请完善信息!");
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
     },
     createStore() {
       this.modalViewLoading = true;
@@ -1567,7 +1602,7 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success('创建成功!');
+          this.$Message.success("创建成功!");
           this.getTableData();
         })
         .catch(() => {
@@ -1578,20 +1613,20 @@ export default {
     },
     editStore() {
       this.modalViewLoading = true;
-      if (this.teambuyDetail.startTime.indexOf('T') > -1) {
+      if (this.teambuyDetail.startTime.indexOf("T") > -1) {
         this.teambuyDetail.startTime = this.$moment(
           this.teambuyDetail.startTime
-        ).format('YYYY-MM-DD HH:mm:ss');
+        ).format("YYYY-MM-DD HH:mm:ss");
       }
-      if (this.teambuyDetail.endTime.indexOf('T') > -1) {
+      if (this.teambuyDetail.endTime.indexOf("T") > -1) {
         this.teambuyDetail.endTime = this.$moment(
           this.teambuyDetail.endTime
-        ).format('YYYY-MM-DD HH:mm:ss');
+        ).format("YYYY-MM-DD HH:mm:ss");
       }
-      if (this.teambuyDetail.deliveryEndTime.indexOf('T') > -1) {
+      if (this.teambuyDetail.deliveryEndTime.indexOf("T") > -1) {
         this.teambuyDetail.deliveryEndTime = this.$moment(
           this.teambuyDetail.deliveryEndTime
-        ).format('YYYY-MM-DD HH:mm:ss');
+        ).format("YYYY-MM-DD HH:mm:ss");
       }
       editTeamBuy(this.teambuyDetail)
         .then(res => {
@@ -1637,7 +1672,7 @@ export default {
         this.currentTableRowSelected.rank = null;
         this.currentTableRowSelected.activityPrice = null;
         this.currentTableRowSelected.singleTeambuyPrice = null;
-        this.currentTableRowSelected.relationStoreType = 'ALL';
+        this.currentTableRowSelected.relationStoreType = "ALL";
         this.currentTableRowSelected.hour = hourTime;
         this.currentTableRowSelected.minute = minuteTime;
         this.currentTableRowSelected.second = secondTime;
@@ -1678,7 +1713,7 @@ export default {
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.banner != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.banner;
         mainImgArr.push(map);
@@ -1693,7 +1728,9 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
-      this.groupStatus = '';
+      this.save = [];
+      this.save.push(params.row.banner);
+      this.groupStatus = "";
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.teambuyDetail = _.cloneDeep(params.row);
@@ -1711,14 +1748,14 @@ export default {
       }
       if (
         this.teambuyDetail.storeIds !== null &&
-        this.teambuyDetail.storeIds !== ''
+        this.teambuyDetail.storeIds !== ""
       ) {
         this.showStoreList = true;
-        this.teambuyDetail.relationStoreType = 'PART';
+        this.teambuyDetail.relationStoreType = "PART";
         const storeIds = this.teambuyDetail.storeIds
           .substring(1, this.teambuyDetail.storeIds.length - 1)
-          .split('][');
-        console.log('storeIds before edit:', storeIds);
+          .split("][");
+        console.log("storeIds before edit:", storeIds);
         storeIds.forEach(element => {
           this.storeIds.push(parseInt(element));
         });
@@ -1731,7 +1768,7 @@ export default {
         }
       } else {
         this.showStoreList = false;
-        this.teambuyDetail.relationStoreType = 'ALL'; // storeIds为''默认关联的门店则是全部门店
+        this.teambuyDetail.relationStoreType = "ALL"; // storeIds为''默认关联的门店则是全部门店
       }
       this.modalEdit = true;
     },
@@ -1741,11 +1778,11 @@ export default {
         const tableData = res.rows;
         // 表格数据导出字段翻译
         tableData.forEach(item => {
-          item['groupId'] = item['groupName'];
-          item['status'] = teamBuyStatusConvert(item['status']).label;
-          item['activityPrice'] = (item['activityPrice'] / 100.0).toFixed(2);
-          item['tourDiscount'] = (item['tourDiscount'] / 100.0).toFixed(2);
-          item['robot'] = teamBuyStatusConvert(item['robot']).label;
+          item["groupId"] = item["groupName"];
+          item["status"] = teamBuyStatusConvert(item["status"]).label;
+          item["activityPrice"] = (item["activityPrice"] / 100.0).toFixed(2);
+          item["tourDiscount"] = (item["tourDiscount"] / 100.0).toFixed(2);
+          item["robot"] = teamBuyStatusConvert(item["robot"]).label;
         });
         this.$refs.tables.handleDownload({
           filename: `拼团活动信息-${new Date().valueOf()}`,
@@ -1756,8 +1793,8 @@ export default {
     },
     getTableData() {
       if (!this.searchRowData.status) {
-        this.searchRowData.sidx = 'start_time';
-        this.searchRowData.sort = 'desc';
+        this.searchRowData.sidx = "start_time";
+        this.searchRowData.sort = "desc";
       }
       getTeamBuyPages(this.searchRowData)
         .then(res => {
@@ -1783,23 +1820,25 @@ export default {
       this.uploadListMain = fileList;
       this.teambuyDetail.banner = null;
       this.teambuyDetail.banner = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     startTimeChange(value, date) {
-      console.log('change start value:', value);
+      console.log("change start value:", value);
       this.teambuyDetail.startTime = value;
-      if (this.teambuyDetail.startTime.indexOf('T') > -1) {
+      if (this.teambuyDetail.startTime.indexOf("T") > -1) {
         this.teambuyDetail.startTime = this.$moment(
           this.teambuyDetail.startTime
-        ).format('YYYY-MM-DD HH:mm:ss');
+        ).format("YYYY-MM-DD HH:mm:ss");
       }
     },
     endTimeChange(value, date) {
-      console.log('change end value:', value);
+      console.log("change end value:", value);
       this.teambuyDetail.endTime = value;
-      if (this.teambuyDetail.endTime.indexOf('T') > -1) {
+      if (this.teambuyDetail.endTime.indexOf("T") > -1) {
         this.teambuyDetail.endTime = this.$moment(
           this.teambuyDetail.endTime
-        ).format('YYYY-MM-DD HH:mm:ss');
+        ).format("YYYY-MM-DD HH:mm:ss");
       }
     },
     createTimeStartChange(value, date) {
@@ -1810,24 +1849,24 @@ export default {
     },
     deliveryEndTimeChange(value, date) {
       this.teambuyDetail.deliveryEndTime = value;
-      if (this.teambuyDetail.deliveryEndTime.indexOf('T') > -1) {
+      if (this.teambuyDetail.deliveryEndTime.indexOf("T") > -1) {
         this.teambuyDetail.deliveryEndTime = this.$moment(
           this.teambuyDetail.deliveryEndTime
-        ).format('YYYY-MM-DD HH:mm:ss');
+        ).format("YYYY-MM-DD HH:mm:ss");
       }
     },
     deliveryStartTimeChange(value, date) {
       this.teambuyDetail.deliveryStartTime = value;
-      if (this.teambuyDetail.deliveryStartTime.indexOf('T') > -1) {
+      if (this.teambuyDetail.deliveryStartTime.indexOf("T") > -1) {
         this.teambuyDetail.deliveryStartTime = this.$moment(
           this.teambuyDetail.deliveryStartTime
-        ).format('YYYY-MM-DD HH:mm:ss');
+        ).format("YYYY-MM-DD HH:mm:ss");
       }
     },
     activityStatusChange(value, date) {
-      if (value === 'expire' || value === 'off') {
-        this.searchRowData.sidx = 'start_time';
-        this.searchRowData.sort = 'desc';
+      if (value === "expire" || value === "off") {
+        this.searchRowData.sidx = "start_time";
+        this.searchRowData.sort = "desc";
       }
     },
     validSecondsChange() {
@@ -1849,9 +1888,9 @@ export default {
       this.teambuyDetail.tourDiscount = yuanToFenNumber(value);
     },
     selectStore(options) {
-      if (options.value === 'ALL') {
+      if (options.value === "ALL") {
         this.showStoreList = false;
-      } else if (options.value === 'PART') {
+      } else if (options.value === "PART") {
         this.showStoreList = true;
       }
     },
@@ -1892,16 +1931,16 @@ export default {
       if (data.length === this.storeList.length) {
         this.indeterminate = false;
         this.checkAll = true;
-        this.teambuyDetail.storeIds = ''; // 全选存空字符串
+        this.teambuyDetail.storeIds = ""; // 全选存空字符串
       } else if (data.length > 0) {
         this.indeterminate = true;
         this.checkAll = false;
-        this.teambuyDetail.storeIds = '[' + data.join('][') + ']';
-        console.log('storeIds before submit:', this.teambuyDetail.storeIds);
+        this.teambuyDetail.storeIds = "[" + data.join("][") + "]";
+        console.log("storeIds before submit:", this.teambuyDetail.storeIds);
       } else {
         this.indeterminate = false;
         this.checkAll = false;
-        this.teambuyDetail.storeIds = '';
+        this.teambuyDetail.storeIds = "";
       }
     },
     handleRelation() {
