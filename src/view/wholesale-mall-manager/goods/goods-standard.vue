@@ -349,7 +349,7 @@
               </FormItem>
             </i-col>
           </Row>
-          <Row style="display:none">
+          <Row>
             <i-col span="12">
               <FormItem label="上架商品主图:建议尺寸;690x690(单位:px):" prop="goodsImage">
                 <Input
@@ -429,6 +429,11 @@
                   </div>
                 </IViewUpload>
               </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12" style="float:right">
+              <Button v-waves type="info" @click="modalSort = true">商品详情图排序</Button>
             </i-col>
           </Row>
           <Row>
@@ -708,6 +713,27 @@
 
     <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%" />
+    </Modal>
+    <Modal v-model="modalSort" :mask-closable="false" title="图片排序">
+      <p slot="header">
+        <span>图片排序</span>
+      </p>
+      <div class="modal-content">
+        <drag-list :list1.sync="uploadListMultiple" :drop-con-class="dropConClass" class="clearfix">
+          <img
+            slot="left"
+            slot-scope="left"
+            :src="left.itemLeft.url"
+            class="drag-item"
+            width="80"
+            height="80"
+          />
+        </drag-list>
+      </div>
+      <div slot="footer">
+        <Button @click="modalSort=false">关闭</Button>
+        <Button type="primary" @click="handleImgSort">确定</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -1234,9 +1260,9 @@ export default {
         ],
         isVip: [{ required: true, message: "请选择商品的类型" }],
         standardGoodsName: [{ required: true, message: "请输入上架商品名称" }],
-        // goodsImage: [{ required: true, message: "请上传上架商品主图" }],
+        goodsImage: [{ required: true, message: "请上传上架商品主图" }],
         // image: [{ required: true, message: "请上传上架商品主图" }],
-        // goodsImages: [{ required: true, message: "请上传上架商品详情主图" }],
+        goodsImages: [{ required: true, message: "请上传上架商品详情主图" }],
         unitCode: [{ required: true, message: "请选择商品单位" }],
         vaild: [{ required: true, message: "请选择商品状态" }],
         standard: [{ required: true, message: "请输入商品规格" }],
@@ -1782,6 +1808,18 @@ export default {
       );
       console.log(this.productStandardDetail.goodsImages);
       console.log(JSON.stringify(this.productStandardDetail.goodsImages));
+    },
+    handleImgSort() {
+      this.descriptionList = [];
+      this.uploadListMultiple.forEach(item => {
+        if (item.url) {
+          this.descriptionList.push(item.url);
+        }
+      });
+      this.productStandardDetail.goodsImages = "";
+      this.productStandardDetail.goodsImages = this.descriptionList.join(",");
+      console.log("after sort:", this.productStandardDetail.goodsImages);
+      this.modalSort = false;
     },
     handleRemoveMultiple(file) {
       this.$refs.uploadMultiple.deleteFile(file);

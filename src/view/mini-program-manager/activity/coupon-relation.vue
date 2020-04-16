@@ -331,30 +331,6 @@
                   </FormItem>
                 </i-col>
               </template>
-              <!-- <i-col span="7" v-if="tempModalType=='addTemplate'">
-                <FormItem label="生效时间:" prop="effectiveStartTime">
-                  <DatePicker
-                    :value="addRelationDetail.effectiveStartTime"
-                    format="yyyy-MM-dd HH:mm:ss"
-                    type="datetime"
-                    placeholder="生效时间"
-                    style="width: 160px"
-                    @on-change="effectiveStartTimeChange"
-                  />
-                </FormItem>
-              </i-col>
-              <i-col span="7" v-if="tempModalType=='addTemplate'">
-                <FormItem label="　失效时间:" prop="effectiveEndTime">
-                  <DatePicker
-                    :value="addRelationDetail.effectiveEndTime"
-                    format="yyyy-MM-dd HH:mm:ss"
-                    type="datetime"
-                    placeholder="结束时间"
-                    style="width: 160px"
-                    @on-change="effectiveEndTimeChange"
-                  />
-                </FormItem>
-              </i-col>-->
             </Row>
             <Row>
               <i-col span="4">
@@ -534,7 +510,78 @@
             </i-col>
           </Row>
           <Row>
-            <i-col span="7">
+            <i-col v-if="addRelationDetail.source==='SMALL'" span="6">
+              <FormItem label="券有效期:" prop="useLimitType">
+                <Select
+                  v-model="addRelationDetail.validDateType"
+                  placeholder="券有效期类型"
+                  style="padding-right: 5px;width: 120px"
+                >
+                  <Option
+                    v-for="(item,index) in validDateTypeEnum"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                    style="padding-left: 5px;width: 100px"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <template
+              v-if="addRelationDetail.validDateType=='UN_FIXED_DATE' && addRelationDetail.source==='SMALL'"
+            >
+              <i-col span="10">
+                <FormItem label="发放券后:" prop="beginDay">
+                  <InputNumber
+                    :min="0"
+                    v-model="addRelationDetail.beginDay"
+                    label="生效开始"
+                    style="width: 95px"
+                  ></InputNumber>&nbsp;天生效
+                </FormItem>
+              </i-col>
+              <i-col span="10">
+                <FormItem label="有效天数:" prop="endDay">
+                  <InputNumber
+                    :min="0"
+                    v-model="addRelationDetail.endDay"
+                    label="有效天数"
+                    style="width: 95px"
+                  ></InputNumber>&nbsp;天
+                </FormItem>
+              </i-col>
+            </template>
+            <template
+              v-if="addRelationDetail.validDateType=='FIXED_DATE' && addRelationDetail.source==='SMALL'"
+            >
+              <i-col span="10">
+                <FormItem label="生效时间:" prop="effectiveStartTime">
+                  <DatePicker
+                    :value="addRelationDetail.effectiveStartTime"
+                    format="yyyy-MM-dd HH:mm:ss"
+                    type="datetime"
+                    placeholder="生效时间"
+                    style="width: 160px"
+                    @on-change="effectiveStartTimeChange"
+                  />
+                </FormItem>
+              </i-col>
+              <i-col span="7">
+                <FormItem label="失效时间:" prop="effectiveEndTime">
+                  <DatePicker
+                    :value="addRelationDetail.effectiveEndTime"
+                    format="yyyy-MM-dd HH:mm:ss"
+                    type="datetime"
+                    placeholder="结束时间"
+                    style="width: 160px"
+                    @on-change="effectiveEndTimeChange"
+                  />
+                </FormItem>
+              </i-col>
+            </template>
+            <!-- <i-col span="7">
               <FormItem
                 label="生效时间:"
                 prop="effectiveStartTime"
@@ -567,7 +614,7 @@
                   @on-change="effectiveEndTimeChange"
                 />
               </FormItem>
-            </i-col>
+            </i-col>-->
           </Row>
           <Row>
             <i-col span="7">
