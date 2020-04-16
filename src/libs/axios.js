@@ -31,7 +31,7 @@ class HttpRequest {
 
     //删除图片
     const delHttpOps = _.merge({}, defaultOps, {
-      baseURL: "http://resource.food-see.com",
+      baseURL: "http://test-resource.food-see.com",
       response: this.responseType
     });
 

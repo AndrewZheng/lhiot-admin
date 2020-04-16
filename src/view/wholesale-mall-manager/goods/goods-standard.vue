@@ -384,7 +384,7 @@
                   :max-num="1"
                   groupType="base_image"
                   fileDir="product"
-                  appType="lv_hang"
+                  appType="min_app"
                   @on-success="handleSuccessMain"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -427,7 +427,7 @@
                   :max-num="10"
                   groupType="base_image"
                   fileDir="product"
-                  appType="lv_hang"
+                  appType="min_app"
                   multiple
                   @on-success="handleSuccessMultiple"
                 >
@@ -436,6 +436,11 @@
                   </div>
                 </IViewUpload>
               </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12" style="float:right">
+              <Button v-waves type="info" @click="modalSort = true">规格描述排序</Button>
             </i-col>
           </Row>
           <Row>
@@ -540,7 +545,27 @@
         <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">确定</Button>
       </div>
     </Modal>
-
+    <Modal v-model="modalSort" :mask-closable="false" title="图片排序">
+      <p slot="header">
+        <span>图片排序</span>
+      </p>
+      <div class="modal-content">
+        <drag-list :list1.sync="uploadListMultiple" :drop-con-class="dropConClass" class="clearfix">
+          <img
+            slot="left"
+            slot-scope="left"
+            :src="left.itemLeft.url"
+            class="drag-item"
+            width="80"
+            height="80"
+          />
+        </drag-list>
+      </div>
+      <div slot="footer">
+        <Button @click="modalSort=false">关闭</Button>
+        <Button type="primary" @click="handleImgSort">确定</Button>
+      </div>
+    </Modal>
     <!-- 关联商品弹窗-->
     <Modal v-model="modalProduct" :width="1000" title="关联商品" footer-hide>
       <Card>
@@ -1554,6 +1579,18 @@ export default {
       }
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
+    },
+    handleImgSort() {
+      this.descriptionList = [];
+      this.uploadListMultiple.forEach(item => {
+        if (item.url) {
+          this.descriptionList.push(item.url);
+        }
+      });
+      this.productStandardDetail.goodsImages = "";
+      this.productStandardDetail.goodsImages = this.descriptionList.join(",");
+      console.log("after sort:", this.productStandardDetail.goodsImages);
+      this.modalSort = false;
     },
     handleSubmit() {
       if (this.oldPicture.length > 0) {
