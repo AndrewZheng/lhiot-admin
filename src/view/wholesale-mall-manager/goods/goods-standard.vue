@@ -350,6 +350,7 @@
             </i-col>
           </Row>
           <Row>
+            <!-- 主图 ==== -->
             <i-col span="12">
               <FormItem label="上架商品主图:建议尺寸;690x690(单位:px):" prop="goodsImage">
                 <Input
@@ -381,6 +382,9 @@
                   :default-list="defaultListMain"
                   :image-size="imageSize"
                   :max-num="1"
+                  groupType="base_image"
+                  fileDir="product"
+                  appType="min_app"
                   @on-success="handleSuccessMain"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -421,6 +425,9 @@
                   :default-list="defaultListMultiple"
                   :image-size="imageSize"
                   :max-num="10"
+                  groupType="base_image"
+                  fileDir="product"
+                  appType="min_app"
                   multiple
                   @on-success="handleSuccessMultiple"
                 >
@@ -433,7 +440,7 @@
           </Row>
           <Row>
             <i-col span="12" style="float:right">
-              <Button v-waves type="info" @click="modalSort = true">商品详情图排序</Button>
+              <Button v-waves type="info" @click="modalSort = true">规格描述排序</Button>
             </i-col>
           </Row>
           <Row>
@@ -538,7 +545,27 @@
         <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">确定</Button>
       </div>
     </Modal>
-
+    <Modal v-model="modalSort" :mask-closable="false" title="图片排序">
+      <p slot="header">
+        <span>图片排序</span>
+      </p>
+      <div class="modal-content">
+        <drag-list :list1.sync="uploadListMultiple" :drop-con-class="dropConClass" class="clearfix">
+          <img
+            slot="left"
+            slot-scope="left"
+            :src="left.itemLeft.url"
+            class="drag-item"
+            width="80"
+            height="80"
+          />
+        </drag-list>
+      </div>
+      <div slot="footer">
+        <Button @click="modalSort=false">关闭</Button>
+        <Button type="primary" @click="handleImgSort">确定</Button>
+      </div>
+    </Modal>
     <!-- 关联商品弹窗-->
     <Modal v-model="modalProduct" :width="1000" title="关联商品" footer-hide>
       <Card>
@@ -714,27 +741,6 @@
     <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
-    <Modal v-model="modalSort" :mask-closable="false" title="图片排序">
-      <p slot="header">
-        <span>图片排序</span>
-      </p>
-      <div class="modal-content">
-        <drag-list :list1.sync="uploadListMultiple" :drop-con-class="dropConClass" class="clearfix">
-          <img
-            slot="left"
-            slot-scope="left"
-            :src="left.itemLeft.url"
-            class="drag-item"
-            width="80"
-            height="80"
-          />
-        </drag-list>
-      </div>
-      <div slot="footer">
-        <Button @click="modalSort=false">关闭</Button>
-        <Button type="primary" @click="handleImgSort">确定</Button>
-      </div>
-    </Modal>
   </div>
 </template>
 
@@ -753,7 +759,8 @@ import {
   deleteGoodsPriceRegion,
   editProductStandard,
   editGoodsPriceRegion,
-  exporGoodsStandard
+  exporGoodsStandard,
+  deletePicture
 } from "@/api/wholesale";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -1143,7 +1150,9 @@ export default {
       productDetailsList: [],
       productDetailsList: [],
       defaultListMultiple: [],
-
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       // ====
       uploadListMain: [],
       defaultListMain: [],
@@ -1261,8 +1270,7 @@ export default {
         isVip: [{ required: true, message: "请选择商品的类型" }],
         standardGoodsName: [{ required: true, message: "请输入上架商品名称" }],
         goodsImage: [{ required: true, message: "请上传上架商品主图" }],
-        // image: [{ required: true, message: "请上传上架商品主图" }],
-        goodsImages: [{ required: true, message: "请上传上架商品详情主图" }],
+        goodsImages: [{ required: true, message: "请上传上架商品详情图" }],
         unitCode: [{ required: true, message: "请选择商品单位" }],
         vaild: [{ required: true, message: "请选择商品状态" }],
         standard: [{ required: true, message: "请输入商品规格" }],
@@ -1538,6 +1546,8 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.image);
       this.tempModalType = this.modalType.edit;
       this.uploadListMain = [];
       this.uploadListMultiple = [];
@@ -1570,7 +1580,25 @@ export default {
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
     },
+    handleImgSort() {
+      this.descriptionList = [];
+      this.uploadListMultiple.forEach(item => {
+        if (item.url) {
+          this.descriptionList.push(item.url);
+        }
+      });
+      this.productStandardDetail.goodsImages = "";
+      this.productStandardDetail.goodsImages = this.descriptionList.join(",");
+      console.log("after sort:", this.productStandardDetail.goodsImages);
+      this.modalSort = false;
+    },
     handleSubmit() {
+      if (this.oldPicture.length > 0) {
+        let urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs.editForm.validate(valid => {
         if (valid) {
           if (this.isCreate) {
@@ -1582,6 +1610,27 @@ export default {
           this.$Message.error("请完善信息!");
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.modalEdit = false;
+      this.oldPicture = [];
+      this.newPicture = [];
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {
+          this.newPicture = [];
+          this.oldPicture = [];
+        })
+        .catch(() => {});
     },
     handleSubmitRegin() {
       // 把规格ID赋值给goodsPriceRegion  goodsPriceRegion.maxQuantity minQuantity
@@ -1792,6 +1841,8 @@ export default {
       this.uploadListMain = fileList;
       this.productStandardDetail.goodsImage = null;
       this.productStandardDetail.goodsImage = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     // 上架规格描述图
     handleSuccessMultiple(response, file, fileList) {
@@ -1806,25 +1857,15 @@ export default {
       this.productStandardDetail.goodsImages = this.productDetailsList.join(
         ","
       );
+      this.newPicture.push(response.fileUrl);
       console.log(this.productStandardDetail.goodsImages);
       console.log(JSON.stringify(this.productStandardDetail.goodsImages));
-    },
-    handleImgSort() {
-      this.descriptionList = [];
-      this.uploadListMultiple.forEach(item => {
-        if (item.url) {
-          this.descriptionList.push(item.url);
-        }
-      });
-      this.productStandardDetail.goodsImages = "";
-      this.productStandardDetail.goodsImages = this.descriptionList.join(",");
-      console.log("after sort:", this.productStandardDetail.goodsImages);
-      this.modalSort = false;
     },
     handleRemoveMultiple(file) {
       this.$refs.uploadMultiple.deleteFile(file);
       const index = this.productDetailsList.indexOf(file.url);
       if (index > -1) {
+        this.oldPicture.push(this.descriptionList[index]);
         this.productDetailsList.splice(index, 1);
         this.productStandardDetail.goodsImages = this.productDetailsList.join(
           ","

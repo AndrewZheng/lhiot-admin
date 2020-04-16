@@ -221,19 +221,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="3">商品主图:</i-col>
+              <i-col span="3">门店照片:</i-col>
               <i-col span="21">
-                <img :src="storeDetail.storeImage" style="width: 300px" >
-              </i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="3">门店微信:</i-col>
-              <i-col span="21">
-                <img :src="storeDetail.wxImage" style="width: 300px" >
+                <img :src="storeDetail.storeImage" style="width: 300px" />
               </i-col>
             </Row>
           </i-col>
@@ -402,7 +392,7 @@
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>
-                    <img :src="item.url" >
+                    <img :src="item.url" />
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                       <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -417,6 +407,9 @@
                 ref="uploadMain"
                 :default-list="defaultListMain"
                 :image-size="imageSize"
+                groupType="base_image"
+                fileDir="store"
+                appType="min_app"
                 @on-success="handleSuccessMain"
               >
                 <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -433,7 +426,7 @@
                 <div v-for="item in uploadwxImageList" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" >
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveWxImage(item)"></Icon>
@@ -449,6 +442,9 @@
                   :default-list="defaultWxImageList"
                   :image-size="imageSize"
                   :max-num="1"
+                  groupType="base_image"
+                  fileDir="store"
+                  appType="min_app"
                   @on-success="handleSuccessWxImage"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -475,60 +471,61 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" >
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
+import Tables from "_c/tables";
+import IViewUpload from "_c/iview-upload";
+import _ from "lodash";
 import {
   deleteStore,
   getStoreDetail,
   getStorePages,
   getStoreAreas,
   editStore,
-  createStore
-} from '@/api/mini-program';
-import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
+  createStore,
+  deletePicture
+} from "@/api/mini-program";
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
 import {
   storeType,
   storeStatus,
   storeStatusEnum,
   storeTypeEnum,
   coordinateTypeEnum
-} from '@/libs/enumerate';
+} from "@/libs/enumerate";
 import {
   storeStatusConvert,
   storeTypeConvert,
   coordinateTypeConvert
-} from '@/libs/converStatus';
+} from "@/libs/converStatus";
 
 const storeDetail = {
   storeId: 0,
-  storeCode: '',
-  storeName: '',
-  storeAddress: '',
-  storePhone: '',
-  storeImage: '',
-  storeArea: '',
-  storeStatus: '',
-  storeFlagship: '',
+  storeCode: "",
+  storeName: "",
+  storeAddress: "",
+  storePhone: "",
+  storeImage: "",
+  storeArea: "",
+  storeStatus: "",
+  storeFlagship: "",
   storeType: null,
-  videoUrl: '',
-  beginAt: '',
-  endAt: '',
-  tapeUrl: '',
+  videoUrl: "",
+  beginAt: "",
+  endAt: "",
+  tapeUrl: "",
   storeCoordx: null,
   storeCoordy: null,
   coordinateType: null,
-  wxImage: '',
-  enterpriseWxId: ''
+  wxImage: "",
+  enterpriseWxId: ""
 };
 
 const roleRowData = {
@@ -553,48 +550,48 @@ export default {
       coordinateTypeEnum,
       ruleInline: {
         storeCode: [
-          { required: true, message: '请输入门店编码' },
+          { required: true, message: "请输入门店编码" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
+                errors.push(new Error("必须为整数"));
               }
               callback(errors);
             }
           }
         ],
-        storeName: [{ required: true, message: '请输入门店名称' }],
-        storeStatus: [{ required: true, message: '请选择门店状态' }],
-        storeArea: [{ required: true, message: '请选择门店区域' }],
-        storeFlagship: [{ required: true, message: '请选择旗舰店' }],
-        beginTime: [{ required: true, message: '请选择开始时间' }],
-        endTime: [{ required: true, message: '请选择结束时间' }],
+        storeName: [{ required: true, message: "请输入门店名称" }],
+        storeStatus: [{ required: true, message: "请选择门店状态" }],
+        storeArea: [{ required: true, message: "请选择门店区域" }],
+        storeFlagship: [{ required: true, message: "请选择旗舰店" }],
+        beginTime: [{ required: true, message: "请选择开始时间" }],
+        endTime: [{ required: true, message: "请选择结束时间" }],
         storeCoordy: [
           {
             required: true,
-            message: '请填写正确的经度',
+            message: "请填写正确的经度",
             pattern: /(^[\-0-9][0-9]*(.[0-9]+)?)$/
           }
         ],
         storeCoordx: [
           {
             required: true,
-            message: '请填写正确的维度',
+            message: "请填写正确的维度",
             pattern: /(^[\-0-9][0-9]*(.[0-9]+)?)$/
           }
         ],
-        coordinateType: [{ required: true, message: '请选择坐标系类型' }],
-        storeImage: [{ required: true, message: '请上传门店图片' }],
+        coordinateType: [{ required: true, message: "请选择坐标系类型" }],
+        storeImage: [{ required: true, message: "请上传门店图片" }],
         storePhone: [
           {
             required: true,
-            message: '请填写正确电话号码',
+            message: "请填写正确电话号码",
             pattern: /^1\d{10}$/
           }
         ],
-        storeType: [{ required: true, message: '请选择门店类型' }],
-        storeAddress: [{ required: true, message: '请填写门店地址' }]
+        storeType: [{ required: true, message: "请选择门店类型" }],
+        storeAddress: [{ required: true, message: "请填写门店地址" }]
       },
       defaultListMain: [],
       defaultWxImageList: [],
@@ -602,77 +599,80 @@ export default {
       uploadwxImageList: [],
       areaList: [],
       flagShipList: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       columns: [
         {
-          title: '门店编码',
-          key: 'storeCode',
-          align: 'center',
+          title: "门店编码",
+          key: "storeCode",
+          align: "center",
           minWidth: 100
         },
         {
-          title: '门店名称',
-          align: 'center',
-          key: 'storeName',
+          title: "门店名称",
+          align: "center",
+          key: "storeName",
           minWidth: 150
         },
         {
-          title: '企业微信ID',
-          key: 'enterpriseWxId',
-          align: 'center',
+          title: "企业微信ID",
+          key: "enterpriseWxId",
+          align: "center",
           minWidth: 130
         },
         {
-          title: '所属区域',
-          align: 'center',
+          title: "所属区域",
+          align: "center",
           minWidth: 90,
-          key: 'storeArea',
+          key: "storeArea",
           render: (h, params, vm) => {
             const { row } = params;
             const obj = this.areaList.find(item => {
               return item.area === row.storeArea;
             });
             if (obj) {
-              return h('span', obj.areaName + '');
+              return h("span", obj.areaName + "");
             } else {
-              return h('span', row.storeArea + '');
+              return h("span", row.storeArea + "");
             }
           }
         },
         {
-          title: '区域旗舰店',
-          align: 'center',
+          title: "区域旗舰店",
+          align: "center",
           minWidth: 130,
-          key: 'storeFlagship',
+          key: "storeFlagship",
           render: (h, params, vm) => {
             const { row } = params;
             const obj = this.flagShipList.find(
               item => row.storeFlagship === item.storeFlagship
             );
             if (obj) {
-              return h('span', obj.storeName);
+              return h("span", obj.storeName);
             }
-            return h('span', row.storeFlagship);
+            return h("span", row.storeFlagship);
           }
         },
         {
-          title: '门店状态',
-          align: 'center',
+          title: "门店状态",
+          align: "center",
           minWidth: 120,
-          key: 'storeStatus',
+          key: "storeStatus",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.storeStatus === 'ENABLED') {
+            if (row.storeStatus === "ENABLED") {
               return (
                 <div>
-                  <tag color='success'>
+                  <tag color="success">
                     {storeStatusConvert(row.storeStatus).label}
                   </tag>
                 </div>
               );
-            } else if (row.storeStatus === 'DISABLED') {
+            } else if (row.storeStatus === "DISABLED") {
               return (
                 <div>
-                  <tag color='error'>
+                  <tag color="error">
                     {storeStatusConvert(row.storeStatus).label}
                   </tag>
                 </div>
@@ -680,47 +680,47 @@ export default {
             }
             return (
               <div>
-                <tag color='primary'>{row.storeStatus}</tag>
+                <tag color="primary">{row.storeStatus}</tag>
               </div>
             );
           }
         },
         {
-          title: '营业时间(起)',
-          align: 'center',
+          title: "营业时间(起)",
+          align: "center",
           minWidth: 130,
-          key: 'beginTime'
+          key: "beginTime"
         },
         {
-          title: '营业时间(止)',
-          align: 'center',
+          title: "营业时间(止)",
+          align: "center",
           minWidth: 130,
-          key: 'endTime'
+          key: "endTime"
         },
         {
-          title: '联系方式',
-          align: 'center',
+          title: "联系方式",
+          align: "center",
           minWidth: 140,
-          key: 'storePhone'
+          key: "storePhone"
         },
         {
-          title: '门店类型',
-          align: 'center',
+          title: "门店类型",
+          align: "center",
           minWidth: 140,
           render: (h, params) => {
             const { row } = params;
-            if (row.storeType === 'FLAGSHIP_STORE') {
+            if (row.storeType === "FLAGSHIP_STORE") {
               return (
                 <div>
-                  <tag color='success'>
+                  <tag color="success">
                     {storeTypeConvert(row.storeType).label}
                   </tag>
                 </div>
               );
-            } else if (row.storeType === 'ORDINARY_STORE') {
+            } else if (row.storeType === "ORDINARY_STORE") {
               return (
                 <div>
-                  <tag color='primary'>
+                  <tag color="primary">
                     {storeTypeConvert(row.storeType).label}
                   </tag>
                 </div>
@@ -730,11 +730,11 @@ export default {
           }
         },
         {
-          title: '操作',
-          align: 'center',
+          title: "操作",
+          align: "center",
           minWidth: 230,
-          key: 'handle',
-          options: ['onStoreStatus', 'view', 'edit', 'delete']
+          key: "handle",
+          options: ["onStoreStatus", "view", "edit", "delete"]
         }
       ],
       createLoading: false,
@@ -776,6 +776,12 @@ export default {
       this.storeDetail.wxImage = null;
     },
     handleSubmit(name) {
+      if (this.oldPicture.length > 0) {
+        let urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs[name].validate(valid => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
@@ -786,9 +792,27 @@ export default {
             this.editStore();
           }
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
     },
     createStore() {
       this.modalViewLoading = true;
@@ -796,7 +820,7 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success('创建成功!');
+          this.$Message.success("创建成功!");
           this.getTableData();
         })
         .catch(() => {
@@ -856,7 +880,7 @@ export default {
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.image != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.image;
         mainImgArr.push(map);
@@ -864,7 +888,7 @@ export default {
         this.uploadListMain = mainImgArr;
       }
       if (res.wxImage != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const detailImgArr = [];
         map.url = res.wxImage;
         detailImgArr.push(map);
@@ -879,6 +903,8 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.storeImage);
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.storeDetail = _.cloneDeep(params.row);
@@ -925,13 +951,13 @@ export default {
       this.uploadListMain = fileList;
       this.storeDetail.storeImage = null;
       this.storeDetail.storeImage = fileList[0].url;
-      console.log('商品主图', file);
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     handleSuccessWxImage(response, file, fileList) {
       this.uploadwxImageList = fileList;
       this.storeDetail.wxImage = null;
       this.storeDetail.wxImage = fileList[0].url;
-      console.log('商品主图1', file);
     }
   }
 };

@@ -225,6 +225,9 @@
                 ref="uploadMain"
                 :default-list="defaultListMain"
                 :image-size="imageSize"
+                groupType="activity_image"
+                fileDir="activity"
+                appType="min_app"
                 @on-success="handleSuccessMain"
               >
                 <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -256,7 +259,8 @@ import {
   getRobotPages,
   editRobot,
   createRobot,
-  getStorePages
+  getStorePages,
+  deletePicture
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -310,6 +314,9 @@ export default {
       uploadListMain: [],
       areaList: [],
       flagShipList: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       columns: [
         {
           type: "selection",
@@ -397,6 +404,12 @@ export default {
       this.robotDetail.storeImage = null;
     },
     handleSubmit(name) {
+      if (this.oldPicture.length > 0) {
+        let urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs[name].validate(valid => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
@@ -410,6 +423,24 @@ export default {
           this.$Message.error("请完善信息!");
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
     },
     createStore() {
       this.modalViewLoading = true;
@@ -493,6 +524,8 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.avater);
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.robotDetail = _.cloneDeep(params.row);
@@ -524,6 +557,8 @@ export default {
       this.uploadListMain = fileList;
       this.robotDetail.avater = null;
       this.robotDetail.avater = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     selectStore(options) {
       this.robotDetail.storeName = options.storeName;

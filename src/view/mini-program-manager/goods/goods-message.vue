@@ -317,7 +317,7 @@
             </Col>
             <Col span="12">
               <FormItem label="基础条码:" prop="baseBarcode">
-                <Input v-model="productDetail.baseBarcode" placeholder="基础条码"></Input>
+                <Input v-model.trim="productDetail.baseBarcode" placeholder="基础条码"></Input>
               </FormItem>
             </Col>
           </Row>
@@ -360,6 +360,9 @@
                 ref="uploadMain"
                 :default-list="defaultListMain"
                 :image-size="imageSize"
+                groupType="base_image"
+                fileDir="product"
+                appType="min_app"
                 @on-success="handleSuccessMain"
               >
                 <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -400,7 +403,8 @@ import {
   getProduct,
   getProductPages,
   getProductCategoriesTree,
-  getProductUnits
+  getProductUnits,
+  deletePicture
 } from "@/api/mini-program";
 import {
   buildMenu,
@@ -495,6 +499,9 @@ export default {
       defaultListMain: [],
       defaultListSecond: [],
       uploadListMain: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       // uploadListSecond: [],
       // uploadListMultiple: [],
       goodsCategoryData: [],
@@ -700,7 +707,14 @@ export default {
       this.uploadListMain = [];
       this.productDetail.image = null;
     },
+    // ====
     handleSubmit(name1) {
+      if (this.oldPicture.length > 0) {
+        let urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs[name1].validate(valid => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
@@ -714,6 +728,43 @@ export default {
           this.$Message.error("请完善信息!");
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
+    },
+    // 商品主图
+    handleSuccessMain(response, file, fileList) {
+      this.uploadListMain = fileList;
+      this.productDetail.image = null;
+      this.productDetail.image = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
+    },
+    // 设置编辑商品的图片列表
+    setDefaultUploadList(res) {
+      if (res.image != null) {
+        const map = { status: "finished", url: "url" };
+        const mainImgArr = [];
+        map.url = res.image;
+        mainImgArr.push(map);
+        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+        this.uploadListMain = mainImgArr;
+      }
     },
     createProduct() {
       this.modalViewLoading = true;
@@ -786,37 +837,6 @@ export default {
           this.loading = false;
         });
     },
-    // 设置编辑商品的图片列表
-    setDefaultUploadList(res) {
-      if (res.image != null) {
-        const map = { status: "finished", url: "url" };
-        const mainImgArr = [];
-        map.url = res.image;
-        mainImgArr.push(map);
-        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
-        this.uploadListMain = mainImgArr;
-      }
-      // if (res.subImg != null) {
-      //   const subImgArr = [];
-      //   res.subImg.forEach(value => {
-      //     const innerMapSub = { status: 'finished', url: 'url' };
-      //     innerMapSub.url = value;
-      //     subImgArr.push(innerMapSub);
-      //   });
-      //   this.$refs.uploadSecond.setDefaultFileList(subImgArr);
-      //   this.uploadListSecond = subImgArr;
-      // }
-      // if (res.detailImg != null) {
-      //   const detailImgArr = [];
-      //   res.detailImg.forEach(value => {
-      //     const innerMapDetailImg = { status: 'finished', url: 'url' };
-      //     innerMapDetailImg.url = value;
-      //     detailImgArr.push(innerMapDetailImg);
-      //   });
-      //   this.$refs.uploadMultiple.setDefaultFileList(detailImgArr);
-      //   this.uploadListMultiple = detailImgArr;
-      // }
-    },
     handleView(params) {
       // this.resetFields();
       this.tempModalType = this.modalType.view;
@@ -837,6 +857,8 @@ export default {
         });
     },
     handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.image);
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.loading = true;
@@ -936,6 +958,8 @@ export default {
       this.uploadListMain = fileList;
       this.productDetail.image = null;
       this.productDetail.image = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     statusChange(value) {
       this.productDetail.status = value;

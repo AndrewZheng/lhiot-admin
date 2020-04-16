@@ -30,7 +30,7 @@
             <div slot="searchCondition">
               <Row>
                 <Input
-                  v-model="searchRowData.baseBar"
+                  v-model.trim="searchRowData.baseBar"
                   placeholder="基础条码"
                   class="search-input mr5"
                   style="width: auto"
@@ -175,7 +175,7 @@
               </i-col>
             </Row>
           </i-col>
-          <i-col span="12">
+          <!-- <i-col span="12">
             <Row>
               <i-col span="8">服务保障图:</i-col>
               <i-col v-show="productDetail.otherImage" span="16">
@@ -190,9 +190,9 @@
                 </div>
               </i-col>
             </Row>
-          </i-col>
+          </i-col>-->
         </Row>
-        <Row>
+        <!-- <Row>
           <i-col span="4">商品详情图：</i-col>
           <i-col span="20">
             <div
@@ -209,7 +209,7 @@
               </div>
             </div>
           </i-col>
-        </Row>
+        </Row>-->
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
@@ -284,7 +284,7 @@
             </i-col>
             <i-col span="12">
               <FormItem label="基础条码:" prop="baseBar">
-                <Input v-model="productDetail.baseBar" placeholder="基础条码"></Input>
+                <Input v-model.trim="productDetail.baseBar" placeholder="基础条码"></Input>
               </FormItem>
             </i-col>
           </Row>
@@ -310,6 +310,9 @@
                   ref="uploadMain"
                   :default-list="defaultListMain"
                   :image-size="imageSize"
+                  groupType="base_image"
+                  fileDir="product"
+                  appType="min_app"
                   @on-success="handleSuccessMain"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -318,7 +321,7 @@
                 </IViewUpload>
               </FormItem>
             </i-col>
-            <i-col span="12">
+            <!-- <i-col span="12">
               <FormItem label="服务保障图:建议尺寸;710x250(单位:px)" prop="otherImage">
                 <Input v-show="false" v-model="productDetail.otherImage" style="width: auto"></Input>
                 <div
@@ -352,9 +355,9 @@
                   </div>
                 </IViewUpload>
               </FormItem>
-            </i-col>
+            </i-col>-->
           </Row>
-          <Row>
+          <!-- <Row>
             <i-col span="12">
               <FormItem label="商品详情图(推荐宽度为710px，高度自适应):" prop="goodsImages">
                 <Input v-show="false" v-model="productDetail.goodsImages" style="width: auto"></Input>
@@ -394,7 +397,7 @@
             <i-col span="12">
               <Button v-waves type="info" @click="modalSort = true">规格描述排序</Button>
             </i-col>
-          </Row>
+          </Row>-->
           <Row>
             <i-col span="12">
               <FormItem label="区域:" prop="goodsArea">
@@ -449,7 +452,7 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="modalEdit=false">关闭</Button>
+        <Button @click="handleEditClose">关闭</Button>
         <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
       </div>
     </Modal>
@@ -495,7 +498,8 @@ import {
   getProduct,
   getProductPages,
   getProductCategoriesTree,
-  getProductUnits
+  getProductUnits,
+  deletePicture
 } from "@/api/wholesale";
 import {
   buildMenu,
@@ -560,6 +564,9 @@ export default {
       defaultGoodsCategoryData: [],
       proCategoryTreeList: [],
       unitsList: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       modalSort: false,
       createLoading: false,
       modalViewLoading: false,
@@ -588,7 +595,7 @@ export default {
         // placeOfOrigin: [{ required: true, message: "请输入商品产地" }],
         categoryId: [{ required: true, message: "请选择商品分类" }],
         goodsImage: [{ required: true, message: "请上传商品主图" }],
-        goodsImages: [{ required: true, message: "请上传商品详情图" }],
+        // goodsImages: [{ required: true, message: "请上传商品详情图" }],
         // otherImage: [{ required: true, message: '请上传服务保障图' }],
         stockLimit: [{ required: true, message: "请输入安全库存" }]
       },
@@ -808,6 +815,8 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.goodsImage);
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       getProduct({
@@ -852,7 +861,12 @@ export default {
         });
     },
     handleSubmit() {
-      // this.productDetail.baseBar.trim();
+      if (this.oldPicture.length > 0) {
+        let urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs.editForm.validate(valid => {
         if (valid) {
           if (this.isCreate) {
@@ -864,6 +878,24 @@ export default {
           this.$Message.error("请完善信息!");
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
     },
     handleDownload() {
       this.exportExcelLoading = true;
@@ -935,26 +967,26 @@ export default {
         this.uploadListMain = mainImgArr;
       }
 
-      if (res.otherImage != null) {
-        const map = { status: "finished", url: "url" };
-        const detailImgArr = [];
-        map.url = res.otherImage;
-        detailImgArr.push(map);
-        this.$refs.uploadDetail.setDefaultFileList(detailImgArr);
-        this.uploadListDetail = detailImgArr;
-      }
+      // if (res.otherImage != null) {
+      //   const map = { status: "finished", url: "url" };
+      //   const detailImgArr = [];
+      //   map.url = res.otherImage;
+      //   detailImgArr.push(map);
+      //   this.$refs.uploadDetail.setDefaultFileList(detailImgArr);
+      //   this.uploadListDetail = detailImgArr;
+      // }
 
-      if (res.goodsImages != null) {
-        const descriptionImgArr = [];
-        const descriptionArr = res.goodsImages.split(",");
-        descriptionArr.forEach(value => {
-          const innerMapDetailImg = { status: "finished", url: "url" };
-          innerMapDetailImg.url = value;
-          descriptionImgArr.push(innerMapDetailImg);
-        });
-        this.$refs.uploadMultiple.setDefaultFileList(descriptionImgArr);
-        this.uploadListMultiple = descriptionImgArr;
-      }
+      // if (res.goodsImages != null) {
+      //   const descriptionImgArr = [];
+      //   const descriptionArr = res.goodsImages.split(",");
+      //   descriptionArr.forEach(value => {
+      //     const innerMapDetailImg = { status: "finished", url: "url" };
+      //     innerMapDetailImg.url = value;
+      //     descriptionImgArr.push(innerMapDetailImg);
+      //   });
+      //   this.$refs.uploadMultiple.setDefaultFileList(descriptionImgArr);
+      //   this.uploadListMultiple = descriptionImgArr;
+      // }
     },
     findGroupId(id) {
       const obj = this.proCategoryTreeList.find(item => {
@@ -1015,6 +1047,8 @@ export default {
       this.uploadListMain = fileList;
       this.productDetail.goodsImage = null;
       this.productDetail.goodsImage = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     // 上架服务保障图
     handleSuccessDetail(response, file, fileList) {

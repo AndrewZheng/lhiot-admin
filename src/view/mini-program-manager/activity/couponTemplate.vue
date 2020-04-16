@@ -314,7 +314,7 @@
                 ></InputNumber>
               </FormItem>
             </Col>
-          </Row> -->
+          </Row>-->
           <Row>
             <Col span="18">
               <FormItem label="优惠券状态:" prop="couponStatus" :label-width="100">
@@ -382,6 +382,9 @@
                 ref="uploadMain"
                 :default-list="defaultListMain"
                 :image-size="imageSize"
+                groupType="activity_image"
+                fileDir="activity"
+                appType="min_app"
                 @on-success="handleSuccessMain"
               >
                 <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -408,7 +411,8 @@ import {
   deleteCouponTemplate,
   getCouponTemplatePages,
   editCouponTemplate,
-  createCouponTemplate
+  createCouponTemplate,
+  deletePicture
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -497,6 +501,9 @@ export default {
       couponStatusEnum,
       couponTypeEnum,
       couponScopeEnum,
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       columns: [
         {
           type: "selection",
@@ -716,6 +723,12 @@ export default {
       this.couponTemplateDetail.storeImage = null;
     },
     handleSubmit(name) {
+      if (this.oldPicture.length > 0) {
+        let urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs[name].validate(valid => {
         if (valid) {
           // TODO ? 最小金额能否大于优惠金额,即用户不需要支付额外金额
@@ -739,6 +752,24 @@ export default {
           this.$Message.error("请完善信息!");
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
     },
     createCouponTemplate() {
       this.modalViewLoading = true;
@@ -811,6 +842,8 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.couponImage);
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.couponTemplateDetail = _.cloneDeep(params.row);
@@ -860,6 +893,8 @@ export default {
       this.uploadListMain = fileList;
       this.couponTemplateDetail.couponImage = null;
       this.couponTemplateDetail.couponImage = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {

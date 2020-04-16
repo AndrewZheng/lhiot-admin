@@ -155,6 +155,9 @@
               ref="uploadMain"
               :default-list="defaultListMain"
               :image-size="imageSize"
+              groupType="base_image"
+              fileDir="product"
+              appType="min_app"
               @on-success="handleSuccessMain"
             >
               <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -182,7 +185,8 @@ import {
   deleteProductSection,
   getProductSectionPages,
   getProductSectionTree,
-  editProductSection
+  editProductSection,
+  deletePicture
 } from "@/api/wholesale";
 import { layoutEnum } from "@/libs/enumerate";
 import { layoutConvert } from "@/libs/converStatus";
@@ -282,6 +286,9 @@ export default {
       menuData: [],
       uploadListMain: [],
       defaultListMain: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       modalEdit: false,
       modalViewLoading: false,
       modalEditLoading: false,
@@ -343,6 +350,12 @@ export default {
     handleSubmit() {
       this.currentCategory.parentId =
         this.parentCategory.id !== 0 ? this.parentCategory.id : 0;
+      if (this.oldPicture.length > 0) {
+        let urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs.editForm.validate(valid => {
         if (valid) {
           this.modalEditLoading = true;
@@ -356,6 +369,24 @@ export default {
           this.$Message.error("请完善板块信息!");
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
     },
     createProductSection() {
       this.modalEditLoading = true;
@@ -389,6 +420,8 @@ export default {
         this.$Message.warning("请先从左侧选择一个板块");
         return;
       }
+      this.save = [];
+      this.save.push(params.row.avater);
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.currentCategory = _.cloneDeep(params.row);
@@ -513,6 +546,8 @@ export default {
       this.uploadListMain = fileList;
       this.currentCategory.plateImage = null;
       this.currentCategory.plateImage = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
