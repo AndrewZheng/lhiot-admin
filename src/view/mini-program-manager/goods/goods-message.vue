@@ -317,7 +317,7 @@
             </Col>
             <Col span="12">
               <FormItem label="基础条码:" prop="baseBarcode">
-                <Input v-model="productDetail.baseBarcode" placeholder="基础条码"></Input>
+                <Input v-model.trim="productDetail.baseBarcode" placeholder="基础条码"></Input>
               </FormItem>
             </Col>
           </Row>
