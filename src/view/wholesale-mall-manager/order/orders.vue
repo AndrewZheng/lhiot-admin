@@ -393,11 +393,11 @@
         <tbody id="tabInfo"></tbody>
         <tbody id="tab"></tbody>
         <tbody id="tabTotal"></tbody>
-        <tr style="height:80px;">
+        <!-- <tr style="height:80px;">
           <td colspan="10">
             <p style="margin-top:-40px">发货备注:</p>
           </td>
-        </tr>
+        </tr>-->
         <tfoot>
           <tr style="height:50px;border: 0 solid red;border-collapse:collapse;">
             <td colspan="3" style="border: 0 solid red;border-collapse:collapse;">配送员签字:</td>
@@ -1239,7 +1239,8 @@ export default {
               strData += "</tr>";
               strData += "<tr align='center' style='height:30px;'>";
               strData += '<td colspan="2">' + "客户备注" + "</td>";
-              strData += '<td colspan="8">' + "</td>";
+              strData +=
+                '<td colspan="8">' + _this.orderDetail.remarks + "</td>";
               strData += "</tr>";
               strData +=
                 "<tr align='center' style='backgroung:#ccc;height:30px'>";
@@ -1268,7 +1269,9 @@ export default {
                 strHTML += "<td>" + orderGoodsList[i].standard + "</td>";
                 strHTML +=
                   "<td>" +
-                  (orderGoodsList[i].standardWeight * orderGoodsList[i].quanity).toFixed(2) +
+                  (
+                    orderGoodsList[i].standardWeight * orderGoodsList[i].quanity
+                  ).toFixed(2) +
                   "</td>";
                 strHTML += "<td>" + orderGoodsList[i].goodsUnit + "</td>";
                 strHTML += "<td>" + orderGoodsList[i].quanity + "</td>";
