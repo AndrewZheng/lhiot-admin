@@ -637,6 +637,14 @@ const orderColumns = [
             </tag>
           </div>
         );
+      } else if (row.settlementType === "haiding") {
+        return (
+          <div>
+            <tag color="warning">
+              {wholesalePayTypeConvert(row.settlementType).label}
+            </tag>
+          </div>
+        );
       } else {
         return <div>{"N/A"}</div>;
       }
@@ -1268,7 +1276,9 @@ export default {
                 strHTML += "<td>" + orderGoodsList[i].standard + "</td>";
                 strHTML +=
                   "<td>" +
-                  (orderGoodsList[i].standardWeight * orderGoodsList[i].quanity).toFixed(2) +
+                  (
+                    orderGoodsList[i].standardWeight * orderGoodsList[i].quanity
+                  ).toFixed(2) +
                   "</td>";
                 strHTML += "<td>" + orderGoodsList[i].goodsUnit + "</td>";
                 strHTML += "<td>" + orderGoodsList[i].quanity + "</td>";
