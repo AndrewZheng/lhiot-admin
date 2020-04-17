@@ -95,7 +95,14 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addCoupon">
+          <Button
+            v-waves
+            :loading="createLoading"
+            type="success"
+            class="mr5"
+            @click="addCoupon"
+            v-show="this.selectActivityType!='BUY_COUPON_ACTIVITY'||this.total<1"
+          >
             <Icon type="md-add" />添加
           </Button>
           <Poptip
@@ -183,7 +190,22 @@
             </Row>
           </i-col>
         </Row>
-
+        <Row class-name="mb20" v-show="selectActivityType==='BUY_COUPON_ACTIVITY'">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">首次购买价:</i-col>
+              <i-col span="18">{{ couponDetail.buyFirstAmount | fenToYuanDot2Filterss }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20" v-show="selectActivityType==='BUY_COUPON_ACTIVITY'">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">购买价:</i-col>
+              <i-col span="18">{{ couponDetail.buyAmount | fenToYuanDot2Filterss }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
