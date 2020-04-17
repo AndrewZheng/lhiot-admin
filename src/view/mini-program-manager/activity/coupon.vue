@@ -298,7 +298,7 @@
             </Row>
             <Row>
               <i-col span="18">
-                <FormItem label="活动开关:" prop="ifEffective">
+                <FormItem label="活动开关:" prop="ifEffective" style="width: 280px">
                   <Select v-model="couponDetail.ifEffective" clearable>
                     <Option
                       v-for="(item,index) in couponStatusEnum"
@@ -308,6 +308,30 @@
                       style="padding-left: 5px;width: 100%"
                     >{{ item.label }}</Option>
                   </Select>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row v-show="selectActivityType==='BUY_COUPON_ACTIVITY'">
+              <i-col span="6">
+                <FormItem label="首次购买价(体验价):" prop="buyFirstAmount">
+                  <InputNumber
+                    :min="0"
+                    :value="firstAmountComputed"
+                    @on-change="firstAmountOnchange"
+                    style="padding-right: 5px;width: 115px;"
+                  ></InputNumber>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row v-show="selectActivityType==='BUY_COUPON_ACTIVITY'">
+              <i-col span="6">
+                <FormItem label="购买价:" prop="buyAmount">
+                  <InputNumber
+                    :min="0"
+                    :value="buyAmountComputed"
+                    @on-change="buyAmountOnchange"
+                    style="padding-right: 5px;width: 115px;"
+                  ></InputNumber>
                 </FormItem>
               </i-col>
             </Row>
@@ -615,7 +639,9 @@ const couponDetail = {
   applicationType: null,
   activityImage: "",
   activityUrl: "",
-  activityType: ""
+  activityType: "",
+  buyFirstAmount: 0,
+  buyAmount: 0
 };
 
 const relationDetail = {
@@ -969,7 +995,9 @@ export default {
         activityName: [{ required: true, message: "请输入活动名称" }],
         ifEffective: [{ required: true, message: "请选择活动开关" }],
         beginTime: [{ required: true, message: "请输入开始时间" }],
-        endTime: [{ required: true, message: "请输入结束时间" }]
+        endTime: [{ required: true, message: "请输入结束时间" }],
+        buyFirstAmount: [{ required: true, message: "请输入首次购买价" }],
+        buyAmount: [{ required: true, message: "请输入购买价" }]
         // TODO 验证商城是否显示
       },
       relationRuleInline: {
@@ -999,6 +1027,7 @@ export default {
       oldPicture: [],
       newPicture: [],
       save: [],
+      selectActivityType: "",
       columns: [
         {
           type: "selection",
@@ -1029,6 +1058,8 @@ export default {
               return <div>{"第三方发券"}</div>;
             } else if (row.activityType === "SHARE_COUPON_ACTIVITY") {
               return <div>{"分享领券"}</div>;
+            } else if (row.activityType === "BUY_COUPON_ACTIVITY") {
+              return <div>{"超值团购"}</div>;
             } else {
               return <div>N/A</div>;
             }
@@ -1128,6 +1159,14 @@ export default {
       couponTemplateTotal: 0
     };
   },
+  computed: {
+    firstAmountComputed() {
+      return fenToYuanDot2Number(this.couponDetail.buyFirstAmount);
+    },
+    buyAmountComputed() {
+      return fenToYuanDot2Number(this.couponDetail.buyAmount);
+    }
+  },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
@@ -1135,6 +1174,12 @@ export default {
   },
   created() {},
   methods: {
+    firstAmountOnchange(value) {
+      this.couponDetail.buyFirstAmount = yuanToFenNumber(value);
+    },
+    buyAmountOnchange(value) {
+      this.couponDetail.buyAmount = yuanToFenNumber(value);
+    },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
       this.getTableData();
@@ -1145,10 +1190,12 @@ export default {
       this.uploadListMain = [];
       this.couponDetail.storeImage = null;
     },
-    handCouponType() {
+    handCouponType(value) {
       this.searchRowData.page = 1;
       this.searchLoading = true;
       this.getTableData();
+      this.selectActivityType = value;
+      console.log("活动类型", this.selectActivityType);
     },
     handleSubmit(name) {
       if (this.oldPicture.length > 0) {
