@@ -384,7 +384,7 @@
                   :max-num="1"
                   groupType="base_image"
                   fileDir="product"
-                  appType="min_app"
+                  appType="lv_hang"
                   @on-success="handleSuccessMain"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -427,7 +427,7 @@
                   :max-num="10"
                   groupType="base_image"
                   fileDir="product"
-                  appType="min_app"
+                  appType="lv_hang"
                   multiple
                   @on-success="handleSuccessMultiple"
                 >

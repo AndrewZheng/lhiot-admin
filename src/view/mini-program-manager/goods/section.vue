@@ -138,7 +138,7 @@
               :image-size="imageSize"
               groupType="base_image"
               fileDir="plate"
-              appType="min_app"
+              appType="lv_hang"
               @on-success="handleSuccessMain"
             >
               <div slot="content" style="width:58px;height:58px;line-height:58px">
