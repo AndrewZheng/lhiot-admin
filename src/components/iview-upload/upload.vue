@@ -70,7 +70,7 @@ export default {
   },
   computed: {},
   mounted: function() {
-    this.actionUrl = `http://resource.food-see.com/v2/upload?groupType=${this.groupType}&fileDir=${this.fileDir}&appType=${this.appType}`;
+    this.actionUrl = `http://test-resource.food-see.com/v2/upload?groupType=${this.groupType}&fileDir=${this.fileDir}&appType=${this.appType}`;
   },
   methods: {
     deleteFile(file) {
