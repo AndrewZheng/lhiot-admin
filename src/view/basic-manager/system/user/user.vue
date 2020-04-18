@@ -127,7 +127,7 @@
               :image-size="imageSize"
               groupType="system_image"
               fileDir="system"
-              appType="lv_hang"
+              appType="min_app"
               @on-success="handleSuccessMain"
             >
               <div slot="content">
@@ -200,7 +200,7 @@
                   :image-size="imageSize"
                   groupType="system_image"
                   fileDir="system"
-                  appType="lv_hang"
+                  appType="min_app"
                   @on-success="handleSuccessMain"
                 >
                   <div slot="content">

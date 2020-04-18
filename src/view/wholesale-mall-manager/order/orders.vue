@@ -1247,7 +1247,8 @@ export default {
               strData += "</tr>";
               strData += "<tr align='center' style='height:30px;'>";
               strData += '<td colspan="2">' + "客户备注" + "</td>";
-              strData += '<td colspan="8">' + "</td>";
+              strData +=
+                '<td colspan="8">' + _this.orderDetail.remarks + "</td>";
               strData += "</tr>";
               strData +=
                 "<tr align='center' style='backgroung:#ccc;height:30px'>";

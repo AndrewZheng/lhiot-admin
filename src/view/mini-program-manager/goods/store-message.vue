@@ -409,7 +409,7 @@
                 :image-size="imageSize"
                 groupType="base_image"
                 fileDir="store"
-                appType="lv_hang"
+                appType="min_app"
                 @on-success="handleSuccessMain"
               >
                 <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -444,7 +444,7 @@
                   :max-num="1"
                   groupType="base_image"
                   fileDir="store"
-                  appType="lv_hang"
+                  appType="min_app"
                   @on-success="handleSuccessWxImage"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
