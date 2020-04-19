@@ -85,7 +85,7 @@
                 style="padding-left: 5px"
               >{{ item.label }}</Option>
             </Select>
-            <Select 
+            <Select
               v-model="searchRowData.sourceType"
               placeholder="支付来源"
               style="padding-right: 5px;width: 100px"
@@ -135,7 +135,7 @@
         </Row>
       </div>
     </Card>
-<!-- 
+    <!--
     <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
         <span>机器人详情</span>
@@ -216,45 +216,43 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import CountTo from "_c/count-to";
-import _ from "lodash";
-import { getPaymentLogPages, getPaymentLogSum } from "@/api/mini-program";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { fenToYuanDot2, fenToYuanDot2Number } from "@/libs/util";
+import Tables from '_c/tables';
+import CountTo from '_c/count-to';
+import { getPaymentLogPages, getPaymentLogSum } from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import { fenToYuanDot2, fenToYuanDot2Number } from '@/libs/util';
 import {
   appTypeConvert,
   payTypeConvert,
   payStepConvert,
   sourceTypeConvert,
   bankTypeConvert
-} from "@/libs/converStatus";
+} from '@/libs/converStatus';
 import {
   appTypeEnum,
   payTypeEnum,
   payStepEnum,
   sourceTypeEnum
-} from "@/libs/enumerate";
+} from '@/libs/enumerate';
 
 const paymentLogDetail = {
   id: 0,
-  orderId: "",
+  orderId: '',
   userId: 0,
   app_type: null,
   sourceType: null,
   payType: null,
   payStep: null,
   payFee: 0,
-  tradeId: "",
+  tradeId: '',
   signAt: null,
   payAt: null,
   bankType: null,
-  deleted: "",
-  orderCode: "",
+  deleted: '',
+  orderCode: '',
   startTime: null,
   endTime: null,
-  nickName: ""
+  nickName: ''
 };
 
 const roleRowData = {
@@ -274,40 +272,40 @@ export default {
     Tables,
     CountTo
   },
-  mixins: [tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       columns: [
         {
-          title: "订单ID",
-          key: "orderId",
+          title: '订单ID',
+          key: 'orderId',
           width: 170,
-          align: "center",
-          fixed: "left"
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: "用户ID",
-          key: "userId",
-          align: "center",
+          title: '用户ID',
+          key: 'userId',
+          align: 'center',
           width: 80
         },
         {
-          title: "应用类型",
-          key: "app_type",
-          align: "center",
+          title: '应用类型',
+          key: 'app_type',
+          align: 'center',
           width: 120,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.app_type === "WXSMALL_SHOP") {
+            if (row.app_type === 'WXSMALL_SHOP') {
               return (
                 <div>
-                  <tag color="green">{appTypeConvert(row.app_type).label}</tag>
+                  <tag color='green'>{appTypeConvert(row.app_type).label}</tag>
                 </div>
               );
-            } else if (row.app_type === "S_MALL") {
+            } else if (row.app_type === 'S_MALL') {
               return (
                 <div>
-                  <tag color="gold">{appTypeConvert(row.app_type).label}</tag>
+                  <tag color='gold'>{appTypeConvert(row.app_type).label}</tag>
                 </div>
               );
             } else {
@@ -316,28 +314,28 @@ export default {
           }
         },
         {
-          title: "支付类型",
+          title: '支付类型',
           width: 120,
-          key: "payType",
-          align: "center",
+          key: 'payType',
+          align: 'center',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.payType === "weixin") {
+            if (row.payType === 'weixin') {
               return (
                 <div>
-                  <tag color="green">{payTypeConvert(row.payType).label}</tag>
+                  <tag color='green'>{payTypeConvert(row.payType).label}</tag>
                 </div>
               );
-            } else if (row.payType === "balance") {
+            } else if (row.payType === 'balance') {
               return (
                 <div>
-                  <tag color="gold">{payTypeConvert(row.payType).label}</tag>
+                  <tag color='gold'>{payTypeConvert(row.payType).label}</tag>
                 </div>
               );
-            } else if (row.payType === "points") {
+            } else if (row.payType === 'points') {
               return (
                 <div>
-                  <tag color="pink">{payTypeConvert(row.payType).label}</tag>
+                  <tag color='pink'>{payTypeConvert(row.payType).label}</tag>
                 </div>
               );
             } else {
@@ -346,24 +344,24 @@ export default {
           }
         },
         {
-          title: "支付来源",
+          title: '支付来源',
           width: 120,
-          align: "center",
-          key: "sourceType",
+          align: 'center',
+          key: 'sourceType',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.sourceType === "recharge") {
+            if (row.sourceType === 'recharge') {
               return (
                 <div>
-                  <tag color="green">
+                  <tag color='green'>
                     {sourceTypeConvert(row.sourceType).label}
                   </tag>
                 </div>
               );
-            } else if (row.sourceType === "order") {
+            } else if (row.sourceType === 'order') {
               return (
                 <div>
-                  <tag color="gold">
+                  <tag color='gold'>
                     {sourceTypeConvert(row.sourceType).label}
                   </tag>
                 </div>
@@ -374,38 +372,38 @@ export default {
           }
         },
         {
-          title: "第三方支付金额",
+          title: '第三方支付金额',
           width: 130,
-          key: "payFee",
-          align: "center",
+          key: 'payFee',
+          align: 'center',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.payFee);
             return <div>{amount}</div>;
           }
         },
         {
-          title: "第三方单号",
-          key: "tradeId",
-          align: "center",
+          title: '第三方单号',
+          key: 'tradeId',
+          align: 'center',
           width: 170
         },
         {
-          title: "支付步骤",
+          title: '支付步骤',
           width: 100,
-          align: "center",
-          key: "payStep",
+          align: 'center',
+          key: 'payStep',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.payStep === "paid") {
+            if (row.payStep === 'paid') {
               return (
                 <div>
-                  <tag color="green">{payStepConvert(row.payStep).label}</tag>
+                  <tag color='green'>{payStepConvert(row.payStep).label}</tag>
                 </div>
               );
-            } else if (row.payStep === "sign") {
+            } else if (row.payStep === 'sign') {
               return (
                 <div>
-                  <tag color="gold">{payStepConvert(row.payStep).label}</tag>
+                  <tag color='gold'>{payStepConvert(row.payStep).label}</tag>
                 </div>
               );
             } else {
@@ -414,21 +412,21 @@ export default {
           }
         },
         {
-          title: "签名时间",
-          key: "signAt",
-          align: "center",
+          title: '签名时间',
+          key: 'signAt',
+          align: 'center',
           width: 160
         },
         {
-          title: "支付时间",
-          align: "center",
-          key: "payAt",
+          title: '支付时间',
+          align: 'center',
+          key: 'payAt',
           width: 160
         },
         {
-          title: "银行类型",
-          key: "bankType",
-          align: "center",
+          title: '银行类型',
+          key: 'bankType',
+          align: 'center',
           width: 140,
           render: (h, params, vm) => {
             const { row } = params;
@@ -436,9 +434,9 @@ export default {
           }
         },
         {
-          title: "用户昵称",
-          align: "center",
-          key: "nickName"
+          title: '用户昵称',
+          align: 'center',
+          key: 'nickName'
         }
         // {
         //   title: '操作',
@@ -464,7 +462,7 @@ export default {
   },
   created() {},
   methods: {
-    //导出
+    // 导出
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
@@ -475,14 +473,14 @@ export default {
         this.searchRowData.rows = 10;
         console.log(this.searchRowData.rows);
         // 表格数据导出字段翻译
-        let _this = this;
+        const _this = this;
         tableData.forEach(item => {
-          item["app_type"] = appTypeConvert(item["app_type"]).label;
-          item["payType"] = payTypeConvert(item["payType"]).label;
-          item["sourceType"] = sourceTypeConvert(item["app_type"]).label;
-          item["payFee"] = (item["payFee"] / 100.0).toFixed(2);
-          item["payStep"] = payStepConvert(item["app_type"]).label;
-          item["bankType"] = bankTypeConvert(item["bankType"]).label;
+          item['app_type'] = appTypeConvert(item['app_type']).label;
+          item['payType'] = payTypeConvert(item['payType']).label;
+          item['sourceType'] = sourceTypeConvert(item['app_type']).label;
+          item['payFee'] = (item['payFee'] / 100.0).toFixed(2);
+          item['payStep'] = payStepConvert(item['app_type']).label;
+          item['bankType'] = bankTypeConvert(item['bankType']).label;
         });
         _this.$refs.tables.handleDownload({
           filename: `鲜果币流水信息-${new Date().valueOf()}`,
@@ -500,10 +498,10 @@ export default {
       this.modalView = true;
     },
     getTableData() {
-      let _this = this;
+      const _this = this;
       getPaymentLogPages(this.searchRowData)
         .then(res => {
-          console.log("12312312",res)
+          console.log('12312312', res)
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
@@ -528,7 +526,6 @@ export default {
     endTimeChange(value, date) {
       this.paymentLogDetail.endTime = value;
       this.searchRowData.endTime = value;
-  
     }
   }
 };

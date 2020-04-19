@@ -65,7 +65,6 @@
             <div slot="operations">
               <Button
                 v-waves
-                :loading="createLoading"
                 type="success"
                 class="mr5"
                 @click="addProduct"
@@ -431,7 +430,9 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
+import CommonIcon from '_c/common-icon';
+import uploadMixin from '@/mixins/uploadMixin';
+import tableMixin from '@/mixins/tableMixin.js';
 import {
   createProduct,
   deleteProduct,
@@ -447,11 +448,6 @@ import {
   setSmallGoodsStandard,
   convertTree
 } from '@/libs/util';
-import CommonIcon from '_c/common-icon';
-import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { productStatusConvert } from '@/libs/converStatus';
 
 const productDetail = {
@@ -477,7 +473,7 @@ const productDetail = {
   createUser: ''
 };
 
-const roleRowData = {
+const searchRowData = {
   groupId: null,
   productCode: null,
   productName: null,
@@ -490,57 +486,29 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
-      ruleInline: {
-        productCode: [{ required: true, message: '请输入商品编码' }],
-        productName: [{ required: true, message: '请输入商品名称' }],
-        status: [{ required: true, message: '请选择商品状态' }],
-        unitId: [{ required: true, message: '请选择商品单位' }],
-        baseBarcode: [{ required: true, message: '请输入基础条码' }],
-        description: [{ required: true, message: '请输入商品描述' }],
-        groupId: [{ required: true, message: '请选择商品分类' }],
-        image: [{ required: true, message: '请上传商品主图' }],
-        packagingUnit: [{ required: true, message: '请选择规格单位' }],
-        barcode: [
-          { required: true, message: '请输入规格条码' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[0-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        limitQty: [{ required: true, message: '请输入安全库存' }],
-        baseQty: [
-          { required: true, message: '请输入重量' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/.test(value)) {
-                errors.push(new Error('必须为大于0的数字'));
-              }
-              callback(errors);
-            }
-          }
-        ]
-      },
+      currentGroupId: 0,
+      currentName: '全部分类',
       menuData: [],
       defaultListMultiple: [],
       defaultListMain: [],
       defaultListSecond: [],
       uploadListMain: [],
-      // uploadListSecond: [],
-      // uploadListMultiple: [],
       goodsCategoryData: [],
       defaultGoodsCategoryData: [41],
       proCategoryTreeList: [],
       tempSubImg: [],
       unitsList: [],
+      modalViewLoading: false,
+      exportExcelLoading: false,
+      searchRowData: _.cloneDeep(searchRowData),
+      productDetail: _.cloneDeep(productDetail),
+      productStatus: [
+        { label: '正常', value: 'NORMAL' },
+        { label: '停采', value: 'STOP_MINING' }
+      ],
       columns: [
         {
           title: 'ID',
@@ -648,25 +616,49 @@ export default {
           options: ['view', 'edit', 'settings']
         }
       ],
-      createLoading: false,
-      modalViewLoading: false,
-      exportExcelLoading: false,
-      searchRowData: _.cloneDeep(roleRowData),
-      productDetail: _.cloneDeep(productDetail),
-      productStatus: [
-        { label: '正常', value: 'NORMAL' },
-        { label: '停采', value: 'STOP_MINING' }
-      ],
-      currentGroupId: 0,
-      currentName: '全部分类'
+      ruleInline: {
+        productCode: [{ required: true, message: '请输入商品编码' }],
+        productName: [{ required: true, message: '请输入商品名称' }],
+        status: [{ required: true, message: '请选择商品状态' }],
+        unitId: [{ required: true, message: '请选择商品单位' }],
+        baseBarcode: [{ required: true, message: '请输入基础条码' }],
+        description: [{ required: true, message: '请输入商品描述' }],
+        groupId: [{ required: true, message: '请选择商品分类' }],
+        image: [{ required: true, message: '请上传商品主图' }],
+        packagingUnit: [{ required: true, message: '请选择规格单位' }],
+        barcode: [
+          { required: true, message: '请输入规格条码' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[0-9]\d*$/.test(value)) {
+                errors.push(new Error('必须为非零整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        limitQty: [{ required: true, message: '请输入安全库存' }],
+        baseQty: [
+          { required: true, message: '请输入重量' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/.test(value)) {
+                errors.push(new Error('必须为大于0的数字'));
+              }
+              callback(errors);
+            }
+          }
+        ]
+      }
     };
   },
   created() {
     this.initMenuList();
   },
   mounted() {
-    // 清空上次搜索的结果
-    this.searchRowData = _.cloneDeep(roleRowData);
+    this.searchRowData = _.cloneDeep(searchRowData);
     this.getProductUnits();
     this.getProductCategoriesTree();
   },
@@ -678,13 +670,11 @@ export default {
           map.value = value.id;
           map.label = value.unitName;
           this.unitsList.push(map);
-          this.createLoading = false;
         });
       });
     },
     getProductCategoriesTree() {
       this.loading = true;
-      // this.createLoading = true;
       getProductCategoriesTree()
         .then(res => {
           this.proCategoryTreeList = [];
@@ -697,16 +687,15 @@ export default {
               children: 'children'
             };
             this.goodsCategoryData = convertTreeCategory(menuList, map, true);
-            this.createLoading = false;
           }
         })
-        .catch(() => {
-          this.createLoading = false;
+        .finally(() => {
+          this.loading = false;
         });
       this.getTableData();
     },
     resetSearchRowData() {
-      this.searchRowData = _.cloneDeep(roleRowData);
+      this.searchRowData = _.cloneDeep(searchRowData);
       this.getTableData();
     },
     handleDownload() {
@@ -736,10 +725,10 @@ export default {
     handleSubmit(name1) {
       this.$refs[name1].validate(valid => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createProduct();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editProduct();
           }
@@ -755,14 +744,12 @@ export default {
         ...this.productDetail
       })
         .then(res => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
-          this.modalEdit = false;
         });
     },
     editProduct() {
@@ -772,15 +759,13 @@ export default {
       })
         .then(res => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
+          this.$Message.success('修改成功!');
           this.getTableData();
         })
-        .catch(() => {
-          this.modalEdit = false;
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
-    // 选择分类
     goodsCategoryChange(value, selectedData) {
       if (selectedData.length > 0) {
         this.productDetail.groupId = selectedData[selectedData.length - 1].id;
@@ -796,7 +781,6 @@ export default {
       }
       this.modalEdit = true;
     },
-    // 删除
     deleteTable(ids) {
       this.loading = true;
       deleteProduct({
@@ -859,14 +843,11 @@ export default {
       })
         .then(res => {
           this.productDetail = res;
-          console.log('pro detail: ', res);
           this.loading = false;
           this.modalView = true;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
-          this.modalView = true;
         });
     },
     handleEdit(params) {
@@ -883,10 +864,8 @@ export default {
           this.defaultGoodsCategoryData = [];
           this.findGroupId(this.productDetail.groupId);
           this.defaultGoodsCategoryData.reverse();
-          this.modalEdit = true;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.modalEdit = true;
         });
@@ -950,7 +929,6 @@ export default {
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
-      // this.uploadListMain = []
       this.productDetail.mainImg = null;
     },
     handleRemoveMultiple(file) {
@@ -1046,20 +1024,6 @@ export default {
       this.searchRowData.groupId = data.id;
       // 获取新数据
       this.getTableData();
-    },
-    expandChildren(array) {
-      array.forEach(item => {
-        if (typeof item.expand === 'undefined') {
-          // this.$set(item, 'expend', true);
-          this.$set(item, 'expend', false);
-          // } else {
-        } else {
-          item.expand = !item.expand;
-        }
-        if (item.children) {
-          this.expandChildren(item.children);
-        }
-      });
     },
     resetRowData() {
       this.productDetail = this._.cloneDeep(productDetail);

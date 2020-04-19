@@ -61,21 +61,6 @@
                 style="padding-left: 5px;width: 100px"
               >{{ item.label }}</Option>
             </Select>
-            <Select
-              v-if="applicationType == null"
-              v-model="searchRowData.applicationType"
-              placeholder="应用类型"
-              style="padding-right: 5px;width: 100px"
-              clearable
-            >
-              <Option
-                v-for="(item,index) in applicationTypeList"
-                :value="item.storeCode"
-                :key="index"
-                class="ptb2-5"
-                style="padding-left: 5px"
-              >{{ item.name }}</Option>
-            </Select>
             <Button
               :loading="searchLoading"
               class="search-btn mr5"
@@ -96,7 +81,7 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
+          <Button v-waves type="success" class="mr5" @click="handleCreate">
             <Icon type="md-add" />添加
           </Button>
         </div>
@@ -114,6 +99,7 @@
         </Row>
       </div>
     </Card>
+
     <!-- 查看 -->
     <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
@@ -257,13 +243,14 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
+
     <!-- 修改 -->
     <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <span>门店基础信息</span>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="storeDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="editForm" :model="storeDetail" :rules="ruleInline" :label-width="80">
           <Row>
             <i-col span="12">
               <FormItem label="门店编码:" prop="storeCode">
@@ -448,7 +435,6 @@
               </FormItem>
             </i-col>
           </Row>
-          <!-- ========================== -->
           <Row align="middle" type="flex">
             <i-col span="24">
               <FormItem label="直播地址:">
@@ -460,7 +446,7 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">确定</Button>
       </div>
     </Modal>
 
@@ -473,21 +459,16 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
+import uploadMixin from '@/mixins/uploadMixin';
+import tableMixin from '@/mixins/tableMixin.js';
 import {
   deleteStore,
-  getStoreDetail,
   getStorePages,
   getStoreAreas,
   editStore,
   createStore
 } from '@/api/mini-program';
-import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
-  storeType,
   storeStatus,
   storeStatusEnum,
   storeTypeEnum,
@@ -495,8 +476,7 @@ import {
 } from '@/libs/enumerate';
 import {
   storeStatusConvert,
-  storeTypeConvert,
-  coordinateTypeConvert
+  storeTypeConvert
 } from '@/libs/converStatus';
 
 const storeDetail = {
@@ -521,7 +501,7 @@ const storeDetail = {
   enterpriseWxId: ''
 };
 
-const roleRowData = {
+const searchRowData = {
   storeCode: null,
   storeName: null,
   storeArea: null,
@@ -535,7 +515,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
       storeStatusEnum,
@@ -715,8 +695,9 @@ export default {
                   </tag>
                 </div>
               );
+            } else {
+              return <div>{row.storeType}</div>;
             }
-            return <div>{row.storeType}</div>;
           }
         },
         {
@@ -727,95 +708,99 @@ export default {
           options: ['onStoreStatus', 'view', 'edit', 'delete']
         }
       ],
-      createLoading: false,
-      modalViewLoading: false,
-      searchRowData: _.cloneDeep(roleRowData),
+      searchRowData: _.cloneDeep(searchRowData),
       storeDetail: _.cloneDeep(storeDetail)
     };
   },
   mounted() {
-    this.searchRowData = _.cloneDeep(roleRowData);
-    this.loading = true;
-    this.createLoading = true;
-    getStoreAreas().then(res => {
-      this.areaList = res;
-      getStorePages({
-        // 数据库数据不完整，暂时先注释掉门店类型条件
-        // storeType: storeType.FLAGSHIP_STORE,
-        page: 1,
-        rows: 10
-      }).then(res => {
-        this.flagShipList = res.rows;
-        this.getTableData();
-        this.createLoading = false;
-      });
-    });
+    this.getStoreAreas();
   },
   created() {},
   methods: {
-    resetSearchRowData() {
-      this.searchRowData = _.cloneDeep(roleRowData);
-      this.getTableData();
+    getStoreAreas() {
+      this.searchRowData = _.cloneDeep(searchRowData);
+      getStoreAreas().then(res => {
+        this.areaList = res;
+        getStorePages({
+        // 数据库数据不完整，暂时先注释掉门店类型条件
+        // storeType: storeType.FLAGSHIP_STORE,
+          page: 1,
+          rows: 10
+        }).then(res => {
+          this.flagShipList = res.rows;
+          this.getTableData();
+        });
+      });
     },
-    resetFields() {
-      this.$refs.modalEdit.resetFields();
-      this.$refs.uploadMain.clearFileList();
-      this.uploadListMain = [];
-      this.uploadwxImageList = [];
-      this.storeDetail.storeImage = null;
-      this.storeDetail.wxImage = null;
+    getTableData() {
+      this.loading = true;
+      getStorePages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.rows;
+          this.total = res.total;
+        })
+        .finally(() => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
     },
-    handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+    handleView(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.view;
+      this.storeDetail = _.cloneDeep(params.row);
+      this.modalView = true;
+    },
+    handleCreate() {
+      this.resetFields();
+      this.tempModalType = this.modalType.create;
+      this.storeDetail = _.cloneDeep(storeDetail);
+      this.modalEdit = true;
+    },
+    handleEdit(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.storeDetail = _.cloneDeep(params.row);
+      this.setDefaultUploadList(this.storeDetail);
+      this.modalEdit = true;
+    },
+    handleSubmit() {
+      this.$refs.editForm.validate(valid => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
-            // 添加状态
-            this.createStore();
-          } else if (this.tempModalType === this.modalType.edit) {
-            // 编辑状态
-            this.editStore();
+          if (this.isCreate) {
+            this.createTableRow();
+          } else if (this.isEdit) {
+            this.editTableRow();
           }
         } else {
           this.$Message.error('请完善信息!');
         }
       });
     },
-    createStore() {
-      this.modalViewLoading = true;
+    createTableRow() {
+      this.modalEditLoading = true;
       createStore(this.storeDetail)
         .then(res => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
+        .finally(() => {
+          this.modalEditLoading = false;
         });
     },
-    editStore() {
-      this.modalViewLoading = true;
+    editTableRow() {
+      this.modalEditLoading = true;
       editStore(this.storeDetail)
         .then(res => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
+          this.$Message.success('修改成功!');
           this.getTableData();
         })
         .catch(() => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
+          this.modalEditLoading = false;
         });
     },
-    addStore() {
-      this.resetFields();
-      if (this.tempModalType !== this.modalType.create) {
-        this.tempModalType = this.modalType.create;
-        this.storeDetail = _.cloneDeep(storeDetail);
-      }
-      this.modalEdit = true;
-    },
-    // 删除
     handleDelete(params) {
       this.tableDataSelected = [];
       this.tableDataSelected.push(params.row);
@@ -862,45 +847,22 @@ export default {
         this.uploadwxImageList = detailImgArr;
       }
     },
-    handleView(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.view;
-      this.storeDetail = _.cloneDeep(params.row);
-      this.modalView = true;
-    },
-    handleEdit(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.storeDetail = _.cloneDeep(params.row);
-      this.setDefaultUploadList(this.storeDetail);
-      this.modalEdit = true;
-    },
     onStoreStatus(params) {
-      console.log(params);
-      this.storeDetail = this._.cloneDeep(params.row);
-      if (params.row.storeStatus === storeStatus.ENABLED) {
-        this.storeDetail.storeStatus = storeStatus.DISABLED;
-      } else {
-        this.storeDetail.storeStatus = storeStatus.ENABLED;
-      }
-      this.loading = true;
-      this.editStore();
+      this.storeDetail = _.cloneDeep(params.row);
+      this.storeDetail.storeStatus = params.row.storeStatus === storeStatus.ENABLED ? storeStatus.DISABLED : storeStatus.ENABLED;
+      this.editTableRow();
     },
-    getTableData() {
-      getStorePages(this.searchRowData)
-        .then(res => {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch(error => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
+    resetSearchRowData() {
+      this.searchRowData = _.cloneDeep(searchRowData);
+      this.getTableData();
+    },
+    resetFields() {
+      this.$refs.editForm.resetFields();
+      this.$refs.uploadMain.clearFileList();
+      this.uploadListMain = [];
+      this.uploadwxImageList = [];
+      this.storeDetail.storeImage = null;
+      this.storeDetail.wxImage = null;
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
@@ -915,13 +877,11 @@ export default {
       this.uploadListMain = fileList;
       this.storeDetail.storeImage = null;
       this.storeDetail.storeImage = fileList[0].url;
-      console.log('商品主图', file);
     },
     handleSuccessWxImage(response, file, fileList) {
       this.uploadwxImageList = fileList;
       this.storeDetail.wxImage = null;
       this.storeDetail.wxImage = fileList[0].url;
-      console.log('商品主图1', file);
     }
   }
 };
