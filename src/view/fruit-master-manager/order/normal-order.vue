@@ -334,7 +334,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import BookTypeOption from '_c/book-type-option';
 import {
   getOrdersPages,
   getOrderDetail,
@@ -342,6 +341,7 @@ import {
   getStore
 } from '@/api/fruitermaster';
 import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import { fenToYuanDot2 } from '@/libs/util';
 import {
   receivingWayEnum,
@@ -355,7 +355,9 @@ import {
 import {
   orderStatusConvert,
   receivingWayConvert
-} from '@/libs/converStatus';
+} from '../../../libs/converStatus';
+
+import BookTypeOption from '_c/book-type-option';
 
 const orderDetail = {
   id: 0,
@@ -404,7 +406,7 @@ export default {
     Tables,
     BookTypeOption
   },
-  mixins: [tableMixin],
+  mixins: [tableMixin, searchMixin],
   data() {
     return {
       orderType: orderTypeEnum,

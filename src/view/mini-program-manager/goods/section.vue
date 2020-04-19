@@ -43,7 +43,7 @@
                   type="primary"
                   @click="handleSearch"
                 >
-                  <Icon type="md-search" /> 搜索
+                  <Icon type="md-search" />&nbsp;搜索
                 </Button>
                 <Button
                   v-waves
@@ -52,28 +52,28 @@
                   type="info"
                   @click="handleClear"
                 >
-                  <Icon type="md-refresh" /> 清除
+                  <Icon type="md-refresh" />&nbsp;清除
                 </Button>
               </Row>
             </div>
             <div slot="operations">
-              <Button v-waves type="warning" class="mr5" @click="handleBack">
-                <Icon type="ios-arrow-back" /> 返回全部板块
-              </Button>
-              <Button v-waves type="success" class="mr5" @click="handleCreate">
-                <Icon type="md-add" /> 添加
+              <Button v-waves type="success" class="mr5" @click="addSection">
+                <Icon type="md-add" />添加
               </Button>
               <Poptip
                 confirm
                 placement="bottom"
                 style="width: 100px"
                 title="您确认删除选中的内容吗?"
-                @on-ok="handleBatchDel"
+                @on-ok="poptipOk"
               >
                 <Button type="error" class="mr5">
-                  <Icon type="md-trash" /> 批量删除
+                  <Icon type="md-trash" />批量删除
                 </Button>
               </Poptip>
+              <Button v-waves :loading="clearSearchLoading" type="warning" @click="handleBack">
+                <Icon type="ios-arrow-back" />&nbsp;返回全部板块
+              </Button>
             </div>
           </tables>
           <div style="margin: 10px;overflow: hidden">
@@ -95,10 +95,10 @@
     <!--编辑菜单 -->
     <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
-        <span>{{ isCreate?'创建板块':'编辑板块' }}</span>
+        <span>{{ currentCategory.id == ''?'创建板块':'编辑板块' }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="currentCategory" :rules="ruleInline" :label-width="130">
+        <Form ref="modalEdit" :model="currentCategory" :rules="ruleInline" :label-width="130">
           <FormItem label="父级ID:">
             <i-col>{{ parentCategory.id }}</i-col>
           </FormItem>
@@ -121,7 +121,7 @@
             <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
               <template v-if="item.status === 'finished'">
                 <div>
-                  <img :src="item.url" >
+                  <img :src="item.url" />
                   <div class="demo-upload-list-cover">
                     <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                     <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -136,6 +136,9 @@
               ref="uploadMain"
               :default-list="defaultListMain"
               :image-size="imageSize"
+              groupType="base_image"
+              fileDir="plate"
+              appType="min_app"
               @on-success="handleSuccessMain"
             >
               <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -150,98 +153,103 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button :loading="modalEditLoading" type="primary" @click="asyncEditOK('modalEdit')">确定</Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
-import CommonIcon from '_c/common-icon';
-import uploadMixin from '@/mixins/uploadMixin';
-import tableMixin from '@/mixins/tableMixin.js';
-
+import Tables from "_c/tables";
+import _ from "lodash";
 import {
   createProductSection,
   deleteProductSection,
   getProductSectionPages,
   getProductSectionTree,
   editProductSection,
-  deleteProductSectionValidation
-} from '@/api/mini-program';
-import { buildMenu, convertTree } from '@/libs/util';
+  deleteProductSectionValidation,
+  deletePicture
+} from "@/api/mini-program";
+import { buildMenu, convertTree } from "@/libs/util";
+import CommonIcon from "_c/common-icon";
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import IViewUpload from "_c/iview-upload";
+import { appTypeEnum } from "@/libs/enumerate";
+import { appTypeConvert } from "@/libs/converStatus";
 
 const currentCategory = {
-  applyType: 'S_MALL',
+  applyType: "S_MALL", //默认就一个小程序 S_MALL
   id: 0,
   parentId: 0,
   sectionProductId: 0,
-  sectionName: '',
-  sectionImg: '',
+  sectionName: "",
+  sectionImg: "",
   rankNo: 0,
   productStandardList: [],
-  positionName: ''
+  positionName: ""
 };
 
-const searchRowData = {
+const roleRowData = {
   sectionName: null,
   page: 1,
   rows: 10,
-  sidx: 'rank_no'
+  sidx: "rank_no"
 };
 
 const dataColumns = [
   {
-    type: 'selection',
-    key: '',
+    type: "selection",
+    key: "",
     width: 60,
-    align: 'center',
-    fixed: 'left'
+    align: "center",
+    fixed: "left"
   },
   {
-    title: '板块ID',
-    key: 'id',
-    align: 'center',
+    title: "板块ID",
+    key: "id",
+    align: "center",
     minWidth: 150
   },
   {
-    title: '板块名称',
-    key: 'sectionName',
-    align: 'center',
+    title: "板块名称",
+    key: "sectionName",
+    align: "center",
     minWidth: 150
   },
   {
-    title: '板块图片',
-    key: 'sectionImg',
-    align: 'center',
+    title: "板块图片",
+    key: "sectionImg",
+    align: "center",
     minWidth: 150,
     render: (h, params, vm) => {
       const { row } = params;
-      const str = <img src={row.sectionImg} height='60' width='60' />;
+      const str = <img src={row.sectionImg} height="60" width="60" />;
       return <div>{str}</div>;
     }
   },
   {
-    title: '位置英文描述',
-    key: 'positionName',
-    align: 'center',
+    title: "位置英文描述",
+    key: "positionName",
+    align: "center",
     minWidth: 150
   },
   {
-    title: '排序',
-    key: 'rankNo',
+    title: "排序",
+    key: "rankNo",
     sortable: true,
-    align: 'center',
+    align: "center",
     minWidth: 150
   },
   {
-    title: '操作',
-    key: 'handle',
-    align: 'center',
+    title: "操作",
+    key: "handle",
+    align: "center",
     minWidth: 150,
-    options: ['edit', 'delete']
+    options: ["edit", "delete"]
   }
 ];
 
@@ -251,149 +259,199 @@ export default {
     CommonIcon,
     IViewUpload
   },
-  mixins: [tableMixin, uploadMixin],
+  mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin],
   data() {
     return {
+      appTypeEnum,
       menuData: [],
-      uploadListMain: [],
-      defaultListMain: [],
-      uploadVisible: false,
-      currentParentName: '',
-      currentParentId: 0,
-      imageSize: 2048,
-      imgUploadViewItem: '',
-      columns: dataColumns,
-      currentCategory: _.cloneDeep(currentCategory),
-      parentCategory: _.cloneDeep(currentCategory),
-      searchRowData: _.cloneDeep(searchRowData),
-      treeData: _.cloneDeep(currentCategory),
       ruleInline: {
-        sectionName: [{ required: true, message: '请输入板块名称' }],
+        sectionName: [{ required: true, message: "请输入板块名称" }],
         positionName: [
           {
             required: true,
-            message: '请输入板块位置英文描述,父级板块需添加 -F 后缀,如 XXXX-F'
+            message: "请输入板块位置英文描述,父级板块需添加 -F 后缀,如 XXXX-F"
           }
         ],
-        sectionImg: [{ required: true, message: '请上传上板块图片' }],
+        sectionImg: [{ required: true, message: "请上传上板块图片" }],
         rankNo: [
-          { required: true, message: '请输入板块排序' },
+          { required: true, message: "请输入板块排序" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
+                errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
             }
           }
         ]
-      }
+      },
+      columns: dataColumns,
+      modalEdit: false,
+      modalViewLoading: false,
+      modalEditLoading: false,
+      clearSearchLoading: false,
+      currentParentName: "",
+      currentParentId: 0,
+      currentCategory: this._.cloneDeep(currentCategory),
+      parentCategory: this._.cloneDeep(currentCategory),
+      searchRowData: this._.cloneDeep(roleRowData),
+      treeData: this._.cloneDeep(currentCategory),
+      uploadListMain: [],
+      defaultListMain: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
+      //查看
+      imageSize: 2048,
+      imgUploadViewItem: "",
+      uploadVisible: false
     };
   },
   created() {
     this.initMenuList();
-    this.parentCategory.groupName = '全部版块';
+    this.parentCategory.groupName = "全部版块";
   },
   methods: {
-    getTableData() {
-      this.loading = true;
-      getProductSectionPages(this.searchRowData)
-        .then(res => {
-          this.tableData = res.rows;
-          this.total = res.total;
-        })
-        .finally(() => {
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
+    renderContent(h, { root, node, data }) {
+      if (data.type == "PARENT") {
+        return (
+          <div
+            style={{
+              display: "inline-block",
+              width: "100%",
+              fontSize: "14px",
+              cursor: "pointer"
+            }}
+          >
+            <span>
+              <CommonIcon type="ios-folder" class="mr10" />
+            </span>
+            <span onClick={() => this.handleClick({ root, node, data })}>
+              {data.title}
+            </span>
+          </div>
+        );
+      } else {
+        return (
+          <div
+            style={{
+              display: "inline-block",
+              width: "100%",
+              fontSize: "14px",
+              cursor: "pointer"
+            }}
+          >
+            <span>
+              <CommonIcon type="ios-paper" class="mr10" />
+            </span>
+            <span onClick={() => this.handleClick({ root, node, data })}>
+              {data.title}
+            </span>
+          </div>
+        );
+      }
     },
-    handleBack() {
-      this.parentCategory.id = 0;
-      this.parentCategory.groupName = '全部版块';
-      this.searchRowData = _.cloneDeep(searchRowData);
-      this.getTableData();
-    },
-    handleCreate() {
+    addSection() {
       this.resetFields();
-      this.currentCategory = _.cloneDeep(currentCategory);
+      if (this.tempModalType !== this.modalType.create) {
+        this.currentCategory = this._.cloneDeep(currentCategory);
+      }
       this.currentCategory.currentParentId = this.currentParentId;
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
     },
-    handleEdit(params) {
-      if (
-        params.row.positionName.indexOf('F') == -1 &&
-        this.parentCategory.groupName === '全部版块'
-      ) {
-        this.$Message.warning('请从左侧选择一个板块');
-        return;
+    asyncEditOK(name) {
+      if (this.oldPicture.length > 0) {
+        let urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
       }
-      this.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.currentCategory = _.cloneDeep(params.row);
-      this.setDefaultUploadList(params.row);
-      this.modalEdit = true;
-    },
-    handleSubmit() {
       if (!this.parentCategory.id) {
         this.currentCategory.parentId = 0;
       } else {
         this.currentCategory.parentId = this.parentCategory.id;
       }
-      this.$refs.editForm.validate(valid => {
+      this.$refs[name].validate(valid => {
         if (valid) {
           this.modalEditLoading = true;
-          if (this.isCreate) {
-            this.createTableRow();
-          } else if (this.isEdit) {
-            this.editTableRow();
+          this.modalViewLoading = true;
+          if (this.tempModalType === this.modalType.create) {
+            createProductSection(this.currentCategory)
+              .then(res => {})
+              .finally(res => {
+                this.initMenuList();
+                this.modalEditLoading = false;
+                this.modalEdit = false;
+              });
+          } else if (this.tempModalType === this.modalType.edit) {
+            editProductSection(this.currentCategory)
+              .then(res => {})
+              .finally(res => {
+                this.initMenuList();
+                this.modalEditLoading = false;
+                this.modalEdit = false;
+              });
           }
         } else {
-          this.$Message.error('请完善板块信息!');
+          this.$Message.error("请完善板块信息!");
         }
       });
     },
-    createTableRow() {
-      this.modalEditLoading = true;
-      createProductSection(this.currentCategory)
-        .then(res => {
-          this.modalEdit = false;
-          this.$Message.success('创建成功！');
-          this.initMenuList();
-        })
-        .finally(res => {
-          this.modalEditLoading = false;
-        });
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.modalEdit = false;
+      this.oldPicture = [];
+      this.newPicture = [];
     },
-    editTableRow() {
-      this.modalEditLoading = true;
-      editProductSection(this.currentCategory)
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
         .then(res => {
-          this.modalEdit = false;
-          this.$Message.success('修改成功！');
-          this.initMenuList();
+          this.newPicture = [];
+          this.oldPicture = [];
         })
-        .finally(res => {
-          this.modalEditLoading = false;
-        });
+        .catch(() => {});
     },
-    resetFields() {
-      this.$refs.editForm.resetFields();
-      this.$refs.uploadMain.clearFileList();
-      this.uploadListMain = [];
+    handleRemoveMain(file) {
+      this.$refs.uploadMain.deleteFile(file);
       this.currentCategory.sectionImg = null;
     },
-    resetSearchRowData() {
-      this.searchRowData = _.cloneDeep(searchRowData);
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.modalEdit = false;
+      this.oldPicture = [];
+      this.newPicture = [];
     },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {
+          this.newPicture = [];
+          this.oldPicture = [];
+        })
+        .catch(() => {});
+    },
+    // 删除
     deleteTable(ids) {
       // this.loading = true;
       deleteProductSectionValidation({ ids })
         .then(res => {
           if (!res) {
-            this.$Message.info('该板块或其子板块关联了商品，删除失败！');
+            this.$Message.info("该板块或其子板块关联了商品，删除失败！");
           } else if (res) {
             deleteProductSection({
               ids
@@ -410,72 +468,89 @@ export default {
                 this.tableDataSelected = [];
                 this.initMenuList();
                 this.searchRowData.page = this.page;
+                this.getTableData();
               })
               .catch(() => {
                 this.loading = false;
               });
           }
+          this.loading = false;
         })
-        .finally(() => {
+        .catch(() => {
           this.loading = false;
         });
+    },
+    // 编辑分类
+    handleEdit(params) {
+      if (
+        params.row.positionName.indexOf("F") == -1 &&
+        this.parentCategory.groupName === "全部版块"
+      ) {
+        this.$Message.warning("请从左侧选择一个板块");
+        return;
+      }
+      this.save = [];
+      this.save.push(params.row.sectionImg);
+      this.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.currentCategory = _.cloneDeep(params.row);
+      this.setDefaultUploadList(params.row);
+      this.modalEdit = true;
+    },
+    handleBack() {
+      this.parentCategory.groupName = "全部版块";
+      this.handleClear();
+    },
+    handleSearch() {
+      this.searchRowData.page = 1;
+      this.searchLoading = true;
+      this.getTableData();
+    },
+    handleClear() {
+      // 重置数据
+      this.resetSearchRowData();
+      this.page = 1;
+      this.pageSize = 10;
+      this.clearSearchLoading = true;
+      this.handleSearch();
+    },
+    getTableData() {
+      this.loading = true;
+      getProductSectionPages(this.searchRowData).then(res => {
+        // if (this.menuData.length > 0) {
+        // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
+        this.tableData = res.rows;
+        this.total = res.total;
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
+        // }
+      });
     },
     // 初始化商品菜单列表
     initMenuList() {
       getProductSectionTree(this.treeData).then(res => {
+        // if (res && res.array.length > 0) {
         const menuList = buildMenu(res.array);
         const map = {
-          title: 'title',
-          children: 'children'
+          title: "title",
+          children: "children"
         };
         this.menuData = convertTree(menuList, map, true);
+        // if (this.menuData.length > 0) {
         this.getTableData();
+        // }
+        // }
       });
     },
-    renderContent(h, { root, node, data }) {
-      if (data.type == 'PARENT') {
-        return (
-          <div
-            style={{
-              display: 'inline-block',
-              width: '100%',
-              fontSize: '14px',
-              cursor: 'pointer'
-            }}
-          >
-            <span>
-              <CommonIcon type='ios-folder' class='mr10' />
-            </span>
-            <span onClick={() => this.handleClick({ root, node, data })}>
-              {data.title}
-            </span>
-          </div>
-        );
-      } else {
-        return (
-          <div
-            style={{
-              display: 'inline-block',
-              width: '100%',
-              fontSize: '14px',
-              cursor: 'pointer'
-            }}
-          >
-            <span>
-              <CommonIcon type='ios-paper' class='mr10' />
-            </span>
-            <span onClick={() => this.handleClick({ root, node, data })}>
-              {data.title}
-            </span>
-          </div>
-        );
-      }
-    },
+
     handleClick({ root, node, data }) {
       this.loading = true;
       // 展开当前节点
-      if (typeof data.expand === 'undefined') {
-        this.$set(data, 'expend', false);
+      if (typeof data.expand === "undefined") {
+        // this.$set(data, 'expend', true);
+        this.$set(data, "expend", false);
+        // if (data.children) {
         if (data.children) {
           this.expandChildren(data.children);
         }
@@ -485,14 +560,28 @@ export default {
       this.parentCategory.id = data.id;
       this.parentCategory.groupName = data.title;
       this.currentParentId = data.id;
-      this.searchRowData = _.cloneDeep(searchRowData);
       this.searchRowData.parentId = data.id;
+      // 获取新数据
       this.getTableData();
+    },
+    expandChildren(array) {
+      array.forEach(item => {
+        if (typeof item.expand === "undefined") {
+          // this.$set(item, 'expend', true);
+          this.$set(item, "expend", false);
+          // } else {
+        } else {
+          item.expand = !item.expand;
+        }
+        if (item.children) {
+          this.expandChildren(item.children);
+        }
+      });
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.sectionImg != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.sectionImg;
         mainImgArr.push(map);
@@ -500,18 +589,36 @@ export default {
         this.uploadListMain = mainImgArr;
       }
     },
+    // 商品主图
     handleSuccessMain(response, file, fileList) {
       this.uploadListMain = fileList;
       this.currentCategory.sectionImg = null;
       this.currentCategory.sectionImg = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
-    handleRemoveMain(file) {
-      this.$refs.uploadMain.deleteFile(file);
+    resetFields() {
+      this.$refs.modalEdit.resetFields();
+      this.$refs.uploadMain.clearFileList();
+      this.uploadListMain = [];
       this.currentCategory.sectionImg = null;
+    },
+    resetSearchRowData() {
+      this.searchRowData = _.cloneDeep(roleRowData);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.img {
+  width: 150px;
+  height: auto !important;
+}
+
+.add-image {
+  line-height: 48px;
+  vertical-align: text-bottom;
+  margin-right: 10px;
+}
 </style>

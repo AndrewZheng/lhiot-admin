@@ -61,6 +61,21 @@
                 style="padding-left: 5px;width: 100px"
               >{{ item.label }}</Option>
             </Select>
+            <Select
+              v-if="applicationType == null"
+              v-model="searchRowData.applicationType"
+              placeholder="应用类型"
+              style="padding-right: 5px;width: 100px"
+              clearable
+            >
+              <Option
+                v-for="(item,index) in applicationTypeList"
+                :value="item.storeCode"
+                :key="index"
+                class="ptb2-5"
+                style="padding-left: 5px"
+              >{{ item.name }}</Option>
+            </Select>
             <Button
               :loading="searchLoading"
               class="search-btn mr5"
@@ -81,7 +96,7 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves type="success" class="mr5" @click="handleCreate">
+          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
             <Icon type="md-add" />添加
           </Button>
         </div>
@@ -99,7 +114,6 @@
         </Row>
       </div>
     </Card>
-
     <!-- 查看 -->
     <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
@@ -207,9 +221,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="3">商品主图:</i-col>
+              <i-col span="3">门店照片:</i-col>
               <i-col span="21">
-                <img :src="storeDetail.storeImage" style="width: 300px" >
+                <img :src="storeDetail.storeImage" style="width: 300px" />
               </i-col>
             </Row>
           </i-col>
@@ -219,7 +233,7 @@
             <Row>
               <i-col span="3">门店微信:</i-col>
               <i-col span="21">
-                <img :src="storeDetail.wxImage" style="width: 300px" >
+                <img :src="storeDetail.wxImage" style="width: 300px" />
               </i-col>
             </Row>
           </i-col>
@@ -243,14 +257,13 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-
     <!-- 修改 -->
     <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <span>门店基础信息</span>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="storeDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="modalEdit" :model="storeDetail" :rules="ruleInline" :label-width="80">
           <Row>
             <i-col span="12">
               <FormItem label="门店编码:" prop="storeCode">
@@ -379,7 +392,7 @@
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>
-                    <img :src="item.url" >
+                    <img :src="item.url" />
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                       <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -394,6 +407,9 @@
                 ref="uploadMain"
                 :default-list="defaultListMain"
                 :image-size="imageSize"
+                groupType="base_image"
+                fileDir="store"
+                appType="min_app"
                 @on-success="handleSuccessMain"
               >
                 <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -410,7 +426,7 @@
                 <div v-for="item in uploadwxImageList" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" >
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveWxImage(item)"></Icon>
@@ -426,6 +442,9 @@
                   :default-list="defaultWxImageList"
                   :image-size="imageSize"
                   :max-num="1"
+                  groupType="base_image"
+                  fileDir="store"
+                  appType="min_app"
                   @on-success="handleSuccessWxImage"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -435,6 +454,7 @@
               </FormItem>
             </i-col>
           </Row>
+          <!-- ========================== -->
           <Row align="middle" type="flex">
             <i-col span="24">
               <FormItem label="直播地址:">
@@ -446,62 +466,69 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
       </div>
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" >
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
-import uploadMixin from '@/mixins/uploadMixin';
-import tableMixin from '@/mixins/tableMixin.js';
+import Tables from "_c/tables";
+import IViewUpload from "_c/iview-upload";
+import _ from "lodash";
 import {
   deleteStore,
+  getStoreDetail,
   getStorePages,
   getStoreAreas,
   editStore,
-  createStore
-} from '@/api/mini-program';
+  createStore,
+  deletePicture
+} from "@/api/mini-program";
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
 import {
+  storeType,
   storeStatus,
   storeStatusEnum,
   storeTypeEnum,
   coordinateTypeEnum
-} from '@/libs/enumerate';
+} from "@/libs/enumerate";
 import {
   storeStatusConvert,
-  storeTypeConvert
-} from '@/libs/converStatus';
+  storeTypeConvert,
+  coordinateTypeConvert
+} from "@/libs/converStatus";
 
 const storeDetail = {
   storeId: 0,
-  storeCode: '',
-  storeName: '',
-  storeAddress: '',
-  storePhone: '',
-  storeImage: '',
-  storeArea: '',
-  storeStatus: '',
-  storeFlagship: '',
+  storeCode: "",
+  storeName: "",
+  storeAddress: "",
+  storePhone: "",
+  storeImage: "",
+  storeArea: "",
+  storeStatus: "",
+  storeFlagship: "",
   storeType: null,
-  videoUrl: '',
-  beginAt: '',
-  endAt: '',
-  tapeUrl: '',
+  videoUrl: "",
+  beginAt: "",
+  endAt: "",
+  tapeUrl: "",
   storeCoordx: null,
   storeCoordy: null,
   coordinateType: null,
-  wxImage: '',
-  enterpriseWxId: ''
+  wxImage: "",
+  enterpriseWxId: ""
 };
 
-const searchRowData = {
+const roleRowData = {
   storeCode: null,
   storeName: null,
   storeArea: null,
@@ -515,7 +542,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, tableMixin],
+  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
     return {
       storeStatusEnum,
@@ -523,48 +550,48 @@ export default {
       coordinateTypeEnum,
       ruleInline: {
         storeCode: [
-          { required: true, message: '请输入门店编码' },
+          { required: true, message: "请输入门店编码" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
+                errors.push(new Error("必须为整数"));
               }
               callback(errors);
             }
           }
         ],
-        storeName: [{ required: true, message: '请输入门店名称' }],
-        storeStatus: [{ required: true, message: '请选择门店状态' }],
-        storeArea: [{ required: true, message: '请选择门店区域' }],
-        storeFlagship: [{ required: true, message: '请选择旗舰店' }],
-        beginTime: [{ required: true, message: '请选择开始时间' }],
-        endTime: [{ required: true, message: '请选择结束时间' }],
+        storeName: [{ required: true, message: "请输入门店名称" }],
+        storeStatus: [{ required: true, message: "请选择门店状态" }],
+        storeArea: [{ required: true, message: "请选择门店区域" }],
+        storeFlagship: [{ required: true, message: "请选择旗舰店" }],
+        beginTime: [{ required: true, message: "请选择开始时间" }],
+        endTime: [{ required: true, message: "请选择结束时间" }],
         storeCoordy: [
           {
             required: true,
-            message: '请填写正确的经度',
+            message: "请填写正确的经度",
             pattern: /(^[\-0-9][0-9]*(.[0-9]+)?)$/
           }
         ],
         storeCoordx: [
           {
             required: true,
-            message: '请填写正确的维度',
+            message: "请填写正确的维度",
             pattern: /(^[\-0-9][0-9]*(.[0-9]+)?)$/
           }
         ],
-        coordinateType: [{ required: true, message: '请选择坐标系类型' }],
-        storeImage: [{ required: true, message: '请上传门店图片' }],
+        coordinateType: [{ required: true, message: "请选择坐标系类型" }],
+        storeImage: [{ required: true, message: "请上传门店图片" }],
         storePhone: [
           {
             required: true,
-            message: '请填写正确电话号码',
+            message: "请填写正确电话号码",
             pattern: /^1\d{10}$/
           }
         ],
-        storeType: [{ required: true, message: '请选择门店类型' }],
-        storeAddress: [{ required: true, message: '请填写门店地址' }]
+        storeType: [{ required: true, message: "请选择门店类型" }],
+        storeAddress: [{ required: true, message: "请填写门店地址" }]
       },
       defaultListMain: [],
       defaultWxImageList: [],
@@ -572,77 +599,80 @@ export default {
       uploadwxImageList: [],
       areaList: [],
       flagShipList: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       columns: [
         {
-          title: '门店编码',
-          key: 'storeCode',
-          align: 'center',
+          title: "门店编码",
+          key: "storeCode",
+          align: "center",
           minWidth: 100
         },
         {
-          title: '门店名称',
-          align: 'center',
-          key: 'storeName',
+          title: "门店名称",
+          align: "center",
+          key: "storeName",
           minWidth: 150
         },
         {
-          title: '企业微信ID',
-          key: 'enterpriseWxId',
-          align: 'center',
+          title: "企业微信ID",
+          key: "enterpriseWxId",
+          align: "center",
           minWidth: 130
         },
         {
-          title: '所属区域',
-          align: 'center',
+          title: "所属区域",
+          align: "center",
           minWidth: 90,
-          key: 'storeArea',
+          key: "storeArea",
           render: (h, params, vm) => {
             const { row } = params;
             const obj = this.areaList.find(item => {
               return item.area === row.storeArea;
             });
             if (obj) {
-              return h('span', obj.areaName + '');
+              return h("span", obj.areaName + "");
             } else {
-              return h('span', row.storeArea + '');
+              return h("span", row.storeArea + "");
             }
           }
         },
         {
-          title: '区域旗舰店',
-          align: 'center',
+          title: "区域旗舰店",
+          align: "center",
           minWidth: 130,
-          key: 'storeFlagship',
+          key: "storeFlagship",
           render: (h, params, vm) => {
             const { row } = params;
             const obj = this.flagShipList.find(
               item => row.storeFlagship === item.storeFlagship
             );
             if (obj) {
-              return h('span', obj.storeName);
+              return h("span", obj.storeName);
             }
-            return h('span', row.storeFlagship);
+            return h("span", row.storeFlagship);
           }
         },
         {
-          title: '门店状态',
-          align: 'center',
+          title: "门店状态",
+          align: "center",
           minWidth: 120,
-          key: 'storeStatus',
+          key: "storeStatus",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.storeStatus === 'ENABLED') {
+            if (row.storeStatus === "ENABLED") {
               return (
                 <div>
-                  <tag color='success'>
+                  <tag color="success">
                     {storeStatusConvert(row.storeStatus).label}
                   </tag>
                 </div>
               );
-            } else if (row.storeStatus === 'DISABLED') {
+            } else if (row.storeStatus === "DISABLED") {
               return (
                 <div>
-                  <tag color='error'>
+                  <tag color="error">
                     {storeStatusConvert(row.storeStatus).label}
                   </tag>
                 </div>
@@ -650,157 +680,176 @@ export default {
             }
             return (
               <div>
-                <tag color='primary'>{row.storeStatus}</tag>
+                <tag color="primary">{row.storeStatus}</tag>
               </div>
             );
           }
         },
         {
-          title: '营业时间(起)',
-          align: 'center',
+          title: "营业时间(起)",
+          align: "center",
           minWidth: 130,
-          key: 'beginTime'
+          key: "beginTime"
         },
         {
-          title: '营业时间(止)',
-          align: 'center',
+          title: "营业时间(止)",
+          align: "center",
           minWidth: 130,
-          key: 'endTime'
+          key: "endTime"
         },
         {
-          title: '联系方式',
-          align: 'center',
+          title: "联系方式",
+          align: "center",
           minWidth: 140,
-          key: 'storePhone'
+          key: "storePhone"
         },
         {
-          title: '门店类型',
-          align: 'center',
+          title: "门店类型",
+          align: "center",
           minWidth: 140,
           render: (h, params) => {
             const { row } = params;
-            if (row.storeType === 'FLAGSHIP_STORE') {
+            if (row.storeType === "FLAGSHIP_STORE") {
               return (
                 <div>
-                  <tag color='success'>
+                  <tag color="success">
                     {storeTypeConvert(row.storeType).label}
                   </tag>
                 </div>
               );
-            } else if (row.storeType === 'ORDINARY_STORE') {
+            } else if (row.storeType === "ORDINARY_STORE") {
               return (
                 <div>
-                  <tag color='primary'>
+                  <tag color="primary">
                     {storeTypeConvert(row.storeType).label}
                   </tag>
                 </div>
               );
-            } else {
-              return <div>{row.storeType}</div>;
             }
+            return <div>{row.storeType}</div>;
           }
         },
         {
-          title: '操作',
-          align: 'center',
+          title: "操作",
+          align: "center",
           minWidth: 230,
-          key: 'handle',
-          options: ['onStoreStatus', 'view', 'edit', 'delete']
+          key: "handle",
+          options: ["onStoreStatus", "view", "edit", "delete"]
         }
       ],
-      searchRowData: _.cloneDeep(searchRowData),
+      createLoading: false,
+      modalViewLoading: false,
+      searchRowData: _.cloneDeep(roleRowData),
       storeDetail: _.cloneDeep(storeDetail)
     };
   },
   mounted() {
-    this.getStoreAreas();
+    this.searchRowData = _.cloneDeep(roleRowData);
+    this.loading = true;
+    this.createLoading = true;
+    getStoreAreas().then(res => {
+      this.areaList = res;
+      getStorePages({
+        // 数据库数据不完整，暂时先注释掉门店类型条件
+        // storeType: storeType.FLAGSHIP_STORE,
+        page: 1,
+        rows: 10
+      }).then(res => {
+        this.flagShipList = res.rows;
+        this.getTableData();
+        this.createLoading = false;
+      });
+    });
   },
   created() {},
   methods: {
-    getStoreAreas() {
-      this.searchRowData = _.cloneDeep(searchRowData);
-      getStoreAreas().then(res => {
-        this.areaList = res;
-        getStorePages({
-        // 数据库数据不完整，暂时先注释掉门店类型条件
-        // storeType: storeType.FLAGSHIP_STORE,
-          page: 1,
-          rows: 10
-        }).then(res => {
-          this.flagShipList = res.rows;
-          this.getTableData();
-        });
-      });
+    resetSearchRowData() {
+      this.searchRowData = _.cloneDeep(roleRowData);
+      this.getTableData();
     },
-    getTableData() {
-      this.loading = true;
-      getStorePages(this.searchRowData)
-        .then(res => {
-          this.tableData = res.rows;
-          this.total = res.total;
-        })
-        .finally(() => {
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
+    resetFields() {
+      this.$refs.modalEdit.resetFields();
+      this.$refs.uploadMain.clearFileList();
+      this.uploadListMain = [];
+      this.uploadwxImageList = [];
+      this.storeDetail.storeImage = null;
+      this.storeDetail.wxImage = null;
     },
-    handleView(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.view;
-      this.storeDetail = _.cloneDeep(params.row);
-      this.modalView = true;
-    },
-    handleCreate() {
-      this.resetFields();
-      this.tempModalType = this.modalType.create;
-      this.storeDetail = _.cloneDeep(storeDetail);
-      this.modalEdit = true;
-    },
-    handleEdit(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.storeDetail = _.cloneDeep(params.row);
-      this.setDefaultUploadList(this.storeDetail);
-      this.modalEdit = true;
-    },
-    handleSubmit() {
-      this.$refs.editForm.validate(valid => {
+    handleSubmit(name) {
+      if (this.oldPicture.length > 0) {
+        let urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.$refs[name].validate(valid => {
         if (valid) {
-          if (this.isCreate) {
-            this.createTableRow();
-          } else if (this.isEdit) {
-            this.editTableRow();
+          if (this.tempModalType === this.modalType.create) {
+            // 添加状态
+            this.createStore();
+          } else if (this.tempModalType === this.modalType.edit) {
+            // 编辑状态
+            this.editStore();
           }
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
     },
-    createTableRow() {
-      this.modalEditLoading = true;
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        let urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
+    },
+    createStore() {
+      this.modalViewLoading = true;
       createStore(this.storeDetail)
         .then(res => {
+          this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success('创建成功!');
-          this.getTableData();
-        })
-        .finally(() => {
-          this.modalEditLoading = false;
-        });
-    },
-    editTableRow() {
-      this.modalEditLoading = true;
-      editStore(this.storeDetail)
-        .then(res => {
-          this.modalEdit = false;
-          this.$Message.success('修改成功!');
+          this.$Message.success("创建成功!");
           this.getTableData();
         })
         .catch(() => {
-          this.modalEditLoading = false;
+          this.modalViewLoading = false;
+          this.modalEdit = false;
         });
     },
+    editStore() {
+      this.modalViewLoading = true;
+      editStore(this.storeDetail)
+        .then(res => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+          this.getTableData();
+        })
+        .catch(() => {
+          this.modalEdit = false;
+          this.modalViewLoading = false;
+        });
+    },
+    addStore() {
+      this.resetFields();
+      if (this.tempModalType !== this.modalType.create) {
+        this.tempModalType = this.modalType.create;
+        this.storeDetail = _.cloneDeep(storeDetail);
+      }
+      this.modalEdit = true;
+    },
+    // 删除
     handleDelete(params) {
       this.tableDataSelected = [];
       this.tableDataSelected.push(params.row);
@@ -831,7 +880,7 @@ export default {
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.image != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.image;
         mainImgArr.push(map);
@@ -839,7 +888,7 @@ export default {
         this.uploadListMain = mainImgArr;
       }
       if (res.wxImage != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const detailImgArr = [];
         map.url = res.wxImage;
         detailImgArr.push(map);
@@ -847,22 +896,47 @@ export default {
         this.uploadwxImageList = detailImgArr;
       }
     },
-    onStoreStatus(params) {
+    handleView(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.view;
       this.storeDetail = _.cloneDeep(params.row);
-      this.storeDetail.storeStatus = params.row.storeStatus === storeStatus.ENABLED ? storeStatus.DISABLED : storeStatus.ENABLED;
-      this.editTableRow();
+      this.modalView = true;
     },
-    resetSearchRowData() {
-      this.searchRowData = _.cloneDeep(searchRowData);
-      this.getTableData();
+    handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.storeImage);
+      this.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.storeDetail = _.cloneDeep(params.row);
+      this.setDefaultUploadList(this.storeDetail);
+      this.modalEdit = true;
     },
-    resetFields() {
-      this.$refs.editForm.resetFields();
-      this.$refs.uploadMain.clearFileList();
-      this.uploadListMain = [];
-      this.uploadwxImageList = [];
-      this.storeDetail.storeImage = null;
-      this.storeDetail.wxImage = null;
+    onStoreStatus(params) {
+      console.log(params);
+      this.storeDetail = this._.cloneDeep(params.row);
+      if (params.row.storeStatus === storeStatus.ENABLED) {
+        this.storeDetail.storeStatus = storeStatus.DISABLED;
+      } else {
+        this.storeDetail.storeStatus = storeStatus.ENABLED;
+      }
+      this.loading = true;
+      this.editStore();
+    },
+    getTableData() {
+      getStorePages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.rows;
+          this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
@@ -877,6 +951,8 @@ export default {
       this.uploadListMain = fileList;
       this.storeDetail.storeImage = null;
       this.storeDetail.storeImage = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     handleSuccessWxImage(response, file, fileList) {
       this.uploadwxImageList = fileList;

@@ -253,84 +253,84 @@
         <Form ref="modalEdit" :label-width="100" :model="managerDetail" :rules="ruleInline">
           <Row>
             <Col span="12">
-            <FormItem label="ID:">
-              <i-col>{{ managerDetail.id }}</i-col>
-            </FormItem>
+              <FormItem label="ID:">
+                <i-col>{{ managerDetail.id }}</i-col>
+              </FormItem>
             </Col>
             <Col span="12">
-            <FormItem label="姓名:" prop="realName">
-              <Input v-model="managerDetail.realName" placeholder="请输入您的姓名"></Input>
-            </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="12">
-            <FormItem label="手机号码:" prop="phone">
-              <Input v-model="managerDetail.phone" placeholder="请输入您的手机号码"></Input>
-            </FormItem>
-            </Col>
-            <Col span="12">
-            <FormItem label="邀请码:">
-              <i-col>{{ managerDetail.inviteCode }}</i-col>
-            </FormItem>
+              <FormItem label="姓名:" prop="realName">
+                <Input v-model="managerDetail.realName" placeholder="请输入您的姓名"></Input>
+              </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="鲜果师等级:" prop="doctorLevel">
-              <Select
-                v-model="managerDetail.doctorLevel"
-                class="search-col mr5"
-                placeholder="鲜果师等级"
-                style="width:100px"
-                clearable
-              >
-                <Option
-                  v-for="item in userStatus"
-                  :value="item.value"
-                  :key="item.value"
-                  class="ptb2-5"
-                >{{ item.label }}</Option>
-              </Select>
-            </FormItem>
+              <FormItem label="手机号码:" prop="phone">
+                <Input v-model="managerDetail.phone" placeholder="请输入您的手机号码"></Input>
+              </FormItem>
             </Col>
             <Col span="12">
-            <FormItem label="鲜果师状态:" prop="doctorStatus">
-              <Select
-                v-model="managerDetail.doctorStatus"
-                class="search-col mr5"
-                placeholder="鲜果师状态"
-                style="width:100px"
-                clearable
-              >
-                <Option
-                  v-for="item in doctorStatus"
-                  :value="item.value"
-                  :key="item.value"
-                  class="ptb2-5"
-                >{{ item.label }}</Option>
-              </Select>
-            </FormItem>
+              <FormItem label="邀请码:">
+                <i-col>{{ managerDetail.inviteCode }}</i-col>
+              </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="明星鲜果师:" prop="hot">
-              <Select
-                v-model="managerDetail.hot"
-                class="search-col mr5"
-                placeholder="明星鲜果师"
-                style="width:100px"
-                clearable
-              >
-                <Option
-                  v-for="item in hotStatus"
-                  :value="item.value"
-                  :key="item.value"
-                  class="ptb2-5"
-                >{{ item.label }}</Option>
-              </Select>
-            </FormItem>
+              <FormItem label="鲜果师等级:" prop="doctorLevel">
+                <Select
+                  v-model="managerDetail.doctorLevel"
+                  class="search-col mr5"
+                  placeholder="鲜果师等级"
+                  style="width:100px"
+                  clearable
+                >
+                  <Option
+                    v-for="item in userStatus"
+                    :value="item.value"
+                    :key="item.value"
+                    class="ptb2-5"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+            </Col>
+            <Col span="12">
+              <FormItem label="鲜果师状态:" prop="doctorStatus">
+                <Select
+                  v-model="managerDetail.doctorStatus"
+                  class="search-col mr5"
+                  placeholder="鲜果师状态"
+                  style="width:100px"
+                  clearable
+                >
+                  <Option
+                    v-for="item in doctorStatus"
+                    :value="item.value"
+                    :key="item.value"
+                    class="ptb2-5"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+              <FormItem label="明星鲜果师:" prop="hot">
+                <Select
+                  v-model="managerDetail.hot"
+                  class="search-col mr5"
+                  placeholder="明星鲜果师"
+                  style="width:100px"
+                  clearable
+                >
+                  <Option
+                    v-for="item in hotStatus"
+                    :value="item.value"
+                    :key="item.value"
+                    class="ptb2-5"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
             </Col>
           </Row>
           <FormItem label="鲜果师头衔:" prop="jobTitle">
@@ -396,33 +396,33 @@
           </FormItem>
           <Row>
             <Col span="12">
-            <FormItem label="开户人姓名:">
-              <i-col>{{ managerDetail.cardUsername }}</i-col>
-            </FormItem>
+              <FormItem label="开户人姓名:">
+                <i-col>{{ managerDetail.cardUsername }}</i-col>
+              </FormItem>
             </Col>
             <Col span="12">
-            <FormItem label="开户行:">
-              <i-col>{{ managerDetail.bankDeposit }}</i-col>
-            </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="12">
-            <FormItem label="银行卡号:">
-              <i-col>{{ managerDetail.cardNo }}</i-col>
-            </FormItem>
-            </Col>
-            <Col span="12">
-            <FormItem label="红利余额:">
-              <i-col>{{ managerDetail.bonus|fenToYuanDot2Filters }}</i-col>
-            </FormItem>
+              <FormItem label="开户行:">
+                <i-col>{{ managerDetail.bankDeposit }}</i-col>
+              </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="可结算余额:">
-              <i-col>{{ managerDetail.settlement|fenToYuanDot2Filters }}</i-col>
-            </FormItem>
+              <FormItem label="银行卡号:">
+                <i-col>{{ managerDetail.cardNo }}</i-col>
+              </FormItem>
+            </Col>
+            <Col span="12">
+              <FormItem label="红利余额:">
+                <i-col>{{ managerDetail.bonus|fenToYuanDot2Filters }}</i-col>
+              </FormItem>
+            </Col>
+          </Row>
+          <Row>
+            <Col span="12">
+              <FormItem label="可结算余额:">
+                <i-col>{{ managerDetail.settlement|fenToYuanDot2Filters }}</i-col>
+              </FormItem>
             </Col>
           </Row>
         </Form>
@@ -439,50 +439,51 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
-import { getFruitDoctorsPages, editFruitDoctor } from '@/api/fruitermaster';
-import tableMixin from '@/mixins/tableMixin.js';
-import uploadMixin from '@/mixins/uploadMixin';
-
+import Tables from "_c/tables";
+import _ from "lodash";
+import { getFruitDoctorsPages, editFruitDoctor } from "@/api/fruitermaster";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import uploadMixin from "@/mixins/uploadMixin";
+import IViewUpload from "_c/iview-upload";
 import {
   doctorLevelConvert,
   doctorStatusConvert,
   hotConvert
-} from '@/libs/converStatus';
-import { fenToYuanDot2 } from '@/libs/util';
-import BookTypeOption from '_c/book-type-option';
+} from "@/libs/converStatus";
+import { fenToYuanDot2 } from "../../../libs/util";
+import BookTypeOption from "_c/book-type-option";
 
 const managerDetail = {
   id: 2,
-  realName: '',
-  photo: '',
-  inviteCode: '',
-  userId: '',
-  doctorLevel: '',
+  realName: "",
+  photo: "",
+  inviteCode: "",
+  userId: "",
+  doctorLevel: "",
   doctorLevels: null,
-  doctorStatus: '',
-  jobTitle: '',
+  doctorStatus: "",
+  jobTitle: "",
   createAt: null,
   refereeId: 1,
-  profile: '',
-  cardNo: '',
-  bankDeposit: '',
-  cardUsername: '',
-  hot: '',
+  profile: "",
+  cardNo: "",
+  bankDeposit: "",
+  cardUsername: "",
+  hot: "",
   bonus: 0,
   amountOfMonth: null,
-  avatar: '',
-  upperbodyPhoto: '',
-  phone: '',
+  avatar: "",
+  upperbodyPhoto: "",
+  phone: "",
   applicationId: 0,
   settlement: 0
 };
 
 const roleRowData = {
-  realName: '',
-  phone: '',
-  inviteCode: '',
+  realName: "",
+  phone: "",
+  inviteCode: "",
   doctorLevel: null,
   page: 1,
   rows: 10
@@ -493,7 +494,7 @@ export default {
     IViewUpload,
     BookTypeOption
   },
-  mixins: [tableMixin, uploadMixin],
+  mixins: [tableMixin, searchMixin, uploadMixin],
   data() {
     return {
       defaultListMain: [],
@@ -501,74 +502,74 @@ export default {
       defaultListSecond: [],
       uploadListSecond: [],
       ruleInline: {
-        realName: { required: true, message: '请填写姓名' },
-        phone: { required: true, message: '请填写电话号码' },
-        upperbodyPhoto: { required: true, message: '请上传半身照' },
-        photo: { required: true, message: '请上传职业照' },
-        doctorStatus: { required: true, message: '请选择鲜果师状态' },
-        doctorLevel: { required: true, message: '请选择鲜果师等级' },
-        hot: { required: true, message: '请选择明星鲜果师状态' },
-        jobTitle: { required: true, message: '请填写鲜果师头衔' }
+        realName: { required: true, message: "请填写姓名" },
+        phone: { required: true, message: "请填写电话号码" },
+        upperbodyPhoto: { required: true, message: "请上传半身照" },
+        photo: { required: true, message: "请上传职业照" },
+        doctorStatus: { required: true, message: "请选择鲜果师状态" },
+        doctorLevel: { required: true, message: "请选择鲜果师等级" },
+        hot: { required: true, message: "请选择明星鲜果师状态" },
+        jobTitle: { required: true, message: "请填写鲜果师头衔" }
       },
       columns: [
         {
-          title: '编号',
-          key: 'id',
+          title: "编号",
+          key: "id",
           sortable: true,
           width: 80,
-          fixed: 'left'
+          fixed: "left"
         },
         {
-          title: '姓名',
+          title: "姓名",
           width: 150,
-          key: 'realName'
+          key: "realName"
         },
         {
-          title: '手机号码',
+          title: "手机号码",
           width: 150,
-          key: 'phone'
+          key: "phone"
         },
         {
-          title: '邀请码',
+          title: "邀请码",
           width: 100,
-          key: 'inviteCode'
+          key: "inviteCode"
         },
         {
-          title: '鲜果师等级',
+          title: "鲜果师等级",
           width: 100,
-          key: 'doctorLevel',
+          key: "doctorLevel",
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{doctorLevelConvert(row.doctorLevel).label}</div>;
           }
         },
         {
-          title: '明星鲜果师',
+          title: "明星鲜果师",
           width: 100,
-          key: 'hot',
+          key: "hot",
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{hotConvert(row.hot).label}</div>;
           }
         },
         {
-          title: '状态',
+          title: "状态",
           width: 100,
-          key: 'doctorStatus',
+          key: "doctorStatus",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.doctorStatus === 'VALID') {
+            if (row.doctorStatus === "VALID") {
               return (
                 <div>
-                  <tag color='success'>
+                  <tag color="success">
                     {doctorStatusConvert(row.doctorStatus).label}
                   </tag>
                 </div>
               );
-            } else if (row.doctorStatus === 'INVALID') {
+            } else if (row.doctorStatus === "INVALID") {
               return (
                 <div>
-                  <tag color='error'>
+                  <tag color="error">
                     {doctorStatusConvert(row.doctorStatus).label}
                   </tag>
                 </div>
@@ -579,75 +580,75 @@ export default {
           }
         },
         {
-          title: '头衔',
+          title: "头衔",
           width: 200,
-          key: 'jobTitle'
+          key: "jobTitle"
         },
         {
-          title: '红利余额',
+          title: "红利余额",
           width: 180,
-          key: 'bonus',
+          key: "bonus",
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{fenToYuanDot2(row.bonus)}</div>;
           }
         },
         {
-          title: '可结算余额',
+          title: "可结算余额",
           width: 180,
-          key: 'settlement',
+          key: "settlement",
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{fenToYuanDot2(row.settlement)}</div>;
           }
         },
         {
-          title: '操作',
+          title: "操作",
           minWidth: 150,
-          key: 'handle',
-          fixed: 'right',
-          options: ['view', 'edit']
+          key: "handle",
+          fixed: "right",
+          options: ["view", "edit"]
         }
       ],
       modalViewLoading: false,
       clearSearchLoading: false,
       userStatus: [
         {
-          label: '培训中',
-          value: 'TRAINING'
+          label: "培训中",
+          value: "TRAINING"
         },
         {
-          label: '初级',
-          value: 'PRIMARY'
+          label: "初级",
+          value: "PRIMARY"
         },
         {
-          label: '中高级',
-          value: 'SENIOR'
+          label: "中高级",
+          value: "SENIOR"
         }
       ],
       doctorStatus: [
         {
-          label: '正常',
-          value: 'VALID'
+          label: "正常",
+          value: "VALID"
         },
         {
-          label: '已停用',
-          value: 'INVALID'
+          label: "已停用",
+          value: "INVALID"
         }
       ],
       hotStatus: [
         {
-          label: '明星鲜果师',
-          value: 'YES'
+          label: "明星鲜果师",
+          value: "YES"
         },
         {
-          label: '普通鲜果师',
-          value: 'NO'
+          label: "普通鲜果师",
+          value: "NO"
         }
       ],
       searchRowData: this._.cloneDeep(roleRowData),
       managerDetail: this._.cloneDeep(managerDetail),
-      exportType: 'xlsx',
+      exportType: "xlsx",
       downloadLoading: false
     };
   },
@@ -666,7 +667,7 @@ export default {
     },
     setDefaultUploadList(res) {
       if (res.photo != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.photo;
         mainImgArr.push(map);
@@ -674,7 +675,7 @@ export default {
         this.uploadListMain = mainImgArr;
       }
       if (res.upperbodyPhoto != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.upperbodyPhoto;
         mainImgArr.push(map);
@@ -705,7 +706,7 @@ export default {
         if (valid) {
           this.editTableRow();
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
     },
@@ -752,13 +753,13 @@ export default {
         const tableData = res.array;
         // 表格数据导出字段翻译
         tableData.forEach(item => {
-          item['id'] = item['id'] + '';
-          item['bonus'] = (item['bonus'] / 100.0).toFixed(2);
-          item['settlement'] = (item['settlement'] / 100.0).toFixed(2);
-          item['doctorLevel'] = doctorLevelConvert(item['doctorLevel']).label;
-          item['hot'] = hotConvert(item['hot']).label;
-          item['doctorStatus'] = doctorStatusConvert(
-            item['doctorStatus']
+          item["id"] = item["id"] + "";
+          item["bonus"] = (item["bonus"] / 100.0).toFixed(2);
+          item["settlement"] = (item["settlement"] / 100.0).toFixed(2);
+          item["doctorLevel"] = doctorLevelConvert(item["doctorLevel"]).label;
+          item["hot"] = hotConvert(item["hot"]).label;
+          item["doctorStatus"] = doctorStatusConvert(
+            item["doctorStatus"]
           ).label;
         });
         this.$refs.tables.handleDownload({

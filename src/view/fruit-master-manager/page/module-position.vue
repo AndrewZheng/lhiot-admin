@@ -114,8 +114,10 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
+import _ from 'lodash';
 import { getUiPosition, getuiPositionsPages } from '@/api/fruitermaster';
 import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 
 const uiPositionDetail = {
   applicationType: null,
@@ -138,7 +140,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin],
+  mixins: [tableMixin, searchMixin],
   data() {
     return {
       columnsAdvertisement: [

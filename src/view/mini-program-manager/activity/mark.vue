@@ -90,7 +90,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="handleBatchDel"
+            @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
@@ -152,10 +152,10 @@
           <i-col span="24">
             <Row>
               <i-col span="6">活动状态:</i-col>
-              <i-col v-if="couponDetail.status === 'ON'" span="18">
+              <i-col span="18" v-if="couponDetail.status === 'ON'">
                 <tag color="success">{{ "开启" | imageStatusFilter }}</tag>
               </i-col>
-              <i-col v-else-if="couponDetail.status === 'OFF'" span="18">
+              <i-col span="18" v-else-if="couponDetail.status === 'OFF'">
                 <tag color="error">{{ "关闭" | imageStatusFilter }}</tag>
               </i-col>
             </Row>
@@ -208,7 +208,7 @@
             <Row>
               <i-col span="18">
                 <FormItem label="活动开关:" prop="status">
-                  <Select v-model="couponDetail.status" clearable style="width: 200px">
+                  <Select v-model="couponDetail.status" clearable  style="width: 200px">
                     <Option
                       v-for="(item,index) in imageStatusEnum"
                       :value="item.value"
@@ -252,9 +252,9 @@
             </Row>
             <Row>
               <Col span="18">
-              <FormItem label="每人限购份数:" prop="userActivityLimit">
-                <Input v-model="couponDetail.userActivityLimit" style="width: 170px"></Input>
-              </FormItem>
+                <FormItem label="每人限购份数:" prop="userActivityLimit">
+                  <Input v-model="couponDetail.userActivityLimit" style="width: 170px"></Input>
+                </FormItem>
               </Col>
             </Row>
             <Row>
@@ -262,8 +262,8 @@
                 <FormItem label="活动描述:" prop="remark">
                   <Input
                     v-model="couponDetail.remark"
-                    :autosize="{minRows: 3,maxRows: 8}"
                     type="textarea"
+                    :autosize="{minRows: 3,maxRows: 8}"
                     placeholder="请输入活动描述"
                   ></Input>
                 </FormItem>
@@ -281,34 +281,34 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
-
+import Tables from "_c/tables";
+import IViewUpload from "_c/iview-upload";
+import _ from "lodash";
 import {
   deleteSeckill,
   getSeckillPages,
   editSeckill,
   createSeckill
-} from '@/api/mini-program';
-import uploadMixin from '@/mixins/uploadMixin';
-
-import tableMixin from '@/mixins/tableMixin.js';
-
-import { couponStatusConvert, imageStatusConvert } from '@/libs/converStatus';
-import { couponStatusEnum, imageStatusEnum } from '@/libs/enumerate';
-import { compareData, setSmallCouponActivity } from '@/libs/util';
+} from "@/api/mini-program";
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import { couponStatusConvert, imageStatusConvert } from "@/libs/converStatus";
+import { couponStatusEnum,imageStatusEnum} from "@/libs/enumerate";
+import { compareData, setSmallCouponActivity } from "@/libs/util";
 
 const couponDetail = {
   beginTime: null,
   createTime: null,
   endTime: null,
   id: 0,
-  remark: '',
-  status: '',
-  title: '',
+  remark: "",
+  status: "",
+  title: "",
   updateTime: null,
-  userActivityLimit: '',
-  userActivitySurplus: ''
+  userActivityLimit: "",
+  userActivitySurplus: ""
 };
 
 const roleRowData = {
@@ -324,14 +324,14 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [tableMixin, uploadMixin],
+  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
   data() {
     return {
       ruleInline: {
-        title: [{ required: true, message: '请输入活动名称' }],
-        status: [{ required: true, message: '请选择活动开关' }],
-        beginTime: [{ required: true, message: '请输入开始时间' }],
-        endTime: [{ required: true, message: '请输入结束时间' }]
+        title: [{ required: true, message: "请输入活动名称" }],
+        status: [{ required: true, message: "请选择活动开关" }],
+        beginTime: [{ required: true, message: "请输入开始时间" }],
+        endTime: [{ required: true, message: "请输入结束时间" }]
         // TODO 验证商城是否显示
       },
       defaultListMain: [],
@@ -341,53 +341,53 @@ export default {
       imageStatusEnum,
       columns: [
         {
-          type: 'selection',
+          type: "selection",
           width: 60,
-          align: 'center'
+          align: "center"
         },
         {
-          title: '活动ID',
-          align: 'center',
-          key: 'id'
+          title: "活动ID",
+          align: "center",
+          key: "id"
         },
         {
-          title: '活动标题',
-          align: 'center',
-          key: 'title'
+          title: "活动标题",
+          align: "center",
+          key: "title"
         },
         {
-          title: '开始时间',
-          align: 'center',
-          key: 'beginTime'
+          title: "开始时间",
+          align: "center",
+          key: "beginTime"
         },
         {
-          title: '结束时间',
-          align: 'center',
-          key: 'endTime'
+          title: "结束时间",
+          align: "center",
+          key: "endTime"
         },
         {
-          title: '修改时间',
-          align: 'center',
-          key: 'updateTime'
+          title: "修改时间",
+          align: "center",
+          key: "updateTime"
         },
         {
-          title: '活动状态',
-          align: 'center',
-          key: 'status',
+          title: "活动状态",
+          align: "center",
+          key: "status",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.status === 'ON') {
+            if (row.status === "ON") {
               return (
                 <div>
-                  <tag color='success'>
+                  <tag color="success">
                     {imageStatusConvert(row.status).label}
                   </tag>
                 </div>
               );
-            } else if (row.status === 'OFF') {
+            } else if (row.status === "OFF") {
               return (
                 <div>
-                  <tag color='error'>
+                  <tag color="error">
                     {imageStatusConvert(row.status).label}
                   </tag>
                 </div>
@@ -395,20 +395,20 @@ export default {
             }
             return (
               <div>
-                <tag color='primary'>{row.status ? row.status : 'N/A'}</tag>
+                <tag color="primary">{row.status ? row.status : "N/A"}</tag>
               </div>
             );
           }
         },
         {
-          title: '活动每人限购份数',
-          align: 'center',
-          key: 'userActivityLimit'
+          title: "活动每人限购份数",
+          align: "center",
+          key: "userActivityLimit"
         },
         {
-          title: '活动个人剩余份数',
-          align: 'center',
-          key: 'userActivitySurplus'
+          title: "活动个人剩余份数",
+          align: "center",
+          key: "userActivitySurplus"
         },
         // {
         //   title: "操作",
@@ -419,11 +419,11 @@ export default {
         //   options: ["onSale", "view", "edit", "settings"]
         // }
         {
-          title: '操作',
-          align: 'center',
+          title: "操作",
+          align: "center",
           minWidth: 80,
-          key: 'handle',
-          options: ['customOnSale', 'view', 'edit', 'delete', 'settings']
+          key: "handle",
+          options: ["customOnSale", "view", "edit", "delete", "settings"]
         }
       ],
       createLoading: false,
@@ -453,20 +453,20 @@ export default {
           if (
             compareData(this.couponDetail.beginTime, this.couponDetail.endTime)
           ) {
-            this.$Message.error('结束时间必须大于开始时间!');
+            this.$Message.error("结束时间必须大于开始时间!");
             return;
           }
           // 应用类型为小程序-WXSMALL_SHOP
-          this.couponDetail.applicationType = 'WXSMALL_SHOP';
-          if (this.isCreate) {
+          this.couponDetail.applicationType = "WXSMALL_SHOP";
+          if (this.tempModalType === this.modalType.create) {
             // 添加状态
             this.createSeckill();
-          } else if (this.isEdit) {
+          } else if (this.tempModalType === this.modalType.edit) {
             // 编辑状态
             this.editSeckill();
           }
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
     },
@@ -476,7 +476,7 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success('创建成功!');
+          this.$Message.success("创建成功!");
           this.getTableData();
         })
         .catch(() => {
@@ -564,10 +564,10 @@ export default {
     },
     onOff(params) {
       this.couponDetail = this._.cloneDeep(params.row);
-      if (params.row.status === 'ON') {
-        this.couponDetail.status = 'OFF';
+      if (params.row.status === "ON") {
+        this.couponDetail.status = "OFF";
       } else {
-        this.couponDetail.status = 'ON';
+        this.couponDetail.status = "ON";
       }
       this.loading = true;
       this.editSeckill();
@@ -582,10 +582,10 @@ export default {
     },
     handleSetting(params) {
       var rows = params.row;
-      console.log('shuju', rows)
+      console.log('shuju',rows)
       setSmallCouponActivity(rows);
       this.turnToPage({
-        name: 'small-activity-seckill'
+        name: "small-activity-seckill"
       });
     }
   }

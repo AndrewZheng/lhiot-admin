@@ -117,7 +117,7 @@
             confirm
             placement="bottom"
             article-title="您确认删除选中的内容吗?"
-            @on-ok="handleBatchDel"
+            @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash" /> 批量删除
@@ -220,7 +220,9 @@ import Tables from '_c/tables';
 import BookTypeOption from '_c/book-type-option';
 
 import { getArticlesPages, deleteArticle, editArticle } from '@/api/wholesale';
+import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 import { articleTypeEnum, createTypeEnum } from '@/libs/enumerate';
 import { articleTypeConvert, createTypeConvert } from '@/libs/converStatus';
@@ -265,7 +267,7 @@ export default {
     Tables,
     BookTypeOption
   },
-  mixins: [tableMixin, uploadMixin],
+  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
   data() {
     return {
       articleTypeEnum,

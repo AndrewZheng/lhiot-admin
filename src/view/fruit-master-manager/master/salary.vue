@@ -294,41 +294,43 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
+import Tables from "_c/tables";
+import _ from "lodash";
 import {
   getFruitDoctorsSettlementPagesPages,
   editFruitDoctorsSettlement,
   refundFruitDoctorsSettlement
-} from '@/api/fruitermaster';
-import tableMixin from '@/mixins/tableMixin.js';
-import { settlementStatusConvert } from '@/libs/converStatus';
-import { settlementStatusEnum, settlementStatus } from '@/libs/enumerate';
-import { fenToYuanDot2 } from '../../../libs/util';
-import BookTypeOption from '_c/book-type-option';
+} from "@/api/fruitermaster";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import { settlementStatusConvert } from "@/libs/converStatus";
+import { settlementStatusEnum, settlementStatus } from "@/libs/enumerate";
+import { fenToYuanDot2 } from "../../../libs/util";
+import BookTypeOption from "_c/book-type-option";
 
 const salaryDetail = {
   doctorId: 0,
-  createAt: '',
+  createAt: "",
   amount: 0,
-  cardNo: '',
+  cardNo: "",
   settlementStatus: null,
-  phone: '',
+  phone: "",
   beginCreateAt: null,
   endCreateAt: null,
-  realName: '',
-  dealAt: '',
-  bankDeposit: '',
-  cardUsername: ''
+  realName: "",
+  dealAt: "",
+  bankDeposit: "",
+  cardUsername: ""
 };
 
 const roleRowData = {
   amount: null,
-  beginCreateAt: '',
-  endCreateAt: '',
-  createAt: '',
-  dealAt: '',
+  beginCreateAt: "",
+  endCreateAt: "",
+  createAt: "",
+  dealAt: "",
   page: 1,
-  realName: '',
+  realName: "",
   rows: 10,
   settlementStatus: null
 };
@@ -338,70 +340,70 @@ export default {
     Tables,
     BookTypeOption
   },
-  mixins: [tableMixin],
+  mixins: [tableMixin, searchMixin],
   data() {
     return {
       columns: [
         {
-          title: 'ID',
-          key: 'id',
+          title: "ID",
+          key: "id",
           sortable: true,
           width: 80,
-          fixed: 'left'
+          fixed: "left"
         },
         {
-          title: '申请人',
-          key: 'realName',
+          title: "申请人",
+          key: "realName",
           width: 150
         },
         {
-          title: '手机号',
+          title: "手机号",
           width: 150,
-          key: 'phone'
+          key: "phone"
         },
         {
-          title: '提取金额',
+          title: "提取金额",
           width: 150,
-          key: 'amount',
+          key: "amount",
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{fenToYuanDot2(row.amount)}</div>;
           }
         },
         {
-          title: '结算状态',
+          title: "结算状态",
           width: 150,
-          key: 'settlementStatus',
+          key: "settlementStatus",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.settlementStatus === 'UNSETTLED') {
+            if (row.settlementStatus === "UNSETTLED") {
               return (
                 <div>
-                  <tag color='warning'>
+                  <tag color="warning">
                     {settlementStatusConvert(row.settlementStatus).label}
                   </tag>
                 </div>
               );
-            } else if (row.settlementStatus === 'SUCCESS') {
+            } else if (row.settlementStatus === "SUCCESS") {
               return (
                 <div>
-                  <tag color='success'>
+                  <tag color="success">
                     {settlementStatusConvert(row.settlementStatus).label}
                   </tag>
                 </div>
               );
-            } else if (row.settlementStatus === 'EXPIRED') {
+            } else if (row.settlementStatus === "EXPIRED") {
               return (
                 <div>
-                  <tag color='error'>
+                  <tag color="error">
                     {settlementStatusConvert(row.settlementStatus).label}
                   </tag>
                 </div>
               );
-            } else if (row.settlementStatus === 'REFUND') {
+            } else if (row.settlementStatus === "REFUND") {
               return (
                 <div>
-                  <tag color='primary'>
+                  <tag color="primary">
                     {settlementStatusConvert(row.settlementStatus).label}
                   </tag>
                 </div>
@@ -414,40 +416,40 @@ export default {
           }
         },
         {
-          title: '银行卡号',
+          title: "银行卡号",
           width: 180,
-          key: 'cardNo',
+          key: "cardNo",
           sortable: true
         },
         {
-          title: '申请时间',
+          title: "申请时间",
           width: 160,
-          key: 'createAt',
+          key: "createAt",
           sortable: true
         },
         {
-          title: '处理时间',
+          title: "处理时间",
           width: 160,
-          key: 'dealAt',
+          key: "dealAt",
           sortable: true
         },
         {
-          title: '操作',
+          title: "操作",
           minWidth: 150,
-          key: 'handle',
-          fixed: 'right',
-          options: ['view', 'settlementEdit', 'settlementRefund']
+          key: "handle",
+          fixed: "right",
+          options: ["view", "settlementEdit", "settlementRefund"]
         }
       ],
       userStatus: settlementStatusEnum,
       editStatus: [
-        { value: 'UNSETTLED', label: '未结算' },
-        { value: 'SUCCESS', label: '已结算' }
+        { value: "UNSETTLED", label: "未结算" },
+        { value: "SUCCESS", label: "已结算" }
       ],
       modalViewLoading: false,
       searchRowData: this._.cloneDeep(roleRowData),
       salaryDetail: this._.cloneDeep(salaryDetail),
-      exportType: 'xlsx',
+      exportType: "xlsx",
       downloadLoading: false
     };
   },
@@ -463,7 +465,7 @@ export default {
     },
     handleSubmit() {
       if (!this.salaryDetail.settlementStatus) {
-        this.$Message.warning('请选择结算状态');
+        this.$Message.warning("请选择结算状态");
         return;
       }
       this.editTableRow();
@@ -492,7 +494,7 @@ export default {
     handleEdit(params) {
       this.tempModalType = this.modalType.edit;
       if (params.row.settlementStatus === settlementStatus.EXPIRED) {
-        this.$Message.warning('已过期不能修改状态');
+        this.$Message.warning("已过期不能修改状态");
         return;
       }
       this.salaryDetail = this._.cloneDeep(params.row);
@@ -527,12 +529,12 @@ export default {
         const tableData = res.array;
         // 表格数据导出字段翻译
         tableData.forEach(item => {
-          item['id'] = item['id'] + '';
-          item['amount'] = (item['amount'] / 100.0).toFixed(2);
-          item['settlementStatus'] = settlementStatusConvert(
-            item['settlementStatus']
+          item["id"] = item["id"] + "";
+          item["amount"] = (item["amount"] / 100.0).toFixed(2);
+          item["settlementStatus"] = settlementStatusConvert(
+            item["settlementStatus"]
           ).label;
-          item['cardNo'] = item['cardNo'] + '';
+          item["cardNo"] = item["cardNo"] + "";
         });
         this.$refs.tables.handleDownload({
           filename: `薪资信息-${new Date().valueOf()}`,
