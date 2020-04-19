@@ -44,7 +44,7 @@
             style="width: 160px"
             @on-change="startTimeChange"
           />
-          <i>-</i>
+          <i> - </i>
           <DatePicker
             v-model="searchRowData.endCreateAt"
             format="yyyy-MM-dd HH:mm:ss"
@@ -69,7 +69,7 @@
             >{{ item.label }}</Option>
           </Select>
           <Button v-waves class="search-btn ml5 mr5" type="primary" @click="handleSearch">
-            <Icon type="md-search" />&nbsp;搜索
+            <Icon type="md-search"/>&nbsp;搜索
           </Button>
           <Button
             v-waves
@@ -78,7 +78,7 @@
             type="info"
             @click="handleClear"
           >
-            <Icon type="md-refresh" />&nbsp;清除条件
+            <Icon type="md-refresh"/>&nbsp;清除条件
           </Button>
         </div>
       </tables>
@@ -140,25 +140,25 @@
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
-            <i-col span="4">身份证正面照:</i-col>
+            <i-col span="4">身份证正面照: </i-col>
             <i-col span="20">
-              <img :src="masterDetail.idcardFront" style="width: 200px;height: auto" >
+              <img :src="masterDetail.idcardFront" style="width: 200px;height: auto">
             </i-col>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
-            <i-col span="4">身份证反面照:</i-col>
+            <i-col span="4">身份证反面照: </i-col>
             <i-col span="20">
-              <img :src="masterDetail.idcardReverse" style="width: 200px;height: auto" >
+              <img :src="masterDetail.idcardReverse" style="width: 200px;height: auto">
             </i-col>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
-            <i-col span="4">资质证明:</i-col>
+            <i-col span="4">资质证明: </i-col>
             <i-col span="20">
-              <img :src="masterDetail.credentials" style="width: 200px;height: auto" >
+              <img :src="masterDetail.credentials" style="width: 200px;height: auto">
             </i-col>
           </i-col>
         </Row>
@@ -233,11 +233,10 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import {
-  getFruitDoctorsQualificationsPages,
-  editFruitDoctorsQualification
-} from '@/api/fruitermaster';
+import _ from 'lodash';
+import { getFruitDoctorsQualificationsPages, editFruitDoctorsQualification } from '@/api/fruitermaster';
 import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 
 const masterDetail = {
   id: 1,
@@ -274,7 +273,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin],
+  mixins: [tableMixin, searchMixin],
   data() {
     return {
       ruleInline: {},
@@ -308,23 +307,11 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             if (row.auditStatus === 'UNAUDITED') {
-              return (
-                <div>
-                  <tag color='warning'>{'待审核'}</tag>
-                </div>
-              );
+              return <div><tag color='warning'>{'待审核'}</tag></div>;
             } else if (row.auditStatus === 'AGREE') {
-              return (
-                <div>
-                  <tag color='success'>{'审核通过'}</tag>
-                </div>
-              );
+              return <div><tag color='success'>{'审核通过'}</tag></div>;
             } else if (row.auditStatus === 'REJECT') {
-              return (
-                <div>
-                  <tag color='error'>{'审核不通过'}</tag>
-                </div>
-              );
+              return <div><tag color='error'>{'审核不通过'}</tag></div>;
             } else {
               return <div>{row.auditStatus}</div>;
             }
@@ -366,8 +353,7 @@ export default {
         {
           label: '审核不通过',
           value: 'REJECT'
-        }
-      ]
+        }]
     };
   },
   computed: {
@@ -409,14 +395,12 @@ export default {
         realName: this.masterDetail.realName,
         phone: this.masterDetail.phone,
         refereeId: this.masterDetail.refereeId
-      })
-        .then(res => {
-          this.getTableData();
-        })
-        .finally(res => {
-          this.modalView = false;
-          this.auditUserLoading = false;
-        });
+      }).then(res => {
+        this.getTableData();
+      }).finally(res => {
+        this.modalView = false;
+        this.auditUserLoading = false;
+      });
     },
     onAuditor(params) {
       this.tempModalType = this.modalType.edit;

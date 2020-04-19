@@ -11,7 +11,7 @@
     :before-upload="handleBeforeUpload"
     :multiple="multiple"
     type="drag"
-    action="https://resource.food-see.com/v1/upload/product_image"
+    :action="actionUrl"
     style="display: inline-block;width:auto;"
   >
     <slot name="content"></slot>
@@ -20,8 +20,25 @@
 
 <script type="text/ecmascript-6">
 export default {
+  data() {
+    return {
+      actionUrl: ""
+    };
+  },
   name: "IViewUpload",
   props: {
+    groupType: {
+      type: String
+    },
+    fileDir: {
+      type: String
+    },
+    appType: {
+      type: String
+    },
+    text: {
+      type: String
+    },
     maxNum: {
       type: Number,
       default: 3
@@ -50,6 +67,10 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  computed: {},
+  mounted: function() {
+    this.actionUrl = `http://172.16.10.185:8082/v2/upload?groupType=${this.groupType}&fileDir=${this.fileDir}&appType=${this.appType}`;
   },
   methods: {
     deleteFile(file) {
