@@ -29,18 +29,10 @@ class HttpRequest {
       response: this.responseType
     });
 
-    //删除图片
-    const delHttpOps = _.merge({}, defaultOps, {
-      baseURL: "http://172.16.10.185:8082",
-      response: this.responseType
-    });
-
     // 后端微服务有需求再扩展
     switch (this.centerType) {
       case 'IMS_SERVICE':
         return imsServiceOps;
-      case 'DEL_HTTP':
-        return delHttpOps;
       default:
         return defaultOps;
     }

@@ -385,10 +385,8 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
 import {
   deleteStore,
-  getStoreDetail,
   getStorePages,
   getStoreAreas,
   editStore,
@@ -396,11 +394,10 @@ import {
 } from '@/api/fruitermaster';
 import { buildMenu, convertTreeCategory } from '@/libs/util';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import { storeType, storeStatus, storeStatusEnum, storeTypeEnum, coordinateTypeEnum } from '../../../libs/enumerate';
-import { storeStatusConvert, storeTypeConvert, coordinateTypeConvert } from '../../../libs/converStatus';
+
+import { storeType, storeStatus, storeStatusEnum, storeTypeEnum, coordinateTypeEnum } from '@/libs/enumerate';
+import { storeStatusConvert, storeTypeConvert, coordinateTypeConvert } from '@/libs/converStatus';
 import { getDictionary } from '@/api/basic';
 
 const storeDetail = {
@@ -438,7 +435,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
       storeStatusEnum,
@@ -649,10 +646,10 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createStore();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.storeDetail.applicationType = this.storeDetail.applicationTypeBak.join(',');
             console.log('this.storeDetail.applicationType:' + JSON.stringify(this.storeDetail.applicationType));

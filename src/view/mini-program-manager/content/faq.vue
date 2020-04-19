@@ -82,7 +82,7 @@
                 placement="bottom"
                 style="width: 100px"
                 title="您确认删除选中的内容吗?"
-                @on-ok="poptipOk"
+                @on-ok="handleBatchDel"
               >
                 <Button type="error" class="mr5">
                   <Icon type="md-trash" />批量删除
@@ -227,39 +227,36 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
 import {
   createFaq,
   deleteFaq,
   getFaqPages,
   getFaqCategoriesTree,
   editFaq
-} from "@/api/mini-program";
-import { buildMenu, convertTree } from "@/libs/util";
-import CommonIcon from "_c/common-icon";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import { appTypeEnum } from "@/libs/enumerate";
-import { appTypeConvert } from "@/libs/converStatus";
+} from '@/api/mini-program';
+import { buildMenu, convertTree } from '@/libs/util';
+import CommonIcon from '_c/common-icon';
+import tableMixin from '@/mixins/tableMixin.js';
+import { appTypeEnum } from '@/libs/enumerate';
+import { appTypeConvert } from '@/libs/converStatus';
 
 const faq = {
   id: 0,
-  title: "",
-  content: "",
+  title: '',
+  content: '',
   faqCategoryId: 0,
   rankNo: 0,
   createTime: null,
-  createUser: "",
+  createUser: '',
   applicationType: null,
   createTimeBegin: null,
   createTimeEnd: null
 };
 
 const roleRowData = {
-  title: "",
-  content: "",
+  title: '',
+  content: '',
   applicationType: null,
   page: 1,
   rows: 10
@@ -270,105 +267,105 @@ export default {
     Tables,
     CommonIcon
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {
-        title: { required: true, message: "请输入FAQ标题" },
-        content: { required: true, message: "请输入FAQ内容" },
+        title: { required: true, message: '请输入FAQ标题' },
+        content: { required: true, message: '请输入FAQ内容' },
         rankNo: [
-          { required: true, message: "请输入序号" },
+          { required: true, message: '请输入序号' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[0-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为整数"));
+                errors.push(new Error('必须为整数'));
               }
               callback(errors);
             }
           }
         ],
-        applicationType: { required: true, message: "请选择应用类型" }
+        applicationType: { required: true, message: '请选择应用类型' }
       },
       menuData: [],
       appTypeEnum,
       columns: [
         {
-          type: "selection",
-          key: "",
+          type: 'selection',
+          key: '',
           width: 60,
-          align: "center",
-          fixed: "left"
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: "ID",
-          key: "id",
+          title: 'ID',
+          key: 'id',
           sortable: true,
-          align: "center",
+          align: 'center',
           minWidth: 80
         },
         {
-          title: "标题",
-          key: "title",
+          title: '标题',
+          key: 'title',
           sortable: true,
-          align: "center",
+          align: 'center',
           minWidth: 150
         },
         {
-          title: "内容",
-          key: "content",
+          title: '内容',
+          key: 'content',
           sortable: true,
-          align: "center",
+          align: 'center',
           minWidth: 150,
           tooltip: true
         },
         {
-          title: "FAQ分类ID",
-          key: "faqCategoryId",
-          align: "center",
+          title: 'FAQ分类ID',
+          key: 'faqCategoryId',
+          align: 'center',
           minWidth: 70
         },
         {
-          title: "序号",
-          key: "rankNo",
+          title: '序号',
+          key: 'rankNo',
           sortable: true,
-          align: "center",
+          align: 'center',
           minWidth: 50
         },
         {
-          title: "创建时间",
-          align: "center",
-          key: "createTime",
+          title: '创建时间',
+          align: 'center',
+          key: 'createTime',
           sortable: true,
           minWidth: 160
         },
         {
-          title: "创建人",
-          align: "center",
-          key: "createUser",
+          title: '创建人',
+          align: 'center',
+          key: 'createUser',
           sortable: true,
           minWidth: 80
         },
         {
-          title: "应用类型",
-          key: "applicationType",
+          title: '应用类型',
+          key: 'applicationType',
           sortable: true,
-          align: "center",
+          align: 'center',
           minWidth: 120,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.applicationType === "WXSMALL_SHOP") {
+            if (row.applicationType === 'WXSMALL_SHOP') {
               return (
                 <div>
-                  <tag color="green">
+                  <tag color='green'>
                     {appTypeConvert(row.applicationType).label}
                   </tag>
                 </div>
               );
-            } else if (row.applicationType === "S_MALL") {
+            } else if (row.applicationType === 'S_MALL') {
               return (
                 <div>
-                  <tag color="gold">
+                  <tag color='gold'>
                     {appTypeConvert(row.applicationType).label}
                   </tag>
                 </div>
@@ -379,17 +376,17 @@ export default {
           }
         },
         {
-          title: "操作",
-          align: "center",
-          key: "handle",
+          title: '操作',
+          align: 'center',
+          key: 'handle',
           minWidth: 120,
-          options: ["view", "edit", "delete"]
+          options: ['view', 'edit', 'delete']
         }
       ],
       modalEdit: false,
       modalViewLoading: false,
       modalEditLoading: false,
-      currentParentName: "",
+      currentParentName: '',
       currentParentId: 0,
       faq: this._.cloneDeep(faq),
       parentCategory: this._.cloneDeep(faq),
@@ -401,18 +398,18 @@ export default {
   },
   methods: {
     renderContent(h, { root, node, data }) {
-      if (data.type == "PARENT") {
+      if (data.type == 'PARENT') {
         return (
           <div
             style={{
-              display: "inline-block",
-              width: "100%",
-              fontSize: "14px",
-              cursor: "pointer"
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
             }}
           >
             <span>
-              <CommonIcon type="ios-folder" class="mr10" />
+              <CommonIcon type='ios-folder' class='mr10' />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -423,14 +420,14 @@ export default {
         return (
           <div
             style={{
-              display: "inline-block",
-              width: "100%",
-              fontSize: "14px",
-              cursor: "pointer"
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
             }}
           >
             <span>
-              <CommonIcon type="ios-paper" class="mr10" />
+              <CommonIcon type='ios-paper' class='mr10' />
             </span>
             <span>{data.title}</span>
           </div>
@@ -459,7 +456,7 @@ export default {
           } else {
             this.faq.faqCategoryId = this.parentCategory.id;
           }
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             createFaq(this.faq)
               .then(res => {})
               .finally(res => {
@@ -468,7 +465,7 @@ export default {
                 this.modalEdit = false;
                 this.resetFields();
               });
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             editFaq(this.faq)
               .then(res => {})
               .finally(res => {
@@ -479,7 +476,7 @@ export default {
               });
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -516,11 +513,11 @@ export default {
       this.loading = true;
       getFaqPages(this.searchRowData).then(res => {
         // if (this.menuData.length > 0) {
-          // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.clearSearchLoading = false;
+        // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
+        this.tableData = res.rows;
+        this.total = res.total;
+        this.loading = false;
+        this.clearSearchLoading = false;
         // }
       });
     },
@@ -528,14 +525,14 @@ export default {
     initMenuList() {
       getFaqCategoriesTree().then(res => {
         // if (res && res.array.length > 0) {
-          const menuList = buildMenu(res.array);
-          const map = {
-            title: "title",
-            children: "children"
-          };
-          this.menuData = convertTree(menuList, map, true);
-          // if (this.menuData.length > 0) {
-            this.getTableData();
+        const menuList = buildMenu(res.array);
+        const map = {
+          title: 'title',
+          children: 'children'
+        };
+        this.menuData = convertTree(menuList, map, true);
+        // if (this.menuData.length > 0) {
+        this.getTableData();
         //   }
         // }
       });
@@ -544,9 +541,9 @@ export default {
     handleClick({ root, node, data }) {
       this.loading = true;
       // 展开当前节点
-      if (typeof data.expand === "undefined") {
+      if (typeof data.expand === 'undefined') {
         // this.$set(data, 'expend', true);
-        this.$set(data, "expend", false);
+        this.$set(data, 'expend', false);
         // if (data.children) {
         if (data.children) {
           this.expandChildren(data.children);
@@ -563,9 +560,9 @@ export default {
     },
     expandChildren(array) {
       array.forEach(item => {
-        if (typeof item.expand === "undefined") {
+        if (typeof item.expand === 'undefined') {
           // this.$set(item, 'expend', true);
-          this.$set(item, "expend", false);
+          this.$set(item, 'expend', false);
           // } else {
         } else {
           item.expand = !item.expand;

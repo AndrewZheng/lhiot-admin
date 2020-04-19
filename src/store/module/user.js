@@ -154,7 +154,7 @@ const actions = {
     await dispatch('getUserInfo');
     await dispatch('getSystemList');
     let pid = 0;
-    if (PcLockr.get(enums.SYSTEM)) {
+    if (PcLockr.get(enums.SYSTEM) !== null) {
       const system = JSON.parse(PcLockr.get(enums.SYSTEM));
       pid = system.id;
     }

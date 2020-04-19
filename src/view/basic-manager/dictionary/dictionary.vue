@@ -271,7 +271,6 @@
 import Tables from '_c/tables';
 import {
   getDictionaryPages,
-  getDictionary,
   createDictionary,
   deleteDictionary,
   editDictionary,
@@ -280,8 +279,6 @@ import {
   editDictionaryEntry
 } from '@/api/basic';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 
 const dictionaryDetail = {
   children: [null],
@@ -401,7 +398,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {
@@ -530,10 +527,10 @@ export default {
       // return;
       this.$refs[name].validate(valid => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createTableRow();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editTableRow();
           }

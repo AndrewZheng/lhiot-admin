@@ -563,8 +563,7 @@ export const storeStatusEnum = [{
 // 门店类型：ORDINARY_STORE(普通门店),FLAGSHIP_STORE (旗舰店)
 export const storeType = {
   ORDINARY_STORE: 'ORDINARY_STORE',
-  FLAGSHIP_STORE: 'FLAGSHIP_STORE',
-  JOIN_STORE: 'JOIN_STORE'
+  FLAGSHIP_STORE: 'FLAGSHIP_STORE'
 };
 
 export const storeTypeEnum = [{
@@ -574,12 +573,7 @@ export const storeTypeEnum = [{
 {
   label: '旗舰店',
   value: storeType.FLAGSHIP_STORE
-},
-{
-  label: '加盟店',
-  value: storeType.JOIN_STORE
 }
-
 ];
 
 // GCJ02("高德坐标系/火星坐标系"),
@@ -2527,10 +2521,6 @@ export const wholesalePayTypeEnum = [{
 {
   label: '线下支付',
   value: 'offline'
-},
-{
-  label: '鼎富通',
-  value: 'haiding'
 }
 ]
 

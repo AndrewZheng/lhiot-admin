@@ -112,7 +112,48 @@ const fruitMasterRouter = [
       component: () => import('@/view/fruit-master-manager/goods/goods-on-sale.vue')
     }
     ]
-  }, {
+  },
+  {
+    path: '/fruit-master-goods-manager-goods-standard',
+    name: 'fruit-master-goods-manager-goods-standard',
+    meta: {
+      icon: 'md-menu',
+      title: '商品规格管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'goods-standard',
+        name: 'goods-standard',
+        meta: {
+          icon: 'md-menu',
+          title: '商品规格管理'
+        },
+        component: () => import('@/view/fruit-master-manager/goods/goods-standard.vue')
+      }
+    ]
+  },
+  {
+    path: '/fruit-master-goods-manager-goods-detail',
+    name: 'fruit-master-goods-manager-goods-detail',
+    meta: {
+      icon: 'md-menu',
+      title: '商品规格管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'goods-detail',
+        name: 'goods-detail',
+        meta: {
+          icon: 'md-menu',
+          title: '详情组合图片'
+        },
+        component: () => import('@/view/fruit-master-manager/goods/goods-detail.vue')
+      }
+    ]
+  },
+  {
     path: '/fruit-master-manager-content',
     name: 'fruit-master-manager-content',
     meta: {
@@ -128,6 +169,27 @@ const fruitMasterRouter = [
         title: '文章管理'
       },
       component: () => import('@/view/fruit-master-manager/content/article.vue')
+    },
+    {
+      path: '/fruit-master-content-article-edit',
+      name: 'fruit-master-content-article-edit',
+      meta: {
+        icon: 'md-menu',
+        title: '文章新增/编辑'
+      },
+      component: Main,
+      children: [
+        {
+          path: 'article-edit',
+          name: 'article-edit',
+          meta: {
+            icon: 'ios-list-box',
+            title: '文章新增/编辑',
+            hideInMenu: true
+          },
+          component: () => import('@/view/fruit-master-manager/content/edit-article.vue')
+        }
+      ]
     },
     {
       path: '/fruit-master-content-feedback',

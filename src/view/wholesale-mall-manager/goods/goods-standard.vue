@@ -129,20 +129,20 @@
           <Button v-waves class="search-btn ml5 mr5" type="success" @click="handleCreate">
             <Icon type="md-add" />&nbsp;添加
           </Button>
-          <Button
+          <!-- <Button
             :loading="downloadLoading"
             class="search-btn mr2"
             type="primary"
             @click="handleDownload"
           >
             <Icon type="md-download" />导出商品规格
-          </Button>
+          </Button> -->
           <!-- <Poptip
             confirm
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="poptipOk"
+            @on-ok="handleBatchDel"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
@@ -219,7 +219,7 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品主图:</i-col>
               <i-col span="16">
-                <img :src="productStandardDetail.goodsImage" width="100" height="100" />
+                <img :src="productStandardDetail.goodsImage" width="100" height="100" >
               </i-col>
             </Row>
           </i-col>
@@ -310,7 +310,7 @@
             <i-col span="12">
               <FormItem label="商品ID:" prop="goodsId">
                 <Input v-model="productStandardDetail.goodsId" readonly="readonly">
-                  <Button slot="append" icon="ios-search" @click="handleRelation"></Button>
+                <Button slot="append" icon="ios-search" @click="handleRelation"></Button>
                 </Input>
               </FormItem>
             </i-col>
@@ -329,7 +329,7 @@
           <Row>
             <i-col span="12">
               <FormItem v-if="productStandardDetail.goodsImage" label="商品主图:">
-                <img :src="productStandardDetail.goodsImage" width="100" height="100" />
+                <img :src="productStandardDetail.goodsImage" width="100" height="100" >
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -350,9 +350,8 @@
             </i-col>
           </Row>
           <Row>
-            <!-- 主图 ==== -->
-            <i-col span="12">
-              <FormItem label="上架商品主图:建议尺寸;690x690(单位:px):" prop="goodsImage">
+            <!-- <i-col span="12">
+              <FormItem label="上架商品主图:建议尺寸;750x750(单位:px):" prop="goodsImage">
                 <Input
                   v-show="false"
                   v-model="productStandardDetail.goodsImage"
@@ -366,7 +365,7 @@
                 >
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" />
+                      <img :src="item.url" >
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -382,9 +381,6 @@
                   :default-list="defaultListMain"
                   :image-size="imageSize"
                   :max-num="1"
-                  groupType="base_image"
-                  fileDir="product"
-                  appType="min_app"
                   @on-success="handleSuccessMain"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -392,56 +388,7 @@
                   </div>
                 </IViewUpload>
               </FormItem>
-            </i-col>
-            <!-- 详情图 ==== -->
-            <i-col span="12">
-              <FormItem label="商品详情(推荐宽度为750px，高度自适应):" prop="goodsImages">
-                <Input
-                  v-show="false"
-                  v-model="productStandardDetail.goodsImages"
-                  style="width: auto"
-                ></Input>
-                <div
-                  v-for="item in uploadListMultiple"
-                  :key="item.url"
-                  :v-show="productStandardDetail.goodsImages"
-                  class="demo-upload-list"
-                >
-                  <template v-if="item.status === 'finished'">
-                    <div>
-                      <img :src="item.url" />
-                      <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveMultiple(item)"></Icon>
-                      </div>
-                    </div>
-                  </template>
-                  <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                  </template>
-                </div>
-                <IViewUpload
-                  ref="uploadMultiple"
-                  :default-list="defaultListMultiple"
-                  :image-size="imageSize"
-                  :max-num="10"
-                  groupType="base_image"
-                  fileDir="product"
-                  appType="min_app"
-                  multiple
-                  @on-success="handleSuccessMultiple"
-                >
-                  <div slot="content" style="width:58px;height:58px;line-height:58px">
-                    <Icon type="ios-camera" size="20"></Icon>
-                  </div>
-                </IViewUpload>
-              </FormItem>
-            </i-col>
-          </Row>
-          <Row>
-            <i-col span="12" style="float:right">
-              <Button v-waves type="info" @click="modalSort = true">规格描述排序</Button>
-            </i-col>
+            </i-col>-->
           </Row>
           <Row>
             <i-col span="12">
@@ -545,27 +492,7 @@
         <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">确定</Button>
       </div>
     </Modal>
-    <Modal v-model="modalSort" :mask-closable="false" title="图片排序">
-      <p slot="header">
-        <span>图片排序</span>
-      </p>
-      <div class="modal-content">
-        <drag-list :list1.sync="uploadListMultiple" :drop-con-class="dropConClass" class="clearfix">
-          <img
-            slot="left"
-            slot-scope="left"
-            :src="left.itemLeft.url"
-            class="drag-item"
-            width="80"
-            height="80"
-          />
-        </drag-list>
-      </div>
-      <div slot="footer">
-        <Button @click="modalSort=false">关闭</Button>
-        <Button type="primary" @click="handleImgSort">确定</Button>
-      </div>
-    </Modal>
+
     <!-- 关联商品弹窗-->
     <Modal v-model="modalProduct" :width="1000" title="关联商品" footer-hide>
       <Card>
@@ -739,15 +666,15 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" />
+      <img :src="imgUploadViewItem" style="width: 100%" >
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import DragList from "_c/drag-list";
-import IViewUpload from "_c/iview-upload";
+import Tables from '_c/tables';
+import DragList from '_c/drag-list';
+import IViewUpload from '_c/iview-upload';
 import {
   getProductPages,
   getProductStandardsPages,
@@ -759,82 +686,78 @@ import {
   deleteGoodsPriceRegion,
   editProductStandard,
   editGoodsPriceRegion,
-  exporGoodsStandard,
-  deletePicture
-} from "@/api/wholesale";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+  exporGoodsStandard
+} from '@/api/wholesale';
+import uploadMixin from '@/mixins/uploadMixin';
+import tableMixin from '@/mixins/tableMixin.js';
 import {
   getWholesaleGoods,
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber
-} from "@/libs/util";
+} from '@/libs/util';
 import {
   customPlanStatusConvert,
   pfExpandTypeConvert
-} from "@/libs/converStatus";
-import { pfExpandTypeEnum } from "@/libs/enumerate";
+} from '@/libs/converStatus';
+import { pfExpandTypeEnum } from '@/libs/enumerate';
 
 const productStandardDetail = {
-  barCode: "",
-  unitName: "",
-  categoryName: "",
-  goodsCode: "",
+  barCode: '',
+  unitName: '',
+  categoryName: '',
+  goodsCode: '',
   goodsId: 0,
   goodsImage: null,
-  goodsImages: null,
-  goodsName: "",
+  goodsName: '',
   goodsPriceRegionList: [], // 商品价格区间
-  goodsUnit: "",
-  hdSkuId: "",
+  goodsUnit: '',
+  hdSkuId: '',
   id: null,
-  goodsType: "NORMAL",
-  netWeight: "", // 商品净重
+  goodsType: 'NORMAL',
+  netWeight: '', // 商品净重
   price: 0,
   purchasePrice: 0,
-  standard: "",
-  standardDesc: "",
-  standardGoodsName: "",
-  unitCode: "",
-  vaild: "",
+  standard: '',
+  standardDesc: '',
+  standardGoodsName: '',
+  unitCode: '',
+  vaild: '',
   weight: 0,
   rank: 0, // 先保留后续扩展
-  baseGoodsName: "", // 先保留可扩展
-  isHasPriceRegion: ""
+  baseGoodsName: '', // 先保留可扩展
+  isHasPriceRegion: ''
 };
 
 const roleRowData = {
-  goodsId: "",
-  barCode: "",
-  goodsCode: "",
-  goodsName: "",
-  vaild: "yes",
-  goodsType: "",
-  minPrice: "",
-  maxPrice: "",
+  goodsId: '',
+  barCode: '',
+  goodsCode: '',
+  goodsName: '',
+  vaild: 'yes',
+  goodsType: '',
+  minPrice: '',
+  maxPrice: '',
   page: 1,
   rows: 20,
-  isHasPriceRegion: ""
+  isHasPriceRegion: ''
 };
 
 const productDetail = {
   id: 0,
-  goodsCode: "",
-  goodsName: "",
-  goodsImage: "",
-  otherImage: "",
-  goodsImages: "",
-  goodsDes: "",
+  goodsCode: '',
+  goodsName: '',
+  goodsImage: '',
+  otherImage: '',
+  goodsImages: '',
+  goodsDes: '',
   unitCode: 0,
   categoryId: 0,
   stockLimit: 0,
-  baseBar: "",
-  baseUnit: "",
-  unitName: "",
-  categoryName: ""
+  baseBar: '',
+  baseUnit: '',
+  unitName: '',
+  categoryName: ''
 };
 
 const productRowData = {
@@ -859,161 +782,161 @@ const goodsPriceRegion = {
   maxQuantity: 0,
   price: 0,
   reorder: 0, // 排序
-  standardDes: "" // 价格区间描述
+  standardDes: '' // 价格区间描述
 };
 
 const standardColumns = [
   {
-    type: "selection",
-    key: "",
+    type: 'selection',
+    key: '',
     minWidth: 50,
-    align: "center",
-    fixed: "left"
+    align: 'center',
+    fixed: 'left'
   },
   {
-    title: "规格ID",
-    align: "center",
-    key: "id",
+    title: '规格ID',
+    align: 'center',
+    key: 'id',
     minWidth: 50
   },
   {
-    title: "商品条码",
-    align: "center",
-    key: "barCode",
+    title: '商品条码',
+    align: 'center',
+    key: 'barCode',
     minWidth: 70
   },
   {
-    title: "上架商品名称",
-    align: "center",
-    key: "standardGoodsName",
+    title: '上架商品名称',
+    align: 'center',
+    key: 'standardGoodsName',
     minWidth: 100
   },
   {
-    title: "商品图片",
-    key: "goodsImage",
-    align: "center",
+    title: '商品图片',
+    key: 'goodsImage',
+    align: 'center',
     minWidth: 120,
     render: (h, params, vm) => {
       const { row } = params;
-      const str = <img src={row.goodsImage} height="60" width="60" />;
+      const str = <img src={row.goodsImage} height='60' width='60' />;
       return <div>{str}</div>;
     }
   },
   {
-    title: "商品规格",
-    align: "center",
-    key: "standard",
+    title: '商品规格',
+    align: 'center',
+    key: 'standard',
     minWidth: 80
   },
   {
-    title: "商品单位",
-    align: "center",
+    title: '商品单位',
+    align: 'center',
     minWidth: 80,
-    key: "goodsUnit"
+    key: 'goodsUnit'
   },
   {
-    title: "商品价格",
-    align: "center",
+    title: '商品价格',
+    align: 'center',
     minWidth: 60,
-    key: "price",
+    key: 'price',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
     }
   },
   {
-    title: "进货价",
-    align: "center",
+    title: '进货价',
+    align: 'center',
     minWidth: 60,
-    key: "purchasePrice",
+    key: 'purchasePrice',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.purchasePrice);
       return <div>{amount}</div>;
     }
   },
   {
-    title: "商品类型",
+    title: '商品类型',
     minWidth: 80,
-    key: "goodsType",
-    align: "center",
+    key: 'goodsType',
+    align: 'center',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.goodsType == "NORMAL") {
+      if (row.goodsType == 'NORMAL') {
         return (
           <div>
-            <tag color="cyan">{pfExpandTypeConvert(row.goodsType).label}</tag>
+            <tag color='cyan'>{pfExpandTypeConvert(row.goodsType).label}</tag>
           </div>
         );
-      } else if (row.goodsType == "VIP") {
+      } else if (row.goodsType == 'VIP') {
         return (
           <div>
-            <tag color="orange">{pfExpandTypeConvert(row.goodsType).label}</tag>
+            <tag color='orange'>{pfExpandTypeConvert(row.goodsType).label}</tag>
           </div>
         );
-      } else if (row.goodsType == "FLASHSALE") {
+      } else if (row.goodsType == 'FLASHSALE') {
       }
       return (
         <div>
-          <tag color="blue">{pfExpandTypeConvert(row.goodsType).label}</tag>
+          <tag color='blue'>{pfExpandTypeConvert(row.goodsType).label}</tag>
         </div>
       );
       return (
         <div>
-          <tag color="primary">N/A</tag>
-        </div>
-      );
-    }
-  },
-  {
-    title: "商品状态",
-    minWidth: 80,
-    key: "vaild",
-    align: "center",
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (row.vaild === "yes") {
-        return (
-          <div>
-            <tag color="success">上架</tag>
-          </div>
-        );
-      } else if (row.vaild === "no") {
-        return (
-          <div>
-            <tag color="error">下架</tag>
-          </div>
-        );
-      }
-      return (
-        <div>
-          <tag color="primary">N/A</tag>
+          <tag color='primary'>N/A</tag>
         </div>
       );
     }
   },
   {
-    title: "是否有区间价",
+    title: '商品状态',
     minWidth: 80,
-    key: "isHasPriceRegion",
-    align: "center",
+    key: 'vaild',
+    align: 'center',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.isHasPriceRegion === "yes") {
+      if (row.vaild === 'yes') {
         return (
           <div>
-            <tag color="success">有</tag>
+            <tag color='success'>上架</tag>
           </div>
         );
-      } else if (row.isHasPriceRegion === "no") {
+      } else if (row.vaild === 'no') {
         return (
           <div>
-            <tag color="error">无</tag>
+            <tag color='error'>下架</tag>
           </div>
         );
       }
       return (
         <div>
-          <tag color="primary">N/A</tag>
+          <tag color='primary'>N/A</tag>
+        </div>
+      );
+    }
+  },
+  {
+    title: '是否有区间价',
+    minWidth: 80,
+    key: 'isHasPriceRegion',
+    align: 'center',
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.isHasPriceRegion === 'yes') {
+        return (
+          <div>
+            <tag color='success'>有</tag>
+          </div>
+        );
+      } else if (row.isHasPriceRegion === 'no') {
+        return (
+          <div>
+            <tag color='error'>无</tag>
+          </div>
+        );
+      }
+      return (
+        <div>
+          <tag color='primary'>N/A</tag>
         </div>
       );
     }
@@ -1025,71 +948,71 @@ const standardColumns = [
   //   key: "rank"
   // },
   {
-    title: "操作",
-    align: "center",
+    title: '操作',
+    align: 'center',
     minWidth: 180,
-    key: "handle",
-    options: ["customOnSale", "view", "edit", "discount"]
+    key: 'handle',
+    options: ['customOnSale', 'view', 'edit', 'discount']
   }
 ];
 
 const productColumns = [
   {
-    title: "商品图片",
-    key: "goodsImage",
-    align: "center",
+    title: '商品图片',
+    key: 'goodsImage',
+    align: 'center',
     minWidth: 120,
     render: (h, params, vm) => {
       const { row } = params;
-      const str = <img src={row.goodsImage} height="60" width="60" />;
+      const str = <img src={row.goodsImage} height='60' width='60' />;
       return <div>{str}</div>;
     }
   },
   {
-    title: "基础条码",
-    align: "center",
+    title: '基础条码',
+    align: 'center',
     sortable: true,
-    key: "baseBar",
+    key: 'baseBar',
     minWidth: 80
   },
   {
-    title: "商品名称",
-    align: "center",
+    title: '商品名称',
+    align: 'center',
     sortable: true,
-    key: "goodsName",
+    key: 'goodsName',
     minWidth: 120
   },
   {
-    title: "商品类别",
-    align: "center",
-    key: "categoryName",
+    title: '商品类别',
+    align: 'center',
+    key: 'categoryName',
     minWidth: 120
   },
   {
-    title: "基础单位",
-    align: "center",
+    title: '基础单位',
+    align: 'center',
     minWidth: 90,
-    key: "unitName"
+    key: 'unitName'
   }
 ];
 
 const goodsPriceRegionColumns = [
   {
-    type: "selection",
-    key: "",
+    type: 'selection',
+    key: '',
     minWidth: 40,
-    align: "center"
+    align: 'center'
   },
   {
-    title: "规格ID",
-    align: "center",
-    key: "goodsStandardId",
+    title: '规格ID',
+    align: 'center',
+    key: 'goodsStandardId',
     minWidth: 40
   },
   {
-    title: "商品价格",
-    key: "price",
-    align: "center",
+    title: '商品价格',
+    key: 'price',
+    align: 'center',
     minWidth: 100,
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
@@ -1097,35 +1020,35 @@ const goodsPriceRegionColumns = [
     }
   },
   {
-    title: "最低购买数量",
-    align: "center",
-    key: "minQuantity",
+    title: '最低购买数量',
+    align: 'center',
+    key: 'minQuantity',
     minWidth: 120
   },
   {
-    title: "最高购买数量",
-    align: "center",
-    key: "maxQuantity",
+    title: '最高购买数量',
+    align: 'center',
+    key: 'maxQuantity',
     minWidth: 120
   },
   {
-    title: "排序",
-    align: "center",
-    key: "reorder",
+    title: '排序',
+    align: 'center',
+    key: 'reorder',
     minWidth: 80
   },
   {
-    title: "规格数量描述",
-    align: "center",
-    key: "standardDes",
+    title: '规格数量描述',
+    align: 'center',
+    key: 'standardDes',
     minWidth: 150
   },
   {
-    title: "操作",
-    align: "center",
+    title: '操作',
+    align: 'center',
     minWidth: 200,
-    key: "handle",
-    options: ["delete", "edit"]
+    key: 'handle',
+    options: ['delete', 'edit']
   }
 ];
 
@@ -1135,28 +1058,21 @@ export default {
     IViewUpload,
     DragList
   },
-  mixins: [uploadMixin, deleteMixin, searchMixin, tableMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
       templatePageOpts: [20, 50],
       hasPriceRegionList: [
-        { label: "有", value: "no" },
-        { label: "无", value: "yes" }
+        { label: '有', value: 'no' },
+        { label: '无', value: 'yes' }
       ],
       productTotal: 0,
       downloadLoading: false,
       regionTotal: 0,
       unitsList: [],
-      productDetailsList: [],
-      productDetailsList: [],
-      defaultListMultiple: [],
-      oldPicture: [],
-      newPicture: [],
-      save: [],
-      // ====
-      uploadListMain: [],
+      descriptionList: [],
       defaultListMain: [],
-      uploadListMultiple: [],
+      uploadListMain: [],
       productData: [],
       priceRegionData: [],
       tableDataSelected: [],
@@ -1184,75 +1100,75 @@ export default {
       searchMaxPrice: null,
       currentTableRowSelected: null,
       dropConClass: {
-        left: ["drop-box", "left-drop-box"],
-        right: ["drop-box", "right-drop-box"]
+        left: ['drop-box', 'left-drop-box'],
+        right: ['drop-box', 'right-drop-box']
       },
       vipEnum: [
         {
-          label: "是",
-          value: "yes"
+          label: '是',
+          value: 'yes'
         },
         {
-          label: "否",
-          value: "no"
+          label: '否',
+          value: 'no'
         }
       ],
       vaild: [
         {
-          label: "上架",
-          value: "yes"
+          label: '上架',
+          value: 'yes'
         },
         {
-          label: "下架",
-          value: "no"
+          label: '下架',
+          value: 'no'
         }
       ],
       ruleInlineRegion: {
         goodsStandardId: [
-          { required: true, message: "请先选择规格商品" },
+          { required: true, message: '请先选择规格商品' },
           {
-            message: "请先选择规格商品",
+            message: '请先选择规格商品',
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
         price: [
-          { required: true, message: "请输入商品价格" },
+          { required: true, message: '请输入商品价格' },
           {
-            message: "必须为大于0的数字",
+            message: '必须为大于0的数字',
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
         reorder: [
-          { required: false, message: "请输入商品排序" },
+          { required: false, message: '请输入商品排序' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
+                errors.push(new Error('必须为非零整数'));
               }
               callback(errors);
             }
           }
         ],
         minQuantity: [
-          { required: true, message: "请输入最低购买数量" },
+          { required: true, message: '请输入最低购买数量' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[0-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
+                errors.push(new Error('必须为非零整数'));
               }
               callback(errors);
             }
           }
         ],
         maxQuantity: [
-          { required: true, message: "请输入最高购买数量" },
+          { required: true, message: '请输入最高购买数量' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[0-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
+                errors.push(new Error('必须为非零整数'));
               }
               callback(errors);
             }
@@ -1261,35 +1177,34 @@ export default {
       },
       ruleInline: {
         goodsId: [
-          { required: true, message: "请选择关联商品" },
+          { required: true, message: '请选择关联商品' },
           {
-            message: "请选择要关联的商品",
+            message: '请选择要关联的商品',
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
-        isVip: [{ required: true, message: "请选择商品的类型" }],
-        standardGoodsName: [{ required: true, message: "请输入上架商品名称" }],
-        goodsImage: [{ required: true, message: "请上传上架商品主图" }],
-        goodsImages: [{ required: true, message: "请上传上架商品详情图" }],
-        unitCode: [{ required: true, message: "请选择商品单位" }],
-        vaild: [{ required: true, message: "请选择商品状态" }],
-        standard: [{ required: true, message: "请输入商品规格" }],
-        standardDesc: [{ required: true, message: "请输入规格描述" }],
+        isVip: [{ required: true, message: '请选择商品的类型' }],
+        standardGoodsName: [{ required: true, message: '请输入上架商品名称' }],
+        // goodsImage: [{ required: true, message: '请上传上架商品主图' }],
+        unitCode: [{ required: true, message: '请选择商品单位' }],
+        vaild: [{ required: true, message: '请选择商品状态' }],
+        standard: [{ required: true, message: '请输入商品规格' }],
+        standardDesc: [{ required: true, message: '请输入规格描述' }],
         price: [
-          { required: true, message: "请输入商品价格" },
+          { required: true, message: '请输入商品价格' },
           {
-            message: "必须为大于0的数字",
+            message: '必须为大于0的数字',
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
         purchasePrice: [
-          { required: true, message: "请输入商品进货价" },
+          { required: true, message: '请输入商品进货价' },
           {
-            message: "必须为大于0的数字",
+            message: '必须为大于0的数字',
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
-        barCode: [{ required: true, message: "请输入商品条码" }],
+        barCode: [{ required: true, message: '请输入商品条码' }],
         // rank: [
         //   { required: false, message: "请输入商品排序" },
         //   {
@@ -1303,12 +1218,12 @@ export default {
         //   }
         // ],
         weight: [
-          { required: true, message: "请输入重量" },
+          { required: true, message: '请输入重量' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/.test(value)) {
-                errors.push(new Error("必须为大于0的数字"));
+                errors.push(new Error('必须为大于0的数字'));
               }
               callback(errors);
             }
@@ -1341,7 +1256,7 @@ export default {
     }
   },
   created() {
-    this.showBack = this.$route.name === "wholesale-goods-relation-standard";
+    this.showBack = this.$route.name === 'wholesale-goods-relation-standard';
     this.getTableData();
   },
   mounted() {
@@ -1370,7 +1285,7 @@ export default {
     // 数据查询
     getTableData() {
       // 获取基础商品页面传过来的商品信息
-      if (this.$route.name === "wholesale-goods-relation-standard") {
+      if (this.$route.name === 'wholesale-goods-relation-standard') {
         const goods = getWholesaleGoods();
         if (goods) {
           // 给商品规格的商品和搜索条件赋值
@@ -1428,7 +1343,7 @@ export default {
     getProductUnits() {
       getProductUnits().then(res => {
         res.forEach(value => {
-          const map = { label: "label", value: "value" };
+          const map = { label: 'label', value: 'value' };
           map.value = value.unitCode;
           map.label = value.unitName;
           this.unitsList.push(map);
@@ -1443,7 +1358,7 @@ export default {
         ...this.goodsPriceRegion
       })
         .then(res => {
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getPriceRegionTableData();
         })
         .finally(() => {
@@ -1457,7 +1372,7 @@ export default {
         ...this.goodsPriceRegion
       })
         .then(res => {
-          this.$Message.success("修改成功");
+          this.$Message.success('修改成功');
           this.getPriceRegionTableData();
         })
         .finally(() => {
@@ -1471,7 +1386,7 @@ export default {
         ...this.productStandardDetail
       })
         .then(res => {
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .finally(() => {
@@ -1485,7 +1400,7 @@ export default {
         ...this.productStandardDetail
       })
         .then(res => {
-          this.$Message.success("修改成功");
+          this.$Message.success('修改成功');
           this.getTableData();
         })
         .finally(() => {
@@ -1546,13 +1461,9 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
-      this.save = [];
-      this.save.push(params.row.image);
       this.tempModalType = this.modalType.edit;
-      this.uploadListMain = [];
-      this.uploadListMultiple = [];
-      this.setDefaultUploadList(params.row);
       this.productStandardDetail = _.cloneDeep(params.row);
+      // this.setDefaultUploadList(params.row);
       this.$refs.editForm.resetFields();
       this.modalEdit = true;
     },
@@ -1569,7 +1480,6 @@ export default {
     handleCreate() {
       if (this.tempModalType !== this.modalType.create) {
         this.uploadListMain = [];
-        this.uploadListMultiple = [];
         this.$refs.editForm.resetFields();
         this.productStandardDetail = _.cloneDeep(productStandardDetail);
       }
@@ -1578,27 +1488,10 @@ export default {
         this.productStandardDetail = _.cloneDeep(this.currentTableRowSelected);
       }
       this.tempModalType = this.modalType.create;
+      // this.setDefaultUploadList(this.productStandardDetail);
       this.modalEdit = true;
     },
-    handleImgSort() {
-      this.descriptionList = [];
-      this.uploadListMultiple.forEach(item => {
-        if (item.url) {
-          this.descriptionList.push(item.url);
-        }
-      });
-      this.productStandardDetail.goodsImages = "";
-      this.productStandardDetail.goodsImages = this.descriptionList.join(",");
-      console.log("after sort:", this.productStandardDetail.goodsImages);
-      this.modalSort = false;
-    },
     handleSubmit() {
-      if (this.oldPicture.length > 0) {
-        let urls = {
-          urls: this.oldPicture
-        };
-        this.deletePicture(urls);
-      }
       this.$refs.editForm.validate(valid => {
         if (valid) {
           if (this.isCreate) {
@@ -1607,30 +1500,9 @@ export default {
             this.editProductStandard();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
-    },
-    handleEditClose() {
-      if (this.newPicture.length > 0) {
-        let urls = {
-          urls: this.newPicture
-        };
-        this.deletePicture(urls);
-      }
-      this.modalEdit = false;
-      this.oldPicture = [];
-      this.newPicture = [];
-    },
-    deletePicture(urls) {
-      deletePicture({
-        urls
-      })
-        .then(res => {
-          this.newPicture = [];
-          this.oldPicture = [];
-        })
-        .catch(() => {});
     },
     handleSubmitRegin() {
       // 把规格ID赋值给goodsPriceRegion  goodsPriceRegion.maxQuantity minQuantity
@@ -1638,7 +1510,7 @@ export default {
       this.$refs.editRegionForm.validate(valid => {
         if (valid) {
           if (this.goodsPriceRegion.price > this.productStandardDetail.price) {
-            this.$Message.error("区间价不能高于商品原价!");
+            this.$Message.error('区间价不能高于商品原价!');
             return;
           }
           // if (
@@ -1648,7 +1520,7 @@ export default {
           //   this.$Message.error("最高起购份数不能小于最低起购份数!");
           //   return;
           // }
-          //后期发版 屏蔽最高购买份数
+          // 后期发版 屏蔽最高购买份数
           // if (this.priceRegionData.length > 0) {
           //   for (let i = 0; i < this.priceRegionData.length; i++) {
           //     if (
@@ -1666,17 +1538,17 @@ export default {
             this.editPriceRegion();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
     handlePublish(params) {
       const rowData = _.cloneDeep(params.row);
-      rowData.vaild = rowData.vaild === "yes" ? "no" : "yes";
+      rowData.vaild = rowData.vaild === 'yes' ? 'no' : 'yes';
       this.loading = true;
       editProductStandard(rowData)
         .then(res => {
-          this.$Message.success("操作成功!");
+          this.$Message.success('操作成功!');
           this.getTableData();
         })
         .finally(res => {
@@ -1685,14 +1557,14 @@ export default {
     },
     handleBatchDel() {
       if (this.regionTableDataSelected.length < 1) {
-        this.$Message.warning("请选中要删除的行");
+        this.$Message.warning('请选中要删除的行');
         return;
       }
       const tempDeleteList = [];
       this.regionTableDataSelected.filter(value => {
         tempDeleteList.push(value.id);
       });
-      const strTempDelete = tempDeleteList.join(",");
+      const strTempDelete = tempDeleteList.join(',');
       this.deleteRegionTable(strTempDelete);
     },
     handleRegin(params) {
@@ -1700,10 +1572,10 @@ export default {
       this.productStandardDetail = _.cloneDeep(params.row);
       this.priceRegionRowData.goodsStandardId = this.productStandardDetail.id;
       if (
-        this.productStandardDetail.goodsType === "VIP" ||
-        this.productStandardDetail.goodsType === "FLASHSALE"
+        this.productStandardDetail.goodsType === 'VIP' ||
+        this.productStandardDetail.goodsType === 'FLASHSALE'
       ) {
-        this.$Message.warning("活动商品不允许添加区间价");
+        this.$Message.warning('活动商品不允许添加区间价');
         return;
       }
       this.getPriceRegionTableData();
@@ -1774,9 +1646,8 @@ export default {
       // 给要关联的规格信息设置默认值，用户可以选择修改
       this.productStandardDetail.standardGoodsName = row.goodsName;
       this.productStandardDetail.goodsImage = row.goodsImage;
-      this.productStandardDetail.goodsImages = row.goodsImages;
-      this.productStandardDetail.vaild = "no"; // 默认是未上架的
-      this.setDefaultUploadList(this.productStandardDetail);
+      this.productStandardDetail.vaild = 'no'; // 默认是未上架的
+      // this.setDefaultUploadList(this.productStandardDetail);
       this.modalProduct = false;
     },
     // 导出
@@ -1791,24 +1662,24 @@ export default {
     },
     handleDown(tableData) {
       exporGoodsStandard({
-        exportType: "GOODS_STANDARD"
+        exportType: 'GOODS_STANDARD'
       }).then(res => {
         const tableColumns = res;
         // 表格数据导出字段翻译
         const _this = this;
         tableData.forEach(item => {
-          item["price"] = (item["price"] / 100.0).toFixed(2);
-          item["salePrice"] = (item["salePrice"] / 100.0).toFixed(2);
-          item["svipPrice"] = (item["svipPrice"] / 100.0).toFixed(2);
-          if (item["vaild"] === "yes") {
-            item["vaild"] = "上架";
+          item['price'] = (item['price'] / 100.0).toFixed(2);
+          item['salePrice'] = (item['salePrice'] / 100.0).toFixed(2);
+          item['svipPrice'] = (item['svipPrice'] / 100.0).toFixed(2);
+          if (item['vaild'] === 'yes') {
+            item['vaild'] = '上架';
           } else {
-            item["vaild"] = "下架";
+            item['vaild'] = '下架';
           }
-          if (item["goodsArea"] === "domestic") {
-            item["goodsArea"] = "国产";
-          } else if (item["goodsArea"] === "imported") {
-            item["goodsArea"] = "进口";
+          if (item['goodsArea'] === 'domestic') {
+            item['goodsArea'] = '国产';
+          } else if (item['goodsArea'] === 'imported') {
+            item['goodsArea'] = '进口';
           }
         });
         this.$refs.tables.handleCustomDownload({
@@ -1818,8 +1689,29 @@ export default {
         });
       });
     },
+    // 图片上传相关函数
+    handleSuccessMain(response, file, fileList) {
+      this.uploadListMain = fileList;
+      this.productStandardDetail.goodsImage = null;
+      this.productStandardDetail.goodsImage = fileList[0].url;
+    },
+    handleRemoveMain(file) {
+      this.$refs.uploadMain.deleteFile(file);
+      this.productStandardDetail.goodsImage = null;
+    },
+    // setDefaultUploadList(res) {
+    //   if (res.goodsImage != null) {
+    //     const map = { status: 'finished', url: 'url' };
+    //     const mainImgArr = [];
+    //     map.url = res.goodsImage;
+    //     mainImgArr.push(map);
+    //     this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+    //     this.uploadListMain = mainImgArr;
+    //   }
+    // },
+    // 其他函数
     goBack() {
-      this.turnToPage("wholesale-goods-info");
+      this.turnToPage('wholesale-goods-info');
     },
     findUnit(unitCode) {
       if (this.unitsList != null) {
@@ -1828,80 +1720,6 @@ export default {
           return obj.label;
         }
       }
-    },
-    resetFields() {
-      // 表单重置
-      this.$refs.editForm.resetFields();
-      // 图片上传列表清除
-      this.uploadListMain = [];
-      this.uploadListMultiple = [];
-    },
-    // 上架商品主图
-    handleSuccessMain(response, file, fileList) {
-      this.uploadListMain = fileList;
-      this.productStandardDetail.goodsImage = null;
-      this.productStandardDetail.goodsImage = fileList[0].url;
-      this.newPicture.push(fileList[0].url);
-      this.oldPicture = this.save;
-    },
-    // 上架规格描述图
-    handleSuccessMultiple(response, file, fileList) {
-      this.uploadListMultiple = fileList;
-      this.productDetailsList = [];
-      fileList.forEach(value => {
-        if (value.url) {
-          this.productDetailsList.push(value.url);
-        }
-      });
-      this.productStandardDetail.goodsImages = "";
-      this.productStandardDetail.goodsImages = this.productDetailsList.join(
-        ","
-      );
-      this.newPicture.push(response.fileUrl);
-      console.log(this.productStandardDetail.goodsImages);
-      console.log(JSON.stringify(this.productStandardDetail.goodsImages));
-    },
-    handleRemoveMultiple(file) {
-      this.$refs.uploadMultiple.deleteFile(file);
-      const index = this.productDetailsList.indexOf(file.url);
-      if (index > -1) {
-        this.oldPicture.push(this.descriptionList[index]);
-        this.productDetailsList.splice(index, 1);
-        this.productStandardDetail.goodsImages = this.productDetailsList.join(
-          ","
-        );
-      }
-      if (this.productDetailsList.length === 0) {
-        this.$refs.uploadMultiple.clearFileList();
-        this.productDetailsList = [];
-        this.productStandardDetail.goodsImages = null;
-      }
-    },
-    // 设置编辑图片列表
-    setDefaultUploadList(res) {
-      if (res.goodsImage != null) {
-        const map = { status: "finished", url: "url" };
-        const mainImgArr = [];
-        map.url = res.goodsImage;
-        mainImgArr.push(map);
-        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
-        this.uploadListMain = mainImgArr;
-      }
-      if (res.goodsImages != null) {
-        const descriptionImgArr = [];
-        const descriptionArr = res.goodsImages.split(",");
-        descriptionArr.forEach(value => {
-          const innerMapDetailImg = { status: "finished", url: "url" };
-          innerMapDetailImg.url = value;
-          descriptionImgArr.push(innerMapDetailImg);
-        });
-        this.$refs.uploadMultiple.setDefaultFileList(descriptionImgArr);
-        this.uploadListMultiple = descriptionImgArr;
-      }
-    },
-    handleRemoveMain(file) {
-      this.$refs.uploadMain.deleteFile(file);
-      this.productStandardDetail.goodsImage = null;
     }
   }
 };

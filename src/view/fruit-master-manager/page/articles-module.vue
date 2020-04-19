@@ -54,7 +54,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="poptipOk"
+            @on-ok="handleBatchDel"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash"/>删除
@@ -224,7 +224,7 @@
         </Button>
       </div>
     </Modal>
-    
+
     <Modal v-model="uploadVisible" title="View Image">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
@@ -244,9 +244,7 @@ import {
   addArticleSectionRelation,
   deleteArticleSectionRelationBatch
 } from '@/api/fruitermaster';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 import IViewUpload from '_c/iview-upload';
 import { positionType, YNEnum } from '@/libs/enumerate';
@@ -335,7 +333,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
       selectDisable: true,
@@ -483,7 +481,7 @@ export default {
       });
     },
     modalHandleDelete(params) {
-      if (this.tempModalType === this.modalType.create) {
+      if (this.isCreate) {
         this.articlesModuleDetail.articleList = this.articlesModuleDetail.articleList.filter((item, index) =>
           index !== params.row.initRowIndex
         );
@@ -518,7 +516,7 @@ export default {
         return item.id === this.tempOptionsArticle.id;
       });
       if (!obj) {
-        if (this.tempModalType === this.modalType.create) {
+        if (this.isCreate) {
           this.articlesModuleDetail.articleList.push({ ...this.tempOptionsArticle });
         } else {
           this.addTempDataLoading = true;
@@ -546,10 +544,10 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createTableRow();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editTableRow();
           }
