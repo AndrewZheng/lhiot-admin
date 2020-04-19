@@ -51,7 +51,7 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStoreArea">
+          <Button v-waves type="success" class="mr5" @click="handleCreate">
             <Icon type="md-add" />添加
           </Button>
         </div>
@@ -95,7 +95,7 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')">确定</Button>
+        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">确定</Button>
       </div>
     </Modal>
   </div>
@@ -112,9 +112,7 @@ import {
   createStoreArea
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 
 const storeArea = {
   area: '',
@@ -137,11 +135,9 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(rowData),
       storeArea: _.cloneDeep(storeArea),
       columns: [
@@ -206,13 +202,6 @@ export default {
   },
   created() {},
   methods: {
-    resetSearchRowData() {
-      this.searchRowData = _.cloneDeep(rowData);
-      this.getTableData();
-    },
-    resetFields() {
-      this.$refs.editForm.resetFields();
-    },
     getTableData() {
       this.loading = true;
       this.searchLoading = true;
@@ -228,58 +217,54 @@ export default {
           this.clearSearchLoading = false;
         });
     },
+    handleCreate() {
+      this.resetFields();
+      this.tempModalType = this.modalType.create;
+      this.storeArea = _.cloneDeep(storeArea);
+      this.modalEdit = true;
+    },
     handleEdit(params) {
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.storeArea = _.cloneDeep(params.row);
       this.modalEdit = true;
     },
-    handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+    handleSubmit() {
+      this.$refs.editForm.validate(valid => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
-            // 添加状态
-            this.createStoreArea();
-          } else if (this.tempModalType === this.modalType.edit) {
-            // 编辑状态
-            this.editStoreArea();
+          if (this.isCreate) {
+            this.createTableRow();
+          } else if (this.isEdit) {
+            this.editTableRow();
           }
         } else {
           this.$Message.error('请完善信息!');
         }
       });
     },
-    createStoreArea() {
-      this.modalViewLoading = true;
+    createTableRow() {
+      this.modalEditLoading = true;
       createStoreArea(this.storeArea)
         .then(res => {
+          this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
         .finally(() => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
+          this.modalEditLoading = false;
         });
     },
-    editStoreArea() {
-      this.modalViewLoading = true;
+    editTableRow() {
+      this.modalEditLoading = true;
       editStoreArea(this.storeArea)
         .then(res => {
+          this.modalEdit = false;
           this.$Message.success('修改成功!');
           this.getTableData();
         })
         .finally(() => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
+          this.modalEditLoading = false;
         });
-    },
-    addStoreArea() {
-      this.resetFields();
-      if (this.tempModalType !== this.modalType.create) {
-        this.tempModalType = this.modalType.create;
-        this.storeArea = _.cloneDeep(storeArea);
-      }
-      this.modalEdit = true;
     },
     deleteTable(ids) {
       this.loading = true;
@@ -302,6 +287,10 @@ export default {
           console.log(err);
           this.loading = false;
         });
+    },
+    resetSearchRowData() {
+      this.searchRowData = _.cloneDeep(rowData);
+      this.getTableData();
     }
   }
 };

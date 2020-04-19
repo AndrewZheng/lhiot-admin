@@ -52,7 +52,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="poptipOk"
+            @on-ok="handleBatchDel"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash"/>
@@ -151,8 +151,6 @@
 import Tables from '_c/tables';
 import { getDeliveryFeeRulePages, createDeliveryFeeRule, deleteDeliveryFeeRule, editDeliveryFeeRule } from '@/api/fruitermaster';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import { deliveryAtTypeConvert } from '@/libs/converStatus';
 import { deliveryAtTypeEnum, updateWay, deliveryAtType } from '@/libs/enumerate';
 import { fenToYuanDot2Number, fenToYuanDot2, yuanToFenNumber } from '@/libs/util';
@@ -197,7 +195,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {
@@ -468,10 +466,10 @@ export default {
       // return;
       this.$refs[name].validate((valid) => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createTableRow();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editTableRow();
           }
@@ -546,7 +544,7 @@ export default {
       return A;
     },
     postageRuleTableHandleDelete(params) {
-      if (this.tempModalType === this.modalType.create) {
+      if (this.isCreate) {
         this.postageDetail.detailList = params.tableData.filter((item, index) => index !== params.row.initRowIndex);
       } else {
         const index = this.tempDetailList.findIndex(item => {
