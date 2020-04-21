@@ -1,14 +1,14 @@
 import Vue from 'vue';
 const $http = Vue.prototype.$http;
-const $delHttp = Vue.prototype.$delHttp;
+const $imgService = Vue.prototype.$imgService;
 
 // 删除图片
 export const deletePicture = ({
   urls
 }) => {
-  return $delHttp.request({
+  return $imgService.request({
     url: '/v2/upload',
-    data:urls,
+    data: urls,
     method: 'delete'
   });
 };
@@ -685,12 +685,12 @@ export const getOrder = ({
     method: 'get'
   });
 };
-// wholesale-small/order/print/order 
+// wholesale-small/order/print/order
 export const getPrintOrder = (data) => {
   return $http.request({
     url: '/wholesale-small/order/print/order',
     data,
-    method: 'post',
+    method: 'post'
   });
 };
 // 无前端页面的通用后台导出API

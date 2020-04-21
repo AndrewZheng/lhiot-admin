@@ -143,7 +143,7 @@
             <Row>
               <i-col span="6">用户头像:</i-col>
               <i-col span="18">
-                <img :src="robotDetail.avater" style="width: 150px" />
+                <img :src="robotDetail.avater" style="width: 150px" >
               </i-col>
             </Row>
           </i-col>
@@ -162,46 +162,46 @@
         <Form ref="modalEdit" :model="robotDetail" :rules="ruleInline" :label-width="80">
           <Row>
             <Col span="18">
-              <FormItem :label-width="85" label="所属门店:" prop="storeId">
-                <Select v-model="robotDetail.storeId">
-                  <Option
-                    v-for="(item,index) in flagShipList"
-                    :value="item.storeId"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px"
-                    @click.native="selectStore(item)"
-                  >{{ item.storeName }}</Option>
-                </Select>
-              </FormItem>
+            <FormItem :label-width="85" label="所属门店:" prop="storeId">
+              <Select v-model="robotDetail.storeId">
+                <Option
+                  v-for="(item,index) in flagShipList"
+                  :value="item.storeId"
+                  :key="index"
+                  class="ptb2-5"
+                  style="padding-left: 5px"
+                  @click.native="selectStore(item)"
+                >{{ item.storeName }}</Option>
+              </Select>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-              <FormItem label="用户ID:" prop="userId">
-                <InputNumber v-model="robotDetail.userId"></InputNumber>
-              </FormItem>
+            <FormItem label="用户ID:" prop="userId">
+              <InputNumber v-model="robotDetail.userId"></InputNumber>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-              <FormItem label="收货人:" prop="receiverName">
-                <Input v-model="robotDetail.receiverName "></Input>
-              </FormItem>
+            <FormItem label="收货人:" prop="receiverName">
+              <Input v-model="robotDetail.receiverName "></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-              <FormItem label="联系方式:" prop="receiverMobile">
-                <Input v-model="robotDetail.receiverMobile"></Input>
-              </FormItem>
+            <FormItem label="联系方式:" prop="receiverMobile">
+              <Input v-model="robotDetail.receiverMobile"></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-              <FormItem label="用户昵称:" prop="nickName">
-                <Input v-model="robotDetail.nickName"></Input>
-              </FormItem>
+            <FormItem label="用户昵称:" prop="nickName">
+              <Input v-model="robotDetail.nickName"></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
@@ -210,7 +210,7 @@
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>
-                    <img :src="item.url" />
+                    <img :src="item.url" >
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                       <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -225,9 +225,8 @@
                 ref="uploadMain"
                 :default-list="defaultListMain"
                 :image-size="imageSize"
-                groupType="activity_image"
-                fileDir="activity"
-                appType="min_app"
+                group-type="activity_image"
+                file-dir="activity"
                 @on-success="handleSuccessMain"
               >
                 <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -245,15 +244,15 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" />
+      <img :src="imgUploadViewItem" style="width: 100%" >
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import IViewUpload from "_c/iview-upload";
-import _ from "lodash";
+import Tables from '_c/tables';
+import IViewUpload from '_c/iview-upload';
+import _ from 'lodash';
 import {
   deleteRobot,
   getRobotPages,
@@ -261,25 +260,25 @@ import {
   createRobot,
   getStorePages,
   deletePicture
-} from "@/api/mini-program";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+} from '@/api/mini-program';
+import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 
 const robotDetail = {
   id: 0,
   storeId: 0,
-  storeName: "",
+  storeName: '',
   userId: 0,
-  receiverName: "",
-  receiverMobile: "",
-  nickName: "",
-  avater: ""
+  receiverName: '',
+  receiverMobile: '',
+  nickName: '',
+  avater: ''
 };
 
 const roleRowData = {
-  nickName: "",
+  nickName: '',
   page: 1,
   rows: 10
 };
@@ -293,22 +292,22 @@ export default {
   data() {
     return {
       ruleInline: {
-        storeId: [{ required: true, message: "请选择门店" }],
+        storeId: [{ required: true, message: '请选择门店' }],
         userId: [
-          { required: true, message: "请输入用户id" },
-          { message: "必须为非零整数", pattern: /^[-1-9]\d*$/ }
+          { required: true, message: '请输入用户id' },
+          { message: '必须为非零整数', pattern: /^[-1-9]\d*$/ }
         ],
-        receiverName: [{ required: true, message: "请输入收货人" }],
+        receiverName: [{ required: true, message: '请输入收货人' }],
         receiverMobile: [
           {
             required: true,
             pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/,
-            message: "电话号码不正确",
-            trigger: "blur"
+            message: '电话号码不正确',
+            trigger: 'blur'
           }
         ],
-        nickName: [{ required: true, message: "请输入用户昵称" }],
-        avater: [{ required: true, message: "请上传用户头像" }]
+        nickName: [{ required: true, message: '请输入用户昵称' }],
+        avater: [{ required: true, message: '请上传用户头像' }]
       },
       defaultListMain: [],
       uploadListMain: [],
@@ -319,57 +318,57 @@ export default {
       save: [],
       columns: [
         {
-          type: "selection",
+          type: 'selection',
           width: 60,
-          align: "center",
-          fixed: "left"
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: "门店ID",
-          align: "center",
-          key: "storeId"
+          title: '门店ID',
+          align: 'center',
+          key: 'storeId'
         },
         {
-          title: "门店名称",
-          align: "center",
-          key: "storeName"
+          title: '门店名称',
+          align: 'center',
+          key: 'storeName'
         },
         {
-          title: "用户ID",
-          align: "center",
-          key: "userId"
+          title: '用户ID',
+          align: 'center',
+          key: 'userId'
         },
         {
-          title: "收货人",
-          align: "center",
-          key: "receiverName"
+          title: '收货人',
+          align: 'center',
+          key: 'receiverName'
         },
         {
-          title: "联系方式",
-          align: "center",
-          key: "receiverMobile"
+          title: '联系方式',
+          align: 'center',
+          key: 'receiverMobile'
         },
         {
-          title: "用户昵称",
-          align: "center",
-          key: "nickName"
+          title: '用户昵称',
+          align: 'center',
+          key: 'nickName'
         },
         {
-          title: "用户头像",
-          align: "center",
-          key: "avater",
+          title: '用户头像',
+          align: 'center',
+          key: 'avater',
           render: (h, params, vm) => {
             const { row } = params;
-            const str = <img src={row.avater} height="60" width="60" />;
+            const str = <img src={row.avater} height='60' width='60' />;
             return <div>{str}</div>;
           }
         },
         {
-          title: "操作",
+          title: '操作',
           minWidth: 80,
-          align: "center",
-          key: "handle",
-          options: ["view", "edit", "delete"]
+          align: 'center',
+          key: 'handle',
+          options: ['view', 'edit', 'delete']
         }
       ],
       createLoading: false,
@@ -405,7 +404,7 @@ export default {
     },
     handleSubmit(name) {
       if (this.oldPicture.length > 0) {
-        let urls = {
+        const urls = {
           urls: this.oldPicture
         };
         this.deletePicture(urls);
@@ -420,13 +419,13 @@ export default {
             this.editStore();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
     handleEditClose() {
       if (this.newPicture.length > 0) {
-        let urls = {
+        const urls = {
           urls: this.newPicture
         };
         this.deletePicture(urls);
@@ -448,7 +447,7 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
@@ -509,7 +508,7 @@ export default {
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.avater != null) {
-        const map = { status: "finished", url: "url" };
+        const map = { status: 'finished', url: 'url' };
         const mainImgArr = [];
         map.url = res.avater;
         mainImgArr.push(map);

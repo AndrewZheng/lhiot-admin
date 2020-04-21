@@ -1,14 +1,14 @@
 import Vue from 'vue';
 const $http = Vue.prototype.$http;
-const $delHttp = Vue.prototype.$delHttp;
+const $imgService = Vue.prototype.$imgService;
 
 // 删除图片
 export const deletePicture = ({
   urls
 }) => {
-  return $delHttp.request({
+  return $imgService.request({
     url: '/v2/upload',
-    data:urls,
+    data: urls,
     method: 'delete'
   });
 };
@@ -2367,6 +2367,6 @@ export const sureMaituan = ({
 }) => {
   return $http.request({
     url: '/minapp/orders/meituan/send/' + orderCode,
-    method: 'post',
+    method: 'post'
   });
 };
