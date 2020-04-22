@@ -130,15 +130,15 @@ import deleteMixin from '@/mixins/deleteMixin.js';
 import { splitConvert } from '@/libs/converStatus';
 
 const unitDetail = {
-  id: "",
+  id: '',
   splitStatus: null,
-  unitName: ""
+  unitName: ''
 };
 
 const roleRowData = {
-  id: "",
+  id: '',
   splitStatus: null,
-  unitName: "",
+  unitName: '',
   page: 1,
   rows: 10
 };
@@ -150,15 +150,15 @@ export default {
   data() {
     return {
       ruleInline: {
-        splitStatus: { required: true, message: "请填写是否可拆分" },
-        unitName: { required: true, message: "请填写单位名称" }
+        splitStatus: { required: true, message: '请填写是否可拆分' },
+        unitName: { required: true, message: '请填写单位名称' }
       },
       columns: [
         {
-          type: "selection",
-          key: "",
+          type: 'selection',
+          key: '',
           width: 60,
-          align: "center"
+          align: 'center'
         },
         {
           title: '编号',
@@ -190,12 +190,12 @@ export default {
       clearSearchLoading: false,
       splitStatus: [
         {
-          label: "是",
-          value: "SEPARABLE"
+          label: '是',
+          value: 'SEPARABLE'
         },
         {
-          label: "否",
-          value: "NO_SEPARABLE"
+          label: '否',
+          value: 'NO_SEPARABLE'
         }
       ],
       searchRowData: this._.cloneDeep(roleRowData),
@@ -219,7 +219,7 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error("请完善商品单位信息!");
+          this.$Message.error('请完善商品单位信息!');
         }
       });
     },
