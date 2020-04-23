@@ -27,10 +27,10 @@
           ></Input>
           <Select
             :disable="selectDisable"
-            v-model="searchRowData.positionIds"
+            v-model="searchRowData.positionId"
             class="search-col mr5"
             placeholder="广告位置"
-            style="width: 150px"
+            style="width:150px"
             clearable
           >
             <Option
@@ -62,7 +62,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="handleBatchDel"
+            @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
@@ -277,6 +277,8 @@
                     ref="uploadMain"
                     :default-list="defaultListMain"
                     :image-size="imageSize"
+                    group-type="activity_image"
+                    file-dir="activity"
                     @on-success="handleSuccessMain"
                   >
                     <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -480,6 +482,7 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   getAdvertisementPositionPages,
   createAdvertisement,
@@ -487,9 +490,12 @@ import {
   editAdvertisement,
   getAdvertisementPages,
   getAdvertisement,
-  getProductStandardsPages
+  getProductStandardsPages,
+  deletePicture
 } from '@/api/mini-program';
+import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 import IViewUpload from '_c/iview-upload';
 import { compareData } from '@/libs/util';
@@ -524,7 +530,7 @@ const advertisementDetail = {
 const roleRowData = {
   applicationType: null,
   advertisementName: null,
-  positionIds: null,
+  positionId: null,
   page: 1,
   rows: 10
 };
@@ -542,7 +548,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [tableMixin, uploadMixin],
+  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
   data() {
     return {
       modalViewLoading: false,
@@ -763,7 +769,10 @@ export default {
       searchRelationRowData: _.cloneDeep(relationRowData),
       tempContent: null,
       tempImage: null,
-      relationTotal: 0
+      relationTotal: 0,
+      oldPicture: [],
+      newPicture: [],
+      save: []
     };
   },
   computed: {
@@ -870,6 +879,12 @@ export default {
       this.advertisementDetail.invalidTime = value;
     },
     handleSubmit(name) {
+      if (this.oldPicture.length > 0) {
+        const urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs[name].validate(valid => {
         if (valid) {
           if (this.advertisementDetail.isPermanent === 'OFF') {
@@ -898,13 +913,13 @@ export default {
               return;
             }
           }
-          if (this.isCreate) {
+          if (this.tempModalType === this.modalType.create) {
             // 添加状态
             console.log(
               'createTableRow' + JSON.stringify(this.advertisementDetail)
             );
             this.createTableRow();
-          } else if (this.isEdit) {
+          } else if (this.tempModalType === this.modalType.edit) {
             // 编辑状态
             console.log(
               'editTableRow' + JSON.stringify(this.advertisementDetail)
@@ -915,6 +930,24 @@ export default {
           this.$Message.error('请完善信息!');
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        const urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
     },
     editTableRow() {
       this.modalViewLoading = true;
@@ -983,6 +1016,8 @@ export default {
       this.advertisementDetail.imageUrl = null;
       this.advertisementDetail.imageUrl = fileList[0].url;
       this.tempImage = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     addChildren() {
       if (this.tempModalType !== this.modalType.create) {
@@ -1001,6 +1036,8 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.imageUrl);
       this.$refs.modalEdit.resetFields();
       this.tempImage = null;
       this.loading = true;

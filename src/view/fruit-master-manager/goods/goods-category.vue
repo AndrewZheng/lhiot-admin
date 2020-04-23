@@ -32,7 +32,7 @@
                   placement="bottom"
                   style="width: 100px"
                   title="您确认删除选中的内容吗?"
-                  @on-ok="handleBatchDel"
+                  @on-ok="poptipOk"
                 >
                   <Button type="error" class="mr5">
                     <Icon type="md-trash"/>
@@ -88,6 +88,7 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   addProductCategories,
   deleteProductCategories,
@@ -98,6 +99,8 @@ import {
 import { buildMenu, convertTree } from '@/libs/util';
 import CommonIcon from '_c/common-icon';
 import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
 
 const currentCategory = {
   parentId: 0,
@@ -115,7 +118,7 @@ export default {
     Tables,
     CommonIcon
   },
-  mixins: [tableMixin],
+  mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
     return {
       menuData: [],
@@ -230,7 +233,7 @@ export default {
       } else {
         this.currentCategory.parentId = this.parentCategory.id;
       }
-      if (this.isCreate) {
+      if (this.tempModalType === this.modalType.create) {
         addProductCategories(this.currentCategory
         ).then(res => {
 
@@ -239,7 +242,7 @@ export default {
           this.modalEditLoading = false;
           this.modalEdit = false;
         });
-      } else if (this.isEdit) {
+      } else if (this.tempModalType === this.modalType.edit) {
         putProductCategories(this.currentCategory).then(res => {
         }).finally(res => {
           this.initMenuList();

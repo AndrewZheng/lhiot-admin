@@ -82,7 +82,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="handleBatchDel"
+            @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
@@ -196,6 +196,8 @@ import {
   editDeliveryFeeConfigRule
 } from '@/api/wholesale';
 import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
 import { deliveryAtTypeConvert } from '@/libs/converStatus';
 import {
   deliveryAtTypeEnum,
@@ -266,7 +268,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin],
+  mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
     return {
       ruleInline: {

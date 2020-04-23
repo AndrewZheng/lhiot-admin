@@ -69,7 +69,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="handleBatchDel"
+            @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
@@ -124,10 +124,10 @@
           <i-col span="24">
             <Row>
               <i-col span="6">活动状态:</i-col>
-              <i-col v-if="activitiesDetail.onOff === 'ON'" span="18">
+              <i-col span="18" v-if="activitiesDetail.onOff === 'ON'">
                 <tag color="success">{{ "开启" | imageStatusFilter }}</tag>
               </i-col>
-              <i-col v-else-if="activitiesDetail.onOff === 'OFF'" span="18">
+              <i-col span="18" v-else-if="activitiesDetail.onOff === 'OFF'">
                 <tag color="error">{{ "关闭" | imageStatusFilter }}</tag>
               </i-col>
             </Row>
@@ -155,38 +155,38 @@
         <Form ref="modalEdit" :model="activitiesDetail" :rules="ruleInline" :label-width="100">
           <Row>
             <Col span="18">
-            <FormItem label="活动编码:" prop="activityCode">
-              <Input v-model="activitiesDetail.activityCode"></Input>
-            </FormItem>
+              <FormItem label="活动编码:" prop="activityCode">
+                <Input v-model="activitiesDetail.activityCode"></Input>
+              </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-            <FormItem label="活动名称:" prop="activityName">
-              <Input v-model="activitiesDetail.activityName"></Input>
-            </FormItem>
+              <FormItem label="活动名称:" prop="activityName">
+                <Input v-model="activitiesDetail.activityName"></Input>
+              </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-            <FormItem label="活动状态:" prop="onOff">
-              <Select v-model="activitiesDetail.onOff" clearable>
-                <Option
-                  v-for="(item,index) in imageStatusEnum"
-                  :value="item.value"
-                  :key="index"
-                  class="ptb2-5"
-                  style="padding-left: 5px;width: 100%"
-                >{{ item.label }}</Option>
-              </Select>
-            </FormItem>
+              <FormItem label="活动状态:" prop="onOff">
+                <Select v-model="activitiesDetail.onOff" clearable>
+                  <Option
+                    v-for="(item,index) in imageStatusEnum"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                    style="padding-left: 5px;width: 100%"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-            <FormItem label="活动详情链接:" prop="activityUrl">
-              <Input v-model="activitiesDetail.activityUrl"></Input>
-            </FormItem>
+              <FormItem label="活动详情链接:" prop="activityUrl">
+                <Input v-model="activitiesDetail.activityUrl"></Input>
+              </FormItem>
             </Col>
           </Row>
         </Form>
@@ -200,43 +200,46 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
+import Tables from "_c/tables";
+import _ from "lodash";
 import {
   deleteActivities,
   getActivitiesPages,
   editActivities,
   createActivities
-} from '@/api/mini-program';
-import tableMixin from '@/mixins/tableMixin.js';
-import { imageStatusConvert } from '@/libs/converStatus';
-import { imageStatusEnum } from '@/libs/enumerate';
+} from "@/api/mini-program";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import { imageStatusConvert } from "@/libs/converStatus";
+import { imageStatusEnum } from "@/libs/enumerate";
 
 const activitiesDetail = {
   id: 0,
-  activityCode: '',
-  activityName: '',
-  onOff: '',
-  activityUrl: ''
+  activityCode: "",
+  activityName: "",
+  onOff: "",
+  activityUrl: ""
 };
 
 const roleRowData = {
   activityCode: null,
   activityName: null,
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 export default {
   components: {
     Tables
   },
-  mixins: [tableMixin],
+  mixins: [deleteMixin, tableMixin, searchMixin],
   data() {
     return {
       ruleInline: {
-        activityCode: [{ required: true, message: '请输入活动编码' }],
-        activityName: [{ required: true, message: '请输入活动名称' }],
-        onOff: [{ required: true, message: '请选择活动状态' }]
+        activityCode: [{ required: true, message: "请输入活动编码" }],
+        activityName: [{ required: true, message: "请输入活动名称" }],
+        onOff: [{ required: true, message: "请选择活动状态" }]
       },
       defaultListMain: [],
       uploadListMain: [],
@@ -244,64 +247,64 @@ export default {
       imageStatusEnum,
       columns: [
         {
-          type: 'selection',
+          type: "selection",
           width: 60,
-          align: 'center'
+          align: "center"
         },
         {
-          title: '活动ID',
-          align: 'center',
-          key: 'id'
+          title: "活动ID",
+          align: "center",
+          key: "id"
         },
         {
-          title: '活动编码',
-          align: 'center',
-          key: 'activityCode'
+          title: "活动编码",
+          align: "center",
+          key: "activityCode"
         },
         {
-          title: '活动名称',
-          align: 'center',
-          key: 'activityName'
+          title: "活动名称",
+          align: "center",
+          key: "activityName"
         },
         {
-          title: '活动状态',
-          align: 'center',
-          key: 'onOff',
+          title: "活动状态",
+          align: "center",
+          key: "onOff",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.onOff === 'ON') {
+            if (row.onOff === "ON") {
               return (
                 <div>
-                  <tag color='success'>
+                  <tag color="success">
                     {imageStatusConvert(row.onOff).label}
                   </tag>
                 </div>
               );
-            } else if (row.onOff === 'OFF') {
+            } else if (row.onOff === "OFF") {
               return (
                 <div>
-                  <tag color='error'>{imageStatusConvert(row.onOff).label}</tag>
+                  <tag color="error">{imageStatusConvert(row.onOff).label}</tag>
                 </div>
               );
             }
             return (
               <div>
-                <tag color='primary'>{row.onOff}</tag>
+                <tag color="primary">{row.onOff}</tag>
               </div>
             );
           }
         },
         {
-          title: '活动详情链接',
-          align: 'center',
-          key: 'activityUrl'
+          title: "活动详情链接",
+          align: "center",
+          key: "activityUrl"
         },
         {
-          title: '操作',
-          align: 'center',
+          title: "操作",
+          align: "center",
           minWidth: 80,
-          key: 'handle',
-          options: ['onSale', 'view', 'edit', 'delete']
+          key: "handle",
+          options: ["onSale", "view", "edit", "delete"]
         }
       ],
       createLoading: false,
@@ -329,15 +332,15 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          if (this.isCreate) {
+          if (this.tempModalType === this.modalType.create) {
             // 添加状态
             this.createActivities();
-          } else if (this.isEdit) {
+          } else if (this.tempModalType === this.modalType.edit) {
             // 编辑状态
             this.editActivities();
           }
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
     },
@@ -347,7 +350,7 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success('创建成功!');
+          this.$Message.success("创建成功!");
           this.getTableData();
         })
         .catch(() => {
@@ -434,10 +437,10 @@ export default {
     },
     onOff(params) {
       this.activitiesDetail = this._.cloneDeep(params.row);
-      if (params.row.onOff === 'ON') {
-        this.activitiesDetail.onOff = 'OFF';
+      if (params.row.onOff === "ON") {
+        this.activitiesDetail.onOff = "OFF";
       } else {
-        this.activitiesDetail.onOff = 'ON';
+        this.activitiesDetail.onOff = "ON";
       }
       this.loading = true;
       this.editActivities();

@@ -30,12 +30,19 @@
             <div slot="searchCondition">
               <Row>
                 <Input
-                  v-model="searchRowData.baseBar"
+                  v-model.trim="searchRowData.baseBar"
                   placeholder="基础条码"
                   class="search-input mr5"
                   style="width: auto"
                   clearable
                 ></Input>
+                <!-- <Input
+                  v-model="searchRowData.goodsCode"
+                  placeholder="商品编码"
+                  class="search-input mr5"
+                  style="width: auto"
+                  clearable
+                ></Input>-->
                 <Input
                   v-model="searchRowData.goodsName"
                   placeholder="商品名称"
@@ -168,12 +175,12 @@
               </i-col>
             </Row>
           </i-col>
-          <i-col span="12">
+          <!-- <i-col span="12">
             <Row>
               <i-col span="8">服务保障图:</i-col>
               <i-col v-show="productDetail.otherImage" span="16">
                 <div class="demo-upload-list">
-                  <img :src="productDetail.otherImage" >
+                  <img :src="productDetail.otherImage" />
                   <div class="demo-upload-list-cover">
                     <Icon
                       type="ios-eye-outline"
@@ -183,9 +190,9 @@
                 </div>
               </i-col>
             </Row>
-          </i-col>
+          </i-col>-->
         </Row>
-        <Row>
+        <!-- <Row>
           <i-col span="4">商品详情图：</i-col>
           <i-col span="20">
             <div
@@ -195,14 +202,14 @@
               class="demo-upload-list"
             >
               <div>
-                <img :src="item" >
+                <img :src="item" />
                 <div class="demo-upload-list-cover">
                   <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                 </div>
               </div>
             </div>
           </i-col>
-        </Row>
+        </Row>-->
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
@@ -277,7 +284,7 @@
             </i-col>
             <i-col span="12">
               <FormItem label="基础条码:" prop="baseBar">
-                <Input v-model="productDetail.baseBar" placeholder="基础条码"></Input>
+                <Input v-model.trim="productDetail.baseBar" placeholder="基础条码"></Input>
               </FormItem>
             </i-col>
           </Row>
@@ -303,6 +310,8 @@
                   ref="uploadMain"
                   :default-list="defaultListMain"
                   :image-size="imageSize"
+                  group-type="base_image"
+                  file-dir="product"
                   @on-success="handleSuccessMain"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -311,7 +320,7 @@
                 </IViewUpload>
               </FormItem>
             </i-col>
-            <i-col span="12">
+            <!-- <i-col span="12">
               <FormItem label="服务保障图:建议尺寸;710x250(单位:px)" prop="otherImage">
                 <Input v-show="false" v-model="productDetail.otherImage" style="width: auto"></Input>
                 <div
@@ -322,7 +331,7 @@
                 >
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" >
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveDetail(item)"></Icon>
@@ -345,11 +354,11 @@
                   </div>
                 </IViewUpload>
               </FormItem>
-            </i-col>
+            </i-col>-->
           </Row>
-          <Row>
+          <!-- <Row>
             <i-col span="12">
-              <FormItem label="规格描述(推荐宽度为710px，高度自适应):" prop="goodsImages">
+              <FormItem label="商品详情图(推荐宽度为710px，高度自适应):" prop="goodsImages">
                 <Input v-show="false" v-model="productDetail.goodsImages" style="width: auto"></Input>
                 <div
                   v-for="item in uploadListMultiple"
@@ -359,7 +368,7 @@
                 >
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" >
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMultiple(item)"></Icon>
@@ -387,8 +396,8 @@
             <i-col span="12">
               <Button v-waves type="info" @click="modalSort = true">规格描述排序</Button>
             </i-col>
-          </Row>
-          <!-- <Row>
+          </Row>-->
+          <Row>
             <i-col span="12">
               <FormItem label="区域:" prop="goodsArea">
                 <Select :value="productDetail.goodsArea" @on-change="goodsAreaChange">
@@ -414,20 +423,20 @@
                 <Input v-model="productDetail.placeOfOrigin" placeholder="产地"></Input>
               </FormItem>
             </i-col>
-          </Row>-->
+          </Row>
           <Row>
             <i-col span="24">
-              <FormItem label="商品描述:" prop="goodsDes">
+              <FormItem label="商品特征:" prop="goodsDes">
                 <Input
                   v-model="productDetail.goodsDes"
                   :autosize="{minRows: 6,maxRows: 15}"
-                  placeholder="请输入商品描述..."
+                  placeholder="请输入商品特征..."
                   type="textarea"
                 ></Input>
               </FormItem>
             </i-col>
           </Row>
-          <!-- <Row>
+          <Row>
             <i-col span="24">
               <FormItem label="售后标准:" prop="afterDes">
                 <Input
@@ -438,11 +447,11 @@
                 ></Input>
               </FormItem>
             </i-col>
-          </Row>-->
+          </Row>
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="modalEdit=false">关闭</Button>
+        <Button @click="handleEditClose">关闭</Button>
         <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
       </div>
     </Modal>
@@ -488,7 +497,8 @@ import {
   getProduct,
   getProductPages,
   getProductCategoriesTree,
-  getProductUnits
+  getProductUnits,
+  deletePicture
 } from '@/api/wholesale';
 import {
   buildMenu,
@@ -498,7 +508,9 @@ import {
 } from '@/libs/util';
 
 import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 
 const productDetail = {
   id: 0,
@@ -535,7 +547,7 @@ export default {
     IViewUpload,
     DragList
   },
-  mixins: [uploadMixin, tableMixin],
+  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
     return {
       menuData: [],
@@ -551,6 +563,9 @@ export default {
       defaultGoodsCategoryData: [],
       proCategoryTreeList: [],
       unitsList: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       modalSort: false,
       createLoading: false,
       modalViewLoading: false,
@@ -572,14 +587,14 @@ export default {
         goodsName: [{ required: true, message: '请输入商品名称' }],
         baseUnit: [{ required: true, message: '请选择商品单位' }],
         baseBar: [{ required: true, message: '请输入基础条码' }],
-        goodsDes: [{ required: true, message: '请输入商品描述' }],
-        // afterDes: [{ required: true, message: "请输入售后标准" }],
+        goodsDes: [{ required: true, message: '请输入商品特诊' }],
+        afterDes: [{ required: true, message: '请输入售后标准' }],
         // goodsArea: [{ required: true, message: "请选择商品区域" }],
         // goodsBrand: [{ required: true, message: "请输入商品品牌" }],
         // placeOfOrigin: [{ required: true, message: "请输入商品产地" }],
         categoryId: [{ required: true, message: '请选择商品分类' }],
         goodsImage: [{ required: true, message: '请上传商品主图' }],
-        goodsImages: [{ required: true, message: '请上传商品详情图' }],
+        // goodsImages: [{ required: true, message: "请上传商品详情图" }],
         // otherImage: [{ required: true, message: '请上传服务保障图' }],
         stockLimit: [{ required: true, message: '请输入安全库存' }]
       },
@@ -616,10 +631,6 @@ export default {
           key: 'goodsDes',
           width: 120,
           tooltip: true
-          // render(h, params) {
-          //   let goodsDes = params.row.goodsDes.replace(/&/g, "\n");
-          //   return <div>{goodsDes}</div>;
-          // }
         },
         {
           title: '商品类别',
@@ -636,6 +647,33 @@ export default {
             }
             return h('span', row.categoryId);
           }
+        },
+        {
+          title: '商品区域',
+          align: 'center',
+          minWidth: 90,
+          key: 'goodsArea',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.goodsArea === 'imported') {
+              return <div>{'进口'}</div>;
+            } else if (row.goodsArea === 'domestic') {
+              return <div>{'国产'}</div>;
+            }
+            return <div>{''}</div>;
+          }
+        },
+        {
+          title: '商品品牌',
+          align: 'center',
+          minWidth: 90,
+          key: 'goodsBrand'
+        },
+        {
+          title: '商品产地',
+          align: 'center',
+          minWidth: 90,
+          key: 'placeOfOrigin'
         },
         {
           title: '基础条码',
@@ -740,8 +778,8 @@ export default {
       this.handleClear();
     },
     handleCreate() {
-      this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
+        this.resetFields();
         this.defaultGoodsCategoryData = [];
         this.tempModalType = this.modalType.create;
       }
@@ -776,6 +814,8 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.goodsImage);
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       getProduct({
@@ -791,6 +831,7 @@ export default {
     },
     createProduct() {
       this.modalViewLoading = true;
+      this.productDetail.baseBar = this.productDetail.baseBar.trim();
       createProduct({
         ...this.productDetail
       })
@@ -805,6 +846,7 @@ export default {
     },
     editProduct() {
       this.modalViewLoading = true;
+      this.productDetail.baseBar = this.productDetail.baseBar.trim();
       editProduct({
         ...this.productDetail
       })
@@ -818,6 +860,12 @@ export default {
         });
     },
     handleSubmit() {
+      if (this.oldPicture.length > 0) {
+        const urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs.editForm.validate(valid => {
         if (valid) {
           if (this.isCreate) {
@@ -829,6 +877,24 @@ export default {
           this.$Message.error('请完善信息!');
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        const urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
     },
     handleDownload() {
       this.exportExcelLoading = true;
@@ -842,6 +908,13 @@ export default {
         tableData.forEach(item => {
           item.categoryId = this.findGroupName(item.categoryId);
           item.goodsImage = '';
+          if (item.goodsArea === 'imported') {
+            item.goodsArea = '进口';
+          } else if (item.goodsArea === 'domestic') {
+            item.goodsArea = '国产';
+          } else {
+            item.goodsArea = '';
+          }
         });
         this.$refs.tables.handleDownload({
           filename: `商品基础信息-${new Date().valueOf()}`,
@@ -893,26 +966,26 @@ export default {
         this.uploadListMain = mainImgArr;
       }
 
-      if (res.otherImage != null) {
-        const map = { status: 'finished', url: 'url' };
-        const detailImgArr = [];
-        map.url = res.otherImage;
-        detailImgArr.push(map);
-        this.$refs.uploadDetail.setDefaultFileList(detailImgArr);
-        this.uploadListDetail = detailImgArr;
-      }
+      // if (res.otherImage != null) {
+      //   const map = { status: "finished", url: "url" };
+      //   const detailImgArr = [];
+      //   map.url = res.otherImage;
+      //   detailImgArr.push(map);
+      //   this.$refs.uploadDetail.setDefaultFileList(detailImgArr);
+      //   this.uploadListDetail = detailImgArr;
+      // }
 
-      if (res.goodsImages != null) {
-        const descriptionImgArr = [];
-        const descriptionArr = res.goodsImages.split(',');
-        descriptionArr.forEach(value => {
-          const innerMapDetailImg = { status: 'finished', url: 'url' };
-          innerMapDetailImg.url = value;
-          descriptionImgArr.push(innerMapDetailImg);
-        });
-        this.$refs.uploadMultiple.setDefaultFileList(descriptionImgArr);
-        this.uploadListMultiple = descriptionImgArr;
-      }
+      // if (res.goodsImages != null) {
+      //   const descriptionImgArr = [];
+      //   const descriptionArr = res.goodsImages.split(",");
+      //   descriptionArr.forEach(value => {
+      //     const innerMapDetailImg = { status: "finished", url: "url" };
+      //     innerMapDetailImg.url = value;
+      //     descriptionImgArr.push(innerMapDetailImg);
+      //   });
+      //   this.$refs.uploadMultiple.setDefaultFileList(descriptionImgArr);
+      //   this.uploadListMultiple = descriptionImgArr;
+      // }
     },
     findGroupId(id) {
       const obj = this.proCategoryTreeList.find(item => {
@@ -973,6 +1046,8 @@ export default {
       this.uploadListMain = fileList;
       this.productDetail.goodsImage = null;
       this.productDetail.goodsImage = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     // 上架服务保障图
     handleSuccessDetail(response, file, fileList) {

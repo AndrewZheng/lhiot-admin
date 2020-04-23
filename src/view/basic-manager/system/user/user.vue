@@ -23,16 +23,14 @@
             class="search-input mr5"
             style="width: auto"
             clearable
-          >
-          </Input>
+          ></Input>
           <Input
             v-model="searchRowData.tel"
             placeholder="电话"
             class="search-input mr5"
             style="width: auto"
             clearable
-          >
-          </Input>
+          ></Input>
           <Select
             v-model="searchRowData.status"
             class="search-col mr5"
@@ -47,18 +45,18 @@
             >{{ item.value }}</Option>
           </Select>
           <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch">
-            <Icon type="md-search"/>&nbsp;搜索
+            <Icon type="md-search" />&nbsp;搜索
           </Button>
           <Button v-waves class="search-btn" type="info" @click="handleClear">
-            <Icon type="md-refresh"/>&nbsp;清除条件
+            <Icon type="md-refresh" />&nbsp;清除条件
           </Button>
         </div>
         <div slot="operations">
           <Button type="success" class="mr5" @click="handleAdd">
-            <Icon type="md-add"/>新增
+            <Icon type="md-add" />新增
           </Button>
           <Button type="error" class="mr5" @click="handleDeleteBatch">
-            <Icon type="md-trash"/>删除
+            <Icon type="md-trash" />删除
           </Button>
         </div>
       </tables>
@@ -107,12 +105,12 @@
           <FormItem label="电话" prop="tel">
             <Input v-model="rowData.tel" placeholder="请输入电话号码"></Input>
           </FormItem>
-          <FormItem label="用户头像" prop="avatarUrl" >
+          <FormItem label="用户头像" prop="avatarUrl">
             <Input v-show="false" v-model="rowData.avatarUrl" style="width: auto"></Input>
             <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
               <template v-if="item.status === 'finished'">
                 <div>
-                  <img :src="item.url">
+                  <img :src="item.url" >
                   <div class="demo-upload-list-cover">
                     <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                     <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -127,12 +125,12 @@
               ref="uploadMain"
               :default-list="defaultListMain"
               :image-size="imageSize"
+              group-type="system_image"
+              file-dir="system"
               @on-success="handleSuccessMain"
             >
               <div slot="content">
-                <Button type="primary">
-                  上传图片
-                </Button>
+                <Button type="primary">上传图片</Button>
               </div>
             </IViewUpload>
           </FormItem>
@@ -151,8 +149,7 @@
               :autosize="{minRows: 2,maxRows: 5}"
               type="textarea"
               placeholder="请输入备注"
-            >
-            </Input>
+            ></Input>
           </FormItem>
         </Form>
       </div>
@@ -180,12 +177,12 @@
               <FormItem label="电话" prop="tel">
                 <Input v-model="rowData.tel" placeholder="请输入电话号码"></Input>
               </FormItem>
-              <FormItem label="用户头像" prop="avatarUrl" >
+              <FormItem label="用户头像" prop="avatarUrl">
                 <Input v-show="false" v-model="rowData.avatarUrl" style="width: auto"></Input>
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url">
+                      <img :src="item.url" >
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -200,12 +197,12 @@
                   ref="uploadMain"
                   :default-list="defaultListMain"
                   :image-size="imageSize"
+                  group-type="system_image"
+                  file-dir="system"
                   @on-success="handleSuccessMain"
                 >
                   <div slot="content">
-                    <Button type="primary">
-                      上传图片
-                    </Button>
+                    <Button type="primary">上传图片</Button>
                   </div>
                 </IViewUpload>
               </FormItem>
@@ -224,8 +221,7 @@
                   :autosize="{minRows: 2,maxRows: 5}"
                   type="textarea"
                   placeholder="请输入备注"
-                >
-                </Input>
+                ></Input>
               </FormItem>
             </Form>
           </TabPane>
@@ -329,7 +325,6 @@ export default {
       }
     };
     return {
-
       columns: [
         {
           type: 'selection',
@@ -443,8 +438,12 @@ export default {
       ruleValidate: {
         name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
         account: [{ required: true, message: '账号不能为空', trigger: 'blur' }],
-        password: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
-        passwdCheck: [{ required: true, validator: validatePassCheck, trigger: 'blur' }],
+        password: [
+          { required: true, message: '密码不能为空', trigger: 'blur' }
+        ],
+        passwdCheck: [
+          { required: true, validator: validatePassCheck, trigger: 'blur' }
+        ],
         tel: [
           {
             required: false,
@@ -453,7 +452,9 @@ export default {
             trigger: 'blur'
           }
         ],
-        avatarUrl: [{ required: true, message: '头像不能为空', trigger: 'blur' }],
+        avatarUrl: [
+          { required: true, message: '头像不能为空', trigger: 'blur' }
+        ],
         status: [{ required: true, message: '请选择角色状态', trigger: 'blur' }]
       },
       // 头像上传
@@ -468,7 +469,7 @@ export default {
     };
   },
   computed: {},
-  created() { },
+  created() {},
   mounted() {
     this.getTableData();
     this.getStatusList();
@@ -512,7 +513,9 @@ export default {
           ) +
           `<br>
           创建时间: ${this.tableData[params.row.initRowIndex].createAt}<br>
-          最后登录时间: ${this.tableData[params.row.initRowIndex].lastLoginAt}<br>
+          最后登录时间: ${
+  this.tableData[params.row.initRowIndex].lastLoginAt
+}<br>
           备注: ${this.tableData[params.row.initRowIndex].remark}<br>`
         // 关联角色：<tag type="border">角色1</tag><tag type="border">角色2</tag><tag type="border">角色3</tag>
       });

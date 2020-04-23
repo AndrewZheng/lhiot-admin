@@ -23,22 +23,7 @@ export const getDragList = () => {
   });
 };
 
-export const getMenuData = ({
-  page,
-  rows,
-  pid
-}) => {
-  const data = {
-    page,
-    rows,
-    pid
-  };
-
-  // return Vue.prototype.$http.request({
-  //   url: 'get_menu_data',
-  //   params: data,
-  //   method: 'get'
-  // });
+export const getMenuData = (data) => {
   return Vue.prototype.$http.request({
     url: '/ims-menu/pages',
     data: data,
@@ -57,11 +42,6 @@ export const getOperateData = ({
     menuId
   };
 
-  // return Vue.prototype.$http.request({
-  //   url: 'get_operate_data',
-  //   params: data,
-  //   method: 'get'
-  // });
   return Vue.prototype.$http.request({
     url: '/ims-operation/pages',
     data: data,

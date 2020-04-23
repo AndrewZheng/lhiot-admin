@@ -128,7 +128,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="handleBatchDel"
+            @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
@@ -427,6 +427,8 @@
                   :default-list="defaultListMain"
                   :image-size="imageSize"
                   :max-num="1"
+                  group-type="base_image"
+                  file-dir="product"
                   @on-success="handleSuccessMain"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -622,6 +624,8 @@
                   :default-list="defaultListMultiple"
                   :image-size="imageSize"
                   :max-num="10"
+                  group-type="base_image"
+                  file-dir="product"
                   multiple
                   @on-success="handleSuccessMultiple"
                 >
@@ -730,9 +734,7 @@
                   :value="discountPriceComputed"
                   @on-change="calDiscountRate"
                 ></InputNumber>
-                <div
-                  v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'"
-                >（以售卖价格优先计算折扣率）</div>
+                <div v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'">（以售卖价格优先计算折扣率）</div>
               </FormItem>
             </i-col>
             <i-col v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'" span="12">
@@ -945,7 +947,7 @@
 import Tables from '_c/tables';
 import DragList from '_c/drag-list';
 import IViewUpload from '_c/iview-upload';
-
+import _ from 'lodash';
 import {
   createProductStandard,
   deleteProductStandard,
@@ -955,11 +957,13 @@ import {
   editProductStandard,
   getProductUnits,
   getProductPages,
-  getHdProductInfo
+  getHdProductInfo,
+  deletePicture
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-
+import searchMixin from '@/mixins/searchMixin.js';
 import {
   getSmallGoodsStandard,
   fenToYuanDot2,
@@ -1084,7 +1088,7 @@ export default {
     IViewUpload,
     DragList
   },
-  mixins: [uploadMixin, tableMixin],
+  mixins: [uploadMixin, deleteMixin, searchMixin, tableMixin],
   data() {
     return {
       unitsList: [],
@@ -1473,6 +1477,9 @@ export default {
       productDetail: productDetail,
       // 选中的行
       tableDataSelected: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       showBack: false,
       HdSvipInfo: '',
       shelvesStatus: [
@@ -1567,6 +1574,18 @@ export default {
       this.tableDataSelected.push(params.row);
       this.deleteTable(params.row.id);
     },
+    poptipOk() {
+      if (this.tableDataSelected.length < 1) {
+        this.$Message.warning('请选中要删除的行');
+        return;
+      }
+      const tempDeleteList = [];
+      this.tableDataSelected.filter(value => {
+        tempDeleteList.push(value.id);
+      });
+      const strTempDelete = tempDeleteList.join(',');
+      this.deleteTable(strTempDelete);
+    },
     // 删除
     deleteTable(ids) {
       this.loading = true;
@@ -1626,6 +1645,8 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.image);
       this.clickFlag = false;
       this.tempModalType = this.modalType.edit;
       this.productStandardDetail = this._.cloneDeep(params.row);
@@ -1779,7 +1800,14 @@ export default {
         });
       });
     },
+    // ====
     handleSubmit(name) {
+      if (this.oldPicture.length > 0) {
+        const urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs[name].validate(valid => {
         if (valid) {
           if (!this.productStandardDetail.salePrice) {
@@ -1808,16 +1836,37 @@ export default {
             this.$Message.error('SVIP价格不能大于售卖价格');
             return;
           }
-          if (this.isCreate) {
+          if (this.tempModalType === this.modalType.create) {
             this.createStandard();
             this.currentTableRowSelected = null;
-          } else if (this.isEdit) {
+          } else if (this.tempModalType === this.modalType.edit) {
             this.editProductStandard();
           }
         } else {
           this.$Message.error('请完善信息!');
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        const urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.modalEdit = false;
+      this.oldPicture = [];
+      this.newPicture = [];
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {
+          this.newPicture = [];
+          this.oldPicture = [];
+        })
+        .catch(() => {});
     },
     handleSubmitDiscount() {
       this.proStandardExpand.expandType = this.productStandardDetail.productType;
@@ -1952,11 +2001,15 @@ export default {
       this.uploadListMain = fileList;
       this.productStandardDetail.image = null;
       this.productStandardDetail.image = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     // 上架规格描述图
     handleSuccessMultiple(response, file, fileList) {
+      console.log(response);
       this.uploadListMultiple = fileList;
       this.descriptionList = [];
+      // this.newPicture = "";
       fileList.forEach(value => {
         if (value.url) {
           this.descriptionList.push(value.url);
@@ -1964,8 +2017,9 @@ export default {
       });
       this.productStandardDetail.description = '';
       this.productStandardDetail.description = this.descriptionList.join(',');
-      console.log(this.productStandardDetail.description);
-      console.log(JSON.stringify(this.productStandardDetail.description));
+
+      this.newPicture.push(response.fileUrl);
+      console.log('new图片', this.newPicture);
     },
     // 设置编辑图片列表
     setDefaultUploadList(res) {
@@ -2011,6 +2065,8 @@ export default {
       this.$refs.uploadMultiple.deleteFile(file);
       const index = this.descriptionList.indexOf(file.url);
       if (index > -1) {
+        this.oldPicture.push(this.descriptionList[index]);
+        console.log('删除的图片list', this.oldPicture);
         this.descriptionList.splice(index, 1);
         this.productStandardDetail.description = this.descriptionList.join(',');
       }
@@ -2109,7 +2165,6 @@ export default {
       this.productStandardDetail.baseBarcode = row.baseBarcode;
       this.productStandardDetail.baseImage = row.image;
       this.productStandardDetail.baseProductDescription = row.description;
-
       // 给要关联的规格信息设置默认值，用户可以选择修改
       this.productStandardDetail.productName = row.productName;
       this.productStandardDetail.productDescription = row.description;

@@ -10,8 +10,8 @@
     :on-exceeded-size="handleMaxSize"
     :before-upload="handleBeforeUpload"
     :multiple="multiple"
+    :action="actionUrl"
     type="drag"
-    action="https://resource.food-see.com/v1/upload/product_image"
     style="display: inline-block;width:auto;"
   >
     <slot name="content"></slot>
@@ -19,9 +19,19 @@
 </template>
 
 <script type="text/ecmascript-6">
+import config from '@/config'
+
 export default {
-  name: "IViewUpload",
+  name: 'IViewUpload',
   props: {
+    groupType: {
+      type: String,
+      default: 'cache_image'
+    },
+    fileDir: {
+      type: String,
+      default: ''
+    },
     maxNum: {
       type: Number,
       default: 3
@@ -50,6 +60,17 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  data() {
+    return {
+      actionUrl: '',
+      uploadBaseUrl: config.imgUploadUrl,
+      brandType: config.brandType ? config.brandType : 'common'
+    };
+  },
+  computed: {},
+  mounted: function() {
+    this.actionUrl = `${this.uploadBaseUrl}/v2/upload?groupType=${this.groupType}&fileDir=${this.fileDir}&appType=${this.brandType}`;
   },
   methods: {
     deleteFile(file) {
@@ -84,7 +105,7 @@ export default {
       file.url = response.fileUrl;
       file.name = file.name;
       file.fileDir = `image/${file.name}`;
-      this.$emit("on-success", response, file, fileList);
+      this.$emit('on-success', response, file, fileList);
     },
     // 上传之前的校验
     handleBeforeUpload(file) {
@@ -93,18 +114,18 @@ export default {
     // 文件格式校验
     handleFormatError(file) {
       this.$Notice.warning({
-        title: "The file format is incorrect",
+        title: 'The file format is incorrect',
         desc:
-          "File format of " +
+          'File format of ' +
           file.name +
-          " is incorrect, please select jpg or png."
+          ' is incorrect, please select jpg or png.'
       });
     },
     // 文件大小校验
     handleMaxSize(file) {
       this.$Notice.warning({
-        title: "Exceeding file size limit",
-        desc: "File  " + file.name + " is too large, no more than 2M."
+        title: 'Exceeding file size limit',
+        desc: 'File  ' + file.name + ' is too large, no more than 2M.'
       });
     },
     // 图片宽高校验
@@ -127,7 +148,7 @@ export default {
               resolve();
             } else if (!check) {
               self.$Notice.error({
-                title: "请上传的图片最多不能超过" + num + "张"
+                title: '请上传的图片最多不能超过' + num + '张'
               });
               reject();
             } else {

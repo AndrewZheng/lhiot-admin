@@ -16,6 +16,7 @@
         @on-view="handleView"
         @on-hand="handleReimburse"
         @on-receive="handSureReceive"
+        @on-meituan="handMeituan"
         @on-current-change="onCurrentChange"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
@@ -211,14 +212,6 @@
             @click="couponDetails"
           >
             <Icon type="md-search" />&nbsp;用券数据
-          </Button>
-          <Button
-            :loading="downloadLoading"
-            class="search-btn mt5"
-            type="primary"
-            @click="monthOrder"
-          >
-            <Icon type="md-search" />&nbsp;跨月退款订单
           </Button>
           <!-- <Poptip
             confirm
@@ -594,9 +587,11 @@ import {
   ordersRefund,
   refundWx,
   refundPt,
-  sureReceive
+  sureReceive,
+  sureMaituan
 } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import { fenToYuanDot2, fenToYuanDot2Number } from '@/libs/util';
 import {
   receivingWayEnum,
@@ -682,7 +677,7 @@ export default {
     Tables,
     BookTypeOption
   },
-  mixins: [tableMixin],
+  mixins: [tableMixin, searchMixin],
   data() {
     return {
       mark: false,
@@ -1189,7 +1184,7 @@ export default {
           align: 'center',
           fixed: 'right',
           key: 'handle',
-          options: ['view', 'onHand', 'onReceive']
+          options: ['view', 'onHand', 'onReceive', 'onMeituan']
         }
       ],
       currentTableRowSelected: null,
@@ -1297,6 +1292,32 @@ export default {
           });
       } else {
         this.$Message.error('只有已发货和配送中的订单才能操作收货');
+      }
+    },
+    // 发送美团
+    handMeituan(params) {
+      if (params.row.receivingWay === 'TO_THE_HOME') {
+        if (
+          params.row.orderStatus === 'WAIT_SEND_OUT' ||
+          params.row.orderStatus === 'SEND_OUT' ||
+          params.row.orderStatus === 'DISPATCHING'
+        ) {
+          sureMaituan({ orderCode: params.row.code })
+            .then(res => {
+              this.loading = false;
+              this.$Message.success('操作成功');
+              this.getTableData();
+            })
+            .catch(() => {
+              this.loading = false;
+            });
+        } else {
+          this.$Message.error(
+            '只有待发货、已发货和配送中的订单才能操作发送美团'
+          );
+        }
+      } else {
+        this.$Message.error('只有送到家的订单才能操作发送美团');
       }
     },
     // 门店调货

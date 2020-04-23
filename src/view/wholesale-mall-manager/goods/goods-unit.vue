@@ -53,7 +53,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="handleBatchDel"
+            @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
@@ -102,23 +102,25 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
+import Tables from "_c/tables";
 import {
   getProductUnitsPages,
   editProductUnits,
   delProductUnits,
   createProductUnits
-} from '@/api/wholesale';
-import tableMixin from '@/mixins/tableMixin.js';
+} from "@/api/wholesale";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import deleteMixin from "@/mixins/deleteMixin.js";
 
 const unitDetail = {
   id: 0,
-  unitCode: '',
-  unitName: ''
+  unitCode: "",
+  unitName: ""
 };
 
 const roleRowData = {
-  unitName: '',
+  unitName: "",
   page: 1,
   rows: 20
 };
@@ -127,7 +129,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin],
+  mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
     return {
       ids: [],
@@ -137,36 +139,36 @@ export default {
       searchRowData: this._.cloneDeep(roleRowData),
       unitDetail: this._.cloneDeep(unitDetail),
       ruleInline: {
-        unitCode: { required: true, message: '请填写单位编码' },
-        unitName: { required: true, message: '请填写单位名称' }
+        unitCode: { required: true, message: "请填写单位编码" },
+        unitName: { required: true, message: "请填写单位名称" }
       },
       columns: [
         {
-          type: 'selection',
-          key: '',
+          type: "selection",
+          key: "",
           width: 60,
-          align: 'center'
+          align: "center"
         },
         {
-          title: '编号',
-          align: 'center',
-          key: 'id'
+          title: "编号",
+          align: "center",
+          key: "id"
         },
         {
-          title: '单位编码',
-          align: 'center',
-          key: 'unitCode'
+          title: "单位编码",
+          align: "center",
+          key: "unitCode"
         },
         {
-          title: '单位名称',
-          align: 'center',
-          key: 'unitName'
+          title: "单位名称",
+          align: "center",
+          key: "unitName"
         },
         {
-          title: '操作',
-          align: 'center',
-          key: 'handle',
-          options: ['edit', 'delete']
+          title: "操作",
+          align: "center",
+          key: "handle",
+          options: ["edit", "delete"]
         }
       ]
     };
@@ -205,7 +207,7 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error('请完善商品单位信息!');
+          this.$Message.error("请完善商品单位信息!");
         }
       });
     },
@@ -214,7 +216,7 @@ export default {
       editProductUnits(this.unitDetail)
         .then(res => {
           this.modalEdit = false;
-          this.$Message.info('修改成功！');
+          this.$Message.info("修改成功！");
           this.getTableData();
         })
         .finally(() => {
@@ -226,7 +228,7 @@ export default {
       createProductUnits(this.unitDetail)
         .then(res => {
           this.modalEdit = false;
-          this.$Message.info('创建成功！');
+          this.$Message.info("创建成功！");
           this.getTableData();
         })
         .finally(() => {

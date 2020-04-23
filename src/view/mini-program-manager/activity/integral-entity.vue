@@ -92,7 +92,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="handleBatchDel"
+            @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
@@ -137,17 +137,17 @@
               <i-col span="6">
                 <FormItem label="商品名称:" prop="productName">
                   <Input v-model="addRelationDetail.productName">
-                  <Button slot="append" icon="ios-search" @click="handleRelation"></Button>
+                    <Button slot="append" icon="ios-search" @click="handleRelation"></Button>
                   </Input>
                 </FormItem>
               </i-col>
               <i-col span="6">
                 <FormItem label="商品单位:" prop="unitId">
-                  <Input v-show="false" v-model="addRelationDetail.unitName"></Input>
+                  <Input v-model="addRelationDetail.unitName" v-show="false"></Input>
                   <Select
                     v-model="addRelationDetail.unitId"
-                    style="width: 80px"
                     @on-change="unitChange"
+                    style="width: 80px"
                   >
                     <Option
                       v-for="(item,index) in unitsList"
@@ -185,12 +185,12 @@
             <Row>
               <i-col span="6">
                 <FormItem label="商品主图:" prop="image">
-                  <img :src="addRelationDetail.image" width="100" height="100" >
+                  <img :src="addRelationDetail.image" width="100" height="100" />
                 </FormItem>
               </i-col>
               <i-col span="6">
                 <FormItem label="商品详情图:" prop="detailImage">
-                  <img :src="addRelationDetail.detailImage" width="100" height="100" >
+                  <img :src="addRelationDetail.detailImage" width="100" height="100" />
                 </FormItem>
               </i-col>
             </Row>
@@ -286,8 +286,8 @@
                 <FormItem label="兑换说明:" prop="exchangeRemark">
                   <Input
                     v-model="addRelationDetail.exchangeRemark"
-                    :autosize="{minRows: 3,maxRows: 8}"
                     type="textarea"
+                    :autosize="{minRows: 3,maxRows: 8}"
                     placeholder="请输入兑换说明"
                   ></Input>
                 </FormItem>
@@ -380,15 +380,15 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" >
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
-
+import Tables from "_c/tables";
+import IViewUpload from "_c/iview-upload";
+import _ from "lodash";
 import {
   getEntityExchangePages,
   deleteEntityExchange,
@@ -398,9 +398,11 @@ import {
   getProductStandardsPages,
   getHdCouponActivitiesPages,
   getProductUnits
-} from '@/api/mini-program';
-import uploadMixin from '@/mixins/uploadMixin';
-import tableMixin from '@/mixins/tableMixin.js';
+} from "@/api/mini-program";
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
 import {
   couponStatusConvert,
   couponTypeConvert,
@@ -408,7 +410,7 @@ import {
   couponUseLimitConvert,
   customPlanStatusConvert,
   memberLimitConvert
-} from '@/libs/converStatus';
+} from "@/libs/converStatus";
 import {
   couponStatusEnum,
   couponTypeEnum,
@@ -417,7 +419,7 @@ import {
   validDateTypeEnum,
   entityTypeEnum,
   memberLimitEnum
-} from '@/libs/enumerate';
+} from "@/libs/enumerate";
 import {
   compareData,
   getSmallCouponActivity,
@@ -426,69 +428,69 @@ import {
   yuanToFenNumber,
   replaceByTag,
   replaceByTab
-} from '@/libs/util';
+} from "@/libs/util";
 
 const relationDetail = {
   baseQty: 0,
-  unitName: '',
-  description: '',
+  unitName: "",
+  description: "",
   detailImage: null,
   entityLimit: 999,
-  entityType: 'COMMON_GOODS', // COMMON_GOODS(普通商品),PERIPHERY_GOODS(周边商品)
-  exchangeRemark: '',
+  entityType: "COMMON_GOODS", //COMMON_GOODS(普通商品),PERIPHERY_GOODS(周边商品)
+  exchangeRemark: "",
   id: 0,
   image: null,
-  memberLimitType: 'ALL', // (ALL(所有会员) 默认不限制会员兑换
+  memberLimitType: "ALL", // (ALL(所有会员) 默认不限制会员兑换
   points: 0,
   price: 0,
-  productName: '',
+  productName: "",
   rank: 0,
   realPoints: 0,
   receiveCount: 0,
   receiveLimit: 999,
   standardId: 0,
   standardQty: 0,
-  status: 'VALID',
+  status: "VALID",
   unitId: 0,
   baseUnitName: null,
-  barcode: '', // inherit
-  specification: ''
+  barcode: "", // inherit
+  specification: ""
 };
 
 const productStandardDetail = {
   id: 0,
   productId: 0,
-  barcode: '',
-  specification: '',
+  barcode: "",
+  specification: "",
   standardQty: 0,
   unitId: 0,
-  productUnit: '',
+  productUnit: "",
   price: 0,
   salePrice: 0,
   rank: 0,
   description: null,
   shelvesStatus: null,
-  applyType: '',
-  productName: '',
+  applyType: "",
+  productName: "",
   createUser: null,
   image: null,
-  productDescription: '',
-  productCode: '',
-  baseProductName: '',
-  baseProductDescription: '',
+  productDescription: "",
+  productCode: "",
+  baseProductName: "",
+  baseProductDescription: "",
   groupId: 0,
-  groupName: '',
-  sourceCode: '',
-  baseImage: '',
-  smallImage: '',
-  largeImage: '',
-  status: '',
+  groupName: "",
+  sourceCode: "",
+  baseImage: "",
+  smallImage: "",
+  largeImage: "",
+  status: "",
   baseUnitId: 0,
-  baseUnit: '',
-  baseBarcode: '',
-  hdSkuid: '',
-  videoUrl: '',
-  videoImage: '',
+  baseUnit: "",
+  baseBarcode: "",
+  hdSkuid: "",
+  videoUrl: "",
+  videoImage: "",
   baseQty: 0,
   limitQty: 0,
   queryStatus: null,
@@ -508,56 +510,56 @@ const roleRowData = {
 };
 
 const templateRowData = {
-  productId: '',
-  barcode: '',
-  productCode: '',
-  productName: '',
-  shelvesStatus: 'VALID',
+  productId: "",
+  barcode: "",
+  productCode: "",
+  productName: "",
+  shelvesStatus: "VALID",
   page: 1,
   rows: 5
 };
 
 const dataColumns = [
   {
-    type: 'selection',
+    type: "selection",
     width: 60,
-    align: 'center'
+    align: "center"
   },
   {
-    title: '商品条码',
-    align: 'center',
-    key: 'barcode',
+    title: "商品条码",
+    align: "center",
+    key: "barcode",
     minWidth: 80
   },
   {
-    title: '商品名称',
-    align: 'center',
-    key: 'productName',
+    title: "商品名称",
+    align: "center",
+    key: "productName",
     minWidth: 80
   },
   {
-    title: '商品规格',
-    align: 'center',
-    key: 'standardQty',
+    title: "商品规格",
+    align: "center",
+    key: "standardQty",
     minWidth: 80
   },
   {
-    title: '商品状态',
-    key: 'status',
-    align: 'center',
+    title: "商品状态",
+    key: "status",
+    align: "center",
     minWidth: 30,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.status === 'VALID') {
+      if (row.status === "VALID") {
         return (
           <div>
-            <tag color='success'>上架</tag>
+            <tag color="success">上架</tag>
           </div>
         );
-      } else if (row.status === 'INVALID') {
+      } else if (row.status === "INVALID") {
         return (
           <div>
-            <tag color='error'>下架</tag>
+            <tag color="error">下架</tag>
           </div>
         );
       } else {
@@ -566,14 +568,14 @@ const dataColumns = [
     }
   },
   {
-    title: '用户范围',
-    align: 'center',
-    key: 'memberLimitType',
+    title: "用户范围",
+    align: "center",
+    key: "memberLimitType",
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.memberLimitType === 'ALL') {
+      if (row.memberLimitType === "ALL") {
         return <div>{memberLimitConvert(row.memberLimitType).label}</div>;
-      } else if (row.userScope === 'SVIP') {
+      } else if (row.userScope === "SVIP") {
         return <div>{memberLimitConvert(row.memberLimitType).label}</div>;
       }
       return <div>{row.memberLimitType}</div>;
@@ -581,103 +583,103 @@ const dataColumns = [
     minWidth: 40
   },
   {
-    title: '创建时间',
-    align: 'center',
-    key: 'createTime',
+    title: "创建时间",
+    align: "center",
+    key: "createTime",
     minWidth: 80
   },
   {
-    title: '操作',
-    align: 'center',
+    title: "操作",
+    align: "center",
     minWidth: 80,
-    key: 'handle',
-    options: ['proStatus', 'edit', 'delete']
+    key: "handle",
+    options: ["proStatus", "edit", "delete"]
   }
 ];
 
 const proStandardColumns = [
   {
-    type: 'selection',
-    key: '',
+    type: "selection",
+    key: "",
     minWidth: 60,
-    align: 'center',
-    fixed: 'left'
+    align: "center",
+    fixed: "left"
   },
   {
-    title: '规格ID',
-    align: 'center',
-    key: 'id',
+    title: "规格ID",
+    align: "center",
+    key: "id",
     minWidth: 80
   },
   {
-    title: '商品条码',
-    key: 'barcode',
-    align: 'center',
+    title: "商品条码",
+    key: "barcode",
+    align: "center",
     minWidth: 80
   },
   {
-    title: '商品编号',
-    align: 'center',
-    key: 'productCode',
+    title: "商品编号",
+    align: "center",
+    key: "productCode",
     minWidth: 120
   },
   {
-    title: '商品名称',
-    align: 'center',
-    key: 'productName',
+    title: "商品名称",
+    align: "center",
+    key: "productName",
     minWidth: 100
   },
   {
-    title: '商品规格',
-    align: 'center',
-    key: 'specification',
+    title: "商品规格",
+    align: "center",
+    key: "specification",
     minWidth: 100
   },
   {
-    title: '商品单位',
-    align: 'center',
+    title: "商品单位",
+    align: "center",
     minWidth: 100,
-    key: 'productUnit'
+    key: "productUnit"
   },
   {
-    title: '商品原价',
-    align: 'center',
+    title: "商品原价",
+    align: "center",
     minWidth: 120,
-    key: 'price',
+    key: "price",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
     }
   },
   {
-    title: '售卖价格',
+    title: "售卖价格",
     minWidth: 120,
-    align: 'center',
-    key: 'salePrice',
+    align: "center",
+    key: "salePrice",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.salePrice);
       return <div>{amount}</div>;
     }
   },
   {
-    title: '商品状态',
+    title: "商品状态",
     minWidth: 100,
-    align: 'center',
-    key: 'shelvesStatus',
+    align: "center",
+    key: "shelvesStatus",
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.shelvesStatus === 'VALID') {
+      if (row.shelvesStatus === "VALID") {
         return (
           <div>
-            <tag color='success'>
+            <tag color="success">
               {customPlanStatusConvert(row.shelvesStatus).label}
             </tag>
           </div>
         );
-      } else if (row.shelvesStatus === 'INVALID') {
+      } else if (row.shelvesStatus === "INVALID") {
         return (
           <div>
-            <tag color='error'>
+            <tag color="error">
               {customPlanStatusConvert(row.shelvesStatus).label}
             </tag>
           </div>
@@ -685,7 +687,7 @@ const proStandardColumns = [
       }
       return (
         <div>
-          <tag color='primary'>
+          <tag color="primary">
             {customPlanStatusConvert(row.shelvesStatus).label}
           </tag>
         </div>
@@ -699,58 +701,58 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [tableMixin, uploadMixin],
+  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
   data() {
     return {
       relationRuleInline: {
-        productName: [{ required: true, message: '请先关联一个商品' }],
-        entityType: [{ required: true, message: '请选择实物类型' }],
-        exchangeRemark: [{ required: true, message: '请输入兑换说明' }],
-        rank: [{ required: true, message: '请输入排序字段' }],
-        memberLimitType: [{ required: true, message: '请选择用户范围' }],
+        productName: [{ required: true, message: "请先关联一个商品" }],
+        entityType: [{ required: true, message: "请选择实物类型" }],
+        exchangeRemark: [{ required: true, message: "请输入兑换说明" }],
+        rank: [{ required: true, message: "请输入排序字段" }],
+        memberLimitType: [{ required: true, message: "请选择用户范围" }],
         points: [
-          { required: true, message: '请输入兑换积分' },
+          { required: true, message: "请输入兑换积分" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
+                errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
             }
           }
         ],
         realPoints: [
-          { required: true, message: '请输入促销积分' },
+          { required: true, message: "请输入促销积分" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
+                errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
             }
           }
         ],
         receiveLimit: [
-          { required: true, message: '请输入每人限兑数量' },
+          { required: true, message: "请输入每人限兑数量" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
+                errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
             }
           }
         ],
         entityLimit: [
-          { required: true, message: '请输入兑换限制的总数' },
+          { required: true, message: "请输入兑换限制的总数" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
+                errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
             }
@@ -798,7 +800,7 @@ export default {
   created() {
     getProductUnits().then(res => {
       res.array.forEach(item => {
-        const map = { label: 'label', value: 'value' };
+        let map = { label: "label", value: "value" };
         map.value = item.id;
         map.label = item.unitName;
         this.unitsList.push(map);
@@ -822,10 +824,10 @@ export default {
     },
     statusChange(params) {
       this.addRelationDetail = _.cloneDeep(params.row);
-      if (params.row.status === 'VALID') {
-        this.addRelationDetail.status = 'INVALID';
+      if (params.row.status === "VALID") {
+        this.addRelationDetail.status = "INVALID";
       } else {
-        this.addRelationDetail.status = 'VALID';
+        this.addRelationDetail.status = "VALID";
       }
       this.editEntityExchange();
     },
@@ -843,7 +845,7 @@ export default {
     },
     handleModalAdd(isShow) {
       // 如果是创建则先清除对象
-      if (isShow && this.isCreate) {
+      if (isShow && this.tempModalType === this.modalType.create) {
         this.resetFields();
       }
     },
@@ -915,14 +917,14 @@ export default {
     },
     createEntityExchange() {
       if (this.addRelationDetail.realPoints > this.addRelationDetail.points) {
-        this.$Message.error('促销积分不能大于兑换积分');
+        this.$Message.error("促销积分不能大于兑换积分");
         return false;
       }
       this.modalViewLoading = true;
       createEntityExchange(this.addRelationDetail)
         .then(res => {
           this.modalViewLoading = false;
-          this.$Message.success('创建成功!');
+          this.$Message.success("创建成功!");
           this.modalAdd = false;
           this.getTableData();
         })
@@ -936,7 +938,7 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.modalAdd = false;
-          this.$Message.success('修改成功!');
+          this.$Message.success("修改成功!");
           this.getTableData();
         })
         .catch(() => {
@@ -958,17 +960,17 @@ export default {
       }
     },
     handleTemplateAdd(name) {
-      console.log('before create:', this.addRelationDetail);
+      console.log("before create:", this.addRelationDetail);
       this.$refs.addForm.validate(valid => {
         if (valid) {
           this.replaceTextByTag();
-          if (name === 'add') {
+          if (name === "add") {
             this.createEntityExchange();
           } else {
             this.editEntityExchange();
           }
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
     },

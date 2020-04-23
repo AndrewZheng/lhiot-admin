@@ -65,6 +65,7 @@
             <div slot="operations">
               <Button
                 v-waves
+                :loading="createLoading"
                 type="success"
                 class="mr5"
                 @click="addProduct"
@@ -316,7 +317,7 @@
             </Col>
             <Col span="12">
             <FormItem label="基础条码:" prop="baseBarcode">
-              <Input v-model="productDetail.baseBarcode" placeholder="基础条码"></Input>
+              <Input v-model.trim="productDetail.baseBarcode" placeholder="基础条码"></Input>
             </FormItem>
             </Col>
           </Row>
@@ -354,10 +355,13 @@
                   <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
                 </template>
               </div>
+              <!-- ==== -->
               <IViewUpload
                 ref="uploadMain"
                 :default-list="defaultListMain"
                 :image-size="imageSize"
+                group-type="base_image"
+                file-dir="product"
                 @on-success="handleSuccessMain"
               >
                 <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -374,46 +378,6 @@
             </i-col>
           </Row>
         </Form>
-        <!--
-        <Divider orientation="center">商品规格</Divider>
-        <Form ref="innerModalEdit" :model="productDetail.productSpecification" :rules="ruleInline">
-          <Row>
-            <Col span="12">
-            <FormItem :label-width="80" label="规格单位:" prop="packagingUnit">
-              <Select :value="productDetail.productSpecification.packagingUnit" @on-change="uniteChange">
-                <Option
-                  v-for="(item,index) in unitsList"
-                  :value="item.value"
-                  :key="index"
-                  class="ptb2-5"
-                  style="padding-left: 5px">{{ item.label }}
-                </Option>
-              </Select>
-            </FormItem>
-              </Col>
-            <Col span="12">
-            <FormItem :label-width="80" label="规格条码:" prop="barcode">
-              <Input v-model="productDetail.productSpecification.barcode"></Input>
-            </FormItem>
-              </Col>
-          </Row>
-          <Row>
-            <Col span="12">
-            <FormItem :label-width="80" label="安全库存:" prop="limitInventory">
-              <Input
-                v-if="productDetail.productSpecification"
-                v-model="productDetail.productSpecification.limitInventory"></Input>
-            </FormItem>
-              </Col>
-            <Col span="12">
-            <FormItem :label-width="80" label="重量(kg):" prop="weight">
-              <Input
-                v-if="productDetail.productSpecification"
-                v-model="productDetail.productSpecification.weight"></Input>
-            </FormItem>
-              </Col>
-          </Row>
-        </Form>-->
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
@@ -430,9 +394,7 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import CommonIcon from '_c/common-icon';
-import uploadMixin from '@/mixins/uploadMixin';
-import tableMixin from '@/mixins/tableMixin.js';
+import _ from 'lodash';
 import {
   createProduct,
   deleteProduct,
@@ -440,7 +402,8 @@ import {
   getProduct,
   getProductPages,
   getProductCategoriesTree,
-  getProductUnits
+  getProductUnits,
+  deletePicture
 } from '@/api/mini-program';
 import {
   buildMenu,
@@ -448,6 +411,11 @@ import {
   setSmallGoodsStandard,
   convertTree
 } from '@/libs/util';
+import CommonIcon from '_c/common-icon';
+import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import { productStatusConvert } from '@/libs/converStatus';
 
 const productDetail = {
@@ -473,7 +441,7 @@ const productDetail = {
   createUser: ''
 };
 
-const searchRowData = {
+const roleRowData = {
   groupId: null,
   productCode: null,
   productName: null,
@@ -486,29 +454,60 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, tableMixin],
+  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
     return {
-      currentGroupId: 0,
-      currentName: '全部分类',
+      ruleInline: {
+        productCode: [{ required: true, message: '请输入商品编码' }],
+        productName: [{ required: true, message: '请输入商品名称' }],
+        status: [{ required: true, message: '请选择商品状态' }],
+        unitId: [{ required: true, message: '请选择商品单位' }],
+        baseBarcode: [{ required: true, message: '请输入基础条码' }],
+        description: [{ required: true, message: '请输入商品描述' }],
+        groupId: [{ required: true, message: '请选择商品分类' }],
+        image: [{ required: true, message: '请上传商品主图' }],
+        packagingUnit: [{ required: true, message: '请选择规格单位' }],
+        barcode: [
+          { required: true, message: '请输入规格条码' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[0-9]\d*$/.test(value)) {
+                errors.push(new Error('必须为非零整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        limitQty: [{ required: true, message: '请输入安全库存' }],
+        baseQty: [
+          { required: true, message: '请输入重量' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/.test(value)) {
+                errors.push(new Error('必须为大于0的数字'));
+              }
+              callback(errors);
+            }
+          }
+        ]
+      },
       menuData: [],
       defaultListMultiple: [],
       defaultListMain: [],
       defaultListSecond: [],
       uploadListMain: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
+      // uploadListSecond: [],
+      // uploadListMultiple: [],
       goodsCategoryData: [],
       defaultGoodsCategoryData: [41],
       proCategoryTreeList: [],
       tempSubImg: [],
       unitsList: [],
-      modalViewLoading: false,
-      exportExcelLoading: false,
-      searchRowData: _.cloneDeep(searchRowData),
-      productDetail: _.cloneDeep(productDetail),
-      productStatus: [
-        { label: '正常', value: 'NORMAL' },
-        { label: '停采', value: 'STOP_MINING' }
-      ],
       columns: [
         {
           title: 'ID',
@@ -557,6 +556,12 @@ export default {
             }
             return h('span', row.groupId);
           }
+        },
+        {
+          title: '基础单位',
+          align: 'center',
+          minWidth: 90,
+          key: 'unitName'
         },
         {
           title: '产地编码',
@@ -616,49 +621,25 @@ export default {
           options: ['view', 'edit', 'settings']
         }
       ],
-      ruleInline: {
-        productCode: [{ required: true, message: '请输入商品编码' }],
-        productName: [{ required: true, message: '请输入商品名称' }],
-        status: [{ required: true, message: '请选择商品状态' }],
-        unitId: [{ required: true, message: '请选择商品单位' }],
-        baseBarcode: [{ required: true, message: '请输入基础条码' }],
-        description: [{ required: true, message: '请输入商品描述' }],
-        groupId: [{ required: true, message: '请选择商品分类' }],
-        image: [{ required: true, message: '请上传商品主图' }],
-        packagingUnit: [{ required: true, message: '请选择规格单位' }],
-        barcode: [
-          { required: true, message: '请输入规格条码' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[0-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        limitQty: [{ required: true, message: '请输入安全库存' }],
-        baseQty: [
-          { required: true, message: '请输入重量' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/.test(value)) {
-                errors.push(new Error('必须为大于0的数字'));
-              }
-              callback(errors);
-            }
-          }
-        ]
-      }
+      createLoading: false,
+      modalViewLoading: false,
+      exportExcelLoading: false,
+      searchRowData: _.cloneDeep(roleRowData),
+      productDetail: _.cloneDeep(productDetail),
+      productStatus: [
+        { label: '正常', value: 'NORMAL' },
+        { label: '停采', value: 'STOP_MINING' }
+      ],
+      currentGroupId: 0,
+      currentName: '全部分类'
     };
   },
   created() {
     this.initMenuList();
   },
   mounted() {
-    this.searchRowData = _.cloneDeep(searchRowData);
+    // 清空上次搜索的结果
+    this.searchRowData = _.cloneDeep(roleRowData);
     this.getProductUnits();
     this.getProductCategoriesTree();
   },
@@ -670,11 +651,13 @@ export default {
           map.value = value.id;
           map.label = value.unitName;
           this.unitsList.push(map);
+          this.createLoading = false;
         });
       });
     },
     getProductCategoriesTree() {
       this.loading = true;
+      // this.createLoading = true;
       getProductCategoriesTree()
         .then(res => {
           this.proCategoryTreeList = [];
@@ -687,15 +670,16 @@ export default {
               children: 'children'
             };
             this.goodsCategoryData = convertTreeCategory(menuList, map, true);
+            this.createLoading = false;
           }
         })
-        .finally(() => {
-          this.loading = false;
+        .catch(() => {
+          this.createLoading = false;
         });
       this.getTableData();
     },
     resetSearchRowData() {
-      this.searchRowData = _.cloneDeep(searchRowData);
+      this.searchRowData = _.cloneDeep(roleRowData);
       this.getTableData();
     },
     handleDownload() {
@@ -722,13 +706,20 @@ export default {
       this.uploadListMain = [];
       this.productDetail.image = null;
     },
+    // ====
     handleSubmit(name1) {
+      if (this.oldPicture.length > 0) {
+        const urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs[name1].validate(valid => {
         if (valid) {
-          if (this.isCreate) {
+          if (this.tempModalType === this.modalType.create) {
             // 添加状态
             this.createProduct();
-          } else if (this.isEdit) {
+          } else if (this.tempModalType === this.modalType.edit) {
             // 编辑状态
             this.editProduct();
           }
@@ -737,6 +728,43 @@ export default {
         }
       });
     },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        const urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
+    },
+    // 商品主图
+    handleSuccessMain(response, file, fileList) {
+      this.uploadListMain = fileList;
+      this.productDetail.image = null;
+      this.productDetail.image = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
+    },
+    // 设置编辑商品的图片列表
+    setDefaultUploadList(res) {
+      if (res.image != null) {
+        const map = { status: 'finished', url: 'url' };
+        const mainImgArr = [];
+        map.url = res.image;
+        mainImgArr.push(map);
+        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+        this.uploadListMain = mainImgArr;
+      }
+    },
     createProduct() {
       this.modalViewLoading = true;
       // this.productDetail.productSpecification.specificationQty = 1;
@@ -744,12 +772,14 @@ export default {
         ...this.productDetail
       })
         .then(res => {
+          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .finally(() => {
+        .catch(() => {
           this.modalViewLoading = false;
+          this.modalEdit = false;
         });
     },
     editProduct() {
@@ -759,13 +789,15 @@ export default {
       })
         .then(res => {
           this.modalEdit = false;
-          this.$Message.success('修改成功!');
+          this.modalViewLoading = false;
           this.getTableData();
         })
-        .finally(() => {
+        .catch(() => {
+          this.modalEdit = false;
           this.modalViewLoading = false;
         });
     },
+    // 选择分类
     goodsCategoryChange(value, selectedData) {
       if (selectedData.length > 0) {
         this.productDetail.groupId = selectedData[selectedData.length - 1].id;
@@ -781,6 +813,7 @@ export default {
       }
       this.modalEdit = true;
     },
+    // 删除
     deleteTable(ids) {
       this.loading = true;
       deleteProduct({
@@ -803,37 +836,6 @@ export default {
           this.loading = false;
         });
     },
-    // 设置编辑商品的图片列表
-    setDefaultUploadList(res) {
-      if (res.image != null) {
-        const map = { status: 'finished', url: 'url' };
-        const mainImgArr = [];
-        map.url = res.image;
-        mainImgArr.push(map);
-        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
-        this.uploadListMain = mainImgArr;
-      }
-      // if (res.subImg != null) {
-      //   const subImgArr = [];
-      //   res.subImg.forEach(value => {
-      //     const innerMapSub = { status: 'finished', url: 'url' };
-      //     innerMapSub.url = value;
-      //     subImgArr.push(innerMapSub);
-      //   });
-      //   this.$refs.uploadSecond.setDefaultFileList(subImgArr);
-      //   this.uploadListSecond = subImgArr;
-      // }
-      // if (res.detailImg != null) {
-      //   const detailImgArr = [];
-      //   res.detailImg.forEach(value => {
-      //     const innerMapDetailImg = { status: 'finished', url: 'url' };
-      //     innerMapDetailImg.url = value;
-      //     detailImgArr.push(innerMapDetailImg);
-      //   });
-      //   this.$refs.uploadMultiple.setDefaultFileList(detailImgArr);
-      //   this.uploadListMultiple = detailImgArr;
-      // }
-    },
     handleView(params) {
       // this.resetFields();
       this.tempModalType = this.modalType.view;
@@ -843,14 +845,19 @@ export default {
       })
         .then(res => {
           this.productDetail = res;
+          console.log('pro detail: ', res);
           this.loading = false;
           this.modalView = true;
         })
-        .finally(() => {
+        .catch(error => {
+          console.log(error);
           this.loading = false;
+          this.modalView = true;
         });
     },
     handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.image);
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.loading = true;
@@ -864,8 +871,10 @@ export default {
           this.defaultGoodsCategoryData = [];
           this.findGroupId(this.productDetail.groupId);
           this.defaultGoodsCategoryData.reverse();
+          this.modalEdit = true;
         })
-        .finally(() => {
+        .catch(error => {
+          console.log(error);
           this.loading = false;
           this.modalEdit = true;
         });
@@ -929,6 +938,7 @@ export default {
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
+      // this.uploadListMain = []
       this.productDetail.mainImg = null;
     },
     handleRemoveMultiple(file) {
@@ -947,6 +957,8 @@ export default {
       this.uploadListMain = fileList;
       this.productDetail.image = null;
       this.productDetail.image = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     statusChange(value) {
       this.productDetail.status = value;
@@ -1024,6 +1036,20 @@ export default {
       this.searchRowData.groupId = data.id;
       // 获取新数据
       this.getTableData();
+    },
+    expandChildren(array) {
+      array.forEach(item => {
+        if (typeof item.expand === 'undefined') {
+          // this.$set(item, 'expend', true);
+          this.$set(item, 'expend', false);
+          // } else {
+        } else {
+          item.expand = !item.expand;
+        }
+        if (item.children) {
+          this.expandChildren(item.children);
+        }
+      });
     },
     resetRowData() {
       this.productDetail = this._.cloneDeep(productDetail);

@@ -62,7 +62,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="handleBatchDel"
+            @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash"/>删除
@@ -182,33 +182,33 @@
             <FormItem label="关联商品:">
               <Row>
                 <Col span="15">
-                <Select
-                  ref="shelfSpecificationSelect"
-                  :remote="true"
-                  :filterable="true"
-                  :remote-method="remoteMethod"
-                  :loading="shelfSpecificationLoading"
-                >
-                  <Option
-                    v-for="(option, index) in optionsShelfSpecification"
-                    :value="option.id"
-                    :key="index"
-                    class="pb5 pt5 pl15"
-                    @click.native="selectIndex(option)"
-                  >{{ option.specificationInfo }}</Option>
-                </Select>
+                  <Select
+                    ref="shelfSpecificationSelect"
+                    :remote="true"
+                    :filterable="true"
+                    :remote-method="remoteMethod"
+                    :loading="shelfSpecificationLoading"
+                  >
+                    <Option
+                      v-for="(option, index) in optionsShelfSpecification"
+                      :value="option.id"
+                      :key="index"
+                      class="pb5 pt5 pl15"
+                      @click.native="selectIndex(option)"
+                    >{{ option.specificationInfo }}</Option>
+                  </Select>
                 </Col>
                 <Col span="4">
-                <Button
-                  v-waves
-                  :loading="addTempDataLoading"
-                  span="4"
-                  class="search-btn ml20"
-                  type="primary"
-                  @click="addTempData"
-                >
-                  <Icon type="md-add"/>&nbsp;添加
-                </Button>
+                  <Button
+                    v-waves
+                    :loading="addTempDataLoading"
+                    span="4"
+                    class="search-btn ml20"
+                    type="primary"
+                    @click="addTempData"
+                  >
+                    <Icon type="md-add"/>&nbsp;添加
+                  </Button>
                 </Col>
               </Row>
             </FormItem>
@@ -230,7 +230,7 @@
         <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
       </div>
     </Modal>
-
+    
     <Modal v-model="uploadVisible" title="View Image">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
@@ -238,8 +238,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
+import Tables from "_c/tables";
+import _ from "lodash";
 import {
   createProductSection,
   deleteProductSection,
@@ -249,20 +249,22 @@ import {
   getuiPositionsPages,
   addProductSectionRelationBatch,
   deleteProductSectionRelationBatch
-} from '@/api/fruitermaster';
-
-import tableMixin from '@/mixins/tableMixin.js';
-import uploadMixin from '@/mixins/uploadMixin';
-import { positionType, YNEnum } from '@/libs/enumerate';
-import { fenToYuanDot2 } from '@/libs/util';
+} from "@/api/fruitermaster";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import uploadMixin from "@/mixins/uploadMixin";
+import IViewUpload from "_c/iview-upload";
+import { positionType, YNEnum } from "@/libs/enumerate";
+import { fenToYuanDot2 } from "@/libs/util";
 
 const goodsModuleDetail = {
   id: 0,
   positionId: null,
-  sectionName: '',
-  sectionImg: '',
+  sectionName: "",
+  sectionImg: "",
   sorting: 0,
-  createAt: '',
+  createAt: "",
   parentId: 0,
   productShelfList: []
 };
@@ -271,19 +273,19 @@ const roleRowData = {
   applicationType: null,
   includeProduct: true,
   includeShelves: true,
-  sectionName: '',
-  positionIds: '',
+  sectionName: "",
+  positionIds: "",
   page: 1,
   rows: 10
 };
 const commonTempColumns = [
   {
-    title: '商品名称',
-    key: 'name',
+    title: "商品名称",
+    key: "name",
     minWidth: 100
   },
   {
-    title: '商品条码',
+    title: "商品条码",
     minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
@@ -291,14 +293,14 @@ const commonTempColumns = [
     }
   },
   {
-    title: '商品规格',
+    title: "商品规格",
     minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
       return (
         <div>
           {row.productSpecification.weight +
-            '*' +
+            "*" +
             row.productSpecification.specificationQty +
             row.productSpecification.packagingUnit}
         </div>
@@ -306,8 +308,8 @@ const commonTempColumns = [
     }
   },
   {
-    title: '商品原价',
-    key: 'originalPrice',
+    title: "商品原价",
+    key: "originalPrice",
     minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
@@ -315,8 +317,8 @@ const commonTempColumns = [
     }
   },
   {
-    title: '商品特价',
-    key: 'price',
+    title: "商品特价",
+    key: "price",
     minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
@@ -329,23 +331,23 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [tableMixin, uploadMixin],
+  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
   data() {
     return {
       selectDisable: true,
       goodsModuleList: [],
       ruleInline: {
-        positionId: [{ required: true, message: '请选择板块位置' }],
-        sectionName: [{ required: true, message: '请填写板块名称' }],
-        sectionImg: [{ required: true, message: '请上传板块主图' }],
+        positionId: [{ required: true, message: "请选择板块位置" }],
+        sectionName: [{ required: true, message: "请填写板块名称" }],
+        sectionImg: [{ required: true, message: "请上传板块主图" }],
         productShelfList: [
-          { required: true, message: '请关联商品' },
+          { required: true, message: "请关联商品" },
           {
             validator(rule, value, callback, source, options) {
               console.log(value);
               const errors = [];
               if (!value || value.length < 1) {
-                errors.push(new Error('请关联商品'));
+                errors.push(new Error("请关联商品"));
               }
               callback(errors);
             }
@@ -355,30 +357,30 @@ export default {
       tempColumns: [
         ...commonTempColumns,
         {
-          title: '操作',
+          title: "操作",
           minWidth: 100,
-          key: 'handle',
-          options: ['delete']
+          key: "handle",
+          options: ["delete"]
         }
       ],
       tempColumnsView: [...commonTempColumns],
       columns: [
         {
-          type: 'selection',
-          key: '',
+          type: "selection",
+          key: "",
           width: 60,
-          align: 'center',
-          fixed: 'left'
+          align: "center",
+          fixed: "left"
         },
         {
-          title: 'ID',
-          key: 'id',
+          title: "ID",
+          key: "id",
           sortable: true,
           width: 80,
-          fixed: 'left'
+          fixed: "left"
         },
         {
-          title: '板块位置',
+          title: "板块位置",
           minWidth: 170,
           render: (h, params, vm) => {
             const { row } = params;
@@ -393,25 +395,25 @@ export default {
           }
         },
         {
-          title: '板块名称',
+          title: "板块名称",
           width: 150,
-          key: 'sectionName'
+          key: "sectionName"
         },
         {
-          title: '创建时间',
+          title: "创建时间",
           width: 160,
-          key: 'createAt'
+          key: "createAt"
         },
         {
-          title: '板块排序',
+          title: "板块排序",
           width: 150,
-          key: 'sorting'
+          key: "sorting"
         },
         {
-          title: '操作',
+          title: "操作",
           minWidth: 200,
-          key: 'handle',
-          options: ['view', 'edit', 'delete', 'relevance']
+          key: "handle",
+          options: ["view", "edit", "delete", "relevance"]
         }
       ],
       shelfSpecificationLoading: false,
@@ -434,7 +436,7 @@ export default {
       if (tempObj) {
         return tempObj.description;
       }
-      return '';
+      return "";
     }
   },
   created() {
@@ -457,7 +459,7 @@ export default {
   methods: {
     setDefaultUploadList(res) {
       if (res.sectionImg != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.sectionImg;
         mainImgArr.push(map);
@@ -473,7 +475,7 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success('创建成功!');
+          this.$Message.success("创建成功!");
           this.resetFields();
           this.getTableData();
         })
@@ -483,7 +485,7 @@ export default {
         });
     },
     modalHandleDelete(params) {
-      if (this.isCreate) {
+      if (this.tempModalType === this.modalType.create) {
         this.goodsModuleDetail.productShelfList = this.goodsModuleDetail.productShelfList.filter(
           (item, index) => index !== params.row.initRowIndex
         );
@@ -506,7 +508,7 @@ export default {
     },
     addTempData() {
       if (!this.tempOptionsShelfSpecification) {
-        this.$Message.warning('请选择定制计划');
+        this.$Message.warning("请选择定制计划");
         return;
       }
       if (!this.goodsModuleDetail.productShelfList) {
@@ -516,7 +518,7 @@ export default {
         return item.id === this.tempOptionsShelfSpecification.id;
       });
       if (!obj) {
-        if (this.isCreate) {
+        if (this.tempModalType === this.modalType.create) {
           this.goodsModuleDetail.productShelfList.push({
             ...this.tempOptionsShelfSpecification
           });
@@ -543,21 +545,21 @@ export default {
             });
         }
       } else {
-        this.$Message.warning('已经添加该商品！');
+        this.$Message.warning("已经添加该商品！");
       }
     },
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          if (this.isCreate) {
+          if (this.tempModalType === this.modalType.create) {
             // 添加状态
             this.createTableRow();
-          } else if (this.isEdit) {
+          } else if (this.tempModalType === this.modalType.edit) {
             // 编辑状态
             this.editTableRow();
           }
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
     },
@@ -565,7 +567,7 @@ export default {
       this.tempOptionsShelfSpecification = options;
     },
     remoteMethod(query) {
-      if (query !== '') {
+      if (query !== "") {
         this.handleSearchAutoComplete(query);
       } else {
         this.optionsShelfSpecification = [];
@@ -574,11 +576,11 @@ export default {
     handleSearchAutoComplete(value) {
       this.shelfSpecificationLoading = true;
       getProductShelvesPages({
-        keyword: value + '',
+        keyword: value + "",
         applicationType: this.applicationType,
-        page: '1',
-        rows: '5',
-        shelfStatus: 'ON'
+        page: "1",
+        rows: "5",
+        shelfStatus: "ON"
       })
         .then(res => {
           if (res.array.length > 0) {
@@ -701,7 +703,7 @@ export default {
         });
     },
     modalHandleEdit(params) {
-      console.log('modalHandleEdit' + params.rows);
+      console.log("modalHandleEdit" + params.rows);
     }
   }
 };

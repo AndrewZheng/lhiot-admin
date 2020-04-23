@@ -45,7 +45,7 @@
           </Button>
         </div>
         <div slot="operations">
-          <Button v-waves type="success" class="mr5" @click="handleCreate">
+          <Button v-waves type="success" class="mr5" @click="handleAdd">
             <Icon type="md-add" />添加
           </Button>
           <Poptip
@@ -53,7 +53,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="handleBatchDel"
+            @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
@@ -77,10 +77,10 @@
 
     <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
-        <span>{{ isCreate?'创建商品单位':'编辑商品单位' }}</span>
+        <span>{{ unitDetail.id == ''?'创建商品单位':'编辑商品单位' }}</span>
       </p>
       <div class="modal-content" style="margin-top: 20px">
-        <Form ref="editForm" :label-width="100" :model="unitDetail" :rules="ruleInline">
+        <Form ref="modalEdit" :label-width="100" :model="unitDetail" :rules="ruleInline">
           <Row>
             <FormItem label="单位名称:" prop="unitName">
               <Input v-model="unitDetail.unitName" placeholder="请输入单位名称" style="width: 200px"></Input>
@@ -108,7 +108,7 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
       </div>
     </Modal>
   </div>
@@ -116,13 +116,17 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import tableMixin from '@/mixins/tableMixin.js';
+import _ from 'lodash';
 import {
   getProductUnitsPages,
   editProductUnits,
   delProductUnits,
   createProductUnits
 } from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
+
 import { splitConvert } from '@/libs/converStatus';
 
 const unitDetail = {
@@ -131,18 +135,18 @@ const unitDetail = {
   unitName: ''
 };
 
-const searchRowData = {
+const roleRowData = {
   id: '',
+  splitStatus: null,
   unitName: '',
   page: 1,
   rows: 10
 };
-
 export default {
   components: {
     Tables
   },
-  mixins: [tableMixin],
+  mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
     return {
       ruleInline: {
@@ -182,6 +186,8 @@ export default {
           options: ['edit', 'delete']
         }
       ],
+      modalViewLoading: false,
+      clearSearchLoading: false,
       splitStatus: [
         {
           label: '是',
@@ -192,8 +198,8 @@ export default {
           value: 'NO_SEPARABLE'
         }
       ],
-      searchRowData: _.cloneDeep(searchRowData),
-      unitDetail: _.cloneDeep(unitDetail),
+      searchRowData: this._.cloneDeep(roleRowData),
+      unitDetail: this._.cloneDeep(unitDetail),
       ids: []
     };
   },
@@ -201,35 +207,15 @@ export default {
     this.getTableData();
   },
   methods: {
-    getTableData() {
-      this.loading = true;
-      getProductUnitsPages(this.searchRowData).then(res => {
-        this.tableData = res.rows;
-        this.total = res.total;
-      }).finally(() => {
-        this.loading = false;
-        this.searchLoading = false;
-        this.clearSearchLoading = false;
-      });
+    resetFields() {
+      this.$refs.modalEdit.resetFields();
     },
-    handleCreate() {
-      this.resetFields();
-      this.tempModalType = this.modalType.create;
-      this.unitDetail = _.cloneDeep(unitDetail);
-      this.modalEdit = true;
-    },
-    handleEdit(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.unitDetail = _.cloneDeep(params.row);
-      this.modalEdit = true;
-    },
-    handleSubmit() {
-      this.$refs.editForm.validate(valid => {
+    handleSubmit(name) {
+      this.$refs[name].validate(valid => {
         if (valid) {
-          if (this.isCreate) {
+          if (this.tempModalType === this.modalType.create) {
             this.createTableRow();
-          } else if (this.isEdit) {
+          } else if (this.tempModalType === this.modalType.edit) {
             this.editTableRow();
           }
         } else {
@@ -237,28 +223,50 @@ export default {
         }
       });
     },
-    createTableRow() {
-      this.modalEditLoading = true;
-      createProductUnits(this.unitDetail)
-        .then(res => {
-          this.modalEdit = false;
-          this.$Message.success('创建成功！');
-          this.getTableData();
-        })
-        .finally(res => {
-          this.modalEditLoading = false;
-        });
-    },
     editTableRow() {
-      this.modalEditLoading = true;
+      this.modalViewLoading = true;
       editProductUnits(this.unitDetail).then(res => {
+        this.modalViewLoading = false;
         this.modalEdit = false;
-        this.$Message.success('修改成功！');
         this.getTableData();
-      }).finally(() => {
-        this.modalEditLoading = false;
+        this.resetFields();
       });
     },
+    createTableRow() {
+      createProductUnits(this.unitDetail)
+        .then(res => {})
+        .finally(res => {
+          this.modalEditLoading = false;
+          this.modalEdit = false;
+          this.getTableData();
+          this.resetFields();
+        });
+    },
+    resetSearchRowData() {
+      this.searchRowData = _.cloneDeep(roleRowData);
+    },
+    handleEdit(params) {
+      this.tempModalType = this.modalType.edit;
+      this.unitDetail = this._.cloneDeep(params.row);
+      this.modalEdit = true;
+    },
+    getTableData() {
+      getProductUnitsPages(this.searchRowData).then(res => {
+        // this.tableData = res.array;
+        this.tableData = res.rows;
+        this.total = res.total;
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
+      });
+    },
+    handleAdd() {
+      this.$refs.modalEdit.resetFields();
+      this.tempModalType = this.modalType.create;
+      this.unitDetail = unitDetail;
+      this.modalEdit = true;
+    },
+    // 删除
     deleteTable(ids) {
       this.loading = true;
       delProductUnits({
@@ -275,17 +283,24 @@ export default {
           }
           this.tableDataSelected = [];
           this.getTableData();
+          this.loading = false;
         })
-        .finally(() => {
+        .catch(() => {
           this.loading = false;
         });
-    },
-    resetSearchRowData() {
-      this.searchRowData = _.cloneDeep(searchRowData);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.img {
+  width: 150px;
+  height: auto !important;
+}
+.add-image {
+  line-height: 48px;
+  vertical-align: text-bottom;
+  margin-right: 10px;
+}
 </style>

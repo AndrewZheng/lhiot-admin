@@ -76,7 +76,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="handleBatchDel"
+            @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
@@ -285,7 +285,7 @@
                 </FormItem>
               </Row>
             </i-col>
-          </Row> -->
+          </Row>-->
           <Row>
             <i-col span="12">
               <FormItem label="开始时间:">
@@ -339,6 +339,8 @@
                     ref="uploadMain"
                     :default-list="defaultListMain"
                     :image-size="imageSize"
+                    group-type="activity_image"
+                    file-dir="activity"
                     @on-success="handleSuccessMain"
                   >
                     <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -437,9 +439,12 @@ import {
   deleteAdvertisement,
   editAdvertisement,
   getAdvertisementPages,
-  getProductStandardsPages
+  getProductStandardsPages,
+  deletePicture
 } from '@/api/wholesale';
+import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 
 import { compareData } from '@/libs/util';
@@ -497,7 +502,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [tableMixin, uploadMixin],
+  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
   data() {
     return {
       advPositionEnum,
@@ -507,6 +512,9 @@ export default {
       relationTargetShow: false,
       selectDisable: true,
       advertisementList: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       ruleInline: {
         title: [{ required: true, message: '请输入广告名称' }],
         vaild: [{ required: true, message: '请选择广告状态' }],
@@ -559,7 +567,10 @@ export default {
       linkTypeEnum,
       tempModalTableData: [],
       relationTypeKeys: [],
-      vaild: [{ label: '有效', value: 'yes' }, { label: '无效', value: 'no' }],
+      vaild: [
+        { label: '有效', value: 'yes' },
+        { label: '无效', value: 'no' }
+      ],
       validityTimeList: [{ label: '定时生效', value: 'OFF' }],
       columns: [
         {
@@ -795,6 +806,12 @@ export default {
       this.advertisementDetail.endTime = value;
     },
     handleSubmit(name) {
+      if (this.oldPicture.length > 0) {
+        const urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs[name].validate(valid => {
         if (valid) {
           if (this.advertisementDetail.isPermanent === 'OFF') {
@@ -825,6 +842,24 @@ export default {
           this.$Message.error('请完善信息!');
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        const urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
     },
     editTableRow() {
       this.modalViewLoading = true;
@@ -893,6 +928,8 @@ export default {
       this.advertisementDetail.advertmentImage = null;
       this.advertisementDetail.advertmentImage = fileList[0].url;
       this.tempImage = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     addChildren() {
       if (this.tempModalType !== this.modalType.create) {
@@ -911,6 +948,8 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.advertmentImage);
       this.$refs.editForm.resetFields();
       this.tempImage = null;
       this.tempModalType = this.modalType.edit;

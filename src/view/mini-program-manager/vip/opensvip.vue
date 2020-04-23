@@ -73,7 +73,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="handleBatchDel"
+            @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash" />删除
@@ -96,7 +96,7 @@
       </div>
     </Card>
     <!-- 查看svip套餐详情 -->
-    <Modal v-model="modalView" :width="800" :mask-closable="false" draggable scrollable>
+    <Modal v-model="modalView" :width="800" draggable scrollable :mask-closable="false">
       <p slot="header">
         <span>查看SVIP套餐</span>
       </p>
@@ -105,13 +105,13 @@
           <i-col span="12">
             <Row>
               <i-col span="8">套餐类型:</i-col>
-              <i-col v-if="addRelationDetail.packageType==='YEAR_CARD'" span="16">
+              <i-col span="16" v-if="addRelationDetail.packageType==='YEAR_CARD'">
                 <tag color="orange">{{ "年卡" | vipStatusFilter }}</tag>
               </i-col>
-              <i-col v-else-if="addRelationDetail.packageType==='MONTH_CARD'" span="16">
+              <i-col span="16" v-else-if="addRelationDetail.packageType==='MONTH_CARD'">
                 <tag color="magenta">{{ "月卡" | vipStatusFilter }}</tag>
               </i-col>
-              <i-col v-else-if="addRelationDetail.packageType==='SEASON'" span="16">
+              <i-col span="16" v-else-if="addRelationDetail.packageType==='SEASON'">
                 <tag color="purple">{{ "季卡" | vipStatusFilter }}</tag>
               </i-col>
             </Row>
@@ -162,16 +162,16 @@
             <Row>
               <i-col span="8">活动状态:</i-col>
               <!-- <i-col span="16">{{ addRelationDetail.state | vipStatusFilter }}</i-col> -->
-              <i-col v-if="addRelationDetail.state==='ON'" span="16">
+              <i-col span="16" v-if="addRelationDetail.state==='ON'">
                 <tag color="success">{{ "开启" | vipStatusFilter }}</tag>
               </i-col>
-              <i-col v-else-if="addRelationDetail.state==='OFF'" span="16">
+              <i-col span="16" v-else-if="addRelationDetail.state==='OFF'">
                 <tag color="error">{{ "关闭" | vipStatusFilter }}</tag>
               </i-col>
             </Row>
           </i-col>
         </Row>
-        <Row v-if="addRelationDetail.packageDesc.length>0" class-name="mb20 ml20">
+        <Row class-name="mb20 ml20" v-if="addRelationDetail.packageDesc.length>0">
           <i-col span="12">
             <Row>
               <i-col span="8">套餐描述:</i-col>
@@ -250,8 +250,8 @@
                   <InputNumber
                     :min="0"
                     :value="priceComputed"
-                    style="padding-right: 5px;width: 115px;"
                     @on-change="priceInputNumberOnchange"
+                    style="padding-right: 5px;width: 115px;"
                   ></InputNumber>
                   <!-- <Input
                     v-model="addRelationDetail.packageAmount"
@@ -272,8 +272,8 @@
                   <InputNumber
                     :min="0"
                     :value="salePriceComputed"
-                    style="padding-right: 5px;width: 115px;"
                     @on-change="salePriceInputNumberOnchange"
+                    style="padding-right: 5px;width: 115px;"
                   ></InputNumber>
                 </FormItem>
               </i-col>
@@ -289,8 +289,8 @@
                   <InputNumber
                     :min="0"
                     :value="svipPriceComputed"
-                    style="padding-right: 5px;width: 115px;"
                     @on-change="svipPriceInputNumberOnchange"
+                    style="padding-right: 5px;width: 115px;"
                   ></InputNumber>
                 </FormItem>
               </i-col>
@@ -315,8 +315,8 @@
                 <FormItem label="套餐描述:" prop="packageDesc">
                   <Input
                     v-model="addRelationDetail.packageDesc"
-                    :autosize="{minRows: 3,maxRows: 8}"
                     type="textarea"
+                    :autosize="{minRows: 3,maxRows: 8}"
                     placeholder="请输入套餐描述"
                   ></Input>
                 </FormItem>
@@ -394,8 +394,8 @@
                 <InputNumber
                   :min="0"
                   :value="priceComputed"
-                  style="padding-right: 5px;width: 115px;"
                   @on-change="priceInputNumberOnchange"
+                  style="padding-right: 5px;width: 115px;"
                 ></InputNumber>
               </FormItem>
             </i-col>
@@ -411,8 +411,8 @@
                 <InputNumber
                   :min="0"
                   :value="salePriceComputed"
-                  style="padding-right: 5px;width: 115px;"
                   @on-change="salePriceInputNumberOnchange"
+                  style="padding-right: 5px;width: 115px;"
                 ></InputNumber>
               </FormItem>
             </i-col>
@@ -428,8 +428,8 @@
                 <InputNumber
                   :min="0"
                   :value="svipPriceComputed"
-                  style="padding-right: 5px;width: 115px;"
                   @on-change="svipPriceInputNumberOnchange"
+                  style="padding-right: 5px;width: 115px;"
                 ></InputNumber>
               </FormItem>
             </i-col>
@@ -454,8 +454,8 @@
               <FormItem label="套餐描述:" prop="packageDesc">
                 <Input
                   v-model="addRelationDetail.packageDesc"
-                  :autosize="{minRows: 3,maxRows: 8}"
                   type="textarea"
+                  :autosize="{minRows: 3,maxRows: 8}"
                   placeholder="请输入套餐描述"
                 ></Input>
               </FormItem>
@@ -471,27 +471,30 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
-import DragList from '_c/drag-list';
+import Tables from "_c/tables";
+import IViewUpload from "_c/iview-upload";
+import DragList from "_c/drag-list";
+import _ from "lodash";
 import {
   getSvipPackagePages,
   deleteSvipPackage,
   createSvipPackage,
   editSvipPackage
-} from '@/api/mini-program';
-import uploadMixin from '@/mixins/uploadMixin';
-import tableMixin from '@/mixins/tableMixin.js';
+} from "@/api/mini-program";
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
 import {
   //   1.7
   packageTypeConvert,
   packageStatusConvert
-} from '@/libs/converStatus';
+} from "@/libs/converStatus";
 import {
   //   1.7
   packageTypeEnum,
   packageStatusEnum
-} from '@/libs/enumerate';
+} from "@/libs/enumerate";
 import {
   compareData,
   getSmallCouponActivity,
@@ -502,22 +505,22 @@ import {
   replaceByTab,
   addRnb,
   addDay
-} from '@/libs/util';
+} from "@/libs/util";
 
 const relationDetail = {
   id: 0,
-  packageType: null, // 套餐类型
-  packageName: '', // 套餐名称
-  packageCycle: null, // 套餐周期
-  packageAmount: null, // 套餐金额
-  discountAmount: null, // 新用户优惠价
-  renewalAmount: null, // 续费金额
-  state: null, // 活动状态
-  packageDesc: '' // 套餐描述
+  packageType: null, //套餐类型
+  packageName: "", //套餐名称
+  packageCycle: null, //套餐周期
+  packageAmount: null, //套餐金额
+  discountAmount: null, //新用户优惠价
+  renewalAmount: null, //续费金额
+  state: null, //活动状态
+  packageDesc: "" //套餐描述
 };
 
 const couponTemplateDetail = {
-  state: 'OFF' // 活动状态
+  state: "OFF" //活动状态
 };
 
 const roleRowData = {
@@ -526,42 +529,42 @@ const roleRowData = {
 };
 
 const templateRowData = {
-  state: 'OFF' // 活动状态
+  state: "OFF" //活动状态
 };
 
 const dataColumns = [
   {
-    type: 'selection',
+    type: "selection",
     width: 60,
-    align: 'center',
-    align: 'center'
+    align: "center",
+    align: "center"
   },
   {
-    title: '套餐类型',
-    align: 'center',
-    key: 'packageType',
+    title: "套餐类型",
+    align: "center",
+    key: "packageType",
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.packageType === 'MONTH_CARD') {
+      if (row.packageType === "MONTH_CARD") {
         return (
           <div>
-            <tag color='magenta'>
+            <tag color="magenta">
               {packageTypeConvert(row.packageType).label}
             </tag>
           </div>
         );
-      } else if (row.packageType === 'SEASON') {
+      } else if (row.packageType === "SEASON") {
         return (
           <div>
-            <tag color='purple'>
+            <tag color="purple">
               {packageTypeConvert(row.packageType).label}
             </tag>
           </div>
         );
-      } else if (row.packageType === 'YEAR_CARD') {
+      } else if (row.packageType === "YEAR_CARD") {
         return (
           <div>
-            <tag color='orange'>
+            <tag color="orange">
               {packageTypeConvert(row.packageType).label}
             </tag>
           </div>
@@ -572,32 +575,32 @@ const dataColumns = [
     minWidth: 40
   },
   {
-    title: '套餐名称',
-    align: 'center',
-    key: 'packageName'
+    title: "套餐名称",
+    align: "center",
+    key: "packageName"
   },
   {
-    title: '套餐周期',
-    align: 'center',
-    key: 'packageCycle',
+    title: "套餐周期",
+    align: "center",
+    key: "packageCycle",
     render(h, params, vm) {
       const amount = addDay(params.row.packageCycle);
       return <div>{amount}</div>;
     }
   },
   {
-    title: '套餐金额',
-    key: 'packageAmount',
-    align: 'center',
+    title: "套餐金额",
+    key: "packageAmount",
+    align: "center",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.packageAmount);
       return <div>{amount}</div>;
     }
   },
   {
-    title: '新用户优惠价',
-    align: 'center',
-    key: 'discountAmount',
+    title: "新用户优惠价",
+    align: "center",
+    key: "discountAmount",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.discountAmount);
       return <div>{amount}</div>;
@@ -605,18 +608,18 @@ const dataColumns = [
     minWidth: 40
   },
   {
-    title: '续费金额',
-    align: 'center',
-    key: 'renewalAmount',
+    title: "续费金额",
+    align: "center",
+    key: "renewalAmount",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.renewalAmount);
       return <div>{amount}</div>;
     }
   },
   {
-    title: '套餐描述',
-    align: 'center',
-    key: 'packageDesc'
+    title: "套餐描述",
+    align: "center",
+    key: "packageDesc"
   },
   // {
   //   title: "活动状态",
@@ -640,21 +643,21 @@ const dataColumns = [
   //   }
   // },
   {
-    title: '活动状态',
-    align: 'center',
-    key: 'state',
+    title: "活动状态",
+    align: "center",
+    key: "state",
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.state === 'ON') {
+      if (row.state === "ON") {
         return (
           <div>
-            <tag color='success'>{packageStatusConvert(row.state).label}</tag>
+            <tag color="success">{packageStatusConvert(row.state).label}</tag>
           </div>
         );
-      } else if (row.state === 'OFF') {
+      } else if (row.state === "OFF") {
         return (
           <div>
-            <tag color='error'>{packageStatusConvert(row.state).label}</tag>
+            <tag color="error">{packageStatusConvert(row.state).label}</tag>
           </div>
         );
       }
@@ -662,29 +665,29 @@ const dataColumns = [
     }
   },
   {
-    title: '创建时间',
-    align: 'center',
-    key: 'createTime',
+    title: "创建时间",
+    align: "center",
+    key: "createTime",
     minWidth: 70
   },
   {
-    title: '修改时间',
-    align: 'center',
-    key: 'updateTime',
+    title: "修改时间",
+    align: "center",
+    key: "updateTime",
     minWidth: 70
   },
   {
-    title: '创建人',
-    align: 'center',
+    title: "创建人",
+    align: "center",
     minWidth: 30,
-    key: 'createUser'
+    key: "createUser"
   },
   {
-    title: '操作',
-    align: 'center',
+    title: "操作",
+    align: "center",
     minWidth: 80,
-    key: 'handle',
-    options: ['onSale', 'view', 'edit', 'delete']
+    key: "handle",
+    options: ["onSale", "view", "edit", "delete"]
   }
 ];
 
@@ -693,57 +696,68 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [tableMixin, uploadMixin],
+  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  computed: {
+    priceComputed() {
+      return fenToYuanDot2Number(this.addRelationDetail.packageAmount);
+    },
+    salePriceComputed() {
+      return fenToYuanDot2Number(this.addRelationDetail.discountAmount);
+    },
+    svipPriceComputed() {
+      return fenToYuanDot2Number(this.addRelationDetail.renewalAmount);
+    }
+  },
   data() {
     return {
       distributionRuleInline: {
-        state: [{ required: true, message: '请选择活动状态' }],
-        packageType: [{ required: true, message: '请选择套餐类型' }],
-        packageName: [{ required: true, message: '请输入套餐名称' }],
-        packageCycle: [{ required: true, message: '请输入套餐周期' }],
+        state: [{ required: true, message: "请选择活动状态" }],
+        packageType: [{ required: true, message: "请选择套餐类型" }],
+        packageName: [{ required: true, message: "请输入套餐名称" }],
+        packageCycle: [{ required: true, message: "请输入套餐周期" }],
         packageAmount: [
-          { required: true, message: '请输入套餐金额' },
+          { required: true, message: "请输入套餐金额" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/([1-9]\d*(\.\d*[1-9])?)|(\d*[1-9])/.test(value)) {
-                errors.push(new Error('必须为非零数'));
+                errors.push(new Error("必须为非零数"));
               }
               callback(errors);
             }
           }
         ],
         discountAmount: [
-          { required: true, message: '请输入优惠金额' },
+          { required: true, message: "请输入优惠金额" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/([1-9]\d*(\.\d*[1-9])?)|(\d*[1-9])/.test(value)) {
-                errors.push(new Error('必须为非零数'));
+                errors.push(new Error("必须为非零数"));
               }
               callback(errors);
             }
           }
         ],
         renewalAmount: [
-          { required: true, message: '请输入续费金额' },
+          { required: true, message: "请输入续费金额" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/([1-9]\d*(\.\d*[1-9])?)|(\d*[1-9])/.test(value)) {
-                errors.push(new Error('必须为非零数'));
+                errors.push(new Error("必须为非零数"));
               }
               callback(errors);
             }
           }
         ],
         packageDesc: [
-          { required: false, message: '' },
+          { required: false, message: "" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (value.length > 200) {
-                errors.push(new Error('字数限制200字'));
+                errors.push(new Error("字数限制200字"));
               }
               callback(errors);
             }
@@ -771,17 +785,6 @@ export default {
       modalAdd: false
     };
   },
-  computed: {
-    priceComputed() {
-      return fenToYuanDot2Number(this.addRelationDetail.packageAmount);
-    },
-    salePriceComputed() {
-      return fenToYuanDot2Number(this.addRelationDetail.discountAmount);
-    },
-    svipPriceComputed() {
-      return fenToYuanDot2Number(this.addRelationDetail.renewalAmount);
-    }
-  },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData); // 刷新清除上次搜索结果
     this.getTableData();
@@ -798,10 +801,10 @@ export default {
     },
     switchStatus(params) {
       this.addRelationDetail = _.cloneDeep(params.row);
-      if (params.row.state === 'ON') {
-        this.addRelationDetail.state = 'OFF';
+      if (params.row.state === "ON") {
+        this.addRelationDetail.state = "OFF";
       } else {
-        this.addRelationDetail.state = 'ON';
+        this.addRelationDetail.state = "ON";
       }
       this.loading = true;
       this.editSvipPackage();
@@ -866,7 +869,7 @@ export default {
       editSvipPackage(this.addRelationDetail)
         .then(res => {
           this.modalEdit = false;
-          this.$Message.success('修改成功!');
+          this.$Message.success("修改成功!");
           this.getTableData();
         })
         .finally(res => {
@@ -890,50 +893,50 @@ export default {
       }
     },
     handleTemplateEdit() {
-      const _this = this;
+      let _this = this;
       if (
         this.addRelationDetail.renewalAmount >
         this.addRelationDetail.packageAmount
       ) {
-        this.$Message.error('续费金额不能大于套餐金额');
+        this.$Message.error("续费金额不能大于套餐金额");
         return;
       }
       if (
         this.addRelationDetail.discountAmount >
         this.addRelationDetail.packageAmount
       ) {
-        this.$Message.error('优惠金额不能大于套餐金额');
+        this.$Message.error("优惠金额不能大于套餐金额");
         return;
       }
       this.$refs.editForm.validate(valid => {
         if (valid) {
           _this.replaceTextByTag();
-          if (this.isEdit) {
+          if (this.tempModalType === this.modalType.edit) {
             _this.editSvipPackage();
           }
         } else {
-          _this.$Message.error('请完善信息!');
+          _this.$Message.error("请完善信息!");
         }
       });
     },
     handleTemplateAdd() {
-      const _this = this;
-      if (_this.addRelationDetail.packageName == '') {
-        _this.$Message.error('请完善信息!');
+      let _this = this;
+      if (_this.addRelationDetail.packageName == "") {
+        _this.$Message.error("请完善信息!");
         return false;
       }
       if (
         this.addRelationDetail.renewalAmount >
         this.addRelationDetail.packageAmount
       ) {
-        this.$Message.error('续费金额不能大于套餐金额');
+        this.$Message.error("续费金额不能大于套餐金额");
         return;
       }
       if (
         this.addRelationDetail.discountAmount >
         this.addRelationDetail.packageAmount
       ) {
-        this.$Message.error('优惠金额不能大于套餐金额');
+        this.$Message.error("优惠金额不能大于套餐金额");
         return;
       }
       this.$refs.addForm.validate(valid => {
@@ -942,7 +945,7 @@ export default {
           _this.replaceTextByTag();
           _this.createRelation();
         } else {
-          _this.$Message.error('请完善信息!');
+          _this.$Message.error("请完善信息!");
         }
       });
     },
@@ -970,7 +973,7 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.modalAdd = false;
-          this.$Message.success('创建成功!');
+          this.$Message.success("创建成功!");
           this.getTableData();
         })
         .catch(() => {
@@ -983,7 +986,7 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success('创建成功!');
+          this.$Message.success("创建成功!");
           this.getTableData();
         })
         .catch(() => {
@@ -993,7 +996,7 @@ export default {
     },
     addPackageTemplate() {
       getSvipPackagePages(this.searchRowData).then(res => {
-        const svipPages = res.rows;
+        let svipPages = res.rows;
         //   svipPages.forEach(item => {
         // console.log(item.packageType)
         // });

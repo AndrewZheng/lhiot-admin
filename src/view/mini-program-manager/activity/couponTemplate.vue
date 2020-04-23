@@ -90,7 +90,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="handleBatchDel"
+            @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
@@ -314,7 +314,7 @@
                 ></InputNumber>
               </FormItem>
             </Col>
-          </Row> -->
+          </Row>-->
           <Row>
             <Col span="18">
             <FormItem :label-width="100" label="优惠券状态:" prop="couponStatus">
@@ -382,6 +382,8 @@
                 ref="uploadMain"
                 :default-list="defaultListMain"
                 :image-size="imageSize"
+                group-type="activity_image"
+                file-dir="activity"
                 @on-success="handleSuccessMain"
               >
                 <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -403,15 +405,18 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
+import _ from 'lodash';
 import {
   deleteCouponTemplate,
   getCouponTemplatePages,
   editCouponTemplate,
-  createCouponTemplate
+  createCouponTemplate,
+  deletePicture
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-
+import searchMixin from '@/mixins/searchMixin.js';
 import {
   couponStatusConvert,
   couponTypeConvert,
@@ -458,7 +463,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, tableMixin],
+  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
     return {
       ruleInline: {
@@ -495,6 +500,9 @@ export default {
       couponStatusEnum,
       couponTypeEnum,
       couponScopeEnum,
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       columns: [
         {
           type: 'selection',
@@ -714,6 +722,12 @@ export default {
       this.couponTemplateDetail.storeImage = null;
     },
     handleSubmit(name) {
+      if (this.oldPicture.length > 0) {
+        const urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs[name].validate(valid => {
         if (valid) {
           // TODO ? 最小金额能否大于优惠金额,即用户不需要支付额外金额
@@ -726,10 +740,10 @@ export default {
             /\n|\r/g,
             '&'
           );
-          if (this.isCreate) {
+          if (this.tempModalType === this.modalType.create) {
             // 添加状态
             this.createCouponTemplate();
-          } else if (this.isEdit) {
+          } else if (this.tempModalType === this.modalType.edit) {
             // 编辑状态
             this.editCouponTemplate();
           }
@@ -737,6 +751,24 @@ export default {
           this.$Message.error('请完善信息!');
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        const urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
     },
     createCouponTemplate() {
       this.modalViewLoading = true;
@@ -809,6 +841,8 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.couponImage);
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.couponTemplateDetail = _.cloneDeep(params.row);
@@ -858,6 +892,8 @@ export default {
       this.uploadListMain = fileList;
       this.couponTemplateDetail.couponImage = null;
       this.couponTemplateDetail.couponImage = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
