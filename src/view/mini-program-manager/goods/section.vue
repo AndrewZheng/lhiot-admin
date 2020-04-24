@@ -301,7 +301,6 @@ export default {
       oldPicture: [],
       newPicture: [],
       save: [],
-      // 查看
       imageSize: 2048,
       imgUploadViewItem: '',
       uploadVisible: false
@@ -423,27 +422,6 @@ export default {
       this.$refs.uploadMain.deleteFile(file);
       this.currentCategory.sectionImg = null;
     },
-    handleEditClose() {
-      if (this.newPicture.length > 0) {
-        const urls = {
-          urls: this.newPicture
-        };
-        this.deletePicture(urls);
-      }
-      this.modalEdit = false;
-      this.oldPicture = [];
-      this.newPicture = [];
-    },
-    deletePicture(urls) {
-      deletePicture({
-        urls
-      })
-        .then(res => {
-          this.newPicture = [];
-          this.oldPicture = [];
-        })
-        .catch(() => {});
-    },
     // 删除
     deleteTable(ids) {
       // this.loading = true;
@@ -535,7 +513,7 @@ export default {
           title: 'title',
           children: 'children'
         };
-        this.menuData = convertTree(menuList, map, true);
+        this.menuData = convertTree(menuList, map, false);
         // if (this.menuData.length > 0) {
         this.getTableData();
         // }

@@ -194,13 +194,13 @@
             type="primary"
             @click="deliverOrder"
           >门店调货</Button>
-          <Button v-waves class="search-btn ml2 mr2" type="primary" @click="resendToHd">海鼎重发</Button>
+          <Button v-waves class="search-btn ml2 mr2" type="warning" @click="resendToHd">海鼎重发</Button>
           <!-- 多类型导出 -->
           <!-- <BookTypeOption v-model="exportType" class="mr5"/> -->
           <Button
             :loading="downloadLoading"
             class="search-btn mr2"
-            type="warning"
+            type="info"
             @click="handleDownload"
           >
             <Icon type="md-download" />导出
@@ -208,7 +208,7 @@
           <Button
             :loading="downloadLoading"
             class="search-btn"
-            type="primary"
+            type="info"
             @click="couponDetails"
           >
             <Icon type="md-search" />&nbsp;用券数据
@@ -240,7 +240,7 @@
       </div>
     </Card>
     <!--查看订单详情-->
-    <Modal v-model="modalView" :width="950" :mask-closable="false">
+    <Modal v-model="modalView" :width="1000" :mask-closable="false">
       <p slot="header">
         <span>查看订单详情</span>
       </p>
