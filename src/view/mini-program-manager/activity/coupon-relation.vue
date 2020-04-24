@@ -93,6 +93,7 @@
             type="success"
             class="mr5"
             @click="addCouponTemplate('HD')"
+            v-show="activityCouponType!='BUY_COUPON_ACTIVITY'"
           >
             <Icon type="md-add" />海鼎优惠券
           </Button>
@@ -155,6 +156,7 @@
                   placeholder="优惠券类型"
                   style="padding-right: 5px;width: 100px"
                   clearable
+                  v-show="activityCouponType!='BUY_COUPON_ACTIVITY'"
                 >
                   <Option
                     v-for="(item,index) in couponTypeEnum"
@@ -263,7 +265,11 @@
             </Row>
             <Row>
               <i-col v-if="tempModalType == 'addTemplate'" span="6">
-                <FormItem label="券有效期:" prop="useLimitType">
+                <FormItem
+                  label="券有效期:"
+                  prop="useLimitType"
+                  v-if="activityCouponType!='BUY_COUPON_ACTIVITY'"
+                >
                   <Select
                     v-model="addRelationDetail.validDateType"
                     placeholder="券有效期类型"
@@ -278,7 +284,13 @@
                     >{{ item.label }}</Option>
                   </Select>
                 </FormItem>
+                <FormItem
+                  label="券有效期:"
+                  prop="useLimitType"
+                  v-else
+                >{{ addRelationDetail.validDateType==="UN_FIXED_DATE"?"相对发券日":"N/A" }}</FormItem>
               </i-col>
+              <!-- v-show="activityCouponType!='BUY_COUPON_ACTIVITY'" -->
               <template
                 v-if="addRelationDetail.validDateType=='UN_FIXED_DATE' && tempModalType=='addTemplate'"
               >
@@ -333,13 +345,13 @@
               </template>
             </Row>
             <Row>
-              <i-col span="4">
+              <i-col span="6" v-show="activityCouponType!='BUY_COUPON_ACTIVITY'">
                 <FormItem label="发券总数:" prop="couponLimit">
                   <InputNumber
                     :min="0"
                     v-model="addRelationDetail.couponLimit"
                     label="限购数量"
-                    style="padding-right: 5px;width: 80px"
+                    style="padding-right: 5px;width: 110px"
                   ></InputNumber>
                 </FormItem>
               </i-col>
@@ -747,7 +759,7 @@ const relationDetail = {
   source: "SMALL", // 默认来源为系统优惠券
   userScope: "",
   rank: 0, // 排序字段
-  validDateType: "FIXED_DATE",
+  validDateType: "UN_FIXED_DATE",
   beginDay: 0,
   endDay: 0
 };
@@ -1450,7 +1462,11 @@ export default {
           this.clearSearchLoading = false;
         });
     },
+    // v-show="activityCouponType!='BUY_COUPON_ACTIVITY'"
     getTemplateTableData() {
+      if (this.activityCouponType === "BUY_COUPON_ACTIVITY") {
+        this.searchTemplateRowData.couponType = "FULL_CUT_COUPON";
+      }
       getCouponTemplatePages(this.searchTemplateRowData)
         .then(res => {
           this.couponTemplateData = res.rows;
@@ -1510,6 +1526,9 @@ export default {
         } else {
           this.addRelationDetail.userScope = "ALL";
         }
+      }
+      if (this.activityCouponType === "BUY_COUPON_ACTIVITY") {
+        this.addRelationDetail.couponLimit = 9999999;
       }
     },
     handleHdTemplateChange(currentRow, oldCurrentRow) {

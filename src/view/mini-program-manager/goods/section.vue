@@ -514,10 +514,7 @@ export default {
           children: 'children'
         };
         this.menuData = convertTree(menuList, map, false);
-        // if (this.menuData.length > 0) {
         this.getTableData();
-        // }
-        // }
       });
     },
 
