@@ -57,6 +57,9 @@
               </Row>
             </div>
             <div slot="operations">
+              <Button v-waves :loading="clearSearchLoading" type="warning" @click="handleBack">
+                <Icon type="ios-arrow-back" />&nbsp;返回全部板块
+              </Button>
               <Button v-waves type="success" class="mr5" @click="addSection">
                 <Icon type="md-add" />添加
               </Button>
@@ -71,9 +74,6 @@
                   <Icon type="md-trash" />批量删除
                 </Button>
               </Poptip>
-              <Button v-waves :loading="clearSearchLoading" type="warning" @click="handleBack">
-                <Icon type="ios-arrow-back" />&nbsp;返回全部板块
-              </Button>
             </div>
           </tables>
           <div style="margin: 10px;overflow: hidden">
