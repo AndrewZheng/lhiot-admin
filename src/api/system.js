@@ -6,7 +6,7 @@ import Vue from 'vue';
  */
 export const getRouterById = (pid) => {
   return Vue.prototype.$http.request({
-    url: '/ims-menu/list/pid', // get_route_list /ims-menu/list/pid
+    url: '/ims-menu/list/pid',
     params: {
       pid: pid
     },
@@ -16,17 +16,50 @@ export const getRouterById = (pid) => {
 
 export const getSystemList = () => {
   return Vue.prototype.$http.request({
-    url: '/ims-menu/list/systems', // get_system_list /ims-menu/list/systems
+    url: '/ims-menu/list/systems',
     method: 'get'
   });
 };
 
+/**
+ *  菜单管理 CRUD
+ */
 export const getMenuList = () => {
   return Vue.prototype.$http.request({
-    url: '/ims-menu/list/all', // get_menu_list /ims-menu/list/all
+    url: '/ims-menu/list/all',
     method: 'get'
   });
 };
+
+export const deleteMenu = (id) => {
+  return Vue.prototype.$http.request({
+    url: '/ims-menu/' + id,
+    ethod: 'delete'
+  });
+}
+
+export const deleteOperate = (id) => {
+  return Vue.prototype.$http.request({
+    url: '/ims-operation/' + id,
+    method: 'delete'
+  });
+}
+
+export const createMenu = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/ims-menu/',
+    data,
+    method: 'post'
+  })
+}
+
+export const editMenu = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/ims-menu/' + data.id,
+    data,
+    method: 'put'
+  })
+}
 
 export const getRelationMenu = (id) => {
   return Vue.prototype.$http.request({
@@ -41,11 +74,6 @@ export const getRoleData = ({ page, rows }) => {
     rows
   };
 
-  // return Vue.prototype.$http.request({
-  //   url: 'get_role_data',
-  //   params: data,
-  //   method: 'get'
-  // });
   return Vue.prototype.$http.request({
     url: '/ims-role/pages',
     data: data,
@@ -73,11 +101,6 @@ export const getUserData = ({ page, rows }) => {
     rows
   };
 
-  // return Vue.prototype.$http.request({
-  //   url: 'get_user_data',
-  //   params: data,
-  //   method: 'get'
-  // });
   return Vue.prototype.$http.request({
     url: '/admin/pages',
     data: data,
@@ -85,7 +108,6 @@ export const getUserData = ({ page, rows }) => {
   });
 };
 
-// 用户管理上传头像
 export const uploadFile = (data) => {
   return Vue.prototype.$http.request({
     url: 'https://resource.food-see.com/v1/upload/product_image',

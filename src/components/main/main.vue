@@ -47,6 +47,13 @@
             <keep-alive :include="cacheList">
               <router-view/>
             </keep-alive>
+            <div class="copyright-area">
+              <p class="copyright">Copyright©2020 All Rights Reserved 湖南绿航恰果果农产品有限公司 版权所有
+                <a href="http://beian.miit.gov.cn">湘ICP备16000524号</a>
+              </p>
+              <p class="address"><Icon type="ios-pin" /> 地址：长沙市岳麓区麓谷企业广场F3栋21楼</p>
+              <p class="phone"><Icon type="ios-call" /> 电话：400-612-0088</p>
+            </div>
           </Content>
         </Layout>
       </Content>

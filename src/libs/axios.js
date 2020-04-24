@@ -29,9 +29,9 @@ class HttpRequest {
       response: this.responseType
     });
 
-    //删除图片
-    const delHttpOps = _.merge({}, defaultOps, {
-      baseURL: "http://test-resource.food-see.com",
+    // 删除图片
+    const imgServiceOps = _.merge({}, defaultOps, {
+      baseURL: this.baseUrl,
       response: this.responseType
     });
 
@@ -39,8 +39,8 @@ class HttpRequest {
     switch (this.centerType) {
       case 'IMS_SERVICE':
         return imsServiceOps;
-      case 'DEL_HTTP':
-        return delHttpOps;
+      case 'IMG_SERVICE':
+        return imgServiceOps;
       default:
         return defaultOps;
     }
