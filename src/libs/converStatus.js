@@ -60,6 +60,9 @@ import {
   yesNoEnum,
   deliverStatusEnum,
   validDateTypeEnum,
+  taskTypeEnum,
+  rewardTypeEnum,
+  receiveStatusEnum,
   // 批发商城小程序
   userStatusEnum,
   userTypeEnum,
@@ -93,6 +96,18 @@ const convertFunction = (value, list) => {
       label: value || 'N/A'
     };
   }
+};
+
+export const receiveStatusConvert = (value) => {
+  return convertFunction(value, receiveStatusEnum);
+};
+
+export const rewardTypeConvert = (value) => {
+  return convertFunction(value, rewardTypeEnum);
+};
+
+export const taskTypeConvert = (value) => {
+  return convertFunction(value, taskTypeEnum);
 };
 
 export const paymentFromConvert = (value) => {

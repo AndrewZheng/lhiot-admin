@@ -42,10 +42,12 @@ import {
   advPositionConvert,
   showTypeConvert
 } from '../libs/converStatus';
+import defaultImg from '@/assets/images/default_img.png';
 
 const mixin = {
   data() {
     return {
+      defaultImg,
       // 待翻译字典对象信息
       userStatus: [{
         key: 'INITIAL',
