@@ -2424,3 +2424,43 @@ export const editTask = (data) => {
   });
 };
 
+/* -------------------------
+ * 每日签到奖励配置
+ * -------------------------
+ */
+export const getSignRewardPages = (data) => {
+  return $http.request({
+    url: '/minapp/everyday-sign-reward/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+export const deleteSignReward = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/everyday-sign-reward/' + ids,
+    method: 'delete'
+  });
+};
+
+export const createSignReward = (data) => {
+  return $http.request({
+    url: '/minapp/everyday-sign-reward/create',
+    data,
+    method: 'post'
+  });
+};
+
+export const editSignReward = (data) => {
+  return $http.request({
+    url: '/minapp/everyday-sign-reward/update/' + data.id,
+    data,
+    method: 'PUT'
+  });
+};

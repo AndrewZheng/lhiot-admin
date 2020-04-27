@@ -28,7 +28,8 @@
           <Select
             v-model="searchRowData.taskType"
             placeholder="任务类型"
-            style="padding-right: 5px;width: 100px"
+            class="mr5"
+            style="width: 120px"
             clearable
           >
             <Option

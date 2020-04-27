@@ -173,7 +173,17 @@ const miniMallRouter = [
         title: '任务操作记录'
       },
       component: () => import('@/view/mini-program-manager/task/record.vue')
-    }]
+    },
+    {
+      path: '/small-sign-reward',
+      name: 'small-sign-reward',
+      meta: {
+        icon: 'ios-paper',
+        title: '每日签到配置'
+      },
+      component: () => import('@/view/mini-program-manager/task/sign-reward.vue')
+    }
+    ]
   },
   {
     path: '/small-activities',
