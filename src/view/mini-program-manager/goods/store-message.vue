@@ -114,6 +114,7 @@
         </Row>
       </div>
     </Card>
+
     <!-- 查看 -->
     <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
@@ -257,6 +258,7 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
+
     <!-- 修改 -->
     <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
@@ -723,8 +725,17 @@ export default {
                   </tag>
                 </div>
               );
+            } else if (row.storeType === 'JOIN_STORE') {
+              return (
+                <div>
+                  <tag color='warning'>
+                    {storeTypeConvert(row.storeType).label}
+                  </tag>
+                </div>
+              );
+            } else {
+              return <div>{row.storeType}</div>;
             }
-            return <div>{row.storeType}</div>;
           }
         },
         {

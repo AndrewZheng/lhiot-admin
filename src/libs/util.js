@@ -670,7 +670,6 @@ export const convertTree = (tree, map, isExpand = false) => {
 
 export const convertTreeCategory = (tree, map, isExpand = false) => {
   const result = [];
-  let count = 0;
   // 遍历 tree
   tree.forEach((item) => {
     // 读取 map 的键值映射
@@ -679,7 +678,6 @@ export const convertTreeCategory = (tree, map, isExpand = false) => {
     let children = item[map.children];
     // 如果有子节点，递归
     if (children.length > 0) {
-      count = count + 1;
       children = convertTreeCategory(children, map, isExpand);
       result.push({
         ...item,
@@ -689,15 +687,6 @@ export const convertTreeCategory = (tree, map, isExpand = false) => {
         children
       });
     } else {
-      // if (count > 0) {
-      //   result.push({
-      //     ...item,
-      //     disabled: true,
-      //     value,
-      //     label,
-      //     children
-      //   });
-      // } else {
       result.push({
         ...item,
         disabled: false,
@@ -705,7 +694,6 @@ export const convertTreeCategory = (tree, map, isExpand = false) => {
         label,
         children
       });
-      // }
     }
   });
   return result;
@@ -951,7 +939,7 @@ export const getSystemHomeName = () => {
 }
 // 根据当前系统获取应该跳转的home页面的routerName
 export const getSystemHomeNameNew = (toLodop) => {
-  if(toLodop != "" && toLodop.indexOf('.exe')>0){
+  if (toLodop != '' && toLodop.indexOf('.exe') > 0) {
     return toLodop;
   }
   let name = 'home';

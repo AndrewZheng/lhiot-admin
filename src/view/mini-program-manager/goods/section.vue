@@ -57,6 +57,9 @@
               </Row>
             </div>
             <div slot="operations">
+              <Button v-waves :loading="clearSearchLoading" type="warning" @click="handleBack">
+                <Icon type="ios-arrow-back" />&nbsp;返回全部板块
+              </Button>
               <Button v-waves type="success" class="mr5" @click="addSection">
                 <Icon type="md-add" />添加
               </Button>
@@ -71,9 +74,6 @@
                   <Icon type="md-trash" />批量删除
                 </Button>
               </Poptip>
-              <Button v-waves :loading="clearSearchLoading" type="warning" @click="handleBack">
-                <Icon type="ios-arrow-back" />&nbsp;返回全部板块
-              </Button>
             </div>
           </tables>
           <div style="margin: 10px;overflow: hidden">
@@ -312,7 +312,6 @@ export default {
       oldPicture: [],
       newPicture: [],
       save: [],
-      // 查看
       imageSize: 2048,
       imgUploadViewItem: "",
       uploadVisible: false
@@ -434,27 +433,6 @@ export default {
       this.$refs.uploadMain.deleteFile(file);
       this.currentCategory.sectionImg = null;
     },
-    handleEditClose() {
-      if (this.newPicture.length > 0) {
-        const urls = {
-          urls: this.newPicture
-        };
-        this.deletePicture(urls);
-      }
-      this.modalEdit = false;
-      this.oldPicture = [];
-      this.newPicture = [];
-    },
-    deletePicture(urls) {
-      deletePicture({
-        urls
-      })
-        .then(res => {
-          this.newPicture = [];
-          this.oldPicture = [];
-        })
-        .catch(() => {});
-    },
     // 删除
     deleteTable(ids) {
       // this.loading = true;
@@ -546,11 +524,8 @@ export default {
           title: "title",
           children: "children"
         };
-        this.menuData = convertTree(menuList, map, true);
-        // if (this.menuData.length > 0) {
+        this.menuData = convertTree(menuList, map, false);
         this.getTableData();
-        // }
-        // }
       });
     },
 

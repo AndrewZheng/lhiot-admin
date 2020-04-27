@@ -2761,3 +2761,51 @@ export const paymentFromEnum = [{
   value: 'debt'
 }
 ];
+
+// MRQD-每日签到、WSGRZL-完善个人资料、XRXSSDXF-新人线上首单消费、XSSCCZ-线上首次充值、XSYDCZ-线上月度充值、XSYDXF-线上月度消费
+export const taskTypeEnum = [{
+  label: '每日签到',
+  value: 'MRQD'
+},
+{
+  label: '完善个人资料',
+  value: 'WSGRZL'
+},
+{
+  label: '新人线上首单消费',
+  value: 'XRXSSDXF'
+},
+{
+  label: '线上首次充值',
+  value: 'XSSCCZ'
+},
+{
+  label: '线上月度充值',
+  value: 'XSYDCZ'
+},
+{
+  label: '线上月度消费',
+  value: 'XSYDXF'
+}
+]
+
+// 奖励类型（INTEGRAL-积分、GIFTPACK-礼包）
+export const rewardTypeEnum = [{
+  label: '积分',
+  value: 'INTEGRAL'
+},
+{
+  label: '礼包',
+  value: 'GIFTPACK'
+}]
+
+// 领取状态（YES-已领取、NO-未领取）
+export const receiveStatusEnum = [{
+  label: '已领取',
+  value: 'YES'
+},
+{
+  label: '未领取',
+  value: 'NO'
+}]
+

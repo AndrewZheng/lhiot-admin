@@ -2370,3 +2370,97 @@ export const sureMaituan = ({
     method: 'post'
   });
 };
+
+/* -------------------------
+ * 任务管理
+ * -------------------------
+ */
+export const getTaskPages = (data) => {
+  return $http.request({
+    url: '/minapp/task-center/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+export const getTaskRecordPages = (data) => {
+  return $http.request({
+    url: '/minapp/task-operation-record/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+export const deleteTask = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/task-center/' + ids,
+    method: 'delete'
+  });
+};
+
+export const createTask = (data) => {
+  return $http.request({
+    url: '/minapp/task-center/create',
+    data,
+    method: 'post'
+  });
+};
+
+export const editTask = (data) => {
+  return $http.request({
+    url: '/minapp/task-center/update/' + data.id,
+    data,
+    method: 'PUT'
+  });
+};
+
+/* -------------------------
+ * 每日签到奖励配置
+ * -------------------------
+ */
+export const getSignRewardPages = (data) => {
+  return $http.request({
+    url: '/minapp/everyday-sign-reward/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+export const deleteSignReward = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/everyday-sign-reward/' + ids,
+    method: 'delete'
+  });
+};
+
+export const createSignReward = (data) => {
+  return $http.request({
+    url: '/minapp/everyday-sign-reward/create',
+    data,
+    method: 'post'
+  });
+};
+
+export const editSignReward = (data) => {
+  return $http.request({
+    url: '/minapp/everyday-sign-reward/update/' + data.id,
+    data,
+    method: 'PUT'
+  });
+};
