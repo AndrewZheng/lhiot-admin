@@ -320,6 +320,15 @@ const miniMallRouter = [
         component: () => import('@/view/mini-program-manager/content/feedback.vue')
       },
       {
+        path: '/small-evaluate',
+        name: 'small-evaluate',
+        meta: {
+          icon: 'md-chatboxes',
+          title: '评价中心'
+        },
+        component: () => import('@/view/mini-program-manager/content/evaluate.vue')
+      },
+      {
         path: '/small-faq-category',
         name: 'small-faq-category',
         meta: {

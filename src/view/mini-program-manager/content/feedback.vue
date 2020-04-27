@@ -16,13 +16,13 @@
         @on-edit="handleEdit"
       >
         <div slot="searchCondition">
-          <Input
+          <!-- <Input
             v-model="searchRowData.title"
             placeholder="标题"
             class="search-input mr5"
             style="width: 150px"
             clearable
-          ></Input>
+          ></Input>-->
           <Input
             v-model="searchRowData.content"
             placeholder="内容"
@@ -32,7 +32,7 @@
           ></Input>
           <Select
             v-model="searchRowData.status"
-            class="search-col"
+            class="search-col mr5"
             placeholder="反馈状态"
             style="width: 150px"
             clearable
@@ -43,6 +43,19 @@
               :key="item.value"
               class="ml15 mt10"
             >{{ item.label }}</Option>
+          </Select>
+          <Select
+            v-model="searchRowData.title"
+            placeholder="活动类型"
+            style="padding-right: 5px;width: 120px"
+            @on-change="handCouponType"
+          >
+            <Option
+              v-for="(item,index) in feedbackClassify"
+              :value="item.indexValue"
+              :key="index"
+              class="ptb2-5"
+            >{{ item.indexValue }}</Option>
           </Select>
           <Button
             v-waves
@@ -109,6 +122,14 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">反馈时间:</i-col>
               <i-col span="16">{{ feedbackDetail.createAt }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">用户电话:</i-col>
+              <i-col span="16">{{ feedbackDetail.phone }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -186,7 +207,11 @@
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
 import _ from "lodash";
-import { getFeedbackPages, editFeedback } from "@/api/mini-program";
+import {
+  getFeedbackPages,
+  editFeedback,
+  getSystemParameter
+} from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 import { appTypeConvert } from "@/libs/converStatus";
@@ -230,7 +255,7 @@ export default {
           title: "ID",
           align: "center",
           key: "id",
-          minWidth: 50
+          minWidth: 60
         },
         {
           title: "标题",
@@ -247,7 +272,13 @@ export default {
           tooltip: true
         },
         {
-          title: "反馈用户",
+          title: "用户电话",
+          align: "center",
+          width: 120,
+          key: "phone"
+        },
+        {
+          title: "用户ID",
           align: "center",
           width: 185,
           key: "userId"
@@ -327,6 +358,7 @@ export default {
           options: ["view", "feedback"]
         }
       ],
+      feedbackClassify: [],
       feedbackDetail: _.cloneDeep(feedbackDetail),
       searchRowData: _.cloneDeep(roleRowData),
       feedbackLoading: false,
@@ -351,6 +383,7 @@ export default {
   mounted() {},
   created() {
     this.getTableData();
+    this.getSystemParameters();
   },
   methods: {
     resetSearchRowData() {
@@ -397,6 +430,24 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
+    },
+    getSystemParameters() {
+      console.log("123");
+      let code = "FEEDBACK_TITLE_TYPE";
+      getSystemParameter(code)
+        .then(res => {
+          this.feedbackClassify = res.systemSettings;
+          console.log("系统参数", this.feedbackClassify);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    handCouponType(value) {
+      this.searchRowData.page = 1;
+      this.searchLoading = true;
+      this.getTableData();
+      this.searchRowData.title = value;
     }
   }
 };

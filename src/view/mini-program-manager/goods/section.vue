@@ -110,6 +110,9 @@
           <FormItem label="板块名称:" prop="sectionName">
             <Input v-model="currentCategory.sectionName"></Input>
           </FormItem>
+          <FormItem label="板块描述:" prop="sectionRemarks">
+            <Input v-model="currentCategory.sectionRemarks"></Input>
+          </FormItem>
           <FormItem label="板块位置英文描述:" prop="positionName">
             <Input v-model="currentCategory.positionName"></Input>
           </FormItem>
@@ -121,7 +124,7 @@
             <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
               <template v-if="item.status === 'finished'">
                 <div>
-                  <img :src="item.url" >
+                  <img :src="item.url" />
                   <div class="demo-upload-list-cover">
                     <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                     <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -159,8 +162,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import _ from 'lodash';
+import Tables from "_c/tables";
+import _ from "lodash";
 import {
   createProductSection,
   deleteProductSection,
@@ -169,86 +172,93 @@ import {
   editProductSection,
   deleteProductSectionValidation,
   deletePicture
-} from '@/api/mini-program';
-import { buildMenu, convertTree } from '@/libs/util';
-import CommonIcon from '_c/common-icon';
-import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import IViewUpload from '_c/iview-upload';
-import { appTypeEnum } from '@/libs/enumerate';
-import { appTypeConvert } from '@/libs/converStatus';
+} from "@/api/mini-program";
+import { buildMenu, convertTree } from "@/libs/util";
+import CommonIcon from "_c/common-icon";
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import IViewUpload from "_c/iview-upload";
+import { appTypeEnum } from "@/libs/enumerate";
+import { appTypeConvert } from "@/libs/converStatus";
 
 const currentCategory = {
-  applyType: 'S_MALL', // 默认就一个小程序 S_MALL
+  applyType: "S_MALL", // 默认就一个小程序 S_MALL
   id: 0,
   parentId: 0,
   sectionProductId: 0,
-  sectionName: '',
-  sectionImg: '',
+  sectionName: "",
+  sectionImg: "",
   rankNo: 0,
   productStandardList: [],
-  positionName: ''
+  positionName: "",
+  sectionRemarks: ""
 };
 
 const roleRowData = {
   sectionName: null,
   page: 1,
   rows: 10,
-  sidx: 'rank_no'
+  sidx: "rank_no"
 };
 
 const dataColumns = [
   {
-    type: 'selection',
-    key: '',
+    type: "selection",
+    key: "",
     width: 60,
-    align: 'center',
-    fixed: 'left'
+    align: "center",
+    fixed: "left"
   },
   {
-    title: '板块ID',
-    key: 'id',
-    align: 'center',
+    title: "板块ID",
+    key: "id",
+    align: "center",
     minWidth: 150
   },
   {
-    title: '板块名称',
-    key: 'sectionName',
-    align: 'center',
+    title: "板块名称",
+    key: "sectionName",
+    align: "center",
     minWidth: 150
   },
   {
-    title: '板块图片',
-    key: 'sectionImg',
-    align: 'center',
+    title: "板块描述",
+    key: "sectionRemarks",
+    align: "center",
+    minWidth: 150
+  },
+  {
+    title: "板块图片",
+    key: "sectionImg",
+    align: "center",
     minWidth: 150,
     render: (h, params, vm) => {
       const { row } = params;
-      const str = <img src={row.sectionImg} height='60' width='60' />;
+      const str = <img src={row.sectionImg} height="60" width="60" />;
       return <div>{str}</div>;
     }
   },
   {
-    title: '位置英文描述',
-    key: 'positionName',
-    align: 'center',
+    title: "位置英文描述",
+    key: "positionName",
+    align: "center",
     minWidth: 150
   },
   {
-    title: '排序',
-    key: 'rankNo',
+    title: "排序",
+    key: "rankNo",
     sortable: true,
-    align: 'center',
+    align: "center",
     minWidth: 150
   },
   {
-    title: '操作',
-    key: 'handle',
-    align: 'center',
+    title: "操作",
+    key: "handle",
+    align: "center",
     minWidth: 150,
-    options: ['edit', 'delete']
+    options: ["edit", "delete"]
   }
 ];
 
@@ -264,21 +274,22 @@ export default {
       appTypeEnum,
       menuData: [],
       ruleInline: {
-        sectionName: [{ required: true, message: '请输入板块名称' }],
+        sectionName: [{ required: true, message: "请输入板块名称" }],
+        sectionRemarks: [{ required: false, message: "请输入板块描述" }],
         positionName: [
           {
             required: true,
-            message: '请输入板块位置英文描述,父级板块需添加 -F 后缀,如 XXXX-F'
+            message: "请输入板块位置英文描述,父级板块需添加 -F 后缀,如 XXXX-F"
           }
         ],
-        sectionImg: [{ required: true, message: '请上传上板块图片' }],
+        sectionImg: [{ required: true, message: "请上传上板块图片" }],
         rankNo: [
-          { required: true, message: '请输入板块排序' },
+          { required: true, message: "请输入板块排序" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
+                errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
             }
@@ -290,7 +301,7 @@ export default {
       modalViewLoading: false,
       modalEditLoading: false,
       clearSearchLoading: false,
-      currentParentName: '',
+      currentParentName: "",
       currentParentId: 0,
       currentCategory: this._.cloneDeep(currentCategory),
       parentCategory: this._.cloneDeep(currentCategory),
@@ -303,28 +314,28 @@ export default {
       save: [],
       // 查看
       imageSize: 2048,
-      imgUploadViewItem: '',
+      imgUploadViewItem: "",
       uploadVisible: false
     };
   },
   created() {
     this.initMenuList();
-    this.parentCategory.groupName = '全部版块';
+    this.parentCategory.groupName = "全部版块";
   },
   methods: {
     renderContent(h, { root, node, data }) {
-      if (data.type == 'PARENT') {
+      if (data.type == "PARENT") {
         return (
           <div
             style={{
-              display: 'inline-block',
-              width: '100%',
-              fontSize: '14px',
-              cursor: 'pointer'
+              display: "inline-block",
+              width: "100%",
+              fontSize: "14px",
+              cursor: "pointer"
             }}
           >
             <span>
-              <CommonIcon type='ios-folder' class='mr10' />
+              <CommonIcon type="ios-folder" class="mr10" />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -335,14 +346,14 @@ export default {
         return (
           <div
             style={{
-              display: 'inline-block',
-              width: '100%',
-              fontSize: '14px',
-              cursor: 'pointer'
+              display: "inline-block",
+              width: "100%",
+              fontSize: "14px",
+              cursor: "pointer"
             }}
           >
             <span>
-              <CommonIcon type='ios-paper' class='mr10' />
+              <CommonIcon type="ios-paper" class="mr10" />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -394,7 +405,7 @@ export default {
               });
           }
         } else {
-          this.$Message.error('请完善板块信息!');
+          this.$Message.error("请完善板块信息!");
         }
       });
     },
@@ -450,7 +461,7 @@ export default {
       deleteProductSectionValidation({ ids })
         .then(res => {
           if (!res) {
-            this.$Message.info('该板块或其子板块关联了商品，删除失败！');
+            this.$Message.info("该板块或其子板块关联了商品，删除失败！");
           } else if (res) {
             deleteProductSection({
               ids
@@ -482,10 +493,10 @@ export default {
     // 编辑分类
     handleEdit(params) {
       if (
-        params.row.positionName.indexOf('F') == -1 &&
-        this.parentCategory.groupName === '全部版块'
+        params.row.positionName.indexOf("F") == -1 &&
+        this.parentCategory.groupName === "全部版块"
       ) {
-        this.$Message.warning('请从左侧选择一个板块');
+        this.$Message.warning("请从左侧选择一个板块");
         return;
       }
       this.save = [];
@@ -497,7 +508,7 @@ export default {
       this.modalEdit = true;
     },
     handleBack() {
-      this.parentCategory.groupName = '全部版块';
+      this.parentCategory.groupName = "全部版块";
       this.handleClear();
     },
     handleSearch() {
@@ -532,8 +543,8 @@ export default {
         // if (res && res.array.length > 0) {
         const menuList = buildMenu(res.array);
         const map = {
-          title: 'title',
-          children: 'children'
+          title: "title",
+          children: "children"
         };
         this.menuData = convertTree(menuList, map, true);
         // if (this.menuData.length > 0) {
@@ -546,9 +557,9 @@ export default {
     handleClick({ root, node, data }) {
       this.loading = true;
       // 展开当前节点
-      if (typeof data.expand === 'undefined') {
+      if (typeof data.expand === "undefined") {
         // this.$set(data, 'expend', true);
-        this.$set(data, 'expend', false);
+        this.$set(data, "expend", false);
         // if (data.children) {
         if (data.children) {
           this.expandChildren(data.children);
@@ -565,9 +576,9 @@ export default {
     },
     expandChildren(array) {
       array.forEach(item => {
-        if (typeof item.expand === 'undefined') {
+        if (typeof item.expand === "undefined") {
           // this.$set(item, 'expend', true);
-          this.$set(item, 'expend', false);
+          this.$set(item, "expend", false);
           // } else {
         } else {
           item.expand = !item.expand;
@@ -580,7 +591,7 @@ export default {
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.sectionImg != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.sectionImg;
         mainImgArr.push(map);
