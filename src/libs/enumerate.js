@@ -736,6 +736,7 @@ export const relationStoreTypeEnum = [{
 }
 ]
 
+
 export const couponStatusEnum = [{
   label: '有效',
   value: 'VALID'
@@ -2797,6 +2798,41 @@ export const rewardTypeEnum = [{
 {
   label: '礼包',
   value: 'GIFTPACK'
+}]
+
+// 骑手评价(很差:NEGATIVE;一般:GENERAL;超赞:GOOD)
+export const deliveryTypeEnum = [{
+  label: '很差',
+  value: 'NEGATIVE'
+},
+{
+  label: '一般',
+  value: 'GENERAL'
+},
+{
+  label: '超赞',
+  value: 'GOOD'
+}]
+
+export const commentScoreTypeEnum = [{
+  label: '1星',
+  value: '1'
+},
+{
+  label: '2星',
+  value: '2'
+},
+{
+  label: '3星',
+  value: '3'
+},
+{
+  label: '4星',
+  value: '4'
+},
+{
+  label: '5星',
+  value: '5'
 }]
 
 // 领取状态（YES-已领取、NO-未领取）

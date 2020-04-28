@@ -1382,6 +1382,164 @@ const btns = {
         ])
       ]);
     }
+  },
+  // 评论 置顶
+  setTop: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.istop === 'NO') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer:true,
+          title: '确认要将此评论置顶吗?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-set-top', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top',transfer:true,content:"置顶评论" },
+        }, [
+          h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+          }, [
+          h('Icon', {
+            props: {
+              type: 'ios-thumbs-up',
+              size: 16,
+              color: '#fff'
+            }
+          })
+          ])
+        ])
+      ]);
+    } else {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer:true,
+          title: '确认要将此评论取消置顶吗?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-set-top', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top',transfer:true,content:"取消置顶" },
+        }, [
+          h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+          }, [
+          h('Icon', {
+            props: {
+              type: 'ios-thumbs-up',
+              size: 16,
+              color: '#fff'
+            }
+          })
+          ])
+        ])
+      ]);
+    }
+  },
+  // 评论 显示
+  setSta: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.status === 'HIDE') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer:true,
+          title: '确认要显示该评论吗?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-set-sta', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top',transfer:true,content:"显示评论" },
+        }, [
+          h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+          }, [
+          h('Icon', {
+            props: {
+              type: 'ios-flame',
+              size: 16,
+              color: '#fff'
+            }
+          })
+          ])
+        ])
+      ]);
+    } else {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer:true,
+          title: '确认要隐藏该评论吗?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-set-sta', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top',transfer:true,content:"隐藏评论" },
+        }, [
+          h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+          }, [
+          h('Icon', {
+            props: {
+              type: 'ios-flame-outline',
+              size: 16,
+              color: '#fff'
+            }
+          })
+          ])
+        ])
+      ]);
+    }
   }
 };
 export default btns;

@@ -62,6 +62,8 @@ import {
   validDateTypeEnum,
   taskTypeEnum,
   rewardTypeEnum,
+  deliveryTypeEnum,
+  commentScoreTypeEnum,
   receiveStatusEnum,
   // 批发商城小程序
   userStatusEnum,
@@ -104,6 +106,14 @@ export const receiveStatusConvert = (value) => {
 
 export const rewardTypeConvert = (value) => {
   return convertFunction(value, rewardTypeEnum);
+};
+
+export const deliveryTypeConvert = (value) => {
+  return convertFunction(value, deliveryTypeEnum);
+};
+
+export const commentScoreConvert = (value) => {
+  return convertFunction(value, commentScoreTypeEnum);
 };
 
 export const taskTypeConvert = (value) => {

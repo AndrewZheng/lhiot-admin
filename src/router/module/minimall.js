@@ -360,7 +360,7 @@ const miniMallRouter = [
         path: '/small-evaluate',
         name: 'small-evaluate',
         meta: {
-          icon: 'md-chatboxes',
+          icon: 'ios-chatbubbles',
           title: '评价中心'
         },
         component: () => import('@/view/mini-program-manager/content/evaluate.vue')

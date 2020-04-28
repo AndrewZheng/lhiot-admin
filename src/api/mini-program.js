@@ -12,7 +12,28 @@ export const deletePicture = ({
     method: 'delete'
   });
 };
-
+/* -------------------------
+ * 评价中心
+ * -------------------------
+ */
+export const getEvaluatePages = (data) => {
+  return $http.request({
+    url: '/minapp/comment-info/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+export const replyEvaluate = (data) => {
+  return $http.request({
+    url: 'minapp/comment-info/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
 // 查询商品分类树结构
 export const getProductCategoriesTree = () => {
   return $http.request({
@@ -776,7 +797,9 @@ export const getSeckillPages = (data) => {
     method: 'post',
     headers: {
       'page': data.page,
-      'rows': data.rows
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
     }
   });
 };

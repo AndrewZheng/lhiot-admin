@@ -65,6 +65,9 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
+          <div class="ml15 mt10">
+            <i style="color:red">*</i> 仅限开启两个活动!
+          </div>
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addFlashsale">
@@ -580,7 +583,9 @@ const roleRowData = {
   endTime: null,
   title: "",
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx: "create_time",
+  sort: "desc"
 };
 
 const relationRowData = {
@@ -1154,6 +1159,20 @@ export default {
     },
     addFlashsale() {
       // this.resetFields();
+      let flashsaleIndex = 0;
+      for (let i = 0; i < this.tableData.length; i++) {
+        console.log("数据", this.tableData[i]);
+        if (
+          this.tableData[i].status === "ON" &&
+          compareCouponData(this.tableData[i].endTime) === true
+        ) {
+          flashsaleIndex++;
+        }
+        if (flashsaleIndex === 2) {
+          this.$Message.info("已有2个有效且开启中的限时抢购活动!");
+          return;
+        }
+      }
       this.tempModalType = this.modalType.create;
       this.activitySeckillDetail = _.cloneDeep(activitySeckillDetail);
       this.modalEdit = true;

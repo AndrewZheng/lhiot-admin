@@ -13,28 +13,82 @@
         border
         search-place="top"
         @on-view="handleView"
-        @on-delete="handleDelete"
         @on-edit="handleEdit"
-        @on-sale="onOff"
+        @on-set-top="handleSetTop"
+        @on-set-sta="handleSetSta"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
           <Row>
             <Input
-              v-model="searchRowData.activityCode"
-              placeholder="活动编码"
+              v-model="searchRowData.storeName"
+              placeholder="门店名称"
               class="search-input mr5"
               style="width: auto"
               clearable
             ></Input>
             <Input
-              v-model="searchRowData.activityName"
-              placeholder="活动名称"
+              v-model="searchRowData.nickName"
+              placeholder="用户名称"
               class="search-input mr5"
               style="width: auto"
               clearable
             ></Input>
+            <Input
+              v-model="searchRowData.phone"
+              placeholder="手机号码"
+              class="search-input mr5"
+              style="width: auto"
+              clearable
+            ></Input>
+            <Select
+              v-model="searchRowData.deliveryComment"
+              class="search-col mr5"
+              placeholder="骑手评价"
+              style="width: 100px"
+              clearable
+            >
+              <Option
+                v-for="item in deliveryTypeEnum"
+                :value="item.value"
+                :key="`orderType-col-${item.value}`"
+                class="ptb2-5"
+              >{{ item.label }}</Option>
+            </Select>
+            <Select
+              v-model="searchRowData.commentScore"
+              class="search-col mr5"
+              placeholder="门店评价"
+              style="width: 100px"
+              clearable
+            >
+              <Option
+                v-for="item in commentScoreTypeEnum"
+                :value="item.value"
+                :key="`orderType-col-${item.value}`"
+                class="ptb2-5"
+              >{{ item.label }}</Option>
+            </Select>
+            <DatePicker
+              v-model="searchRowData.beginDate"
+              format="yyyy-MM-dd HH:mm:ss"
+              type="datetime"
+              placeholder="开始时间起"
+              class="search-input"
+              style="width: 150px"
+              @on-change="beginTimeChange"
+            />
+            <i>-</i>
+            <DatePicker
+              v-model="searchRowData.endDate"
+              format="yyyy-MM-dd HH:mm:ss"
+              type="datetime"
+              placeholder="开始时间止"
+              class="search-input mr5"
+              style="width: 150px"
+              @on-change="endTimeChange"
+            />
             <Button
               :loading="searchLoading"
               class="search-btn mr5"
@@ -54,28 +108,6 @@
             </Button>
           </Row>
         </div>
-        <div slot="operations">
-          <Button
-            v-waves
-            :loading="createLoading"
-            type="success"
-            class="mr5"
-            @click="addActivities"
-          >
-            <Icon type="md-add" />添加
-          </Button>
-          <Poptip
-            confirm
-            placement="bottom"
-            style="width: 100px"
-            title="您确认删除选中的内容吗?"
-            @on-ok="poptipOk"
-          >
-            <Button type="error" class="mr5">
-              <Icon type="md-trash" />批量删除
-            </Button>
-          </Poptip>
-        </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
@@ -91,53 +123,108 @@
       </div>
     </Card>
 
-    <Modal v-model="modalView" :mask-closable="false">
+    <Modal v-model="modalView" :mask-closable="false" :width="800">
       <p slot="header">
-        <span>活动信息详情</span>
+        <span>用户评价详情</span>
       </p>
       <div class="modal-content">
         <Row class-name="mb20">
-          <i-col span="24">
+          <i-col span="12">
             <Row>
-              <i-col span="6">活动ID:</i-col>
-              <i-col span="18">{{ activitiesDetail.id }}</i-col>
+              <i-col span="6">门店ID:</i-col>
+              <i-col span="18">{{ evaluateDetail.storeId }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="6">门店Code:</i-col>
+              <i-col span="18">{{ evaluateDetail.storeCode }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
-          <i-col span="24">
+          <i-col span="12">
             <Row>
-              <i-col span="6">活动编码:</i-col>
-              <i-col span="18">{{ activitiesDetail.activityCode }}</i-col>
+              <i-col span="6">门店名称:</i-col>
+              <i-col span="18">{{ evaluateDetail.storeName }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="6">用户ID:</i-col>
+              <i-col span="18">{{ evaluateDetail.userId }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
-          <i-col span="24">
+          <i-col span="12">
             <Row>
-              <i-col span="6">活动名称:</i-col>
-              <i-col span="18">{{ activitiesDetail.activityName }}</i-col>
+              <i-col span="6">用户昵称:</i-col>
+              <i-col span="18">{{ evaluateDetail.nickName }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="6">手机号码:</i-col>
+              <i-col span="18">{{ evaluateDetail.phone }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
-          <i-col span="24">
+          <i-col span="12">
             <Row>
-              <i-col span="6">活动状态:</i-col>
-              <i-col span="18" v-if="activitiesDetail.onOff === 'ON'">
-                <tag color="success">{{ "开启" | imageStatusFilter }}</tag>
-              </i-col>
-              <i-col span="18" v-else-if="activitiesDetail.onOff === 'OFF'">
-                <tag color="error">{{ "关闭" | imageStatusFilter }}</tag>
-              </i-col>
+              <i-col span="6">所得积分:</i-col>
+              <i-col span="18">{{ evaluateDetail.point }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="6">商品名称组合:</i-col>
+              <i-col span="18">{{ evaluateDetail.productNames }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
-          <i-col span="24">
+          <i-col span="12">
             <Row>
-              <i-col span="6">活动链接:</i-col>
-              <i-col span="18">{{ activitiesDetail.activityUrl }}</i-col>
+              <i-col span="6">订单编号:</i-col>
+              <i-col span="18">{{ evaluateDetail.orderCode }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="6">骑手评价:</i-col>
+              <i-col span="18">{{ evaluateDetail.deliveryComment }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="6">门店评价:</i-col>
+              <i-col span="18">{{ evaluateDetail.commentScore }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="6">是否置顶:</i-col>
+              <i-col span="18" v-if="evaluateDetail.istop='YES'">{{ "是" }}</i-col>
+              <i-col span="18" v-else>{{ "否" }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="6">状态:</i-col>
+              <i-col span="18" v-if="evaluateDetail.status==='VIEW'">{{ "显示" }}</i-col>
+              <i-col span="18" v-else>{{ "隐藏" }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="6">置顶时间:</i-col>
+              <i-col span="18">{{ evaluateDetail.topTime }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -147,53 +234,93 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000">
+    <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000" :width="800">
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改活动':'创建活动' }}</i-col>
+        <i-col>{{ "回复评论" }}</i-col>
       </p>
+      <!-- 
+订单编号：387416179821780992
+
+下单门店：麓谷林语店
+
+用户名称：E-June
+
+骑手评价：超赞
+
+门店评价：5星
+
+评价内容：
+
+
+      -->
       <div class="modal-content">
-        <Form ref="modalEdit" :model="activitiesDetail" :rules="ruleInline" :label-width="100">
-          <Row>
-            <Col span="18">
-              <FormItem label="活动编码:" prop="activityCode">
-                <Input v-model="activitiesDetail.activityCode"></Input>
-              </FormItem>
-            </Col>
+        <Form ref="modalEdit" :model="evaluateDetail" :rules="ruleInline" :label-width="100">
+          <Row class-name="mb20">
+            <i-col span="24">
+              <Row>
+                <i-col span="6">订单编号:</i-col>
+                <i-col span="18">{{ evaluateDetail.orderCode }}</i-col>
+              </Row>
+            </i-col>
           </Row>
-          <Row>
-            <Col span="18">
-              <FormItem label="活动名称:" prop="activityName">
-                <Input v-model="activitiesDetail.activityName"></Input>
-              </FormItem>
-            </Col>
+          <Row class-name="mb20">
+            <i-col span="24">
+              <Row>
+                <i-col span="6">下单门店:</i-col>
+                <i-col span="18">{{ evaluateDetail.storeName }}</i-col>
+              </Row>
+            </i-col>
           </Row>
-          <Row>
-            <Col span="18">
-              <FormItem label="活动状态:" prop="onOff">
-                <Select v-model="activitiesDetail.onOff" clearable>
-                  <Option
-                    v-for="(item,index) in imageStatusEnum"
-                    :value="item.value"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px;width: 100%"
-                  >{{ item.label }}</Option>
-                </Select>
-              </FormItem>
-            </Col>
+          <Row class-name="mb20">
+            <i-col span="24">
+              <Row>
+                <i-col span="6">用户名称:</i-col>
+                <i-col span="18">{{ evaluateDetail.nickName }}</i-col>
+              </Row>
+            </i-col>
           </Row>
-          <Row>
-            <Col span="18">
-              <FormItem label="活动详情链接:" prop="activityUrl">
-                <Input v-model="activitiesDetail.activityUrl"></Input>
+          <Row class-name="mb20">
+            <i-col span="24">
+              <Row>
+                <i-col span="6">骑手评价:</i-col>
+                <i-col span="18">{{ evaluateDetail.deliveryComment }}</i-col>
+              </Row>
+            </i-col>
+          </Row>
+          <Row class-name="mb20">
+            <i-col span="24">
+              <Row>
+                <i-col span="6">门店评价:</i-col>
+                <i-col span="18">{{ evaluateDetail.commentScore }}</i-col>
+              </Row>
+            </i-col>
+          </Row>
+          <Row class-name="mb20">
+            <i-col span="20">
+              <Row>
+                <i-col span="5">评价内容:</i-col>
+                <i-col span="18">{{ evaluateDetail.commentContent }}</i-col>
+              </Row>
+            </i-col>
+          </Row>
+          <Divider>回复评价</Divider>
+          <Row class-name="mb20">
+            <i-col span="20">
+              <FormItem :label-width="100" label="回复评价:" prop="answerContent">
+                <Input
+                  v-model="evaluateDetail.answerContent"
+                  :autosize="{minRows: 3,maxRows: 8}"
+                  type="textarea"
+                  placeholder="请输入回复内容..."
+                ></Input>
               </FormItem>
-            </Col>
+            </i-col>
           </Row>
         </Form>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit()">确定</Button>
       </div>
     </Modal>
   </div>
@@ -202,31 +329,59 @@
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
 import _ from "lodash";
-import {
-  deleteActivities,
-  getActivitiesPages,
-  editActivities,
-  createActivities
-} from "@/api/mini-program";
+import { getEvaluatePages, replyEvaluate } from "@/api/mini-program";
 import deleteMixin from "@/mixins/deleteMixin.js";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
-import { imageStatusConvert } from "@/libs/converStatus";
-import { imageStatusEnum } from "@/libs/enumerate";
+import {
+  imageStatusConvert,
+  deliveryTypeConvert,
+  commentScoreConvert
+} from "@/libs/converStatus";
+import {
+  imageStatusEnum,
+  deliveryTypeEnum,
+  commentScoreTypeEnum
+} from "@/libs/enumerate";
 
-const activitiesDetail = {
-  id: 0,
-  activityCode: "",
-  activityName: "",
-  onOff: "",
-  activityUrl: ""
+const evaluateDetail = {
+  answerContent: "",
+  avatarUrl: "",
+  beginDate: "",
+  commentContent: "",
+  commentImages: "",
+  commentScore: "",
+  commentSource: "",
+  createTime: "",
+  deliveryComment: "",
+  endDate: "",
+  id: "",
+  istop: "",
+  nickName: "",
+  orderCode: "",
+  orderId: "",
+  phone: "",
+  point: "",
+  productNames: "",
+  status: "",
+  storeCode: "",
+  storeId: "",
+  storeName: "",
+  topTime: "",
+  type: "",
+  userId: ""
 };
 
 const roleRowData = {
-  activityCode: null,
-  activityName: null,
+  deliveryComment: null,
+  nickName: null,
+  commentScore: null,
+  phone: null,
+  storeName: "",
+  beginDate: "",
+  endDate: "",
   page: 1,
-  rows: 10,
+  rows: 10
 };
 
 export default {
@@ -236,15 +391,17 @@ export default {
   mixins: [deleteMixin, tableMixin, searchMixin],
   data() {
     return {
+      searchRowData: _.cloneDeep(roleRowData),
+      evaluateDetail: _.cloneDeep(evaluateDetail),
       ruleInline: {
-        activityCode: [{ required: true, message: "请输入活动编码" }],
-        activityName: [{ required: true, message: "请输入活动名称" }],
-        onOff: [{ required: true, message: "请选择活动状态" }]
+        answerContent: [{ required: true, message: "请输入评价回复" }]
       },
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
       imageStatusEnum,
+      deliveryTypeEnum,
+      commentScoreTypeEnum,
       columns: [
         {
           type: "selection",
@@ -252,65 +409,88 @@ export default {
           align: "center"
         },
         {
-          title: "活动ID",
+          title: "订单标号",
           align: "center",
-          key: "id"
+          key: "orderCode"
         },
         {
-          title: "活动编码",
+          title: "商品名称",
           align: "center",
-          key: "activityCode"
+          key: "productNames"
         },
         {
-          title: "活动名称",
+          title: "门店名称",
           align: "center",
-          key: "activityName"
+          key: "storeName"
         },
         {
-          title: "活动状态",
+          title: "用户名称",
           align: "center",
-          key: "onOff",
+          key: "nickName"
+        },
+        {
+          title: "手机号码",
+          align: "center",
+          key: "phone"
+        },
+        {
+          title: "骑手评价",
+          align: "center",
+          key: "deliveryComment",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.onOff === "ON") {
+            if (row.deliveryComment === "GOOD") {
               return (
                 <div>
-                  <tag color="success">
-                    {imageStatusConvert(row.onOff).label}
+                  <tag color="orange">
+                    {deliveryTypeConvert(row.deliveryComment).label}
                   </tag>
                 </div>
               );
-            } else if (row.onOff === "OFF") {
+            } else if (row.deliveryComment === "GENERAL") {
               return (
                 <div>
-                  <tag color="error">{imageStatusConvert(row.onOff).label}</tag>
+                  <tag color="cyan">
+                    {deliveryTypeConvert(row.deliveryComment).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.deliveryComment === "NEGATIVE") {
+              return (
+                <div>
+                  <tag color="error">
+                    {deliveryTypeConvert(row.deliveryComment).label}
+                  </tag>
                 </div>
               );
             }
-            return (
-              <div>
-                <tag color="primary">{row.onOff}</tag>
-              </div>
-            );
+            return <div>{"N/A"}</div>;
           }
         },
         {
-          title: "活动详情链接",
+          title: "门店评价",
           align: "center",
-          key: "activityUrl"
+          key: "commentScore",
+          render: (h, params, vm) => {
+            const { row } = params;
+            return <div>{row.commentScore + "星"}</div>;
+          }
+        },
+        {
+          title: "评价内容",
+          align: "center",
+          key: "commentContent"
         },
         {
           title: "操作",
           align: "center",
           minWidth: 80,
           key: "handle",
-          options: ["onSale", "view", "edit", "delete"]
+          options: ["view", "setTop", "setSta", "edit"]
         }
       ],
       createLoading: false,
-      modalViewLoading: false,
-      searchRowData: _.cloneDeep(roleRowData),
-      activitiesDetail: _.cloneDeep(activitiesDetail)
+      modalViewLoading: false
     };
   },
   mounted() {
@@ -325,102 +505,41 @@ export default {
     },
     resetFields() {
       this.$refs.modalEdit.resetFields();
-      // this.$refs.uploadMain.clearFileList();
-      this.uploadListMain = [];
-      this.activitiesDetail.storeImage = null;
     },
-    handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+    handleSubmit() {
+      this.$refs.modalEdit.validate(valid => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
-            // 添加状态
-            this.createActivities();
-          } else if (this.tempModalType === this.modalType.edit) {
-            // 编辑状态
-            this.editActivities();
-          }
+          this.replyEvaluate();
         } else {
           this.$Message.error("请完善信息!");
         }
       });
     },
-    createActivities() {
-      this.modalViewLoading = true;
-      createActivities(this.activitiesDetail)
+    replyEvaluate() {
+      replyEvaluate(this.evaluateDetail)
         .then(res => {
-          this.modalViewLoading = false;
+          console.log("接口返回", res);
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
-          this.getTableData();
-        })
-        .catch(() => {
-          this.modalViewLoading = false;
-        });
-    },
-    editActivities() {
-      this.modalViewLoading = true;
-      editActivities(this.activitiesDetail)
-        .then(res => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
           this.getTableData();
         })
         .catch(() => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
-        });
-    },
-    addActivities() {
-      this.resetFields();
-      if (this.tempModalType !== this.modalType.create) {
-        this.tempModalType = this.modalType.create;
-        this.activitiesDetail = _.cloneDeep(activitiesDetail);
-      }
-
-      this.modalEdit = true;
-    },
-    // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
-    },
-    deleteTable(ids) {
-      this.loading = true;
-      deleteActivities({
-        ids
-      })
-        .then(res => {
-          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-          if (
-            this.tableData.length == this.tableDataSelected.length &&
-            this.searchRowData.page === totalPage &&
-            this.searchRowData.page !== 1
-          ) {
-            this.searchRowData.page -= 1;
-          }
-          this.tableDataSelected = [];
-          this.getTableData();
-        })
-        .catch(err => {
-          console.log(err);
-          this.loading = false;
         });
     },
     handleView(params) {
       this.resetFields();
       this.tempModalType = this.modalType.view;
-      this.activitiesDetail = _.cloneDeep(params.row);
+      this.evaluateDetail = _.cloneDeep(params.row);
       this.modalView = true;
     },
     handleEdit(params) {
       this.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.activitiesDetail = _.cloneDeep(params.row);
+      console.log("数据", params.row);
+      this.evaluateDetail = _.cloneDeep(params.row);
       this.modalEdit = true;
     },
     getTableData() {
-      getActivitiesPages(this.searchRowData)
+      getEvaluatePages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
@@ -435,15 +554,24 @@ export default {
           this.clearSearchLoading = false;
         });
     },
-    onOff(params) {
-      this.activitiesDetail = this._.cloneDeep(params.row);
-      if (params.row.onOff === "ON") {
-        this.activitiesDetail.onOff = "OFF";
-      } else {
-        this.activitiesDetail.onOff = "ON";
-      }
-      this.loading = true;
-      this.editActivities();
+    beginTimeChange(value, date) {
+      console.log("时间", value);
+      this.evaluateDetail.beginDate = value;
+      console.log("时间1", this.evaluateDetail.beginDate);
+    },
+    endTimeChange(value, date) {
+      this.evaluateDetail.endDate = value;
+    },
+    handleSetTop(params) {
+      this.evaluateDetail = _.cloneDeep(params.row);
+      this.evaluateDetail.istop = params.row.istop === "YES" ? "NO" : "YES";
+      this.replyEvaluate(this.evaluateDetail);
+    },
+    handleSetSta(params) {
+      this.evaluateDetail = _.cloneDeep(params.row);
+      this.evaluateDetail.status =
+        params.row.status === "VIEW" ? "HIDE" : "VIEW";
+      this.replyEvaluate(this.evaluateDetail);
     }
   }
 };
