@@ -89,8 +89,7 @@
             <Icon type="md-refresh" />&nbsp;清除
           </Button>
         </div>
-        <div slot="operations">
-        </div>
+        <div slot="operations"></div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
@@ -109,34 +108,42 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
-import { getTaskRecordPages } from '@/api/mini-program';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import uploadMixin from '@/mixins/uploadMixin.js';
-import { taskTypeEnum, rewardTypeEnum, receiveStatusEnum } from '@/libs/enumerate';
-import { taskTypeConvert, rewardTypeConvert, receiveStatusConvert } from '@/libs/converStatus';
+import Tables from "_c/tables";
+import IViewUpload from "_c/iview-upload";
+import { getTaskRecordPages } from "@/api/mini-program";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import uploadMixin from "@/mixins/uploadMixin.js";
+import {
+  taskTypeEnum,
+  rewardTypeEnum,
+  receiveStatusEnum
+} from "@/libs/enumerate";
+import {
+  taskTypeConvert,
+  rewardTypeConvert,
+  receiveStatusConvert
+} from "@/libs/converStatus";
 
 const taskRecordDetail = {
-  createTime: '',
+  createTime: "",
   createTimeBegin: null,
   createTimeEnd: null,
-  giftPackType: '',
+  giftPackType: "",
   id: 0,
   userId: 0,
-  receiveStatus: '',
-  receiveTime: '',
-  rewardType: '',
+  receiveStatus: "",
+  receiveTime: "",
+  rewardType: "",
   taskIntegral: 0,
-  taskType: '',
-  taskName: ''
+  taskType: "",
+  taskName: ""
 };
 
 const searchRowData = {
-  taskName: '',
-  taskType: '',
+  taskName: "",
+  taskType: "",
   createTimeBegin: null,
   createTimeEnd: null,
   page: 1,
@@ -167,73 +174,88 @@ export default {
       taskRecordDetail: this._.cloneDeep(taskRecordDetail),
       columns: [
         {
-          title: '编号',
-          align: 'center',
-          key: 'id',
-          fixed: 'left',
+          title: "编号",
+          align: "center",
+          key: "id",
+          fixed: "left",
           width: 80
         },
         {
-          title: '任务名称',
-          align: 'center',
-          key: 'taskName',
+          title: "用户名称",
+          align: "center",
+          key: "nickName",
           resizable: true,
-          width: '150'
+          width: "150"
+        },
+
+        {
+          title: "手机号码",
+          align: "center",
+          key: "phone",
+          resizable: true,
+          width: "150"
         },
         {
-          title: '任务类型',
-          align: 'center',
-          key: 'taskType',
+          title: "任务名称",
+          align: "center",
+          key: "taskName",
+          resizable: true,
+          width: "150"
+        },
+        {
+          title: "任务类型",
+          align: "center",
+          key: "taskType",
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{taskTypeConvert(row.taskType).label}</div>;
           }
         },
         {
-          title: '任务积分',
-          align: 'center',
-          key: 'taskIntegral',
-          width: '100'
+          title: "任务积分",
+          align: "center",
+          key: "taskIntegral",
+          width: "100"
         },
         {
-          title: '奖励类型',
-          align: 'center',
-          key: 'rewardType',
+          title: "奖励类型",
+          align: "center",
+          key: "rewardType",
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{rewardTypeConvert(row.rewardType).label}</div>;
           }
         },
         {
-          title: '礼包类型',
-          align: 'center',
-          key: 'giftPackType',
+          title: "礼包类型",
+          align: "center",
+          key: "giftPackType",
           render: (h, params, vm) => {
             const { row } = params;
-            const str = row.giftPackType === 'COUPON' ? '优惠券' : 'N/A';
+            const str = row.giftPackType === "COUPON" ? "优惠券" : "N/A";
             return <div>{str}</div>;
           }
         },
         {
-          title: '领取状态',
-          align: 'center',
-          key: 'receiveStatus',
+          title: "领取状态",
+          align: "center",
+          key: "receiveStatus",
           resizable: true,
-          width: '150px',
+          width: "150px",
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{receiveStatusConvert(row.receiveStatus).label}</div>;
           }
         },
         {
-          title: '领取时间',
-          align: 'center',
-          key: 'receiveTime'
+          title: "领取时间",
+          align: "center",
+          key: "receiveTime"
         },
         {
-          title: '创建时间',
-          align: 'center',
-          key: 'createTime'
+          title: "创建时间",
+          align: "center",
+          key: "createTime"
         }
       ]
     };

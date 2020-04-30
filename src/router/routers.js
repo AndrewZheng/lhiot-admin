@@ -189,6 +189,15 @@ export const constantRouterMap = [
         component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
       },
       {
+        path: 'small-relation-system',
+        name: 'small-relation-system',
+        meta: {
+          icon: 'logo-buffer',
+          title: '系统参数管理'
+        },
+        component: () => import('@/view/mini-program-manager/system/system.vue')
+      },
+      {
         path: 'small-activity-relation-coupon',
         name: 'small-activity-relation-coupon',
         meta: {

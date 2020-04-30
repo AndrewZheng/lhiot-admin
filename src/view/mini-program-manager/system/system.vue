@@ -19,7 +19,7 @@
         @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
-          <Row>
+          <Row  v-if="this.$route.name != 'small-relation-system'">
             <Input
               v-model="searchRowData.indexName"
               placeholder="键"
@@ -35,17 +35,12 @@
               clearable
             ></Input>
             <Cascader
+              change-on-select
               :data="systemCategoryData"
               v-model="defaultSystemCategoryData"
               class="search-col"
               @on-change="systemCategoryChange1"
             ></Cascader>
-            <!-- <Cascader
-              :data="systemCategoryData"
-              v-model="defaultSystemCategoryData"
-              span="21"
-              @on-change="systemCategoryChange"
-            ></Cascader>-->
             <Button
               :searchLoading="searchLoading"
               class="search-btn mr5"
@@ -66,6 +61,15 @@
           </Row>
         </div>
         <div slot="operations">
+          <Button
+            v-waves
+            class="search-btn ml5 mr5"
+            type="primary"
+            @click="goBack"
+            v-if="this.$route.name === 'small-relation-system'"
+          >
+            <Icon type="ios-arrow-back" />&nbsp;返回
+          </Button>
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
             <Icon type="md-add" />添加
           </Button>
@@ -256,7 +260,12 @@ import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
-import { buildMenu, convertTreeCategory, convertTree } from "@/libs/util";
+import {
+  buildMenu,
+  convertTreeCategory,
+  convertTree,
+  getSmallGoodsStandard
+} from "@/libs/util";
 
 const systemDetail = {
   id: 0,
@@ -373,8 +382,6 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          console.log(this.systemDetail.indexValue);
-          console.log(this.systemDetail.categoryId);
           this.systemDetail.indexValue = this.systemDetail.indexValue.replace(
             /\n|\r/g,
             "&"
@@ -477,16 +484,18 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
+      if (this.$route.name === "small-relation-system") {
+        const systemInfos = getSmallGoodsStandard();
+        this.searchRowData.categoryId = systemInfos.id;
+      }
       getSystemSettingPages(this.searchRowData)
         .then(res => {
           if (res.rows.length !== 0) {
             res.rows.forEach(element => {
-              // element.indexValue = element.indexValue.replace(/&/g, '<br>');
               element.indexValue =
                 element.indexValue == null
                   ? null
                   : element.indexValue.replace(/&/g, "\n");
-              // element.indexValue = element.indexValue.replace(/&/g, /\n/g);
             });
           }
           this.tableData = res.rows;
@@ -518,14 +527,12 @@ export default {
           if (res && res.array.length > 0) {
             this.systemCategoriesTreeList = res.array;
             const menuList = buildMenu(res.array);
-            console.log("menuList from server:", menuList);
             const map = {
               id: "id",
               title: "title",
               children: "children"
             };
             this.systemCategoryData = convertTreeCategory(menuList, map, true);
-            console.log("menuList after covert:", this.systemCategoryData);
             this.createLoading = false;
           }
         })
@@ -556,7 +563,8 @@ export default {
     // 选择分类搜索
     systemCategoryChange1(value, selectedData) {
       if (selectedData.length > 0) {
-        this.searchRowData.categoryId = selectedData[selectedData.length - 1].id;
+        this.searchRowData.categoryId =
+          selectedData[selectedData.length - 1].id;
       } else {
         this.searchRowData.categoryId = null;
       }
@@ -570,6 +578,9 @@ export default {
       if (obj && obj.parentid !== 0) {
         this.findGroupId(obj.parentid);
       }
+    },
+    goBack() {
+      this.$router.back();
     }
   }
 };

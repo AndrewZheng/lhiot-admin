@@ -2080,6 +2080,15 @@ export const getSystemSettingPages = (data) => {
   });
 };
 
+// 查询父级分类 
+export const getParentInfos = () => {
+  return $http.request({
+    url: 'minapp/system-setting-categories/get-parent/infos',
+    method: 'get'
+  });
+};
+
+
 // 查询系统参数位详情
 export const getSystemSetting = ({
   id
