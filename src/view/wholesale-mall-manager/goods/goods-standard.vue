@@ -949,12 +949,12 @@ const standardColumns = [
           </div>
         );
       } else if (row.goodsType == 'FLASHSALE') {
+        return (
+          <div>
+            <tag color='blue'>{pfExpandTypeConvert(row.goodsType).label}</tag>
+          </div>
+        );
       }
-      return (
-        <div>
-          <tag color='blue'>{pfExpandTypeConvert(row.goodsType).label}</tag>
-        </div>
-      );
       return (
         <div>
           <tag color='primary'>N/A</tag>
@@ -1792,8 +1792,6 @@ export default {
         exportType: 'GOODS_STANDARD'
       }).then(res => {
         const tableColumns = res;
-        // 表格数据导出字段翻译
-        const _this = this;
         tableData.forEach(item => {
           item['price'] = (item['price'] / 100.0).toFixed(2);
           item['salePrice'] = (item['salePrice'] / 100.0).toFixed(2);

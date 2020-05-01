@@ -48,7 +48,6 @@ const mixin = {
   data() {
     return {
       defaultImg,
-      // 待翻译字典对象信息
       userStatus: [{
         key: 'INITIAL',
         value: '初始化'

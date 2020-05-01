@@ -700,7 +700,7 @@ export const convertTreeCategory = (tree, map, isExpand = false) => {
 };
 
 export const setTreeNodeChecked = (tree, ids) => {
-  if (ids.length != 0) {
+  if (ids.length > 0) {
     ids.forEach(id => {
       tree.forEach(node => {
         if (id == node.id && node.type === 'SON') {
