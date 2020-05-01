@@ -564,7 +564,7 @@ export default {
         storeName: [{ required: true, message: '请输入门店名称' }],
         storeStatus: [{ required: true, message: '请选择门店状态' }],
         storeArea: [{ required: true, message: '请选择门店区域' }],
-        storeFlagship: [{ required: true, message: '请选择旗舰店' }],
+        storeFlagship: [{ required: false, message: '请选择旗舰店' }],
         beginTime: [{ required: true, message: '请选择开始时间' }],
         endTime: [{ required: true, message: '请选择结束时间' }],
         storeCoordy: [
