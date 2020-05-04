@@ -105,7 +105,7 @@
               <Input v-model="signRewardDetail.getIntegral" placeholder="请输入任务积分" style="width: 200px"></Input>
             </FormItem>
           </Row>
-          <Row>
+          <Row v-if="signRewardDetail.rewardType==='GIFTPACK'">
             <FormItem label="礼包类型:" prop="giftPackType">
               <Input v-model="giftPackTypeStr" style="width: 200px" readonly>
               <Button v-if="signRewardDetail.giftPackType==='COUPON'" slot="append" type="success" icon="ios-settings" class="pr5" @click="handleConfig"></Button>
@@ -134,6 +134,7 @@
                 placeholder="请选择"
                 style="width:200px"
                 clearable
+                @on-change="rewardTypeChange"
               >
                 <Option
                   v-for="item in rewardTypeEnum"
@@ -172,7 +173,7 @@ import { rewardTypeConvert } from '@/libs/converStatus';
 const signRewardDetail = {
   continueSignDay: 0,
   getIntegral: 0,
-  giftPackType: 'COUPON',
+  giftPackType: null,
   rewardType: ''
 };
 
@@ -337,6 +338,9 @@ export default {
         .finally(() => {
           this.modalEditLoading = false;
         });
+    },
+    rewardTypeChange(value) {
+      this.signRewardDetail.giftPackType = value === 'GIFTPACK' ? 'COUPON' : null;
     },
     deleteTable(ids) {
       this.loading = true;
