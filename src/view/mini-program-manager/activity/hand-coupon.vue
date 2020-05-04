@@ -1009,7 +1009,7 @@ const relationDetail = {
   couponScope: 'STORE',
   useLimitType: null,
   hdActivityId: 0,
-  validDateType: 'FIXED_DATE',
+  validDateType: 'UN_FIXED_DATE',
   userScope: 'ALL',
   receiveLimit: 0,
   beginDay: 0,

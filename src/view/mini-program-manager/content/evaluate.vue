@@ -311,12 +311,13 @@
           </Row>
           <Divider>回复评价</Divider>
           <Row class-name="mb20">
-            <i-col span="20" v-if="!evaluateDetail.answerContent">
+            <i-col span="20" v-if="evaluateStatus">
               <FormItem :label-width="100" label="回复评价:" prop="answerContent">
                 <Input
                   v-model="evaluateDetail.answerContent"
                   :autosize="{minRows: 3,maxRows: 8}"
                   type="textarea"
+                  disabled
                   placeholder="请输入回复内容..."
                 ></Input>
               </FormItem>
@@ -326,7 +327,6 @@
                 <Input
                   v-model="evaluateDetail.answerContent"
                   :autosize="{minRows: 3,maxRows: 8}"
-                  disabled
                   type="textarea"
                   placeholder="请输入回复内容..."
                 ></Input>
@@ -425,6 +425,7 @@ export default {
       areaList: [],
       evaluateList: [],
       uploadVisible: false,
+      evaluateStatus: false,
       imgUploadViewItem: "",
       imageStatusEnum,
       deliveryTypeEnum,
@@ -579,7 +580,10 @@ export default {
           this.evaluateList.push(arr[i]);
         }
       }
-      console.log("图片列表", this.evaluateList);
+      params.row.answerContent
+        ? (this.evaluateStatus = true)
+        : (this.evaluateStatus = false);
+
       this.modalEdit = true;
     },
     getTableData() {

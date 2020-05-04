@@ -21,20 +21,20 @@
       >
         <div slot="searchCondition">
           <Row>
-            <Input
-              v-model="searchRowData.id"
-              placeholder="分类ID"
-              class="search-input mr5"
-              style="width: auto"
+            <Select
+              v-model="searchRowData.parentId"
+              class="search-col mr5"
+              placeholder="父级分类"
+              style="width: 120px"
               clearable
-            ></Input>
-            <Input
-              v-model="searchRowData.categoriesName"
-              placeholder="分类名称"
-              class="search-input mr5"
-              style="width: auto"
-              clearable
-            ></Input>
+            >
+              <Option
+                v-for="item in parentInfoList"
+                :value="item.id"
+                :key="`search-col-${item.value}`"
+                class="ptb2-5"
+              >{{ item.categoriesName }}</Option>
+            </Select>
             <Button
               :loading="searchLoading"
               class="search-btn mr5"
@@ -196,8 +196,7 @@ const systemCategoryDetail = {
 const roleRowData = {
   page: 1,
   rows: 10,
-  id: null,
-  categoriesName: null
+  parentId:2
 };
 
 export default {

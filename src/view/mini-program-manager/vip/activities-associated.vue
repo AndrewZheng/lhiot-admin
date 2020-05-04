@@ -840,7 +840,7 @@ const relationDetail = {
   useLimitType: null,
   hdActivityId: 0,
   source: "SMALL", // 默认来源为系统对象
-  validDateType: "FIXED_DATE",
+  validDateType: "UN_FIXED_DATE",
   beginDay: 0,
   endDay: 0,
   hdActivityId: ""

@@ -437,8 +437,8 @@
             </i-col>
           </Row>
           <Row>
-            <i-col span="12" style="float:right">
-              <Button v-waves type="info" @click="modalSort = true">规格描述排序</Button>
+            <i-col span="9" style="float:right;margin-bottom:10px;margin-right:9px">
+              <Button v-waves type="info" @click="modalSort = true">商品详情图排序</Button>
             </i-col>
           </Row>
           <Row>
