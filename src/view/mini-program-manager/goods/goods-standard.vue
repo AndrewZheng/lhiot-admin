@@ -242,14 +242,14 @@
               </i-col>
             </Row>
           </i-col>
-          <i-col span="12">
+          <!-- <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">上架商品详情图:</i-col>
               <i-col v-if="productStandardDetail.detailImage" span="16">
                 <img :src="productStandardDetail.detailImage" width="100" height="100" />
               </i-col>
             </Row>
-          </i-col>
+          </i-col> -->
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
@@ -2171,15 +2171,14 @@ export default {
         this.$refs.uploadShar.setDefaultFileList(sharImgArr);
         this.uploadListShar = sharImgArr;
       }
-      if (res.detailImage != null) {
-        const map = { status: "finished", url: "url" };
-        const detailImgArr = [];
-        map.url = res.detailImage;
-        detailImgArr.push(map);
-        this.$refs.uploadDetail.setDefaultFileList(detailImgArr);
-        this.uploadListDetail = detailImgArr;
-      }
-
+      // if (res.detailImage != null) {
+      //   const map = { status: "finished", url: "url" };
+      //   const detailImgArr = [];
+      //   map.url = res.detailImage;
+      //   detailImgArr.push(map);
+      //   this.$refs.uploadDetail.setDefaultFileList(detailImgArr);
+      //   this.uploadListDetail = detailImgArr;
+      // }
       if (res.description != null) {
         const descriptionImgArr = [];
         const descriptionArr = res.description.split(",");
@@ -2205,7 +2204,7 @@ export default {
     },
     handleRemoveDetail(file) {
       this.$refs.uploadDetail.deleteFile(file);
-      this.productStandardDetail.detailImage = null;
+      // this.productStandardDetail.detailImage = null;
     },
     handleRemoveShar(file) {
       this.$refs.uploadShar.deleteFile(file);

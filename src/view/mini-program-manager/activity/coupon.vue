@@ -272,7 +272,7 @@
 
     <Modal v-model="modalEdit" :width="1000" :z-index="1000" :mask-closable="false">
       <p slot="header">
-        <i-col>{{ tempModalType == modalType.edit?'修改限时抢购活动':(tempModalType==modalType.create?'创建优惠券活动': '优惠券活动和模板关联') }}</i-col>
+        <i-col>{{ tempModalType == modalType.edit?'修改优惠券活动':(tempModalType==modalType.create?'创建优惠券活动': '优惠券活动和模板关联') }}</i-col>
       </p>
       <div class="modal-content">
         <Form ref="editForm" :model="couponDetail" :rules="ruleInline" :label-width="80">

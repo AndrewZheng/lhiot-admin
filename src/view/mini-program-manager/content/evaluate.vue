@@ -238,25 +238,10 @@
       <p slot="header">
         <i-col>{{ "回复评论" }}</i-col>
       </p>
-      <!-- 
-订单编号：387416179821780992
-
-下单门店：麓谷林语店
-
-用户名称：E-June
-
-骑手评价：超赞
-
-门店评价：5星
-
-评价内容：
-
-
-      -->
       <div class="modal-content">
         <Form ref="modalEdit" :model="evaluateDetail" :rules="ruleInline" :label-width="100">
           <Row class-name="mb20">
-            <i-col span="24">
+            <i-col span="20">
               <Row>
                 <i-col span="6">订单编号:</i-col>
                 <i-col span="18">{{ evaluateDetail.orderCode }}</i-col>
@@ -264,7 +249,7 @@
             </i-col>
           </Row>
           <Row class-name="mb20">
-            <i-col span="24">
+            <i-col span="20">
               <Row>
                 <i-col span="6">下单门店:</i-col>
                 <i-col span="18">{{ evaluateDetail.storeName }}</i-col>
@@ -272,7 +257,7 @@
             </i-col>
           </Row>
           <Row class-name="mb20">
-            <i-col span="24">
+            <i-col span="20">
               <Row>
                 <i-col span="6">用户名称:</i-col>
                 <i-col span="18">{{ evaluateDetail.nickName }}</i-col>
@@ -280,7 +265,7 @@
             </i-col>
           </Row>
           <Row class-name="mb20">
-            <i-col span="24">
+            <i-col span="20">
               <Row>
                 <i-col span="6">骑手评价:</i-col>
                 <i-col span="18">{{ evaluateDetail.deliveryComment }}</i-col>
@@ -288,7 +273,7 @@
             </i-col>
           </Row>
           <Row class-name="mb20">
-            <i-col span="24">
+            <i-col span="20">
               <Row>
                 <i-col span="6">门店评价:</i-col>
                 <i-col span="18">{{ evaluateDetail.commentScore }}</i-col>
@@ -303,13 +288,45 @@
               </Row>
             </i-col>
           </Row>
+          <!-- 图片评价 -->
+          <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+            <i-col span="20">
+              <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+                <i-col span="6">评价图片:</i-col>
+                <i-col span="16">
+                  <div
+                    v-for="item in evaluateList"
+                    :key="item.id"
+                    class="demo-upload-list"
+                    style="width:100px;height:100px;"
+                  >
+                    <img :src="item" />
+                    <div class="demo-upload-list-cover">
+                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                    </div>
+                  </div>
+                </i-col>
+              </Row>
+            </i-col>
+          </Row>
           <Divider>回复评价</Divider>
           <Row class-name="mb20">
-            <i-col span="20">
+            <i-col span="20" v-if="!evaluateDetail.answerContent">
               <FormItem :label-width="100" label="回复评价:" prop="answerContent">
                 <Input
                   v-model="evaluateDetail.answerContent"
                   :autosize="{minRows: 3,maxRows: 8}"
+                  type="textarea"
+                  placeholder="请输入回复内容..."
+                ></Input>
+              </FormItem>
+            </i-col>
+            <i-col span="20" v-else>
+              <FormItem :label-width="100" label="回复评价:" prop="answerContent">
+                <Input
+                  v-model="evaluateDetail.answerContent"
+                  :autosize="{minRows: 3,maxRows: 8}"
+                  disabled
                   type="textarea"
                   placeholder="请输入回复内容..."
                 ></Input>
@@ -323,11 +340,16 @@
         <Button :loading="modalViewLoading" type="primary" @click="handleSubmit()">确定</Button>
       </div>
     </Modal>
+    <Modal v-model="uploadVisible" title="图片预览">
+      <img :src="imgUploadViewItem" style="width: 100%" />
+    </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
+import IViewUpload from "_c/iview-upload";
+import DragList from "_c/drag-list";
 import _ from "lodash";
 import { getEvaluatePages, replyEvaluate } from "@/api/mini-program";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -386,7 +408,9 @@ const roleRowData = {
 
 export default {
   components: {
-    Tables
+    Tables,
+    IViewUpload,
+    DragList
   },
   mixins: [deleteMixin, tableMixin, searchMixin],
   data() {
@@ -399,6 +423,9 @@ export default {
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
+      evaluateList: [],
+      uploadVisible: false,
+      imgUploadViewItem: "",
       imageStatusEnum,
       deliveryTypeEnum,
       commentScoreTypeEnum,
@@ -409,14 +436,16 @@ export default {
           align: "center"
         },
         {
-          title: "订单标号",
+          title: "订单编号",
           align: "center",
+          width: 170,
           key: "orderCode"
         },
         {
           title: "商品名称",
           align: "center",
-          key: "productNames"
+          key: "productNames",
+          tooltip: true
         },
         {
           title: "门店名称",
@@ -479,7 +508,16 @@ export default {
         {
           title: "评价内容",
           align: "center",
-          key: "commentContent"
+          width: 200,
+          key: "commentContent",
+          tooltip: true
+        },
+        {
+          title: "回复评价",
+          align: "center",
+          width: 200,
+          key: "answerContent",
+          tooltip: true
         },
         {
           title: "操作",
@@ -534,8 +572,14 @@ export default {
     },
     handleEdit(params) {
       this.resetFields();
-      console.log("数据", params.row);
-      this.evaluateDetail = _.cloneDeep(params.row);
+      (this.evaluateList = []), (this.evaluateDetail = _.cloneDeep(params.row));
+      let arr = params.row.commentImages.split(",");
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] != "") {
+          this.evaluateList.push(arr[i]);
+        }
+      }
+      console.log("图片列表", this.evaluateList);
       this.modalEdit = true;
     },
     getTableData() {
@@ -572,10 +616,17 @@ export default {
       this.evaluateDetail.status =
         params.row.status === "VIEW" ? "HIDE" : "VIEW";
       this.replyEvaluate(this.evaluateDetail);
+    },
+    handleUploadView(item) {
+      this.imgUploadViewItem = item;
+      this.uploadVisible = true;
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.mr20 {
+  margin-right: 20px;
+}
 </style>

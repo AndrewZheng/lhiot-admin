@@ -278,12 +278,6 @@ export default {
           key: "phone"
         },
         {
-          title: "用户ID",
-          align: "center",
-          width: 185,
-          key: "userId"
-        },
-        {
           title: "创建时间",
           align: "center",
           width: 185,
@@ -309,46 +303,11 @@ export default {
           }
         },
         {
-          title: "回复人",
-          align: "center",
-          width: 100,
-          key: "backEditor",
-          tooltip: true
-        },
-        {
           title: "回复内容",
           align: "center",
           width: 170,
           key: "backMessage",
           tooltip: true
-        },
-        {
-          title: "应用类型",
-          align: "center",
-          width: 160,
-          key: "applicationType",
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.applicationType === "WXSMALL_SHOP") {
-              return (
-                <div>
-                  <tag color="green">
-                    {appTypeConvert(row.applicationType).label}
-                  </tag>
-                </div>
-              );
-            } else if (row.applicationType === "S_MALL") {
-              return (
-                <div>
-                  <tag color="gold">
-                    {appTypeConvert(row.applicationType).label}
-                  </tag>
-                </div>
-              );
-            } else {
-              return <div>{row.applicationType}</div>;
-            }
-          }
         },
         {
           title: "操作",
