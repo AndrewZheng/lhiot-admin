@@ -688,7 +688,7 @@
                 </IViewUpload>
               </FormItem>
             </i-col>
-            <i-col span="12" style="float:right;margin-right:-30px">
+            <i-col span="12" style="float:right;margin-bottom:15px;margin-right:-30px">
               <Button v-waves type="info" @click="handleImageSort">规格描述排序</Button>
             </i-col>
           </Row>

@@ -1160,20 +1160,6 @@ export default {
     },
     addFlashsale() {
       // this.resetFields();
-      let flashsaleIndex = 0;
-      for (let i = 0; i < this.tableData.length; i++) {
-        console.log("数据", this.tableData[i]);
-        if (
-          this.tableData[i].status === "ON" &&
-          compareCouponData(this.tableData[i].endTime) === true
-        ) {
-          flashsaleIndex++;
-        }
-        if (flashsaleIndex === 2) {
-          this.$Message.info("已有2个有效且开启中的限时抢购活动!");
-          return;
-        }
-      }
       this.tempModalType = this.modalType.create;
       this.activitySeckillDetail = _.cloneDeep(activitySeckillDetail);
       this.modalEdit = true;
