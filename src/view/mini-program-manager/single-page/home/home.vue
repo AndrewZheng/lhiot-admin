@@ -27,7 +27,6 @@
     </Row>
     <Row style="margin-top: 20px;">
       <Card shadow>
-        <!-- <example style="height: 310px;" /> -->
         <img
           src="http://resource.shuiguoshule.com.cn/product_image/2019-07-31/sgv7qBdSKI7ZrH5JU2kB.jpg"
           style="height: 300px;width:100%;"
