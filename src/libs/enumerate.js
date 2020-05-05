@@ -2529,7 +2529,7 @@ export const wholesalePayTypeEnum = [{
   value: 'offline'
 },
 {
-  label: '鼎富通',
+  label: '鼎付通',
   value: 'haiding'
 }
 ]

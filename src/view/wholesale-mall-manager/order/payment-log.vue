@@ -286,6 +286,14 @@ export default {
                   </tag>
                 </div>
               );
+            } else if (row.paymentType === "haiding") {
+              return (
+                <div>
+                  <tag color="warning">
+                    {wholesalePayTypeConvert(row.paymentType).label}
+                  </tag>
+                </div>
+              );
             } else {
               return <div>{"N/A"}</div>;
             }
