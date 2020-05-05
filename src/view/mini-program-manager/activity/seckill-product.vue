@@ -980,6 +980,7 @@ export default {
           title: "结束时间",
           align: "center",
           key: "endTime",
+          width: 200,
           render: (h, params, vm) => {
             const { row } = params;
             if (!compareCouponData(row.endTime)) {

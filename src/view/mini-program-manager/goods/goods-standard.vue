@@ -293,14 +293,14 @@
             </Row>
           </i-col>
         </Row>
-        <Row>
+        <!-- <Row>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">SVIP价格:</i-col>
               <i-col span="16">{{ productStandardDetail.svipPrice | fenToYuanDot2Filters }}</i-col>
             </Row>
           </i-col>
-        </Row>
+        </Row> -->
 
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
@@ -632,7 +632,7 @@
             </i-col>
           </Row>
           <Row>
-            <i-col span="12">
+            <!-- <i-col span="12">
               <FormItem label="SVIP价格:" prop="svipPrice">
                 <InputNumber
                   :min="0"
@@ -640,8 +640,8 @@
                   @on-change="svipPriceInputNumberOnchange"
                 ></InputNumber>
               </FormItem>
-            </i-col>
-            <i-col span="12">
+            </i-col> -->
+            <i-col span="12" style="float:right;margin-bottom:15px;margin-right:-30px">
               <Button v-waves type="warning" @click="handleHdSvipPrice">海鼎价格参考</Button>
             </i-col>
           </Row>
@@ -688,7 +688,7 @@
                 </IViewUpload>
               </FormItem>
             </i-col>
-            <i-col span="12">
+            <i-col span="12" style="float:right;margin-right:-30px">
               <Button v-waves type="info" @click="handleImageSort">规格描述排序</Button>
             </i-col>
           </Row>
@@ -773,11 +773,11 @@
                 <InputNumber :min="0" :value="salePriceComputed" disabled></InputNumber>
               </FormItem>
             </i-col>
-            <i-col span="12">
+            <!-- <i-col span="12">
               <FormItem label="SVIP价格:">
                 <InputNumber :min="0" :value="svipPriceComputed" disabled></InputNumber>
               </FormItem>
-            </i-col>
+            </i-col> -->
           </Row>
           <Row>
             <i-col span="12">

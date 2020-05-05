@@ -339,7 +339,7 @@
             </Col>
           </Row>
           <Row>
-            <FormItem label="商品主图:建议尺寸;400x400(单位:px):" prop="image">
+            <FormItem label="商品主图:建议尺寸:750x750(单位:px)" prop="image">
               <Input v-show="false" v-model="productDetail.image" style="width: auto"></Input>
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
@@ -564,11 +564,11 @@ export default {
           key: 'unitName'
         },
         {
-          title: '产地编码',
+          title: '基础条码',
           align: 'center',
           minWidth: 120,
           sortable: true,
-          key: 'sourceCode'
+          key: 'baseBarcode'
         },
         {
           title: '基础单位',
@@ -579,7 +579,7 @@ export default {
         {
           title: '基础重量(kg)',
           align: 'center',
-          minWidth: 90,
+          minWidth: 100,
           key: 'baseQty'
         },
         {

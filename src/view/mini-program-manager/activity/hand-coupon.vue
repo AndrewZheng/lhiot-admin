@@ -1260,7 +1260,7 @@ const dataColumns = [
     title: '生效时间',
     key: 'effectiveStartTime',
     align: 'center',
-    minWidth: 90,
+    minWidth: 40,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
@@ -1310,7 +1310,7 @@ const dataColumns = [
     title: '创建时间',
     align: 'center',
     key: 'createTime',
-    minWidth: 35
+    minWidth: 40
   },
   {
     title: '操作',

@@ -837,12 +837,13 @@ export default {
     handleView(params) {
       getProStandardExpand({
         id: params.row.productStandardId
-      }).then(res => {
+      }).then(res => {  
         this.discount = res;
-
+         console.log("回调",res)
         if (!res) {
           this.modalView = false;
           this.$Message.error("当前商品不是活动商品");
+          return;
         } else {
           this.discount.discountPrice = fenToYuanDot2(
             this.discount.discountPrice
