@@ -27,7 +27,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="handleBatchDel"
+            @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
@@ -138,7 +138,9 @@ import {
   getSystemSettingCategoryTree
 } from '@/api/wholesale';
 import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import { buildMenu, convertTreeCategory, convertTree } from '@/libs/util';
 
 const systemCategoryDetail = {
@@ -156,7 +158,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [uploadMixin, tableMixin],
+  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
     return {
       ruleInline: {

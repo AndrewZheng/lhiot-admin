@@ -74,7 +74,7 @@
                 placement="bottom"
                 style="width: 100px"
                 title="您确认删除选中的内容吗?"
-                @on-ok="handleBatchDel"
+                @on-ok="poptipOk"
               >
                 <Button type="error" class="mr5">
                   <Icon type="md-trash" />批量删除
@@ -155,6 +155,8 @@
               ref="uploadMain"
               :default-list="defaultListMain"
               :image-size="imageSize"
+              group-type="base_image"
+              file-dir="product"
               @on-success="handleSuccessMain"
             >
               <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -182,14 +184,17 @@ import {
   deleteProductSection,
   getProductSectionPages,
   getProductSectionTree,
-  editProductSection
+  editProductSection,
+  deletePicture
 } from '@/api/wholesale';
 import { layoutEnum } from '@/libs/enumerate';
 import { layoutConvert } from '@/libs/converStatus';
 import { buildMenu, convertTree } from '@/libs/util';
 
 import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 
 const currentCategory = {
   id: 0,
@@ -272,7 +277,7 @@ export default {
     CommonIcon,
     IViewUpload
   },
-  mixins: [tableMixin, uploadMixin],
+  mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin],
   data() {
     return {
       layoutEnum,
@@ -280,6 +285,9 @@ export default {
       menuData: [],
       uploadListMain: [],
       defaultListMain: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       modalEdit: false,
       modalViewLoading: false,
       modalEditLoading: false,
@@ -341,6 +349,12 @@ export default {
     handleSubmit() {
       this.currentCategory.parentId =
         this.parentCategory.id !== 0 ? this.parentCategory.id : 0;
+      if (this.oldPicture.length > 0) {
+        const urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
       this.$refs.editForm.validate(valid => {
         if (valid) {
           this.modalEditLoading = true;
@@ -354,6 +368,24 @@ export default {
           this.$Message.error('请完善板块信息!');
         }
       });
+    },
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        const urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
     },
     createProductSection() {
       this.modalEditLoading = true;
@@ -387,6 +419,8 @@ export default {
         this.$Message.warning('请先从左侧选择一个板块');
         return;
       }
+      this.save = [];
+      this.save.push(params.row.avater);
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.currentCategory = _.cloneDeep(params.row);
@@ -511,6 +545,8 @@ export default {
       this.uploadListMain = fileList;
       this.currentCategory.plateImage = null;
       this.currentCategory.plateImage = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);

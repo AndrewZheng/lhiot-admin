@@ -41,7 +41,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="handleBatchDel"
+            @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash"/>
@@ -331,7 +331,9 @@ import { getCustomPlansPages,
   createCustomPlan,
   getProductShelvesPages, getCustomPlan, editCustomPlan, editCustomPlanStatus, editCustomPlanPeriod } from '@/api/fruitermaster';
 import IViewUpload from '_c/iview-upload';
+import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 import { fenToYuanDot2, fenToYuanDot2Number, yuanToFenNumber } from '@/libs/util';
 import { customPlanStatusConvert } from '@/libs/converStatus';
@@ -410,7 +412,7 @@ export default {
     IViewUpload,
     BookTypeOption
   },
-  mixins: [tableMixin, uploadMixin],
+  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
   data() {
     return {
       shelfSpecificationLoadingDay1: false,

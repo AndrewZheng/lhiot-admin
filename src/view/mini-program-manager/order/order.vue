@@ -16,6 +16,7 @@
         @on-view="handleView"
         @on-hand="handleReimburse"
         @on-receive="handSureReceive"
+        @on-meituan="handMeituan"
         @on-current-change="onCurrentChange"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
@@ -185,7 +186,7 @@
             </div>
           </Row>
         </div>
-        <div slot="operations" style="margin-left:-30px">
+        <div slot="operations" style="margin-left:-160px">
           <Button
             v-waves
             :loading="deliverOrderLoading"
@@ -193,32 +194,22 @@
             type="primary"
             @click="deliverOrder"
           >门店调货</Button>
-          <Button v-waves class="search-btn ml2 mr2" type="primary" @click="resendToHd">海鼎重发</Button>
+          <Button v-waves class="search-btn ml2 mr2" type="warning" @click="resendToHd">海鼎重发</Button>
           <!-- 多类型导出 -->
           <!-- <BookTypeOption v-model="exportType" class="mr5"/> -->
           <Button
             :loading="downloadLoading"
             class="search-btn mr2"
-            type="warning"
+            type="info"
             @click="handleDownload"
           >
             <Icon type="md-download" />导出
           </Button>
-          <Button
-            :loading="downloadLoading"
-            class="search-btn"
-            type="primary"
-            @click="couponDetails"
-          >
+          <Button :loading="downloadLoading" class="search-btn" type="info" @click="couponDetails">
             <Icon type="md-search" />&nbsp;用券数据
           </Button>
-          <Button
-            :loading="downloadLoading"
-            class="search-btn mt5"
-            type="primary"
-            @click="monthOrder"
-          >
-            <Icon type="md-search" />&nbsp;跨月退款订单
+          <Button :loading="downloadLoading" class="search-btn" type="info" @click="monthOrder">
+            <Icon type="md-search" />&nbsp;跨月退款数据
           </Button>
           <!-- <Poptip
             confirm
@@ -247,7 +238,7 @@
       </div>
     </Card>
     <!--查看订单详情-->
-    <Modal v-model="modalView" :width="800" :mask-closable="false">
+    <Modal v-model="modalView" :width="1000" :mask-closable="false">
       <p slot="header">
         <span>查看订单详情</span>
       </p>
@@ -255,14 +246,14 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">订单code:</i-col>
+              <i-col span="8">订单编号:</i-col>
               <i-col span="16">{{ orderDetail.code }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">应用类型:</i-col>
-              <i-col span="16">{{ orderDetail.apply | appTypeFilter }}</i-col>
+              <i-col span="8">订单状态:</i-col>
+              <i-col span="16">{{ orderDetail.orderStatus| miniOrderStatusFilter }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -274,79 +265,8 @@
             </Row>
           </i-col>
           <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="8">海鼎备货时间:</i-col>
-              <i-col span="16">{{ orderDetail.hdStockAt }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="8">下单用户:</i-col>
-              <i-col span="16">{{ orderDetail.receiveUser }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="8">下单门店:</i-col>
-              <i-col span="16">{{ orderDetail.storeName }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="8">门店编码:</i-col>
-              <i-col span="16">{{ orderDetail.storeCode }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="8">优惠券id:</i-col>
-              <i-col span="16">{{ orderDetail.couponId? orderDetail.couponId: '未使用' }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="8">下单时间:</i-col>
-              <i-col span="16">{{ orderDetail.createAt }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="8">提货截止时间:</i-col>
-              <i-col span="16">{{ orderDetail.deliveryEndTime?orderDetail.deliveryEndTime: 'N/A' }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="8">订单类型:</i-col>
-              <i-col span="16">{{ orderDetail.orderType| miniOrderTypeFilter }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="8">收货方式:</i-col>
-              <i-col span="16">{{ orderDetail.receivingWay| receivingWayFilters }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="8">订单状态:</i-col>
-              <i-col span="16">{{ orderDetail.orderStatus| miniOrderStatusFilter }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row class-name="mb10">
+            <Row>
               <i-col span="8">海鼎状态:</i-col>
-              <!-- <i-col span="16">{{ orderDetail.hdStatus | miniHdStatusFilter }}</i-col> -->
               <i-col v-if="orderDetail.hdStatus === 'NOT_SEND'" span="16">
                 <tag color="warning">{{ "未发送" }}</tag>
               </i-col>
@@ -360,6 +280,80 @@
             </Row>
           </i-col>
         </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">收货方式:</i-col>
+              <i-col span="16">{{ orderDetail.receivingWay| receivingWayFilters }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">海鼎备货时间:</i-col>
+              <i-col span="16">{{ orderDetail.hdStockAt?orderDetail.hdStockAt:'N/A' }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">订单类型:</i-col>
+              <i-col span="16">{{ orderDetail.orderType| miniOrderTypeFilter }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">应用类型:</i-col>
+              <i-col span="16">{{ orderDetail.apply | appTypeFilter }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Divider orientation="center">用户信息</Divider>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">下单用户:</i-col>
+              <i-col span="16">{{ orderDetail.receiveUser }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">下单时间:</i-col>
+              <i-col span="16">{{ orderDetail.createAt }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">下单门店:</i-col>
+              <i-col span="16">{{ orderDetail.storeName }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">提货截止时间:</i-col>
+              <i-col span="16">{{ orderDetail.deliveryEndTime?orderDetail.deliveryEndTime: 'N/A' }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">门店编码:</i-col>
+              <i-col span="16">{{ orderDetail.storeCode }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="8">优惠券编号:</i-col>
+              <i-col span="16">{{ orderDetail.couponId? orderDetail.couponId: '未使用' }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+
+        <Divider orientation="center">支付信息</Divider>
+
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
@@ -402,6 +396,9 @@
             </Row>
           </i-col>
         </Row>
+
+        <Divider orientation="center">配送信息</Divider>
+
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
@@ -492,6 +489,8 @@
             <i-col v-else span="8">{{ "N/A" }}</i-col>
           </Row>
         </Row>
+
+        <Divider orientation="center">商品信息</Divider>
 
         <Row>
           <tables :columns="orderViewRelationsColumn" v-model="orderDetail.orderProducts" border></tables>
@@ -594,9 +593,11 @@ import {
   ordersRefund,
   refundWx,
   refundPt,
-  sureReceive
+  sureReceive,
+  sureMaituan
 } from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
 import { fenToYuanDot2, fenToYuanDot2Number } from "@/libs/util";
 import {
   receivingWayEnum,
@@ -682,7 +683,7 @@ export default {
     Tables,
     BookTypeOption
   },
-  mixins: [tableMixin],
+  mixins: [tableMixin, searchMixin],
   data() {
     return {
       mark: false,
@@ -1189,7 +1190,7 @@ export default {
           align: "center",
           fixed: "right",
           key: "handle",
-          options: ["view", "onHand", "onReceive"]
+          options: ["view", "onHand", "onReceive", "onMeituan"]
         }
       ],
       currentTableRowSelected: null,
@@ -1297,6 +1298,32 @@ export default {
           });
       } else {
         this.$Message.error("只有已发货和配送中的订单才能操作收货");
+      }
+    },
+    // 发送美团
+    handMeituan(params) {
+      if (params.row.receivingWay === "TO_THE_HOME") {
+        if (
+          params.row.orderStatus === "WAIT_SEND_OUT" ||
+          params.row.orderStatus === "SEND_OUT" ||
+          params.row.orderStatus === "DISPATCHING"
+        ) {
+          sureMaituan({ orderCode: params.row.code })
+            .then(res => {
+              this.loading = false;
+              this.$Message.success("操作成功");
+              this.getTableData();
+            })
+            .catch(() => {
+              this.loading = false;
+            });
+        } else {
+          this.$Message.error(
+            "只有待发货、已发货和配送中的订单才能操作发送美团"
+          );
+        }
+      } else {
+        this.$Message.error("只有送到家的订单才能操作发送美团");
       }
     },
     // 门店调货

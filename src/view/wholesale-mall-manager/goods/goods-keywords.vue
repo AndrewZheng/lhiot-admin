@@ -81,7 +81,7 @@
             placement="bottom"
             style="width: 100px"
             title="您确认删除选中的内容吗?"
-            @on-ok="handleBatchDel"
+            @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
@@ -149,7 +149,7 @@
                 style="width: 200px"
                 readonly
               >
-              <Button slot="append" icon="ios-search" @click="handleRelation"></Button>
+                <Button slot="append" icon="ios-search" @click="handleRelation"></Button>
               </Input>
             </FormItem>
             <FormItem label="关联名称:" prop="mappingName">
@@ -282,7 +282,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
+import Tables from "_c/tables";
 
 import {
   editKeywords,
@@ -292,245 +292,247 @@ import {
   getProductStandardsPages,
   getProductCategoriesTree,
   getProductUnits
-} from '@/api/wholesale';
+} from "@/api/wholesale";
 
-import tableMixin from '@/mixins/tableMixin.js';
-import { pfExpandTypeConvert } from '@/libs/converStatus';
-import { pfExpandTypeEnum } from '@/libs/enumerate';
-import { buildMenu, convertTreeCategory, fenToYuanDot2 } from '@/libs/util';
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import { pfExpandTypeConvert } from "@/libs/converStatus";
+import { pfExpandTypeEnum } from "@/libs/enumerate";
+import { buildMenu, convertTreeCategory, fenToYuanDot2 } from "@/libs/util";
 
 const keywordsDetail = {
   id: 0,
-  hotSearch: '', // yes-是 no-否
-  keyword: '',
-  kwType: '', // goods-商品 category-分类
-  mappingName: '', // 用于显示
+  hotSearch: "", // yes-是 no-否
+  keyword: "",
+  kwType: "", // goods-商品 category-分类
+  mappingName: "", // 用于显示
   mappingId: 0
 };
 
 const roleRowData = {
-  keyword: '',
-  hotSearch: '',
-  kwType: '',
+  keyword: "",
+  hotSearch: "",
+  kwType: "",
   page: 1,
   rows: 20
 };
 
 const productStandardDetail = {
-  barCode: '',
-  unitName: '',
-  categoryName: '',
-  goodsCode: '',
+  barCode: "",
+  unitName: "",
+  categoryName: "",
+  goodsCode: "",
   goodsId: 0,
   goodsImage: null,
-  goodsName: '',
+  goodsName: "",
   goodsPriceRegionList: [], // 商品价格区间
-  goodsUnit: '',
-  hdSkuId: '',
+  goodsUnit: "",
+  hdSkuId: "",
   id: 0,
-  isVip: '',
+  isVip: "",
   netWeight: 0, // 商品净重
   price: 0,
   purchasePrice: 0,
-  standard: '',
-  standardDesc: '',
-  unitCode: '',
-  vaild: '',
+  standard: "",
+  standardDesc: "",
+  unitCode: "",
+  vaild: "",
   weight: 0,
   rank: 0, // 先保留后续扩展
-  baseProductName: '' // 先保留可扩展
+  baseProductName: "" // 先保留可扩展
 };
 
 const standardRoleRowData = {
-  goodsId: '',
-  barCode: '',
-  goodsCode: '',
-  goodsName: '',
-  goodsType: '',
+  goodsId: "",
+  barCode: "",
+  goodsCode: "",
+  goodsName: "",
+  goodsType: "",
   page: 1,
   rows: 20,
-  vaild: ''
+  vaild: ""
 };
 
 const keywordsColumns = [
   {
-    type: 'selection',
-    key: '',
+    type: "selection",
+    key: "",
     width: 60,
-    align: 'center'
+    align: "center"
   },
   {
-    title: '编号',
-    align: 'center',
-    key: 'id',
+    title: "编号",
+    align: "center",
+    key: "id",
     width: 80
   },
   {
-    title: '关键词',
-    align: 'center',
-    key: 'keyword'
+    title: "关键词",
+    align: "center",
+    key: "keyword"
   },
   {
-    title: '关键词类型',
-    align: 'center',
-    key: 'kwType',
+    title: "关键词类型",
+    align: "center",
+    key: "kwType",
     render: (h, params, vm) => {
       const { row } = params;
-      let str = 'N/A';
-      if (row.kwType === 'goods') {
-        str = '商品';
-      } else if (row.kwType === 'category') {
-        str = '分类';
+      let str = "N/A";
+      if (row.kwType === "goods") {
+        str = "商品";
+      } else if (row.kwType === "category") {
+        str = "分类";
       }
       return <div>{str}</div>;
     }
   },
   {
-    title: '关联名称',
-    align: 'center',
-    key: 'mappingId'
+    title: "关联名称",
+    align: "center",
+    key: "mappingId"
   },
   {
-    title: '是否热门搜索',
-    align: 'center',
-    key: 'hotSearch',
+    title: "是否热门搜索",
+    align: "center",
+    key: "hotSearch",
     render: (h, params, vm) => {
       const { row } = params;
-      let str = 'N/A';
-      if (row.hotSearch === 'yes') {
-        str = '是';
-      } else if (row.hotSearch === 'no') {
-        str = '否';
+      let str = "N/A";
+      if (row.hotSearch === "yes") {
+        str = "是";
+      } else if (row.hotSearch === "no") {
+        str = "否";
       }
       return <div>{str}</div>;
     }
   },
   {
-    title: '操作',
-    align: 'center',
-    key: 'handle',
-    options: ['edit', 'delete']
+    title: "操作",
+    align: "center",
+    key: "handle",
+    options: ["edit", "delete"]
   }
 ];
 
 const standardColumns = [
   {
-    title: '规格ID',
-    align: 'center',
-    key: 'id',
+    title: "规格ID",
+    align: "center",
+    key: "id",
     minWidth: 50
   },
   {
-    title: '商品条码',
-    align: 'center',
-    key: 'barCode',
+    title: "商品条码",
+    align: "center",
+    key: "barCode",
     minWidth: 70
   },
   {
-    title: '商品名称',
-    align: 'center',
-    key: 'goodsName',
+    title: "商品名称",
+    align: "center",
+    key: "goodsName",
     minWidth: 100
   },
   {
-    title: '商品图片',
-    key: 'goodsImage',
-    align: 'center',
+    title: "商品图片",
+    key: "goodsImage",
+    align: "center",
     minWidth: 120,
     render: (h, params, vm) => {
       const { row } = params;
-      const str = <img src={row.goodsImage} height='60' width='60' />;
+      const str = <img src={row.goodsImage} height="60" width="60" />;
       return <div>{str}</div>;
     }
   },
   {
-    title: '商品规格',
-    align: 'center',
-    key: 'standardDesc',
+    title: "商品规格",
+    align: "center",
+    key: "standardDesc",
     minWidth: 80
   },
   {
-    title: '商品单位',
-    align: 'center',
+    title: "商品单位",
+    align: "center",
     minWidth: 80,
-    key: 'goodsUnit'
+    key: "goodsUnit"
   },
   {
-    title: '商品原价',
-    align: 'center',
+    title: "商品原价",
+    align: "center",
     minWidth: 60,
-    key: 'price',
+    key: "price",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
     }
   },
   {
-    title: '进货价',
-    align: 'center',
+    title: "进货价",
+    align: "center",
     minWidth: 60,
-    key: 'purchasePrice',
+    key: "purchasePrice",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.purchasePrice);
       return <div>{amount}</div>;
     }
   },
   {
-    title: '商品类型',
+    title: "商品类型",
     minWidth: 80,
-    key: 'goodsType',
-    align: 'center',
+    key: "goodsType",
+    align: "center",
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.goodsType == 'NORMAL') {
+      if (row.goodsType == "NORMAL") {
         return (
           <div>
-            <tag color='cyan'>{pfExpandTypeConvert(row.goodsType).label}</tag>
+            <tag color="cyan">{pfExpandTypeConvert(row.goodsType).label}</tag>
           </div>
         );
-      } else if (row.goodsType == 'VIP') {
+      } else if (row.goodsType == "VIP") {
         return (
           <div>
-            <tag color='orange'>{pfExpandTypeConvert(row.goodsType).label}</tag>
+            <tag color="orange">{pfExpandTypeConvert(row.goodsType).label}</tag>
           </div>
         );
-      } else if (row.goodsType == 'FLASHSALE') {
+      } else if (row.goodsType == "FLASHSALE") {
       }
       return (
         <div>
-          <tag color='blue'>{pfExpandTypeConvert(row.goodsType).label}</tag>
+          <tag color="blue">{pfExpandTypeConvert(row.goodsType).label}</tag>
         </div>
       );
       return (
         <div>
-          <tag color='primary'>N/A</tag>
+          <tag color="primary">N/A</tag>
         </div>
       );
     }
   },
   {
-    title: '商品状态',
+    title: "商品状态",
     minWidth: 80,
-    key: 'vaild',
-    align: 'center',
+    key: "vaild",
+    align: "center",
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.vaild === 'yes') {
+      if (row.vaild === "yes") {
         return (
           <div>
-            <tag color='success'>上架</tag>
+            <tag color="success">上架</tag>
           </div>
         );
-      } else if (row.vaild === 'no') {
+      } else if (row.vaild === "no") {
         return (
           <div>
-            <tag color='error'>下架</tag>
+            <tag color="error">下架</tag>
           </div>
         );
       }
       return (
         <div>
-          <tag color='primary'>N/A</tag>
+          <tag color="primary">N/A</tag>
         </div>
       );
     }
@@ -541,12 +543,12 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin],
+  mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
     return {
       ids: [],
       unitsList: [],
-      configTotal: '',
+      configTotal: "",
       goodsCategoryData: [],
       defaultGoodsCategoryData: [],
       proCategoryTreeList: [],
@@ -566,48 +568,48 @@ export default {
       productStandardDetail: _.cloneDeep(productStandardDetail),
       vipEnum: [
         {
-          label: '是',
-          value: 'yes'
+          label: "是",
+          value: "yes"
         },
         {
-          label: '否',
-          value: 'no'
+          label: "否",
+          value: "no"
         }
       ],
       vaild: [
         {
-          label: '上架',
-          value: 'yes'
+          label: "上架",
+          value: "yes"
         },
         {
-          label: '下架',
-          value: 'no'
+          label: "下架",
+          value: "no"
         }
       ],
       kwTypeEnum: [
         {
-          label: '商品',
-          value: 'goods'
+          label: "商品",
+          value: "goods"
         },
         {
-          label: '分类',
-          value: 'category'
+          label: "分类",
+          value: "category"
         }
       ],
       hotSearchEnum: [
         {
-          label: '是',
-          value: 'yes'
+          label: "是",
+          value: "yes"
         },
         {
-          label: '否',
-          value: 'no'
+          label: "否",
+          value: "no"
         }
       ],
       ruleInline: {
-        keyword: { required: true, message: '请填写商品关键词' },
-        kwType: { required: true, message: '请填写商品关键词类型' },
-        mappingId: { required: true, message: '请选择关联的商品或分类' }
+        keyword: { required: true, message: "请填写商品关键词" },
+        kwType: { required: true, message: "请填写商品关键词类型" },
+        mappingId: { required: true, message: "请选择关联的商品或分类" }
       },
       columns: keywordsColumns,
       productColumns: standardColumns
@@ -648,7 +650,7 @@ export default {
     getProductUnits() {
       getProductUnits().then(res => {
         res.forEach(value => {
-          const map = { label: 'label', value: 'value' };
+          const map = { label: "label", value: "value" };
           map.value = value.unitCode;
           map.label = value.unitName;
           this.unitsList.push(map);
@@ -666,9 +668,9 @@ export default {
             this.proCategoryTreeList = res;
             const menuList = buildMenu(res);
             const map = {
-              id: 'id',
-              title: 'title',
-              children: 'children'
+              id: "id",
+              title: "title",
+              children: "children"
             };
             this.goodsCategoryData = convertTreeCategory(menuList, map, true);
             this.createLoading = false;
@@ -697,8 +699,8 @@ export default {
       this.getProductTableData();
     },
     handleRelation() {
-      if (keywordsDetail.kwType === 'category') {
-        this.$Message.info('请直接选择关联的分类');
+      if (keywordsDetail.kwType === "category") {
+        this.$Message.info("请直接选择关联的分类");
         return false;
       }
       this.getProductTableData();
@@ -721,7 +723,7 @@ export default {
     // 切换分类时清除之前的选择
     kwTypeChange(selectedItem) {
       this.keywordsDetail.mappingId = 0;
-      this.keywordsDetail.mappingName = '';
+      this.keywordsDetail.mappingName = "";
       this.defaultGoodsCategoryData = [];
     },
     // 选择分类
@@ -763,7 +765,7 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error('请完善相关信息!');
+          this.$Message.error("请完善相关信息!");
         }
       });
     },

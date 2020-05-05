@@ -1167,7 +1167,7 @@ const btns = {
         // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
       },
       style: {
-        marginRight: '5px'
+        marginRight: '5px',
       },
       on: {
         'on-ok': () => {
@@ -1187,6 +1187,44 @@ const btns = {
         h('Icon', {
           props: {
             type: 'md-checkbox',
+            size: 16,
+            color: '#fff'
+          }
+        })
+        ])
+      ])
+    ]);
+  },
+   // 发送美团
+   onMeituan: (h, params, vm) => {
+    return h('Poptip', {
+      props: {
+        confirm: true,
+        transfer:true,
+        title: '是否发送美团?'
+        // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
+      },
+      style: {
+        marginRight: '5px',
+      },
+      on: {
+        'on-ok': () => {
+          vm.$emit('on-meituan', params);
+        }
+      }
+    }, [
+      h('Tooltip', {
+        props: { placement: 'top',transfer:true,content:"发送美团" },
+      }, [
+        h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+        }, [
+        h('Icon', {
+          props: {
+            type: 'ios-paper-plane',
             size: 16,
             color: '#fff'
           }

@@ -61,6 +61,21 @@
                 style="padding-left: 5px;width: 100px"
               >{{ item.label }}</Option>
             </Select>
+            <Select
+              v-if="applicationType == null"
+              v-model="searchRowData.applicationType"
+              placeholder="应用类型"
+              style="padding-right: 5px;width: 100px"
+              clearable
+            >
+              <Option
+                v-for="(item,index) in applicationTypeList"
+                :value="item.storeCode"
+                :key="index"
+                class="ptb2-5"
+                style="padding-left: 5px"
+              >{{ item.name }}</Option>
+            </Select>
             <Button
               :loading="searchLoading"
               class="search-btn mr5"
@@ -81,7 +96,7 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves type="success" class="mr5" @click="handleCreate">
+          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
             <Icon type="md-add" />添加
           </Button>
         </div>
@@ -207,7 +222,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="3">商品主图:</i-col>
+              <i-col span="3">门店照片:</i-col>
               <i-col span="21">
                 <img :src="storeDetail.storeImage" style="width: 300px" >
               </i-col>
@@ -250,7 +265,7 @@
         <span>门店基础信息</span>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="storeDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="modalEdit" :model="storeDetail" :rules="ruleInline" :label-width="80">
           <Row>
             <i-col span="12">
               <FormItem label="门店编码:" prop="storeCode">
@@ -394,6 +409,8 @@
                 ref="uploadMain"
                 :default-list="defaultListMain"
                 :image-size="imageSize"
+                group-type="base_image"
+                file-dir="store"
                 @on-success="handleSuccessMain"
               >
                 <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -426,6 +443,8 @@
                   :default-list="defaultWxImageList"
                   :image-size="imageSize"
                   :max-num="1"
+                  group-type="base_image"
+                  file-dir="store"
                   @on-success="handleSuccessWxImage"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
@@ -435,6 +454,7 @@
               </FormItem>
             </i-col>
           </Row>
+          <!-- ========================== -->
           <Row align="middle" type="flex">
             <i-col span="24">
               <FormItem label="直播地址:">
@@ -446,7 +466,7 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
       </div>
     </Modal>
 
@@ -459,16 +479,22 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import uploadMixin from '@/mixins/uploadMixin';
-import tableMixin from '@/mixins/tableMixin.js';
+import _ from 'lodash';
 import {
   deleteStore,
+  getStoreDetail,
   getStorePages,
   getStoreAreas,
   editStore,
-  createStore
+  createStore,
+  deletePicture
 } from '@/api/mini-program';
+import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import {
+  storeType,
   storeStatus,
   storeStatusEnum,
   storeTypeEnum,
@@ -476,7 +502,8 @@ import {
 } from '@/libs/enumerate';
 import {
   storeStatusConvert,
-  storeTypeConvert
+  storeTypeConvert,
+  coordinateTypeConvert
 } from '@/libs/converStatus';
 
 const storeDetail = {
@@ -501,7 +528,7 @@ const storeDetail = {
   enterpriseWxId: ''
 };
 
-const searchRowData = {
+const roleRowData = {
   storeCode: null,
   storeName: null,
   storeArea: null,
@@ -515,7 +542,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, tableMixin],
+  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
     return {
       storeStatusEnum,
@@ -537,7 +564,7 @@ export default {
         storeName: [{ required: true, message: '请输入门店名称' }],
         storeStatus: [{ required: true, message: '请选择门店状态' }],
         storeArea: [{ required: true, message: '请选择门店区域' }],
-        storeFlagship: [{ required: true, message: '请选择旗舰店' }],
+        storeFlagship: [{ required: false, message: '请选择旗舰店' }],
         beginTime: [{ required: true, message: '请选择开始时间' }],
         endTime: [{ required: true, message: '请选择结束时间' }],
         storeCoordy: [
@@ -572,6 +599,9 @@ export default {
       uploadwxImageList: [],
       areaList: [],
       flagShipList: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       columns: [
         {
           title: '门店编码',
@@ -695,6 +725,14 @@ export default {
                   </tag>
                 </div>
               );
+            } else if (row.storeType === 'JOIN_STORE') {
+              return (
+                <div>
+                  <tag color='warning'>
+                    {storeTypeConvert(row.storeType).label}
+                  </tag>
+                </div>
+              );
             } else {
               return <div>{row.storeType}</div>;
             }
@@ -708,99 +746,119 @@ export default {
           options: ['onStoreStatus', 'view', 'edit', 'delete']
         }
       ],
-      searchRowData: _.cloneDeep(searchRowData),
+      createLoading: false,
+      modalViewLoading: false,
+      searchRowData: _.cloneDeep(roleRowData),
       storeDetail: _.cloneDeep(storeDetail)
     };
   },
   mounted() {
-    this.getStoreAreas();
+    this.searchRowData = _.cloneDeep(roleRowData);
+    this.loading = true;
+    this.createLoading = true;
+    getStoreAreas().then(res => {
+      this.areaList = res;
+      getStorePages({
+        // 数据库数据不完整，暂时先注释掉门店类型条件
+        // storeType: storeType.FLAGSHIP_STORE,
+        page: 1,
+        rows: 10
+      }).then(res => {
+        this.flagShipList = res.rows;
+        this.getTableData();
+        this.createLoading = false;
+      });
+    });
   },
   created() {},
   methods: {
-    getStoreAreas() {
-      this.searchRowData = _.cloneDeep(searchRowData);
-      getStoreAreas().then(res => {
-        this.areaList = res;
-        getStorePages({
-        // 数据库数据不完整，暂时先注释掉门店类型条件
-        // storeType: storeType.FLAGSHIP_STORE,
-          page: 1,
-          rows: 10
-        }).then(res => {
-          this.flagShipList = res.rows;
-          this.getTableData();
-        });
-      });
+    resetSearchRowData() {
+      this.searchRowData = _.cloneDeep(roleRowData);
+      this.getTableData();
     },
-    getTableData() {
-      this.loading = true;
-      getStorePages(this.searchRowData)
-        .then(res => {
-          this.tableData = res.rows;
-          this.total = res.total;
-        })
-        .finally(() => {
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
+    resetFields() {
+      this.$refs.modalEdit.resetFields();
+      this.$refs.uploadMain.clearFileList();
+      this.uploadListMain = [];
+      this.uploadwxImageList = [];
+      this.storeDetail.storeImage = null;
+      this.storeDetail.wxImage = null;
     },
-    handleView(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.view;
-      this.storeDetail = _.cloneDeep(params.row);
-      this.modalView = true;
-    },
-    handleCreate() {
-      this.resetFields();
-      this.tempModalType = this.modalType.create;
-      this.storeDetail = _.cloneDeep(storeDetail);
-      this.modalEdit = true;
-    },
-    handleEdit(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.storeDetail = _.cloneDeep(params.row);
-      this.setDefaultUploadList(this.storeDetail);
-      this.modalEdit = true;
-    },
-    handleSubmit() {
-      this.$refs.editForm.validate(valid => {
+    handleSubmit(name) {
+      if (this.oldPicture.length > 0) {
+        const urls = {
+          urls: this.oldPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.$refs[name].validate(valid => {
         if (valid) {
-          if (this.isCreate) {
-            this.createTableRow();
-          } else if (this.isEdit) {
-            this.editTableRow();
+          if (this.tempModalType === this.modalType.create) {
+            // 添加状态
+            this.createStore();
+          } else if (this.tempModalType === this.modalType.edit) {
+            // 编辑状态
+            this.editStore();
           }
         } else {
           this.$Message.error('请完善信息!');
         }
       });
     },
-    createTableRow() {
-      this.modalEditLoading = true;
+    handleEditClose() {
+      if (this.newPicture.length > 0) {
+        const urls = {
+          urls: this.newPicture
+        };
+        this.deletePicture(urls);
+      }
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    deletePicture(urls) {
+      deletePicture({
+        urls
+      })
+        .then(res => {})
+        .catch(() => {});
+    },
+    createStore() {
+      this.modalViewLoading = true;
       createStore(this.storeDetail)
         .then(res => {
+          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .finally(() => {
-          this.modalEditLoading = false;
+        .catch(() => {
+          this.modalViewLoading = false;
+          this.modalEdit = false;
         });
     },
-    editTableRow() {
-      this.modalEditLoading = true;
+    editStore() {
+      this.modalViewLoading = true;
       editStore(this.storeDetail)
         .then(res => {
           this.modalEdit = false;
-          this.$Message.success('修改成功!');
+          this.modalViewLoading = false;
           this.getTableData();
         })
         .catch(() => {
-          this.modalEditLoading = false;
+          this.modalEdit = false;
+          this.modalViewLoading = false;
         });
     },
+    addStore() {
+      this.resetFields();
+      if (this.tempModalType !== this.modalType.create) {
+        this.tempModalType = this.modalType.create;
+        this.storeDetail = _.cloneDeep(storeDetail);
+      }
+      this.modalEdit = true;
+    },
+    // 删除
     handleDelete(params) {
       this.tableDataSelected = [];
       this.tableDataSelected.push(params.row);
@@ -847,22 +905,47 @@ export default {
         this.uploadwxImageList = detailImgArr;
       }
     },
-    onStoreStatus(params) {
+    handleView(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.view;
       this.storeDetail = _.cloneDeep(params.row);
-      this.storeDetail.storeStatus = params.row.storeStatus === storeStatus.ENABLED ? storeStatus.DISABLED : storeStatus.ENABLED;
-      this.editTableRow();
+      this.modalView = true;
     },
-    resetSearchRowData() {
-      this.searchRowData = _.cloneDeep(searchRowData);
-      this.getTableData();
+    handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.storeImage);
+      this.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.storeDetail = _.cloneDeep(params.row);
+      this.setDefaultUploadList(this.storeDetail);
+      this.modalEdit = true;
     },
-    resetFields() {
-      this.$refs.editForm.resetFields();
-      this.$refs.uploadMain.clearFileList();
-      this.uploadListMain = [];
-      this.uploadwxImageList = [];
-      this.storeDetail.storeImage = null;
-      this.storeDetail.wxImage = null;
+    onStoreStatus(params) {
+      console.log(params);
+      this.storeDetail = this._.cloneDeep(params.row);
+      if (params.row.storeStatus === storeStatus.ENABLED) {
+        this.storeDetail.storeStatus = storeStatus.DISABLED;
+      } else {
+        this.storeDetail.storeStatus = storeStatus.ENABLED;
+      }
+      this.loading = true;
+      this.editStore();
+    },
+    getTableData() {
+      getStorePages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.rows;
+          this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
@@ -877,6 +960,8 @@ export default {
       this.uploadListMain = fileList;
       this.storeDetail.storeImage = null;
       this.storeDetail.storeImage = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     },
     handleSuccessWxImage(response, file, fileList) {
       this.uploadwxImageList = fileList;

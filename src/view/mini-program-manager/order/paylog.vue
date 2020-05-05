@@ -135,6 +135,7 @@
         </Row>
       </div>
     </Card>
+
     <!--
     <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
@@ -218,8 +219,10 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import CountTo from '_c/count-to';
+import _ from 'lodash';
 import { getPaymentLogPages, getPaymentLogSum } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import { fenToYuanDot2, fenToYuanDot2Number } from '@/libs/util';
 import {
   appTypeConvert,
@@ -272,7 +275,7 @@ export default {
     Tables,
     CountTo
   },
-  mixins: [tableMixin],
+  mixins: [tableMixin, searchMixin],
   data() {
     return {
       columns: [
