@@ -286,6 +286,14 @@ export default {
                   </tag>
                 </div>
               );
+            } else if (row.settlementType === "haiding") {
+              return (
+                <div>
+                  <tag color="warning">
+                    {wholesalePayTypeConvert(row.settlementType).label}
+                  </tag>
+                </div>
+              );
             } else {
               return <div>{"N/A"}</div>;
             }
