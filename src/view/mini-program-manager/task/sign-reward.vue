@@ -173,7 +173,7 @@ import { rewardTypeConvert } from '@/libs/converStatus';
 const signRewardDetail = {
   continueSignDay: 0,
   getIntegral: 0,
-  giftPackType: null,
+  giftPackType: '',
   rewardType: ''
 };
 
@@ -340,7 +340,7 @@ export default {
         });
     },
     rewardTypeChange(value) {
-      this.signRewardDetail.giftPackType = value === 'GIFTPACK' ? 'COUPON' : null;
+      this.signRewardDetail.giftPackType = value === 'GIFTPACK' ? 'COUPON' : '';
     },
     deleteTable(ids) {
       this.loading = true;
