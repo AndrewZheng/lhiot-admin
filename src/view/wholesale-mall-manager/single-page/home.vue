@@ -128,7 +128,7 @@
     <Row style="margin-top: 20px;">
       <Card shadow>
         <img
-          src="http://resource.shuiguoshule.com.cn/product_image/2020-04-06/sPCU3eaHKq4OY7aYajNm.jpg"
+          :src="banner"
           style="height: 300px;width:100%;"
         />
       </Card>
@@ -140,7 +140,7 @@
 import Tables from "_c/tables";
 import InforCard from "_c/info-card";
 import CountTo from "_c/count-to";
-
+import config from "@/config";
 import { getAnalysisDatas } from "@/api/wholesale";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
@@ -214,6 +214,7 @@ export default {
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
     return {
+      brandType: config.brandType,
       inforCardData: [
         {
           title: "订单总数",
@@ -276,7 +277,21 @@ export default {
       ]
     };
   },
-  computed: {},
+  computed: {
+    banner() {
+      // 默认万翼果联品牌
+      let str =
+        "http://resource.shuiguoshule.com.cn/product_image/2020-04-06/sPCU3eaHKq4OY7aYajNm.jpg";
+      if (this.brandType === "qgg") {
+        str =
+          "http://resource.shuiguoshule.com.cn/v2/qgg/activity_image/activity/2020-04-24/e7qhDWpvwOrSGRCJqDHT.jpg";
+      } else if (this.brandType === "lv_hang") {
+        str =
+          "http://resource.shuiguoshule.com.cn/v2/lv_hang/activity_image/activity/2020-04-24/EenfAkUuSzvbxu0Jmz1G.jpg";
+      }
+      return str;
+    }
+  },
   created() {
     this.getTableData();
   },
