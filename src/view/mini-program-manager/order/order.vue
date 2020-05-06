@@ -186,7 +186,7 @@
             </div>
           </Row>
         </div>
-        <div slot="operations" style="margin-left:-160px">
+        <div slot="operations" style="margin-left:-30px">
           <Button
             v-waves
             :loading="deliverOrderLoading"
@@ -208,7 +208,7 @@
           <Button :loading="downloadLoading" class="search-btn" type="info" @click="couponDetails">
             <Icon type="md-search" />&nbsp;用券数据
           </Button>
-          <Button :loading="downloadLoading" class="search-btn" type="info" @click="monthOrder">
+          <Button :loading="downloadLoading" class="search-btn" style="margin-top:5px" type="info" @click="monthOrder">
             <Icon type="md-search" />&nbsp;跨月退款数据
           </Button>
           <!-- <Poptip
