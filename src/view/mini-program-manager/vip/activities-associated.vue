@@ -360,6 +360,7 @@
                   <Select
                     v-model="addRelationDetail.validDateType"
                     placeholder="券有效期类型"
+                    disabled
                     style="padding-right: 5px;width: 120px"
                   >
                     <Option
@@ -633,6 +634,7 @@
                 <Select
                   v-model="addRelationDetail.validDateType"
                   placeholder="券有效期类型"
+                  disabled
                   style="padding-right: 5px;width: 120px"
                 >
                   <Option
