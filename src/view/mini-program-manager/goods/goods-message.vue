@@ -685,7 +685,7 @@ export default {
     handleDownload() {
       this.exportExcelLoading = true;
       // 导出不带分页搜索条件
-      this.searchRowData.rows = null;
+      this.searchRowData.rows = '';
       getProductPages(this.searchRowData).then(res => {
         const tableData = res.rows;
         // 表格数据导出字段翻译
