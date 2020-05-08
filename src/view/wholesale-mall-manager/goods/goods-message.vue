@@ -860,12 +860,12 @@ export default {
         });
     },
     handleSubmit() {
-      if (this.oldPicture.length > 0) {
-        const urls = {
-          urls: this.oldPicture
-        };
-        this.deletePicture(urls);
-      }
+      // if (this.oldPicture.length > 0) {
+      //   const urls = {
+      //     urls: this.oldPicture
+      //   };
+      //   this.deletePicture(urls);
+      // }
       this.$refs.editForm.validate(valid => {
         if (valid) {
           if (this.isCreate) {
@@ -879,23 +879,23 @@ export default {
       });
     },
     handleEditClose() {
-      if (this.newPicture.length > 0) {
-        const urls = {
-          urls: this.newPicture
-        };
-        this.deletePicture(urls);
-      }
+      // if (this.newPicture.length > 0) {
+      //   const urls = {
+      //     urls: this.newPicture
+      //   };
+      //   this.deletePicture(urls);
+      // }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
     },
-    deletePicture(urls) {
-      deletePicture({
-        urls
-      })
-        .then(res => {})
-        .catch(() => {});
-    },
+    // deletePicture(urls) {
+    //   deletePicture({
+    //     urls
+    //   })
+    //     .then(res => {})
+    //     .catch(() => {});
+    // },
     handleDownload() {
       this.exportExcelLoading = true;
       // TODO：测试导出不带分页搜索条件 目前默认导出10条

@@ -1454,12 +1454,12 @@ export default {
     },
     handleSubmit() {
       const _this = this;
-      if (_this.oldPicture.length > 0) {
-        const urls = {
-          urls: _this.oldPicture
-        };
-        _this.deletePicture(urls);
-      }
+      // if (_this.oldPicture.length > 0) {
+      //   const urls = {
+      //     urls: _this.oldPicture
+      //   };
+      //   _this.deletePicture(urls);
+      // }
       this.$refs.editForm.validate(valid => {
         if (valid) {
           if (
@@ -1577,23 +1577,23 @@ export default {
       });
     },
     handleEditClose() {
-      if (this.newPicture.length > 0) {
-        const urls = {
-          urls: this.newPicture
-        };
-        this.deletePicture(urls);
-      }
+      // if (this.newPicture.length > 0) {
+      //   const urls = {
+      //     urls: this.newPicture
+      //   };
+      //   this.deletePicture(urls);
+      // }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
     },
-    deletePicture(urls) {
-      deletePicture({
-        urls
-      })
-        .then(res => {})
-        .catch(() => {});
-    },
+    // deletePicture(urls) {
+    //   deletePicture({
+    //     urls
+    //   })
+    //     .then(res => {})
+    //     .catch(() => {});
+    // },
     createStore() {
       this.modalViewLoading = true;
       this.teambuyDetail.id = null; // 新建时不需要传递id

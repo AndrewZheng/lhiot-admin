@@ -843,10 +843,11 @@ export const gitTime = (time) => {
 
 // hd折扣
 export const HdDiscount = (number) => {
-  if (typeof number === 'number') {
-    return (number * 10.00) + '折';
+  let num=Number(number)*100
+  if (typeof num === 'number') {
+    return num/10 + '折';
   }
-  return number;
+  return num;
 };
 // 加¥和天数
 export const addRnb = (number) => {

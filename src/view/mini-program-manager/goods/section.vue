@@ -371,12 +371,12 @@ export default {
       this.modalEdit = true;
     },
     asyncEditOK(name) {
-      if (this.oldPicture.length > 0) {
-        const urls = {
-          urls: this.oldPicture
-        };
-        this.deletePicture(urls);
-      }
+      // if (this.oldPicture.length > 0) {
+      //   const urls = {
+      //     urls: this.oldPicture
+      //   };
+      //   this.deletePicture(urls);
+      // }
       if (!this.parentCategory.id) {
         this.currentCategory.parentId = 0;
       } else {
@@ -409,26 +409,26 @@ export default {
       });
     },
     handleEditClose() {
-      if (this.newPicture.length > 0) {
-        const urls = {
-          urls: this.newPicture
-        };
-        this.deletePicture(urls);
-      }
+      // if (this.newPicture.length > 0) {
+      //   const urls = {
+      //     urls: this.newPicture
+      //   };
+      //   this.deletePicture(urls);
+      // }
       this.modalEdit = false;
       this.oldPicture = [];
       this.newPicture = [];
     },
-    deletePicture(urls) {
-      deletePicture({
-        urls
-      })
-        .then(res => {
-          this.newPicture = [];
-          this.oldPicture = [];
-        })
-        .catch(() => {});
-    },
+    // deletePicture(urls) {
+    //   deletePicture({
+    //     urls
+    //   })
+    //     .then(res => {
+    //       this.newPicture = [];
+    //       this.oldPicture = [];
+    //     })
+    //     .catch(() => {});
+    // },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
       this.currentCategory.sectionImg = null;

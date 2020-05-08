@@ -19,7 +19,8 @@
         @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
-          <Row  v-if="this.$route.name != 'small-relation-system'">
+          <!-- v-if="this.$route.name != 'small-relation-system'" -->
+          <Row>
             <Input
               v-model="searchRowData.indexName"
               placeholder="键"
@@ -219,9 +220,19 @@
             </Col>
           </Row>
           <Row>
-            <Col span="20">
+            <Col span="20" v-show="this.$route.name === 'small-relation-system'">
               <FormItem label="分类ID:" prop="categoryId">
-                <!-- <InputNumber :min="0" v-model="systemDetail.categoryId" placeholder="分类id"></InputNumber> -->
+                <Cascader
+                  disabled
+                  :data="systemCategoryData"
+                  v-model="defaultSystemCategoryData"
+                  span="21"
+                  @on-change="systemCategoryChange"
+                ></Cascader>
+              </FormItem>
+            </Col>
+            <Col span="20" v-show="this.$route.name != 'small-relation-system'">
+              <FormItem label="分类ID:" prop="categoryId">
                 <Cascader
                   :data="systemCategoryData"
                   v-model="defaultSystemCategoryData"
@@ -320,6 +331,12 @@ export default {
           width: 80
         },
         {
+          title: "分类名称",
+          key: "categoriesName",
+          align: "center",
+          width: 130
+        },
+        {
           title: "键",
           align: "center",
           key: "indexName"
@@ -334,12 +351,6 @@ export default {
           title: "描述",
           align: "center",
           key: "description"
-        },
-        {
-          title: "分类ID",
-          align: "center",
-          key: "categoryId",
-          width: 80
         },
         {
           title: "操作",
@@ -558,7 +569,9 @@ export default {
       } else {
         this.systemDetail.categoryId = null;
       }
+      selectedData[0].title = "袁木是sb";
       this.defaultSystemCategoryData = selectedData;
+      console.log("显示参数", this.defaultSystemCategoryData);
     },
     // 选择分类搜索
     systemCategoryChange1(value, selectedData) {

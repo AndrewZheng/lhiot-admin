@@ -1910,12 +1910,12 @@ export default {
     },
     // ====
     handleSubmit(name) {
-      if (this.oldPicture.length > 0) {
-        const urls = {
-          urls: this.oldPicture
-        };
-        this.deletePicture(urls);
-      }
+      // if (this.oldPicture.length > 0) {
+      //   const urls = {
+      //     urls: this.oldPicture
+      //   };
+      //   this.deletePicture(urls);
+      // }
       this.$refs[name].validate(valid => {
         if (valid) {
           if (!this.productStandardDetail.salePrice) {
@@ -1956,26 +1956,26 @@ export default {
       });
     },
     handleEditClose() {
-      if (this.newPicture.length > 0) {
-        const urls = {
-          urls: this.newPicture
-        };
-        this.deletePicture(urls);
-      }
+      // if (this.newPicture.length > 0) {
+      //   const urls = {
+      //     urls: this.newPicture
+      //   };
+      //   this.deletePicture(urls);
+      // }
       this.modalEdit = false;
       this.oldPicture = [];
       this.newPicture = [];
     },
-    deletePicture(urls) {
-      deletePicture({
-        urls
-      })
-        .then(res => {
-          this.newPicture = [];
-          this.oldPicture = [];
-        })
-        .catch(() => {});
-    },
+    // deletePicture(urls) {
+    //   deletePicture({
+    //     urls
+    //   })
+    //     .then(res => {
+    //       this.newPicture = [];
+    //       this.oldPicture = [];
+    //     })
+    //     .catch(() => {});
+    // },
     handleSubmitDiscount() {
       this.proStandardExpand.expandType = this.productStandardDetail.productType;
       this.$refs.modalDiscount.validate(valid => {
