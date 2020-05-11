@@ -1037,7 +1037,8 @@ export const appTypesEnum = [{
 export const payType = {
   weixin: 'weixin',
   balance: 'balance',
-  points: 'points'
+  points: 'points',
+  haiding:'haiding'
 };
 
 export const payTypeEnum = [{
@@ -1051,6 +1052,10 @@ export const payTypeEnum = [{
 {
   label: '积分兑换',
   value: payType.points
+},
+{
+  label: '鼎付通',
+  value: payType.haiding
 }
 ];
 
