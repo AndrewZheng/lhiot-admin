@@ -1749,6 +1749,11 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      console.log("打开的数据", params.row);
+      this.productStandardDetail.rotationImage = "";
+      this.productStandardDetail.shareImage = "";
+      this.uploadListMultiple_ = [];
+      this.uploadListShar = [];
       this.save = [];
       this.save.push(params.row.image);
       this.clickFlag = false;
@@ -2194,7 +2199,11 @@ export default {
         this.$refs.uploadMultiple.setDefaultFileList(descriptionImgArr);
         this.uploadListMultiple = descriptionImgArr;
       }
-      if (res.rotationImage != null) {
+      if (
+        res.rotationImage != null &&
+        res.rotationImage != "" &&
+        res.rotationImage != "null"
+      ) {
         const rotationImageArr = [];
         const rotationArr = res.rotationImage.split(",");
         console.log("图片展示列表", rotationArr);
