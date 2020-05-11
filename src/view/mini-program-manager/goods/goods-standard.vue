@@ -249,7 +249,7 @@
                 <img :src="productStandardDetail.detailImage" width="100" height="100" />
               </i-col>
             </Row>
-          </i-col> -->
+          </i-col>-->
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
@@ -300,7 +300,7 @@
               <i-col span="16">{{ productStandardDetail.svipPrice | fenToYuanDot2Filters }}</i-col>
             </Row>
           </i-col>
-        </Row> -->
+        </Row>-->
 
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
@@ -640,7 +640,7 @@
                   @on-change="svipPriceInputNumberOnchange"
                 ></InputNumber>
               </FormItem>
-            </i-col> -->
+            </i-col>-->
             <i-col span="12" style="float:right;margin-bottom:15px;margin-right:-30px">
               <Button v-waves type="warning" @click="handleHdSvipPrice">海鼎价格参考</Button>
             </i-col>
@@ -777,7 +777,7 @@
               <FormItem label="SVIP价格:">
                 <InputNumber :min="0" :value="svipPriceComputed" disabled></InputNumber>
               </FormItem>
-            </i-col> -->
+            </i-col>-->
           </Row>
           <Row>
             <i-col span="12">
@@ -1084,7 +1084,7 @@ const productStandardDetail = {
   unitId: 0,
   productUnit: "",
   price: 0,
-  rotationImage: "",
+  rotationImage: null,
   salePrice: 0,
   startNum: 1,
   rank: 0,
@@ -1759,6 +1759,11 @@ export default {
           ","
         );
       }
+      if (this.productStandardDetail.rotationImage != null) {
+        this.rotationImageList = this.productStandardDetail.rotationImage.split(
+          ","
+        );
+      }
       this.setDefaultUploadList(params.row);
       this.$refs.editForm.resetFields();
       this.modalEdit = true;
@@ -1777,7 +1782,6 @@ export default {
       this.proStandardExpand.discountPrice = 0;
       // this.productStandardDetail.productStandardExpand.expandType =
       //   params.row.productType;
-      console.log("shuju", this.productStandardDetail.productStandardExpand);
 
       // 请求数据展示
       this.modalDiscount = true;
@@ -1832,7 +1836,6 @@ export default {
       }
       // 复制数据
       if (this.currentTableRowSelected) {
-        // console.log("当前选中数据", this.currentTableRowSelected);
         this.currentTableRowSelected.productId = null;
         // this.currentTableRowSelected.baseProductName = null;
         // this.currentTableRowSelected.groupName = null;
@@ -1847,7 +1850,8 @@ export default {
         this.currentTableRowSelected.price = null;
         this.currentTableRowSelected.salePrice = null;
         this.currentTableRowSelected.productStandardExpand = null;
-        // console.log("当前选中数据", this.currentTableRowSelected);
+        this.currentTableRowSelected.rotationImage = "";
+        this.currentTableRowSelected.shareImage = "";
         this.productStandardDetail = _.cloneDeep(this.currentTableRowSelected);
       }
       this.tempModalType = this.modalType.create;
@@ -1916,6 +1920,7 @@ export default {
       //   };
       //   this.deletePicture(urls);
       // }
+
       this.$refs[name].validate(valid => {
         if (valid) {
           if (!this.productStandardDetail.salePrice) {
@@ -2132,7 +2137,6 @@ export default {
       this.productStandardDetail.description = this.descriptionList.join(",");
 
       this.newPicture.push(response.fileUrl);
-      console.log("new图片", this.newPicture);
     },
     // 上架轮播图
     handleSuccessMultiple_(response, file, fileList) {
@@ -2145,7 +2149,7 @@ export default {
           this.rotationImageList.push(value.url);
         }
       });
-      this.productStandardDetail.rotationImage = "";
+      this.productStandardDetail.rotationImage = null;
       this.productStandardDetail.rotationImage = this.rotationImageList.join(
         ","
       );
@@ -2193,6 +2197,7 @@ export default {
       if (res.rotationImage != null) {
         const rotationImageArr = [];
         const rotationArr = res.rotationImage.split(",");
+        console.log("图片展示列表", rotationArr);
         rotationArr.forEach(value => {
           const innerMapDetailImg_ = { status: "finished", url: "url" };
           innerMapDetailImg_.url = value;
@@ -2219,7 +2224,6 @@ export default {
       const index = this.descriptionList.indexOf(file.url);
       if (index > -1) {
         this.oldPicture.push(this.descriptionList[index]);
-        console.log("删除的图片list", this.oldPicture);
         this.descriptionList.splice(index, 1);
         this.productStandardDetail.description = this.descriptionList.join(",");
       }
@@ -2231,19 +2235,23 @@ export default {
     },
     handleRemoveMultiple_(file) {
       this.$refs.uploadMultiple_.deleteFile(file);
+
       const index = this.rotationImageList.indexOf(file.url);
       if (index > -1) {
         this.oldPicture.push(this.rotationImageList[index]);
-        console.log("删除的图片list", this.oldPicture);
         this.rotationImageList.splice(index, 1);
+        console.log("删除图片", this.rotationImageList.splice(index, 1));
         this.productStandardDetail.rotationImage = this.rotationImageList.join(
           ","
         );
+        console.log("图片显示", this.productStandardDetail.rotationImage);
       }
       if (this.rotationImageList.length === 0) {
+        // console.log("删除图片", this.rotationImageList.length);
         this.$refs.uploadMultiple_.clearFileList();
         this.rotationImageList = [];
-        this.productStandardDetail.rotationImage = null;
+        this.productStandardDetail.rotationImage = "";
+        // console.log("轮播图", this.$refs.uploadMultiple_);
       }
     },
     customOnSale(params) {

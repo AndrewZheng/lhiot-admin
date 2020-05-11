@@ -204,7 +204,7 @@ const roleRowData = {
   page: 1,
   rows: 10,
   parentId: 2,
-  categoriesName:""
+  categoriesName: ""
 };
 
 export default {
@@ -455,11 +455,13 @@ export default {
     },
     handleSetting(params) {
       var rows = params.row;
+      console.log("设置数据", rows);
       setSmallGoodsStandard(rows);
       this.turnToPage({
         name: "small-relation-system",
         params: {
           parentName: rows.parentName,
+          parentId: rows.parentId,
           categoriesName: rows.categoriesName,
           id: rows.id
         }

@@ -589,7 +589,14 @@ export default {
     getTableData() {
       getEvaluatePages(this.searchRowData)
         .then(res => {
-          this.tableData = res.rows;
+          this.tableData = [];
+          for (let i = 0; i < res.rows.length; i++) {
+            if (res.rows[i].commentSource === "USER") {
+              this.tableData.push(res.rows[i]);
+            }
+          }
+          console.log("返回", res.rows);
+          // this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;

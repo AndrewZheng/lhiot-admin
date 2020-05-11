@@ -19,8 +19,7 @@
         @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
-          <!-- v-if="this.$route.name != 'small-relation-system'" -->
-          <Row>
+          <Row v-if="this.$route.name != 'small-relation-system'">
             <Input
               v-model="searchRowData.indexName"
               placeholder="键"
@@ -224,8 +223,8 @@
               <FormItem label="分类ID:" prop="categoryId">
                 <Cascader
                   disabled
-                  :data="systemCategoryData"
-                  v-model="defaultSystemCategoryData"
+                  :data="skipData"
+                  v-model="defaultData"
                   span="21"
                   @on-change="systemCategoryChange"
                 ></Cascader>
@@ -360,6 +359,8 @@ export default {
           options: ["view", "edit", "delete"]
         }
       ],
+      skipData: [],
+      defaultData: [],
       systemCategoryData: [],
       defaultSystemCategoryData: [41],
       systemCategoriesTreeList: [],
@@ -391,6 +392,10 @@ export default {
       this.systemDetail.description = null;
     },
     handleSubmit(name) {
+      if (this.$route.name === "small-relation-system") {
+        const systemInfos = getSmallGoodsStandard();
+        this.systemDetail.categoryId = systemInfos.id;
+      }
       this.$refs[name].validate(valid => {
         if (valid) {
           this.systemDetail.indexValue = this.systemDetail.indexValue.replace(
@@ -497,7 +502,22 @@ export default {
     getTableData() {
       if (this.$route.name === "small-relation-system") {
         const systemInfos = getSmallGoodsStandard();
+        this.skipArr = systemInfos;
         this.searchRowData.categoryId = systemInfos.id;
+        this.skipData = [];
+        this.skipData = [
+          {
+            value: this.skipArr.parentid,
+            label: this.skipArr.parentName,
+            children: [
+              {
+                value: this.skipArr.id,
+                label: this.skipArr.categoriesName
+              }
+            ]
+          }
+        ];
+        this.defaultData = [this.skipArr.parentid, this.skipArr.id];
       }
       getSystemSettingPages(this.searchRowData)
         .then(res => {
@@ -545,6 +565,7 @@ export default {
             };
             this.systemCategoryData = convertTreeCategory(menuList, map, true);
             this.createLoading = false;
+            console.log("级联数据", this.systemCategoryData);
           }
         })
         .catch(() => {
@@ -569,9 +590,7 @@ export default {
       } else {
         this.systemDetail.categoryId = null;
       }
-      selectedData[0].title = "袁木是sb";
       this.defaultSystemCategoryData = selectedData;
-      console.log("显示参数", this.defaultSystemCategoryData);
     },
     // 选择分类搜索
     systemCategoryChange1(value, selectedData) {
