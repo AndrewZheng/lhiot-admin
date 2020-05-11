@@ -860,12 +860,6 @@ export default {
         });
     },
     handleSubmit() {
-      if (this.oldPicture.length > 0) {
-        const urls = {
-          urls: this.oldPicture
-        };
-        this.deletePicture(urls);
-      }
       this.$refs.editForm.validate(valid => {
         if (valid) {
           if (this.isCreate) {
@@ -879,22 +873,9 @@ export default {
       });
     },
     handleEditClose() {
-      if (this.newPicture.length > 0) {
-        const urls = {
-          urls: this.newPicture
-        };
-        this.deletePicture(urls);
-      }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
-    },
-    deletePicture(urls) {
-      deletePicture({
-        urls
-      })
-        .then(res => {})
-        .catch(() => {});
     },
     handleDownload() {
       this.exportExcelLoading = true;
