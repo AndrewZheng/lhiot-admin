@@ -403,7 +403,9 @@ const roleRowData = {
   beginDate: "",
   endDate: "",
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx: "createTime",
+  sort: "desc"
 };
 
 export default {
@@ -511,7 +513,15 @@ export default {
           align: "center",
           width: 200,
           key: "commentContent",
-          tooltip: true
+          tooltip: true,
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.commentSource != "USER") {
+              return <div>{"系统评价"}</div>;
+            } else {
+              return <div>{row.commentContent}</div>;
+            }
+          }
         },
         {
           title: "回复评价",
@@ -557,7 +567,6 @@ export default {
     replyEvaluate() {
       replyEvaluate(this.evaluateDetail)
         .then(res => {
-          console.log("接口返回", res);
           this.modalEdit = false;
           this.getTableData();
         })
@@ -589,14 +598,7 @@ export default {
     getTableData() {
       getEvaluatePages(this.searchRowData)
         .then(res => {
-          this.tableData = [];
-          for (let i = 0; i < res.rows.length; i++) {
-            if (res.rows[i].commentSource === "USER") {
-              this.tableData.push(res.rows[i]);
-            }
-          }
-          console.log("返回", res.rows);
-          // this.tableData = res.rows;
+          this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
