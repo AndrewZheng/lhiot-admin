@@ -293,8 +293,84 @@ const btns = {
     }else{
       return ""
     }
-
   },
+  // unlock: (h, params, vm) => {
+  //   const { row } = params;
+  //   if (row.userStatus==="locking") {
+  //     return h('Tooltip', {
+  //       props: { placement: 'top',transfer:true,content:"解锁用户" },
+  //     }, [
+  //       h('Button', {
+  //         props: {
+  //           type: 'primary',
+  //           size: 'small'
+  //         },
+  //         style: {
+  //           marginRight: '5px'
+  //         },
+  //         on: {
+  //           click: () => {
+  //             vm.$emit('on-unlock', params);
+  //           }
+  //         }
+  //       }, [
+  //         h('Icon', {
+  //           props: {
+  //             type: 'ios-key',
+  //             size: 16,
+  //             color: '#fff'
+  //           }
+  //         })
+  //       ])
+  //   ]);
+  //   }else{
+  //     return ""
+  //   }
+  // },
+  // =======================
+  unlock: (h, params, vm) => {
+    const { row } = params;
+    if (row.userStatus==="locking") {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer:true,
+          title: '确认要解锁该用户吗?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-unlock', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top',transfer:true,content:"解锁用户" },
+        }, [
+          h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+          }, [
+          h('Icon', {
+            props: {
+              type: 'ios-key',
+              size: 16,
+              color: '#fff'
+            }
+          })
+          ])
+        ])
+      ]);
+    }else{
+      return ""
+    }
+  },
+  // =======================
   permission: (h, params, vm) => {
     const {
       row

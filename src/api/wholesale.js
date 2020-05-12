@@ -1422,3 +1422,12 @@ export const getAnalysisDatas = (data) => {
   });
 };
 
+// 解锁业务员
+export const unlockSalesman = (data) => {
+  return $http.request({
+    url: '/wholesale-small/user/unlock-user/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+

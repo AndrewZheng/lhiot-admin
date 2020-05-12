@@ -19,6 +19,7 @@
         @on-user="hanldeUser"
         @on-set-vip="handleSetVip"
         @on-userChange="handleExchange"
+        @on-unlock="handleUnlock"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
@@ -184,7 +185,7 @@
           <Row>
             <i-col span="12">
               <FormItem label="用户状态:" prop="userStatus">
-                <Select v-model="userDetail.userStatus" style="width: 200px">
+                <Select v-model="userDetail.userStatus" style="width: 200px" disabled>
                   <Option
                     v-for="(item,index) in userStatusEnum"
                     :value="item.value"
@@ -342,7 +343,8 @@ import {
   changeUser,
   createUser,
   getAllSalesman,
-  storeAssign
+  storeAssign,
+  unlockSalesman
 } from "@/api/wholesale";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
@@ -597,8 +599,8 @@ const columns = [
     align: "center",
     key: "handle",
     fixed: "right",
-    width: 220,
-    options: ["setVip", "edit", "saleAudit", "onUser", "userChange"]
+    width: 240,
+    options: ["setVip", "edit", "saleAudit", "onUser", "userChange", "unlock"]
   }
 ];
 
@@ -993,6 +995,13 @@ export default {
     },
     onSelectionChange(selection) {
       this.selectedUserIds = selection.map(item => item.id.toString());
+    },
+    handleUnlock(params) {
+      let data = params.row;
+      unlockSalesman(data).then(res => {
+        this.$Message.info("解锁成功");
+        this.getTableData();
+      });
     }
   }
 };
