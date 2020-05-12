@@ -233,6 +233,7 @@
             <Col span="20" v-show="this.$route.name != 'small-relation-system'">
               <FormItem label="分类ID:" prop="categoryId">
                 <Cascader
+                  change-on-select
                   :data="systemCategoryData"
                   v-model="defaultSystemCategoryData"
                   span="21"

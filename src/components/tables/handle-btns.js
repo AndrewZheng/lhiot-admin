@@ -124,7 +124,7 @@ const btns = {
         }, [
         h('Icon', {
          props: {
-            type: 'logo-buffer',
+            type: 'md-person-add',
             size: 16,
             color: '#fff'
           }
@@ -260,6 +260,40 @@ const btns = {
         })
       ])
   ]);
+  },
+  userChange: (h, params, vm) => {
+    const { row } = params;
+    if (row.userType==="consumer") {
+      return h('Tooltip', {
+        props: { placement: 'top',transfer:true,content:"更换所属业务员" },
+      }, [
+        h('Button', {
+          props: {
+            type: 'primary',
+            size: 'small'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            click: () => {
+              vm.$emit('on-userChange', params);
+            }
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'ios-switch',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+    ]);
+    }else{
+      return ""
+    }
+
   },
   permission: (h, params, vm) => {
     const {
@@ -1261,50 +1295,6 @@ const btns = {
       ])
   ]);
   },
-  //
-  // saleAudit: (h, params, vm) => {
-  //   return h('Poptip', {
-  //     props: {
-  //       confirm: true,
-  //       transfer:true,
-  //       title: '该业务员资质已核实，是否通过业务员申请?',
-  //       placement: params.index === 0 ? 'right' : 'top',
-  //       'ok-text': '通过',
-  //       'cancel-text': '拒绝'
-  //     },
-  //     style: {
-  //       marginRight: '5px'
-  //     },
-  //     on: {
-  //       'on-ok': () => {
-  //         vm.$emit('on-audit', { params, checkStatus: 'agree' });
-  //       },
-  //       'on-cancel': () => {
-  //         vm.$emit('on-audit', { params, checkStatus: 'reject' });
-  //       }
-  //     }
-  //   }, [
-  //     h('Tooltip', {
-  //       props: { placement: 'top',transfer:true,content:"审核业务员" },
-  //     }, [
-  //       h('Button', {
-  //        props: {
-  //         type: 'primary',
-  //         size: 'small'
-  //       }
-  //       }, [
-  //       h('Icon', {
-  //        props: {
-  //           type: 'logo-buffer',
-  //           size: 16,
-  //           color: '#fff'
-  //         }
-  //       })
-  //       ])
-  //     ])
-  //   ]);
-  // },
-  //
   setVip: (h, params, vm) => {
     const {
       row
@@ -1337,7 +1327,7 @@ const btns = {
           }, [
           h('Icon', {
             props: {
-              type: 'ios-ribbon',
+              type: 'logo-vimeo',
               size: 16,
               color: '#fff'
             }
@@ -1373,7 +1363,7 @@ const btns = {
           }, [
           h('Icon', {
             props: {
-              type: 'ios-ribbon-outline',
+              type: 'logo-vimeo',
               size: 16,
               color: '#fff'
             }
