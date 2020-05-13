@@ -826,7 +826,7 @@ export const percent = (number) => {
 };
 
 export const gitTime = (time) => {
-  const date = new Date(time)
+  const date = new Date(Number(time))
   var y = date.getFullYear();
   var m = date.getMonth() + 1;
   m = m < 10 ? ('0' + m) : m;
