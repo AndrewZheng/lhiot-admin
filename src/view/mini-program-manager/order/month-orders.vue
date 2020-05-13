@@ -536,7 +536,6 @@ export default {
             item["receivingWay"]
           ).label;
           item["createAt"] = gitTime(item["createAt"]);
-          item["createAt"] = gitTime(item["createAt"]);
           item["refundAt"] = gitTime(item["refundAt"]);
           item["status"] = miniOrderStatusConvert(item["status"]).label;
           // console.log("时间",item["refundAt"])
