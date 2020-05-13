@@ -651,6 +651,20 @@ export const getOrderPages = (data) => {
   });
 };
 
+export const getAfterSalePages = (data) => {
+  return $http.request({
+    url: '/manage/post-sale/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      // 'sidx': data.sidx,
+      // 'sort': data.sort
+    }
+  });
+};
+
 export const getPaymentLogPages = (data) => {
   return $http.request({
     url: '/wholesale-small/payment-log/pages',
