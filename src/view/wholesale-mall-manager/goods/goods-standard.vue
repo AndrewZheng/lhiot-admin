@@ -494,7 +494,7 @@
                     </Select>
                   </FormItem>
                 </i-col>
-              </Row>
+              </Row> 
             </i-col>
           </Row>
           <Row>
