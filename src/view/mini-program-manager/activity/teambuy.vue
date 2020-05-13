@@ -1747,9 +1747,7 @@ export default {
         this.teambuyDetail.second =
           (this.teambuyDetail.validSeconds % 3600) % 60;
       }
-      if (
-        this.teambuyDetail.storeIds !== null
-      ) {
+      if (this.teambuyDetail.storeIds !== null) {
         this.showStoreList = true;
         this.teambuyDetail.relationStoreType = "PART";
         const storeIds = this.teambuyDetail.storeIds
@@ -1889,11 +1887,14 @@ export default {
     },
     selectStore(options) {
       if (options.value === "ALL") {
-        console.log("选中全部门店");
+        this.teambuyDetail.relationStoreType = "ALL";
         this.teambuyDetail.storeIds = null;
         this.showStoreList = false;
       } else if (options.value === "PART") {
-        console.log("选中部分门店");
+        this.teambuyDetail.relationStoreType = "PART";
+        this.indeterminate = false;
+        this.checkAll = false;
+        this.teambuyDetail.storeIds = "";
         this.showStoreList = true;
       }
     },
@@ -1939,7 +1940,6 @@ export default {
         this.indeterminate = true;
         this.checkAll = false;
         this.teambuyDetail.storeIds = "[" + data.join("][") + "]";
-        console.log("storeIds before submit:", this.teambuyDetail.storeIds);
       } else {
         this.indeterminate = false;
         this.checkAll = false;
