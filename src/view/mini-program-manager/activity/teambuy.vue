@@ -1454,6 +1454,12 @@ export default {
     },
     handleSubmit() {
       const _this = this;
+      // if (_this.oldPicture.length > 0) {
+      //   const urls = {
+      //     urls: _this.oldPicture
+      //   };
+      //   _this.deletePicture(urls);
+      // }
       this.$refs.editForm.validate(valid => {
         if (valid) {
           if (
@@ -1535,27 +1541,18 @@ export default {
             _this.teambuyDetail.startTime = _this
               .$moment(_this.teambuyDetail.startTime)
               .format("yyyy-MM-dd HH:mm:ss");
-            console.log(
-              "startTime after format",
-              _this.teambuyDetail.startTime
-            );
           }
 
           if (_this.teambuyDetail.endTime.indexOf("GMT") > 0) {
             _this.teambuyDetail.endTime = _this
               .$moment(_this.teambuyDetail.endTime)
               .format("yyyy-MM-dd HH:mm:ss");
-            console.log("endTime after format", _this.teambuyDetail.endTime);
           }
 
           if (_this.teambuyDetail.deliveryEndTime.indexOf("GMT") > 0) {
             _this.teambuyDetail.deliveryEndTime = _this
               .$moment(_this.teambuyDetail.deliveryEndTime)
               .format("yyyy-MM-dd HH:mm:ss");
-            console.log(
-              "endTime after format",
-              _this.teambuyDetail.deliveryEndTime
-            );
           }
 
           if (_this.tempModalType === _this.modalType.create) {
@@ -1571,10 +1568,23 @@ export default {
       });
     },
     handleEditClose() {
+      // if (this.newPicture.length > 0) {
+      //   const urls = {
+      //     urls: this.newPicture
+      //   };
+      //   this.deletePicture(urls);
+      // }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
     },
+    // deletePicture(urls) {
+    //   deletePicture({
+    //     urls
+    //   })
+    //     .then(res => {})
+    //     .catch(() => {});
+    // },
     createStore() {
       this.modalViewLoading = true;
       this.teambuyDetail.id = null; // 新建时不需要传递id
@@ -1623,7 +1633,6 @@ export default {
     // 选取一条数据
     onCurrentChange(currentRow, oldCurrentRow) {
       this.currentTableRowSelected = currentRow;
-      // console.log("当前数据", this.currentTableRowSelected);
     },
     addStore() {
       this.resetFields();
@@ -1652,9 +1661,9 @@ export default {
         this.currentTableRowSelected.rank = null;
         this.currentTableRowSelected.storeId = null;
         this.currentTableRowSelected.storeIds = null;
+        this.currentTableRowSelected.relationStoreType = "ALL";
         this.currentTableRowSelected.activityPrice = null;
         this.currentTableRowSelected.singleTeambuyPrice = null;
-        this.currentTableRowSelected.relationStoreType = "ALL";
         this.currentTableRowSelected.hour = hourTime;
         this.currentTableRowSelected.minute = minuteTime;
         this.currentTableRowSelected.second = secondTime;
@@ -1712,6 +1721,10 @@ export default {
     handleEdit(params) {
       this.save = [];
       this.save.push(params.row.banner);
+      this.teambuyDetail.storeId = null;
+      this.teambuyDetail.storeIds = null;
+      this.storeIds = [];
+      this.teambuyDetail.relationStoreType = "ALL";
       this.groupStatus = "";
       this.resetFields();
       this.tempModalType = this.modalType.edit;
@@ -1728,16 +1741,12 @@ export default {
         this.teambuyDetail.second =
           (this.teambuyDetail.validSeconds % 3600) % 60;
       }
-      if (
-        this.teambuyDetail.storeIds !== null &&
-        this.teambuyDetail.storeIds !== ""
-      ) {
+      if (this.teambuyDetail.storeIds !== null) {
         this.showStoreList = true;
         this.teambuyDetail.relationStoreType = "PART";
         const storeIds = this.teambuyDetail.storeIds
           .substring(1, this.teambuyDetail.storeIds.length - 1)
           .split("][");
-        console.log("storeIds before edit:", storeIds);
         storeIds.forEach(element => {
           this.storeIds.push(parseInt(element));
         });
@@ -1806,7 +1815,6 @@ export default {
       this.oldPicture = this.save;
     },
     startTimeChange(value, date) {
-      console.log("change start value:", value);
       this.teambuyDetail.startTime = value;
       if (this.teambuyDetail.startTime.indexOf("T") > -1) {
         this.teambuyDetail.startTime = this.$moment(
@@ -1815,7 +1823,6 @@ export default {
       }
     },
     endTimeChange(value, date) {
-      console.log("change end value:", value);
       this.teambuyDetail.endTime = value;
       if (this.teambuyDetail.endTime.indexOf("T") > -1) {
         this.teambuyDetail.endTime = this.$moment(
@@ -1871,10 +1878,14 @@ export default {
     },
     selectStore(options) {
       if (options.value === "ALL") {
-        console.log("选中全部门店");
+        this.teambuyDetail.relationStoreType = "ALL";
         this.teambuyDetail.storeIds = null;
         this.showStoreList = false;
       } else if (options.value === "PART") {
+        this.teambuyDetail.relationStoreType = "PART";
+        this.indeterminate = false;
+        this.checkAll = false;
+        this.teambuyDetail.storeIds = "";
         this.showStoreList = true;
       }
     },
@@ -1920,7 +1931,6 @@ export default {
         this.indeterminate = true;
         this.checkAll = false;
         this.teambuyDetail.storeIds = "[" + data.join("][") + "]";
-        console.log("storeIds before submit:", this.teambuyDetail.storeIds);
       } else {
         this.indeterminate = false;
         this.checkAll = false;
