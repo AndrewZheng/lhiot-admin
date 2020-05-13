@@ -1889,11 +1889,14 @@ export default {
     },
     selectStore(options) {
       if (options.value === "ALL") {
-        console.log("选中全部门店");
+        this.teambuyDetail.relationStoreType = "ALL";
         this.teambuyDetail.storeIds = null;
         this.showStoreList = false;
       } else if (options.value === "PART") {
-        console.log("选中部分门店");
+        this.teambuyDetail.relationStoreType = "PART";
+        this.indeterminate = false;
+        this.checkAll = false;
+        this.teambuyDetail.storeIds = "";
         this.showStoreList = true;
       }
     },

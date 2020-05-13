@@ -457,7 +457,11 @@
             </i-col>
             <i-col span="12">
               <FormItem label="安全库存:" prop="stockLimit">
-                <InputNumber v-model="productStandardDetail.stockLimit" placeholder="安全库存"></InputNumber>
+                <InputNumber
+                  v-model="productStandardDetail.stockLimit"
+                  placeholder="安全库存"
+                  style="width:100px;"
+                ></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -479,7 +483,7 @@
               <Row>
                 <i-col span="12">
                   <FormItem label="商品单位:" prop="unitCode" style="width:180px;">
-                    <Select v-model="productStandardDetail.unitCode" @on-change="unitChange">
+                    <Select v-model="productStandardDetail.unitCode" @on-change="unitChange"  style="width:100px;">
                       <Option
                         v-for="(item,index) in unitsList"
                         :value="item.value"
@@ -501,7 +505,7 @@
             </i-col>
             <i-col span="12">
               <FormItem label="商品净重:" prop="netWeight">
-                <Input v-model="productStandardDetail.netWeight" style="width:80px;"></Input>千克
+                <Input v-model="productStandardDetail.netWeight" style="width:100px;"></Input>千克
               </FormItem>
             </i-col>
           </Row>
@@ -522,6 +526,7 @@
                   :min="0"
                   :value="purchasePriceComputed"
                   @on-change="purchasePriceOnchange"
+                  style="width:100px;"
                 ></InputNumber>
               </FormItem>
             </i-col>
