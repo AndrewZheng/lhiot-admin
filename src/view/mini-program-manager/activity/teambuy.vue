@@ -1541,27 +1541,18 @@ export default {
             _this.teambuyDetail.startTime = _this
               .$moment(_this.teambuyDetail.startTime)
               .format("yyyy-MM-dd HH:mm:ss");
-            console.log(
-              "startTime after format",
-              _this.teambuyDetail.startTime
-            );
           }
 
           if (_this.teambuyDetail.endTime.indexOf("GMT") > 0) {
             _this.teambuyDetail.endTime = _this
               .$moment(_this.teambuyDetail.endTime)
               .format("yyyy-MM-dd HH:mm:ss");
-            console.log("endTime after format", _this.teambuyDetail.endTime);
           }
 
           if (_this.teambuyDetail.deliveryEndTime.indexOf("GMT") > 0) {
             _this.teambuyDetail.deliveryEndTime = _this
               .$moment(_this.teambuyDetail.deliveryEndTime)
               .format("yyyy-MM-dd HH:mm:ss");
-            console.log(
-              "endTime after format",
-              _this.teambuyDetail.deliveryEndTime
-            );
           }
 
           if (_this.tempModalType === _this.modalType.create) {
@@ -1642,7 +1633,6 @@ export default {
     // 选取一条数据
     onCurrentChange(currentRow, oldCurrentRow) {
       this.currentTableRowSelected = currentRow;
-      console.log("当前数据", this.currentTableRowSelected);
     },
     addStore() {
       this.resetFields();
@@ -1671,9 +1661,9 @@ export default {
         this.currentTableRowSelected.rank = null;
         this.currentTableRowSelected.storeId = null;
         this.currentTableRowSelected.storeIds = null;
+        this.currentTableRowSelected.relationStoreType = "ALL";
         this.currentTableRowSelected.activityPrice = null;
         this.currentTableRowSelected.singleTeambuyPrice = null;
-        this.currentTableRowSelected.relationStoreType = "ALL";
         this.currentTableRowSelected.hour = hourTime;
         this.currentTableRowSelected.minute = minuteTime;
         this.currentTableRowSelected.second = secondTime;
@@ -1731,6 +1721,10 @@ export default {
     handleEdit(params) {
       this.save = [];
       this.save.push(params.row.banner);
+      this.teambuyDetail.storeId = null;
+      this.teambuyDetail.storeIds = null;
+      this.storeIds = [];
+      this.teambuyDetail.relationStoreType = "ALL";
       this.groupStatus = "";
       this.resetFields();
       this.tempModalType = this.modalType.edit;
@@ -1753,7 +1747,6 @@ export default {
         const storeIds = this.teambuyDetail.storeIds
           .substring(1, this.teambuyDetail.storeIds.length - 1)
           .split("][");
-        console.log("storeIds before edit:", storeIds);
         storeIds.forEach(element => {
           this.storeIds.push(parseInt(element));
         });
@@ -1822,7 +1815,6 @@ export default {
       this.oldPicture = this.save;
     },
     startTimeChange(value, date) {
-      console.log("change start value:", value);
       this.teambuyDetail.startTime = value;
       if (this.teambuyDetail.startTime.indexOf("T") > -1) {
         this.teambuyDetail.startTime = this.$moment(
@@ -1831,7 +1823,6 @@ export default {
       }
     },
     endTimeChange(value, date) {
-      console.log("change end value:", value);
       this.teambuyDetail.endTime = value;
       if (this.teambuyDetail.endTime.indexOf("T") > -1) {
         this.teambuyDetail.endTime = this.$moment(
