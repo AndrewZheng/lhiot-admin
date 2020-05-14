@@ -469,6 +469,11 @@ export default {
           key: "phone"
         },
         {
+          title: "评价时间",
+          align: "center",
+          key: "createTime"
+        },
+        {
           title: "骑手评价",
           align: "center",
           key: "deliveryComment",
@@ -654,7 +659,7 @@ export default {
         const tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 10;
-        // 表格数据导出字段翻译   
+        // 表格数据导出字段翻译
         let _this = this;
         tableData.forEach(item => {
           item["deliveryComment"] = deliveryTypeConvert(
