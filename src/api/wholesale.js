@@ -653,7 +653,7 @@ export const getOrderPages = (data) => {
 
 export const getAfterSalePages = (data) => {
   return $http.request({
-    url: '/manage/post-sale/pages',
+    url: '/wholesale-small/post-sale/pages',
     data,
     method: 'post',
     headers: {
