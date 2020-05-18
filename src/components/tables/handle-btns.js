@@ -124,7 +124,7 @@ const btns = {
         }, [
         h('Icon', {
          props: {
-            type: 'logo-buffer',
+            type: 'md-person-add',
             size: 16,
             color: '#fff'
           }
@@ -261,6 +261,116 @@ const btns = {
       ])
   ]);
   },
+  userChange: (h, params, vm) => {
+    const { row } = params;
+    if (row.userType==="consumer") {
+      return h('Tooltip', {
+        props: { placement: 'top',transfer:true,content:"更换所属业务员" },
+      }, [
+        h('Button', {
+          props: {
+            type: 'primary',
+            size: 'small'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            click: () => {
+              vm.$emit('on-userChange', params);
+            }
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'ios-switch',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+    ]);
+    }else{
+      return ""
+    }
+  },
+  // unlock: (h, params, vm) => {
+  //   const { row } = params;
+  //   if (row.userStatus==="locking") {
+  //     return h('Tooltip', {
+  //       props: { placement: 'top',transfer:true,content:"解锁用户" },
+  //     }, [
+  //       h('Button', {
+  //         props: {
+  //           type: 'primary',
+  //           size: 'small'
+  //         },
+  //         style: {
+  //           marginRight: '5px'
+  //         },
+  //         on: {
+  //           click: () => {
+  //             vm.$emit('on-unlock', params);
+  //           }
+  //         }
+  //       }, [
+  //         h('Icon', {
+  //           props: {
+  //             type: 'ios-key',
+  //             size: 16,
+  //             color: '#fff'
+  //           }
+  //         })
+  //       ])
+  //   ]);
+  //   }else{
+  //     return ""
+  //   }
+  // },
+  // =======================
+  unlock: (h, params, vm) => {
+    const { row } = params;
+    if (row.userStatus==="locking") {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer:true,
+          title: '确认要解锁该用户吗?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-unlock', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top',transfer:true,content:"解锁用户" },
+        }, [
+          h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+          }, [
+          h('Icon', {
+            props: {
+              type: 'ios-key',
+              size: 16,
+              color: '#fff'
+            }
+          })
+          ])
+        ])
+      ]);
+    }else{
+      return ""
+    }
+  },
+  // =======================
   permission: (h, params, vm) => {
     const {
       row
@@ -945,53 +1055,106 @@ const btns = {
       }
     })]);
   },
+  inlineEdits: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.status==="WAIT") {
+      if (row.isEdit === false) {
+        return h('Button', {
+          props: {
+            type: 'warning',
+            size: 'small'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            click: () => {
+              vm.$emit('on-inline-edit', params);
+            }
+          }
+        }, [h('Icon', {
+          props: {
+            type: 'md-create',
+            size: 16,
+            color: '#fff'
+          }
+        })]);
+      } else {
+        return h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            click: () => {
+              vm.$emit('on-inline-save', params);
+            }
+          }
+        }, [h('Icon', {
+          props: {
+            type: 'md-checkmark',
+            size: 16,
+            color: '#green'
+          }
+        })]);
+      }
+    }
+
+  },
   inlineEdit: (h, params, vm) => {
     const {
       row
     } = params;
-    if (row.isEdit === false) {
-      return h('Button', {
-        props: {
-          type: 'warning',
-          size: 'small'
-        },
-        style: {
-          marginRight: '5px'
-        },
-        on: {
-          click: () => {
-            vm.$emit('on-inline-edit', params);
+      if (row.isEdit === false) {
+        return h('Button', {
+          props: {
+            type: 'warning',
+            size: 'small'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            click: () => {
+              vm.$emit('on-inline-edit', params);
+            }
           }
-        }
-      }, [h('Icon', {
-        props: {
-          type: 'md-create',
-          size: 16,
-          color: '#fff'
-        }
-      })]);
-    } else {
-      return h('Button', {
-        props: {
-          type: 'success',
-          size: 'small'
-        },
-        style: {
-          marginRight: '5px'
-        },
-        on: {
-          click: () => {
-            vm.$emit('on-inline-save', params);
+        }, [h('Icon', {
+          props: {
+            type: 'md-create',
+            size: 16,
+            color: '#fff'
           }
-        }
-      }, [h('Icon', {
-        props: {
-          type: 'md-checkmark',
-          size: 16,
-          color: '#green'
-        }
-      })]);
-    }
+        })]);
+      } else {
+        return h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            click: () => {
+              vm.$emit('on-inline-save', params);
+            }
+          }
+        }, [h('Icon', {
+          props: {
+            type: 'md-checkmark',
+            size: 16,
+            color: '#green'
+          }
+        })]);
+      }
+    
+
   },
   settlementRefund: (h, params, vm) => {
     const { row } = params;
@@ -1261,50 +1424,6 @@ const btns = {
       ])
   ]);
   },
-  //
-  // saleAudit: (h, params, vm) => {
-  //   return h('Poptip', {
-  //     props: {
-  //       confirm: true,
-  //       transfer:true,
-  //       title: '该业务员资质已核实，是否通过业务员申请?',
-  //       placement: params.index === 0 ? 'right' : 'top',
-  //       'ok-text': '通过',
-  //       'cancel-text': '拒绝'
-  //     },
-  //     style: {
-  //       marginRight: '5px'
-  //     },
-  //     on: {
-  //       'on-ok': () => {
-  //         vm.$emit('on-audit', { params, checkStatus: 'agree' });
-  //       },
-  //       'on-cancel': () => {
-  //         vm.$emit('on-audit', { params, checkStatus: 'reject' });
-  //       }
-  //     }
-  //   }, [
-  //     h('Tooltip', {
-  //       props: { placement: 'top',transfer:true,content:"审核业务员" },
-  //     }, [
-  //       h('Button', {
-  //        props: {
-  //         type: 'primary',
-  //         size: 'small'
-  //       }
-  //       }, [
-  //       h('Icon', {
-  //        props: {
-  //           type: 'logo-buffer',
-  //           size: 16,
-  //           color: '#fff'
-  //         }
-  //       })
-  //       ])
-  //     ])
-  //   ]);
-  // },
-  //
   setVip: (h, params, vm) => {
     const {
       row
@@ -1337,7 +1456,7 @@ const btns = {
           }, [
           h('Icon', {
             props: {
-              type: 'ios-ribbon',
+              type: 'logo-vimeo',
               size: 16,
               color: '#fff'
             }
@@ -1373,7 +1492,7 @@ const btns = {
           }, [
           h('Icon', {
             props: {
-              type: 'ios-ribbon-outline',
+              type: 'logo-vimeo',
               size: 16,
               color: '#fff'
             }
@@ -1540,6 +1659,120 @@ const btns = {
         ])
       ]);
     }
+  },
+  finish: (h, params, vm) => {
+    const { row } = params;
+    // 除了薪资未审核的其他不显示修改权限按钮
+    if (row.status === 'SERVICEING') {
+    return h('Tooltip', {
+      props: { placement: 'top',transfer:true,content:"售后完成" },
+    }, [
+    h('Button', {
+      props: {
+        type: 'info',
+        size: 'small'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        click: () => {
+          vm.$emit('on-finish', params);
+        }
+      }
+    }, [
+    h('Icon', {
+      props: {
+        type: 'md-checkmark-circle',
+        size: 16,
+        color: '#fff'
+      }
+    })
+    ])]);
+  }else{
+    return ""
   }
+  },
+  financeAudit: (h, params, vm) => {
+    const {
+      row
+    } = params;
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer:true,
+          title: '是否审核通过?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-audit', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top',transfer:true,content:"审核通过" },
+        }, [
+          h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+          }, [
+          h('Icon', {
+            props: {
+              type: 'md-checkbox',
+              size: 16,
+              color: '#fff'
+            }
+          })
+          ])
+        ])
+      ]);
+  },
+  financeRefuse: (h, params, vm) => {
+    const {
+      row
+    } = params;
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer:true,
+          title: '是否拒绝审核?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-refuse', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top',transfer:true,content:"审核拒绝" },
+        }, [
+          h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+          }, [
+          h('Icon', {
+            props: {
+              type: 'md-backspace',
+              size: 16,
+              color: '#fff'
+            }
+          })
+          ])
+        ])
+      ]);
+  },
 };
+
 export default btns;
