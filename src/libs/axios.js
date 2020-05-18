@@ -26,13 +26,13 @@ class HttpRequest {
 
     const imsServiceOps = _.merge({}, defaultOps, {
       baseURL: this.baseUrl,
-      response: this.responseType
+      responseType: this.responseType
     });
 
     // 删除图片
     const imgServiceOps = _.merge({}, defaultOps, {
       baseURL: this.baseUrl,
-      response: this.responseType
+      responseType: this.responseType
     });
 
     // 后端微服务有需求再扩展
@@ -105,7 +105,7 @@ class HttpRequest {
       // 导出
       const { data, status, headers } = res;
       if (headers['content-type'] === 'application/vnd.ms-excel;charset=utf-8') {
-        return res;
+        return res.data;
       }
       // 后续再做修改
       if (status < 400) {
