@@ -54,6 +54,34 @@ const btns = {
     ])
   ]);
   },
+  operate: (h, params, vm) => {
+    return h('Tooltip', {
+      props: { placement: 'top',transfer:true,content:"查看/操作" },
+    }, [
+    h('Button', {
+      props: {
+        type: 'warning',
+        size: 'small'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        click: () => {
+          vm.$emit('on-operate', params);
+        }
+      }
+    }, [
+     h('Icon', {
+      props: {
+        type: 'md-ionic',
+        size: 16,
+        color: '#fff'
+      }
+    })
+    ])
+  ]);
+  },
   delete: (h, params, vm) => {
     return h('Poptip', {
       props: {
@@ -92,46 +120,54 @@ const btns = {
     ]);
   },
   saleAudit: (h, params, vm) => {
-    return h('Poptip', {
-      props: {
-        confirm: true,
-        transfer:true,
-        title: '该业务员资质已核实，是否通过业务员申请?',
-        placement: params.index === 0 ? 'right' : 'top',
-        'ok-text': '通过',
-        'cancel-text': '拒绝'
-      },
-      style: {
-        marginRight: '5px'
-      },
-      on: {
-        'on-ok': () => {
-          vm.$emit('on-audit', { params, checkStatus: 'agree' });
+    const {
+      row
+    } = params;
+    if (row.userType==="sale"&&row.salesUserStatus==="unaudited") {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer:true,
+          title: '该业务员资质已核实，是否通过业务员申请?',
+          placement: params.index === 0 ? 'right' : 'top',
+          'ok-text': '通过',
+          'cancel-text': '拒绝'
         },
-        'on-cancel': () => {
-          vm.$emit('on-audit', { params, checkStatus: 'reject' });
-        }
-      }
-    }, [
-      h('Tooltip', {
-        props: { placement: 'top',transfer:true,content:"审核业务员" },
-      }, [
-        h('Button', {
-         props: {
-          type: 'primary',
-          size: 'small'
-        }
-        }, [
-        h('Icon', {
-         props: {
-            type: 'md-person-add',
-            size: 16,
-            color: '#fff'
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-audit', { params, checkStatus: 'agree' });
+          },
+          'on-cancel': () => {
+            vm.$emit('on-audit', { params, checkStatus: 'reject' });
           }
-        })
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top',transfer:true,content:"审核业务员" },
+        }, [
+          h('Button', {
+           props: {
+            type: 'primary',
+            size: 'small'
+          }
+          }, [
+          h('Icon', {
+           props: {
+              type: 'md-person-add',
+              size: 16,
+              color: '#fff'
+            }
+          })
+          ])
         ])
-      ])
-    ]);
+      ]);
+    }else{
+      return ""
+    }
+
   },
   onUser: (h, params, vm) => {
     const {

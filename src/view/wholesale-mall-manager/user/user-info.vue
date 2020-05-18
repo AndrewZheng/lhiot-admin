@@ -210,7 +210,7 @@
           <Row v-show="userDetail.userType==='sale'">
             <i-col span="12">
               <FormItem label="业务员状态:" prop="salesUserStatus">
-                <Select v-model="userDetail.salesUserStatus" style="width: 200px">
+                <Select v-model="userDetail.salesUserStatus" style="width: 200px" disabled>
                   <Option
                     v-for="(item,index) in userStatusEnum"
                     :value="item.value"

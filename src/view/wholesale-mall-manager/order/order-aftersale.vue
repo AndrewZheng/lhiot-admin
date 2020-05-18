@@ -12,7 +12,7 @@
         searchable
         border
         search-place="top"
-        @on-edit="handleEdit"
+        @on-operate="handleOperate"
         @on-finish="hanldeFinish"
       >
         <div slot="searchCondition">
@@ -395,7 +395,7 @@
           </i-col>
         </Row>
       </div>
-      <div slot="footer">
+      <div slot="footer" v-show="afterMsg.status==='WAIT'">
         <Button type="error" @click="handlePassAudit('refuse')">拒绝售后</Button>
         <Button type="primary" @click="handlePassAudit('pass')">审核通过</Button>
       </div>
@@ -1118,49 +1118,6 @@ export default {
             } else {
               return <div>{"N/A"}</div>;
             }
-            // if (row.serviceMode === "NORMAL") {
-            //   return (
-            //     <div>
-            //       <tag color="success">
-            //         {serviceModeConvert(row.serviceMode).label}
-            //       </tag>
-            //     </div>
-            //   );
-            // } else if (row.serviceMode === "ABNORMAL") {
-            //   return (
-            //     <div>
-            //       <tag color="primary">
-            //         {serviceModeConvert(row.serviceMode).label}
-            //       </tag>
-            //     </div>
-            //   );
-            // } else if (row.serviceMode === "REPLENISH") {
-            //   return (
-            //     <div>
-            //       <tag color="warning">
-            //         {serviceModeConvert(row.serviceMode).label}
-            //       </tag>
-            //     </div>
-            //   );
-            // } else if (row.serviceMode === "SUPPLEMENT") {
-            //   return (
-            //     <div>
-            //       <tag color="green">
-            //         {serviceModeConvert(row.serviceMode).label}
-            //       </tag>
-            //     </div>
-            //   );
-            // } else if (row.serviceMode === "REVERT") {
-            //   return (
-            //     <div>
-            //       <tag color="gold">
-            //         {serviceModeConvert(row.serviceMode).label}
-            //       </tag>
-            //     </div>
-            //   );
-            // } else {
-            //   return <div>{"N/A"}</div>;
-            // }
           }
         },
         {
@@ -1205,7 +1162,7 @@ export default {
             } else if (row.status === "REVIEW_REJECT") {
               return (
                 <div>
-                  <tag color="success">
+                  <tag color="error">
                     {serviceStatusConvert(row.status).label}
                   </tag>
                 </div>
@@ -1221,7 +1178,7 @@ export default {
             } else if (row.status === "FINISH") {
               return (
                 <div>
-                  <tag color="blue">
+                  <tag color="success">
                     {serviceStatusConvert(row.status).label}
                   </tag>
                 </div>
@@ -1233,9 +1190,11 @@ export default {
         {
           title: "操作",
           minWidth: 120,
+          resizable: true,
           align: "center",
+          fixed: "right",
           key: "handle",
-          options: ["edit", "finish"]
+          options: ["operate", "finish"]
         }
       ]
     };
@@ -1259,7 +1218,6 @@ export default {
       this.getTableData();
     },
     getTableData() {
-      console.log("saleUploadUrl", this.saleUploadUrl);
       this.loading = true;
       this.searchLoading = true;
       this.clearSearchLoading = true;
@@ -1284,8 +1242,7 @@ export default {
             element.isEdit = false;
             element.status = res.status;
             element.postSaleGoods.refundAmount =
-              element.postSaleGoods.refundAmount/100;
-            console.log("售后信息", element.postSaleGoods.refundAmount);
+              element.postSaleGoods.refundAmount / 100;
           });
           this.compensateDetail = res.postSaleGoodsDtoList;
           if (this.orderDetail.deliveryAddress) {
@@ -1317,7 +1274,7 @@ export default {
         .finally(() => {});
     },
     //根据id修改
-    handleEdit(params) {
+    handleOperate(params) {
       this.loading = true;
       this.allMoney = 0;
       let id = params.row.id;
@@ -1340,25 +1297,25 @@ export default {
     handleDownload(name) {
       let dataParams = this.searchRowData;
       dataParams.name = name;
-      getOrderGoods(dataParams)
-        .then(res => {
-          const blob = new Blob([res]);
-          const fileName = "售后订单.xlsx";
-          const elink = document.createElement("a");
-          elink.download = fileName;
-          elink.style.display = "none";
-          elink.href = URL.createObjectURL(blob);
-          document.body.appendChild(elink);
-          elink.click();
-          URL.revokeObjectURL(elink.href); // 释放URL 对象
-          document.body.removeChild(elink);
-          console.log("blob", blob);
-        })
-        .finally(() => {});
-      return;
-      // window.open(
-      //   `${this.saleUploadUrl}/wholesale-small/post-sale/export/${dataParams.name}?userName=${dataParams.userName}&phone=${dataParams.phone}&serviceMode=${dataParams.serviceMode}&status=${dataParams.status}&startTime=${dataParams.startTime}&endTime=${dataParams.endTime}&orderGoods=${dataParams.orderGoods}&hdCode=${dataParams.hdCode}`
-      // );
+      // getOrderGoods(dataParams)
+      //   .then(res => {
+      //     const blob = new Blob([res]);
+      //     const fileName = "售后订单.xlsx";
+      //     const elink = document.createElement("a");
+      //     elink.download = fileName;
+      //     elink.style.display = "none";
+      //     elink.href = URL.createObjectURL(blob);
+      //     document.body.appendChild(elink);
+      //     elink.click();
+      //     URL.revokeObjectURL(elink.href); // 释放URL 对象
+      //     document.body.removeChild(elink);
+      //     console.log("blob", blob);
+      //   })
+      //   .finally(() => {});
+      // return;
+      window.open(
+        `${this.saleUploadUrl}/wholesale-small/post-sale/export/${dataParams.name}?userName=${dataParams.userName}&phone=${dataParams.phone}&serviceMode=${dataParams.serviceMode}&status=${dataParams.status}&startTime=${dataParams.startTime}&endTime=${dataParams.endTime}&orderGoods=${dataParams.orderGoods}&hdCode=${dataParams.hdCode}`
+      );
     },
     modalHandleEdit(params) {
       this.$set(params.row, "isEdit", true);
@@ -1392,10 +1349,6 @@ export default {
     },
     //审核通过
     handlePassAudit(name) {
-      if (this.afterMsg.status != "WAIT") {
-        this.$Message.info("不是待审核的订单");
-        return;
-      }
       this.postSaleAudit.id = this.afterMsg.id;
       this.postSaleAudit.refundAmount = this.allMoney;
       this.postSaleAudit.refundFreightAmount = 0;
