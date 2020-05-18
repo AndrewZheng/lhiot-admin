@@ -916,8 +916,9 @@ export default {
             item.goodsArea = "";
           }
         });
+      const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
-          filename: `商品基础信息-${new Date().valueOf()}`,
+          filename: `商品基础信息-${date}`,
           data: tableData
         });
         this.exportExcelLoading = false;

@@ -919,7 +919,7 @@ export default {
             title: 'title',
             children: 'children'
           };
-          this.menuList = convertTree(menuList, map, true);
+          this.menuList = convertTree(menuList, map, false);
           console.log('menuList after convert: ', this.menuList);
           this.getTableData();
         }
@@ -933,7 +933,7 @@ export default {
             title: 'title',
             children: 'children'
           };
-          this.menuList = convertTree(menuList, map, true);
+          this.menuList = convertTree(menuList, map, false);
         }
       });
     },

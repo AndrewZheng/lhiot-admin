@@ -486,8 +486,9 @@ export default {
               item["salesUserStatus"]
             ).label;
           });
+          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
           this.$refs.tables.handleDownload({
-            filename: `会员分析信息-${new Date().valueOf()}`,
+            filename: `会员分析信息-${date}`,
             data: tableData
           });
         })

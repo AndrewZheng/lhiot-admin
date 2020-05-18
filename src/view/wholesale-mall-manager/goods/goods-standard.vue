@@ -1900,8 +1900,9 @@ export default {
             item["goodsArea"] = "进口";
           }
         });
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleCustomDownload({
-          filename: `商品规格-${new Date().valueOf()}`,
+          filename: `商品规格-${date}`,
           data: tableData,
           columns: tableColumns
         });

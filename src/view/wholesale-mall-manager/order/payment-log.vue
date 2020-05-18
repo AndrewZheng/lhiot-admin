@@ -368,8 +368,9 @@ export default {
             item["paymentType"]
           ).label;
         });
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
-          filename: `支付流水-${new Date().valueOf()}`,
+          filename: `支付流水-${date}`,
           data: tableData
         });
       });

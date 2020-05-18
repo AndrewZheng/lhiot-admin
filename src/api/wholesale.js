@@ -3,7 +3,6 @@ const $http = Vue.prototype.$http;
 const $imgService = Vue.prototype.$imgService;
 const $imsService = Vue.prototype.$imsService;
 
-
 // 删除图片
 export const deletePicture = ({
   urls
@@ -652,7 +651,7 @@ export const getOrderPages = (data) => {
     }
   });
 };
-//售后订单
+// 售后订单
 export const getAfterSalePages = (data) => {
   return $http.request({
     url: '/wholesale-small/post-sale/pages',
@@ -681,7 +680,7 @@ export const getFinanceAuditPages = (data) => {
   });
 };
 
-//id查看售后订单 
+// id查看售后订单
 export const getOrderDetail = ({
   id
 }) => {
@@ -696,49 +695,57 @@ export const getSaleFinish = (data) => {
   return $http.request({
     url: `/wholesale-small/post-sale/audit/finish/${data.id}`,
     data,
-    method: 'post',
+    method: 'post'
   });
 };
 
-//财务审核通过
+// 财务审核通过
 export const getFinanceAudit = (data) => {
   return $http.request({
     url: `/wholesale-small/post-sale/review/pass/${data.id}`,
     data,
-    method: 'post',
+    method: 'post'
   });
 };
-//财务审核拒绝
+// 财务审核拒绝
 export const getFinanceRefuse = (data) => {
   return $http.request({
     url: `/wholesale-small/post-sale/review/reject/${data.id}`,
     data,
-    method: 'post',
+    method: 'post'
   });
 };
 
 // 导出售后商品
-export const getOrderGoods = (dataParams) => {
+export const getOrderGoods = (data) => {
   return $imsService.request({
-    url: `/wholesale-small/post-sale/export/${dataParams.name}?userName=${dataParams.userName}&phone=${dataParams.phone}&serviceMode=${dataParams.serviceMode}&status=${dataParams.status}&startTime=${dataParams.startTime}&endTime=${dataParams.endTime}&orderGoods=${dataParams.orderGoods}&hdCode=${dataParams.hdCode}`,
-    method: 'get'
+    url: `/wholesale-small/post-sale/export/${data.name}`,
+    method: 'post',
+    data: data,
+    headers: {
+      'page': data.page,
+      'rows': -1,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
   });
 };
-//通过审核
+
+// 通过审核
 export const getPassAudit = (data) => {
   return $http.request({
     url: '/wholesale-small/post-sale/audit/pass',
     data,
-    method: 'post',
+    method: 'post'
   });
 };
 
-//审核拒绝
+// 审核拒绝
 export const getRefuseAudit = (data) => {
   return $http.request({
     url: '/wholesale-small/post-sale/audit/reject',
     data,
-    method: 'post',
+    method: 'post'
   });
 };
 

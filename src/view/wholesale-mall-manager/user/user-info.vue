@@ -913,8 +913,9 @@ export default {
             item["balance"] = (item["balance"] / 100.0).toFixed(2);
             item["addressDetail"] = item["city"] + item["addressDetail"];
           });
+          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
           this.$refs.tables.handleDownload({
-            filename: `会员信息-${new Date().valueOf()}`,
+            filename: `会员信息-${date}`,
             data: tableData
           });
         })

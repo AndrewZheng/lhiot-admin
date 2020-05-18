@@ -345,8 +345,9 @@ export default {
             item["refundType"] = "N/A";
           }
         });
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
-          filename: `退款流水-${new Date().valueOf()}`,
+          filename: `退款流水-${date}`,
           data: tableData
         });
       });

@@ -670,7 +670,7 @@ const orderColumns = [
     render(h, params, vm) {
       const { row } = params;
       const address = JSON.parse(row.deliveryAddress);
-      return <div>{address.addressArea+address.addressDetail}</div>;
+      return <div>{address.addressArea + address.addressDetail}</div>;
     }
   },
   {
@@ -1072,14 +1072,16 @@ export default {
             Number(item["deliveryFee"]) + Number(item["payableFee"])
           ).toFixed(2);
         });
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleCustomDownload({
-          filename: `普通订单信息-${new Date().valueOf()}`,
+          filename: `普通订单信息-${date}`,
           data: tableData,
           columns: tableColumns
         });
       });
     },
     handleExport(name) {
+      const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
       if (name === "ORDER_GOODS") {
         this.searchRowData.orderCodes = this.selectedOrderCodes;
         // 导出订单商品
@@ -1096,7 +1098,7 @@ export default {
           //   item['sumPrice'] = (item['couponAmount'] / 100.0).toFixed(2);
           // });
           this.$refs.tables.handleCustomDownload({
-            filename: `订单商品信息-${new Date().valueOf()}`,
+            filename: `订单商品信息-${date}`,
             data: tableData,
             columns: tableColumns
           });
@@ -1111,7 +1113,7 @@ export default {
           const tableData = res.rows;
           const tableColumns = res.columns;
           this.$refs.tables.handleCustomDownload({
-            filename: `配送单-${new Date().valueOf()}`,
+            filename: `配送单-${date}`,
             data: tableData,
             columns: tableColumns
           });
