@@ -992,7 +992,7 @@ const compensateColumns = [
     align: "center",
     width: "98px",
     key: "handle",
-    options: ["inlineEdit"]
+    options: ["inlineEdits"]
   }
 ];
 export default {
@@ -1282,6 +1282,10 @@ export default {
           this.afterMsg = res;
           res.postSaleGoodsDtoList.forEach(element => {
             element.isEdit = false;
+            element.status = res.status;
+            element.postSaleGoods.refundAmount =
+              element.postSaleGoods.refundAmount/100;
+            console.log("售后信息", element.postSaleGoods.refundAmount);
           });
           this.compensateDetail = res.postSaleGoodsDtoList;
           if (this.orderDetail.deliveryAddress) {
@@ -1336,33 +1340,34 @@ export default {
     handleDownload(name) {
       let dataParams = this.searchRowData;
       dataParams.name = name;
-      // getOrderGoods(dataParams)
-      //   .then(res => {
-      //     const blob = new Blob([res]);
-      //     const fileName = "售后订单.xlsx";
-      //     const elink = document.createElement("a");
-      //     elink.download = fileName;
-      //     elink.style.display = "none";
-      //     elink.href = URL.createObjectURL(blob);
-      //     document.body.appendChild(elink);
-      //     elink.click();
-      //     URL.revokeObjectURL(elink.href); // 释放URL 对象
-      //     document.body.removeChild(elink);
-      //     console.log("blob", blob);
-      //   })
-      //   .finally(() => {});
-      // return;
-      window.open(
-        `${this.saleUploadUrl}/wholesale-small/post-sale/export/${dataParams.name}?userName=${dataParams.userName}&phone=${dataParams.phone}&serviceMode=${dataParams.serviceMode}&status=${dataParams.status}&startTime=${dataParams.startTime}&endTime=${dataParams.endTime}&orderGoods=${dataParams.orderGoods}&hdCode=${dataParams.hdCode}`
-      );
+      getOrderGoods(dataParams)
+        .then(res => {
+          const blob = new Blob([res]);
+          const fileName = "售后订单.xlsx";
+          const elink = document.createElement("a");
+          elink.download = fileName;
+          elink.style.display = "none";
+          elink.href = URL.createObjectURL(blob);
+          document.body.appendChild(elink);
+          elink.click();
+          URL.revokeObjectURL(elink.href); // 释放URL 对象
+          document.body.removeChild(elink);
+          console.log("blob", blob);
+        })
+        .finally(() => {});
+      return;
+      // window.open(
+      //   `${this.saleUploadUrl}/wholesale-small/post-sale/export/${dataParams.name}?userName=${dataParams.userName}&phone=${dataParams.phone}&serviceMode=${dataParams.serviceMode}&status=${dataParams.status}&startTime=${dataParams.startTime}&endTime=${dataParams.endTime}&orderGoods=${dataParams.orderGoods}&hdCode=${dataParams.hdCode}`
+      // );
     },
     modalHandleEdit(params) {
       this.$set(params.row, "isEdit", true);
     },
     modalHandleSave(params) {
-      //.orderGoods.quanity,params.row.postSaleGoods.quantity
-      console.log("售后数量", params.row);
-      return;
+      if (params.row.postSaleGoods.quantity > params.row.orderGoods.quanity) {
+        this.$Message.info("售后数量不能大于购买数量");
+        return;
+      }
       let index = params.row.initRowIndex;
       this.compensateDetail[index].postSaleGoods.serviceReason =
         params.row.postSaleGoods.serviceReason;
@@ -1404,7 +1409,6 @@ export default {
           Number(allData[i].postSaleGoods.refundAmount) * 100;
         this.postSaleAudit.postSaleGoods.push(allData[i].postSaleGoods);
       }
-      console.log("赋值对象", this.postSaleAudit, this.deliveryFlag);
       if (name === "pass") {
         getPassAudit(this.postSaleAudit)
           .then(res => {

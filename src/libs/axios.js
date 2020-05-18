@@ -105,7 +105,7 @@ class HttpRequest {
       // 导出
       const { data, status, headers } = res;
       if (headers['content-type'] === 'application/vnd.ms-excel;charset=utf-8') {
-        return res.data;
+        return res;
       }
       // 后续再做修改
       if (status < 400) {

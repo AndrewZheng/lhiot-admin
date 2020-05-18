@@ -1055,53 +1055,106 @@ const btns = {
       }
     })]);
   },
+  inlineEdits: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.status==="WAIT") {
+      if (row.isEdit === false) {
+        return h('Button', {
+          props: {
+            type: 'warning',
+            size: 'small'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            click: () => {
+              vm.$emit('on-inline-edit', params);
+            }
+          }
+        }, [h('Icon', {
+          props: {
+            type: 'md-create',
+            size: 16,
+            color: '#fff'
+          }
+        })]);
+      } else {
+        return h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            click: () => {
+              vm.$emit('on-inline-save', params);
+            }
+          }
+        }, [h('Icon', {
+          props: {
+            type: 'md-checkmark',
+            size: 16,
+            color: '#green'
+          }
+        })]);
+      }
+    }
+
+  },
   inlineEdit: (h, params, vm) => {
     const {
       row
     } = params;
-    if (row.isEdit === false) {
-      return h('Button', {
-        props: {
-          type: 'warning',
-          size: 'small'
-        },
-        style: {
-          marginRight: '5px'
-        },
-        on: {
-          click: () => {
-            vm.$emit('on-inline-edit', params);
+      if (row.isEdit === false) {
+        return h('Button', {
+          props: {
+            type: 'warning',
+            size: 'small'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            click: () => {
+              vm.$emit('on-inline-edit', params);
+            }
           }
-        }
-      }, [h('Icon', {
-        props: {
-          type: 'md-create',
-          size: 16,
-          color: '#fff'
-        }
-      })]);
-    } else {
-      return h('Button', {
-        props: {
-          type: 'success',
-          size: 'small'
-        },
-        style: {
-          marginRight: '5px'
-        },
-        on: {
-          click: () => {
-            vm.$emit('on-inline-save', params);
+        }, [h('Icon', {
+          props: {
+            type: 'md-create',
+            size: 16,
+            color: '#fff'
           }
-        }
-      }, [h('Icon', {
-        props: {
-          type: 'md-checkmark',
-          size: 16,
-          color: '#green'
-        }
-      })]);
-    }
+        })]);
+      } else {
+        return h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            click: () => {
+              vm.$emit('on-inline-save', params);
+            }
+          }
+        }, [h('Icon', {
+          props: {
+            type: 'md-checkmark',
+            size: 16,
+            color: '#green'
+          }
+        })]);
+      }
+    
+
   },
   settlementRefund: (h, params, vm) => {
     const { row } = params;
