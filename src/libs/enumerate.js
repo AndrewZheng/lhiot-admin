@@ -2849,4 +2849,48 @@ export const receiveStatusEnum = [{
   label: '未领取',
   value: 'NO'
 }]
+//售后方式
+export const serviceModeEnum = [{
+  label: '补货',
+  value: 'REPLENISH'
+},
+{
+  label: '补款',
+  value: 'SUPPLEMENT'
+},
+{
+  label: '返仓',
+  value: 'REVERT'
+},{
+  label: '退运费',
+  value: 'ABNORMAL'
+},]
+//售后状态 
+export const serviceStatusEnum = [{
+  label: '待审核',
+  value: 'WAIT'
+},
+{
+  label: '审核拒绝',
+  value: 'AUDIT_REJECT'
+},{
+  label: '客户取消',
+  value: 'CANCEL'
+},
+{
+  label: '待财务确认',
+  value: 'WAIT_REVIEW'
+},
+{
+  label: '财务拒绝',
+  value: 'REVIEW_REJECT'
+},
+{
+  label: '售后中',
+  value: 'SERVICEING'
+},
+{
+  label: '售后完成',
+  value: 'FINISH'
+}]
 

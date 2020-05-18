@@ -1993,7 +1993,7 @@ export default {
       this.productStandardDetail.goodsImage = null;
     },
     goodsAreaChange(value) {
-      this.productDetail.goodsArea = value;
+      this.productStandardDetail.goodsArea = value;
     }
   }
 };

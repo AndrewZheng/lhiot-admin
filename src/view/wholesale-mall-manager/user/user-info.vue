@@ -80,6 +80,13 @@
               class="ptb2-5"
             >{{ item.label }}</Option>
           </Select>
+          <Cascader
+            change-on-select
+            :data="data"
+            placeholder="请选择区域"
+            class="search-col"
+            @on-change="onChangeCity"
+          ></Cascader>
           <DatePicker
             v-model="searchRowData.regBeginTime"
             format="yyyy-MM-dd HH:mm:ss"
@@ -349,6 +356,7 @@ import {
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 import deleteMixin from "@/mixins/deleteMixin.js";
+import city from "@/assets/city/city.js";
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
@@ -632,6 +640,7 @@ const userRowData = {
   userName: "",
   phone: "",
   userType: "sale",
+  city: "",
   page: 1,
   rows: 10
 };
@@ -731,6 +740,7 @@ export default {
       userTypeEnum,
       sexEnum,
       userColumns,
+      cityDaty: "",
       modalViewLoading: false,
       clearSearchLoading: false,
       exportExcelLoading: false,
@@ -738,7 +748,8 @@ export default {
       userDetail: _.cloneDeep(userDetail),
       columns: columns,
       userDetailChange: _.cloneDeep(userDetailChange),
-      searchUserRowData: _.cloneDeep(userRowData)
+      searchUserRowData: _.cloneDeep(userRowData),
+      data: []
     };
   },
   computed: {
@@ -750,6 +761,7 @@ export default {
     }
   },
   created() {
+    this.data = city;
     this.getTableData();
   },
   methods: {
@@ -798,7 +810,6 @@ export default {
       });
     },
     hanldeUser(params) {
-      console.log("转换会员类型", params.row.id);
       let userType = "";
       if (params.row.userType === "consumer") {
         userType = "sale";
@@ -1002,6 +1013,19 @@ export default {
         this.$Message.info("解锁成功");
         this.getTableData();
       });
+    },
+    onChangeCity(value, selectedData) {
+      let city = "";
+      let index = 1;
+      for (let i = 0; i < value.length; i++) {
+        if (value.length - index > 0) {
+          city += value[i] + "/";
+        } else {
+          city += value[i];
+        }
+        index++;
+      }
+      this.searchRowData.city = city;
     }
   }
 };

@@ -1606,6 +1606,120 @@ const btns = {
         ])
       ]);
     }
+  },
+  finish: (h, params, vm) => {
+    const { row } = params;
+    // 除了薪资未审核的其他不显示修改权限按钮
+    if (row.status === 'SERVICEING') {
+    return h('Tooltip', {
+      props: { placement: 'top',transfer:true,content:"售后完成" },
+    }, [
+    h('Button', {
+      props: {
+        type: 'info',
+        size: 'small'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        click: () => {
+          vm.$emit('on-finish', params);
+        }
+      }
+    }, [
+    h('Icon', {
+      props: {
+        type: 'md-checkmark-circle',
+        size: 16,
+        color: '#fff'
+      }
+    })
+    ])]);
+  }else{
+    return ""
   }
+  },
+  financeAudit: (h, params, vm) => {
+    const {
+      row
+    } = params;
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer:true,
+          title: '是否审核通过?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-audit', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top',transfer:true,content:"审核通过" },
+        }, [
+          h('Button', {
+          props: {
+            type: 'success',
+            size: 'small'
+          }
+          }, [
+          h('Icon', {
+            props: {
+              type: 'md-checkbox',
+              size: 16,
+              color: '#fff'
+            }
+          })
+          ])
+        ])
+      ]);
+  },
+  financeRefuse: (h, params, vm) => {
+    const {
+      row
+    } = params;
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer:true,
+          title: '是否拒绝审核?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-refuse', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top',transfer:true,content:"审核拒绝" },
+        }, [
+          h('Button', {
+          props: {
+            type: 'error',
+            size: 'small'
+          }
+          }, [
+          h('Icon', {
+            props: {
+              type: 'md-backspace',
+              size: 16,
+              color: '#fff'
+            }
+          })
+          ])
+        ])
+      ]);
+  },
 };
+
 export default btns;

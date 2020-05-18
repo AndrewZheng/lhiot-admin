@@ -104,8 +104,7 @@ class HttpRequest {
       this.destory(url);
       // 导出
       const { data, status, headers } = res;
-      // console.log('res frombackend: ', res);
-      if (headers['content-type'] === 'application/vnd.ms-excel;charset=UTF-8') {
+      if (headers['content-type'] === 'application/vnd.ms-excel;charset=utf-8') {
         return res.data;
       }
       // 后续再做修改
