@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="18"
+        :search-area-column="20"
         :operate-area-column="6"
         editable
         searchable
@@ -73,7 +73,7 @@
             <DatePicker
               v-model="searchRowData.beginDate"
               format="yyyy-MM-dd HH:mm:ss"
-              type="datetime"
+              type="date"
               placeholder="开始时间起"
               class="search-input"
               style="width: 150px"
@@ -83,7 +83,7 @@
             <DatePicker
               v-model="searchRowData.endDate"
               format="yyyy-MM-dd HH:mm:ss"
-              type="datetime"
+              type="date"
               placeholder="开始时间止"
               class="search-input mr5"
               style="width: 150px"
@@ -105,6 +105,9 @@
               @click="handleClear"
             >
               <Icon type="md-refresh" />&nbsp;清除
+            </Button>
+            <Button class="search-btn mr2" type="warning" @click="handleDownload">
+              <Icon type="md-download" />导出数据
             </Button>
           </Row>
         </div>
@@ -403,7 +406,9 @@ const roleRowData = {
   beginDate: "",
   endDate: "",
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx: "createTime",
+  sort: "desc"
 };
 
 export default {
@@ -464,6 +469,11 @@ export default {
           key: "phone"
         },
         {
+          title: "评价时间",
+          align: "center",
+          key: "createTime"
+        },
+        {
           title: "骑手评价",
           align: "center",
           key: "deliveryComment",
@@ -511,7 +521,15 @@ export default {
           align: "center",
           width: 200,
           key: "commentContent",
-          tooltip: true
+          tooltip: true,
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.commentSource != "USER") {
+              return <div>{"系统评价"}</div>;
+            } else {
+              return <div>{row.commentContent}</div>;
+            }
+          }
         },
         {
           title: "回复评价",
@@ -557,7 +575,6 @@ export default {
     replyEvaluate() {
       replyEvaluate(this.evaluateDetail)
         .then(res => {
-          console.log("接口返回", res);
           this.modalEdit = false;
           this.getTableData();
         })
@@ -587,6 +604,17 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
+      if (this.searchRowData.beginDate) {
+        this.searchRowData.beginDate = this.$moment(
+          this.searchRowData.beginDate
+        ).format("YYYY-MM-DD HH:mm:ss");
+      }
+      if (this.searchRowData.endDate) {
+        this.searchRowData.endDate = this.$moment(
+          this.searchRowData.endDate
+        ).format("YYYY-MM-DD HH:mm:ss");
+      }
+
       getEvaluatePages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
@@ -603,9 +631,7 @@ export default {
         });
     },
     beginTimeChange(value, date) {
-      console.log("时间", value);
       this.evaluateDetail.beginDate = value;
-      console.log("时间1", this.evaluateDetail.beginDate);
     },
     endTimeChange(value, date) {
       this.evaluateDetail.endDate = value;
@@ -624,6 +650,28 @@ export default {
     handleUploadView(item) {
       this.imgUploadViewItem = item;
       this.uploadVisible = true;
+    },
+    // 导出数据
+    handleDownload() {
+      // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
+      this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      getEvaluatePages(this.searchRowData).then(res => {
+        const tableData = res.rows;
+        // 恢复正常页数
+        this.searchRowData.rows = 10;
+        // 表格数据导出字段翻译
+        let _this = this;
+        tableData.forEach(item => {
+          item["deliveryComment"] = deliveryTypeConvert(
+            item["deliveryComment"]
+          ).label;
+          item["commentScore"] = item["commentScore"] + "星";
+        });
+        this.$refs.tables.handleDownload({
+          filename: `用户评价数据-${new Date().valueOf()}`,
+          data: tableData
+        });
+      });
     }
   }
 };

@@ -65,9 +65,6 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
-          <div class="ml15 mt10">
-            <i style="color:red">*</i> 仅限开启两个活动!
-          </div>
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addFlashsale">

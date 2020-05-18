@@ -455,20 +455,20 @@ export default {
       }
     },
     handleEditClose() {
-      if (this.newPicture.length > 0) {
-        const urls = { urls: this.newPicture };
-        this.deletePicture(urls);
-      }
+      // if (this.newPicture.length > 0) {
+      //   const urls = { urls: this.newPicture };
+      //   this.deletePicture(urls);
+      // }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
     },
-    deletePicture(urls) {
-      deletePicture({
-        urls
-      })
-        .then(res => {})
-    },
+    // deletePicture(urls) {
+    //   deletePicture({
+    //     urls
+    //   })
+    //     .then(res => {})
+    // },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
       this.taskDetail.taskImage = null;

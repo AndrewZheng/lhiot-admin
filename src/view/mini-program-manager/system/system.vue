@@ -19,7 +19,7 @@
         @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
-          <Row  v-if="this.$route.name != 'small-relation-system'">
+          <Row v-if="this.$route.name != 'small-relation-system'">
             <Input
               v-model="searchRowData.indexName"
               placeholder="键"
@@ -219,10 +219,21 @@
             </Col>
           </Row>
           <Row>
-            <Col span="20">
+            <Col span="20" v-show="this.$route.name === 'small-relation-system'">
               <FormItem label="分类ID:" prop="categoryId">
-                <!-- <InputNumber :min="0" v-model="systemDetail.categoryId" placeholder="分类id"></InputNumber> -->
                 <Cascader
+                  disabled
+                  :data="skipData"
+                  v-model="defaultData"
+                  span="21"
+                  @on-change="systemCategoryChange"
+                ></Cascader>
+              </FormItem>
+            </Col>
+            <Col span="20" v-show="this.$route.name != 'small-relation-system'">
+              <FormItem label="分类ID:" prop="categoryId">
+                <Cascader
+                  change-on-select
                   :data="systemCategoryData"
                   v-model="defaultSystemCategoryData"
                   span="21"
@@ -320,6 +331,12 @@ export default {
           width: 80
         },
         {
+          title: "分类名称",
+          key: "categoriesName",
+          align: "center",
+          width: 130
+        },
+        {
           title: "键",
           align: "center",
           key: "indexName"
@@ -336,12 +353,6 @@ export default {
           key: "description"
         },
         {
-          title: "分类ID",
-          align: "center",
-          key: "categoryId",
-          width: 80
-        },
-        {
           title: "操作",
           align: "center",
           width: 180,
@@ -349,6 +360,8 @@ export default {
           options: ["view", "edit", "delete"]
         }
       ],
+      skipData: [],
+      defaultData: [],
       systemCategoryData: [],
       defaultSystemCategoryData: [41],
       systemCategoriesTreeList: [],
@@ -380,6 +393,10 @@ export default {
       this.systemDetail.description = null;
     },
     handleSubmit(name) {
+      if (this.$route.name === "small-relation-system") {
+        const systemInfos = getSmallGoodsStandard();
+        this.systemDetail.categoryId = systemInfos.id;
+      }
       this.$refs[name].validate(valid => {
         if (valid) {
           this.systemDetail.indexValue = this.systemDetail.indexValue.replace(
@@ -486,7 +503,22 @@ export default {
     getTableData() {
       if (this.$route.name === "small-relation-system") {
         const systemInfos = getSmallGoodsStandard();
+        this.skipArr = systemInfos;
         this.searchRowData.categoryId = systemInfos.id;
+        this.skipData = [];
+        this.skipData = [
+          {
+            value: this.skipArr.parentid,
+            label: this.skipArr.parentName,
+            children: [
+              {
+                value: this.skipArr.id,
+                label: this.skipArr.categoriesName
+              }
+            ]
+          }
+        ];
+        this.defaultData = [this.skipArr.parentid, this.skipArr.id];
       }
       getSystemSettingPages(this.searchRowData)
         .then(res => {
@@ -534,6 +566,7 @@ export default {
             };
             this.systemCategoryData = convertTreeCategory(menuList, map, true);
             this.createLoading = false;
+            console.log("级联数据", this.systemCategoryData);
           }
         })
         .catch(() => {

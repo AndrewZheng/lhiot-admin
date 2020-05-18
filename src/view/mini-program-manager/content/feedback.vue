@@ -236,8 +236,8 @@ const roleRowData = {
   rows: 10,
   status: null,
   title: "",
-  sidx: "create_time",
-  sort: "desc"
+  sidx: "createTime",
+  sord: "desc"
 };
 
 export default {

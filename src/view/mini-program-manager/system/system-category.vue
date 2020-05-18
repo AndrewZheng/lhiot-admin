@@ -35,6 +35,13 @@
                 class="ptb2-5"
               >{{ item.categoriesName }}</Option>
             </Select>
+            <Input
+              v-model="searchRowData.categoriesName"
+              placeholder="分类名称"
+              class="search-input mr5"
+              style="width: 150px"
+              clearable
+            ></Input>
             <Button
               :loading="searchLoading"
               class="search-btn mr5"
@@ -196,7 +203,8 @@ const systemCategoryDetail = {
 const roleRowData = {
   page: 1,
   rows: 10,
-  parentId:2
+  parentId: 2,
+  categoriesName: ""
 };
 
 export default {
@@ -234,11 +242,6 @@ export default {
           title: "分类名称",
           align: "center",
           key: "categoriesName"
-        },
-        {
-          title: "父级分类ID",
-          align: "center",
-          key: "parentId"
         },
         {
           title: "父级分类名称",
@@ -452,11 +455,13 @@ export default {
     },
     handleSetting(params) {
       var rows = params.row;
+      console.log("设置数据", rows);
       setSmallGoodsStandard(rows);
       this.turnToPage({
         name: "small-relation-system",
         params: {
           parentName: rows.parentName,
+          parentId: rows.parentId,
           categoriesName: rows.categoriesName,
           id: rows.id
         }

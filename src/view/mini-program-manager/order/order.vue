@@ -208,7 +208,13 @@
           <Button :loading="downloadLoading" class="search-btn" type="info" @click="couponDetails">
             <Icon type="md-search" />&nbsp;用券数据
           </Button>
-          <Button :loading="downloadLoading" class="search-btn" style="margin-top:5px" type="info" @click="monthOrder">
+          <Button
+            :loading="downloadLoading"
+            class="search-btn"
+            style="margin-top:5px"
+            type="info"
+            @click="monthOrder"
+          >
             <Icon type="md-search" />&nbsp;跨月退款数据
           </Button>
           <!-- <Poptip
@@ -894,6 +900,18 @@ export default {
                 </div>
               );
             } else if (row.payType === "balance") {
+              return (
+                <div>
+                  <tag color="pink">{payTypeConvert(row.payType).label}</tag>
+                </div>
+              );
+            } else if (row.payType === "haiding") {
+              return (
+                <div>
+                  <tag color="warning">{payTypeConvert(row.payType).label}</tag>
+                </div>
+              );
+            } else if (row.payType === "points") {
               return (
                 <div>
                   <tag color="pink">{payTypeConvert(row.payType).label}</tag>
