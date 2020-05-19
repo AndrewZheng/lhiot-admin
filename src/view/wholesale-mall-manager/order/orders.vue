@@ -115,6 +115,13 @@
               style="width: 150px"
               @on-change="endTimeChange"
             />
+            <Cascader
+              change-on-select
+              :data="data"
+              placeholder="请选择区域"
+              class="search-col"
+              @on-change="onChangeCity"
+            ></Cascader>
             <Button
               v-waves
               :loading="searchLoading"
@@ -426,6 +433,7 @@ import {
 import getLodop from "@/assets/lodop/lodopFuncs.js";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
+import city from "@/assets/city/city.js";
 import { fenToYuanDot2, fenToYuanDot2Number } from "@/libs/util";
 import {
   orderStatusEnum,
@@ -489,7 +497,8 @@ const roleRowData = {
   sort: "desc",
   orderCodes: "",
   userName: "",
-  hdCode: ""
+  hdCode: "",
+  deliveryAddress: ""
 };
 
 const goodsDetail = {
@@ -670,7 +679,7 @@ const orderColumns = [
     render(h, params, vm) {
       const { row } = params;
       const address = JSON.parse(row.deliveryAddress);
-      return <div>{address.addressArea + address.addressDetail}</div>;
+      return <div>{address.addressArea}</div>;
     }
   },
   {
@@ -888,6 +897,7 @@ export default {
       currentSaleUserId: 0,
       exportType: "", // ORDER_GOODS,DELIVERY_NOTE
       tableDataSelected: [],
+      data: [],
       selectedOrderCodes: "",
       flag: true,
       printFlag: null,
@@ -909,6 +919,7 @@ export default {
     this.salesmanName = this.$route.query.salesmanName
       ? this.$route.query.salesmanName
       : "N/A";
+    this.data = city;
     this.getTableData();
   },
   methods: {
@@ -1347,7 +1358,20 @@ export default {
       otabTotal.innerHTML = "";
       this.flag = true;
       this.printFlag = true;
-    }
+    },
+    onChangeCity(value, selectedData) {
+      let city = "";
+      let index = 1;
+      for (let i = 0; i < value.length; i++) {
+        if (value.length - index > 0) {
+          city += value[i] + "/";
+        } else {
+          city += value[i];
+        }
+        index++;
+      }
+      this.searchRowData.deliveryAddress = city;
+    },
   }
 };
 </script>

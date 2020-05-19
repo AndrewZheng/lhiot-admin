@@ -128,7 +128,7 @@
       </div>
     </Card>
     <!--查看/审核售后订单详情-->
-    <Modal v-model="modalView" :width="1280" :mask-closable="false">
+    <Modal v-model="modalView" :width="1280" :mask-closable="false" :styles="{bottom: '20px'}">>
       <p slot="header">
         <i-col>{{ tempModalType===modalType.view?'查看售后订单':'审核售后订单' }}</i-col>
       </p>
@@ -359,26 +359,21 @@
         <Row style="margin-top:10px">
           <i-col span="10">
             <Row>
-              <i-col span="6">退款总金额：{{allMoney | fenToYuanDot2Filters}}</i-col>
+              <i-col span="6">退款总金额：{{afterMsg.refundAmount | fenToYuanDot2Filters}}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row>
           <i-col span="10">
             <Row class="check">
-              <!-- <input type="checkbox" @click="dateGroupChange" ref="status" style="margin-right:5px" /> -->
-              <i-col span="6">退运费金额：{{orderDetail.deliveryFee | fenToYuanDot2Filters}}</i-col>
-              <RadioGroup v-model="deliveryFeeGroup" @on-change="dateGroupChange">
-                <Radio label="是" disabled></Radio>
-                <Radio label="否" disabled></Radio>
-              </RadioGroup>
+              <i-col span="6">退运费金额：{{afterMsg.refundFreightAmount | fenToYuanDot2Filters}}</i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer" v-show="afterMsg.status==='WAIT_REVIEW'">
-        <Button type="error" @click="hanldeFinanceAudit('refuse')">审核通过</Button>
-        <Button type="primary" @click="hanldeFinanceRefuse('pass')">审核拒绝</Button>
+        <Button type="primary" @click="hanldeFinanceAudit('refuse')">审核通过</Button>
+        <Button type="error" @click="hanldeFinanceRefuse('pass')">审核拒绝</Button>
       </div>
     </Modal>
     <Modal v-model="uploadVisible" title="图片预览">
@@ -1136,7 +1131,7 @@ export default {
             } else if (row.status === "REVIEW_REJECT") {
               return (
                 <div>
-                  <tag color="success">
+                  <tag color="error">
                     {serviceStatusConvert(row.status).label}
                   </tag>
                 </div>
@@ -1152,7 +1147,7 @@ export default {
             } else if (row.status === "FINISH") {
               return (
                 <div>
-                  <tag color="blue">
+                  <tag color="success">
                     {serviceStatusConvert(row.status).label}
                   </tag>
                 </div>
