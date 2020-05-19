@@ -1548,8 +1548,9 @@ export default {
           item["isAllRefund"] = isAllRefundConvert(item["isAllRefund"]).label;
           item["recieveTime"] = item["recieveTime"];
         });
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
-          filename: `普通订单信息-${new Date().valueOf()}`,
+          filename: `普通订单信息-${date}`,
           data: tableData
         });
       });

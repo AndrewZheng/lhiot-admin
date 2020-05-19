@@ -1911,8 +1911,9 @@ export default {
             item["shelvesStatus"]
           ).label;
         });
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
-          filename: `商品规格-${new Date().valueOf()}`,
+          filename: `商品规格-${date}`,
           data: tableData
         });
       });

@@ -1091,12 +1091,6 @@ export default {
         }).then(res => {
           const tableData = res.rows;
           const tableColumns = res.columns;
-          // 表格数据导出字段翻译
-          // tableData.forEach(item => {
-          //   item['orderCode'] = item['orderCode'] + '';
-          //   item['goodsPrice'] = (item['totalAmount'] / 100.0).toFixed(2);
-          //   item['sumPrice'] = (item['couponAmount'] / 100.0).toFixed(2);
-          // });
           this.$refs.tables.handleCustomDownload({
             filename: `订单商品信息-${date}`,
             data: tableData,
@@ -1261,7 +1255,9 @@ export default {
               strData += "<tr align='center' style='height:30px;'>";
               strData += '<td colspan="2">' + "客户备注" + "</td>";
               strData +=
-                '<td colspan="8">' + _this.orderDetail.remarks + "</td>";
+                '<td colspan="8">' + _this.orderDetail.remarks == "null"
+                  ? ""
+                  : _this.orderDetail.remarks + "</td>";
               strData += "</tr>";
               strData +=
                 "<tr align='center' style='backgroung:#ccc;height:30px'>";

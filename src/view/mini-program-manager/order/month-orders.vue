@@ -540,8 +540,9 @@ export default {
           item["status"] = miniOrderStatusConvert(item["status"]).label;
           // console.log("时间",item["refundAt"])
         });
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
-          filename: `跨月退款订单数据-${new Date().valueOf()}`,
+          filename: `跨月退款订单数据-${date}`,
           data: tableData
         });
       });

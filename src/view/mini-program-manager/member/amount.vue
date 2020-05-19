@@ -478,8 +478,9 @@ export default {
           item["canOutAmount"] = (item["canOutAmount"] / 100.0).toFixed(2);
           item["allOutAmount"] = (item["allOutAmount"] / 100.0).toFixed(2);
         });
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
-          filename: `邀请有礼数据统计-${new Date().valueOf()}`,
+          filename: `邀请有礼数据统计-${date}`,
           data: tableData
         });
       });

@@ -682,8 +682,9 @@ export default {
           }
           item["couponConfigId"] = Number(item["couponConfigId"]);
         });
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables1.handleDownload({
-          filename: `助力抢爆品单品数据统计-${new Date().valueOf()}`,
+          filename: `助力抢爆品单品数据统计-${date}`,
           data: tableData2
         });
       });

@@ -330,8 +330,9 @@ export default {
           ).label;
           item["status"] = miniOrderStatusConvert(item["status"]).label;
         });
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
-          filename: `用券数据信息-${new Date().valueOf()}`,
+          filename: `用券数据信息-${date}`,
           data: tableData
         });
       });
