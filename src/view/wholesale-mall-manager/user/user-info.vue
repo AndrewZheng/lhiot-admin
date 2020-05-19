@@ -254,7 +254,7 @@
         <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
       </div>
     </Modal>
-    <!-- v1.2.0 迁移门店转换 -->
+  
     <Modal v-model="modalUser" :width="1000" title="业务员选择">
       <Card>
         <tables
