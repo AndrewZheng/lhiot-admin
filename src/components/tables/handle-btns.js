@@ -298,7 +298,7 @@ const btns = {
   },
   userChange: (h, params, vm) => {
     const { row } = params;
-    if (row.userType === 'consumer') {
+    if (row.userType === 'consumer'&&(row.loginName === 'admin' || row.loginName === 'wygl_operator' || row.loginName === 'lhgy_lvA' || row.loginName === 'qgg_operator')) {
       return h('Tooltip', {
         props: { placement: 'top', transfer: true, content: '更换所属业务员' }
       }, [

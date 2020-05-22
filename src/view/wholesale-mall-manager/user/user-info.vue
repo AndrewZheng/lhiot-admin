@@ -254,7 +254,7 @@
         <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
       </div>
     </Modal>
-  
+
     <Modal v-model="modalUser" :width="1000" title="业务员选择">
       <Card>
         <tables
@@ -730,6 +730,8 @@ export default {
       userData: [],
       salesManList: [],
       selectedUserIds: [],
+      data: [],
+      loginName: "",
       currentSalesId: null,
       assginSalesUserId: null,
       modalUser: false,
@@ -748,8 +750,7 @@ export default {
       userDetail: _.cloneDeep(userDetail),
       columns: columns,
       userDetailChange: _.cloneDeep(userDetailChange),
-      searchUserRowData: _.cloneDeep(userRowData),
-      data: []
+      searchUserRowData: _.cloneDeep(userRowData)
     };
   },
   computed: {
@@ -763,6 +764,7 @@ export default {
   created() {
     this.data = city;
     this.getTableData();
+    this.loginName = sessionStorage.getItem("loginName");
   },
   methods: {
     resetSearchUserRowData() {
@@ -770,6 +772,9 @@ export default {
     },
     getTableData() {
       getUserPages(this.searchRowData).then(res => {
+        for (let i = 0; i < res.rows.length; i++) {
+          res.rows[i].loginName = this.loginName;
+        }
         this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;
