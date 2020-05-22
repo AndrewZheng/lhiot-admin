@@ -428,6 +428,7 @@
                   file-dir="product"
                   multiple
                   @on-success="handleSuccessMultiple"
+                  v-show="fileListLength<2"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
                     <Icon type="ios-camera" size="20"></Icon>
@@ -483,7 +484,11 @@
               <Row>
                 <i-col span="12">
                   <FormItem label="商品单位:" prop="unitCode" style="width:180px;">
-                    <Select v-model="productStandardDetail.unitCode" @on-change="unitChange"  style="width:100px;">
+                    <Select
+                      v-model="productStandardDetail.unitCode"
+                      @on-change="unitChange"
+                      style="width:100px;"
+                    >
                       <Option
                         v-for="(item,index) in unitsList"
                         :value="item.value"
@@ -494,7 +499,7 @@
                     </Select>
                   </FormItem>
                 </i-col>
-              </Row> 
+              </Row>
             </i-col>
           </Row>
           <Row>
@@ -1230,6 +1235,7 @@ export default {
       productTotal: 0,
       downloadLoading: false,
       regionTotal: 0,
+      fileListLength: 0,
       unitsList: [],
       productDetailsList: [],
       productDetailsList: [],
@@ -1936,6 +1942,8 @@ export default {
     },
     // 上架规格描述图
     handleSuccessMultiple(response, file, fileList) {
+      console.log("图片数组", fileList.length);
+      this.fileListLength = fileList.length;
       this.uploadListMultiple = fileList;
       this.productDetailsList = [];
       fileList.forEach(value => {

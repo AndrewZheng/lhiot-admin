@@ -354,7 +354,7 @@
                   class="demo-upload-list"
                 >
                   <div>
-                    <img :src="item" >
+                    <img :src="item" />
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                     </div>
@@ -414,128 +414,135 @@
       </div>
     </Modal>
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" >
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
+import Tables from "_c/tables";
 import {
   getAfterSalePages,
   getOrderDetail,
   getOrderGoods,
   getPassAudit,
   getRefuseAudit,
-  getSaleFinish
-} from '@/api/wholesale';
-import { fenToYuanDot2, fenToYuanDot2Number, download } from '@/libs/util';
-import { hasOneOf } from '@/libs/tools';
-import { serviceModeEnum, serviceStatusEnum } from '@/libs/enumerate';
-import { serviceModeConvert, serviceStatusConvert } from '@/libs/converStatus';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
+  getSaleFinish,
+  getProductUnitsPages
+} from "@/api/wholesale";
+import { fenToYuanDot2, fenToYuanDot2Number, download } from "@/libs/util";
+import { hasOneOf } from "@/libs/tools";
+import { serviceModeEnum, serviceStatusEnum } from "@/libs/enumerate";
+import { serviceModeConvert, serviceStatusConvert } from "@/libs/converStatus";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
 
 const orderDetail = {
-  addressDetail: '',
-  afterSaleTime: '',
-  afterStatus: '',
-  checkStatus: '',
-  createTime: '',
-  createTimeBegin: '',
-  createTimeEnd: '',
-  currentOrderStatus: '',
-  deliveryAddress: '',
+  addressDetail: "",
+  afterSaleTime: "",
+  afterStatus: "",
+  checkStatus: "",
+  createTime: "",
+  createTimeBegin: "",
+  createTimeEnd: "",
+  currentOrderStatus: "",
+  deliveryAddress: "",
   deliveryFee: 0,
-  deliveryTime: '',
-  discountFee: '',
-  hdCode: '',
-  hdStatus: '',
-  id: '',
-  invoiceStatus: '',
-  needPay: '',
-  notHdStatus: '',
-  orderCode: '',
-  orderCoupon: '',
+  deliveryTime: "",
+  discountFee: "",
+  hdCode: "",
+  hdStatus: "",
+  id: "",
+  invoiceStatus: "",
+  needPay: "",
+  notHdStatus: "",
+  orderCode: "",
+  orderCoupon: "",
   orderGoodsList: [],
-  orderStatus: '',
-  delivery: '',
-  orderStatusIn: '',
-  payStatus: '',
-  payableFee: '',
-  paymentTime: '',
-  phone: '',
-  receiveTime: '',
-  refundFee: '',
-  remarks: '',
-  saleUserName: '',
-  salesmanId: '',
-  settlementType: '',
-  shopCode: '',
-  shopName: '',
-  totalFee: '',
-  userId: '',
-  userName: '',
+  orderStatus: "",
+  delivery: "",
+  orderStatusIn: "",
+  payStatus: "",
+  payableFee: "",
+  paymentTime: "",
+  phone: "",
+  receiveTime: "",
+  refundFee: "",
+  remarks: "",
+  saleUserName: "",
+  salesmanId: "",
+  settlementType: "",
+  shopCode: "",
+  shopName: "",
+  totalFee: "",
+  userId: "",
+  userName: "",
   isEdit: false
 };
 
 const afterMsg = {
-  id: '',
-  userId: '',
-  orderId: '',
-  remark: '',
-  images: '',
-  phone: '',
-  serviceMode: '',
-  status: '',
+  id: "",
+  userId: "",
+  orderId: "",
+  remark: "",
+  images: "",
+  phone: "",
+  serviceMode: "",
+  status: "",
   statusList: null,
   createTime: null,
-  orderGoods: '',
-  serviceGoods: '',
-  replenishGoods: '',
+  orderGoods: "",
+  serviceGoods: "",
+  replenishGoods: "",
   refundAmount: 0,
   refundFreightAmount: 0,
   totalRefundAmount: 0,
-  serviceReason: '',
-  auditUser: '',
+  serviceReason: "",
+  auditUser: "",
   auditTime: null,
-  reviewUser: '1',
+  reviewUser: "1",
   reviewTime: null,
   finishTime: null,
   order: {},
   postSaleGoods: []
 };
 
-const compensateDetail = [{
-  orderGoods: {},
-  postSaleGoods: {}
-}];
+const compensateDetail = [
+  {
+    orderGoods: {},
+    postSaleGoods: {}
+  }
+];
 
 const rowData = {
   page: 1,
   rows: 20,
-  startTime: '',
-  endTime: '',
-  orderCode: '',
-  hdCode: '',
-  userName: '',
-  phone: '',
-  serviceMode: '',
-  status: 'WAIT',
-  sidx: 'createTime',
-  sort: 'desc'
+  startTime: "",
+  endTime: "",
+  orderCode: "",
+  hdCode: "",
+  userName: "",
+  phone: "",
+  serviceMode: "",
+  status: "WAIT",
+  sidx: "createTime",
+  sort: "desc"
 };
-
+const roleRowData = {
+  unitName: "",
+  page: 1,
+  rows: 20
+};
 // 地址对象
 const deliveryInfo = {
   id: 0,
   sex: null,
-  phone: '',
-  addressDetail: '',
-  addressArea: '',
-  isDefault: '',
+  phone: "",
+  addressDetail: "",
+  addressArea: "",
+  isDefault: "",
   userId: 0,
-  contactsName: ''
+  contactsName: ""
 };
 
 // 商品对象
@@ -543,20 +550,20 @@ const goodsDetail = {
   discountGoodsPrice: 0,
   flash: 0,
   goodsId: 0,
-  goodsImage: '',
-  goodsName: '',
+  goodsImage: "",
+  goodsName: "",
   goodsPrice: 0,
   goodsStandardId: 0,
-  hdSkuId: '',
+  hdSkuId: "",
   id: 0,
   orderId: 0,
-  paymentTime: '',
+  paymentTime: "",
   purchasePrice: 0,
   quanity: 0,
-  refundStatus: '',
-  standard: '',
+  refundStatus: "",
+  standard: "",
   standardWeight: 0,
-  unitName: '',
+  unitName: "",
   userId: 0
 };
 
@@ -571,88 +578,88 @@ const postSaleAudit = {
 // 商品列表
 const goodsColumns = [
   {
-    title: '商品编号',
-    key: 'goodsId'
+    title: "商品编号",
+    key: "goodsId"
   },
   {
-    title: '商品名称',
-    key: 'goodsName'
+    title: "商品名称",
+    key: "goodsName"
   },
   {
-    title: '商品图片',
-    key: 'goodsImage',
-    align: 'center',
+    title: "商品图片",
+    key: "goodsImage",
+    align: "center",
     maxWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
-      const str = <img src={row.goodsImage} height='60' width='60' />;
+      const str = <img src={row.goodsImage} height="60" width="60" />;
       return <div>{str}</div>;
     }
   },
   {
-    title: '商品规格',
-    key: 'standard'
+    title: "商品规格",
+    key: "standard"
   },
   {
-    title: '购买数量',
-    key: 'quanity'
+    title: "购买数量",
+    key: "quanity"
   },
   {
-    title: '商品单位',
-    key: 'unitName'
+    title: "商品单位",
+    key: "unitName"
   },
   {
-    title: '商品单价',
-    key: 'goodsPrice',
+    title: "商品单价",
+    key: "goodsPrice",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.goodsPrice);
       return <div>{amount}</div>;
     }
   },
   {
-    title: '折扣价',
-    key: 'discountGoodsPrice',
+    title: "折扣价",
+    key: "discountGoodsPrice",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.discountGoodsPrice);
       return <div>{amount}</div>;
     }
   },
   {
-    title: '是否限时抢购',
-    key: 'flash',
+    title: "是否限时抢购",
+    key: "flash",
     render(h, params, vm) {
       if (params.row.flash === 0) {
         return (
           <div>
-            <tag color='success'>普通商品</tag>
+            <tag color="success">普通商品</tag>
           </div>
         );
       } else if (params.row.flash === 1) {
         return (
           <div>
-            <tag color='error'>限时抢购</tag>
+            <tag color="error">限时抢购</tag>
           </div>
         );
       }
     }
   },
   {
-    title: '退货状态',
+    title: "退货状态",
     minWidth: 80,
-    key: 'refundStatus',
-    align: 'center',
+    key: "refundStatus",
+    align: "center",
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.refundStatus === 'yes') {
+      if (row.refundStatus === "yes") {
         return (
           <div>
-            <tag color='error'>已退货</tag>
+            <tag color="error">已退货</tag>
           </div>
         );
       } else {
         return (
           <div>
-            <tag color='success'>未退货</tag>
+            <tag color="success">未退货</tag>
           </div>
         );
       }
@@ -663,180 +670,193 @@ const goodsColumns = [
 // 补损信息列表
 const compensateColumns = [
   {
-    title: '商品名称',
-    key: 'goodsName',
-    align: 'center',
+    title: "商品名称",
+    key: "goodsName",
+    align: "center",
     render(h, params, vm) {
-      const data = !params.row.orderGoods.goodsName ? '' : params.row.orderGoods.goodsName;
+      const data = !params.row.orderGoods.goodsName
+        ? ""
+        : params.row.orderGoods.goodsName;
       return <div>{data}</div>;
     }
   },
   {
-    title: '商品规格',
-    key: 'standard',
-    align: 'center',
+    title: "商品规格",
+    key: "standard",
+    align: "center",
     render(h, params, vm) {
-      const data = !params.row.orderGoods.standard ? '' : params.row.orderGoods.standard;
+      const data = !params.row.orderGoods.standard
+        ? ""
+        : params.row.orderGoods.standard;
       return <div>{data}</div>;
     }
   },
   {
-    title: '购买数量',
-    key: 'quanity',
-    align: 'center',
+    title: "购买数量",
+    key: "quanity",
+    align: "center",
     render(h, params, vm) {
-      const data = !params.row.orderGoods.quanity ? '' : params.row.orderGoods.quanity;
+      const data = !params.row.orderGoods.quanity
+        ? ""
+        : params.row.orderGoods.quanity;
       return <div>{data}</div>;
     }
   },
   {
-    title: '商品单位',
-    key: 'goodsUnit',
-    align: 'center',
+    title: "商品单位",
+    key: "goodsUnit",
+    align: "center",
     render(h, params, vm) {
-      const data = !params.row.orderGoods.goodsUnit ? '' : params.row.orderGoods.goodsUnit;
+      const data = !params.row.orderGoods.goodsUnit
+        ? ""
+        : params.row.orderGoods.goodsUnit;
       return <div>{data}</div>;
     }
   },
   {
-    title: '商品折后单价',
-    key: 'discountGoodsPrice',
-    align: 'center',
+    title: "商品折后单价",
+    key: "discountGoodsPrice",
+    align: "center",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.orderGoods.discountGoodsPrice);
       return <div>{amount}</div>;
     }
   },
   {
-    title: '商品总价',
-    key: 'discountGoodsPrice',
-    align: 'center',
+    title: "商品总价",
+    key: "discountGoodsPrice",
+    align: "center",
     render(h, params, vm) {
-      const amount = fenToYuanDot2(params.row.orderGoods.quanity * params.row.orderGoods.discountGoodsPrice);
+      const amount = fenToYuanDot2(
+        params.row.orderGoods.quanity * params.row.orderGoods.discountGoodsPrice
+      );
       return <div>{amount}</div>;
     }
   },
   {
-    title: '商品类型',
-    key: 'flash',
-    align: 'center',
+    title: "商品类型",
+    key: "flash",
+    align: "center",
     render(h, params, vm) {
       if (params.row.orderGoods.flash === 0) {
         return (
           <div>
-            <tag color='primary'>普通</tag>
+            <tag color="primary">普通</tag>
           </div>
         );
       } else if (params.row.orderGoods.flash === 1) {
         return (
           <div>
-            <tag color='pink'>抢购</tag>
+            <tag color="pink">抢购</tag>
           </div>
         );
       }
     }
   },
   {
-    title: '售后方式',
-    key: 'serviceMode',
-    align: 'center',
+    title: "售后方式",
+    key: "serviceMode",
+    align: "center",
     render: (h, params) => {
       if (params.row.isEdit) {
         return h(
-          'Select',
+          "Select",
           {
             props: {
-              value: params.row.postSaleGoods.serviceMode
+              value: params.row.postSaleGoods.serviceMode,
+              transfer: true,
             },
             style: {
-              width: '100%',
-              height: '100%',
-              padding: '0 0 170px 0'
+              width: "100%",
+              height: "100%"
             },
             on: {
-              'on-change': event => {
+              "on-change": event => {
                 params.row.postSaleGoods.serviceMode = event;
               }
             }
           },
           [
             h(
-              'Option',
+              "Option",
               {
                 props: {
-                  value: 'NORMAL'
+                  value: "NORMAL"
                 }
               },
-              '正常'
+              "正常"
             ),
             h(
-              'Option',
+              "Option",
               {
                 props: {
-                  value: 'ABNORMAL'
+                  value: "ABNORMAL"
                 }
               },
-              '异常'
+              "异常"
             ),
             h(
-              'Option',
+              "Option",
               {
                 props: {
-                  value: 'REPLENISH'
+                  value: "REPLENISH"
                 }
               },
-              '补货'
+              "补货"
             ),
             h(
-              'Option',
+              "Option",
               {
                 props: {
-                  value: 'SUPPLEMENT'
+                  value: "SUPPLEMENT"
                 }
               },
-              '补款'
+              "补款"
             ),
             h(
-              'Option',
+              "Option",
               {
                 props: {
-                  value: 'REVERT'
+                  value: "REVERT"
                 }
               },
-              '返仓'
+              "返仓"
             )
           ]
         );
       } else {
-        if (params.row.postSaleGoods.serviceMode === 'NORMAL') {
-          return h('div', '正常');
-        } else if (params.row.postSaleGoods.serviceMode === 'ABNORMAL') {
-          return h('div', '异常');
-        } else if (params.row.postSaleGoods.serviceMode === 'REPLENISH') {
-          return h('div', '补货');
-        } else if (params.row.postSaleGoods.serviceMode === 'SUPPLEMENT') {
-          return h('div', '补款');
-        } else if (params.row.postSaleGoods.serviceMode === 'REVERT') {
-          return h('div', '返仓');
+        if (params.row.postSaleGoods.serviceMode === "NORMAL") {
+          return h("div", "正常");
+        } else if (params.row.postSaleGoods.serviceMode === "ABNORMAL") {
+          return h("div", "异常");
+        } else if (params.row.postSaleGoods.serviceMode === "REPLENISH") {
+          return h("div", "补货");
+        } else if (params.row.postSaleGoods.serviceMode === "SUPPLEMENT") {
+          return h("div", "补款");
+        } else if (params.row.postSaleGoods.serviceMode === "REVERT") {
+          return h("div", "返仓");
         }
       }
     }
   },
   {
-    title: '售后原因',
-    key: 'serviceReason',
-    width: '200px',
-    align: 'center',
+    title: "售后原因",
+    key: "serviceReason",
+    width: "200px",
+    align: "center",
     render: (h, params) => {
-      if (params.row.isEdit && params.row.postSaleGoods.serviceMode != 'NORMAL') {
-        return h('Form', [
-          h('Input', {
+      if (
+        params.row.isEdit &&
+        params.row.postSaleGoods.serviceMode != "NORMAL"
+      ) {
+        return h("Form", [
+          h("Input", {
             style: {
-              marginLeft: '4px',
-              width: '100%'
+              marginLeft: "4px",
+              width: "100%"
             },
             props: {
-              type: 'textarea',
+              type: "textarea",
               rows: 4,
               value: params.row.postSaleGoods.serviceReason
             },
@@ -848,26 +868,28 @@ const compensateColumns = [
           })
         ]);
       } else {
-        return h('div', params.row.postSaleGoods.serviceReason);
+        return h("div", params.row.postSaleGoods.serviceReason);
       }
     }
   },
   {
-    title: '售后数量',
-    key: 'quantity',
-    align: 'center',
+    title: "售后数量",
+    key: "quantity",
+    align: "center",
     render: (h, params) => {
-      if (params.row.isEdit && params.row.isEdit && params.row.postSaleGoods.serviceMode !== 'NORMAL' &&
-      params.row.postSaleGoods.serviceMode !== 'ABNORMAL'
+      if (
+        params.row.isEdit &&
+        params.row.postSaleGoods.serviceMode !== "NORMAL" &&
+        params.row.postSaleGoods.serviceMode !== "ABNORMAL"
       ) {
-        return h('Form', [
-          h('Input', {
+        return h("Form", [
+          h("Input", {
             style: {
-              marginLeft: '4px',
-              width: '100%'
+              marginLeft: "4px",
+              width: "100%"
             },
             props: {
-              type: 'text',
+              type: "text",
               value: params.row.postSaleGoods.quantity
             },
             on: {
@@ -878,103 +900,142 @@ const compensateColumns = [
           })
         ]);
       } else {
-        return h('div', params.row.postSaleGoods.quantity);
+        return h("div", params.row.postSaleGoods.quantity);
       }
     }
   },
   {
-    title: '单位',
-    key: 'unitCode',
-    align: 'center',
+    title: "单位",
+    key: "unitName",
+    align: "center",
     render: (h, params) => {
-      if (params.row.isEdit && params.row.postSaleGoods.serviceMode !== 'NORMAL' &&
-      params.row.postSaleGoods.serviceMode !== 'ABNORMAL') {
+      if (
+        params.row.isEdit &&
+        params.row.postSaleGoods.serviceMode !== "NORMAL" &&
+        params.row.postSaleGoods.serviceMode !== "ABNORMAL"
+      ) {
         return h(
-          'Select',
+          "Select",
           {
             props: {
-              value: params.row.postSaleGoods.unitCode
+              value: params.row.postSaleGoods.unitCode,
+              transfer: true,
+              placeholder: "单位"
             },
             style: {
-              width: '100%',
-              height: '100%',
-              padding: '0 0 170px 0'
+              width: "67px",
+              height: "100%"
             },
             on: {
-              'on-change': event => {
+              "on-change": event => {
                 params.row.postSaleGoods.unitCode = event;
+                if (event === "01") {
+                  params.row.postSaleGoods.unitName = "个";
+                } else if (event === "02") {
+                  params.row.postSaleGoods.unitName = "盒";
+                } else if (event === "03") {
+                  params.row.postSaleGoods.unitName = "袋";
+                } else if (event === "04") {
+                  params.row.postSaleGoods.unitName = "件";
+                } else if (event === "05") {
+                  params.row.postSaleGoods.unitName = "盘";
+                } else if (event === "06") {
+                  params.row.postSaleGoods.unitName = "千克";
+                } else if (event === "07") {
+                  params.row.postSaleGoods.unitName = "元";
+                }
               }
             }
           },
           [
             h(
-              'Option',
+              "Option",
               {
                 props: {
-                  value: '个'
+                  value: "01"
                 }
               },
-              '个'
+              "个"
             ),
             h(
-              'Option',
+              "Option",
               {
                 props: {
-                  value: 'KG'
+                  value: "02"
                 }
               },
-              'KG'
+              "盒"
             ),
             h(
-              'Option',
+              "Option",
               {
                 props: {
-                  value: '盒'
+                  value: "03"
                 }
               },
-              '盒'
+              "袋"
             ),
             h(
-              'Option',
+              "Option",
               {
                 props: {
-                  value: '件'
+                  value: "04"
                 }
               },
-              '件'
+              "件"
             ),
             h(
-              'Option',
+              "Option",
               {
                 props: {
-                  value: '包'
+                  value: "05"
                 }
               },
-              '包'
+              "盘"
+            ),
+            h(
+              "Option",
+              {
+                props: {
+                  value: "06"
+                }
+              },
+              "千克"
+            ),
+            h(
+              "Option",
+              {
+                props: {
+                  value: "07"
+                }
+              },
+              "元"
             )
           ]
         );
       } else {
-        return h('div', params.row.postSaleGoods.unitCode);
+        return h("div", params.row.postSaleGoods.unitName);
       }
     }
   },
   {
-    title: '补款金额',
-    key: 'refundAmount',
-    align: 'center',
+    title: "补款金额",
+    key: "refundAmount",
+    align: "center",
     render: (h, params) => {
-      if (params.row.isEdit && params.row.postSaleGoods.serviceMode === 'SUPPLEMENT' ||
-      params.row.postSaleGoods.serviceMode === 'REVERT'
+      if (
+        params.row.isEdit &&
+        (params.row.postSaleGoods.serviceMode === "SUPPLEMENT" ||
+          params.row.postSaleGoods.serviceMode === "REVERT")
       ) {
-        return h('Form', [
-          h('Input', {
+        return h("Form", [
+          h("Input", {
             style: {
-              marginLeft: '4px',
-              width: '100%'
+              marginLeft: "4px",
+              width: "100%"
             },
             props: {
-              type: 'text',
+              type: "text",
               value: params.row.postSaleGoods.fillingMoney // 使用key的键值
             },
             on: {
@@ -985,15 +1046,15 @@ const compensateColumns = [
           })
         ]);
       } else {
-        return h('div', params.row.postSaleGoods.fillingMoney);
+        return h("div", params.row.postSaleGoods.fillingMoney);
       }
     }
   },
   {
-    title: '操作',
-    align: 'center',
-    key: 'handle',
-    options: ['inlineEdits']
+    title: "操作",
+    align: "center",
+    key: "handle",
+    options: ["inlineEdits"]
   }
 ];
 export default {
@@ -1010,13 +1071,15 @@ export default {
       serviceModeEnum,
       serviceStatusEnum,
       afterImageList: [],
+      unitData: [],
       uploadVisible: false,
       tempTableLoading: false,
       deliveryFlag: false,
-      imgUploadViewItem: '',
-      deliveryFeeGroup: '否',
+      imgUploadViewItem: "",
+      deliveryFeeGroup: "否",
       allMoney: 0,
       searchRowData: _.cloneDeep(rowData),
+      searchUnitRowData: this._.cloneDeep(roleRowData),
       orderDetail: _.cloneDeep(orderDetail),
       afterMsg: _.cloneDeep(afterMsg),
       compensateDetail: _.cloneDeep(compensateDetail),
@@ -1026,124 +1089,124 @@ export default {
       compensateColumns,
       serviceMode: [
         {
-          label: '正常',
-          value: 'NORMAL'
+          label: "正常",
+          value: "NORMAL"
         },
         {
-          label: '异常',
-          value: 'ABNORMAL'
+          label: "异常",
+          value: "ABNORMAL"
         },
         {
-          label: '补货',
-          value: 'REPLENISH'
+          label: "补货",
+          value: "REPLENISH"
         },
         {
-          label: '补款',
-          value: 'SUPPLEMENT'
+          label: "补款",
+          value: "SUPPLEMENT"
         },
         {
-          label: '返仓',
-          value: 'REVERT'
+          label: "返仓",
+          value: "REVERT"
         }
       ],
       // 售后列表
       columns: [
         {
-          title: '申请时间',
-          key: 'createTime',
-          fixed: 'left',
+          title: "申请时间",
+          key: "createTime",
+          fixed: "left",
           width: 170,
-          align: 'center'
+          align: "center"
         },
         {
-          title: '订单编号',
-          key: 'orderCode',
-          fixed: 'left',
+          title: "订单编号",
+          key: "orderCode",
+          fixed: "left",
           width: 170,
-          align: 'center'
+          align: "center"
         },
         {
-          title: '海鼎单号',
-          key: 'hdCode',
-          fixed: 'left',
+          title: "海鼎单号",
+          key: "hdCode",
+          fixed: "left",
           width: 150,
-          align: 'center'
+          align: "center"
         },
         {
-          title: '售后方式',
-          fixed: 'left',
-          align: 'center',
+          title: "售后方式",
+          fixed: "left",
+          align: "center",
           width: 120,
-          key: 'serviceMode',
+          key: "serviceMode",
           render: (h, params, vm) => {
             const { row } = params;
             if (row.serviceMode) {
               return <div>{row.serviceMode}</div>;
             } else {
-              return <div>{'N/A'}</div>;
+              return <div>{"N/A"}</div>;
             }
           }
         },
         {
-          title: '售后状态',
-          align: 'center',
-          fixed: 'left',
+          title: "售后状态",
+          align: "center",
+          fixed: "left",
           width: 120,
-          key: 'status',
+          key: "status",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.status === 'WAIT') {
+            if (row.status === "WAIT") {
               return (
                 <div>
-                  <tag color='magenta'>
+                  <tag color="magenta">
                     {serviceStatusConvert(row.status).label}
                   </tag>
                 </div>
               );
-            } else if (row.status === 'AUDIT_REJECT') {
+            } else if (row.status === "AUDIT_REJECT") {
               return (
                 <div>
-                  <tag color='orange'>
+                  <tag color="orange">
                     {serviceStatusConvert(row.status).label}
                   </tag>
                 </div>
               );
-            } else if (row.status === 'CANCEL') {
+            } else if (row.status === "CANCEL") {
               return (
                 <div>
-                  <tag color='cyan'>
+                  <tag color="cyan">
                     {serviceStatusConvert(row.status).label}
                   </tag>
                 </div>
               );
-            } else if (row.status === 'WAIT_REVIEW') {
+            } else if (row.status === "WAIT_REVIEW") {
               return (
                 <div>
-                  <tag color='pink'>
+                  <tag color="pink">
                     {serviceStatusConvert(row.status).label}
                   </tag>
                 </div>
               );
-            } else if (row.status === 'REVIEW_REJECT') {
+            } else if (row.status === "REVIEW_REJECT") {
               return (
                 <div>
-                  <tag color='error'>
+                  <tag color="error">
                     {serviceStatusConvert(row.status).label}
                   </tag>
                 </div>
               );
-            } else if (row.status === 'SERVICEING') {
+            } else if (row.status === "SERVICEING") {
               return (
                 <div>
-                  <tag color='gold'>
+                  <tag color="gold">
                     {serviceStatusConvert(row.status).label}
                   </tag>
                 </div>
               );
-            } else if (row.status === 'FINISH') {
+            } else if (row.status === "FINISH") {
               return (
                 <div>
-                  <tag color='success'>
+                  <tag color="success">
                     {serviceStatusConvert(row.status).label}
                   </tag>
                 </div>
@@ -1153,53 +1216,53 @@ export default {
           }
         },
         {
-          title: '门店名称',
-          align: 'center',
+          title: "门店名称",
+          align: "center",
           width: 160,
-          key: 'shopName'
+          key: "shopName"
         },
         {
-          title: '店长名称',
-          align: 'center',
+          title: "店长名称",
+          align: "center",
           width: 90,
-          key: 'userName'
+          key: "userName"
         },
         {
-          title: '店长手机',
-          align: 'center',
+          title: "店长手机",
+          align: "center",
           width: 160,
-          key: 'phone'
+          key: "phone"
         },
         {
-          title: '商品名称',
-          align: 'center',
+          title: "商品名称",
+          align: "center",
           width: 160,
-          key: 'orderGoods'
+          key: "orderGoods"
         },
         {
-          title: '实付金额',
-          align: 'center',
+          title: "实付金额",
+          align: "center",
           width: 120,
-          key: 'payableFee',
+          key: "payableFee",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.payableFee);
             return <div>{amount}</div>;
           }
         },
         {
-          title: '收货区域',
-          align: 'center',
+          title: "收货区域",
+          align: "center",
           width: 160,
-          key: 'receiptArea'
+          key: "receiptArea"
         },
         {
-          title: '操作',
+          title: "操作",
           minWidth: 120,
           resizable: true,
-          align: 'center',
-          fixed: 'right',
-          key: 'handle',
-          options: ['operate', 'finish']
+          align: "center",
+          fixed: "right",
+          key: "handle",
+          options: ["operate", "finish"]
         }
       ]
     };
@@ -1207,19 +1270,21 @@ export default {
   computed: {
     address() {
       const addressArea = this.deliveryInfo.addressArea
-        ? this.deliveryInfo.addressArea.replace(new RegExp('/', 'gm'), '')
-        : '';
+        ? this.deliveryInfo.addressArea.replace(new RegExp("/", "gm"), "")
+        : "";
       return addressArea + this.deliveryInfo.addressDetail;
     }
   },
   mounted() {
     this.searchRowData = _.cloneDeep(rowData);
     this.getTableData();
+    this.getTableUnitsData();
   },
   created() {},
   methods: {
     resetSearchRowData() {
       this.searchRowData = this._.cloneDeep(rowData);
+      this.searchUnitRowData = _.cloneDeep(roleRowData);
       this.getTableData();
     },
     getTableData() {
@@ -1236,6 +1301,12 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
+    },
+    getTableUnitsData() {
+      getProductUnitsPages(this.searchUnitRowData).then(res => {
+        this.unitData = res.rows;
+        console.log("单位", this.unitData);
+      });
     },
     getOrderDetail(id) {
       this.afterImageList = [];
@@ -1257,10 +1328,10 @@ export default {
             this.deliveryInfo = _.cloneDeep(deliveryInfo);
           }
           if (this.afterMsg.images) {
-            const imageList = this.afterMsg.images.split(',');
+            const imageList = this.afterMsg.images.split(",");
 
             for (let i = 0; i < imageList.length; i++) {
-              if (imageList[i] != '') {
+              if (imageList[i] != "") {
                 this.afterImageList.push(imageList[i]);
               }
             }
@@ -1275,7 +1346,7 @@ export default {
     hanldeFinish(params) {
       getSaleFinish(params.row)
         .then(res => {
-          this.$Message.info('售后完成');
+          this.$Message.info("售后完成");
           this.getTableData();
         })
         .finally(() => {});
@@ -1286,7 +1357,7 @@ export default {
       this.allMoney = 0;
       const id = params.row.id;
       this.tempModalType = this.modalType.edit;
-      this.deliveryFeeGroup = '否';
+      this.deliveryFeeGroup = "否";
       this.deliveryFlag = false;
       this.getOrderDetail(id);
     },
@@ -1306,18 +1377,18 @@ export default {
       dataParams.name = name;
       getOrderGoods(dataParams).then(res => {
         if (!res) {
-          this.$Message.info('暂无任何数据返回');
+          this.$Message.info("暂无任何数据返回");
           return;
         }
-        const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         const fileType =
-          name === 'POST_SALE_ORDER' ? '售后订单' : '售后订单商品';
+          name === "POST_SALE_ORDER" ? "售后订单" : "售后订单商品";
         const fileName = `${fileType}-${date}.xls`;
         download(res, fileName);
       });
     },
     modalHandleEdit(params) {
-      this.$set(params.row, 'isEdit', true);
+      this.$set(params.row, "isEdit", true);
     },
     modalHandleSave(params) {
       const sumPrice =
@@ -1325,26 +1396,34 @@ export default {
           params.row.orderGoods.discountGoodsPrice) /
         100;
       if (Number(params.row.postSaleGoods.fillingMoney) > sumPrice) {
-        this.$Message.info('补款金额不能大于商品总价');
+        this.$Message.info("补款金额不能大于商品总价");
         return;
       }
       const index = params.row.initRowIndex;
-      this.compensateDetail[index].postSaleGoods.serviceReason = params.row.postSaleGoods.serviceReason;
-      this.compensateDetail[index].postSaleGoods.serviceMode = params.row.postSaleGoods.serviceMode;
-      this.compensateDetail[index].postSaleGoods.quantity = params.row.postSaleGoods.quantity;
-      this.compensateDetail[index].postSaleGoods.unitCode = params.row.postSaleGoods.unitCode;
-      this.compensateDetail[index].postSaleGoods.refundAmount = params.row.postSaleGoods.fillingMoney;
-      this.compensateDetail[index].postSaleGoods.fillingMoney = params.row.postSaleGoods.fillingMoney;
+      this.compensateDetail[index].postSaleGoods.serviceReason =
+        params.row.postSaleGoods.serviceReason;
+      this.compensateDetail[index].postSaleGoods.serviceMode =
+        params.row.postSaleGoods.serviceMode;
+      this.compensateDetail[index].postSaleGoods.quantity =
+        params.row.postSaleGoods.quantity;
+      this.compensateDetail[index].postSaleGoods.unitCode =
+        params.row.postSaleGoods.unitCode;
+      this.compensateDetail[index].postSaleGoods.unitName =
+        params.row.postSaleGoods.unitName;
+      this.compensateDetail[index].postSaleGoods.refundAmount =
+        params.row.postSaleGoods.fillingMoney;
+      this.compensateDetail[index].postSaleGoods.fillingMoney =
+        params.row.postSaleGoods.fillingMoney;
       const allData = this.compensateDetail;
       let money = 0;
       for (let i = 0; i < allData.length; i++) {
         money += Number(allData[i].postSaleGoods.fillingMoney);
       }
       this.allMoney = money * 100;
-      this.$set(params.row, 'isEdit', false);
+      this.$set(params.row, "isEdit", false);
     },
     dateGroupChange(value) {
-      value === '是' ? (this.deliveryFlag = true) : (this.deliveryFlag = false);
+      value === "是" ? (this.deliveryFlag = true) : (this.deliveryFlag = false);
     },
     // 提交审核
     handlePassAudit(name) {
@@ -1361,27 +1440,26 @@ export default {
           Number(allData[i].postSaleGoods.refundAmount) * 100;
         this.postSaleAudit.postSaleGoods.push(allData[i].postSaleGoods);
       }
-      console.log('chuancan', this.postSaleAudit);
-      if (name === 'pass') {
+      console.log("chuancan", this.postSaleAudit);
+      if (name === "pass") {
         // 如果售后方式存在全部正常、全部异常、只要正常异常并且不退运费则不需发送财务审核
         const serviceModeList = [];
-        const targtArr = ['REPLENISH', 'SUPPLEMENT', 'REVERT'];
+        const targtArr = ["REPLENISH", "SUPPLEMENT", "REVERT"];
         this.postSaleAudit.postSaleGoods.forEach(item =>
           serviceModeList.push(item.serviceMode)
         );
-        console.log('serviceModeList:', serviceModeList);
         if (!hasOneOf(targtArr, serviceModeList) && !this.deliveryFlag) {
-          this.$Message.info('无补货、补款，返仓处理情况，请选择拒绝售后');
+          this.$Message.info("无补货、补款，返仓处理情况，请选择拒绝售后");
           return false;
         }
         getPassAudit(this.postSaleAudit).then(res => {
-          this.$Message.info('审核通过');
+          this.$Message.info("审核通过");
           this.modalView = false;
           this.getTableData();
         });
       } else {
         getRefuseAudit(this.postSaleAudit).then(res => {
-          this.$Message.info('拒绝售后');
+          this.$Message.info("拒绝售后");
           this.modalView = false;
           this.getTableData();
         });
@@ -1391,7 +1469,10 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.ivu-select-dropdown {
+ width: 67px;
+}
 .check {
   display: flex;
   align-items: center;
