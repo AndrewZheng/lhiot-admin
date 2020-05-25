@@ -667,8 +667,9 @@ export default {
           ).label;
           item["commentScore"] = item["commentScore"] + "星";
         });
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
-          filename: `用户评价数据-${new Date().valueOf()}`,
+          filename: `用户评价数据-${date}`,
           data: tableData
         });
       });

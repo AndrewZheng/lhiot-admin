@@ -115,6 +115,13 @@
               style="width: 150px"
               @on-change="endTimeChange"
             />
+            <Cascader
+              :data="data"
+              change-on-select
+              placeholder="请选择区域"
+              class="search-col"
+              @on-change="onChangeCity"
+            ></Cascader>
             <Button
               v-waves
               :loading="searchLoading"
@@ -426,6 +433,7 @@ import {
 import getLodop from '@/assets/lodop/lodopFuncs.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
+import city from '@/assets/city/city.js';
 import { fenToYuanDot2, fenToYuanDot2Number } from '@/libs/util';
 import {
   orderStatusEnum,
@@ -489,7 +497,8 @@ const roleRowData = {
   sort: 'desc',
   orderCodes: '',
   userName: '',
-  hdCode: ''
+  hdCode: '',
+  deliveryAddress: ''
 };
 
 const goodsDetail = {
@@ -546,12 +555,14 @@ const orderColumns = [
     sortable: true,
     resizable: true,
     width: 150,
+    fixed: 'left',
     align: 'center'
   },
   {
     title: '创建时间',
     align: 'center',
     width: 160,
+    fixed: 'left',
     key: 'createTime'
   },
   {
@@ -661,6 +672,17 @@ const orderColumns = [
     align: 'center',
     width: 120,
     key: 'userName'
+  },
+  {
+    title: '配送区域',
+    align: 'center',
+    width: 160,
+    key: 'deliveryAddress',
+    render(h, params, vm) {
+      const { row } = params;
+      const address = JSON.parse(row.deliveryAddress);
+      return <div>{address.addressArea}</div>;
+    }
   },
   {
     title: '店长手机',
@@ -877,6 +899,7 @@ export default {
       currentSaleUserId: 0,
       exportType: '', // ORDER_GOODS,DELIVERY_NOTE
       tableDataSelected: [],
+      data: [],
       selectedOrderCodes: '',
       flag: true,
       printFlag: null,
@@ -898,6 +921,7 @@ export default {
     this.salesmanName = this.$route.query.salesmanName
       ? this.$route.query.salesmanName
       : 'N/A';
+    this.data = city;
     this.getTableData();
   },
   methods: {
@@ -1061,14 +1085,16 @@ export default {
             Number(item['deliveryFee']) + Number(item['payableFee'])
           ).toFixed(2);
         });
+        const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
         this.$refs.tables.handleCustomDownload({
-          filename: `普通订单信息-${new Date().valueOf()}`,
+          filename: `普通订单信息-${date}`,
           data: tableData,
           columns: tableColumns
         });
       });
     },
     handleExport(name) {
+      const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
       if (name === 'ORDER_GOODS') {
         this.searchRowData.orderCodes = this.selectedOrderCodes;
         // 导出订单商品
@@ -1078,14 +1104,8 @@ export default {
         }).then(res => {
           const tableData = res.rows;
           const tableColumns = res.columns;
-          // 表格数据导出字段翻译
-          // tableData.forEach(item => {
-          //   item['orderCode'] = item['orderCode'] + '';
-          //   item['goodsPrice'] = (item['totalAmount'] / 100.0).toFixed(2);
-          //   item['sumPrice'] = (item['couponAmount'] / 100.0).toFixed(2);
-          // });
           this.$refs.tables.handleCustomDownload({
-            filename: `订单商品信息-${new Date().valueOf()}`,
+            filename: `订单商品信息-${date}`,
             data: tableData,
             columns: tableColumns
           });
@@ -1100,7 +1120,7 @@ export default {
           const tableData = res.rows;
           const tableColumns = res.columns;
           this.$refs.tables.handleCustomDownload({
-            filename: `配送单-${new Date().valueOf()}`,
+            filename: `配送单-${date}`,
             data: tableData,
             columns: tableColumns
           });
@@ -1248,7 +1268,9 @@ export default {
               strData += "<tr align='center' style='height:30px;'>";
               strData += '<td colspan="2">' + '客户备注' + '</td>';
               strData +=
-                '<td colspan="8">' + _this.orderDetail.remarks + '</td>';
+                '<td colspan="8">' + _this.orderDetail.remarks == 'null'
+                  ? ''
+                  : _this.orderDetail.remarks + '</td>';
               strData += '</tr>';
               strData +=
                 "<tr align='center' style='backgroung:#ccc;height:30px'>";
@@ -1338,6 +1360,19 @@ export default {
       otabTotal.innerHTML = '';
       this.flag = true;
       this.printFlag = true;
+    },
+    onChangeCity(value, selectedData) {
+      let city = '';
+      let index = 1;
+      for (let i = 0; i < value.length; i++) {
+        if (value.length - index > 0) {
+          city += value[i] + '/';
+        } else {
+          city += value[i];
+        }
+        index++;
+      }
+      this.searchRowData.deliveryAddress = city;
     }
   }
 };

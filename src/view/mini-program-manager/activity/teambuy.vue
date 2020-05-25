@@ -1775,8 +1775,9 @@ export default {
           item["tourDiscount"] = (item["tourDiscount"] / 100.0).toFixed(2);
           item["robot"] = teamBuyStatusConvert(item["robot"]).label;
         });
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
-          filename: `拼团活动信息-${new Date().valueOf()}`,
+          filename: `拼团活动信息-${date}`,
           data: tableData
         });
         this.exportExcelLoading = false;

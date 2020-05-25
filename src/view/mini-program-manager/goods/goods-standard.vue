@@ -1081,7 +1081,7 @@ const productStandardDetail = {
   productType: "",
   specification: "",
   standardQty: 0,
-  unitId: 0,
+  unitId: "",
   productUnit: "",
   price: 0,
   rotationImage: null,
@@ -1147,7 +1147,7 @@ const productDetail = {
   smallImage: "",
   largeImage: "",
   status: null,
-  unitId: 0,
+  unitId: "",
   baseBarcode: "",
   hdSkuid: "",
   videoUrl: "",
@@ -1911,8 +1911,9 @@ export default {
             item["shelvesStatus"]
           ).label;
         });
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
-          filename: `商品规格-${new Date().valueOf()}`,
+          filename: `商品规格-${date}`,
           data: tableData
         });
       });

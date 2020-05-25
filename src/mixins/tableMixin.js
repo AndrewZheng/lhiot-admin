@@ -37,6 +37,7 @@ const mixin = {
     },
     handleEditClose() {
       this.modalEdit = false;
+      this.data = [];
     },
     handleClose() {
       this.loading = false;
