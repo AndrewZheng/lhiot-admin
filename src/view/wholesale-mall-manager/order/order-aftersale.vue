@@ -764,7 +764,7 @@ const compensateColumns = [
           {
             props: {
               value: params.row.postSaleGoods.serviceMode,
-              transfer: true,
+              transfer: true
             },
             style: {
               width: "100%",
@@ -773,6 +773,10 @@ const compensateColumns = [
             on: {
               "on-change": event => {
                 params.row.postSaleGoods.serviceMode = event;
+                if (event === "NORMAL" || event === "ABNORMAL") {
+                  params.row.postSaleGoods.unitCode = null;
+                  params.row.postSaleGoods.unitName = null;
+                }
               }
             }
           },
@@ -943,7 +947,7 @@ const compensateColumns = [
                   params.row.postSaleGoods.unitName = "千克";
                 } else if (event === "07") {
                   params.row.postSaleGoods.unitName = "元";
-                }
+                } 
               }
             }
           },
@@ -1305,7 +1309,7 @@ export default {
     getTableUnitsData() {
       getProductUnitsPages(this.searchUnitRowData).then(res => {
         this.unitData = res.rows;
-        console.log("单位", this.unitData);
+        // console.log("单位", this.unitData);
       });
     },
     getOrderDetail(id) {
@@ -1421,6 +1425,7 @@ export default {
       }
       this.allMoney = money * 100;
       this.$set(params.row, "isEdit", false);
+      console.log("传参", params);
     },
     dateGroupChange(value) {
       value === "是" ? (this.deliveryFlag = true) : (this.deliveryFlag = false);
@@ -1440,7 +1445,6 @@ export default {
           Number(allData[i].postSaleGoods.refundAmount) * 100;
         this.postSaleAudit.postSaleGoods.push(allData[i].postSaleGoods);
       }
-      console.log("chuancan", this.postSaleAudit);
       if (name === "pass") {
         // 如果售后方式存在全部正常、全部异常、只要正常异常并且不退运费则不需发送财务审核
         const serviceModeList = [];
@@ -1471,7 +1475,7 @@ export default {
 
 <style lang="scss">
 .ivu-select-dropdown {
- width: 67px;
+  width: 67px;
 }
 .check {
   display: flex;
