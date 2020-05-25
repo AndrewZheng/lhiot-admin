@@ -764,7 +764,7 @@ const compensateColumns = [
           {
             props: {
               value: params.row.postSaleGoods.serviceMode,
-              transfer: true,
+              transfer: true
             },
             style: {
               width: "100%",
@@ -773,6 +773,10 @@ const compensateColumns = [
             on: {
               "on-change": event => {
                 params.row.postSaleGoods.serviceMode = event;
+                if (event === "NORMAL" || event === "ABNORMAL") {
+                  params.row.postSaleGoods.unitCode = null;
+                  params.row.postSaleGoods.unitName = null;
+                }
               }
             }
           },
@@ -1471,7 +1475,7 @@ export default {
 
 <style lang="scss">
 .ivu-select-dropdown {
- width: 67px;
+  width: 67px;
 }
 .check {
   display: flex;
