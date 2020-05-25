@@ -907,6 +907,14 @@ export const replaceByTab = (value) => {
   return value.replace(/&/g, '\n');
 }
 
+export const localSave = (key, value) => {
+  localStorage.setItem(key, value)
+}
+
+export const localRead = (key) => {
+  return localStorage.getItem(key) || ''
+}
+
 export const download = (data, name) => {
   const content = data;
   const blob = new Blob([content], { type: 'application/vnd.ms-excel' });

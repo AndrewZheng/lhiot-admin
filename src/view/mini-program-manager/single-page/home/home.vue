@@ -13,19 +13,19 @@
         </infor-card>
       </i-col>
     </Row>
-    <Row :gutter="20" style="margin-top: 20px;">
-      <i-col span="8">
+    <Row :gutter="20" style="margin-top: 10px;">
+      <i-col :md="24" :lg="8" style="margin-bottom: 20px;">
         <Card shadow>
           <chart-pie :value="pieData" style="height: 300px;width:100%;" text="用户访问来源"></chart-pie>
         </Card>
       </i-col>
-      <i-col span="16">
+      <i-col :md="24" :lg="16" style="margin-bottom: 20px;">
         <Card shadow>
           <chart-bar :value="barData" style="height: 300px;width:100%;" text="每周用户活跃量" />
         </Card>
       </i-col>
     </Row>
-    <Row style="margin-top: 20px;">
+    <Row>
       <Card shadow>
         <!-- <example style="height: 310px;" /> -->
         <img :src="banner" style="height: 300px;width:100%;" />
