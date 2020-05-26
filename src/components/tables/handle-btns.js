@@ -606,12 +606,12 @@ const btns = {
   // 优惠券上下架操作
   couponStatus: (h, params, vm) => {
     const { row } = params;
-    if (row.couponStatus === 'VALID') {
+    if (row.couponStatus === 'VALID' || row.status === 'VALID') {
       return h('Poptip', {
         props: {
           confirm: true,
           transfer: true,
-          title: '确认要下架该优惠券吗?'
+          title: '确认要下架吗?'
         },
         style: {
           marginRight: '5px'
@@ -642,7 +642,7 @@ const btns = {
         props: {
           confirm: true,
           transfer: true,
-          title: '确认要上架该优惠券吗?'
+          title: '确认要上架吗?'
         },
         style: {
           marginRight: '5px'

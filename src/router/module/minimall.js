@@ -149,6 +149,24 @@ const miniMallRouter = [
     }]
   },
   {
+    path: '/small-goods-presell',
+    name: 'small-goods-presell',
+    meta: {
+      icon: 'md-menu',
+      title: '预售管理'
+    },
+    component: Main,
+    children: [{
+      path: '/small-goods-presellActivity',
+      name: 'small-goods-presellActivity',
+      meta: {
+        icon: 'ios-people',
+        title: '预售活动'
+      },
+      component: () => import('@/view/mini-program-manager/presell/presellActivity.vue')
+    }]
+  },
+  {
     path: '/small-task',
     name: 'small-task',
     meta: {

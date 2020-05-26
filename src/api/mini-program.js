@@ -707,6 +707,44 @@ export const editActivities = (data) => {
     method: 'put'
   });
 };
+//===================预售活动
+// 根据条件分页查询拼团活动管理列表
+export const getPresellPages = (data) => {
+  return $http.request({
+    url: '/minapp/activity-pre-sale/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+    }
+  });
+};
+
+// 添加预售活动管理
+export const createPresell = (data) => {
+  return $http.request({
+    url: '/minapp/activity-pre-sale/create',
+    data,
+    method: 'post'
+  });
+};
+// 修改拼团活动管理
+export const editPresell = (data) => {
+  return $http.request({
+    url: '/minapp/activity-pre-sale/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+//根据id查询商品规格
+export const getGoodsStandard = (data) => {
+  return $http.request({
+    url: '/minapp/product-standards/' + data.standardId,
+    data,
+    method: 'get'
+  });
+};
 // ================================老限时抢购
 // 根据条件分页查询限时抢购列表
 export const getFlashsalePages = (data) => {
