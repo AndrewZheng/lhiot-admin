@@ -1,17 +1,16 @@
 {
   "name": "iview-admin",
   "version": "2.1.1",
+  "private": false,
   "description": "A magical vue admin. An out-of-box UI solution for enterprise applications. Newest development stack of vue. Lots of awesome features",
   "author": "Andrew<andrew.zhengx@gmail.com>",
-  "private": false,
-  "license": "MIT",
   "scripts": {
-    "dev": "vue-cli-service serve && webpack-dev-server --open",
+    "test:unit": "vue-cli-service test:unit",
+    "test:e2e": "vue-cli-service test:e2e",
+    "lint": "vue-cli-service lint",
     "build:prod": "vue-cli-service build",
     "build:stage": "vue-cli-service build --mode staging",
-    "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit",
-    "test:e2e": "vue-cli-service test:e2e"
+    "dev": "vue-cli-service serve && webpack-dev-server --open"
   },
   "dependencies": {
     "@tinymce/tinymce-vue": "^1.0.9",
@@ -50,21 +49,27 @@
     "xlsx": "^0.13.3"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.1",
-    "@vue/cli-plugin-eslint": "^3.0.1",
-    "@vue/cli-plugin-unit-mocha": "^3.0.1",
-    "@vue/cli-service": "^3.0.1",
-    "@vue/eslint-config-standard": "^3.0.0-beta.10",
+    "@vue/cli-plugin-babel": "~4.3.1",
+    "@vue/cli-plugin-eslint": "~4.3.1",
+    "@vue/cli-plugin-unit-mocha": "~4.3.1",
+    "@vue/cli-service": "~4.3.1",
+    "@vue/eslint-config-standard": "^5.1.2",
     "@vue/test-utils": "^1.0.0-beta.10",
     "autoprefixer": "^9.7.6",
-    "babel-eslint": "^8.2.6",
+    "babel-eslint": "^10.1.0",
     "chai": "^4.1.2",
+    "eslint": "^6.7.2",
     "eslint-plugin-cypress": "^2.0.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "eslint-plugin-vue": "^6.2.2",
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
     "lint-staged": "^6.0.0",
     "mockjs": "^1.0.1-beta3",
-    "sass-loader": "^7.1.0",
+    "sass-loader": "8.0.0",
     "script-loader": "^0.7.2",
     "vue-template-compiler": "^2.5.13"
   },
@@ -76,6 +81,7 @@
   "gitHooks": {
     "pre-commit": "lint-staged"
   },
+  "license": "MIT",
   "lint-staged": {
     "*.js": [
       "git add"

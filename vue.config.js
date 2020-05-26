@@ -16,7 +16,7 @@ const BASE_URL = process.env.NODE_ENV === 'production' ?
   '/';
 
 module.exports = {
-  baseUrl: BASE_URL,
+  publicPath: BASE_URL,
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: false,
@@ -56,17 +56,19 @@ module.exports = {
     }
   },
   css: {
-    modules: false,
+    requireModuleExtension: true,
     loaderOptions: {
       css: {
-        localIdentName: 'app.[hash]',
-        camelCase: false
+        modules:{
+          localIdentName: 'app.[hash]'
+        }
       },
       sass: {
-        data: '@import "@/assets/styles/style.scss";'
+        prependData: '@import "@/assets/styles/style.scss";'
       }
     },
     extract: process.env.NODE_ENV === 'production',
-    sourceMap: false
+    sourceMap: false,
+    extract: false
   }
 };

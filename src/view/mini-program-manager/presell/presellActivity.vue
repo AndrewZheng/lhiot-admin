@@ -327,11 +327,7 @@
             </i-col>
             <i-col span="12">
               <FormItem label="活动状态:" prop="status">
-                <Select
-                  v-model="presellDetail.status"
-                  style="width: 200px"
-                  :disabled="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
-                >
+                <Select v-model="presellDetail.status" style="width: 200px">
                   <Option
                     v-for="item in activityStatus"
                     :value="item.value"
