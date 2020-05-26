@@ -349,6 +349,12 @@ export default {
     handleSubmit() {
       this.currentCategory.parentId =
         this.parentCategory.id !== 0 ? this.parentCategory.id : 0;
+      // if (this.oldPicture.length > 0) {
+      //   const urls = {
+      //     urls: this.oldPicture
+      //   };
+      //   this.deletePicture(urls);
+      // }
       this.$refs.editForm.validate(valid => {
         if (valid) {
           this.modalEditLoading = true;
@@ -364,10 +370,23 @@ export default {
       });
     },
     handleEditClose() {
+      // if (this.newPicture.length > 0) {
+      //   const urls = {
+      //     urls: this.newPicture
+      //   };
+      //   this.deletePicture(urls);
+      // }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
     },
+    // deletePicture(urls) {
+    //   deletePicture({
+    //     urls
+    //   })
+    //     .then(res => {})
+    //     .catch(() => {});
+    // },
     createProductSection() {
       this.modalEditLoading = true;
       this.modalViewLoading = true;

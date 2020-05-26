@@ -236,8 +236,9 @@ export default {
           this.searchRowData.rows = 10;
           // 表格数据导出字段翻译
           //  tableData.forEach(item => {});
+          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
           this.$refs.tables.handleDownload({
-            filename: `新品需求信息-${new Date().valueOf()}`,
+            filename: `新品需求信息-${date}`,
             data: tableData
           });
         })

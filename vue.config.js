@@ -16,7 +16,7 @@ const BASE_URL = process.env.NODE_ENV === 'production' ?
   '/';
 
 module.exports = {
-  baseUrl: BASE_URL,
+  publicPath: BASE_URL,
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: false,
@@ -45,7 +45,7 @@ module.exports = {
     open: true, // 配置自动启动浏览器
     proxy: {
       '/api': {
-        target: 'http://172.16.10.194:1311/ims-service-v1-5-0', //194测试环境 196开发环境 203 pre环境
+        target: 'http://172.16.10.189:1311/ims-service-v1-5-0', //194测试环境 196开发环境 203 pre环境
         ws: true,
         logLevel: 'debug',
         changeOrigin: true,
@@ -56,17 +56,19 @@ module.exports = {
     }
   },
   css: {
-    modules: false,
+    requireModuleExtension: true,
     loaderOptions: {
       css: {
-        localIdentName: 'app.[hash]',
-        camelCase: false
+        modules:{
+          localIdentName: 'app.[hash]'
+        }
       },
       sass: {
-        data: '@import "@/assets/styles/style.scss";'
+        prependData: '@import "@/assets/styles/style.scss";'
       }
     },
     extract: process.env.NODE_ENV === 'production',
-    sourceMap: false
+    sourceMap: false,
+    extract: false
   }
 };

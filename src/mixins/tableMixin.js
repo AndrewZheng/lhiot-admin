@@ -37,10 +37,12 @@ const mixin = {
     },
     handleEditClose() {
       this.modalEdit = false;
+      this.data = [];
     },
     handleClose() {
       this.loading = false;
       this.modalView = false;
+
     },
     // 获取分类树展开函数
     expandChildren(array) {

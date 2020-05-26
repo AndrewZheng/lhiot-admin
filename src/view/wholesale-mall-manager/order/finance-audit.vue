@@ -13,7 +13,6 @@
         border
         search-place="top"
         @on-operate="handleOperate"
-        @on-finish="hanldeFinish"
       >
         <div slot="searchCondition">
           <Row>
@@ -82,7 +81,7 @@
               v-model="searchRowData.status"
               class="search-col mr5"
               placeholder="售后状态"
-              style="width: 90px"
+              style="width: 120px"
               clearable
             >
               <Option
@@ -109,22 +108,6 @@
             >
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
-            <Button
-              :loading="downloadLoading"
-              class="search-btn mr2"
-              type="success"
-              @click="handleDownload('POST_SALE_ORDER')"
-            >
-              <Icon type="md-download" />导出售后订单
-            </Button>
-            <Button
-              :loading="downloadLoading"
-              class="search-btn mr2"
-              type="success"
-              @click="handleDownload('POST_SALE_ORDER_GOODS')"
-            >
-              <Icon type="md-download" />导出售后订单商品
-            </Button>
           </Row>
         </div>
         <div slot="operations"></div>
@@ -145,7 +128,7 @@
       </div>
     </Card>
     <!--查看/审核售后订单详情-->
-    <Modal v-model="modalView" :width="1500" :mask-closable="false">
+    <Modal v-model="modalView" :width="1500" :mask-closable="false" :styles="{bottom: '20px'}">
       <p slot="header">
         <i-col>{{ tempModalType===modalType.view?'查看售后订单':'审核售后订单' }}</i-col>
       </p>
@@ -371,46 +354,26 @@
             v-model="compensateDetail"
             :loading="tempTableLoading"
             border
-            @on-inline-edit="modalHandleEdit"
-            @on-inline-save="modalHandleSave"
           ></tables>
         </Row>
         <Row style="margin-top:10px">
           <i-col span="10">
-            <Row v-if="afterMsg.status==='WAIT'">
-              <i-col span="6">退款总金额：{{ allMoney | fenToYuanDot2Filters }}</i-col>
-            </Row>
-            <Row v-else>
+            <Row>
               <i-col span="6">退款总金额：{{ afterMsg.refundAmount | fenToYuanDot2Filters }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row>
           <i-col span="10">
-            <Row v-if="afterMsg.status==='WAIT'" class="check">
-              <i-col span="6">退运费金额：{{ orderDetail.deliveryFee | fenToYuanDot2Filters }}</i-col>
-              <RadioGroup
-                v-show="afterMsg.status==='WAIT'"
-                v-model="deliveryFeeGroup"
-                @on-change="dateGroupChange"
-              >
-                <Radio label="是"></Radio>
-                <Radio label="否"></Radio>
-              </RadioGroup>
-            </Row>
-            <Row v-else>
-              <i-col span="10">
-                <Row class="check">
-                  <i-col span="18">退运费金额：{{ afterMsg.refundFreightAmount | fenToYuanDot2Filters }}</i-col>
-                </Row>
-              </i-col>
+            <Row class="check">
+              <i-col span="6">退运费金额：{{ afterMsg.refundFreightAmount | fenToYuanDot2Filters }}</i-col>
             </Row>
           </i-col>
         </Row>
       </div>
-      <div v-show="afterMsg.status==='WAIT'" slot="footer">
-        <Button type="error" @click="handlePassAudit('refuse')">拒绝售后</Button>
-        <Button type="primary" @click="handlePassAudit('pass')">审核通过</Button>
+      <div v-show="afterMsg.status==='WAIT_REVIEW'" slot="footer">
+        <Button type="error" @click="hanldeFinanceRefuse('pass')">审核拒绝</Button>
+        <Button type="primary" @click="hanldeFinanceAudit('refuse')">审核通过</Button>
       </div>
     </Modal>
     <Modal v-model="uploadVisible" title="图片预览">
@@ -422,16 +385,12 @@
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
 import {
-  getAfterSalePages,
-  getOrderDetail,
-  getOrderGoods,
-  getPassAudit,
-  getRefuseAudit,
-  getSaleFinish,
-  getProductUnitsPages
+  getFinanceAuditPages,
+  getFinanceAudit,
+  getFinanceRefuse,
+  getOrderDetail
 } from "@/api/wholesale";
-import { fenToYuanDot2, fenToYuanDot2Number, download } from "@/libs/util";
-import { hasOneOf } from "@/libs/tools";
+import { fenToYuanDot2, fenToYuanDot2Number } from "@/libs/util";
 import { serviceModeEnum, serviceStatusEnum } from "@/libs/enumerate";
 import { serviceModeConvert, serviceStatusConvert } from "@/libs/converStatus";
 import tableMixin from "@/mixins/tableMixin.js";
@@ -447,7 +406,7 @@ const orderDetail = {
   createTimeEnd: "",
   currentOrderStatus: "",
   deliveryAddress: "",
-  deliveryFee: 0,
+  deliveryFee: "",
   deliveryTime: "",
   discountFee: "",
   hdCode: "",
@@ -476,10 +435,8 @@ const orderDetail = {
   shopName: "",
   totalFee: "",
   userId: "",
-  userName: "",
-  isEdit: false
+  userName: ""
 };
-
 const afterMsg = {
   id: "",
   userId: "",
@@ -506,32 +463,25 @@ const afterMsg = {
   order: {},
   postSaleGoods: []
 };
-
 const compensateDetail = [
   {
     orderGoods: {},
     postSaleGoods: {}
   }
 ];
-
 const rowData = {
   page: 1,
   rows: 20,
-  startTime: "",
-  endTime: "",
+  startTime: null,
+  endTime: null,
   orderCode: "",
   hdCode: "",
   userName: "",
   phone: "",
-  serviceMode: "",
-  status: "WAIT",
-  sidx: "createTime",
+  serviceMode: null,
+  status: "WAIT_REVIEW",
+  sidx: "auditTime",
   sort: "desc"
-};
-const roleRowData = {
-  unitName: "",
-  page: 1,
-  rows: 20
 };
 // 地址对象
 const deliveryInfo = {
@@ -544,7 +494,6 @@ const deliveryInfo = {
   userId: 0,
   contactsName: ""
 };
-
 // 商品对象
 const goodsDetail = {
   discountGoodsPrice: 0,
@@ -566,7 +515,6 @@ const goodsDetail = {
   unitName: "",
   userId: 0
 };
-
 // 审核对象
 const postSaleAudit = {
   id: 0,
@@ -574,7 +522,6 @@ const postSaleAudit = {
   refundAmount: 0,
   refundFreightAmount: 0
 };
-
 // 商品列表
 const goodsColumns = [
   {
@@ -666,7 +613,6 @@ const goodsColumns = [
     }
   }
 ];
-
 // 补损信息列表
 const compensateColumns = [
   {
@@ -677,6 +623,7 @@ const compensateColumns = [
       const data = !params.row.orderGoods.goodsName
         ? ""
         : params.row.orderGoods.goodsName;
+
       return <div>{data}</div>;
     }
   },
@@ -688,6 +635,7 @@ const compensateColumns = [
       const data = !params.row.orderGoods.standard
         ? ""
         : params.row.orderGoods.standard;
+
       return <div>{data}</div>;
     }
   },
@@ -699,6 +647,7 @@ const compensateColumns = [
       const data = !params.row.orderGoods.quanity
         ? ""
         : params.row.orderGoods.quanity;
+
       return <div>{data}</div>;
     }
   },
@@ -710,26 +659,25 @@ const compensateColumns = [
       const data = !params.row.orderGoods.goodsUnit
         ? ""
         : params.row.orderGoods.goodsUnit;
+
       return <div>{data}</div>;
     }
   },
   {
-    title: "商品折后单价",
-    key: "discountGoodsPrice",
+    title: "商品单价",
+    key: "goodsPrice",
     align: "center",
     render(h, params, vm) {
-      const amount = fenToYuanDot2(params.row.orderGoods.discountGoodsPrice);
+      const amount = fenToYuanDot2(params.row.orderGoods.goodsPrice);
       return <div>{amount}</div>;
     }
   },
   {
-    title: "商品总价",
+    title: "折扣价",
     key: "discountGoodsPrice",
     align: "center",
     render(h, params, vm) {
-      const amount = fenToYuanDot2(
-        params.row.orderGoods.quanity * params.row.orderGoods.discountGoodsPrice
-      );
+      const amount = fenToYuanDot2(params.row.orderGoods.discountGoodsPrice);
       return <div>{amount}</div>;
     }
   },
@@ -741,15 +689,44 @@ const compensateColumns = [
       if (params.row.orderGoods.flash === 0) {
         return (
           <div>
-            <tag color="primary">普通</tag>
+            <tag color="success">普通</tag>
           </div>
         );
       } else if (params.row.orderGoods.flash === 1) {
         return (
           <div>
-            <tag color="pink">抢购</tag>
+            <tag color="error">抢购</tag>
           </div>
         );
+      }
+    }
+  },
+  {
+    title: "售后原因",
+    key: "serviceReason",
+    align: "center",
+    width: "200px",
+    render: (h, params) => {
+      if (params.row.isEdit) {
+        return h("Form", [
+          h("Input", {
+            style: {
+              marginLeft: "4px",
+              width: "100%"
+            },
+            props: {
+              type: "text",
+              value: params.row.postSaleGoods.serviceReason // 使用key的键值
+            },
+            on: {
+              input: event => {
+                params.row.postSaleGoods.serviceReason = event;
+              }
+            }
+          })
+        ]);
+      } else {
+        return h("div", params.row.postSaleGoods.serviceReason);
       }
     }
   },
@@ -763,20 +740,16 @@ const compensateColumns = [
           "Select",
           {
             props: {
-              value: params.row.postSaleGoods.serviceMode,
-              transfer: true
+              value: params.row.postSaleGoods.serviceMode
             },
             style: {
               width: "100%",
-              height: "100%"
+              height: "100%",
+              padding: "0 0 170px 0"
             },
             on: {
               "on-change": event => {
                 params.row.postSaleGoods.serviceMode = event;
-                if (event === "NORMAL" || event === "ABNORMAL") {
-                  params.row.postSaleGoods.unitCode = null;
-                  params.row.postSaleGoods.unitName = null;
-                }
               }
             }
           },
@@ -831,48 +804,15 @@ const compensateColumns = [
       } else {
         if (params.row.postSaleGoods.serviceMode === "NORMAL") {
           return h("div", "正常");
-        } else if (params.row.postSaleGoods.serviceMode === "ABNORMAL") {
-          return h("div", "异常");
         } else if (params.row.postSaleGoods.serviceMode === "REPLENISH") {
           return h("div", "补货");
         } else if (params.row.postSaleGoods.serviceMode === "SUPPLEMENT") {
           return h("div", "补款");
         } else if (params.row.postSaleGoods.serviceMode === "REVERT") {
           return h("div", "返仓");
+        } else if (params.row.postSaleGoods.serviceMode === "ABNORMAL") {
+          return h("div", "异常");
         }
-      }
-    }
-  },
-  {
-    title: "售后原因",
-    key: "serviceReason",
-    width: "200px",
-    align: "center",
-    render: (h, params) => {
-      if (
-        params.row.isEdit &&
-        params.row.postSaleGoods.serviceMode != "NORMAL"
-      ) {
-        return h("Form", [
-          h("Input", {
-            style: {
-              marginLeft: "4px",
-              width: "100%"
-            },
-            props: {
-              type: "textarea",
-              rows: 4,
-              value: params.row.postSaleGoods.serviceReason
-            },
-            on: {
-              input: event => {
-                params.row.postSaleGoods.serviceReason = event;
-              }
-            }
-          })
-        ]);
-      } else {
-        return h("div", params.row.postSaleGoods.serviceReason);
       }
     }
   },
@@ -881,11 +821,7 @@ const compensateColumns = [
     key: "quantity",
     align: "center",
     render: (h, params) => {
-      if (
-        params.row.isEdit &&
-        params.row.postSaleGoods.serviceMode !== "NORMAL" &&
-        params.row.postSaleGoods.serviceMode !== "ABNORMAL"
-      ) {
+      if (params.row.isEdit) {
         return h("Form", [
           h("Input", {
             style: {
@@ -894,7 +830,7 @@ const compensateColumns = [
             },
             props: {
               type: "text",
-              value: params.row.postSaleGoods.quantity
+              value: params.row.postSaleGoods.quantity // 使用key的键值
             },
             on: {
               input: event => {
@@ -913,41 +849,21 @@ const compensateColumns = [
     key: "unitName",
     align: "center",
     render: (h, params) => {
-      if (
-        params.row.isEdit &&
-        params.row.postSaleGoods.serviceMode !== "NORMAL" &&
-        params.row.postSaleGoods.serviceMode !== "ABNORMAL"
-      ) {
+      if (params.row.isEdit) {
         return h(
           "Select",
           {
             props: {
-              value: params.row.postSaleGoods.unitCode,
-              transfer: true,
-              placeholder: "单位"
+              value: params.row.postSaleGoods.unitCode
             },
             style: {
-              width: "67px",
-              height: "100%"
+              width: "100%",
+              height: "100%",
+              padding: "0 0 170px 0"
             },
             on: {
               "on-change": event => {
                 params.row.postSaleGoods.unitCode = event;
-                if (event === "01") {
-                  params.row.postSaleGoods.unitName = "个";
-                } else if (event === "02") {
-                  params.row.postSaleGoods.unitName = "盒";
-                } else if (event === "03") {
-                  params.row.postSaleGoods.unitName = "袋";
-                } else if (event === "04") {
-                  params.row.postSaleGoods.unitName = "件";
-                } else if (event === "05") {
-                  params.row.postSaleGoods.unitName = "盘";
-                } else if (event === "06") {
-                  params.row.postSaleGoods.unitName = "千克";
-                } else if (event === "07") {
-                  params.row.postSaleGoods.unitName = "元";
-                } 
               }
             }
           },
@@ -956,7 +872,7 @@ const compensateColumns = [
               "Option",
               {
                 props: {
-                  value: "01"
+                  value: "个"
                 }
               },
               "个"
@@ -965,7 +881,16 @@ const compensateColumns = [
               "Option",
               {
                 props: {
-                  value: "02"
+                  value: "KG"
+                }
+              },
+              "KG"
+            ),
+            h(
+              "Option",
+              {
+                props: {
+                  value: "盒"
                 }
               },
               "盒"
@@ -974,16 +899,7 @@ const compensateColumns = [
               "Option",
               {
                 props: {
-                  value: "03"
-                }
-              },
-              "袋"
-            ),
-            h(
-              "Option",
-              {
-                props: {
-                  value: "04"
+                  value: "件"
                 }
               },
               "件"
@@ -992,28 +908,10 @@ const compensateColumns = [
               "Option",
               {
                 props: {
-                  value: "05"
+                  value: "包"
                 }
               },
-              "盘"
-            ),
-            h(
-              "Option",
-              {
-                props: {
-                  value: "06"
-                }
-              },
-              "千克"
-            ),
-            h(
-              "Option",
-              {
-                props: {
-                  value: "07"
-                }
-              },
-              "元"
+              "包"
             )
           ]
         );
@@ -1027,11 +925,7 @@ const compensateColumns = [
     key: "refundAmount",
     align: "center",
     render: (h, params) => {
-      if (
-        params.row.isEdit &&
-        (params.row.postSaleGoods.serviceMode === "SUPPLEMENT" ||
-          params.row.postSaleGoods.serviceMode === "REVERT")
-      ) {
+      if (params.row.isEdit) {
         return h("Form", [
           h("Input", {
             style: {
@@ -1040,25 +934,19 @@ const compensateColumns = [
             },
             props: {
               type: "text",
-              value: params.row.postSaleGoods.fillingMoney // 使用key的键值
+              value: params.row.postSaleGoods.refundAmount // 使用key的键值
             },
             on: {
               input: event => {
-                params.row.postSaleGoods.fillingMoney = event;
+                params.row.postSaleGoods.refundAmount = event;
               }
             }
           })
         ]);
       } else {
-        return h("div", params.row.postSaleGoods.fillingMoney);
+        return h("div", params.row.postSaleGoods.refundAmount);
       }
     }
-  },
-  {
-    title: "操作",
-    align: "center",
-    key: "handle",
-    options: ["inlineEdits"]
   }
 ];
 export default {
@@ -1075,30 +963,26 @@ export default {
       serviceModeEnum,
       serviceStatusEnum,
       afterImageList: [],
-      unitData: [],
       uploadVisible: false,
       tempTableLoading: false,
       deliveryFlag: false,
       imgUploadViewItem: "",
       deliveryFeeGroup: "否",
       allMoney: 0,
+      deliveryFee: 0,
       searchRowData: _.cloneDeep(rowData),
-      searchUnitRowData: this._.cloneDeep(roleRowData),
       orderDetail: _.cloneDeep(orderDetail),
+      deliveryInfo: _.cloneDeep(deliveryInfo),
       afterMsg: _.cloneDeep(afterMsg),
       compensateDetail: _.cloneDeep(compensateDetail),
       postSaleAudit: _.cloneDeep(postSaleAudit),
-      deliveryInfo: _.cloneDeep(deliveryInfo),
+      // 商品列表
       goodsColumns,
       compensateColumns,
       serviceMode: [
         {
           label: "正常",
           value: "NORMAL"
-        },
-        {
-          label: "异常",
-          value: "ABNORMAL"
         },
         {
           label: "补货",
@@ -1138,8 +1022,8 @@ export default {
         },
         {
           title: "售后方式",
-          fixed: "left",
           align: "center",
+          fixed: "left",
           width: 120,
           key: "serviceMode",
           render: (h, params, vm) => {
@@ -1228,7 +1112,7 @@ export default {
         {
           title: "店长名称",
           align: "center",
-          width: 90,
+          width: 160,
           key: "userName"
         },
         {
@@ -1266,7 +1150,7 @@ export default {
           align: "center",
           fixed: "right",
           key: "handle",
-          options: ["operate", "finish"]
+          options: ["operate"]
         }
       ]
     };
@@ -1282,20 +1166,18 @@ export default {
   mounted() {
     this.searchRowData = _.cloneDeep(rowData);
     this.getTableData();
-    this.getTableUnitsData();
   },
   created() {},
   methods: {
     resetSearchRowData() {
       this.searchRowData = this._.cloneDeep(rowData);
-      this.searchUnitRowData = _.cloneDeep(roleRowData);
       this.getTableData();
     },
     getTableData() {
       this.loading = true;
       this.searchLoading = true;
       this.clearSearchLoading = true;
-      getAfterSalePages(this.searchRowData)
+      getFinanceAuditPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
@@ -1305,12 +1187,6 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
-    },
-    getTableUnitsData() {
-      getProductUnitsPages(this.searchUnitRowData).then(res => {
-        this.unitData = res.rows;
-        // console.log("单位", this.unitData);
-      });
     },
     getOrderDetail(id) {
       this.afterImageList = [];
@@ -1323,8 +1199,6 @@ export default {
             element.status = res.status;
             element.postSaleGoods.refundAmount =
               element.postSaleGoods.refundAmount / 100;
-            element.postSaleGoods.fillingMoney =
-              element.postSaleGoods.refundAmount;
           });
           this.compensateDetail = res.postSaleGoodsDtoList;
           if (this.orderDetail.deliveryAddress) {
@@ -1346,15 +1220,6 @@ export default {
           this.loading = false;
         });
     },
-    // getSaleFinish 售后完成
-    hanldeFinish(params) {
-      getSaleFinish(params.row)
-        .then(res => {
-          this.$Message.info("售后完成");
-          this.getTableData();
-        })
-        .finally(() => {});
-    },
     // 根据id修改
     handleOperate(params) {
       this.loading = true;
@@ -1364,6 +1229,9 @@ export default {
       this.deliveryFeeGroup = "否";
       this.deliveryFlag = false;
       this.getOrderDetail(id);
+    },
+    dateGroupChange(value) {
+      value === "是" ? (this.deliveryFlag = true) : (this.deliveryFlag = false);
     },
     startTimeChange(value, date) {
       this.searchRowData.startTime = value;
@@ -1375,108 +1243,31 @@ export default {
       this.imgUploadViewItem = item;
       this.uploadVisible = true;
     },
-    // POST_SALE_ORDER_GOODS 订单商品 POST_SALE_ORDER 订单
-    handleDownload(name) {
-      const dataParams = this.searchRowData;
-      dataParams.name = name;
-      getOrderGoods(dataParams).then(res => {
-        if (!res) {
-          this.$Message.info("暂无任何数据返回");
-          return;
-        }
-        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
-        const fileType =
-          name === "POST_SALE_ORDER" ? "售后订单" : "售后订单商品";
-        const fileName = `${fileType}-${date}.xls`;
-        download(res, fileName);
-      });
-    },
-    modalHandleEdit(params) {
-      this.$set(params.row, "isEdit", true);
-    },
-    modalHandleSave(params) {
-      const sumPrice =
-        (params.row.orderGoods.quanity *
-          params.row.orderGoods.discountGoodsPrice) /
-        100;
-      if (Number(params.row.postSaleGoods.fillingMoney) > sumPrice) {
-        this.$Message.info("补款金额不能大于商品总价");
-        return;
-      }
-      const index = params.row.initRowIndex;
-      this.compensateDetail[index].postSaleGoods.serviceReason =
-        params.row.postSaleGoods.serviceReason;
-      this.compensateDetail[index].postSaleGoods.serviceMode =
-        params.row.postSaleGoods.serviceMode;
-      this.compensateDetail[index].postSaleGoods.quantity =
-        params.row.postSaleGoods.quantity;
-      this.compensateDetail[index].postSaleGoods.unitCode =
-        params.row.postSaleGoods.unitCode;
-      this.compensateDetail[index].postSaleGoods.unitName =
-        params.row.postSaleGoods.unitName;
-      this.compensateDetail[index].postSaleGoods.refundAmount =
-        params.row.postSaleGoods.fillingMoney;
-      this.compensateDetail[index].postSaleGoods.fillingMoney =
-        params.row.postSaleGoods.fillingMoney;
-      const allData = this.compensateDetail;
-      let money = 0;
-      for (let i = 0; i < allData.length; i++) {
-        money += Number(allData[i].postSaleGoods.fillingMoney);
-      }
-      this.allMoney = money * 100;
-      this.$set(params.row, "isEdit", false);
-      console.log("传参", params);
-    },
-    dateGroupChange(value) {
-      value === "是" ? (this.deliveryFlag = true) : (this.deliveryFlag = false);
-    },
-    // 提交审核
-    handlePassAudit(name) {
-      this.postSaleAudit.id = this.afterMsg.id;
-      this.postSaleAudit.refundAmount = this.allMoney;
-      this.postSaleAudit.refundFreightAmount = 0;
-      if (this.deliveryFlag) {
-        this.postSaleAudit.refundFreightAmount = this.orderDetail.deliveryFee;
-      }
-      const allData = this.compensateDetail;
-      this.postSaleAudit.postSaleGoods = [];
-      for (let i = 0; i < allData.length; i++) {
-        allData[i].postSaleGoods.refundAmount =
-          Number(allData[i].postSaleGoods.refundAmount) * 100;
-        this.postSaleAudit.postSaleGoods.push(allData[i].postSaleGoods);
-      }
-      if (name === "pass") {
-        // 如果售后方式存在全部正常、全部异常、只要正常异常并且不退运费则不需发送财务审核
-        const serviceModeList = [];
-        const targtArr = ["REPLENISH", "SUPPLEMENT", "REVERT"];
-        this.postSaleAudit.postSaleGoods.forEach(item =>
-          serviceModeList.push(item.serviceMode)
-        );
-        if (!hasOneOf(targtArr, serviceModeList) && !this.deliveryFlag) {
-          this.$Message.info("无补货、补款，返仓处理情况，请选择拒绝售后");
-          return false;
-        }
-        getPassAudit(this.postSaleAudit).then(res => {
-          this.$Message.info("审核通过");
-          this.modalView = false;
+    // 财务审核通过
+    hanldeFinanceAudit() {
+      getFinanceAudit(this.afterMsg)
+        .then(res => {
+          this.$Message.info("通过审核");
           this.getTableData();
-        });
-      } else {
-        getRefuseAudit(this.postSaleAudit).then(res => {
-          this.$Message.info("拒绝售后");
           this.modalView = false;
+        })
+        .finally(() => {});
+    },
+    // 财务审核拒绝
+    hanldeFinanceRefuse() {
+      getFinanceRefuse(this.afterMsg)
+        .then(res => {
+          this.$Message.info("拒绝审核");
           this.getTableData();
-        });
-      }
+          this.modalView = false;
+        })
+        .finally(() => {});
     }
   }
 };
 </script>
 
-<style lang="scss">
-.ivu-select-dropdown {
-  width: 67px;
-}
+<style lang="scss" scoped>
 .check {
   display: flex;
   align-items: center;

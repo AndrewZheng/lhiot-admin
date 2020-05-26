@@ -60,6 +60,13 @@ import {
   yesNoEnum,
   deliverStatusEnum,
   validDateTypeEnum,
+  taskTypeEnum,
+  rewardTypeEnum,
+  deliveryTypeEnum,
+  commentScoreTypeEnum,
+  receiveStatusEnum,
+  serviceModeEnum,
+  serviceStatusEnum,
   // 批发商城小程序
   userStatusEnum,
   userTypeEnum,
@@ -93,6 +100,31 @@ const convertFunction = (value, list) => {
       label: value || 'N/A'
     };
   }
+};
+
+export const receiveStatusConvert = (value) => {
+  return convertFunction(value, receiveStatusEnum);
+};
+export const serviceModeConvert = (value) => {
+  return convertFunction(value, serviceModeEnum);
+};
+export const serviceStatusConvert = (value) => {
+  return convertFunction(value, serviceStatusEnum);
+};
+export const rewardTypeConvert = (value) => {
+  return convertFunction(value, rewardTypeEnum);
+};
+
+export const deliveryTypeConvert = (value) => {
+  return convertFunction(value, deliveryTypeEnum);
+};
+
+export const commentScoreConvert = (value) => {
+  return convertFunction(value, commentScoreTypeEnum);
+};
+
+export const taskTypeConvert = (value) => {
+  return convertFunction(value, taskTypeEnum);
 };
 
 export const paymentFromConvert = (value) => {

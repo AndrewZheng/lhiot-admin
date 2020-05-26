@@ -736,6 +736,7 @@ export const relationStoreTypeEnum = [{
 }
 ]
 
+
 export const couponStatusEnum = [{
   label: '有效',
   value: 'VALID'
@@ -1038,7 +1039,7 @@ export const payType = {
   weixin: 'weixin',
   balance: 'balance',
   points: 'points',
-  haiding:'haiding'
+  haiding: 'haiding',
 };
 
 export const payTypeEnum = [{
@@ -2766,3 +2767,130 @@ export const paymentFromEnum = [{
   value: 'debt'
 }
 ];
+
+// MRQD-每日签到、WSGRZL-完善个人资料、XRXSSDXF-新人线上首单消费、XSSCCZ-线上首次充值、XSYDCZ-线上月度充值、XSYDXF-线上月度消费
+export const taskTypeEnum = [{
+  label: '每日签到',
+  value: 'MRQD'
+},
+{
+  label: '完善个人资料',
+  value: 'WSGRZL'
+},
+{
+  label: '新人线上首单消费',
+  value: 'XRXSSDXF'
+},
+{
+  label: '线上首次充值',
+  value: 'XSSCCZ'
+},
+{
+  label: '线上月度充值',
+  value: 'XSYDCZ'
+},
+{
+  label: '线上月度消费',
+  value: 'XSYDXF'
+}
+]
+
+// 奖励类型（INTEGRAL-积分、GIFTPACK-礼包）
+export const rewardTypeEnum = [{
+  label: '积分',
+  value: 'INTEGRAL'
+},
+{
+  label: '礼包',
+  value: 'GIFTPACK'
+}]
+
+// 骑手评价(很差:NEGATIVE;一般:GENERAL;超赞:GOOD)
+export const deliveryTypeEnum = [{
+  label: '很差',
+  value: 'NEGATIVE'
+},
+{
+  label: '一般',
+  value: 'GENERAL'
+},
+{
+  label: '超赞',
+  value: 'GOOD'
+}]
+
+export const commentScoreTypeEnum = [{
+  label: '1星',
+  value: '1'
+},
+{
+  label: '2星',
+  value: '2'
+},
+{
+  label: '3星',
+  value: '3'
+},
+{
+  label: '4星',
+  value: '4'
+},
+{
+  label: '5星',
+  value: '5'
+}]
+
+// 领取状态（YES-已领取、NO-未领取）
+export const receiveStatusEnum = [{
+  label: '已领取',
+  value: 'YES'
+},
+{
+  label: '未领取',
+  value: 'NO'
+}]
+//售后方式
+export const serviceModeEnum = [{
+  label: '补货',
+  value: 'REPLENISH'
+},
+{
+  label: '补款',
+  value: 'SUPPLEMENT'
+},
+{
+  label: '返仓',
+  value: 'REVERT'
+},{
+  label: '退运费',
+  value: 'ABNORMAL'
+},]
+//售后状态 
+export const serviceStatusEnum = [{
+  label: '待审核',
+  value: 'WAIT'
+},
+{
+  label: '审核拒绝',
+  value: 'AUDIT_REJECT'
+},{
+  label: '客户取消',
+  value: 'CANCEL'
+},
+{
+  label: '待财务确认',
+  value: 'WAIT_REVIEW'
+},
+{
+  label: '财务拒绝',
+  value: 'REVIEW_REJECT'
+},
+{
+  label: '售后中',
+  value: 'SERVICEING'
+},
+{
+  label: '售后完成',
+  value: 'FINISH'
+}]
+
