@@ -95,7 +95,7 @@
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
             <Icon type="md-add" />添加
           </Button>
-          <Button
+          <!-- <Button
             v-waves
             :loading="exportExcelLoading"
             type="primary"
@@ -103,7 +103,7 @@
             @click="handleDownload"
           >
             <Icon type="md-download" />导出
-          </Button>
+          </Button> -->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">

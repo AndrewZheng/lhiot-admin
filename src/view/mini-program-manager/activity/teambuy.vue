@@ -846,7 +846,8 @@ import {
   fenToYuanDot2Number,
   yuanToFenNumber,
   compareData,
-  secondsToDate
+  secondsToDate,
+  compareCouponData
 } from "@/libs/util";
 
 const teambuyDetail = {
@@ -1174,7 +1175,16 @@ export default {
           title: "有效期止",
           align: "center",
           minWidth: 160,
-          key: "endTime"
+          key: "endTime",
+          render(h, params) {
+            if (!compareCouponData(params.row.endTime)) {
+              return (
+                <div style="color:red">{params.row.endTime + "已过期"}</div>
+              );
+            } else {
+              return <div>{params.row.endTime}</div>;
+            }
+          }
         },
         {
           title: "商品库存",
