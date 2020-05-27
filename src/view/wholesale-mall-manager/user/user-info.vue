@@ -1015,8 +1015,10 @@ export default {
     },
     handleUnlock(params) {
       let data = params.row;
+      data.userStatus =
+        params.row.userStatus === "certified" ? "locking" : "certified";
       unlockSalesman(data).then(res => {
-        this.$Message.info("解锁成功");
+        this.$Message.info("操作成功");
         this.getTableData();
       });
     },

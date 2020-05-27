@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="22"
+        :search-area-column="23"
         :operate-area-column="6"
         editable
         searchable
@@ -1309,7 +1309,7 @@ export default {
     getTableUnitsData() {
       getProductUnitsPages(this.searchUnitRowData).then(res => {
         this.unitData = res.rows;
-        // console.log("单位", this.unitData);
+        console.log("单位", this.unitData);
       });
     },
     getOrderDetail(id) {
@@ -1426,7 +1426,6 @@ export default {
       }
       this.allMoney = money * 100;
       this.$set(params.row, "isEdit", false);
-      console.log("传参", params);
     },
     dateGroupChange(value) {
       value === "是" ? (this.deliveryFlag = true) : (this.deliveryFlag = false);
@@ -1446,6 +1445,7 @@ export default {
           Number(allData[i].postSaleGoods.refundAmount) * 100;
         this.postSaleAudit.postSaleGoods.push(allData[i].postSaleGoods);
       }
+      console.log("chuancan", this.postSaleAudit);
       if (name === "pass") {
         // 如果售后方式存在全部正常、全部异常、只要正常异常并且不退运费则不需发送财务审核
         const serviceModeList = [];

@@ -723,10 +723,7 @@ export const getOrderGoods = (data) => {
     method: 'post',
     data: data,
     headers: {
-      'page': data.page,
       'rows': -1,
-      'sidx': data.sidx,
-      'sort': data.sort
     }
   });
 };
@@ -1536,7 +1533,7 @@ export const getAnalysisDatas = (data) => {
 // 解锁业务员
 export const unlockSalesman = (data) => {
   return $http.request({
-    url: '/wholesale-small/user/unlock-user/' + data.id,
+    url: `/wholesale-small/user/unlock-user/${data.id}?userStatus=${data.userStatus}`,
     data,
     method: 'put'
   });

@@ -21,7 +21,7 @@
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
               placeholder="开始时间"
-              class="mr5"
+              class
               style="width: 150px"
               @on-change="startTimeChange"
             />
@@ -31,41 +31,41 @@
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
               placeholder="结束时间"
-              class="mr5"
+              class
               style="width: 150px"
               @on-change="endTimeChange"
             />
             <Input
               v-model="searchRowData.orderCode"
               placeholder="订单编码"
-              class="search-input mr5"
+              class="search-input"
               style="width: 150px"
               clearable
             ></Input>
             <Input
               v-model="searchRowData.hdCode"
               placeholder="海鼎编码"
-              class="search-input mr5"
+              class="search-input"
               style="width: 120px"
               clearable
             ></Input>
             <Input
               v-model="searchRowData.userName"
               placeholder="店长姓名"
-              class="search-input mr5"
+              class="search-input"
               style="width: 90px"
               clearable
             ></Input>
             <Input
               v-model="searchRowData.phone"
               placeholder="手机号码"
-              class="search-input mr5"
+              class="search-input"
               style="width: 120px"
               clearable
             ></Input>
             <Select
               v-model="searchRowData.serviceMode"
-              class="search-col mr5"
+              class="search-col"
               placeholder="售后方式"
               style="width: 90px"
               clearable
@@ -79,7 +79,7 @@
             </Select>
             <Select
               v-model="searchRowData.status"
-              class="search-col mr5"
+              class="search-col"
               placeholder="售后状态"
               style="width: 120px"
               clearable
@@ -93,7 +93,7 @@
             </Select>
             <Button
               :loading="searchLoading"
-              class="search-btn mr5"
+              class="search-btn"
               type="primary"
               @click="handleSearch"
             >
@@ -107,6 +107,14 @@
               @click="handleClear"
             >
               <Icon type="md-refresh" />&nbsp;清除
+            </Button>
+            <Button
+              :loading="downloadLoading"
+              class="search-btn mr2"
+              type="primary"
+              @click="handleDownload"
+            >
+              <Icon type="md-download" />导出
             </Button>
           </Row>
         </div>
@@ -1262,6 +1270,27 @@ export default {
           this.modalView = false;
         })
         .finally(() => {});
+    },
+    handleDownload() {
+      // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
+      this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      getFinanceAuditPages(this.searchRowData).then(res => {
+        const tableData = res.rows;
+        // 恢复正常页数
+        this.searchRowData.rows = 20;
+        // 表格数据导出字段翻译
+        tableData.forEach(item => {
+          item["status"] = serviceStatusConvert(
+            item["status"]
+          ).label;
+          item["payableFee"] = (item["payableFee"] / 100.0).toFixed(2);
+        });
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+        this.$refs.tables.handleDownload({
+          filename: `财务审核订单-${date}`,
+          data: tableData
+        });
+      });
     }
   }
 };
