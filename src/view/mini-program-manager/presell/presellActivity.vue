@@ -460,7 +460,7 @@
                 <FormItem label="提货开始时间:" prop="deliveryStartTime">
                   <DatePicker
                     v-model="presellDetail.deliveryStartTime"
-                    format="yyyy-MM-dd"
+                    format="yyyy-MM-dd HH:mm:ss"
                     type="date"
                     :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
                     placeholder="提货开始时间"
@@ -473,7 +473,7 @@
                 <FormItem label="提货截止时间:" prop="deliveryEndTime">
                   <DatePicker
                     v-model="presellDetail.deliveryEndTime"
-                    format="yyyy-MM-dd"
+                    format="yyyy-MM-dd HH:mm:ss"
                     type="date"
                     :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
                     placeholder="提货截止时间"
@@ -877,8 +877,8 @@ const preselldata = {
   banner: "",
   beginDay: 0,
   content: "",
-  deliveryEndTime: "",
-  deliveryStartTime: "",
+  deliveryEndTime: null,
+  deliveryStartTime: null,
   endTime: null,
   flashCount: 0,
   id: 0,
@@ -989,8 +989,8 @@ export default {
         banner: [{ required: true, message: "请上传活动banner " }],
         startTime: [{ required: true, message: "请输入活动开始时间" }],
         endTime: [{ required: true, message: "请输入活动结束时间" }],
-        deliveryStartTime: [{ required: true, message: "请输入提货开始时间" }],
-        // deliveryEndTime: [{ required: false, message: "请输入提货截止时间" }],
+        // deliveryStartTime: [{ required: true, message: "请选择提货开始时间" }],
+        // beginDay: [{ required: false, message: "请输入下单后提货天数" }],
         triesLimit: [
           { required: true, message: "请输入限购" },
           {
@@ -1847,12 +1847,9 @@ export default {
       this.modalGoodsStandard = false;
     },
     handleChange(value) {
-      console.log("对象", this.presellDetail, value);
-      // if (value === "UN_FIXED_DATE") {
-      //   this.presellDetail.deliveryStartTime = "";
-      //   this.presellDetail.deliveryEndTime = "";
-      // }
-      // console.log("选择后对象", this.presellDetail);
+      this.presellDetail.deliveryStartTime = "";
+      this.presellDetail.deliveryEndTime = "";
+      this.presellDetail.beginDa = 0;
     }
   }
 };
