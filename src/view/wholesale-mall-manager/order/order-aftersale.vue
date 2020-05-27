@@ -525,7 +525,7 @@ const rowData = {
   phone: "",
   serviceMode: "",
   status: "WAIT",
-  sidx: "createTime",
+  sidx: "t.createTime",
   sort: "desc"
 };
 const roleRowData = {
