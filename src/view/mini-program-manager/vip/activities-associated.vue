@@ -496,6 +496,15 @@
             </Row>
             <Row>
               <i-col span="6">
+                <FormItem label="排序字段:" prop="rank" :label-width="100">
+                  <InputNumber
+                    v-model="addRelationDetail.rank"
+                    label
+                    style="padding-right: 5px;width: 120px"
+                  ></InputNumber>
+                </FormItem>
+              </i-col>
+              <i-col span="6">
                 <FormItem
                   label="最高优惠金额:"
                   prop="maxDiscountFee"
@@ -595,6 +604,17 @@
                     class="ptb2-5"
                   >{{ item.label }}</Option>
                 </Select>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="6">
+              <FormItem label="排序字段:" prop="rank" :label-width="100">
+                <InputNumber
+                  v-model="addRelationDetail.rank"
+                  label
+                  style="width: 120px"
+                ></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -818,7 +838,8 @@ const couponDetail = {
   applicationType: null,
   activityImage: "",
   activityUrl: "",
-  hdActivityId: ""
+  hdActivityId: "",
+  rank: 0
 };
 
 // 关联的优惠券配置对象
@@ -856,7 +877,8 @@ const couponTemplateDetail = {
   createUser: "",
   createTime: null,
   couponRules: "",
-  couponScope: null
+  couponScope: null,
+  rank: 0
 };
 
 // 海鼎优惠券模板对象
@@ -880,7 +902,8 @@ const hdCouponTemplateDetail = {
   source: "HD",
   useLimitType: null,
   validDateType: "FIXED_DATE",
-  hdActivityId: ""
+  hdActivityId: "",
+  rank: 0
 };
 
 const roleRowData = {
@@ -999,7 +1022,7 @@ const dataColumns = [
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{row.couponFee/10 + "折"}</div>;
+        return <div>{row.couponFee / 10 + "折"}</div>;
       } else {
         return <div>{fenToYuanDot2(row.couponFee)}</div>;
       }
