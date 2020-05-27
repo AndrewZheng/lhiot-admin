@@ -231,6 +231,26 @@
             </Row>
           </i-col>
         </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="20">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="6">评价图片:</i-col>
+              <i-col span="16">
+                <div
+                  v-for="item in evaluateList"
+                  :key="item.id"
+                  class="demo-upload-list"
+                  style="width:100px;height:100px;"
+                >
+                  <img :src="item" />
+                  <div class="demo-upload-list-cover">
+                    <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                  </div>
+                </div>
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
       </div>
       <div slot="footer">
         <Button type="primary" @click="handleClose">关闭</Button>
@@ -314,7 +334,7 @@
           </Row>
           <Divider>回复评价</Divider>
           <Row class-name="mb20">
-            <i-col span="20" v-if="evaluateStatus">
+            <!-- <i-col span="20" v-if="evaluateStatus">
               <FormItem :label-width="100" label="回复评价:" prop="answerContent">
                 <Input
                   v-model="evaluateDetail.answerContent"
@@ -324,8 +344,8 @@
                   placeholder="请输入回复内容..."
                 ></Input>
               </FormItem>
-            </i-col>
-            <i-col span="20" v-else>
+            </i-col>-->
+            <i-col span="20">
               <FormItem :label-width="100" label="回复评价:" prop="answerContent">
                 <Input
                   v-model="evaluateDetail.answerContent"
@@ -586,6 +606,13 @@ export default {
       this.resetFields();
       this.tempModalType = this.modalType.view;
       this.evaluateDetail = _.cloneDeep(params.row);
+      (this.evaluateList = []), (this.evaluateDetail = _.cloneDeep(params.row));
+      let arr = params.row.commentImages.split(",");
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] != "") {
+          this.evaluateList.push(arr[i]);
+        }
+      }
       this.modalView = true;
     },
     handleEdit(params) {
