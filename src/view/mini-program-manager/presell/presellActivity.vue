@@ -175,9 +175,9 @@
             <Row>
               <i-col span="6">活动开始时间:</i-col>
               <i-col span="18">
-                {{ this.presellDetail.startTime = this.$moment(
-                this.presellDetail.startTime
-                ).format("YYYY-MM-DD HH:mm:ss") }}
+                {{ this.$moment(
+                presellDetail.startTime
+                ).format("YYYY-MM-DD HH:mm:ss")}}
               </i-col>
             </Row>
           </i-col>
@@ -185,9 +185,9 @@
             <Row>
               <i-col span="6">活动结束时间:</i-col>
               <i-col span="18">
-                {{ this.presellDetail.endTime = this.$moment(
-                this.presellDetail.endTime
-                ).format("YYYY-MM-DD HH:mm:ss") }}
+                {{ this.$moment(
+                presellDetail.endTime
+                ).format("YYYY-MM-DD HH:mm:ss")}}
               </i-col>
             </Row>
           </i-col>
@@ -212,9 +212,9 @@
             <Row>
               <i-col span="6">提货开始时间:</i-col>
               <i-col span="18">
-                {{ this.presellDetail.deliveryStartTime = this.$moment(
-                this.presellDetail.deliveryStartTime
-                ).format("YYYY-MM-DD HH:mm:ss") }}
+                {{ this.$moment(
+                presellDetail.deliveryStartTime
+                ).format("YYYY-MM-DD HH:mm:ss")}}
               </i-col>
             </Row>
           </i-col>
@@ -222,9 +222,9 @@
             <Row>
               <i-col span="6">提货结束时间:</i-col>
               <i-col span="18">
-                {{ this.presellDetail.deliveryEndTime = this.$moment(
-                this.presellDetail.deliveryEndTime
-                ).format("YYYY-MM-DD HH:mm:ss") }}
+                {{ this.$moment(
+                presellDetail.deliveryEndTime
+                ).format("YYYY-MM-DD HH:mm:ss")}}
               </i-col>
             </Row>
           </i-col>
@@ -392,7 +392,7 @@
               </FormItem>
             </i-col>
           </Row>
-          <!-- <Row>
+          <Row>
             <i-col span="12">
               <FormItem label="活动开始时间:" prop="startTime">
                 <DatePicker
@@ -421,8 +421,8 @@
                 />
               </FormItem>
             </i-col>
-          </Row> -->
-          <!-- <Row>
+          </Row>
+          <Row>
             <i-col span="12">
               <FormItem label="提货时间:" prop="validDateType">
                 <Select
@@ -486,7 +486,7 @@
             <i-col span="12">
               <FormItem label="原价:">{{ presellDetail.originalPrice | fenToYuanDot2Filters }}</FormItem>
             </i-col>
-          </Row> -->
+          </Row>
           <Row>
             <i-col span="12">
               <FormItem label="商品规格:" prop="standardId">
@@ -877,9 +877,9 @@ const preselldata = {
   banner: "",
   beginDay: 0,
   content: "",
-  deliveryEndTime: "123",
+  deliveryEndTime: "",
   deliveryStartTime: "",
-  endTime: "",
+  endTime: null,
   flashCount: 0,
   id: 0,
   invNum: 0,
@@ -888,7 +888,7 @@ const preselldata = {
   saleQuantity: 0,
   standardDesc: "",
   standardId: 0,
-  startTime: "",
+  startTime: null,
   startedFlag: "",
   status: "",
   storeIds: "",
@@ -1413,7 +1413,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.presellDetail)
+    console.log(this.presellDetail);
     this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
     this.getStore();
@@ -1433,7 +1433,7 @@ export default {
     handleSubmit() {
       const _this = this;
       console.log("shuju", _this.presellDetail);
-      return;
+      // return;
       this.$refs.editForm.validate(valid => {
         if (valid) {
           if (
@@ -1462,24 +1462,6 @@ export default {
             _this.$Message.error("选择部分门店时必须选择至少一个门店!");
             return;
           }
-          // 活动格式转换Formart
-          // if (_this.presellDetail.startTime.indexOf("GMT") > 0) {
-          //   _this.presellDetail.startTime = _this
-          //     .$moment(_this.presellDetail.startTime)
-          //     .format("yyyy-MM-dd HH:mm:ss");
-          // }
-
-          // if (_this.presellDetail.endTime.indexOf("GMT") > 0) {
-          //   _this.presellDetail.endTime = _this
-          //     .$moment(_this.presellDetail.endTime)
-          //     .format("yyyy-MM-dd HH:mm:ss");
-          // }
-
-          // if (_this.presellDetail.deliveryEndTime.indexOf("GMT") > 0) {
-          //   _this.presellDetail.deliveryEndTime = _this
-          //     .$moment(_this.presellDetail.deliveryEndTime)
-          //     .format("yyyy-MM-dd HH:mm:ss");
-          // }
           if (_this.tempModalType === _this.modalType.create) {
             // 添加状态
             _this.createStore();
@@ -1493,23 +1475,11 @@ export default {
       });
     },
     handleEditClose() {
-      // if (this.newPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.newPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
     },
-    // deletePicture(urls) {
-    //   deletePicture({
-    //     urls
-    //   })
-    //     .then(res => {})
-    //     .catch(() => {});
-    // },
+
     createStore() {
       this.modalViewLoading = true;
       this.presellDetail.id = null; // 新建时不需要传递id
@@ -1528,24 +1498,6 @@ export default {
     },
     editStore() {
       this.modalViewLoading = true;
-      if (this.presellDetail.startTime.indexOf("T") > -1) {
-        this.presellDetail.startTime = this.$moment(
-          this.presellDetail.startTime
-        ).format("YYYY-MM-DD HH:mm:ss");
-      }
-      if (this.presellDetail.endTime.indexOf("T") > -1) {
-        this.presellDetail.endTime = this.$moment(
-          this.presellDetail.endTime
-        ).format("YYYY-MM-DD HH:mm:ss");
-      }
-      if (this.presellDetail.deliveryEndTime.indexOf("T") > -1) {
-        this.presellDetail.deliveryEndTime = this.$moment(
-          this.presellDetail.deliveryEndTime
-        ).format("YYYY-MM-DD HH:mm:ss");
-      }
-      console.log("duixiang", this.presellDetail);
-      // return;
-
       editPresell(this.presellDetail)
         .then(res => {
           this.getTableData();
@@ -1568,24 +1520,6 @@ export default {
         this.tempModalType = this.modalType.create;
         this.presellDetail = _.cloneDeep(preselldata);
       }
-      // if (this.currentTableRowSelected) {
-      //   this.currentTableRowSelected.id = null;
-      //   this.currentTableRowSelected.standardId = null;
-      //   this.currentTableRowSelected.originalPrice = null;
-      //   this.currentTableRowSelected.banner = null;
-      //   this.currentTableRowSelected.status = null;
-      //   this.currentTableRowSelected.rank = null;
-      //   this.currentTableRowSelected.storeId = null;
-      //   this.currentTableRowSelected.storeIds = null;
-      //   this.currentTableRowSelected.relationStoreType = "ALL";
-      //   this.currentTableRowSelected.activityPrice = null;
-      //   this.currentTableRowSelected.validDateType = "FIXED_DATE";
-      //   this.currentTableRowSelected.deliveryStartTime = null;
-      //   this.currentTableRowSelected.deliveryEndTime = null;
-
-      //   this.presellDetail = _.cloneDeep(this.currentTableRowSelected);
-      // }
-
       this.getStore();
       this.modalEdit = true;
     },
@@ -1688,10 +1622,6 @@ export default {
       });
     },
     getTableData() {
-      // if (!this.searchRowData.status) {
-      //   this.searchRowData.sidx = "start_time";
-      //   this.searchRowData.sort = "desc";
-      // }
       getPresellPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
@@ -1721,7 +1651,6 @@ export default {
     },
     startTimeChange(value, date) {
       this.presellDetail.startTime = value;
-      console.log("时间", value);
       // if (this.presellDetail.startTime.indexOf("T") > -1) {
       //   this.presellDetail.startTime = this.$moment(
       //     this.presellDetail.startTime
@@ -1738,32 +1667,10 @@ export default {
     },
     createTimeStartChange(value, date) {
       this.searchRowData.startTime = value || null;
-      // this.searchRowData.startTime = this.$moment(value).format(
-      //   "YYYY-MM-DD HH:mm:ss"
-      // );
     },
     createTimeEndChange(value, date) {
       this.searchRowData.endTime = value || null;
-      // this.searchRowData.endTime = this.$moment(value).format(
-      //   "YYYY-MM-DD HH:mm:ss"
-      // );
     },
-    // deliveryEndTimeChange(value, date) {
-    //   this.presellDetail.deliveryEndTime = value;
-    //   if (this.presellDetail.deliveryEndTime.indexOf("T") > -1) {
-    //     this.presellDetail.deliveryEndTime = this.$moment(
-    //       this.presellDetail.deliveryEndTime
-    //     ).format("YYYY-MM-DD HH:mm:ss");
-    //   }
-    // },
-    // deliveryStartTimeChange(value, date) {
-    //   this.presellDetail.deliveryStartTime = value;
-    //   if (this.presellDetail.deliveryStartTime.indexOf("T") > -1) {
-    //     this.presellDetail.deliveryStartTime = this.$moment(
-    //       this.presellDetail.deliveryStartTime
-    //     ).format("YYYY-MM-DD HH:mm:ss");
-    //   }
-    // },
     effectiveStartTimeChange(value, date) {
       this.presellDetail.deliveryStartTime = value || null;
     },
