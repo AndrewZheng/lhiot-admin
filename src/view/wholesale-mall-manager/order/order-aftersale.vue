@@ -525,7 +525,7 @@ const rowData = {
   phone: "",
   serviceMode: "",
   status: "WAIT",
-  sidx: "createTime",
+  sidx: "t.createTime",
   sort: "desc"
 };
 const roleRowData = {
@@ -1379,6 +1379,7 @@ export default {
     handleDownload(name) {
       const dataParams = this.searchRowData;
       dataParams.name = name;
+      dataParams.rows = -1;
       getOrderGoods(dataParams).then(res => {
         if (!res) {
           this.$Message.info("暂无任何数据返回");

@@ -480,7 +480,7 @@ const rowData = {
   phone: "",
   serviceMode: null,
   status: "WAIT_REVIEW",
-  sidx: "auditTime",
+  sidx: "t.auditTime",
   sort: "desc"
 };
 // 地址对象
