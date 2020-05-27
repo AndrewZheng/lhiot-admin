@@ -87,9 +87,9 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
-          <div class="ml15 mt10">
+          <!-- <div class="ml15 mt10">
             <i style="color:red">*</i> 选中单条数据再点击添加,可复制当前数据
-          </div>
+          </div>-->
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
@@ -392,13 +392,13 @@
               </FormItem>
             </i-col>
           </Row>
-          <Row>
+          <!-- <Row>
             <i-col span="12">
               <FormItem label="活动开始时间:" prop="startTime">
                 <DatePicker
                   v-model="presellDetail.startTime"
-                  format="yyyy-MM-dd HH:mm:ss"
                   type="datetime"
+                  format="yyyy-MM-dd HH:mm:ss"
                   placeholder="活动开始时间"
                   :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
                   class="search-input"
@@ -411,8 +411,8 @@
               <FormItem label="活动结束时间:" prop="endTime">
                 <DatePicker
                   v-model="presellDetail.endTime"
-                  format="yyyy-MM-dd HH:mm:ss"
                   type="datetime"
+                  format="yyyy-MM-dd HH:mm:ss"
                   placeholder="活动结束时间"
                   :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
                   class="search-input"
@@ -421,8 +421,8 @@
                 />
               </FormItem>
             </i-col>
-          </Row>
-          <Row>
+          </Row> -->
+          <!-- <Row>
             <i-col span="12">
               <FormItem label="提货时间:" prop="validDateType">
                 <Select
@@ -458,10 +458,9 @@
             <template>
               <i-col span="12" v-if="presellDetail.validDateType=='FIXED_DATE'">
                 <FormItem label="提货开始时间:" prop="deliveryStartTime">
-                  <!-- :value="presellDetail.deliveryStartTime" -->
                   <DatePicker
                     v-model="presellDetail.deliveryStartTime"
-                    format="yyyy/MM/dd"
+                    format="yyyy-MM-dd"
                     type="date"
                     :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
                     placeholder="提货开始时间"
@@ -472,10 +471,9 @@
               </i-col>
               <i-col span="12">
                 <FormItem label="提货截止时间:" prop="deliveryEndTime">
-                  <!-- :value="presellDetail.deliveryEndTime" -->
                   <DatePicker
                     v-model="presellDetail.deliveryEndTime"
-                    format="yyyy/MM/dd"
+                    format="yyyy-MM-dd"
                     type="date"
                     :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
                     placeholder="提货截止时间"
@@ -488,7 +486,7 @@
             <i-col span="12">
               <FormItem label="原价:">{{ presellDetail.originalPrice | fenToYuanDot2Filters }}</FormItem>
             </i-col>
-          </Row>
+          </Row> -->
           <Row>
             <i-col span="12">
               <FormItem label="商品规格:" prop="standardId">
@@ -873,14 +871,14 @@ import {
   compareCouponData
 } from "@/libs/util";
 
-const presellDetail = {
+const preselldata = {
   activityName: "",
   activityPrice: 0,
   banner: "",
   beginDay: 0,
   content: "",
-  deliveryEndTime: null,
-  deliveryStartTime: null,
+  deliveryEndTime: "123",
+  deliveryStartTime: "",
   endTime: "",
   flashCount: 0,
   id: 0,
@@ -895,7 +893,7 @@ const presellDetail = {
   status: "",
   storeIds: "",
   triesLimit: 0,
-  validDateType: "FIXED_DATE"
+  validDateType: "UN_FIXED_DATE"
 };
 
 const roleRowData = {
@@ -1372,7 +1370,7 @@ export default {
       searchRowData: _.cloneDeep(roleRowData),
       searchProductRowData: _.cloneDeep(productRowData),
       productDetail: _.cloneDeep(productStandardDetail),
-      presellDetail: _.cloneDeep(presellDetail)
+      presellDetail: _.cloneDeep(preselldata)
     };
   },
   computed: {
@@ -1415,6 +1413,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.presellDetail)
     this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
     this.getStore();
@@ -1433,6 +1432,8 @@ export default {
     },
     handleSubmit() {
       const _this = this;
+      console.log("shuju", _this.presellDetail);
+      return;
       this.$refs.editForm.validate(valid => {
         if (valid) {
           if (
@@ -1462,23 +1463,23 @@ export default {
             return;
           }
           // 活动格式转换Formart
-          if (_this.presellDetail.startTime.indexOf("GMT") > 0) {
-            _this.presellDetail.startTime = _this
-              .$moment(_this.presellDetail.startTime)
-              .format("yyyy-MM-dd HH:mm:ss");
-          }
+          // if (_this.presellDetail.startTime.indexOf("GMT") > 0) {
+          //   _this.presellDetail.startTime = _this
+          //     .$moment(_this.presellDetail.startTime)
+          //     .format("yyyy-MM-dd HH:mm:ss");
+          // }
 
-          if (_this.presellDetail.endTime.indexOf("GMT") > 0) {
-            _this.presellDetail.endTime = _this
-              .$moment(_this.presellDetail.endTime)
-              .format("yyyy-MM-dd HH:mm:ss");
-          }
+          // if (_this.presellDetail.endTime.indexOf("GMT") > 0) {
+          //   _this.presellDetail.endTime = _this
+          //     .$moment(_this.presellDetail.endTime)
+          //     .format("yyyy-MM-dd HH:mm:ss");
+          // }
 
-          if (_this.presellDetail.deliveryEndTime.indexOf("GMT") > 0) {
-            _this.presellDetail.deliveryEndTime = _this
-              .$moment(_this.presellDetail.deliveryEndTime)
-              .format("yyyy-MM-dd HH:mm:ss");
-          }
+          // if (_this.presellDetail.deliveryEndTime.indexOf("GMT") > 0) {
+          //   _this.presellDetail.deliveryEndTime = _this
+          //     .$moment(_this.presellDetail.deliveryEndTime)
+          //     .format("yyyy-MM-dd HH:mm:ss");
+          // }
           if (_this.tempModalType === _this.modalType.create) {
             // 添加状态
             _this.createStore();
@@ -1565,25 +1566,25 @@ export default {
       this.resetFields();
       if (this.tempModalType !== this.modalType.create) {
         this.tempModalType = this.modalType.create;
-        this.presellDetail = _.cloneDeep(presellDetail);
+        this.presellDetail = _.cloneDeep(preselldata);
       }
-      if (this.currentTableRowSelected) {
-        this.currentTableRowSelected.id = null;
-        this.currentTableRowSelected.standardId = null;
-        this.currentTableRowSelected.originalPrice = null;
-        this.currentTableRowSelected.banner = null;
-        this.currentTableRowSelected.status = null;
-        this.currentTableRowSelected.rank = null;
-        this.currentTableRowSelected.storeId = null;
-        this.currentTableRowSelected.storeIds = null;
-        this.currentTableRowSelected.relationStoreType = "ALL";
-        this.currentTableRowSelected.activityPrice = null;
-        this.currentTableRowSelected.validDateType = "FIXED_DATE";
-        this.currentTableRowSelected.deliveryStartTime = null;
-        this.currentTableRowSelected.deliveryEndTime = null;
+      // if (this.currentTableRowSelected) {
+      //   this.currentTableRowSelected.id = null;
+      //   this.currentTableRowSelected.standardId = null;
+      //   this.currentTableRowSelected.originalPrice = null;
+      //   this.currentTableRowSelected.banner = null;
+      //   this.currentTableRowSelected.status = null;
+      //   this.currentTableRowSelected.rank = null;
+      //   this.currentTableRowSelected.storeId = null;
+      //   this.currentTableRowSelected.storeIds = null;
+      //   this.currentTableRowSelected.relationStoreType = "ALL";
+      //   this.currentTableRowSelected.activityPrice = null;
+      //   this.currentTableRowSelected.validDateType = "FIXED_DATE";
+      //   this.currentTableRowSelected.deliveryStartTime = null;
+      //   this.currentTableRowSelected.deliveryEndTime = null;
 
-        this.presellDetail = _.cloneDeep(this.currentTableRowSelected);
-      }
+      //   this.presellDetail = _.cloneDeep(this.currentTableRowSelected);
+      // }
 
       this.getStore();
       this.modalEdit = true;
@@ -1634,8 +1635,6 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
-      this.save = [];
-      this.save.push(params.row.banner);
       this.presellDetail.storeId = null;
       this.presellDetail.storeIds = null;
       this.storeIds = [];
@@ -1646,16 +1645,6 @@ export default {
       this.presellDetail = _.cloneDeep(params.row);
       this.groupStatus = this.presellDetail.status;
       this.setDefaultUploadList(this.presellDetail);
-      if (this.presellDetail.validSeconds > 0) {
-        this.presellDetail.hour = parseInt(
-          this.presellDetail.validSeconds / 3600
-        );
-        this.presellDetail.minute = parseInt(
-          (this.presellDetail.validSeconds % 3600) / 60
-        );
-        this.presellDetail.second =
-          (this.presellDetail.validSeconds % 3600) % 60;
-      }
       if (this.presellDetail.storeIds !== null) {
         this.showStoreList = true;
         this.presellDetail.relationStoreType = "PART";
@@ -1699,10 +1688,10 @@ export default {
       });
     },
     getTableData() {
-      if (!this.searchRowData.status) {
-        this.searchRowData.sidx = "start_time";
-        this.searchRowData.sort = "desc";
-      }
+      // if (!this.searchRowData.status) {
+      //   this.searchRowData.sidx = "start_time";
+      //   this.searchRowData.sort = "desc";
+      // }
       getPresellPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
@@ -1732,19 +1721,20 @@ export default {
     },
     startTimeChange(value, date) {
       this.presellDetail.startTime = value;
-      if (this.presellDetail.startTime.indexOf("T") > -1) {
-        this.presellDetail.startTime = this.$moment(
-          this.presellDetail.startTime
-        ).format("YYYY-MM-DD HH:mm:ss");
-      }
+      console.log("时间", value);
+      // if (this.presellDetail.startTime.indexOf("T") > -1) {
+      //   this.presellDetail.startTime = this.$moment(
+      //     this.presellDetail.startTime
+      //   ).format("YYYY-MM-DD HH:mm:ss");
+      // }
     },
     endTimeChange(value, date) {
       this.presellDetail.endTime = value;
-      if (this.presellDetail.endTime.indexOf("T") > -1) {
-        this.presellDetail.endTime = this.$moment(
-          this.presellDetail.endTime
-        ).format("YYYY-MM-DD HH:mm:ss");
-      }
+      // if (this.presellDetail.endTime.indexOf("T") > -1) {
+      //   this.presellDetail.endTime = this.$moment(
+      //     this.presellDetail.endTime
+      //   ).format("YYYY-MM-DD HH:mm:ss");
+      // }
     },
     createTimeStartChange(value, date) {
       this.searchRowData.startTime = value || null;
