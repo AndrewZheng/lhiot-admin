@@ -947,7 +947,7 @@ const compensateColumns = [
                   params.row.postSaleGoods.unitName = "千克";
                 } else if (event === "07") {
                   params.row.postSaleGoods.unitName = "元";
-                } 
+                }
               }
             }
           },
@@ -1379,6 +1379,7 @@ export default {
     handleDownload(name) {
       const dataParams = this.searchRowData;
       dataParams.name = name;
+      dataParams.rows = -1;
       getOrderGoods(dataParams).then(res => {
         if (!res) {
           this.$Message.info("暂无任何数据返回");
