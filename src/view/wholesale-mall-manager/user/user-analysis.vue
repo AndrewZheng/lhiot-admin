@@ -472,11 +472,14 @@ export default {
     handleDownload() {
       this.exportExcelLoading = true;
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      let pageSize = this.searchRowData.page;
+      this.searchRowData.page = 1;
       getUserAnalysisPages(this.searchRowData)
         .then(res => {
           const tableData = res.rows;
           // 恢复正常页数
-          this.searchRowData.rows = 10;
+          this.searchRowData.rows = 20;
+          this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
           tableData.forEach(item => {
             item["userType"] =

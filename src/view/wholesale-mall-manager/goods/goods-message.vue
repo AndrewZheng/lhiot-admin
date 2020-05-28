@@ -267,7 +267,7 @@
                 <InputNumber v-model="productDetail.stockLimit" placeholder="安全库存"></InputNumber>
               </FormItem>
             </i-col>
-          </Row> -->
+          </Row>-->
           <Row>
             <i-col span="12">
               <FormItem label="基础单位:" prop="baseUnit">
@@ -447,7 +447,7 @@
                 ></Input>
               </FormItem>
             </i-col>
-          </Row> -->
+          </Row>-->
         </Form>
       </div>
       <div slot="footer">
@@ -593,7 +593,7 @@ export default {
         // goodsBrand: [{ required: true, message: "请输入商品品牌" }],
         // placeOfOrigin: [{ required: true, message: "请输入商品产地" }],
         categoryId: [{ required: true, message: "请选择商品分类" }],
-        goodsImage: [{ required: true, message: "请上传商品主图" }],
+        goodsImage: [{ required: true, message: "请上传商品主图" }]
         // goodsImages: [{ required: true, message: "请上传商品详情图" }],
         // otherImage: [{ required: true, message: '请上传服务保障图' }],
         // stockLimit: [{ required: true, message: "请输入安全库存" }]
@@ -900,10 +900,13 @@ export default {
       this.exportExcelLoading = true;
       // TODO：测试导出不带分页搜索条件 目前默认导出10条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      let pageSize = this.searchRowData.page;
+      this.searchRowData.page = 1;
       getProductPages(this.searchRowData).then(res => {
         const tableData = res.rows;
         // 恢复正常页数
-        this.searchRowData.rows = 10;
+        this.searchRowData.rows = 20;
+        this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
         tableData.forEach(item => {
           item.categoryId = this.findGroupName(item.categoryId);
@@ -916,7 +919,7 @@ export default {
             item.goodsArea = "";
           }
         });
-      const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
           filename: `商品基础信息-${date}`,
           data: tableData
