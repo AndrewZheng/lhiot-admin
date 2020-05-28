@@ -887,6 +887,10 @@ export const expandTypeEnum = [
     value: 'SECKILL_PRODUCT'
   },
   {
+    label: '分享赚商品',
+    value: 'SHARE_PRODUCT'
+  },
+  {
     label: '助力商品',
     value: 'ASSIST_PRODUCT'
   },

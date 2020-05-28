@@ -12,8 +12,9 @@ const minxin = {
       this.getTableData();
     },
     handleClear() {
-      // 重置数据
+      // 重置数据productType
       this.searchRowData.expandType = null;
+      this.searchRowData.productType = null;
       this.resetSearchRowData();
       this.page = 1;
       this.pageSize = 10;

@@ -801,6 +801,9 @@
                 <i-col v-else-if="productStandardDetail.productType === 'ASSIST_PRODUCT'" span="16">
                   <tag color="green">{{ "助力抢爆品商品" }}</tag>
                 </i-col>
+                <i-col v-else-if="productStandardDetail.productType === 'SHARE_PRODUCT'" span="16">
+                  <tag color="green">{{ "分享赚商品" }}</tag>
+                </i-col>
                 <i-col v-else-if="productStandardDetail.productType === null" span="16">{{ "N/A" }}</i-col>
               </Row>
             </i-col>
@@ -834,7 +837,13 @@
                 <div v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'">（以售卖价格优先计算折扣率）</div>
               </FormItem>
             </i-col>
-            <i-col v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'" span="12">
+            <!-- v1.8.0 -->
+            <i-col v-if="productStandardDetail.productType==='SHARE_PRODUCT'" span="8">
+              <FormItem label="佣金比例:" prop="commissionRate">
+                <Input v-model="proStandardExpand.commissionRate"></Input>%
+              </FormItem>
+            </i-col>
+            <i-col v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'" span="8">
               <FormItem label="折扣率:" prop="discountRate">
                 <Input v-model="proStandardExpand.discountRate" readonly></Input>
               </FormItem>
@@ -1178,7 +1187,8 @@ const proStandardExpand = {
   standardId: 0,
   startNum: 0,
   // expandType: "DISCOUNT_PRODUCT",
-  limitQty: 0
+  limitQty: 0,
+  commissionRate: 0
 };
 
 export default {
@@ -1405,6 +1415,14 @@ export default {
                 </div>
               );
             } else if (row.productType == "ASSIST_PRODUCT") {
+              return (
+                <div>
+                  <tag color="green">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.productType == "SHARE_PRODUCT") {
               return (
                 <div>
                   <tag color="green">
