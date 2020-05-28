@@ -610,11 +610,7 @@
           <Row>
             <i-col span="6">
               <FormItem label="排序字段:" prop="rank" :label-width="100">
-                <InputNumber
-                  v-model="addRelationDetail.rank"
-                  label
-                  style="width: 120px"
-                ></InputNumber>
+                <InputNumber v-model="addRelationDetail.rank" label style="width: 120px"></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -1056,7 +1052,7 @@ const dataColumns = [
     title: "优惠券状态",
     key: "couponStatus",
     align: "center",
-    minWidth: 40,
+    minWidth: 60,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.couponStatus === "VALID") {
@@ -1139,6 +1135,12 @@ const dataColumns = [
     title: "发券总数限制",
     align: "center",
     key: "couponLimit",
+    minWidth: 50
+  },
+  {
+    title: "排序",
+    align: "center",
+    key: "rank",
     minWidth: 50
   },
   {
