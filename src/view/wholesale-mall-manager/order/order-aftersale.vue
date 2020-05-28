@@ -1295,6 +1295,9 @@ export default {
       this.loading = true;
       this.searchLoading = true;
       this.clearSearchLoading = true;
+      if (this.searchRowData.rows === -1) {
+        this.searchRowData.rows = 20;
+      }
       getAfterSalePages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;

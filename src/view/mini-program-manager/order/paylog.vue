@@ -475,11 +475,14 @@ export default {
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      let pageSize = this.searchRowData.page;
+      this.searchRowData.page = 1;
       console.log(this.searchRowData.rows);
       getPaymentLogPages(this.searchRowData).then(res => {
         const tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 10;
+        this.searchRowData.page = pageSize;
         console.log(this.searchRowData.rows);
         // 表格数据导出字段翻译
         const _this = this;

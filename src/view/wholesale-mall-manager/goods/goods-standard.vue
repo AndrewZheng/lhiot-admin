@@ -1880,9 +1880,12 @@ export default {
     handleDownload() {
       var tableData;
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      let pageSize = this.searchRowData.page;
+      this.searchRowData.page = 1;
       getProductStandardsPages(this.searchRowData).then(res => {
         tableData = res.rows;
         this.searchRowData.rows = 20;
+        this.searchRowData.page = pageSize;
         this.handleDown(tableData);
       });
     },
