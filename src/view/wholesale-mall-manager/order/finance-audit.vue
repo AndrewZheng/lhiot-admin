@@ -112,9 +112,9 @@
               :loading="downloadLoading"
               class="search-btn mr2"
               type="primary"
-              @click="handleDownload"
+              @click="handleDownload('POST_SALE_ORDER_GOODS')"
             >
-              <Icon type="md-download" />导出
+              <Icon type="md-download" />导出售后订单商品
             </Button>
           </Row>
         </div>
@@ -396,9 +396,10 @@ import {
   getFinanceAuditPages,
   getFinanceAudit,
   getFinanceRefuse,
-  getOrderDetail
+  getOrderDetail,
+  getOrderGoods
 } from "@/api/wholesale";
-import { fenToYuanDot2, fenToYuanDot2Number } from "@/libs/util";
+import { fenToYuanDot2, fenToYuanDot2Number, download } from "@/libs/util";
 import { serviceModeEnum, serviceStatusEnum } from "@/libs/enumerate";
 import { serviceModeConvert, serviceStatusConvert } from "@/libs/converStatus";
 import tableMixin from "@/mixins/tableMixin.js";
@@ -1185,6 +1186,9 @@ export default {
       this.loading = true;
       this.searchLoading = true;
       this.clearSearchLoading = true;
+      if (this.searchRowData.rows === -1) {
+        this.searchRowData.rows = 20;
+      }
       getFinanceAuditPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
@@ -1271,25 +1275,20 @@ export default {
         })
         .finally(() => {});
     },
-    handleDownload() {
-      // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
-      this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      getFinanceAuditPages(this.searchRowData).then(res => {
-        const tableData = res.rows;
-        // 恢复正常页数
-        this.searchRowData.rows = 20;
-        // 表格数据导出字段翻译
-        tableData.forEach(item => {
-          item["status"] = serviceStatusConvert(
-            item["status"]
-          ).label;
-          item["payableFee"] = (item["payableFee"] / 100.0).toFixed(2);
-        });
+    handleDownload(name) {
+      const dataParams = this.searchRowData;
+      dataParams.name = name;
+      dataParams.rows = -1;
+      getOrderGoods(dataParams).then(res => {
+        if (!res) {
+          this.$Message.info("暂无任何数据返回");
+          return;
+        }
         const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
-        this.$refs.tables.handleDownload({
-          filename: `财务审核订单-${date}`,
-          data: tableData
-        });
+        const fileType =
+          name === "POST_SALE_ORDER_GOODS" ? "售后订单商品" : "售后订单";
+        const fileName = `${fileType}-${date}.xls`;
+        download(res, fileName);
       });
     }
   }
