@@ -428,7 +428,7 @@
                   file-dir="product"
                   multiple
                   @on-success="handleSuccessMultiple"
-                  v-show="fileListLength<2"
+                  v-show="fileListLength<15"
                 >
                   <div slot="content" style="width:58px;height:58px;line-height:58px">
                     <Icon type="ios-camera" size="20"></Icon>
@@ -443,9 +443,12 @@
             </i-col>
           </Row>
           <Row>
-            <i-col v-show="isCreate" span="12">
+            <i-col span="12">
               <FormItem label="商品类型:" prop="goodsType" style="width:200px;">
-                <Select v-model="productStandardDetail.goodsType">
+                <Select
+                  v-model="productStandardDetail.goodsType"
+                  :disabled="tempModalType===modalType.edit"
+                >
                   <Option
                     v-for="(item,index) in pfExpandTypeEnum"
                     :value="item.value"

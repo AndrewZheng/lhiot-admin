@@ -291,7 +291,7 @@
                   <Cascader
                     v-show="sindex===2"
                     change-on-select
-                    :data="data"
+                    :data="cityData"
                     placeholder="请选择区域"
                     class="search-col"
                     style="margin-top:6px"
@@ -428,7 +428,7 @@ export default {
       paramObjectList: [],
       paramObject: {},
       keys: [],
-      data: [],
+      cityData: [],
       findIdx: "",
       newItem: "",
       showImage: false,
@@ -528,7 +528,7 @@ export default {
     this.getSystemSettingCategoryTree();
   },
   created() {
-    this.data = city;
+    this.cityData = city;
   },
   methods: {
     resetSearchRowData() {
