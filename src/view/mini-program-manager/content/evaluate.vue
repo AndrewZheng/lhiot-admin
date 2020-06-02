@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="20"
+        :search-area-column="22"
         :operate-area-column="6"
         editable
         searchable
@@ -65,6 +65,20 @@
             >
               <Option
                 v-for="item in commentScoreTypeEnum"
+                :value="item.value"
+                :key="`orderType-col-${item.value}`"
+                class="ptb2-5"
+              >{{ item.label }}</Option>
+            </Select>
+            <Select
+              v-model="searchRowData.orderType"
+              class="search-col mr5"
+              placeholder="订单类型"
+              style="width: 100px"
+              clearable
+            >
+              <Option
+                v-for="item in orderType"
                 :value="item.value"
                 :key="`orderType-col-${item.value}`"
                 class="ptb2-5"
@@ -427,6 +441,7 @@ const roleRowData = {
   endDate: "",
   page: 1,
   rows: 10,
+  orderType: "WX_SMALL",
   sidx: "createTime",
   sort: "desc"
 };
@@ -455,6 +470,10 @@ export default {
       imageStatusEnum,
       deliveryTypeEnum,
       commentScoreTypeEnum,
+      orderType: [
+        { label: "小程序订单", value: "WX_SMALL" },
+        { label: "门店订单", value: "STORE" }
+      ],
       columns: [
         {
           type: "selection",
@@ -465,7 +484,16 @@ export default {
           title: "订单编号",
           align: "center",
           width: 170,
-          key: "orderCode"
+          key: "orderCode",
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.orderType === "WX_SMALL") {
+              return <div>{row.orderCode}</div>;
+            } else {
+              return <div>{row.xid}</div>;
+            }
+            return <div>{row.orderCode}</div>;
+          }
         },
         {
           title: "商品名称",

@@ -627,7 +627,7 @@
             </i-col>
             <i-col v-show="productStandardDetail.productType==='ORDINARY_PRODUCT'" span="12">
               <FormItem label="起购份数:" prop="startNum">
-                <InputNumber :min="0" v-model="productStandardDetail.startNum"></InputNumber>
+                <InputNumber :min="1" v-model="productStandardDetail.startNum"></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -821,7 +821,7 @@
             </i-col>
             <i-col span="12">
               <FormItem label="起购份数:" prop="startNum">
-                <Input v-model="proStandardExpand.startNum"></Input>
+                <Input :min="1" v-model="proStandardExpand.startNum"></Input>
               </FormItem>
             </i-col>
           </Row>
@@ -839,8 +839,8 @@
             </i-col>
             <!-- v1.8.0 -->
             <i-col v-if="productStandardDetail.productType==='SHARE_PRODUCT'" span="8">
-              <FormItem label="佣金比例:" prop="commissionRate">
-                <Input v-model="proStandardExpand.commissionRate"></Input>%
+              <FormItem label="佣金比例(单位%):" prop="commissionRate">
+                <InputNumber v-model="proStandardExpand.commissionRate"></InputNumber>
               </FormItem>
             </i-col>
             <i-col v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'" span="8">
@@ -1185,7 +1185,7 @@ const proStandardExpand = {
   discountRate: 0,
   limitNum: 0,
   standardId: 0,
-  startNum: 0,
+  startNum: 1,
   // expandType: "DISCOUNT_PRODUCT",
   limitQty: 0,
   commissionRate: 0
@@ -2025,6 +2025,12 @@ export default {
               this.proStandardExpand.startNum > this.proStandardExpand.limitNum
             ) {
               this.$Message.warning("起购份数不能大于限购份数");
+              return false;
+            }
+          }
+          if (this.proStandardExpand.expandType === "SHARE_PRODUCT") {
+            if (this.proStandardExpand.commissionRate <= 0) {
+              this.$Message.warning("佣金比例不能为空");
               return false;
             }
           }

@@ -103,7 +103,7 @@
             @click="handleDownload"
           >
             <Icon type="md-download" />导出
-          </Button> -->
+          </Button>-->
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -892,7 +892,7 @@ const preselldata = {
   startedFlag: "",
   status: "",
   storeIds: "",
-  triesLimit: 0,
+  triesLimit: 999,
   validDateType: "UN_FIXED_DATE"
 };
 
@@ -1012,8 +1012,8 @@ export default {
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
-        triesLimit: [
-          { required: true, message: "请输入限购次数" },
+        invNum: [
+          { required: true, message: "请输入库存数量" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
@@ -1024,13 +1024,16 @@ export default {
             }
           }
         ],
-        invNum: [
-          { required: true, message: "请选择库存数量" },
+        triesLimit: [
+          { required: true, message: "请输入限购次数" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[-0-9]+$/.test(value)) {
                 errors.push(new Error("必须为整数"));
+              }
+              if (value > 999) {
+                errors.push(new Error("限购次数最大值999"));
               }
               callback(errors);
             }
@@ -1432,10 +1435,11 @@ export default {
     },
     handleSubmit() {
       const _this = this;
-      console.log("shuju", _this.presellDetail);
-      // return;
       this.$refs.editForm.validate(valid => {
         if (valid) {
+          if (_this.presellDetail.triesLimit > 999) {
+            _this.presellDetail.triesLimit = 999;
+          }
           if (
             compareData(
               _this.presellDetail.startTime,

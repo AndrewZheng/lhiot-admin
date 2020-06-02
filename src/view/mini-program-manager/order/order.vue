@@ -1460,7 +1460,6 @@ export default {
       });
     },
     getTableData() {
-      console.log("num", this.num);
       this.loading = true;
       const date = new Date();
       date.setDate(date.getDate());

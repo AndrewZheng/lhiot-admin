@@ -445,7 +445,10 @@
           <Row>
             <i-col span="12">
               <FormItem label="商品类型:" prop="goodsType" style="width:200px;">
-                <Select v-model="productStandardDetail.goodsType" :disabled="tempModalType===modalType.edit">
+                <Select
+                  v-model="productStandardDetail.goodsType"
+                  :disabled="tempModalType===modalType.edit"
+                >
                   <Option
                     v-for="(item,index) in pfExpandTypeEnum"
                     :value="item.value"

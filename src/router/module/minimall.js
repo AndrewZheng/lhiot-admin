@@ -440,6 +440,33 @@ const miniMallRouter = [
         component: () => import('@/view/mini-program-manager/member/system-data-statistics.vue')
       },
       {
+        path: '/small-integral-statistics',
+        name: 'small-integral-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '积分数据统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/integral-statistics.vue')
+      },
+      {
+        path: '/small-coupon-statistics',
+        name: 'small-coupon-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '用券数据统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/coupon-statistics.vue')
+      },
+      {
+        path: '/small-share-statistics',
+        name: 'small-share-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '分享赚数据统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/share-statistics.vue')
+      },
+      {
         path: '/small-phones',
         name: 'small-phones',
         meta: {

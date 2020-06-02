@@ -954,6 +954,81 @@ export const userSeckillStatistics = (data) => {
   });
 };
 
+// coupon/statistics/statistics  积分统计 
+export const integralStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `coupon/statistics/statistics?beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+    }
+  });
+};
+
+//发券数据统计
+export const getSendCouponPages = (data) => {
+  return $http.request({
+    url: 'coupon/statistics/send-coupon',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+//用券数据统计 /coupon/statistics/use-coupon
+export const getUseCouponPages = (data) => {
+  return $http.request({
+    url: '/coupon/statistics/use-coupon',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+//发券数据列表/coupon/statistics/get/comboBoxs
+export const getComboBoxs = () => {
+  return Vue.prototype.$http.request({
+    url: `/coupon/statistics/get/comboBoxs`,
+    method: 'get',
+    // headers: {
+    //   'page': data.page,
+    //   'rows': data.rows,
+    // }
+  });
+};
+
+//分享赚商品数据统计 /minapp/share/prod/share-total
+export const shareProdStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/share/prod/share-total?productName=${data.productName}&beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+//分享赚用户数据统计 /minapp/share/user/share-total
+export const shareUserStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/share/user/share-total?nickName=${data.nickName}&phone=${data.phone}&beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
 // =========================助力抢爆品
 // 根据条件分页查询助力抢爆品列表
 export const getAssistPages = (data) => {
