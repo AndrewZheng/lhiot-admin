@@ -1,5 +1,5 @@
 import { login, logout, getUserInfo } from '@/api/user';
-import { getRouterById } from '@/api/system';
+import { getRouterById, getOperateByMenuId } from '@/api/system';
 import { setToken, getToken, filterLocalRoute, getMenuByRouter } from '@/libs/util';
 import routersLocal, { constantRouterMap } from '@/router/routers';
 import { PcLockr, enums } from 'util/';
@@ -13,6 +13,7 @@ const state = {
   access: '',
   hasGetInfo: false,
   userPermission: [],
+  btnPermission: [],
   routePermission: {},
   routers: constantRouterMap,
   actualRouter: []
@@ -24,12 +25,14 @@ const getters = {
     console.log('menuData generate by router: ', menuData);
     return menuData;
   },
-
   getUserName: (state) => {
     if (!state.userName) {
       state.userName = PcLockr.get(enums.USER.LOGIN_NAME);
     }
     return state.userName;
+  },
+  getButtonPermission: (state) => {
+    return state.btnPermission;
   },
   getUserPermission: (state) => {
     return state.userPermission;
@@ -73,6 +76,9 @@ const mutations = {
   setToken(state, token) {
     state.token = token;
     setToken(token);
+  },
+  setButtonPermission(state, btnPermission) {
+    state.btnPermission = btnPermission;
   },
   setRoutePermission(state, routePermission) {
     state.routePermission = routePermission;
@@ -142,6 +148,23 @@ const actions = {
           console.log('generateRoutes：', res.array);
           commit('generateRoutes', res.array);
         }
+        resolve();
+      }).catch(err => {
+        reject(err);
+      });
+    });
+  },
+  getBtnPermissionById({ state, commit }, menuId) {
+    console.log('current menu_id: ', menuId);
+    return new Promise((resolve, reject) => {
+      getOperateByMenuId(menuId).then(res => {
+        const buttonPermissions = [];
+        if (res && res.array && res.array.length > 0) {
+          console.log('operates form backend:', res.array);
+          res.array.forEach(item => buttonPermissions.push(item.code));
+          console.log('buttonPermissions:', buttonPermissions);
+        }
+        commit('setButtonPermission', buttonPermissions);
         resolve();
       }).catch(err => {
         reject(err);

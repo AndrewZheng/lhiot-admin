@@ -40,9 +40,11 @@
           >
             <Option
               v-for="item in userStatusList"
-              :value="item.key"
               :key="`search-col-${item.key}`"
-            >{{ item.value }}</Option>
+              :value="item.key"
+            >
+              {{ item.value }}
+            </Option>
           </Select>
           <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch">
             <Icon type="md-search" />&nbsp;搜索
@@ -83,7 +85,6 @@
       :model="rowData"
       :rules="ruleValidate"
       @on-ok="handleAddOrEditOk('formValidate')"
-      @on-cancel="handleCancel"
     >
       <p slot="header">
         <span>{{ rowData.id==''?'创建用户':'编辑用户' }}</span>
@@ -110,7 +111,7 @@
             <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
               <template v-if="item.status === 'finished'">
                 <div>
-                  <img :src="item.url" >
+                  <img :src="item.url">
                   <div class="demo-upload-list-cover">
                     <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                     <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -130,7 +131,9 @@
               @on-success="handleSuccessMain"
             >
               <div slot="content">
-                <Button type="primary">上传图片</Button>
+                <Button type="primary">
+                  上传图片
+                </Button>
               </div>
             </IViewUpload>
           </FormItem>
@@ -138,9 +141,11 @@
             <Select v-model="rowData.status" class="search-col" placeholder="请选择用户状态">
               <Option
                 v-for="item in userStatusList"
-                :value="item.key"
                 :key="`search-col-${item.key}`"
-              >{{ item.value }}</Option>
+                :value="item.key"
+              >
+                {{ item.value }}
+              </Option>
             </Select>
           </FormItem>
           <FormItem label="备注" prop="remark">
@@ -182,7 +187,7 @@
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" >
+                      <img :src="item.url">
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -202,7 +207,9 @@
                   @on-success="handleSuccessMain"
                 >
                   <div slot="content">
-                    <Button type="primary">上传图片</Button>
+                    <Button type="primary">
+                      上传图片
+                    </Button>
                   </div>
                 </IViewUpload>
               </FormItem>
@@ -210,9 +217,11 @@
                 <Select v-model="rowData.status" class="search-col" placeholder="请选择用户状态">
                   <Option
                     v-for="item in userStatusList"
-                    :value="item.key"
                     :key="`search-col-${item.key}`"
-                  >{{ item.value }}</Option>
+                    :value="item.key"
+                  >
+                    {{ item.value }}
+                  </Option>
                 </Select>
               </FormItem>
               <FormItem label="备注" prop="remark">
@@ -237,13 +246,19 @@
         </Tabs>
       </div>
       <div v-if="step=='userAdd' && !isCreated" slot="footer">
-        <Button type="primary" @click="handleAddOrEditOk('formValidate')">下一步</Button>
+        <Button type="primary" @click="handleAddOrEditOk('formValidate')">
+          下一步
+        </Button>
       </div>
       <div v-else-if="step=='roleAdd'" slot="footer">
-        <Button type="primary" @click="handleRoleOk">保存</Button>
+        <Button type="primary" @click="handleRoleOk">
+          保存
+        </Button>
       </div>
       <div v-else slot="footer">
-        <Button type="primary" @click="handleCloseAdd">关闭</Button>
+        <Button type="primary" @click="handleCloseAdd">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -253,7 +268,6 @@
       :loading="loadingBtn"
       :mask-closable="false"
       @on-ok="handleRoleOk"
-      @on-cancel="handleCancel"
     >
       <p slot="header">
         <span>关联角色</span>
@@ -272,9 +286,9 @@
     <!-- 头像上传组件 -->
     <image-cropper
       v-show="imagecropperShow"
+      :key="imagecropperKey"
       :width="70"
       :height="70"
-      :key="imagecropperKey"
       lang-type="zh"
       @close="close"
       @crop-upload-success="cropSuccess"
@@ -315,7 +329,6 @@ export default {
   mixins: [uploadMixin],
   data() {
     const validatePassCheck = (rule, value, callback) => {
-      // console.log(this.rowData.password);
       if (value === '') {
         callback(new Error('请再次输入您的密码'));
       } else if (value !== this.rowData.password) {
@@ -611,9 +624,6 @@ export default {
           this.$Message.warning('请先完善信息');
         }
       });
-    },
-    handleCancel() {
-      this.$Message.info('取消成功');
     },
     handleCloseAdd() {
       this.modalAdd = false;

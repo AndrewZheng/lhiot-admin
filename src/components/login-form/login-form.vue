@@ -10,8 +10,8 @@
         </Input>
       </FormItem>
       <FormItem prop="password">
-        <Input v-show="false" prefix="ios-contact" placeholder="Enter name" style="width: auto" ></Input>
-        <Input v-model="form.password" size="large" type="password" placeholder="请输入密码">
+        <Input v-show="false" prefix="ios-contact" placeholder="Enter name" style="width: auto"></Input>
+        <Input v-model="form.password" size="large" type="password" placeholder="请输入密码" password>
         <span slot="prepend">
           <img src="../../../src/assets/images/mima.png">
         </span>
@@ -21,7 +21,9 @@
         记住我
       </div>
       <FormItem>
-        <Button type="primary" long @click="handleSubmit">登录</Button>
+        <Button type="primary" long @click="handleSubmit">
+          登录
+        </Button>
       </FormItem>
     </Form>
   </div>

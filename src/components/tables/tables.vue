@@ -33,6 +33,15 @@
       :size="size"
       :no-data-text="noDataText"
       :no-filtered-data-text="noFilteredDataText"
+      :show-summary="showSummary"
+      :sum-text="sumText"
+      :draggable="draggable"
+      :tooltip-theme="tooltipTheme"
+      :row-key="rowKey"
+      :indent-size="indentSize"
+      :context-menu="contextMenu"
+      :show-context-menu="showContextMenu"
+      :summary-method="summaryMethod"
       @on-current-change="onCurrentChange"
       @on-select="onSelect"
       @on-select-cancel="onSelectCancel"
@@ -50,10 +59,14 @@
     </Table>
     <div v-if="searchable && searchPlace === 'bottom'" class="search-con search-con-top">
       <Select v-model="searchKey" class="search-col">
-        <Option v-for="item in columns" v-show="item.key !== 'handle' && item.type!=='selection'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
+        <Option v-for="item in columns" v-show="item.key !== 'handle' && item.type!=='selection'" :key="`search-col-${item.key}`" :value="item.key">
+          {{ item.title }}
+        </Option>
       </Select>
       <Input v-model="searchValue" placeholder="输入关键字搜索" class="search-input"></Input>
-      <Button class="search-btn" type="primary"><Icon type="search"/>搜索</Button>
+      <Button class="search-btn" type="primary">
+        <Icon type="search" />搜索
+      </Button>
     </div>
     <a id="hrefToExportTable" style="display: none;width: 0px;height: 0px;"></a>
   </div>
@@ -81,10 +94,6 @@ export default {
         return [];
       }
     },
-    size: {
-      type: String,
-      default: 'default'
-    },
     width: {
       type: [Number, String],
       default: ''
@@ -111,9 +120,13 @@ export default {
     },
     rowClassName: {
       type: Function,
-      default() {
+      default(row, index) {
         return '';
       }
+    },
+    size: {
+      type: String,
+      default: 'default'
     },
     noDataText: {
       type: String,
@@ -128,6 +141,13 @@ export default {
       default: false
     },
     loading: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * @description 表格是否需要按钮权限控制
+     */
+    needPermission: {
       type: Boolean,
       default: false
     },
@@ -167,6 +187,83 @@ export default {
     exportType: {
       type: String,
       default: 'xlsx'
+    },
+    draggable: {
+      type: Boolean,
+      default: false
+    },
+    tooltipTheme: {
+      type: String,
+      default: 'dark'
+    },
+    /**
+     * @description 是否强制使用内置的 row-key，开启后可能会影响性能，4.1.0 支持 String
+     */
+    rowKey: {
+      type: [Boolean, String],
+      default: false
+    },
+    /**
+     * @description v4.0.0升级-合并行或列的计算方法
+     */
+    spanMethod: {
+      type: Function,
+      default({ row, column, rowIndex, columnIndex }) {
+        return;
+      }
+    },
+    /**
+     * @description v4.0.0升级-是否在表尾显示合计行
+     */
+    showSummary: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * @description v4.0.0升级-合计行第一列的文本
+     */
+    sumText: {
+      type: String,
+      default: '合计'
+    },
+    /**
+     * @description v4.0.0升级-自定义的合计计算方法
+     */
+    summaryMethod: {
+      type: Function,
+      default() {
+        return;
+      }
+    },
+    /**
+     * @description v4.1.0升级-树形数据缩进宽度，单位 px
+     */
+    indentSize: {
+      type: Number,
+      default: 16
+    },
+    /**
+     * @description v4.1.0升级-异步加载树形数据的方法
+     */
+    loadData: {
+      type: Function,
+      default(item, callback) {
+        return;
+      }
+    },
+    /**
+     * @description v4.1.0升级-当前行点击右键是否会阻止默认行为
+     */
+    contextMenu: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * @description v4.2.0升级-点击右键弹出菜单，需配合 slot contextMenu 一起使用，详见示例
+     */
+    showContextMenu: {
+      type: Boolean,
+      default: false
     }
   },
   /**
@@ -238,9 +335,16 @@ export default {
     surportHandle(item) {
       const options = item.options || [];
       const insideBtns = [];
-      options.forEach(item => {
-        if (handleBtns[item]) insideBtns.push(handleBtns[item]);
-      });
+      const btnPermissions = this.btnPermissions;
+      if (this.needPermission && options.length > 0 && btnPermissions.length > 0) {
+        options.forEach(item => {
+          if (handleBtns[item] && btnPermissions.includes(item)) insideBtns.push(handleBtns[item]);
+        });
+      } else {
+        options.forEach(item => {
+          if (handleBtns[item]) insideBtns.push(handleBtns[item]);
+        });
+      }
       const btns = item.button ? [].concat(insideBtns, item.button) : insideBtns;
       item.render = (h, params) => {
         params.tableData = this.value;
