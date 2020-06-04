@@ -234,7 +234,9 @@ const roleRowData1 = {
   beginDate:null,
   endDate:null,
   nickName:"",
-  phone:""
+  phone:"",
+  sidx: 'awardAmount',
+  sort: 'desc'
 };
 
 export default {
@@ -605,8 +607,8 @@ export default {
         });
     },
     onSortChange1(type) {
-      this.searchRowData.sidx = type.key;
-      this.searchRowData.sort = type.order;
+      this.searchRowData1.sidx = type.key;
+      this.searchRowData1.sort = type.order;
       shareUserStatistics(this.searchRowData1)
         .then(res => {
           this.tableData1 = res.rows;

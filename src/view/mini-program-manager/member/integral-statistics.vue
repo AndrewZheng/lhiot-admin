@@ -52,15 +52,28 @@
               >
                 <Icon type="md-search" />&nbsp;搜索
               </Button>
-              <Button class="search-btn mr2" type="warning" @click="handleDownload">
+              <!-- <Button class="search-btn mr2" type="warning" @click="handleDownload">
                 <Icon type="md-download" />导出数据
-              </Button>
+              </Button> -->
             </Row>
             <div class="ml15 mt10">
               <i style="color:red">*</i> 默认展示当天的数据
             </div>
           </div>
         </tables>
+      </Card>
+      <Card>
+        <tables
+          v-model="tableData1"
+          :columns="dataColumns1"
+          :loading="loading"
+          :search-area-column="18"
+          :operate-area-column="6"
+          editable
+          searchable
+          border
+          search-place="top"
+        ></tables>
       </Card>
     </div>
   </div>
@@ -115,10 +128,11 @@ export default {
       mark: false,
       button: "今日",
       tableData: [],
+      tableData1: [],
       dataColumns: [
         {
           title: "积分途径",
-          key: "value1",
+          key: "value",
           align: "center"
         },
         {
@@ -171,6 +185,29 @@ export default {
           title: "汇总",
           align: "center",
           key: "value10"
+        }
+      ],
+      dataColumns1: [
+        {
+          title: "消费途径",
+          key: "value",
+          align: "center"
+        },
+        {
+          title: "实物兑换",
+          key: "value1",
+          align: "center",
+          width: "150"
+        },
+        {
+          title: "券兑换",
+          key: "value2",
+          align: "center"
+        },
+        {
+          title: "汇总",
+          align: "center",
+          key: "value3"
         }
       ],
       searchRowData: _.cloneDeep(roleRowData),
@@ -234,8 +271,8 @@ export default {
       integralStatistics(this.searchRowData)
         .then(res => {
           let data = res.getPointsList;
-          let unitsList;
           let map = {
+            value: "value",
             value1: "value",
             value2: "value",
             value3: "value",
@@ -248,6 +285,7 @@ export default {
             value10: "value"
           };
           let map1 = {
+            value: "value",
             value1: "value",
             value2: "value",
             value3: "value",
@@ -259,6 +297,7 @@ export default {
             value9: "value",
             value10: "value"
           };
+          map.value = "积分数量";
           map.value1 = data.countPoints[0];
           map.value2 = data.countPoints[1];
           map.value3 = data.countPoints[2];
@@ -269,6 +308,7 @@ export default {
           map.value8 = data.countPoints[7];
           map.value9 = data.countPoints[8];
           map.value10 = data.countPoints[9];
+          map1.value = "参与人数";
           map1.value1 = data.countUser[0];
           map1.value2 = data.countUser[1];
           map1.value3 = data.countUser[2];
@@ -283,6 +323,31 @@ export default {
           data.countUser = map1;
           this.tableData.push(data.countPoints);
           this.tableData.push(data.countUser);
+          let data1 = res.consumePointsList;
+          let map2 = {
+            value: "value",
+            value1: "value",
+            value2: "value",
+            value3: "value",
+          };
+          let map3= {
+            value: "value",
+            value1: "value",
+            value2: "value",
+            value3: "value",
+          };
+          map2.value = "消费数量";
+          map2.value1 = data1.countPoints[0];
+          map2.value2 = data1.countPoints[1];
+          map2.value3 = data1.countPoints[2];
+          map3.value = "消费人数";
+          map3.value1 = data1.countUser[0];
+          map3.value2 = data1.countUser[1];
+          map3.value3 = data1.countUser[2];
+          data1.countPoints = map2;
+          data1.countUser = map3;
+          this.tableData1.push(data1.countPoints);
+          this.tableData1.push(data1.countUser);
           this.createLoading = false;
           this.loading = false;
           this.searchLoading = false;
@@ -298,18 +363,22 @@ export default {
       if (value === "今日") {
         this.getTableData(value);
         this.tableData = [];
+        this.tableData1 = [];
         this.mark = false;
       } else if (value === "昨日") {
         this.mark = false;
         this.tableData = [];
+        this.tableData1 = [];
         this.getTableData(value);
       } else if (value === "最近7天") {
         this.mark = false;
         this.tableData = [];
+        this.tableData1 = [];
         this.getTableData(value);
       } else if (value === "最近30天") {
         this.mark = false;
         this.tableData = [];
+        this.tableData1 = [];
         this.getTableData(value);
       } else if (value === "自定义时间") {
         this.mark = true;
@@ -329,19 +398,20 @@ export default {
       this.searchRowData.page = 1;
       this.searchLoading = true;
       this.tableData = [];
+      this.tableData1 = [];
       this.getTableData();
     },
     // 导出数据
-    handleDownload() {
-      const tableData = this.tableData;
-      // 表格数据导出字段翻译
-      let _this = this;
-      const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
-      handleDownload({
-        filename: `积分数据统计-${date}`,
-        data: tableData
-      });
-    }
+    // handleDownload() {
+    //   const tableData = this.tableData;
+    //   // 表格数据导出字段翻译
+    //   let _this = this;
+    //   const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+    //   handleDownload({
+    //     filename: `积分数据统计-${date}`,
+    //     data: tableData
+    //   });
+    // }
   }
 };
 </script>

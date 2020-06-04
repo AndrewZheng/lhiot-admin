@@ -1025,7 +1025,9 @@ export const shareUserStatistics = (data) => {
     method: 'get',
     headers: {
       'page': data.page,
-      'rows': data.rows
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
     }
   });
 };

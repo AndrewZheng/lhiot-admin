@@ -71,10 +71,10 @@
               >
                 <Option
                   v-for="(item,index) in couponWayList"
-                  :value="item.value"
+                  :value="item.key"
                   :key="index"
                   class="ptb2-5"
-                >{{ item.label }}</Option>
+                >{{ item.value }}</Option>
               </Select>
               <Select
                 v-model="searchRowData.couponType"
@@ -84,11 +84,11 @@
               >
                 <Option
                   v-for="(item,index) in couponTypeList"
-                  :value="item.value"
+                  :value="item.key"
                   :key="index"
                   class="ptb2-5"
                   style="padding-left: 5px;width: 100px"
-                >{{ item.label }}</Option>
+                >{{ item.value }}</Option>
               </Select>
               <Input
                 v-model="searchRowData.couponName"
@@ -113,6 +113,9 @@
                 @click="handleClear"
               >
                 <Icon type="md-refresh" />&nbsp;清除
+              </Button>
+              <Button class="search-btn mr2" type="warning" @click="handleDownload('issue')">
+                <Icon type="md-download" />导出数据
               </Button>
             </Row>
               <div class="ml15 mt10">
@@ -204,6 +207,18 @@
               </Select>
               </Select>
               <Select
+                v-model="searchRowData1.couponWay"
+                placeholder="发券途径"
+                style="padding-right: 5px;width: 100px"
+              >
+                <Option
+                  v-for="(item,index) in couponWayList"
+                  :value="item.key"
+                  :key="index"
+                  class="ptb2-5"
+                >{{ item.value }}</Option>
+              </Select>
+              <Select
                 v-model="searchRowData1.couponType"
                 placeholder="优惠券类型"
                 style="padding-right: 5px;width: 100px"
@@ -211,11 +226,11 @@
               >
                 <Option
                   v-for="(item,index) in couponTypeList"
-                  :value="item.value"
+                  :value="item.key"
                   :key="index"
                   class="ptb2-5"
                   style="padding-left: 5px;width: 100px"
-                >{{ item.label }}</Option>
+                >{{ item.value }}</Option>
               </Select>
               <Input
                 v-model="searchRowData1.couponName"
@@ -241,9 +256,12 @@
               >
                 <Icon type="md-refresh" />&nbsp;清除
               </Button>
+              <Button class="search-btn mr2" type="warning" @click="handleDownload('use')">
+                <Icon type="md-download" />导出数据
+              </Button>
             </Row>
             <div class="ml15 mt10">
-              发券总数<i style="color:red">{{totalNum1}}</i> 张；总抵扣金额<i style="color:red">{{totalCouponAmount}}</i> 元；实收总金额<i style="color:red">{{totalAmountPayable}}</i> 元
+              用券总数<i style="color:red">{{totalNum1}}</i> 张；总抵扣金额<i style="color:red">{{totalCouponAmount}}</i> 元；实收总金额<i style="color:red">{{totalAmountPayable}}</i> 元
             </div>
           </div>
         </tables>
@@ -300,6 +318,7 @@ const roleRowData1 = {
   source: null,
   page: 1,
   rows: 10,
+  couponWay:null,
   storeName: null,
   couponType: null,
   couponName: null
@@ -317,30 +336,8 @@ export default {
       mark1: false,
       num: 0,
       num1:0,
-      couponTypeList: [
-        { label: "现金券", value: "CASH_COUPON" },
-        { label: "分享红包", value: "EXCLUSIVE_RED_ENVELOPES" },
-        { label: "运费券", value: "FREIGHT_COUPON" },
-        { label: "满减券", value: "FULL_CUT_COUPONS" },
-        { label: "折扣券", value: "DISCOUNT_COUPON" }
-      ],
-      couponWayList: [
-        { label: "分享红包", value: "ACTIVITY_REWARD_INFO" },
-        { label: "注册送礼", value: "ACTIVITY_REGISTER" },
-        { label: "领券中心", value: "COUPON_CENTER_ACTIVITY" },
-        { label: "老用户新人券", value: "ACTIVITY_OLD_USER_NEWCOMER_COUPON" },
-        { label: "SVIP领券中心", value: "SVIP_COUPON_CENTER_ACTIVITY" },
-        { label: "第三方发券", value: "THIRD_COUPON_ACTIVITY" },
-        { label: "优惠券活动", value: "COUPON_ACTIVITY" },
-        { label: "注册送优惠券活动", value: "REGISTER_GIFT_COUPON" },
-        { label: "积分兑换优惠券", value: "ACTIVITY_INTEGRAL" },
-        { label: "助力抢爆品活动券", value: "ACTIVITY_ASSIST_COUPON" },
-        { label: "限时抢购活动", value: "FLASH_ACTIVITY" },
-        { label: "超值购券", value: "BUY_COUPON_ACTIVITY" },
-        { label: "手动发券", value: "ACTIVITY_MANUAL_COUPON_SEND" },
-        { label: "分享领券", value: "SHARE_COUPON_ACTIVITY" },
-        { label: "签到礼包券", value: "ACTIVITY_SIGN_COUPON" }
-      ],
+      couponTypeList: [],
+      couponWayList: [],
       button: "今日",
       button1: "今日",
       couponTypeEnum,
@@ -463,6 +460,11 @@ export default {
               return <tag color="cyan">{"海鼎"}</tag>;
             }
           }
+        },
+        {
+          title: "发券途径",
+          align: "center",
+          key: "couponWay"
         },
         {
           title: "券名称",
@@ -619,7 +621,7 @@ export default {
         .then(res => {
           this.totalNum = res.totalNum;
           this.tableData = res.pagingResultDto.rows;
-          this.total = res.total;
+          this.total = res.pagingResultDto.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -697,7 +699,7 @@ export default {
           this.totalCouponAmount = res.totalCouponAmount;
           this.totalAmountPayable = res.totalAmountPayable;
           this.tableData1 = res.pagingResultDto.rows;
-          this.totalPage = res.total;
+          this.totalPage = res.pagingResultDto.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -712,18 +714,8 @@ export default {
     getComboBoxs() {
       getComboBoxs()
         .then(res => {
-          //   res.couponTypeList.forEach(value => {
-          //     const map = { label: "label", value: "value" };
-          //     map.value = value.id;
-          //     map.label = value.unitName;
-          //     this.couponTypeList.push(map);
-          //   });
-          //   res.couponWayList.forEach(value => {
-          //     const map = { label: "label", value: "value" };
-          //     map.value = value.id;
-          //     map.label = value.unitName;
-          //     this.couponWayList.push(map);
-          //   });
+          this.couponTypeList = res.couponTypeList;
+          this.couponWayList = res.couponWayList;
         })
         .catch(error => {});
     },
@@ -853,6 +845,62 @@ export default {
       this.pageSize = 10;
       this.clearSearchLoading = true;
       this.handleSearch();
+    },
+        // 导出数据
+    handleDownload(name) {
+        if (name==="issue") {
+        // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
+        this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+        console.log("用券数据统计",this.searchRowData)
+        let pageSize = this.searchRowData.page;
+        this.searchRowData.page = 1;
+        getSendCouponPages(this.searchRowData).then(res => {
+            const tableData = res.pagingResultDto.rows;
+            // 恢复正常页数
+            this.searchRowData.rows = 10;
+            this.searchRowData.page = pageSize;
+            // 表格数据导出字段翻译
+            let _this = this;
+            tableData.forEach(item => {
+              item["couponType"] = couponTypeConvert(item["couponType"]).label;
+            if (item["source"]==="SMALL") {
+                item["source"]="小程序"
+            }else{
+              item["source"]="海鼎"
+            }
+        });
+            const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+            this.$refs.tables.handleDownload({
+            filename: `发券数据统计-${date}`,
+            data: tableData
+            });
+        });
+        }else{
+        this.searchRowData1.rows = this.totalPage > 5000 ? 5000 : this.totalPage;
+        let pageSize = this.searchRowData1.page;
+        this.searchRowData1.page = 1;
+        getUseCouponPages(this.searchRowData1).then(res => {
+            const tableData1 = res.pagingResultDto.rows;
+            // 恢复正常页数
+            this.searchRowData1.rows = 10;
+            this.searchRowData1.page = pageSize;
+            // 表格数据导出字段翻译
+            let _this = this;
+            tableData1.forEach(item => {
+              item["couponType"] = couponTypeConvert(item["couponType"]).label;
+            if (item["source"]==="SMALL") {
+                item["source"]="小程序"
+            }else{
+              item["source"]="海鼎"
+            }
+        });
+            const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+            this.$refs.tables1.handleDownload({
+            filename: `用券数据统计-${date}`,
+            data: tableData1
+            });
+        });
+        }
     }
   }
 };

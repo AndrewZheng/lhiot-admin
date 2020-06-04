@@ -653,6 +653,7 @@ export default {
           this.unitsList.push(map);
           this.createLoading = false;
         });
+        console.log("单位", this.unitsList);
       });
     },
     getProductCategoriesTree() {
