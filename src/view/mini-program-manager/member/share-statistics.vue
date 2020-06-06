@@ -287,6 +287,9 @@ export default {
           key: "awardAmount",
           sortable: 'custom',
           minWidth: 60,
+          render(h, params) {
+            return <div>{fenToYuanDot2(params.row.awardAmount)}</div>;
+          }
         },
       ],
       columns1: [
@@ -318,6 +321,9 @@ export default {
           align: "center",
           sortable: 'custom',
           key: "awardAmount",
+          render(h, params) {
+            return <div>{fenToYuanDot2(params.row.awardAmount)}</div>;
+          },
           minWidth: 60
         },
       ],
@@ -638,6 +644,9 @@ export default {
             this.searchRowData.page = pageSize;
             // 表格数据导出字段翻译
             let _this = this;
+          tableData.forEach(item => {
+          item["awardAmount"] = (item["awardAmount"] / 100.0).toFixed(2);
+           });
             const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
             this.$refs.tables.handleDownload({
             filename: `分享赚商品数据统计-${date}`,
@@ -655,6 +664,9 @@ export default {
             this.searchRowData1.page = pageSize;
             // 表格数据导出字段翻译
             let _this = this;
+          tableData.forEach(item => {
+          item["awardAmount"] = (item["awardAmount"] / 100.0).toFixed(2);
+           });
             const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
             this.$refs.tables1.handleDownload({
             filename: `分享赚用户数据统计-${date}`,

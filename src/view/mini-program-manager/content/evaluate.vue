@@ -428,7 +428,9 @@ const evaluateDetail = {
   storeName: "",
   topTime: "",
   type: "",
-  userId: ""
+  userId: "",
+  orderType: "",
+  xid: ""
 };
 
 const roleRowData = {

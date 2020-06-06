@@ -269,12 +269,12 @@
               <i-col span="18">{{ presellDetail.triesLimit }}</i-col>
             </Row>
           </i-col>
-          <i-col span="12">
+          <!-- <i-col span="12">
             <Row>
               <i-col span="6">已购份数:</i-col>
               <i-col span="18">{{ presellDetail.flashCount }}</i-col>
             </Row>
-          </i-col>
+          </i-col> -->
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
@@ -408,13 +408,14 @@
               </FormItem>
             </i-col>
             <i-col span="12">
+              <!--                   :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit" -->
               <FormItem label="活动结束时间:" prop="endTime">
                 <DatePicker
                   v-model="presellDetail.endTime"
                   type="datetime"
                   format="yyyy-MM-dd HH:mm:ss"
                   placeholder="活动结束时间"
-                  :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
+
                   class="search-input"
                   style="width: 200px"
                   @on-change="endTimeChange"
@@ -882,6 +883,7 @@ const preselldata = {
   endTime: null,
   flashCount: 0,
   id: 0,
+  relationStoreType: "ALL",
   invNum: 0,
   originalPrice: 0,
   rank: 0,
@@ -1218,12 +1220,12 @@ export default {
             return <div>{params.row.beginDay}</div>;
           }
         },
-        {
-          title: "以购买数量",
-          align: "center",
-          minWidth: 160,
-          key: "flashCount"
-        },
+        // {
+        //   title: "以购买数量",
+        //   align: "center",
+        //   minWidth: 160,
+        //   key: "flashCount"
+        // },
         {
           title: "规格描述",
           align: "center",
@@ -1465,6 +1467,22 @@ export default {
           ) {
             _this.$Message.error("选择部分门店时必须选择至少一个门店!");
             return;
+          }
+          _this.presellDetail.startTime = _this
+            .$moment(_this.presellDetail.startTime)
+            .format("YYYY-MM-DD HH:mm:ss");
+          _this.presellDetail.endTime = _this
+            .$moment(_this.presellDetail.endTime)
+            .format("YYYY-MM-DD HH:mm:ss");
+          if (_this.presellDetail.deliveryEndTime) {
+            _this.presellDetail.deliveryEndTime = _this
+              .$moment(_this.presellDetail.deliveryEndTime)
+              .format("YYYY-MM-DD HH:mm:ss");
+          }
+          if (_this.presellDetail.deliveryStartTime) {
+            _this.presellDetail.deliveryStartTime = _this
+              .$moment(_this.presellDetail.deliveryStartTime)
+              .format("YYYY-MM-DD HH:mm:ss");
           }
           if (_this.tempModalType === _this.modalType.create) {
             // 添加状态
