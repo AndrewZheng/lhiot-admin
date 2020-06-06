@@ -487,6 +487,14 @@ const productColumns = [
               </tag>
             </div>
           );
+        } else if (row.productStandardExpand.expandType == "SHARE_PRODUCT") {
+          return (
+            <div>
+              <tag color="blue">
+                {expandTypeConvert(row.productStandardExpand.expandType).label}
+              </tag>
+            </div>
+          );
         } else if (row.productStandardExpand.expandType == "ASSIST_PRODUCT") {
           return (
             <div>
@@ -776,6 +784,8 @@ export default {
         this.searchProductRowData.expandType = "SECKILL_PRODUCT";
       } else if (this.currentSectionCode === "ASSIST") {
         this.searchProductRowData.expandType = "ASSIST_PRODUCT";
+      } else if (this.currentSectionCode === "SHARE") {
+        this.searchProductRowData.expandType = "SHARE_PRODUCT";
       } else if (this.currentSectionCode === "SVIP") {
         this.searchProductRowData.expandType = "";
       } else {
@@ -837,9 +847,9 @@ export default {
     handleView(params) {
       getProStandardExpand({
         id: params.row.productStandardId
-      }).then(res => {  
+      }).then(res => {
         this.discount = res;
-         console.log("回调",res)
+        console.log("回调", res);
         if (!res) {
           this.modalView = false;
           this.$Message.error("当前商品不是活动商品");

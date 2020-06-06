@@ -149,6 +149,24 @@ const miniMallRouter = [
     }]
   },
   {
+    path: '/small-goods-presell',
+    name: 'small-goods-presell',
+    meta: {
+      icon: 'md-menu',
+      title: '预售管理'
+    },
+    component: Main,
+    children: [{
+      path: '/small-goods-presellActivity',
+      name: 'small-goods-presellActivity',
+      meta: {
+        icon: 'ios-people',
+        title: '预售活动'
+      },
+      component: () => import('@/view/mini-program-manager/presell/presellActivity.vue')
+    }]
+  },
+  {
     path: '/small-task',
     name: 'small-task',
     meta: {
@@ -420,6 +438,33 @@ const miniMallRouter = [
           title: '系统数据统计'
         },
         component: () => import('@/view/mini-program-manager/member/system-data-statistics.vue')
+      },
+      {
+        path: '/small-integral-statistics',
+        name: 'small-integral-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '积分数据统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/integral-statistics.vue')
+      },
+      {
+        path: '/small-coupon-statistics',
+        name: 'small-coupon-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '用券数据统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/coupon-statistics.vue')
+      },
+      {
+        path: '/small-share-statistics',
+        name: 'small-share-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '分享赚数据统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/share-statistics.vue')
       },
       {
         path: '/small-phones',

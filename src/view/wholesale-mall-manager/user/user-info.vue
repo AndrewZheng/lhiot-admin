@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="19"
+        :search-area-column="22"
         :operate-area-column="5"
         editable
         searchable
@@ -69,6 +69,20 @@
             >
               {{ item.label }}
             </Option>
+          </Select>
+          <Select
+            v-model="searchRowData.isVip"
+            class="search-col mr5"
+            placeholder="是否VIP"
+            style="width:80px"
+            clearable
+          >
+            <Option
+              v-for="item in isVipStatus"
+              :value="item.value"
+              :key="item.value"
+              class="ptb2-5"
+            >{{ item.label }}</Option>
           </Select>
           <Select
             v-model="searchRowData.salesUserStatus"
@@ -669,10 +683,11 @@ const userDetailChange = {
 };
 
 const userRowData = {
-  userName: '',
-  phone: '',
-  userType: 'sale',
-  city: '',
+  userName: "",
+  phone: "",
+  userType: "sale",
+  isVip: "",
+  city: "",
   page: 1,
   rows: 10
 };
@@ -763,7 +778,11 @@ export default {
       salesManList: [],
       selectedUserIds: [],
       data: [],
-      loginName: '',
+      isVipStatus: [
+        { label: "是", value: "yes" },
+        { label: "否", value: "no" }
+      ],
+      loginName: "",
       currentSalesId: null,
       assginSalesUserId: null,
       modalUser: false,
@@ -934,7 +953,7 @@ export default {
     handleDownload() {
       this.exportExcelLoading = true;
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      const pageSize = this.searchRowData.page;
+      let pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       getUserPages(this.searchRowData)
         .then(res => {
@@ -1049,11 +1068,11 @@ export default {
       this.selectedUserIds = selection.map(item => item.id.toString());
     },
     handleUnlock(params) {
-      const data = params.row;
+      let data = params.row;
       data.userStatus =
-        params.row.userStatus === 'certified' ? 'locking' : 'certified';
+        params.row.userStatus === "certified" ? "locking" : "certified";
       unlockSalesman(data).then(res => {
-        this.$Message.info('操作成功');
+        this.$Message.info("操作成功");
         this.getTableData();
       });
     },

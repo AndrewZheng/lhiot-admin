@@ -334,82 +334,81 @@ const btns = {
       row
     } = params;
     if (row.userStatus === 'locking' || row.userStatus === 'certified') {
-      if (row.userStatus === 'locking') {
-        return h('Poptip', {
-          props: {
-            confirm: true,
-            transfer: true,
-            title: '确认要将此用户解锁吗?',
-            placement: params.index === 0 ? 'right' : 'top'
-          },
-          style: {
-            marginRight: '5px'
-          },
-          on: {
-            'on-ok': () => {
-              vm.$emit('on-unlock', params);
-            }
+    if (row.userStatus === 'locking') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '确认要将此用户解锁吗?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-unlock', params);
           }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '解锁用户' }
         }, [
-          h('Tooltip', {
-            props: { placement: 'top', transfer: true, content: '解锁用户' }
-          }, [
-            h('Button', {
-              props: {
-                type: 'success',
-                size: 'small'
-              }
-            }, [
-              h('Icon', {
-                props: {
-                  type: 'ios-key',
-                  size: 16,
-                  color: '#fff'
-                }
-              })
-            ])
-          ])
-        ]);
-      } else {
-        return h('Poptip', {
-          props: {
-            confirm: true,
-            transfer: true,
-            title: '确认要将此用户锁定吗?',
-            placement: params.index === 0 ? 'right' : 'top'
-          },
-          style: {
-            marginRight: '5px'
-          },
-          on: {
-            'on-ok': () => {
-              vm.$emit('on-unlock', params);
+          h('Button', {
+            props: {
+              type: 'success',
+              size: 'small'
             }
-          }
-        }, [
-          h('Tooltip', {
-            props: { placement: 'top', transfer: true, content: '锁定用户' }
           }, [
-            h('Button', {
+            h('Icon', {
               props: {
-                type: 'error',
-                size: 'small'
+                type: 'ios-key',
+                size: 16,
+                color: '#fff'
               }
-            }, [
-              h('Icon', {
-                props: {
-                  type: 'ios-key',
-                  size: 16,
-                  color: '#fff'
-                }
-              })
-            ])
+            })
           ])
-        ]);
-      }
+        ])
+      ]);
     } else {
-      return ''
-    }
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '确认要将此用户锁定吗?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-unlock', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '锁定用户' }
+        }, [
+          h('Button', {
+            props: {
+              type: 'error',
+              size: 'small'
+            }
+          }, [
+            h('Icon', {
+              props: {
+                type: 'ios-key',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
+        ])
+      ]);
+    }} else {
+    return ''
+  }
   },
   permission: (h, params, vm) => {
     const {
@@ -611,12 +610,12 @@ const btns = {
   // 优惠券上下架操作
   couponStatus: (h, params, vm) => {
     const { row } = params;
-    if (row.couponStatus === 'VALID') {
+    if (row.couponStatus === 'VALID' || row.status === 'VALID') {
       return h('Poptip', {
         props: {
           confirm: true,
           transfer: true,
-          title: '确认要下架该优惠券吗?'
+          title: '确认要下架吗?'
         },
         style: {
           marginRight: '5px'
@@ -647,7 +646,7 @@ const btns = {
         props: {
           confirm: true,
           transfer: true,
-          title: '确认要上架该优惠券吗?'
+          title: '确认要上架吗?'
         },
         style: {
           marginRight: '5px'

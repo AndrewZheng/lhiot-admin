@@ -793,7 +793,7 @@ export const compareData = (date1, date2) => {
   if (!(date1 && date2)) { return false; }
   const oDate1 = new Date(date1);
   const oDate2 = new Date(date2);
-  return oDate1.getTime() > oDate2.getTime();
+  return oDate1.getTime() >= oDate2.getTime();
 };
 
 export const compareCouponData = (date) => {

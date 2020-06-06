@@ -1652,7 +1652,6 @@ export default {
       });
     },
     getTableData() {
-      console.log('num', this.num);
       this.loading = true;
       const date = new Date();
       date.setDate(date.getDate());
@@ -1708,12 +1707,12 @@ export default {
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      const pageSize = this.searchRowData.page;
+      let pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       getOrderPages(this.searchRowData).then(res => {
         const tableData = res.rows;
         // 恢复正常页数
-        this.searchRowData.rows = 10;
+        this.searchRowData.rows = 20;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
         const _this = this;

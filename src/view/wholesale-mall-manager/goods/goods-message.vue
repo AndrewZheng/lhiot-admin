@@ -622,8 +622,8 @@ export default {
         // goodsArea: [{ required: true, message: "请选择商品区域" }],
         // goodsBrand: [{ required: true, message: "请输入商品品牌" }],
         // placeOfOrigin: [{ required: true, message: "请输入商品产地" }],
-        categoryId: [{ required: true, message: '请选择商品分类' }],
-        goodsImage: [{ required: true, message: '请上传商品主图' }]
+        categoryId: [{ required: true, message: "请选择商品分类" }],
+        goodsImage: [{ required: true, message: "请上传商品主图" }]
         // goodsImages: [{ required: true, message: "请上传商品详情图" }],
         // otherImage: [{ required: true, message: '请上传服务保障图' }],
         // stockLimit: [{ required: true, message: "请输入安全库存" }]
@@ -930,7 +930,7 @@ export default {
       this.exportExcelLoading = true;
       // TODO：测试导出不带分页搜索条件 目前默认导出10条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      const pageSize = this.searchRowData.page;
+      let pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       getProductPages(this.searchRowData).then(res => {
         const tableData = res.rows;
@@ -949,7 +949,7 @@ export default {
             item.goodsArea = '';
           }
         });
-        const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
           filename: `商品基础信息-${date}`,
           data: tableData
