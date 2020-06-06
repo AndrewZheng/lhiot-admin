@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="19"
+        :search-area-column="22"
         :operate-area-column="5"
         editable
         searchable
@@ -61,6 +61,20 @@
           >
             <Option
               v-for="item in userStatusEnum"
+              :value="item.value"
+              :key="item.value"
+              class="ptb2-5"
+            >{{ item.label }}</Option>
+          </Select>
+          <Select
+            v-model="searchRowData.isVip"
+            class="search-col mr5"
+            placeholder="是否VIP"
+            style="width:80px"
+            clearable
+          >
+            <Option
+              v-for="item in isVipStatus"
               :value="item.value"
               :key="item.value"
               class="ptb2-5"
@@ -640,6 +654,7 @@ const userRowData = {
   userName: "",
   phone: "",
   userType: "sale",
+  isVip: "",
   city: "",
   page: 1,
   rows: 10
@@ -731,6 +746,10 @@ export default {
       salesManList: [],
       selectedUserIds: [],
       data: [],
+      isVipStatus: [
+        { label: "是", value: "yes" },
+        { label: "否", value: "no" }
+      ],
       loginName: "",
       currentSalesId: null,
       assginSalesUserId: null,
@@ -908,8 +927,9 @@ export default {
         .then(res => {
           const tableData = res.rows;
           // 恢复正常页数
-          this.searchRowData.rows = 10; // 表格数据导出字段翻译
+          this.searchRowData.rows = 20;
           this.searchRowData.page = pageSize;
+          // 表格数据导出字段翻译
           tableData.forEach(item => {
             item["userType"] =
               item["userType"] === "sale" ? "业务员" : "普通用户";
