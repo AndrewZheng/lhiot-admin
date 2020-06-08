@@ -23,6 +23,25 @@
             style="width: 100px"
             clearable
           ></Input>
+          <DatePicker
+            v-model="searchRowData.startDate"
+            format="yyyy-MM-dd"
+            type="date"
+            placeholder="开始时间"
+            class="mr5"
+            style="width: 150px"
+            @on-change="startTimeChange"
+          />
+          <i>-</i>
+          <DatePicker
+            v-model="searchRowData.endDate"
+            format="yyyy-MM-dd"
+            type="date"
+            placeholder="结束时间"
+            class="mr5"
+            style="width: 150px"
+            @on-change="endTimeChange"
+          />
           <Button
             v-waves
             :searchLoading="searchLoading"
@@ -105,6 +124,8 @@ const goodsToday = {
 
 const roleRowData = {
   goodsName: "",
+  startDate: null,
+  endDate: null,
   page: 1,
   rows: 20
 };
@@ -181,6 +202,12 @@ export default {
           align: "center",
           key: "goodsSumPrice",
           minWidth: 80
+        },
+        {
+          title: "下单日期",
+          align: "center",
+          key: "createDate",
+          minWidth: 80
         }
       ]
     };
@@ -225,6 +252,12 @@ export default {
       this.goodsToday = _.cloneDeep(goodsToday);
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
+    },
+    startTimeChange(value, date) {
+      this.searchRowData.startDate = value;
+    },
+    endTimeChange(value, data) {
+      this.searchRowData.endDate = value;
     },
     handleDownload() {
       this.exportExcelLoading = true;
