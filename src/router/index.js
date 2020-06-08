@@ -19,13 +19,14 @@ const LOGIN_PAGE_NAME = 'login';
 const whiteList = ['/login', '/redirect', '/401', '/404', '/500'];
 // 如果在静态路由列表中
 const constantRouter = getNamesByRouters(constantRouterMap);
+const constantRouterNames = getNamesByRouters(constantRouterMap);
 
 // permission judge function
 function hasPermission(userPermission, currentRoute) {
   if (!userPermission) return true;
   if (whiteList.indexOf(currentRoute.path) !== -1) return true;
-  console.log('constantRouterNames: ', constantRouter);
-  if (constantRouter.indexOf(currentRoute.name) !== -1) return true;
+  console.log('constantRouterNames: ', constantRouterNames);
+  if (constantRouterNames.indexOf(currentRoute.name) !== -1) return true;
   return userPermission.some(role => role.code === currentRoute.name);
 }
 

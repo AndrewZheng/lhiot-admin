@@ -263,7 +263,7 @@ export default {
           key: "productName"
         },
         {
-          title: "分享次数",
+          title: "分享人数",
           align: "center",
           key: "shareCount",
           sortable: 'custom',
@@ -304,7 +304,7 @@ export default {
           key: "phone",
         },
         {
-          title: "分享次数",
+          title: "分享人数",
           align: "center",
           sortable: 'custom',
           key: "shareCount"
