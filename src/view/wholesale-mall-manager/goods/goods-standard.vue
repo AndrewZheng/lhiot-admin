@@ -1241,7 +1241,6 @@ export default {
       fileListLength: 0,
       unitsList: [],
       productDetailsList: [],
-      productDetailsList: [],
       defaultListMultiple: [],
       oldPicture: [],
       newPicture: [],
@@ -1655,6 +1654,9 @@ export default {
       this.productStandardDetail = _.cloneDeep(params.row);
       this.$refs.editForm.resetFields();
       this.modalEdit = true;
+      this.productDetailsList = this.productStandardDetail.goodsImages.split(
+        ","
+      );
     },
     handleEditRegion(params) {
       this.goodsPriceRegion = _.cloneDeep(params.row);
@@ -1689,7 +1691,6 @@ export default {
       });
       this.productStandardDetail.goodsImages = "";
       this.productStandardDetail.goodsImages = this.descriptionList.join(",");
-      console.log("after sort:", this.productStandardDetail.goodsImages);
       this.modalSort = false;
     },
     handleSubmit() {
@@ -1885,6 +1886,7 @@ export default {
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
       let pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
+      this.searchRowData.page = pageSize;
       getProductStandardsPages(this.searchRowData).then(res => {
         tableData = res.rows;
         this.searchRowData.rows = 20;
@@ -1948,7 +1950,6 @@ export default {
     },
     // 上架规格描述图
     handleSuccessMultiple(response, file, fileList) {
-      console.log("图片数组", fileList.length);
       this.fileListLength = fileList.length;
       this.uploadListMultiple = fileList;
       this.productDetailsList = [];
@@ -1962,14 +1963,11 @@ export default {
         ","
       );
       this.newPicture.push(response.fileUrl);
-      console.log(this.productStandardDetail.goodsImages);
-      console.log(JSON.stringify(this.productStandardDetail.goodsImages));
     },
     handleRemoveMultiple(file) {
       this.$refs.uploadMultiple.deleteFile(file);
-      const index = this.productDetailsList.indexOf(file.url);
-      if (index > -1) {
-        this.oldPicture.push(this.descriptionList[index]);
+      let index = this.productDetailsList.indexOf(file.url);
+      if (Number(index) > -1) {
         this.productDetailsList.splice(index, 1);
         this.productStandardDetail.goodsImages = this.productDetailsList.join(
           ","
@@ -1978,7 +1976,7 @@ export default {
       if (this.productDetailsList.length === 0) {
         this.$refs.uploadMultiple.clearFileList();
         this.productDetailsList = [];
-        this.productStandardDetail.goodsImages = null;
+        this.productStandardDetail.goodsImages = "";
       }
     },
     // 设置编辑图片列表
