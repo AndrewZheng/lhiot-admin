@@ -408,13 +408,13 @@
               </FormItem>
             </i-col>
             <i-col span="12">
-              <!--                   :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit" -->
               <FormItem label="活动结束时间:" prop="endTime">
                 <DatePicker
                   v-model="presellDetail.endTime"
                   type="datetime"
                   format="yyyy-MM-dd HH:mm:ss"
                   placeholder="活动结束时间"
+                  :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
                   class="search-input"
                   style="width: 200px"
                   @on-change="endTimeChange"
