@@ -162,7 +162,7 @@ const wholesaleRouter = [
       name: 'wholesale-order-analysis',
       meta: {
         icon: 'ios-eye',
-        title: '今日订单商品查询'
+        title: '订单商品查询'
       },
       component: () => import('@/view/wholesale-mall-manager/order/order-analysis.vue')
     },
