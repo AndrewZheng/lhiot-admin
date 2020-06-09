@@ -111,7 +111,6 @@ module.exports = {
       }
     },
     extract: process.env.NODE_ENV === 'production',
-    sourceMap: false,
-    extract: false
+    sourceMap: false
   }
 };
