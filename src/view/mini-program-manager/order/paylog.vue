@@ -399,8 +399,12 @@ export default {
           key: "rechargeAmount",
           align: "center",
           render(h, params, vm) {
-            const amount = fenToYuanDot2(params.row.rechargeAmount);
-            return <div>{amount}</div>;
+            if (params.row.sourceType === "recharge") {
+              const amount = fenToYuanDot2(params.row.rechargeAmount);
+              return <div>{amount}</div>;
+            } else {
+              return <div>{"N/A"}</div>;
+            }
           }
         },
         {

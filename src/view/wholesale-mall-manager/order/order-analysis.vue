@@ -60,6 +60,9 @@
           >
             <Icon type="md-refresh" />&nbsp;清除
           </Button>
+          <div class="ml15 mt10">
+            <i style="color:red">*</i> 当天中午12点前默认为昨日订单,12点后为今日订单
+          </div>
         </div>
         <div slot="operations">
           <Button
