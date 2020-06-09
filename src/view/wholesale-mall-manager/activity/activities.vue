@@ -603,7 +603,6 @@ export default {
     createActivity() {
       this.modalViewLoading = true;
       this.activityDetail.id = "";
-      return;
       createActivity(this.activityDetail)
         .then(res => {
           this.$Message.success("创建成功!");
