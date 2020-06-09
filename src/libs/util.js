@@ -939,6 +939,7 @@ export const getSystemHomeName = () => {
   }
   return name;
 }
+
 // 根据当前系统获取应该跳转的home页面的routerName
 export const getSystemHomeNameNew = (toLodop) => {
   if (toLodop != '' && toLodop.indexOf('.exe') > 0) {

@@ -7,21 +7,25 @@ import { getToken, getNamesByRouters, getSystemHomeName, getSystemHomeNameNew } 
 
 Vue.use(Router);
 
-const router = new Router({
+const createRouter = () => new Router({
   mode: 'history',
   routes: constantRouterMap,
-  scrollBehavior: () => ({
-    y: 0
-  })
+  scrollBehavior: () => ({ y: 0 })
 });
+
+const router = createRouter();
+
+// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
+export function resetRouter() {
+  const newRouter = createRouter();
+  router.matcher = newRouter.matcher; // reset router
+}
 
 const LOGIN_PAGE_NAME = 'login';
 const whiteList = ['/login', '/redirect', '/401', '/404', '/500'];
-// 如果在静态路由列表中
-const constantRouter = getNamesByRouters(constantRouterMap);
+
 const constantRouterNames = getNamesByRouters(constantRouterMap);
 
-// permission judge function
 function hasPermission(userPermission, currentRoute) {
   if (!userPermission) return true;
   if (whiteList.indexOf(currentRoute.path) !== -1) return true;

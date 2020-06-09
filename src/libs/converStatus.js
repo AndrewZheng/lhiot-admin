@@ -90,11 +90,9 @@ import {
 } from './enumerate';
 
 const convertFunction = (value, list) => {
-  const filterObj = list.find(item => {
-    return item.value === value;
-  });
-  if (filterObj) {
-    return filterObj;
+  const obj = list.find(item => item.value === value);
+  if (obj) {
+    return obj;
   } else {
     return {
       label: value || 'N/A'
@@ -105,12 +103,15 @@ const convertFunction = (value, list) => {
 export const receiveStatusConvert = (value) => {
   return convertFunction(value, receiveStatusEnum);
 };
+
 export const serviceModeConvert = (value) => {
   return convertFunction(value, serviceModeEnum);
 };
+
 export const serviceStatusConvert = (value) => {
   return convertFunction(value, serviceStatusEnum);
 };
+
 export const rewardTypeConvert = (value) => {
   return convertFunction(value, rewardTypeEnum);
 };

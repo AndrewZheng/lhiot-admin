@@ -39,10 +39,12 @@
           >
             <Option
               v-for="(item,index) in taskTypeEnum"
-              :value="item.value"
               :key="index"
+              :value="item.value"
               class="ptb2-5"
-            >{{ item.label }}</Option>
+            >
+              {{ item.label }}
+            </Option>
           </Select>
           <Select
             v-model="searchRowData.rewardType"
@@ -53,10 +55,12 @@
           >
             <Option
               v-for="(item,index) in rewardTypeEnum"
-              :value="item.value"
               :key="index"
+              :value="item.value"
               class="ptb2-5"
-            >{{ item.label }}</Option>
+            >
+              {{ item.label }}
+            </Option>
           </Select>
           <DatePicker
             v-model="searchRowData.createTimeBegin"
@@ -79,7 +83,7 @@
           />
           <Button
             v-waves
-            :searchLoading="searchLoading"
+            :search-loading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"

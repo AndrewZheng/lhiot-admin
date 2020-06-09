@@ -2,6 +2,7 @@ import { login, logout, getUserInfo } from '@/api/user';
 import { getRouterById, getOperateByMenuId } from '@/api/system';
 import { setToken, getToken, filterLocalRoute, getMenuByRouter } from '@/libs/util';
 import routersLocal, { constantRouterMap } from '@/router/routers';
+import { resetRouter } from '@/router';
 import { PcLockr, enums } from 'util/';
 
 const state = {
@@ -119,6 +120,7 @@ const actions = {
         commit('setToken', '');
         commit('setAccess', []);
         commit('setHasGetInfo', false);
+        resetRouter();
         resolve();
       }).catch(err => {
         reject(err);
@@ -191,6 +193,8 @@ const actions = {
       const system = JSON.parse(PcLockr.get(enums.SYSTEM));
       pid = system.id;
     }
+    // 刷新路由
+    resetRouter();
     // 不退出登录重新获取用户的信息-生成右上角系统菜单，生成左边菜单
     return dispatch('getRouteListById', pid);
   }
