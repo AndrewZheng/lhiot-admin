@@ -887,6 +887,10 @@ export const expandTypeEnum = [
     value: 'SECKILL_PRODUCT'
   },
   {
+    label: '分享赚商品',
+    value: 'SHARE_PRODUCT'
+  },
+  {
     label: '助力商品',
     value: 'ASSIST_PRODUCT'
   },
@@ -985,10 +989,10 @@ export const couponTypeEnum = [{
   label: '现金券',
   value: couponType.CASH_COUPON
 },
-{
-  label: '运费券',
-  value: couponType.FREIGHT_COUPON
-}
+// {
+//   label: '运费券',
+//   value: couponType.FREIGHT_COUPON
+// }
 ];
 
 // 小程序SVIP身份识别(SUPER_VIP svip   PROBATION_VIP  试用vip)
