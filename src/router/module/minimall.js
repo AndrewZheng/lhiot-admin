@@ -66,6 +66,17 @@ const miniMallRouter = [
       component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
     },
     {
+      path: 'small-goods-relation-standard',
+      name: 'small-goods-relation-standard',
+      meta: {
+        hideInMenu: true,
+        icon: 'md-menu',
+        title: '商品关联规格'
+      },
+      component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
+    },
+
+    {
       path: '/small-goods-section',
       name: 'small-goods-section',
       meta: {
@@ -256,6 +267,27 @@ const miniMallRouter = [
       },
       component: () => import('@/view/mini-program-manager/activity/coupon.vue')
     },
+    {
+      path: 'small-activity-relation-coupon',
+      name: 'small-activity-relation-coupon',
+      meta: {
+        hideInMenu: true,
+        icon: 'md-menu',
+        title: '活动关联优惠券模板'
+      },
+      component: () => import('@/view/mini-program-manager/activity/coupon-relation.vue')
+    },
+    {
+      path: 'small-vip-activities-associated',
+      name: 'small-vip-activities-associated',
+      meta: {
+        hideInMenu: true,
+        icon: 'md-menu',
+        title: 'VIP活动关联优惠券模板'
+      },
+      component: () => import('@/view/mini-program-manager/vip/activities-associated.vue')
+    },
+
     {
       path: '/integral-coupon',
       name: 'integral-coupon',
@@ -556,8 +588,28 @@ const miniMallRouter = [
         title: '鲜果币流水管理'
       },
       component: () => import('@/view/mini-program-manager/order/paylog.vue')
-    }]
-  },
+    },
+    {
+        path: 'small-order-coupon-details',
+        name: 'small-order-coupon-details',
+        meta: {
+          hideInMenu: true,
+          icon: 'md-menu',
+          title: '用券数据'
+        },
+        component: () => import('@/view/mini-program-manager/order/coupon-details.vue')
+    },
+    {
+        path: 'small-order-month-orders',
+        name: 'small-order-month-orders',
+        meta: {
+          hideInMenu: true,
+          icon: 'md-menu',
+          title: '跨月退款订单'
+        },
+        component: () => import('@/view/mini-program-manager/order/month-orders.vue')
+      }]
+    },
   {
     path: '/small-vip',
     name: 'small-vip',

@@ -274,7 +274,7 @@
               <i-col span="6">已购份数:</i-col>
               <i-col span="18">{{ presellDetail.flashCount }}</i-col>
             </Row>
-          </i-col> -->
+          </i-col>-->
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
@@ -408,14 +408,13 @@
               </FormItem>
             </i-col>
             <i-col span="12">
-              <!--                   :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit" -->
               <FormItem label="活动结束时间:" prop="endTime">
                 <DatePicker
                   v-model="presellDetail.endTime"
                   type="datetime"
                   format="yyyy-MM-dd HH:mm:ss"
                   placeholder="活动结束时间"
-
+                  :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
                   class="search-input"
                   style="width: 200px"
                   @on-change="endTimeChange"
@@ -893,7 +892,7 @@ const preselldata = {
   startTime: null,
   startedFlag: "",
   status: "",
-  storeIds: "",
+  storeIds: null,
   triesLimit: 999,
   validDateType: "UN_FIXED_DATE"
 };
@@ -1462,8 +1461,7 @@ export default {
           }
           if (
             _this.presellDetail.relationStoreType === "PART" &&
-            (_this.presellDetail.storeIds == null ||
-              _this.presellDetail.storeIds === "")
+            _this.presellDetail.storeIds == null
           ) {
             _this.$Message.error("选择部分门店时必须选择至少一个门店!");
             return;
@@ -1594,14 +1592,16 @@ export default {
       this.presellDetail.storeId = null;
       this.presellDetail.storeIds = null;
       this.storeIds = [];
-      this.presellDetail.relationStoreType = "ALL";
       this.groupStatus = "";
+      this.presellDetail.relationStoreType = "ALL";
       this.resetFields();
       this.tempModalType = this.modalType.edit;
       this.presellDetail = _.cloneDeep(params.row);
       this.groupStatus = this.presellDetail.status;
       this.setDefaultUploadList(this.presellDetail);
-      if (this.presellDetail.storeIds !== null) {
+      console.log("门店id", this.presellDetail.storeIds);
+      if (this.presellDetail.storeIds != null) {
+        console.log("部份门店");
         this.showStoreList = true;
         this.presellDetail.relationStoreType = "PART";
         const storeIds = this.presellDetail.storeIds
@@ -1620,6 +1620,7 @@ export default {
       } else {
         this.showStoreList = false;
         this.presellDetail.relationStoreType = "ALL"; // storeIds为''默认关联的门店则是全部门店
+        console.log("全部门店");
       }
       this.modalEdit = true;
     },

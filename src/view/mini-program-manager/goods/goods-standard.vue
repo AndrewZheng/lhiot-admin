@@ -2250,7 +2250,7 @@ export default {
     },
     handleRemoveShar(file) {
       this.$refs.uploadShar.deleteFile(file);
-      this.productStandardDetail.shareImage = null;
+      this.productStandardDetail.shareImage = "";
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);

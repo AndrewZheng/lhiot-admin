@@ -269,6 +269,9 @@ const mixin = {
     },
     applicationType() {
       return this.$store.getters.systemCurrent.applicationType;
+    },
+    btnPermissions() {
+      return this.$store.getters.getButtonPermission;
     }
   },
   methods: {

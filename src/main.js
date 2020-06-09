@@ -10,12 +10,12 @@ import i18n from '@/locale';
 import config from '@/config';
 import importDirective from '@/directive';
 import axiosPlugin from '@/libs/api.request';
-import { enums, PcEncrypt } from '@/util/';
+import { enums, PcEncrypt, PcLockr, PcCookie } from '@/util/';
 
 import 'view-design/dist/styles/iview.css';
 import './index.less';
 import 'assets/icons/iconfont.css';
-import './assets/iconfont/iconfont.css';
+import 'assets/iconfont/iconfont.css';
 import 'assets/styles/style.scss';
 import moment from 'moment';
 import lodashLib from 'lodash';
@@ -36,6 +36,9 @@ Object.defineProperty(Vue.prototype, '$config', { value: config });
 Object.defineProperty(Vue.prototype, '$moment', { value: moment });
 Object.defineProperty(Vue.prototype, '$pcEnum', { value: enums });
 Object.defineProperty(Vue.prototype, '$pcEncrypt', { value: PcEncrypt });
+Object.defineProperty(Vue.prototype, '$pcLockr', { value: PcLockr });
+Object.defineProperty(Vue.prototype, '$pcCookie', { value: PcCookie });
+
 
 Vue.config.productionTip = false;
 importDirective(Vue);

@@ -38,7 +38,7 @@
     "simplemde": "^1.11.2",
     "sortablejs": "^1.7.0",
     "tinymce": "^4.8.3",
-    "view-design": "^4.0.2",
+    "view-design": "4.2.0",
     "vue": "^2.5.10",
     "vue-i18n": "^7.8.0",
     "vue-router": "^3.0.1",
@@ -70,6 +70,7 @@
     "lint-staged": "^6.0.0",
     "mockjs": "^1.0.1-beta3",
     "sass-loader": "8.0.0",
+    "script-ext-html-webpack-plugin": "^2.1.4",
     "script-loader": "^0.7.2",
     "vue-template-compiler": "^2.5.13"
   },

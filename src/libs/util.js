@@ -652,14 +652,15 @@ export const convertTree = (tree, map, isExpand = false) => {
       selected: false,
       checked: false
     };
+
+    const newItem = Object.assign({}, obj, item);
     // 如果有子节点，递归
     if (children) {
       children = convertTree(children, map, isExpand);
     }
 
     result.push({
-      ...item,
-      ...obj,
+      ...newItem,
       title,
       children
     });
@@ -843,9 +844,9 @@ export const gitTime = (time) => {
 
 // hd折扣
 export const HdDiscount = (number) => {
-  let num=Number(number)*100
+  const num = Number(number) * 100
   if (typeof num === 'number') {
-    return num/10 + '折';
+    return num / 10 + '折';
   }
   return num;
 };
