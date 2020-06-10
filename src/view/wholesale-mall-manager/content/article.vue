@@ -37,10 +37,12 @@
             >
               <Option
                 v-for="item in articleTypeEnum"
-                :value="item.value"
                 :key="item.value"
+                :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.createType"
@@ -51,10 +53,12 @@
             >
               <Option
                 v-for="item in createTypeEnum"
-                :value="item.value"
                 :key="item.value"
+                :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <DatePicker
               v-model="searchRowData.beginCreateAt"
@@ -156,45 +160,67 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">文章标题:</i-col>
-              <i-col span="20">{{ articleDetail.articleTitle }}</i-col>
+              <i-col span="4">
+                文章标题:
+              </i-col>
+              <i-col span="20">
+                {{ articleDetail.articleTitle }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">文章副标题:</i-col>
-              <i-col span="20">{{ articleDetail.articleSubhead }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-          <i-col span="24">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">作者:</i-col>
-              <i-col span="16">{{ articleDetail.articleAuthor }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-          <i-col span="24">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">创建时间:</i-col>
-              <i-col span="16">{{ articleDetail.createTime }}</i-col>
+              <i-col span="4">
+                文章副标题:
+              </i-col>
+              <i-col span="20">
+                {{ articleDetail.articleSubhead }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">发布时间:</i-col>
-              <i-col span="16">{{ articleDetail.publishTime }}</i-col>
+              <i-col span="4">
+                作者:
+              </i-col>
+              <i-col span="16">
+                {{ articleDetail.articleAuthor }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">文章内容:</i-col>
+              <i-col span="4">
+                创建时间:
+              </i-col>
+              <i-col span="16">
+                {{ articleDetail.createTime }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="24">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="4">
+                发布时间:
+              </i-col>
+              <i-col span="16">
+                {{ articleDetail.publishTime }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="24">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="4">
+                文章内容:
+              </i-col>
               <i-col span="16" v-html="articleDetail.articleContent"></i-col>
             </Row>
           </i-col>
@@ -202,14 +228,18 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">资源链接:</i-col>
+              <i-col span="4">
+                资源链接:
+              </i-col>
               <i-col span="16" v-html="articleDetail.resouceUrl"></i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
   </div>
@@ -310,13 +340,13 @@ export default {
             if (row.articleType === 'perday') {
               return (
                 <div>
-                  <tag color='primary'>{ articleTypeConvert(row.articleType).label }</tag>
+                  <tag color='primary'>{ articleTypeConvert(row.articleType)}</tag>
                 </div>
               );
             } else if (row.articleType === 'industry') {
               return (
                 <div>
-                  <tag color='warning'>{ articleTypeConvert(row.articleType).label }</tag>
+                  <tag color='warning'>{ articleTypeConvert(row.articleType) }</tag>
                 </div>
               );
             } else {
@@ -333,13 +363,13 @@ export default {
             if (row.createType === 'original') {
               return (
                 <div>
-                  <tag color='pink'>{ createTypeConvert(row.createType).label }</tag>
+                  <tag color='pink'>{ createTypeConvert(row.createType)}</tag>
                 </div>
               );
             } else if (row.createType === 'reprint') {
               return (
                 <div>
-                  <tag color='yellow'>{ createTypeConvert(row.createType).label }</tag>
+                  <tag color='yellow'>{ createTypeConvert(row.createType) }</tag>
                 </div>
               );
             } else {

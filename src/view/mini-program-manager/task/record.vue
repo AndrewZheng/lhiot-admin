@@ -39,10 +39,12 @@
           >
             <Option
               v-for="(item,index) in taskTypeEnum"
-              :value="item.value"
               :key="index"
+              :value="item.value"
               class="ptb2-5"
-            >{{ item.label }}</Option>
+            >
+              {{ item.label }}
+            </Option>
           </Select>
           <Select
             v-model="searchRowData.rewardType"
@@ -53,10 +55,12 @@
           >
             <Option
               v-for="(item,index) in rewardTypeEnum"
-              :value="item.value"
               :key="index"
+              :value="item.value"
               class="ptb2-5"
-            >{{ item.label }}</Option>
+            >
+              {{ item.label }}
+            </Option>
           </Select>
           <DatePicker
             v-model="searchRowData.createTimeBegin"
@@ -79,7 +83,7 @@
           />
           <Button
             v-waves
-            :searchLoading="searchLoading"
+            :search-loading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
@@ -216,7 +220,7 @@ export default {
           key: 'taskType',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{taskTypeConvert(row.taskType).label}</div>;
+            return <div>{taskTypeConvert(row.taskType)}</div>;
           }
         },
         {
@@ -231,7 +235,7 @@ export default {
           key: 'rewardType',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{rewardTypeConvert(row.rewardType).label}</div>;
+            return <div>{rewardTypeConvert(row.rewardType)}</div>;
           }
         },
         {
@@ -252,7 +256,7 @@ export default {
           width: '150px',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{receiveStatusConvert(row.receiveStatus).label}</div>;
+            return <div>{receiveStatusConvert(row.receiveStatus)}</div>;
           }
         },
         {

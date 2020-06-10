@@ -1039,7 +1039,6 @@ export default {
       }
     },
     handleClick({ root, node, data }) {
-      console.log('current data: ', data);
       if (typeof data.expand === 'undefined') {
         this.$set(data, 'expend', false);
         if (data.children) {

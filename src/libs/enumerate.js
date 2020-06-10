@@ -736,7 +736,6 @@ export const relationStoreTypeEnum = [{
 }
 ]
 
-
 export const couponStatusEnum = [{
   label: '有效',
   value: 'VALID'
@@ -988,7 +987,7 @@ export const couponTypeEnum = [{
 {
   label: '现金券',
   value: couponType.CASH_COUPON
-},
+}
 // {
 //   label: '运费券',
 //   value: couponType.FREIGHT_COUPON
@@ -1043,7 +1042,7 @@ export const payType = {
   weixin: 'weixin',
   balance: 'balance',
   points: 'points',
-  haiding: 'haiding',
+  haiding: 'haiding'
 };
 
 export const payTypeEnum = [{
@@ -2853,7 +2852,8 @@ export const receiveStatusEnum = [{
   label: '未领取',
   value: 'NO'
 }]
-//售后方式
+
+// 售后方式
 export const serviceModeEnum = [{
   label: '补货',
   value: 'REPLENISH'
@@ -2865,11 +2865,11 @@ export const serviceModeEnum = [{
 {
   label: '返仓',
   value: 'REVERT'
-},{
+}, {
   label: '退运费',
   value: 'ABNORMAL'
-},]
-//售后状态 
+}]
+// 售后状态
 export const serviceStatusEnum = [{
   label: '待审核',
   value: 'WAIT'
@@ -2877,7 +2877,7 @@ export const serviceStatusEnum = [{
 {
   label: '审核拒绝',
   value: 'AUDIT_REJECT'
-},{
+}, {
   label: '客户取消',
   value: 'CANCEL'
 },

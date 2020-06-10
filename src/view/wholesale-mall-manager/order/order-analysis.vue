@@ -44,7 +44,7 @@
           />
           <Button
             v-waves
-            :searchLoading="searchLoading"
+            :search-loading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
@@ -95,38 +95,38 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
-import { getOrderGoodsToday } from "@/api/wholesale";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
+import Tables from '_c/tables';
+import _ from 'lodash';
+import { getOrderGoodsToday } from '@/api/wholesale';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber
-} from "@/libs/util";
-import { userStatusEnum, sexEnum, userTypeEnum } from "@/libs/enumerate";
+} from '@/libs/util';
+import { userStatusEnum, sexEnum, userTypeEnum } from '@/libs/enumerate';
 import {
   userTypeConvert,
   userStatusConvert,
   sexConvert
-} from "@/libs/converStatus";
+} from '@/libs/converStatus';
 
 const goodsToday = {
-  baseBar: "",
-  goodsName: "",
+  baseBar: '',
+  goodsName: '',
   goodsWeight: 0,
   netWeight: 0,
   quanity: 0,
-  standard: "",
-  goodsSumPrice: "",
-  goodsPrice: "",
-  categoryName: ""
+  standard: '',
+  goodsSumPrice: '',
+  goodsPrice: '',
+  categoryName: ''
 };
 
 const roleRowData = {
-  goodsName: "",
+  goodsName: '',
   startDate: null,
   endDate: null,
   page: 1,
@@ -153,73 +153,73 @@ export default {
       goodsToday: _.cloneDeep(goodsToday),
       columns: [
         {
-          title: "商品条码",
-          align: "center",
-          key: "baseBar",
+          title: '商品条码',
+          align: 'center',
+          key: 'baseBar',
           minWidth: 60
         },
         {
-          title: "商品分类",
-          align: "center",
-          key: "categoryName",
+          title: '商品分类',
+          align: 'center',
+          key: 'categoryName',
           minWidth: 60
         },
         {
-          title: "商品名称",
-          align: "center",
-          key: "goodsName",
+          title: '商品名称',
+          align: 'center',
+          key: 'goodsName',
           minWidth: 100
         },
         {
-          title: "商品规格",
-          align: "center",
-          key: "standard",
+          title: '商品规格',
+          align: 'center',
+          key: 'standard',
           minWidth: 80
         },
         {
-          title: "商品单价",
-          align: "center",
-          key: "goodsPrice",
+          title: '商品单价',
+          align: 'center',
+          key: 'goodsPrice',
           minWidth: 80
         },
         {
-          title: "商品数量",
-          align: "center",
-          key: "quanity",
+          title: '商品数量',
+          align: 'center',
+          key: 'quanity',
           minWidth: 80
         },
         {
-          title: "商品重量",
-          align: "center",
-          key: "goodsWeight",
+          title: '商品重量',
+          align: 'center',
+          key: 'goodsWeight',
           minWidth: 80
         },
         {
-          title: "商品净重",
-          align: "center",
-          key: "netWeight",
+          title: '商品净重',
+          align: 'center',
+          key: 'netWeight',
           minWidth: 80
         },
         {
-          title: "商品总额",
-          align: "center",
-          key: "goodsSumPrice",
+          title: '商品总额',
+          align: 'center',
+          key: 'goodsSumPrice',
           minWidth: 80
         },
         {
-          title: "下单日期",
-          align: "center",
-          key: "createDate",
+          title: '下单日期',
+          align: 'center',
+          key: 'createDate',
           minWidth: 80
         }
       ]
     };
   },
+  computed: {},
   created() {
     this.getTableData();
   },
   mounted() {},
-  computed: {},
   methods: {
     getTableData() {
       getOrderGoodsToday(this.searchRowData)
@@ -265,7 +265,7 @@ export default {
     handleDownload() {
       this.exportExcelLoading = true;
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      let pageSize = this.searchRowData.page;
+      const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       getOrderGoodsToday(this.searchRowData)
         .then(res => {
@@ -275,7 +275,7 @@ export default {
           this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
           //  tableData.forEach(item => {});
-          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+          const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
           this.$refs.tables.handleDownload({
             filename: `新品需求信息-${date}`,
             data: tableData

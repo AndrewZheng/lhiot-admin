@@ -334,81 +334,82 @@ const btns = {
       row
     } = params;
     if (row.userStatus === 'locking' || row.userStatus === 'certified') {
-    if (row.userStatus === 'locking') {
-      return h('Poptip', {
-        props: {
-          confirm: true,
-          transfer: true,
-          title: '确认要将此用户解锁吗?',
-          placement: params.index === 0 ? 'right' : 'top'
-        },
-        style: {
-          marginRight: '5px'
-        },
-        on: {
-          'on-ok': () => {
-            vm.$emit('on-unlock', params);
-          }
-        }
-      }, [
-        h('Tooltip', {
-          props: { placement: 'top', transfer: true, content: '解锁用户' }
-        }, [
-          h('Button', {
-            props: {
-              type: 'success',
-              size: 'small'
+      if (row.userStatus === 'locking') {
+        return h('Poptip', {
+          props: {
+            confirm: true,
+            transfer: true,
+            title: '确认要将此用户解锁吗?',
+            placement: params.index === 0 ? 'right' : 'top'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            'on-ok': () => {
+              vm.$emit('on-unlock', params);
             }
+          }
+        }, [
+          h('Tooltip', {
+            props: { placement: 'top', transfer: true, content: '解锁用户' }
           }, [
-            h('Icon', {
+            h('Button', {
               props: {
-                type: 'ios-key',
-                size: 16,
-                color: '#fff'
+                type: 'success',
+                size: 'small'
               }
-            })
+            }, [
+              h('Icon', {
+                props: {
+                  type: 'ios-key',
+                  size: 16,
+                  color: '#fff'
+                }
+              })
+            ])
           ])
-        ])
-      ]);
+        ]);
+      } else {
+        return h('Poptip', {
+          props: {
+            confirm: true,
+            transfer: true,
+            title: '确认要将此用户锁定吗?',
+            placement: params.index === 0 ? 'right' : 'top'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            'on-ok': () => {
+              vm.$emit('on-unlock', params);
+            }
+          }
+        }, [
+          h('Tooltip', {
+            props: { placement: 'top', transfer: true, content: '锁定用户' }
+          }, [
+            h('Button', {
+              props: {
+                type: 'error',
+                size: 'small'
+              }
+            }, [
+              h('Icon', {
+                props: {
+                  type: 'ios-key',
+                  size: 16,
+                  color: '#fff'
+                }
+              })
+            ])
+          ])
+        ]);
+      }
     } else {
-      return h('Poptip', {
-        props: {
-          confirm: true,
-          transfer: true,
-          title: '确认要将此用户锁定吗?',
-          placement: params.index === 0 ? 'right' : 'top'
-        },
-        style: {
-          marginRight: '5px'
-        },
-        on: {
-          'on-ok': () => {
-            vm.$emit('on-unlock', params);
-          }
-        }
-      }, [
-        h('Tooltip', {
-          props: { placement: 'top', transfer: true, content: '锁定用户' }
-        }, [
-          h('Button', {
-            props: {
-              type: 'error',
-              size: 'small'
-            }
-          }, [
-            h('Icon', {
-              props: {
-                type: 'ios-key',
-                size: 16,
-                color: '#fff'
-              }
-            })
-          ])
-        ])
-      ]);
-    }} else {
-    return ''
-  }
+      return ''
+    }
   },
   permission: (h, params, vm) => {
     const {
