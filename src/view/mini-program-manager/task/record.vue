@@ -220,7 +220,7 @@ export default {
           key: 'taskType',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{taskTypeConvert(row.taskType).label}</div>;
+            return <div>{taskTypeConvert(row.taskType)}</div>;
           }
         },
         {
@@ -235,7 +235,7 @@ export default {
           key: 'rewardType',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{rewardTypeConvert(row.rewardType).label}</div>;
+            return <div>{rewardTypeConvert(row.rewardType)}</div>;
           }
         },
         {
@@ -256,7 +256,7 @@ export default {
           width: '150px',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{receiveStatusConvert(row.receiveStatus).label}</div>;
+            return <div>{receiveStatusConvert(row.receiveStatus)}</div>;
           }
         },
         {

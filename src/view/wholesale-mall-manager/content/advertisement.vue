@@ -26,8 +26,8 @@
             clearable
           ></Input>
           <Select
-            :disable="selectDisable"
             v-model="searchRowData.advertmentPosition"
+            :disable="selectDisable"
             class="search-col mr5"
             placeholder="广告位置"
             style="width: 150px"
@@ -35,10 +35,12 @@
           >
             <Option
               v-for="item in advPositionEnum"
-              :value="item.value"
               :key="item.value"
+              :value="item.value"
               class="pt5 pb5 pl15"
-            >{{ item.label }}</Option>
+            >
+              {{ item.label }}
+            </Option>
           </Select>
           <Select
             v-model="searchRowData.vaild"
@@ -49,10 +51,12 @@
           >
             <Option
               v-for="item in activityStatusEnum"
-              :value="item.value"
               :key="item.value"
+              :value="item.value"
               class="ptb2-5"
-            >{{ item.label }}</Option>
+            >
+              {{ item.label }}
+            </Option>
           </Select>
           <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch">
             <Icon type="md-search" />&nbsp;搜索
@@ -106,14 +110,22 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">广告位置:</i-col>
-              <i-col span="16">{{ advertisementDetail.advertmentPosition | advPositionFilter }}</i-col>
+              <i-col span="8">
+                广告位置:
+              </i-col>
+              <i-col span="16">
+                {{ advertisementDetail.advertmentPosition | advPositionFilter }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">广告名称:</i-col>
-              <i-col span="16">{{ advertisementDetail.title }}</i-col>
+              <i-col span="8">
+                广告名称:
+              </i-col>
+              <i-col span="16">
+                {{ advertisementDetail.title }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -128,9 +140,11 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">广告图:</i-col>
+              <i-col span="8">
+                广告图:
+              </i-col>
               <i-col span="16">
-                <img :src="advertisementDetail.advertmentImage" style="width: 100%;height: auto" >
+                <img :src="advertisementDetail.advertmentImage" style="width: 100%;height: auto">
               </i-col>
             </Row>
           </i-col>
@@ -138,8 +152,12 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">广告状态:</i-col>
-              <i-col span="16">{{ advertisementDetail.vaild==="yes"?'有效':'无效' }}</i-col>
+              <i-col span="8">
+                广告状态:
+              </i-col>
+              <i-col span="16">
+                {{ advertisementDetail.vaild==="yes"?'有效':'无效' }}
+              </i-col>
             </Row>
           </i-col>
           <!-- <i-col span="12">
@@ -152,42 +170,64 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">链接类型:</i-col>
-              <i-col span="16">{{ advertisementDetail.linkType | advertisementLinkTypeFilter }}</i-col>
+              <i-col span="8">
+                链接类型:
+              </i-col>
+              <i-col span="16">
+                {{ advertisementDetail.linkType | advertisementLinkTypeFilter }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">链接目标:</i-col>
-              <i-col span="16">{{ advertisementDetail.linkUrl }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">有效时间:</i-col>
-              <i-col span="16">{{ advertisementDetail.beginTime }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">失效时间:</i-col>
-              <i-col span="16">{{ advertisementDetail.endTime }}</i-col>
+              <i-col span="8">
+                链接目标:
+              </i-col>
+              <i-col span="16">
+                {{ advertisementDetail.linkUrl }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">创建时间:</i-col>
-              <i-col span="16">{{ advertisementDetail.createAt }}</i-col>
+              <i-col span="8">
+                有效时间:
+              </i-col>
+              <i-col span="16">
+                {{ advertisementDetail.beginTime }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                失效时间:
+              </i-col>
+              <i-col span="16">
+                {{ advertisementDetail.endTime }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                创建时间:
+              </i-col>
+              <i-col span="16">
+                {{ advertisementDetail.createAt }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -208,10 +248,12 @@
                 <Select v-model="advertisementDetail.advertmentPosition" style="width: 200px">
                   <Option
                     v-for="item in advPositionEnum"
-                    :value="item.value"
                     :key="item.value"
+                    :value="item.value"
                     class="pt5 pb5 pl15"
-                  >{{ item.label }}</Option>
+                  >
+                    {{ item.label }}
+                  </Option>
                 </Select>
               </FormItem>
             </i-col>
@@ -231,11 +273,13 @@
                 <Select v-model="advertisementDetail.vaild" style="width: 200px">
                   <Option
                     v-for="(item,index) in vaild"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                  >
+                    {{ item.label }}
+                  </Option>
                 </Select>
               </FormItem>
             </i-col>
@@ -324,7 +368,7 @@
                   <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                     <template v-if="item.status === 'finished'">
                       <div>
-                        <img :src="item.url" >
+                        <img :src="item.url">
                         <div class="demo-upload-list-cover">
                           <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                           <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -354,22 +398,26 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')">确定</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')">
+          确定
+        </Button>
       </div>
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" >
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
 
-    <Modal :mask-closable="false" :width="1200" v-model="relationTargetShow" title="关联商品规格">
+    <Modal v-model="relationTargetShow" :mask-closable="false" :width="1200" title="关联商品规格">
       <div class="modal-content">
         Tips：点击要选择的行
         <tables
           ref="tables"
-          :columns="tempColumns"
           v-model="tempModalTableData"
+          :columns="tempColumns"
           border
           searchable
           search-place="top"
@@ -635,24 +683,20 @@ export default {
             switch (row.advertmentPosition) {
               case 'poppup':
                 return (
-                  <div>{advPositionConvert(row.advertmentPosition).label}</div>
+                  <div>{advPositionConvert(row.advertmentPosition)}</div>
                 );
-                break;
               case 'top':
                 return (
-                  <div>{advPositionConvert(row.advertmentPosition).label}</div>
+                  <div>{advPositionConvert(row.advertmentPosition)}</div>
                 );
-                break;
               case 'flashsale':
                 return (
-                  <div>{advPositionConvert(row.advertmentPosition).label}</div>
+                  <div>{advPositionConvert(row.advertmentPosition)}</div>
                 );
-                break;
               case 'bottom':
                 return (
-                  <div>{advPositionConvert(row.advertmentPosition).label}</div>
+                  <div>{advPositionConvert(row.advertmentPosition)}</div>
                 );
-                break;
               default:
                 return <div>{str}</div>;
             }
@@ -687,7 +731,7 @@ export default {
               return (
                 <div>
                   <tag color='success'>
-                    {activityStatusConvert(row.vaild).label}
+                    {activityStatusConvert(row.vaild)}
                   </tag>
                 </div>
               );
@@ -695,7 +739,7 @@ export default {
               return (
                 <div>
                   <tag color='error'>
-                    {activityStatusConvert(row.vaild).label}
+                    {activityStatusConvert(row.vaild)}
                   </tag>
                 </div>
               );

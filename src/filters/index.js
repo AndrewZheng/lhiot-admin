@@ -292,26 +292,26 @@ filters.coordinateTypeFilter = (value) => {
 
 // 结算状态
 filters.settlementStatusFilters = (name) => {
-  return settlementStatusConvert(name).label;
+  return settlementStatusConvert(name);
 }
 // 鲜果师等级
 filters.doctorLevelFilters = (name) => {
-  return doctorLevelConvert(name).label;
+  return doctorLevelConvert(name);
 }
 
 // 鲜果师状态
 filters.doctorStatusFilters = (name) => {
-  return doctorStatusConvert(name).label;
+  return doctorStatusConvert(name);
 }
 
 // 明星鲜果师
 filters.hotFilters = (name) => {
-  return hotConvert(name).label;
+  return hotConvert(name);
 }
 
 // 订单状态
 filters.orderStatusFilters = (status) => {
-  return orderStatusConvert(status).label;
+  return orderStatusConvert(status);
 }
 
 // 门店管理状态
@@ -321,12 +321,12 @@ filters.storeStatusFilters = (status) => {
 
 // 提货方式
 filters.receivingWayFilters = (status) => {
-  return receivingWayConvert(status).label;
+  return receivingWayConvert(status);
 }
 
 // 订单类型
 filters.orderTypeFilters = (status) => {
-  return orderTypeConvert(status).label;
+  return orderTypeConvert(status);
 }
 
 // 定制周期
@@ -336,12 +336,12 @@ filters.customPeriodFilters = (status) => {
 
 // 定制状态
 filters.customOrderStatusFilters = (status) => {
-  return customOrderStatusConvert(status).label;
+  return customOrderStatusConvert(status);
 }
 
 // 定制配送方式
 filters.deliveryTypeCustomFilters = (status) => {
-  return deliveryTypeCustomConvert(status).label;
+  return deliveryTypeCustomConvert(status);
 }
 
 // 商品上架
@@ -401,7 +401,7 @@ filters.couponScopeFilter = (status) => {
 
 // 批发商城活动类型
 filters.pfActivityTypeFilter = (status) => {
-  return activityTypeConvert(status).label;
+  return activityTypeConvert(status);
 }
 
 // 小程序优惠券有效期类型
@@ -456,7 +456,7 @@ filters.miniOrderStatusFilter = (status) => {
 
 // 小程序海鼎状态
 filters.miniHdStatusFilter = (status) => {
-  return wholesaleHdStatusConvert(status).label;
+  return wholesaleHdStatusConvert(status);
 }
 
 // 小程序订单类型
@@ -475,28 +475,28 @@ filters.deliverStatusFilter = (status) => {
 
 // 批发小程序订单状态
 filters.wholesaleOrderStatusFilter = (status) => {
-  return wholesaleOrderStatusConvert(status).label;
+  return wholesaleOrderStatusConvert(status);
 }
 
 // 批发小程序海鼎状态
 filters.wholesaleHdStatusFilter = (status) => {
-  return wholesaleHdStatusConvert(status).label;
+  return wholesaleHdStatusConvert(status);
 }
 
 filters.wholeslaePayTypeFilter = (type) => {
-  return wholesalePayTypeConvert(type).label;
+  return wholesalePayTypeConvert(type);
 }
 
 filters.payStatusFilter = (status) => {
-  return payStatusConvert(status).label;
+  return payStatusConvert(status);
 }
 
 filters.advPositionFilter = (value) => {
-  return advPositionConvert(value).label;
+  return advPositionConvert(value);
 }
 
 filters.showTypeFilter = (value) => {
-  return showTypeConvert(value).label;
+  return showTypeConvert(value);
 }
 
 export default filters;

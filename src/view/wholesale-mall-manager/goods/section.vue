@@ -38,7 +38,7 @@
                   clearable
                 ></Input>
                 <Button
-                  :searchLoading="searchLoading"
+                  :search-loading="searchLoading"
                   class="search-btn mr5"
                   type="primary"
                   @click="handleSearch"
@@ -113,7 +113,9 @@
           <FormItem v-show="isCreate" label="父级名称:">
             <i-col
               style="color:red;font-weight:bold;"
-            >{{ parentCategory.plateName?parentCategory.plateName:'全部板块' }}</i-col>
+            >
+              {{ parentCategory.plateName?parentCategory.plateName:'全部板块' }}
+            </i-col>
           </FormItem>
           <FormItem :label-width="100" label="板块名称:" prop="plateName">
             <Input v-model="currentCategory.plateName" style="width:200px;"></Input>
@@ -129,10 +131,12 @@
             >
               <Option
                 v-for="(item,index) in layoutEnum"
-                :value="item.value"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
           </FormItem>
           <FormItem label="板块图片:建议尺寸;750x338(单位:px):" prop="plateImage">
@@ -140,7 +144,7 @@
             <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
               <template v-if="item.status === 'finished'">
                 <div>
-                  <img :src="item.url" >
+                  <img :src="item.url">
                   <div class="demo-upload-list-cover">
                     <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                     <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -167,8 +171,12 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">
+          确定
+        </Button>
       </div>
     </Modal>
   </div>
@@ -241,7 +249,7 @@ const dataColumns = [
     minWidth: 150,
     render: (h, params, vm) => {
       const { row } = params;
-      return <div>{layoutConvert(row.layout).label}</div>;
+      return <div>{layoutConvert(row.layout)}</div>;
     }
   },
   {

@@ -938,7 +938,7 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             return (
-              <div>{thirdDeliverStatusConvert(row.deliverStatus).label}</div>
+              <div>{thirdDeliverStatusConvert(row.deliverStatus)}</div>
             );
           }
         },
@@ -1218,7 +1218,7 @@ export default {
               return (
                 <div>
                   <tag color='green'>
-                    {receivingWayConvert(row.receivingWay).label}
+                    {receivingWayConvert(row.receivingWay)}
                   </tag>
                 </div>
               );
@@ -1226,7 +1226,7 @@ export default {
               return (
                 <div>
                   <tag color='gold'>
-                    {receivingWayConvert(row.receivingWay).label}
+                    {receivingWayConvert(row.receivingWay)}
                   </tag>
                 </div>
               );
@@ -1249,7 +1249,7 @@ export default {
               return (
                 <div>
                   <tag color='cyan'>
-                    {isAllRefundConvert(row.isAllRefund).label}
+                    {isAllRefundConvert(row.isAllRefund)}
                   </tag>
                 </div>
               );
@@ -1726,21 +1726,21 @@ export default {
           item['couponAmount'] = (item['couponAmount'] / 100.0).toFixed(2);
           item['amountPayable'] = (item['amountPayable'] / 100.0).toFixed(2);
           item['refundFee'] = (item['refundFee'] / 100.0).toFixed(2);
-          item['orderType'] = orderTypeConvert(item['orderType']).label;
+          item['orderType'] = orderTypeConvert(item['orderType']);
           item['deliverStatus'] = thirdDeliverStatusConvert(
             item['deliverStatus']
-          ).label;
+          );
           item['orderStatus'] = miniOrderStatusConvert(
             item['orderStatus']
           ).label;
           item['hdStatus'] = miniHdStatusConvert(item['hdStatus']).label;
           item['receivingWay'] = receivingWayConvert(
             item['receivingWay']
-          ).label;
+          );
           item['status'] = miniOrderStatusConvert(item['status']).label;
           item['payType'] = payTypeConvert(item['payType']).label;
-          item['isAllRefund'] = isAllRefundConvert(item['isAllRefund']).label;
-          item['recieveTime'] = item['recieveTime'];
+          item['isAllRefund'] = isAllRefundConvert(item['isAllRefund']);
+          // item['recieveTime'] = item['recieveTime'];
         });
         const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
         this.$refs.tables.handleDownload({

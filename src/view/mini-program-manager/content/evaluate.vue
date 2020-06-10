@@ -51,10 +51,12 @@
             >
               <Option
                 v-for="item in deliveryTypeEnum"
-                :value="item.value"
                 :key="`orderType-col-${item.value}`"
+                :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.commentScore"
@@ -65,10 +67,12 @@
             >
               <Option
                 v-for="item in commentScoreTypeEnum"
-                :value="item.value"
                 :key="`orderType-col-${item.value}`"
+                :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.orderType"
@@ -79,10 +83,12 @@
             >
               <Option
                 v-for="item in orderType"
-                :value="item.value"
                 :key="`orderType-col-${item.value}`"
+                :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <DatePicker
               v-model="searchRowData.beginDate"
@@ -148,107 +154,169 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">门店ID:</i-col>
-              <i-col span="18">{{ evaluateDetail.storeId }}</i-col>
+              <i-col span="6">
+                门店ID:
+              </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.storeId }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">门店Code:</i-col>
-              <i-col span="18">{{ evaluateDetail.storeCode }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="12">
-            <Row>
-              <i-col span="6">门店名称:</i-col>
-              <i-col span="18">{{ evaluateDetail.storeName }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row>
-              <i-col span="6">用户ID:</i-col>
-              <i-col span="18">{{ evaluateDetail.userId }}</i-col>
+              <i-col span="6">
+                门店Code:
+              </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.storeCode }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">用户昵称:</i-col>
-              <i-col span="18">{{ evaluateDetail.nickName }}</i-col>
+              <i-col span="6">
+                门店名称:
+              </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.storeName }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">手机号码:</i-col>
-              <i-col span="18">{{ evaluateDetail.phone }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="12">
-            <Row>
-              <i-col span="6">所得积分:</i-col>
-              <i-col span="18">{{ evaluateDetail.point }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row>
-              <i-col span="6">商品名称组合:</i-col>
-              <i-col span="18">{{ evaluateDetail.productNames }}</i-col>
+              <i-col span="6">
+                用户ID:
+              </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.userId }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">订单编号:</i-col>
-              <i-col span="18">{{ evaluateDetail.orderCode }}</i-col>
+              <i-col span="6">
+                用户昵称:
+              </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.nickName }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">骑手评价:</i-col>
-              <i-col span="18">{{ evaluateDetail.deliveryComment }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="12">
-            <Row>
-              <i-col span="6">门店评价:</i-col>
-              <i-col span="18">{{ evaluateDetail.commentScore }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row>
-              <i-col span="6">是否置顶:</i-col>
-              <i-col span="18" v-if="evaluateDetail.istop='YES'">{{ "是" }}</i-col>
-              <i-col span="18" v-else>{{ "否" }}</i-col>
+              <i-col span="6">
+                手机号码:
+              </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.phone }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">状态:</i-col>
-              <i-col span="18" v-if="evaluateDetail.status==='VIEW'">{{ "显示" }}</i-col>
-              <i-col span="18" v-else>{{ "隐藏" }}</i-col>
+              <i-col span="6">
+                所得积分:
+              </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.point }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">置顶时间:</i-col>
-              <i-col span="18">{{ evaluateDetail.topTime }}</i-col>
+              <i-col span="6">
+                商品名称组合:
+              </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.productNames }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="6">
+                订单编号:
+              </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.orderCode }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="6">
+                骑手评价:
+              </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.deliveryComment }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="6">
+                门店评价:
+              </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.commentScore }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="6">
+                是否置顶:
+              </i-col>
+              <i-col v-if="evaluateDetail.istop='YES'" span="18">
+                {{ "是" }}
+              </i-col>
+              <i-col v-else span="18">
+                {{ "否" }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="6">
+                状态:
+              </i-col>
+              <i-col v-if="evaluateDetail.status==='VIEW'" span="18">
+                {{ "显示" }}
+              </i-col>
+              <i-col v-else span="18">
+                {{ "隐藏" }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="6">
+                置顶时间:
+              </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.topTime }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="20">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="6">评价图片:</i-col>
+              <i-col span="6">
+                评价图片:
+              </i-col>
               <i-col span="16">
                 <div
                   v-for="item in evaluateList"
@@ -256,7 +324,7 @@
                   class="demo-upload-list"
                   style="width:100px;height:100px;"
                 >
-                  <img :src="item" />
+                  <img :src="item">
                   <div class="demo-upload-list-cover">
                     <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                   </div>
@@ -267,7 +335,9 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -280,48 +350,72 @@
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">订单编号:</i-col>
-                <i-col span="18">{{ evaluateDetail.orderCode }}</i-col>
+                <i-col span="6">
+                  订单编号:
+                </i-col>
+                <i-col span="18">
+                  {{ evaluateDetail.orderCode }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">下单门店:</i-col>
-                <i-col span="18">{{ evaluateDetail.storeName }}</i-col>
+                <i-col span="6">
+                  下单门店:
+                </i-col>
+                <i-col span="18">
+                  {{ evaluateDetail.storeName }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">用户名称:</i-col>
-                <i-col span="18">{{ evaluateDetail.nickName }}</i-col>
+                <i-col span="6">
+                  用户名称:
+                </i-col>
+                <i-col span="18">
+                  {{ evaluateDetail.nickName }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">骑手评价:</i-col>
-                <i-col span="18">{{ evaluateDetail.deliveryComment }}</i-col>
+                <i-col span="6">
+                  骑手评价:
+                </i-col>
+                <i-col span="18">
+                  {{ evaluateDetail.deliveryComment }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">门店评价:</i-col>
-                <i-col span="18">{{ evaluateDetail.commentScore }}</i-col>
+                <i-col span="6">
+                  门店评价:
+                </i-col>
+                <i-col span="18">
+                  {{ evaluateDetail.commentScore }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="5">评价内容:</i-col>
-                <i-col span="18">{{ evaluateDetail.commentContent }}</i-col>
+                <i-col span="5">
+                  评价内容:
+                </i-col>
+                <i-col span="18">
+                  {{ evaluateDetail.commentContent }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
@@ -329,7 +423,9 @@
           <Row :gutter="8" type="flex" align="middle" class-name="mb10">
             <i-col span="20">
               <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                <i-col span="6">评价图片:</i-col>
+                <i-col span="6">
+                  评价图片:
+                </i-col>
                 <i-col span="16">
                   <div
                     v-for="item in evaluateList"
@@ -337,7 +433,7 @@
                     class="demo-upload-list"
                     style="width:100px;height:100px;"
                   >
-                    <img :src="item" />
+                    <img :src="item">
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                     </div>
@@ -373,64 +469,68 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit()">确定</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit()">
+          确定
+        </Button>
       </div>
     </Modal>
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" />
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import IViewUpload from "_c/iview-upload";
-import DragList from "_c/drag-list";
-import _ from "lodash";
-import { getEvaluatePages, replyEvaluate } from "@/api/mini-program";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+import Tables from '_c/tables';
+import IViewUpload from '_c/iview-upload';
+import DragList from '_c/drag-list';
+import _ from 'lodash';
+import { getEvaluatePages, replyEvaluate } from '@/api/mini-program';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import {
   imageStatusConvert,
   deliveryTypeConvert,
   commentScoreConvert
-} from "@/libs/converStatus";
+} from '@/libs/converStatus';
 import {
   imageStatusEnum,
   deliveryTypeEnum,
   commentScoreTypeEnum
-} from "@/libs/enumerate";
+} from '@/libs/enumerate';
 
 const evaluateDetail = {
-  answerContent: "",
-  avatarUrl: "",
-  beginDate: "",
-  commentContent: "",
-  commentImages: "",
-  commentScore: "",
-  commentSource: "",
-  createTime: "",
-  deliveryComment: "",
-  endDate: "",
-  id: "",
-  istop: "",
-  nickName: "",
-  orderCode: "",
-  orderId: "",
-  phone: "",
-  point: "",
-  productNames: "",
-  status: "",
-  storeCode: "",
-  storeId: "",
-  storeName: "",
-  topTime: "",
-  type: "",
-  userId: "",
-  orderType: "",
-  xid: ""
+  answerContent: '',
+  avatarUrl: '',
+  beginDate: '',
+  commentContent: '',
+  commentImages: '',
+  commentScore: '',
+  commentSource: '',
+  createTime: '',
+  deliveryComment: '',
+  endDate: '',
+  id: '',
+  istop: '',
+  nickName: '',
+  orderCode: '',
+  orderId: '',
+  phone: '',
+  point: '',
+  productNames: '',
+  status: '',
+  storeCode: '',
+  storeId: '',
+  storeName: '',
+  topTime: '',
+  type: '',
+  userId: '',
+  orderType: '',
+  xid: ''
 };
 
 const roleRowData = {
@@ -438,14 +538,14 @@ const roleRowData = {
   nickName: null,
   commentScore: null,
   phone: null,
-  storeName: "",
-  beginDate: "",
-  endDate: "",
+  storeName: '',
+  beginDate: '',
+  endDate: '',
   page: 1,
   rows: 10,
-  orderType: "WX_SMALL",
-  sidx: "createTime",
-  sort: "desc"
+  orderType: 'WX_SMALL',
+  sidx: 'createTime',
+  sort: 'desc'
 };
 
 export default {
@@ -460,7 +560,7 @@ export default {
       searchRowData: _.cloneDeep(roleRowData),
       evaluateDetail: _.cloneDeep(evaluateDetail),
       ruleInline: {
-        answerContent: [{ required: true, message: "请输入评价回复" }]
+        answerContent: [{ required: true, message: '请输入评价回复' }]
       },
       defaultListMain: [],
       uploadListMain: [],
@@ -468,28 +568,28 @@ export default {
       evaluateList: [],
       uploadVisible: false,
       evaluateStatus: false,
-      imgUploadViewItem: "",
+      imgUploadViewItem: '',
       imageStatusEnum,
       deliveryTypeEnum,
       commentScoreTypeEnum,
       orderType: [
-        { label: "小程序订单", value: "WX_SMALL" },
-        { label: "门店订单", value: "STORE" }
+        { label: '小程序订单', value: 'WX_SMALL' },
+        { label: '门店订单', value: 'STORE' }
       ],
       columns: [
         {
-          type: "selection",
+          type: 'selection',
           width: 60,
-          align: "center"
+          align: 'center'
         },
         {
-          title: "订单编号",
-          align: "center",
+          title: '订单编号',
+          align: 'center',
           width: 170,
-          key: "orderCode",
+          key: 'orderCode',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.orderType === "WX_SMALL") {
+            if (row.orderType === 'WX_SMALL') {
               return <div>{row.orderCode}</div>;
             } else {
               return <div>{row.xid}</div>;
@@ -498,102 +598,102 @@ export default {
           }
         },
         {
-          title: "商品名称",
-          align: "center",
-          key: "productNames",
+          title: '商品名称',
+          align: 'center',
+          key: 'productNames',
           tooltip: true
         },
         {
-          title: "门店名称",
-          align: "center",
-          key: "storeName"
+          title: '门店名称',
+          align: 'center',
+          key: 'storeName'
         },
         {
-          title: "用户名称",
-          align: "center",
-          key: "nickName"
+          title: '用户名称',
+          align: 'center',
+          key: 'nickName'
         },
         {
-          title: "手机号码",
-          align: "center",
-          key: "phone"
+          title: '手机号码',
+          align: 'center',
+          key: 'phone'
         },
         {
-          title: "评价时间",
-          align: "center",
-          key: "createTime"
+          title: '评价时间',
+          align: 'center',
+          key: 'createTime'
         },
         {
-          title: "骑手评价",
-          align: "center",
-          key: "deliveryComment",
+          title: '骑手评价',
+          align: 'center',
+          key: 'deliveryComment',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.deliveryComment === "GOOD") {
+            if (row.deliveryComment === 'GOOD') {
               return (
                 <div>
-                  <tag color="orange">
-                    {deliveryTypeConvert(row.deliveryComment).label}
+                  <tag color='orange'>
+                    {deliveryTypeConvert(row.deliveryComment)}
                   </tag>
                 </div>
               );
-            } else if (row.deliveryComment === "GENERAL") {
+            } else if (row.deliveryComment === 'GENERAL') {
               return (
                 <div>
-                  <tag color="cyan">
-                    {deliveryTypeConvert(row.deliveryComment).label}
+                  <tag color='cyan'>
+                    {deliveryTypeConvert(row.deliveryComment)}
                   </tag>
                 </div>
               );
-            } else if (row.deliveryComment === "NEGATIVE") {
+            } else if (row.deliveryComment === 'NEGATIVE') {
               return (
                 <div>
-                  <tag color="error">
-                    {deliveryTypeConvert(row.deliveryComment).label}
+                  <tag color='error'>
+                    {deliveryTypeConvert(row.deliveryComment)}
                   </tag>
                 </div>
               );
             }
-            return <div>{"N/A"}</div>;
+            return <div>{'N/A'}</div>;
           }
         },
         {
-          title: "门店评价",
-          align: "center",
-          key: "commentScore",
+          title: '门店评价',
+          align: 'center',
+          key: 'commentScore',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{row.commentScore + "星"}</div>;
+            return <div>{row.commentScore + '星'}</div>;
           }
         },
         {
-          title: "评价内容",
-          align: "center",
+          title: '评价内容',
+          align: 'center',
           width: 200,
-          key: "commentContent",
+          key: 'commentContent',
           tooltip: true,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.commentSource != "USER") {
-              return <div>{"系统评价"}</div>;
+            if (row.commentSource != 'USER') {
+              return <div>{'系统评价'}</div>;
             } else {
               return <div>{row.commentContent}</div>;
             }
           }
         },
         {
-          title: "回复评价",
-          align: "center",
+          title: '回复评价',
+          align: 'center',
           width: 200,
-          key: "answerContent",
+          key: 'answerContent',
           tooltip: true
         },
         {
-          title: "操作",
-          align: "center",
+          title: '操作',
+          align: 'center',
           minWidth: 80,
-          key: "handle",
-          options: ["view", "setTop", "setSta", "edit"]
+          key: 'handle',
+          options: ['view', 'setTop', 'setSta', 'edit']
         }
       ],
       createLoading: false,
@@ -618,7 +718,7 @@ export default {
         if (valid) {
           this.replyEvaluate();
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -637,9 +737,9 @@ export default {
       this.tempModalType = this.modalType.view;
       this.evaluateDetail = _.cloneDeep(params.row);
       (this.evaluateList = []), (this.evaluateDetail = _.cloneDeep(params.row));
-      let arr = params.row.commentImages.split(",");
+      const arr = params.row.commentImages.split(',');
       for (let i = 0; i < arr.length; i++) {
-        if (arr[i] != "") {
+        if (arr[i] != '') {
           this.evaluateList.push(arr[i]);
         }
       }
@@ -648,9 +748,9 @@ export default {
     handleEdit(params) {
       this.resetFields();
       (this.evaluateList = []), (this.evaluateDetail = _.cloneDeep(params.row));
-      let arr = params.row.commentImages.split(",");
+      const arr = params.row.commentImages.split(',');
       for (let i = 0; i < arr.length; i++) {
-        if (arr[i] != "") {
+        if (arr[i] != '') {
           this.evaluateList.push(arr[i]);
         }
       }
@@ -664,12 +764,12 @@ export default {
       if (this.searchRowData.beginDate) {
         this.searchRowData.beginDate = this.$moment(
           this.searchRowData.beginDate
-        ).format("YYYY-MM-DD HH:mm:ss");
+        ).format('YYYY-MM-DD HH:mm:ss');
       }
       if (this.searchRowData.endDate) {
         this.searchRowData.endDate = this.$moment(
           this.searchRowData.endDate
-        ).format("YYYY-MM-DD HH:mm:ss");
+        ).format('YYYY-MM-DD HH:mm:ss');
       }
 
       getEvaluatePages(this.searchRowData)
@@ -695,13 +795,13 @@ export default {
     },
     handleSetTop(params) {
       this.evaluateDetail = _.cloneDeep(params.row);
-      this.evaluateDetail.istop = params.row.istop === "YES" ? "NO" : "YES";
+      this.evaluateDetail.istop = params.row.istop === 'YES' ? 'NO' : 'YES';
       this.replyEvaluate(this.evaluateDetail);
     },
     handleSetSta(params) {
       this.evaluateDetail = _.cloneDeep(params.row);
       this.evaluateDetail.status =
-        params.row.status === "VIEW" ? "HIDE" : "VIEW";
+        params.row.status === 'VIEW' ? 'HIDE' : 'VIEW';
       this.replyEvaluate(this.evaluateDetail);
     },
     handleUploadView(item) {
@@ -712,7 +812,7 @@ export default {
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      let pageSize = this.searchRowData.page;
+      const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       getEvaluatePages(this.searchRowData).then(res => {
         const tableData = res.rows;
@@ -720,14 +820,14 @@ export default {
         this.searchRowData.rows = 10;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
-        let _this = this;
+        const _this = this;
         tableData.forEach(item => {
-          item["deliveryComment"] = deliveryTypeConvert(
-            item["deliveryComment"]
+          item['deliveryComment'] = deliveryTypeConvert(
+            item['deliveryComment']
           ).label;
-          item["commentScore"] = item["commentScore"] + "星";
+          item['commentScore'] = item['commentScore'] + '星';
         });
-        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+        const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
         this.$refs.tables.handleDownload({
           filename: `用户评价数据-${date}`,
           data: tableData

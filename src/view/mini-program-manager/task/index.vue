@@ -34,14 +34,16 @@
           >
             <Option
               v-for="(item,index) in taskTypeEnum"
-              :value="item.value"
               :key="index"
+              :value="item.value"
               class="ptb2-5"
-            >{{ item.label }}</Option>
+            >
+              {{ item.label }}
+            </Option>
           </Select>
           <Button
             v-waves
-            :searchLoading="searchLoading"
+            :search-loading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
@@ -111,10 +113,12 @@
               >
                 <Option
                   v-for="item in taskTypeEnum"
-                  :value="item.value"
                   :key="item.value"
+                  :value="item.value"
                   class="ptb2-5"
-                >{{ item.label }}</Option>
+                >
+                  {{ item.label }}
+                </Option>
               </Select>
             </FormItem>
           </Row>
@@ -130,7 +134,7 @@
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" >
+                      <img :src="item.url">
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -195,18 +199,21 @@
           <Row>
             <FormItem label="任务规则:" prop="taskRuleDesc">
               <Input
-                :rows="6"
                 v-model="taskDetail.taskRuleDesc"
+                :rows="6"
                 type="textarea"
               ></Input>
             </FormItem>
           </Row>
-
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">
+          确定
+        </Button>
       </div>
     </Modal>
   </div>
@@ -305,7 +312,7 @@ export default {
           key: 'taskType',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{taskTypeConvert(row.taskType).label}</div>;
+            return <div>{taskTypeConvert(row.taskType)}</div>;
           }
         },
         {

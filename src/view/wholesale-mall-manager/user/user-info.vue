@@ -79,10 +79,12 @@
           >
             <Option
               v-for="item in isVipStatus"
-              :value="item.value"
               :key="item.value"
+              :value="item.value"
               class="ptb2-5"
-            >{{ item.label }}</Option>
+            >
+              {{ item.label }}
+            </Option>
           </Select>
           <Select
             v-model="searchRowData.salesUserStatus"
@@ -546,13 +548,13 @@ const columns = [
       if (row.userType === 'consumer') {
         return (
           <div>
-            <tag color='primary'>{userTypeConvert(row.userType).label}</tag>
+            <tag color='primary'>{userTypeConvert(row.userType)}</tag>
           </div>
         );
       } else if (row.userType === 'sale') {
         return (
           <div>
-            <tag color='warning'>{userTypeConvert(row.userType).label}</tag>
+            <tag color='warning'>{userTypeConvert(row.userType)}</tag>
           </div>
         );
       }
@@ -568,25 +570,25 @@ const columns = [
       if (row.userStatus === 'certified') {
         return (
           <div>
-            <tag color='success'>{userStatusConvert(row.userStatus).label}</tag>
+            <tag color='success'>{userStatusConvert(row.userStatus)}</tag>
           </div>
         );
       } else if (row.userStatus === 'locking') {
         return (
           <div>
-            <tag color='error'>{userStatusConvert(row.userStatus).label}</tag>
+            <tag color='error'>{userStatusConvert(row.userStatus)}</tag>
           </div>
         );
       } else if (row.userStatus === 'unaudited') {
         return (
           <div>
-            <tag color='warning'>{userStatusConvert(row.userStatus).label}</tag>
+            <tag color='warning'>{userStatusConvert(row.userStatus)}</tag>
           </div>
         );
       }
       return (
         <div>
-          <tag color='primary'>{userStatusConvert(row.userStatus).label}</tag>
+          <tag color='primary'>{userStatusConvert(row.userStatus)}</tag>
         </div>
       );
     }
@@ -602,7 +604,7 @@ const columns = [
         return (
           <div>
             <tag color='success'>
-              {userStatusConvert(row.salesUserStatus).label}
+              {userStatusConvert(row.salesUserStatus)}
             </tag>
           </div>
         );
@@ -610,7 +612,7 @@ const columns = [
         return (
           <div>
             <tag color='error'>
-              {userStatusConvert(row.salesUserStatus).label}
+              {userStatusConvert(row.salesUserStatus)}
             </tag>
           </div>
         );
@@ -618,12 +620,12 @@ const columns = [
         return (
           <div>
             <tag color='warning'>
-              {userStatusConvert(row.salesUserStatus).label}
+              {userStatusConvert(row.salesUserStatus)}
             </tag>
           </div>
         );
       }
-      return <div>{userStatusConvert(row.salesUserStatus).label}</div>;
+      return <div>{userStatusConvert(row.salesUserStatus)}</div>;
     }
   },
   {
@@ -683,11 +685,11 @@ const userDetailChange = {
 };
 
 const userRowData = {
-  userName: "",
-  phone: "",
-  userType: "sale",
-  isVip: "",
-  city: "",
+  userName: '',
+  phone: '',
+  userType: 'sale',
+  isVip: '',
+  city: '',
   page: 1,
   rows: 10
 };
@@ -735,7 +737,7 @@ const userColumns = [
         return (
           <div>
             <tag color='success'>
-              {userStatusConvert(row.salesUserStatus).label}
+              {userStatusConvert(row.salesUserStatus)}
             </tag>
           </div>
         );
@@ -743,7 +745,7 @@ const userColumns = [
         return (
           <div>
             <tag color='error'>
-              {userStatusConvert(row.salesUserStatus).label}
+              {userStatusConvert(row.salesUserStatus)}
             </tag>
           </div>
         );
@@ -751,12 +753,12 @@ const userColumns = [
         return (
           <div>
             <tag color='warning'>
-              {userStatusConvert(row.salesUserStatus).label}
+              {userStatusConvert(row.salesUserStatus)}
             </tag>
           </div>
         );
       }
-      return <div>{userStatusConvert(row.salesUserStatus).label}</div>;
+      return <div>{userStatusConvert(row.salesUserStatus)}</div>;
     }
   },
   {
@@ -779,10 +781,10 @@ export default {
       selectedUserIds: [],
       data: [],
       isVipStatus: [
-        { label: "是", value: "yes" },
-        { label: "否", value: "no" }
+        { label: '是', value: 'yes' },
+        { label: '否', value: 'no' }
       ],
-      loginName: "",
+      loginName: '',
       currentSalesId: null,
       assginSalesUserId: null,
       modalUser: false,
@@ -806,7 +808,7 @@ export default {
   },
   computed: {
     sexConvertName() {
-      return sexConvert(this.userDetail.sex).label;
+      return sexConvert(this.userDetail.sex);
     },
     userBalance() {
       return fenToYuanDot2(this.userDetail.balance);
@@ -953,7 +955,7 @@ export default {
     handleDownload() {
       this.exportExcelLoading = true;
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      let pageSize = this.searchRowData.page;
+      const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       getUserPages(this.searchRowData)
         .then(res => {
@@ -965,10 +967,10 @@ export default {
           tableData.forEach(item => {
             item['userType'] =
               item['userType'] === 'sale' ? '业务员' : '普通用户';
-            item['userStatus'] = userStatusConvert(item['userStatus']).label;
+            item['userStatus'] = userStatusConvert(item['userStatus']);
             item['salesUserStatus'] = userStatusConvert(
               item['salesUserStatus']
-            ).label;
+            );
             item['balance'] = (item['balance'] / 100.0).toFixed(2);
             item['addressDetail'] = item['city'] + item['addressDetail'];
           });
@@ -1068,11 +1070,11 @@ export default {
       this.selectedUserIds = selection.map(item => item.id.toString());
     },
     handleUnlock(params) {
-      let data = params.row;
+      const data = params.row;
       data.userStatus =
-        params.row.userStatus === "certified" ? "locking" : "certified";
+        params.row.userStatus === 'certified' ? 'locking' : 'certified';
       unlockSalesman(data).then(res => {
-        this.$Message.info("操作成功");
+        this.$Message.info('操作成功');
         this.getTableData();
       });
     },

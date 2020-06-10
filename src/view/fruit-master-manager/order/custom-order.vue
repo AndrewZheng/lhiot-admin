@@ -36,26 +36,32 @@
               class="search-col mr5"
               placeholder="定制周期"
               style="width: 100px"
-              clearable>
+              clearable
+            >
               <Option
                 v-for="item in totalQtyList"
-                :value="item.value"
                 :key="`search-col-${item.value}`"
+                :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.quantity"
               class="search-col mr5"
               placeholder="定制份数"
               style="width: 100px"
-              clearable>
+              clearable
+            >
               <Option
                 v-for="item in customCopiesList"
-                :value="item.quantity"
                 :key="`search-col-${item.quantity}`"
+                :value="item.quantity"
                 class="ptb2-5"
-              >{{ item.description }}</Option>
+              >
+                {{ item.description }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.statusIn"
@@ -64,13 +70,16 @@
               placeholder="订单状态"
               style="width: 150px"
               clearable
-              @on-change="orderStatusesOnChange">
+              @on-change="orderStatusesOnChange"
+            >
               <Option
                 v-for="item in orderStatus"
-                :value="item.value"
                 :key="`search-col-${item.value}`"
+                :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <DatePicker
               v-model="searchRowData.beginCreateAt"
@@ -97,7 +106,7 @@
               type="primary"
               @click="handleSearch"
             >
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
               v-waves
@@ -106,14 +115,16 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除条件
+              <Icon type="md-refresh" />&nbsp;清除条件
             </Button>
           </Row>
         </div>
         <div slot="operations">
           <!-- 多类型导出 -->
-          <BookTypeOption v-model="exportType" class="mr5"/>
-          <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
+          <BookTypeOption v-model="exportType" class="mr5" />
+          <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload">
+            <Icon type="md-download" />导出
+          </Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -138,56 +149,88 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">订单编号:</i-col>
-              <i-col span="16">{{ orderDetail.customOrderCode }}</i-col>
+              <i-col span="8">
+                订单编号:
+              </i-col>
+              <i-col span="16">
+                {{ orderDetail.customOrderCode }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">用户手机号:</i-col>
-              <i-col span="16">{{ orderDetail.phone }}</i-col>
+              <i-col span="8">
+                用户手机号:
+              </i-col>
+              <i-col span="16">
+                {{ orderDetail.phone }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">用户昵称:</i-col>
-              <i-col span="16">{{ orderDetail.nickname }}</i-col>
+              <i-col span="8">
+                用户昵称:
+              </i-col>
+              <i-col span="16">
+                {{ orderDetail.nickname }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row v-if="orderDetail.customPlan" class-name="mb10">
-              <i-col span="6">定制计划:</i-col>
-              <i-col span="18">{{ orderDetail.customPlan.name }}</i-col>
+              <i-col span="6">
+                定制计划:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.customPlan.name }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">定制周期:</i-col>
-              <i-col span="16">{{ orderDetail.totalQty|customPeriodFilters }}</i-col>
+              <i-col span="8">
+                定制周期:
+              </i-col>
+              <i-col span="16">
+                {{ orderDetail.totalQty|customPeriodFilters }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">定制份数:</i-col>
-              <i-col span="16">{{ orderDetail.quantity }}</i-col>
+              <i-col span="8">
+                定制份数:
+              </i-col>
+              <i-col span="16">
+                {{ orderDetail.quantity }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">定制状态:</i-col>
-              <i-col span="16">{{ orderDetail.status|customOrderStatusFilters }}</i-col>
+              <i-col span="8">
+                定制状态:
+              </i-col>
+              <i-col span="16">
+                {{ orderDetail.status|customOrderStatusFilters }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">配送方式:</i-col>
-              <i-col span="16">{{ orderDetail.deliveryType|deliveryTypeCustomFilters }}</i-col>
+              <i-col span="8">
+                配送方式:
+              </i-col>
+              <i-col span="16">
+                {{ orderDetail.deliveryType|deliveryTypeCustomFilters }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -198,10 +241,12 @@
           <Row>
             <i-col span="24">
               <Row class="mb10 pl10 pt5">
-                <i-col span="8">收货地址:</i-col>
+                <i-col span="8">
+                  收货地址:
+                </i-col>
                 <i-col span="16">
                   {{ orderDetail.deliveryAddress +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+ orderDetail.nickname +`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`+
-                  orderDetail.phone }}
+                    orderDetail.phone }}
                 </i-col>
               </Row>
             </i-col>
@@ -209,8 +254,12 @@
           <Row>
             <i-col span="12">
               <Row class="mb10 pl10 pt5">
-                <i-col span="8">收货时间:</i-col>
-                <i-col span="16">{{ orderDetail.deliveryTime }}</i-col>
+                <i-col span="8">
+                  收货时间:
+                </i-col>
+                <i-col span="16">
+                  {{ orderDetail.deliveryTime }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
@@ -218,35 +267,49 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">定制总额:</i-col>
-              <i-col span="16">{{ orderDetail.price|fenToYuanDot2Filters }}</i-col>
+              <i-col span="8">
+                定制总额:
+              </i-col>
+              <i-col span="16">
+                {{ orderDetail.price|fenToYuanDot2Filters }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">剩余次数:</i-col>
-              <i-col span="16">{{ orderDetail.remainingQty }}</i-col>
+              <i-col span="8">
+                剩余次数:
+              </i-col>
+              <i-col span="16">
+                {{ orderDetail.remainingQty }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">创建时间:</i-col>
-              <i-col span="16">{{ orderDetail.createAt }}</i-col>
+              <i-col span="8">
+                创建时间:
+              </i-col>
+              <i-col span="16">
+                {{ orderDetail.createAt }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row>
           <tables
-            :columns="orderViewRelationsColumn"
             v-model="orderDetail.customOrderDeliveryList"
+            :columns="orderViewRelationsColumn"
             border
           ></tables>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
   </div>
@@ -347,7 +410,7 @@ export default {
           key: 'deliveryStatus',
           render(h, params, vm) {
             if (params.row.deliveryStatus) {
-              return <div>{customDeliverStatusConvert(params.row.deliveryStatus).label}</div>;
+              return <div>{customDeliverStatusConvert(params.row.deliveryStatus)}</div>;
             } else {
               return <div>{'未配送'}</div>;
             }
@@ -430,15 +493,15 @@ export default {
             // INVALID-已失效
             // FINISHED-已结束
             if (params.row.status === 'WAIT_PAYMENT') {
-              return <div><tag color='default'>{customOrderStatusConvert(params.row.status).label}</tag></div>;
+              return <div><tag color='default'>{customOrderStatusConvert(params.row.status)}</tag></div>;
             } else if (params.row.status === 'CUSTOMING') {
-              return <div><tag color='primary'>{customOrderStatusConvert(params.row.status).label}</tag></div>;
+              return <div><tag color='primary'>{customOrderStatusConvert(params.row.status)}</tag></div>;
             } else if (params.row.status === 'PAUSE_DELIVERY') {
-              return <div><tag color='warning'>{customOrderStatusConvert(params.row.status).label}</tag></div>;
+              return <div><tag color='warning'>{customOrderStatusConvert(params.row.status)}</tag></div>;
             } else if (params.row.status === 'INVALID') {
-              return <div><tag color='error'>{customOrderStatusConvert(params.row.status).label}</tag></div>;
+              return <div><tag color='error'>{customOrderStatusConvert(params.row.status)}</tag></div>;
             } else if (params.row.status === 'FINISHED') {
-              return <div><tag color='success'>{customOrderStatusConvert(params.row.status).label}</tag></div>;
+              return <div><tag color='success'>{customOrderStatusConvert(params.row.status)}</tag></div>;
             } else {
               return <div>{params.row.status}</div>;
             }
@@ -450,9 +513,9 @@ export default {
           key: 'deliveryType',
           render: (h, params, vm) => {
             if (params.row.deliveryType === 'MANUAL') {
-              return <div><tag color='green'>{deliveryTypeCustomConvert(params.row.deliveryType).label}</tag></div>;
+              return <div><tag color='green'>{deliveryTypeCustomConvert(params.row.deliveryType)}</tag></div>;
             } else if (params.row.deliveryType === 'AUTO') {
-              return <div><tag color='gold'>{deliveryTypeCustomConvert(params.row.deliveryType).label}</tag></div>;
+              return <div><tag color='gold'>{deliveryTypeCustomConvert(params.row.deliveryType)}</tag></div>;
             } else {
               return <div>{params.row.deliveryType}</div>;
             }
@@ -549,8 +612,8 @@ export default {
           item['customOrderCode'] = item['customOrderCode'] + '';
           item['name'] = item['customPlan']['name'];
           item['price'] = (item['price'] / 100.00).toFixed(2);
-          item['status'] = customOrderStatusConvert(item['status']).label;
-          item['deliveryType'] = deliveryTypeCustomConvert(item['deliveryType']).label;
+          item['status'] = customOrderStatusConvert(item['status']);
+          item['deliveryType'] = deliveryTypeCustomConvert(item['deliveryType']);
         });
         this.$refs.tables.handleDownload({
           filename: `定制订单信息-${new Date().valueOf()}`,
