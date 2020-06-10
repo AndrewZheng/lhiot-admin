@@ -194,7 +194,10 @@
               </div>
             </FormItem>
           </Row>
-          <FormItem label="排序:" prop="productSectionRank">
+          <FormItem v-if="tempModalType == modalType.create" label="排序:" prop="rank">
+            <InputNumber v-model="productStandardRelation.rank"></InputNumber>
+          </FormItem>
+          <FormItem v-else label="排序:" prop="productSectionRank">
             <InputNumber v-model="productStandardRelation.productSectionRank"></InputNumber>
           </FormItem>
         </Form>
