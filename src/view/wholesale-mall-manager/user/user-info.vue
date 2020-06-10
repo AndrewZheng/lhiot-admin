@@ -87,6 +87,20 @@
             </Option>
           </Select>
           <Select
+            v-model="searchRowData.isVip"
+            class="search-col mr5"
+            placeholder="是否VIP"
+            style="width:80px"
+            clearable
+          >
+            <Option
+              v-for="item in isVipStatus"
+              :value="item.value"
+              :key="item.value"
+              class="ptb2-5"
+            >{{ item.label }}</Option>
+          </Select>
+          <Select
             v-model="searchRowData.salesUserStatus"
             class="search-col mr5"
             placeholder="业务员状态"

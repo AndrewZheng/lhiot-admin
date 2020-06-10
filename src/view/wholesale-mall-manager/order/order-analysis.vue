@@ -211,6 +211,12 @@ export default {
           align: 'center',
           key: 'createDate',
           minWidth: 80
+        },
+        {
+          title: "下单日期",
+          align: "center",
+          key: "createDate",
+          minWidth: 80
         }
       ]
     };
