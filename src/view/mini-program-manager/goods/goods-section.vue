@@ -490,14 +490,6 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == "SHARE_PRODUCT") {
-          return (
-            <div>
-              <tag color="blue">
-                {expandTypeConvert(row.productStandardExpand.expandType).label}
-              </tag>
-            </div>
-          );
         } else if (row.productStandardExpand.expandType == "ASSIST_PRODUCT") {
           return (
             <div>
@@ -583,8 +575,8 @@ export default {
               callback(errors);
             }
           }
-        ],
-        rank: [{ required: true, message: "请输入商品排序" }]
+        ]
+        // rank: [{ required: true, message: "请输入商品排序" }]
       },
       appTypeEnum,
       expandTypeEnum,
@@ -787,8 +779,6 @@ export default {
         this.searchProductRowData.expandType = "SECKILL_PRODUCT";
       } else if (this.currentSectionCode === "ASSIST") {
         this.searchProductRowData.expandType = "ASSIST_PRODUCT";
-      } else if (this.currentSectionCode === "SHARE") {
-        this.searchProductRowData.expandType = "SHARE_PRODUCT";
       } else if (this.currentSectionCode === "SVIP") {
         this.searchProductRowData.expandType = "";
       } else {
@@ -796,7 +786,7 @@ export default {
       }
       this.$refs.editForm.resetFields();
       this.getProductTableData();
-      console.log(this.currentSectionId);
+      this.productStandardRelation.rank = 0;
       this.currentStandard.currentSectionId = this.currentSectionId;
       this.productStandardRelation.productSectionId = this.currentSectionId;
       this.tempModalType = this.modalType.create;
