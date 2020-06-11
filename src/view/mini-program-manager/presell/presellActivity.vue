@@ -1456,7 +1456,7 @@ export default {
               _this.presellDetail.deliveryEndTime
             )
           ) {
-            _this.$Message.error("提货截止时间必须大于有效期止时间!");
+            _this.$Message.error("提货截止时间必须大于活动截止时间!");
             return;
           }
           if (
