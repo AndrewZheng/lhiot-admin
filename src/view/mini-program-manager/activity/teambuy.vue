@@ -1216,6 +1216,12 @@ export default {
           key: "deliveryEndTime"
         },
         {
+          title: "规格ID",
+          align: "center",
+          minWidth: 90,
+          key: "standardId"
+        },
+        {
           title: "规格描述",
           align: "center",
           minWidth: 120,
