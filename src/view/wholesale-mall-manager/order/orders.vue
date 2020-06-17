@@ -1424,7 +1424,7 @@ export default {
           );
           item['orderStatus'] = wholesaleOrderStatusConvert(
             item['orderStatus']
-          ).label;
+          );
           item['settlementType'] = wholesalePayTypeConvert(
             item['settlementType']
           );
