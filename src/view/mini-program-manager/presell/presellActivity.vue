@@ -87,9 +87,9 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
-          <!-- <div class="ml15 mt10">
+          <div class="ml15 mt10">
             <i style="color:red">*</i> 选中单条数据再点击添加,可复制当前数据
-          </div>-->
+          </div>
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
@@ -214,18 +214,19 @@
               <i-col span="18">
                 {{ this.$moment(
                 presellDetail.deliveryStartTime
-                ).format("YYYY-MM-DD HH:mm:ss")}}
+                ).format("YYYY-MM-DD")}}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
               <i-col span="6">提货结束时间:</i-col>
-              <i-col span="18">
+              <i-col span="18" v-if="presellDetail.deliveryEndTime">
                 {{ this.$moment(
                 presellDetail.deliveryEndTime
-                ).format("YYYY-MM-DD HH:mm:ss")}}
+                ).format("YYYY-MM-DD")}}
               </i-col>
+              <i-col span="18" v-else>{{"N/A"}}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -350,17 +351,6 @@
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="排序序号:" prop="rank">
-                <InputNumber
-                  v-model="presellDetail.rank"
-                  style="width: 200px"
-                  :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
-                ></InputNumber>
-              </FormItem>
-            </i-col>
-          </Row>
-          <Row>
-            <i-col span="12">
               <FormItem :label-width="130" label="活动Banner 推荐尺寸750*304(单位:px):" prop="banner">
                 <Input v-show="false" v-model="presellDetail.banner" style="width: auto"></Input>
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
@@ -396,28 +386,28 @@
             <i-col span="12">
               <FormItem label="活动开始时间:" prop="startTime">
                 <DatePicker
-                  v-model="presellDetail.startTime"
+                  :value="presellDetail.startTime"
                   type="datetime"
                   format="yyyy-MM-dd HH:mm:ss"
                   placeholder="活动开始时间"
                   :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
                   class="search-input"
                   style="width: 200px"
-                  @on-change="startTimeChange"
+                  @on-change="presellDetail.startTime=$event"
                 />
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="活动结束时间:" prop="endTime">
                 <DatePicker
-                  v-model="presellDetail.endTime"
+                  :value="presellDetail.endTime"
                   type="datetime"
                   format="yyyy-MM-dd HH:mm:ss"
                   placeholder="活动结束时间"
                   :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
                   class="search-input"
                   style="width: 200px"
-                  @on-change="endTimeChange"
+                  @on-change="presellDetail.endTime=$event"
                 />
               </FormItem>
             </i-col>
@@ -459,26 +449,26 @@
               <i-col span="12" v-if="presellDetail.validDateType=='FIXED_DATE'">
                 <FormItem label="提货开始时间:" prop="deliveryStartTime">
                   <DatePicker
-                    v-model="presellDetail.deliveryStartTime"
-                    format="yyyy-MM-dd HH:mm:ss"
+                    :value="presellDetail.deliveryStartTime"
+                    format="yyyy-MM-dd"
                     type="date"
                     :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
                     placeholder="提货开始时间"
                     style="width: 200px"
-                    @on-change="effectiveStartTimeChange"
+                    @on-change="presellDetail.deliveryStartTime=$event"
                   />
                 </FormItem>
               </i-col>
               <i-col span="12">
                 <FormItem label="提货截止时间:" prop="deliveryEndTime">
                   <DatePicker
-                    v-model="presellDetail.deliveryEndTime"
-                    format="yyyy-MM-dd HH:mm:ss"
+                    :value="presellDetail.deliveryEndTime"
+                    format="yyyy-MM-dd"
                     type="date"
                     :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
                     placeholder="提货截止时间"
                     style="width: 200px"
-                    @on-change="effectiveEndTimeChange"
+                    @on-change="presellDetail.deliveryEndTime=$event"
                   />
                 </FormItem>
               </i-col>
@@ -523,6 +513,13 @@
             <i-col span="12">
               <FormItem label="规格描述:" prop="standardDesc">
                 <Input v-model="presellDetail.standardDesc" style="width: 585px"></Input>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
+              <FormItem label="排序序号:" prop="rank">
+                <InputNumber v-model="presellDetail.rank" style="width: 200px"></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -900,11 +897,13 @@ const preselldata = {
 const roleRowData = {
   startTime: null,
   endTime: null,
-  status: null,
+  status: "VALID",
   activityName: null,
   content: null,
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx: "rank",
+  sort: "asc"
 };
 
 const productStandardDetail = {
@@ -952,6 +951,7 @@ const productStandardDetail = {
 };
 
 const productRowData = {
+  productType: "ORDINARY_PRODUCT",
   productId: "",
   barcode: "",
   productCode: "",
@@ -991,7 +991,18 @@ export default {
         startTime: [{ required: true, message: "请输入活动开始时间" }],
         endTime: [{ required: true, message: "请输入活动结束时间" }],
         // deliveryStartTime: [{ required: true, message: "请选择提货开始时间" }],
-        // beginDay: [{ required: false, message: "请输入下单后提货天数" }],
+        beginDay: [
+          { required: true, message: "请输入下单后第几天开始提货" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[1-9]+$/.test(value)) {
+                errors.push(new Error("必须为整数"));
+              }
+              callback(errors);
+            }
+          }
+        ],
         triesLimit: [
           { required: true, message: "请输入限购" },
           {
@@ -1199,13 +1210,23 @@ export default {
           title: "提货开始时间",
           align: "center",
           minWidth: 160,
-          key: "deliveryStartTime"
+          key: "deliveryStartTime",
+          render(h, params) {
+            if (params.row.deliveryStartTime) {
+              return <div>{params.row.deliveryStartTime.split(" ")[0]}</div>;
+            }
+          }
         },
         {
           title: "提货截止时间",
           align: "center",
           minWidth: 160,
-          key: "deliveryEndTime"
+          key: "deliveryEndTime",
+          render(h, params) {
+            if (params.row.deliveryEndTime) {
+              return <div>{params.row.deliveryEndTime.split(" ")[0]}</div>;
+            }
+          }
         },
         {
           title: "几天后开始提货",
@@ -1417,7 +1438,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.presellDetail);
     this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
     this.getStore();
@@ -1459,6 +1479,20 @@ export default {
             _this.$Message.error("提货截止时间必须大于活动截止时间!");
             return;
           }
+          if (_this.presellDetail.validDateType === "FIXED_DATE") {
+            if (_this.presellDetail.deliveryEndTime) {
+              if (
+                compareData(
+                  _this.presellDetail.deliveryStartTime,
+                  _this.presellDetail.deliveryEndTime
+                )
+              ) {
+                _this.$Message.error("提货截止时间必须大于提货开始时间!");
+                return;
+              }
+            }
+          }
+
           if (
             _this.presellDetail.relationStoreType === "PART" &&
             _this.presellDetail.storeIds == null
@@ -1540,6 +1574,20 @@ export default {
         this.tempModalType = this.modalType.create;
         this.presellDetail = _.cloneDeep(preselldata);
       }
+      if (this.currentTableRowSelected) {
+        this.currentTableRowSelected.id = null;
+        this.currentTableRowSelected.createTime = null;
+        this.currentTableRowSelected.standardId = null;
+        this.currentTableRowSelected.originalPrice = null;
+        this.currentTableRowSelected.banner = null;
+        this.currentTableRowSelected.status = null;
+        this.currentTableRowSelected.rank = null;
+        this.currentTableRowSelected.storeId = null;
+        this.currentTableRowSelected.storeIds = null;
+        this.currentTableRowSelected.relationStoreType = "ALL";
+        this.currentTableRowSelected.activityPrice = null;
+        this.presellDetail = _.cloneDeep(this.currentTableRowSelected);
+      }
       this.getStore();
       this.modalEdit = true;
     },
@@ -1599,9 +1647,7 @@ export default {
       this.presellDetail = _.cloneDeep(params.row);
       this.groupStatus = this.presellDetail.status;
       this.setDefaultUploadList(this.presellDetail);
-      console.log("门店id", this.presellDetail.storeIds);
       if (this.presellDetail.storeIds != null) {
-        console.log("部份门店");
         this.showStoreList = true;
         this.presellDetail.relationStoreType = "PART";
         const storeIds = this.presellDetail.storeIds
@@ -1620,7 +1666,6 @@ export default {
       } else {
         this.showStoreList = false;
         this.presellDetail.relationStoreType = "ALL"; // storeIds为''默认关联的门店则是全部门店
-        console.log("全部门店");
       }
       this.modalEdit = true;
     },
@@ -1872,7 +1917,7 @@ export default {
     handleChange(value) {
       this.presellDetail.deliveryStartTime = "";
       this.presellDetail.deliveryEndTime = "";
-      this.presellDetail.beginDa = 0;
+      this.presellDetail.beginDay = 0;
     }
   }
 };

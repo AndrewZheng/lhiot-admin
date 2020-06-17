@@ -490,6 +490,14 @@ const productColumns = [
               </tag>
             </div>
           );
+        } else if (row.productStandardExpand.expandType == "SHARE_PRODUCT") {
+          return (
+            <div>
+              <tag color="blue">
+                {expandTypeConvert(row.productStandardExpand.expandType).label}
+              </tag>
+            </div>
+          );
         } else if (row.productStandardExpand.expandType == "ASSIST_PRODUCT") {
           return (
             <div>
@@ -779,6 +787,8 @@ export default {
         this.searchProductRowData.expandType = "SECKILL_PRODUCT";
       } else if (this.currentSectionCode === "ASSIST") {
         this.searchProductRowData.expandType = "ASSIST_PRODUCT";
+      } else if (this.currentSectionCode === "SHARE") {
+        this.searchProductRowData.expandType = "SHARE_PRODUCT";
       } else if (this.currentSectionCode === "SVIP") {
         this.searchProductRowData.expandType = "";
       } else {

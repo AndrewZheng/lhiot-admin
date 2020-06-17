@@ -353,7 +353,12 @@ export default {
           key: "assistSuccessRate",
           align: "center",
           render(h, params) {
-            return h("div", params.row.assistSuccessRate + "%");
+            return h(
+              "div",
+              params.row.assistSuccessRate === null
+                ? 0 + "%"
+                : params.row.assistSuccessRate + "%"
+            );
           }
         },
         {

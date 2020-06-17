@@ -717,6 +717,8 @@ export const getPresellPages = (data) => {
     headers: {
       'page': data.page,
       'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
     }
   });
 };

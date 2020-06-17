@@ -582,7 +582,12 @@
             <Row>
               <i-col span="12">
                 <FormItem label="商品规格:" prop="standard">
-                  <Input v-model="productStandardDetail.standard"></Input>
+                  <Input
+                    v-model="productStandardDetail.standard"
+                    :autosize="{minRows: 2,maxRows: 6}"
+                    type="textarea"
+                    placeholder="请输入商品规格..."
+                  ></Input>
                 </FormItem>
               </i-col>
               <i-col span="12">
@@ -1369,7 +1374,7 @@ export default {
         goodsImages: [{ required: true, message: "请上传上架商品详情图" }],
         unitCode: [{ required: true, message: "请选择商品单位" }],
         vaild: [{ required: true, message: "请选择商品状态" }],
-        standard: [{ required: true, message: "请输入商品规格" }],
+        // standard: [{ required: true, message: "请输入商品规格" }],
         standardDesc: [{ required: true, message: "请输入规格描述" }],
         goodsDes: [{ required: true, message: "请输入商品特征" }],
         afterDes: [{ required: true, message: "请输入售后标准" }],
@@ -1389,18 +1394,18 @@ export default {
           }
         ],
         barCode: [{ required: true, message: "请输入商品条码" }],
-        // rank: [
-        //   { required: false, message: "请输入商品排序" },
-        //   {
-        //     validator(rule, value, callback, source, options) {
-        //       const errors = [];
-        //       if (!/^[-1-9]\d*$/.test(value)) {
-        //         errors.push(new Error("必须为非零整数"));
-        //       }
-        //       callback(errors);
-        //     }
-        //   }
-        // ],
+        standard: [
+          { required: true, message: "请输入商品规格" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (value.length > 25) {
+                errors.push(new Error("字数不得超过25个字"));
+              }
+              callback(errors);
+            }
+          }
+        ],
         weight: [
           { required: true, message: "请输入重量" },
           {

@@ -54,7 +54,7 @@
               </Button>
               <!-- <Button class="search-btn mr2" type="warning" @click="handleDownload">
                 <Icon type="md-download" />导出数据
-              </Button> -->
+              </Button>-->
             </Row>
             <div class="ml15 mt10">
               <i style="color:red">*</i> 默认展示当天的数据
@@ -248,6 +248,16 @@ export default {
         this.searchRowData.beginDate = today;
         this.searchRowData.endDate = today;
       }
+      if (this.button === "今日") {
+        let date = new Date();
+        date.setDate(date.getDate());
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var today = `${year}-${month}-${day}`;
+        this.searchRowData.beginDate = today;
+        this.searchRowData.endDate = today;
+      }
       if (value === "最近7天") {
         let date = new Date();
         date.setDate(date.getDate() - 7);
@@ -328,13 +338,13 @@ export default {
             value: "value",
             value1: "value",
             value2: "value",
-            value3: "value",
+            value3: "value"
           };
-          let map3= {
+          let map3 = {
             value: "value",
             value1: "value",
             value2: "value",
-            value3: "value",
+            value3: "value"
           };
           map2.value = "消费数量";
           map2.value1 = data1.countPoints[0];
@@ -400,7 +410,7 @@ export default {
       this.tableData = [];
       this.tableData1 = [];
       this.getTableData();
-    },
+    }
     // 导出数据
     // handleDownload() {
     //   const tableData = this.tableData;

@@ -312,12 +312,6 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">单人团购价格:</i-col>
-              <i-col span="18">{{ teambuyDetail.singleTeambuyPrice | fenToYuanDot2Filters }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row>
               <i-col span="6">红包活动设置:</i-col>
               <i-col
                 span="18"
@@ -609,6 +603,11 @@
               </FormItem>
             </i-col>
           </Row>
+          <Row v-show="teambuyDetail.standardId">
+            <i-col span="12" style="margin-left:130px;margin-bottom:20px">
+              <Button v-waves type="warning" @click="aboutGoods">关联商品详情</Button>
+            </i-col>
+          </Row>
           <Row>
             <i-col span="12">
               <FormItem label="原价:">
@@ -674,17 +673,6 @@
             </i-col>
           </Row>
           <Row>
-            <i-col v-if="teambuyDetail.teamBuyType!=='OLD_AND_NEW'" span="12">
-              <FormItem label="单人团购价格:" prop="singleTeambuyPrice">
-                <InputNumber
-                  :min="0"
-                  :value="singleTeambuyPriceComputed"
-                  placeholder="单人团购价格"
-                  style="width: 200px"
-                  @on-change="singleTeambuyPriceInputNumberOnchange"
-                ></InputNumber>
-              </FormItem>
-            </i-col>
             <i-col span="12">
               <FormItem label="红包活动设置:" prop="rewardActivitySetting">
                 <Select v-model="teambuyDetail.rewardActivitySetting" style="width: 200px">
@@ -811,6 +799,167 @@
         </div>
       </Card>
     </Modal>
+    <!-- 商品规格展示 -->
+    <Modal v-model="modalGoodsStandard" :mask-closable="false" :width="700">
+      <p slot="header">
+        <span>商品规格详情</span>
+      </p>
+      <div class="modal-content">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品ID:</i-col>
+              <i-col span="16">{{ productStandardDetail.productId }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品名称:</i-col>
+              <i-col span="16">{{ productStandardDetail.baseProductName }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品分类:</i-col>
+              <i-col span="16">{{ productStandardDetail.groupName }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">基础单位:</i-col>
+              <i-col span="16">{{ productStandardDetail.baseUnit }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品编号:</i-col>
+              <i-col span="16">{{ productStandardDetail.productCode }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品条码:</i-col>
+              <i-col span="16">{{ productStandardDetail.baseBarcode }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品主图:</i-col>
+              <i-col span="16">
+                <img :src="productStandardDetail.baseImage" width="100" height="100" />
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品描述:</i-col>
+              <i-col span="16">{{ productStandardDetail.baseProductDescription }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Divider orientation="center">商品规格</Divider>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">上架商品名称:</i-col>
+              <i-col span="16">{{ productStandardDetail.productName }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">上架商品描述:</i-col>
+              <i-col span="16">{{ productStandardDetail.productDescription }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">上架商品主图:</i-col>
+              <i-col v-if="productStandardDetail.image" span="16">
+                <img :src="productStandardDetail.image" width="100" height="100" />
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品条码:</i-col>
+              <i-col span="16">{{ productStandardDetail.barcode }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品状态:</i-col>
+              <i-col span="16">{{ productStandardDetail.shelvesStatus | customPlanStatusFilters }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品规格:</i-col>
+              <i-col span="16">{{ productStandardDetail.specification }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">数量/重量:</i-col>
+              <i-col span="16">{{ productStandardDetail.standardQty }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品原价:</i-col>
+              <i-col span="16">{{ productStandardDetail.price| fenToYuanDot2Filters }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">售卖价格:</i-col>
+              <i-col span="16">{{ productStandardDetail.salePrice | fenToYuanDot2Filters }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <!-- <Row>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">SVIP价格:</i-col>
+              <i-col span="16">{{ productStandardDetail.svipPrice | fenToYuanDot2Filters }}</i-col>
+            </Row>
+          </i-col>
+        </Row>-->
+
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品单位:</i-col>
+              <i-col span="16">{{ productStandardDetail.productUnit }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品排序:</i-col>
+              <i-col span="16">{{ productStandardDetail.rank }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+      </div>
+      <div slot="footer">
+        <Button type="primary" @click="handleGoodsClose">关闭</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -825,7 +974,8 @@ import {
   createTeamBuy,
   getStorePages,
   getProductStandardsPages,
-  deletePicture
+  deletePicture,
+  getGoodsStandard
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -954,6 +1104,7 @@ const productStandardDetail = {
 
 const productRowData = {
   productId: "",
+  productType: "ORDINARY_PRODUCT",
   barcode: "",
   productCode: "",
   productName: "",
@@ -1073,13 +1224,13 @@ export default {
             }
           }
         ],
-        singleTeambuyPrice: [
-          { required: true, message: "请输入单人团购价格" },
-          {
-            message: "必须为大于0的数字",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
-        ],
+        // singleTeambuyPrice: [
+        //   { required: true, message: "请输入单人团购价格" },
+        //   {
+        //     message: "必须为大于0的数字",
+        //     pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+        //   }
+        // ],
         rewardActivitySetting: [
           { required: true, message: "请选择红包活动设置" }
         ]
@@ -1100,12 +1251,14 @@ export default {
       rewardActivitySettingEnum,
       relationStoreTypeEnum,
       groupStatus: "",
+      modalGoodsStandard: false,
       flagShipList: [],
       storeList: [],
       storeIds: [],
       oldPicture: [],
       newPicture: [],
       save: [],
+      productStandardDetail: [],
       columns: [
         // {
         //   type: "selection",
@@ -1229,7 +1382,7 @@ export default {
           title: "规格ID",
           align: "center",
           minWidth: 90,
-          key: "standardId",
+          key: "standardId"
         },
         {
           title: "规格描述",
@@ -1419,9 +1572,9 @@ export default {
     activityPriceComputed() {
       return fenToYuanDot2Number(this.teambuyDetail.activityPrice);
     },
-    singleTeambuyPriceComputed() {
-      return fenToYuanDot2Number(this.teambuyDetail.singleTeambuyPrice);
-    },
+    // singleTeambuyPriceComputed() {
+    //   return fenToYuanDot2Number(this.teambuyDetail.singleTeambuyPrice);
+    // },
     tourDiscountComputed() {
       return fenToYuanDot2Number(this.teambuyDetail.tourDiscount);
     },
@@ -1887,9 +2040,9 @@ export default {
     activityPriceInputNumberOnchange(value) {
       this.teambuyDetail.activityPrice = yuanToFenNumber(value);
     },
-    singleTeambuyPriceInputNumberOnchange(value) {
-      this.teambuyDetail.singleTeambuyPrice = yuanToFenNumber(value);
-    },
+    // singleTeambuyPriceInputNumberOnchange(value) {
+    //   this.teambuyDetail.singleTeambuyPrice = yuanToFenNumber(value);
+    // },
     tourDiscountInputNumberOnchange(value) {
       this.teambuyDetail.tourDiscount = yuanToFenNumber(value);
     },
@@ -2015,6 +2168,18 @@ export default {
       } else {
         this.currentTableRowSelected = null;
       }
+    },
+    aboutGoods() {
+      getGoodsStandard(this.teambuyDetail)
+        .then(res => {
+          this.productStandardDetail = res;
+          this.modalGoodsStandard = true;
+        })
+        .catch(error => {});
+    },
+    handleGoodsClose() {
+      this.loading = false;
+      this.modalGoodsStandard = false;
     }
   }
 };
