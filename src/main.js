@@ -19,7 +19,6 @@ import 'assets/iconfont/iconfont.css';
 import 'assets/styles/style.scss';
 import moment from 'moment';
 import lodashLib from 'lodash';
-// if (process.env.NODE_ENV !== 'production') require('@/mock');
 
 Vue.mixin(Mixin);
 Vue.use(axiosPlugin);
@@ -39,11 +38,9 @@ Object.defineProperty(Vue.prototype, '$pcEncrypt', { value: PcEncrypt });
 Object.defineProperty(Vue.prototype, '$pcLockr', { value: PcLockr });
 Object.defineProperty(Vue.prototype, '$pcCookie', { value: PcCookie });
 
-
 Vue.config.productionTip = false;
 importDirective(Vue);
 
-/* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
