@@ -390,10 +390,10 @@
           <tr align="center">
             <th colspan="10" style="font-size:26px;height:60px">
               <img
-                src="http://resource.shuiguoshule.com.cn/product_image/2020-03-31/OVFftIF74gHs2Qa01dF2.png"
+                src="http://resource.shuiguoshule.com.cn/product_image/2020-06-19/22EmmZv8mpdMUrJsgQFL.png"
                 style="width:120px;height:39px;float:left;"
               />
-              <p style="margin-right:120px;color:#666666">万翼果联销售单</p>
+              <p style="margin-right:120px;color:#666666">恰果果销售单</p>
             </th>
           </tr>
         </thead>
