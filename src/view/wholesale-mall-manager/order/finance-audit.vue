@@ -72,10 +72,12 @@
             >
               <Option
                 v-for="item in serviceModeEnum"
-                :value="item.label"
                 :key="`search-col-${item.value}`"
+                :value="item.label"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.status"
@@ -86,10 +88,12 @@
             >
               <Option
                 v-for="item in serviceStatusEnum"
-                :value="item.value"
                 :key="`search-col-${item.value}`"
+                :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <Button
               :loading="searchLoading"
@@ -144,199 +148,315 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">订单编号:</i-col>
-              <i-col span="18">{{ orderDetail.orderCode }}</i-col>
+              <i-col span="6">
+                订单编号:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.orderCode }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">订单状态:</i-col>
-              <i-col span="18">{{ orderDetail.orderStatus| wholesaleOrderStatusFilter }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="6">海鼎编号:</i-col>
-              <i-col span="18">{{ orderDetail.hdCode }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="6">海鼎状态:</i-col>
-              <i-col span="18">{{ orderDetail.hdStatus | wholesaleHdStatusFilter }}</i-col>
+              <i-col span="6">
+                订单状态:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.orderStatus| wholesaleOrderStatusFilter }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">下单时间:</i-col>
-              <i-col span="18">{{ orderDetail.createTime }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-
-        <Divider orientation="center">支付信息</Divider>
-        <Row>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="6">支付类型:</i-col>
-              <i-col span="18">{{ orderDetail.settlementType | wholeslaePayTypeFilter }}</i-col>
+              <i-col span="6">
+                海鼎编号:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.hdCode }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">支付状态:</i-col>
-              <i-col span="18">{{ orderDetail.payStatus | payStatusFilter }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="6">订单金额:</i-col>
-              <i-col span="18">{{ orderDetail.totalFee | fenToYuanDot2Filters }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="6">优惠金额:</i-col>
-              <i-col span="18">{{ orderDetail.discountFee | fenToYuanDot2Filters }}</i-col>
+              <i-col span="6">
+                海鼎状态:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.hdStatus | wholesaleHdStatusFilter }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">配送费:</i-col>
-              <i-col span="18">{{ orderDetail.deliveryFee | fenToYuanDot2Filters }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="6">应付金额:</i-col>
-              <i-col span="18">{{ orderDetail.payableFee | fenToYuanDot2Filters }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="6">支付时间:</i-col>
-              <i-col span="18">{{ orderDetail.paymentTime? orderDetail.paymentTime: 'N/A' }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Divider orientation="center">用户信息</Divider>
-        <Row>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="6">门店名称:</i-col>
-              <i-col span="18">{{ orderDetail.shopName }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="6">店长名称:</i-col>
-              <i-col span="18">{{ orderDetail.userName }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="6">店长手机:</i-col>
-              <i-col span="18">{{ orderDetail.phone }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="6">所属业务员:</i-col>
-              <i-col span="18">{{ orderDetail.saleUserName }}</i-col>
+              <i-col span="6">
+                下单时间:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.createTime }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
 
-        <Divider orientation="center">配送信息</Divider>
+        <Divider orientation="center">
+          支付信息
+        </Divider>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">收货人:</i-col>
-              <i-col span="18">{{ deliveryInfo.contactsName }}</i-col>
+              <i-col span="6">
+                支付类型:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.settlementType | wholeslaePayTypeFilter }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">联系方式:</i-col>
-              <i-col span="18">{{ deliveryInfo.phone }}</i-col>
+              <i-col span="6">
+                支付状态:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.payStatus | payStatusFilter }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="6">
+                订单金额:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.totalFee | fenToYuanDot2Filters }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="6">
+                优惠金额:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.discountFee | fenToYuanDot2Filters }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">收货地址:</i-col>
-              <i-col span="18">{{ address }}</i-col>
+              <i-col span="6">
+                配送费:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.deliveryFee | fenToYuanDot2Filters }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">收货时间:</i-col>
-              <i-col span="18">{{ orderDetail.receiveTime }}</i-col>
+              <i-col span="6">
+                应付金额:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.payableFee | fenToYuanDot2Filters }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
-        <Divider orientation="center">商品信息</Divider>
-        <Row>
-          <tables :columns="goodsColumns" v-model="orderDetail.orderGoodsList" border></tables>
-        </Row>
-        <Divider orientation="center">售后信息</Divider>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">审核状态:</i-col>
+              <i-col span="6">
+                支付时间:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.paymentTime? orderDetail.paymentTime: 'N/A' }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Divider orientation="center">
+          用户信息
+        </Divider>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="6">
+                门店名称:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.shopName }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="6">
+                店长名称:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.userName }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="6">
+                店长手机:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.phone }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="6">
+                所属业务员:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.saleUserName }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+
+        <Divider orientation="center">
+          配送信息
+        </Divider>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="6">
+                收货人:
+              </i-col>
+              <i-col span="18">
+                {{ deliveryInfo.contactsName }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="6">
+                联系方式:
+              </i-col>
+              <i-col span="18">
+                {{ deliveryInfo.phone }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="6">
+                收货地址:
+              </i-col>
+              <i-col span="18">
+                {{ address }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="6">
+                收货时间:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.receiveTime }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Divider orientation="center">
+          商品信息
+        </Divider>
+        <Row>
+          <tables v-model="orderDetail.orderGoodsList" :columns="goodsColumns" border></tables>
+        </Row>
+        <Divider orientation="center">
+          售后信息
+        </Divider>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="6">
+                审核状态:
+              </i-col>
               <i-col v-if="afterMsg.status === 'WAIT'" span="16">
-                <tag color="magenta">{{ "待审核" }}</tag>
+                <tag color="magenta">
+                  {{ "待审核" }}
+                </tag>
               </i-col>
               <i-col v-else-if="afterMsg.status === 'AUDIT_REJECT'" span="16">
-                <tag color="orange">{{ "审核拒绝" }}</tag>
+                <tag color="orange">
+                  {{ "审核拒绝" }}
+                </tag>
               </i-col>
               <i-col v-else-if="afterMsg.status === 'CANCEL'" span="16">
-                <tag color="cyan">{{ "客户取消" }}</tag>
+                <tag color="cyan">
+                  {{ "客户取消" }}
+                </tag>
               </i-col>
               <i-col v-else-if="afterMsg.status === 'WAIT_REVIEW'" span="16">
-                <tag color="cyan">{{ "待财务确认" }}</tag>
+                <tag color="cyan">
+                  {{ "待财务确认" }}
+                </tag>
               </i-col>
               <i-col v-else-if="afterMsg.status === 'REVIEW_REJECT'" span="16">
-                <tag color="orange">{{ "财务拒绝" }}</tag>
+                <tag color="orange">
+                  {{ "财务拒绝" }}
+                </tag>
               </i-col>
               <i-col v-else-if="afterMsg.status === 'SERVICEING'" span="16">
-                <tag color="cyan">{{ "售后中" }}</tag>
+                <tag color="cyan">
+                  {{ "售后中" }}
+                </tag>
               </i-col>
               <i-col v-else-if="afterMsg.status === 'FINISH'" span="16">
-                <tag color="cyan">{{ "售后完成" }}</tag>
+                <tag color="cyan">
+                  {{ "售后完成" }}
+                </tag>
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">联系方式:</i-col>
-              <i-col span="18">{{ afterMsg.phone }}</i-col>
+              <i-col span="6">
+                联系方式:
+              </i-col>
+              <i-col span="18">
+                {{ afterMsg.phone }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">其他原因:</i-col>
-              <i-col span="18" style="color:red">{{ afterMsg.remark }}</i-col>
+              <i-col span="6">
+                其他原因:
+              </i-col>
+              <i-col span="18" style="color:red">
+                {{ afterMsg.remark }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">售后图片:</i-col>
+              <i-col span="6">
+                售后图片:
+              </i-col>
               <i-col span="18">
                 <div
                   v-for="item in afterImageList"
@@ -345,7 +465,7 @@
                   class="demo-upload-list"
                 >
                   <div>
-                    <img :src="item" />
+                    <img :src="item">
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                     </div>
@@ -355,11 +475,13 @@
             </Row>
           </i-col>
         </Row>
-        <Divider orientation="center">补损信息</Divider>
+        <Divider orientation="center">
+          补损信息
+        </Divider>
         <Row>
           <tables
-            :columns="compensateColumns"
             v-model="compensateDetail"
+            :columns="compensateColumns"
             :loading="tempTableLoading"
             border
           ></tables>
@@ -367,106 +489,114 @@
         <Row style="margin-top:10px">
           <i-col span="10">
             <Row>
-              <i-col span="6">退款总金额：{{ afterMsg.refundAmount | fenToYuanDot2Filters }}</i-col>
+              <i-col span="6">
+                退款总金额：{{ afterMsg.refundAmount | fenToYuanDot2Filters }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row>
           <i-col span="10">
             <Row class="check">
-              <i-col span="6">退运费金额：{{ afterMsg.refundFreightAmount | fenToYuanDot2Filters }}</i-col>
+              <i-col span="6">
+                退运费金额：{{ afterMsg.refundFreightAmount | fenToYuanDot2Filters }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div v-show="afterMsg.status==='WAIT_REVIEW'" slot="footer">
-        <Button type="error" @click="hanldeFinanceRefuse('pass')">审核拒绝</Button>
-        <Button type="primary" @click="hanldeFinanceAudit('refuse')">审核通过</Button>
+        <Button type="error" @click="hanldeFinanceRefuse('pass')">
+          审核拒绝
+        </Button>
+        <Button type="primary" @click="hanldeFinanceAudit('refuse')">
+          审核通过
+        </Button>
       </div>
     </Modal>
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" />
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
+import Tables from '_c/tables';
 import {
   getFinanceAuditPages,
   getFinanceAudit,
   getFinanceRefuse,
   getOrderDetail,
   getOrderGoods
-} from "@/api/wholesale";
-import { fenToYuanDot2, fenToYuanDot2Number, download } from "@/libs/util";
-import { serviceModeEnum, serviceStatusEnum } from "@/libs/enumerate";
-import { serviceModeConvert, serviceStatusConvert } from "@/libs/converStatus";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+} from '@/api/wholesale';
+import { fenToYuanDot2, fenToYuanDot2Number, download } from '@/libs/util';
+import { serviceModeEnum, serviceStatusEnum } from '@/libs/enumerate';
+import { serviceModeConvert, serviceStatusConvert } from '@/libs/converStatus';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 
 const orderDetail = {
-  addressDetail: "",
-  afterSaleTime: "",
-  afterStatus: "",
-  checkStatus: "",
-  createTime: "",
-  createTimeBegin: "",
-  createTimeEnd: "",
-  currentOrderStatus: "",
-  deliveryAddress: "",
-  deliveryFee: "",
-  deliveryTime: "",
-  discountFee: "",
-  hdCode: "",
-  hdStatus: "",
-  id: "",
-  invoiceStatus: "",
-  needPay: "",
-  notHdStatus: "",
-  orderCode: "",
-  orderCoupon: "",
+  addressDetail: '',
+  afterSaleTime: '',
+  afterStatus: '',
+  checkStatus: '',
+  createTime: '',
+  createTimeBegin: '',
+  createTimeEnd: '',
+  currentOrderStatus: '',
+  deliveryAddress: '',
+  deliveryFee: '',
+  deliveryTime: '',
+  discountFee: '',
+  hdCode: '',
+  hdStatus: '',
+  id: '',
+  invoiceStatus: '',
+  needPay: '',
+  notHdStatus: '',
+  orderCode: '',
+  orderCoupon: '',
   orderGoodsList: [],
-  orderStatus: "",
-  delivery: "",
-  orderStatusIn: "",
-  payStatus: "",
-  payableFee: "",
-  paymentTime: "",
-  phone: "",
-  receiveTime: "",
-  refundFee: "",
-  remarks: "",
-  saleUserName: "",
-  salesmanId: "",
-  settlementType: "",
-  shopCode: "",
-  shopName: "",
-  totalFee: "",
-  userId: "",
-  userName: ""
+  orderStatus: '',
+  delivery: '',
+  orderStatusIn: '',
+  payStatus: '',
+  payableFee: '',
+  paymentTime: '',
+  phone: '',
+  receiveTime: '',
+  refundFee: '',
+  remarks: '',
+  saleUserName: '',
+  salesmanId: '',
+  settlementType: '',
+  shopCode: '',
+  shopName: '',
+  totalFee: '',
+  userId: '',
+  userName: ''
 };
 const afterMsg = {
-  id: "",
-  userId: "",
-  orderId: "",
-  remark: "",
-  images: "",
-  phone: "",
-  serviceMode: "",
-  status: "",
+  id: '',
+  userId: '',
+  orderId: '',
+  remark: '',
+  images: '',
+  phone: '',
+  serviceMode: '',
+  status: '',
   statusList: null,
   createTime: null,
-  orderGoods: "",
-  serviceGoods: "",
-  replenishGoods: "",
+  orderGoods: '',
+  serviceGoods: '',
+  replenishGoods: '',
   refundAmount: 0,
   refundFreightAmount: 0,
   totalRefundAmount: 0,
-  serviceReason: "",
-  auditUser: "",
+  serviceReason: '',
+  auditUser: '',
   auditTime: null,
-  reviewUser: "1",
+  reviewUser: '1',
   reviewTime: null,
   finishTime: null,
   order: {},
@@ -483,45 +613,45 @@ const rowData = {
   rows: 20,
   startTime: null,
   endTime: null,
-  orderCode: "",
-  hdCode: "",
-  userName: "",
-  phone: "",
+  orderCode: '',
+  hdCode: '',
+  userName: '',
+  phone: '',
   serviceMode: null,
-  status: "WAIT_REVIEW",
-  sidx: "t.auditTime",
-  sort: "desc"
+  status: 'WAIT_REVIEW',
+  sidx: 't.auditTime',
+  sort: 'desc'
 };
 // 地址对象
 const deliveryInfo = {
   id: 0,
   sex: null,
-  phone: "",
-  addressDetail: "",
-  addressArea: "",
-  isDefault: "",
+  phone: '',
+  addressDetail: '',
+  addressArea: '',
+  isDefault: '',
   userId: 0,
-  contactsName: ""
+  contactsName: ''
 };
 // 商品对象
 const goodsDetail = {
   discountGoodsPrice: 0,
   flash: 0,
   goodsId: 0,
-  goodsImage: "",
-  goodsName: "",
+  goodsImage: '',
+  goodsName: '',
   goodsPrice: 0,
   goodsStandardId: 0,
-  hdSkuId: "",
+  hdSkuId: '',
   id: 0,
   orderId: 0,
-  paymentTime: "",
+  paymentTime: '',
   purchasePrice: 0,
   quanity: 0,
-  refundStatus: "",
-  standard: "",
+  refundStatus: '',
+  standard: '',
   standardWeight: 0,
-  unitName: "",
+  unitName: '',
   userId: 0
 };
 // 审核对象
@@ -534,88 +664,88 @@ const postSaleAudit = {
 // 商品列表
 const goodsColumns = [
   {
-    title: "商品编号",
-    key: "goodsId"
+    title: '商品编号',
+    key: 'goodsId'
   },
   {
-    title: "商品名称",
-    key: "goodsName"
+    title: '商品名称',
+    key: 'goodsName'
   },
   {
-    title: "商品图片",
-    key: "goodsImage",
-    align: "center",
+    title: '商品图片',
+    key: 'goodsImage',
+    align: 'center',
     maxWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
-      const str = <img src={row.goodsImage} height="60" width="60" />;
+      const str = <img src={row.goodsImage} height='60' width='60' />;
       return <div>{str}</div>;
     }
   },
   {
-    title: "商品规格",
-    key: "standard"
+    title: '商品规格',
+    key: 'standard'
   },
   {
-    title: "购买数量",
-    key: "quanity"
+    title: '购买数量',
+    key: 'quanity'
   },
   {
-    title: "商品单位",
-    key: "unitName"
+    title: '商品单位',
+    key: 'unitName'
   },
   {
-    title: "商品单价",
-    key: "goodsPrice",
+    title: '商品单价',
+    key: 'goodsPrice',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.goodsPrice);
       return <div>{amount}</div>;
     }
   },
   {
-    title: "折扣价",
-    key: "discountGoodsPrice",
+    title: '折扣价',
+    key: 'discountGoodsPrice',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.discountGoodsPrice);
       return <div>{amount}</div>;
     }
   },
   {
-    title: "是否限时抢购",
-    key: "flash",
+    title: '是否限时抢购',
+    key: 'flash',
     render(h, params, vm) {
       if (params.row.flash === 0) {
         return (
           <div>
-            <tag color="success">普通商品</tag>
+            <tag color='success'>普通商品</tag>
           </div>
         );
       } else if (params.row.flash === 1) {
         return (
           <div>
-            <tag color="error">限时抢购</tag>
+            <tag color='error'>限时抢购</tag>
           </div>
         );
       }
     }
   },
   {
-    title: "退货状态",
+    title: '退货状态',
     minWidth: 80,
-    key: "refundStatus",
-    align: "center",
+    key: 'refundStatus',
+    align: 'center',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.refundStatus === "yes") {
+      if (row.refundStatus === 'yes') {
         return (
           <div>
-            <tag color="error">已退货</tag>
+            <tag color='error'>已退货</tag>
           </div>
         );
       } else {
         return (
           <div>
-            <tag color="success">未退货</tag>
+            <tag color='success'>未退货</tag>
           </div>
         );
       }
@@ -625,106 +755,106 @@ const goodsColumns = [
 // 补损信息列表
 const compensateColumns = [
   {
-    title: "商品名称",
-    key: "goodsName",
-    align: "center",
+    title: '商品名称',
+    key: 'goodsName',
+    align: 'center',
     render(h, params, vm) {
       const data = !params.row.orderGoods.goodsName
-        ? ""
+        ? ''
         : params.row.orderGoods.goodsName;
 
       return <div>{data}</div>;
     }
   },
   {
-    title: "商品规格",
-    key: "standard",
-    align: "center",
+    title: '商品规格',
+    key: 'standard',
+    align: 'center',
     render(h, params, vm) {
       const data = !params.row.orderGoods.standard
-        ? ""
+        ? ''
         : params.row.orderGoods.standard;
 
       return <div>{data}</div>;
     }
   },
   {
-    title: "购买数量",
-    key: "quanity",
-    align: "center",
+    title: '购买数量',
+    key: 'quanity',
+    align: 'center',
     render(h, params, vm) {
       const data = !params.row.orderGoods.quanity
-        ? ""
+        ? ''
         : params.row.orderGoods.quanity;
 
       return <div>{data}</div>;
     }
   },
   {
-    title: "商品单位",
-    key: "goodsUnit",
-    align: "center",
+    title: '商品单位',
+    key: 'goodsUnit',
+    align: 'center',
     render(h, params, vm) {
       const data = !params.row.orderGoods.goodsUnit
-        ? ""
+        ? ''
         : params.row.orderGoods.goodsUnit;
 
       return <div>{data}</div>;
     }
   },
   {
-    title: "商品单价",
-    key: "goodsPrice",
-    align: "center",
+    title: '商品单价',
+    key: 'goodsPrice',
+    align: 'center',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.orderGoods.goodsPrice);
       return <div>{amount}</div>;
     }
   },
   {
-    title: "折扣价",
-    key: "discountGoodsPrice",
-    align: "center",
+    title: '折扣价',
+    key: 'discountGoodsPrice',
+    align: 'center',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.orderGoods.discountGoodsPrice);
       return <div>{amount}</div>;
     }
   },
   {
-    title: "商品类型",
-    key: "flash",
-    align: "center",
+    title: '商品类型',
+    key: 'flash',
+    align: 'center',
     render(h, params, vm) {
       if (params.row.orderGoods.flash === 0) {
         return (
           <div>
-            <tag color="success">普通</tag>
+            <tag color='success'>普通</tag>
           </div>
         );
       } else if (params.row.orderGoods.flash === 1) {
         return (
           <div>
-            <tag color="error">抢购</tag>
+            <tag color='error'>抢购</tag>
           </div>
         );
       }
     }
   },
   {
-    title: "售后原因",
-    key: "serviceReason",
-    align: "center",
-    width: "200px",
+    title: '售后原因',
+    key: 'serviceReason',
+    align: 'center',
+    width: '200px',
     render: (h, params) => {
       if (params.row.isEdit) {
-        return h("Form", [
-          h("Input", {
+        return h('Form', [
+          h('Input', {
             style: {
-              marginLeft: "4px",
-              width: "100%"
+              marginLeft: '4px',
+              width: '100%'
             },
             props: {
-              type: "text",
+              type: 'text',
               value: params.row.postSaleGoods.serviceReason // 使用key的键值
             },
             on: {
@@ -735,110 +865,110 @@ const compensateColumns = [
           })
         ]);
       } else {
-        return h("div", params.row.postSaleGoods.serviceReason);
+        return h('div', params.row.postSaleGoods.serviceReason);
       }
     }
   },
   {
-    title: "售后方式",
-    key: "serviceMode",
-    align: "center",
+    title: '售后方式',
+    key: 'serviceMode',
+    align: 'center',
     render: (h, params) => {
       if (params.row.isEdit) {
         return h(
-          "Select",
+          'Select',
           {
             props: {
               value: params.row.postSaleGoods.serviceMode
             },
             style: {
-              width: "100%",
-              height: "100%",
-              padding: "0 0 170px 0"
+              width: '100%',
+              height: '100%',
+              padding: '0 0 170px 0'
             },
             on: {
-              "on-change": event => {
+              'on-change': event => {
                 params.row.postSaleGoods.serviceMode = event;
               }
             }
           },
           [
             h(
-              "Option",
+              'Option',
               {
                 props: {
-                  value: "NORMAL"
+                  value: 'NORMAL'
                 }
               },
-              "正常"
+              '正常'
             ),
             h(
-              "Option",
+              'Option',
               {
                 props: {
-                  value: "ABNORMAL"
+                  value: 'ABNORMAL'
                 }
               },
-              "异常"
+              '异常'
             ),
             h(
-              "Option",
+              'Option',
               {
                 props: {
-                  value: "REPLENISH"
+                  value: 'REPLENISH'
                 }
               },
-              "补货"
+              '补货'
             ),
             h(
-              "Option",
+              'Option',
               {
                 props: {
-                  value: "SUPPLEMENT"
+                  value: 'SUPPLEMENT'
                 }
               },
-              "补款"
+              '补款'
             ),
             h(
-              "Option",
+              'Option',
               {
                 props: {
-                  value: "REVERT"
+                  value: 'REVERT'
                 }
               },
-              "返仓"
+              '返仓'
             )
           ]
         );
       } else {
-        if (params.row.postSaleGoods.serviceMode === "NORMAL") {
-          return h("div", "正常");
-        } else if (params.row.postSaleGoods.serviceMode === "REPLENISH") {
-          return h("div", "补货");
-        } else if (params.row.postSaleGoods.serviceMode === "SUPPLEMENT") {
-          return h("div", "补款");
-        } else if (params.row.postSaleGoods.serviceMode === "REVERT") {
-          return h("div", "返仓");
-        } else if (params.row.postSaleGoods.serviceMode === "ABNORMAL") {
-          return h("div", "异常");
+        if (params.row.postSaleGoods.serviceMode === 'NORMAL') {
+          return h('div', '正常');
+        } else if (params.row.postSaleGoods.serviceMode === 'REPLENISH') {
+          return h('div', '补货');
+        } else if (params.row.postSaleGoods.serviceMode === 'SUPPLEMENT') {
+          return h('div', '补款');
+        } else if (params.row.postSaleGoods.serviceMode === 'REVERT') {
+          return h('div', '返仓');
+        } else if (params.row.postSaleGoods.serviceMode === 'ABNORMAL') {
+          return h('div', '异常');
         }
       }
     }
   },
   {
-    title: "售后数量",
-    key: "quantity",
-    align: "center",
+    title: '售后数量',
+    key: 'quantity',
+    align: 'center',
     render: (h, params) => {
       if (params.row.isEdit) {
-        return h("Form", [
-          h("Input", {
+        return h('Form', [
+          h('Input', {
             style: {
-              marginLeft: "4px",
-              width: "100%"
+              marginLeft: '4px',
+              width: '100%'
             },
             props: {
-              type: "text",
+              type: 'text',
               value: params.row.postSaleGoods.quantity // 使用key的键值
             },
             on: {
@@ -849,100 +979,100 @@ const compensateColumns = [
           })
         ]);
       } else {
-        return h("div", params.row.postSaleGoods.quantity);
+        return h('div', params.row.postSaleGoods.quantity);
       }
     }
   },
   {
-    title: "单位",
-    key: "unitName",
-    align: "center",
+    title: '单位',
+    key: 'unitName',
+    align: 'center',
     render: (h, params) => {
       if (params.row.isEdit) {
         return h(
-          "Select",
+          'Select',
           {
             props: {
               value: params.row.postSaleGoods.unitCode
             },
             style: {
-              width: "100%",
-              height: "100%",
-              padding: "0 0 170px 0"
+              width: '100%',
+              height: '100%',
+              padding: '0 0 170px 0'
             },
             on: {
-              "on-change": event => {
+              'on-change': event => {
                 params.row.postSaleGoods.unitCode = event;
               }
             }
           },
           [
             h(
-              "Option",
+              'Option',
               {
                 props: {
-                  value: "个"
+                  value: '个'
                 }
               },
-              "个"
+              '个'
             ),
             h(
-              "Option",
+              'Option',
               {
                 props: {
-                  value: "KG"
+                  value: 'KG'
                 }
               },
-              "KG"
+              'KG'
             ),
             h(
-              "Option",
+              'Option',
               {
                 props: {
-                  value: "盒"
+                  value: '盒'
                 }
               },
-              "盒"
+              '盒'
             ),
             h(
-              "Option",
+              'Option',
               {
                 props: {
-                  value: "件"
+                  value: '件'
                 }
               },
-              "件"
+              '件'
             ),
             h(
-              "Option",
+              'Option',
               {
                 props: {
-                  value: "包"
+                  value: '包'
                 }
               },
-              "包"
+              '包'
             )
           ]
         );
       } else {
-        return h("div", params.row.postSaleGoods.unitName);
+        return h('div', params.row.postSaleGoods.unitName);
       }
     }
   },
   {
-    title: "补款金额",
-    key: "refundAmount",
-    align: "center",
+    title: '补款金额',
+    key: 'refundAmount',
+    align: 'center',
     render: (h, params) => {
       if (params.row.isEdit) {
-        return h("Form", [
-          h("Input", {
+        return h('Form', [
+          h('Input', {
             style: {
-              marginLeft: "4px",
-              width: "100%"
+              marginLeft: '4px',
+              width: '100%'
             },
             props: {
-              type: "text",
+              type: 'text',
               value: params.row.postSaleGoods.refundAmount // 使用key的键值
             },
             on: {
@@ -953,7 +1083,7 @@ const compensateColumns = [
           })
         ]);
       } else {
-        return h("div", params.row.postSaleGoods.refundAmount);
+        return h('div', params.row.postSaleGoods.refundAmount);
       }
     }
   }
@@ -975,8 +1105,8 @@ export default {
       uploadVisible: false,
       tempTableLoading: false,
       deliveryFlag: false,
-      imgUploadViewItem: "",
-      deliveryFeeGroup: "否",
+      imgUploadViewItem: '',
+      deliveryFeeGroup: '否',
       allMoney: 0,
       deliveryFee: 0,
       searchRowData: _.cloneDeep(rowData),
@@ -990,121 +1120,121 @@ export default {
       compensateColumns,
       serviceMode: [
         {
-          label: "正常",
-          value: "NORMAL"
+          label: '正常',
+          value: 'NORMAL'
         },
         {
-          label: "补货",
-          value: "REPLENISH"
+          label: '补货',
+          value: 'REPLENISH'
         },
         {
-          label: "补款",
-          value: "SUPPLEMENT"
+          label: '补款',
+          value: 'SUPPLEMENT'
         },
         {
-          label: "返仓",
-          value: "REVERT"
+          label: '返仓',
+          value: 'REVERT'
         }
       ],
       // 售后列表
       columns: [
         {
-          title: "申请时间",
-          key: "createTime",
-          fixed: "left",
+          title: '申请时间',
+          key: 'createTime',
+          fixed: 'left',
           width: 170,
-          align: "center"
+          align: 'center'
         },
         {
-          title: "订单编号",
-          key: "orderCode",
-          fixed: "left",
+          title: '订单编号',
+          key: 'orderCode',
+          fixed: 'left',
           width: 170,
-          align: "center"
+          align: 'center'
         },
         {
-          title: "海鼎单号",
-          key: "hdCode",
-          fixed: "left",
+          title: '海鼎单号',
+          key: 'hdCode',
+          fixed: 'left',
           width: 150,
-          align: "center"
+          align: 'center'
         },
         {
-          title: "售后方式",
-          align: "center",
-          fixed: "left",
+          title: '售后方式',
+          align: 'center',
+          fixed: 'left',
           width: 120,
-          key: "serviceMode",
+          key: 'serviceMode',
           render: (h, params, vm) => {
             const { row } = params;
             if (row.serviceMode) {
               return <div>{row.serviceMode}</div>;
             } else {
-              return <div>{"N/A"}</div>;
+              return <div>{'N/A'}</div>;
             }
           }
         },
         {
-          title: "售后状态",
-          align: "center",
-          fixed: "left",
+          title: '售后状态',
+          align: 'center',
+          fixed: 'left',
           width: 120,
-          key: "status",
+          key: 'status',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.status === "WAIT") {
+            if (row.status === 'WAIT') {
               return (
                 <div>
-                  <tag color="magenta">
-                    {serviceStatusConvert(row.status).label}
+                  <tag color='magenta'>
+                    {serviceStatusConvert(row.status)}
                   </tag>
                 </div>
               );
-            } else if (row.status === "AUDIT_REJECT") {
+            } else if (row.status === 'AUDIT_REJECT') {
               return (
                 <div>
-                  <tag color="orange">
-                    {serviceStatusConvert(row.status).label}
+                  <tag color='orange'>
+                    {serviceStatusConvert(row.status)}
                   </tag>
                 </div>
               );
-            } else if (row.status === "CANCEL") {
+            } else if (row.status === 'CANCEL') {
               return (
                 <div>
-                  <tag color="cyan">
-                    {serviceStatusConvert(row.status).label}
+                  <tag color='cyan'>
+                    {serviceStatusConvert(row.status)}
                   </tag>
                 </div>
               );
-            } else if (row.status === "WAIT_REVIEW") {
+            } else if (row.status === 'WAIT_REVIEW') {
               return (
                 <div>
-                  <tag color="pink">
-                    {serviceStatusConvert(row.status).label}
+                  <tag color='pink'>
+                    {serviceStatusConvert(row.status)}
                   </tag>
                 </div>
               );
-            } else if (row.status === "REVIEW_REJECT") {
+            } else if (row.status === 'REVIEW_REJECT') {
               return (
                 <div>
-                  <tag color="error">
-                    {serviceStatusConvert(row.status).label}
+                  <tag color='error'>
+                    {serviceStatusConvert(row.status)}
                   </tag>
                 </div>
               );
-            } else if (row.status === "SERVICEING") {
+            } else if (row.status === 'SERVICEING') {
               return (
                 <div>
-                  <tag color="gold">
-                    {serviceStatusConvert(row.status).label}
+                  <tag color='gold'>
+                    {serviceStatusConvert(row.status)}
                   </tag>
                 </div>
               );
-            } else if (row.status === "FINISH") {
+            } else if (row.status === 'FINISH') {
               return (
                 <div>
-                  <tag color="success">
-                    {serviceStatusConvert(row.status).label}
+                  <tag color='success'>
+                    {serviceStatusConvert(row.status)}
                   </tag>
                 </div>
               );
@@ -1113,53 +1243,53 @@ export default {
           }
         },
         {
-          title: "门店名称",
-          align: "center",
+          title: '门店名称',
+          align: 'center',
           width: 160,
-          key: "shopName"
+          key: 'shopName'
         },
         {
-          title: "店长名称",
-          align: "center",
+          title: '店长名称',
+          align: 'center',
           width: 160,
-          key: "userName"
+          key: 'userName'
         },
         {
-          title: "店长手机",
-          align: "center",
+          title: '店长手机',
+          align: 'center',
           width: 160,
-          key: "phone"
+          key: 'phone'
         },
         {
-          title: "商品名称",
-          align: "center",
+          title: '商品名称',
+          align: 'center',
           width: 160,
-          key: "orderGoods"
+          key: 'orderGoods'
         },
         {
-          title: "实付金额",
-          align: "center",
+          title: '实付金额',
+          align: 'center',
           width: 120,
-          key: "payableFee",
+          key: 'payableFee',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.payableFee);
             return <div>{amount}</div>;
           }
         },
         {
-          title: "收货区域",
-          align: "center",
+          title: '收货区域',
+          align: 'center',
           width: 160,
-          key: "receiptArea"
+          key: 'receiptArea'
         },
         {
-          title: "操作",
+          title: '操作',
           minWidth: 120,
           resizable: true,
-          align: "center",
-          fixed: "right",
-          key: "handle",
-          options: ["operate"]
+          align: 'center',
+          fixed: 'right',
+          key: 'handle',
+          options: ['operate']
         }
       ]
     };
@@ -1167,8 +1297,8 @@ export default {
   computed: {
     address() {
       const addressArea = this.deliveryInfo.addressArea
-        ? this.deliveryInfo.addressArea.replace(new RegExp("/", "gm"), "")
-        : "";
+        ? this.deliveryInfo.addressArea.replace(new RegExp('/', 'gm'), '')
+        : '';
       return addressArea + this.deliveryInfo.addressDetail;
     }
   },
@@ -1218,10 +1348,10 @@ export default {
             this.deliveryInfo = _.cloneDeep(deliveryInfo);
           }
           if (this.afterMsg.images) {
-            const imageList = this.afterMsg.images.split(",");
+            const imageList = this.afterMsg.images.split(',');
 
             for (let i = 0; i < imageList.length; i++) {
-              if (imageList[i] != "") {
+              if (imageList[i] != '') {
                 this.afterImageList.push(imageList[i]);
               }
             }
@@ -1238,12 +1368,12 @@ export default {
       this.allMoney = 0;
       const id = params.row.id;
       this.tempModalType = this.modalType.edit;
-      this.deliveryFeeGroup = "否";
+      this.deliveryFeeGroup = '否';
       this.deliveryFlag = false;
       this.getOrderDetail(id);
     },
     dateGroupChange(value) {
-      value === "是" ? (this.deliveryFlag = true) : (this.deliveryFlag = false);
+      value === '是' ? (this.deliveryFlag = true) : (this.deliveryFlag = false);
     },
     startTimeChange(value, date) {
       this.searchRowData.startTime = value;
@@ -1259,7 +1389,7 @@ export default {
     hanldeFinanceAudit() {
       getFinanceAudit(this.afterMsg)
         .then(res => {
-          this.$Message.info("通过审核");
+          this.$Message.info('通过审核');
           this.getTableData();
           this.modalView = false;
         })
@@ -1269,7 +1399,7 @@ export default {
     hanldeFinanceRefuse() {
       getFinanceRefuse(this.afterMsg)
         .then(res => {
-          this.$Message.info("拒绝审核");
+          this.$Message.info('拒绝审核');
           this.getTableData();
           this.modalView = false;
         })
@@ -1281,12 +1411,12 @@ export default {
       dataParams.rows = -1;
       getOrderGoods(dataParams).then(res => {
         if (!res) {
-          this.$Message.info("暂无任何数据返回");
+          this.$Message.info('暂无任何数据返回');
           return;
         }
-        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+        const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
         const fileType =
-          name === "POST_SALE_ORDER_GOODS" ? "售后订单商品" : "售后订单";
+          name === 'POST_SALE_ORDER_GOODS' ? '售后订单商品' : '售后订单';
         const fileName = `${fileType}-${date}.xls`;
         download(res, fileName);
       });

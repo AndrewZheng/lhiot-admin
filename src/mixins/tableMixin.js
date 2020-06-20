@@ -43,7 +43,6 @@ const mixin = {
       this.loading = false;
       this.modalView = false;
     },
-    // 获取分类树展开函数
     expandChildren(array) {
       array.forEach(item => {
         if (typeof item.expand === 'undefined') {

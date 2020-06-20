@@ -66,6 +66,16 @@ const wholesaleRouter = [
       component: () => import('@/view/wholesale-mall-manager/goods/goods-standard.vue')
     },
     {
+      path: 'wholesale-goods-relation-standard',
+      name: 'wholesale-goods-relation-standard',
+      meta: {
+        hideInMenu: true,
+        icon: 'md-menu',
+        title: '商品关联规格'
+      },
+      component: () => import('@/view/wholesale-mall-manager/goods/goods-standard.vue')
+    },
+    {
       path: '/wholesale-goods-section',
       name: 'wholesale-goods-section',
       meta: {
@@ -137,6 +147,16 @@ const wholesaleRouter = [
         title: '业务员业绩分析'
       },
       component: () => import('@/view/wholesale-mall-manager/user/salesman-analysis.vue')
+    },
+    {
+      path: '/wholesale-salesman-store-analysis',
+      name: 'wholesale-salesman-store-analysis',
+      meta: {
+        hideInMenu: true,
+        icon: 'md-analytics',
+        title: '业务员门店业绩分析'
+      },
+      component: () => import('@/view/wholesale-mall-manager/user/salesman-store-analysis.vue')
     }
     ]
   },
@@ -162,7 +182,7 @@ const wholesaleRouter = [
       name: 'wholesale-order-analysis',
       meta: {
         icon: 'ios-eye',
-        title: '今日订单商品查询'
+        title: '订单商品查询'
       },
       component: () => import('@/view/wholesale-mall-manager/order/order-analysis.vue')
     },
@@ -332,6 +352,16 @@ const wholesaleRouter = [
         title: '文章管理'
       },
       component: () => import('@/view/wholesale-mall-manager/content/article.vue')
+    },
+    {
+      path: '/wholesale-article-edit',
+      name: 'wholesale-article-edit',
+      meta: {
+        hideInMenu: true,
+        icon: 'md-basket',
+        title: '文章编辑'
+      },
+      component: () => import('@/view/wholesale-mall-manager/content/article-edit.vue')
     }]
   },
   {

@@ -269,7 +269,17 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="24">
+              <i-col span="12">
+                <Row :gutter="8" type="flex" align="middle">
+                  <i-col span="4">
+                    标识
+                  </i-col>
+                  <i-col span="16">
+                    <Input v-model="operateRowData.code" placeholder clearable></Input>
+                  </i-col>
+                </Row>
+              </i-col>
+              <i-col span="12">
                 <Button :loading="loadingAdd" type="success" @click="handleAdd">
                   <span v-if="!loadingAdd">添加</span>
                   <span v-else>保存中...</span>
@@ -523,6 +533,7 @@ const operateColumns = [
     }
   },
   { title: '名称', key: 'name', sortable: true },
+  { title: '标识', key: 'code', sortable: false, minWidth: 120 },
   { title: '类型', key: 'type', sortable: false },
   { title: '路径', key: 'antUrl', sortable: false },
   {
@@ -584,6 +595,7 @@ const operateRowData = {
   type: '',
   menuId: 0,
   name: '',
+  code: '',
   antUrl: ''
 };
 
@@ -818,12 +830,12 @@ export default {
         return false;
       }
 
-      if (!this.operateRowData.antUrl) {
-        this.$Message.warning('请填写操作的匹配路径');
-        return false;
-      }
+      // if (!this.operateRowData.antUrl) {
+      //   this.$Message.warning('请填写操作的匹配路径');
+      //   return false;
+      // }
 
-      if (this.requestTypeList.length == 0) {
+      if (this.requestTypeList.length === 0) {
         this.$Message.warning('请至少选择一种请求类型');
         return false;
       }
@@ -1023,7 +1035,6 @@ export default {
       }
     },
     handleClick({ root, node, data }) {
-      console.log('current data: ', data);
       if (typeof data.expand === 'undefined') {
         this.$set(data, 'expend', false);
         if (data.children) {

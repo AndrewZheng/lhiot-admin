@@ -627,7 +627,7 @@
             </i-col>
             <i-col v-show="productStandardDetail.productType==='ORDINARY_PRODUCT'" span="12">
               <FormItem label="起购份数:" prop="startNum">
-                <InputNumber :min="0" v-model="productStandardDetail.startNum"></InputNumber>
+                <InputNumber :min="1" v-model="productStandardDetail.startNum"></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -801,6 +801,9 @@
                 <i-col v-else-if="productStandardDetail.productType === 'ASSIST_PRODUCT'" span="16">
                   <tag color="green">{{ "助力抢爆品商品" }}</tag>
                 </i-col>
+                <i-col v-else-if="productStandardDetail.productType === 'SHARE_PRODUCT'" span="16">
+                  <tag color="green">{{ "分享赚商品" }}</tag>
+                </i-col>
                 <i-col v-else-if="productStandardDetail.productType === null" span="16">{{ "N/A" }}</i-col>
               </Row>
             </i-col>
@@ -818,7 +821,7 @@
             </i-col>
             <i-col span="12">
               <FormItem label="起购份数:" prop="startNum">
-                <Input v-model="proStandardExpand.startNum"></Input>
+                <Input :min="1" v-model="proStandardExpand.startNum"></Input>
               </FormItem>
             </i-col>
           </Row>
@@ -834,7 +837,13 @@
                 <div v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'">（以售卖价格优先计算折扣率）</div>
               </FormItem>
             </i-col>
-            <i-col v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'" span="12">
+            <!-- v1.8.0 -->
+            <i-col v-if="productStandardDetail.productType==='SHARE_PRODUCT'" span="8">
+              <FormItem label="佣金比例(单位%):" prop="commissionRate">
+                <InputNumber v-model="proStandardExpand.commissionRate"></InputNumber>
+              </FormItem>
+            </i-col>
+            <i-col v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'" span="8">
               <FormItem label="折扣率:" prop="discountRate">
                 <Input v-model="proStandardExpand.discountRate" readonly></Input>
               </FormItem>
@@ -1176,9 +1185,10 @@ const proStandardExpand = {
   discountRate: 0,
   limitNum: 0,
   standardId: 0,
-  startNum: 0,
+  startNum: 1,
   // expandType: "DISCOUNT_PRODUCT",
-  limitQty: 0
+  limitQty: 0,
+  commissionRate: 0
 };
 
 export default {
@@ -1405,6 +1415,14 @@ export default {
                 </div>
               );
             } else if (row.productType == "ASSIST_PRODUCT") {
+              return (
+                <div>
+                  <tag color="green">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.productType == "SHARE_PRODUCT") {
               return (
                 <div>
                   <tag color="green">
@@ -2010,6 +2028,12 @@ export default {
               return false;
             }
           }
+          if (this.proStandardExpand.expandType === "SHARE_PRODUCT") {
+            if (this.proStandardExpand.commissionRate <= 0) {
+              this.$Message.warning("佣金比例不能为空");
+              return false;
+            }
+          }
           this.updateProStandardExpand();
         } else {
           this.$Message.error("请完善信息!");
@@ -2226,7 +2250,7 @@ export default {
     },
     handleRemoveShar(file) {
       this.$refs.uploadShar.deleteFile(file);
-      this.productStandardDetail.shareImage = null;
+      this.productStandardDetail.shareImage = "";
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);

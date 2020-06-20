@@ -248,6 +248,7 @@ const paymentLogDetail = {
   payStep: null,
   payFee: 0,
   tradeId: "",
+  rechargeAmount: 0,
   signAt: null,
   payAt: null,
   bankType: null,
@@ -267,7 +268,9 @@ const roleRowData = {
   app_type: null,
   page: 1,
   rows: 10,
-  sum: null
+  sum: null,
+  sidx: "signAt",
+  sort: "desc"
 };
 
 export default {
@@ -391,6 +394,20 @@ export default {
           }
         },
         {
+          title: "实际到账金额",
+          width: 110,
+          key: "rechargeAmount",
+          align: "center",
+          render(h, params, vm) {
+            if (params.row.sourceType === "recharge") {
+              const amount = fenToYuanDot2(params.row.rechargeAmount);
+              return <div>{amount}</div>;
+            } else {
+              return <div>{"N/A"}</div>;
+            }
+          }
+        },
+        {
           title: "第三方单号",
           key: "tradeId",
           align: "center",
@@ -424,13 +441,13 @@ export default {
           title: "签名时间",
           key: "signAt",
           align: "center",
-          width: 160
+          width: 110
         },
         {
           title: "支付时间",
           align: "center",
           key: "payAt",
-          width: 160
+          width: 110
         },
         {
           title: "银行类型",

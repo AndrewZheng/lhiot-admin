@@ -736,7 +736,6 @@ export const relationStoreTypeEnum = [{
 }
 ]
 
-
 export const couponStatusEnum = [{
   label: '有效',
   value: 'VALID'
@@ -887,6 +886,10 @@ export const expandTypeEnum = [
     value: 'SECKILL_PRODUCT'
   },
   {
+    label: '分享赚商品',
+    value: 'SHARE_PRODUCT'
+  },
+  {
     label: '助力商品',
     value: 'ASSIST_PRODUCT'
   },
@@ -984,11 +987,11 @@ export const couponTypeEnum = [{
 {
   label: '现金券',
   value: couponType.CASH_COUPON
-},
-{
-  label: '运费券',
-  value: couponType.FREIGHT_COUPON
 }
+  // {
+  //   label: '运费券',
+  //   value: couponType.FREIGHT_COUPON
+  // }
 ];
 
 // 小程序SVIP身份识别(SUPER_VIP svip   PROBATION_VIP  试用vip)
@@ -1008,7 +1011,6 @@ export const svipTypeEnum = [{
 ];
 
 // 小程序应用类型 appType WXSMALL_SHOP 微信小程序; S_MALL 拼团小程序;
-
 export const appType = {
   WXSMALL_SHOP: 'WXSMALL_SHOP',
   S_MALL: 'S_MALL'
@@ -1039,7 +1041,7 @@ export const payType = {
   weixin: 'weixin',
   balance: 'balance',
   points: 'points',
-  haiding: 'haiding',
+  haiding: 'haiding'
 };
 
 export const payTypeEnum = [{
@@ -2427,10 +2429,11 @@ export const miniHdStatusEnum = [{
 ];
 
 // 小程序订单类型 SHOPPING("导购订单"),SELF_BUYING("自购订单"),TEAM_BUYING("团购订单"),PICKING("提货订单");
-
+//              TEAM_BUYING-团购订单 SELF_BUYING-微商城小程序订单 POINTS_BUYING-积分兑换订单 PRESAL_ORDER-预售订单
 export const miniOrderType = {
   SELF_BUYING: 'SELF_BUYING',
   TEAM_BUYING: 'TEAM_BUYING',
+  PRESAL_ORDER: 'PRESAL_ORDER',
   POINTS_BUYING: 'POINTS_BUYING'
 };
 
@@ -2441,6 +2444,10 @@ export const miniOrderTypeEnum = [{
 {
   label: '团购订单',
   value: miniOrderType.TEAM_BUYING
+},
+{
+  label: '预售订单',
+  value: miniOrderType.PRESAL_ORDER
 },
 {
   label: '积分兑换订单',
@@ -2849,7 +2856,8 @@ export const receiveStatusEnum = [{
   label: '未领取',
   value: 'NO'
 }]
-//售后方式
+
+// 售后方式
 export const serviceModeEnum = [{
   label: '补货',
   value: 'REPLENISH'
@@ -2861,11 +2869,11 @@ export const serviceModeEnum = [{
 {
   label: '返仓',
   value: 'REVERT'
-},{
+}, {
   label: '退运费',
   value: 'ABNORMAL'
-},]
-//售后状态 
+}]
+// 售后状态
 export const serviceStatusEnum = [{
   label: '待审核',
   value: 'WAIT'
@@ -2873,7 +2881,7 @@ export const serviceStatusEnum = [{
 {
   label: '审核拒绝',
   value: 'AUDIT_REJECT'
-},{
+}, {
   label: '客户取消',
   value: 'CANCEL'
 },

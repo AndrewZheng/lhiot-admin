@@ -1163,7 +1163,7 @@ export default {
               return (
                 <div>
                   <tag color="magenta">
-                    {serviceStatusConvert(row.status).label}
+                    {serviceStatusConvert(row.status)}
                   </tag>
                 </div>
               );
@@ -1171,7 +1171,7 @@ export default {
               return (
                 <div>
                   <tag color="orange">
-                    {serviceStatusConvert(row.status).label}
+                    {serviceStatusConvert(row.status)}
                   </tag>
                 </div>
               );
@@ -1179,7 +1179,7 @@ export default {
               return (
                 <div>
                   <tag color="cyan">
-                    {serviceStatusConvert(row.status).label}
+                    {serviceStatusConvert(row.status)}
                   </tag>
                 </div>
               );
@@ -1187,7 +1187,7 @@ export default {
               return (
                 <div>
                   <tag color="pink">
-                    {serviceStatusConvert(row.status).label}
+                    {serviceStatusConvert(row.status)}
                   </tag>
                 </div>
               );
@@ -1195,7 +1195,7 @@ export default {
               return (
                 <div>
                   <tag color="error">
-                    {serviceStatusConvert(row.status).label}
+                    {serviceStatusConvert(row.status)}
                   </tag>
                 </div>
               );
@@ -1203,7 +1203,7 @@ export default {
               return (
                 <div>
                   <tag color="gold">
-                    {serviceStatusConvert(row.status).label}
+                    {serviceStatusConvert(row.status)}
                   </tag>
                 </div>
               );
@@ -1211,7 +1211,7 @@ export default {
               return (
                 <div>
                   <tag color="success">
-                    {serviceStatusConvert(row.status).label}
+                    {serviceStatusConvert(row.status)}
                   </tag>
                 </div>
               );

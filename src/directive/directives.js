@@ -1,4 +1,5 @@
 import { on } from '@/libs/tools';
+import store from '@/store';
 import Vue from 'vue';
 
 const directives = {
@@ -43,10 +44,14 @@ const directives = {
     }
   },
   has: {
-    bind: (el, binding) => {
-      if (!Vue.prototype.$_has(binding.value)) {
-        el.parentNode.removeChild(el);
-      }
+    inserted(el, binding, vnode) {
+      const { value } = binding;
+      // 在vuex中查看是否有按钮权限
+      const buttonPermissions = store.getters && store.getters.getButtonPermission;
+      const flag = buttonPermissions.includes(value);
+      console.log(`value:${value} / flag: ${flag}`);
+      // 如果没有全选则将按钮删除即可
+      !flag && el.parentNode && el.parentNode.removeChild(el);
     }
   }
 };

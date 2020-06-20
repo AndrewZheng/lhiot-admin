@@ -194,7 +194,10 @@
               </div>
             </FormItem>
           </Row>
-          <FormItem label="排序:" prop="productSectionRank">
+          <FormItem v-if="tempModalType == modalType.create" label="排序:" prop="rank">
+            <InputNumber v-model="productStandardRelation.rank"></InputNumber>
+          </FormItem>
+          <FormItem v-else label="排序:" prop="productSectionRank">
             <InputNumber v-model="productStandardRelation.productSectionRank"></InputNumber>
           </FormItem>
         </Form>
@@ -572,8 +575,8 @@ export default {
               callback(errors);
             }
           }
-        ],
-        rank: [{ required: true, message: "请输入商品排序" }]
+        ]
+        // rank: [{ required: true, message: "请输入商品排序" }]
       },
       appTypeEnum,
       expandTypeEnum,
@@ -783,7 +786,7 @@ export default {
       }
       this.$refs.editForm.resetFields();
       this.getProductTableData();
-      console.log(this.currentSectionId);
+      this.productStandardRelation.rank = 0;
       this.currentStandard.currentSectionId = this.currentSectionId;
       this.productStandardRelation.productSectionId = this.currentSectionId;
       this.tempModalType = this.modalType.create;
@@ -837,9 +840,9 @@ export default {
     handleView(params) {
       getProStandardExpand({
         id: params.row.productStandardId
-      }).then(res => {  
+      }).then(res => {
         this.discount = res;
-         console.log("回调",res)
+        console.log("回调", res);
         if (!res) {
           this.modalView = false;
           this.$Message.error("当前商品不是活动商品");

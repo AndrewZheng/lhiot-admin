@@ -259,7 +259,7 @@ import {
   activityTypeConvert
 } from "@/libs/converStatus";
 import { activityTypeEnum, activityStatusEnum } from "@/libs/enumerate";
-import { setActivity, compareCouponData } from "@/libs/util";
+import { setActivity, compareCouponData, compareData } from "@/libs/util";
 
 const activityDetail = {
   activityCode: "",
@@ -492,22 +492,6 @@ export default {
       let rechargeIndex = 0;
       for (let i = 0; i < this.tableData.length; i++) {
         if (
-          params.row.activityType === "flashsale" &&
-          params.row.vaild === "no"
-        ) {
-          if (
-            this.tableData[i].activityType === "flashsale" &&
-            this.tableData[i].vaild === "yes" &&
-            compareCouponData(this.tableData[i].endTime) === true
-          ) {
-            flashsaleIndex++;
-          }
-          if (flashsaleIndex === 2) {
-            this.$Message.info("已有2个有效且开启中的限时抢购活动!");
-            return;
-          }
-        }
-        if (
           params.row.activityType === "registration" &&
           params.row.vaild === "no"
         ) {
@@ -560,11 +544,17 @@ export default {
                 this.tableData[i].vaild === "yes" &&
                 compareCouponData(this.tableData[i].endTime) === true
               ) {
-                flashsaleIndex++;
-              }
-              if (flashsaleIndex === 2) {
-                this.$Message.info("已有2个有效且开启中的限时抢购活动!");
-                return;
+                if (
+                  compareData(
+                    this.tableData[i].endTime,
+                    this.activityDetail.startTime
+                  )
+                ) {
+                  this.$Message.error(
+                    "下期限时抢购开始时间必须大于以后活动结束时间!"
+                  );
+                  return;
+                }
               }
             }
             if (

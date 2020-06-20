@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="19"
+        :search-area-column="22"
         :operate-area-column="5"
         editable
         searchable
@@ -47,10 +47,12 @@
           >
             <Option
               v-for="item in userTypeEnum"
-              :value="item.value"
               :key="item.value"
+              :value="item.value"
               class="ptb2-5"
-            >{{ item.label }}</Option>
+            >
+              {{ item.label }}
+            </Option>
           </Select>
           <Select
             v-model="searchRowData.userStatus"
@@ -61,6 +63,38 @@
           >
             <Option
               v-for="item in userStatusEnum"
+              :key="item.value"
+              :value="item.value"
+              class="ptb2-5"
+            >
+              {{ item.label }}
+            </Option>
+          </Select>
+          <Select
+            v-model="searchRowData.isVip"
+            class="search-col mr5"
+            placeholder="是否VIP"
+            style="width:80px"
+            clearable
+          >
+            <Option
+              v-for="item in isVipStatus"
+              :key="item.value"
+              :value="item.value"
+              class="ptb2-5"
+            >
+              {{ item.label }}
+            </Option>
+          </Select>
+          <Select
+            v-model="searchRowData.isVip"
+            class="search-col mr5"
+            placeholder="是否VIP"
+            style="width:80px"
+            clearable
+          >
+            <Option
+              v-for="item in isVipStatus"
               :value="item.value"
               :key="item.value"
               class="ptb2-5"
@@ -75,10 +109,12 @@
           >
             <Option
               v-for="item in userStatusEnum"
-              :value="item.value"
               :key="item.value"
+              :value="item.value"
               class="ptb2-5"
-            >{{ item.label }}</Option>
+            >
+              {{ item.label }}
+            </Option>
           </Select>
           <Cascader
             change-on-select
@@ -108,7 +144,7 @@
           />
           <Button
             v-waves
-            :searchLoading="searchLoading"
+            :search-loading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
@@ -161,7 +197,9 @@
         <Form ref="editForm" :label-width="100" :model="userDetail">
           <Row>
             <i-col span="12">
-              <FormItem label="门店名称:" prop="shopName">{{ userDetail.shopName }}</FormItem>
+              <FormItem label="门店名称:" prop="shopName">
+                {{ userDetail.shopName }}
+              </FormItem>
             </i-col>
             <i-col span="12">
               <!-- <FormItem label="店长名称:" prop="userName">{{ userDetail.userName }}</FormItem> -->
@@ -172,21 +210,29 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="手机号码:" prop="phone">{{ userDetail.phone }}</FormItem>
+              <FormItem label="手机号码:" prop="phone">
+                {{ userDetail.phone }}
+              </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="微信昵称:" prop="nickname">{{ userDetail.nickname }}</FormItem>
+              <FormItem label="微信昵称:" prop="nickname">
+                {{ userDetail.nickname }}
+              </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
               <FormItem label="用户头像:" prop="profilePhoto">
-                <img :src="userDetail.profilePhoto" width="60" height="60" />
+                <img :src="userDetail.profilePhoto" width="60" height="60">
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="性别:" prop="sex">{{ sexConvertName }}</FormItem>
-              <FormItem label="余额:" prop="balance">{{ userBalance }}</FormItem>
+              <FormItem label="性别:" prop="sex">
+                {{ sexConvertName }}
+              </FormItem>
+              <FormItem label="余额:" prop="balance">
+                {{ userBalance }}
+              </FormItem>
             </i-col>
           </Row>
           <Row>
@@ -195,16 +241,20 @@
                 <Select v-model="userDetail.userStatus" style="width: 200px" disabled>
                   <Option
                     v-for="(item,index) in userStatusEnum"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                  >
+                    {{ item.label }}
+                  </Option>
                 </Select>
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="所属业务员:" prop="saleUserName">{{ userDetail.saleUserName }}</FormItem>
+              <FormItem label="所属业务员:" prop="saleUserName">
+                {{ userDetail.saleUserName }}
+              </FormItem>
             </i-col>
           </Row>
           <Row v-show="userDetail.userType==='sale'">
@@ -213,11 +263,13 @@
                 <Select v-model="userDetail.salesUserStatus" style="width: 200px" disabled>
                   <Option
                     v-for="(item,index) in userStatusEnum"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                  >
+                    {{ item.label }}
+                  </Option>
                 </Select>
               </FormItem>
             </i-col>
@@ -250,8 +302,12 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">
+          确定
+        </Button>
       </div>
     </Modal>
 
@@ -293,14 +349,16 @@
             >
               <Option
                 v-for="item in userStatusEnum"
-                :value="item.value"
                 :key="item.value"
+                :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <Button
               v-waves
-              :searchLoading="searchLoading"
+              :search-loading="searchLoading"
               class="search-btn mr5"
               type="primary"
               @click="handleSearch1"
@@ -332,16 +390,20 @@
         </div>
       </Card>
       <div slot="footer">
-        <Button @click="modalUser=false">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleAssgin">确定</Button>
+        <Button @click="modalUser=false">
+          关闭
+        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleAssgin">
+          确定
+        </Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   getUserPages,
   editUser,
@@ -352,116 +414,116 @@ import {
   getAllSalesman,
   storeAssign,
   unlockSalesman
-} from "@/api/wholesale";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import city from "@/assets/city/city.js";
+} from '@/api/wholesale';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import city from '@/assets/city/city.js';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber
-} from "@/libs/util";
-import { userStatusEnum, sexEnum, userTypeEnum } from "@/libs/enumerate";
+} from '@/libs/util';
+import { userStatusEnum, sexEnum, userTypeEnum } from '@/libs/enumerate';
 import {
   userTypeConvert,
   userStatusConvert,
   sexConvert
-} from "@/libs/converStatus";
+} from '@/libs/converStatus';
 
 const userDetail = {
-  addressDetail: "",
+  addressDetail: '',
   balance: 0,
-  city: "",
+  city: '',
   id: 0,
-  inviteCode: "",
-  isVip: "",
-  nickname: "",
-  openId: "",
-  phone: "",
-  profilePhoto: "",
-  registerTime: "",
-  salesUserId: "",
-  saleUserName: "",
-  salesUserStatus: "",
-  sex: "",
-  shopName: "",
-  unionId: "",
-  userName: "",
-  userStatus: "",
-  userType: ""
+  inviteCode: '',
+  isVip: '',
+  nickname: '',
+  openId: '',
+  phone: '',
+  profilePhoto: '',
+  registerTime: '',
+  salesUserId: '',
+  saleUserName: '',
+  salesUserStatus: '',
+  sex: '',
+  shopName: '',
+  unionId: '',
+  userName: '',
+  userStatus: '',
+  userType: ''
 };
 
 const roleRowData = {
-  userName: "",
-  phone: "",
-  userType: "",
+  userName: '',
+  phone: '',
+  userType: '',
   regBeginTime: null,
   regEndTime: null,
   salesUserId: null,
-  userStatus: "",
-  salesUserStatus: "",
+  userStatus: '',
+  salesUserStatus: '',
   page: 1,
   rows: 20,
-  sidx: "registerTime",
-  sort: "desc"
+  sidx: 'registerTime',
+  sort: 'desc'
 };
 
 const columns = [
   {
-    type: "selection",
-    key: "",
+    type: 'selection',
+    key: '',
     width: 60,
-    fixed: "left",
-    align: "center"
+    fixed: 'left',
+    align: 'center'
   },
   {
-    title: "编号",
-    align: "center",
-    key: "id",
-    fixed: "left",
+    title: '编号',
+    align: 'center',
+    key: 'id',
+    fixed: 'left',
     width: 70
   },
   {
-    title: "所属地区",
-    align: "center",
-    key: "city",
+    title: '所属地区',
+    align: 'center',
+    key: 'city',
     width: 180
   },
   {
-    title: "门店代码",
-    align: "center",
-    key: "shopCode",
+    title: '门店代码',
+    align: 'center',
+    key: 'shopCode',
     width: 100
   },
   {
-    title: "门店名称",
-    align: "center",
-    key: "shopName",
+    title: '门店名称',
+    align: 'center',
+    key: 'shopName',
     width: 140
   },
   {
-    title: "店长姓名",
-    align: "center",
-    key: "userName",
+    title: '店长姓名',
+    align: 'center',
+    key: 'userName',
     width: 100
   },
   {
-    title: "手机号码",
-    align: "center",
-    key: "phone",
+    title: '手机号码',
+    align: 'center',
+    key: 'phone',
     width: 120
   },
   {
-    title: "注册时间",
-    align: "center",
-    key: "registerTime",
+    title: '注册时间',
+    align: 'center',
+    key: 'registerTime',
     width: 160
   },
   {
-    title: "用户余额",
-    align: "center",
-    key: "balance",
+    title: '用户余额',
+    align: 'center',
+    key: 'balance',
     width: 100,
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.balance);
@@ -469,133 +531,133 @@ const columns = [
     }
   },
   {
-    title: "是否VIP",
-    align: "center",
-    key: "isVip",
+    title: '是否VIP',
+    align: 'center',
+    key: 'isVip',
     width: 120,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.isVip === "yes") {
+      if (row.isVip === 'yes') {
         return (
           <div>
-            <tag color="gold">VIP</tag>
+            <tag color='gold'>VIP</tag>
           </div>
         );
-      } else if (row.isVip === "no") {
+      } else if (row.isVip === 'no') {
         return (
           <div>
-            <tag color="primary">普通用户</tag>
+            <tag color='primary'>普通用户</tag>
           </div>
         );
       }
     }
   },
   {
-    title: "用户类型",
-    align: "center",
-    key: "userType",
+    title: '用户类型',
+    align: 'center',
+    key: 'userType',
     width: 120,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.userType === "consumer") {
+      if (row.userType === 'consumer') {
         return (
           <div>
-            <tag color="primary">{userTypeConvert(row.userType).label}</tag>
+            <tag color='primary'>{userTypeConvert(row.userType)}</tag>
           </div>
         );
-      } else if (row.userType === "sale") {
+      } else if (row.userType === 'sale') {
         return (
           <div>
-            <tag color="warning">{userTypeConvert(row.userType).label}</tag>
+            <tag color='warning'>{userTypeConvert(row.userType)}</tag>
           </div>
         );
       }
     }
   },
   {
-    title: "用户状态",
-    align: "center",
-    key: "userStatus",
+    title: '用户状态',
+    align: 'center',
+    key: 'userStatus',
     width: 120,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.userStatus === "certified") {
+      if (row.userStatus === 'certified') {
         return (
           <div>
-            <tag color="success">{userStatusConvert(row.userStatus).label}</tag>
+            <tag color='success'>{userStatusConvert(row.userStatus)}</tag>
           </div>
         );
-      } else if (row.userStatus === "locking") {
+      } else if (row.userStatus === 'locking') {
         return (
           <div>
-            <tag color="error">{userStatusConvert(row.userStatus).label}</tag>
+            <tag color='error'>{userStatusConvert(row.userStatus)}</tag>
           </div>
         );
-      } else if (row.userStatus === "unaudited") {
+      } else if (row.userStatus === 'unaudited') {
         return (
           <div>
-            <tag color="warning">{userStatusConvert(row.userStatus).label}</tag>
+            <tag color='warning'>{userStatusConvert(row.userStatus)}</tag>
           </div>
         );
       }
       return (
         <div>
-          <tag color="primary">{userStatusConvert(row.userStatus).label}</tag>
+          <tag color='primary'>{userStatusConvert(row.userStatus)}</tag>
         </div>
       );
     }
   },
   {
-    title: "业务员状态",
-    align: "center",
-    key: "salesUserStatus",
+    title: '业务员状态',
+    align: 'center',
+    key: 'salesUserStatus',
     width: 120,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.salesUserStatus === "certified") {
+      if (row.salesUserStatus === 'certified') {
         return (
           <div>
-            <tag color="success">
-              {userStatusConvert(row.salesUserStatus).label}
+            <tag color='success'>
+              {userStatusConvert(row.salesUserStatus)}
             </tag>
           </div>
         );
-      } else if (row.salesUserStatus === "locking") {
+      } else if (row.salesUserStatus === 'locking') {
         return (
           <div>
-            <tag color="error">
-              {userStatusConvert(row.salesUserStatus).label}
+            <tag color='error'>
+              {userStatusConvert(row.salesUserStatus)}
             </tag>
           </div>
         );
-      } else if (row.salesUserStatus === "unaudited") {
+      } else if (row.salesUserStatus === 'unaudited') {
         return (
           <div>
-            <tag color="warning">
-              {userStatusConvert(row.salesUserStatus).label}
+            <tag color='warning'>
+              {userStatusConvert(row.salesUserStatus)}
             </tag>
           </div>
         );
       }
-      return <div>{userStatusConvert(row.salesUserStatus).label}</div>;
+      return <div>{userStatusConvert(row.salesUserStatus)}</div>;
     }
   },
   {
-    title: "所属业务员",
-    align: "center",
-    key: "saleUserName",
+    title: '所属业务员',
+    align: 'center',
+    key: 'saleUserName',
     width: 120
   },
   {
-    title: "邀请码",
-    align: "center",
-    key: "inviteCode",
+    title: '邀请码',
+    align: 'center',
+    key: 'inviteCode',
     width: 80
   },
   {
-    title: "详细地址",
-    align: "center",
-    key: "addressDetail",
+    title: '详细地址',
+    align: 'center',
+    key: 'addressDetail',
     width: 300,
     render(h, params, vm) {
       const { row } = params;
@@ -603,119 +665,120 @@ const columns = [
     }
   },
   {
-    title: "操作",
-    align: "center",
-    key: "handle",
-    fixed: "right",
+    title: '操作',
+    align: 'center',
+    key: 'handle',
+    fixed: 'right',
     width: 240,
-    options: ["setVip", "edit", "saleAudit", "onUser", "userChange", "unlock"]
+    options: ['setVip', 'edit', 'saleAudit', 'onUser', 'userChange', 'unlock']
   }
 ];
 
 // v1.2.0
 const userDetailChange = {
-  addressDetail: "",
+  addressDetail: '',
   balance: 0,
-  city: "",
+  city: '',
   id: 0,
-  inviteCode: "",
-  isVip: "",
-  nickname: "",
-  openId: "",
-  phone: "",
-  profilePhoto: "",
-  registerTime: "",
-  salesUserId: "",
-  saleUserName: "",
-  salesUserStatus: "",
-  sex: "",
-  shopName: "",
-  unionId: "",
-  userName: "",
-  userStatus: "",
-  userType: ""
+  inviteCode: '',
+  isVip: '',
+  nickname: '',
+  openId: '',
+  phone: '',
+  profilePhoto: '',
+  registerTime: '',
+  salesUserId: '',
+  saleUserName: '',
+  salesUserStatus: '',
+  sex: '',
+  shopName: '',
+  unionId: '',
+  userName: '',
+  userStatus: '',
+  userType: ''
 };
 
 const userRowData = {
-  userName: "",
-  phone: "",
-  userType: "sale",
-  city: "",
+  userName: '',
+  phone: '',
+  userType: 'sale',
+  isVip: '',
+  city: '',
   page: 1,
   rows: 10
 };
 
 const userColumns = [
   {
-    type: "selection",
-    key: "",
+    type: 'selection',
+    key: '',
     width: 60,
-    fixed: "left",
-    align: "center"
+    fixed: 'left',
+    align: 'center'
   },
   {
-    title: "编号",
-    align: "center",
-    key: "id",
-    fixed: "left",
+    title: '编号',
+    align: 'center',
+    key: 'id',
+    fixed: 'left',
     maxWidth: 80
   },
 
   {
-    title: "店长姓名",
-    align: "center",
-    key: "userName"
+    title: '店长姓名',
+    align: 'center',
+    key: 'userName'
   },
   {
-    title: "手机号码",
-    align: "center",
-    key: "phone",
+    title: '手机号码',
+    align: 'center',
+    key: 'phone',
     minWidth: 60
   },
   {
-    title: "注册时间",
-    align: "center",
-    key: "registerTime",
+    title: '注册时间',
+    align: 'center',
+    key: 'registerTime',
     minWidth: 80
   },
   {
-    title: "业务员状态",
-    align: "center",
-    key: "salesUserStatus",
+    title: '业务员状态',
+    align: 'center',
+    key: 'salesUserStatus',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.salesUserStatus === "certified") {
+      if (row.salesUserStatus === 'certified') {
         return (
           <div>
-            <tag color="success">
-              {userStatusConvert(row.salesUserStatus).label}
+            <tag color='success'>
+              {userStatusConvert(row.salesUserStatus)}
             </tag>
           </div>
         );
-      } else if (row.salesUserStatus === "locking") {
+      } else if (row.salesUserStatus === 'locking') {
         return (
           <div>
-            <tag color="error">
-              {userStatusConvert(row.salesUserStatus).label}
+            <tag color='error'>
+              {userStatusConvert(row.salesUserStatus)}
             </tag>
           </div>
         );
-      } else if (row.salesUserStatus === "unaudited") {
+      } else if (row.salesUserStatus === 'unaudited') {
         return (
           <div>
-            <tag color="warning">
-              {userStatusConvert(row.salesUserStatus).label}
+            <tag color='warning'>
+              {userStatusConvert(row.salesUserStatus)}
             </tag>
           </div>
         );
       }
-      return <div>{userStatusConvert(row.salesUserStatus).label}</div>;
+      return <div>{userStatusConvert(row.salesUserStatus)}</div>;
     }
   },
   {
-    title: "邀请码",
-    align: "center",
-    key: "inviteCode",
+    title: '邀请码',
+    align: 'center',
+    key: 'inviteCode',
     maxWidth: 100
   }
 ];
@@ -731,7 +794,11 @@ export default {
       salesManList: [],
       selectedUserIds: [],
       data: [],
-      loginName: "",
+      isVipStatus: [
+        { label: '是', value: 'yes' },
+        { label: '否', value: 'no' }
+      ],
+      loginName: '',
       currentSalesId: null,
       assginSalesUserId: null,
       modalUser: false,
@@ -742,7 +809,7 @@ export default {
       userTypeEnum,
       sexEnum,
       userColumns,
-      cityDaty: "",
+      cityDaty: '',
       modalViewLoading: false,
       clearSearchLoading: false,
       exportExcelLoading: false,
@@ -755,7 +822,7 @@ export default {
   },
   computed: {
     sexConvertName() {
-      return sexConvert(this.userDetail.sex).label;
+      return sexConvert(this.userDetail.sex);
     },
     userBalance() {
       return fenToYuanDot2(this.userDetail.balance);
@@ -764,7 +831,7 @@ export default {
   created() {
     this.data = city;
     this.getTableData();
-    this.loginName = sessionStorage.getItem("loginName");
+    this.loginName = sessionStorage.getItem('loginName');
   },
   methods: {
     resetSearchUserRowData() {
@@ -793,39 +860,39 @@ export default {
     },
     handleSetVip(params) {
       this.userDetail = _.cloneDeep(params.row);
-      if (params.row.userStatus !== "certified") {
-        this.$Message.info("该用户还未完成认证");
+      if (params.row.userStatus !== 'certified') {
+        this.$Message.info('该用户还未完成认证');
         return;
       }
-      this.userDetail.isVip = params.row.isVip === "yes" ? "no" : "yes";
-      this.$Message.info("操作成功");
+      this.userDetail.isVip = params.row.isVip === 'yes' ? 'no' : 'yes';
+      this.$Message.info('操作成功');
       this.editTableRow();
     },
     hanldeAudit({ params, checkStatus }) {
-      if (params.row.userType === "consumer") {
-        this.$Message.info("该用户为普通用户，操作无效");
+      if (params.row.userType === 'consumer') {
+        this.$Message.info('该用户为普通用户，操作无效');
         return;
       }
       auditUser({
         id: params.row.id,
         checkStatus
       }).then(res => {
-        this.$Message.info("审核成功");
+        this.$Message.info('审核成功');
         this.getTableData();
       });
     },
     hanldeUser(params) {
-      let userType = "";
-      if (params.row.userType === "consumer") {
-        userType = "sale";
+      let userType = '';
+      if (params.row.userType === 'consumer') {
+        userType = 'sale';
       } else {
-        userType = "consumer";
+        userType = 'consumer';
       }
       changeUser({
         id: params.row.id,
         userType
       }).then(res => {
-        this.$Message.info("转换会员类型成功");
+        this.$Message.info('转换会员类型成功');
         this.getTableData();
       });
     },
@@ -838,7 +905,7 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error("请完善商品单位信息!");
+          this.$Message.error('请完善商品单位信息!');
         }
       });
     },
@@ -902,7 +969,7 @@ export default {
     handleDownload() {
       this.exportExcelLoading = true;
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      let pageSize = this.searchRowData.page;
+      const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       getUserPages(this.searchRowData)
         .then(res => {
@@ -912,16 +979,16 @@ export default {
           this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
           tableData.forEach(item => {
-            item["userType"] =
-              item["userType"] === "sale" ? "业务员" : "普通用户";
-            item["userStatus"] = userStatusConvert(item["userStatus"]).label;
-            item["salesUserStatus"] = userStatusConvert(
-              item["salesUserStatus"]
-            ).label;
-            item["balance"] = (item["balance"] / 100.0).toFixed(2);
-            item["addressDetail"] = item["city"] + item["addressDetail"];
+            item['userType'] =
+              item['userType'] === 'sale' ? '业务员' : '普通用户';
+            item['userStatus'] = userStatusConvert(item['userStatus']);
+            item['salesUserStatus'] = userStatusConvert(
+              item['salesUserStatus']
+            );
+            item['balance'] = (item['balance'] / 100.0).toFixed(2);
+            item['addressDetail'] = item['city'] + item['addressDetail'];
           });
-          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+          const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
           this.$refs.tables.handleDownload({
             filename: `会员信息-${date}`,
             data: tableData
@@ -946,33 +1013,33 @@ export default {
     },
     onSelectionAllUser(selection) {
       if (selection.length > 1) {
-        this.$Message.warning("每次只能选择一个业务员");
+        this.$Message.warning('每次只能选择一个业务员');
         return;
       }
       this.assginSalesUserId = selection[0].id.toString();
     },
     onSelectionChangeUser(selection) {
       if (selection.length > 1) {
-        this.$Message.warning("每次只能选择一个业务员");
+        this.$Message.warning('每次只能选择一个业务员');
         return;
       }
       this.assginSalesUserId = selection[0].id.toString();
     },
     handleAssgin() {
       if (this.selectedUserIds.length === 0) {
-        this.$Message.error("请先选择要转让的用户");
+        this.$Message.error('请先选择要转让的用户');
         return;
       }
       if (!this.assginSalesUserId) {
-        this.$Message.error("请先选择要转让的业务员");
+        this.$Message.error('请先选择要转让的业务员');
         return;
       }
-      const userIds = this.selectedUserIds.join(",");
+      const userIds = this.selectedUserIds.join(',');
       storeAssign({
         userIds,
         assginSalesUserId: this.assginSalesUserId
       }).then(res => {
-        this.$Message.info("门店转让成功");
+        this.$Message.info('门店转让成功');
         this.getTableData();
         this.modalUser = false;
       });
@@ -1017,20 +1084,20 @@ export default {
       this.selectedUserIds = selection.map(item => item.id.toString());
     },
     handleUnlock(params) {
-      let data = params.row;
+      const data = params.row;
       data.userStatus =
-        params.row.userStatus === "certified" ? "locking" : "certified";
+        params.row.userStatus === 'certified' ? 'locking' : 'certified';
       unlockSalesman(data).then(res => {
-        this.$Message.info("操作成功");
+        this.$Message.info('操作成功');
         this.getTableData();
       });
     },
     onChangeCity(value, selectedData) {
-      let city = "";
+      let city = '';
       let index = 1;
       for (let i = 0; i < value.length; i++) {
         if (value.length - index > 0) {
-          city += value[i] + "/";
+          city += value[i] + '/';
         } else {
           city += value[i];
         }

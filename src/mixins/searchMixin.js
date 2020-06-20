@@ -12,8 +12,8 @@ const minxin = {
       this.getTableData();
     },
     handleClear() {
-      // 重置数据
       this.searchRowData.expandType = null;
+      this.searchRowData.productType = null;
       this.resetSearchRowData();
       this.page = 1;
       this.pageSize = 10;
@@ -25,7 +25,6 @@ const minxin = {
       this.searchLoading = true;
       this.getTableData();
       this.$refs.tables.exportCsv({
-        // filename: `table-${new Date().valueOf()}.csv`
         filename: filename + '-' + new Date().valueOf() + '.csv'
       });
     }

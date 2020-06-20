@@ -66,6 +66,17 @@ const miniMallRouter = [
       component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
     },
     {
+      path: 'small-goods-relation-standard',
+      name: 'small-goods-relation-standard',
+      meta: {
+        hideInMenu: true,
+        icon: 'md-menu',
+        title: '商品关联规格'
+      },
+      component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
+    },
+
+    {
       path: '/small-goods-section',
       name: 'small-goods-section',
       meta: {
@@ -146,6 +157,24 @@ const miniMallRouter = [
         title: '图片管理'
       },
       component: () => import('@/view/mini-program-manager/activity/images.vue')
+    }]
+  },
+  {
+    path: '/small-goods-presell',
+    name: 'small-goods-presell',
+    meta: {
+      icon: 'md-menu',
+      title: '预售管理'
+    },
+    component: Main,
+    children: [{
+      path: '/small-goods-presellActivity',
+      name: 'small-goods-presellActivity',
+      meta: {
+        icon: 'ios-people',
+        title: '预售活动'
+      },
+      component: () => import('@/view/mini-program-manager/presell/presellActivity.vue')
     }]
   },
   {
@@ -238,6 +267,27 @@ const miniMallRouter = [
       },
       component: () => import('@/view/mini-program-manager/activity/coupon.vue')
     },
+    {
+      path: 'small-activity-relation-coupon',
+      name: 'small-activity-relation-coupon',
+      meta: {
+        hideInMenu: true,
+        icon: 'md-menu',
+        title: '活动关联优惠券模板'
+      },
+      component: () => import('@/view/mini-program-manager/activity/coupon-relation.vue')
+    },
+    {
+      path: 'small-vip-activities-associated',
+      name: 'small-vip-activities-associated',
+      meta: {
+        hideInMenu: true,
+        icon: 'md-menu',
+        title: 'VIP活动关联优惠券模板'
+      },
+      component: () => import('@/view/mini-program-manager/vip/activities-associated.vue')
+    },
+
     {
       path: '/integral-coupon',
       name: 'integral-coupon',
@@ -422,6 +472,33 @@ const miniMallRouter = [
         component: () => import('@/view/mini-program-manager/member/system-data-statistics.vue')
       },
       {
+        path: '/small-integral-statistics',
+        name: 'small-integral-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '积分数据统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/integral-statistics.vue')
+      },
+      {
+        path: '/small-coupon-statistics',
+        name: 'small-coupon-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '用券数据统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/coupon-statistics.vue')
+      },
+      {
+        path: '/small-share-statistics',
+        name: 'small-share-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '分享赚数据统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/share-statistics.vue')
+      },
+      {
         path: '/small-phones',
         name: 'small-phones',
         meta: {
@@ -511,8 +588,28 @@ const miniMallRouter = [
         title: '鲜果币流水管理'
       },
       component: () => import('@/view/mini-program-manager/order/paylog.vue')
-    }]
-  },
+    },
+    {
+        path: 'small-order-coupon-details',
+        name: 'small-order-coupon-details',
+        meta: {
+          hideInMenu: true,
+          icon: 'md-menu',
+          title: '用券数据'
+        },
+        component: () => import('@/view/mini-program-manager/order/coupon-details.vue')
+    },
+    {
+        path: 'small-order-month-orders',
+        name: 'small-order-month-orders',
+        meta: {
+          hideInMenu: true,
+          icon: 'md-menu',
+          title: '跨月退款订单'
+        },
+        component: () => import('@/view/mini-program-manager/order/month-orders.vue')
+      }]
+    },
   {
     path: '/small-vip',
     name: 'small-vip',

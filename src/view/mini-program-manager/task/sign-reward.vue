@@ -237,7 +237,7 @@ export default {
           key: 'rewardType',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{rewardTypeConvert(row.rewardType).label}</div>;
+            return <div>{rewardTypeConvert(row.rewardType)}</div>;
           }
         },
         {
