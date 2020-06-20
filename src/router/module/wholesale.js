@@ -162,7 +162,7 @@ const wholesaleRouter = [
       name: 'wholesale-order-analysis',
       meta: {
         icon: 'ios-eye',
-        title: '今日订单商品查询'
+        title: '订单商品查询'
       },
       component: () => import('@/view/wholesale-mall-manager/order/order-analysis.vue')
     },
@@ -176,6 +176,15 @@ const wholesaleRouter = [
       component: () => import('@/view/wholesale-mall-manager/order/payment-log.vue')
     },
     {
+      path: '/wholesale-refund-log',
+      name: 'wholesale-refund-log',
+      meta: {
+        icon: 'ios-eye',
+        title: '退款流水查询'
+      },
+      component: () => import('@/view/wholesale-mall-manager/order/refund-log.vue')
+    },
+    {
       path: '/wholesale-order-aftersale',
       name: 'wholesale-order-aftersale',
       meta: {
@@ -183,7 +192,16 @@ const wholesaleRouter = [
         title: '售后订单'
       },
       component: () => import('@/view/wholesale-mall-manager/order/order-aftersale.vue')
-    }
+    },
+    {
+      path: '/wholesale-finance-audit',
+      name: 'wholesale-finance-audit',
+      meta: {
+        icon: 'ios-albums',
+        title: '财务审核'
+      },
+      component: () => import('@/view/wholesale-mall-manager/order/finance-audit.vue')
+    },
     ]
   },
   {

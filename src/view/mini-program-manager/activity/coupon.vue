@@ -1150,12 +1150,6 @@ export default {
       this.getTableData();
     },
     handleSubmit(name) {
-      if (this.oldPicture.length > 0) {
-        const urls = {
-          urls: this.oldPicture
-        };
-        this.deletePicture(urls);
-      }
       this.couponDetail.activityType = this.searchRowData.activityType;
       this.$refs[name].validate(valid => {
         if (valid) {
@@ -1190,22 +1184,9 @@ export default {
       });
     },
     handleEditClose() {
-      if (this.newPicture.length > 0) {
-        const urls = {
-          urls: this.newPicture
-        };
-        this.deletePicture(urls);
-      }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
-    },
-    deletePicture(urls) {
-      deletePicture({
-        urls
-      })
-        .then(res => {})
-        .catch(() => {});
     },
     createCoupon() {
       this.modalViewLoading = true;

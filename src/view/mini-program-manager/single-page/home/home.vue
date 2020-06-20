@@ -28,10 +28,7 @@
     <Row style="margin-top: 20px;">
       <Card shadow>
         <!-- <example style="height: 310px;" /> -->
-        <img
-          src="http://resource.shuiguoshule.com.cn/product_image/2019-07-31/sgv7qBdSKI7ZrH5JU2kB.jpg"
-          style="height: 300px;width:100%;"
-        />
+        <img :src="banner" style="height: 300px;width:100%;" />
       </Card>
     </Row>
   </div>
@@ -41,6 +38,7 @@
 import { getTotalOrders } from "@/api/mini-program";
 import InforCard from "_c/info-card";
 import CountTo from "_c/count-to";
+import config from "@/config";
 import { ChartPie, ChartBar } from "_c/charts";
 import Example from "./example.vue";
 export default {
@@ -54,6 +52,7 @@ export default {
   },
   data() {
     return {
+      brandType: config.brandType,
       inforCardData: [
         {
           title: "昨日支付金额",
@@ -109,6 +108,20 @@ export default {
         "50岁以上": 36
       }
     };
+  },
+  computed: {
+    banner() {
+      let str =
+        "http://resource.shuiguoshule.com.cn/product_image/2019-07-31/sgv7qBdSKI7ZrH5JU2kB.jpg";
+      if (this.brandType === "qgg") {
+        str =
+          "http://resource.shuiguoshule.com.cn/v2/qgg/activity_image/activity/2020-04-24/e7qhDWpvwOrSGRCJqDHT.jpg";
+      } else if (this.brandType === "lv_hang") {
+        str =
+          "http://resource.shuiguoshule.com.cn/v2/lv_hang/activity_image/activity/2020-04-24/EenfAkUuSzvbxu0Jmz1G.jpg";
+      }
+      return str;
+    }
   },
   mounted() {},
   methods: {}

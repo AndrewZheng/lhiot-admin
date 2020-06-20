@@ -40,12 +40,12 @@ module.exports = {
     port: 80, // 端口号
     // host: 'localhost', // 本地，打包选这个
     disableHostCheck: true,
-    host: '192.168.1.229', // 本地ip，方便其他人通过ip访问 
+    host: '192.168.1.169', // 本地ip，方便其他人通过ip访问 
     https: false, // https:{type:Boolean}
     open: true, // 配置自动启动浏览器
     proxy: {
       '/api': {
-        target: 'http://172.16.10.194:1311/ims-service-v1-5-0', //194测试环境 196开发环境 203 pre环境
+        target: 'http://172.16.10.206:1311/ims-service-v1-5-0', //194测试环境 196开发环境 203 pre环境
         ws: true,
         logLevel: 'debug',
         changeOrigin: true,
@@ -56,17 +56,19 @@ module.exports = {
     }
   },
   css: {
-    modules: false,
+    requireModuleExtension: true,
     loaderOptions: {
       css: {
-        localIdentName: 'app.[hash]',
-        camelCase: false
+        modules:{
+          localIdentName: 'app.[hash]'
+        }
       },
       sass: {
-        data: '@import "@/assets/styles/style.scss";'
+        prependData: '@import "@/assets/styles/style.scss";'
       }
     },
     extract: process.env.NODE_ENV === 'production',
-    sourceMap: false
+    sourceMap: false,
+    extract: false
   }
 };

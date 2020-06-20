@@ -23,6 +23,25 @@
             style="width: 100px"
             clearable
           ></Input>
+          <DatePicker
+            v-model="searchRowData.startDate"
+            format="yyyy-MM-dd"
+            type="date"
+            placeholder="开始时间"
+            class="mr5"
+            style="width: 150px"
+            @on-change="startTimeChange"
+          />
+          <i>-</i>
+          <DatePicker
+            v-model="searchRowData.endDate"
+            format="yyyy-MM-dd"
+            type="date"
+            placeholder="结束时间"
+            class="mr5"
+            style="width: 150px"
+            @on-change="endTimeChange"
+          />
           <Button
             v-waves
             :searchLoading="searchLoading"
@@ -41,6 +60,9 @@
           >
             <Icon type="md-refresh" />&nbsp;清除
           </Button>
+          <div class="ml15 mt10">
+            <i style="color:red">*</i> 当天中午12点前默认为昨日订单,12点后为今日订单
+          </div>
         </div>
         <div slot="operations">
           <Button
@@ -105,6 +127,8 @@ const goodsToday = {
 
 const roleRowData = {
   goodsName: "",
+  startDate: null,
+  endDate: null,
   page: 1,
   rows: 20
 };
@@ -181,6 +205,12 @@ export default {
           align: "center",
           key: "goodsSumPrice",
           minWidth: 80
+        },
+        {
+          title: "下单日期",
+          align: "center",
+          key: "createDate",
+          minWidth: 80
         }
       ]
     };
@@ -226,18 +256,28 @@ export default {
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
     },
+    startTimeChange(value, date) {
+      this.searchRowData.startDate = value;
+    },
+    endTimeChange(value, data) {
+      this.searchRowData.endDate = value;
+    },
     handleDownload() {
       this.exportExcelLoading = true;
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      let pageSize = this.searchRowData.page;
+      this.searchRowData.page = 1;
       getOrderGoodsToday(this.searchRowData)
         .then(res => {
           const tableData = res.rows;
           // 恢复正常页数
           this.searchRowData.rows = 10;
+          this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
           //  tableData.forEach(item => {});
+          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
           this.$refs.tables.handleDownload({
-            filename: `新品需求信息-${new Date().valueOf()}`,
+            filename: `新品需求信息-${date}`,
             data: tableData
           });
         })

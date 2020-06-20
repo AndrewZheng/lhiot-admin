@@ -37,48 +37,48 @@
               clearable
             ></Input>
             <Select
-              v-model="searchRowData.paymentType"
+              v-model="searchRowData.refundType"
               class="search-col mr5"
-              placeholder="支付方式"
-              style="width: 150px"
+              placeholder="退款方式"
+              style="width: 100px"
               clearable
             >
               <Option
-                v-for="item in wholesalePayTypeEnum"
+                v-for="item in wholesaleRefundTypeEnum"
                 :value="item.value"
                 :key="`search-col-${item.value}`"
                 class="ptb2-5"
               >{{ item.label }}</Option>
             </Select>
             <Select
-              v-model="searchRowData.paymentFrom"
+              v-model="searchRowData.refundReason"
               class="search-col mr5"
-              placeholder="支付来源"
-              style="width: 150px"
+              placeholder="退款原因"
+              style="width: 100px"
               clearable
             >
               <Option
-                v-for="item in paymentFromEnum"
+                v-for="item in wholesaleRefundReasonEnum"
                 :value="item.value"
                 :key="`search-col-${item.value}`"
                 class="ptb2-5"
               >{{ item.label }}</Option>
             </Select>
             <DatePicker
-              v-model="searchRowData.paymentTimeBegin"
+              v-model="searchRowData.refundTimeBegin"
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
-              placeholder="支付时间起"
+              placeholder="退款时间起"
               class="mr5"
               style="width: 150px"
               @on-change="startTimeChange"
             />
             <i>-</i>
             <DatePicker
-              v-model="searchRowData.paymentTimeEnd"
+              v-model="searchRowData.refundTimeEnd"
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
-              placeholder="支付时间止"
+              placeholder="退款时间止"
               class="mr5"
               style="width: 150px"
               @on-change="endTimeChange"
@@ -133,7 +133,7 @@
 
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
-import { getPaymentLogPages } from "@/api/wholesale";
+import { getrefundLogPages } from "@/api/wholesale";
 import { fenToYuanDot2, fenToYuanDot2Number } from "@/libs/util";
 import { paymentFromEnum, wholesalePayTypeEnum } from "@/libs/enumerate";
 import {
@@ -143,31 +143,28 @@ import {
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 
-const paymentLog = {
-  bankName: "",
-  bankType: "",
+const refundLog = {
   id: 0,
   orderCode: "",
-  orderId: 0,
-  paymentFrom: "", // order-订单 debt-账款 invoice-发票 recharge-充值
-  paymentStep: "paid", // sign-签名成功 paid-支付成功
-  paymentTime: "",
-  paymentTimeBegin: "",
-  paymentTimeEnd: "",
-  paymentType: "", // balance-余额支付 wechat-微信 offline-线下支付
+  paymentLogId: 0,
+  phone: "",
   refundFee: 0,
-  totalFee: 0,
+  refundReason: "",
+  refundTime: "",
+  refundTimeBegin: "",
+  refundTimeEnd: "",
+  refundType: "",
+  shopName: "",
   transactionId: "",
-  userId: 0
+  userId: 0,
+  userName: ""
 };
 
 const rowData = {
   orderCode: "",
-  paymentFrom: "recharge",
-  paymentType: "",
-  paymentStep: "paid",
-  paymentTimeBegin: null,
-  paymentTimeEnd: null,
+  userName: "",
+  refundReason: "",
+  phone: "",
   sidx: "id",
   sort: "desc",
   page: 1,
@@ -188,27 +185,48 @@ export default {
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(rowData),
-      paymentLog: _.cloneDeep(paymentLog),
+      refundLog: _.cloneDeep(refundLog),
+      wholesaleRefundTypeEnum: [
+        {
+          label: "微信",
+          value: "wechatRefund"
+        },
+        {
+          label: "余额",
+          value: "balanceRefund"
+        },
+        {
+          label: "鼎付通",
+          value: "haidingRefund"
+        }
+      ],
+      wholesaleRefundReasonEnum: [
+        {
+          label: "取消订单",
+          value: "取消订单"
+        },
+        {
+          label: "售后退款",
+          value: "售后退款"
+        }
+      ],
       columns: [
         {
           title: "编号",
           key: "id",
           align: "center",
-          fixed: "left",
           minWidth: 40
         },
         {
           title: "订单编码",
           key: "orderCode",
           align: "center",
-          fixed: "left",
           minWidth: 150
         },
         {
           title: "微信交易流水号",
           key: "transactionId",
           align: "center",
-          fixed: "left",
           minWidth: 200
         },
         {
@@ -230,90 +248,44 @@ export default {
           minWidth: 120
         },
         {
-          title: "所属业务员",
+          title: "退款方式",
           align: "center",
-          key: "saleUserName",
-          minWidth: 80
-        },
-        {
-          title: "支付来源",
-          align: "center",
-          key: "paymentFrom",
+          key: "refundType",
           minWidth: 80,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.paymentFrom === "order") {
-              return <div>订单</div>;
-            } else if (row.paymentFrom === "debt") {
-              return <div>账款</div>;
-            } else if (row.paymentFrom === "invoice") {
-              return <div>发票</div>;
-            } else if (row.paymentFrom === "recharge") {
-              return <div>充值</div>;
+            if (row.refundType === "balanceRefund") {
+              return <div>余额</div>;
+            } else if (row.refundType === "wechatRefund") {
+              return <div>微信</div>;
+            } else if (row.refundType === "haidingRefund") {
+              return <div>鼎付通</div>;
             } else {
               return <div>{"N/A"}</div>;
             }
           }
         },
         {
-          title: "支付类型",
+          title: "退款金额",
           align: "center",
-          key: "paymentType",
-          minWidth: 80,
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.paymentType === "wechat") {
-              return (
-                <div>
-                  <tag color="success">
-                    {wholesalePayTypeConvert(row.paymentType).label}
-                  </tag>
-                </div>
-              );
-            } else if (row.paymentType === "balance") {
-              return (
-                <div>
-                  <tag color="primary">
-                    {wholesalePayTypeConvert(row.paymentType).label}
-                  </tag>
-                </div>
-              );
-            } else if (row.paymentType === "offline") {
-              return (
-                <div>
-                  <tag color="warning">
-                    {wholesalePayTypeConvert(row.paymentType).label}
-                  </tag>
-                </div>
-              );
-            } else if (row.paymentType === "haiding") {
-              return (
-                <div>
-                  <tag color="warning">
-                    {wholesalePayTypeConvert(row.paymentType).label}
-                  </tag>
-                </div>
-              );
-            } else {
-              return <div>{"N/A"}</div>;
-            }
-          }
-        },
-        {
-          title: "支付金额",
-          align: "center",
-          key: "totalFee",
+          key: "refundFee",
           minWidth: 150,
           render(h, params, vm) {
-            const amount = fenToYuanDot2(params.row.totalFee);
+            const amount = fenToYuanDot2(params.row.refundFee);
             return <div>{amount}</div>;
           }
         },
         {
-          title: "支付时间",
+          title: "退款原因",
           align: "center",
           minWidth: 130,
-          key: "paymentTime"
+          key: "refundReason"
+        },
+        {
+          title: "退款时间",
+          align: "center",
+          minWidth: 130,
+          key: "refundTime"
         }
       ]
     };
@@ -332,7 +304,7 @@ export default {
       this.loading = true;
       this.searchLoading = true;
       this.clearSearchLoading = true;
-      getPaymentLogPages(this.searchRowData)
+      getrefundLogPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
@@ -345,18 +317,18 @@ export default {
     },
     startTimeChange(value, date) {
       console.log("beginTime:", value);
-      this.searchRowData.paymentTimeBegin = value;
+      this.searchRowData.refundTimeBegin = value;
     },
     endTimeChange(value, data) {
       console.log("endTime:", value);
-      this.searchRowData.paymentTimeEnd = value;
+      this.searchRowData.refundTimeEnd = value;
     },
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
       let pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
-      getPaymentLogPages(this.searchRowData).then(res => {
+      getrefundLogPages(this.searchRowData).then(res => {
         const tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 10;
@@ -365,15 +337,20 @@ export default {
         tableData.forEach(item => {
           item["orderCode"] = item["orderCode"] + "";
           item["transactionId"] = item["transactionId"] + "";
-          item["totalFee"] = (item["totalFee"] / 100.0).toFixed(2);
-          item["paymentFrom"] = paymentFromConvert(item["paymentFrom"]).label;
-          item["paymentType"] = wholesalePayTypeConvert(
-            item["paymentType"]
-          ).label;
+          item["refundFee"] = (item["refundFee"] / 100.0).toFixed(2);
+          if (item["refundType"] === "balanceRefund") {
+            item["refundType"] = "余额";
+          } else if (item["refundType"] === "wechatRefund") {
+            item["refundType"] = "微信";
+          } else if (item["refundType"] === "haidingRefund") {
+            item["refundType"] = "鼎付通";
+          } else {
+            item["refundType"] = "N/A";
+          }
         });
         const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
-          filename: `支付流水-${date}`,
+          filename: `退款流水-${date}`,
           data: tableData
         });
       });

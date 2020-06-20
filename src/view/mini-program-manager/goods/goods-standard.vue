@@ -205,7 +205,7 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品主图:</i-col>
               <i-col span="16">
-                <img :src="productStandardDetail.baseImage" width="100" height="100" >
+                <img :src="productStandardDetail.baseImage" width="100" height="100" />
               </i-col>
             </Row>
           </i-col>
@@ -238,7 +238,7 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">上架商品主图:</i-col>
               <i-col v-if="productStandardDetail.image" span="16">
-                <img :src="productStandardDetail.image" width="100" height="100" >
+                <img :src="productStandardDetail.image" width="100" height="100" />
               </i-col>
             </Row>
           </i-col>
@@ -246,7 +246,7 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">上架商品详情图:</i-col>
               <i-col v-if="productStandardDetail.detailImage" span="16">
-                <img :src="productStandardDetail.detailImage" width="100" height="100" >
+                <img :src="productStandardDetail.detailImage" width="100" height="100" />
               </i-col>
             </Row>
           </i-col>
@@ -327,7 +327,7 @@
                   :v-show="descriptionList"
                   class="demo-upload-list"
                 >
-                  <img :src="item" >
+                  <img :src="item" />
                   <div class="demo-upload-list-cover">
                     <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                   </div>
@@ -352,7 +352,7 @@
             <i-col span="12">
               <FormItem label="商品ID:" prop="productId">
                 <Input v-model="productStandardDetail.productId" readonly="readonly">
-                <Button slot="append" icon="ios-search" @click="handleRelation"></Button>
+                  <Button slot="append" icon="ios-search" @click="handleRelation"></Button>
                 </Input>
               </FormItem>
             </i-col>
@@ -379,7 +379,7 @@
           <Row>
             <i-col span="12">
               <FormItem v-if="productStandardDetail.baseImage" label="商品主图:">
-                <img :src="productStandardDetail.baseImage" width="100" height="100" >
+                <img :src="productStandardDetail.baseImage" width="100" height="100" />
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -411,7 +411,7 @@
                 >
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" >
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -452,7 +452,7 @@
                 >
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" >
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveDetail(item)"></Icon>
@@ -608,7 +608,7 @@
                 >
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" >
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMultiple(item)"></Icon>
@@ -816,7 +816,7 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" >
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
 
     <Modal v-model="modalSort" :mask-closable="false" title="图片排序">
@@ -837,7 +837,7 @@
             class="drag-item"
             width="80"
             height="80"
-          >
+          />
         </drag-list>
       </div>
       <div slot="footer">
@@ -944,10 +944,10 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import DragList from '_c/drag-list';
-import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
+import Tables from "_c/tables";
+import DragList from "_c/drag-list";
+import IViewUpload from "_c/iview-upload";
+import _ from "lodash";
 import {
   createProductStandard,
   deleteProductStandard,
@@ -959,61 +959,61 @@ import {
   getProductPages,
   getHdProductInfo,
   deletePicture
-} from '@/api/mini-program';
-import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
+} from "@/api/mini-program";
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
 import {
   getSmallGoodsStandard,
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber
-} from '@/libs/util';
-import { expandTypeEnum } from '@/libs/enumerate';
+} from "@/libs/util";
+import { expandTypeEnum } from "@/libs/enumerate";
 import {
   customPlanStatusConvert,
   productStatusConvert,
   expandTypeConvert
-} from '@/libs/converStatus';
+} from "@/libs/converStatus";
 
 const productStandardDetail = {
   id: 0,
   productId: 0,
-  barcode: '',
-  productType: '',
-  specification: '',
+  barcode: "",
+  productType: "",
+  specification: "",
   standardQty: 0,
   unitId: 0,
-  productUnit: '',
+  productUnit: "",
   price: 0,
   salePrice: 0,
   startNum: 1,
   rank: 0,
   description: null,
   shelvesStatus: null,
-  applyType: '',
-  productName: '',
+  applyType: "",
+  productName: "",
   createUser: null,
   image: null,
   detailImage: null,
-  productDescription: '',
-  productCode: '',
-  baseProductName: '',
-  baseProductDescription: '',
+  productDescription: "",
+  productCode: "",
+  baseProductName: "",
+  baseProductDescription: "",
   groupId: 0,
-  groupName: '',
-  sourceCode: '',
-  baseImage: '',
-  smallImage: '',
-  largeImage: '',
-  status: '',
+  groupName: "",
+  sourceCode: "",
+  baseImage: "",
+  smallImage: "",
+  largeImage: "",
+  status: "",
   baseUnitId: 0,
-  baseUnit: '',
-  baseBarcode: '',
-  hdSkuid: '',
-  videoUrl: '',
-  videoImage: '',
+  baseUnit: "",
+  baseBarcode: "",
+  hdSkuid: "",
+  videoUrl: "",
+  videoImage: "",
   baseQty: 0,
   limitQty: 0,
   queryStatus: null,
@@ -1026,47 +1026,47 @@ const productStandardDetail = {
 };
 
 const roleRowData = {
-  productId: '',
-  barcode: '',
-  productCode: '',
-  productType: '',
-  productName: '',
+  productId: "",
+  barcode: "",
+  productCode: "",
+  productType: "",
+  productName: "",
   shelvesStatus: null,
-  minPrice: '',
-  maxPrice: '',
+  minPrice: "",
+  maxPrice: "",
   page: 1,
   rows: 10
 };
 
 const productDetail = {
   id: 0,
-  productCode: '',
-  productName: '',
+  productCode: "",
+  productName: "",
   groupId: 0,
-  sourceCode: '',
-  image: '',
-  smallImage: '',
-  largeImage: '',
+  sourceCode: "",
+  image: "",
+  smallImage: "",
+  largeImage: "",
   status: null,
   unitId: 0,
-  baseBarcode: '',
-  hdSkuid: '',
-  videoUrl: '',
-  videoImage: '',
+  baseBarcode: "",
+  hdSkuid: "",
+  videoUrl: "",
+  videoImage: "",
   baseQty: 0,
   limitQty: 0,
-  description: '',
-  unitName: '',
-  groupName: '',
-  createUser: '',
-  expandType: ''
+  description: "",
+  unitName: "",
+  groupName: "",
+  createUser: "",
+  expandType: ""
 };
 
 const productRowData = {
   groupId: null,
   productCode: null,
   productName: null,
-  status: 'NORMAL',
+  status: "NORMAL",
   page: 1,
   rows: 10
 };
@@ -1100,54 +1100,54 @@ export default {
       uploadListDetail: [],
       uploadListMultiple: [],
       expandTypeEnum,
-      clickFlag: '',
+      clickFlag: "",
       ruleValidate: {
         limitNum: [
-          { required: false, message: '请输入限购份数', trigger: 'blur' }
+          { required: false, message: "请输入限购份数", trigger: "blur" }
         ],
         startNum: [
-          { required: false, message: '请输入起购份数', trigger: 'blur' }
+          { required: false, message: "请输入起购份数", trigger: "blur" }
         ],
         discountPrice: [
-          { required: true, message: '请输入活动价格', trigger: 'change' }
+          { required: true, message: "请输入活动价格", trigger: "change" }
         ],
         discountRate: [
-          { required: false, message: '请计算折扣率', trigger: 'change' }
+          { required: false, message: "请计算折扣率", trigger: "change" }
         ]
       },
       ruleInline: {
         productId: [
-          { required: true, message: '请选择关联商品' },
+          { required: true, message: "请选择关联商品" },
           {
-            message: '请选择要关联的商品',
+            message: "请选择要关联的商品",
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
-        productName: [{ required: true, message: '请选择上架商品名称' }],
-        description: [{ required: true, message: '请上传规格描述图' }],
-        image: [{ required: true, message: '请上传上架商品主图' }],
-        availableStatus: [{ required: true, message: '请选择商品分类' }],
-        unitId: [{ required: true, message: '请选择商品单位' }],
-        productType: [{ required: true, message: '请选择商品类型' }],
-        productDescription: [{ required: true, message: '请输入上架商品描述' }],
-        shelvesStatus: [{ required: true, message: '请选择商品状态' }],
-        specification: [{ required: true, message: '请输入商品规格' }],
+        productName: [{ required: true, message: "请选择上架商品名称" }],
+        description: [{ required: true, message: "请上传规格描述图" }],
+        image: [{ required: true, message: "请上传上架商品主图" }],
+        availableStatus: [{ required: true, message: "请选择商品分类" }],
+        unitId: [{ required: true, message: "请选择商品单位" }],
+        productType: [{ required: true, message: "请选择商品类型" }],
+        productDescription: [{ required: true, message: "请输入上架商品描述" }],
+        shelvesStatus: [{ required: true, message: "请选择商品状态" }],
+        specification: [{ required: true, message: "请输入商品规格" }],
         price: [
-          { required: true, message: '请输入商品价格' },
+          { required: true, message: "请输入商品价格" },
           {
-            message: '必须为大于0的数字',
+            message: "必须为大于0的数字",
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
         salePrice: [
-          { required: true, message: '请输入售卖价格' },
+          { required: true, message: "请输入售卖价格" },
           {
-            message: '必须为大于0的数字',
+            message: "必须为大于0的数字",
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
         barcode: [
-          { required: true, message: '请输入商品条码' }
+          { required: true, message: "请输入商品条码" }
           // {
           //   validator(rule, value, callback, source, options) {
           //     const errors = [];
@@ -1159,36 +1159,36 @@ export default {
           // }
         ],
         specificationQty: [
-          { required: true, message: '请输入安全库存' },
+          { required: true, message: "请输入安全库存" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
+                errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
             }
           }
         ],
         rank: [
-          { required: true, message: '请输入商品排序' },
+          { required: true, message: "请输入商品排序" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
+                errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
             }
           }
         ],
         standardQty: [
-          { required: true, message: '请输入重量' },
+          { required: true, message: "请输入重量" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/.test(value)) {
-                errors.push(new Error('必须为大于0的数字'));
+                errors.push(new Error("必须为大于0的数字"));
               }
               callback(errors);
             }
@@ -1197,63 +1197,63 @@ export default {
       },
       columns: [
         {
-          type: 'selection',
-          key: '',
+          type: "selection",
+          key: "",
           minWidth: 50,
-          align: 'center',
-          fixed: 'left'
+          align: "center",
+          fixed: "left"
         },
         {
-          title: '规格ID',
-          align: 'center',
-          key: 'id',
+          title: "规格ID",
+          align: "center",
+          key: "id",
           minWidth: 50
         },
         {
-          title: '商品条码',
-          align: 'center',
-          key: 'barcode',
+          title: "商品条码",
+          align: "center",
+          key: "barcode",
           minWidth: 70
         },
         {
-          title: '商品编号',
-          key: 'productCode',
-          align: 'center',
+          title: "商品编号",
+          key: "productCode",
+          align: "center",
           minWidth: 100
         },
         {
-          title: '商品名称',
-          align: 'center',
-          key: 'productName',
+          title: "商品名称",
+          align: "center",
+          key: "productName",
           minWidth: 100
         },
         {
-          title: '商品规格',
-          align: 'center',
-          key: 'specification',
+          title: "商品规格",
+          align: "center",
+          key: "specification",
           minWidth: 80
         },
         {
-          title: '商品单位',
-          align: 'center',
+          title: "商品单位",
+          align: "center",
           minWidth: 80,
-          key: 'productUnit'
+          key: "productUnit"
         },
         {
-          title: '商品原价',
-          align: 'center',
+          title: "商品原价",
+          align: "center",
           minWidth: 60,
-          key: 'price',
+          key: "price",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.price);
             return <div>{amount}</div>;
           }
         },
         {
-          title: '售卖价格',
-          align: 'center',
+          title: "售卖价格",
+          align: "center",
           minWidth: 60,
-          key: 'salePrice',
+          key: "salePrice",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.salePrice);
             return <div>{amount}</div>;
@@ -1270,48 +1270,48 @@ export default {
         //   }
         // },
         {
-          title: '商品类型',
+          title: "商品类型",
           minWidth: 100,
-          key: 'productType',
-          align: 'center',
+          key: "productType",
+          align: "center",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.productType == 'DISCOUNT_PRODUCT') {
+            if (row.productType == "DISCOUNT_PRODUCT") {
               return (
                 <div>
-                  <tag color='magenta'>
+                  <tag color="magenta">
                     {expandTypeConvert(row.productType).label}
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'PULL_NEW_PRODUCT') {
+            } else if (row.productType == "PULL_NEW_PRODUCT") {
               return (
                 <div>
-                  <tag color='orange'>
+                  <tag color="orange">
                     {expandTypeConvert(row.productType).label}
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'SECKILL_PRODUCT') {
+            } else if (row.productType == "SECKILL_PRODUCT") {
               return (
                 <div>
-                  <tag color='blue'>
+                  <tag color="blue">
                     {expandTypeConvert(row.productType).label}
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'ASSIST_PRODUCT') {
+            } else if (row.productType == "ASSIST_PRODUCT") {
               return (
                 <div>
-                  <tag color='green'>
+                  <tag color="green">
                     {expandTypeConvert(row.productType).label}
                   </tag>
                 </div>
               );
-            } else if (row.productType == 'ORDINARY_PRODUCT') {
+            } else if (row.productType == "ORDINARY_PRODUCT") {
               return (
                 <div>
-                  <tag color='cyan'>
+                  <tag color="cyan">
                     {expandTypeConvert(row.productType).label}
                   </tag>
                 </div>
@@ -1320,24 +1320,24 @@ export default {
           }
         },
         {
-          title: '商品状态',
+          title: "商品状态",
           minWidth: 80,
-          key: 'shelvesStatus',
-          align: 'center',
+          key: "shelvesStatus",
+          align: "center",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.shelvesStatus === 'VALID') {
+            if (row.shelvesStatus === "VALID") {
               return (
                 <div>
-                  <tag color='success'>
+                  <tag color="success">
                     {customPlanStatusConvert(row.shelvesStatus).label}
                   </tag>
                 </div>
               );
-            } else if (row.shelvesStatus === 'INVALID') {
+            } else if (row.shelvesStatus === "INVALID") {
               return (
                 <div>
-                  <tag color='error'>
+                  <tag color="error">
                     {customPlanStatusConvert(row.shelvesStatus).label}
                   </tag>
                 </div>
@@ -1345,7 +1345,7 @@ export default {
             }
             return (
               <div>
-                <tag color='primary'>
+                <tag color="primary">
                   {customPlanStatusConvert(row.shelvesStatus).label}
                 </tag>
               </div>
@@ -1353,88 +1353,88 @@ export default {
           }
         },
         {
-          title: '起购份数',
-          key: 'startNum',
+          title: "起购份数",
+          key: "startNum",
           minWidth: 60,
-          align: 'center'
+          align: "center"
         },
         {
-          title: '商品排序',
-          align: 'center',
+          title: "商品排序",
+          align: "center",
           minWidth: 60,
-          key: 'rank'
+          key: "rank"
         },
         {
-          title: '操作',
-          align: 'center',
+          title: "操作",
+          align: "center",
           minWidth: 180,
-          key: 'handle',
-          options: ['customOnSale', 'view', 'edit', 'discount']
+          key: "handle",
+          options: ["customOnSale", "view", "edit", "discount"]
         }
       ],
       productColumns: [
         {
-          title: '商品图片',
-          key: 'image',
-          align: 'center',
+          title: "商品图片",
+          key: "image",
+          align: "center",
           minWidth: 120,
           render: (h, params, vm) => {
             const { row } = params;
-            const str = <img src={row.image} height='60' width='60' />;
+            const str = <img src={row.image} height="60" width="60" />;
             return <div>{str}</div>;
           }
         },
         {
-          title: '商品编码',
-          key: 'productCode',
+          title: "商品编码",
+          key: "productCode",
           sortable: true,
-          align: 'center',
+          align: "center",
           minWidth: 140
         },
         {
-          title: '商品名称',
-          align: 'center',
+          title: "商品名称",
+          align: "center",
           sortable: true,
-          key: 'productName',
+          key: "productName",
           minWidth: 120
         },
         {
-          title: '商品类别',
-          align: 'center',
-          key: 'groupName',
+          title: "商品类别",
+          align: "center",
+          key: "groupName",
           minWidth: 120
         },
         {
-          title: '基础单位',
-          align: 'center',
+          title: "基础单位",
+          align: "center",
           minWidth: 90,
-          key: 'unitName'
+          key: "unitName"
         },
         {
-          title: '基础重量(kg)',
-          align: 'center',
+          title: "基础重量(kg)",
+          align: "center",
           minWidth: 90,
-          key: 'baseQty'
+          key: "baseQty"
         },
         {
-          title: '商品状态',
-          align: 'center',
+          title: "商品状态",
+          align: "center",
           minWidth: 90,
-          key: 'status',
+          key: "status",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.status === 'NORMAL') {
+            if (row.status === "NORMAL") {
               return (
                 <div>
-                  <tag color='success'>
+                  <tag color="success">
                     {productStatusConvert(row.status).label}
                   </tag>
                 </div>
               );
-            } else if (row.status === 'STOP_MINING') {
+            } else if (row.status === "STOP_MINING") {
               return (
                 <div>
-                  <tag color='error'>
+                  <tag color="error">
                     {productStatusConvert(row.status).label}
                   </tag>
                 </div>
@@ -1442,22 +1442,22 @@ export default {
             }
             return (
               <div>
-                <tag color='primary'>{row.status}</tag>
+                <tag color="primary">{row.status}</tag>
               </div>
             );
           }
         }
       ],
       modalType: {
-        view: 'view',
-        edit: 'edit',
-        create: 'create'
+        view: "view",
+        edit: "edit",
+        create: "create"
       },
       dropConClass: {
-        left: ['drop-box', 'left-drop-box'],
-        right: ['drop-box', 'right-drop-box']
+        left: ["drop-box", "left-drop-box"],
+        right: ["drop-box", "right-drop-box"]
       },
-      tempModalType: 'create',
+      tempModalType: "create",
       tableData: [],
       total: 0,
       productData: [],
@@ -1481,15 +1481,15 @@ export default {
       newPicture: [],
       save: [],
       showBack: false,
-      HdSvipInfo: '',
+      HdSvipInfo: "",
       shelvesStatus: [
         {
-          label: '上架',
-          value: 'VALID'
+          label: "上架",
+          value: "VALID"
         },
         {
-          label: '下架',
-          value: 'INVALID'
+          label: "下架",
+          value: "INVALID"
         }
       ],
       searchMinPrice: null,
@@ -1511,13 +1511,13 @@ export default {
     }
   },
   created() {
-    this.showBack = this.$route.name === 'small-goods-relation-standard';
+    this.showBack = this.$route.name === "small-goods-relation-standard";
     this.getTableData();
   },
   mounted() {
     getProductUnits().then(res => {
       res.array.forEach(value => {
-        const map = { label: 'label', value: 'value' };
+        const map = { label: "label", value: "value" };
         map.value = value.id;
         map.label = value.unitName;
         this.unitsList.push(map);
@@ -1576,14 +1576,14 @@ export default {
     },
     poptipOk() {
       if (this.tableDataSelected.length < 1) {
-        this.$Message.warning('请选中要删除的行');
+        this.$Message.warning("请选中要删除的行");
         return;
       }
       const tempDeleteList = [];
       this.tableDataSelected.filter(value => {
         tempDeleteList.push(value.id);
       });
-      const strTempDelete = tempDeleteList.join(',');
+      const strTempDelete = tempDeleteList.join(",");
       this.deleteTable(strTempDelete);
     },
     // 删除
@@ -1618,9 +1618,9 @@ export default {
           this.descriptionList.push(item.url);
         }
       });
-      this.productStandardDetail.description = '';
-      this.productStandardDetail.description = this.descriptionList.join(',');
-      console.log('after sort:', this.productStandardDetail.description);
+      this.productStandardDetail.description = "";
+      this.productStandardDetail.description = this.descriptionList.join(",");
+      console.log("after sort:", this.productStandardDetail.description);
       this.modalSort = false;
     },
     handleImageSort() {
@@ -1639,7 +1639,7 @@ export default {
       this.productStandardDetail = this._.cloneDeep(params.row);
       if (this.productStandardDetail.description != null) {
         this.descriptionList = this.productStandardDetail.description.split(
-          ','
+          ","
         );
       }
       this.modalView = true;
@@ -1652,7 +1652,7 @@ export default {
       this.productStandardDetail = this._.cloneDeep(params.row);
       if (this.productStandardDetail.description != null) {
         this.descriptionList = this.productStandardDetail.description.split(
-          ','
+          ","
         );
       }
       this.setDefaultUploadList(params.row);
@@ -1660,8 +1660,8 @@ export default {
       this.modalEdit = true;
     },
     handleDiscount(params) {
-      if (params.row.productType == 'ORDINARY_PRODUCT') {
-        this.$Message.error('普通商品不允许配置');
+      if (params.row.productType == "ORDINARY_PRODUCT") {
+        this.$Message.error("普通商品不允许配置");
         return;
       }
       // 展示折扣配置弹窗
@@ -1673,7 +1673,7 @@ export default {
       this.proStandardExpand.discountPrice = 0;
       // this.productStandardDetail.productStandardExpand.expandType =
       //   params.row.productType;
-      console.log('shuju', this.productStandardDetail.productStandardExpand);
+      console.log("shuju", this.productStandardDetail.productStandardExpand);
 
       // 请求数据展示
       this.modalDiscount = true;
@@ -1694,7 +1694,7 @@ export default {
       // this.modalHdSvip = true;
       // console.log(this.productStandardDetail.barcode)
       if (!this.productStandardDetail.barcode) {
-        this.$Message.error('请先选择关联商品');
+        this.$Message.error("请先选择关联商品");
         return;
       }
       this.loading = true;
@@ -1768,7 +1768,7 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success('创建成功!');
+          this.$Message.success("创建成功!");
           this.getTableData();
         })
         .catch(() => {
@@ -1780,18 +1780,21 @@ export default {
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      let pageSize = this.searchRowData.page;
+      this.searchRowData.page = 1;
       getProductStandardsPages(this.searchRowData).then(res => {
         const tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 10;
+        this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
         const _this = this;
         tableData.forEach(item => {
-          item['price'] = (item['price'] / 100.0).toFixed(2);
-          item['salePrice'] = (item['salePrice'] / 100.0).toFixed(2);
-          item['svipPrice'] = (item['svipPrice'] / 100.0).toFixed(2);
-          item['shelvesStatus'] = customPlanStatusConvert(
-            item['shelvesStatus']
+          item["price"] = (item["price"] / 100.0).toFixed(2);
+          item["salePrice"] = (item["salePrice"] / 100.0).toFixed(2);
+          item["svipPrice"] = (item["svipPrice"] / 100.0).toFixed(2);
+          item["shelvesStatus"] = customPlanStatusConvert(
+            item["shelvesStatus"]
           ).label;
         });
         this.$refs.tables.handleDownload({
@@ -1802,38 +1805,32 @@ export default {
     },
     // ====
     handleSubmit(name) {
-      if (this.oldPicture.length > 0) {
-        const urls = {
-          urls: this.oldPicture
-        };
-        this.deletePicture(urls);
-      }
       this.$refs[name].validate(valid => {
         if (valid) {
           if (!this.productStandardDetail.salePrice) {
-            this.$Message.error('请输入售卖价格');
+            this.$Message.error("请输入售卖价格");
             return;
           }
           if (this.productStandardDetail.salePrice < 0) {
-            this.$Message.error('售卖价格不能小于0');
+            this.$Message.error("售卖价格不能小于0");
             return;
           }
           if (this.productStandardDetail.svipPrice < 0) {
-            this.$Message.error('SVIP价格不能小于0');
+            this.$Message.error("SVIP价格不能小于0");
             return;
           }
           if (
             this.productStandardDetail.salePrice >
             this.productStandardDetail.price
           ) {
-            this.$Message.error('售卖价格不能大于原价');
+            this.$Message.error("售卖价格不能大于原价");
             return;
           }
           if (
             this.productStandardDetail.svipPrice >
             this.productStandardDetail.salePrice
           ) {
-            this.$Message.error('SVIP价格不能大于售卖价格');
+            this.$Message.error("SVIP价格不能大于售卖价格");
             return;
           }
           if (this.tempModalType === this.modalType.create) {
@@ -1843,54 +1840,38 @@ export default {
             this.editProductStandard();
           }
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
     },
     handleEditClose() {
-      if (this.newPicture.length > 0) {
-        const urls = {
-          urls: this.newPicture
-        };
-        this.deletePicture(urls);
-      }
       this.modalEdit = false;
       this.oldPicture = [];
       this.newPicture = [];
-    },
-    deletePicture(urls) {
-      deletePicture({
-        urls
-      })
-        .then(res => {
-          this.newPicture = [];
-          this.oldPicture = [];
-        })
-        .catch(() => {});
     },
     handleSubmitDiscount() {
       this.proStandardExpand.expandType = this.productStandardDetail.productType;
       this.$refs.modalDiscount.validate(valid => {
         if (valid) {
           if (this.proStandardExpand.discountPrice <= 0) {
-            this.$Message.warning('活动价不能为0');
+            this.$Message.warning("活动价不能为0");
             return false;
           }
-          if (this.proStandardExpand.expandType === 'DISCOUNT_PRODUCT') {
+          if (this.proStandardExpand.expandType === "DISCOUNT_PRODUCT") {
             if (this.proStandardExpand.limitNum <= 0) {
-              this.$Message.warning('限购份数不能为0');
+              this.$Message.warning("限购份数不能为0");
               return false;
             }
             if (
               this.proStandardExpand.startNum > this.proStandardExpand.limitNum
             ) {
-              this.$Message.warning('起购份数不能大于限购份数');
+              this.$Message.warning("起购份数不能大于限购份数");
               return false;
             }
           }
           this.updateProStandardExpand();
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
     },
@@ -1903,7 +1884,7 @@ export default {
         ...this.proStandardExpand
       })
         .then(res => {
-          const msg = this.proStandardExpand.id ? '修改成功!' : '创建成功';
+          const msg = this.proStandardExpand.id ? "修改成功!" : "创建成功";
           this.modalDiscount = false;
           this.modalViewLoading = false;
           this.$Message.success(msg);
@@ -1943,10 +1924,10 @@ export default {
     getTableData() {
       // 获取商品页面传过来的商品信息
       // console.log("this.$route.name:", this.$route.name);
-      if (this.$route.name === 'small-goods-relation-standard') {
+      if (this.$route.name === "small-goods-relation-standard") {
         const goodsStandard = getSmallGoodsStandard();
-        console.log('standard from cookie:', goodsStandard);
-        if (goodsStandard != null && goodsStandard !== '') {
+        console.log("standard from cookie:", goodsStandard);
+        if (goodsStandard != null && goodsStandard !== "") {
           // 给商品规格的商品和搜索条件赋值
           this.searchRowData.productId = goodsStandard.id;
           this.productStandardDetail = this._.cloneDeep(goodsStandard);
@@ -1964,7 +1945,7 @@ export default {
         }
       } else {
         // 清楚上次的查询条件
-        this.searchRowData.productId = '';
+        this.searchRowData.productId = "";
       }
 
       getProductStandardsPages(this.searchRowData)
@@ -2015,16 +1996,16 @@ export default {
           this.descriptionList.push(value.url);
         }
       });
-      this.productStandardDetail.description = '';
-      this.productStandardDetail.description = this.descriptionList.join(',');
+      this.productStandardDetail.description = "";
+      this.productStandardDetail.description = this.descriptionList.join(",");
 
       this.newPicture.push(response.fileUrl);
-      console.log('new图片', this.newPicture);
+      console.log("new图片", this.newPicture);
     },
     // 设置编辑图片列表
     setDefaultUploadList(res) {
       if (res.image != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.image;
         mainImgArr.push(map);
@@ -2033,7 +2014,7 @@ export default {
       }
 
       if (res.detailImage != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const detailImgArr = [];
         map.url = res.detailImage;
         detailImgArr.push(map);
@@ -2043,9 +2024,9 @@ export default {
 
       if (res.description != null) {
         const descriptionImgArr = [];
-        const descriptionArr = res.description.split(',');
+        const descriptionArr = res.description.split(",");
         descriptionArr.forEach(value => {
-          const innerMapDetailImg = { status: 'finished', url: 'url' };
+          const innerMapDetailImg = { status: "finished", url: "url" };
           innerMapDetailImg.url = value;
           descriptionImgArr.push(innerMapDetailImg);
         });
@@ -2066,9 +2047,9 @@ export default {
       const index = this.descriptionList.indexOf(file.url);
       if (index > -1) {
         this.oldPicture.push(this.descriptionList[index]);
-        console.log('删除的图片list', this.oldPicture);
+        console.log("删除的图片list", this.oldPicture);
         this.descriptionList.splice(index, 1);
-        this.productStandardDetail.description = this.descriptionList.join(',');
+        this.productStandardDetail.description = this.descriptionList.join(",");
       }
       if (this.descriptionList.length === 0) {
         this.$refs.uploadMultiple.clearFileList();
@@ -2078,15 +2059,15 @@ export default {
     },
     customOnSale(params) {
       const rowData = this._.cloneDeep(params.row);
-      if (params.row.shelvesStatus === 'VALID') {
-        rowData.shelvesStatus = 'INVALID';
+      if (params.row.shelvesStatus === "VALID") {
+        rowData.shelvesStatus = "INVALID";
       } else {
-        rowData.shelvesStatus = 'VALID';
+        rowData.shelvesStatus = "VALID";
       }
       this.loading = true;
       editProductStandard(rowData)
         .then(res => {
-          this.$Message.success('修改成功!');
+          this.$Message.success("修改成功!");
         })
         .finally(res => {
           this.loading = false;
@@ -2096,7 +2077,7 @@ export default {
         });
     },
     goBack() {
-      this.turnToPage('small-goods-info');
+      this.turnToPage("small-goods-info");
     },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
@@ -2171,30 +2152,30 @@ export default {
       this.productStandardDetail.image = row.image;
       this.productStandardDetail.barcode = row.baseBarcode;
       this.productStandardDetail.shelvesStatus =
-        row.status === 'NORMAL' ? 'VALID' : 'INVALID';
+        row.status === "NORMAL" ? "VALID" : "INVALID";
       this.setDefaultUploadList(this.productStandardDetail);
       this.modalProduct = false;
     },
     productTypeChange(value) {
-      if (value != 'ORDINARY_PRODUCT') {
+      if (value != "ORDINARY_PRODUCT") {
         this.productStandardDetail.startNum = 1;
       }
     },
     productStandardChange(value) {
       console.log(
-        '商品规格',
-        Number(this.productStandardDetail.specification.split('*')[0]) *
-          Number(this.productStandardDetail.specification.split('*')[1])
+        "商品规格",
+        Number(this.productStandardDetail.specification.split("*")[0]) *
+          Number(this.productStandardDetail.specification.split("*")[1])
       );
       if (
         Number(
-          this.productStandardDetail.specification.split('*')[0] > 0 &&
-            Number(this.productStandardDetail.specification.split('*')[1] > 0)
+          this.productStandardDetail.specification.split("*")[0] > 0 &&
+            Number(this.productStandardDetail.specification.split("*")[1] > 0)
         )
       ) {
         this.productStandardDetail.standardQty =
-          this.productStandardDetail.specification.split('*')[0] *
-          this.productStandardDetail.specification.split('*')[1];
+          this.productStandardDetail.specification.split("*")[0] *
+          this.productStandardDetail.specification.split("*")[1];
       } else {
         this.productStandardDetail.standardQty = 1;
       }

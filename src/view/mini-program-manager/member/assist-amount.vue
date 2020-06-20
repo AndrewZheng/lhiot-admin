@@ -668,10 +668,13 @@ export default {
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
       this.searchRowData2.rows = this.total > 5000 ? 5000 : this.total;
+      let pageSize = this.searchRowData.page;
+      this.searchRowData.page = 1;
       singleAssistStatistics(this.searchRowData2).then(res => {
         const tableData2 = res.rows;
         // 恢复正常页数
         this.searchRowData2.rows = 10;
+        this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
         let _this = this;
         tableData2.forEach(item => {

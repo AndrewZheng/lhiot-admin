@@ -267,17 +267,37 @@
               justify="start"
               class="mt10"
             >
-              <i-col span="10">
+              <i-col span="17">
                 <Row v-for="(objKey,sindex) in keys" :key="sindex" type="flex" justify="start">
                   <i-col span="12 mt5">
                     <Input
                       v-model="item[objKey]"
                       style="width:300px;"
                       @on-change="handleInputChange"
+                      v-if="sindex<2"
+                    >
+                      <span slot="prepend">{{ findKeyName(objKey) }}</span>
+                    </Input>
+                    <Input
+                      v-model="item[objKey]"
+                      style="width:300px;"
+                      readonly
+                      @on-change="handleInputChange"
+                      v-if="sindex===2"
                     >
                       <span slot="prepend">{{ findKeyName(objKey) }}</span>
                     </Input>
                   </i-col>
+                  <Cascader
+                    v-show="sindex===2"
+                    change-on-select
+                    :data="cityData"
+                    placeholder="请选择区域"
+                    class="search-col"
+                    style="margin-top:6px"
+                    @on-visible-change="findIndex(index)"
+                    @on-change="onChangeCity"
+                  ></Cascader>
                 </Row>
               </i-col>
               <i-col span="14 mt5">
@@ -347,6 +367,7 @@
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
 import IViewUpload from "_c/iview-upload";
+import city from "@/assets/city/city.js";
 
 import {
   deleteSystemSetting,
@@ -407,6 +428,8 @@ export default {
       paramObjectList: [],
       paramObject: {},
       keys: [],
+      data: [],
+      findIdx: "",
       newItem: "",
       showImage: false,
       createLoading: false,
@@ -504,7 +527,9 @@ export default {
     this.getTableData();
     this.getSystemSettingCategoryTree();
   },
-  created() {},
+  created() {
+    this.cityData = city;
+  },
   methods: {
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
@@ -658,7 +683,6 @@ export default {
       this.systemDetail.orderTimeSpan = [];
       this.tempModalType = this.modalType.edit;
       this.systemDetail = _.cloneDeep(params.row);
-      console.log("数据", this.systemDetail);
       if (this.systemDetail.description != null) {
         this.showImage = this.systemDetail.description.indexOf("http") != -1;
       }
@@ -676,10 +700,6 @@ export default {
       if (this.hasParamRule) {
         this.paramRuleSetting = JSON.parse(this.systemDetail.paramRuleSetting);
         this.paramRuleSetting.forEach(item => this.keys.push(item.key));
-        // const obj = {};
-        // this.keys.forEach(key => { obj[key] = ''; });
-        // this.paramObject = _.cloneDeep(obj);
-        // console.log('paramObject', this.paramObject);
       }
 
       if (this.hasParamRule && this.systemDetail.indexValue) {
@@ -796,6 +816,24 @@ export default {
       if (obj && obj.parentid !== 0) {
         this.findGroupId(obj.parentid);
       }
+    },
+    findIndex(index) {
+      let idx = index;
+      this.findIdx = idx;
+    },
+    onChangeCity(value, selectedData) {
+      let city = "";
+      let index = 1;
+      for (let i = 0; i < value.length; i++) {
+        if (value.length - index > 0) {
+          city += value[i] + "/";
+        } else {
+          city += value[i];
+        }
+        index++;
+      }
+      this.paramObjectList[this.findIdx].addressArea = city;
+      this.systemDetail.indexValue = JSON.stringify(this.paramObjectList);
     }
   }
 };

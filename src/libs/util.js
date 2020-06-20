@@ -700,7 +700,7 @@ export const convertTreeCategory = (tree, map, isExpand = false) => {
 };
 
 export const setTreeNodeChecked = (tree, ids) => {
-  if (ids.length != 0) {
+  if (ids.length > 0) {
     ids.forEach(id => {
       tree.forEach(node => {
         if (id == node.id && node.type === 'SON') {
@@ -792,7 +792,7 @@ export const compareData = (date1, date2) => {
   if (!(date1 && date2)) { return false; }
   const oDate1 = new Date(date1);
   const oDate2 = new Date(date2);
-  return oDate1.getTime() > oDate2.getTime();
+  return oDate1.getTime() >= oDate2.getTime();
 };
 
 export const compareCouponData = (date) => {
@@ -826,7 +826,7 @@ export const percent = (number) => {
 };
 
 export const gitTime = (time) => {
-  const date = new Date(time)
+  const date = new Date(Number(time))
   var y = date.getFullYear();
   var m = date.getMonth() + 1;
   m = m < 10 ? ('0' + m) : m;
@@ -843,10 +843,11 @@ export const gitTime = (time) => {
 
 // hd折扣
 export const HdDiscount = (number) => {
-  if (typeof number === 'number') {
-    return (number * 10.00) + '折';
+  let num=Number(number)*100
+  if (typeof num === 'number') {
+    return num/10 + '折';
   }
-  return number;
+  return num;
 };
 // 加¥和天数
 export const addRnb = (number) => {
