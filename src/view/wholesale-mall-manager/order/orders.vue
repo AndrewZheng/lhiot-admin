@@ -415,7 +415,18 @@
             </Row>
           </i-col>
         </Row>
-
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="6">
+                用户备注:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.remarks?orderDetail.remarks:'N/A' }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
         <Divider orientation="center">
           配送信息
         </Divider>
@@ -1576,25 +1587,22 @@ export default {
                 _this.orderDetail.settlementType === 'balance'
                   ? '余额'
                   : '微信支付';
+              const remarks = !_this.orderDetail.remarks ? '' : _this.orderDetail.remarks;
               var strData = "<tr align='center' style='height:30px;'>";
               strData += '<td colspan="2">' + '门店代码' + '</td>';
               strData += '<td>' + _this.orderDetail.shopCode + '</td>';
               strData += '<td>' + '订单号' + '</td>';
-              strData +=
-                '<td colspan="2">' + _this.orderDetail.orderCode + '</td>';
+              strData += '<td colspan="2">' + _this.orderDetail.orderCode + '</td>';
               strData += "<td colspan='2'>" + '海鼎编号' + '</td>';
-              strData +=
-                "<td colspan='2'>" + _this.orderDetail.hdCode + '</td>';
+              strData += "<td colspan='2'>" + _this.orderDetail.hdCode + '</td>';
               strData += '</tr>';
               strData += "<tr align='center' style='height:30px;'>";
               strData += '<td colspan="2">' + '门店名称' + '</td>';
               strData += '<td>' + _this.orderDetail.shopName + '</td>';
               strData += '<td>' + '联系人' + '</td>';
-              strData +=
-                '<td colspan="2">' + _this.deliveryInfo.contactsName + '</td>';
+              strData += '<td colspan="2">' + _this.deliveryInfo.contactsName + '</td>';
               strData += "<td colspan='2'>" + '联系电话' + '</td>';
-              strData +=
-                '<td colspan="2">' + _this.deliveryInfo.phone + '</td>';
+              strData += '<td colspan="2">' + _this.deliveryInfo.phone + '</td>';
               strData += '</tr>';
               strData += "<tr align='center' style='height:30px;'>";
               strData += '<td colspan="2">' + '联系地址' + '</td>';
@@ -1628,10 +1636,7 @@ export default {
               strData += '</tr>';
               strData += "<tr align='center' style='height:30px;'>";
               strData += '<td colspan="2">' + '客户备注' + '</td>';
-              strData +=
-                '<td colspan="8">' + _this.orderDetail.remarks == 'null'
-                  ? ''
-                  : _this.orderDetail.remarks + '</td>';
+              strData += '<td colspan="8">' + remarks + '</td>';
               strData += '</tr>';
               strData +=
                 "<tr align='center' style='backgroung:#ccc;height:30px'>";
