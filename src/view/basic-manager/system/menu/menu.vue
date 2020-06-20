@@ -45,8 +45,12 @@
                 style="width: auto"
                 clearable
               >
-                <Option value="PARENT">父级菜单</Option>
-                <Option value="SON">子级菜单</Option>
+                <Option value="PARENT">
+                  父级菜单
+                </Option>
+                <Option value="SON">
+                  子级菜单
+                </Option>
               </Select>
               <Button v-waves class="search-btn mr5 ml5" type="primary" @click="handleSearch">
                 <Icon type="md-search" />搜索
@@ -115,28 +119,44 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">类型</i-col>
-              <i-col span="20">{{ rowData.type | switchType }}</i-col>
+              <i-col span="4">
+                类型
+              </i-col>
+              <i-col span="20">
+                {{ rowData.type | switchType }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">名称</i-col>
-              <i-col span="20">{{ rowData.name }}</i-col>
+              <i-col span="4">
+                名称
+              </i-col>
+              <i-col span="20">
+                {{ rowData.name }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">编码</i-col>
-              <i-col span="20">{{ rowData.code }}</i-col>
+              <i-col span="4">
+                编码
+              </i-col>
+              <i-col span="20">
+                {{ rowData.code }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">排序</i-col>
-              <i-col span="20">{{ rowData.sort }}</i-col>
+              <i-col span="4">
+                排序
+              </i-col>
+              <i-col span="20">
+                {{ rowData.sort }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -152,7 +172,9 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -211,7 +233,9 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">名称</i-col>
+              <i-col span="4">
+                名称
+              </i-col>
               <i-col span="12">
                 <Input v-model="operateRowData.name" placeholder clearable></Input>
               </i-col>
@@ -219,10 +243,14 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">类型</i-col>
+              <i-col span="4">
+                类型
+              </i-col>
               <i-col span="20">
                 <CheckboxGroup v-model="requestTypeList">
-                  <Checkbox v-for="item in optionList" :label="item" :key="item">{{ item }}</Checkbox>
+                  <Checkbox v-for="item in optionList" :key="item" :label="item">
+                    {{ item }}
+                  </Checkbox>
                 </CheckboxGroup>
               </i-col>
             </Row>
@@ -231,7 +259,9 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">路径</i-col>
+              <i-col span="4">
+                路径
+              </i-col>
               <i-col span="16">
                 <Input v-model="operateRowData.antUrl" placeholder clearable></Input>
               </i-col>
@@ -260,7 +290,9 @@
         />
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleCloseEdit">关闭</Button>
+        <Button type="primary" @click="handleCloseEdit">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -278,7 +310,9 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                  <i-col span="4">类型</i-col>
+                  <i-col span="4">
+                    类型
+                  </i-col>
                   <i-col span="12">
                     <Input v-model="menuType" placeholder readonly></Input>
                   </i-col>
@@ -286,7 +320,9 @@
               </i-col>
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                  <i-col span="4">名称</i-col>
+                  <i-col span="4">
+                    名称
+                  </i-col>
                   <i-col span="12">
                     <Input v-model="rowData.name" placeholder clearable></Input>
                   </i-col>
@@ -296,7 +332,9 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                  <i-col span="4">编码</i-col>
+                  <i-col span="4">
+                    编码
+                  </i-col>
                   <i-col span="12">
                     <Input v-model="rowData.code" placeholder clearable></Input>
                   </i-col>
@@ -304,7 +342,9 @@
               </i-col>
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                  <i-col span="4">排序</i-col>
+                  <i-col span="4">
+                    排序
+                  </i-col>
                   <i-col span="12">
                     <Input v-model="rowData.sort" placeholder clearable></Input>
                   </i-col>
@@ -316,7 +356,9 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                  <i-col span="4">名称</i-col>
+                  <i-col span="4">
+                    名称
+                  </i-col>
                   <i-col span="12">
                     <Input v-model="operateRowData.name" placeholder clearable></Input>
                   </i-col>
@@ -324,10 +366,14 @@
               </i-col>
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                  <i-col span="4">类型</i-col>
+                  <i-col span="4">
+                    类型
+                  </i-col>
                   <i-col span="20">
                     <CheckboxGroup v-model="requestTypeList">
-                      <Checkbox v-for="item in optionList" :label="item" :key="item">{{ item }}</Checkbox>
+                      <Checkbox v-for="item in optionList" :key="item" :label="item">
+                        {{ item }}
+                      </Checkbox>
                     </CheckboxGroup>
                   </i-col>
                 </Row>
@@ -336,7 +382,9 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                  <i-col span="4">路径</i-col>
+                  <i-col span="4">
+                    路径
+                  </i-col>
                   <i-col span="16">
                     <Input v-model="operateRowData.antUrl" placeholder clearable></Input>
                   </i-col>
@@ -367,10 +415,14 @@
         </Tabs>
       </div>
       <div v-if="step=='addMenu' && !isCreated" slot="footer">
-        <Button type="primary" @click="goNext">下一步</Button>
+        <Button type="primary" @click="goNext">
+          下一步
+        </Button>
       </div>
       <div v-else slot="footer">
-        <Button type="primary" @click="handleCloseAdd">关闭</Button>
+        <Button type="primary" @click="handleCloseAdd">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -747,13 +799,9 @@ export default {
       }
       deleteMenu(params.row.id)
         .then(res => {
-          if (!res) {
-            this.$Message.error('已关联角色 删除失败');
-          } else {
-            this.$Message.info('删除成功');
-            this.refreshMenuList();
-            this.getTableData();
-          }
+          this.$Message.info('删除成功');
+          this.refreshMenuList();
+          this.getTableData();
         });
     },
     handleDeleteOperate(params) {

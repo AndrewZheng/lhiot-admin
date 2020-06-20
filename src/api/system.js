@@ -34,7 +34,7 @@ export const getMenuList = () => {
 export const deleteMenu = (id) => {
   return Vue.prototype.$http.request({
     url: '/ims-menu/' + id,
-    ethod: 'delete'
+    method: 'delete'
   });
 }
 
