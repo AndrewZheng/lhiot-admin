@@ -6,9 +6,10 @@
 </template>
 
 <script>
-import './error.less';
+import "./error.less";
+import { getSystemHomeName } from "@/libs/util";
 export default {
-  name: 'BackBtnGroup',
+  name: "BackBtnGroup",
   data() {
     return {
       second: 5,
@@ -26,8 +27,9 @@ export default {
   },
   methods: {
     backHome() {
+      const name = getSystemHomeName();
       this.$router.replace({
-        name: 'home'
+        name: name
       });
     },
     backPrev() {
