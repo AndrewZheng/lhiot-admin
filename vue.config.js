@@ -24,7 +24,7 @@ module.exports = {
       .end()
 
     //修复 HMR(热更新)失效
-    config.resolve.symlinks(true); 
+    config.resolve.symlinks(true);
     config.resolve.alias
       .set('@', resolve('src'))
       .set('_c', resolve('src/components'))
@@ -43,7 +43,7 @@ module.exports = {
             .plugin('ScriptExtHtmlWebpackPlugin')
             .after('html')
             .use('script-ext-html-webpack-plugin', [{
-            // `runtime` must same as runtimeChunk name. default is `runtime`
+              // `runtime` must same as runtimeChunk name. default is `runtime`
               inline: /runtime\..*\.js$/
             }])
             .end()
@@ -88,12 +88,12 @@ module.exports = {
     open: true, // 配置自动启动浏览器
     proxy: {
       '/api': {
-        target: 'http://172.16.10.196:1311/ims-service-v1-5-0', //194测试环境 196开发环境 203 pre环境 http://172.16.10.203:1311/ims-service-v1-5-0
+        target: 'http://172.16.10.203:1311/ims-service-v1-5-0', //194测试环境 196开发环境 203 pre环境 http://172.16.10.203:1311/ims-service-v1-5-0
         ws: true,
         logLevel: 'debug',
         changeOrigin: true,
         pathRewrite: {
-          '^/api' : ''
+          '^/api': ''
         }
       }
     }
@@ -102,7 +102,7 @@ module.exports = {
     requireModuleExtension: true,
     loaderOptions: {
       css: {
-        modules:{
+        modules: {
           localIdentName: 'app.[hash]'
         }
       },
@@ -111,6 +111,7 @@ module.exports = {
       }
     },
     extract: process.env.NODE_ENV === 'production',
-    sourceMap: false
+    sourceMap: false,
+    extract: false
   }
 };
