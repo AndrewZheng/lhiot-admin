@@ -2546,11 +2546,11 @@ export const wholesalePayTypeEnum = [{
   value: 'haiding'
 },
 {
-  label: '组合支付',
+  label: '组合支付(余额微信)',
   value: 'balance_wechat'
 },
 {
-  label: '组合支付',
+  label: '组合支付(余额海鼎)',
   value: 'balance_haiding'
 }
 ]

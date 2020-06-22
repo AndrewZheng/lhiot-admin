@@ -339,7 +339,14 @@
             </Row>
           </i-col>
         </Row>
-
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="6">用户备注:</i-col>
+              <i-col span="18">{{ orderDetail.remarks?orderDetail.remarks:'N/A' }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
         <Divider orientation="center">配送信息</Divider>
         <Row>
           <i-col span="12">
@@ -657,6 +664,15 @@ const orderColumns = [
             <tag color="warning">
               {wholesalePayTypeConvert(row.settlementType)}
             </tag>
+          </div>
+        );
+      } else if (
+        row.settlementType === "balance_wechat" ||
+        row.settlementType === "balance_haiding"
+      ) {
+        return (
+          <div>
+            <tag color="warning">{"组合支付"}</tag>
           </div>
         );
       } else {
@@ -1037,9 +1053,7 @@ export default {
             ) {
               return (
                 <div>
-                  <tag color="warning">
-                    {wholesalePayTypeConvert(row.settlementType)}
-                  </tag>
+                  <tag color="warning">{"组合支付"}</tag>
                 </div>
               );
             } else {
@@ -1477,6 +1491,9 @@ export default {
                 _this.orderDetail.settlementType === "balance"
                   ? "余额"
                   : "微信支付";
+              const remarks = !_this.orderDetail.remarks
+                ? ""
+                : _this.orderDetail.remarks;
               var strData = "<tr align='center' style='height:30px;'>";
               strData += '<td colspan="2">' + "门店代码" + "</td>";
               strData += "<td>" + _this.orderDetail.shopCode + "</td>";
@@ -1529,10 +1546,7 @@ export default {
               strData += "</tr>";
               strData += "<tr align='center' style='height:30px;'>";
               strData += '<td colspan="2">' + "客户备注" + "</td>";
-              strData +=
-                '<td colspan="8">' + _this.orderDetail.remarks == "null"
-                  ? ""
-                  : _this.orderDetail.remarks + "</td>";
+              strData += '<td colspan="8">' + remarks + "</td>";
               strData += "</tr>";
               strData +=
                 "<tr align='center' style='backgroung:#ccc;height:30px'>";
