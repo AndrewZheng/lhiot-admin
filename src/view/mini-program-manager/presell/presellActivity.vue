@@ -37,6 +37,20 @@
                 style="padding-left: 5px;width: 100px"
               >{{ item.label }}</Option>
             </Select>
+            <Select
+              v-model="searchRowData.validDateType"
+              placeholder="时间类型"
+              style="padding-right: 5px;width: 100px"
+              clearable
+            >
+              <Option
+                v-for="(item,index) in validDateTypeEnum"
+                :value="item.value"
+                :key="index"
+                class="ptb2-5"
+                style="padding-left: 5px;width: 100px"
+              >{{ item.label }}</Option>
+            </Select>
             <Input
               v-model="searchRowData.activityName"
               placeholder="活动名称"
@@ -903,7 +917,8 @@ const roleRowData = {
   page: 1,
   rows: 10,
   sidx: "rank",
-  sort: "asc"
+  sort: "asc",
+  validDateType: null
 };
 
 const productStandardDetail = {
@@ -1581,6 +1596,9 @@ export default {
         this.currentTableRowSelected.originalPrice = null;
         this.currentTableRowSelected.banner = null;
         this.currentTableRowSelected.status = null;
+        this.currentTableRowSelected.deliveryEndTime = null;
+        this.currentTableRowSelected.deliveryStartTime = null;
+        this.currentTableRowSelected.beginDay = 0;
         this.currentTableRowSelected.rank = null;
         this.currentTableRowSelected.storeId = null;
         this.currentTableRowSelected.storeIds = null;
