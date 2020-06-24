@@ -129,6 +129,7 @@
           <Page
             :total="total"
             :current="page"
+            :page-size="20"
             :page-size-opts="templatePageOpts"
             show-sizer
             show-total
@@ -222,7 +223,11 @@ const userColumns = [
     align: "center",
     key: "addressDetail",
     minWidth: 100,
-    tooltip: true
+    tooltip: true,
+    render: (h, params, vm) => {
+      const { row } = params;
+      return <div>{row.city + row.addressDetail}</div>;
+    }
   },
   {
     title: "店长姓名",
@@ -495,6 +500,8 @@ export default {
             item["salesUserStatus"] = userStatusConvert(
               item["salesUserStatus"]
             );
+            item["addressDetail"] = item["city"] + item["addressDetail"];
+            //  row.city + row.addressDetail
           });
           const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
           this.$refs.tables.handleDownload({

@@ -76,7 +76,7 @@
             <Option
               v-for="item in userGrade"
               :key="item.value"
-              :value="item.label"
+              :value="item.value"
               class="ptb2-5"
             >{{ item.label }}</Option>
           </Select>
@@ -118,7 +118,7 @@
             <Option
               v-for="item in shopType"
               :key="item.value"
-              :value="item.label"
+              :value="item.value"
               class="ptb2-5"
             >{{ item.label }}</Option>
           </Select>
@@ -269,7 +269,7 @@
                   <Option
                     v-for="(item,index) in shopType"
                     :key="index"
-                    :value="item.label"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
                   >{{ item.label }}</Option>
@@ -282,7 +282,7 @@
                   <Option
                     v-for="(item,index) in userGrade"
                     :key="index"
-                    :value="item.label"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
                   >{{ item.label }}</Option>
@@ -517,7 +517,7 @@ const columns = [
   {
     title: "门店类型",
     align: "center",
-    key: "shopType",
+    key: "shopTypeName",
     width: 120
   },
   {
@@ -595,7 +595,7 @@ const columns = [
   {
     title: "用户等级",
     align: "center",
-    key: "userGrade",
+    key: "userGradeName",
     width: 120
   },
   {
@@ -938,11 +938,11 @@ export default {
     getShopType() {
       getShopType()
         .then(res => {
-          let indexValue = res.indexValue.split(",");
+          let indexValue = JSON.parse(res.indexValue);
           for (let i = 0; i < indexValue.length; i++) {
             const map = { label: "label", value: "value" };
-            map.value = i;
-            map.label = indexValue[i];
+            map.value = indexValue[i].shopType;
+            map.label = indexValue[i].shopTypeName;
             this.shopType.push(map);
           }
         })
@@ -951,11 +951,11 @@ export default {
     getUserGrade() {
       getUserGrade()
         .then(res => {
-          let indexValue = res.indexValue.split(",");
+          let indexValue = JSON.parse(res.indexValue);
           for (let i = 0; i < indexValue.length; i++) {
             const map = { label: "label", value: "value" };
-            map.value = i;
-            map.label = indexValue[i];
+            map.value = indexValue[i].userGrade;
+            map.label = indexValue[i].userGradeName;
             this.userGrade.push(map);
           }
         })
