@@ -811,13 +811,9 @@ export default {
       }
       deleteMenu(params.row.id)
         .then(res => {
-          if (!res) {
-            this.$Message.error('已关联角色 删除失败');
-          } else {
-            this.$Message.info('删除成功');
-            this.refreshMenuList();
-            this.getTableData();
-          }
+          this.$Message.info('删除成功');
+          this.refreshMenuList();
+          this.getTableData();
         });
     },
     handleDeleteOperate(params) {
