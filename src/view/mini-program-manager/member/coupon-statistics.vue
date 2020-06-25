@@ -33,23 +33,23 @@
               </RadioGroup>
               <div class="mark" v-show="mark===true">
                 <DatePicker
-                  v-model="searchRowData.startDate"
+                  :value="searchRowData.startDate"
                   format="yyyy-MM-dd"
                   type="date"
                   placeholder="自定义开始时间"
                   class="search-input"
                   style="width: 150px"
-                  @on-change="startTimeChange"
+                  @on-change="searchRowData.startDate=$event"
                 />
                 <i>-</i>
                 <DatePicker
-                  v-model="searchRowData.endDate"
+                  :value="searchRowData.endDate"
                   format="yyyy-MM-dd"
                   type="date"
                   placeholder="自定义结束时间"
                   class="search-input mr5"
                   style="width: 150px"
-                  @on-change="endTimeChange"
+                  @on-change="searchRowData.endDate=$event"
                 />
               </div>
               <Select
@@ -160,23 +160,23 @@
               </RadioGroup>
               <div class="mark" v-show="mark1===true">
                 <DatePicker
-                  v-model="searchRowData1.startDate"
+                  :value="searchRowData1.startDate"
                   format="yyyy-MM-dd"
                   type="date"
                   placeholder="自定义开始时间"
                   class="search-input"
                   style="width: 150px"
-                  @on-change="startTimeChange1"
+                  @on-change="searchRowData1.startDate=$event"
                 />
                 <i>-</i>
                 <DatePicker
-                  v-model="searchRowData1.endDate"
+                  :value="searchRowData1.endDate"
                   format="yyyy-MM-dd"
                   type="date"
                   placeholder="自定义结束时间"
                   class="search-input mr5"
                   style="width: 150px"
-                  @on-change="endTimeChange1"
+                  @on-change="searchRowData1.endDate=$event"
                 />
               </div>               
               <Select
@@ -311,7 +311,9 @@ const roleRowData = {
   page: 1,
   rows: 10,
   couponType: null,
-  couponName: null
+  couponName: null,
+  startDate: null,
+  endDate: null
 };
 
 const roleRowData1 = {
@@ -321,7 +323,9 @@ const roleRowData1 = {
   couponWay:null,
   storeName: null,
   couponType: null,
-  couponName: null
+  couponName: null,
+  startDate: null,
+  endDate: null
 };
 
 export default {
@@ -596,6 +600,8 @@ export default {
         var today = `${year}-${month}-${day}`;
         this.searchRowData.startDate = today;
         this.searchRowData.endDate = today;
+        console.log("时间1",this.searchRowData.startDate)
+
       }
       if (value === "最近7天") {
         let date = new Date();
@@ -617,6 +623,14 @@ export default {
         this.searchRowData.startDate = toMonth;
         this.searchRowData.endDate = today;
       }
+          // this.searchRowData.startDate = this
+          //   .$moment(this.searchRowData.startDate)
+          //   .format("YYYY-MM-DD HH:mm:ss");
+          // this.searchRowData.endDate = this
+          //   .$moment(this.searchRowData.endDate)
+          //   .format("YYYY-MM-DD HH:mm:ss");
+        console.log("时间2",this.searchRowData.startDate)
+
       getSendCouponPages(this.searchRowData)
         .then(res => {
           this.totalNum = res.totalNum;
