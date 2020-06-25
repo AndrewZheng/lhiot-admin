@@ -11,7 +11,7 @@
         :loading="loading"
         :search-area-column="17"
         :operate-area-column="7"
-        :need-permission="true"
+        :need-permission="false"
         editable
         searchable
         border
@@ -158,7 +158,6 @@
             <Icon type="ios-arrow-back" />返回
           </Button>
           <Button
-            v-has="'export_order'"
             :loading="downloadLoading"
             class="search-btn mr2"
             type="primary"
@@ -167,7 +166,6 @@
             <Icon type="md-download" />导出订单
           </Button>
           <Button
-            v-has="'export_order_goods'"
             :loading="downloadLoading"
             class="search-btn mr2"
             type="success"
@@ -176,7 +174,6 @@
             <Icon type="md-download" />导出订单商品
           </Button>
           <Button
-            v-has="'export_delivery_order'"
             :loading="downloadLoading"
             class="search-btn mr2"
             type="success"
@@ -186,7 +183,6 @@
           </Button>
           <Button
             v-if="flag"
-            v-has="'online_printing'"
             :loading="downloadLoading"
             class="search-btn mr2"
             type="success"
