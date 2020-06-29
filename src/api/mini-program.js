@@ -1033,6 +1033,13 @@ export const shareUserStatistics = (data) => {
     }
   });
 };
+//分佣金数据统计 /minapp/share/user/share-total
+export const commissionStatistics = () => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/commission-data/total',
+    method: 'get',
+  });
+};
 // =========================助力抢爆品
 // 根据条件分页查询助力抢爆品列表
 export const getAssistPages = (data) => {

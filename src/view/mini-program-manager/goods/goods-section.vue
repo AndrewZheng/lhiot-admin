@@ -633,6 +633,11 @@ export default {
           }
         },
         {
+          title: "所属板块",
+          key: "sectionName",
+          align: "center"
+        },
+        {
           title: "商品状态",
           key: "shelvesStatus",
           align: "center",
