@@ -583,6 +583,12 @@ export default {
           key: "baseQty"
         },
         {
+          title: "最低库存",
+          align: "center",
+          minWidth: 100,
+          key: "limitQty"
+        },
+        {
           title: "商品状态",
           align: "center",
           minWidth: 90,
@@ -686,9 +692,13 @@ export default {
     handleDownload() {
       this.exportExcelLoading = true;
       // 导出不带分页搜索条件
-      this.searchRowData.rows = "";
+      this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      let pageSize = this.searchRowData.page;
+      this.searchRowData.page = 1;
       getProductPages(this.searchRowData).then(res => {
         const tableData = res.rows;
+        this.searchRowData.rows = 10;
+        this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
         tableData.forEach(item => {
           item["groupId"] = item["groupName"];
