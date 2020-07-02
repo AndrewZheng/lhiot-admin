@@ -439,7 +439,6 @@
         <Divider orientation="center">
           支付信息
         </Divider>
-
         <Row>
           <i-col span="12">
             <Row class-name="mb10">

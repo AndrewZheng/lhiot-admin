@@ -315,6 +315,30 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="6">
+                余额支付:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.currencyFee | fenToYuanDot2Filters }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="6">
+                微信支付:
+              </i-col>
+              <i-col
+                span="18"
+              >
+                {{ orderDetail.payableFee + orderDetail.deliveryFee - orderDetail.currencyFee | fenToYuanDot2Filters }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="6">
                 订单金额:
               </i-col>
               <i-col span="18">
@@ -350,7 +374,7 @@
                 应付金额:
               </i-col>
               <i-col span="18">
-                {{ orderDetail.payableFee | fenToYuanDot2Filters }}
+                {{ orderDetail.payableFee + orderDetail.deliveryFee | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
@@ -842,6 +866,7 @@ const orderColumns = [
     title: '订单状态',
     align: 'center',
     width: 120,
+    fixed: 'right',
     key: 'orderStatus',
     render: (h, params, vm) => {
       const { row } = params;
@@ -896,6 +921,7 @@ const orderColumns = [
     title: '海鼎状态',
     align: 'center',
     width: 120,
+    fixed: 'right',
     key: 'hdStatus',
     render: (h, params, vm) => {
       const { row } = params;
