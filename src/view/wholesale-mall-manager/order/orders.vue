@@ -163,7 +163,7 @@
             class="mr5"
             @click="handleBack"
           >
-            <Icon type="ios-arrow-back" /> 返回
+            <Icon type="ios-arrow-back" />返回
           </Button>
           <Button
             v-has="'export_order'"
@@ -172,7 +172,7 @@
             type="primary"
             @click="handleDownload"
           >
-            <Icon type="md-download" /> 导出订单
+            <Icon type="md-download" />导出订单
           </Button>
           <Button
             v-has="'export_order_goods'"
@@ -181,7 +181,7 @@
             type="success"
             @click="handleExport('ORDER_GOODS')"
           >
-            <Icon type="md-download" /> 导出订单商品
+            <Icon type="md-download" />导出订单商品
           </Button>
           <Button
             v-has="'export_delivery_order'"
@@ -190,7 +190,7 @@
             type="success"
             @click="handleExport('DELIVERY_NOTE')"
           >
-            <Icon type="md-download" /> 导出配送单
+            <Icon type="md-download" />导出配送单
           </Button>
           <Button
             v-if="flag"
@@ -200,10 +200,10 @@
             type="success"
             @click="onlinePrinting"
           >
-            <Icon type="md-download" /> 在线打印
+            <Icon type="md-download" />在线打印
           </Button>
           <Button v-if="!flag" class="search-btn mr2" type="success">
-            <Icon type="md-download" /> 正在打印中...
+            <Icon type="md-download" />正在打印中...
           </Button>
         </div>
       </tables>
@@ -415,6 +415,21 @@
             </Row>
           </i-col>
         </Row>
+        <Row>
+          <i-col span="12">
+            <Row class-name="mb10">
+              <i-col span="6">
+                用户备注:
+              </i-col>
+              <i-col span="18">
+                {{ orderDetail.remarks?orderDetail.remarks:'N/A' }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Divider orientation="center">
+          配送信息
+        </Divider>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
@@ -778,6 +793,15 @@ const orderColumns = [
             <tag color='warning'>
               {wholesalePayTypeConvert(row.settlementType)}
             </tag>
+          </div>
+        );
+      } else if (
+        row.settlementType === 'balance_wechat' ||
+        row.settlementType === 'balance_haiding'
+      ) {
+        return (
+          <div>
+            <tag color='warning'>{'组合支付'}</tag>
           </div>
         );
       } else {
@@ -1152,6 +1176,15 @@ export default {
                   </tag>
                 </div>
               );
+            } else if (
+              row.settlementType === 'balance_wechat' ||
+              row.settlementType === 'balance_haiding'
+            ) {
+              return (
+                <div>
+                  <tag color='warning'>{'组合支付'}</tag>
+                </div>
+              );
             } else {
               return <div>{'N/A'}</div>;
             }
@@ -1435,6 +1468,9 @@ export default {
           );
           item['orderStatus'] = wholesaleOrderStatusConvert(
             item['orderStatus']
+          );
+          item['settlementType'] = wholesalePayTypeConvert(
+            item['settlementType']
           );
           item['settlementType'] = wholesalePayTypeConvert(
             item['settlementType']

@@ -1805,10 +1805,7 @@ export default {
       // 展示区间价格维护弹窗
       this.productStandardDetail = _.cloneDeep(params.row);
       this.priceRegionRowData.goodsStandardId = this.productStandardDetail.id;
-      if (
-        this.productStandardDetail.goodsType === "VIP" ||
-        this.productStandardDetail.goodsType === "FLASHSALE"
-      ) {
+      if (this.productStandardDetail.goodsType === "FLASHSALE") {
         this.$Message.warning("活动商品不允许添加区间价");
         return;
       }
