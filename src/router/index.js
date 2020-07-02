@@ -4,11 +4,13 @@ import iView from 'view-design';
 import store from '@/store';
 import { constantRouterMap } from './routers';
 import { getToken, getNamesByRouters, getSystemHomeName, getSystemHomeNameNew } from '@/libs/util';
-
+const IS_PROD = ['production'].includes(process.env.NODE_ENV);
+const BASE_URL = IS_PROD ? '/lhiot-admin/' : '/';
 Vue.use(Router);
 
 const createRouter = () => new Router({
   mode: 'history',
+  base: BASE_URL,
   routes: constantRouterMap,
   scrollBehavior: () => ({ y: 0 })
 });
@@ -65,7 +67,8 @@ router.beforeEach((to, from, next) => {
               replace: true
             })
           } else {
-            next({ ...to,
+            next({
+              ...to,
               replace: true
             });
           }
