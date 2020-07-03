@@ -1185,11 +1185,8 @@ export default {
         .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.clearSearchLoading = false;
-          this.searchLoading = false;
         })
-        .catch(() => {
+        .finally(() => {
           this.loading = false;
           this.clearSearchLoading = false;
           this.searchLoading = false;
