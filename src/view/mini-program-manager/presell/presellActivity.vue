@@ -31,6 +31,20 @@
             >
               <Option
                 v-for="(item,index) in activityStatus"
+                :key="index"
+                :value="item.value"
+                class="ptb2-5"
+                style="padding-left: 5px;width: 100px"
+              >{{ item.label }}</Option>
+            </Select>
+            <Select
+              v-model="searchRowData.validDateType"
+              placeholder="时间类型"
+              style="padding-right: 5px;width: 100px"
+              clearable
+            >
+              <Option
+                v-for="(item,index) in validDateTypeEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
@@ -163,8 +177,8 @@
           <i-col span="12">
             <Row>
               <i-col span="6">活动状态:</i-col>
-              <i-col span="18" v-if="presellDetail.status==='VALID'">{{ '上架' }}</i-col>
-              <i-col span="18" v-else>{{ '下架' }}</i-col>
+              <i-col v-if="presellDetail.status==='VALID'" span="18">{{ '上架' }}</i-col>
+              <i-col v-else span="18">{{ '下架' }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -191,7 +205,7 @@
               <i-col span="18">
                 {{ this.$moment(
                 presellDetail.startTime
-                ).format("YYYY-MM-DD HH:mm:ss")}}
+                ).format("YYYY-MM-DD HH:mm:ss") }}
               </i-col>
             </Row>
           </i-col>
@@ -201,7 +215,7 @@
               <i-col span="18">
                 {{ this.$moment(
                 presellDetail.endTime
-                ).format("YYYY-MM-DD HH:mm:ss")}}
+                ).format("YYYY-MM-DD HH:mm:ss") }}
               </i-col>
             </Row>
           </i-col>
@@ -210,37 +224,37 @@
           <i-col span="12">
             <Row>
               <i-col span="6">提货时间类型:</i-col>
-              <i-col span="18" v-if="presellDetail.validDateType==='FIXED_DATE'">{{ '绝对时间' }}</i-col>
-              <i-col span="18" v-else>{{ '相对时间' }}</i-col>
+              <i-col v-if="presellDetail.validDateType==='FIXED_DATE'" span="18">{{ '绝对时间' }}</i-col>
+              <i-col v-else span="18">{{ '相对时间' }}</i-col>
             </Row>
           </i-col>
-          <i-col span="12" v-show="presellDetail.validDateType==='UN_FIXED_DATE'">
+          <i-col v-show="presellDetail.validDateType==='UN_FIXED_DATE'" span="12">
             <Row>
               <i-col span="6">几天后提货:</i-col>
               <i-col span="18">{{ presellDetail.beginDay+"天" }}</i-col>
             </Row>
           </i-col>
         </Row>
-        <Row class-name="mb20" v-show="presellDetail.validDateType==='FIXED_DATE'">
+        <Row v-show="presellDetail.validDateType==='FIXED_DATE'" class-name="mb20">
           <i-col span="12">
             <Row>
               <i-col span="6">提货开始时间:</i-col>
               <i-col span="18">
                 {{ this.$moment(
                 presellDetail.deliveryStartTime
-                ).format("YYYY-MM-DD")}}
+                ).format("YYYY-MM-DD") }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
               <i-col span="6">提货结束时间:</i-col>
-              <i-col span="18" v-if="presellDetail.deliveryEndTime">
+              <i-col v-if="presellDetail.deliveryEndTime" span="18">
                 {{ this.$moment(
                 presellDetail.deliveryEndTime
-                ).format("YYYY-MM-DD")}}
+                ).format("YYYY-MM-DD") }}
               </i-col>
-              <i-col span="18" v-else>{{"N/A"}}</i-col>
+              <i-col v-else span="18">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -306,10 +320,10 @@
           </i-col>
         </Row>
         <Row class-name="mb20">
-          <i-col span="12">
+          <i-col span="24">
             <Row>
-              <i-col span="6">关联门店:</i-col>
-              <i-col span="18">{{ relationStore }}</i-col>
+              <i-col span="3">关联门店:</i-col>
+              <i-col span="21">{{ getRelationStore(presellDetail.storeIds) }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -345,8 +359,8 @@
                 <Select v-model="presellDetail.status" style="width: 200px">
                   <Option
                     v-for="item in activityStatus"
-                    :value="item.value"
                     :key="item.value"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
                   >{{ item.label }}</Option>
@@ -433,13 +447,13 @@
                   v-model="presellDetail.validDateType"
                   placeholder="券有效期类型"
                   style="padding-right: 5px;width: 200px"
-                  @on-change="handleChange"
                   :disabled="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
+                  @on-change="handleChange"
                 >
                   <Option
                     v-for="(item,index) in validDateTypeEnum"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px;width: 100px"
                   >{{ item.label }}</Option>
@@ -450,9 +464,9 @@
               <i-col span="12">
                 <FormItem label="下单成功后第:" prop="beginDay">
                   <InputNumber
+                    v-model="presellDetail.beginDay"
                     :min="0"
                     :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
-                    v-model="presellDetail.beginDay"
                     label="生效开始"
                     style="width: 60px"
                   ></InputNumber>天提货
@@ -460,7 +474,7 @@
               </i-col>
             </template>
             <template>
-              <i-col span="12" v-if="presellDetail.validDateType=='FIXED_DATE'">
+              <i-col v-if="presellDetail.validDateType=='FIXED_DATE'" span="12">
                 <FormItem label="提货开始时间:" prop="deliveryStartTime">
                   <DatePicker
                     :value="presellDetail.deliveryStartTime"
@@ -546,8 +560,8 @@
             <i-col span="12">
               <FormItem label="限购次数:" prop="triesLimit">
                 <InputNumber
-                  :min="0"
                   v-model="presellDetail.triesLimit"
+                  :min="0"
                   style="width: 200px"
                   placeholder="默认999"
                 ></InputNumber>
@@ -560,8 +574,8 @@
                 <Select v-model="presellDetail.relationStoreType" style="width: 200px">
                   <Option
                     v-for="item in relationStoreTypeEnum"
-                    :value="item.value"
                     :key="item.value"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
                     @click.native="selectStore(item)"
@@ -571,7 +585,7 @@
             </i-col>
             <i-col span="12">
               <FormItem label="已售份数:" prop="saleQuantity">
-                <InputNumber :min="0" v-model="presellDetail.saleQuantity" style="width: 200px"></InputNumber>
+                <InputNumber v-model="presellDetail.saleQuantity" :min="0" style="width: 200px"></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -639,7 +653,7 @@
                 clearable
               ></Input>
               <Button
-                :searchLoading="searchLoading"
+                :search-loading="searchLoading"
                 class="search-btn mr5"
                 type="primary"
                 @click="handleProductSearch"
@@ -1012,18 +1026,6 @@ export default {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[1-9]+$/.test(value)) {
-                errors.push(new Error("必须为整数"));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        triesLimit: [
-          { required: true, message: "请输入限购" },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[0-9]+$/.test(value)) {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
@@ -1425,23 +1427,6 @@ export default {
     },
     tourDiscountComputed() {
       return fenToYuanDot2Number(this.presellDetail.tourDiscount);
-    },
-    relationStore() {
-      if (!this.presellDetail.storeIds) {
-        return "全部门店";
-      }
-      const ids = this.presellDetail.storeIds
-        .substring(1, this.presellDetail.storeIds.length - 1)
-        .split("][");
-      const list = this.storeList;
-      let str = "";
-      if (list.length > 0) {
-        ids.forEach(id => {
-          const item = list.find(item => item.storeId == id);
-          str += item.storeName + ",";
-        });
-        return str.substring(0, str.length - 1);
-      }
     }
   },
   watch: {
@@ -1459,6 +1444,22 @@ export default {
   },
   created() {},
   methods: {
+    getRelationStore(storeIds) {
+      if (!storeIds) {
+        return "全部门店";
+      }
+      const ids = storeIds.substring(1, storeIds.length - 1).split("][");
+      const list = this.storeList;
+      let str = "";
+      if (list.length > 0) {
+        ids.forEach(id => {
+          const item = list.find(item => item.storeId == id);
+          const itemName = item.storeName ? item.storeName : "";
+          str += itemName + ",";
+        });
+        return str.substring(0, str.length - 1);
+      }
+    },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
       this.getTableData();
@@ -1548,7 +1549,6 @@ export default {
       this.newPicture = [];
       this.modalEdit = false;
     },
-
     createStore() {
       this.modalViewLoading = true;
       this.presellDetail.id = null; // 新建时不需要传递id
@@ -1802,13 +1802,9 @@ export default {
     },
     // TODO 选择门店id方法
     getStore() {
-      getStorePages({ page: 1, rows: -1 })
-        .then(res => {
-          this.storeList = res.rows;
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      getStorePages({ page: 1, rows: -1 }).then(res => {
+        this.storeList = res.rows;
+      });
     },
     handleCheckAll() {
       if (this.indeterminate) {
@@ -1921,12 +1917,10 @@ export default {
       this.editStore();
     },
     aboutGoods() {
-      getGoodsStandard(this.presellDetail)
-        .then(res => {
-          this.productStandardDetail = res;
-          this.modalGoodsStandard = true;
-        })
-        .catch(error => {});
+      getGoodsStandard(this.presellDetail).then(res => {
+        this.productStandardDetail = res;
+        this.modalGoodsStandard = true;
+      });
     },
     handleGoodsClose() {
       this.loading = false;
