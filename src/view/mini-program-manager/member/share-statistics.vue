@@ -210,7 +210,7 @@
           <div slot="searchCondition">
             <Row>
               <b>历史总佣金:</b>
-              <b style="color:red">{{hisAmount}}</b>
+              <b style="color:red">{{hisAmount | fenToYuanDot2Filters}}</b>
             </Row>
           </div>
         </tables>
@@ -355,17 +355,26 @@ export default {
         {
           title: "待提现佣金",
           align: "center",
-          key: "canOutAmount"
+          key: "canOutAmount",
+          render(h, params) {
+            return <div>{fenToYuanDot2(params.row.canOutAmount)}</div>;
+          },
         },
         {
           title: "待入账佣金",
           align: "center",
           key: "waitAmount",
+          render(h, params) {
+            return <div>{fenToYuanDot2(params.row.waitAmount)}</div>;
+          },
         },
         {
           title: "已提现佣金",
           align: "center",
-          key: "allOutAmount"
+          key: "allOutAmount",
+          render(h, params) {
+            return <div>{fenToYuanDot2(params.row.allOutAmount)}</div>;
+          },
         }
       ],
       searchRowData: _.cloneDeep(roleRowData),
