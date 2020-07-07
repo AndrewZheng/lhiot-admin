@@ -807,7 +807,10 @@
                 <i-col v-else-if="productStandardDetail.productType === null" span="16">{{ "N/A" }}</i-col>
               </Row>
             </i-col>
-            <i-col span="12">
+            <i-col
+              span="12"
+              v-show="proStandardExpand.expandType=='DISCOUNT_PRODUCT'||proStandardExpand.expandType=='PULL_NEW_PRODUCT'||proStandardExpand.expandType=='SHARE_PRODUCT'"
+            >
               <FormItem label="库存数量:" prop="invNum">
                 <InputNumber v-model="proStandardExpand.invNum"></InputNumber>
               </FormItem>
@@ -1188,7 +1191,7 @@ const proStandardExpand = {
   startNum: 1,
   // expandType: "DISCOUNT_PRODUCT",
   // limitQty: 0,
-  invNum:0,
+  invNum: 0,
   commissionRate: 0
 };
 

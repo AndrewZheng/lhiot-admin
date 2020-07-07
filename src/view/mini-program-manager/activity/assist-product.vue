@@ -1743,7 +1743,6 @@ export default {
     },
     editAssist() {
       this.modalViewLoading = true;
-
       this.flashsaleDetail.beginTime = this.$moment(
         this.flashsaleDetail.beginTime
       ).format("YYYY-MM-DD HH:mm:ss");

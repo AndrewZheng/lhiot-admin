@@ -204,13 +204,13 @@
               <i-col span="18">
                 <FormItem label="有效期起:" prop="beginTime">
                   <DatePicker
-                    v-model="activitySeckillDetail.beginTime"
+                    :value="activitySeckillDetail.beginTime"
                     format="yyyy-MM-dd HH:mm:ss"
                     type="datetime"
                     placeholder="有效期起"
                     class="search-input"
                     style="width: 170px"
-                    @on-change="startTimeChange"
+                    @on-change="activitySeckillDetail.beginTime=$event"
                   />
                 </FormItem>
               </i-col>
@@ -219,13 +219,13 @@
               <i-col span="18">
                 <FormItem label="有效期止:" prop="endTime">
                   <DatePicker
-                    v-model="activitySeckillDetail.endTime"
+                    :value="activitySeckillDetail.endTime"
                     format="yyyy-MM-dd HH:mm:ss"
                     type="datetime"
                     placeholder="有效期止"
                     class="search-input"
                     style="width: 170px"
-                    @on-change="endTimeChange"
+                    @on-change="activitySeckillDetail.endTime=$event"
                   />
                 </FormItem>
               </i-col>

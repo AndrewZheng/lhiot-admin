@@ -84,6 +84,20 @@
                 class="ptb2-5"
               >{{ item.label }}</Option>
             </Select>
+            <Select
+              v-model="searchRowData.istop"
+              class="search-col mr5"
+              placeholder="是否置顶"
+              style="width: 90px"
+              clearable
+            >
+              <Option
+                v-for="item in istopTypeEnum"
+                :key="`orderType-col-${item.value}`"
+                :value="item.value"
+                class="ptb2-5"
+              >{{ item.label }}</Option>
+            </Select>
             <DatePicker
               v-model="searchRowData.beginDate"
               format="yyyy-MM-dd HH:mm:ss"
@@ -443,6 +457,7 @@ const roleRowData = {
   endDate: "",
   page: 1,
   rows: 10,
+  isTop: "",
   orderType: "WX_SMALL",
   sidx: "createTime",
   sort: "desc"
@@ -475,6 +490,10 @@ export default {
       orderType: [
         { label: "小程序订单", value: "WX_SMALL" },
         { label: "门店订单", value: "STORE" }
+      ],
+      istopTypeEnum: [
+        { label: "是", value: "YES" },
+        { label: "否", value: "NO" }
       ],
       columns: [
         {
