@@ -261,15 +261,6 @@ export const constantRouterMap = [
         },
         component: () => import('@/view/wholesale-mall-manager/content/article-edit.vue')
       },
-      {
-        path: '/wholesale-salesman-store-analysis',
-        name: 'wholesale-salesman-store-analysis',
-        meta: {
-          icon: 'md-analytics',
-          title: '业务员门店业绩分析'
-        },
-        component: () => import('@/view/wholesale-mall-manager/user/salesman-store-analysis.vue')
-      }
     ]
   }
 ];

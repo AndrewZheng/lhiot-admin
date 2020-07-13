@@ -230,12 +230,6 @@ export default {
           minWidth: 200
         },
         {
-          title: "门店名称",
-          align: "center",
-          key: "shopName",
-          minWidth: 80
-        },
-        {
           title: "用户名",
           align: "center",
           key: "userName",

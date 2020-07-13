@@ -480,12 +480,6 @@ const couponColumns = [
     maxWidth: 80
   },
   {
-    title: '店铺名称',
-    align: 'center',
-    key: 'shopName',
-    minWidth: 100
-  },
-  {
     title: '用户名称',
     align: 'center',
     key: 'userName'
@@ -495,38 +489,6 @@ const couponColumns = [
     align: 'center',
     key: 'phone',
     minWidth: 40
-  },
-  {
-    title: '用户状态',
-    align: 'center',
-    key: 'userStatus',
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (row.userStatus === 'certified') {
-        return (
-          <div>
-            <tag color='success'>{userStatusConvert(row.userStatus)}</tag>
-          </div>
-        );
-      } else if (row.userStatus === 'locking') {
-        return (
-          <div>
-            <tag color='error'>{userStatusConvert(row.userStatus)}</tag>
-          </div>
-        );
-      } else if (row.userStatus === 'unaudited') {
-        return (
-          <div>
-            <tag color='warning'>{userStatusConvert(row.userStatus)}</tag>
-          </div>
-        );
-      }
-      return (
-        <div>
-          <tag color='primary'>{userStatusConvert(row.userStatus)}</tag>
-        </div>
-      );
-    }
   },
   {
     title: '优惠券名称',
@@ -554,13 +516,13 @@ const couponColumns = [
       if (row.couponFrom === 'artificial') {
         return (
           <div>
-            <tag color='primary'>{couponFromConvert(row.couponFrom).label}</tag>
+            <tag color='primary'>{couponFromConvert(row.couponFrom)}</tag>
           </div>
         );
       } else {
         return (
           <div>
-            <tag color='pink'>{couponFromConvert(row.couponFrom).label}</tag>
+            <tag color='pink'>{couponFromConvert(row.couponFrom)}</tag>
           </div>
         );
       }
