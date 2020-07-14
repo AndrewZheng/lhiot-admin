@@ -74,7 +74,7 @@
                 {{ item.label }}
               </Option>
             </Select>
-            <Select
+            <!-- <Select
               v-model="searchRowData.orderType"
               class="search-col mr5"
               placeholder="订单类型"
@@ -89,7 +89,7 @@
               >
                 {{ item.label }}
               </Option>
-            </Select>
+            </Select> -->
             <DatePicker
               v-model="searchRowData.beginDate"
               format="yyyy-MM-dd HH:mm:ss"
@@ -587,15 +587,15 @@ export default {
           align: 'center',
           width: 170,
           key: 'orderCode',
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.orderType === 'WX_SMALL') {
-              return <div>{row.orderCode}</div>;
-            } else {
-              return <div>{row.xid}</div>;
-            }
-            return <div>{row.orderCode}</div>;
-          }
+          // render: (h, params, vm) => {
+            // const { row } = params;
+            // if (row.orderType === 'WX_SMALL') {
+            //   return <div>{row.orderCode}</div>;
+            // } else {
+            //   return <div>{row.xid}</div>;
+            // }
+          //   return <div>{row.orderCode}</div>;
+          // }
         },
         {
           title: '商品名称',

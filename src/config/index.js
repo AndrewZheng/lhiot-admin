@@ -23,7 +23,7 @@ export default {
    * @description 图片资源请求基础路径  正式http://172.16.10.185:8082 测试 http://test-resource.food-see.com  
    */
 
-  imgUploadUrl: 'http://test-resource.food-see.com',
+  imgUploadUrl: 'http://172.16.10.185:8082',
   /**
    * @description 绿航集团旗下品牌 水果熟了 / 万翼果联-min_app 恰果果-qgg 绿航果业-lv_hang 跟图片资源请求配套使用
    */
