@@ -800,7 +800,8 @@ const roleRowData = {
   // effectiveEndTime: null,
   page: 1,
   rows: 10,
-  sidx: "rank"
+  sidx: "rank",
+  sort: "desc"
 };
 
 const templateRowData = {
