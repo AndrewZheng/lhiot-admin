@@ -212,12 +212,6 @@ export default {
           key: 'createDate',
           minWidth: 80
         },
-        {
-          title: "下单日期",
-          align: "center",
-          key: "createDate",
-          minWidth: 80
-        }
       ]
     };
   },
@@ -283,7 +277,7 @@ export default {
           //  tableData.forEach(item => {});
           const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
           this.$refs.tables.handleDownload({
-            filename: `新品需求信息-${date}`,
+            filename: `订单商品导出-${date}`,
             data: tableData
           });
         })
