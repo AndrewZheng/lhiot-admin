@@ -2630,12 +2630,12 @@ export const activityStatusEnum = [{
 ];
 
 export const couponTemplateTypeEnum = [{
-  label: '全品类',
-  value: 'allgoods'
+  label: '折扣券',
+  value: 'DISCOUNT_COUPON'
 },
 {
-  label: '单品',
-  value: 'singlegoods'
+  label: '满减券',
+  value: 'FULL_CUT_COUPON'
 }
 ];
 

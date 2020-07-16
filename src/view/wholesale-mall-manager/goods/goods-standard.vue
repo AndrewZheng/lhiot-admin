@@ -1335,8 +1335,8 @@ export default {
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
-              if (!/^[0-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
+              if (!/^[2-9]\d*$/.test(value)) {
+                errors.push(new Error("必须为大于1的整数"));
               }
               callback(errors);
             }
@@ -1828,6 +1828,10 @@ export default {
     },
     handleRegionAdd() {
       // 因为新增或修改由id是否为0判断
+      if (this.regionTotal >= 3) {
+        this.$Message.info("最多只能创建3条区间价！");
+        return;
+      }
       this.goodsPriceRegion.id = 0;
       this.$refs.editRegionForm.resetFields();
       this.modalEditRegion = true;

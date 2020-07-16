@@ -3,16 +3,16 @@ import Main from '@/components/main';
 const wholesaleRouter = [
   {
     path: '/',
-    name: 'wholesale-home',
-    redirect: '/wholesale-home',
+    name: 'stores-home',
+    redirect: '/stores-home',
     component: Main,
     meta: {
       hideInMenu: true,
       notCache: true
     },
     children: [{
-      path: '/wholesale-home',
-      name: 'wholesale-home',
+      path: '/stores-home',
+      name: 'stores-home',
       meta: {
         hideInMenu: true,
         title: '首页',

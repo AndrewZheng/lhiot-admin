@@ -368,7 +368,7 @@ export default {
       if (e.target.value === '') this.insideTableData = this.value;
     },
     handleSearch() {
-      this.insideTableData = this.value.filter(item => {
+      this.insideTableData = (this.value || []).filter(item => {
         if (typeof item[this.searchKey] === 'string') {
           return item[this.searchKey].indexOf(this.searchValue) > -1;
         } else {
@@ -377,7 +377,7 @@ export default {
       });
     },
     handleTableData() {
-      this.insideTableData = this.value.map((item, index) => {
+      this.insideTableData = (this.value || []).map((item, index) => {
         const res = item;
         res.initRowIndex = index;
         return res;

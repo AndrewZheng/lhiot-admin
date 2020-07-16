@@ -15,9 +15,9 @@
         highlight-row
         search-place="top"
         @on-view="handleView"
+        @on-edit="handleEdit"
         @on-hand="handleReimburse"
         @on-receive="handSureReceive"
-        @on-send-hd="sendHdManual"
         @on-current-change="onCurrentChange"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
@@ -29,13 +29,6 @@
               placeholder="订单编码"
               class="search-input mr5"
               style="width: 150px"
-              clearable
-            ></Input>
-            <Input
-              v-model="searchRowData.hdCode"
-              placeholder="海鼎编码"
-              class="search-input mr5"
-              style="width: 120px"
               clearable
             ></Input>
             <Input
@@ -75,20 +68,6 @@
             >
               <Option
                 v-for="item in wholesaleOrderStatusEnum"
-                :key="`search-col-${item.value}`"
-                :value="item.value"
-                class="ptb2-5"
-              >{{ item.label }}</Option>
-            </Select>
-            <Select
-              v-model="searchRowData.hdStatus"
-              class="search-col mr5"
-              placeholder="海鼎状态"
-              style="width: 85px"
-              clearable
-            >
-              <Option
-                v-for="item in wholesaleHdStatusEnum"
                 :key="`search-col-${item.value}`"
                 :value="item.value"
                 class="ptb2-5"
@@ -175,20 +154,6 @@
             <Row class-name="mb10">
               <i-col span="6">订单状态:</i-col>
               <i-col span="18">{{ orderDetail.orderStatus| wholesaleOrderStatusFilter }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="6">海鼎编号:</i-col>
-              <i-col span="18">{{ orderDetail.hdCode }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row class-name="mb10">
-              <i-col span="6">海鼎状态:</i-col>
-              <i-col span="18">{{ orderDetail.hdStatus | wholesaleHdStatusFilter }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -315,6 +280,32 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
+    <!-- 添加单号 -->
+    <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000" :width="600">
+      <p slot="header">添加快递单号</p>
+      <div class="modal-content">
+        <Form ref="editForm" :model="orderDetail" :rules="ruleInline" :label-width="100">
+          <Row>
+            <i-col span="20">
+              <FormItem label="订单编号:" prop="orderCode">
+                <Input v-model="orderDetail.orderCode" disabled></Input>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="20">
+              <FormItem label="快递单号:" prop="deliveryCode">
+                <Input v-model="orderDetail.deliveryCode" placeholder="请输入快递单号..."></Input>
+              </FormItem>
+            </i-col>
+          </Row>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button @click="handleEditClose">关闭</Button>
+        <Button type="primary" @click="handleCourierCode">确定</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -328,7 +319,8 @@ import {
   getOrder,
   getPrintOrder,
   sendHdManual,
-  exportOrder
+  exportOrder,
+  putCourierCode
 } from "@/api/wholesale";
 import getLodop from "@/assets/lodop/lodopFuncs.js";
 import tableMixin from "@/mixins/tableMixin.js";
@@ -377,6 +369,7 @@ const orderDetail = {
   supplements: [],
   totalFee: 0,
   userId: 0,
+  deliveryCode: "",
   createTimeBegin: null,
   createTimeEnd: null
 };
@@ -446,15 +439,6 @@ const orderColumns = [
     sortable: true,
     resizable: true,
     width: 170,
-    fixed: "left",
-    align: "center"
-  },
-  {
-    title: "海鼎单号",
-    key: "hdCode",
-    sortable: true,
-    resizable: true,
-    width: 150,
     fixed: "left",
     align: "center"
   },
@@ -645,37 +629,13 @@ const orderColumns = [
     }
   },
   {
-    title: "海鼎状态",
-    align: "center",
-    width: 120,
-    key: "hdStatus",
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (row.hdStatus === "success") {
-        return (
-          <div>
-            <tag color="success">成功</tag>
-          </div>
-        );
-      } else if (row.hdStatus === "failed") {
-        return (
-          <div>
-            <tag color="error">失败</tag>
-          </div>
-        );
-      } else {
-        return <div>N/A</div>;
-      }
-    }
-  },
-  {
     title: "操作",
     minWidth: 120,
     resizable: true,
     align: "center",
     fixed: "right",
     key: "handle",
-    options: ["view", "sendHd"]
+    options: ["view"]
   }
 ];
 
@@ -804,6 +764,10 @@ export default {
       printFlag: null,
       printNum: 0,
       goodsColumns,
+      ruleInline: {
+        orderCode: [{ required: true, message: "请输入订单编号" }],
+        deliveryCode: [{ required: true, message: "请输入快递单号" }]
+      },
       columns: [
         {
           type: "selection",
@@ -822,20 +786,21 @@ export default {
           align: "center"
         },
         {
-          title: "海鼎单号",
-          key: "hdCode",
-          sortable: true,
-          resizable: true,
-          width: 150,
-          fixed: "left",
-          align: "center"
-        },
-        {
           title: "创建时间",
           align: "center",
           width: 160,
           fixed: "left",
           key: "createTime"
+        },
+        {
+          title: "快递单号",
+          align: "center",
+          width: 120,
+          key: "deliveryCode",
+          render(h, params, vm) {
+            const { row } = params;
+            return <div>{row.deliveryCode ? row.deliveryCode : "N/A"}</div>;
+          }
         },
         {
           title: "订单总价",
@@ -1011,37 +976,13 @@ export default {
           }
         },
         {
-          title: "海鼎状态",
-          align: "center",
-          width: 120,
-          key: "hdStatus",
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.hdStatus === "success") {
-              return (
-                <div>
-                  <tag color="success">成功</tag>
-                </div>
-              );
-            } else if (row.hdStatus === "failed") {
-              return (
-                <div>
-                  <tag color="error">失败</tag>
-                </div>
-              );
-            } else {
-              return <div>N/A</div>;
-            }
-          }
-        },
-        {
           title: "操作",
           minWidth: 120,
           resizable: true,
           align: "center",
           fixed: "right",
           key: "handle",
-          options: ["view", "sendHd"]
+          options: ["edit", "view"]
         }
       ]
     };
@@ -1235,19 +1176,19 @@ export default {
         });
       });
     },
-    sendHdManual() {
-      if (this.tableDataSelected.length > 1) {
-        this.$Message.warn("目前只支持单笔订单重发海鼎");
-        return;
-      }
+    // sendHdManual() {
+    //   if (this.tableDataSelected.length > 1) {
+    //     this.$Message.warn("目前只支持单笔订单重发海鼎");
+    //     return;
+    //   }
 
-      if (this.tableDataSelected.length > 0) {
-        sendHdManual({ orderCode: this.selectedOrderCodes }).then(res => {
-          this.$Message.info("海鼎重发成功");
-          this.getTableData();
-        });
-      }
-    },
+    //   if (this.tableDataSelected.length > 0) {
+    //     sendHdManual({ orderCode: this.selectedOrderCodes }).then(res => {
+    //       this.$Message.info("海鼎重发成功");
+    //       this.getTableData();
+    //     });
+    //   }
+    // },
     onSelectionAll(selection) {
       this.tableDataSelected = selection;
       this.selectedOrderCodes = selection
@@ -1284,6 +1225,30 @@ export default {
         index++;
       }
       this.searchRowData.deliveryAddress = city;
+    },
+    handleEdit(params) {
+      if (params.row.orderStatus === "undelivery") {
+        this.orderDetail = _.cloneDeep(params.row);
+        this.modalEdit = true;
+      } else {
+        this.$Message.info("只有待发货的订单才能编辑快递单号!");
+      }
+    },
+    handleCourierCode() {
+      this.$refs.editForm.validate(valid => {
+        if (valid) {
+          putCourierCode(this.orderDetail)
+            .then(res => {
+              this.modalEdit = false;
+              this.getTableData();
+            })
+            .catch(() => {
+              this.modalEdit = false;
+            });
+        } else {
+          this.$Message.error("请完善信息!");
+        }
+      });
     }
   }
 };

@@ -150,13 +150,29 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="满减金额:" prop="fullFee">
+              <FormItem label="最小起购门槛:" prop="fullFee">
                 <InputNumber :min="0" :value="fullFeeComputed" @on-change="fullFeeOnchange"></InputNumber>
               </FormItem>
             </i-col>
-            <i-col span="12">
+            <i-col span="12" v-if="couponTemplate.couponType==='FULL_CUT_COUPON'">
               <FormItem label="优惠金额:" prop="couponFee">
                 <InputNumber :min="0" :value="couponFeeComputed" @on-change="couponFeeOnchange"></InputNumber>
+              </FormItem>
+            </i-col>
+            <i-col span="12" v-else>
+              <FormItem label="折扣额度:" prop="couponFee">
+                <InputNumber :min="0" :value="couponFeeComputed1" @on-change="couponFeeOnchange1"></InputNumber>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row v-show="couponTemplate.couponType==='DISCOUNT_COUPON'">
+            <i-col span="12">
+              <FormItem label="最高折扣金额:" prop="discountMaxFee">
+                <InputNumber
+                  :min="0"
+                  :value="couponFeeDiscount"
+                  @on-change="couponDiscountOnchange"
+                ></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -209,7 +225,8 @@ const couponTemplate = {
   couponFee: 0,
   couponName: "",
   couponType: "", // allgoods-全品类 singlegoods-单品
-  fullFee: 0
+  fullFee: 0,
+  discountMaxFee: 0
 };
 
 const roleRowData = {
@@ -242,15 +259,23 @@ export default {
       couponTemplate: _.cloneDeep(couponTemplate),
       ruleInline: {
         couponType: [{ required: true, message: "请选择活动类型" }],
+        couponName: [{ required: true, message: "请输入优惠券名称" }],
         couponFee: [
-          { required: true, message: "请输入优惠金额" },
+          { required: true, message: "请输入优惠金额/折扣额度" },
           {
             message: "必须为大于0的数字",
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
+        discountMaxFee: [
+          { required: true, message: "请输入最高折扣金额" },
+          {
+            message: "必须为整数",
+            pattern: /^([1-9]\d*|[0]{1,1})$/
+          }
+        ],
         fullFee: [
-          { required: true, message: "请输入满减金额" },
+          { required: true, message: "请输入最小起购门槛" },
           {
             message: "必须为大于0的数字",
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
@@ -277,7 +302,7 @@ export default {
           minWidth: 150
         },
         {
-          title: "满减金额",
+          title: "最小起购门槛",
           align: "center",
           minWidth: 60,
           key: "fullFee",
@@ -287,13 +312,31 @@ export default {
           }
         },
         {
-          title: "优惠金额",
+          title: "最高折扣金额",
+          align: "center",
+          minWidth: 60,
+          key: "discountMaxFee",
+          render(h, params, vm) {
+            if (params.row.couponType === "DISCOUNT_COUPON") {
+              const amount = fenToYuanDot2(params.row.discountMaxFee);
+              return <div>{amount}</div>;
+            } else {
+              return <div>N/A</div>;
+            }
+          }
+        },
+        {
+          title: "优惠金额/折扣额度",
           align: "center",
           minWidth: 60,
           key: "couponFee",
           render(h, params, vm) {
-            const amount = fenToYuanDot2(params.row.couponFee);
-            return <div>{amount}</div>;
+            if (params.row.couponType === "DISCOUNT_COUPON") {
+              return <div>{params.row.couponFee / 10 + "折"}</div>;
+            } else {
+              const amount = fenToYuanDot2(params.row.couponFee);
+              return <div>{amount}</div>;
+            }
           }
         },
         {
@@ -302,16 +345,16 @@ export default {
           key: "couponType",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.couponType === "allgoods") {
+            if (row.couponType === "FULL_CUT_COUPON") {
               return (
                 <div>
-                  <tag color="primary">全品类</tag>
+                  <tag color="primary">满减券</tag>
                 </div>
               );
-            } else if (row.couponType === "singlegoods") {
+            } else if (row.couponType === "DISCOUNT_COUPON") {
               return (
                 <div>
-                  <tag color="pink">单品</tag>
+                  <tag color="pink">折扣券</tag>
                 </div>
               );
             } else {
@@ -368,8 +411,14 @@ export default {
     couponFeeComputed() {
       return fenToYuanDot2Number(this.couponTemplate.couponFee);
     },
+    couponFeeComputed1() {
+      return this.couponTemplate.couponFee;
+    },
     fullFeeComputed() {
       return fenToYuanDot2Number(this.couponTemplate.fullFee);
+    },
+    couponFeeDiscount() {
+      return fenToYuanDot2Number(this.couponTemplate.discountMaxFee);
     }
   },
   methods: {
@@ -379,6 +428,12 @@ export default {
     },
     couponFeeOnchange(value) {
       this.couponTemplate.couponFee = yuanToFenNumber(value);
+    },
+    couponFeeOnchange1(value) {
+      this.couponTemplate.couponFee = value;
+    },
+    couponDiscountOnchange(value) {
+      this.couponTemplate.discountMaxFee = yuanToFenNumber(value);
     },
     getTableData() {
       getCouponTemplatePages(this.searchRowData)
@@ -418,6 +473,13 @@ export default {
     handleSubmit() {
       this.$refs.editForm.validate(valid => {
         if (valid) {
+          if (this.couponTemplate.couponType === "FULL_CUT_COUPON") {
+            this.couponTemplate.discountMaxFee = this.couponTemplate.couponFee;
+            if (this.couponTemplate.couponFee >= this.couponTemplate.fullFee) {
+              this.$Message.info("优惠金额不能大于最小起购门槛！");
+              return;
+            }
+          }
           if (this.isCreate) {
             this.createCouponTemplate();
           } else if (this.isEdit) {

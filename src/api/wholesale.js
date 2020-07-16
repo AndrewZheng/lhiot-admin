@@ -679,6 +679,14 @@ export const getFinanceAuditPages = (data) => {
     }
   });
 };
+//添加快递单号
+export const putCourierCode = (data) => {
+  return $http.request({
+    url: '/wholesale-small/order/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
 
 // id查看售后订单
 export const getOrderDetail = ({
