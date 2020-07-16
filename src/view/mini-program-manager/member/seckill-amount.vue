@@ -46,7 +46,6 @@
                 v-model="searchRowData.sidx"
                 placeholder="排序"
                 style="padding-right: 5px;width: 100px"
-                clearable
               >
                 <Option
                   v-for="(item,index) in rankType"
