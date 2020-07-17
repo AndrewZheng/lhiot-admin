@@ -26,7 +26,7 @@
               v-model="searchRowData.userName"
               placeholder="用户名"
               class="search-input mr5"
-              style="width: 90px"
+              style="width: 105px"
               clearable
             ></Input>
             <Input
@@ -40,7 +40,7 @@
               v-model="searchRowData.paymentType"
               class="search-col mr5"
               placeholder="支付方式"
-              style="width: 150px"
+              style="width: 105px"
               clearable
             >
               <Option
@@ -48,15 +48,13 @@
                 :key="`search-col-${item.value}`"
                 :value="item.value"
                 class="ptb2-5"
-              >
-                {{ item.label }}
-              </Option>
+              >{{ item.label }}</Option>
             </Select>
             <Select
               v-model="searchRowData.paymentFrom"
               class="search-col mr5"
               placeholder="支付来源"
-              style="width: 150px"
+              style="width: 90px"
               clearable
             >
               <Option
@@ -64,9 +62,7 @@
                 :key="`search-col-${item.value}`"
                 :value="item.value"
                 class="ptb2-5"
-              >
-                {{ item.label }}
-              </Option>
+              >{{ item.label }}</Option>
             </Select>
             <DatePicker
               v-model="searchRowData.paymentTimeBegin"
@@ -136,44 +132,44 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import { getPaymentLogPages } from '@/api/wholesale';
-import { fenToYuanDot2, fenToYuanDot2Number } from '@/libs/util';
-import { paymentFromEnum, wholesalePayTypeEnum } from '@/libs/enumerate';
+import Tables from "_c/tables";
+import { getPaymentLogPages } from "@/api/lhfarm-small";
+import { fenToYuanDot2, fenToYuanDot2Number } from "@/libs/util";
+import { paymentFromEnum, wholesalePayTypeEnum } from "@/libs/enumerate";
 import {
   wholesalePayTypeConvert,
   paymentFromConvert
-} from '@/libs/converStatus';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
+} from "@/libs/converStatus";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
 
 const paymentLog = {
-  bankName: '',
-  bankType: '',
+  bankName: "",
+  bankType: "",
   id: 0,
-  orderCode: '',
+  orderCode: "",
   orderId: 0,
-  paymentFrom: '', // order-订单 debt-账款 invoice-发票 recharge-充值
-  paymentStep: 'paid', // sign-签名成功 paid-支付成功
-  paymentTime: '',
-  paymentTimeBegin: '',
-  paymentTimeEnd: '',
-  paymentType: '', // balance-余额支付 wechat-微信 offline-线下支付
+  paymentFrom: "", // order-订单 debt-账款 invoice-发票 recharge-充值
+  paymentStep: "paid", // sign-签名成功 paid-支付成功
+  paymentTime: "",
+  paymentTimeBegin: "",
+  paymentTimeEnd: "",
+  paymentType: "", // balance-余额支付 wechat-微信 offline-线下支付
   refundFee: 0,
   totalFee: 0,
-  transactionId: '',
+  transactionId: "",
   userId: 0
 };
 
 const rowData = {
-  orderCode: '',
-  paymentFrom: 'recharge',
-  paymentType: '',
-  paymentStep: 'paid',
+  orderCode: "",
+  paymentFrom: "recharge",
+  paymentType: "",
+  paymentStep: "paid",
   paymentTimeBegin: null,
   paymentTimeEnd: null,
-  sidx: 'id',
-  sort: 'desc',
+  sidx: "id",
+  sort: "desc",
   page: 1,
   rows: 20
 };
@@ -195,106 +191,114 @@ export default {
       paymentLog: _.cloneDeep(paymentLog),
       columns: [
         {
-          title: '编号',
-          key: 'id',
-          align: 'center',
-          fixed: 'left',
-          minWidth: 40
+          title: "编号",
+          key: "id",
+          align: "center",
+          fixed: "left",
+          minWidth: 20
         },
         {
-          title: '订单编码',
-          key: 'orderCode',
-          align: 'center',
-          fixed: 'left',
-          minWidth: 150
+          title: "订单编码",
+          key: "orderCode",
+          align: "center",
+          fixed: "left",
+          minWidth: 140
         },
         {
-          title: '微信交易流水号',
-          key: 'transactionId',
-          align: 'center',
-          fixed: 'left',
-          minWidth: 200
+          title: "微信交易流水号",
+          key: "transactionId",
+          align: "center",
+          fixed: "left",
+          minWidth: 220,
+          render(h, params, vm) {
+            const { row } = params;
+            if (row.transactionId) {
+              return <div>{row.transactionId}</div>;
+            } else {
+              return <div>N/A</div>;
+            }
+          }
         },
         {
-          title: '用户名',
-          align: 'center',
-          key: 'userName',
+          title: "用户名",
+          align: "center",
+          key: "userName",
           minWidth: 80
         },
         {
-          title: '手机号',
-          align: 'center',
-          key: 'phone',
+          title: "手机号",
+          align: "center",
+          key: "phone",
           minWidth: 120
         },
         {
-          title: '支付来源',
-          align: 'center',
-          key: 'paymentFrom',
+          title: "支付来源",
+          align: "center",
+          key: "paymentFrom",
           minWidth: 80,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.paymentFrom === 'order') {
+            if (row.paymentFrom === "order") {
               return <div>订单</div>;
-            } else if (row.paymentFrom === 'debt') {
+            } else if (row.paymentFrom === "debt") {
               return <div>账款</div>;
-            } else if (row.paymentFrom === 'invoice') {
+            } else if (row.paymentFrom === "invoice") {
               return <div>发票</div>;
-            } else if (row.paymentFrom === 'recharge') {
+            } else if (row.paymentFrom === "recharge") {
               return <div>充值</div>;
             } else {
-              return <div>{'N/A'}</div>;
+              return <div>{"N/A"}</div>;
             }
           }
         },
         {
-          title: '支付类型',
-          align: 'center',
-          key: 'paymentType',
+          title: "支付类型",
+          align: "center",
+          key: "paymentType",
           minWidth: 80,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.paymentType === 'wechat') {
+            if (row.paymentType === "wechat") {
               return (
                 <div>
-                  <tag color='success'>
+                  <tag color="success">
                     {wholesalePayTypeConvert(row.paymentType)}
                   </tag>
                 </div>
               );
-            } else if (row.paymentType === 'balance') {
+            } else if (row.paymentType === "balance") {
               return (
                 <div>
-                  <tag color='primary'>
+                  <tag color="primary">
                     {wholesalePayTypeConvert(row.paymentType)}
                   </tag>
                 </div>
               );
-            } else if (row.paymentType === 'offline') {
+            } else if (row.paymentType === "offline") {
               return (
                 <div>
-                  <tag color='warning'>
+                  <tag color="warning">
                     {wholesalePayTypeConvert(row.paymentType)}
                   </tag>
                 </div>
               );
-            } else if (row.paymentType === 'haiding') {
+            } else if (row.paymentType === "haiding") {
               return (
                 <div>
-                  <tag color='warning'>
+                  <tag color="warning">
                     {wholesalePayTypeConvert(row.paymentType)}
                   </tag>
                 </div>
               );
             } else {
-              return <div>{'N/A'}</div>;
+              return <div>{"N/A"}</div>;
             }
           }
         },
         {
-          title: '支付金额',
-          align: 'center',
-          key: 'totalFee',
+          title: "支付金额",
+          align: "center",
+          key: "totalFee",
           minWidth: 150,
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.totalFee);
@@ -302,10 +306,10 @@ export default {
           }
         },
         {
-          title: '支付时间',
-          align: 'center',
+          title: "支付时间",
+          align: "center",
           minWidth: 130,
-          key: 'paymentTime'
+          key: "paymentTime"
         }
       ]
     };
@@ -336,11 +340,11 @@ export default {
         });
     },
     startTimeChange(value, date) {
-      console.log('beginTime:', value);
+      console.log("beginTime:", value);
       this.searchRowData.paymentTimeBegin = value;
     },
     endTimeChange(value, data) {
-      console.log('endTime:', value);
+      console.log("endTime:", value);
       this.searchRowData.paymentTimeEnd = value;
     },
     handleDownload() {
@@ -355,15 +359,13 @@ export default {
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
         tableData.forEach(item => {
-          item['orderCode'] = item['orderCode'] + '';
-          item['transactionId'] = item['transactionId'] + '';
-          item['totalFee'] = (item['totalFee'] / 100.0).toFixed(2);
-          item['paymentFrom'] = paymentFromConvert(item['paymentFrom']);
-          item['paymentType'] = wholesalePayTypeConvert(
-            item['paymentType']
-          );
+          item["orderCode"] = item["orderCode"] + "";
+          item["transactionId"] = item["transactionId"] + "";
+          item["totalFee"] = (item["totalFee"] / 100.0).toFixed(2);
+          item["paymentFrom"] = paymentFromConvert(item["paymentFrom"]);
+          item["paymentType"] = wholesalePayTypeConvert(item["paymentType"]);
         });
-        const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
           filename: `支付流水-${date}`,
           data: tableData

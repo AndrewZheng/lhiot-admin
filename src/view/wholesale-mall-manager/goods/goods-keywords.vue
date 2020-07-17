@@ -292,7 +292,7 @@ import {
   getProductStandardsPages,
   getProductCategoriesTree,
   getProductUnits
-} from "@/api/wholesale";
+} from "@/api/lhfarm-small";
 
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";

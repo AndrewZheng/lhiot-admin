@@ -249,7 +249,7 @@
 import Tables from '_c/tables';
 import BookTypeOption from '_c/book-type-option';
 
-import { getArticlesPages, deleteArticle, editArticle } from '@/api/wholesale';
+import { getArticlesPages, deleteArticle, editArticle } from '@/api/lhfarm-small';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';

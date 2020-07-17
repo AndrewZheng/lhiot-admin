@@ -194,7 +194,7 @@ import {
   createDeliveryFeeConfigRule,
   deleteDeliveryFeeConfigRule,
   editDeliveryFeeConfigRule
-} from '@/api/wholesale';
+} from '@/api/lhfarm-small';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import deleteMixin from '@/mixins/deleteMixin.js';

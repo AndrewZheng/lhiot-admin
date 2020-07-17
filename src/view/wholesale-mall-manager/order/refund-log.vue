@@ -133,7 +133,7 @@
 
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
-import { getrefundLogPages } from "@/api/wholesale";
+import { getrefundLogPages } from "@/api/lhfarm-small";
 import { fenToYuanDot2, fenToYuanDot2Number } from "@/libs/util";
 import { paymentFromEnum, wholesalePayTypeEnum } from "@/libs/enumerate";
 import {
@@ -215,19 +215,27 @@ export default {
           title: "编号",
           key: "id",
           align: "center",
-          minWidth: 40
+          minWidth: 20
         },
         {
           title: "订单编码",
           key: "orderCode",
           align: "center",
-          minWidth: 150
+          minWidth: 140
         },
         {
           title: "微信交易流水号",
           key: "transactionId",
           align: "center",
-          minWidth: 200
+          minWidth: 220,
+          render(h, params, vm) {
+            const { row } = params;
+            if (row.transactionId) {
+              return <div>{row.transactionId}</div>;
+            } else {
+              return <div>N/A</div>;
+            }
+          }
         },
         {
           title: "用户名",

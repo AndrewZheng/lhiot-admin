@@ -14,7 +14,6 @@
         highlight-row
         search-place="top"
         @on-delete="handleDelete"
-        @on-edit="handleEdit"
         @on-set-vip="handleSetVip"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
@@ -111,146 +110,6 @@
         </Row>
       </div>
     </Card>
-
-    <Modal v-model="modalEdit" :mask-closable="false" :width="800">
-      <p slot="header">
-        <span>编辑用户信息</span>
-      </p>
-      <div class="modal-content" style="margin-top: 20px">
-        <Form ref="editForm" :label-width="100" :model="userDetail">
-          <Row>
-            <i-col span="12">
-              <FormItem label="手机号码:" prop="phone">{{ userDetail.phone }}</FormItem>
-            </i-col>
-            <i-col span="12">
-              <FormItem label="微信昵称:" prop="nickname">{{ userDetail.nickname }}</FormItem>
-            </i-col>
-          </Row>
-          <Row>
-            <i-col span="12">
-              <FormItem label="用户头像:" prop="profilePhoto">
-                <img :src="userDetail.profilePhoto" width="60" height="60" />
-              </FormItem>
-            </i-col>
-            <i-col span="12">
-              <FormItem label="性别:" prop="sex">{{ sexConvertName }}</FormItem>
-              <FormItem label="余额:" prop="balance">{{ userBalance }}</FormItem>
-            </i-col>
-          </Row>
-          <Row>
-            <i-col span="24">
-              <FormItem label="区域:" prop="city">
-                <Input
-                  v-model="userDetail.city"
-                  :autosize="{minRows: 2,maxRows: 6}"
-                  type="textarea"
-                  style="width: 400px"
-                ></Input>
-              </FormItem>
-            </i-col>
-          </Row>
-          <Row>
-            <i-col span="24">
-              <!-- <FormItem label="详细地址:" prop="addressDetail">{{ userDetail.addressDetail }}</FormItem> -->
-              <FormItem label="详细地址:" prop="addressDetail">
-                <Input
-                  v-model="userDetail.addressDetail"
-                  :autosize="{minRows: 2,maxRows: 6}"
-                  type="textarea"
-                  style="width: 400px"
-                ></Input>
-              </FormItem>
-            </i-col>
-          </Row>
-        </Form>
-      </div>
-      <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
-      </div>
-    </Modal>
-
-    <Modal v-model="modalUser" :width="1000" title="业务员选择">
-      <Card>
-        <tables
-          ref="dataTables"
-          v-model="userData"
-          :columns="userColumns"
-          :loading="loadingUser"
-          editable
-          searchable
-          border
-          search-place="top"
-          @on-select-all="onSelectionAllUser"
-          @on-selection-change="onSelectionChangeUser"
-        >
-          <div slot="searchCondition">
-            <Input
-              v-model="searchUserRowData.phone"
-              placeholder="用户电话"
-              class="search-input mr5"
-              style="width: 100px"
-              clearable
-            ></Input>
-            <Input
-              v-model="searchUserRowData.userName"
-              placeholder="用户姓名"
-              class="search-input mr5"
-              style="width: 100px"
-              clearable
-            ></Input>
-            <Select
-              v-model="searchUserRowData.salesUserStatus"
-              class="search-col mr5"
-              placeholder="业务员状态"
-              style="width:100px"
-              clearable
-            >
-              <Option
-                v-for="item in userStatusEnum"
-                :key="item.value"
-                :value="item.value"
-                class="ptb2-5"
-              >{{ item.label }}</Option>
-            </Select>
-            <Button
-              v-waves
-              :search-loading="searchLoading"
-              class="search-btn mr5"
-              type="primary"
-              @click="handleSearch1"
-            >
-              <Icon type="md-search" />&nbsp;搜索
-            </Button>
-            <Button
-              v-waves
-              :loading="clearSearchLoading"
-              class="search-btn"
-              type="info"
-              @click="handleClear1"
-            >
-              <Icon type="md-refresh" />&nbsp;清除
-            </Button>
-          </div>
-        </tables>
-        <div style="margin: 10px;overflow: hidden">
-          <Row type="flex" justify="end">
-            <Page
-              :total="usersTotal"
-              :current="searchUserRowData.page"
-              show-sizer
-              show-total
-              @on-change="changeUserPage"
-              @on-page-size-change="changeUserPageSize"
-            ></Page>
-          </Row>
-        </div>
-      </Card>
-      <div slot="footer">
-        <Button @click="modalUser=false">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleAssgin">确定</Button>
-      </div>
-    </Modal>
   </div>
 </template>
 
@@ -267,7 +126,7 @@ import {
   getAllSalesman,
   storeAssign,
   unlockSalesman
-} from "@/api/wholesale";
+} from "@/api/lhfarm-small";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -330,22 +189,17 @@ const columns = [
     title: "编号",
     align: "center",
     key: "id",
-    width: 80,
+    width: 80
   },
   {
-    title: "所属地区",
+    title: "微信昵称",
     align: "center",
-    key: "city",
+    key: "nickname"
   },
   {
     title: "手机号码",
     align: "center",
-    key: "phone",
-  },
-  {
-    title: "注册时间",
-    align: "center",
-    key: "registerTime",
+    key: "phone"
   },
   {
     title: "用户余额",
@@ -355,6 +209,11 @@ const columns = [
       const amount = fenToYuanDot2(params.row.balance);
       return <div>{amount}</div>;
     }
+  },
+  {
+    title: "注册时间",
+    align: "center",
+    key: "registerTime"
   },
   {
     title: "是否VIP",
@@ -391,7 +250,7 @@ const columns = [
     align: "center",
     key: "handle",
     width: 240,
-    options: ["setVip", "edit",]
+    options: ["setVip"]
   }
 ];
 
@@ -583,28 +442,7 @@ export default {
       this.$Message.info("操作成功");
       this.editTableRow();
     },
-    handleSubmit() {
-      this.$refs.editForm.validate(valid => {
-        if (valid) {
-          if (this.isCreate) {
-            this.createTableRow();
-          } else if (this.isEdit) {
-            this.editTableRow();
-          }
-        } else {
-          this.$Message.error("请完善商品单位信息!");
-        }
-      });
-    },
-    editTableRow() {
-      this.modalViewLoading = true;
-      editUser(this.userDetail).then(res => {
-        this.modalViewLoading = false;
-        this.modalEdit = false;
-        this.getTableData();
-        this.resetFields();
-      });
-    },
+
     createTableRow() {
       createUser(this.userDetail)
         .then(res => {})
@@ -617,11 +455,6 @@ export default {
     },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
-    },
-    handleEdit(params) {
-      this.tempModalType = this.modalType.edit;
-      this.userDetail = _.cloneDeep(params.row);
-      this.modalEdit = true;
     },
     handleAdd() {
       this.$refs.editForm.resetFields();
@@ -698,44 +531,6 @@ export default {
           this.clearSearchLoading = false;
         });
     },
-    onSelectionAllUser(selection) {
-      if (selection.length > 1) {
-        this.$Message.warning("每次只能选择一个业务员");
-        return;
-      }
-      this.assginSalesUserId = selection[0].id.toString();
-    },
-    onSelectionChangeUser(selection) {
-      if (selection.length > 1) {
-        this.$Message.warning("每次只能选择一个业务员");
-        return;
-      }
-      this.assginSalesUserId = selection[0].id.toString();
-    },
-    handleAssgin() {
-      if (this.selectedUserIds.length === 0) {
-        this.$Message.error("请先选择要转让的用户");
-        return;
-      }
-      if (!this.assginSalesUserId) {
-        this.$Message.error("请先选择要转让的业务员");
-        return;
-      }
-      const userIds = this.selectedUserIds.join(",");
-      storeAssign({
-        userIds,
-        assginSalesUserId: this.assginSalesUserId
-      }).then(res => {
-        this.$Message.info("门店转让成功");
-        this.getTableData();
-        this.modalUser = false;
-      });
-    },
-    getAllSalesman() {
-      getAllSalesman().then(res => {
-        this.salesManList = res;
-      });
-    },
     changeUserPage(page) {
       this.searchUserRowData.page = page;
       this.getUserTableData();
@@ -760,19 +555,6 @@ export default {
     },
     onSelectionChange(selection) {
       this.selectedUserIds = selection.map(item => item.id.toString());
-    },
-    onChangeCity(value, selectedData) {
-      let city = "";
-      let index = 1;
-      for (let i = 0; i < value.length; i++) {
-        if (value.length - index > 0) {
-          city += value[i] + "/";
-        } else {
-          city += value[i];
-        }
-        index++;
-      }
-      this.searchRowData.city = city;
     }
   }
 };

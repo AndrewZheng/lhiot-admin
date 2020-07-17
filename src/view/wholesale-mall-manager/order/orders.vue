@@ -321,7 +321,7 @@ import {
   sendHdManual,
   exportOrder,
   putCourierCode
-} from "@/api/wholesale";
+} from "@/api/lhfarm-small";
 import getLodop from "@/assets/lodop/lodopFuncs.js";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
@@ -642,10 +642,12 @@ const orderColumns = [
 const goodsColumns = [
   {
     title: "商品编号",
+    align: "center",
     key: "goodsId"
   },
   {
     title: "商品名称",
+    align: "center",
     key: "goodsName"
   },
   {
@@ -661,18 +663,22 @@ const goodsColumns = [
   },
   {
     title: "商品规格",
+    align: "center",
     key: "standard"
   },
   {
     title: "购买数量",
+    align: "center",
     key: "quanity"
   },
   {
     title: "商品单位",
+    align: "center",
     key: "unitName"
   },
   {
     title: "商品单价",
+    align: "center",
     key: "goodsPrice",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.goodsPrice);
@@ -682,6 +688,7 @@ const goodsColumns = [
   {
     title: "折扣价",
     key: "discountGoodsPrice",
+    align: "center",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.discountGoodsPrice);
       return <div>{amount}</div>;
@@ -690,6 +697,8 @@ const goodsColumns = [
   {
     title: "是否限时抢购",
     key: "flash",
+    align: "center",
+    minWidth:20,
     render(h, params, vm) {
       if (params.row.flash === 0) {
         return (
@@ -708,7 +717,8 @@ const goodsColumns = [
   },
   {
     title: "退货状态",
-    minWidth: 80,
+    minWidth: 20,
+    align: "center",
     key: "refundStatus",
     align: "center",
     render: (h, params, vm) => {

@@ -170,7 +170,7 @@ import {
   getProductCategoriesPages,
   getProductCategoriesTree,
   editProductCategories
-} from "@/api/wholesale";
+} from "@/api/lhfarm-small";
 import { buildMenu, convertTree } from "@/libs/util";
 
 import uploadMixin from "@/mixins/uploadMixin";

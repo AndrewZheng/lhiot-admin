@@ -257,7 +257,7 @@ import {
   createFaq,
   deleteFaq,
   editFaq
-} from '@/api/wholesale';
+} from '@/api/lhfarm-small';
 import { buildMenu, convertTree } from '@/libs/util';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';

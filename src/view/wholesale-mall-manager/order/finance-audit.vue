@@ -528,7 +528,7 @@ import {
   getFinanceRefuse,
   getOrderDetail,
   getOrderGoods
-} from '@/api/wholesale';
+} from '@/api/lhfarm-small';
 import { fenToYuanDot2, fenToYuanDot2Number, download } from '@/libs/util';
 import { serviceModeEnum, serviceStatusEnum } from '@/libs/enumerate';
 import { serviceModeConvert, serviceStatusConvert } from '@/libs/converStatus';

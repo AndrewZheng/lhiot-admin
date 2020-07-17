@@ -194,7 +194,7 @@ import {
   deletCouponTemplate,
   editCouponTemplate,
   createCouponTemplate
-} from "@/api/wholesale";
+} from "@/api/lhfarm-small";
 import deleteMixin from "@/mixins/deleteMixin.js";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
@@ -293,7 +293,7 @@ export default {
           title: "ID",
           align: "center",
           key: "id",
-          maxWidth: 80
+          width: 60
         },
         {
           title: "优惠券名称",
@@ -343,6 +343,7 @@ export default {
           title: "模板类型",
           align: "center",
           key: "couponType",
+          minWidth: 60,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.couponType === "FULL_CUT_COUPON") {
@@ -506,6 +507,7 @@ export default {
       this.modalViewLoading = true;
       editCouponTemplate(this.couponTemplate)
         .then(res => {
+          this.$Message.success("操作成功！");
           this.getTableData();
         })
         .finally(() => {

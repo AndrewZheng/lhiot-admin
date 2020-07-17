@@ -136,7 +136,7 @@ import {
   editSystemSettingCategory,
   createSystemSettingCategory,
   getSystemSettingCategoryTree
-} from '@/api/wholesale';
+} from '@/api/lhfarm-small';
 import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';

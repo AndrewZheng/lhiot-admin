@@ -208,7 +208,7 @@ import {
   getProductStandardsPages,
   editProductSectionRelation,
   getProductSectionTree
-} from "@/api/wholesale";
+} from "@/api/lhfarm-small";
 import {
   buildMenu,
   convertTree,
@@ -588,6 +588,8 @@ export default {
   methods: {
     handleBack() {
       this.currentCategory.plateName = "所有板块";
+      this.searchRowData.plateId = null;
+      this.initMenuList();
       this.handleClear();
     },
     renderContent(h, { root, node, data }) {
@@ -743,6 +745,9 @@ export default {
     },
     getTableData() {
       this.loading = true;
+      if (this.currentCategory.plateName === "所有板块") {
+        this.searchRowData.plateId = "";
+      }
       getProductSectionRelationPages(this.searchRowData).then(res => {
         if (this.menuData.length > 0) {
           this.tableData = res.rows;

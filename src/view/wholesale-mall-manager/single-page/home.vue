@@ -141,7 +141,7 @@ import Tables from '_c/tables';
 import InforCard from '_c/info-card';
 import CountTo from '_c/count-to';
 import config from '@/config';
-import { getAnalysisDatas } from '@/api/wholesale';
+import { getAnalysisDatas } from '@/api/lhfarm-small';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import deleteMixin from '@/mixins/deleteMixin.js';

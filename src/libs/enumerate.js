@@ -2769,14 +2769,6 @@ export const paymentFromEnum = [{
   label: '订单',
   value: 'order'
 },
-{
-  label: '发票',
-  value: 'invoice'
-},
-{
-  label: '账款',
-  value: 'debt'
-}
 ];
 
 // MRQD-每日签到、WSGRZL-完善个人资料、XRXSSDXF-新人线上首单消费、XSSCCZ-线上首次充值、XSYDCZ-线上月度充值、XSYDXF-线上月度消费

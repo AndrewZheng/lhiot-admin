@@ -67,8 +67,8 @@
             <Select
               v-model="searchRowData.isHasPriceRegion"
               class="ml5 mr5"
-              placeholder="区间价状态"
-              style="width:90px"
+              placeholder="是否有区间价"
+              style="width:120px"
               clearable
             >
               <Option
@@ -846,7 +846,7 @@ import {
   editGoodsPriceRegion,
   exporGoodsStandard,
   deletePicture
-} from "@/api/wholesale";
+} from "@/api/lhfarm-small";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
 import tableMixin from "@/mixins/tableMixin.js";
@@ -1335,7 +1335,7 @@ export default {
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
-              if (!/^[2-9]\d*$/.test(value)) {
+              if (!/^[1-9]{1}[0-9]*$/.test(value)) {
                 errors.push(new Error("必须为大于1的整数"));
               }
               callback(errors);
