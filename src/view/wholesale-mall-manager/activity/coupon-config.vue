@@ -41,7 +41,7 @@
               >{{ item.label }}</Option>
             </Select>
             <Select
-              v-model="searchRowData.couponType"
+              v-model="searchRowData.couponSendType"
               class="search-col mr5"
               placeholder="发放类型"
               style="width: 150px"
@@ -192,8 +192,8 @@
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="发放类型:" prop="couponType" style="width:200px;">
-                <Select v-model="couponConfig.couponType">
+              <FormItem label="发放类型:" prop="couponSendType" style="width:200px;">
+                <Select v-model="couponConfig.couponSendType">
                   <Option
                     v-for="(item,index) in couponFromEnum"
                     :key="index"
@@ -362,10 +362,12 @@ const couponConfig = {
   effectiveTime: "",
   failureTime: "",
   plateType: "", // allgoods-全品类 singlegoods-单品类
-  vaildDays: 0
+  vaildDays: 0,
+  couponSendType: ""
 };
 
 const roleRowData = {
+  couponSendType: "",
   couponConfigvaild: "",
   endTime: null,
   startTime: null,
@@ -559,14 +561,14 @@ export default {
       columns: [
         {
           type: "selection",
-          width: 60,
+          width: 50,
           align: "center"
         },
         {
           title: "ID",
           align: "center",
           key: "id",
-          maxWidth: 80
+          maxWidth: 55
         },
         {
           title: "优惠券名称",
@@ -641,10 +643,59 @@ export default {
           }
         },
         {
+          title: "发放类型",
+          align: "center",
+          key: "couponSendType",
+          minWidth: 60,
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.couponSendType === "artificial") {
+              return (
+                <div>
+                  <tag color="primary">
+                    {couponFromConvert(row.couponSendType)}
+                  </tag>
+                </div>
+              );
+            } else if (row.couponSendType === "recharge") {
+              return (
+                <div>
+                  <tag color="pink">
+                    {couponFromConvert(row.couponSendType)}
+                  </tag>
+                </div>
+              );
+            } else if (row.couponSendType === "registration") {
+              return (
+                <div>
+                  <tag color="orange">
+                    {couponFromConvert(row.couponSendType)}
+                  </tag>
+                </div>
+              );
+            } else if (row.couponSendType === "flashsale") {
+              return (
+                <div>
+                  <tag color="cyan">
+                    {couponFromConvert(row.couponSendType)}
+                  </tag>
+                </div>
+              );
+            } else {
+              return (
+                <div>
+                  <tag color="primary">N/A</tag>
+                </div>
+              );
+            }
+          }
+        },
+
+        {
           title: "生效时间",
           align: "center",
           key: "effectiveTime",
-          minWidth: 80,
+          minWidth: 90,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.vaildDays) {
@@ -658,7 +709,7 @@ export default {
           title: "失效时间",
           align: "center",
           key: "failureTime",
-          width: 220,
+          minWidth: 90,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.vaildDays) {
@@ -689,7 +740,7 @@ export default {
           }
         },
         {
-          title: "优惠券状态",
+          title: "券状态",
           align: "center",
           minWidth: 20,
           key: "couponConfigvaild",

@@ -29,13 +29,13 @@
           >
             <div slot="searchCondition">
               <Row>
-                <Input
+                <!-- <Input
                   v-model.trim="searchRowData.baseBar"
                   placeholder="基础条码"
                   class="search-input mr5"
                   style="width: auto"
                   clearable
-                ></Input>
+                ></Input> -->
                 <!-- <Input
                   v-model="searchRowData.goodsCode"
                   placeholder="商品编码"
@@ -151,12 +151,12 @@
               <i-col span="18">{{ productDetail.unitName }}</i-col>
             </Row>
           </i-col>
-          <i-col span="12">
+          <!-- <i-col span="12">
             <Row>
               <i-col span="8">基础条码:</i-col>
               <i-col span="16">{{ productDetail.baseBar }}</i-col>
             </Row>
-          </i-col>
+          </i-col> -->
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
@@ -282,11 +282,11 @@
                 </Select>
               </FormItem>
             </i-col>
-            <i-col span="12">
+            <!-- <i-col span="12">
               <FormItem label="基础条码:" prop="baseBar">
                 <Input v-model.trim="productDetail.baseBar" placeholder="基础条码"></Input>
               </FormItem>
-            </i-col>
+            </i-col> -->
           </Row>
           <Row>
             <i-col span="12">
@@ -586,7 +586,7 @@ export default {
         // goodsCode: [{ required: false, message: "请输入商品编码" }],
         goodsName: [{ required: true, message: "请输入商品名称" }],
         baseUnit: [{ required: true, message: "请选择商品单位" }],
-        baseBar: [{ required: true, message: "请输入基础条码" }],
+        // baseBar: [{ required: true, message: "请输入基础条码" }],
         // goodsDes: [{ required: true, message: "请输入商品特征" }],
         // afterDes: [{ required: true, message: "请输入售后标准" }],
         // goodsArea: [{ required: true, message: "请选择商品区域" }],
@@ -675,13 +675,13 @@ export default {
           minWidth: 90,
           key: "placeOfOrigin"
         },
-        {
-          title: "基础条码",
-          align: "center",
-          key: "baseBar",
-          sortable: true,
-          minWidth: 140
-        },
+        // {
+        //   title: "基础条码",
+        //   align: "center",
+        //   key: "baseBar",
+        //   sortable: true,
+        //   minWidth: 140
+        // },
         {
           title: "基础单位",
           align: "center",
@@ -831,7 +831,7 @@ export default {
     },
     createProduct() {
       this.modalViewLoading = true;
-      this.productDetail.baseBar = this.productDetail.baseBar.trim();
+      // this.productDetail.baseBar = this.productDetail.baseBar.trim();
       createProduct({
         ...this.productDetail
       })
@@ -846,7 +846,7 @@ export default {
     },
     editProduct() {
       this.modalViewLoading = true;
-      this.productDetail.baseBar = this.productDetail.baseBar.trim();
+      // this.productDetail.baseBar = this.productDetail.baseBar.trim();
       editProduct({
         ...this.productDetail
       })

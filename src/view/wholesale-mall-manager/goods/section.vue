@@ -113,9 +113,7 @@
           <FormItem v-show="isCreate" label="父级名称:">
             <i-col
               style="color:red;font-weight:bold;"
-            >
-              {{ parentCategory.plateName?parentCategory.plateName:'全部板块' }}
-            </i-col>
+            >{{ parentCategory.plateName?parentCategory.plateName:'全部板块' }}</i-col>
           </FormItem>
           <FormItem :label-width="100" label="板块名称:" prop="plateName">
             <Input v-model="currentCategory.plateName" style="width:200px;"></Input>
@@ -134,9 +132,7 @@
                 :key="index"
                 :value="item.value"
                 class="ptb2-5"
-              >
-                {{ item.label }}
-              </Option>
+              >{{ item.label }}</Option>
             </Select>
           </FormItem>
           <FormItem label="板块图片:建议尺寸;750x338(单位:px):" prop="plateImage">
@@ -144,7 +140,7 @@
             <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
               <template v-if="item.status === 'finished'">
                 <div>
-                  <img :src="item.url">
+                  <img :src="item.url" />
                   <div class="demo-upload-list-cover">
                     <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                     <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -171,21 +167,17 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">
-          确定
-        </Button>
+        <Button @click="handleEditClose">关闭</Button>
+        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">确定</Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import CommonIcon from '_c/common-icon';
-import IViewUpload from '_c/iview-upload';
+import Tables from "_c/tables";
+import CommonIcon from "_c/common-icon";
+import IViewUpload from "_c/iview-upload";
 
 import {
   createProductSection,
@@ -194,58 +186,58 @@ import {
   getProductSectionTree,
   editProductSection,
   deletePicture
-} from '@/api/lhfarm-small';
-import { layoutEnum } from '@/libs/enumerate';
-import { layoutConvert } from '@/libs/converStatus';
-import { buildMenu, convertTree } from '@/libs/util';
+} from "@/api/lhfarm-small";
+import { layoutEnum } from "@/libs/enumerate";
+import { layoutConvert } from "@/libs/converStatus";
+import { buildMenu, convertTree } from "@/libs/util";
 
-import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
 
 const currentCategory = {
   id: 0,
   rank: 0,
   levels: 0,
   parentId: 0,
-  plateName: '',
-  plateImage: '',
-  layout: '', // xlayout-横向布局 ylayout-纵向布局 roll-滚动布局 list-列表-用于推荐商品
-  parentPlateName: '',
+  plateName: "",
+  plateImage: "",
+  layout: "", // xlayout-横向布局 ylayout-纵向布局 roll-滚动布局 list-列表-用于推荐商品
+  parentPlateName: "",
   channelGoods: []
 };
 
 const roleRowData = {
-  plateName: '',
+  plateName: "",
   page: 1,
   rows: 20,
-  sidx: 'rank'
+  sidx: "rank"
 };
 
 const dataColumns = [
   {
-    type: 'selection',
-    key: '',
+    type: "selection",
+    key: "",
     width: 60,
-    align: 'center'
+    align: "center"
   },
   {
-    title: '板块ID',
-    key: 'id',
-    align: 'center',
+    title: "板块ID",
+    key: "id",
+    align: "center",
     maxWidth: 80
   },
   {
-    title: '板块名称',
-    key: 'plateName',
-    align: 'center',
+    title: "板块名称",
+    key: "plateName",
+    align: "center",
     minWidth: 150
   },
   {
-    title: '板块布局',
-    key: 'layout',
-    align: 'center',
+    title: "板块布局",
+    key: "layout",
+    align: "center",
     minWidth: 150,
     render: (h, params, vm) => {
       const { row } = params;
@@ -253,29 +245,29 @@ const dataColumns = [
     }
   },
   {
-    title: '板块图片',
-    key: 'plateImage',
-    align: 'center',
+    title: "板块图片",
+    key: "plateImage",
+    align: "center",
     maxWidth: 790,
     render: (h, params, vm) => {
       const { row } = params;
-      const str = <img src={row.plateImage} height='60' width='100%' />;
+      const str = <img src={row.plateImage} height="60" width="100%" />;
       return <div>{str}</div>;
     }
   },
   {
-    title: '排序',
-    key: 'rank',
+    title: "排序",
+    key: "rank",
     sortable: true,
-    align: 'center',
+    align: "center",
     minWidth: 150
   },
   {
-    title: '操作',
-    key: 'handle',
-    align: 'center',
+    title: "操作",
+    key: "handle",
+    align: "center",
     minWidth: 150,
-    options: ['edit', 'delete']
+    options: ["edit", "delete"]
   }
 ];
 
@@ -301,8 +293,8 @@ export default {
       modalEditLoading: false,
       uploadVisible: false,
       clearSearchLoading: false,
-      currentParentName: '',
-      imgUploadViewItem: '',
+      currentParentName: "",
+      imgUploadViewItem: "",
       imageSize: 2048,
       currentParentId: 0,
       currentCategory: _.cloneDeep(currentCategory),
@@ -310,15 +302,15 @@ export default {
       searchRowData: _.cloneDeep(roleRowData),
       columns: dataColumns,
       ruleInline: {
-        plateName: [{ required: true, message: '请输入板块名称' }],
-        plateImage: [{ required: false, message: '请上传上板块图片' }],
+        plateName: [{ required: true, message: "请输入板块名称" }],
+        plateImage: [{ required: false, message: "请上传上板块图片" }],
         rank: [
-          { required: true, message: '请输入板块排序' },
+          { required: true, message: "请输入板块排序" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
+                errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
             }
@@ -329,7 +321,7 @@ export default {
   },
   created() {
     this.initMenuList();
-    this.parentCategory.plateName = '全部版块';
+    this.parentCategory.plateName = "全部版块";
   },
   methods: {
     getTableData() {
@@ -373,7 +365,7 @@ export default {
             this.editProductSection();
           }
         } else {
-          this.$Message.error('请完善板块信息!');
+          this.$Message.error("请完善板块信息!");
         }
       });
     },
@@ -400,7 +392,7 @@ export default {
       this.modalViewLoading = true;
       createProductSection(this.currentCategory)
         .then(res => {
-          this.$Message.info('添加成功!');
+          this.$Message.info("添加成功!");
         })
         .finally(res => {
           this.initMenuList();
@@ -413,7 +405,7 @@ export default {
       this.modalViewLoading = true;
       editProductSection(this.currentCategory)
         .then(res => {
-          this.$Message.info('修改成功!');
+          this.$Message.info("修改成功!");
         })
         .finally(res => {
           this.initMenuList();
@@ -423,8 +415,8 @@ export default {
     },
     // 编辑分类
     handleEdit(params) {
-      if (this.parentCategory.plateName === '全部版块') {
-        this.$Message.warning('请先从左侧选择一个板块');
+      if (this.parentCategory.plateName === "全部版块") {
+        this.$Message.warning("请先从左侧选择一个板块");
         return;
       }
       this.save = [];
@@ -438,7 +430,7 @@ export default {
     },
     handleBack() {
       this.parentCategory.id = 0;
-      this.parentCategory.plateName = '全部版块';
+      this.parentCategory.plateName = "全部版块";
       this.handleClear();
     },
     deleteTable(ids) {
@@ -469,8 +461,8 @@ export default {
         if (res && res.length > 0) {
           const menuList = buildMenu(res);
           const map = {
-            title: 'title',
-            children: 'children'
+            title: "title",
+            children: "children"
           };
           this.menuData = convertTree(menuList, map, true);
           if (this.menuData.length > 0) {
@@ -480,18 +472,18 @@ export default {
       });
     },
     renderContent(h, { root, node, data }) {
-      if (data.type == 'PARENT') {
+      if (data.children.length > 0) {
         return (
           <div
             style={{
-              display: 'inline-block',
-              width: '100%',
-              fontSize: '14px',
-              cursor: 'pointer'
+              display: "inline-block",
+              width: "100%",
+              fontSize: "14px",
+              cursor: "pointer"
             }}
           >
             <span>
-              <CommonIcon type='ios-folder' class='mr10' />
+              <CommonIcon type="ios-folder" class="mr10" />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -502,14 +494,14 @@ export default {
         return (
           <div
             style={{
-              display: 'inline-block',
-              width: '100%',
-              fontSize: '14px',
-              cursor: 'pointer'
+              display: "inline-block",
+              width: "100%",
+              fontSize: "14px",
+              cursor: "pointer"
             }}
           >
             <span>
-              <CommonIcon type='ios-paper' class='mr10' />
+              <CommonIcon type="ios-paper" class="mr10" />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -521,9 +513,9 @@ export default {
     handleClick({ root, node, data }) {
       this.loading = true;
       // 展开当前节点
-      if (typeof data.expand === 'undefined') {
+      if (typeof data.expand === "undefined") {
         // this.$set(data, 'expend', true);
-        this.$set(data, 'expend', false);
+        this.$set(data, "expend", false);
         if (data.children) {
           this.expandChildren(data.children);
         }
@@ -540,7 +532,7 @@ export default {
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.plateImage != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.plateImage;
         mainImgArr.push(map);

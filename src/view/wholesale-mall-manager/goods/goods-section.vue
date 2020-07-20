@@ -135,13 +135,13 @@
               >
                 <div slot="searchCondition">
                   <Row>
-                    <Input
+                    <!-- <Input
                       v-model="searchProductRowData.barCode"
                       placeholder="商品条码"
                       class="search-input mr5"
                       style="width: auto"
                       clearable
-                    ></Input>
+                    ></Input>-->
                     <Input
                       v-model="searchProductRowData.goodsName"
                       placeholder="商品名称"
@@ -304,12 +304,12 @@ const relationColumns = [
     key: "id",
     minWidth: 80
   },
-  {
-    title: "商品条码",
-    align: "center",
-    key: "barCode",
-    minWidth: 70
-  },
+  // {
+  //   title: "商品条码",
+  //   align: "center",
+  //   key: "barCode",
+  //   minWidth: 70
+  // },
   {
     title: "商品名称",
     align: "center",
@@ -439,12 +439,12 @@ const standardColumns = [
     key: "id",
     minWidth: 50
   },
-  {
-    title: "商品条码",
-    align: "center",
-    key: "barCode",
-    minWidth: 70
-  },
+  // {
+  //   title: "商品条码",
+  //   align: "center",
+  //   key: "barCode",
+  //   minWidth: 70
+  // },
   {
     title: "商品名称",
     align: "center",
@@ -593,7 +593,7 @@ export default {
       this.handleClear();
     },
     renderContent(h, { root, node, data }) {
-      if (data.type == "PARENT") {
+      if (data.children.length > 0) {
         return (
           <div
             style={{
