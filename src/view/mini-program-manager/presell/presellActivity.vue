@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="18"
+        :search-area-column="22"
         :operate-area-column="6"
         editable
         searchable
@@ -31,6 +31,20 @@
             >
               <Option
                 v-for="(item,index) in activityStatus"
+                :key="index"
+                :value="item.value"
+                class="ptb2-5"
+                style="padding-left: 5px;width: 100px"
+              >{{ item.label }}</Option>
+            </Select>
+            <Select
+              v-model="searchRowData.startedFlag"
+              placeholder="是否开始"
+              style="padding-right: 5px;width: 100px"
+              clearable
+            >
+              <Option
+                v-for="(item,index) in startedFlagStatus"
                 :key="index"
                 :value="item.value"
                 class="ptb2-5"
@@ -108,11 +122,14 @@
             <Button
               v-waves
               :loading="clearSearchLoading"
-              class="search-btn"
+              class="search-btn mr5"
               type="info"
               @click="handleClear"
             >
               <Icon type="md-refresh" />&nbsp;清除
+            </Button>
+            <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
+              <Icon type="md-add" />添加
             </Button>
           </Row>
           <div class="ml15 mt10">
@@ -120,9 +137,6 @@
           </div>
         </div>
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
-            <Icon type="md-add" />添加
-          </Button>
           <!-- <Button
             v-waves
             :loading="exportExcelLoading"
@@ -932,7 +946,8 @@ const roleRowData = {
   rows: 10,
   sidx: "rank",
   sort: "asc",
-  validDateType: null
+  validDateType: null,
+  startedFlag: true
 };
 
 const productStandardDetail = {
@@ -1083,6 +1098,10 @@ export default {
       },
       defaultListMain: [],
       uploadListMain: [],
+      startedFlagStatus: [
+        { label: "是", value: "true" },
+        { label: "否", value: "false" }
+      ],
       activityStatus: [
         { label: "上架", value: "VALID" },
         { label: "下架", value: "INVALID" }
