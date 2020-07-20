@@ -250,7 +250,7 @@ import {
   getActivityPages,
   editActivity,
   createActivity
-} from "@/api/wholesale";
+} from "@/api/lhfarm-small";
 import deleteMixin from "@/mixins/deleteMixin.js";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";

@@ -3,16 +3,16 @@ import Main from '@/components/main';
 const wholesaleRouter = [
   {
     path: '/',
-    name: 'wholesale-home',
-    redirect: '/wholesale-home',
+    name: 'stores-home',
+    redirect: '/stores-home',
     component: Main,
     meta: {
       hideInMenu: true,
       notCache: true
     },
     children: [{
-      path: '/wholesale-home',
-      name: 'wholesale-home',
+      path: '/stores-home',
+      name: 'stores-home',
       meta: {
         hideInMenu: true,
         title: '首页',
@@ -101,15 +101,6 @@ const wholesaleRouter = [
         title: '关键字管理'
       },
       component: () => import('@/view/wholesale-mall-manager/goods/goods-keywords.vue')
-    },
-    {
-      path: '/wholesale-goods-demand',
-      name: 'wholesale-goods-demand',
-      meta: {
-        icon: 'ios-list-box',
-        title: '新品需求管理'
-      },
-      component: () => import('@/view/wholesale-mall-manager/goods/goods-demand.vue')
     }
     ]
   },
@@ -139,25 +130,6 @@ const wholesaleRouter = [
       },
       component: () => import('@/view/wholesale-mall-manager/user/user-analysis.vue')
     },
-    {
-      path: '/wholesale-salesman-analysis',
-      name: 'wholesale-salesman-analysis',
-      meta: {
-        icon: 'md-analytics',
-        title: '业务员业绩分析'
-      },
-      component: () => import('@/view/wholesale-mall-manager/user/salesman-analysis.vue')
-    },
-    {
-      path: '/wholesale-salesman-store-analysis',
-      name: 'wholesale-salesman-store-analysis',
-      meta: {
-        hideInMenu: true,
-        icon: 'md-analytics',
-        title: '业务员门店业绩分析'
-      },
-      component: () => import('@/view/wholesale-mall-manager/user/salesman-store-analysis.vue')
-    }
     ]
   },
   {
@@ -204,24 +176,24 @@ const wholesaleRouter = [
       },
       component: () => import('@/view/wholesale-mall-manager/order/refund-log.vue')
     },
-    {
-      path: '/wholesale-order-aftersale',
-      name: 'wholesale-order-aftersale',
-      meta: {
-        icon: 'ios-albums',
-        title: '售后订单'
-      },
-      component: () => import('@/view/wholesale-mall-manager/order/order-aftersale.vue')
-    },
-    {
-      path: '/wholesale-finance-audit',
-      name: 'wholesale-finance-audit',
-      meta: {
-        icon: 'ios-albums',
-        title: '财务审核'
-      },
-      component: () => import('@/view/wholesale-mall-manager/order/finance-audit.vue')
-    },
+    // {
+    //   path: '/wholesale-order-aftersale',
+    //   name: 'wholesale-order-aftersale',
+    //   meta: {
+    //     icon: 'ios-albums',
+    //     title: '售后订单'
+    //   },
+    //   component: () => import('@/view/wholesale-mall-manager/order/order-aftersale.vue')
+    // },
+    // {
+    //   path: '/wholesale-finance-audit',
+    //   name: 'wholesale-finance-audit',
+    //   meta: {
+    //     icon: 'ios-albums',
+    //     title: '财务审核'
+    //   },
+    //   component: () => import('@/view/wholesale-mall-manager/order/finance-audit.vue')
+    // },
     ]
   },
   {

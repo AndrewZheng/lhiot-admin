@@ -2630,12 +2630,12 @@ export const activityStatusEnum = [{
 ];
 
 export const couponTemplateTypeEnum = [{
-  label: '全品类',
-  value: 'allgoods'
+  label: '折扣券',
+  value: 'DISCOUNT_COUPON'
 },
 {
-  label: '单品',
-  value: 'singlegoods'
+  label: '满减券',
+  value: 'FULL_CUT_COUPON'
 }
 ];
 
@@ -2670,6 +2670,10 @@ export const couponFromEnum = [{
 {
   label: '限时抢购',
   value: 'flashsale'
+},
+{
+  label: '活动送券',
+  value: 'activity'
 }
 ];
 
@@ -2765,14 +2769,6 @@ export const paymentFromEnum = [{
   label: '订单',
   value: 'order'
 },
-{
-  label: '发票',
-  value: 'invoice'
-},
-{
-  label: '账款',
-  value: 'debt'
-}
 ];
 
 // MRQD-每日签到、WSGRZL-完善个人资料、XRXSSDXF-新人线上首单消费、XSSCCZ-线上首次充值、XSYDCZ-线上月度充值、XSYDXF-线上月度消费

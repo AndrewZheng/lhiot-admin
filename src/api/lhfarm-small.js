@@ -21,7 +21,7 @@ export const deletePicture = ({
 // 查询商品分类树结构
 export const getProductCategoriesTree = () => {
   return $http.request({
-    url: '/wholesale-small/goods-category/tree',
+    url: '/lhfarm-small/goods-category/tree',
     method: 'get'
   });
 };
@@ -29,7 +29,7 @@ export const getProductCategoriesTree = () => {
 // 根据条件分页查询商品分类信息列表
 export const getProductCategoriesPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods-category/pages',
+    url: '/lhfarm-small/goods-category/pages',
     data,
     method: 'post',
     headers: {
@@ -42,7 +42,7 @@ export const getProductCategoriesPages = (data) => {
 // 添加商品分类
 export const createProductCategories = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods-category/create',
+    url: '/lhfarm-small/goods-category/create',
     data,
     method: 'post'
   });
@@ -53,7 +53,7 @@ export const delProductCategories = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/goods-category/' + ids,
+    url: '/lhfarm-small/goods-category/' + ids,
     method: 'delete'
   });
 };
@@ -61,7 +61,7 @@ export const delProductCategories = ({
 // 修改商品分类
 export const editProductCategories = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods-category/update/' + data.id,
+    url: '/lhfarm-small/goods-category/update/' + data.id,
     data,
     method: 'put'
   });
@@ -74,7 +74,7 @@ export const editProductCategories = (data) => {
 // 根据条件分页查询商品单位列表
 export const getProductUnitsPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods-unit/pages',
+    url: '/lhfarm-small/goods-unit/pages',
     data,
     method: 'post',
     headers: {
@@ -87,7 +87,7 @@ export const getProductUnitsPages = (data) => {
 // 查询所有的商品单位列表
 export const getProductUnits = () => {
   return $http.request({
-    url: '/wholesale-small/goods-unit/getGoodsUnitAll',
+    url: '/lhfarm-small/goods-unit/getGoodsUnitAll',
     method: 'get'
   });
 };
@@ -95,7 +95,7 @@ export const getProductUnits = () => {
 // 添加商品单位
 export const createProductUnits = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods-unit/create',
+    url: '/lhfarm-small/goods-unit/create',
     data,
     method: 'post'
   });
@@ -106,7 +106,7 @@ export const delProductUnits = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/goods-unit/' + ids,
+    url: '/lhfarm-small/goods-unit/' + ids,
     method: 'delete'
   });
 };
@@ -114,7 +114,7 @@ export const delProductUnits = ({
 // 修改商品单位
 export const editProductUnits = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods-unit/update/' + data.id,
+    url: '/lhfarm-small/goods-unit/update/' + data.id,
     data,
     method: 'put'
   });
@@ -127,7 +127,7 @@ export const editProductUnits = (data) => {
 // 根据条件分页查询商品信息列表
 export const getProductPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods/pages',
+    url: '/lhfarm-small/goods/pages',
     data,
     method: 'post',
     headers: {
@@ -142,7 +142,7 @@ export const deleteProduct = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/goods/' + ids,
+    url: '/lhfarm-small/goods/' + ids,
     method: 'delete'
   });
 };
@@ -152,7 +152,7 @@ export const getProduct = ({
   id
 }) => {
   return $http.request({
-    url: '/wholesale-small/goods/' + id,
+    url: '/lhfarm-small/goods/' + id,
     method: 'get'
   });
 };
@@ -160,7 +160,7 @@ export const getProduct = ({
 // 修改商品
 export const editProduct = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods/update/' + data.id,
+    url: '/lhfarm-small/goods/update/' + data.id,
     data,
     method: 'put'
   });
@@ -169,7 +169,7 @@ export const editProduct = (data) => {
 // 添加商品
 export const createProduct = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods/create',
+    url: '/lhfarm-small/goods/create',
     data,
     method: 'post'
   });
@@ -182,7 +182,7 @@ export const createProduct = (data) => {
 // 根据条件分页查询商品信息列表
 export const getDemandGoodsPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/demand-goods/pages',
+    url: '/lhfarm-small/demand-goods/pages',
     data,
     method: 'post',
     headers: {
@@ -197,7 +197,7 @@ export const deleteDemandGoods = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/demand-goods/' + ids,
+    url: '/lhfarm-small/demand-goods/' + ids,
     method: 'delete'
   });
 };
@@ -207,7 +207,7 @@ export const getDemandGoods = ({
   id
 }) => {
   return $http.request({
-    url: '/wholesale-small/demand-goods/' + id,
+    url: '/lhfarm-small/demand-goods/' + id,
     method: 'get'
   });
 };
@@ -215,7 +215,7 @@ export const getDemandGoods = ({
 // 修改商品
 export const editDemandGoods = (data) => {
   return $http.request({
-    url: '/wholesale-small/demand-goods/update/' + data.id,
+    url: '/lhfarm-small/demand-goods/update/' + data.id,
     data,
     method: 'put'
   });
@@ -224,7 +224,7 @@ export const editDemandGoods = (data) => {
 // 添加商品
 export const createDemandGoods = (data) => {
   return $http.request({
-    url: '/wholesale-small/demand-goods/create',
+    url: '/lhfarm-small/demand-goods/create',
     data,
     method: 'post'
   });
@@ -237,7 +237,7 @@ export const createDemandGoods = (data) => {
 // 根据条件分页查询商品关键字列表
 export const getKeywordsPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods-keywords/pages',
+    url: '/lhfarm-small/goods-keywords/pages',
     data,
     method: 'post',
     headers: {
@@ -252,7 +252,7 @@ export const deleteKeywords = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/goods-keywords/' + ids,
+    url: '/lhfarm-small/goods-keywords/' + ids,
     method: 'delete'
   });
 };
@@ -262,7 +262,7 @@ export const getKeywords = ({
   id
 }) => {
   return $http.request({
-    url: '/wholesale-small/goods-keywords/' + id,
+    url: '/lhfarm-small/goods-keywords/' + id,
     method: 'get'
   });
 };
@@ -270,7 +270,7 @@ export const getKeywords = ({
 // 修改关键字
 export const editKeywords = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods-keywords/update/' + data.id,
+    url: '/lhfarm-small/goods-keywords/update/' + data.id,
     data,
     method: 'put'
   });
@@ -279,7 +279,7 @@ export const editKeywords = (data) => {
 // 添加关键字
 export const createKeywords = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods-keywords/create',
+    url: '/lhfarm-small/goods-keywords/create',
     data,
     method: 'post'
   });
@@ -292,7 +292,7 @@ export const createKeywords = (data) => {
 // 根据条件分页查询板块信息列表
 export const getProductSectionPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/plate-category/pages',
+    url: '/lhfarm-small/plate-category/pages',
     data,
     method: 'post',
     headers: {
@@ -309,7 +309,7 @@ export const deleteProductSection = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/plate-category/' + ids,
+    url: '/lhfarm-small/plate-category/' + ids,
     method: 'delete'
   });
 };
@@ -319,7 +319,7 @@ export const deleteProductSectionValidation = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/plate-category/whetherdelete/' + ids,
+    url: '/lhfarm-small/plate-category/whetherdelete/' + ids,
     method: 'get'
   });
 };
@@ -327,7 +327,7 @@ export const deleteProductSectionValidation = ({
 // 添加板块
 export const createProductSection = (data) => {
   return $http.request({
-    url: '/wholesale-small/plate-category/create',
+    url: '/lhfarm-small/plate-category/create',
     data,
     method: 'post'
   });
@@ -336,7 +336,7 @@ export const createProductSection = (data) => {
 //  修改板块
 export const editProductSection = (data) => {
   return $http.request({
-    url: '/wholesale-small/plate-category/update/' + data.id,
+    url: '/lhfarm-small/plate-category/update/' + data.id,
     data,
     method: 'put'
   });
@@ -345,7 +345,7 @@ export const editProductSection = (data) => {
 // 查询商品分类树结构
 export const getProductSectionTree = () => {
   return $http.request({
-    url: '/wholesale-small/plate-category/tree',
+    url: '/lhfarm-small/plate-category/tree',
     method: 'get'
   });
 };
@@ -359,7 +359,7 @@ export const getPlateGoodsDetail = ({
   id
 }) => {
   return $http.request({
-    url: '/wholesale-small/plate-goods/' + id,
+    url: '/lhfarm-small/plate-goods/' + id,
     method: 'get'
   });
 };
@@ -367,7 +367,7 @@ export const getPlateGoodsDetail = ({
 // 根据条件分页查询板块和商品关联信息列表
 export const getProductSectionRelationPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/plate-goods/pages',
+    url: '/lhfarm-small/plate-goods/pages',
     data,
     method: 'post',
     headers: {
@@ -382,7 +382,7 @@ export const getProductSectionRelationPages = (data) => {
 // 批量创建板块和商品之间的关联
 export const createProductSectionRelation = (data) => {
   return $http.request({
-    url: '/wholesale-small/plate-goods/creates',
+    url: '/lhfarm-small/plate-goods/creates',
     data,
     method: 'post'
   });
@@ -393,7 +393,7 @@ export const deleteProductSectionRelation = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/plate-goods/' + ids,
+    url: '/lhfarm-small/plate-goods/' + ids,
     method: 'delete'
   });
 };
@@ -401,7 +401,7 @@ export const deleteProductSectionRelation = ({
 // 批量修改板块和商品的关联
 export const editProductSectionRelation = (data) => {
   return $http.request({
-    url: '/wholesale-small/plate-goods/updates',
+    url: '/lhfarm-small/plate-goods/updates',
     data,
     method: 'put'
   });
@@ -415,7 +415,7 @@ export const getProStandardExpand = ({
   id
 }) => {
   return $http.request({
-    url: '/wholesale-small/goods-standard/standard/' + id,
+    url: '/lhfarm-small/goods-standard/standard/' + id,
     method: 'get'
   });
 };
@@ -433,7 +433,7 @@ export const getHdProductInfo = ({
 // 修改商品规格扩展信息
 export const modifyProStandardExpand = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods-standard/update/' + data.id,
+    url: '/lhfarm-small/goods-standard/update/' + data.id,
     data,
     method: 'post'
   });
@@ -442,7 +442,7 @@ export const modifyProStandardExpand = (data) => {
 // 根据条件分页查询商品规格信息列表
 export const getProductStandardsPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods-standard/pages',
+    url: '/lhfarm-small/goods-standard/pages',
     data,
     method: 'post',
     headers: {
@@ -457,7 +457,7 @@ export const deleteProductStandard = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/goods-standard/' + ids,
+    url: '/lhfarm-small/goods-standard/' + ids,
     method: 'delete'
   });
 };
@@ -465,7 +465,7 @@ export const deleteProductStandard = ({
 // 添加商品规格
 export const createProductStandard = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods-standard/create',
+    url: '/lhfarm-small/goods-standard/create',
     data,
     method: 'post'
   });
@@ -474,7 +474,7 @@ export const createProductStandard = (data) => {
 // 修改商品规格
 export const editProductStandard = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods-standard/update/' + data.id,
+    url: '/lhfarm-small/goods-standard/update/' + data.id,
     data,
     method: 'put'
   });
@@ -487,7 +487,7 @@ export const editProductStandard = (data) => {
 // 根据条件分页查询商品规格信息列表
 export const getGoodsPriceRegionPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods-price-region/pages',
+    url: '/lhfarm-small/goods-price-region/pages',
     data,
     method: 'post',
     headers: {
@@ -502,7 +502,7 @@ export const deleteGoodsPriceRegion = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/goods-price-region/' + ids,
+    url: '/lhfarm-small/goods-price-region/' + ids,
     method: 'delete'
   });
 };
@@ -510,7 +510,7 @@ export const deleteGoodsPriceRegion = ({
 // 添加商品规格
 export const createGoodsPriceRegion = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods-price-region/create',
+    url: '/lhfarm-small/goods-price-region/create',
     data,
     method: 'post'
   });
@@ -519,7 +519,7 @@ export const createGoodsPriceRegion = (data) => {
 // 修改商品规格
 export const editGoodsPriceRegion = (data) => {
   return $http.request({
-    url: '/wholesale-small/goods-price-region/update/' + data.id,
+    url: '/lhfarm-small/goods-price-region/update/' + data.id,
     data,
     method: 'put'
   });
@@ -532,7 +532,7 @@ export const editGoodsPriceRegion = (data) => {
 // 根据条件分页查询用户信息列表
 export const getUserPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/user/pages',
+    url: '/lhfarm-small/user/pages',
     data,
     method: 'post',
     headers: {
@@ -544,7 +544,7 @@ export const getUserPages = (data) => {
 
 export const getUserAnalysisPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/user/user-analys',
+    url: '/lhfarm-small/user/user-analys',
     data,
     method: 'post',
     headers: {
@@ -556,7 +556,7 @@ export const getUserAnalysisPages = (data) => {
 
 export const getPerformancePages = (data) => {
   return $http.request({
-    url: '/wholesale-small/user/sales/performance',
+    url: '/lhfarm-small/user/sales/performance',
     data,
     method: 'post',
     headers: {
@@ -568,7 +568,7 @@ export const getPerformancePages = (data) => {
 
 export const getPerformanceShopPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/user/sales/performance-shop',
+    url: '/lhfarm-small/user/sales/performance-shop',
     data,
     method: 'post',
     headers: {
@@ -581,7 +581,7 @@ export const getPerformanceShopPages = (data) => {
 // 门店转让
 export const storeAssign = (data) => {
   return $http.request({
-    url: '/wholesale-small/user/sales/assgin/shop',
+    url: '/lhfarm-small/user/sales/assgin/shop',
     data,
     method: 'post'
   });
@@ -590,7 +590,7 @@ export const storeAssign = (data) => {
 // 查询所有业务员
 export const getAllSalesman = () => {
   return $http.request({
-    url: '/wholesale-small/user/sales-users',
+    url: '/lhfarm-small/user/sales-users',
     method: 'get'
   });
 }
@@ -599,14 +599,14 @@ export const deleteUser = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/user/' + ids,
+    url: '/lhfarm-small/user/' + ids,
     method: 'delete'
   });
 };
 
 export const createUser = (data) => {
   return $http.request({
-    url: '/wholesale-small/user/create',
+    url: '/lhfarm-small/user/create',
     data,
     method: 'post'
   });
@@ -614,7 +614,7 @@ export const createUser = (data) => {
 
 export const editUser = (data) => {
   return $http.request({
-    url: '/wholesale-small/user/update/' + data.id,
+    url: '/lhfarm-small/user/update/' + data.id,
     data,
     method: 'put'
   });
@@ -623,14 +623,14 @@ export const editUser = (data) => {
 // 审核业务员
 export const auditUser = (data) => {
   return $http.request({
-    url: `/wholesale-small/user/check/${data.id}?checkStatus=${data.checkStatus}`,
+    url: `/lhfarm-small/user/check/${data.id}?checkStatus=${data.checkStatus}`,
     method: 'post'
   });
 };
 // 会员类型切换
 export const changeUser = (data) => {
   return $http.request({
-    url: `/wholesale-small/user/change/user-type/${data.id}?userType=${data.userType}`,
+    url: `/lhfarm-small/user/change/user-type/${data.id}?userType=${data.userType}`,
     method: 'put'
   });
 };
@@ -640,7 +640,7 @@ export const changeUser = (data) => {
  */
 export const getOrderPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/order/pages',
+    url: '/lhfarm-small/order/pages',
     data,
     method: 'post',
     headers: {
@@ -654,7 +654,7 @@ export const getOrderPages = (data) => {
 // 售后订单
 export const getAfterSalePages = (data) => {
   return $http.request({
-    url: '/wholesale-small/post-sale/pages',
+    url: '/lhfarm-small/post-sale/pages',
     data,
     method: 'post',
     headers: {
@@ -665,10 +665,10 @@ export const getAfterSalePages = (data) => {
     }
   });
 };
-// /wholesale-small/post-sale/review/pages 财务审核列表
+// /lhfarm-small/post-sale/review/pages 财务审核列表
 export const getFinanceAuditPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/post-sale/review/pages',
+    url: '/lhfarm-small/post-sale/review/pages',
     data,
     method: 'post',
     headers: {
@@ -677,6 +677,14 @@ export const getFinanceAuditPages = (data) => {
       'sidx': data.sidx,
       'sort': data.sort
     }
+  });
+};
+//添加快递单号
+export const putCourierCode = (data) => {
+  return $http.request({
+    url: '/lhfarm-small/order/update/' + data.id,
+    data,
+    method: 'put'
   });
 };
 
@@ -685,7 +693,7 @@ export const getOrderDetail = ({
   id
 }) => {
   return $http.request({
-    url: '/wholesale-small/post-sale/' + id,
+    url: '/lhfarm-small/post-sale/' + id,
     method: 'get'
   });
 };
@@ -693,7 +701,7 @@ export const getOrderDetail = ({
 // 完成订单
 export const getSaleFinish = (data) => {
   return $http.request({
-    url: `/wholesale-small/post-sale/audit/finish/${data.id}`,
+    url: `/lhfarm-small/post-sale/audit/finish/${data.id}`,
     data,
     method: 'post'
   });
@@ -702,7 +710,7 @@ export const getSaleFinish = (data) => {
 // 财务审核通过
 export const getFinanceAudit = (data) => {
   return $http.request({
-    url: `/wholesale-small/post-sale/review/pass/${data.id}`,
+    url: `/lhfarm-small/post-sale/review/pass/${data.id}`,
     data,
     method: 'post'
   });
@@ -710,7 +718,7 @@ export const getFinanceAudit = (data) => {
 // 财务审核拒绝
 export const getFinanceRefuse = (data) => {
   return $http.request({
-    url: `/wholesale-small/post-sale/review/reject/${data.id}`,
+    url: `/lhfarm-small/post-sale/review/reject/${data.id}`,
     data,
     method: 'post'
   });
@@ -719,7 +727,7 @@ export const getFinanceRefuse = (data) => {
 // 导出售后商品
 export const getOrderGoods = (data) => {
   return $imsService.request({
-    url: `/wholesale-small/post-sale/export/${data.name}`,
+    url: `/lhfarm-small/post-sale/export/${data.name}`,
     method: 'post',
     data: data,
     headers: {
@@ -731,7 +739,7 @@ export const getOrderGoods = (data) => {
 // 通过审核
 export const getPassAudit = (data) => {
   return $http.request({
-    url: '/wholesale-small/post-sale/audit/pass',
+    url: '/lhfarm-small/post-sale/audit/pass',
     data,
     method: 'post'
   });
@@ -740,7 +748,7 @@ export const getPassAudit = (data) => {
 // 审核拒绝
 export const getRefuseAudit = (data) => {
   return $http.request({
-    url: '/wholesale-small/post-sale/audit/reject',
+    url: '/lhfarm-small/post-sale/audit/reject',
     data,
     method: 'post'
   });
@@ -748,7 +756,7 @@ export const getRefuseAudit = (data) => {
 
 export const getPaymentLogPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/payment-log/pages',
+    url: '/lhfarm-small/payment-log/pages',
     data,
     method: 'post',
     headers: {
@@ -762,7 +770,7 @@ export const getPaymentLogPages = (data) => {
 
 export const getrefundLogPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/refund-log/pages',
+    url: '/lhfarm-small/refund-log/pages',
     data,
     method: 'post',
     headers: {
@@ -775,7 +783,7 @@ export const getrefundLogPages = (data) => {
 };
 export const getOrderGoodsToday = (data) => {
   return $http.request({
-    url: '/wholesale-small/order/order-goods-today',
+    url: '/lhfarm-small/order/order-goods-today',
     data,
     method: 'post',
     headers: {
@@ -789,14 +797,14 @@ export const getOrder = ({
   id
 }) => {
   return $http.request({
-    url: '/wholesale-small/order/' + id,
+    url: '/lhfarm-small/order/' + id,
     method: 'get'
   });
 };
-// wholesale-small/order/print/order
+// lhfarm-small/order/print/order
 export const getPrintOrder = (data) => {
   return $http.request({
-    url: '/wholesale-small/order/print/order',
+    url: '/lhfarm-small/order/print/order',
     data,
     method: 'post'
   });
@@ -804,22 +812,22 @@ export const getPrintOrder = (data) => {
 // 无前端页面的通用后台导出API
 export const exportOrder = (data) => {
   return $http.request({
-    url: '/wholesale-small/export/' + data.exportType,
+    url: '/lhfarm-small/export/' + data.exportType,
     data: data.searchParam,
     method: 'post'
   });
 };
-// /wholesale-small/export/cloumns/{exportType}
+// /lhfarm-small/export/cloumns/{exportType}
 export const exporGoodsStandard = (data) => {
   return $http.request({
-    url: '/wholesale-small/export/cloumns/' + data.exportType,
+    url: '/lhfarm-small/export/cloumns/' + data.exportType,
     method: 'get'
   });
 };
 // 手动发送海鼎
 export const sendHdManual = ({ orderCode }) => {
   return $http.request({
-    url: '/wholesale-small/order/send-to-sock?orderCode=' + orderCode,
+    url: '/lhfarm-small/order/send-to-sock?orderCode=' + orderCode,
     method: 'put'
   });
 };
@@ -831,7 +839,7 @@ export const sendHdManual = ({ orderCode }) => {
 // 根据条件分页查询活动信息列表
 export const getActivityPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/activity/pages',
+    url: '/lhfarm-small/activity/pages',
     data,
     method: 'post',
     headers: {
@@ -847,7 +855,7 @@ export const deletActivity = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/activity/' + ids,
+    url: '/lhfarm-small/activity/' + ids,
     method: 'delete'
   });
 };
@@ -855,7 +863,7 @@ export const deletActivity = ({
 // 添加商品规格
 export const createActivity = (data) => {
   return $http.request({
-    url: '/wholesale-small/activity/create',
+    url: '/lhfarm-small/activity/create',
     data,
     method: 'post'
   });
@@ -864,7 +872,7 @@ export const createActivity = (data) => {
 // 修改商品规格
 export const editActivity = (data) => {
   return $http.request({
-    url: '/wholesale-small/activity/update/' + data.id,
+    url: '/lhfarm-small/activity/update/' + data.id,
     data,
     method: 'put'
   });
@@ -876,7 +884,7 @@ export const editActivity = (data) => {
  */
 export const getCouponTemplatePages = (data) => {
   return $http.request({
-    url: '/wholesale-small/coupon-plate/pages',
+    url: '/lhfarm-small/coupon-plate/pages',
     data,
     method: 'post',
     headers: {
@@ -890,7 +898,7 @@ export const deletCouponTemplate = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/coupon-plate/' + ids,
+    url: '/lhfarm-small/coupon-plate/' + ids,
     method: 'delete'
   });
 };
@@ -898,7 +906,7 @@ export const deletCouponTemplate = ({
 // 添加商品规格
 export const createCouponTemplate = (data) => {
   return $http.request({
-    url: '/wholesale-small/coupon-plate/create',
+    url: '/lhfarm-small/coupon-plate/create',
     data,
     method: 'post'
   });
@@ -907,7 +915,7 @@ export const createCouponTemplate = (data) => {
 // 修改商品规格
 export const editCouponTemplate = (data) => {
   return $http.request({
-    url: '/wholesale-small/coupon-plate/update/' + data.id,
+    url: '/lhfarm-small/coupon-plate/update/' + data.id,
     data,
     method: 'put'
   });
@@ -919,7 +927,7 @@ export const editCouponTemplate = (data) => {
  */
 export const getCouponPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/coupon-entity/pages',
+    url: '/lhfarm-small/coupon-entity/pages',
     data,
     method: 'post',
     headers: {
@@ -934,7 +942,7 @@ export const getCouponPages = (data) => {
 // 手动发放优惠券
 export const sendCouponByPhones = (data) => {
   return $http.request({
-    url: '/wholesale-small/coupon-entity/coupon-config-manage/send',
+    url: '/lhfarm-small/coupon-entity/coupon-config-manage/send',
     data,
     method: 'post'
   });
@@ -944,7 +952,7 @@ export const deletCoupon = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/coupon-entity/' + ids,
+    url: '/lhfarm-small/coupon-entity/' + ids,
     method: 'delete'
   });
 };
@@ -952,7 +960,7 @@ export const deletCoupon = ({
 // 添加商品规格
 export const createCoupon = (data) => {
   return $http.request({
-    url: '/wholesale-small/coupon-entity/create',
+    url: '/lhfarm-small/coupon-entity/create',
     data,
     method: 'post'
   });
@@ -961,7 +969,7 @@ export const createCoupon = (data) => {
 // 修改商品规格
 export const editCoupon = (data) => {
   return $http.request({
-    url: '/wholesale-small/coupon-entity/update/' + data.id,
+    url: '/lhfarm-small/coupon-entity/update/' + data.id,
     data,
     method: 'put'
   });
@@ -973,7 +981,7 @@ export const editCoupon = (data) => {
  */
 export const getCouponConfigPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/coupon-config/pages',
+    url: '/lhfarm-small/coupon-config/pages',
     data,
     method: 'post',
     headers: {
@@ -987,14 +995,14 @@ export const deleteCouponConfig = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/coupon-config/' + ids,
+    url: '/lhfarm-small/coupon-config/' + ids,
     method: 'delete'
   });
 };
 
 export const createCouponConfig = (data) => {
   return $http.request({
-    url: '/wholesale-small/coupon-config/create',
+    url: '/lhfarm-small/coupon-config/create',
     data,
     method: 'post'
   });
@@ -1002,7 +1010,7 @@ export const createCouponConfig = (data) => {
 
 export const editCouponConfig = (data) => {
   return $http.request({
-    url: '/wholesale-small/coupon-config/update/' + data.id,
+    url: '/lhfarm-small/coupon-config/update/' + data.id,
     data,
     method: 'put'
   });
@@ -1014,7 +1022,7 @@ export const editCouponConfig = (data) => {
  */
 export const getRewardConfigPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/reward-config/pages',
+    url: '/lhfarm-small/reward-config/pages',
     data,
     method: 'post',
     headers: {
@@ -1028,14 +1036,14 @@ export const deleteRewardConfig = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/reward-config/' + ids,
+    url: '/lhfarm-small/reward-config/' + ids,
     method: 'delete'
   });
 };
 
 export const createRewardConfig = (data) => {
   return $http.request({
-    url: '/wholesale-small/reward-config/create',
+    url: '/lhfarm-small/reward-config/create',
     data,
     method: 'post'
   });
@@ -1043,7 +1051,7 @@ export const createRewardConfig = (data) => {
 
 export const editRewardConfig = (data) => {
   return $http.request({
-    url: '/wholesale-small/reward-config/update/' + data.id,
+    url: '/lhfarm-small/reward-config/update/' + data.id,
     data,
     method: 'put'
   });
@@ -1055,7 +1063,7 @@ export const editRewardConfig = (data) => {
  */
 export const getFlashsaleGoodsPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/flashsale-goods/pages',
+    url: '/lhfarm-small/flashsale-goods/pages',
     data,
     method: 'post',
     headers: {
@@ -1069,14 +1077,14 @@ export const deleteFlashsaleGoods = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/flashsale-goods/' + ids,
+    url: '/lhfarm-small/flashsale-goods/' + ids,
     method: 'delete'
   });
 };
 
 export const createFlashsaleGoods = (data) => {
   return $http.request({
-    url: '/wholesale-small/flashsale-goods/create',
+    url: '/lhfarm-small/flashsale-goods/create',
     data,
     method: 'post'
   });
@@ -1084,7 +1092,7 @@ export const createFlashsaleGoods = (data) => {
 
 export const editFlashsaleGoods = (data) => {
   return $http.request({
-    url: '/wholesale-small/flashsale-goods/update/' + data.id,
+    url: '/lhfarm-small/flashsale-goods/update/' + data.id,
     data,
     method: 'put'
   });
@@ -1096,7 +1104,7 @@ export const editFlashsaleGoods = (data) => {
  */
 export const getAdvertisementPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/advertisement/pages',
+    url: '/lhfarm-small/advertisement/pages',
     data,
     method: 'post',
     headers: {
@@ -1110,14 +1118,14 @@ export const deleteAdvertisement = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/advertisement/' + ids,
+    url: '/lhfarm-small/advertisement/' + ids,
     method: 'delete'
   });
 };
 
 export const createAdvertisement = (data) => {
   return $http.request({
-    url: '/wholesale-small/advertisement/create',
+    url: '/lhfarm-small/advertisement/create',
     data,
     method: 'post'
   });
@@ -1125,7 +1133,7 @@ export const createAdvertisement = (data) => {
 
 export const editAdvertisement = (data) => {
   return $http.request({
-    url: '/wholesale-small/advertisement/update/' + data.id,
+    url: '/lhfarm-small/advertisement/update/' + data.id,
     data,
     method: 'put'
   });
@@ -1138,7 +1146,7 @@ export const editAdvertisement = (data) => {
 // 查询FAQ分类树结构
 export const getFaqCategoriesTree = () => {
   return $http.request({
-    url: '/wholesale-small/faq-category/tree',
+    url: '/lhfarm-small/faq-category/tree',
     method: 'get'
   });
 };
@@ -1146,7 +1154,7 @@ export const getFaqCategoriesTree = () => {
 // 根据条件分页查询FAQ分类信息列表
 export const getFaqCategoriesPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/faq-category/pages',
+    url: '/lhfarm-small/faq-category/pages',
     data,
     method: 'post',
     headers: {
@@ -1159,7 +1167,7 @@ export const getFaqCategoriesPages = (data) => {
 // 添加FAQ分类
 export const createFaqCategories = (data) => {
   return $http.request({
-    url: '/wholesale-small/faq-category/create',
+    url: '/lhfarm-small/faq-category/create',
     data,
     method: 'post'
   });
@@ -1170,7 +1178,7 @@ export const deleteFaqCategories = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/faq-category/' + ids,
+    url: '/lhfarm-small/faq-category/' + ids,
     method: 'delete'
   });
 };
@@ -1178,7 +1186,7 @@ export const deleteFaqCategories = ({
 // 修改FAQ分类
 export const editFaqCategories = (data) => {
   return $http.request({
-    url: '/wholesale-small/faq-category/update/' + data.id,
+    url: '/lhfarm-small/faq-category/update/' + data.id,
     data,
     method: 'put'
   });
@@ -1191,7 +1199,7 @@ export const editFaqCategories = (data) => {
 // 根据条件分页查询FAQ信息列表
 export const getFaqPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/faq/pages',
+    url: '/lhfarm-small/faq/pages',
     data,
     method: 'post',
     headers: {
@@ -1204,7 +1212,7 @@ export const getFaqPages = (data) => {
 // 添加FAQ
 export const createFaq = (data) => {
   return $http.request({
-    url: '/wholesale-small/faq/create',
+    url: '/lhfarm-small/faq/create',
     data,
     method: 'post'
   });
@@ -1215,7 +1223,7 @@ export const deleteFaq = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/faq/' + ids,
+    url: '/lhfarm-small/faq/' + ids,
     method: 'delete'
   });
 };
@@ -1223,7 +1231,7 @@ export const deleteFaq = ({
 // 修改FAQ
 export const editFaq = (data) => {
   return $http.request({
-    url: '/wholesale-small/faq/update/' + data.id,
+    url: '/lhfarm-small/faq/update/' + data.id,
     data,
     method: 'put'
   });
@@ -1235,7 +1243,7 @@ export const editFaq = (data) => {
  */
 export const getArticlesPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/article/pages',
+    url: '/lhfarm-small/article/pages',
     data,
     method: 'post',
     headers: {
@@ -1248,7 +1256,7 @@ export const getArticlesPages = (data) => {
 // 添加FAQ
 export const createArticle = (data) => {
   return $http.request({
-    url: '/wholesale-small/article/create',
+    url: '/lhfarm-small/article/create',
     data,
     method: 'post'
   });
@@ -1259,7 +1267,7 @@ export const deleteArticle = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/article/' + ids,
+    url: '/lhfarm-small/article/' + ids,
     method: 'delete'
   });
 };
@@ -1267,7 +1275,7 @@ export const deleteArticle = ({
 // 修改FAQ
 export const editArticle = (data) => {
   return $http.request({
-    url: '/wholesale-small/article/update/' + data.id,
+    url: '/lhfarm-small/article/update/' + data.id,
     data,
     method: 'put'
   });
@@ -1275,7 +1283,7 @@ export const editArticle = (data) => {
 
 export const getArticle = ({ id }) => {
   return $http.request({
-    url: '/wholesale-small/article/' + id,
+    url: '/lhfarm-small/article/' + id,
     method: 'get'
   });
 };
@@ -1393,7 +1401,7 @@ export const editDeliveryFeeConfigRule = (data) => {
 // 查询系统参数分类树结构
 export const getSystemSettingCategoryTree = () => {
   return $http.request({
-    url: '/wholesale-small/system-setting-category/tree',
+    url: '/lhfarm-small/system-setting-category/tree',
     method: 'get'
   });
 };
@@ -1401,7 +1409,7 @@ export const getSystemSettingCategoryTree = () => {
 // 根据条件分页查询系统参数分类列表
 export const getSystemSettingCategoryPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/system-setting-category/pages',
+    url: '/lhfarm-small/system-setting-category/pages',
     data,
     method: 'post',
     headers: {
@@ -1414,7 +1422,7 @@ export const getSystemSettingCategoryPages = (data) => {
 // 根据系统分类code查询系统设置参数
 export const getSystemParameter = (code) => {
   return $http.request({
-    url: '/wholesale-small/system-setting-category/find-by/' + code,
+    url: '/lhfarm-small/system-setting-category/find-by/' + code,
     method: 'get'
   });
 };
@@ -1424,7 +1432,7 @@ export const getSystemSettingCategory = ({
   id
 }) => {
   return $http.request({
-    url: '/wholesale-small/system-setting-category/' + id,
+    url: '/lhfarm-small/system-setting-category/' + id,
     method: 'get'
   });
 };
@@ -1432,7 +1440,7 @@ export const getSystemSettingCategory = ({
 // 添加系统参数分类
 export const createSystemSettingCategory = (data) => {
   return $http.request({
-    url: '/wholesale-small/system-setting-category/create',
+    url: '/lhfarm-small/system-setting-category/create',
     data,
     method: 'post'
   });
@@ -1443,7 +1451,7 @@ export const deleteSystemSettingCategory = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/system-setting-category/' + ids,
+    url: '/lhfarm-small/system-setting-category/' + ids,
     method: 'delete'
   });
 };
@@ -1451,7 +1459,7 @@ export const deleteSystemSettingCategory = ({
 // 修改系统参数分类
 export const editSystemSettingCategory = (data) => {
   return $http.request({
-    url: '/wholesale-small/system-setting-category/update/' + data.id,
+    url: '/lhfarm-small/system-setting-category/update/' + data.id,
     data,
     method: 'put'
   });
@@ -1464,7 +1472,7 @@ export const editSystemSettingCategory = (data) => {
 // 根据条件分页查询系统参数列表
 export const getSystemSettingPages = (data) => {
   return $http.request({
-    url: '/wholesale-small/system-setting/pages',
+    url: '/lhfarm-small/system-setting/pages',
     data,
     method: 'post',
     headers: {
@@ -1479,7 +1487,7 @@ export const getSystemSetting = ({
   id
 }) => {
   return $http.request({
-    url: '/wholesale-small/system-setting/' + id,
+    url: '/lhfarm-small/system-setting/' + id,
     method: 'get'
   });
 };
@@ -1487,7 +1495,7 @@ export const getSystemSetting = ({
 // 添加系统参数
 export const createSystemSetting = (data) => {
   return $http.request({
-    url: '/wholesale-small/system-setting/create',
+    url: '/lhfarm-small/system-setting/create',
     data,
     method: 'post'
   });
@@ -1498,7 +1506,7 @@ export const deleteSystemSetting = ({
   ids
 }) => {
   return $http.request({
-    url: '/wholesale-small/system-setting/' + ids,
+    url: '/lhfarm-small/system-setting/' + ids,
     method: 'delete'
   });
 };
@@ -1506,7 +1514,7 @@ export const deleteSystemSetting = ({
 // 修改系统参数
 export const editSystemSetting = (data) => {
   return $http.request({
-    url: '/wholesale-small/system-setting/update/' + data.id,
+    url: '/lhfarm-small/system-setting/update/' + data.id,
     data,
     method: 'put'
   });
@@ -1518,7 +1526,7 @@ export const editSystemSetting = (data) => {
  */
 export const getAnalysisDatas = (data) => {
   return $http.request({
-    url: '/wholesale-small/data/statistics',
+    url: '/lhfarm-small/data/statistics',
     data,
     method: 'post',
     headers: {
@@ -1533,7 +1541,7 @@ export const getAnalysisDatas = (data) => {
 // 解锁业务员
 export const unlockSalesman = (data) => {
   return $http.request({
-    url: `/wholesale-small/user/unlock-user/${data.id}?userStatus=${data.userStatus}`,
+    url: `/lhfarm-small/user/unlock-user/${data.id}?userStatus=${data.userStatus}`,
     data,
     method: 'put'
   });

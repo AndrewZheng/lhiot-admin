@@ -429,7 +429,7 @@ import {
   getRefuseAudit,
   getSaleFinish,
   getProductUnitsPages
-} from "@/api/wholesale";
+} from "@/api/lhfarm-small";
 import { fenToYuanDot2, fenToYuanDot2Number, download } from "@/libs/util";
 import { hasOneOf } from "@/libs/tools";
 import { serviceModeEnum, serviceStatusEnum } from "@/libs/enumerate";

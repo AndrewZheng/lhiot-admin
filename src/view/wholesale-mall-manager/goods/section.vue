@@ -194,7 +194,7 @@ import {
   getProductSectionTree,
   editProductSection,
   deletePicture
-} from '@/api/wholesale';
+} from '@/api/lhfarm-small';
 import { layoutEnum } from '@/libs/enumerate';
 import { layoutConvert } from '@/libs/converStatus';
 import { buildMenu, convertTree } from '@/libs/util';

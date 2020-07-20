@@ -97,7 +97,7 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import _ from 'lodash';
-import { getOrderGoodsToday } from '@/api/wholesale';
+import { getOrderGoodsToday } from '@/api/lhfarm-small';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import deleteMixin from '@/mixins/deleteMixin.js';

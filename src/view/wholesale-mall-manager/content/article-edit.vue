@@ -140,7 +140,7 @@ import IViewUpload from '_c/iview-upload';
 import TinymceEditor from '_c/tinymce-editor';
 import Editor from '_c/editor';
 
-import { createArticle, editArticle, getArticle } from '@/api/wholesale';
+import { createArticle, editArticle, getArticle } from '@/api/lhfarm-small';
 import uploadMixin from '@/mixins/uploadMixin';
 import { articleTypeEnum, createTypeEnum } from '@/libs/enumerate';
 import { articleTypeConvert, createTypeConvert } from '@/libs/converStatus';
