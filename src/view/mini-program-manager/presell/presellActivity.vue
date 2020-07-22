@@ -1034,7 +1034,7 @@ export default {
         banner: [{ required: true, message: "请上传活动banner " }],
         startTime: [{ required: true, message: "请输入活动开始时间" }],
         endTime: [{ required: true, message: "请输入活动结束时间" }],
-        // deliveryStartTime: [{ required: true, message: "请选择提货开始时间" }],
+        deliveryStartTime: [{ required: true, message: "请选择提货开始时间" }],
         beginDay: [
           { required: true, message: "请输入下单后第几天开始提货" },
           {
