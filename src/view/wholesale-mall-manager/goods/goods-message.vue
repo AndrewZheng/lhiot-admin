@@ -688,12 +688,12 @@ export default {
           minWidth: 90,
           key: "unitName"
         },
-        {
-          title: "安全库存",
-          align: "center",
-          minWidth: 90,
-          key: "stockLimit"
-        },
+        // {
+        //   title: "库存",
+        //   align: "center",
+        //   minWidth: 90,
+        //   key: "stockLimit"
+        // },
         {
           title: "操作",
           minWidth: 150,

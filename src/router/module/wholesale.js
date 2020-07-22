@@ -167,15 +167,15 @@ const wholesaleRouter = [
       },
       component: () => import('@/view/wholesale-mall-manager/order/payment-log.vue')
     },
-    {
-      path: '/wholesale-refund-log',
-      name: 'wholesale-refund-log',
-      meta: {
-        icon: 'ios-eye',
-        title: '退款流水查询'
-      },
-      component: () => import('@/view/wholesale-mall-manager/order/refund-log.vue')
-    },
+    // {
+    //   path: '/wholesale-refund-log',
+    //   name: 'wholesale-refund-log',
+    //   meta: {
+    //     icon: 'ios-eye',
+    //     title: '退款流水查询'
+    //   },
+    //   component: () => import('@/view/wholesale-mall-manager/order/refund-log.vue')
+    // },
     // {
     //   path: '/wholesale-order-aftersale',
     //   name: 'wholesale-order-aftersale',

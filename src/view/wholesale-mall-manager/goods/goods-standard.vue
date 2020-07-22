@@ -68,7 +68,7 @@
               v-model="searchRowData.isHasPriceRegion"
               class="ml5 mr5"
               placeholder="是否有区间价"
-              style="width:120px"
+              style="width:110px"
               clearable
             >
               <Option
