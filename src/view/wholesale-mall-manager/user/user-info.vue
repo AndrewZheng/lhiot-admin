@@ -237,15 +237,6 @@ const columns = [
     }
   },
   {
-    title: "详细地址",
-    align: "center",
-    key: "addressDetail",
-    render(h, params, vm) {
-      const { row } = params;
-      return <div>{row.city + row.addressDetail}</div>;
-    }
-  },
-  {
     title: "操作",
     align: "center",
     key: "handle",

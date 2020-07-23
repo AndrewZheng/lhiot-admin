@@ -22,13 +22,13 @@
       >
         <div slot="searchCondition">
           <Row v-show="!showBack">
-            <Input
+            <!-- <Input
               v-model="searchRowData.barCode"
               placeholder="商品条码"
               class="search-input mr5"
               style="width: auto"
               clearable
-            ></Input>
+            ></Input> -->
             <Input
               v-model="searchRowData.goodsName"
               placeholder="商品名称"
@@ -200,7 +200,7 @@
             </Row>
           </i-col>
         </Row>
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+        <!-- <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品编码:</i-col>
@@ -213,7 +213,7 @@
               <i-col span="16">{{ productStandardDetail.barCode }}</i-col>
             </Row>
           </i-col>
-        </Row>
+        </Row> -->
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
@@ -243,14 +243,14 @@
             </Row>
           </i-col>
         </Row>-->
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+        <!-- <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品条码:</i-col>
               <i-col span="16">{{ productStandardDetail.barCode }}</i-col>
             </Row>
           </i-col>
-        </Row>
+        </Row> -->
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
@@ -332,9 +332,9 @@
                 <img :src="productStandardDetail.goodsImage" width="100" height="100" />
               </FormItem>
             </i-col>
-            <i-col span="12">
+            <!-- <i-col span="12">
               <FormItem label="商品条码:">{{ productStandardDetail.barCode }}</FormItem>
-            </i-col>
+            </i-col> -->
           </Row>
           <Divider orientation="center">规格信息</Divider>
           <Row>
@@ -343,11 +343,11 @@
                 <Input v-model="productStandardDetail.standardGoodsName"></Input>
               </FormItem>
             </i-col>
-            <i-col span="12">
+            <!-- <i-col span="12">
               <FormItem label="商品条码:" prop="barCode">
                 <Input v-model="productStandardDetail.barCode"></Input>
               </FormItem>
-            </i-col>
+            </i-col> -->
           </Row>
           <Row>
             <!-- 主图 ==== -->
@@ -460,10 +460,10 @@
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="安全库存:" prop="stockLimit">
+              <FormItem label="库存:" prop="stockLimit">
                 <InputNumber
                   v-model="productStandardDetail.stockLimit"
-                  placeholder="安全库存"
+                  placeholder="库存"
                   style="width:100px;"
                 ></InputNumber>
               </FormItem>
@@ -968,12 +968,12 @@ const standardColumns = [
     key: "id",
     minWidth: 50
   },
-  {
-    title: "商品条码",
-    align: "center",
-    key: "barCode",
-    minWidth: 70
-  },
+  // {
+  //   title: "商品条码",
+  //   align: "center",
+  //   key: "barCode",
+  //   minWidth: 70
+  // },
   {
     title: "上架商品名称",
     align: "center",
@@ -1373,7 +1373,7 @@ export default {
         standardDesc: [{ required: true, message: "请输入规格描述" }],
         goodsDes: [{ required: true, message: "请输入商品特征" }],
         afterDes: [{ required: true, message: "请输入售后标准" }],
-        stockLimit: [{ required: true, message: "请输入安全库存" }],
+        stockLimit: [{ required: true, message: "请输入库存" }],
         price: [
           { required: true, message: "请输入商品价格" },
           {
@@ -1388,7 +1388,7 @@ export default {
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
-        barCode: [{ required: true, message: "请输入商品条码" }],
+        // barCode: [{ required: true, message: "请输入商品条码" }],
         // rank: [
         //   { required: false, message: "请输入商品排序" },
         //   {
@@ -1477,7 +1477,7 @@ export default {
           this.productDetail = _.cloneDeep(goods);
           this.productStandardDetail.goodsId = goods.id;
           this.productStandardDetail.unitName = goods.unitName;
-          this.productStandardDetail.barCode = goods.baseBar;
+          // this.productStandardDetail.barCode = goods.baseBar;
           this.productStandardDetail.baseGoodsName = goods.baseGoodsName;
           this.productStandardDetail.standardGoodsName =
             goods.standardGoodsName; // 默认先读取以前的商品名称
@@ -1875,7 +1875,7 @@ export default {
       this.productStandardDetail.baseGoodsName = row.goodsName;
       this.productStandardDetail.categoryName = row.categoryName;
       this.productStandardDetail.unitName = row.unitName;
-      this.productStandardDetail.barCode = row.baseBar; // 商品对象的条码和规格对象里条码不一致
+      // this.productStandardDetail.barCode = row.baseBar; // 商品对象的条码和规格对象里条码不一致
       // 给要关联的规格信息设置默认值，用户可以选择修改
       this.productStandardDetail.standardGoodsName = row.goodsName;
       this.productStandardDetail.goodsImage = row.goodsImage;

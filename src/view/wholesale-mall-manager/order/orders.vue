@@ -698,7 +698,7 @@ const goodsColumns = [
     title: "是否限时抢购",
     key: "flash",
     align: "center",
-    minWidth:20,
+    minWidth: 20,
     render(h, params, vm) {
       if (params.row.flash === 0) {
         return (
@@ -805,7 +805,7 @@ export default {
         {
           title: "快递单号",
           align: "center",
-          width: 120,
+          width: 150,
           key: "deliveryCode",
           render(h, params, vm) {
             const { row } = params;
@@ -934,6 +934,7 @@ export default {
         {
           title: "订单状态",
           align: "center",
+          fixed: "right",
           width: 120,
           key: "orderStatus",
           render: (h, params, vm) => {
@@ -1241,7 +1242,7 @@ export default {
         this.orderDetail = _.cloneDeep(params.row);
         this.modalEdit = true;
       } else {
-        this.$Message.info("只有待发货的订单才能编辑快递单号!");
+        this.$Message.info("只有待发货的订单才能编辑!");
       }
     },
     handleCourierCode() {

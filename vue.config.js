@@ -1,7 +1,7 @@
 const path = require('path');
 const resolve = (dir) => path.join(__dirname, dir);
 const IS_PROD = ['production'].includes(process.env.NODE_ENV);
-const BASE_URL = IS_PROD ? '/lhiot-admin/' : '/';
+const BASE_URL = IS_PROD ? '/lvhang-farm/' : '/';
 
 module.exports = {
   publicPath: BASE_URL,

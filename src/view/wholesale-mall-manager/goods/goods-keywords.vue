@@ -431,7 +431,7 @@ const standardColumns = [
   {
     title: "商品名称",
     align: "center",
-    key: "goodsName",
+    key: "standardGoodsName",
     minWidth: 100
   },
   {

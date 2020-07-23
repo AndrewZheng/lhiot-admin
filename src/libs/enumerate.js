@@ -2538,10 +2538,6 @@ export const wholesalePayTypeEnum = [{
   value: 'balance'
 },
 {
-  label: '线下支付',
-  value: 'offline'
-},
-{
   label: '鼎付通',
   value: 'haiding'
 }
@@ -2563,18 +2559,18 @@ export const wholesaleOrderStatusEnum = [{
   label: '配送中',
   value: 'delivery'
 },
-{
-  label: '退货中',
-  value: 'unrefunded'
-},
-{
-  label: '退款失败',
-  value: 'refundfailed'
-},
-{
-  label: '退货完成',
-  value: 'refunded'
-},
+// {
+//   label: '退货中',
+//   value: 'unrefunded'
+// },
+// {
+//   label: '退款失败',
+//   value: 'refundfailed'
+// },
+// {
+//   label: '退货完成',
+//   value: 'refunded'
+// },
 {
   label: '已失效',
   value: 'failed'
@@ -2608,10 +2604,6 @@ export const wholesaleHdStatusEnum = [{
 export const activityTypeEnum = [{
   label: '限时抢购',
   value: 'flashsale'
-},
-{
-  label: '注册送礼',
-  value: 'registration'
 },
 {
   label: '充值活动',
