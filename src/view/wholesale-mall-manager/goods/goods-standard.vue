@@ -1376,8 +1376,8 @@ export default {
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
-              if (value.length > 10) {
-                errors.push(new Error("字数不得超过10个字"));
+              if (value.length > 8) {
+                errors.push(new Error("字数不得超过8个字"));
               }
               callback(errors);
             }
