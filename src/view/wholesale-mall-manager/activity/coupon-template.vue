@@ -160,6 +160,7 @@
               </FormItem>
             </i-col>
             <i-col span="12" v-else>
+              <p class="ml20">* 如8.8折，填写88</p>
               <FormItem label="折扣额度:" prop="couponFee">
                 <InputNumber :min="0" :value="couponFeeComputed1" @on-change="couponFeeOnchange1"></InputNumber>
               </FormItem>
@@ -565,4 +566,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.ml20 {
+  margin-left: 27px;
+  color: #ff3861;
+}
 </style>

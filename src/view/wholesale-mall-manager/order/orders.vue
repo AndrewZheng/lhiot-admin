@@ -320,7 +320,8 @@ import {
   getPrintOrder,
   sendHdManual,
   exportOrder,
-  putCourierCode
+  putCourierCode,
+  confirmReceipt
 } from "@/api/lhfarm-small";
 import getLodop from "@/assets/lodop/lodopFuncs.js";
 import tableMixin from "@/mixins/tableMixin.js";
@@ -988,12 +989,12 @@ export default {
         },
         {
           title: "操作",
-          minWidth: 120,
+          minWidth: 150,
           resizable: true,
           align: "center",
           fixed: "right",
           key: "handle",
-          options: ["edit", "view"]
+          options: ["view", "edit", "onReceive"]
         }
       ]
     };
@@ -1046,11 +1047,8 @@ export default {
     },
     // 确认收货
     handSureReceive(params) {
-      if (
-        params.row.orderStatus === "SEND_OUT" ||
-        params.row.orderStatus === "DISPATCHING"
-      ) {
-        sureReceive({ orderId: params.row.id })
+      if (params.row.orderStatus === "delivery") {
+        confirmReceipt(params.row)
           .then(res => {
             this.loading = false;
             this.$Message.success("确认收货成功");
@@ -1060,7 +1058,7 @@ export default {
             this.loading = false;
           });
       } else {
-        this.$Message.error("只有已发货和配送中的订单才能操作收货");
+        this.$Message.error("只有配送中的订单才能操作收货");
       }
     },
     handleSubmit() {

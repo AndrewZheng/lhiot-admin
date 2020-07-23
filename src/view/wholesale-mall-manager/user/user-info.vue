@@ -27,13 +27,13 @@
             clearable
           ></Input>
           <Input
-            v-model="searchRowData.userName"
+            v-model="searchRowData.nickname"
             placeholder="用户姓名"
             class="search-input mr5"
             style="width: 100px"
             clearable
           ></Input>
-          <Select
+          <!-- <Select
             v-model="searchRowData.isVip"
             class="search-col mr5"
             placeholder="是否VIP"
@@ -46,7 +46,7 @@
               :value="item.value"
               class="ptb2-5"
             >{{ item.label }}</Option>
-          </Select>
+          </Select> -->
           <DatePicker
             v-model="searchRowData.regBeginTime"
             format="yyyy-MM-dd HH:mm:ss"
@@ -215,34 +215,34 @@ const columns = [
     align: "center",
     key: "registerTime"
   },
-  {
-    title: "是否VIP",
-    align: "center",
-    key: "isVip",
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (row.isVip === "yes") {
-        return (
-          <div>
-            <tag color="gold">VIP</tag>
-          </div>
-        );
-      } else if (row.isVip === "no") {
-        return (
-          <div>
-            <tag color="primary">普通用户</tag>
-          </div>
-        );
-      }
-    }
-  },
-  {
-    title: "操作",
-    align: "center",
-    key: "handle",
-    width: 240,
-    options: ["setVip"]
-  }
+  // {
+  //   title: "是否VIP",
+  //   align: "center",
+  //   key: "isVip",
+  //   render: (h, params, vm) => {
+  //     const { row } = params;
+  //     if (row.isVip === "yes") {
+  //       return (
+  //         <div>
+  //           <tag color="gold">VIP</tag>
+  //         </div>
+  //       );
+  //     } else if (row.isVip === "no") {
+  //       return (
+  //         <div>
+  //           <tag color="primary">普通用户</tag>
+  //         </div>
+  //       );
+  //     }
+  //   }
+  // },
+  // {
+  //   title: "操作",
+  //   align: "center",
+  //   key: "handle",
+  //   width: 240,
+  //   options: ["setVip"]
+  // }
 ];
 
 // v1.2.0
@@ -270,7 +270,7 @@ const userDetailChange = {
 };
 
 const userRowData = {
-  userName: "",
+  nickname: "",
   phone: "",
   userType: "sale",
   isVip: "",

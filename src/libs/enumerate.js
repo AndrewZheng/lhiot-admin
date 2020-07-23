@@ -2652,16 +2652,8 @@ export const couponFromEnum = [{
   value: 'artificial'
 },
 {
-  label: '注册送礼',
-  value: 'registration'
-},
-{
   label: '充值活动',
   value: 'recharge'
-},
-{
-  label: '限时抢购',
-  value: 'flashsale'
 },
 {
   label: '活动送券',

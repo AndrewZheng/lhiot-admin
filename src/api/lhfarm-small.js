@@ -679,6 +679,14 @@ export const getFinanceAuditPages = (data) => {
     }
   });
 };
+//确认收货
+export const confirmReceipt = (data) => {
+  return $http.request({
+    url: '/lhfarm-small/order/received/' + data.orderCode,
+    data,
+    method: 'put'
+  });
+};
 //添加快递单号
 export const putCourierCode = (data) => {
   return $http.request({

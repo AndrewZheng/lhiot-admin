@@ -148,7 +148,10 @@
                 prop="fullFee"
               >{{ couponConfig.fullFee | fenToYuanDot2Filters }}</FormItem>
             </i-col>
-            <i-col span="12">
+            <i-col span="12" v-if="couponConfig.couponType==='DISCOUNT_COUPON'">
+              <FormItem label="折扣额度:" prop="couponFee">{{ couponConfig.couponFee/10 }}折</FormItem>
+            </i-col>
+            <i-col span="12" v-else>
               <FormItem
                 label="优惠金额:"
                 prop="couponFee"
@@ -156,7 +159,7 @@
             </i-col>
           </Row>
           <Divider orientation="center">配置信息</Divider>
-          <Row v-show="couponConfig.vaildDays===0">
+          <Row v-show="couponConfig.vaildDays===null">
             <i-col span="12">
               <FormItem label="生效时间:" prop="effectiveTime">
                 <DatePicker
@@ -187,12 +190,17 @@
               v-show="couponConfig.effectiveTime==='' && couponConfig.failureTime===''"
               span="12"
             >
+              <p class="ml20">*有效天数为相对时间，领券后几天内有效</p>
               <FormItem label="有效天数:" prop="vaildDays">
-                <InputNumber v-model="couponConfig.vaildDays" placeholder="有效天数"></InputNumber>
+                <InputNumber
+                  v-model="couponConfig.vaildDays"
+                  placeholder="有效天数"
+                  style="width: 160px"
+                ></InputNumber>
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="发放类型:" prop="couponSendType" style="width:200px;">
+              <FormItem label="发放类型:" prop="couponSendType" style="width:260px;">
                 <Select v-model="couponConfig.couponSendType">
                   <Option
                     v-for="(item,index) in couponFromEnum"
@@ -206,7 +214,7 @@
             </i-col>
           </Row>
           <Row>
-            <i-col span="20">
+            <i-col span="21">
               <FormItem label="优惠券描述:" prop="couponDes">
                 <Input
                   v-model="couponConfig.couponDes"
@@ -362,7 +370,7 @@ const couponConfig = {
   effectiveTime: "",
   failureTime: "",
   plateType: "", // allgoods-全品类 singlegoods-单品类
-  vaildDays: 0,
+  vaildDays: null,
   couponSendType: ""
 };
 
@@ -603,7 +611,7 @@ export default {
         {
           title: "优惠金额/折扣额度",
           align: "center",
-          minWidth: 60,
+          minWidth: 25,
           key: "couponFee",
           render(h, params, vm) {
             if (params.row.couponType === "DISCOUNT_COUPON") {
@@ -729,7 +737,7 @@ export default {
           title: "有效天数",
           align: "center",
           key: "vaildDays",
-          maxWidth: 100,
+          minWidth: 15,
           render(h, params, vm) {
             const { row } = params;
             if (row.vaildDays) {
@@ -955,4 +963,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.ml20 {
+  margin-left: 37px;
+  color: #ff3861;
+}
 </style>

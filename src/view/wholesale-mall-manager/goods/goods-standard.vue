@@ -28,7 +28,7 @@
               class="search-input mr5"
               style="width: auto"
               clearable
-            ></Input> -->
+            ></Input>-->
             <Input
               v-model="searchRowData.goodsName"
               placeholder="商品名称"
@@ -68,7 +68,7 @@
               v-model="searchRowData.isHasPriceRegion"
               class="ml5 mr5"
               placeholder="是否有区间价"
-              style="width:120px"
+              style="width:110px"
               clearable
             >
               <Option
@@ -213,7 +213,7 @@
               <i-col span="16">{{ productStandardDetail.barCode }}</i-col>
             </Row>
           </i-col>
-        </Row> -->
+        </Row>-->
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
@@ -250,7 +250,7 @@
               <i-col span="16">{{ productStandardDetail.barCode }}</i-col>
             </Row>
           </i-col>
-        </Row> -->
+        </Row>-->
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
@@ -334,7 +334,7 @@
             </i-col>
             <!-- <i-col span="12">
               <FormItem label="商品条码:">{{ productStandardDetail.barCode }}</FormItem>
-            </i-col> -->
+            </i-col>-->
           </Row>
           <Divider orientation="center">规格信息</Divider>
           <Row>
@@ -347,7 +347,7 @@
               <FormItem label="商品条码:" prop="barCode">
                 <Input v-model="productStandardDetail.barCode"></Input>
               </FormItem>
-            </i-col> -->
+            </i-col>-->
           </Row>
           <Row>
             <!-- 主图 ==== -->
@@ -539,7 +539,7 @@
               </FormItem>
             </i-col>
           </Row>
-          <Row>
+          <!-- <Row>
             <i-col span="12">
               <FormItem label="区域:" prop="goodsArea">
                 <Select
@@ -577,7 +577,7 @@
                 ></Input>
               </FormItem>
             </i-col>
-          </Row>
+          </Row>-->
           <Row>
             <Row>
               <i-col span="12">
@@ -612,7 +612,7 @@
                 ></Input>
               </FormItem>
             </i-col>
-            <i-col span="12">
+            <!-- <i-col span="12">
               <FormItem label="售后标准:" prop="afterDes">
                 <Input
                   v-model="productStandardDetail.afterDes"
@@ -621,7 +621,7 @@
                   type="textarea"
                 ></Input>
               </FormItem>
-            </i-col>
+            </i-col>-->
           </Row>
         </Form>
       </div>
@@ -1370,9 +1370,22 @@ export default {
         unitCode: [{ required: true, message: "请选择商品单位" }],
         vaild: [{ required: true, message: "请选择商品状态" }],
         standard: [{ required: true, message: "请输入商品规格" }],
-        standardDesc: [{ required: true, message: "请输入规格描述" }],
+        // standardDesc: [{ required: true, message: "请输入规格描述" }],
+        standardDesc: [
+          { required: true, message: "请输入规格描述" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (value.length > 10) {
+                errors.push(new Error("字数不得超过10个字"));
+              }
+              callback(errors);
+            }
+          }
+        ],
+
         goodsDes: [{ required: true, message: "请输入商品特征" }],
-        afterDes: [{ required: true, message: "请输入售后标准" }],
+        // afterDes: [{ required: true, message: "请输入售后标准" }],
         stockLimit: [{ required: true, message: "请输入库存" }],
         price: [
           { required: true, message: "请输入商品价格" },

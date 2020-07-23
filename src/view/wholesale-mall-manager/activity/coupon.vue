@@ -36,7 +36,7 @@
               v-model="searchRowData.couponStatus"
               class="search-col mr5"
               placeholder="使用状态"
-              style="width: 150px"
+              style="width: 100px"
               clearable
             >
               <Option
@@ -50,7 +50,7 @@
               v-model="searchRowData.couponFrom"
               class="search-col mr5"
               placeholder="优惠券来源"
-              style="width: 150px"
+              style="width: 100px"
               clearable
             >
               <Option
@@ -471,7 +471,7 @@ const couponColumns = [
     title: "ID",
     align: "center",
     key: "id",
-    maxWidth: 80
+    minWidth: 10
   },
   {
     title: "用户名称",
@@ -518,7 +518,7 @@ const couponColumns = [
   {
     title: "优惠金额/折扣额度",
     align: "center",
-    minWidth: 30,
+    minWidth: 25,
     key: "couponFee",
     render(h, params, vm) {
       if (params.row.couponType === "DISCOUNT_COUPON") {
