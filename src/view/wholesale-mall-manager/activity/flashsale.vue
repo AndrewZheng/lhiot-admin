@@ -83,13 +83,6 @@
             <div slot="searchCondition">
               <Row>
                 <Input
-                  v-model="searchConfigRowData.barCode"
-                  placeholder="商品条码"
-                  class="search-input mr5"
-                  style="width: auto"
-                  clearable
-                ></Input>
-                <Input
                   v-model="searchConfigRowData.goodsName"
                   placeholder="商品名称"
                   class="search-input mr5"
@@ -340,12 +333,6 @@ const standardColumns = [
     align: "center",
     key: "id",
     minWidth: 50
-  },
-  {
-    title: "商品条码",
-    align: "center",
-    key: "barCode",
-    minWidth: 70
   },
   {
     title: "商品名称",
