@@ -534,59 +534,61 @@ export default {
         let registrationIndex = 0;
         let rechargeIndex = 0;
         if (valid) {
-          for (let i = 0; i < this.tableData.length; i++) {
-            if (
-              this.activityDetail.activityType === "flashsale" &&
-              this.activityDetail.vaild === "yes"
-            ) {
+          if (this.isCreate) {
+            for (let i = 0; i < this.tableData.length; i++) {
               if (
-                this.tableData[i].activityType === "flashsale" &&
-                this.tableData[i].vaild === "yes" &&
-                compareCouponData(this.tableData[i].endTime) === true
+                this.activityDetail.activityType === "flashsale" &&
+                this.activityDetail.vaild === "yes"
               ) {
                 if (
-                  compareData(
-                    this.tableData[i].endTime,
-                    this.activityDetail.startTime
-                  )
+                  this.tableData[i].activityType === "flashsale" &&
+                  this.tableData[i].vaild === "yes" &&
+                  compareCouponData(this.tableData[i].endTime) === true
                 ) {
-                  this.$Message.error(
-                    "下期限时抢购开始时间必须大于以后活动结束时间!"
-                  );
+                  if (
+                    compareData(
+                      this.tableData[i].endTime,
+                      this.activityDetail.startTime
+                    )
+                  ) {
+                    this.$Message.error(
+                      "下期限时抢购开始时间必须大于以后活动结束时间!"
+                    );
+                    return;
+                  }
+                }
+              }
+              if (
+                this.activityDetail.activityType === "registration" &&
+                this.activityDetail.vaild === "yes"
+              ) {
+                if (
+                  this.tableData[i].activityType === "registration" &&
+                  this.tableData[i].vaild === "yes" &&
+                  compareCouponData(this.tableData[i].endTime) === true
+                ) {
+                  registrationIndex++;
+                }
+                if (registrationIndex === 1) {
+                  this.$Message.info("已有1个有效且开启中的注册送礼活动!");
                   return;
                 }
               }
-            }
-            if (
-              this.activityDetail.activityType === "registration" &&
-              this.activityDetail.vaild === "yes"
-            ) {
               if (
-                this.tableData[i].activityType === "registration" &&
-                this.tableData[i].vaild === "yes" &&
-                compareCouponData(this.tableData[i].endTime) === true
+                this.activityDetail.activityType === "recharge" &&
+                this.activityDetail.vaild === "yes"
               ) {
-                registrationIndex++;
-              }
-              if (registrationIndex === 1) {
-                this.$Message.info("已有1个有效且开启中的注册送礼活动!");
-                return;
-              }
-            }
-            if (
-              this.activityDetail.activityType === "recharge" &&
-              this.activityDetail.vaild === "yes"
-            ) {
-              if (
-                this.tableData[i].activityType === "recharge" &&
-                this.tableData[i].vaild === "yes" &&
-                compareCouponData(this.tableData[i].endTime) === true
-              ) {
-                rechargeIndex++;
-              }
-              if (rechargeIndex === 1) {
-                this.$Message.info("已有1个有效且开启中的充值送礼活动!");
-                return;
+                if (
+                  this.tableData[i].activityType === "recharge" &&
+                  this.tableData[i].vaild === "yes" &&
+                  compareCouponData(this.tableData[i].endTime) === true
+                ) {
+                  rechargeIndex++;
+                }
+                if (rechargeIndex === 1) {
+                  this.$Message.info("已有1个有效且开启中的充值送礼活动!");
+                  return;
+                }
               }
             }
           }
