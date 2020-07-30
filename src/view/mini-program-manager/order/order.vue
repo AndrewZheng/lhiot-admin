@@ -44,13 +44,6 @@
               style="width: 120px"
               clearable
             ></Input>
-            <Input
-              v-model="searchRowData.storeName"
-              placeholder="下单门店"
-              class="search-input mr5"
-              style="width: 120px"
-              clearable
-            ></Input>
             <Select
               v-model="searchRowData.apply"
               :clearable="true"

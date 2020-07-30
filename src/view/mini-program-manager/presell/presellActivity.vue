@@ -38,20 +38,6 @@
               >{{ item.label }}</Option>
             </Select>
             <Select
-              v-model="searchRowData.startedFlag"
-              placeholder="是否开始"
-              style="padding-right: 5px;width: 100px"
-              clearable
-            >
-              <Option
-                v-for="(item,index) in startedFlagStatus"
-                :key="index"
-                :value="item.value"
-                class="ptb2-5"
-                style="padding-left: 5px;width: 100px"
-              >{{ item.label }}</Option>
-            </Select>
-            <Select
               v-model="searchRowData.validDateType"
               placeholder="时间类型"
               style="padding-right: 5px;width: 100px"
@@ -871,7 +857,7 @@ import {
   getGoodsStandard,
   getStorePages,
   getProductStandardsPages,
-  deletePicture
+  deletePicture,
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -879,13 +865,13 @@ import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 import {
   teamBuyStatusConvert,
-  customPlanStatusConvert
+  customPlanStatusConvert,
 } from "@/libs/converStatus";
 import {
   teamBuyStatusEnum,
   teamBuyTypeEnum,
   rewardActivitySettingEnum,
-  relationStoreTypeEnum
+  relationStoreTypeEnum,
 } from "@/libs/enumerate";
 import {
   fenToYuanDot2,
@@ -893,7 +879,7 @@ import {
   yuanToFenNumber,
   compareData,
   secondsToDate,
-  compareCouponData
+  compareCouponData,
 } from "@/libs/util";
 
 const preselldata = {
@@ -919,7 +905,7 @@ const preselldata = {
   status: "",
   storeIds: null,
   triesLimit: 999,
-  validDateType: "UN_FIXED_DATE"
+  validDateType: "UN_FIXED_DATE",
 };
 
 const roleRowData = {
@@ -933,7 +919,6 @@ const roleRowData = {
   sidx: "rank",
   sort: "asc",
   validDateType: null,
-  startedFlag: true
 };
 
 const productStandardDetail = {
@@ -977,7 +962,7 @@ const productStandardDetail = {
   invNum: null,
   saleCount: null,
   positionName: null,
-  dbId: null
+  dbId: null,
 };
 
 const productRowData = {
@@ -990,13 +975,13 @@ const productRowData = {
   minPrice: "",
   maxPrice: "",
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 export default {
   components: {
     Tables,
-    IViewUpload
+    IViewUpload,
   },
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
@@ -1011,8 +996,8 @@ export default {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         activityName: [{ required: true, message: "请输入活动名称" }],
         content: [{ required: true, message: "请输入活动内容" }],
@@ -1030,8 +1015,8 @@ export default {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         standardId: [{ required: true, message: "请选择商品规格" }],
         standardDesc: [{ required: true, message: "请输入规格描述" }],
@@ -1039,8 +1024,8 @@ export default {
           { required: true, message: "请输入预售活动价" },
           {
             message: "必须为大于0的数字",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+          },
         ],
         invNum: [
           { required: true, message: "请输入库存数量" },
@@ -1051,8 +1036,8 @@ export default {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         triesLimit: [
           { required: true, message: "请输入限购次数" },
@@ -1066,8 +1051,8 @@ export default {
                 errors.push(new Error("限购次数最大值999"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         saleQuantity: [
           { required: true, message: "请输入已售份数" },
@@ -1078,33 +1063,29 @@ export default {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
       defaultListMain: [],
       uploadListMain: [],
-      startedFlagStatus: [
-        { label: "是", value: "true" },
-        { label: "否", value: "false" }
-      ],
       activityStatus: [
         { label: "上架", value: "VALID" },
-        { label: "下架", value: "INVALID" }
+        { label: "下架", value: "INVALID" },
       ],
       validDateTypeEnum: [
         {
           label: "绝对时间",
-          value: "FIXED_DATE"
+          value: "FIXED_DATE",
         },
         {
           label: "相对时间",
-          value: "UN_FIXED_DATE"
-        }
+          value: "UN_FIXED_DATE",
+        },
       ],
       teamBuyStatus: [
         { label: "关闭", value: "off" },
-        { label: "开启", value: "on" }
+        { label: "开启", value: "on" },
       ],
       teamBuyStatusEnum,
       teamBuyTypeEnum,
@@ -1129,7 +1110,7 @@ export default {
           key: "activityName",
           align: "center",
           fixed: "left",
-          minWidth: 200
+          minWidth: 200,
         },
         {
           title: "活动状态",
@@ -1152,7 +1133,7 @@ export default {
               );
             }
             return <div>{"N/A"}</div>;
-          }
+          },
         },
         {
           title: "是否开始",
@@ -1175,19 +1156,19 @@ export default {
               );
             }
             return <div>{"N/A"}</div>;
-          }
+          },
         },
         {
           title: "活动内容",
           align: "center",
           minWidth: 160,
-          key: "content"
+          key: "content",
         },
         {
           title: "活动开始时间",
           align: "center",
           minWidth: 160,
-          key: "startTime"
+          key: "startTime",
         },
         {
           title: "活动结束时间",
@@ -1202,13 +1183,13 @@ export default {
             } else {
               return <div>{params.row.endTime}</div>;
             }
-          }
+          },
         },
         {
           title: "商品库存",
           align: "center",
           minWidth: 90,
-          key: "invNum"
+          key: "invNum",
         },
         {
           title: "原价",
@@ -1217,7 +1198,7 @@ export default {
           align: "center",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.originalPrice)}</div>;
-          }
+          },
         },
         {
           title: "活动价",
@@ -1226,7 +1207,7 @@ export default {
           align: "center",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.activityPrice)}</div>;
-          }
+          },
         },
         {
           title: "提货开始时间",
@@ -1237,7 +1218,7 @@ export default {
             if (params.row.deliveryStartTime) {
               return <div>{params.row.deliveryStartTime.split(" ")[0]}</div>;
             }
-          }
+          },
         },
         {
           title: "提货截止时间",
@@ -1248,7 +1229,7 @@ export default {
             if (params.row.deliveryEndTime) {
               return <div>{params.row.deliveryEndTime.split(" ")[0]}</div>;
             }
-          }
+          },
         },
         {
           title: "几天后开始提货",
@@ -1260,7 +1241,7 @@ export default {
               return <div>{"N/A"}</div>;
             }
             return <div>{params.row.beginDay}</div>;
-          }
+          },
         },
         // {
         //   title: "以购买数量",
@@ -1273,19 +1254,19 @@ export default {
           align: "center",
           minWidth: 120,
           key: "standardDesc",
-          tooltip: true
+          tooltip: true,
         },
         {
           title: "限购次数",
           align: "center",
           minWidth: 90,
-          key: "triesLimit"
+          key: "triesLimit",
         },
         {
           title: "排序",
           align: "center",
           minWidth: 80,
-          key: "rank"
+          key: "rank",
         },
         {
           title: "操作",
@@ -1293,8 +1274,8 @@ export default {
           align: "center",
           fixed: "right",
           key: "handle",
-          options: ["couponStatus", "view", "edit"]
-        }
+          options: ["couponStatus", "view", "edit"],
+        },
       ],
       productColumns: [
         // {
@@ -1308,37 +1289,37 @@ export default {
           title: "规格ID",
           align: "center",
           key: "id",
-          minWidth: 80
+          minWidth: 80,
         },
         {
           title: "商品条码",
           key: "barcode",
           align: "center",
-          minWidth: 80
+          minWidth: 80,
         },
         {
           title: "商品编号",
           key: "productCode",
           align: "center",
-          minWidth: 130
+          minWidth: 130,
         },
         {
           title: "商品名称",
           align: "center",
           key: "productName",
-          minWidth: 150
+          minWidth: 150,
         },
         {
           title: "商品规格",
           align: "center",
           key: "specification",
-          minWidth: 100
+          minWidth: 100,
         },
         {
           title: "商品单位",
           align: "center",
           minWidth: 100,
-          key: "productUnit"
+          key: "productUnit",
         },
         {
           title: "商品原价",
@@ -1348,7 +1329,7 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.price);
             return <div>{amount}</div>;
-          }
+          },
         },
         {
           title: "优惠价格",
@@ -1358,7 +1339,7 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.salePrice);
             return <div>{amount}</div>;
-          }
+          },
         },
         {
           title: "商品状态",
@@ -1391,14 +1372,14 @@ export default {
                 </tag>
               </div>
             );
-          }
+          },
         },
         {
           title: "商品排序",
           align: "center",
           minWidth: 100,
-          key: "rank"
-        }
+          key: "rank",
+        },
       ],
       productData: [],
       productStandardDetail: [],
@@ -1417,7 +1398,7 @@ export default {
       searchRowData: _.cloneDeep(roleRowData),
       searchProductRowData: _.cloneDeep(productRowData),
       productDetail: _.cloneDeep(productStandardDetail),
-      presellDetail: _.cloneDeep(preselldata)
+      presellDetail: _.cloneDeep(preselldata),
     };
   },
   computed: {
@@ -1432,7 +1413,7 @@ export default {
     },
     tourDiscountComputed() {
       return fenToYuanDot2Number(this.presellDetail.tourDiscount);
-    }
+    },
   },
   watch: {
     numberInput(v) {
@@ -1440,7 +1421,7 @@ export default {
       this.$nextTick(() => {
         this.testInput = String(v).replace(/\D/g, "");
       });
-    }
+    },
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
@@ -1457,8 +1438,8 @@ export default {
       const list = this.storeList;
       let str = "";
       if (list.length > 0) {
-        ids.forEach(id => {
-          const item = list.find(item => item.storeId == id);
+        ids.forEach((id) => {
+          const item = list.find((item) => item.storeId == id);
           const itemName = item.storeName ? item.storeName : "";
           str += itemName + ",";
         });
@@ -1477,7 +1458,7 @@ export default {
     },
     handleSubmit() {
       const _this = this;
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (_this.presellDetail.triesLimit > 999) {
             _this.presellDetail.triesLimit = 999;
@@ -1558,7 +1539,7 @@ export default {
       this.modalViewLoading = true;
       this.presellDetail.id = null; // 新建时不需要传递id
       createPresell(this.presellDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success("创建成功!");
@@ -1573,7 +1554,7 @@ export default {
     editStore() {
       this.modalViewLoading = true;
       editPresell(this.presellDetail)
-        .then(res => {
+        .then((res) => {
           this.getTableData();
           this.modalEdit = false;
           this.modalViewLoading = false;
@@ -1623,9 +1604,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteTeamBuy({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -1637,7 +1618,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -1676,7 +1657,7 @@ export default {
         const storeIds = this.presellDetail.storeIds
           .substring(1, this.presellDetail.storeIds.length - 1)
           .split("][");
-        storeIds.forEach(element => {
+        storeIds.forEach((element) => {
           this.storeIds.push(parseInt(element));
         });
         // 全选/反选按钮的样式
@@ -1694,10 +1675,10 @@ export default {
     },
     handleDownload() {
       this.exportExcelLoading = true;
-      getTeamBuyPages(this.searchRowData).then(res => {
+      getTeamBuyPages(this.searchRowData).then((res) => {
         const tableData = res.rows;
         // 表格数据导出字段翻译
-        tableData.forEach(item => {
+        tableData.forEach((item) => {
           item["groupId"] = item["groupName"];
           item["status"] = teamBuyStatusConvert(item["status"]).label;
           item["activityPrice"] = (item["activityPrice"] / 100.0).toFixed(2);
@@ -1707,21 +1688,21 @@ export default {
         const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
           filename: `拼团活动信息-${date}`,
-          data: tableData
+          data: tableData,
         });
         this.exportExcelLoading = false;
       });
     },
     getTableData() {
       getPresellPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -1807,7 +1788,7 @@ export default {
     },
     // TODO 选择门店id方法
     getStore() {
-      getStorePages({ page: 1, rows: -1 }).then(res => {
+      getStorePages({ page: 1, rows: -1 }).then((res) => {
         this.storeList = res.rows;
       });
     },
@@ -1820,7 +1801,7 @@ export default {
       this.indeterminate = false;
       if (this.checkAll) {
         const allIds = [];
-        this.storeList.forEach(item => {
+        this.storeList.forEach((item) => {
           allIds.push(item.storeId);
         });
         this.storeIds = allIds;
@@ -1855,14 +1836,14 @@ export default {
     },
     getProductTableData() {
       getProductStandardsPages(this.searchProductRowData)
-        .then(res => {
+        .then((res) => {
           this.productData = res.rows;
           this.productTotal = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -1922,7 +1903,7 @@ export default {
       this.editStore();
     },
     aboutGoods() {
-      getGoodsStandard(this.presellDetail).then(res => {
+      getGoodsStandard(this.presellDetail).then((res) => {
         this.productStandardDetail = res;
         this.modalGoodsStandard = true;
       });
@@ -1935,8 +1916,8 @@ export default {
       this.presellDetail.deliveryStartTime = "";
       this.presellDetail.deliveryEndTime = "";
       this.presellDetail.beginDay = 0;
-    }
-  }
+    },
+  },
 };
 </script>
 
