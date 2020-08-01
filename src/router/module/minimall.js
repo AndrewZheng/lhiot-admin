@@ -368,7 +368,17 @@ const miniMallRouter = [
         title: '助力抢爆品活动'
       },
       component: () => import('@/view/mini-program-manager/activity/assist-product.vue')
-    }]
+    },
+    {
+      path: '/small-newGoods',
+      name: 'small-newGoods',
+      meta: {
+        icon: 'md-basket',
+        title: '新品上市活动'
+      },
+      component: () => import('@/view/mini-program-manager/activity/newGoods.vue')
+    },
+    ]
   },
   {
     path: '/small-content',
@@ -379,24 +389,24 @@ const miniMallRouter = [
     },
     component: Main,
     children: [
-    // {
-    //   path: '/small-article-category',
-    //   name: 'small-article-category',
-    //   meta: {
-    //     icon: 'md-pricetag',
-    //     title: '文章分类管理'
-    //   },
-    //   component: () => import('@/view/mini-program-manager/activity/activities.vue')
-    // },
-    // {
-    //   path: '/small-article-section',
-    //   name: 'small-article-section',
-    //   meta: {
-    //     icon: 'md-pricetag',
-    //     title: '文章管理'
-    //   },
-    //   component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
-    // },
+      // {
+      //   path: '/small-article-category',
+      //   name: 'small-article-category',
+      //   meta: {
+      //     icon: 'md-pricetag',
+      //     title: '文章分类管理'
+      //   },
+      //   component: () => import('@/view/mini-program-manager/activity/activities.vue')
+      // },
+      // {
+      //   path: '/small-article-section',
+      //   name: 'small-article-section',
+      //   meta: {
+      //     icon: 'md-pricetag',
+      //     title: '文章管理'
+      //   },
+      //   component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
+      // },
       {
         path: '/small-feedback',
         name: 'small-feedback',
@@ -462,6 +472,15 @@ const miniMallRouter = [
     },
     component: Main,
     children: [
+      {
+        path: '/small-member-management',
+        name: 'small-member-management',
+        meta: {
+          icon: 'ios-stats',
+          title: '会员管理'
+        },
+        component: () => import('@/view/mini-program-manager/member/member-management.vue')
+      },
       {
         path: '/small-system-data-statistics',
         name: 'small-system-data-statistics',
@@ -581,6 +600,16 @@ const miniMallRouter = [
       component: () => import('@/view/mini-program-manager/order/order.vue')
     },
     {
+      path: '/small-skip-order',
+      name: 'small-skip-order',
+      meta: {
+        hideInMenu: true,
+        icon: 'ios-paper',
+        title: '订单管理'
+      },
+      component: () => import('@/view/mini-program-manager/order/order.vue')
+    },
+    {
       path: '/small-paymentlogs',
       name: 'small-paymentlogs',
       meta: {
@@ -590,26 +619,26 @@ const miniMallRouter = [
       component: () => import('@/view/mini-program-manager/order/paylog.vue')
     },
     {
-        path: 'small-order-coupon-details',
-        name: 'small-order-coupon-details',
-        meta: {
-          hideInMenu: true,
-          icon: 'md-menu',
-          title: '用券数据'
-        },
-        component: () => import('@/view/mini-program-manager/order/coupon-details.vue')
+      path: 'small-order-coupon-details',
+      name: 'small-order-coupon-details',
+      meta: {
+        hideInMenu: true,
+        icon: 'md-menu',
+        title: '用券数据'
+      },
+      component: () => import('@/view/mini-program-manager/order/coupon-details.vue')
     },
     {
-        path: 'small-order-month-orders',
-        name: 'small-order-month-orders',
-        meta: {
-          hideInMenu: true,
-          icon: 'md-menu',
-          title: '跨月退款订单'
-        },
-        component: () => import('@/view/mini-program-manager/order/month-orders.vue')
-      }]
-    },
+      path: 'small-order-month-orders',
+      name: 'small-order-month-orders',
+      meta: {
+        hideInMenu: true,
+        icon: 'md-menu',
+        title: '跨月退款订单'
+      },
+      component: () => import('@/view/mini-program-manager/order/month-orders.vue')
+    }]
+  },
   {
     path: '/small-vip',
     name: 'small-vip',

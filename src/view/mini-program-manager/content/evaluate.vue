@@ -334,8 +334,24 @@
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="5">评价内容:</i-col>
+                <i-col span="6">评价内容:</i-col>
                 <i-col span="18">{{ evaluateDetail.commentContent }}</i-col>
+              </Row>
+            </i-col>
+          </Row>
+          <Row class-name="mb20">
+            <i-col span="20">
+              <Row>
+                <i-col span="6">修改评价:</i-col>
+                <i-col span="18">{{ "N/A" }}</i-col>
+              </Row>
+            </i-col>
+          </Row>
+          <Row class-name="mb20">
+            <i-col span="20">
+              <Row>
+                <i-col span="6">修改时间:</i-col>
+                <i-col span="18">{{ "N/A" }}</i-col>
               </Row>
             </i-col>
           </Row>
@@ -409,12 +425,12 @@ import searchMixin from "@/mixins/searchMixin.js";
 import {
   imageStatusConvert,
   deliveryTypeConvert,
-  commentScoreConvert
+  commentScoreConvert,
 } from "@/libs/converStatus";
 import {
   imageStatusEnum,
   deliveryTypeEnum,
-  commentScoreTypeEnum
+  commentScoreTypeEnum,
 } from "@/libs/enumerate";
 
 const evaluateDetail = {
@@ -444,7 +460,7 @@ const evaluateDetail = {
   type: "",
   userId: "",
   orderType: "",
-  xid: ""
+  xid: "",
 };
 
 const roleRowData = {
@@ -460,14 +476,14 @@ const roleRowData = {
   isTop: "",
   orderType: "WX_SMALL",
   sidx: "createTime",
-  sort: "desc"
+  sort: "desc",
 };
 
 export default {
   components: {
     Tables,
     IViewUpload,
-    DragList
+    DragList,
   },
   mixins: [deleteMixin, tableMixin, searchMixin],
   data() {
@@ -475,7 +491,7 @@ export default {
       searchRowData: _.cloneDeep(roleRowData),
       evaluateDetail: _.cloneDeep(evaluateDetail),
       ruleInline: {
-        answerContent: [{ required: true, message: "请输入评价回复" }]
+        answerContent: [{ required: true, message: "请输入评价回复" }],
       },
       defaultListMain: [],
       uploadListMain: [],
@@ -489,17 +505,17 @@ export default {
       commentScoreTypeEnum,
       orderType: [
         { label: "小程序订单", value: "WX_SMALL" },
-        { label: "门店订单", value: "STORE" }
+        { label: "门店订单", value: "STORE" },
       ],
       istopTypeEnum: [
         { label: "是", value: "YES" },
-        { label: "否", value: "NO" }
+        { label: "否", value: "NO" },
       ],
       columns: [
         {
           type: "selection",
           width: 60,
-          align: "center"
+          align: "center",
         },
         {
           title: "订单编号",
@@ -514,33 +530,33 @@ export default {
               return <div>{row.xid}</div>;
             }
             return <div>{row.orderCode}</div>;
-          }
+          },
         },
         {
           title: "商品名称",
           align: "center",
           key: "productNames",
-          tooltip: true
+          tooltip: true,
         },
         {
           title: "门店名称",
           align: "center",
-          key: "storeName"
+          key: "storeName",
         },
         {
           title: "用户名称",
           align: "center",
-          key: "nickName"
+          key: "nickName",
         },
         {
           title: "手机号码",
           align: "center",
-          key: "phone"
+          key: "phone",
         },
         {
           title: "评价时间",
           align: "center",
-          key: "createTime"
+          key: "createTime",
         },
         {
           title: "骑手评价",
@@ -574,7 +590,7 @@ export default {
               );
             }
             return <div>{"N/A"}</div>;
-          }
+          },
         },
         {
           title: "门店评价",
@@ -583,7 +599,7 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{row.commentScore + "星"}</div>;
-          }
+          },
         },
         {
           title: "评价内容",
@@ -598,25 +614,25 @@ export default {
             } else {
               return <div>{row.commentContent}</div>;
             }
-          }
+          },
         },
         {
           title: "回复评价",
           align: "center",
           width: 200,
           key: "answerContent",
-          tooltip: true
+          tooltip: true,
         },
         {
           title: "操作",
           align: "center",
           minWidth: 80,
           key: "handle",
-          options: ["view", "setTop", "setSta", "edit"]
-        }
+          options: ["view", "setTop", "setSta", "edit"],
+        },
       ],
       createLoading: false,
-      modalViewLoading: false
+      modalViewLoading: false,
     };
   },
   mounted() {
@@ -633,7 +649,7 @@ export default {
       this.$refs.modalEdit.resetFields();
     },
     handleSubmit() {
-      this.$refs.modalEdit.validate(valid => {
+      this.$refs.modalEdit.validate((valid) => {
         if (valid) {
           let evaluateData = this.evaluateDetail;
           evaluateData.istop = "NO";
@@ -645,7 +661,7 @@ export default {
     },
     replyEvaluate(data) {
       replyEvaluate(data)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.getTableData();
         })
@@ -694,14 +710,14 @@ export default {
       }
 
       getEvaluatePages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -734,14 +750,14 @@ export default {
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
       const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
-      getEvaluatePages(this.searchRowData).then(res => {
+      getEvaluatePages(this.searchRowData).then((res) => {
         const tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 10;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
         const _this = this;
-        tableData.forEach(item => {
+        tableData.forEach((item) => {
           item["deliveryComment"] = deliveryTypeConvert(
             item["deliveryComment"]
           ).label;
@@ -750,11 +766,11 @@ export default {
         const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
           filename: `用户评价数据-${date}`,
-          data: tableData
+          data: tableData,
         });
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

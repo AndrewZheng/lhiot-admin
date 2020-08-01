@@ -2,6 +2,54 @@ import Vue from 'vue';
 const $http = Vue.prototype.$http;
 const $imgService = Vue.prototype.$imgService;
 
+//销售数据 
+export const getOrderTotal = () => {
+  return $http.request({
+    url: '/minapp/index/statistics/select-order-total',
+    method: 'get'
+  });
+};
+
+//首页数据 
+export const getWaitOrder = () => {
+  return $http.request({
+    url: '/minapp/index/statistics/wait-order',
+    method: 'get'
+  });
+};
+
+//门店排行  
+export const storeRanking = (rankingType) => {
+  return $http.request({
+    url: `/minapp/index/statistics/store-ranking-total?rankingType=${rankingType}`,
+    method: 'get'
+  });
+};
+
+//商品踩赞排行 
+export const productRanking = (data) => {
+  return $http.request({
+    url: `/minapp/index/statistics/product-ranking-total?rankingType=${data.rankingType}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+//商品规格排行 /minapp/index/statistics/product-stanard/sale-ranking
+export const productStanardRanking = (data) => {
+  return $http.request({
+    url: `/minapp/index/statistics/product-stanard/sale-ranking?rankingType=${data.rankingType}&beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
 // 删除图片
 export const deletePicture = ({
   urls
@@ -1985,7 +2033,10 @@ export const getAdvertisementPages = (data) => {
     method: 'post',
     headers: {
       'page': data.page,
-      'rows': data.rows
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+
     }
   });
 };
