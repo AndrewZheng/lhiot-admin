@@ -621,6 +621,12 @@ export default {
         this.goodsSearchRowData.beginDate = yesterday1;
         this.goodsSearchRowData.endDate = yesterday1;
       }
+      this.goodsSearchRowData.beginDate = this.$moment(
+        this.goodsSearchRowData.beginDate
+      ).format("YYYY-MM-DD");
+      this.goodsSearchRowData.endDate = this.$moment(
+        this.goodsSearchRowData.endDate
+      ).format("YYYY-MM-DD");
       productStanardRanking(this.goodsSearchRowData)
         .then((res) => {
           this.goodsTableData = res.rows;

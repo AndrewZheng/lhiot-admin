@@ -1021,6 +1021,16 @@ export default {
           },
         },
         {
+          title: "优惠券金额",
+          align: "center",
+          width: 120,
+          key: "couponTicketAmount",
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(params.row.couponTicketAmount);
+            return <div>{amount}</div>;
+          },
+        },
+        {
           title: "运费",
           align: "center",
           width: 120,
@@ -1598,6 +1608,9 @@ export default {
             obj && obj.storeName ? obj.storeName : item["storeId"]; // 如果找不到就显示门店Id
           item["totalAmount"] = (item["totalAmount"] / 100.0).toFixed(2);
           item["couponAmount"] = (item["couponAmount"] / 100.0).toFixed(2);
+          item["couponTicketAmount"] = (
+            item["couponTicketAmount"] / 100.0
+          ).toFixed(2);
           item["amountPayable"] = (item["amountPayable"] / 100.0).toFixed(2);
           item["refundFee"] = (item["refundFee"] / 100.0).toFixed(2);
           item["orderType"] = orderTypeConvert(item["orderType"]);
