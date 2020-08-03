@@ -2,50 +2,50 @@ import Vue from 'vue';
 const $http = Vue.prototype.$http;
 const $imgService = Vue.prototype.$imgService;
 
-//销售数据 
-export const getOrderTotal = () => {
-  return $http.request({
-    url: '/minapp/index/statistics/select-order-total',
-    method: 'get'
-  });
-};
-
-//首页数据 
+//获取首页头部订单数据
 export const getWaitOrder = () => {
   return $http.request({
     url: '/minapp/index/statistics/wait-order',
-    method: 'get'
+    method: 'get',
   });
 };
 
-//门店排行  
+//获取门店排行 
 export const storeRanking = (rankingType) => {
   return $http.request({
     url: `/minapp/index/statistics/store-ranking-total?rankingType=${rankingType}`,
-    method: 'get'
+    method: 'get',
   });
 };
 
-//商品踩赞排行 
+//获取订单list 
+export const getOrderTotal = () => {
+  return $http.request({
+    url: '/minapp/index/statistics/select-order-total',
+    method: 'get',
+  });
+};
+
+//获取点赞排行 
 export const productRanking = (data) => {
   return $http.request({
     url: `/minapp/index/statistics/product-ranking-total?rankingType=${data.rankingType}`,
     method: 'get',
     headers: {
       'page': data.page,
-      'rows': data.rows
+      'rows': data.rows,
     }
   });
 };
 
-//商品规格排行 /minapp/index/statistics/product-stanard/sale-ranking
+//规格商品排行 
 export const productStanardRanking = (data) => {
   return $http.request({
     url: `/minapp/index/statistics/product-stanard/sale-ranking?rankingType=${data.rankingType}&beginDate=${data.beginDate}&endDate=${data.endDate}`,
     method: 'get',
     headers: {
       'page': data.page,
-      'rows': data.rows
+      'rows': data.rows,
     }
   });
 };
@@ -2036,7 +2036,6 @@ export const getAdvertisementPages = (data) => {
       'rows': data.rows,
       'sidx': data.sidx,
       'sort': data.sort
-
     }
   });
 };

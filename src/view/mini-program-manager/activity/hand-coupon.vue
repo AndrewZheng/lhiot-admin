@@ -414,15 +414,28 @@
                   ></Input>
                 </FormItem>
               </i-col>
-              <i-col span="6" v-if="addRelationDetail.maxDiscountFee">
+              <i-col span="6" v-if="tempModalType == 'addTemplate'">
                 <FormItem
                   :label-width="100"
                   label="最高优惠金额:"
                   prop="maxDiscountFee"
+                  v-if="addRelationDetail.maxDiscountFee"
                 >{{ addRelationDetail.maxDiscountFee | fenToYuanDot2Filters }}</FormItem>
+                <FormItem
+                  :label-width="100"
+                  label="最高优惠金额:"
+                  prop="maxDiscountFee"
+                  v-else
+                >{{ "N/A" }}</FormItem>
               </i-col>
               <i-col span="6" v-else>
-                <FormItem :label-width="100" label="最高优惠金额:" prop="maxDiscountFee">{{ "N/A" }}</FormItem>
+                <FormItem label="最高优惠金额:" prop="addRelationDetail" :label-width="100">
+                  <InputNumber
+                    :min="0"
+                    :value="maxDiscountFeeComputed"
+                    @on-change="maxDiscountFeeInputNumberOnchange"
+                  ></InputNumber>
+                </FormItem>
               </i-col>
             </Row>
 
@@ -621,12 +634,15 @@
                 prop="minBuyFee"
               >{{ addRelationDetail.minBuyFee | fenToYuanDot2Filters }}</FormItem>
             </i-col>
-            <!-- <i-col span="12">
-              <Row>
-                <i-col span="8">最高优惠金额:</i-col>
-                <i-col span="16">{{ "¥"+addRelationDetail.maxDiscountFee.toFixed(2) }}</i-col>
-              </Row>
-            </i-col>-->
+            <i-col span="6">
+              <FormItem
+                :label-width="100"
+                label="最高优惠金额:"
+                prop="minBuyFee"
+                v-if="addRelationDetail.maxDiscountFee"
+              >{{ addRelationDetail.maxDiscountFee | fenToYuanDot2Filters }}</FormItem>
+              <FormItem :label-width="100" label="最高优惠金额:" prop="minBuyFee" v-else>{{ "N/A" }}</FormItem>
+            </i-col>
           </Row>
 
           <Divider>可修改部分</Divider>
@@ -1049,7 +1065,7 @@ const relationDetail = {
   receiveLimit: 0,
   beginDay: 0,
   endDay: 0,
-  maxDiscountFee: "",
+  maxDiscountFee: null,
   rank: 0,
   phones: "",
   couponStatus: "VALID",
@@ -1188,11 +1204,10 @@ const dataColumns = [
     render(h, params) {
       const { row } = params;
       if (row.maxDiscountFee != null) {
-        return <div>{"¥" + row.maxDiscountFee.toFixed(2)}</div>;
+        return <div>{fenToYuanDot2(row.maxDiscountFee)}</div>;
       } else {
         return <div>{"N/A"}</div>;
       }
-      return <div>{row.maxDiscountFee}</div>;
     },
   },
   {
@@ -1407,13 +1422,13 @@ const templateColumns = [
     title: "优惠/折扣额度",
     align: "center",
     key: "couponFee",
-    minWidth: 80,
+    minWidth: 50,
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{fenToYuanDot2Number(row.couponFee) * 10 + "折"}</div>;
+        return <div>{row.couponFee / 10 + "折"}</div>;
       } else {
-        return <div>{fenToYuanDot2(row.couponFee)}</div>;
+        return <div>{fenToYuanDot2(params.row.couponFee)}</div>;
       }
     },
   },
@@ -1424,6 +1439,19 @@ const templateColumns = [
     minWidth: 80,
     render(h, params) {
       return <div>{fenToYuanDot2(params.row.minBuyFee)}</div>;
+    },
+  },
+  {
+    title: "最高优惠金额",
+    align: "center",
+    key: "maxDiscountFee",
+    minWidth: 80,
+    render(h, params) {
+      if (params.row.maxDiscountFee) {
+        return <div>{fenToYuanDot2(params.row.maxDiscountFee)}</div>;
+      } else {
+        return <div>{"N/A"}</div>;
+      }
     },
   },
   {
@@ -1649,6 +1677,9 @@ export default {
         this.addRelationDetail.validDateType === "UN_FIXED_DATE"
       );
     },
+    maxDiscountFeeComputed() {
+      return fenToYuanDot2Number(this.addRelationDetail.maxDiscountFee);
+    },
   },
   mounted() {
     this.searchRowData = _.cloneDeep(searchRowData);
@@ -1736,18 +1767,17 @@ export default {
     },
     onCurrentChange(currentRow, oldCurrentRow) {
       this.currentTableRowSelected = currentRow;
-      // console.log(this.currentTableRowSelected);
     },
     // 添加手机号码
     onRelevance(params) {
-      this.failPhone = [];
-      this.currentTableRowSelected.phones = "";
       if (!this.currentTableRowSelected) {
         this.$Message.error(
           "请用鼠标左键点击选择下方表格一行优惠券数据,才能进行手动发券"
         );
         return;
       }
+      this.failPhone = [];
+      this.currentTableRowSelected.phones = "";
       if (this.hdCouponType === "手动发券") {
         this.modalPhones = true;
       }
@@ -2094,6 +2124,9 @@ export default {
       } else {
         this.currentTableRowSelected = null;
       }
+    },
+    maxDiscountFeeInputNumberOnchange(value) {
+      this.addRelationDetail.maxDiscountFee = yuanToFenNumber(value);
     },
   },
 };

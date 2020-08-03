@@ -411,12 +411,28 @@
               </i-col>
             </Row>
             <Row>
-              <i-col span="12">
+              <i-col span="6" v-if="tempModalType == 'addTemplate'">
                 <FormItem
+                  :label-width="100"
                   label="最高优惠金额:"
                   prop="maxDiscountFee"
-                  :label-width="100"
+                  v-if="addRelationDetail.maxDiscountFee"
                 >{{ addRelationDetail.maxDiscountFee | fenToYuanDot2Filters }}</FormItem>
+                <FormItem
+                  :label-width="100"
+                  label="最高优惠金额:"
+                  prop="maxDiscountFee"
+                  v-else
+                >{{ "N/A" }}</FormItem>
+              </i-col>
+              <i-col span="6" v-else>
+                <FormItem label="最高优惠金额:" prop="addRelationDetail" :label-width="100">
+                  <InputNumber
+                    :min="0"
+                    :value="maxDiscountFeeComputed"
+                    @on-change="maxDiscountFeeInputNumberOnchange"
+                  ></InputNumber>
+                </FormItem>
               </i-col>
             </Row>
             <Row>
@@ -518,7 +534,9 @@
               <FormItem
                 label="最高优惠金额:"
                 prop="maxDiscountFee"
-              >{{"¥"+(addRelationDetail.maxDiscountFee)/100}}</FormItem>
+                v-if="addRelationDetail.maxDiscountFee"
+              >{{addRelationDetail.maxDiscountFee | fenToYuanDot2Filters}}</FormItem>
+              <FormItem label="最高优惠金额:" prop="maxDiscountFee" v-else>{{"N/A"}}</FormItem>
             </i-col>
           </Row>
           <Row>
@@ -678,7 +696,7 @@ import {
   createCouponTemplateRelation,
   editCouponTemplateRelation,
   getCouponTemplatePages,
-  getHdCouponActivitiesPages
+  getHdCouponActivitiesPages,
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -689,7 +707,7 @@ import {
   couponTypeConvert,
   couponScopeConvert,
   couponUseLimitConvert,
-  userScopeConvert
+  userScopeConvert,
 } from "@/libs/converStatus";
 import {
   couponStatusEnum,
@@ -697,7 +715,7 @@ import {
   couponScopeEnum,
   couponUseLimitEnum,
   userScopeEnum,
-  validDateTypeEnum
+  validDateTypeEnum,
 } from "@/libs/enumerate";
 import {
   compareData,
@@ -708,7 +726,7 @@ import {
   replaceByTag,
   replaceByTab,
   HdDiscount,
-  compareCouponData
+  compareCouponData,
 } from "@/libs/util";
 
 // 优惠券活动对象
@@ -731,11 +749,11 @@ const couponDetail = {
   applicationType: null,
   activityImage: "",
   activityUrl: "",
-  maxDiscountFee: "",
+  maxDiscountFee: null,
   rank: 0, // 排序字段
   validDateType: "FIXED_DATE",
   beginDay: 0,
-  endDay: 0
+  endDay: 0,
 };
 
 // 关联的优惠券配置对象
@@ -761,7 +779,7 @@ const relationDetail = {
   rank: 0, // 排序字段
   validDateType: "UN_FIXED_DATE",
   beginDay: 0,
-  endDay: 0
+  endDay: 0,
 };
 
 // 系统优惠券模板对象
@@ -776,7 +794,7 @@ const couponTemplateDetail = {
   createUser: "",
   createTime: null,
   couponRules: "",
-  couponScope: null
+  couponScope: null,
 };
 
 // 海鼎优惠券模板对象
@@ -789,7 +807,7 @@ const hdCouponTemplateDetail = {
   couponType: "",
   faceValue: 0,
   price: 0,
-  useRule: ""
+  useRule: "",
 };
 
 const roleRowData = {
@@ -801,7 +819,7 @@ const roleRowData = {
   page: 1,
   rows: 10,
   sidx: "rank",
-  sort: "desc"
+  sort: "desc",
 };
 
 const templateRowData = {
@@ -811,7 +829,7 @@ const templateRowData = {
   page: 1,
   rows: 5,
   sidx: "create_time",
-  sort: "desc"
+  sort: "desc",
 };
 
 const hdTemplateRowData = {
@@ -822,7 +840,7 @@ const hdTemplateRowData = {
   activityTypes: ["component"],
   activityId: null,
   page: 1,
-  rows: 5
+  rows: 5,
 };
 
 const dataColumns = [
@@ -830,14 +848,14 @@ const dataColumns = [
     type: "selection",
     width: 60,
     align: "center",
-    fixed: "left"
+    fixed: "left",
   },
   {
     title: "优惠券名称",
     key: "couponName",
     align: "center",
     minWidth: 140,
-    fixed: "left"
+    fixed: "left",
   },
   {
     title: "优惠券类型",
@@ -866,7 +884,7 @@ const dataColumns = [
       }
       return <div>{row.couponType}</div>;
     },
-    minWidth: 100
+    minWidth: 100,
   },
   {
     title: "券使用范围",
@@ -899,7 +917,7 @@ const dataColumns = [
         );
       }
       return <div>{row.couponScope}</div>;
-    }
+    },
   },
   {
     title: "券使用限制",
@@ -909,7 +927,7 @@ const dataColumns = [
     render: (h, params, vm) => {
       const { row } = params;
       return <div>{couponUseLimitConvert(row.useLimitType).label}</div>;
-    }
+    },
   },
   {
     title: "来源",
@@ -925,7 +943,7 @@ const dataColumns = [
       } else {
         return <div>N/A</div>;
       }
-    }
+    },
   },
   {
     title: "优惠/折扣额度",
@@ -939,7 +957,7 @@ const dataColumns = [
       } else {
         return <div>{fenToYuanDot2(row.couponFee)}</div>;
       }
-    }
+    },
   },
   {
     title: "最小购买金额",
@@ -948,7 +966,7 @@ const dataColumns = [
     minWidth: 120,
     render(h, params) {
       return h("div", fenToYuanDot2(params.row.minBuyFee));
-    }
+    },
   },
   {
     title: "最高优惠金额",
@@ -963,7 +981,7 @@ const dataColumns = [
         return <div>{"N/A"}</div>;
       }
       return <div>{row.maxDiscountFee}</div>;
-    }
+    },
   },
   {
     title: "优惠券状态",
@@ -990,7 +1008,7 @@ const dataColumns = [
         );
       }
       return <div>{row.couponStatus}</div>;
-    }
+    },
   },
   {
     title: "生效时间",
@@ -1011,7 +1029,7 @@ const dataColumns = [
       } else {
         return <div>N/A</div>;
       }
-    }
+    },
   },
   {
     title: "失效时间",
@@ -1040,25 +1058,25 @@ const dataColumns = [
       } else {
         return <div>N/A</div>;
       }
-    }
+    },
   },
   {
     title: "已领取统计",
     align: "center",
     key: "receiveCount",
-    minWidth: 100
+    minWidth: 100,
   },
   {
     title: "发券总数限制",
     align: "center",
     key: "couponLimit",
-    minWidth: 110
+    minWidth: 110,
   },
   {
     title: "排序",
     align: "center",
     key: "rank",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "操作",
@@ -1066,21 +1084,21 @@ const dataColumns = [
     minWidth: 120,
     key: "handle",
     // options: ["edit", "delete"]
-    options: ["onSale", "edit"]
-  }
+    options: ["onSale", "edit"],
+  },
 ];
 
 const templateColumns = [
   {
     type: "index",
     width: 60,
-    align: "center"
+    align: "center",
   },
   {
     title: "优惠券名称",
     key: "couponName",
     align: "center",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "优惠券类型",
@@ -1115,7 +1133,7 @@ const templateColumns = [
         );
       }
       return <div>{row.couponType}</div>;
-    }
+    },
   },
   // {
   //   title: '使用范围',
@@ -1145,7 +1163,7 @@ const templateColumns = [
       } else {
         return <div>{fenToYuanDot2(params.row.couponFee)}</div>;
       }
-    }
+    },
   },
   {
     title: "最小购买金额",
@@ -1154,7 +1172,20 @@ const templateColumns = [
     minWidth: 80,
     render(h, params) {
       return <div>{fenToYuanDot2(params.row.minBuyFee)}</div>;
-    }
+    },
+  },
+  {
+    title: "最高优惠金额",
+    align: "center",
+    key: "maxDiscountFee",
+    minWidth: 80,
+    render(h, params) {
+      if (params.row.maxDiscountFee) {
+        return <div>{fenToYuanDot2(params.row.maxDiscountFee)}</div>;
+      } else {
+        return <div>{"N/A"}</div>;
+      }
+    },
   },
   {
     title: "优惠券状态",
@@ -1181,27 +1212,27 @@ const templateColumns = [
         );
       }
       return <div>{row.couponStatus}</div>;
-    }
+    },
   },
   {
     title: "创建时间",
     align: "center",
     minWidth: 120,
-    key: "createTime"
-  }
+    key: "createTime",
+  },
 ];
 
 const hdTemplateColumns = [
   {
     type: "index",
     width: 60,
-    align: "center"
+    align: "center",
   },
   {
     title: "优惠券名称",
     key: "couponName",
     align: "center",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "优惠券类型",
@@ -1230,7 +1261,7 @@ const hdTemplateColumns = [
         );
       }
       return <div>{row.couponType}</div>;
-    }
+    },
   },
   {
     title: "券使用限制",
@@ -1240,7 +1271,7 @@ const hdTemplateColumns = [
     render: (h, params, vm) => {
       const { row } = params;
       return <div>{couponUseLimitConvert(row.useLimitType).label}</div>;
-    }
+    },
   },
   // {
   //   title: "优惠/折扣额度",
@@ -1272,7 +1303,7 @@ const hdTemplateColumns = [
       } else {
         return <div>{fenToYuanDot2(params.row.faceValue)}</div>;
       }
-    }
+    },
   },
   {
     title: "最小购买金额",
@@ -1285,20 +1316,20 @@ const hdTemplateColumns = [
       const endIndex = useRule.indexOf("元");
       const minBuyFee = useRule.slice(startIndex + 1, endIndex);
       return <div>{fenToYuanDot2(minBuyFee * 100)}</div>;
-    }
+    },
   },
   {
     title: "生效时间",
     align: "center",
     key: "beginDate",
-    minWidth: 50
+    minWidth: 50,
   },
   {
     title: "失效时间",
     align: "center",
     key: "endDate",
-    minWidth: 50
-  }
+    minWidth: 50,
+  },
   // {
   //   title: '用券条件',
   //   key: 'useRule',
@@ -1324,7 +1355,7 @@ const hdTemplateColumns = [
 export default {
   components: {
     Tables,
-    IViewUpload
+    IViewUpload,
   },
   mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
   data() {
@@ -1342,9 +1373,9 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
       defaultListMain: [],
       uploadListMain: [],
@@ -1373,7 +1404,7 @@ export default {
       hdCouponTemplateData: [],
       couponTemplateTotal: 0,
       couponHdTemplateTotal: 0,
-      activityCouponType: ""
+      activityCouponType: "",
     };
   },
   computed: {
@@ -1382,7 +1413,10 @@ export default {
     },
     showBack() {
       return this.$route.name === "small-activity-relation-coupon";
-    }
+    },
+    maxDiscountFeeComputed() {
+      return fenToYuanDot2Number(this.addRelationDetail.maxDiscountFee);
+    },
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
@@ -1421,11 +1455,11 @@ export default {
       }
       this.loading = true;
       editCouponTemplateRelation(this.addRelationDetail)
-        .then(res => {
+        .then((res) => {
           this.getRelationTableData();
           this.loading = false;
         })
-        .finally(res => {
+        .finally((res) => {
           this.loading = false;
         });
     },
@@ -1450,14 +1484,14 @@ export default {
     },
     getRelationTableData() {
       getCouponTemplateRelationPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1469,14 +1503,14 @@ export default {
         this.searchTemplateRowData.couponType = "FULL_CUT_COUPON";
       }
       getCouponTemplatePages(this.searchTemplateRowData)
-        .then(res => {
+        .then((res) => {
           this.couponTemplateData = res.rows;
           this.couponTemplateTotal = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -1598,7 +1632,7 @@ export default {
       console.log("before create:", this.addRelationDetail);
       this.addRelationList.push(this.addRelationDetail);
       createCouponTemplateRelation(this.addRelationList)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalAdd = false;
           this.$Message.success("创建成功!");
@@ -1617,7 +1651,7 @@ export default {
       console.log("before create:", this.addRelationDetail);
       this.addRelationList.push(this.addRelationDetail);
       createCouponTemplateRelation(this.addRelationList)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.$Message.success("创建成功!");
           this.modalAdd = false;
@@ -1630,14 +1664,14 @@ export default {
     },
     getHdTemplateTableData() {
       getHdCouponActivitiesPages(this.searchHdTemplateRowData)
-        .then(res => {
+        .then((res) => {
           this.hdCouponTemplateData = res.rows;
           this.couponHdTemplateTotal = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -1645,7 +1679,7 @@ export default {
         });
     },
     handleTemplateEdit() {
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (
             compareData(
@@ -1668,11 +1702,11 @@ export default {
             // 编辑状态
             this.tempTableLoading = true;
             editCouponTemplateRelation(this.addRelationDetail)
-              .then(res => {
+              .then((res) => {
                 this.getRelationTableData();
                 this.modalEdit = false;
               })
-              .finally(res => {
+              .finally((res) => {
                 this.tempTableLoading = false;
               });
             this.tempTableLoading = false;
@@ -1687,7 +1721,7 @@ export default {
         this.$Message.error("请先关联一张优惠券模板!");
         return false;
       }
-      this.$refs.addForm.validate(valid => {
+      this.$refs.addForm.validate((valid) => {
         if (valid) {
           if (
             compareData(
@@ -1721,7 +1755,7 @@ export default {
     deleteTable(ids) {
       this.tempTableLoading = true;
       deleteCouponTemplateRelation({ ids })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -1733,11 +1767,14 @@ export default {
           this.tableDataSelected = [];
           this.getRelationTableData();
         })
-        .finally(res => {
+        .finally((res) => {
           this.tempTableLoading = false;
         });
-    }
-  }
+    },
+    maxDiscountFeeInputNumberOnchange(value) {
+      this.addRelationDetail.maxDiscountFee = yuanToFenNumber(value);
+    },
+  },
 };
 </script>
 

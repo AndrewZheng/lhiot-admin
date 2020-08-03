@@ -236,8 +236,6 @@ export default {
       systemDataStatistics(this.searchRowData1)
         .then(res => {
           this.inviteData.push(res);
-          console.log('121', this.inviteData)
-
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
