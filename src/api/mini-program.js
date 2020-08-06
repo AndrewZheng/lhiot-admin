@@ -1237,6 +1237,19 @@ export const systemDataStatistics = (data) => {
   });
 };
 
+//会员管理 /minapp/user/users-info
+export const getUsersInfo = (data) => {
+  return $http.request({
+    url: '/minapp/user/users-info',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+    }
+  });
+};
+
 // 根据条件分页查询优惠券列表
 export const getCouponPages = (data) => {
   return $http.request({
@@ -2672,5 +2685,46 @@ export const editSignReward = (data) => {
     url: '/minapp/everyday-sign-reward/update/' + data.id,
     data,
     method: 'PUT'
+  });
+};
+
+//获取关键字列表 /minapp/product-keywords/pages
+export const getKeywordsPages = (data) => {
+  return $http.request({
+    url: '/minapp/product-keywords/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+//添加关键词 /minapp/product-keywords/create
+export const createKeywords = (data) => {
+  return $http.request({
+    url: '/minapp/product-keywords/create',
+    data,
+    method: 'post',
+  });
+};
+
+//删除关键词 deleteProduct
+export const deleteKeywords = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/product-keywords/' + ids,
+    method: 'delete'
+  });
+};
+
+//更新关键词 /minapp/product-keywords/update/{id}
+export const updateKeywords = (data) => {
+  return $http.request({
+    url: '/minapp/product-keywords/update/' + data.id,
+    data,
+    method: 'put'
   });
 };

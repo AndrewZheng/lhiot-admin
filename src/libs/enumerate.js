@@ -2678,7 +2678,11 @@ export const couponFromEnum = [{
 {
   label: '限时抢购',
   value: 'flashsale'
-}
+},
+{
+  label: '活动送券',
+  value: 'activity'
+},
 ];
 
 export const layoutEnum = [{

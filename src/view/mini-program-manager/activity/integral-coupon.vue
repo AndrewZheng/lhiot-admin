@@ -635,13 +635,6 @@
                   </Select>
                 </FormItem>
               </i-col>
-              <!-- <i-col span="6">
-                <FormItem
-                  label="最高优惠金额:"
-                  prop="maxDiscountFee"
-                  :label-width="100"
-                >{{ addRelationDetail.maxDiscountFee | fenToYuanDot2Filters }}</FormItem>
-              </i-col>-->
               <i-col span="6" v-if="tempModalType == 'addTemplate'">
                 <FormItem
                   :label-width="100"
@@ -657,13 +650,24 @@
                 >{{ "N/A" }}</FormItem>
               </i-col>
               <i-col span="6" v-else>
-                <FormItem label="最高优惠金额:" prop="addRelationDetail" :label-width="100">
+                <FormItem
+                  label="最高优惠金额:"
+                  prop="addRelationDetail"
+                  :label-width="100"
+                  v-if="addRelationDetail.couponType=='DISCOUNT_COUPON'"
+                >
                   <InputNumber
                     :min="0"
                     :value="maxDiscountFeeComputed"
                     @on-change="maxDiscountFeeInputNumberOnchange"
                   ></InputNumber>
                 </FormItem>
+                <FormItem
+                  :label-width="100"
+                  label="最高优惠金额:"
+                  prop="maxDiscountFee"
+                  v-else
+                >{{ "N/A" }}</FormItem>
               </i-col>
             </Row>
             <Row>

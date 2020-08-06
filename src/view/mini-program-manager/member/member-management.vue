@@ -16,13 +16,13 @@
         <div slot="searchCondition">
           <Row>
             <Select
-              v-model="searchRowData.app_type"
+              v-model="searchRowData.gender"
               placeholder="性别"
               style="padding-right: 5px;width: 100px"
               clearable
             >
               <Option
-                v-for="(item,index) in appTypeEnum"
+                v-for="(item,index) in genderEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
@@ -30,33 +30,43 @@
               >{{ item.label }}</Option>
             </Select>
             <Select
-              v-model="searchRowData.payType"
+              v-model="searchRowData.isCommunity"
               placeholder="是否社群用户"
               style="padding-right: 5px;width: 120px"
               clearable
             >
               <Option
-                v-for="(item,index) in payTypeEnum"
+                v-for="(item,index) in communityEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
                 style="padding-left: 5px"
               >{{ item.label }}</Option>
             </Select>
-            <Select
-              v-model="searchRowData.payStep"
+            <!-- v1.8.3 -->
+            <!-- <Select
+              v-model="searchRowData.userType"
               placeholder="用户类型"
               style="padding-right: 5px;width: 100px"
               clearable
             >
               <Option
-                v-for="(item,index) in payStepEnum"
+                v-for="(item,index) in userEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
                 style="padding-left: 5px"
               >{{ item.label }}</Option>
-            </Select>
+            </Select>-->
+            <Button
+              v-waves
+              :loading="searchLoading"
+              class="search-btn mr5"
+              type="primary"
+              @click="handleSearch"
+            >
+              <Icon type="md-search" />&nbsp;搜索
+            </Button>
             <Button
               v-waves
               :loading="clearSearchLoading"
@@ -89,36 +99,16 @@
 import Tables from "_c/tables";
 import CountTo from "_c/count-to";
 import _ from "lodash";
-import { getPaymentLogPages } from "@/api/mini-program";
+import { getUsersInfo } from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
-import { fenToYuanDot2, fenToYuanDot2Number } from "@/libs/util";
-import {
-  appTypeConvert,
-  payTypeConvert,
-  payStepConvert,
-  sourceTypeConvert,
-  bankTypeConvert,
-} from "@/libs/converStatus";
-import {
-  appTypeEnum,
-  payTypeEnum,
-  payStepEnum,
-  sourceTypeEnum,
-} from "@/libs/enumerate";
 
 const roleRowData = {
-  startTime: null,
-  endTime: null,
-  sourceType: null,
-  payType: null,
-  payStep: null,
-  app_type: null,
+  isCommunity: null,
+  userType: null,
+  gender: null,
   page: 1,
   rows: 10,
-  sum: null,
-  sidx: "signAt",
-  sort: "desc",
 };
 
 export default {
@@ -132,58 +122,110 @@ export default {
       columns: [
         {
           title: "会员ID",
-          key: "orderId",
+          key: "id",
           align: "center",
+          width: "80px",
         },
         {
           title: "昵称",
-          key: "userId",
+          key: "nickName",
           align: "center",
         },
         {
           title: "手机号码",
-          key: "app_type",
+          key: "phone",
           align: "center",
+          width: "140px",
         },
         {
           title: "性别",
-          key: "payType",
+          key: "gender",
           align: "center",
+          width: "80px",
+          render(h, params) {
+            const { row } = params;
+            if (row.gender === "1") {
+              return <div>{"男"}</div>;
+            } else if (row.gender === "2") {
+              return <div>{"女"}</div>;
+            } else {
+              return <div>{"未知"}</div>;
+            }
+          },
         },
         {
           title: "消费总额",
           align: "center",
-          key: "sourceType",
+          key: "consumeSumAmount",
         },
         {
           title: "充值总额",
-          key: "payFee",
+          key: "rechargeSumAmount",
           align: "center",
         },
         {
           title: "社群成员",
-          key: "rechargeAmount",
+          key: "isCommunity",
           align: "center",
+          width: "100px",
+          render(h, params) {
+            const { row } = params;
+            if (row.isCommunity === "YES") {
+              return (
+                <div>
+                  <tag color="orange">{"是"}</tag>
+                </div>
+              );
+            } else {
+              return (
+                <div>
+                  <tag color="blue">{"否"}</tag>
+                </div>
+              );
+            }
+          },
         },
         {
           title: "用户类型",
-          key: "tradeId",
+          key: "userType",
           align: "center",
+          width: "100px",
+          render(h, params) {
+            const { row } = params;
+            if (row.userType === "CONSUMER") {
+              return (
+                <div>
+                  <tag color="green">{"普通用户"}</tag>
+                </div>
+              );
+            } else {
+              return (
+                <div>
+                  <tag color="blue">{"N/A"}</tag>
+                </div>
+              );
+            }
+          },
         },
         {
           title: "注册时间",
-          key: "signAt",
+          key: "registrationAt",
           align: "center",
-          width: 110,
         },
       ],
+      genderEnum: [
+        { label: "男", value: "1" },
+        { label: "女", value: "2" },
+        { label: "未知", value: "0" },
+      ],
+      communityEnum: [
+        { label: "是", value: "YES" },
+        { label: "否", value: "NO" },
+      ],
+      userEnum: [{ label: "普通用户", value: "CONSUMER" }],
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
-      appTypeEnum,
-      payTypeEnum,
-      payStepEnum,
-      sourceTypeEnum,
     };
   },
   mounted() {
@@ -198,9 +240,8 @@ export default {
     },
     getTableData() {
       const _this = this;
-      getPaymentLogPages(this.searchRowData)
+      getUsersInfo(this.searchRowData)
         .then((res) => {
-          console.log("12312312", res);
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;

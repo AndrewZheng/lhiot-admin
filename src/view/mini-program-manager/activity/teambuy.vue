@@ -434,23 +434,6 @@
             <!-- :readonly="tempModalType === modalType.edit" -->
             <!-- :readonly="tempModalType === modalType.edit" -->
             <!-- :readonly="tempModalType === modalType.edit" -->
-            <!--
-                    <Row>
-              <Col span="18">
-                <FormItem label="有效期起:" prop="beginTime">
-                  <DatePicker
-                    v-model="registerDetail.beginTime"
-                    format="yyyy-MM-dd HH:mm:ss"
-                    type="datetime"
-                    placeholder="有效期起"
-                    class="search-input"
-                    style="width: 170px"
-                    @on-change="beginTimeChange"
-                  />
-                </FormItem>
-              </Col>
-            </Row>
-            -->
             <i-col span="12">
               <FormItem label="有效期起:" prop="startTime">
                 <DatePicker
@@ -480,6 +463,24 @@
           </Row>
           <Row>
             <i-col span="12">
+              <FormItem label="提货截止时间类型:" prop="validDateType">
+                <Select
+                  v-model="teambuyDetail.validDateType"
+                  placeholder="券有效期类型"
+                  style="width: 205px"
+                >
+                  <Option
+                    v-for="(item,index) in validDateTypeEnum"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                    style="width: 205px"
+                    @click.native="selectValidDateType(item.value)"
+                  >{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+            </i-col>
+            <i-col span="12" v-if="teambuyDetail.validDateType=='FIXED_DATE'">
               <FormItem label="提货截止时间:" prop="deliveryEndTime">
                 <DatePicker
                   v-model="teambuyDetail.deliveryEndTime"
@@ -490,6 +491,16 @@
                   style="width: 200px"
                   @on-change="deliveryEndTimeChange"
                 />
+              </FormItem>
+            </i-col>
+            <i-col span="12" v-else>
+              <FormItem label="提货截止天数:" prop="deliveryEndTimeDay">
+                <InputNumber
+                  :min="0"
+                  v-model="teambuyDetail.deliveryEndTimeDay"
+                  label="提货截止天数"
+                  style="width: 160px"
+                ></InputNumber>
               </FormItem>
             </i-col>
             <!-- <i-col span="12">
@@ -975,7 +986,7 @@ import {
   getStorePages,
   getProductStandardsPages,
   deletePicture,
-  getGoodsStandard
+  getGoodsStandard,
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -983,13 +994,13 @@ import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 import {
   teamBuyStatusConvert,
-  customPlanStatusConvert
+  customPlanStatusConvert,
 } from "@/libs/converStatus";
 import {
   teamBuyStatusEnum,
   teamBuyTypeEnum,
   rewardActivitySettingEnum,
-  relationStoreTypeEnum
+  relationStoreTypeEnum,
 } from "@/libs/enumerate";
 import {
   fenToYuanDot2,
@@ -997,7 +1008,7 @@ import {
   yuanToFenNumber,
   compareData,
   secondsToDate,
-  compareCouponData
+  compareCouponData,
 } from "@/libs/util";
 
 const teambuyDetail = {
@@ -1024,6 +1035,7 @@ const teambuyDetail = {
   endTime: null,
   deliveryEndTime: null,
   deliveryStartTime: null,
+  deliveryEndTimeDay: null,
   banner: "",
   totalNum: 0,
   activityPrice: null,
@@ -1043,7 +1055,8 @@ const teambuyDetail = {
   minute: null,
   second: null,
   relationStoreType: "ALL",
-  content: ""
+  validDateType: "FIXED_DATE",
+  content: "",
 };
 
 const roleRowData = {
@@ -1055,7 +1068,7 @@ const roleRowData = {
   rows: 10,
   sidx: "rank",
   sort: "asc",
-  content: ""
+  content: "",
 };
 
 const productStandardDetail = {
@@ -1099,7 +1112,7 @@ const productStandardDetail = {
   invNum: null,
   saleCount: null,
   positionName: null,
-  dbId: null
+  dbId: null,
 };
 
 const productRowData = {
@@ -1112,13 +1125,13 @@ const productRowData = {
   minPrice: "",
   maxPrice: "",
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 export default {
   components: {
     Tables,
-    IViewUpload
+    IViewUpload,
   },
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
@@ -1133,8 +1146,8 @@ export default {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         activityName: [{ required: true, message: "请输入活动名称" }],
         teamBuyType: [{ required: true, message: "请选择活动类型" }],
@@ -1154,8 +1167,8 @@ export default {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         joinInfoStatus: [{ required: true, message: "请选择参团信息列表状态" }],
         robot: [{ required: true, message: "请选择是否模拟成团" }],
@@ -1168,8 +1181,8 @@ export default {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         standardId: [{ required: true, message: "请选择商品规格" }],
         standardDesc: [{ required: true, message: "请输入规格描述" }],
@@ -1177,15 +1190,15 @@ export default {
           { required: true, message: "请输入商品原价" },
           {
             message: "必须为大于0的数字",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+          },
         ],
         activityPrice: [
           { required: true, message: "请输入商品活动价" },
           {
             message: "必须为大于0的数字",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+          },
         ],
         tourDiscount: [{ required: true, message: "请选择团长优惠" }],
         triesLimit: [
@@ -1197,8 +1210,8 @@ export default {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         productNum: [
           { required: true, message: "请选择库存数量" },
@@ -1209,8 +1222,8 @@ export default {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         saleQuantity: [
           { required: true, message: "请输入已售份数" },
@@ -1221,8 +1234,8 @@ export default {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         // singleTeambuyPrice: [
         //   { required: true, message: "请输入单人团购价格" },
@@ -1232,19 +1245,29 @@ export default {
         //   }
         // ],
         rewardActivitySetting: [
-          { required: true, message: "请选择红包活动设置" }
-        ]
+          { required: true, message: "请选择红包活动设置" },
+        ],
       },
       defaultListMain: [],
       uploadListMain: [],
       activityStatus: [
         { label: "未开始", value: "off" },
         { label: "进行中", value: "on" },
-        { label: "已结束", value: "expire" }
+        { label: "已结束", value: "expire" },
       ],
       teamBuyStatus: [
         { label: "关闭", value: "off" },
-        { label: "开启", value: "on" }
+        { label: "开启", value: "on" },
+      ],
+      validDateTypeEnum: [
+        {
+          label: "绝对时间",
+          value: "FIXED_DATE",
+        },
+        {
+          label: "相对时间",
+          value: "UN_FIXED_DATE",
+        },
       ],
       teamBuyStatusEnum,
       teamBuyTypeEnum,
@@ -1271,7 +1294,7 @@ export default {
           key: "activityName",
           align: "center",
           fixed: "left",
-          minWidth: 200
+          minWidth: 200,
         },
         {
           title: "活动状态",
@@ -1310,19 +1333,19 @@ export default {
                 <tag color="primary">{row.status}</tag>
               </div>
             );
-          }
+          },
         },
         {
           title: "活动内容",
           align: "center",
           minWidth: 160,
-          key: "content"
+          key: "content",
         },
         {
           title: "有效期起",
           align: "center",
           minWidth: 160,
-          key: "startTime"
+          key: "startTime",
         },
         {
           title: "有效期止",
@@ -1337,13 +1360,13 @@ export default {
             } else {
               return <div>{params.row.endTime}</div>;
             }
-          }
+          },
         },
         {
           title: "商品库存",
           align: "center",
           minWidth: 90,
-          key: "productNum"
+          key: "productNum",
         },
         {
           title: "活动价",
@@ -1352,7 +1375,7 @@ export default {
           align: "center",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.activityPrice)}</div>;
-          }
+          },
         },
         {
           title: "团长优惠",
@@ -1361,7 +1384,7 @@ export default {
           key: "tourDiscount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.tourDiscount)}</div>;
-          }
+          },
         },
         {
           title: "成团有效时长",
@@ -1370,38 +1393,38 @@ export default {
           key: "validSeconds",
           render(h, params) {
             return <div>{secondsToDate(params.row.validSeconds)}</div>;
-          }
+          },
         },
         {
           title: "提货截至时间",
           align: "center",
           minWidth: 160,
-          key: "deliveryEndTime"
+          key: "deliveryEndTime",
         },
         {
           title: "规格ID",
           align: "center",
           minWidth: 90,
-          key: "standardId"
+          key: "standardId",
         },
         {
           title: "规格描述",
           align: "center",
           minWidth: 120,
           key: "standardDesc",
-          tooltip: true
+          tooltip: true,
         },
         {
           title: "限购次数",
           align: "center",
           minWidth: 90,
-          key: "triesLimit"
+          key: "triesLimit",
         },
         {
           title: "排序",
           align: "center",
           minWidth: 80,
-          key: "rank"
+          key: "rank",
         },
         {
           title: "是否模拟成团",
@@ -1432,7 +1455,7 @@ export default {
                 <tag color="primary">{row.robot}</tag>
               </div>
             );
-          }
+          },
         },
         {
           title: "操作",
@@ -1440,8 +1463,8 @@ export default {
           align: "center",
           fixed: "right",
           key: "handle",
-          options: ["view", "edit"]
-        }
+          options: ["view", "edit"],
+        },
       ],
       productColumns: [
         // {
@@ -1455,37 +1478,37 @@ export default {
           title: "规格ID",
           align: "center",
           key: "id",
-          minWidth: 80
+          minWidth: 80,
         },
         {
           title: "商品条码",
           key: "barcode",
           align: "center",
-          minWidth: 80
+          minWidth: 80,
         },
         {
           title: "商品编号",
           key: "productCode",
           align: "center",
-          minWidth: 130
+          minWidth: 130,
         },
         {
           title: "商品名称",
           align: "center",
           key: "productName",
-          minWidth: 150
+          minWidth: 150,
         },
         {
           title: "商品规格",
           align: "center",
           key: "specification",
-          minWidth: 100
+          minWidth: 100,
         },
         {
           title: "商品单位",
           align: "center",
           minWidth: 100,
-          key: "productUnit"
+          key: "productUnit",
         },
         {
           title: "商品原价",
@@ -1495,7 +1518,7 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.price);
             return <div>{amount}</div>;
-          }
+          },
         },
         {
           title: "优惠价格",
@@ -1505,7 +1528,7 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.salePrice);
             return <div>{amount}</div>;
-          }
+          },
         },
         {
           title: "商品状态",
@@ -1538,14 +1561,14 @@ export default {
                 </tag>
               </div>
             );
-          }
+          },
         },
         {
           title: "商品排序",
           align: "center",
           minWidth: 100,
-          key: "rank"
-        }
+          key: "rank",
+        },
       ],
       productData: [],
       productTotal: 0,
@@ -1562,7 +1585,7 @@ export default {
       searchRowData: _.cloneDeep(roleRowData),
       searchProductRowData: _.cloneDeep(productRowData),
       productDetail: _.cloneDeep(productStandardDetail),
-      teambuyDetail: _.cloneDeep(teambuyDetail)
+      teambuyDetail: _.cloneDeep(teambuyDetail),
     };
   },
   computed: {
@@ -1588,13 +1611,13 @@ export default {
       const list = this.storeList;
       let str = "";
       if (list.length > 0) {
-        ids.forEach(id => {
-          const item = list.find(item => item.storeId == id);
+        ids.forEach((id) => {
+          const item = list.find((item) => item.storeId == id);
           str += item.storeName + ",";
         });
         return str.substring(0, str.length - 1);
       }
-    }
+    },
   },
   watch: {
     numberInput(v) {
@@ -1602,7 +1625,7 @@ export default {
       this.$nextTick(() => {
         this.testInput = String(v).replace(/\D/g, "");
       });
-    }
+    },
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
@@ -1629,7 +1652,7 @@ export default {
       //   };
       //   _this.deletePicture(urls);
       // }
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (
             _this.teambuyDetail.teamBuyType === "OLD_AND_NEW" &&
@@ -1758,7 +1781,7 @@ export default {
       this.modalViewLoading = true;
       this.teambuyDetail.id = null; // 新建时不需要传递id
       createTeamBuy(this.teambuyDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success("创建成功!");
@@ -1788,7 +1811,7 @@ export default {
         ).format("YYYY-MM-DD HH:mm:ss");
       }
       editTeamBuy(this.teambuyDetail)
-        .then(res => {
+        .then((res) => {
           this.getTableData();
           this.modalEdit = false;
           this.modalViewLoading = false;
@@ -1831,6 +1854,9 @@ export default {
         this.currentTableRowSelected.storeId = null;
         this.currentTableRowSelected.storeIds = null;
         this.currentTableRowSelected.relationStoreType = "ALL";
+        this.currentTableRowSelected.validDateType = "FIXED_DATE";
+        this.currentTableRowSelected.deliveryEndTime = null;
+        this.currentTableRowSelected.deliveryEndTimeDay = null;
         this.currentTableRowSelected.activityPrice = null;
         this.currentTableRowSelected.singleTeambuyPrice = null;
         this.currentTableRowSelected.hour = hourTime;
@@ -1851,9 +1877,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteTeamBuy({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -1865,7 +1891,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -1894,6 +1920,7 @@ export default {
       this.teambuyDetail.storeIds = null;
       this.storeIds = [];
       this.teambuyDetail.relationStoreType = "ALL";
+      this.teambuyDetail.validDateType = "FIXED_DATE";
       this.groupStatus = "";
       this.resetFields();
       this.tempModalType = this.modalType.edit;
@@ -1910,13 +1937,19 @@ export default {
         this.teambuyDetail.second =
           (this.teambuyDetail.validSeconds % 3600) % 60;
       }
+      if (this.teambuyDetail.deliveryEndTimeDay !== null) {
+        this.teambuyDetail.validDateType = "UN_FIXED_DATE";
+        this.currentTableRowSelected.deliveryEndTime = null;
+      } else {
+        this.teambuyDetail.validDateType = "FIXED_DATE";
+      }
       if (this.teambuyDetail.storeIds !== null) {
         this.showStoreList = true;
         this.teambuyDetail.relationStoreType = "PART";
         const storeIds = this.teambuyDetail.storeIds
           .substring(1, this.teambuyDetail.storeIds.length - 1)
           .split("][");
-        storeIds.forEach(element => {
+        storeIds.forEach((element) => {
           this.storeIds.push(parseInt(element));
         });
         // 全选/反选按钮的样式
@@ -1934,10 +1967,10 @@ export default {
     },
     handleDownload() {
       this.exportExcelLoading = true;
-      getTeamBuyPages(this.searchRowData).then(res => {
+      getTeamBuyPages(this.searchRowData).then((res) => {
         const tableData = res.rows;
         // 表格数据导出字段翻译
-        tableData.forEach(item => {
+        tableData.forEach((item) => {
           item["groupId"] = item["groupName"];
           item["status"] = teamBuyStatusConvert(item["status"]).label;
           item["activityPrice"] = (item["activityPrice"] / 100.0).toFixed(2);
@@ -1947,7 +1980,7 @@ export default {
         const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
           filename: `拼团活动信息-${date}`,
-          data: tableData
+          data: tableData,
         });
         this.exportExcelLoading = false;
       });
@@ -1958,14 +1991,14 @@ export default {
         this.searchRowData.sort = "desc";
       }
       getTeamBuyPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -2059,13 +2092,22 @@ export default {
         this.showStoreList = true;
       }
     },
+    selectValidDateType(options) {
+      if (options === "FIXED_DATE") {
+        this.teambuyDetail.validDateType = "FIXED_DATE";
+        console.log("类型", this.teambuyDetail.validDateType);
+      } else if (options === "UN_FIXED_DATE") {
+        this.teambuyDetail.validDateType = "UN_FIXED_DATE";
+        console.log("类型", this.teambuyDetail.validDateType);
+      }
+    },
     // TODO 选择门店id方法
     getStore() {
       getStorePages({ page: 1, rows: -1 })
-        .then(res => {
+        .then((res) => {
           this.storeList = res.rows;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -2078,7 +2120,7 @@ export default {
       this.indeterminate = false;
       if (this.checkAll) {
         const allIds = [];
-        this.storeList.forEach(item => {
+        this.storeList.forEach((item) => {
           allIds.push(item.storeId);
         });
         this.storeIds = allIds;
@@ -2113,14 +2155,14 @@ export default {
     },
     getProductTableData() {
       getProductStandardsPages(this.searchProductRowData)
-        .then(res => {
+        .then((res) => {
           this.productData = res.rows;
           this.productTotal = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -2171,17 +2213,17 @@ export default {
     },
     aboutGoods() {
       getGoodsStandard(this.teambuyDetail)
-        .then(res => {
+        .then((res) => {
           this.productStandardDetail = res;
           this.modalGoodsStandard = true;
         })
-        .catch(error => {});
+        .catch((error) => {});
     },
     handleGoodsClose() {
       this.loading = false;
       this.modalGoodsStandard = false;
-    }
-  }
+    },
+  },
 };
 </script>
 

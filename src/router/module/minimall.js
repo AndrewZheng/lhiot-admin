@@ -95,6 +95,15 @@ const miniMallRouter = [
       component: () => import('@/view/mini-program-manager/goods/goods-section.vue')
     },
     {
+      path: '/small-goods-keywords',
+      name: 'small-goods-keywords',
+      meta: {
+        icon: 'md-keypad',
+        title: '商品关键字管理'
+      },
+      component: () => import('@/view/mini-program-manager/goods/goods-keywords.vue')
+    },
+    {
       path: '/small-store',
       name: 'small-store',
       meta: {
