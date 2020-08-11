@@ -720,9 +720,16 @@ export default {
       this.goodsSearchRowData.endDate = value;
     },
     handleGoodsSearch() {
-      this.searchRowData.page = 1;
-      this.searchLoading = true;
-      this.getGoodsTableData();
+      if (
+        this.goodsSearchRowData.beginDate &&
+        this.goodsSearchRowData.endDate
+      ) {
+        this.searchRowData.page = 1;
+        this.searchLoading = true;
+        this.getGoodsTableData();
+      } else {
+        this.$Message.info("请先选择搜索时间!");
+      }
     },
     // 导出数据
     handleDownload() {

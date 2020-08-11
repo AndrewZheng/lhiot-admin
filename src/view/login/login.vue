@@ -29,7 +29,7 @@ import maxLogo from "@/assets/images/lhiot_logo.jpg";
 
 export default {
   components: {
-    LoginForm
+    LoginForm,
   },
   data() {
     return {
@@ -37,21 +37,23 @@ export default {
       logo:
         'this.src="' +
         require("../../../src/assets/images/lhiot_logo.jpg") +
-        '"'
+        '"',
     };
   },
   methods: {
     ...mapActions(["handleLogin", "getUserInfo"]),
     handleSubmit({ account, password }) {
-      this.handleLogin({ account, password }).then(res => {
+      let storage = window.localStorage;
+      storage.clear();
+      this.handleLogin({ account, password }).then((res) => {
         sessionStorage.setItem("loginName", account);
         const name = getSystemHomeName();
         this.$router.push({
-          name
+          name,
         });
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
