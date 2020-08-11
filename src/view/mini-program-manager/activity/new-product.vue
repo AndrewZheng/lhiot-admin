@@ -99,7 +99,7 @@
 
     <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
-        <span>限时秒杀活动详情</span>
+        <span>新品尝鲜活动详情</span>
       </p>
       <div class="modal-content">
         <Row class-name="mb20">
@@ -179,7 +179,7 @@
 
     <Modal v-model="modalEdit" :width="1200" :z-index="1000" :mask-closable="false">
       <p slot="header">
-        <i-col>{{ tempModalType==modalType.edit?'修改限时秒杀活动':(tempModalType==modalType.create?'创建限时秒杀活动': '添加限时秒杀活动和商品关联') }}</i-col>
+        <i-col>{{ tempModalType==modalType.edit?'修改新品尝鲜活动':(tempModalType==modalType.create?'创建新品尝鲜活动': '添加新品尝鲜活动和商品关联') }}</i-col>
       </p>
       <div class="modal-content">
         <Row v-if="tempModalType == modalType.edit || tempModalType == modalType.create">
@@ -435,7 +435,7 @@
                       @click="addTempData('modalCreate')"
                       v-show="this.proFlag===true"
                     >
-                      <Icon type="md-add" />&nbsp;关联秒杀商品
+                      <Icon type="md-add" />&nbsp;关联尝鲜商品
                     </Button>
                   </i-col>
                 </Row>
@@ -443,7 +443,7 @@
             </Card>
           </Row>
 
-          <Divider orientation="center">已关联限时秒杀活动商品</Divider>
+          <Divider orientation="center">已关联新品尝鲜活动商品</Divider>
           <tables
             :columns="relationColumns"
             v-model="relationProducts"
@@ -509,7 +509,7 @@ const activitySeckillDetail = {
   status: "",
   title: "",
   updateTime: null,
-  activityType: "SECKILL_ACTIVITY",
+  activityType: "NEW_TRY_ACTIVITY",
   userActivityLimit: "",
   userActivitySurplus: "",
 };
@@ -580,7 +580,7 @@ const roleRowData = {
   beginTime: null,
   endTime: null,
   title: "",
-  activityType: "SECKILL_ACTIVITY",
+  activityType: "NEW_TRY_ACTIVITY",
   page: 1,
   rows: 10,
   sidx: "create_time",
@@ -600,7 +600,7 @@ const productRowData = {
   productName: null,
   barcode: null,
   shelvesStatus: "VALID",
-  expandType: "SECKILL_PRODUCT",
+  expandType: "NEW_TRY_PRODUCT",
   page: 1,
   rows: 5,
 };
@@ -649,7 +649,7 @@ const relationTempColumns = [
     },
   },
   {
-    title: "商品秒杀价",
+    title: "商品尝鲜价",
     key: "discountPrice",
     minWidth: 100,
     align: "center",
@@ -825,7 +825,7 @@ const productColumns = [
     align: "center",
   },
   {
-    title: "秒杀价格",
+    title: "尝鲜价格",
     key: "price",
     minWidth: 80,
     align: "center",
@@ -861,6 +861,14 @@ const productColumns = [
             </div>
           );
         } else if (row.productStandardExpand.expandType == "SECKILL_PRODUCT") {
+          return (
+            <div>
+              <tag color="blue">
+                {expandTypeConvert(row.productStandardExpand.expandType).label}
+              </tag>
+            </div>
+          );
+        } else if (row.productStandardExpand.expandType == "NEW_TRY_PRODUCT") {
           return (
             <div>
               <tag color="blue">

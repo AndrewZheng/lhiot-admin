@@ -208,12 +208,15 @@
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
-            <Row>
-              <!-- {{ teambuyDetail.deliveryEndTime }} -->
+            <Row v-if="teambuyDetail.deliveryEndTimeDay>0">
+              <i-col span="6">提货截止天数:</i-col>
+              <i-col span="18">{{ teambuyDetail.deliveryEndTimeDay }}</i-col>
+            </Row>
+            <Row v-else>
               <i-col span="6">提货截止时间:</i-col>
               <i-col span="18">
-                {{ this.teambuyDetail.deliveryEndTime = this.$moment(
-                this.teambuyDetail.deliveryEndTime
+                {{ teambuyDetail.deliveryEndTime = this.$moment(
+                teambuyDetail.deliveryEndTime
                 ).format("YYYY-MM-DD HH:mm:ss") }}
               </i-col>
             </Row>
@@ -443,6 +446,7 @@
                   placeholder="有效期起"
                   class="search-input"
                   style="width: 200px"
+                  :readonly="teambuyDetail.status==='on'"
                   @on-change="startTimeChange"
                 />
               </FormItem>
@@ -456,6 +460,7 @@
                   placeholder="有效期止"
                   class="search-input"
                   style="width: 200px"
+                  :readonly="teambuyDetail.status==='on'"
                   @on-change="endTimeChange"
                 />
               </FormItem>
@@ -468,6 +473,7 @@
                   v-model="teambuyDetail.validDateType"
                   placeholder="券有效期类型"
                   style="width: 205px"
+                  :disabled="teambuyDetail.status==='on'"
                 >
                   <Option
                     v-for="(item,index) in validDateTypeEnum"
@@ -480,7 +486,7 @@
                 </Select>
               </FormItem>
             </i-col>
-            <i-col span="12" v-if="teambuyDetail.validDateType=='FIXED_DATE'">
+            <i-col span="12" v-if="this.showValidDate||teambuyDetail.validDateType=='FIXED_DATE'">
               <FormItem label="提货截止时间:" prop="deliveryEndTime">
                 <DatePicker
                   v-model="teambuyDetail.deliveryEndTime"
@@ -489,6 +495,7 @@
                   placeholder="提货截止时间"
                   class="search-input"
                   style="width: 200px"
+                  :readonly="teambuyDetail.status==='on'"
                   @on-change="deliveryEndTimeChange"
                 />
               </FormItem>
@@ -500,36 +507,20 @@
                   v-model="teambuyDetail.deliveryEndTimeDay"
                   label="提货截止天数"
                   style="width: 160px"
+                  :readonly="teambuyDetail.status==='on'"
                 ></InputNumber>
               </FormItem>
             </i-col>
-            <!-- <i-col span="12">
-              <FormItem
-                label="提货开始时间:"
-                prop="deliveryStartTime"
-                v-if="tempModalType===modalType.create||groupStatus==='off'"
-              >
-                <DatePicker
-                  v-model="teambuyDetail.deliveryStartTime"
-                  format="yyyy-MM-dd HH:mm:ss"
-                  type="datetime"
-                  placeholder="提货开始时间"
-                  class="search-input"
-                  style="width: 200px"
-                  @on-change="deliveryStartTimeChange"
-                />
-              </FormItem>
-              <FormItem
-                v-else
-                label="提货开始时间:"
-                prop="deliveryStartTime"
-              >{{ teambuyDetail.deliveryStartTime | couponScopeFilter }}</FormItem>
-            </i-col>-->
           </Row>
           <Row>
             <i-col span="12">
               <FormItem label="成团人数:" prop="fullUserNum">
-                <InputNumber :min="0" v-model="teambuyDetail.fullUserNum" style="width: 200px"></InputNumber>
+                <InputNumber
+                  :min="0"
+                  v-model="teambuyDetail.fullUserNum"
+                  style="width: 200px"
+                  :readonly="teambuyDetail.status==='on'"
+                ></InputNumber>
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -1396,10 +1387,18 @@ export default {
           },
         },
         {
-          title: "提货截至时间",
+          title: "提货截止时间/天数",
           align: "center",
           minWidth: 160,
           key: "deliveryEndTime",
+          render: (h, params) => {
+            const { row } = params;
+            if (row.deliveryEndTimeDay > 0) {
+              return <div>{row.deliveryEndTimeDay}天</div>;
+            } else {
+              return <div>{row.deliveryEndTime}</div>;
+            }
+          },
         },
         {
           title: "规格ID",
@@ -1578,6 +1577,7 @@ export default {
       modalViewLoading: false,
       exportExcelLoading: false,
       showStoreList: false,
+      showValidDate: true,
       indeterminate: false,
       checkAll: false,
       currentTableRowSelected: null,
@@ -1646,12 +1646,6 @@ export default {
     },
     handleSubmit() {
       const _this = this;
-      // if (_this.oldPicture.length > 0) {
-      //   const urls = {
-      //     urls: _this.oldPicture
-      //   };
-      //   _this.deletePicture(urls);
-      // }
       this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (
@@ -1660,6 +1654,12 @@ export default {
           ) {
             _this.$Message.error("老带新团成团人数必须大于1");
             return;
+          }
+          if (_this.teambuyDetail.validDateType === "FIXED_DATE") {
+            console.log("FIXED_DATE");
+            _this.teambuyDetail.deliveryEndTimeDay = 0;
+          } else {
+            _this.teambuyDetail.deliveryEndTime = null;
           }
           if (
             compareData(
@@ -1715,14 +1715,6 @@ export default {
             _this.$Message.error("团长优惠不能大于等于活动金额!");
             return;
           }
-          // if (this.teambuyDetail.activityPrice > this.teambuyDetail.originalPrice) {
-          //   this.$Message.info('活动价不能高于商品原价');
-          //   return;
-          // }
-          // if (this.teambuyDetail.singleTeambuyPrice > this.teambuyDetail.originalPrice) {
-          //   this.$Message.error('单人团购价格不能大于原价');
-          //   return;
-          // }
           var numRe = new RegExp(/^[0-9]+$/);
           if (!numRe.test(_this.teambuyDetail.validSeconds)) {
             _this.$Message.error("成团有效时长不能为小数");
@@ -1741,10 +1733,12 @@ export default {
               .format("yyyy-MM-dd HH:mm:ss");
           }
 
-          if (_this.teambuyDetail.deliveryEndTime.indexOf("GMT") > 0) {
-            _this.teambuyDetail.deliveryEndTime = _this
-              .$moment(_this.teambuyDetail.deliveryEndTime)
-              .format("yyyy-MM-dd HH:mm:ss");
+          if (_this.teambuyDetail.validDateType === "FIXED_DATE") {
+            if (_this.teambuyDetail.deliveryEndTime.indexOf("GMT") > 0) {
+              _this.teambuyDetail.deliveryEndTime = _this
+                .$moment(_this.teambuyDetail.deliveryEndTime)
+                .format("yyyy-MM-dd HH:mm:ss");
+            }
           }
 
           if (_this.tempModalType === _this.modalType.create) {
@@ -1805,10 +1799,12 @@ export default {
           this.teambuyDetail.endTime
         ).format("YYYY-MM-DD HH:mm:ss");
       }
-      if (this.teambuyDetail.deliveryEndTime.indexOf("T") > -1) {
-        this.teambuyDetail.deliveryEndTime = this.$moment(
-          this.teambuyDetail.deliveryEndTime
-        ).format("YYYY-MM-DD HH:mm:ss");
+      if (this.teambuyDetail.deliveryEndTimeDay < 0) {
+        if (this.teambuyDetail.deliveryEndTime.indexOf("T") > -1) {
+          this.teambuyDetail.deliveryEndTime = this.$moment(
+            this.teambuyDetail.deliveryEndTime
+          ).format("YYYY-MM-DD HH:mm:ss");
+        }
       }
       editTeamBuy(this.teambuyDetail)
         .then((res) => {
@@ -1937,10 +1933,11 @@ export default {
         this.teambuyDetail.second =
           (this.teambuyDetail.validSeconds % 3600) % 60;
       }
-      if (this.teambuyDetail.deliveryEndTimeDay !== null) {
+      if (this.teambuyDetail.deliveryEndTimeDay > 0) {
+        this.showValidDate = false;
         this.teambuyDetail.validDateType = "UN_FIXED_DATE";
-        this.currentTableRowSelected.deliveryEndTime = null;
       } else {
+        this.showValidDate = true;
         this.teambuyDetail.validDateType = "FIXED_DATE";
       }
       if (this.teambuyDetail.storeIds !== null) {
@@ -2094,9 +2091,11 @@ export default {
     },
     selectValidDateType(options) {
       if (options === "FIXED_DATE") {
+        this.showValidDate = true;
         this.teambuyDetail.validDateType = "FIXED_DATE";
         console.log("类型", this.teambuyDetail.validDateType);
       } else if (options === "UN_FIXED_DATE") {
+        this.showValidDate = false;
         this.teambuyDetail.validDateType = "UN_FIXED_DATE";
         console.log("类型", this.teambuyDetail.validDateType);
       }

@@ -490,6 +490,7 @@
                     v-model="addRelationDetail.validDateType"
                     placeholder="券有效期类型"
                     style="padding-right: 5px;width: 120px"
+                    disabled
                   >
                     <Option
                       v-for="(item,index) in validDateTypeEnum"
@@ -1038,7 +1039,7 @@ const relationDetail = {
   couponScope: "STORE",
   useLimitType: null,
   hdActivityId: 0,
-  validDateType: "FIXED_DATE",
+  validDateType: "UN_FIXED_DATE",
   userScope: "ALL",
   receiveLimit: 999,
   beginDay: 0,

@@ -2728,3 +2728,106 @@ export const updateKeywords = (data) => {
     method: 'put'
   });
 };
+
+//板块活动分享设置 /minapp/plate-activity-share-setting/pages
+export const getShareSettingPages = (data) => {
+  return $http.request({
+    url: '/minapp/plate-activity-share-setting/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+//添加板块活动分享设置 /minapp/plate-activity-share-setting/create
+export const createShareSettingPages = (data) => {
+  return $http.request({
+    url: '/minapp/plate-activity-share-setting/create',
+    data,
+    method: 'post',
+  });
+};
+
+//更新板块活动分享设置 /minapp/plate-activity-share-setting/update/
+export const updateShareSetting = (data) => {
+  return $http.request({
+    url: '/minapp/plate-activity-share-setting/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+//删除板块活动分享设置 /minapp/plate-activity-share-setting/
+export const deleteShareSetting = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/plate-activity-share-setting/' + ids,
+    method: 'delete'
+  });
+};
+
+//查询新品上市活动列表 /minapp/activity-new-products/pages
+export const getNewProductsPages = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+//添加新品上市活动 /minapp/activity-new-products/create
+export const createNewProducts = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/create',
+    data,
+    method: 'post',
+  });
+};
+
+//根据ID 修改新品上市活动 /minapp/activity-new-products/update/{id}
+export const updateNewProducts = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+//根据id 删除新品上市活动
+export const deleteNewProducts = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/' + ids,
+    method: 'delete'
+  });
+};
+
+//根据id查询新品上市活动关联 /minapp/activity-new-products/{id}/relation
+export const getNewProductsRelevance = (id) => {
+  return $http.request({
+    url: `/minapp/activity-new-products/${id}/relation`,
+    method: 'get'
+  });
+};
+//添加新品上市活动关联 /minapp/activity-new-products/create/relation
+export const createNewProductsRelevance = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/create/relation',
+    data,
+    method: 'post',
+  });
+};
+//更新新品上市活动关联 /minapp/activity-new-products/update/relation/{id}
+export const updateNewProductsRelevance = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/update/relation/' + data.id,
+    data,
+    method: 'put'
+  });
+};

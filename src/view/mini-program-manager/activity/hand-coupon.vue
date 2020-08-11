@@ -98,6 +98,7 @@
             type="success"
             class="mr5"
             @click="addHdCouponTemplate"
+            v-if="hdCouponType!='新品上市活动券'"
           >
             <Icon type="md-add" />海鼎优惠券
           </Button>

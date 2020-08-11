@@ -370,6 +370,15 @@ const miniMallRouter = [
       component: () => import('@/view/mini-program-manager/activity/seckill-product.vue')
     },
     {
+      path: '/small-activity-new-product',
+      name: 'small-activity-new-product',
+      meta: {
+        icon: 'ios-alarm',
+        title: '新品尝鲜活动'
+      },
+      component: () => import('@/view/mini-program-manager/activity/new-product.vue')
+    },
+    {
       path: '/small-activity-assist-product',
       name: 'small-activity-assist-product',
       meta: {
@@ -433,6 +442,15 @@ const miniMallRouter = [
           title: '评价中心'
         },
         component: () => import('@/view/mini-program-manager/content/evaluate.vue')
+      },
+      {
+        path: '/small-share-setting',
+        name: 'small-share-setting',
+        meta: {
+          icon: 'md-analytics',
+          title: '板块活动分享管理'
+        },
+        component: () => import('@/view/mini-program-manager/content/share-setting.vue')
       },
       {
         path: '/small-faq-category',

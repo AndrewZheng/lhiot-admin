@@ -820,7 +820,7 @@ export default {
         },
         {
           title: "计量单位",
-          key: "productUnit",
+          key: "unitName",
         },
         {
           title: "原价",

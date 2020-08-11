@@ -225,7 +225,9 @@
           <i-col span="12">
             <Row>
               <i-col span="6">骑手评价:</i-col>
-              <i-col span="18">{{ evaluateDetail.deliveryComment }}</i-col>
+              <i-col v-if="evaluateDetail.deliveryComment='GOOD'" span="18">{{ "超赞" }}</i-col>
+              <i-col v-else-if="evaluateDetail.deliveryComment='GENERAL'" span="18">{{ "一般" }}</i-col>
+              <i-col v-else span="18">{{ "很差" }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -239,7 +241,7 @@
           <i-col span="12">
             <Row>
               <i-col span="6">是否置顶:</i-col>
-              <i-col v-if="evaluateDetail.istop='YES'" span="18">{{ "是" }}</i-col>
+              <i-col v-if="evaluateDetail.istop==='YES'" span="18">{{ "是" }}</i-col>
               <i-col v-else span="18">{{ "否" }}</i-col>
             </Row>
           </i-col>
@@ -256,6 +258,32 @@
             <Row>
               <i-col span="6">置顶时间:</i-col>
               <i-col span="18">{{ evaluateDetail.topTime }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="22">
+            <Row>
+              <i-col span="3">评价内容:</i-col>
+              <i-col span="18">{{ evaluateDetail.commentContent }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="22">
+            <Row>
+              <i-col span="3">历史评价:</i-col>
+              <i-col
+                span="18"
+              >{{ evaluateDetail.historyCommentContent?evaluateDetail.historyCommentContent:"N/A" }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="6">修改时间:</i-col>
+              <i-col span="18">{{ evaluateDetail.updateTime?evaluateDetail.updateTime:"N/A" }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -342,8 +370,10 @@
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">修改评价:</i-col>
-                <i-col span="18">{{ "N/A" }}</i-col>
+                <i-col span="6">历史评价:</i-col>
+                <i-col
+                  span="18"
+                >{{ evaluateDetail.historyCommentContent?evaluateDetail.historyCommentContent:"N/A" }}</i-col>
               </Row>
             </i-col>
           </Row>
@@ -351,7 +381,7 @@
             <i-col span="20">
               <Row>
                 <i-col span="6">修改时间:</i-col>
-                <i-col span="18">{{ "N/A" }}</i-col>
+                <i-col span="18">{{ evaluateDetail.updateTime?evaluateDetail.updateTime:"N/A" }}</i-col>
               </Row>
             </i-col>
           </Row>
