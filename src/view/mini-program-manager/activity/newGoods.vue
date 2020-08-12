@@ -228,11 +228,13 @@
                 placeholder="有效期起"
                 class="search-input"
                 style="width: 300px"
+                :readonly="editStatus"
                 @on-change="activityNewProducts.beginTime=$event"
               />
             </FormItem>
           </Row>
           <Row>
+            <!-- editStatus -->
             <FormItem label="有效期止:" prop="endTime">
               <DatePicker
                 :value="activityNewProducts.endTime"
@@ -241,6 +243,7 @@
                 placeholder="有效期止"
                 class="search-input"
                 style="width: 300px"
+                :readonly="editStatus"
                 @on-change="activityNewProducts.endTime=$event"
               />
             </FormItem>
@@ -1736,6 +1739,7 @@ export default {
       modalAddPresell: false,
       modalAddNewProduct: false,
       modalEditRank: false,
+      editStatus: false,
       modalRelevanceLoading: false,
       templatePageOpts: [5, 10],
       templateColumns: templateColumns,
@@ -2379,6 +2383,7 @@ export default {
       this.searchRowData = _.cloneDeep(searchRowData);
     },
     handleCreate() {
+      this.editStatus = false;
       this.$refs.editForm.resetFields();
       this.uploadListMain = [];
       this.uploadListBanner = [];
@@ -2387,6 +2392,7 @@ export default {
       this.modalEdit = true;
     },
     handleEdit(params) {
+      this.editStatus = !compareCouponData(params.row.beginTime);
       this.$refs.editForm.resetFields();
       this.tempModalType = this.modalType.edit;
       this.activityNewProducts = this._.cloneDeep(params.row);
@@ -2634,8 +2640,20 @@ export default {
           ActivityNewProductsRelevance
         ));
       if (value === "NEW_COUPON") {
-        this.getTemplateTableData();
-        this.modalAddCoupun = true;
+        let couponNum = 0;
+        // 列表只允许有一张券
+        for (let val of this.couponConfigManageRelations) {
+          if (val.status === "ON") {
+            couponNum++;
+          }
+        }
+        if (couponNum == 0) {
+          this.getTemplateTableData();
+          this.modalAddCoupun = true;
+        } else {
+          this.$Message.info("当前存在有效的新品券(只允许关联一张)!");
+          return;
+        }
       } else if (value === "NEW_TRY") {
         this.getSeckillPages();
         this.modalAddNewProduct = true;
@@ -2663,6 +2681,24 @@ export default {
     },
     //统一上下架
     onRelevanceSale(params) {
+      console.log("上下架", params.row);
+
+      let couponNum = 0;
+      for (let val of this.couponConfigManageRelations) {
+        if (
+          params.row.relationType === "NEW_COUPON" &&
+          params.row.status === "OFF"
+        ) {
+          if (val.status === "ON") {
+            couponNum++;
+          }
+          if (couponNum === 1) {
+            this.$Message.info("当前存在有效的新品券!");
+            return;
+          }
+        }
+      }
+
       this.ActivityNewProductsRelation = this._.cloneDeep(params.row);
       if (params.row.status === "ON") {
         this.ActivityNewProductsRelation.status = "OFF";

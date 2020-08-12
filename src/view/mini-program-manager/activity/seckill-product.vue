@@ -210,6 +210,7 @@
                     placeholder="有效期起"
                     class="search-input"
                     style="width: 170px"
+                    :readonly="editStatus"
                     @on-change="activitySeckillDetail.beginTime=$event"
                   />
                 </FormItem>
@@ -225,6 +226,7 @@
                     placeholder="有效期止"
                     class="search-input"
                     style="width: 170px"
+                    :readonly="editStatus"
                     @on-change="activitySeckillDetail.endTime=$event"
                   />
                 </FormItem>
@@ -1057,6 +1059,7 @@ export default {
       addTempDataLoading: false,
       tempTableLoading: false,
       createLoading: false,
+      editStatus: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
@@ -1159,6 +1162,7 @@ export default {
     },
     addFlashsale() {
       // this.resetFields();
+      this.editStatus = false;
       this.tempModalType = this.modalType.create;
       this.activitySeckillDetail = _.cloneDeep(activitySeckillDetail);
       this.modalEdit = true;
@@ -1198,6 +1202,7 @@ export default {
     },
     handleEdit(params) {
       // this.resetFields();
+      this.editStatus = !compareCouponData(params.row.beginTime);
       this.tempModalType = this.modalType.edit;
       this.activitySeckillDetail = _.cloneDeep(params.row);
       this.modalEdit = true;
