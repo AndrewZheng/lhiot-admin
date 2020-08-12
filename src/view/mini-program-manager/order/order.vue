@@ -599,7 +599,7 @@ import {
   refundWx,
   refundPt,
   sureReceive,
-  sureMaituan
+  sureMaituan,
 } from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
@@ -615,7 +615,7 @@ import {
   miniOrderStatus,
   miniHdStatusEnum,
   miniHdStatus,
-  isAllRefundEnum
+  isAllRefundEnum,
 } from "@/libs/enumerate";
 import {
   orderTypeConvert,
@@ -625,7 +625,7 @@ import {
   receivingWayConvert,
   appTypeConvert,
   payTypeConvert,
-  isAllRefundConvert
+  isAllRefundConvert,
 } from "@/libs/converStatus";
 import BookTypeOption from "_c/book-type-option";
 
@@ -665,8 +665,8 @@ const orderDetail = {
     display: "",
     startTime: null,
     endTime: null,
-    status: null
-  }
+    status: null,
+  },
 };
 
 const roleRowData = {
@@ -681,13 +681,13 @@ const roleRowData = {
   storeName: null,
   recieveStartTime: null,
   recieveEndTime: null,
-  productNames: ""
+  productNames: "",
 };
 
 export default {
   components: {
     Tables,
-    BookTypeOption
+    BookTypeOption,
   },
   mixins: [tableMixin, searchMixin],
   data() {
@@ -723,12 +723,12 @@ export default {
         {
           title: "配送方",
           minWidth: 100,
-          key: "deliverType"
+          key: "deliverType",
         },
         {
           title: "配送距离",
           minWidth: 100,
-          key: "distance"
+          key: "distance",
         },
         {
           title: "配送费",
@@ -737,7 +737,7 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.fee);
             return <div>{amount}</div>;
-          }
+          },
         },
         {
           title: "配送状态",
@@ -746,42 +746,42 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{thirdDeliverStatusConvert(row.deliverStatus)}</div>;
-          }
+          },
         },
         {
           title: "接单时间",
           minWidth: 100,
-          key: "receiveTime"
+          key: "receiveTime",
         },
         {
           title: "配送员手机号",
           minWidth: 110,
-          key: "deliverPhone"
-        }
+          key: "deliverPhone",
+        },
       ],
       orderViewRelationsColumn: [
         {
           title: "商品编码",
-          key: "barcode"
+          key: "barcode",
         },
         {
           title: "商品名称",
-          key: "productName"
+          key: "productName",
         },
         {
           title: "商品规格",
           render(h, params, vm) {
             const { row } = params;
             return <div>{row.productQty + "*" + row.standardQty}</div>;
-          }
+          },
         },
         {
           title: "商品数量",
-          key: "productQty"
+          key: "productQty",
         },
         {
           title: "计量单位",
-          key: "productUnit"
+          key: "productUnit",
         },
         {
           title: "原价",
@@ -789,7 +789,7 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.price);
             return <div>{amount}</div>;
-          }
+          },
         },
         {
           title: "折后价",
@@ -797,7 +797,7 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.discountPrice);
             return <div>{amount}</div>;
-          }
+          },
         },
         {
           title: "总价",
@@ -806,7 +806,7 @@ export default {
             const amount = params.row.discountPrice / 100;
             const price = amount * params.row.productQty;
             return <div>{"￥" + price.toFixed(2)}</div>;
-          }
+          },
         },
         {
           title: "是否退款",
@@ -832,8 +832,8 @@ export default {
             } else {
               return <div>N/A</div>;
             }
-          }
-        }
+          },
+        },
         // {
         //   title: "退款金额",
         //   width: 100,
@@ -850,7 +850,7 @@ export default {
           key: "",
           width: 60,
           align: "center",
-          fixed: "left"
+          fixed: "left",
         },
         {
           title: "订单编号",
@@ -858,7 +858,7 @@ export default {
           sortable: true,
           width: 170,
           fixed: "left",
-          align: "center"
+          align: "center",
         },
         {
           title: "应用类型",
@@ -882,7 +882,7 @@ export default {
             } else {
               return <div>{row.apply}</div>;
             }
-          }
+          },
         },
         {
           title: "支付类型",
@@ -918,31 +918,31 @@ export default {
             } else {
               return <div>{"N/A"}</div>;
             }
-          }
+          },
         },
         {
           title: "创建时间",
           align: "center",
           width: 160,
-          key: "createAt"
+          key: "createAt",
         },
         {
           title: "提货时间",
           align: "center",
           width: 160,
-          key: "recieveTime"
+          key: "recieveTime",
         },
         {
           title: "订单用户",
           align: "center",
           width: 120,
-          key: "receiveUser"
+          key: "receiveUser",
         },
         {
           title: "手机号码",
           align: "center",
           width: 120,
-          key: "contactPhone"
+          key: "contactPhone",
         },
         { align: "center", title: "商品名称", width: 150, key: "productNames" },
         {
@@ -953,13 +953,13 @@ export default {
           render: (h, params) => {
             const { row } = params;
             const obj = this.storeList.find(
-              item => row.storeId === item.storeId
+              (item) => row.storeId === item.storeId
             );
             if (obj) {
               return h("span", obj.storeName);
             }
             return h("span", row.storeId);
-          }
+          },
         },
         {
           title: "订单总价",
@@ -969,7 +969,7 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.totalAmount);
             return <div>{amount}</div>;
-          }
+          },
         },
         {
           title: "优惠金额",
@@ -979,7 +979,17 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.couponAmount);
             return <div>{amount}</div>;
-          }
+          },
+        },
+        {
+          title: "优惠券金额",
+          align: "center",
+          width: 120,
+          key: "couponTicketAmount",
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(params.row.couponTicketAmount);
+            return <div>{amount}</div>;
+          },
         },
         {
           title: "运费",
@@ -989,7 +999,7 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.deliveryAmount);
             return <div>{amount || "N/A"}</div>;
-          }
+          },
         },
         {
           title: "应付金额",
@@ -999,19 +1009,19 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.amountPayable);
             return <div>{amount}</div>;
-          }
+          },
         },
         { align: "center", title: "商品名称", width: 150, key: "productNames" },
         {
           title: "活动名称",
           width: 120,
-          key: "activityTeambuyContent"
+          key: "activityTeambuyContent",
         },
         {
           title: "券名称",
           align: "center",
           width: 120,
-          key: "couponName"
+          key: "couponName",
         },
         {
           title: "提货类型",
@@ -1039,7 +1049,7 @@ export default {
             } else {
               return <div>{row.receivingWay}</div>;
             }
-          }
+          },
         },
         {
           title: "是否退款",
@@ -1066,7 +1076,7 @@ export default {
             } else {
               return <div>N/A</div>;
             }
-          }
+          },
         },
         {
           title: "退款金额",
@@ -1076,7 +1086,7 @@ export default {
           render(h, params, vm) {
             const refund = fenToYuanDot2(params.row.refundFee);
             return <div>{refund}</div>;
-          }
+          },
         },
         {
           title: "订单状态",
@@ -1136,7 +1146,7 @@ export default {
             } else {
               return <div>{row.orderStatus}</div>;
             }
-          }
+          },
         },
         {
           title: "海鼎状态",
@@ -1172,7 +1182,7 @@ export default {
             } else {
               return <div>{row.hdStatus}</div>;
             }
-          }
+          },
         },
         // {
         //   title: '海鼎备货时间',
@@ -1204,15 +1214,15 @@ export default {
           align: "center",
           fixed: "right",
           key: "handle",
-          options: ["view", "onHand", "onReceive", "onMeituan"]
-        }
+          options: ["view", "onHand", "onReceive", "onMeituan"],
+        },
       ],
       currentTableRowSelected: null,
       searchRowData: _.cloneDeep(roleRowData),
       orderDetail: _.cloneDeep(orderDetail),
       exportType: "xlsx",
       downloadLoading: false,
-      tableDataSelected: []
+      tableDataSelected: [],
     };
   },
   created() {
@@ -1251,7 +1261,7 @@ export default {
         return false;
       }
       // 处理手动退款
-      ordersRefund({ endTime: this.searchRowData.endTime }).then(res => {
+      ordersRefund({ endTime: this.searchRowData.endTime }).then((res) => {
         this.resetSearchRowData();
       });
     },
@@ -1274,7 +1284,7 @@ export default {
       }
       if (params.row.apply === "S_MALL") {
         refundPt({ orderCode: params.row.code })
-          .then(res => {
+          .then((res) => {
             this.loading = false;
             this.$Message.success("拼团小程序退款成功");
             this.getTableData();
@@ -1284,7 +1294,7 @@ export default {
           });
       } else if (params.row.apply === "WXSMALL_SHOP") {
         refundWx({ orderCode: params.row.code })
-          .then(res => {
+          .then((res) => {
             this.loading = false;
             this.$Message.success("微信小程序退款成功");
             this.getTableData();
@@ -1302,7 +1312,7 @@ export default {
         params.row.orderStatus === "RETURNING"
       ) {
         sureReceive({ orderId: params.row.id })
-          .then(res => {
+          .then((res) => {
             this.loading = false;
             this.$Message.success("操作成功");
             this.getTableData();
@@ -1323,7 +1333,7 @@ export default {
           params.row.orderStatus === "DISPATCHING"
         ) {
           sureMaituan({ orderCode: params.row.code })
-            .then(res => {
+            .then((res) => {
               this.loading = false;
               this.$Message.success("操作成功");
               this.getTableData();
@@ -1400,7 +1410,7 @@ export default {
     handleView(params) {
       this.loading = true;
       getOrder({ orderCode: params.row.code })
-        .then(res => {
+        .then((res) => {
           this.orderDetail = res;
           let addresss = "";
           if (
@@ -1447,12 +1457,12 @@ export default {
     },
     couponDetails(params) {
       this.turnToPage({
-        name: "small-order-coupon-details"
+        name: "small-order-coupon-details",
       });
     },
     monthOrder(params) {
       this.turnToPage({
-        name: "small-order-month-orders"
+        name: "small-order-month-orders",
       });
     },
     getTableData() {
@@ -1476,7 +1486,7 @@ export default {
         this.searchRowData.endTime
       ).format("YYYY-MM-DD HH:mm:ss");
       getOrderPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
@@ -1513,21 +1523,24 @@ export default {
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
       const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
-      getOrderPages(this.searchRowData).then(res => {
+      getOrderPages(this.searchRowData).then((res) => {
         const tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 20;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
         const _this = this;
-        tableData.forEach(item => {
-          const obj = _this.storeList.find(x => item.storeId === x.storeId);
+        tableData.forEach((item) => {
+          const obj = _this.storeList.find((x) => item.storeId === x.storeId);
           item["code"] = item["code"] + "";
           item["apply"] = appTypeConvert(item["apply"]).label;
           item["storeId"] =
             obj && obj.storeName ? obj.storeName : item["storeId"]; // 如果找不到就显示门店Id
           item["totalAmount"] = (item["totalAmount"] / 100.0).toFixed(2);
           item["couponAmount"] = (item["couponAmount"] / 100.0).toFixed(2);
+          item["couponTicketAmount"] = (
+            item["couponTicketAmount"] / 100.0
+          ).toFixed(2);
           item["amountPayable"] = (item["amountPayable"] / 100.0).toFixed(2);
           item["refundFee"] = (item["refundFee"] / 100.0).toFixed(2);
           item["orderType"] = orderTypeConvert(item["orderType"]);
@@ -1547,7 +1560,7 @@ export default {
         const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
           filename: `普通订单信息-${date}`,
-          data: tableData
+          data: tableData,
         });
       });
     },
@@ -1558,12 +1571,12 @@ export default {
         if (index === 0) {
           sums[key] = {
             key,
-            value: "合计"
+            value: "合计",
           };
           return;
         }
-        const values = data.map(item => Number(item[key]));
-        if (!values.every(value => isNaN(value))) {
+        const values = data.map((item) => Number(item[key]));
+        if (!values.every((value) => isNaN(value))) {
           const v = values.reduce((prev, curr) => {
             const value = Number(curr);
             if (!isNaN(value)) {
@@ -1574,12 +1587,12 @@ export default {
           }, 0);
           sums[key] = {
             key,
-            value: v + " 元"
+            value: v + " 元",
           };
         } else {
           sums[key] = {
             key,
-            value: "N/A"
+            value: "N/A",
           };
         }
       });
@@ -1587,10 +1600,10 @@ export default {
     },
     getStore() {
       getStorePages({ page: 1, rows: -1 })
-        .then(res => {
+        .then((res) => {
           this.storeList = res.rows;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -1598,11 +1611,11 @@ export default {
       // TODO 未测试
       // console.log("数据",this.currentTableRowSelected.newStoreId)
       modifyStoreInOrder(this.currentTableRowSelected)
-        .then(res => {
+        .then((res) => {
           this.$Message.info("调货成功！");
           this.transferModalView = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -1611,11 +1624,11 @@ export default {
       // TODO 未测试
       if (this.tableDataSelected.length > 0) {
         const tempDeleteList = [];
-        this.tableDataSelected.filter(value => {
+        this.tableDataSelected.filter((value) => {
           tempDeleteList.push(value.id);
         });
         const ids = tempDeleteList.join(",");
-        resendToHd({ ids: ids }).then(res => {
+        resendToHd({ ids: ids }).then((res) => {
           const { disqualification, failure } = res;
           if (failure.length === 0) {
             this.$Message.info("海鼎重发成功");
@@ -1624,7 +1637,7 @@ export default {
             this.$Message.error({
               content: `海鼎重发失败订单：${lst}`,
               duration: 30,
-              closable: true
+              closable: true,
             });
           }
         });
@@ -1645,8 +1658,8 @@ export default {
       } else {
         this.currentTableRowSelected = null;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
