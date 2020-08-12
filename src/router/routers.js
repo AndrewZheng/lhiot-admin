@@ -158,7 +158,7 @@ export const constantRouterMap = [
       title: '文章新增/编辑'
     },
     component: Main,
-    children: [      
+    children: [
       {
         path: 'article-edit',
         name: 'article-edit',
@@ -189,6 +189,16 @@ export const constantRouterMap = [
         component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
       },
       {
+        path: '/small-skip-order',
+        name: 'small-skip-order',
+        meta: {
+          hideInMenu: true,
+          icon: 'ios-paper',
+          title: '订单管理'
+        },
+        component: () => import('@/view/mini-program-manager/order/order.vue')
+      },
+      {
         path: 'small-relation-system',
         name: 'small-relation-system',
         meta: {
@@ -214,7 +224,7 @@ export const constantRouterMap = [
           title: '活动关联优惠券模板'
         },
         component: () => import('@/view/mini-program-manager/vip/activities-associated.vue')
-      },{
+      }, {
         path: 'small-order-coupon-details',
         name: 'small-order-coupon-details',
         meta: {
@@ -222,7 +232,7 @@ export const constantRouterMap = [
           title: '用券数据'
         },
         component: () => import('@/view/mini-program-manager/order/coupon-details.vue')
-      },{
+      }, {
         path: 'small-order-month-orders',
         name: 'small-order-month-orders',
         meta: {
@@ -231,7 +241,7 @@ export const constantRouterMap = [
         },
         component: () => import('@/view/mini-program-manager/order/month-orders.vue')
       }
-      
+
     ],
   },
   {

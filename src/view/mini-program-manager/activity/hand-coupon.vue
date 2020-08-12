@@ -44,7 +44,7 @@
             <Select
               v-model="searchRowData.couponBusinessType"
               placeholder="发券类型"
-              style="padding-right: 5px;width: 120px"
+              style="padding-right: 5px;width: 140px"
               @on-change="handCouponType"
             >
               <Option
@@ -98,6 +98,7 @@
             type="success"
             class="mr5"
             @click="addHdCouponTemplate"
+            v-if="hdCouponType!='新品上市活动券'"
           >
             <Icon type="md-add" />海鼎优惠券
           </Button>
@@ -395,9 +396,7 @@
               ></Page>
             </Row>
           </div>
-
           <Divider>关联优惠券后配置</Divider>
-
           <Form
             ref="addForm"
             :model="addRelationDetail"
@@ -414,12 +413,39 @@
                   ></Input>
                 </FormItem>
               </i-col>
-              <i-col span="6">
+              <i-col span="6" v-if="tempModalType == 'addTemplate'">
                 <FormItem
                   :label-width="100"
                   label="最高优惠金额:"
                   prop="maxDiscountFee"
+                  v-if="addRelationDetail.maxDiscountFee"
                 >{{ addRelationDetail.maxDiscountFee | fenToYuanDot2Filters }}</FormItem>
+                <FormItem
+                  :label-width="100"
+                  label="最高优惠金额:"
+                  prop="maxDiscountFee"
+                  v-else
+                >{{ "N/A" }}</FormItem>
+              </i-col>
+              <i-col span="6" v-else>
+                <FormItem
+                  label="最高优惠金额:"
+                  prop="addRelationDetail"
+                  :label-width="100"
+                  v-if="addRelationDetail.couponType=='DISCOUNT_COUPON'"
+                >
+                  <InputNumber
+                    :min="0"
+                    :value="maxDiscountFeeComputed"
+                    @on-change="maxDiscountFeeInputNumberOnchange"
+                  ></InputNumber>
+                </FormItem>
+                <FormItem
+                  :label-width="100"
+                  label="最高优惠金额:"
+                  prop="maxDiscountFee"
+                  v-else
+                >{{ "N/A" }}</FormItem>
               </i-col>
             </Row>
 
@@ -572,7 +598,39 @@
                 </FormItem>
               </i-col>
             </Row>
-          </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板
+            <Divider v-if="this.hdCouponType === '新品上市活动券'">关联活动单品</Divider>
+            <Button
+              v-waves
+              :loading="createLoading"
+              type="success"
+              class="mr5"
+              @click="addActivityGoods"
+              v-if="this.hdCouponType === '新品上市活动券'"
+            >
+              <Icon type="md-add" />关联活动单品
+            </Button>
+            <!-- ymsb -->
+            <Row style="margin-top:15px" v-if="this.hdCouponType === '新品上市活动券'">
+              <i-col span="28">
+                <FormItem label="商品规格Ids列表:" :label-width="120">
+                  <div
+                    v-for="(item,index) in standardIdsArray"
+                    :value="item.value"
+                    :key="index"
+                    class="standardidList"
+                    @click="checkGoodsInfo(item.value)"
+                  >
+                    {{ item.label }}
+                    <p class="delete" @click.stop="deleteGoods(index,item.value)"></p>
+                  </div>
+                </FormItem>
+              </i-col>
+            </Row>
+          </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板！
+          <span
+            v-if="this.hdCouponType === '新品上市活动券'"
+            style="color:#ff3861"
+          >关联活动商品可点击查看商品信息！</span>
         </Row>
       </div>
       <div slot="footer">
@@ -581,7 +639,7 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :mask-closable="false" :width="1000" draggable>
+    <Modal v-model="modalEdit" :mask-closable="false" :width="1000" :z-index="1000">
       <p slot="header">
         <span>修改优惠券配置</span>
       </p>
@@ -618,12 +676,15 @@
                 prop="minBuyFee"
               >{{ addRelationDetail.minBuyFee | fenToYuanDot2Filters }}</FormItem>
             </i-col>
-            <!-- <i-col span="12">
-              <Row>
-                <i-col span="8">最高优惠金额:</i-col>
-                <i-col span="16">{{ "¥"+addRelationDetail.maxDiscountFee.toFixed(2) }}</i-col>
-              </Row>
-            </i-col>-->
+            <i-col span="6">
+              <FormItem
+                :label-width="100"
+                label="最高优惠金额:"
+                prop="minBuyFee"
+                v-if="addRelationDetail.maxDiscountFee"
+              >{{ addRelationDetail.maxDiscountFee | fenToYuanDot2Filters }}</FormItem>
+              <FormItem :label-width="100" label="最高优惠金额:" prop="minBuyFee" v-else>{{ "N/A" }}</FormItem>
+            </i-col>
           </Row>
 
           <Divider>可修改部分</Divider>
@@ -786,7 +847,39 @@
               </FormItem>
             </i-col>
           </Row>
-        </Form>
+          <Divider v-if="this.hdCouponType === '新品上市活动券'">关联活动单品</Divider>
+          <Button
+            v-waves
+            :loading="createLoading"
+            type="success"
+            class="mr5"
+            @click="addActivityGoods"
+            v-if="this.hdCouponType === '新品上市活动券'"
+          >
+            <Icon type="md-add" />关联活动单品
+          </Button>
+          <!-- ymsb -->
+          <Row style="margin-top:15px" v-if="this.hdCouponType === '新品上市活动券'">
+            <i-col span="28">
+              <FormItem label="商品规格Ids列表:" :label-width="120">
+                <div
+                  v-for="(item,index) in standardIdsArray"
+                  :value="item.value"
+                  :key="index"
+                  class="standardidList"
+                  @click="checkGoodsInfo(item.value)"
+                >
+                  {{ item.label }}
+                  <p class="delete" @click.stop="deleteGoods(index,item.value)"></p>
+                </div>
+              </FormItem>
+            </i-col>
+          </Row>
+        </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板！
+        <span
+          v-if="this.hdCouponType === '新品上市活动券'"
+          style="color:#ff3861"
+        >关联活动商品可点击查看商品信息！</span>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
@@ -975,8 +1068,253 @@
       </div>
     </Modal>
 
+    <!-- 关联规格商品 -->
+    <Modal v-model="modalProduct" :mask-closable="false" :width="1200" :z-index="1000">
+      <p slot="header">
+        <span>{{ '关联规格商品' }}</span>
+      </p>
+      <div class="modal-content">
+        <Form ref="goodsForm" :model="productStandardRelation">
+          <Row>
+            <FormItem>
+              <tables
+                ref="tables"
+                :columns="productColumns"
+                v-model="productData"
+                search-place="top"
+                searchable
+                highlight-row
+                border
+                @on-select-all="onSelectionAllGoods"
+                @on-selection-change="onSelectionChangeGoods"
+              >
+                <div slot="searchCondition">
+                  <Row>
+                    <Input
+                      v-model="searchProductRowData.barcode"
+                      placeholder="商品条码"
+                      class="search-input mr5"
+                      style="width: auto"
+                      clearable
+                    ></Input>
+                    <Input
+                      v-model="searchProductRowData.productName"
+                      placeholder="商品名称"
+                      class="search-input mr5"
+                      style="width: auto"
+                      clearable
+                    ></Input>
+                    <Button
+                      :loading="searchLoading"
+                      class="search-btn mr5"
+                      type="primary"
+                      @click="handleProductSearch"
+                    >
+                      <Icon type="md-search" />&nbsp;搜索
+                    </Button>
+                    <Button
+                      v-waves
+                      :loading="clearSearchLoading"
+                      class="search-btn"
+                      type="info"
+                      @click="hanldeProductClear"
+                    >
+                      <Icon type="md-refresh" />&nbsp;清除
+                    </Button>
+                  </Row>
+                </div>
+              </tables>
+              <div style="margin: 10px;overflow: hidden">
+                <Row type="flex" justify="end">
+                  <Page
+                    :total="productTotal"
+                    :current="searchProductRowData.page"
+                    show-sizer
+                    show-total
+                    @on-change="changeStaProductPage"
+                    @on-page-size-change="changeStaProductPageSize"
+                  ></Page>
+                </Row>
+              </div>
+            </FormItem>
+          </Row>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button @click="handleGoodsClose">关闭</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleGoodsSubmit">确认</Button>
+      </div>
+    </Modal>
     <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%" />
+    </Modal>
+    <!-- 商品规格展示 -->
+    <Modal v-model="modalGoodsStandard" :mask-closable="false" :width="700">
+      <p slot="header">
+        <span>商品规格详情</span>
+      </p>
+      <div class="modal-content">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品ID:</i-col>
+              <i-col span="16">{{ productStandardDetail.productId }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品名称:</i-col>
+              <i-col span="16">{{ productStandardDetail.baseProductName }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品分类:</i-col>
+              <i-col span="16">{{ productStandardDetail.groupName }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">基础单位:</i-col>
+              <i-col span="16">{{ productStandardDetail.baseUnit }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品编号:</i-col>
+              <i-col span="16">{{ productStandardDetail.productCode }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品条码:</i-col>
+              <i-col span="16">{{ productStandardDetail.baseBarcode }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品主图:</i-col>
+              <i-col span="16">
+                <img :src="productStandardDetail.baseImage" width="100" height="100" />
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品描述:</i-col>
+              <i-col span="16">{{ productStandardDetail.baseProductDescription }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Divider orientation="center">商品规格</Divider>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">上架商品名称:</i-col>
+              <i-col span="16">{{ productStandardDetail.productName }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">上架商品描述:</i-col>
+              <i-col span="16">{{ productStandardDetail.productDescription }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">上架商品主图:</i-col>
+              <i-col v-if="productStandardDetail.image" span="16">
+                <img :src="productStandardDetail.image" width="100" height="100" />
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品条码:</i-col>
+              <i-col span="16">{{ productStandardDetail.barcode }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品状态:</i-col>
+              <i-col span="16">{{ productStandardDetail.shelvesStatus | customPlanStatusFilters }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品规格:</i-col>
+              <i-col span="16">{{ productStandardDetail.specification }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">数量/重量:</i-col>
+              <i-col span="16">{{ productStandardDetail.standardQty }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品原价:</i-col>
+              <i-col span="16">{{ productStandardDetail.price| fenToYuanDot2Filters }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">售卖价格:</i-col>
+              <i-col span="16">{{ productStandardDetail.salePrice | fenToYuanDot2Filters }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <!-- <Row>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">SVIP价格:</i-col>
+              <i-col span="16">{{ productStandardDetail.svipPrice | fenToYuanDot2Filters }}</i-col>
+            </Row>
+          </i-col>
+        </Row>-->
+
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品单位:</i-col>
+              <i-col span="16">{{ productStandardDetail.productUnit }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品排序:</i-col>
+              <i-col span="16">{{ productStandardDetail.rank }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+      </div>
+      <div slot="footer">
+        <Button type="primary" @click="handleGoodClose">关闭</Button>
+      </div>
+    </Modal>
+    <Modal v-model="deleteAffirm" title="正在进行删除操作" @on-ok="affirmOk" @on-cancel="affirmCancel">
+      <p>
+        是否确认删除规格ID为
+        <b style="color:#ff3861">{{deleteStandardId}}</b>
+        的商品?
+      </p>
     </Modal>
   </div>
 </template>
@@ -993,7 +1331,9 @@ import {
   handGrandCoupon,
   getCouponTemplatePages,
   getHdCouponActivitiesPages,
-  getSystemParameter
+  getSystemParameter,
+  getProductStandardsPages,
+  getGoodsStandard,
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -1004,7 +1344,8 @@ import {
   couponTypeConvert,
   couponScopeConvert,
   couponUseLimitConvert,
-  userScopeConvert
+  userScopeConvert,
+  customPlanStatusConvert,
 } from "@/libs/converStatus";
 import {
   couponStatusEnum,
@@ -1012,7 +1353,7 @@ import {
   couponScopeEnum,
   couponUseLimitEnum,
   validDateTypeEnum,
-  userScopeEnum
+  userScopeEnum,
 } from "@/libs/enumerate";
 import {
   compareData,
@@ -1023,7 +1364,7 @@ import {
   replaceByTag,
   replaceByTab,
   HdDiscount,
-  compareCouponData
+  compareCouponData,
 } from "@/libs/util";
 
 const relationDetail = {
@@ -1046,13 +1387,25 @@ const relationDetail = {
   receiveLimit: 0,
   beginDay: 0,
   endDay: 0,
-  maxDiscountFee: "",
+  maxDiscountFee: null,
   rank: 0,
   phones: "",
   couponStatus: "VALID",
-  couponBusinessType: ""
+  couponBusinessType: "",
 };
-
+const productRowData = {
+  productStandardId: "",
+  productId: "",
+  barcode: "",
+  productCode: "",
+  productName: "",
+  shelvesStatus: "VALID",
+  minPrice: "",
+  maxPrice: "",
+  page: 1,
+  rows: 10,
+  expandType: "IGNORE_TYPE",
+};
 const couponTemplateDetail = {
   id: 0,
   couponName: "",
@@ -1064,7 +1417,7 @@ const couponTemplateDetail = {
   createUser: "",
   createTime: null,
   couponRules: "",
-  couponScope: null
+  couponScope: null,
 };
 
 const hdCouponTemplateDetail = {
@@ -1077,13 +1430,13 @@ const hdCouponTemplateDetail = {
   faceValue: 0,
   price: 0,
   useRule: "",
-  couponStatus: "VALID"
+  couponStatus: "VALID",
 };
 
 const searchRowData = {
   couponBusinessType: "MANUAL_SEND",
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 const templateRowData = {
@@ -1093,7 +1446,7 @@ const templateRowData = {
   page: 1,
   rows: 5,
   sidx: "create_time",
-  sort: "desc"
+  sort: "desc",
 };
 
 const hdTemplateRowData = {
@@ -1104,20 +1457,20 @@ const hdTemplateRowData = {
   activityTypes: ["component"],
   activityId: null,
   page: 1,
-  rows: 5
+  rows: 5,
 };
 
 const dataColumns = [
   {
     type: "selection",
     width: 50,
-    align: "center"
+    align: "center",
   },
   {
     title: "优惠券名称",
     align: "center",
     key: "couponName",
-    minWidth: 70
+    minWidth: 70,
   },
   {
     title: "优惠券类型",
@@ -1152,7 +1505,7 @@ const dataColumns = [
       }
       return <div>{row.couponType}</div>;
     },
-    minWidth: 40
+    minWidth: 40,
   },
   {
     title: "优惠/折扣额度",
@@ -1166,7 +1519,7 @@ const dataColumns = [
       } else {
         return <div>{fenToYuanDot2(params.row.couponFee)}</div>;
       }
-    }
+    },
   },
   {
     title: "最小购买金额",
@@ -1175,7 +1528,7 @@ const dataColumns = [
     minWidth: 40,
     render(h, params) {
       return h("div", fenToYuanDot2(params.row.minBuyFee));
-    }
+    },
   },
   {
     title: "最高优惠金额",
@@ -1185,12 +1538,11 @@ const dataColumns = [
     render(h, params) {
       const { row } = params;
       if (row.maxDiscountFee != null) {
-        return <div>{"¥" + row.maxDiscountFee.toFixed(2)}</div>;
+        return <div>{fenToYuanDot2(row.maxDiscountFee)}</div>;
       } else {
         return <div>{"N/A"}</div>;
       }
-      return <div>{row.maxDiscountFee}</div>;
-    }
+    },
   },
   {
     title: "优惠券状态",
@@ -1217,7 +1569,7 @@ const dataColumns = [
         );
       }
       return <div>{row.couponStatus}</div>;
-    }
+    },
   },
   {
     title: "券使用范围",
@@ -1250,7 +1602,7 @@ const dataColumns = [
         );
       }
       return <div>{row.couponScope}</div>;
-    }
+    },
   },
   {
     title: "券使用限制",
@@ -1270,7 +1622,7 @@ const dataColumns = [
       } else {
         return <div>N/A</div>;
       }
-    }
+    },
   },
   {
     title: "来源",
@@ -1286,7 +1638,7 @@ const dataColumns = [
       } else {
         return <div>N/A</div>;
       }
-    }
+    },
   },
   {
     title: "生效时间",
@@ -1307,7 +1659,7 @@ const dataColumns = [
       } else {
         return <div>N/A</div>;
       }
-    }
+    },
   },
   {
     title: "失效时间",
@@ -1336,34 +1688,34 @@ const dataColumns = [
       } else {
         return <div>N/A</div>;
       }
-    }
+    },
   },
   {
     title: "创建时间",
     align: "center",
     key: "createTime",
-    minWidth: 40
+    minWidth: 40,
   },
   {
     title: "操作",
     align: "center",
     minWidth: 110,
     key: "handle",
-    options: ["couponStatus", "view", "edit"]
-  }
+    options: ["couponStatus", "view", "edit"],
+  },
 ];
 
 const templateColumns = [
   {
     type: "index",
     width: 60,
-    align: "center"
+    align: "center",
   },
   {
     title: "优惠券名称",
     key: "couponName",
     align: "center",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "优惠券类型",
@@ -1398,21 +1750,21 @@ const templateColumns = [
         );
       }
       return <div>{row.couponType}</div>;
-    }
+    },
   },
   {
     title: "优惠/折扣额度",
     align: "center",
     key: "couponFee",
-    minWidth: 80,
+    minWidth: 50,
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{fenToYuanDot2Number(row.couponFee) * 10 + "折"}</div>;
+        return <div>{row.couponFee / 10 + "折"}</div>;
       } else {
-        return <div>{fenToYuanDot2(row.couponFee)}</div>;
+        return <div>{fenToYuanDot2(params.row.couponFee)}</div>;
       }
-    }
+    },
   },
   {
     title: "最小购买金额",
@@ -1421,7 +1773,20 @@ const templateColumns = [
     minWidth: 80,
     render(h, params) {
       return <div>{fenToYuanDot2(params.row.minBuyFee)}</div>;
-    }
+    },
+  },
+  {
+    title: "最高优惠金额",
+    align: "center",
+    key: "maxDiscountFee",
+    minWidth: 80,
+    render(h, params) {
+      if (params.row.maxDiscountFee) {
+        return <div>{fenToYuanDot2(params.row.maxDiscountFee)}</div>;
+      } else {
+        return <div>{"N/A"}</div>;
+      }
+    },
   },
   {
     title: "优惠券状态",
@@ -1448,27 +1813,191 @@ const templateColumns = [
         );
       }
       return <div>{row.couponStatus}</div>;
-    }
+    },
   },
   {
     title: "创建时间",
     align: "center",
     minWidth: 120,
-    key: "createTime"
-  }
+    key: "createTime",
+  },
 ];
+const productColumns = [
+  {
+    type: "selection",
+    key: "",
+    width: 60,
+    align: "center",
+    fixed: "left",
+  },
+  {
+    title: "规格ID",
+    key: "id",
+    align: "center",
+    minWidth: 70,
+  },
+  {
+    title: "商品条码",
+    key: "barcode",
+    minWidth: 70,
+    align: "center",
+  },
+  {
+    title: "商品编号",
+    key: "productCode",
+    align: "center",
+    minWidth: 120,
+  },
+  {
+    title: "商品名称",
+    key: "productName",
+    minWidth: 100,
+    align: "center",
+  },
+  {
+    title: "商品规格",
+    key: "specification",
+    minWidth: 80,
+    align: "center",
+  },
+  {
+    title: "商品单位",
+    key: "productUnit",
+    minWidth: 80,
+    align: "center",
+  },
+  {
+    title: "商品价格",
+    key: "price",
+    minWidth: 80,
+    align: "center",
+    render(h, params, vm) {
+      const amount = fenToYuanDot2(params.row.price);
+      return <div>{amount}</div>;
+    },
+  },
+  {
+    title: "起购份数",
+    key: "startNum",
+    minWidth: 80,
+    align: "center",
+  },
+  {
+    title: "商品类型",
+    minWidth: 120,
+    key: "expandType",
+    align: "center",
+    render: (h, params, vm) => {
+      const { row } = params;
 
+      if (row.productStandardExpand != null) {
+        if (row.productStandardExpand.expandType == "DISCOUNT_PRODUCT") {
+          return (
+            <div>
+              <tag color="magenta">
+                {expandTypeConvert(row.productStandardExpand.expandType).label}
+              </tag>
+            </div>
+          );
+        } else if (row.productStandardExpand.expandType == "PULL_NEW_PRODUCT") {
+          return (
+            <div>
+              <tag color="orange">
+                {expandTypeConvert(row.productStandardExpand.expandType).label}
+              </tag>
+            </div>
+          );
+        } else if (row.productStandardExpand.expandType == "SECKILL_PRODUCT") {
+          return (
+            <div>
+              <tag color="blue">
+                {expandTypeConvert(row.productStandardExpand.expandType).label}
+              </tag>
+            </div>
+          );
+        } else if (row.productStandardExpand.expandType == "SHARE_PRODUCT") {
+          return (
+            <div>
+              <tag color="blue">
+                {expandTypeConvert(row.productStandardExpand.expandType).label}
+              </tag>
+            </div>
+          );
+        } else if (row.productStandardExpand.expandType == "ASSIST_PRODUCT") {
+          return (
+            <div>
+              <tag color="green">
+                {expandTypeConvert(row.productStandardExpand.expandType).label}
+              </tag>
+            </div>
+          );
+        }
+      } else {
+        return (
+          <div>
+            <tag color="cyan">{"普通商品"}</tag>
+          </div>
+        );
+      }
+    },
+  },
+  {
+    title: "商品状态",
+    minWidth: 100,
+    key: "shelvesStatus",
+    align: "center",
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.shelvesStatus === "VALID") {
+        return (
+          <div>
+            <tag color="success">
+              {customPlanStatusConvert(row.shelvesStatus).label}
+            </tag>
+          </div>
+        );
+      } else if (row.shelvesStatus === "INVALID") {
+        return (
+          <div>
+            <tag color="error">
+              {customPlanStatusConvert(row.shelvesStatus).label}
+            </tag>
+          </div>
+        );
+      }
+      return (
+        <div>
+          <tag color="primary">
+            {customPlanStatusConvert(row.shelvesStatus).label}
+          </tag>
+        </div>
+      );
+    },
+  },
+];
+const relationData = {
+  id: 0,
+  productStandardIds: 0,
+  productSectionId: 0,
+  productSectionRank: 0,
+};
 const hdTemplateColumns = [
   {
     type: "index",
-    width: 60,
-    align: "center"
+    width: 50,
+    align: "center",
+  },
+  {
+    title: "活动ID",
+    key: "activityId",
+    align: "center",
+    minWidth: 80,
   },
   {
     title: "优惠券名称",
     key: "couponName",
     align: "center",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "优惠券类型",
@@ -1497,7 +2026,7 @@ const hdTemplateColumns = [
         );
       }
       return <div>{row.couponType}</div>;
-    }
+    },
   },
   {
     title: "券使用限制",
@@ -1507,7 +2036,7 @@ const hdTemplateColumns = [
     render: (h, params, vm) => {
       const { row } = params;
       return <div>{couponUseLimitConvert(row.useLimitType).label}</div>;
-    }
+    },
   },
   // {
   //   title: "优惠/折扣额度",
@@ -1538,7 +2067,7 @@ const hdTemplateColumns = [
       } else {
         return <div>{fenToYuanDot2(params.row.faceValue)}</div>;
       }
-    }
+    },
   },
   {
     title: "最小购买金额",
@@ -1551,26 +2080,26 @@ const hdTemplateColumns = [
       const endIndex = useRule.indexOf("元");
       const minBuyFee = useRule.slice(startIndex + 1, endIndex);
       return <div>{fenToYuanDot2(minBuyFee * 100)}</div>;
-    }
+    },
   },
   {
     title: "生效时间",
     key: "beginDate",
     align: "center",
-    minWidth: 50
+    minWidth: 50,
   },
   {
     title: "失效时间",
     align: "center",
     key: "endDate",
-    minWidth: 50
-  }
+    minWidth: 50,
+  },
 ];
 
 export default {
   components: {
     Tables,
-    IViewUpload
+    IViewUpload,
   },
   mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
   data() {
@@ -1584,14 +2113,19 @@ export default {
         useLimitType: [{ required: true, message: "请选择券使用限制" }],
         couponRules: [{ required: true, message: "请输入券使用规则" }],
         couponStatus: [{ required: true, message: "请选择优惠券状态" }],
-        couponName: [{ required: true, message: "请输入优惠券名称" }]
+        couponName: [{ required: true, message: "请输入优惠券名称" }],
         // maxDiscountFee: [{ required: true, message: "最高优惠金额" }]
       },
+      standardIdList: [],
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
       phones: "",
       failPhone: [],
+      goodsIndex: "",
+      deleteStandardId: "",
+      productStandardDetail: [],
+      modalGoodsStandard: false,
       handCouponTime: false,
       couponStatusEnum,
       couponTypeEnum,
@@ -1599,6 +2133,7 @@ export default {
       userScopeEnum,
       couponUseLimitEnum,
       validDateTypeEnum,
+      productColumns: productColumns,
       dataColumns: dataColumns,
       templatePageOpts: [5, 10],
       templateColumns: templateColumns,
@@ -1613,7 +2148,9 @@ export default {
       searchTemplateRowData: _.cloneDeep(templateRowData),
       searchHdTemplateRowData: _.cloneDeep(hdTemplateRowData),
       relationDetail: _.cloneDeep(relationDetail),
+      productStandardRelation: _.cloneDeep(relationData),
       addRelationDetail: _.cloneDeep(relationDetail),
+      searchProductRowData: _.cloneDeep(productRowData),
       addRelationList: [],
       couponTemplateData: [],
       hdCouponTemplateData: [],
@@ -1621,7 +2158,12 @@ export default {
       couponHdTemplateTotal: 0,
       modalAdd: false,
       activityClassify: [],
-      hdCouponType: "手动发券"
+      standardIdsArray: [],
+      productData: [],
+      modalProduct: false,
+      deleteAffirm: false,
+      productTotal: 0,
+      hdCouponType: "手动发券",
     };
   },
   computed: {
@@ -1645,7 +2187,10 @@ export default {
         this.tempModalType === "addTemplate" &&
         this.addRelationDetail.validDateType === "UN_FIXED_DATE"
       );
-    }
+    },
+    maxDiscountFeeComputed() {
+      return fenToYuanDot2Number(this.addRelationDetail.maxDiscountFee);
+    },
   },
   mounted() {
     this.searchRowData = _.cloneDeep(searchRowData);
@@ -1673,7 +2218,7 @@ export default {
       this.editCouponPage();
     },
     handCouponType(value) {
-      const item = this.activityClassify.find(x => value === x.indexName);
+      const item = this.activityClassify.find((x) => value === x.indexName);
       this.hdCouponType =
         item && item.indexValue ? item.indexValue : "手动发券";
       this.searchRowData.page = 1;
@@ -1685,7 +2230,6 @@ export default {
       ) {
         this.handCouponTime = true;
       }
-      console.log("发券类型", this.hdCouponType);
     },
     handleTemplateAdd() {
       this.addRelationDetail.couponBusinessType = this.searchRowData.couponBusinessType;
@@ -1694,7 +2238,7 @@ export default {
         this.$Message.error("请先关联一张优惠券模板!");
         return false;
       }
-      this.$refs.addForm.validate(valid => {
+      this.$refs.addForm.validate((valid) => {
         if (valid) {
           _this.extraValidator();
           _this.replaceTextByTag();
@@ -1726,25 +2270,35 @@ export default {
       this.addRelationDetail = _.cloneDeep(relationDetail);
     },
     handleEdit(params) {
+      this.standardIdsArray = [];
       this.tempModalType = this.modalType.edit;
       this.addRelationDetail = _.cloneDeep(params.row);
+      let standardIdsData = [];
+      if (this.addRelationDetail.standardIds) {
+        standardIdsData.push(this.addRelationDetail.standardIds.split(","));
+        standardIdsData[0].forEach((value) => {
+          const map = { label: "label", value: "value" };
+          map.value = value;
+          map.label = value;
+          this.standardIdsArray.push(map);
+        });
+      }
       this.replaceTextByTab();
       this.modalEdit = true;
     },
     onCurrentChange(currentRow, oldCurrentRow) {
       this.currentTableRowSelected = currentRow;
-      // console.log(this.currentTableRowSelected);
     },
     // 添加手机号码
     onRelevance(params) {
-      this.failPhone = [];
-      this.currentTableRowSelected.phones = "";
       if (!this.currentTableRowSelected) {
         this.$Message.error(
           "请用鼠标左键点击选择下方表格一行优惠券数据,才能进行手动发券"
         );
         return;
       }
+      this.failPhone = [];
+      this.currentTableRowSelected.phones = "";
       if (this.hdCouponType === "手动发券") {
         this.modalPhones = true;
       }
@@ -1771,7 +2325,7 @@ export default {
     },
     handGrandCoupon() {
       handGrandCoupon(this.currentTableRowSelected)
-        .then(res => {
+        .then((res) => {
           if (res === "没有需要发券的数据") {
             this.$Message.error("没有需要发券的数据！");
             return;
@@ -1784,20 +2338,20 @@ export default {
             this.modalPhones = false;
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     },
     getTableData() {
       getCouponPagess(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -1806,20 +2360,20 @@ export default {
     },
     getSystemParameters() {
       const code = "SEND_COUPON_TYPE";
-      getSystemParameter(code).then(res => {
+      getSystemParameter(code).then((res) => {
         this.activityClassify = res.systemSettings;
       });
     },
     getTemplateTableData() {
       getCouponTemplatePages(this.searchTemplateRowData)
-        .then(res => {
+        .then((res) => {
           this.couponTemplateData = res.rows;
           this.couponTemplateTotal = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -1844,6 +2398,15 @@ export default {
       this.searchTemplateRowData.rows = pageSize;
       this.getTemplateTableData();
     },
+    changeStaProductPage(page) {
+      this.searchProductRowData.page = page;
+      this.getProductTableData();
+    },
+    changeStaProductPageSize(pageSize) {
+      this.searchProductRowData.page = 1;
+      this.searchProductRowData.rows = pageSize;
+      this.getProductTableData();
+    },
     handleTemplateSearch() {
       this.searchTemplateRowData.page = 1;
       this.searchLoading = true;
@@ -1858,12 +2421,12 @@ export default {
       // 编辑状态
       this.tempTableLoading = true;
       editCouponPage(this.addRelationDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.$Message.success("修改成功!");
           this.getTableData();
         })
-        .finally(res => {
+        .finally((res) => {
           this.tempTableLoading = false;
         });
     },
@@ -1925,7 +2488,7 @@ export default {
         this.$Message.error("请先关联一张优惠券模板!");
         return false;
       }
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           _this.extraValidator();
           _this.replaceTextByTag();
@@ -1960,14 +2523,6 @@ export default {
       this.addRelationDetail.couponFee = currentRow.faceValue;
       this.addRelationDetail.couponStatus = "VALID";
       const disIndex = currentRow.couponName.indexOf("折");
-      // if (currentRow.couponType === "DISCOUNT_COUPON") {
-      //   this.addRelationDetail.couponFee =
-      //     parseFloat(currentRow.couponName.substring(0, disIndex)) * 10;
-      //   console.log(
-      //     "DISCOUNT_COUPON couponFee:",
-      //     this.addRelationDetail.couponFee
-      //   );
-      // }
       if (currentRow.couponType === "DISCOUNT_COUPON") {
         this.addRelationDetail.couponFee =
           parseFloat(currentRow.discount) * 100;
@@ -1992,7 +2547,7 @@ export default {
       this.modalViewLoading = true;
       this.addRelationDetail.source = "SMALL";
       createCouponPage(this.addRelationDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalAdd = false;
           this.$Message.success("创建成功!");
@@ -2006,7 +2561,7 @@ export default {
       this.modalViewLoading = true;
       this.addRelationDetail.source = "HD";
       createCouponPage(this.addRelationDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalAdd = false;
           this.$Message.success("创建成功!");
@@ -2018,28 +2573,36 @@ export default {
     },
     getHdTemplateTableData() {
       getHdCouponActivitiesPages(this.searchHdTemplateRowData)
-        .then(res => {
+        .then((res) => {
           this.hdCouponTemplateData = res.rows;
           this.couponHdTemplateTotal = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
+    getProductTableData() {
+      getProductStandardsPages(this.searchProductRowData).then((res) => {
+        this.productData = res.rows;
+        this.productTotal = res.total;
+      });
+    },
     addCouponTemplate() {
       // this.relationDetail.couponBusinessType = this.searchRowData.couponBusinessType;
       // console.log("搜索条件", this.relationDetail.couponBusinessType);
+      this.standardIdsArray = [];
       this.getTemplateTableData();
       this.tempModalType = "addTemplate";
       this.modalAdd = true;
     },
     addHdCouponTemplate() {
+      this.standardIdsArray = [];
       this.getHdTemplateTableData();
       this.tempModalType = "addHdTemplate";
       this.modalAdd = true;
@@ -2053,6 +2616,8 @@ export default {
     },
     handleAddClose() {
       this.modalAdd = false;
+      this.standardIdList = [];
+      this.standardIdsArray = [];
     },
     minBuyFeeInputNumberOnchange(value) {
       this.relationDetail.minBuyFee = yuanToFenNumber(value);
@@ -2060,7 +2625,7 @@ export default {
     deleteTable(ids) {
       this.tempTableLoading = true;
       deleteCouponPage({ ids })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -2072,7 +2637,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .finally(res => {
+        .finally((res) => {
           this.tempTableLoading = false;
         });
     },
@@ -2091,10 +2656,102 @@ export default {
       } else {
         this.currentTableRowSelected = null;
       }
-    }
-  }
+    },
+    maxDiscountFeeInputNumberOnchange(value) {
+      this.addRelationDetail.maxDiscountFee = yuanToFenNumber(value);
+    },
+    handleProductSearch() {
+      this.getProductTableData();
+    },
+    hanldeProductClear() {
+      this.searchProductRowData = _.cloneDeep(productRowData);
+      this.getProductTableData();
+    },
+    addActivityGoods() {
+      this.modalProduct = true;
+      this.standardIdList = [];
+      this.getProductTableData();
+    },
+    onSelectionAllGoods(selection) {
+      this.standardIdList.push(selection.map((item) => item.id.toString()));
+    },
+    onSelectionChangeGoods(selection) {
+      this.standardIdList.push(selection.map((item) => item.id));
+    },
+    handleGoodsClose() {
+      this.standardIdList = [];
+      this.modalProduct = false;
+    },
+    handleGoodsSubmit() {
+      if (this.standardIdList.length > 0) {
+        this.standardIdList[this.standardIdList.length - 1].forEach((value) => {
+          const map = { label: "label", value: "value" };
+          map.value = value;
+          map.label = value;
+          this.standardIdsArray.push(map);
+        });
+        this.addRelationDetail.standardIds = this.standardIdsArray
+          .map((item) => item.value)
+          .join(",");
+      }
+      this.modalProduct = false;
+    },
+    checkGoodsInfo(standardId) {
+      let standardArray = {};
+      standardArray.standardId = standardId;
+      getGoodsStandard(standardArray)
+        .then((res) => {
+          this.productStandardDetail = res;
+          this.modalGoodsStandard = true;
+        })
+        .catch((error) => {});
+    },
+    handleGoodClose() {
+      this.loading = false;
+      this.modalGoodsStandard = false;
+    },
+    deleteGoods(index, standardId) {
+      this.goodsIndex = "";
+      this.deleteStandardId = "";
+      this.deleteAffirm = true;
+      this.goodsIndex = index;
+      this.deleteStandardId = standardId;
+    },
+    affirmOk() {
+      this.standardIdsArray.splice(this.goodsIndex, 1);
+      this.addRelationDetail.standardIds = this.standardIdsArray
+        .map((item) => item.value)
+        .join(",");
+      this.deleteAffirm = false;
+    },
+    affirmCancel() {
+      this.deleteAffirm = false;
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
+.standardidList {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  background: #ff3861;
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 38px;
+  margin-right: 8px;
+  cursor: pointer;
+  position: relative;
+  .delete {
+    width: 12px;
+    height: 12px;
+    background-image: url("http://resource.shuiguoshule.com.cn/product_image/h5/2020-08-05/UkYn1xNUt48yOxSQv4ty.png");
+    background-size: 100% 100%;
+    position: absolute;
+    top: 0;
+    right: -5px;
+  }
+}
 </style>

@@ -2,6 +2,54 @@ import Vue from 'vue';
 const $http = Vue.prototype.$http;
 const $imgService = Vue.prototype.$imgService;
 
+//获取首页头部订单数据
+export const getWaitOrder = () => {
+  return $http.request({
+    url: '/minapp/index/statistics/wait-order',
+    method: 'get',
+  });
+};
+
+//获取门店排行 
+export const storeRanking = (rankingType) => {
+  return $http.request({
+    url: `/minapp/index/statistics/store-ranking-total?rankingType=${rankingType}`,
+    method: 'get',
+  });
+};
+
+//获取订单list 
+export const getOrderTotal = () => {
+  return $http.request({
+    url: '/minapp/index/statistics/select-order-total',
+    method: 'get',
+  });
+};
+
+//获取点赞排行 
+export const productRanking = (data) => {
+  return $http.request({
+    url: `/minapp/index/statistics/product-ranking-total?rankingType=${data.rankingType}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+    }
+  });
+};
+
+//规格商品排行 
+export const productStanardRanking = (data) => {
+  return $http.request({
+    url: `/minapp/index/statistics/product-stanard/sale-ranking?rankingType=${data.rankingType}&beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+    }
+  });
+};
+
 // 删除图片
 export const deletePicture = ({
   urls
@@ -1189,6 +1237,19 @@ export const systemDataStatistics = (data) => {
   });
 };
 
+//会员管理 /minapp/user/users-info
+export const getUsersInfo = (data) => {
+  return $http.request({
+    url: '/minapp/user/users-info',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+    }
+  });
+};
+
 // 根据条件分页查询优惠券列表
 export const getCouponPages = (data) => {
   return $http.request({
@@ -1985,7 +2046,9 @@ export const getAdvertisementPages = (data) => {
     method: 'post',
     headers: {
       'page': data.page,
-      'rows': data.rows
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
     }
   });
 };
@@ -2622,5 +2685,149 @@ export const editSignReward = (data) => {
     url: '/minapp/everyday-sign-reward/update/' + data.id,
     data,
     method: 'PUT'
+  });
+};
+
+//获取关键字列表 /minapp/product-keywords/pages
+export const getKeywordsPages = (data) => {
+  return $http.request({
+    url: '/minapp/product-keywords/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+
+//添加关键词 /minapp/product-keywords/create
+export const createKeywords = (data) => {
+  return $http.request({
+    url: '/minapp/product-keywords/create',
+    data,
+    method: 'post',
+  });
+};
+
+//删除关键词 deleteProduct
+export const deleteKeywords = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/product-keywords/' + ids,
+    method: 'delete'
+  });
+};
+
+//更新关键词 /minapp/product-keywords/update/{id}
+export const updateKeywords = (data) => {
+  return $http.request({
+    url: '/minapp/product-keywords/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+//板块活动分享设置 /minapp/plate-activity-share-setting/pages
+export const getShareSettingPages = (data) => {
+  return $http.request({
+    url: '/minapp/plate-activity-share-setting/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+//添加板块活动分享设置 /minapp/plate-activity-share-setting/create
+export const createShareSettingPages = (data) => {
+  return $http.request({
+    url: '/minapp/plate-activity-share-setting/create',
+    data,
+    method: 'post',
+  });
+};
+
+//更新板块活动分享设置 /minapp/plate-activity-share-setting/update/
+export const updateShareSetting = (data) => {
+  return $http.request({
+    url: '/minapp/plate-activity-share-setting/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+//删除板块活动分享设置 /minapp/plate-activity-share-setting/
+export const deleteShareSetting = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/plate-activity-share-setting/' + ids,
+    method: 'delete'
+  });
+};
+
+//查询新品上市活动列表 /minapp/activity-new-products/pages
+export const getNewProductsPages = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows
+    }
+  });
+};
+//添加新品上市活动 /minapp/activity-new-products/create
+export const createNewProducts = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/create',
+    data,
+    method: 'post',
+  });
+};
+
+//根据ID 修改新品上市活动 /minapp/activity-new-products/update/{id}
+export const updateNewProducts = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+//根据id 删除新品上市活动
+export const deleteNewProducts = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/' + ids,
+    method: 'delete'
+  });
+};
+
+//根据id查询新品上市活动关联 /minapp/activity-new-products/{id}/relation
+export const getNewProductsRelevance = (id) => {
+  return $http.request({
+    url: `/minapp/activity-new-products/${id}/relation`,
+    method: 'get'
+  });
+};
+//添加新品上市活动关联 /minapp/activity-new-products/create/relation
+export const createNewProductsRelevance = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/create/relation',
+    data,
+    method: 'post',
+  });
+};
+//更新新品上市活动关联 /minapp/activity-new-products/update/relation/{id}
+export const updateNewProductsRelevance = (data) => {
+  return $http.request({
+    url: '/minapp/activity-new-products/update/relation/' + data.id,
+    data,
+    method: 'put'
   });
 };

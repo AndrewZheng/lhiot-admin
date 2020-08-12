@@ -204,6 +204,7 @@
                     placeholder="有效期起"
                     class="search-input"
                     style="width: 170px"
+                    :readonly="editStatus"
                     @on-change="beginTimeChange"
                   />
                 </FormItem>
@@ -219,6 +220,7 @@
                     placeholder="有效期止"
                     class="search-input"
                     style="width: 170px"
+                    :readonly="editStatus"
                     @on-change="endTimeChange"
                   />
                 </FormItem>
@@ -254,7 +256,7 @@ import {
   getRegisterPages,
   deleteRegister,
   createRegister,
-  editRegister
+  editRegister,
 } from "@/api/mini-program";
 import deleteMixin from "@/mixins/deleteMixin.js";
 import tableMixin from "@/mixins/tableMixin.js";
@@ -264,7 +266,7 @@ import { imageStatusEnum, receiveTypeEnum } from "@/libs/enumerate";
 import {
   compareData,
   setSmallCouponActivity,
-  compareCouponData
+  compareCouponData,
 } from "@/libs/util";
 
 const registerDetail = {
@@ -280,25 +282,25 @@ const registerDetail = {
   createTime: null,
   updateTime: null,
   createBy: "",
-  receiveType: "MANUAL"
+  receiveType: "MANUAL",
 };
 
 const roleRowData = {
   page: 1,
   rows: 10,
   sidx: "begin_time",
-  sort: "desc"
+  sort: "desc",
 };
 
 const relationRowData = {
   activityRegisterId: 0,
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 export default {
   components: {
-    Tables
+    Tables,
   },
   mixins: [deleteMixin, tableMixin, searchMixin],
   data() {
@@ -313,8 +315,8 @@ export default {
                 errors.push(new Error("字数限制20字"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         activityRule: [
           { required: true, message: "请输入活动规则" },
@@ -325,8 +327,8 @@ export default {
                 errors.push(new Error("字数限制200字"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         onOff: [
           { required: true, message: "请选择活动状态" },
@@ -337,12 +339,12 @@ export default {
                 errors.push(new Error("字数限制200字"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         beginTime: [{ required: true, message: "请选择活动开始时间" }],
         endTime: [{ required: true, message: "请选择活动结束时间" }],
-        receiveType: [{ required: true, message: "请选择活动结束时间" }]
+        receiveType: [{ required: true, message: "请选择活动结束时间" }],
       },
       defaultListMain: [],
       uploadListMain: [],
@@ -352,28 +354,28 @@ export default {
         {
           type: "selection",
           width: 60,
-          align: "center"
+          align: "center",
         },
         {
           title: "ID",
           align: "center",
-          key: "id"
+          key: "id",
         },
         {
           title: "活动名称",
           align: "center",
-          key: "activityName"
+          key: "activityName",
         },
         {
           title: "活动规则",
           key: "activityRule",
           align: "center",
-          tooltips: true
+          tooltips: true,
         },
         {
           title: "开始时间",
           align: "center",
-          key: "beginTime"
+          key: "beginTime",
         },
         {
           title: "结束时间",
@@ -387,7 +389,7 @@ export default {
             } else {
               return <div>{row.endTime}</div>;
             }
-          }
+          },
         },
         {
           title: "活动状态",
@@ -411,29 +413,30 @@ export default {
               );
             }
             return <div>{row.onOff}</div>;
-          }
+          },
         },
         {
           title: "创建人",
           align: "center",
-          key: "createBy"
+          key: "createBy",
         },
         {
           title: "操作",
           align: "center",
           minWidth: 80,
           key: "handle",
-          options: ["onSale", "view", "edit", "delete", "settings"]
-        }
+          options: ["onSale", "view", "edit", "delete", "settings"],
+        },
       ],
       addTempDataLoading: false,
       tempTableLoading: false,
       templateLoading: false,
       modalViewLoading: false,
       modalRelation: false,
+      editStatus: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
-      registerDetail: _.cloneDeep(registerDetail)
+      registerDetail: _.cloneDeep(registerDetail),
     };
   },
   mounted() {
@@ -454,7 +457,7 @@ export default {
       this.uploadListMain = [];
     },
     handleSubmit() {
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (
             compareData(
@@ -500,7 +503,7 @@ export default {
         ).format("YYYY-MM-DD HH:mm:ss");
       }
       createRegister(this.registerDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success("创建成功!");
@@ -534,7 +537,7 @@ export default {
       //   ).format("YYYY-MM-DD HH:mm:ss");
       // }
       editRegister(this.registerDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
@@ -545,6 +548,7 @@ export default {
         });
     },
     addRegisterReward() {
+      this.editStatus = false;
       if (this.tempModalType !== this.modalType.create) {
         this.tempModalType = this.modalType.create;
         this.registerDetail = _.cloneDeep(registerDetail);
@@ -556,7 +560,7 @@ export default {
       var rows = params.row;
       setSmallCouponActivity(rows);
       this.turnToPage({
-        name: "small-vip-activities-associated"
+        name: "small-vip-activities-associated",
       });
     },
     // 删除
@@ -568,9 +572,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteRegister({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -582,7 +586,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -598,6 +602,7 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
+      this.editStatus = !compareCouponData(params.row.beginTime);
       this.tempModalType = this.modalType.edit;
       this.resetFields();
       this.registerDetail = _.cloneDeep(params.row);
@@ -609,14 +614,14 @@ export default {
     },
     getTableData() {
       getRegisterPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -648,8 +653,8 @@ export default {
           this.registerDetail.endTime
         ).format("YYYY-MM-DD HH:mm:ss");
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

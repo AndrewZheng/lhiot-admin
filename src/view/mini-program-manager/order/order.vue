@@ -29,6 +29,7 @@
               class="search-input mr5"
               style="width: 150px"
               clearable
+              v-show="this.$route.name != 'small-skip-order'"
             ></Input>
             <Input
               v-model="searchRowData.phone"
@@ -36,6 +37,7 @@
               class="search-input mr5"
               style="width: 110px"
               clearable
+              v-show="this.$route.name != 'small-skip-order'"
             ></Input>
             <Input
               v-model="searchRowData.productName"
@@ -43,6 +45,7 @@
               class="search-input mr5"
               style="width: 120px"
               clearable
+              v-show="this.$route.name != 'small-skip-order'"
             ></Input>
             <Input
               v-model="searchRowData.storeName"
@@ -50,12 +53,14 @@
               class="search-input mr5"
               style="width: 120px"
               clearable
+              v-show="this.$route.name != 'small-skip-order'"
             ></Input>
             <Select
               v-model="searchRowData.apply"
               :clearable="true"
               style="padding-right: 5px;width: 100px"
               placeholder="应用类型"
+              v-show="this.$route.name != 'small-skip-order'"
             >
               <Option
                 v-for="item in appTypeEnum"
@@ -71,6 +76,7 @@
               placeholder="订单类型"
               style="width: 100px"
               clearable
+              v-show="this.$route.name != 'small-skip-order'"
             >
               <Option
                 v-for="item in orderType"
@@ -85,6 +91,7 @@
               placeholder="提货方式"
               style="width: 90px"
               clearable
+              v-show="this.$route.name != 'small-skip-order'"
             >
               <Option
                 v-for="item in receivingWayEnum"
@@ -99,6 +106,7 @@
               placeholder="订单状态"
               style="width: 90px"
               clearable
+              v-show="this.$route.name != 'small-skip-order'"
             >
               <Option
                 v-for="item in miniOrderStatusEnum"
@@ -113,6 +121,7 @@
               placeholder="海鼎状态"
               style="width: 90px"
               clearable
+              v-show="this.$route.name != 'small-skip-order'"
             >
               <Option
                 v-for="item in miniHdStatusEnum"
@@ -127,12 +136,13 @@
                 type="button"
                 style="float:left;margin-right:5px"
                 @on-change="timeChange"
+                v-show="this.$route.name != 'small-skip-order'"
               >
                 <Radio label="今日"></Radio>
                 <Radio label="自定义时间"></Radio>
               </RadioGroup>
               <DatePicker
-                v-show="mark===true"
+                v-show="mark===true||this.$route.name == 'small-skip-order'"
                 v-model="searchRowData.startTime"
                 format="yyyy-MM-dd HH:mm:ss"
                 type="datetime"
@@ -141,9 +151,9 @@
                 style="width: 150px"
                 @on-change="startTimeChange"
               />
-              <i v-show="mark===true">-</i>
+              <i v-show="mark===true||this.$route.name == 'small-skip-order'">-</i>
               <DatePicker
-                v-show="mark===true"
+                v-show="mark===true||this.$route.name == 'small-skip-order'"
                 v-model="searchRowData.endTime"
                 format="yyyy-MM-dd HH:mm:ss"
                 type="datetime"
@@ -161,8 +171,9 @@
                 class="mr5"
                 style="width: 150px"
                 @on-change="recieveStartTimeChange"
+                v-show="this.$route.name != 'small-skip-order'"
               />
-              <i>-</i>
+              <i v-show="this.$route.name != 'small-skip-order'">-</i>
               <DatePicker
                 v-model="searchRowData.recieveEndTime"
                 format="yyyy-MM-dd HH:mm:ss"
@@ -171,6 +182,7 @@
                 class="mr5"
                 style="width: 150px"
                 @on-change="recieveEndTimeChange"
+                v-show="this.$route.name != 'small-skip-order'"
               />
               <Button
                 v-waves
@@ -187,13 +199,27 @@
                 class="search-btn"
                 type="info"
                 @click="handleClear"
+                v-show="this.$route.name != 'small-skip-order'"
               >
                 <Icon type="md-refresh" />&nbsp;清除
+              </Button>
+              <Button
+                v-waves
+                v-show="this.$route.name == 'small-skip-order'"
+                class="search-btn ml5 mr5"
+                type="warning"
+                @click="goBack"
+              >
+                <Icon type="md-home" />&nbsp;返回首页
               </Button>
             </div>
           </Row>
         </div>
-        <div slot="operations" style="margin-left:-30px">
+        <div
+          slot="operations"
+          style="margin-left:-30px"
+          v-show="this.$route.name != 'small-skip-order'"
+        >
           <Button
             v-waves
             :loading="deliverOrderLoading"
@@ -610,7 +636,11 @@ import {
 } from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
-import { fenToYuanDot2, fenToYuanDot2Number } from "@/libs/util";
+import {
+  fenToYuanDot2,
+  fenToYuanDot2Number,
+  getSmallGoodsStandard,
+} from "@/libs/util";
 import {
   receivingWayEnum,
   receivingWay,
@@ -689,6 +719,7 @@ const roleRowData = {
   recieveStartTime: null,
   recieveEndTime: null,
   productNames: "",
+  totalOrderType: null,
 };
 
 export default {
@@ -702,6 +733,7 @@ export default {
       mark: false,
       button: "今日",
       num: 0,
+      searchMark: true,
       deliverNoteList: [],
       haiDingStatus: [],
       storeList: [],
@@ -788,7 +820,7 @@ export default {
         },
         {
           title: "计量单位",
-          key: "productUnit",
+          key: "unitName",
         },
         {
           title: "原价",
@@ -1472,26 +1504,55 @@ export default {
         name: "small-order-month-orders",
       });
     },
+    // 获取数据
     getTableData() {
       this.loading = true;
-      const date = new Date();
-      date.setDate(date.getDate());
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var day1 = date.getDate() + 1;
-      var start = `${year}-${month}-${day} 00:00:00`;
-      var end = `${year}-${month}-${day} 23:59:59`;
-      if (this.button === "今日") {
-        this.searchRowData.startTime = start;
-        this.searchRowData.endTime = end;
+      if (this.$route.name === "small-skip-order") {
+        const orderDel = getSmallGoodsStandard();
+        this.searchRowData.totalOrderType = orderDel.typeCode;
+        const date = new Date();
+        const nowDate = new Date();
+        date.setDate(date.getDate() - orderDel.queryDay + 1);
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        nowDate.setDate(nowDate.getDate());
+        var nowYear = nowDate.getFullYear();
+        var nowMonth = nowDate.getMonth() + 1;
+        var nowDay = nowDate.getDate();
+        var start = `${year}-${month}-${day} 00:00:00`;
+        var end = `${nowYear}-${nowMonth}-${nowDay} 23:59:59`;
+        if (this.searchMark) {
+          this.searchRowData.startTime = start;
+          this.searchRowData.endTime = end;
+        } else {
+          this.searchRowData.startTime = this.$moment(
+            this.searchRowData.startTime
+          ).format("YYYY-MM-DD HH:mm:ss");
+          this.searchRowData.endTime = this.$moment(
+            this.searchRowData.endTime
+          ).format("YYYY-MM-DD HH:mm:ss");
+        }
+      } else {
+        const date = new Date();
+        date.setDate(date.getDate());
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var day1 = date.getDate() + 1;
+        var start = `${year}-${month}-${day} 00:00:00`;
+        var end = `${year}-${month}-${day} 23:59:59`;
+        if (this.button === "今日") {
+          this.searchRowData.startTime = start;
+          this.searchRowData.endTime = end;
+        }
+        this.searchRowData.startTime = this.$moment(
+          this.searchRowData.startTime
+        ).format("YYYY-MM-DD HH:mm:ss");
+        this.searchRowData.endTime = this.$moment(
+          this.searchRowData.endTime
+        ).format("YYYY-MM-DD HH:mm:ss");
       }
-      this.searchRowData.startTime = this.$moment(
-        this.searchRowData.startTime
-      ).format("YYYY-MM-DD HH:mm:ss");
-      this.searchRowData.endTime = this.$moment(
-        this.searchRowData.endTime
-      ).format("YYYY-MM-DD HH:mm:ss");
       getOrderPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
@@ -1499,7 +1560,7 @@ export default {
           this.loading = false;
           this.clearSearchLoading = false;
           this.searchLoading = false;
-          if (this.num < 2) {
+          if (this.num < 1) {
             this.handleSearch();
           }
         })
@@ -1518,10 +1579,12 @@ export default {
       }
     },
     startTimeChange(value, date) {
+      this.searchMark = false;
       this.button = "自定义时间";
       this.searchRowData.startTime = value;
     },
     endTimeChange(value, date) {
+      this.searchMark = false;
       this.button = "自定义时间";
       this.searchRowData.endTime = value;
     },
@@ -1665,6 +1728,9 @@ export default {
       } else {
         this.currentTableRowSelected = null;
       }
+    },
+    goBack() {
+      this.$router.back();
     },
   },
 };
