@@ -807,9 +807,12 @@
                 <i-col v-else-if="productStandardDetail.productType === null" span="16">{{ "N/A" }}</i-col>
               </Row>
             </i-col>
-            <i-col span="12">
-              <FormItem label="最低库存:" prop="limitQty">
-                <InputNumber v-model="proStandardExpand.limitQty"></InputNumber>
+            <i-col
+              span="12"
+              v-show="proStandardExpand.expandType=='DISCOUNT_PRODUCT'||proStandardExpand.expandType=='PULL_NEW_PRODUCT'||proStandardExpand.expandType=='SHARE_PRODUCT'"
+            >
+              <FormItem label="库存数量:" prop="invNum">
+                <InputNumber v-model="proStandardExpand.invNum"></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -1187,7 +1190,8 @@ const proStandardExpand = {
   standardId: 0,
   startNum: 1,
   // expandType: "DISCOUNT_PRODUCT",
-  limitQty: 0,
+  // limitQty: 0,
+  invNum: 0,
   commissionRate: 0
 };
 
@@ -1800,7 +1804,7 @@ export default {
       this.productStandardDetail = this._.cloneDeep(params.row);
       // 先清除上次请求的数据
       this.proStandardExpand = proStandardExpand;
-      this.proStandardExpand.limitQty = this.productStandardDetail.limitQty;
+      this.proStandardExpand.invNum = this.productStandardDetail.invNum;
       this.productStandardDetail.expandType = proStandardExpand.expandType;
       this.proStandardExpand.discountPrice = 0;
       // this.productStandardDetail.productStandardExpand.expandType =

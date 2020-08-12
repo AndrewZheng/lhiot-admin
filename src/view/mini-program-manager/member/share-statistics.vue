@@ -8,6 +8,7 @@
           :class=" topStatus=='pro' ? 'hot' : '' "
         >商品数据统计</b>
         <b data-index="use" @click="assistDataChange" :class=" topStatus=='use' ? 'hot' : '' ">用户数据统计</b>
+        <b data-index="commission" @click="assistDataChange" :class=" topStatus=='commission' ? 'hot' : '' ">佣金数据统计</b>
       </div>
       <Card v-show="topStatus==='pro'">
         <tables
@@ -193,6 +194,27 @@
           </Row>
         </div>
       </Card>
+      <Card v-show="topStatus==='commission'">
+        <tables
+          ref="tables2"
+          v-model="tableData2"
+          :columns="columns2"
+          :loading="loading"
+          :search-area-column="22"
+          :operate-area-column="6"
+          editable
+          searchable
+          border
+          search-place="top"
+        >
+          <div slot="searchCondition">
+            <Row>
+              <b>历史总佣金:</b>
+              <b style="color:red">{{hisAmount | fenToYuanDot2Filters}}</b>
+            </Row>
+          </div>
+        </tables>
+      </Card>
     </div>
   </div>
 </template>
@@ -203,6 +225,7 @@ import _ from "lodash";
 import {
   shareProdStatistics,
   shareUserStatistics,
+  commissionStatistics
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -256,6 +279,7 @@ export default {
       couponTypeEnum,
       totalPage1:0,
       totalPage: 0,
+      hisAmount:"",
       columns: [
         {
           title: "商品名称",
@@ -327,10 +351,37 @@ export default {
           minWidth: 60
         },
       ],
+      columns2: [
+        {
+          title: "待提现佣金",
+          align: "center",
+          key: "canOutAmount",
+          render(h, params) {
+            return <div>{fenToYuanDot2(params.row.canOutAmount)}</div>;
+          },
+        },
+        {
+          title: "待入账佣金",
+          align: "center",
+          key: "waitAmount",
+          render(h, params) {
+            return <div>{fenToYuanDot2(params.row.waitAmount)}</div>;
+          },
+        },
+        {
+          title: "已提现佣金",
+          align: "center",
+          key: "allOutAmount",
+          render(h, params) {
+            return <div>{fenToYuanDot2(params.row.allOutAmount)}</div>;
+          },
+        }
+      ],
       searchRowData: _.cloneDeep(roleRowData),
       searchRowData1: _.cloneDeep(roleRowData1),
       couponTemplateDetail: _.cloneDeep(couponTemplateDetail),
-      tableData1: []
+      tableData1: [],
+      tableData2: []
     };
   },
   computed: {},
@@ -339,6 +390,7 @@ export default {
     this.searchRowData1 = _.cloneDeep(roleRowData1);
     this.getTableData();
     this.getTableData1();
+    this.getTableData2();
   },
   created() {},
   methods: {
@@ -482,6 +534,22 @@ export default {
           this.clearSearchLoading = false;
         });
     },
+    getTableData2() {
+      this.tableData2=[];
+      commissionStatistics()
+        .then(res => {
+          this.tableData2.push(res);
+          this.hisAmount=res.hisAmount;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        })
+        .catch(error => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
     handleSearch() {
       this.num++;
       this.searchRowData1.page = 1;
@@ -509,8 +577,12 @@ export default {
     },
     assistDataChange(e) {
       let index = e.currentTarget.dataset.index;
+      console.log(index)
       if (this.topStatus === index) {
         return;
+      }
+      if (index === "commission") {
+          this.getTableData2();
       }
       this.button="汇总",
       this.button1="汇总",
@@ -684,7 +756,7 @@ export default {
 }
 .tabChange {
   height: 50px;
-  width: 230px;
+  width: 320px;
   font-size: 14px;
   display: flex;
   align-items: center;
@@ -709,5 +781,6 @@ export default {
   display: inline-block;
   // color: red;
   background-color: #fff;
+  padding: 0 10px;
 }
 </style>
