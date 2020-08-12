@@ -27,12 +27,12 @@
           ></Input>
           <Button
             v-waves
-            :searchLoading="searchLoading"
+            :loading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
           >
-            <Icon type="md-search" />&nbsp;搜索
+            <Icon type="md-search" /> 搜索
           </Button>
           <Button
             v-waves
@@ -41,7 +41,7 @@
             type="info"
             @click="handleClear"
           >
-            <Icon type="md-refresh" />&nbsp;清除
+            <Icon type="md-refresh" /> 清除
           </Button>
         </div>
         <div slot="operations">
@@ -94,33 +94,37 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="loadingSubmit" type="primary" @click="handleSubmit">确定</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="loadingSubmit" type="primary" @click="handleSubmit">
+          确定
+        </Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
+import Tables from '_c/tables';
 import {
   getProductUnitsPages,
   editProductUnits,
   delProductUnits,
   createProductUnits
-} from "@/api/wholesale";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
+} from '@/api/wholesale';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
 
 const unitDetail = {
   id: 0,
-  unitCode: "",
-  unitName: ""
+  unitCode: '',
+  unitName: ''
 };
 
 const roleRowData = {
-  unitName: "",
+  unitName: '',
   page: 1,
   rows: 20
 };
@@ -139,36 +143,36 @@ export default {
       searchRowData: this._.cloneDeep(roleRowData),
       unitDetail: this._.cloneDeep(unitDetail),
       ruleInline: {
-        unitCode: { required: true, message: "请填写单位编码" },
-        unitName: { required: true, message: "请填写单位名称" }
+        unitCode: { required: true, message: '请填写单位编码' },
+        unitName: { required: true, message: '请填写单位名称' }
       },
       columns: [
         {
-          type: "selection",
-          key: "",
+          type: 'selection',
+          key: '',
           width: 60,
-          align: "center"
+          align: 'center'
         },
         {
-          title: "编号",
-          align: "center",
-          key: "id"
+          title: '编号',
+          align: 'center',
+          key: 'id'
         },
         {
-          title: "单位编码",
-          align: "center",
-          key: "unitCode"
+          title: '单位编码',
+          align: 'center',
+          key: 'unitCode'
         },
         {
-          title: "单位名称",
-          align: "center",
-          key: "unitName"
+          title: '单位名称',
+          align: 'center',
+          key: 'unitName'
         },
         {
-          title: "操作",
-          align: "center",
-          key: "handle",
-          options: ["edit", "delete"]
+          title: '操作',
+          align: 'center',
+          key: 'handle',
+          options: ['edit', 'delete']
         }
       ]
     };
@@ -178,9 +182,11 @@ export default {
   },
   methods: {
     getTableData() {
+      this.loading = true;
       getProductUnitsPages(this.searchRowData).then(res => {
         this.tableData = res.rows;
         this.total = res.total;
+      }).finally(res => {
         this.loading = false;
         this.searchLoading = false;
         this.clearSearchLoading = false;
@@ -207,7 +213,7 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error("请完善商品单位信息!");
+          this.$Message.error('请完善商品单位信息!');
         }
       });
     },
@@ -216,7 +222,7 @@ export default {
       editProductUnits(this.unitDetail)
         .then(res => {
           this.modalEdit = false;
-          this.$Message.info("修改成功！");
+          this.$Message.info('修改成功！');
           this.getTableData();
         })
         .finally(() => {
@@ -228,7 +234,7 @@ export default {
       createProductUnits(this.unitDetail)
         .then(res => {
           this.modalEdit = false;
-          this.$Message.info("创建成功！");
+          this.$Message.info('创建成功！');
           this.getTableData();
         })
         .finally(() => {

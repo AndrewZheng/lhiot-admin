@@ -59,11 +59,10 @@ export default {
       }
       PcLockr.set(enums.SYSTEM, item);
       const name = getSystemHomeName();
-      const tagNavList = this.tagNavList.length > 0 ? this.tagNavList : getTagNavListFromLocalstorage();
-      const tagNav = tagNavList.find(item => item.name === name);
-      if (tagNav) {
-        const newTagNavList = [];
-        newTagNavList.push(tagNav);
+      const tagNavListLocal = getTagNavListFromLocalstorage();
+      if (tagNavListLocal.length > 0) {
+        const newTagNavList = []
+        setTagNavListInLocalstorage(newTagNavList);
         this.setTagNavList(newTagNavList);
       }
       // 更新systemName

@@ -38,7 +38,7 @@
           ></Input>
           <Button
             v-waves
-            :search-loading="searchLoading"
+            :loading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
@@ -142,7 +142,7 @@
             </Select>
             <Button
               v-waves
-              :search-loading="searchLoading"
+              :loading="searchLoading"
               class="search-btn mr5"
               type="primary"
               @click="handleSearch1"

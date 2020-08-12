@@ -41,7 +41,7 @@
               @on-change="systemCategoryChange1"
             ></Cascader>
             <Button
-              :search-loading="searchLoading"
+              :loading="searchLoading"
               class="search-btn mr5"
               type="primary"
               @click="handleSearch"

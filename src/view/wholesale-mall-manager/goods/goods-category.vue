@@ -38,12 +38,12 @@
                   clearable
                 ></Input>
                 <Button
-                  :searchLoading="searchLoading"
+                  :loading="searchLoading"
                   class="search-btn mr5"
                   type="primary"
                   @click="handleSearch"
                 >
-                  <Icon type="md-search" />&nbsp;搜索
+                  <Icon type="md-search" /> 搜索
                 </Button>
                 <Button
                   v-waves
@@ -52,7 +52,7 @@
                   type="info"
                   @click="handleClear"
                 >
-                  <Icon type="md-refresh" />&nbsp;清除
+                  <Icon type="md-refresh" /> 清除
                 </Button>
               </Row>
             </div>
@@ -64,13 +64,13 @@
                 class="mr5"
                 @click="handleBack"
               >
-                <Icon type="ios-arrow-back" />&nbsp;返回父级分类
+                <Icon type="ios-arrow-back" /> 返回父级分类
               </Button>
               <Button v-waves type="success" class="mr5" @click="createParentRow">
-                <Icon type="md-add" />添加父分类
+                <Icon type="md-add" /> 添加父分类
               </Button>
               <Button v-waves type="success" class="mr5" @click="createSonRow">
-                <Icon type="md-add" />添加子分类
+                <Icon type="md-add" /> 添加子分类
               </Button>
               <Poptip
                 confirm
@@ -80,7 +80,7 @@
                 @on-ok="poptipOk"
               >
                 <Button type="error" class="mr5">
-                  <Icon type="md-trash" />批量删除
+                  <Icon type="md-trash" /> 批量删除
                 </Button>
               </Poptip>
             </div>
@@ -127,7 +127,7 @@
             <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
               <template v-if="item.status === 'finished'">
                 <div>
-                  <img :src="item.url" />
+                  <img :src="item.url">
                   <div class="demo-upload-list-cover">
                     <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                     <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -152,17 +152,21 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit('editForm')">确定</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit('editForm')">
+          确定
+        </Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import CommonIcon from "_c/common-icon";
-import IViewUpload from "_c/iview-upload";
+import Tables from '_c/tables';
+import CommonIcon from '_c/common-icon';
+import IViewUpload from '_c/iview-upload';
 
 import {
   createProductCategories,
@@ -170,29 +174,29 @@ import {
   getProductCategoriesPages,
   getProductCategoriesTree,
   editProductCategories
-} from "@/api/wholesale";
-import { buildMenu, convertTree } from "@/libs/util";
+} from '@/api/wholesale';
+import { buildMenu, convertTree } from '@/libs/util';
 
-import uploadMixin from "@/mixins/uploadMixin";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
+import uploadMixin from '@/mixins/uploadMixin';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
 
 const currentCategory = {
   id: 0,
   parentId: 0,
-  categoryCode: "",
-  categoryName: "",
-  image: "",
+  categoryCode: '',
+  categoryName: '',
+  image: '',
   levels: 0,
-  parentCategoryCode: "",
-  parentCategoryName: "",
+  parentCategoryCode: '',
+  parentCategoryName: '',
   rank: 0
 };
 
 const roleRowData = {
   parentId: 0,
-  categoryName: "",
+  categoryName: '',
   page: 1,
   rows: 20
 };
@@ -211,52 +215,49 @@ export default {
       uploadListMain: [],
       defaultListMain: [],
       addSon: false,
-      modalEdit: false,
-      modalViewLoading: false,
       modalEditLoading: false,
       clearSearchLoading: false,
-      currentParentName: "",
       currentParentId: 0,
       currentCategory: _.cloneDeep(currentCategory),
       parentCategory: _.cloneDeep(currentCategory),
       searchRowData: _.cloneDeep(roleRowData),
       ruleInline: {
-        categoryName: { required: true, message: "请填写单位名称" }
+        categoryName: { required: true, message: '请填写单位名称' }
       },
       columns: [
         {
-          type: "selection",
-          key: "",
+          type: 'selection',
+          key: '',
           width: 60,
-          align: "center"
+          align: 'center'
         },
         {
-          title: "商品分类ID",
-          key: "id",
+          title: '商品分类ID',
+          key: 'id',
           sortable: true,
-          align: "center",
+          align: 'center',
           minWidth: 150
         },
         {
-          title: "分类名",
-          key: "categoryName",
+          title: '分类名',
+          key: 'categoryName',
           sortable: true,
-          align: "center",
+          align: 'center',
           minWidth: 150
         },
         {
-          title: "排序",
-          key: "rank",
+          title: '排序',
+          key: 'rank',
           sortable: true,
-          align: "center",
+          align: 'center',
           minWidth: 40
         },
         {
-          title: "操作",
-          align: "center",
-          key: "handle",
+          title: '操作',
+          align: 'center',
+          key: 'handle',
           minWidth: 150,
-          options: ["edit", "delete"]
+          options: ['edit', 'delete']
         }
       ]
     };
@@ -271,8 +272,8 @@ export default {
         if (res && res.length > 0) {
           const menuList = buildMenu(res);
           const map = {
-            title: "title",
-            children: "children"
+            title: 'title',
+            children: 'children'
           };
           this.menuData = convertTree(menuList, map, true);
           if (this.menuData.length > 0) {
@@ -287,16 +288,17 @@ export default {
         if (this.menuData.length > 0) {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         }
+      }).finally(() => {
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
       });
     },
     createSonRow() {
       this.addSon = true;
       if (!this.parentCategory.id) {
-        this.$Message.warning("请从左侧选择一个父分类");
+        this.$Message.warning('请从左侧选择一个父分类');
         return;
       }
       this.resetRowData();
@@ -315,8 +317,8 @@ export default {
         this.currentCategory = _.cloneDeep(currentCategory);
       }
       this.currentCategory.parentId = 0;
-      this.currentCategory.parentCategoryName = "父级分类";
-      this.parentCategory.categoryName = "父级分类";
+      this.currentCategory.parentCategoryName = '父级分类';
+      this.parentCategory.categoryName = '父级分类';
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
     },
@@ -347,7 +349,7 @@ export default {
             this.editProductCategories();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -373,7 +375,7 @@ export default {
     },
     handleBack() {
       this.parentCategory.id = 0;
-      this.parentCategory.categoryName = "父级分类";
+      this.parentCategory.categoryName = '父级分类';
       this.clearSearchLoading = true;
       this.searchRowData = _.cloneDeep(roleRowData);
       this.getTableData();
@@ -403,7 +405,7 @@ export default {
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.image != null) {
-        const map = { status: "finished", url: "url" };
+        const map = { status: 'finished', url: 'url' };
         const mainImgArr = [];
         map.url = res.image;
         mainImgArr.push(map);
@@ -413,27 +415,27 @@ export default {
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
-      this.currentCategory.image = "";
+      this.currentCategory.image = '';
     },
     // 商品主图
     handleSuccessMain(response, file, fileList) {
       this.uploadListMain = fileList;
-      this.currentCategory.image = "";
+      this.currentCategory.image = '';
       this.currentCategory.image = fileList[0].url;
     },
     renderContent(h, { root, node, data }) {
-      if (data.type == "PARENT") {
+      if (data.type === 'PARENT') {
         return (
           <div
             style={{
-              display: "inline-block",
-              width: "100%",
-              fontSize: "14px",
-              cursor: "pointer"
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
             }}
           >
             <span>
-              <CommonIcon type="ios-folder" class="mr10" />
+              <CommonIcon type='ios-folder' class='mr10' />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -444,14 +446,14 @@ export default {
         return (
           <div
             style={{
-              display: "inline-block",
-              width: "100%",
-              fontSize: "14px",
-              cursor: "pointer"
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
             }}
           >
             <span>
-              <CommonIcon type="ios-paper" class="mr10" />
+              <CommonIcon type='ios-paper' class='mr10' />
             </span>
             <span>{data.title}</span>
           </div>
@@ -461,17 +463,17 @@ export default {
     handleClick({ root, node, data }) {
       this.loading = true;
       // 递归展开当前节点
-      if (typeof data.expand === "undefined") {
-        this.$set(data, "expend", false);
+      if (typeof data.expand === 'undefined') {
+        this.$set(data, 'expend', false);
         if (data.children) {
           this.expandChildren(data.children);
         }
       }
 
-      if (typeof data.selected === "undefined") {
-        this.$set(data, "selected", true);
+      if (typeof data.selected === 'undefined') {
+        this.$set(data, 'selected', true);
       } else {
-        this.$set(data, "selected", !data.selected);
+        this.$set(data, 'selected', !data.selected);
       }
       this.parentCategory.id = data.id;
       this.parentCategory.categoryName = data.title;

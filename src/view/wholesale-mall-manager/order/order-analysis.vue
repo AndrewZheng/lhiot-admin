@@ -44,7 +44,7 @@
           />
           <Button
             v-waves
-            :search-loading="searchLoading"
+            :loading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
@@ -211,7 +211,7 @@ export default {
           align: 'center',
           key: 'createDate',
           minWidth: 80
-        },
+        }
       ]
     };
   },
@@ -222,6 +222,7 @@ export default {
   mounted() {},
   methods: {
     getTableData() {
+      this.loading = true;
       getOrderGoodsToday(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;

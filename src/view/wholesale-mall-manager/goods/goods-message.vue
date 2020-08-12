@@ -51,7 +51,7 @@
                   clearable
                 ></Input>
                 <Button
-                  :search-loading="searchLoading"
+                  :loading="searchLoading"
                   class="search-btn mr5"
                   type="primary"
                   @click="handleSearch"
@@ -622,8 +622,8 @@ export default {
         // goodsArea: [{ required: true, message: "请选择商品区域" }],
         // goodsBrand: [{ required: true, message: "请输入商品品牌" }],
         // placeOfOrigin: [{ required: true, message: "请输入商品产地" }],
-        categoryId: [{ required: true, message: "请选择商品分类" }],
-        goodsImage: [{ required: true, message: "请上传商品主图" }]
+        categoryId: [{ required: true, message: '请选择商品分类' }],
+        goodsImage: [{ required: true, message: '请上传商品主图' }]
         // goodsImages: [{ required: true, message: "请上传商品详情图" }],
         // otherImage: [{ required: true, message: '请上传服务保障图' }],
         // stockLimit: [{ required: true, message: "请输入安全库存" }]
@@ -632,9 +632,8 @@ export default {
         {
           title: 'ID',
           key: 'id',
-          minWidth: 80,
-          align: 'center',
-          fixed: 'left'
+          minWidth: 60,
+          align: 'center'
         },
         {
           title: '商品图片',
@@ -678,33 +677,33 @@ export default {
             return h('span', row.categoryId);
           }
         },
-        {
-          title: '商品区域',
-          align: 'center',
-          minWidth: 90,
-          key: 'goodsArea',
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.goodsArea === 'imported') {
-              return <div>{'进口'}</div>;
-            } else if (row.goodsArea === 'domestic') {
-              return <div>{'国产'}</div>;
-            }
-            return <div>{''}</div>;
-          }
-        },
-        {
-          title: '商品品牌',
-          align: 'center',
-          minWidth: 90,
-          key: 'goodsBrand'
-        },
-        {
-          title: '商品产地',
-          align: 'center',
-          minWidth: 90,
-          key: 'placeOfOrigin'
-        },
+        // {
+        //   title: '商品区域',
+        //   align: 'center',
+        //   minWidth: 90,
+        //   key: 'goodsArea',
+        //   render: (h, params, vm) => {
+        //     const { row } = params;
+        //     if (row.goodsArea === 'imported') {
+        //       return <div>{'进口'}</div>;
+        //     } else if (row.goodsArea === 'domestic') {
+        //       return <div>{'国产'}</div>;
+        //     }
+        //     return <div>{''}</div>;
+        //   }
+        // },
+        // {
+        //   title: '商品品牌',
+        //   align: 'center',
+        //   minWidth: 90,
+        //   key: 'goodsBrand'
+        // },
+        // {
+        //   title: '商品产地',
+        //   align: 'center',
+        //   minWidth: 90,
+        //   key: 'placeOfOrigin'
+        // },
         {
           title: '基础条码',
           align: 'center',
@@ -930,7 +929,7 @@ export default {
       this.exportExcelLoading = true;
       // TODO：测试导出不带分页搜索条件 目前默认导出10条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      let pageSize = this.searchRowData.page;
+      const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       getProductPages(this.searchRowData).then(res => {
         const tableData = res.rows;
@@ -949,7 +948,7 @@ export default {
             item.goodsArea = '';
           }
         });
-        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+        const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
         this.$refs.tables.handleDownload({
           filename: `商品基础信息-${date}`,
           data: tableData
