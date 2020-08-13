@@ -1085,12 +1085,16 @@ const searchRowData = {
   title: "",
   page: 1,
   rows: 10,
+  sidx: "createTime",
+  sort: "desc",
 };
 
 const templateRowData = {
   couponBusinessType: "ACTIVITY_NEW_SHELF_COUPON",
   page: 1,
   rows: 10,
+  sidx: "createTime",
+  sort: "desc",
 };
 const productRowData = {
   productStandardId: "",
@@ -1139,7 +1143,7 @@ const newproductRowData = {
   activityType: "NEW_TRY_ACTIVITY",
   page: 1,
   rows: 10,
-  sidx: "create_time",
+  sidx: "createTime",
   sort: "desc",
 };
 const templateColumns = [
@@ -2818,8 +2822,7 @@ export default {
         return;
       }
       createNewProductsRelevance(this.ActivityNewProductsRelation)
-        .then((res) => {})
-        .finally((res) => {
+        .then((res) => {
           this.modalAddCoupun = false;
           this.modalAddproduct = false;
           this.modalAddNewProduct = false;

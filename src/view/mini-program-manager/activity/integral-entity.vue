@@ -397,7 +397,7 @@ import {
   getEntityTemplatePages,
   getProductStandardsPages,
   getHdCouponActivitiesPages,
-  getProductUnits
+  getProductUnits,
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -409,7 +409,7 @@ import {
   couponScopeConvert,
   couponUseLimitConvert,
   customPlanStatusConvert,
-  memberLimitConvert
+  memberLimitConvert,
 } from "@/libs/converStatus";
 import {
   couponStatusEnum,
@@ -418,7 +418,7 @@ import {
   couponUseLimitEnum,
   validDateTypeEnum,
   entityTypeEnum,
-  memberLimitEnum
+  memberLimitEnum,
 } from "@/libs/enumerate";
 import {
   compareData,
@@ -427,7 +427,7 @@ import {
   fenToYuanDot2Number,
   yuanToFenNumber,
   replaceByTag,
-  replaceByTab
+  replaceByTab,
 } from "@/libs/util";
 
 const relationDetail = {
@@ -454,7 +454,7 @@ const relationDetail = {
   unitId: 0,
   baseUnitName: null,
   barcode: "", // inherit
-  specification: ""
+  specification: "",
 };
 
 const productStandardDetail = {
@@ -498,7 +498,7 @@ const productStandardDetail = {
   invNum: null,
   saleCount: null,
   positionName: null,
-  dbId: null
+  dbId: null,
 };
 
 const roleRowData = {
@@ -506,7 +506,9 @@ const roleRowData = {
   productName: null,
   // barcode: '',
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx: "createTime",
+  sort: "desc",
 };
 
 const templateRowData = {
@@ -516,32 +518,32 @@ const templateRowData = {
   productName: "",
   shelvesStatus: "VALID",
   page: 1,
-  rows: 5
+  rows: 5,
 };
 
 const dataColumns = [
   {
     type: "selection",
     width: 60,
-    align: "center"
+    align: "center",
   },
   {
     title: "商品条码",
     align: "center",
     key: "barcode",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "商品名称",
     align: "center",
     key: "productName",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "商品规格",
     align: "center",
     key: "standardQty",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "商品状态",
@@ -565,7 +567,7 @@ const dataColumns = [
       } else {
         return <div>N/A</div>;
       }
-    }
+    },
   },
   {
     title: "用户范围",
@@ -580,21 +582,21 @@ const dataColumns = [
       }
       return <div>{row.memberLimitType}</div>;
     },
-    minWidth: 40
+    minWidth: 40,
   },
   {
     title: "创建时间",
     align: "center",
     key: "createTime",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "操作",
     align: "center",
     minWidth: 80,
     key: "handle",
-    options: ["proStatus", "edit", "delete"]
-  }
+    options: ["proStatus", "edit", "delete"],
+  },
 ];
 
 const proStandardColumns = [
@@ -603,43 +605,43 @@ const proStandardColumns = [
     key: "",
     minWidth: 60,
     align: "center",
-    fixed: "left"
+    fixed: "left",
   },
   {
     title: "规格ID",
     align: "center",
     key: "id",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "商品条码",
     key: "barcode",
     align: "center",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "商品编号",
     align: "center",
     key: "productCode",
-    minWidth: 120
+    minWidth: 120,
   },
   {
     title: "商品名称",
     align: "center",
     key: "productName",
-    minWidth: 100
+    minWidth: 100,
   },
   {
     title: "商品规格",
     align: "center",
     key: "specification",
-    minWidth: 100
+    minWidth: 100,
   },
   {
     title: "商品单位",
     align: "center",
     minWidth: 100,
-    key: "productUnit"
+    key: "productUnit",
   },
   {
     title: "商品原价",
@@ -649,7 +651,7 @@ const proStandardColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "售卖价格",
@@ -659,7 +661,7 @@ const proStandardColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.salePrice);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "商品状态",
@@ -692,14 +694,14 @@ const proStandardColumns = [
           </tag>
         </div>
       );
-    }
-  }
+    },
+  },
 ];
 
 export default {
   components: {
     Tables,
-    IViewUpload
+    IViewUpload,
   },
   mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
   data() {
@@ -719,8 +721,8 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         realPoints: [
           { required: true, message: "请输入促销积分" },
@@ -731,8 +733,8 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         receiveLimit: [
           { required: true, message: "请输入每人限兑数量" },
@@ -743,8 +745,8 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         entityLimit: [
           { required: true, message: "请输入兑换限制的总数" },
@@ -755,9 +757,9 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
       defaultListMain: [],
       uploadListMain: [],
@@ -786,7 +788,7 @@ export default {
       hdCouponTemplateData: [],
       couponTemplateTotal: 0,
       couponHdTemplateTotal: 0,
-      modalRelation: false
+      modalRelation: false,
     };
   },
   computed: {
@@ -795,11 +797,11 @@ export default {
     },
     minBuyFeeComputed() {
       return fenToYuanDot2Number(this.addRelationDetail.minBuyFee);
-    }
+    },
   },
   created() {
-    getProductUnits().then(res => {
-      res.array.forEach(item => {
+    getProductUnits().then((res) => {
+      res.array.forEach((item) => {
         let map = { label: "label", value: "value" };
         map.value = item.id;
         map.label = item.unitName;
@@ -832,7 +834,7 @@ export default {
       this.editEntityExchange();
     },
     unitChange(value) {
-      const unit = this.unitsList.find(x => x.value == value);
+      const unit = this.unitsList.find((x) => x.value == value);
       this.addRelationDetail.unitId = value;
       this.addRelationDetail.unitName = unit.label;
     },
@@ -867,14 +869,14 @@ export default {
     },
     getTableData() {
       getEntityExchangePages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -883,7 +885,7 @@ export default {
     },
     getProStandardData() {
       getProductStandardsPages(this.searchTemplateRowData)
-        .then(res => {
+        .then((res) => {
           this.couponTemplateData = res.rows;
           this.couponTemplateTotal = res.total;
           this.loading = false;
@@ -922,7 +924,7 @@ export default {
       }
       this.modalViewLoading = true;
       createEntityExchange(this.addRelationDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.$Message.success("创建成功!");
           this.modalAdd = false;
@@ -935,7 +937,7 @@ export default {
     editEntityExchange() {
       this.modalViewLoading = true;
       editEntityExchange(this.addRelationDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalAdd = false;
           this.$Message.success("修改成功!");
@@ -961,7 +963,7 @@ export default {
     },
     handleTemplateAdd(name) {
       console.log("before create:", this.addRelationDetail);
-      this.$refs.addForm.validate(valid => {
+      this.$refs.addForm.validate((valid) => {
         if (valid) {
           this.replaceTextByTag();
           if (name === "add") {
@@ -997,7 +999,7 @@ export default {
     deleteTable(ids) {
       this.tempTableLoading = true;
       deleteEntityExchange({ ids })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -1009,11 +1011,11 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .finally(res => {
+        .finally((res) => {
           this.tempTableLoading = false;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

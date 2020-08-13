@@ -585,7 +585,7 @@ const roleRowData = {
   activityType: "SECKILL_ACTIVITY",
   page: 1,
   rows: 10,
-  sidx: "create_time",
+  sidx: "createTime",
   sort: "desc",
 };
 

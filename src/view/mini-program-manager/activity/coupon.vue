@@ -717,7 +717,7 @@ const roleRowData = {
   activityType: "COUPON_CENTER_ACTIVITY",
   page: 1,
   rows: 10,
-  sidx: "begin_time",
+  sidx: "createTime",
   sort: "desc",
 };
 

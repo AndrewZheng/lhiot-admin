@@ -288,7 +288,7 @@ const registerDetail = {
 const roleRowData = {
   page: 1,
   rows: 10,
-  sidx: "begin_time",
+  sidx: "endTime",
   sort: "desc",
 };
 

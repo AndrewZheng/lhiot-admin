@@ -374,7 +374,7 @@ export default {
       goodsColumns: [
         {
           title: "排名",
-          key: "standardId",
+          key: "ranking",
           align: "center",
           width: "60px",
           render(h, params, vm) {
@@ -530,9 +530,9 @@ export default {
           this.orderTotalData[1].todayNum = res.nowSumTotal;
           this.orderTotalData[1].yesterdayNum = res.yesSumTotal;
           this.orderTotalData[2].todayNum = res.nowReturnAmount;
-          this.orderTotalData[2].yesterdayNum = res.yesReturnTotal;
+          this.orderTotalData[2].yesterdayNum = res.yesReturnAmount;
           this.orderTotalData[3].todayNum = res.nowReturnTotal;
-          this.orderTotalData[3].yesterdayNum = res.yesSumTotal;
+          this.orderTotalData[3].yesterdayNum = res.yesReturnTotal;
         })
         .catch((error) => {});
     },
@@ -750,12 +750,13 @@ export default {
         this.goodsSearchRowData.page = pageSize;
         // 表格数据导出字段翻译
         let _this = this;
-        tableData.forEach((item) => {
+        tableData.forEach((item, index) => {
           item["productType"] = expandTypeConvert(item["productType"]).label;
+          item["ranking"] = Number(index) + 1;
         });
         const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
-          filename: `邀请有礼数据统计-${date}`,
+          filename: `商品规格销售排行统计-${date}`,
           data: tableData,
         });
       });

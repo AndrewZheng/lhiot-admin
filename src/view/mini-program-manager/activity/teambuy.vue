@@ -1984,7 +1984,7 @@ export default {
     },
     getTableData() {
       if (!this.searchRowData.status) {
-        this.searchRowData.sidx = "start_time";
+        this.searchRowData.sidx = "createTime";
         this.searchRowData.sort = "desc";
       }
       getTeamBuyPages(this.searchRowData)
@@ -2054,7 +2054,7 @@ export default {
     },
     activityStatusChange(value, date) {
       if (value === "expire" || value === "off") {
-        this.searchRowData.sidx = "start_time";
+        this.searchRowData.sidx = "createTime";
         this.searchRowData.sort = "desc";
       }
     },
