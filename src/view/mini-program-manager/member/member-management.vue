@@ -15,6 +15,20 @@
       >
         <div slot="searchCondition">
           <Row>
+            <!-- <Input
+              v-model="searchRowData.nickName"
+              placeholder="昵称"
+              class="search-input mr5"
+              style="width: auto"
+              clearable
+            ></Input>
+            <Input
+              v-model="searchRowData.phone"
+              placeholder="手机号码"
+              class="search-input mr5"
+              style="width: auto"
+              clearable
+            ></Input> -->
             <Select
               v-model="searchRowData.gender"
               placeholder="性别"
@@ -107,6 +121,8 @@ const roleRowData = {
   isCommunity: null,
   userType: null,
   gender: null,
+  nickName: null,
+  phone: null,
   page: 1,
   rows: 10,
 };
