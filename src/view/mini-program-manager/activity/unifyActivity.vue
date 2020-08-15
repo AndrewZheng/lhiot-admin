@@ -172,7 +172,7 @@
           <Row>
             <Col span="22">
               <FormItem label="活动名称:" prop="activityName">
-                <Input v-model="activitiesDetail.activityName"></Input>
+                <Input v-model="activitiesDetail.activityName" :readonly="activitiesDetail.isValid"></Input>
               </FormItem>
             </Col>
           </Row>
@@ -186,6 +186,7 @@
                   placeholder="开始时间"
                   style="width: 160px"
                   @on-change="startTimeChange"
+                  :readonly="activitiesDetail.isValid"
                 />
               </FormItem>
             </Col>
@@ -200,6 +201,7 @@
                   placeholder="结束时间"
                   style="width: 160px"
                   @on-change="endTimeChange"
+                  :readonly="activitiesDetail.isValid"
                 />
               </FormItem>
             </Col>
@@ -408,7 +410,7 @@
     <!-- 集字配置 -->
     <Modal v-model="modalAddCollection" :width="600" :z-index="1000" :mask-closable="false">
       <p slot="header">
-        <i-col>{{ isCreate?'新增集字配置':'修改集字配置'}}</i-col>
+        <i-col>{{ isCreateStatus?'新增集字配置':'修改集字配置'}}</i-col>
       </p>
       <div class="modal-content">
         <Form
@@ -474,7 +476,7 @@ import {
   deleteWollectWordRelevance,
   createUnifyActivityRelevance,
   createWollectWordRelevance,
-  updateWollectWordRelevance
+  updateWollectWordRelevance,
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -528,6 +530,7 @@ const activitiesDetail = {
   status: "VALID",
   defaultCount: null,
   shareCount: null,
+  isValid: null,
 };
 
 const activitySettingRelation = {
@@ -1028,6 +1031,10 @@ export default {
           title: "集字发放比例",
           align: "center",
           key: "wordKeyScale",
+          render(h, params) {
+            const { row } = params;
+            return h("div", row.rank + "%");
+          },
         },
         {
           title: "排序",
@@ -1052,8 +1059,9 @@ export default {
       modalAddCoupun: false,
       modalAddCollection: false,
       activitySettingId: null,
+      activityIsValid: null,
       modalRelevanceLoading: false,
-      isCreate: true,
+      isCreateStatus: true,
       searchRowData: _.cloneDeep(roleRowData),
       activitiesDetail: _.cloneDeep(activitiesDetail),
       searchTemplateRowData: _.cloneDeep(templateRowData),
@@ -1241,6 +1249,7 @@ export default {
     },
     handleSetting(params) {
       this.activitySettingId = params.row.id;
+      this.activityIsValid = params.row.isValid;
       this.getUnifyActivity(this.activitySettingId);
       this.modalRelevance = true;
     },
@@ -1249,12 +1258,20 @@ export default {
     },
     //上下架
     onRelevanceSale(params) {
-      this.activitySettingRelation = this._.cloneDeep(params.row);
-      this.deleteUnifyActivityRelevance(this.activitySettingRelation);
+      if (this.activityIsValid) {
+        this.$Message.info("活动进行中不允许删除!");
+      } else {
+        this.activitySettingRelation = this._.cloneDeep(params.row);
+        this.deleteUnifyActivityRelevance(this.activitySettingRelation);
+      }
     },
     onCollection(params) {
-      this.collectWordSettingRelation = this._.cloneDeep(params.row);
-      this.deleteWollectWordRelevance(this.collectWordSettingRelation);
+      if (this.activityIsValid) {
+        this.$Message.info("活动进行中不允许删除!");
+      } else {
+        this.collectWordSettingRelation = this._.cloneDeep(params.row);
+        this.deleteWollectWordRelevance(this.collectWordSettingRelation);
+      }
     },
     //统一关闭
     handleAddClose() {
@@ -1280,7 +1297,7 @@ export default {
           return;
         }
       } else if (value === "COLLECTION_SETTING") {
-        this.isCreate = true;
+        this.isCreateStatus = true;
         this.modalAddCollection = true;
         this.collectWordSettingRelation.activitySettingId = this.activitySettingId;
       }
@@ -1340,7 +1357,7 @@ export default {
             this.modalRelevanceLoading = false;
           });
       } else if (value === "COLLECTION_SETTING") {
-        if (this.isCreate) {
+        if (this.isCreateStatus) {
           createWollectWordRelevance(this.collectWordSettingRelation)
             .then((res) => {
               this.modalAddCollection = false;
@@ -1372,9 +1389,13 @@ export default {
     },
     // 集字修改
     handleCollectWordEdit(params) {
-      this.isCreate = false;
-      this.collectWordSettingRelation = _.cloneDeep(params.row);
-      this.modalAddCollection = true;
+      if (this.activityIsValid) {
+        this.$Message.info("活动进行中不允许删除!");
+      } else {
+        this.isCreateStatus = false;
+        this.collectWordSettingRelation = _.cloneDeep(params.row);
+        this.modalAddCollection = true;
+      }
     },
   },
 };

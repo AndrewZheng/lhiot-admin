@@ -2927,3 +2927,18 @@ export const updateWollectWordRelevance = (data) => {
     method: 'put'
   });
 };
+
+// 查询集字领取记录分页列表 
+export const getCollectWordPages = (data) => {
+  return $http.request({
+    url: '/minapp/collect-word-record/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};

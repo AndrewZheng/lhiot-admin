@@ -405,6 +405,15 @@ const miniMallRouter = [
       },
       component: () => import('@/view/mini-program-manager/activity/unifyActivity.vue')
     },
+    {
+      path: '/small-handSendWord',
+      name: 'small-handSendWord',
+      meta: {
+        icon: 'md-basket',
+        title: '手动发字'
+      },
+      component: () => import('@/view/mini-program-manager/activity/handSendWord.vue')
+    },
     ]
   },
   {
