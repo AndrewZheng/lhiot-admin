@@ -236,7 +236,7 @@ const miniMallRouter = [
       name: 'small-activity',
       meta: {
         icon: 'ios-book',
-        title: '统一活动管理'
+        title: '系统活动配置'
       },
       component: () => import('@/view/mini-program-manager/activity/activities.vue')
     },
@@ -395,6 +395,15 @@ const miniMallRouter = [
         title: '新品上市活动'
       },
       component: () => import('@/view/mini-program-manager/activity/newGoods.vue')
+    },
+    {
+      path: '/small-unifyActivity',
+      name: 'small-unifyActivity',
+      meta: {
+        icon: 'md-basket',
+        title: '统一活动管理'
+      },
+      component: () => import('@/view/mini-program-manager/activity/unifyActivity.vue')
     },
     ]
   },
