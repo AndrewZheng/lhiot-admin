@@ -691,9 +691,9 @@ const relationTempColumns = [
             },
             on: {
               input: function (event) {
-                if (event > 0) {
+                // if (event > 0) {
                   params.row.rank = event;
-                }
+                // }
               },
             },
           }),
