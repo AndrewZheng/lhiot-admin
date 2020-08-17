@@ -1617,9 +1617,6 @@ export default {
       productDetail: productDetail,
       // 选中的行
       tableDataSelected: [],
-      oldPicture: [],
-      newPicture: [],
-      save: [],
       showBack: false,
       HdSvipInfo: "",
       shelvesStatus: [
@@ -1785,13 +1782,10 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
-      console.log("打开的数据", params.row);
       this.productStandardDetail.rotationImage = "";
       this.productStandardDetail.shareImage = "";
       this.uploadListMultiple_ = [];
       this.uploadListShar = [];
-      this.save = [];
-      this.save.push(params.row.image);
       this.clickFlag = false;
       this.tempModalType = this.modalType.edit;
       this.productStandardDetail = this._.cloneDeep(params.row);
@@ -1840,8 +1834,6 @@ export default {
     },
     // 海鼎会员价查询
     handleHdSvipPrice() {
-      // this.modalHdSvip = true;
-      // console.log(this.productStandardDetail.barcode)
       if (!this.productStandardDetail.barcode) {
         this.$Message.error("请先选择关联商品");
         return;
@@ -1923,6 +1915,7 @@ export default {
           this.modalEdit = false;
           this.$Message.success("创建成功!");
           this.getTableData();
+          this.defaultListMultiple_ = [];
         })
         .catch(() => {
           this.modalViewLoading = false;
@@ -1959,13 +1952,6 @@ export default {
     },
     // ====
     handleSubmit(name) {
-      // if (this.oldPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.oldPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
-
       this.$refs[name].validate((valid) => {
         if (valid) {
           if (!this.productStandardDetail.salePrice) {
@@ -2006,26 +1992,8 @@ export default {
       });
     },
     handleEditClose() {
-      // if (this.newPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.newPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
       this.modalEdit = false;
-      this.oldPicture = [];
-      this.newPicture = [];
     },
-    // deletePicture(urls) {
-    //   deletePicture({
-    //     urls
-    //   })
-    //     .then(res => {
-    //       this.newPicture = [];
-    //       this.oldPicture = [];
-    //     })
-    //     .catch(() => {});
-    // },
     handleSubmitDiscount() {
       this.proStandardExpand.expandType = this.productStandardDetail.productType;
       this.$refs.modalDiscount.validate((valid) => {
@@ -2089,6 +2057,7 @@ export default {
           // this.productStandardDetail = productStandardDetail;
           // this.productStandardDetail.productId = this.$route.params.id;
           this.getTableData();
+          this.defaultListMultiple_ = [];
         })
         .catch(() => {
           this.modalEdit = false;
@@ -2106,10 +2075,8 @@ export default {
     },
     getTableData() {
       // 获取商品页面传过来的商品信息
-      console.log("this.$route.name:", this.$route.name);
       if (this.$route.name === "small-goods-relation-standard") {
         const goodsStandard = getSmallGoodsStandard();
-        console.log("standard from cookie:", goodsStandard);
         if (goodsStandard != null && goodsStandard !== "") {
           // 给商品规格的商品和搜索条件赋值
           this.searchRowData.productId = goodsStandard.id;
@@ -2165,8 +2132,6 @@ export default {
       this.uploadListMain = fileList;
       this.productStandardDetail.image = null;
       this.productStandardDetail.image = fileList[0].url;
-      this.newPicture.push(fileList[0].url);
-      this.oldPicture = this.save;
     },
     handleSuccessShar(response, file, fileList) {
       this.uploadListShar = fileList;
@@ -2175,10 +2140,8 @@ export default {
     },
     // 上架规格描述图
     handleSuccessMultiple(response, file, fileList) {
-      console.log(response);
       this.uploadListMultiple = fileList;
       this.descriptionList = [];
-      // this.newPicture = "";
       fileList.forEach((value) => {
         if (value.url) {
           this.descriptionList.push(value.url);
@@ -2186,15 +2149,11 @@ export default {
       });
       this.productStandardDetail.description = "";
       this.productStandardDetail.description = this.descriptionList.join(",");
-
-      this.newPicture.push(response.fileUrl);
     },
     // 上架轮播图
     handleSuccessMultiple_(response, file, fileList) {
-      console.log(response);
       this.uploadListMultiple_ = fileList;
       this.rotationImageList = [];
-      // this.newPicture = "";
       fileList.forEach((value) => {
         if (value.url) {
           this.rotationImageList.push(value.url);
@@ -2204,9 +2163,6 @@ export default {
       this.productStandardDetail.rotationImage = this.rotationImageList.join(
         ","
       );
-
-      this.newPicture.push(response.fileUrl);
-      console.log("new图片", this.newPicture);
     },
     // 设置编辑图片列表
     setDefaultUploadList(res) {
@@ -2252,7 +2208,6 @@ export default {
       ) {
         const rotationImageArr = [];
         const rotationArr = res.rotationImage.split(",");
-        console.log("图片展示列表", rotationArr);
         rotationArr.forEach((value) => {
           const innerMapDetailImg_ = { status: "finished", url: "url" };
           innerMapDetailImg_.url = value;
@@ -2278,7 +2233,6 @@ export default {
       this.$refs.uploadMultiple.deleteFile(file);
       const index = this.descriptionList.indexOf(file.url);
       if (index > -1) {
-        this.oldPicture.push(this.descriptionList[index]);
         this.descriptionList.splice(index, 1);
         this.productStandardDetail.description = this.descriptionList.join(",");
       }
@@ -2293,20 +2247,15 @@ export default {
 
       const index = this.rotationImageList.indexOf(file.url);
       if (index > -1) {
-        this.oldPicture.push(this.rotationImageList[index]);
         this.rotationImageList.splice(index, 1);
-        console.log("删除图片", this.rotationImageList.splice(index, 1));
         this.productStandardDetail.rotationImage = this.rotationImageList.join(
           ","
         );
-        console.log("图片显示", this.productStandardDetail.rotationImage);
       }
       if (this.rotationImageList.length === 0) {
-        // console.log("删除图片", this.rotationImageList.length);
         this.$refs.uploadMultiple_.clearFileList();
         this.rotationImageList = [];
         this.productStandardDetail.rotationImage = "";
-        // console.log("轮播图", this.$refs.uploadMultiple_);
       }
     },
     customOnSale(params) {
@@ -2414,11 +2363,6 @@ export default {
       }
     },
     productStandardChange(value) {
-      console.log(
-        "商品规格",
-        Number(this.productStandardDetail.specification.split("*")[0]) *
-          Number(this.productStandardDetail.specification.split("*")[1])
-      );
       if (
         Number(
           this.productStandardDetail.specification.split("*")[0] > 0 &&
