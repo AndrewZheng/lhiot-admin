@@ -640,7 +640,7 @@
         <Button
           :loading="modalRelevanceLoading"
           type="primary"
-          @click="handleRelevanceAdd('NEW_COUPON')"
+          @click="handleRelevanceAdd('NEW_TRY')"
         >确定</Button>
       </div>
     </Modal>
@@ -725,7 +725,7 @@
         <Button
           :loading="modalRelevanceLoading"
           type="primary"
-          @click="handleRelevanceAdd('NEW_COUPON')"
+          @click="handleRelevanceAdd('NEW_PROD')"
         >确定</Button>
       </div>
     </Modal>
@@ -834,7 +834,7 @@
         <Button
           :loading="modalRelevanceLoading"
           type="primary"
-          @click="handleRelevanceAdd('NEW_COUPON')"
+          @click="handleRelevanceAdd('NEW_TEAM_BUY')"
         >确定</Button>
       </div>
     </Modal>
@@ -970,7 +970,7 @@
         <Button
           :loading="modalRelevanceLoading"
           type="primary"
-          @click="handleRelevanceAdd('NEW_COUPON')"
+          @click="handleRelevanceAdd('NEW_PRE_SALE')"
         >确定</Button>
       </div>
     </Modal>
@@ -2813,13 +2813,22 @@ export default {
       this.ActivityNewProductsRelation.relationType = "NEW_PRE_SALE";
       this.ActivityNewProductsRelation.activityId = this.activityId;
     },
-    handleRelevanceAdd() {
+    handleRelevanceAdd(value) {
       if (
         !this.ActivityNewProductsRelation.activityId &&
         !this.ActivityNewProductsRelation.relationId
       ) {
         this.$Message.error("请先关联活动配置!");
         return;
+      }
+      if (value === "NEW_PROD") {
+        let productList = this.productStandardRelations;
+        for (let val of productList) {
+          if (val.relationId == this.ActivityNewProductsRelation.relationId) {
+            this.$Message.error("当前选中的商品已存在!");
+            return;
+          }
+        }
       }
       createNewProductsRelevance(this.ActivityNewProductsRelation)
         .then((res) => {

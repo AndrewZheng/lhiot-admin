@@ -47,13 +47,7 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button
-            v-waves
-            :loading="createLoading"
-            type="success"
-            class="mr5"
-            @click="addKeywords"
-          >
+          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addKeywords">
             <Icon type="md-add" />添加
           </Button>
           <Poptip
@@ -717,6 +711,16 @@ export default {
       this.modalProduct = false;
     },
     handleGoodsSubmit() {
+      let keywordData = this.keywordDetail.mappingId.split(",");
+      let standardIdData = this.standardIdList[this.standardIdList.length - 1];
+      for (let value of keywordData) {
+        for (let val of standardIdData) {
+          if (value == val) {
+            this.$Message.info("当前关键字商品列表中存在选中的商品!");
+            return;
+          }
+        }
+      }
       if (this.standardIdList.length > 0) {
         this.standardIdList[this.standardIdList.length - 1].forEach((value) => {
           const map = { label: "label", value: "value" };
