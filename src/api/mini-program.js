@@ -2942,3 +2942,26 @@ export const getCollectWordPages = (data) => {
     }
   });
 };
+
+export const getCollectWordRecord = () => {
+  return $http.request({
+    url: `minapp/collect-word-record/run-activity/collect-word`,
+    method: 'get'
+  });
+};
+
+// //通过phone 发送集字 
+export const sendCollectWord = (data) => {
+  return $http.request({
+    url: `/minapp/collect-word-record/send?phones=${data.phones}&id=${data.id}&quantity=${data.quantity}`,
+    method: 'post',
+  });
+};
+
+//集字活动数据统计 /coupon/statistics/collect-word-activity
+export const getCollectWordStatistics = () => {
+  return $http.request({
+    url: `/coupon/statistics/collect-word-activity`,
+    method: 'get'
+  });
+};

@@ -1,20 +1,38 @@
 import Main from '@/components/main';
 
 const miniMallRouter = [
+  // {
+  //   path: '/',
+  //   name: 'wechat-home',
+  //   redirect: '/wechat-home',
+  //   component: Main,
+  //   meta: {
+  //     hideInMenu: true,
+  //     notCache: true
+  //   },
+  //   children: [{
+  //     path: '/wechat-home',
+  //     name: 'wechat-home',
+  //     meta: {
+  //       hideInMenu: true,
+  //       title: '首页',
+  //       notCache: true
+  //     },
+  //     component: () => import('@/view/mini-program-manager/single-page/home')
+  //   }]
+  // },
   {
-    path: '/',
+    path: '/wechat-home',
     name: 'wechat-home',
-    redirect: '/wechat-home',
     component: Main,
     meta: {
-      hideInMenu: true,
-      notCache: true
+      hideInBread: true,
     },
     children: [{
       path: '/wechat-home',
       name: 'wechat-home',
       meta: {
-        hideInMenu: true,
+        icon: 'md-home',
         title: '首页',
         notCache: true
       },
@@ -527,6 +545,15 @@ const miniMallRouter = [
         component: () => import('@/view/mini-program-manager/member/member-management.vue')
       },
       {
+        path: '/small-phones',
+        name: 'small-phones',
+        meta: {
+          icon: 'md-phone-portrait',
+          title: '换绑会员手机号'
+        },
+        component: () => import('@/view/mini-program-manager/member/phones.vue')
+      },
+      {
         path: '/small-system-data-statistics',
         name: 'small-system-data-statistics',
         meta: {
@@ -563,13 +590,13 @@ const miniMallRouter = [
         component: () => import('@/view/mini-program-manager/member/share-statistics.vue')
       },
       {
-        path: '/small-phones',
-        name: 'small-phones',
+        path: '/small-collectWordStatistics',
+        name: 'small-collectWordStatistics',
         meta: {
-          icon: 'md-phone-portrait',
-          title: '换绑会员手机号'
+          icon: 'ios-stats',
+          title: '集字活动数据统计'
         },
-        component: () => import('@/view/mini-program-manager/member/phones.vue')
+        component: () => import('@/view/mini-program-manager/member/collectWordStatistics.vue')
       },
       {
         path: '/small-data-statistics',
@@ -584,7 +611,7 @@ const miniMallRouter = [
         path: '/small-amount',
         name: 'small-amount',
         meta: {
-          icon: 'logo-usd',
+          icon: 'ios-stats',
           title: '邀请有礼用户汇总'
         },
         component: () => import('@/view/mini-program-manager/member/amount.vue')
@@ -602,7 +629,7 @@ const miniMallRouter = [
         path: '/small-seckill-amount',
         name: 'small-seckill-amount',
         meta: {
-          icon: 'logo-usd',
+          icon: 'ios-stats',
           title: '限时秒杀活动数据汇总'
         },
         component: () => import('@/view/mini-program-manager/member/seckill-amount.vue')
@@ -620,7 +647,7 @@ const miniMallRouter = [
         path: '/small-assist-amount',
         name: 'small-assist-amount',
         meta: {
-          icon: 'logo-usd',
+          icon: 'ios-stats',
           title: '助力抢爆品活动数据汇总'
         },
         component: () => import('@/view/mini-program-manager/member/assist-amount.vue')

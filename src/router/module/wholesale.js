@@ -1,20 +1,38 @@
 import Main from '@/components/main';
 
 const wholesaleRouter = [
+  // {
+  //   path: '/',
+  //   name: 'wholesale-home',
+  //   redirect: '/wholesale-home',
+  //   component: Main,
+  //   meta: {
+  //     hideInMenu: true,
+  //     notCache: true
+  //   },
+  //   children: [{
+  //     path: '/wholesale-home',
+  //     name: 'wholesale-home',
+  //     meta: {
+  //       hideInMenu: true,
+  //       title: '首页',
+  //       notCache: true
+  //     },
+  //     component: () => import('@/view/wholesale-mall-manager/single-page/home')
+  //   }]
+  // },
   {
-    path: '/',
+    path: '/wholesale-home',
     name: 'wholesale-home',
-    redirect: '/wholesale-home',
     component: Main,
     meta: {
-      hideInMenu: true,
-      notCache: true
+      hideInBread: true,
     },
     children: [{
       path: '/wholesale-home',
       name: 'wholesale-home',
       meta: {
-        hideInMenu: true,
+        icon: 'md-home',
         title: '首页',
         notCache: true
       },

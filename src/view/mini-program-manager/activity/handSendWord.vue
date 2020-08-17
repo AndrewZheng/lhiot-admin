@@ -12,29 +12,67 @@
         searchable
         border
         search-place="top"
-        @on-view="handleView"
-        @on-delete="handleDelete"
-        @on-edit="handleEdit"
-        @on-sale="onOff"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
           <Row>
             <Input
-              v-model="searchRowData.activityCode"
-              placeholder="活动编码"
+              v-model="searchRowData.userName"
+              placeholder="领取用户名称"
               class="search-input mr5"
               style="width: auto"
               clearable
             ></Input>
             <Input
-              v-model="searchRowData.activityName"
-              placeholder="活动名称"
+              v-model="searchRowData.giveUserName"
+              placeholder="赠送的用户名称"
               class="search-input mr5"
               style="width: auto"
               clearable
             ></Input>
+            <Select
+              v-model="searchRowData.receiveSource"
+              placeholder="领取来源"
+              style="padding-right: 5px;width: 100px"
+              clearable
+            >
+              <Option
+                v-for="(item,index) in receiveSourceEnum"
+                :value="item.value"
+                :key="index"
+                class="ptb2-5"
+                style="padding-left: 5px;width: 100px"
+              >{{ item.label }}</Option>
+            </Select>
+            <Select
+              v-model="searchRowData.giveStatus"
+              placeholder="领取状态"
+              style="padding-right: 5px;width: 100px"
+              clearable
+            >
+              <Option
+                v-for="(item,index) in giveStatusEnum"
+                :value="item.value"
+                :key="index"
+                class="ptb2-5"
+                style="padding-left: 5px;width: 100px"
+              >{{ item.label }}</Option>
+            </Select>
+            <Select
+              v-model="searchRowData.isConvertCoupon"
+              placeholder="是否兑换券"
+              style="padding-right: 5px;width: 100px"
+              clearable
+            >
+              <Option
+                v-for="(item,index) in isConvertCouponEnum"
+                :value="item.value"
+                :key="index"
+                class="ptb2-5"
+                style="padding-left: 5px;width: 100px"
+              >{{ item.label }}</Option>
+            </Select>
             <Button
               :loading="searchLoading"
               class="search-btn mr5"
@@ -53,28 +91,14 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
+          <div class="mt10">
+            <i style="color:red">*</i> 领取状态默认为空(自己领取)
+          </div>
         </div>
         <div slot="operations">
-          <Button
-            v-waves
-            :loading="createLoading"
-            type="success"
-            class="mr5"
-            @click="addActivities"
-          >
-            <Icon type="md-add" />添加
+          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addSendWord">
+            <Icon type="md-add" />手动发字
           </Button>
-          <Poptip
-            confirm
-            placement="bottom"
-            style="width: 100px"
-            title="您确认删除选中的内容吗?"
-            @on-ok="poptipOk"
-          >
-            <Button type="error" class="mr5">
-              <Icon type="md-trash" />批量删除
-            </Button>
-          </Poptip>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -90,110 +114,60 @@
         </Row>
       </div>
     </Card>
-
-    <Modal v-model="modalView" :mask-closable="false">
+    <!-- 集字配置列表 -->
+    <Modal v-model="modalCollectWord" :width="800" :z-index="1000" :mask-closable="false">
       <p slot="header">
-        <span>活动信息详情</span>
+        <i-col>{{ "手动发字配置" }}</i-col>
       </p>
       <div class="modal-content">
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">活动ID:</i-col>
-              <i-col span="18">{{ collectWordDetail.id }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">活动编码:</i-col>
-              <i-col span="18">{{ collectWordDetail.activityCode }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">活动名称:</i-col>
-              <i-col span="18">{{ collectWordDetail.activityName }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">活动状态:</i-col>
-              <i-col span="18" v-if="collectWordDetail.onOff === 'ON'">
-                <tag color="success">{{ "开启" | imageStatusFilter }}</tag>
-              </i-col>
-              <i-col span="18" v-else-if="collectWordDetail.onOff === 'OFF'">
-                <tag color="error">{{ "关闭" | imageStatusFilter }}</tag>
-              </i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">活动链接:</i-col>
-              <i-col span="18">{{ collectWordDetail.activityUrl }}</i-col>
-            </Row>
-          </i-col>
+        <Row>
+          <tables
+            ref="collectWordTemplate"
+            v-model="collectWordData"
+            :columns="collectWordColumns"
+            highlight-row
+            border
+            searchable
+            search-place="top"
+            @on-current-change="handleTemplateChange"
+          ></tables>
         </Row>
       </div>
+      <Divider orientation="center">填写发送对象手机号</Divider>
+      <Form ref="modalSendWord" :model="sendWordToPhone" :label-width="150" :rules="ruleInline">
+        <Row>
+          <i-col span="15">
+            <Row class-name="mb10">
+              <FormItem label="请输入用户手机号码:" prop="phones">
+                <Input
+                  v-model="sendWordToPhone.phones"
+                  :autosize="{minRows: 3,maxRows: 8}"
+                  clearable
+                  type="textarea"
+                  style="width: 450px;"
+                  placeholder="请输入需发券手机号码，多个号码用英文逗号分隔"
+                ></Input>
+              </FormItem>
+            </Row>
+          </i-col>
+        </Row>
+        <Row>
+          <i-col span="10">
+            <FormItem label="发送数量:" prop="quantity">
+              <InputNumber v-model="sendWordToPhone.quantity" clearable style="width: 80px"></InputNumber>
+            </FormItem>
+          </i-col>
+        </Row>
+      </Form>*Tips：请输入需发券手机号码，多个号码用
+      <b style="color:red">英文逗号</b>
+      分隔
+      <Row v-show="failPhone.length > 0" class="mt10">
+        <i-col span="6">发送失败手机号：</i-col>
+        <i-col span="22" class="brand-red">{{ failPhone.join(',') }}</i-col>
+      </Row>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
-      </div>
-    </Modal>
-
-    <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000">
-      <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改活动':'创建活动' }}</i-col>
-      </p>
-      <div class="modal-content">
-        <Form ref="modalEdit" :model="collectWordDetail" :rules="ruleInline" :label-width="100">
-          <Row>
-            <Col span="18">
-              <FormItem label="活动编码:" prop="activityCode">
-                <Input v-model="collectWordDetail.activityCode"></Input>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="18">
-              <FormItem label="活动名称:" prop="activityName">
-                <Input v-model="collectWordDetail.activityName"></Input>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="18">
-              <FormItem label="活动状态:" prop="onOff">
-                <Select v-model="collectWordDetail.onOff" clearable>
-                  <Option
-                    v-for="(item,index) in imageStatusEnum"
-                    :value="item.value"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px;width: 100%"
-                  >{{ item.label }}</Option>
-                </Select>
-              </FormItem>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="18">
-              <FormItem label="活动详情链接:" prop="activityUrl">
-                <Input v-model="collectWordDetail.activityUrl"></Input>
-              </FormItem>
-            </Col>
-          </Row>
-        </Form>
-      </div>
-      <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button @click="handleAddClose">关闭</Button>
+        <Button type="primary" @click="handleSendWordAdd('modalSendWord')">确定</Button>
       </div>
     </Modal>
   </div>
@@ -206,12 +180,12 @@ import {
   getCollectWordPages,
   editActivities,
   createActivities,
+  getCollectWordRecord,
+  sendCollectWord,
 } from "@/api/mini-program";
 import deleteMixin from "@/mixins/deleteMixin.js";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
-import { imageStatusConvert } from "@/libs/converStatus";
-import { imageStatusEnum } from "@/libs/enumerate";
 
 const collectWordDetail = {
   collectWordSettingId: "",
@@ -228,9 +202,16 @@ const collectWordDetail = {
   wordKeyName: "",
 };
 
+const sendWordToPhone = {
+  quantity: 0,
+  id: null,
+  phones: null,
+};
+
 const roleRowData = {
   wordKeyName: "",
   userNamel: "",
+  giveUserName: "",
   receiveSource: "",
   isConvertCoupon: "",
   page: 1,
@@ -247,14 +228,25 @@ export default {
   data() {
     return {
       ruleInline: {
-        activityCode: [{ required: true, message: "请输入活动编码" }],
-        activityName: [{ required: true, message: "请输入活动名称" }],
-        onOff: [{ required: true, message: "请选择活动状态" }],
+        quantity: [
+          { required: true, message: "请输入发送数量" },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-1-9]\d*$/.test(value)) {
+                errors.push(new Error("必须为非零整数"));
+              }
+              callback(errors);
+            },
+          },
+        ],
+        phones: [
+          {
+            required: true,
+            message: "请输入需发券手机号码，多个号码用英文逗号分隔",
+          },
+        ],
       },
-      defaultListMain: [],
-      uploadListMain: [],
-      areaList: [],
-      imageStatusEnum,
       columns: [
         {
           type: "selection",
@@ -414,10 +406,63 @@ export default {
           },
         },
       ],
+      collectWordColumns: [
+        {
+          type: "index",
+          width: 60,
+          align: "center",
+        },
+        {
+          title: "活动ID",
+          align: "center",
+          key: "activitySettingId",
+          minWidth: 5,
+        },
+        {
+          title: "字ID",
+          align: "center",
+          key: "id",
+          minWidth: 5,
+        },
+        {
+          title: "集字名称",
+          align: "center",
+          key: "wordKeyName",
+          minWidth: 5,
+        },
+        {
+          title: "集字发放比例",
+          align: "center",
+          key: "wordKeyScale",
+          minWidth: 5,
+        },
+        {
+          title: "排序",
+          align: "center",
+          key: "rank",
+          minWidth: 5,
+        },
+      ],
+      receiveSourceEnum: [
+        { label: "赠送", value: "GIVE" },
+        { label: "获取", value: "GET" },
+      ],
+      giveStatusEnum: [
+        { label: "赠送已领取", value: "YES" },
+        { label: "赠送未领取", value: "NO" },
+      ],
+      isConvertCouponEnum: [
+        { label: "是", value: "YES" },
+        { label: "否", value: "NO" },
+      ],
+      collectWordData: [],
       createLoading: false,
       modalViewLoading: false,
+      modalCollectWord: false,
+      failPhone: [],
       searchRowData: _.cloneDeep(roleRowData),
       collectWordDetail: _.cloneDeep(collectWordDetail),
+      sendWordToPhone: _.cloneDeep(sendWordToPhone),
     };
   },
   mounted() {
@@ -432,71 +477,6 @@ export default {
     },
     resetFields() {
       this.$refs.modalEdit.resetFields();
-      // this.$refs.uploadMain.clearFileList();
-      this.uploadListMain = [];
-      this.collectWordDetail.storeImage = null;
-    },
-    handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          if (this.tempModalType === this.modalType.create) {
-            // 添加状态
-            this.createActivities();
-          } else if (this.tempModalType === this.modalType.edit) {
-            // 编辑状态
-            this.editActivities();
-          }
-        } else {
-          this.$Message.error("请完善信息!");
-        }
-      });
-    },
-    createActivities() {
-      this.modalViewLoading = true;
-      createActivities(this.collectWordDetail)
-        .then((res) => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
-          this.$Message.success("创建成功!");
-          this.getTableData();
-        })
-        .catch(() => {
-          this.modalViewLoading = false;
-        });
-    },
-    editActivities() {
-      this.modalViewLoading = true;
-      editActivities(this.collectWordDetail)
-        .then((res) => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-          this.getTableData();
-        })
-        .catch(() => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-        });
-    },
-    addActivities() {
-      this.resetFields();
-      if (this.tempModalType !== this.modalType.create) {
-        this.tempModalType = this.modalType.create;
-        this.collectWordDetail = _.cloneDeep(collectWordDetail);
-      }
-
-      this.modalEdit = true;
-    },
-    handleView(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.view;
-      this.collectWordDetail = _.cloneDeep(params.row);
-      this.modalView = true;
-    },
-    handleEdit(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.collectWordDetail = _.cloneDeep(params.row);
-      this.modalEdit = true;
     },
     getTableData() {
       getCollectWordPages(this.searchRowData)
@@ -514,15 +494,61 @@ export default {
           this.clearSearchLoading = false;
         });
     },
-    onOff(params) {
-      this.collectWordDetail = this._.cloneDeep(params.row);
-      if (params.row.onOff === "ON") {
-        this.collectWordDetail.onOff = "OFF";
-      } else {
-        this.collectWordDetail.onOff = "ON";
-      }
-      this.loading = true;
-      this.editActivities();
+    getCollectWordRecord() {
+      getCollectWordRecord()
+        .then((res) => {
+          this.collectWordData = res;
+        })
+        .catch((error) => {});
+    },
+    handleAddClose() {
+      this.modalCollectWord = false;
+    },
+    handleTemplateChange(currentRow, oldCurrentRow) {
+      const currentTemplate = currentRow;
+      this.sendWordToPhone.id = currentTemplate.id;
+    },
+    addSendWord() {
+      (this.sendWordToPhone = _.cloneDeep(sendWordToPhone)),
+        (this.failPhone = []),
+        this.getCollectWordRecord();
+      this.modalCollectWord = true;
+    },
+    handleSendWordAdd(name) {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          if (!this.sendWordToPhone.id) {
+            this.$Message.info("请先选中一条集字数据!");
+          } else {
+            console.log("调用函数");
+            this.sendCollectWord();
+          }
+        } else {
+          this.$Message.error("请完善信息!");
+        }
+      });
+    },
+    // 发送集字
+    sendCollectWord() {
+      console.log("123312323", this.sendWordToPhone);
+      sendCollectWord(this.sendWordToPhone)
+        .then((res) => {
+          console.log("res", res);
+          if (res === "用户不存在") {
+            return;
+          }
+          if (res.body.fail.length > 0) {
+            this.$Message.error("部分用户发送失败！");
+            this.sendWordToPhone.phones = "";
+            this.failPhone = res.body.fail;
+            this.getTableData();
+          } else {
+            this.$Message.success("发送成功!");
+            this.modalCollectWord = false;
+            this.getTableData();
+          }
+        })
+        .catch((error) => {});
     },
   },
 };

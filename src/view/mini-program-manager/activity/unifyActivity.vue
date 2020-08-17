@@ -1259,7 +1259,7 @@ export default {
     //上下架
     onRelevanceSale(params) {
       if (this.activityIsValid) {
-        this.$Message.info("活动进行中不允许删除!");
+        this.$Message.info("活动进行中不允许修改!");
       } else {
         this.activitySettingRelation = this._.cloneDeep(params.row);
         this.deleteUnifyActivityRelevance(this.activitySettingRelation);
@@ -1267,7 +1267,7 @@ export default {
     },
     onCollection(params) {
       if (this.activityIsValid) {
-        this.$Message.info("活动进行中不允许删除!");
+        this.$Message.info("活动进行中不允许修改!");
       } else {
         this.collectWordSettingRelation = this._.cloneDeep(params.row);
         this.deleteWollectWordRelevance(this.collectWordSettingRelation);
@@ -1390,7 +1390,7 @@ export default {
     // 集字修改
     handleCollectWordEdit(params) {
       if (this.activityIsValid) {
-        this.$Message.info("活动进行中不允许删除!");
+        this.$Message.info("活动进行中不允许修改!");
       } else {
         this.isCreateStatus = false;
         this.collectWordSettingRelation = _.cloneDeep(params.row);
