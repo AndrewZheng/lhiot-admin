@@ -1602,7 +1602,10 @@ export default {
       return fenToYuanDot2Number(this.teambuyDetail.tourDiscount);
     },
     relationStore() {
-      if (!this.teambuyDetail.storeIds) {
+      if (
+        this.teambuyDetail.storeIds === null ||
+        this.teambuyDetail.storeIds === ""
+      ) {
         return "全部门店";
       }
       const ids = this.teambuyDetail.storeIds
@@ -1697,7 +1700,7 @@ export default {
           if (
             _this.teambuyDetail.relationStoreType === "PART" &&
             (_this.teambuyDetail.storeIds == null ||
-              _this.teambuyDetail.storeIds === "")
+              _this.teambuyDetail.storeIds == "")
           ) {
             _this.$Message.error("选择部分门店时必须选择至少一个门店!");
             return;
@@ -1848,7 +1851,7 @@ export default {
         this.currentTableRowSelected.status = null;
         this.currentTableRowSelected.rank = null;
         this.currentTableRowSelected.storeId = null;
-        this.currentTableRowSelected.storeIds = null;
+        this.currentTableRowSelected.storeIds = "";
         this.currentTableRowSelected.relationStoreType = "ALL";
         this.currentTableRowSelected.validDateType = "FIXED_DATE";
         this.currentTableRowSelected.deliveryEndTime = null;
@@ -1913,7 +1916,7 @@ export default {
       this.save = [];
       this.save.push(params.row.banner);
       this.teambuyDetail.storeId = null;
-      this.teambuyDetail.storeIds = null;
+      this.teambuyDetail.storeIds = "";
       this.storeIds = [];
       this.teambuyDetail.relationStoreType = "ALL";
       this.teambuyDetail.validDateType = "FIXED_DATE";
@@ -1940,7 +1943,12 @@ export default {
         this.showValidDate = true;
         this.teambuyDetail.validDateType = "FIXED_DATE";
       }
-      if (this.teambuyDetail.storeIds !== null) {
+      //  ||
+      if (
+        this.teambuyDetail.storeIds !== null &&
+        this.teambuyDetail.storeIds !== ""
+      ) {
+        console.log("门店id", this.teambuyDetail.storeIds);
         this.showStoreList = true;
         this.teambuyDetail.relationStoreType = "PART";
         const storeIds = this.teambuyDetail.storeIds
@@ -2079,7 +2087,7 @@ export default {
     selectStore(options) {
       if (options.value === "ALL") {
         this.teambuyDetail.relationStoreType = "ALL";
-        this.teambuyDetail.storeIds = null;
+        this.teambuyDetail.storeIds = "";
         this.showStoreList = false;
       } else if (options.value === "PART") {
         this.teambuyDetail.relationStoreType = "PART";
