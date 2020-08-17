@@ -1033,7 +1033,7 @@ export default {
           key: "wordKeyScale",
           render(h, params) {
             const { row } = params;
-            return h("div", row.rank + "%");
+            return h("div", row.wordKeyScale + "%");
           },
         },
         {
