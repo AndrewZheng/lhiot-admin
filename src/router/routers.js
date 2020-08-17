@@ -240,8 +240,17 @@ export const constantRouterMap = [
           title: '跨月退款订单'
         },
         component: () => import('@/view/mini-program-manager/order/month-orders.vue')
+      },
+      {
+        path: '/wechat-home',
+        name: 'wechat-home',
+        meta: {
+          icon: 'md-home',
+          title: '首页',
+          notCache: true
+        },
+        component: () => import('@/view/mini-program-manager/single-page/home')
       }
-
     ],
   },
   {
@@ -279,6 +288,16 @@ export const constantRouterMap = [
           title: '业务员门店业绩分析'
         },
         component: () => import('@/view/wholesale-mall-manager/user/salesman-store-analysis.vue')
+      },
+      {
+        path: '/wholesale-home',
+        name: 'wholesale-home',
+        meta: {
+          icon: 'md-home',
+          title: '首页',
+          notCache: true
+        },
+        component: () => import('@/view/wholesale-mall-manager/single-page/home')
       }
     ]
   }

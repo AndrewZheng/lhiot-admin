@@ -1,20 +1,38 @@
 import Main from '@/components/main';
 
 const miniMallRouter = [
+  // {
+  //   path: '/',
+  //   name: 'wechat-home',
+  //   redirect: '/wechat-home',
+  //   component: Main,
+  //   meta: {
+  //     hideInMenu: true,
+  //     notCache: true
+  //   },
+  //   children: [{
+  //     path: '/wechat-home',
+  //     name: 'wechat-home',
+  //     meta: {
+  //       hideInMenu: true,
+  //       title: '首页',
+  //       notCache: true
+  //     },
+  //     component: () => import('@/view/mini-program-manager/single-page/home')
+  //   }]
+  // },
   {
-    path: '/',
+    path: '/wechat-home',
     name: 'wechat-home',
-    redirect: '/wechat-home',
     component: Main,
     meta: {
-      hideInMenu: true,
-      notCache: true
+      hideInBread: true,
     },
     children: [{
       path: '/wechat-home',
       name: 'wechat-home',
       meta: {
-        hideInMenu: true,
+        icon: 'md-home',
         title: '首页',
         notCache: true
       },
