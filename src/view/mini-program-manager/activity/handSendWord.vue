@@ -77,9 +77,6 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
-          <div class="mt10">
-            <i style="color:red">*</i> 领取状态默认为空(自己领取)
-          </div>
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addSendWord">
@@ -131,7 +128,7 @@
                   clearable
                   type="textarea"
                   style="width: 450px;"
-                  placeholder="请输入需发券手机号码，多个号码用英文逗号分隔"
+                  placeholder="请输入需发字手机号码，多个号码用英文逗号分隔"
                 ></Input>
               </FormItem>
             </Row>
