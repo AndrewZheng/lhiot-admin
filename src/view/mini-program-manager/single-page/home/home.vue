@@ -734,7 +734,7 @@ export default {
     // 导出数据
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
-      this.goodsSearchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      this.goodsSearchRowData.rows = this.goodsTotal > 5000 ? 5000 : this.goodsTotal;
       let pageSize = this.searchRowData.page;
       this.goodsSearchRowData.page = 1;
       this.goodsSearchRowData.beginDate = this.$moment(

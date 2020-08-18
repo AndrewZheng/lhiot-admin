@@ -15,20 +15,13 @@
       >
         <div slot="searchCondition">
           <Row>
-            <!-- <Input
-              v-model="searchRowData.nickName"
-              placeholder="昵称"
-              class="search-input mr5"
-              style="width: auto"
-              clearable
-            ></Input>
             <Input
               v-model="searchRowData.phone"
               placeholder="手机号码"
               class="search-input mr5"
               style="width: auto"
               clearable
-            ></Input> -->
+            ></Input>
             <Select
               v-model="searchRowData.gender"
               placeholder="性别"
@@ -57,6 +50,25 @@
                 style="padding-left: 5px"
               >{{ item.label }}</Option>
             </Select>
+            <DatePicker
+              v-model="searchRowData.regBeginTime"
+              format="yyyy-MM-dd"
+              type="date"
+              placeholder="自定义开始时间"
+              class="search-input"
+              style="width: 150px"
+              @on-change="startTimeChange"
+            />
+            <i>-</i>
+            <DatePicker
+              v-model="searchRowData.regEndTime"
+              format="yyyy-MM-dd"
+              type="date"
+              placeholder="自定义结束时间"
+              class="search-input mr5"
+              style="width: 150px"
+              @on-change="endTimeChange"
+            />
             <!-- v1.8.3 -->
             <!-- <Select
               v-model="searchRowData.userType"
@@ -123,6 +135,8 @@ const roleRowData = {
   gender: null,
   nickName: null,
   phone: null,
+  regBeginTime: null,
+  regEndTime: null,
   page: 1,
   rows: 10,
 };
@@ -205,7 +219,7 @@ export default {
           title: "用户类型",
           key: "userType",
           align: "center",
-          width: "100px",
+          width: "120px",
           render(h, params) {
             const { row } = params;
             if (row.userType === "CONSUMER") {
@@ -270,6 +284,12 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
+    },
+    startTimeChange(value, date) {
+      this.searchRowData.regBeginTime = value;
+    },
+    endTimeChange(value, date) {
+      this.searchRowData.regEndTime = value;
     },
   },
 };

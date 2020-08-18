@@ -225,9 +225,10 @@
           <i-col span="12">
             <Row>
               <i-col span="6">骑手评价:</i-col>
-              <i-col v-if="evaluateDetail.deliveryComment='GOOD'" span="18">{{ "超赞" }}</i-col>
-              <i-col v-else-if="evaluateDetail.deliveryComment='GENERAL'" span="18">{{ "一般" }}</i-col>
-              <i-col v-else span="18">{{ "很差" }}</i-col>
+              <i-col v-if="evaluateDetail.deliveryComment==='GOOD'" span="18">{{ "超赞" }}</i-col>
+              <i-col v-else-if="evaluateDetail.deliveryComment==='GENERAL'" span="18">{{ "一般" }}</i-col>
+              <i-col v-else-if="evaluateDetail.deliveryComment==='NEGATIVE'" span="18">{{ "很差" }}</i-col>
+              <i-col v-else span="18">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -347,7 +348,10 @@
             <i-col span="20">
               <Row>
                 <i-col span="6">骑手评价:</i-col>
-                <i-col span="18">{{ evaluateDetail.deliveryComment }}</i-col>
+                <i-col span="18" v-if="evaluateDetail.deliveryComment=='GOOD'">{{ "超赞" }}</i-col>
+                <i-col span="18" v-else-if="evaluateDetail.deliveryComment=='GENERAL'">{{ "一般"}}</i-col>
+                <i-col span="18" v-else-if="evaluateDetail.deliveryComment=='NEGATIVE'">{{ "很差" }}</i-col>
+                <i-col span="18" v-else>{{ "N/A" }}</i-col>
               </Row>
             </i-col>
           </Row>
@@ -715,6 +719,7 @@ export default {
     handleEdit(params) {
       this.resetFields();
       (this.evaluateList = []), (this.evaluateDetail = _.cloneDeep(params.row));
+      console.log("当前数据", params.row.deliveryComment);
       const arr = params.row.commentImages.split(",");
       for (let i = 0; i < arr.length; i++) {
         if (arr[i] != "") {
