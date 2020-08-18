@@ -31,13 +31,6 @@
               style="width: auto"
               clearable
             ></Input>
-            <Input
-              v-model="searchRowData.giveUserName"
-              placeholder="赠送的用户名称"
-              class="search-input mr5"
-              style="width: auto"
-              clearable
-            ></Input>
             <Select
               v-model="searchRowData.receiveSource"
               placeholder="领取来源"
@@ -243,9 +236,10 @@ export default {
       },
       columns: [
         {
-          type: "selection",
-          width: 60,
+          title: "字ID",
           align: "center",
+          key: "id",
+          width: 90,
         },
         {
           title: "集字名称",
