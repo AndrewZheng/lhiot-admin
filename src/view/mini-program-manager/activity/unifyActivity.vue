@@ -139,7 +139,7 @@
             </Row>
           </i-col>
         </Row>
-        <Row class-name="mb20">
+        <!-- <Row class-name="mb20">
           <i-col span="24">
             <Row>
               <i-col span="6">宣传图片:</i-col>
@@ -148,7 +148,7 @@
               </i-col>
             </Row>
           </i-col>
-        </Row>
+        </Row> -->
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
@@ -245,7 +245,7 @@
               </FormItem>
             </Col>
           </Row>
-          <Row>
+          <!-- <Row>
             <FormItem label="活动图片:" prop="banner">
               <Input v-show="false" v-model="activitiesDetail.banner" style="width: auto"></Input>
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
@@ -275,7 +275,7 @@
                 </div>
               </IViewUpload>
             </FormItem>
-          </Row>
+          </Row> -->
           <Row>
             <Col span="22">
               <FormItem label="活动规则:" prop="content">
@@ -702,7 +702,7 @@ export default {
       ruleInline: {
         activityName: [{ required: true, message: "请输入活动名称" }],
         status: [{ required: true, message: "请选择活动状态" }],
-        banner: [{ required: true, message: "请添加活动图片" }],
+        // banner: [{ required: true, message: "请添加活动图片" }],
         status: [{ required: true, message: "请选择活动状态" }],
         content: [{ required: true, message: "请输入活动规则" }],
         startTime: [{ required: true, message: "请选择活动开始时间" }],
@@ -750,16 +750,16 @@ export default {
           align: "center",
           key: "activityName",
         },
-        {
-          title: "活动图片",
-          align: "center",
-          key: "banner",
-          render: (h, params, vm) => {
-            const { row } = params;
-            const str = <img src={row.banner} height="60" width="60" />;
-            return <div>{str}</div>;
-          },
-        },
+        // {
+        //   title: "活动图片",
+        //   align: "center",
+        //   key: "banner",
+        //   render: (h, params, vm) => {
+        //     const { row } = params;
+        //     const str = <img src={row.banner} height="60" width="60" />;
+        //     return <div>{str}</div>;
+        //   },
+        // },
         {
           title: "开始时间",
           align: "center",

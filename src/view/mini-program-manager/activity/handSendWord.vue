@@ -18,6 +18,13 @@
         <div slot="searchCondition">
           <Row>
             <Input
+              v-model="searchRowData.phone"
+              placeholder="手机号码"
+              class="search-input mr5"
+              style="width: auto"
+              clearable
+            ></Input>
+            <Input
               v-model="searchRowData.userName"
               placeholder="领取用户名称"
               class="search-input mr5"
@@ -39,20 +46,6 @@
             >
               <Option
                 v-for="(item,index) in receiveSourceEnum"
-                :value="item.value"
-                :key="index"
-                class="ptb2-5"
-                style="padding-left: 5px;width: 100px"
-              >{{ item.label }}</Option>
-            </Select>
-            <Select
-              v-model="searchRowData.giveStatus"
-              placeholder="领取状态"
-              style="padding-right: 5px;width: 100px"
-              clearable
-            >
-              <Option
-                v-for="(item,index) in giveStatusEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
@@ -204,6 +197,7 @@ const collectWordDetail = {
 
 const sendWordToPhone = {
   quantity: 0,
+  phone: "",
   id: null,
   phones: null,
 };
@@ -294,95 +288,45 @@ export default {
           minWidth: 40,
         },
         {
+          title: "领取用户手机",
+          align: "center",
+          key: "phone",
+          minWidth: 40,
+        },
+        {
           title: "领取用户ID",
           align: "center",
           key: "userId",
           minWidth: 10,
         },
-        {
-          title: "赠送的用户名称",
-          align: "center",
-          key: "giveUserName",
-          minWidth: 40,
-          render(h, params, vm) {
-            const { row } = params;
-            if (row.giveUserName) {
-              return <div>{row.giveUserName}</div>;
-            } else {
-              return <div>{"N/A"}</div>;
-            }
-          },
-        },
-        {
-          title: "赠送的用户ID",
-          align: "center",
-          key: "giveUserId",
-          minWidth: 10,
-          render(h, params, vm) {
-            const { row } = params;
-            if (row.giveUserId) {
-              return <div>{row.giveUserId}</div>;
-            } else {
-              return <div>{"N/A"}</div>;
-            }
-          },
-        },
-        {
-          title: "赠送的原字",
-          align: "center",
-          key: "giveCollectWordId",
-          minWidth: 10,
-          render(h, params, vm) {
-            const { row } = params;
-            if (row.giveCollectWordId) {
-              return <div>{row.giveCollectWordId}</div>;
-            } else {
-              return <div>{"N/A"}</div>;
-            }
-          },
-        },
-        {
-          title: "赠送领取时间",
-          align: "center",
-          key: "giveReceiveTime",
-          minWidth: 50,
-          render(h, params, vm) {
-            const { row } = params;
-            if (row.giveReceiveTime) {
-              return <div>{row.giveReceiveTime}</div>;
-            } else {
-              return <div>{"N/A"}</div>;
-            }
-          },
-        },
-        {
-          title: "状态",
-          align: "center",
-          key: "giveStatus",
-          minWidth: 30,
-          render(h, params, vm) {
-            const { row } = params;
-            if (!row.giveStatus) {
-              return (
-                <div>
-                  <tag color="orange">{"自己领取"}</tag>
-                </div>
-              );
-            } else if (row.giveStatus === "YES") {
-              return (
-                <div>
-                  <tag color="magenta">{"赠送已领取)"}</tag>
-                </div>
-              );
-            } else if (row.giveStatus === "NO") {
-              return (
-                <div>
-                  <tag color="gold">{"赠送未领取)"}</tag>
-                </div>
-              );
-            }
-          },
-        },
+        // {
+        //   title: "状态",
+        //   align: "center",
+        //   key: "giveStatus",
+        //   minWidth: 30,
+        //   render(h, params, vm) {
+        //     const { row } = params;
+        //     if (!row.giveStatus) {
+        //       return (
+        //         <div>
+        //           <tag color="orange">{"自己领取"}</tag>
+        //         </div>
+        //       );
+        //     } else if (row.giveStatus === "YES") {
+        //       return (
+        //         <div>
+        //           <tag color="magenta">{"赠送已领取)"}</tag>
+        //         </div>
+        //       );
+        //     } else if (row.giveStatus === "NO") {
+        //       return (
+        //         <div>
+        //           <tag color="gold">{"赠送未领取)"}</tag>
+        //         </div>
+        //       );
+        //     }
+        //   },
+        // },
         {
           title: "是否兑换券",
           align: "center",
