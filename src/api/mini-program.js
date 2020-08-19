@@ -2965,3 +2965,12 @@ export const getCollectWordStatistics = () => {
     method: 'get'
   });
 };
+
+//添加新品上市活动 /minapp/user/user-class/{userId}
+export const setUserClass = (data) => {
+  return $http.request({
+    url: `/minapp/user/user-class/${data.id}?userClass=${data.userClass}`,
+    data,
+    method: 'post',
+  });
+};

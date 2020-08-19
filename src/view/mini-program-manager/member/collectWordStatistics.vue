@@ -54,6 +54,11 @@ export default {
           align: "center",
           key: "useUserCount",
         },
+        {
+          title: "集满人数",
+          align: "center",
+          key: "fullUserCount",
+        },
       ],
       couponTemplateDetail: _.cloneDeep(couponTemplateDetail),
     };

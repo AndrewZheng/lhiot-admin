@@ -1539,6 +1539,84 @@ const btns = {
       ]);
     }
   },
+  upgrade: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.userClass === 'EXTERIOR' || row.userClass === null) {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '将此用户升级为内部用户?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-upgrade', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '升级为内部用户' }
+        }, [
+          h('Button', {
+            props: {
+              type: 'success',
+              size: 'small'
+            }
+          }, [
+            h('Icon', {
+              props: {
+                type: 'ios-cloud-upload',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
+        ])
+      ]);
+    } else {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '将此白名单用户变为普通用户?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-upgrade', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '降级为普通用户' }
+        }, [
+          h('Button', {
+            props: {
+              type: 'error',
+              size: 'small'
+            }
+          }, [
+            h('Icon', {
+              props: {
+                type: 'ios-cloud-download',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
+        ])
+      ]);
+    }
+  },
   // 评论 置顶
   setTop: (h, params, vm) => {
     const {

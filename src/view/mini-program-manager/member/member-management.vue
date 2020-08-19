@@ -12,6 +12,7 @@
         searchable
         border
         search-place="top"
+        @on-upgrade="onUpgrade"
       >
         <div slot="searchCondition">
           <Row>
@@ -125,9 +126,22 @@
 import Tables from "_c/tables";
 import CountTo from "_c/count-to";
 import _ from "lodash";
-import { getUsersInfo } from "@/api/mini-program";
+import { getUsersInfo, setUserClass } from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
+
+const userDetail = {
+  nickName: "",
+  phone: "",
+  gender: "",
+  consumeSumAmount: "",
+  rechargeSumAmount: "",
+  isCommunity: "",
+  isCommunity: "",
+  userType: "",
+  registrationAt: "",
+  userClass: "EXTERIOR",
+};
 
 const roleRowData = {
   isCommunity: null,
@@ -242,6 +256,13 @@ export default {
           key: "registrationAt",
           align: "center",
         },
+        {
+          title: "操作",
+          align: "center",
+          width: 90,
+          key: "handle",
+          options: ["upgrade"],
+        },
       ],
       genderEnum: [
         { label: "男", value: "1" },
@@ -256,6 +277,7 @@ export default {
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
+      userDetail: _.cloneDeep(userDetail),
     };
   },
   mounted() {
@@ -290,6 +312,17 @@ export default {
     },
     endTimeChange(value, date) {
       this.searchRowData.regEndTime = value;
+    },
+    onUpgrade(params) {
+      this.userDetail = _.cloneDeep(params.row);
+      this.userDetail.userClass =
+        params.row.userClass === "EXTERIOR" ? "INTERIOR" : "EXTERIOR";
+      setUserClass(this.userDetail)
+        .then((res) => {
+          this.$Message.info("操作成功");
+          this.getTableData();
+        })
+        .catch((error) => {});
     },
   },
 };
