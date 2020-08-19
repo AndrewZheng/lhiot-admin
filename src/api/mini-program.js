@@ -2825,6 +2825,7 @@ export const getNewProductsRelevance = (id) => {
     method: 'get'
   });
 };
+
 //添加新品上市活动关联 /minapp/activity-new-products/create/relation
 export const createNewProductsRelevance = (data) => {
   return $http.request({
@@ -2839,5 +2840,128 @@ export const updateNewProductsRelevance = (data) => {
     url: '/minapp/activity-new-products/update/relation/' + data.id,
     data,
     method: 'put'
+  });
+};
+
+//查询统一活动列表 
+export const getUnifyActivityPages = (data) => {
+  return $http.request({
+    url: '/minapp/activity-setting/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+//添加统一活动 
+export const createUnifyActivity = (data) => {
+  return $http.request({
+    url: '/minapp/activity-setting/create',
+    data,
+    method: 'post',
+  });
+};
+
+//根据ID 修改活动 /minapp/activity-new-products/update/{id}
+export const updateUnifyActivity = (data) => {
+  return $http.request({
+    url: '/minapp/activity-setting/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+//根据id查询统一活动关联 
+export const getUnifyActivity = (id) => {
+  return $http.request({
+    url: `/minapp/activity-setting/${id}/relation`,
+    method: 'get'
+  });
+};
+
+//更新统一活动关联 
+export const deleteUnifyActivityRelevance = (data) => {
+  return $http.request({
+    url: '/minapp/activity-setting-relation/update-status/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+//添加统一活动关联券
+export const createUnifyActivityRelevance = (data) => {
+  return $http.request({
+    url: '/minapp/activity-setting-relation/create',
+    data,
+    method: 'post',
+  });
+};
+
+//添加集字名称 /minapp/collect-word-setting/create
+export const createWollectWordRelevance = (data) => {
+  return $http.request({
+    url: '/minapp/collect-word-setting/create',
+    data,
+    method: 'post',
+  });
+};
+
+//更删除统一活动字配置
+export const deleteWollectWordRelevance = (data) => {
+  return $http.request({
+    url: '/minapp/collect-word-setting/' + data.id,
+    data,
+    method: 'delete'
+  });
+};
+// /minapp/collect-word-setting/update/{id}
+export const updateWollectWordRelevance = (data) => {
+  return $http.request({
+    url: '/minapp/collect-word-setting/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 查询集字领取记录分页列表 
+export const getCollectWordPages = (data) => {
+  return $http.request({
+    url: '/minapp/collect-word-record/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+export const getCollectWordRecord = () => {
+  return $http.request({
+    url: `minapp/collect-word-record/run-activity/collect-word`,
+    method: 'get'
+  });
+};
+
+// //通过phone 发送集字 
+export const sendCollectWord = (data) => {
+  return $http.request({
+    url: `/minapp/collect-word-record/send?phones=${data.phones}&id=${data.id}&quantity=${data.quantity}`,
+    method: 'post',
+  });
+};
+
+//集字活动数据统计 /coupon/statistics/collect-word-activity
+export const getCollectWordStatistics = () => {
+  return $http.request({
+    url: `/coupon/statistics/collect-word-activity`,
+    method: 'get'
   });
 };

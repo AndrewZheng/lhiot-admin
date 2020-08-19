@@ -286,6 +286,24 @@ const miniMallRouter = [
     //   component: () => import('@/view/mini-program-manager/activity/random-discount.vue')
     // },
     {
+      path: '/small-unifyActivity',
+      name: 'small-unifyActivity',
+      meta: {
+        icon: 'ios-nuclear',
+        title: '统一活动管理'
+      },
+      component: () => import('@/view/mini-program-manager/activity/unifyActivity.vue')
+    },
+    {
+      path: '/small-handSendWord',
+      name: 'small-handSendWord',
+      meta: {
+        icon: 'md-hand',
+        title: '手动发字管理'
+      },
+      component: () => import('@/view/mini-program-manager/activity/handSendWord.vue')
+    },
+    {
       path: '/small-activity-register-reward',
       name: 'small-activity-register-reward',
       meta: {
@@ -581,6 +599,15 @@ const miniMallRouter = [
           title: '分享赚数据统计'
         },
         component: () => import('@/view/mini-program-manager/member/share-statistics.vue')
+      },
+      {
+        path: '/small-collectWordStatistics',
+        name: 'small-collectWordStatistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '集字活动数据统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/collectWordStatistics.vue')
       },
       {
         path: '/small-data-statistics',

@@ -473,12 +473,12 @@ const btns = {
     const {
       row
     } = params;
-    if (row.shelfStatus === 'ON' || row.onOff === 'ON' || row.state === 'ON' || row.couponStatus === 'VALID' || row.status === 'ON' || row.vaild === 'yes' || row.couponConfigvaild === 'yes') {
+    if (row.shelfStatus === 'ON' || row.onOff === 'ON' || row.state === 'ON' || row.couponStatus === 'VALID' || row.status === 'ON' || row.status === 'VALID' || row.vaild === 'yes' || row.couponConfigvaild === 'yes') {
       return h('Poptip', {
         props: {
           confirm: true,
           transfer: true,
-          title: row.vaild === 'yes' ? '确认要关闭活动吗?' : '确认要下架吗?',
+          title: row.vaild === 'yes' || row.status === 'VALID' ? '确认要关闭活动吗?' : '确认要下架吗?',
           placement: params.index === 0 ? 'right' : 'top'
         },
         style: {
@@ -510,7 +510,7 @@ const btns = {
         props: {
           confirm: true,
           transfer: true,
-          title: row.vaild === 'no' ? '确认要开启活动吗?' : '确认要上架吗?',
+          title: row.vaild === 'no' || row.status === 'INVALID' ? '确认要开启活动吗?' : '确认要上架吗?',
           placement: params.index === 0 ? 'right' : 'top'
         },
         style: {
