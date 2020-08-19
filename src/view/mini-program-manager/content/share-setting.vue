@@ -208,6 +208,7 @@
                 <!-- <FormItem label="分享图片路径:" prop="shareUrl">
                   <Input v-model="shareDetail.shareUrl"></Input>
                 </FormItem>-->
+                <p style="color:#ff3861;margin-left:67px">请上传JPG&PNG格式的图片!</p>
                 <FormItem label="分享图片:">
                   <Input v-show="false" v-model="shareDetail.shareUrl" style="width: auto"></Input>
                   <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
