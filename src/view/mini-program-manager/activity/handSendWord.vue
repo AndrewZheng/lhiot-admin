@@ -31,6 +31,13 @@
               style="width: auto"
               clearable
             ></Input>
+            <Input
+              v-model="searchRowData.wordKeyName"
+              placeholder="集字名称"
+              class="search-input mr5"
+              style="width: 80px"
+              clearable
+            ></Input>
             <Select
               v-model="searchRowData.receiveSource"
               placeholder="领取来源"
@@ -188,6 +195,7 @@ const collectWordDetail = {
 const sendWordToPhone = {
   quantity: 0,
   phone: "",
+  wordKeyName: "",
   id: null,
   phones: null,
 };

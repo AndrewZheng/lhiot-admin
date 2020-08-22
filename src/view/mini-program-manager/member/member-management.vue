@@ -316,7 +316,9 @@ export default {
     onUpgrade(params) {
       this.userDetail = _.cloneDeep(params.row);
       this.userDetail.userClass =
-        params.row.userClass === "EXTERIOR" ? "INTERIOR" : "EXTERIOR";
+        params.row.userClass == "EXTERIOR" || params.row.userClass == null
+          ? "INTERIOR"
+          : "EXTERIOR";
       setUserClass(this.userDetail)
         .then((res) => {
           this.$Message.info("操作成功");
