@@ -201,6 +201,7 @@
                     placeholder="有效期起"
                     class="search-input"
                     style="width: 170px"
+                    :readonly="editStatus"
                     @on-change="flashsaleDetail.beginTime=$event"
                   />
                 </FormItem>
@@ -216,6 +217,7 @@
                     placeholder="有效期止"
                     class="search-input"
                     style="width: 170px"
+                    :readonly="editStatus"
                     @on-change="flashsaleDetail.endTime=$event"
                   />
                 </FormItem>
@@ -825,7 +827,7 @@ import {
   createAssistProductRelation,
   editAssistProductRelation,
   getProductStandardsPages,
-  getCouponPagess
+  getCouponPagess,
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -837,14 +839,14 @@ import {
   onSaleStatusConvert,
   couponTypeConvert,
   couponStatusConvert,
-  couponUseLimitConvert
+  couponUseLimitConvert,
 } from "@/libs/converStatus";
 import { imageStatusEnum, onSaleStatusEnum } from "@/libs/enumerate";
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber,
-  compareCouponData
+  compareCouponData,
 } from "@/libs/util";
 import { customPlanStatusConvert, appTypeConvert } from "@/libs/converStatus";
 
@@ -858,7 +860,7 @@ const flashsaleDetail = {
   title: "",
   updateTime: null,
   userActivityLimit: "",
-  userActivitySurplus: ""
+  userActivitySurplus: "",
 };
 
 const relationDetail = {
@@ -880,7 +882,7 @@ const relationDetail = {
   couponConfigManage: {},
   couponConfigId: 0,
   type: "PROD",
-  shareImage: ""
+  shareImage: "",
 };
 
 const productDetail = {
@@ -924,7 +926,7 @@ const productDetail = {
   invNum: null,
   saleCount: null,
   positionName: null,
-  dbId: null
+  dbId: null,
 };
 
 const roleRowData = {
@@ -932,14 +934,16 @@ const roleRowData = {
   endTime: null,
   title: "",
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx: "createTime",
+  sort: "desc",
 };
 
 const relationRowData = {
   id: null,
   activityId: null,
   page: 1,
-  rows: 100
+  rows: 100,
 };
 
 const productRowData = {
@@ -950,14 +954,14 @@ const productRowData = {
   shelvesStatus: "VALID",
   expandType: "ASSIST_PRODUCT",
   page: 1,
-  rows: 5
+  rows: 5,
 };
 const couponRowData = {
   couponName: "",
   couponBusinessType: "ACTIVITY_ASSIST_COUPON",
   page: 1,
   rows: 5,
-  couponStatus: "VALID"
+  couponStatus: "VALID",
 };
 
 const relationTempColumns = [
@@ -973,7 +977,7 @@ const relationTempColumns = [
       } else if (row.type === "COUPON") {
         return <div>{row.couponConfigManage.couponName}</div>;
       }
-    }
+    },
   },
   {
     title: "商品价格/券额度",
@@ -997,7 +1001,7 @@ const relationTempColumns = [
           return <div>{fenToYuanDot2(row.couponConfigManage.couponFee)}</div>;
         }
       }
-    }
+    },
   },
   {
     title: "商品/券类型",
@@ -1059,7 +1063,7 @@ const relationTempColumns = [
           );
         }
       }
-    }
+    },
   },
   // {
   //   title: "创建时间",
@@ -1076,7 +1080,7 @@ const relationTempColumns = [
     title: "排序",
     key: "rank",
     align: "center",
-    minWidth: 100
+    minWidth: 100,
     // render: (h, params) => {
     //   if (params.row.isEdit) {
     //     return h("div", [
@@ -1102,7 +1106,7 @@ const relationTempColumns = [
     title: "商品库存总数",
     key: "activityLimit",
     align: "center",
-    minWidth: 100
+    minWidth: 100,
     // render: (h, params) => {
     //   if (params.row.isEdit) {
     //     return h("div", [
@@ -1128,7 +1132,7 @@ const relationTempColumns = [
     title: "需助力人数",
     key: "peopleNumber",
     align: "center",
-    minWidth: 100
+    minWidth: 100,
     // render: (h, params) => {
     //   if (params.row.isEdit) {
     //     return h("div", [
@@ -1154,7 +1158,7 @@ const relationTempColumns = [
     title: "有效时长(小时)",
     key: "validHour",
     align: "center",
-    minWidth: 100
+    minWidth: 100,
     // render: (h, params) => {
     //   if (params.row.isEdit) {
     //     return h("div", [
@@ -1201,51 +1205,51 @@ const relationTempColumns = [
           <tag color="primary">{row.status}</tag>
         </div>
       );
-    }
-  }
+    },
+  },
 ];
 
 const productColumns = [
   {
     type: "index",
     width: 60,
-    align: "center"
+    align: "center",
   },
   {
     title: "规格id",
     key: "id",
     minWidth: 60,
-    align: "center"
+    align: "center",
   },
   {
     title: "商品条码",
     key: "barcode",
     minWidth: 70,
-    align: "center"
+    align: "center",
   },
   {
     title: "商品编号",
     key: "productCode",
     align: "center",
-    minWidth: 120
+    minWidth: 120,
   },
   {
     title: "商品名称",
     key: "productName",
     minWidth: 100,
-    align: "center"
+    align: "center",
   },
   {
     title: "商品规格",
     key: "specification",
     minWidth: 80,
-    align: "center"
+    align: "center",
   },
   {
     title: "商品单位",
     key: "productUnit",
     minWidth: 80,
-    align: "center"
+    align: "center",
   },
   {
     title: "助力价格",
@@ -1257,7 +1261,7 @@ const productColumns = [
         params.row.productStandardExpand.discountPrice
       );
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "商品类型",
@@ -1307,26 +1311,26 @@ const productColumns = [
           </div>
         );
       }
-    }
+    },
   },
   {
     title: "排序",
     key: "rank",
     minWidth: 60,
-    align: "center"
-  }
+    align: "center",
+  },
 ];
 const couponColumns = [
   {
     type: "index",
     width: 60,
-    align: "center"
+    align: "center",
   },
   {
     title: "优惠券名称",
     key: "couponName",
     align: "center",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "优惠券类型",
@@ -1361,7 +1365,7 @@ const couponColumns = [
         );
       }
       return <div>{row.couponType}</div>;
-    }
+    },
   },
   {
     title: "优惠/折扣额度",
@@ -1375,7 +1379,7 @@ const couponColumns = [
       } else {
         return <div>{fenToYuanDot2(row.couponFee)}</div>;
       }
-    }
+    },
   },
   {
     title: "最小购买金额",
@@ -1384,7 +1388,7 @@ const couponColumns = [
     minWidth: 80,
     render(h, params) {
       return <div>{fenToYuanDot2(params.row.minBuyFee)}</div>;
-    }
+    },
   },
   {
     title: "最高优惠金额",
@@ -1399,7 +1403,7 @@ const couponColumns = [
         return <div>{"N/A"}</div>;
       }
       return <div>{fenToYuanDot2(row.maxDiscountFee)}</div>;
-    }
+    },
   },
   {
     title: "生效时间",
@@ -1420,7 +1424,7 @@ const couponColumns = [
       } else {
         return <div>N/A</div>;
       }
-    }
+    },
   },
   {
     title: "失效时间",
@@ -1449,13 +1453,13 @@ const couponColumns = [
       } else {
         return <div>N/A</div>;
       }
-    }
-  }
+    },
+  },
 ];
 export default {
   components: {
     Tables,
-    IViewUpload
+    IViewUpload,
   },
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
@@ -1466,9 +1470,9 @@ export default {
         status: [{ required: true, message: "请选择活动状态" }],
         title: [{ required: true, message: "请输入活动标题" }],
         receiveValidDays: [
-          { required: true, message: "请输入领取奖励有效天数" }
+          { required: true, message: "请输入领取奖励有效天数" },
         ],
-        useValidDays: [{ required: true, message: "请输入使用奖励有效天数" }]
+        useValidDays: [{ required: true, message: "请输入使用奖励有效天数" }],
       },
       relationRuleInline: {
         activityLimit: [
@@ -1480,8 +1484,8 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         rank: [
           { required: true, message: "请输入商品排序" },
@@ -1492,8 +1496,8 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         peopleNumber: [
           { required: true, message: "请输入需助力人数" },
@@ -1504,8 +1508,8 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         validHour: [
           { required: true, message: "请输入有效时长(单位小时)" },
@@ -1516,16 +1520,17 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
-        shareImage: [{ required: true, message: "请上传分享图片" }]
+        shareImage: [{ required: true, message: "请上传分享图片" }],
       },
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
       templatePageOpts: [5, 10],
       imageStatusEnum,
+      editStatus: false,
       onSaleStatusEnum,
       topStatus: "PROD",
       discountPrice: "",
@@ -1533,22 +1538,22 @@ export default {
         {
           type: "selection",
           width: 60,
-          align: "center"
+          align: "center",
         },
         {
           title: "活动ID",
           align: "center",
-          key: "id"
+          key: "id",
         },
         {
           title: "活动标题",
           align: "center",
-          key: "title"
+          key: "title",
         },
         {
           title: "开始时间",
           align: "center",
-          key: "beginTime"
+          key: "beginTime",
         },
         {
           title: "结束时间",
@@ -1561,12 +1566,12 @@ export default {
             } else {
               return <div>{row.endTime}</div>;
             }
-          }
+          },
         },
         {
           title: "修改时间",
           align: "center",
-          key: "updateTime"
+          key: "updateTime",
         },
         {
           title: "活动状态",
@@ -1596,17 +1601,17 @@ export default {
                 <tag color="primary">{row.status ? row.status : "N/A"}</tag>
               </div>
             );
-          }
+          },
         },
         {
           title: "领取奖励有效天数",
           align: "center",
-          key: "receiveValidDays"
+          key: "receiveValidDays",
         },
         {
           title: "使用奖励有效天数",
           align: "center",
-          key: "useValidDays"
+          key: "useValidDays",
         },
         {
           title: "操作",
@@ -1614,8 +1619,8 @@ export default {
           minWidth: 80,
           key: "handle",
           // "delete",
-          options: ["onSale", "view", "edit", "settings"]
-        }
+          options: ["onSale", "view", "edit", "settings"],
+        },
       ],
       relationColumns: [
         ...relationTempColumns,
@@ -1624,8 +1629,8 @@ export default {
           align: "center",
           minWidth: 150,
           key: "handle",
-          options: ["onSale", "view", "edit"]
-        }
+          options: ["onSale", "view", "edit"],
+        },
       ],
       productColumns: _.cloneDeep(productColumns),
       couponColumns: _.cloneDeep(couponColumns),
@@ -1650,7 +1655,7 @@ export default {
       activitiesCouponDetail: {},
       modalRelevanceView: false,
       modalRelevanceEdit: false,
-      proFlag: true
+      proFlag: true,
     };
   },
   computed: {},
@@ -1699,7 +1704,7 @@ export default {
       }
     },
     handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.flashsaleDetail.startTime > this.flashsaleDetail.endTime) {
             this.$Message.error("开始时间不能大于结束时间!");
@@ -1730,7 +1735,7 @@ export default {
     createAssist() {
       this.modalViewLoading = true;
       createAssist(this.flashsaleDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success("创建成功!");
@@ -1751,7 +1756,7 @@ export default {
       ).format("YYYY-MM-DD HH:mm:ss");
 
       editAssist(this.flashsaleDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.$Message.success("修改成功!");
@@ -1763,6 +1768,7 @@ export default {
         });
     },
     addFlashsale() {
+      this.editStatus = false;
       // this.resetFields();
       this.tempModalType = this.modalType.create;
       this.flashsaleDetail = _.cloneDeep(flashsaleDetail);
@@ -1777,9 +1783,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteAssist({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -1791,7 +1797,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -1803,20 +1809,21 @@ export default {
     },
     handleEdit(params) {
       // this.resetFields();
+      this.editStatus = !compareCouponData(params.row.beginTime);
       this.tempModalType = this.modalType.edit;
       this.flashsaleDetail = _.cloneDeep(params.row);
       this.modalEdit = true;
     },
     getTableData() {
       getAssistPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -1825,10 +1832,10 @@ export default {
     },
     getRelationTableData() {
       getAssistProductRelationPages(this.searchRelationRowData)
-        .then(res => {
+        .then((res) => {
           // 设置行是否可编辑
           // if (res && res.rows.length > 0) {
-          res.rows.forEach(element => {
+          res.rows.forEach((element) => {
             element.isEdit = false;
           });
           this.relationProducts = res.rows;
@@ -1837,7 +1844,7 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1892,7 +1899,7 @@ export default {
           return;
         }
       }
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           this.createRelation();
         } else {
@@ -1931,19 +1938,19 @@ export default {
     modalHandleDelete(params) {
       this.tempTableLoading = true;
       deleteAssistProductRelation({ ids: params.row.id })
-        .then(res => {
+        .then((res) => {
           this.relationProducts = this.relationProducts.filter(
             (item, index) => index !== params.row.initRowIndex
           );
           this.getRelationTableData();
         })
-        .finally(res => {
+        .finally((res) => {
           this.tempTableLoading = false;
         });
     },
     getProductTableData() {
       this.loading = true;
-      getProductStandardsPages(this.searchProductRowData).then(res => {
+      getProductStandardsPages(this.searchProductRowData).then((res) => {
         this.products = res.rows;
         this.productTotal = res.total;
         this.loading = false;
@@ -1952,7 +1959,7 @@ export default {
     },
     getCouponTableData() {
       this.loading = true;
-      getCouponPagess(this.searchCouponRowData).then(res => {
+      getCouponPagess(this.searchCouponRowData).then((res) => {
         this.coupons = res.rows;
         this.couponsTotal = res.total;
         this.loading = false;
@@ -2005,12 +2012,12 @@ export default {
     },
     onProductSelectionAll(selection) {
       this.addRelationDetail.standardId = selection
-        .map(item => item.id.toString())
+        .map((item) => item.id.toString())
         .join(",");
     },
     onProductSelectionChange(selection) {
       this.addRelationDetail.standardId = selection
-        .map(item => item.id.toString())
+        .map((item) => item.id.toString())
         .join(",");
     },
     handleTemplateChange(currentRow, oldCurrentRow) {
@@ -2032,7 +2039,7 @@ export default {
           this.proFlag = true;
         }
         this.addRelationDetail.standardId = mark
-          .map(item => item.id.toString())
+          .map((item) => item.id.toString())
           .join(",");
         this.addRelationDetail.status = "ON";
         this.addRelationDetail.couponConfigManage = null;
@@ -2051,7 +2058,7 @@ export default {
           this.proFlag = true;
         }
         this.addRelationDetail.couponConfigId = mark
-          .map(item => item.id.toString())
+          .map((item) => item.id.toString())
           .join(",");
         this.addRelationDetail.status = "ON";
         this.addRelationDetail.productStandard = null;
@@ -2068,7 +2075,7 @@ export default {
     createRelation() {
       this.modalViewLoading = true;
       createAssistProductRelation(this.addRelationDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success("创建成功!");
@@ -2119,7 +2126,7 @@ export default {
     },
     handleconfirmEdit() {
       editAssistProductRelation(this.addRelationDetail)
-        .then(res => {
+        .then((res) => {
           this.modalRelevanceEdit = false;
           this.$Message.success("修改成功!");
           this.getRelationTableData();
@@ -2127,7 +2134,7 @@ export default {
             (this.uploadListMain = []);
           // this.uploadListMain = [];
         })
-        .finally(res => {
+        .finally((res) => {
           this.tempTableLoading = false;
         });
     },
@@ -2142,16 +2149,16 @@ export default {
       this.loading = true;
       // console.log("上下架", params.row);
       editAssistProductRelation(params.row)
-        .then(res => {
+        .then((res) => {
           this.getRelationTableData();
         })
-        .finally(res => {
+        .finally((res) => {
           this.tempTableLoading = false;
         });
       this.tempTableLoading = false;
       this.$set(params.row, "isEdit", false);
-    }
-  }
+    },
+  },
 };
 </script>
 

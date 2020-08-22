@@ -886,6 +886,10 @@ export const expandTypeEnum = [
     value: 'SECKILL_PRODUCT'
   },
   {
+    label: '新品尝鲜商品',
+    value: 'NEW_TRY_PRODUCT'
+  },
+  {
     label: '分享赚商品',
     value: 'SHARE_PRODUCT'
   },
@@ -2678,7 +2682,11 @@ export const couponFromEnum = [{
 {
   label: '限时抢购',
   value: 'flashsale'
-}
+},
+{
+  label: '活动送券',
+  value: 'activity'
+},
 ];
 
 export const layoutEnum = [{

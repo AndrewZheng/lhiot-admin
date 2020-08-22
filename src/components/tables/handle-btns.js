@@ -473,12 +473,12 @@ const btns = {
     const {
       row
     } = params;
-    if (row.shelfStatus === 'ON' || row.onOff === 'ON' || row.state === 'ON' || row.couponStatus === 'VALID' || row.status === 'ON' || row.vaild === 'yes' || row.couponConfigvaild === 'yes') {
+    if (row.shelfStatus === 'ON' || row.onOff === 'ON' || row.state === 'ON' || row.couponStatus === 'VALID' || row.status === 'ON' || row.status === 'VALID' || row.vaild === 'yes' || row.couponConfigvaild === 'yes') {
       return h('Poptip', {
         props: {
           confirm: true,
           transfer: true,
-          title: row.vaild === 'yes' ? '确认要关闭活动吗?' : '确认要下架吗?',
+          title: row.vaild === 'yes' || row.status === 'VALID' ? '确认要关闭活动吗?' : '确认要下架吗?',
           placement: params.index === 0 ? 'right' : 'top'
         },
         style: {
@@ -510,7 +510,7 @@ const btns = {
         props: {
           confirm: true,
           transfer: true,
-          title: row.vaild === 'no' ? '确认要开启活动吗?' : '确认要上架吗?',
+          title: row.vaild === 'no' || row.status === 'INVALID' ? '确认要开启活动吗?' : '确认要上架吗?',
           placement: params.index === 0 ? 'right' : 'top'
         },
         style: {
@@ -1530,6 +1530,84 @@ const btns = {
             h('Icon', {
               props: {
                 type: 'logo-vimeo',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
+        ])
+      ]);
+    }
+  },
+  upgrade: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.userClass === 'EXTERIOR' || row.userClass === null) {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '将此用户升级为内部用户?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-upgrade', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '升级为内部用户' }
+        }, [
+          h('Button', {
+            props: {
+              type: 'success',
+              size: 'small'
+            }
+          }, [
+            h('Icon', {
+              props: {
+                type: 'ios-cloud-upload',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
+        ])
+      ]);
+    } else {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '将此白名单用户变为普通用户?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-upgrade', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '降级为普通用户' }
+        }, [
+          h('Button', {
+            props: {
+              type: 'error',
+              size: 'small'
+            }
+          }, [
+            h('Icon', {
+              props: {
+                type: 'ios-cloud-download',
                 size: 16,
                 color: '#fff'
               }

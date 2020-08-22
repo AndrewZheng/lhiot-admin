@@ -798,6 +798,12 @@
                 >
                   <tag color="blue">{{ "限时秒杀商品" }}</tag>
                 </i-col>
+                <i-col
+                  v-else-if="productStandardDetail.productType === 'NEW_TRY_PRODUCT'"
+                  span="16"
+                >
+                  <tag color="blue">{{ "新品尝鲜商品" }}</tag>
+                </i-col>
                 <i-col v-else-if="productStandardDetail.productType === 'ASSIST_PRODUCT'" span="16">
                   <tag color="green">{{ "助力抢爆品商品" }}</tag>
                 </i-col>
@@ -1067,7 +1073,7 @@ import {
   getProductUnits,
   getProductPages,
   getHdProductInfo,
-  deletePicture
+  deletePicture,
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -1077,13 +1083,13 @@ import {
   getSmallGoodsStandard,
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber
+  yuanToFenNumber,
 } from "@/libs/util";
 import { expandTypeEnum } from "@/libs/enumerate";
 import {
   customPlanStatusConvert,
   productStatusConvert,
-  expandTypeConvert
+  expandTypeConvert,
 } from "@/libs/converStatus";
 
 const productStandardDetail = {
@@ -1133,7 +1139,7 @@ const productStandardDetail = {
   positionName: null,
   dbId: null,
   svipPrice: null,
-  shareImage: null
+  shareImage: null,
 };
 
 const roleRowData = {
@@ -1146,7 +1152,7 @@ const roleRowData = {
   minPrice: "",
   maxPrice: "",
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 const productDetail = {
@@ -1170,7 +1176,7 @@ const productDetail = {
   unitName: "",
   groupName: "",
   createUser: "",
-  expandType: ""
+  expandType: "",
 };
 
 const productRowData = {
@@ -1179,7 +1185,7 @@ const productRowData = {
   productName: null,
   status: "NORMAL",
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 const proStandardExpand = {
@@ -1192,14 +1198,14 @@ const proStandardExpand = {
   // expandType: "DISCOUNT_PRODUCT",
   // limitQty: 0,
   invNum: 0,
-  commissionRate: 0
+  commissionRate: 0,
 };
 
 export default {
   components: {
     Tables,
     IViewUpload,
-    DragList
+    DragList,
   },
   mixins: [uploadMixin, deleteMixin, searchMixin, tableMixin],
   data() {
@@ -1221,25 +1227,25 @@ export default {
       clickFlag: "",
       ruleValidate: {
         limitNum: [
-          { required: false, message: "请输入限购份数", trigger: "blur" }
+          { required: false, message: "请输入限购份数", trigger: "blur" },
         ],
         startNum: [
-          { required: false, message: "请输入起购份数", trigger: "blur" }
+          { required: false, message: "请输入起购份数", trigger: "blur" },
         ],
         discountPrice: [
-          { required: true, message: "请输入活动价格", trigger: "change" }
+          { required: true, message: "请输入活动价格", trigger: "change" },
         ],
         discountRate: [
-          { required: false, message: "请计算折扣率", trigger: "change" }
-        ]
+          { required: false, message: "请计算折扣率", trigger: "change" },
+        ],
       },
       ruleInline: {
         productId: [
           { required: true, message: "请选择关联商品" },
           {
             message: "请选择要关联的商品",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+          },
         ],
         productName: [{ required: true, message: "请选择上架商品名称" }],
         description: [{ required: true, message: "请上传规格描述图" }],
@@ -1254,18 +1260,18 @@ export default {
           { required: true, message: "请输入商品价格" },
           {
             message: "必须为大于0的数字",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+          },
         ],
         salePrice: [
           { required: true, message: "请输入售卖价格" },
           {
             message: "必须为大于0的数字",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+          },
         ],
         barcode: [
-          { required: true, message: "请输入商品条码" }
+          { required: true, message: "请输入商品条码" },
           // {
           //   validator(rule, value, callback, source, options) {
           //     const errors = [];
@@ -1285,8 +1291,8 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         rank: [
           { required: true, message: "请输入商品排序" },
@@ -1297,8 +1303,8 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         standardQty: [
           { required: true, message: "请输入重量" },
@@ -1309,9 +1315,9 @@ export default {
                 errors.push(new Error("必须为大于0的数字"));
               }
               callback(errors);
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
       columns: [
         {
@@ -1319,43 +1325,43 @@ export default {
           key: "",
           minWidth: 50,
           align: "center",
-          fixed: "left"
+          fixed: "left",
         },
         {
           title: "规格ID",
           align: "center",
           key: "id",
-          minWidth: 50
+          minWidth: 50,
         },
         {
           title: "商品条码",
           align: "center",
           key: "barcode",
-          minWidth: 70
+          minWidth: 70,
         },
         {
           title: "商品编号",
           key: "productCode",
           align: "center",
-          minWidth: 100
+          minWidth: 100,
         },
         {
           title: "商品名称",
           align: "center",
           key: "productName",
-          minWidth: 100
+          minWidth: 100,
         },
         {
           title: "商品规格",
           align: "center",
           key: "specification",
-          minWidth: 80
+          minWidth: 80,
         },
         {
           title: "商品单位",
           align: "center",
           minWidth: 80,
-          key: "productUnit"
+          key: "productUnit",
         },
         {
           title: "商品原价",
@@ -1365,7 +1371,7 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.price);
             return <div>{amount}</div>;
-          }
+          },
         },
         {
           title: "售卖价格",
@@ -1375,7 +1381,7 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.salePrice);
             return <div>{amount}</div>;
-          }
+          },
         },
         // {
         //   title: "SVIP价格",
@@ -1418,6 +1424,14 @@ export default {
                   </tag>
                 </div>
               );
+            } else if (row.productType == "NEW_TRY_PRODUCT") {
+              return (
+                <div>
+                  <tag color="blue">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
             } else if (row.productType == "ASSIST_PRODUCT") {
               return (
                 <div>
@@ -1443,7 +1457,7 @@ export default {
                 </div>
               );
             }
-          }
+          },
         },
         {
           title: "商品状态",
@@ -1476,27 +1490,27 @@ export default {
                 </tag>
               </div>
             );
-          }
+          },
         },
         {
           title: "起购份数",
           key: "startNum",
           minWidth: 60,
-          align: "center"
+          align: "center",
         },
         {
           title: "商品排序",
           align: "center",
           minWidth: 60,
-          key: "rank"
+          key: "rank",
         },
         {
           title: "操作",
           align: "center",
           minWidth: 180,
           key: "handle",
-          options: ["customOnSale", "view", "edit", "discount"]
-        }
+          options: ["customOnSale", "view", "edit", "discount"],
+        },
       ],
       productColumns: [
         {
@@ -1508,39 +1522,39 @@ export default {
             const { row } = params;
             const str = <img src={row.image} height="60" width="60" />;
             return <div>{str}</div>;
-          }
+          },
         },
         {
           title: "商品编码",
           key: "productCode",
           sortable: true,
           align: "center",
-          minWidth: 140
+          minWidth: 140,
         },
         {
           title: "商品名称",
           align: "center",
           sortable: true,
           key: "productName",
-          minWidth: 120
+          minWidth: 120,
         },
         {
           title: "商品类别",
           align: "center",
           key: "groupName",
-          minWidth: 120
+          minWidth: 120,
         },
         {
           title: "基础单位",
           align: "center",
           minWidth: 90,
-          key: "unitName"
+          key: "unitName",
         },
         {
           title: "基础重量(kg)",
           align: "center",
           minWidth: 90,
-          key: "baseQty"
+          key: "baseQty",
         },
         {
           title: "商品状态",
@@ -1571,17 +1585,17 @@ export default {
                 <tag color="primary">{row.status}</tag>
               </div>
             );
-          }
-        }
+          },
+        },
       ],
       modalType: {
         view: "view",
         edit: "edit",
-        create: "create"
+        create: "create",
       },
       dropConClass: {
         left: ["drop-box", "left-drop-box"],
-        right: ["drop-box", "right-drop-box"]
+        right: ["drop-box", "right-drop-box"],
       },
       tempModalType: "create",
       tableData: [],
@@ -1603,23 +1617,20 @@ export default {
       productDetail: productDetail,
       // 选中的行
       tableDataSelected: [],
-      oldPicture: [],
-      newPicture: [],
-      save: [],
       showBack: false,
       HdSvipInfo: "",
       shelvesStatus: [
         {
           label: "上架",
-          value: "VALID"
+          value: "VALID",
         },
         {
           label: "下架",
-          value: "INVALID"
-        }
+          value: "INVALID",
+        },
       ],
       searchMinPrice: null,
-      searchMaxPrice: null
+      searchMaxPrice: null,
     };
   },
   computed: {
@@ -1634,15 +1645,15 @@ export default {
     },
     discountPriceComputed() {
       return fenToYuanDot2Number(this.proStandardExpand.discountPrice);
-    }
+    },
   },
   created() {
     this.showBack = this.$route.name === "small-goods-relation-standard";
     this.getTableData();
   },
   mounted() {
-    getProductUnits().then(res => {
-      res.array.forEach(value => {
+    getProductUnits().then((res) => {
+      res.array.forEach((value) => {
         const map = { label: "label", value: "value" };
         map.value = value.id;
         map.label = value.unitName;
@@ -1706,7 +1717,7 @@ export default {
         return;
       }
       const tempDeleteList = [];
-      this.tableDataSelected.filter(value => {
+      this.tableDataSelected.filter((value) => {
         tempDeleteList.push(value.id);
       });
       const strTempDelete = tempDeleteList.join(",");
@@ -1716,9 +1727,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteProductStandard({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -1739,7 +1750,7 @@ export default {
     },
     handleImgSort() {
       this.descriptionList = [];
-      this.uploadListMultiple.forEach(item => {
+      this.uploadListMultiple.forEach((item) => {
         if (item.url) {
           this.descriptionList.push(item.url);
         }
@@ -1771,13 +1782,10 @@ export default {
       this.modalView = true;
     },
     handleEdit(params) {
-      console.log("打开的数据", params.row);
       this.productStandardDetail.rotationImage = "";
       this.productStandardDetail.shareImage = "";
       this.uploadListMultiple_ = [];
       this.uploadListShar = [];
-      this.save = [];
-      this.save.push(params.row.image);
       this.clickFlag = false;
       this.tempModalType = this.modalType.edit;
       this.productStandardDetail = this._.cloneDeep(params.row);
@@ -1813,9 +1821,9 @@ export default {
       // 请求数据展示
       this.modalDiscount = true;
       getProStandardExpand({
-        id: this.productStandardDetail.id
+        id: this.productStandardDetail.id,
       })
-        .then(res => {
+        .then((res) => {
           res.expandType = this.productStandardDetail.productType;
           this.proStandardExpand = res;
           this.modalDiscount = true;
@@ -1826,8 +1834,6 @@ export default {
     },
     // 海鼎会员价查询
     handleHdSvipPrice() {
-      // this.modalHdSvip = true;
-      // console.log(this.productStandardDetail.barcode)
       if (!this.productStandardDetail.barcode) {
         this.$Message.error("请先选择关联商品");
         return;
@@ -1835,7 +1841,7 @@ export default {
       this.loading = true;
       const code = this.productStandardDetail.barcode;
       getHdProductInfo({ code: code })
-        .then(res => {
+        .then((res) => {
           this.HdSvipInfo = res;
           this.loading = false;
           this.modalHdSvip = true;
@@ -1902,13 +1908,14 @@ export default {
       this.modalViewLoading = true;
       createProductStandard({
         productId: this.$route.params.id,
-        ...this.productStandardDetail
+        ...this.productStandardDetail,
       })
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success("创建成功!");
           this.getTableData();
+          this.defaultListMultiple_ = [];
         })
         .catch(() => {
           this.modalViewLoading = false;
@@ -1921,14 +1928,14 @@ export default {
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
       let pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
-      getProductStandardsPages(this.searchRowData).then(res => {
+      getProductStandardsPages(this.searchRowData).then((res) => {
         const tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 10;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
         const _this = this;
-        tableData.forEach(item => {
+        tableData.forEach((item) => {
           item["price"] = (item["price"] / 100.0).toFixed(2);
           item["salePrice"] = (item["salePrice"] / 100.0).toFixed(2);
           item["svipPrice"] = (item["svipPrice"] / 100.0).toFixed(2);
@@ -1939,20 +1946,13 @@ export default {
         const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
           filename: `商品规格-${date}`,
-          data: tableData
+          data: tableData,
         });
       });
     },
     // ====
     handleSubmit(name) {
-      // if (this.oldPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.oldPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
-
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (!this.productStandardDetail.salePrice) {
             this.$Message.error("请输入售卖价格");
@@ -1992,29 +1992,11 @@ export default {
       });
     },
     handleEditClose() {
-      // if (this.newPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.newPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
       this.modalEdit = false;
-      this.oldPicture = [];
-      this.newPicture = [];
     },
-    // deletePicture(urls) {
-    //   deletePicture({
-    //     urls
-    //   })
-    //     .then(res => {
-    //       this.newPicture = [];
-    //       this.oldPicture = [];
-    //     })
-    //     .catch(() => {});
-    // },
     handleSubmitDiscount() {
       this.proStandardExpand.expandType = this.productStandardDetail.productType;
-      this.$refs.modalDiscount.validate(valid => {
+      this.$refs.modalDiscount.validate((valid) => {
         if (valid) {
           if (this.proStandardExpand.discountPrice <= 0) {
             this.$Message.warning("活动价不能为0");
@@ -2050,9 +2032,9 @@ export default {
       this.modalViewLoading = true;
       // 新增或修改
       modifyProStandardExpand({
-        ...this.proStandardExpand
+        ...this.proStandardExpand,
       })
-        .then(res => {
+        .then((res) => {
           const msg = this.proStandardExpand.id ? "修改成功!" : "创建成功";
           this.modalDiscount = false;
           this.modalViewLoading = false;
@@ -2067,14 +2049,15 @@ export default {
     editProductStandard() {
       this.modalViewLoading = true;
       editProductStandard({
-        ...this.productStandardDetail
+        ...this.productStandardDetail,
       })
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           // this.productStandardDetail = productStandardDetail;
           // this.productStandardDetail.productId = this.$route.params.id;
           this.getTableData();
+          this.defaultListMultiple_ = [];
         })
         .catch(() => {
           this.modalEdit = false;
@@ -2092,10 +2075,8 @@ export default {
     },
     getTableData() {
       // 获取商品页面传过来的商品信息
-      console.log("this.$route.name:", this.$route.name);
       if (this.$route.name === "small-goods-relation-standard") {
         const goodsStandard = getSmallGoodsStandard();
-        console.log("standard from cookie:", goodsStandard);
         if (goodsStandard != null && goodsStandard !== "") {
           // 给商品规格的商品和搜索条件赋值
           this.searchRowData.productId = goodsStandard.id;
@@ -2118,7 +2099,7 @@ export default {
       }
 
       getProductStandardsPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
@@ -2151,8 +2132,6 @@ export default {
       this.uploadListMain = fileList;
       this.productStandardDetail.image = null;
       this.productStandardDetail.image = fileList[0].url;
-      this.newPicture.push(fileList[0].url);
-      this.oldPicture = this.save;
     },
     handleSuccessShar(response, file, fileList) {
       this.uploadListShar = fileList;
@@ -2161,27 +2140,21 @@ export default {
     },
     // 上架规格描述图
     handleSuccessMultiple(response, file, fileList) {
-      console.log(response);
       this.uploadListMultiple = fileList;
       this.descriptionList = [];
-      // this.newPicture = "";
-      fileList.forEach(value => {
+      fileList.forEach((value) => {
         if (value.url) {
           this.descriptionList.push(value.url);
         }
       });
       this.productStandardDetail.description = "";
       this.productStandardDetail.description = this.descriptionList.join(",");
-
-      this.newPicture.push(response.fileUrl);
     },
     // 上架轮播图
     handleSuccessMultiple_(response, file, fileList) {
-      console.log(response);
       this.uploadListMultiple_ = fileList;
       this.rotationImageList = [];
-      // this.newPicture = "";
-      fileList.forEach(value => {
+      fileList.forEach((value) => {
         if (value.url) {
           this.rotationImageList.push(value.url);
         }
@@ -2190,9 +2163,6 @@ export default {
       this.productStandardDetail.rotationImage = this.rotationImageList.join(
         ","
       );
-
-      this.newPicture.push(response.fileUrl);
-      console.log("new图片", this.newPicture);
     },
     // 设置编辑图片列表
     setDefaultUploadList(res) {
@@ -2223,7 +2193,7 @@ export default {
       if (res.description != null) {
         const descriptionImgArr = [];
         const descriptionArr = res.description.split(",");
-        descriptionArr.forEach(value => {
+        descriptionArr.forEach((value) => {
           const innerMapDetailImg = { status: "finished", url: "url" };
           innerMapDetailImg.url = value;
           descriptionImgArr.push(innerMapDetailImg);
@@ -2238,8 +2208,7 @@ export default {
       ) {
         const rotationImageArr = [];
         const rotationArr = res.rotationImage.split(",");
-        console.log("图片展示列表", rotationArr);
-        rotationArr.forEach(value => {
+        rotationArr.forEach((value) => {
           const innerMapDetailImg_ = { status: "finished", url: "url" };
           innerMapDetailImg_.url = value;
           rotationImageArr.push(innerMapDetailImg_);
@@ -2264,7 +2233,6 @@ export default {
       this.$refs.uploadMultiple.deleteFile(file);
       const index = this.descriptionList.indexOf(file.url);
       if (index > -1) {
-        this.oldPicture.push(this.descriptionList[index]);
         this.descriptionList.splice(index, 1);
         this.productStandardDetail.description = this.descriptionList.join(",");
       }
@@ -2279,20 +2247,15 @@ export default {
 
       const index = this.rotationImageList.indexOf(file.url);
       if (index > -1) {
-        this.oldPicture.push(this.rotationImageList[index]);
         this.rotationImageList.splice(index, 1);
-        console.log("删除图片", this.rotationImageList.splice(index, 1));
         this.productStandardDetail.rotationImage = this.rotationImageList.join(
           ","
         );
-        console.log("图片显示", this.productStandardDetail.rotationImage);
       }
       if (this.rotationImageList.length === 0) {
-        // console.log("删除图片", this.rotationImageList.length);
         this.$refs.uploadMultiple_.clearFileList();
         this.rotationImageList = [];
         this.productStandardDetail.rotationImage = "";
-        // console.log("轮播图", this.$refs.uploadMultiple_);
       }
     },
     customOnSale(params) {
@@ -2304,10 +2267,10 @@ export default {
       }
       this.loading = true;
       editProductStandard(rowData)
-        .then(res => {
+        .then((res) => {
           this.$Message.success("修改成功!");
         })
-        .finally(res => {
+        .finally((res) => {
           this.loading = false;
           this.modalViewLoading = false;
           this.getTableData();
@@ -2322,7 +2285,7 @@ export default {
     },
     findUnit(unitId) {
       if (this.unitsList != null) {
-        const obj = this.unitsList.find(item => item.value === unitId);
+        const obj = this.unitsList.find((item) => item.value === unitId);
         if (obj) {
           return obj.label;
         }
@@ -2334,14 +2297,14 @@ export default {
     },
     getProductTableData() {
       getProductPages(this.searchProductRowData)
-        .then(res => {
+        .then((res) => {
           this.productData = res.rows;
           this.productTotal = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -2400,11 +2363,6 @@ export default {
       }
     },
     productStandardChange(value) {
-      console.log(
-        "商品规格",
-        Number(this.productStandardDetail.specification.split("*")[0]) *
-          Number(this.productStandardDetail.specification.split("*")[1])
-      );
       if (
         Number(
           this.productStandardDetail.specification.split("*")[0] > 0 &&
@@ -2417,8 +2375,8 @@ export default {
       } else {
         this.productStandardDetail.standardQty = 1;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
