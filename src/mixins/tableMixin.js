@@ -39,7 +39,6 @@ const mixin = {
       this.modalEdit = false;
       this.data = [];
       this.standardIdsArray = [];
-
     },
     handleClose() {
       this.loading = false;
