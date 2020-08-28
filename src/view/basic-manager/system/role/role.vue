@@ -202,6 +202,9 @@ import {
   getMenuOperatesByRoleId,
   createRoleRelation
 } from '@/api/system';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
 import { buildMenu, convertTree } from '@/libs/util';
 
 const roleRowData = {
@@ -226,6 +229,7 @@ export default {
   components: {
     Tables
   },
+  mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
     return {
       tableData: [],
@@ -517,22 +521,6 @@ export default {
       this.selectedOperationIds = operationIds;
       console.log('menuIds:', menuIds);
       console.log('selectedOperationIds:', operationIds);
-    },
-    handleSearch(params) {
-      this.getTableData();
-    },
-    handleClear(params) {
-      this.resetSearchRowData();
-      this.handleSearch();
-    },
-    changePage(currentPage) {
-      this.page = currentPage;
-      this.getTableData();
-    },
-    changePageSize(pageSize) {
-      this.page = 1;
-      this.pageSize = pageSize;
-      this.getTableData();
     },
     findParent(item) {
       const result = [];
