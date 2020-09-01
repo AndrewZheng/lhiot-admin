@@ -384,7 +384,7 @@ const productRowData = {
   maxPrice: "",
   page: 1,
   rows: 10,
-  expandType: ""
+  productType: ""
 };
 
 const productColumns = [
@@ -785,19 +785,19 @@ export default {
         return;
       }
       if (this.currentSectionCode === "PULL_NEW") {
-        this.searchProductRowData.expandType = "PULL_NEW_PRODUCT";
+        this.searchProductRowData.productType = "PULL_NEW_PRODUCT";
       } else if (this.currentSectionCode === "ZKSP") {
-        this.searchProductRowData.expandType = "DISCOUNT_PRODUCT";
+        this.searchProductRowData.productType = "DISCOUNT_PRODUCT";
       } else if (this.currentSectionCode === "SECKILL") {
-        this.searchProductRowData.expandType = "SECKILL_PRODUCT";
+        this.searchProductRowData.productType = "SECKILL_PRODUCT";
       } else if (this.currentSectionCode === "ASSIST") {
-        this.searchProductRowData.expandType = "ASSIST_PRODUCT";
+        this.searchProductRowData.productType = "ASSIST_PRODUCT";
       } else if (this.currentSectionCode === "SHARE") {
-        this.searchProductRowData.expandType = "SHARE_PRODUCT";
+        this.searchProductRowData.productType = "SHARE_PRODUCT";
       } else if (this.currentSectionCode === "SVIP") {
-        this.searchProductRowData.expandType = "";
+        this.searchProductRowData.productType = "";
       } else {
-        this.searchProductRowData.expandType = "IGNORE_TYPE";
+        this.searchProductRowData.productType = "ORDINARY_PRODUCT";
       }
       this.$refs.editForm.resetFields();
       this.getProductTableData();
