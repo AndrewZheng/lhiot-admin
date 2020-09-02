@@ -432,6 +432,14 @@ export default {
                   </tag>
                 </div>
               );
+            } else if (row.productType == "NEW_TRY_PRODUCT") {
+              return (
+                <div>
+                  <tag color="blue">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
             } else if (row.productType == "ASSIST_PRODUCT") {
               return (
                 <div>
@@ -734,7 +742,8 @@ export default {
     // 导出数据
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
-      this.goodsSearchRowData.rows = this.goodsTotal > 5000 ? 5000 : this.goodsTotal;
+      this.goodsSearchRowData.rows =
+        this.goodsTotal > 5000 ? 5000 : this.goodsTotal;
       let pageSize = this.searchRowData.page;
       this.goodsSearchRowData.page = 1;
       this.goodsSearchRowData.beginDate = this.$moment(
