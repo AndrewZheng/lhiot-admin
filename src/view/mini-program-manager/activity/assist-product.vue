@@ -962,6 +962,8 @@ const couponRowData = {
   page: 1,
   rows: 5,
   couponStatus: "VALID",
+  sidx: "createTime",
+  sort: "desc",
 };
 
 const relationTempColumns = [
