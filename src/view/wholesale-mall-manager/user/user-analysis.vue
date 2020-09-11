@@ -112,7 +112,7 @@
             <Icon type="md-refresh" />&nbsp;清除
           </Button>
         </div>
-        <div slot="operations">
+        <!-- <div slot="operations">
           <Button
             v-waves
             :loading="exportExcelLoading"
@@ -122,7 +122,7 @@
           >
             <Icon type="md-download" />导出
           </Button>
-        </div>
+        </div> -->
       </tables>
       <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">

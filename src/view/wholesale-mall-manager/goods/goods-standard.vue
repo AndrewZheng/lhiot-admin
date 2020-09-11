@@ -129,14 +129,14 @@
           <Button v-waves class="search-btn ml5 mr5" type="success" @click="handleCreate">
             <Icon type="md-add" />&nbsp;添加
           </Button>
-          <Button
+          <!-- <Button
             :loading="downloadLoading"
             class="search-btn mr2"
             type="primary"
             @click="handleDownload"
           >
             <Icon type="md-download" />导出商品规格
-          </Button>
+          </Button> -->
           <!-- <Poptip
             confirm
             placement="bottom"

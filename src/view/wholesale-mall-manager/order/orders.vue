@@ -157,7 +157,7 @@
           >
             <Icon type="ios-arrow-back" />返回
           </Button>
-          <Button
+          <!-- <Button
             v-has="'export_order'"
             :loading="downloadLoading"
             class="search-btn mr2"
@@ -165,8 +165,8 @@
             @click="handleDownload"
           >
             <Icon type="md-download" />导出订单
-          </Button>
-          <Button
+          </Button> -->
+          <!-- <Button
             v-has="'export_order_goods'"
             :loading="downloadLoading"
             class="search-btn mr2"
@@ -174,7 +174,7 @@
             @click="handleExport('ORDER_GOODS')"
           >
             <Icon type="md-download" />导出订单商品
-          </Button>
+          </Button> -->
           <Button
             v-has="'export_delivery_order'"
             :loading="downloadLoading"
