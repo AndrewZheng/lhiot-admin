@@ -1,20 +1,38 @@
 import Main from '@/components/main';
 
 const miniMallRouter = [
+  // {
+  //   path: '/',
+  //   name: 'wechat-home',
+  //   redirect: '/wechat-home',
+  //   component: Main,
+  //   meta: {
+  //     hideInMenu: true,
+  //     notCache: true
+  //   },
+  //   children: [{
+  //     path: '/wechat-home',
+  //     name: 'wechat-home',
+  //     meta: {
+  //       hideInMenu: true,
+  //       title: '首页',
+  //       notCache: true
+  //     },
+  //     component: () => import('@/view/mini-program-manager/single-page/home')
+  //   }]
+  // },
   {
-    path: '/',
+    path: '/wechat-home',
     name: 'wechat-home',
-    redirect: '/wechat-home',
     component: Main,
     meta: {
-      hideInMenu: true,
-      notCache: true
+      hideInBread: true,
     },
     children: [{
       path: '/wechat-home',
       name: 'wechat-home',
       meta: {
-        hideInMenu: true,
+        icon: 'md-home',
         title: '首页',
         notCache: true
       },
@@ -119,10 +137,19 @@ const miniMallRouter = [
     name: 'small-goods-teambuy',
     meta: {
       icon: 'md-menu',
-      title: '团购管理'
+      title: '预售•团购管理'
     },
     component: Main,
     children: [{
+      path: '/small-goods-presellActivity',
+      name: 'small-goods-presellActivity',
+      meta: {
+        icon: 'ios-people',
+        title: '预售活动'
+      },
+      component: () => import('@/view/mini-program-manager/presell/presellActivity.vue')
+    },
+    {
       path: '/small-goods-activity-teambuy',
       name: 'small-goods-activity-teambuy',
       meta: {
@@ -159,24 +186,24 @@ const miniMallRouter = [
       component: () => import('@/view/mini-program-manager/activity/images.vue')
     }]
   },
-  {
-    path: '/small-goods-presell',
-    name: 'small-goods-presell',
-    meta: {
-      icon: 'md-menu',
-      title: '预售管理'
-    },
-    component: Main,
-    children: [{
-      path: '/small-goods-presellActivity',
-      name: 'small-goods-presellActivity',
-      meta: {
-        icon: 'ios-people',
-        title: '预售活动'
-      },
-      component: () => import('@/view/mini-program-manager/presell/presellActivity.vue')
-    }]
-  },
+  // {
+  //   path: '/small-goods-presell',
+  //   name: 'small-goods-presell',
+  //   meta: {
+  //     icon: 'md-menu',
+  //     title: '预售管理'
+  //   },
+  //   component: Main,
+  //   children: [{
+  //     path: '/small-goods-presellActivity',
+  //     name: 'small-goods-presellActivity',
+  //     meta: {
+  //       icon: 'ios-people',
+  //       title: '预售活动'
+  //     },
+  //     component: () => import('@/view/mini-program-manager/presell/presellActivity.vue')
+  //   }]
+  // },
   {
     path: '/small-task',
     name: 'small-task',
@@ -231,15 +258,15 @@ const miniMallRouter = [
       },
       component: () => import('@/view/mini-program-manager/activity/activities.vue')
     },
-    {
-      path: '/small-activity-flashsale',
-      name: 'small-activity-flashsale',
-      meta: {
-        icon: 'md-clock',
-        title: '限时抢购管理'
-      },
-      component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
-    },
+    // {
+    //   path: '/small-activity-flashsale',
+    //   name: 'small-activity-flashsale',
+    //   meta: {
+    //     icon: 'md-clock',
+    //     title: '限时抢购管理'
+    //   },
+    //   component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
+    // },
     {
       path: '/small-hand-coupon',
       name: 'small-hand-coupon',
@@ -342,15 +369,15 @@ const miniMallRouter = [
     //   },
     //   component: () => import('@/view/mini-program-manager/activity/recharge.vue')
     // },
-    {
-      path: '/small-activity-random-discount',
-      name: 'small-activity-random-discount',
-      meta: {
-        icon: 'md-remove-circle',
-        title: '随机立减活动'
-      },
-      component: () => import('@/view/mini-program-manager/activity/random-discount.vue')
-    },
+    // {
+    //   path: '/small-activity-random-discount',
+    //   name: 'small-activity-random-discount',
+    //   meta: {
+    //     icon: 'md-remove-circle',
+    //     title: '随机立减活动'
+    //   },
+    //   component: () => import('@/view/mini-program-manager/activity/random-discount.vue')
+    // },
     {
       path: '/small-activity-seckill-product',
       name: 'small-activity-seckill-product',
@@ -379,24 +406,24 @@ const miniMallRouter = [
     },
     component: Main,
     children: [
-    // {
-    //   path: '/small-article-category',
-    //   name: 'small-article-category',
-    //   meta: {
-    //     icon: 'md-pricetag',
-    //     title: '文章分类管理'
-    //   },
-    //   component: () => import('@/view/mini-program-manager/activity/activities.vue')
-    // },
-    // {
-    //   path: '/small-article-section',
-    //   name: 'small-article-section',
-    //   meta: {
-    //     icon: 'md-pricetag',
-    //     title: '文章管理'
-    //   },
-    //   component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
-    // },
+      // {
+      //   path: '/small-article-category',
+      //   name: 'small-article-category',
+      //   meta: {
+      //     icon: 'md-pricetag',
+      //     title: '文章分类管理'
+      //   },
+      //   component: () => import('@/view/mini-program-manager/activity/activities.vue')
+      // },
+      // {
+      //   path: '/small-article-section',
+      //   name: 'small-article-section',
+      //   meta: {
+      //     icon: 'md-pricetag',
+      //     title: '文章管理'
+      //   },
+      //   component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
+      // },
       {
         path: '/small-feedback',
         name: 'small-feedback',
@@ -590,71 +617,71 @@ const miniMallRouter = [
       component: () => import('@/view/mini-program-manager/order/paylog.vue')
     },
     {
-        path: 'small-order-coupon-details',
-        name: 'small-order-coupon-details',
-        meta: {
-          hideInMenu: true,
-          icon: 'md-menu',
-          title: '用券数据'
-        },
-        component: () => import('@/view/mini-program-manager/order/coupon-details.vue')
+      path: 'small-order-coupon-details',
+      name: 'small-order-coupon-details',
+      meta: {
+        hideInMenu: true,
+        icon: 'md-menu',
+        title: '用券数据'
+      },
+      component: () => import('@/view/mini-program-manager/order/coupon-details.vue')
     },
     {
-        path: 'small-order-month-orders',
-        name: 'small-order-month-orders',
-        meta: {
-          hideInMenu: true,
-          icon: 'md-menu',
-          title: '跨月退款订单'
-        },
-        component: () => import('@/view/mini-program-manager/order/month-orders.vue')
-      }]
-    },
-  {
-    path: '/small-vip',
-    name: 'small-vip',
-    meta: {
-      icon: 'md-menu',
-      title: '付费会员管理'
-    },
-    component: Main,
-    children: [{
-      path: '/small-opensvip',
-      name: 'small-opensvip',
+      path: 'small-order-month-orders',
+      name: 'small-order-month-orders',
       meta: {
-        icon: 'logo-skype',
-        title: 'svip套餐'
+        hideInMenu: true,
+        icon: 'md-menu',
+        title: '跨月退款订单'
       },
-      component: () => import('@/view/mini-program-manager/vip/opensvip.vue')
-    },
-    {
-      path: '/small-souvenir',
-      name: 'small-souvenir',
-      meta: {
-        icon: 'ios-basket',
-        title: '开卡礼包'
-      },
-      component: () => import('@/view/mini-program-manager/vip/souvenir.vue')
-    },
-    {
-      path: '/small-privilege',
-      name: 'small-privilege',
-      meta: {
-        icon: 'logo-pinterest',
-        title: '生日特权券活动'
-      },
-      component: () => import('@/view/mini-program-manager/vip/privilege.vue')
-    },
-    {
-      path: '/small-distribution',
-      name: 'small-distribution',
-      meta: {
-        icon: 'ios-car',
-        title: '省心配送券活动'
-      },
-      component: () => import('@/view/mini-program-manager/vip/distribution.vue')
+      component: () => import('@/view/mini-program-manager/order/month-orders.vue')
     }]
   },
+  // {
+  //   path: '/small-vip',
+  //   name: 'small-vip',
+  //   meta: {
+  //     icon: 'md-menu',
+  //     title: '付费会员管理'
+  //   },
+  //   component: Main,
+  //   children: [{
+  //     path: '/small-opensvip',
+  //     name: 'small-opensvip',
+  //     meta: {
+  //       icon: 'logo-skype',
+  //       title: 'svip套餐'
+  //     },
+  //     component: () => import('@/view/mini-program-manager/vip/opensvip.vue')
+  //   },
+  //   {
+  //     path: '/small-souvenir',
+  //     name: 'small-souvenir',
+  //     meta: {
+  //       icon: 'ios-basket',
+  //       title: '开卡礼包'
+  //     },
+  //     component: () => import('@/view/mini-program-manager/vip/souvenir.vue')
+  //   },
+  //   {
+  //     path: '/small-privilege',
+  //     name: 'small-privilege',
+  //     meta: {
+  //       icon: 'logo-pinterest',
+  //       title: '生日特权券活动'
+  //     },
+  //     component: () => import('@/view/mini-program-manager/vip/privilege.vue')
+  //   },
+  //   {
+  //     path: '/small-distribution',
+  //     name: 'small-distribution',
+  //     meta: {
+  //       icon: 'ios-car',
+  //       title: '省心配送券活动'
+  //     },
+  //     component: () => import('@/view/mini-program-manager/vip/distribution.vue')
+  //   }]
+  // },
   {
     path: '/small-system-manager',
     name: 'small-system-manager',
