@@ -41,7 +41,7 @@ export const productRanking = (data) => {
 //规格商品排行 
 export const productStanardRanking = (data) => {
   return $http.request({
-    url: `/minapp/index/statistics/product-stanard/sale-ranking?rankingType=${data.rankingType}&beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    url: `/minapp/index/statistics/product-stanard/sale-ranking?productName=${data.productName}&rankingType=${data.rankingType}&beginDate=${data.beginDate}&endDate=${data.endDate}`,
     method: 'get',
     headers: {
       'page': data.page,
