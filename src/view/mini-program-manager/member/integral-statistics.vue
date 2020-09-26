@@ -1,6 +1,6 @@
 <template>
   <div class="m-role">
-    <div style="margin-bottom:30px">
+    <div style="margin-bottom: 30px">
       <Card>
         <h4>积分数据统计</h4>
         <tables
@@ -16,14 +16,18 @@
         >
           <div slot="searchCondition">
             <Row>
-              <RadioGroup v-model="button" type="button" @on-change="timeChange">
+              <RadioGroup
+                v-model="button"
+                type="button"
+                @on-change="timeChange"
+              >
                 <Radio label="今日"></Radio>
                 <Radio label="昨日"></Radio>
                 <Radio label="最近7天"></Radio>
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
               </RadioGroup>
-              <div class="mark" v-show="mark===true">
+              <div class="mark" v-show="mark === true">
                 <DatePicker
                   v-model="searchRowData.beginDate"
                   format="yyyy-MM-dd"
@@ -48,7 +52,7 @@
                 class="search-btn mr5"
                 type="primary"
                 @click="handleSearch"
-                v-show="mark===true"
+                v-show="mark === true"
               >
                 <Icon type="md-search" />&nbsp;搜索
               </Button>
@@ -57,7 +61,7 @@
               </Button> -->
             </Row>
             <div class="ml15 mt10">
-              <i style="color:red">*</i> 默认展示当天的数据
+              <i style="color: red">*</i> 默认展示当天的数据
             </div>
           </div>
         </tables>
@@ -85,7 +89,7 @@ import _ from "lodash";
 import {
   userDataStatistics,
   dataStatistics,
-  integralStatistics
+  integralStatistics,
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -94,7 +98,7 @@ import searchMixin from "@/mixins/searchMixin.js";
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber
+  yuanToFenNumber,
 } from "@/libs/util";
 
 const couponTemplateDetail = {
@@ -114,13 +118,13 @@ const couponTemplateDetail = {
 // 第一个tables
 const roleRowData = {
   beginDate: null,
-  endDate: null
+  endDate: null,
   //   dateGroup: false
 };
 
 export default {
   components: {
-    Tables
+    Tables,
   },
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
@@ -133,85 +137,85 @@ export default {
         {
           title: "积分途径",
           key: "value",
-          align: "center"
+          align: "center",
         },
         {
           title: "日常消费",
           key: "value1",
           align: "center",
-          width: "150"
+          width: "150",
         },
         {
           title: "评价奖励",
           key: "value2",
-          align: "center"
+          align: "center",
         },
         {
           title: "每日签到",
           align: "center",
-          key: "value3"
+          key: "value3",
         },
         {
           title: "月度消费",
           align: "center",
-          key: "value4"
+          key: "value4",
         },
         {
           title: "首次消费",
           align: "center",
-          key: "value5"
+          key: "value5",
         },
         {
           title: "月度充值",
           align: "center",
-          key: "value6"
+          key: "value6",
         },
         {
           title: "首充",
           align: "center",
-          key: "value7"
+          key: "value7",
         },
         {
           title: "完善资料",
           align: "center",
-          key: "value8"
+          key: "value8",
         },
         {
           title: "任务中心",
           align: "center",
-          key: "value9"
+          key: "value9",
         },
         {
           title: "汇总",
           align: "center",
-          key: "value10"
-        }
+          key: "value10",
+        },
       ],
       dataColumns1: [
         {
           title: "消费途径",
           key: "value",
-          align: "center"
+          align: "center",
         },
         {
           title: "实物兑换",
           key: "value1",
           align: "center",
-          width: "150"
+          width: "150",
         },
         {
           title: "券兑换",
           key: "value2",
-          align: "center"
+          align: "center",
         },
         {
           title: "汇总",
           align: "center",
-          key: "value3"
-        }
+          key: "value3",
+        },
       ],
       searchRowData: _.cloneDeep(roleRowData),
-      couponTemplateDetail: _.cloneDeep(couponTemplateDetail)
+      couponTemplateDetail: _.cloneDeep(couponTemplateDetail),
     };
   },
   computed: {},
@@ -238,7 +242,7 @@ export default {
         this.searchRowData.beginDate = yesterday;
         this.searchRowData.endDate = yesterday;
       }
-      if (value === "今日") {
+      if (value === "今日" || this.button === "今日") {
         let date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
@@ -269,7 +273,7 @@ export default {
         this.searchRowData.endDate = today;
       }
       integralStatistics(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           let data = res.getPointsList;
           let map = {
             value: "value",
@@ -282,7 +286,7 @@ export default {
             value7: "value",
             value8: "value",
             value9: "value",
-            value10: "value"
+            value10: "value",
           };
           let map1 = {
             value: "value",
@@ -295,7 +299,7 @@ export default {
             value7: "value",
             value8: "value",
             value9: "value",
-            value10: "value"
+            value10: "value",
           };
           map.value = "积分数量";
           map.value1 = data.countPoints[0];
@@ -330,7 +334,7 @@ export default {
             value2: "value",
             value3: "value",
           };
-          let map3= {
+          let map3 = {
             value: "value",
             value1: "value",
             value2: "value",
@@ -353,7 +357,7 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -412,7 +416,7 @@ export default {
     //     data: tableData
     //   });
     // }
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>

@@ -25,17 +25,18 @@
             <Select
               v-model="searchRowData.status"
               placeholder="活动状态"
-              style="padding-right: 5px;width: 100px"
+              style="padding-right: 5px; width: 100px"
               clearable
               @on-change="activityStatusChange"
             >
               <Option
-                v-for="(item,index) in teamBuyStatusEnum"
+                v-for="(item, index) in teamBuyStatusEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
-                style="padding-left: 5px;width: 100px"
-              >{{ item.label }}</Option>
+                style="padding-left: 5px; width: 100px"
+                >{{ item.label }}</Option
+              >
             </Select>
             <Input
               v-model="searchRowData.activityName"
@@ -88,11 +89,17 @@
             </Button>
           </Row>
           <div class="ml15 mt10">
-            <i style="color:red">*</i> 选中单条数据再点击添加,可复制当前数据
+            <i style="color: red">*</i> 选中单条数据再点击添加,可复制当前数据
           </div>
         </div>
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
+          <Button
+            v-waves
+            :loading="createLoading"
+            type="success"
+            class="mr5"
+            @click="addStore"
+          >
             <Icon type="md-add" />添加
           </Button>
           <Button
@@ -106,7 +113,7 @@
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -135,7 +142,9 @@
           <i-col span="12">
             <Row>
               <i-col span="6">活动类型:</i-col>
-              <i-col span="18">{{ teambuyDetail.teamBuyType | teamBuyTypeFilter }}</i-col>
+              <i-col span="18">{{
+                teambuyDetail.teamBuyType | teamBuyTypeFilter
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -163,7 +172,9 @@
           <i-col span="12">
             <Row>
               <i-col span="6">活动状态:</i-col>
-              <i-col span="18">{{ teambuyDetail.status | teamBuyStatusFilter }}</i-col>
+              <i-col span="18">{{
+                teambuyDetail.status | teamBuyStatusFilter
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -188,9 +199,11 @@
             <Row>
               <i-col span="6">有效期起:</i-col>
               <i-col span="18">
-                {{ this.teambuyDetail.startTime = this.$moment(
-                this.teambuyDetail.startTime
-                ).format("YYYY-MM-DD HH:mm:ss") }}
+                {{
+                  (this.teambuyDetail.startTime = this.$moment(
+                    this.teambuyDetail.startTime
+                  ).format("YYYY-MM-DD HH:mm:ss"))
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -199,9 +212,11 @@
               <!-- {{ teambuyDetail.endTime }} -->
               <i-col span="6">有效期止:</i-col>
               <i-col span="18">
-                {{ this.teambuyDetail.endTime = this.$moment(
-                this.teambuyDetail.endTime
-                ).format("YYYY-MM-DD HH:mm:ss") }}
+                {{
+                  (this.teambuyDetail.endTime = this.$moment(
+                    this.teambuyDetail.endTime
+                  ).format("YYYY-MM-DD HH:mm:ss"))
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -212,9 +227,11 @@
               <!-- {{ teambuyDetail.deliveryEndTime }} -->
               <i-col span="6">提货截止时间:</i-col>
               <i-col span="18">
-                {{ this.teambuyDetail.deliveryEndTime = this.$moment(
-                this.teambuyDetail.deliveryEndTime
-                ).format("YYYY-MM-DD HH:mm:ss") }}
+                {{
+                  (this.teambuyDetail.deliveryEndTime = this.$moment(
+                    this.teambuyDetail.deliveryEndTime
+                  ).format("YYYY-MM-DD HH:mm:ss"))
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -235,7 +252,9 @@
           <i-col span="12">
             <Row>
               <i-col span="6">参团信息列表:</i-col>
-              <i-col span="18">{{ teambuyDetail.joinInfoStatus | teamBuyStatusFilter }}</i-col>
+              <i-col span="18">{{
+                teambuyDetail.joinInfoStatus | teamBuyStatusFilter
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -243,7 +262,9 @@
           <i-col span="12">
             <Row>
               <i-col span="6">是否模拟成团:</i-col>
-              <i-col span="18">{{ teambuyDetail.robot | teamBuyStatusFilter }}</i-col>
+              <i-col span="18">{{
+                teambuyDetail.robot | teamBuyStatusFilter
+              }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -271,13 +292,17 @@
           <i-col span="12">
             <Row>
               <i-col span="6">原价:</i-col>
-              <i-col span="18">{{ teambuyDetail.originalPrice | fenToYuanDot2Filters }}</i-col>
+              <i-col span="18">{{
+                teambuyDetail.originalPrice | fenToYuanDot2Filters
+              }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
               <i-col span="6">活动价:</i-col>
-              <i-col span="18">{{ teambuyDetail.activityPrice | fenToYuanDot2Filters }}</i-col>
+              <i-col span="18">{{
+                teambuyDetail.activityPrice | fenToYuanDot2Filters
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -285,7 +310,9 @@
           <i-col span="12">
             <Row>
               <i-col span="6">团长优惠:</i-col>
-              <i-col span="18">{{ teambuyDetail.tourDiscount | fenToYuanDot2Filters }}</i-col>
+              <i-col span="18">{{
+                teambuyDetail.tourDiscount | fenToYuanDot2Filters
+              }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -310,18 +337,19 @@
           </i-col>
         </Row>
         <Row class-name="mb20">
-          <i-col span="12">
+          <!-- <i-col span="12">
             <Row>
               <i-col span="6">单人团购价格:</i-col>
               <i-col span="18">{{ teambuyDetail.singleTeambuyPrice | fenToYuanDot2Filters }}</i-col>
             </Row>
-          </i-col>
+          </i-col> -->
           <i-col span="12">
             <Row>
               <i-col span="6">红包活动设置:</i-col>
-              <i-col
-                span="18"
-              >{{ teambuyDetail.rewardActivitySetting | rewardActivitySettingFilter }}</i-col>
+              <i-col span="18">{{
+                teambuyDetail.rewardActivitySetting
+                  | rewardActivitySettingFilter
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -339,18 +367,34 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :z-index="1000" :width="800" :mask-closable="false">
+    <Modal
+      v-model="modalEdit"
+      :z-index="1000"
+      :width="800"
+      :mask-closable="false"
+    >
       <p slot="header">
-        <i-col>{{ tempModalType === modalType.edit?'修改团购活动':'创建团购活动' }}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit ? "修改团购活动" : "创建团购活动"
+        }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="teambuyDetail" :rules="ruleInline" :label-width="130">
-          <Row v-show="tempModalType===modalType.edit">
+        <Form
+          ref="editForm"
+          :model="teambuyDetail"
+          :rules="ruleInline"
+          :label-width="130"
+        >
+          <Row v-show="tempModalType === modalType.edit">
             <i-col span="12">
-              <FormItem label="团购ID:" prop="id">{{ teambuyDetail.id }}</FormItem>
+              <FormItem label="团购ID:" prop="id">{{
+                teambuyDetail.id
+              }}</FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="创建时间:" prop="createTime">{{ teambuyDetail.createTime }}</FormItem>
+              <FormItem label="创建时间:" prop="createTime">{{
+                teambuyDetail.createTime
+              }}</FormItem>
             </i-col>
           </Row>
           <Row>
@@ -358,21 +402,25 @@
               <FormItem label="活动名称:" prop="activityName">
                 <Input
                   v-model="teambuyDetail.activityName"
-                  :readonly="teambuyDetail.status==='on'"
+                  :readonly="teambuyDetail.status === 'on'"
                   style="width: 200px"
                 ></Input>
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="活动类型:" prop="teamBuyType">
-                <Select v-model="teambuyDetail.teamBuyType" style="width: 200px">
+                <Select
+                  v-model="teambuyDetail.teamBuyType"
+                  style="width: 200px"
+                >
                   <Option
                     v-for="item in teamBuyTypeEnum"
                     :value="item.value"
                     :key="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
@@ -380,7 +428,10 @@
           <Row>
             <i-col span="12">
               <FormItem label="活动内容:" prop="content">
-                <Input v-model="teambuyDetail.content" style="width: 200px"></Input>
+                <Input
+                  v-model="teambuyDetail.content"
+                  style="width: 200px"
+                ></Input>
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -390,10 +441,14 @@
                     v-for="item in activityStatus"
                     :value="item.value"
                     :key="item.value"
-                    :disabled="tempModalType === modalType.create && item.value=='expire'"
+                    :disabled="
+                      tempModalType === modalType.create &&
+                      item.value == 'expire'
+                    "
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
@@ -401,24 +456,49 @@
           <Row>
             <i-col span="12">
               <FormItem label="排序序号:" prop="rank">
-                <InputNumber v-model="teambuyDetail.rank" style="width: 200px"></InputNumber>
+                <InputNumber
+                  v-model="teambuyDetail.rank"
+                  style="width: 200px"
+                ></InputNumber>
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem :label-width="130" label="活动Banner 推荐尺寸750*304(单位:px):" prop="banner">
-                <Input v-show="false" v-model="teambuyDetail.banner" style="width: auto"></Input>
-                <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+              <FormItem
+                :label-width="130"
+                label="活动Banner 推荐尺寸750*304(单位:px):"
+                prop="banner"
+              >
+                <Input
+                  v-show="false"
+                  v-model="teambuyDetail.banner"
+                  style="width: auto"
+                ></Input>
+                <div
+                  v-for="item in uploadListMain"
+                  :key="item.url"
+                  class="demo-upload-list"
+                >
                   <template v-if="item.status === 'finished'">
                     <div>
                       <img :src="item.url" />
                       <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                        <Icon
+                          type="ios-eye-outline"
+                          @click.native="handleUploadView(item)"
+                        ></Icon>
+                        <Icon
+                          type="ios-trash-outline"
+                          @click.native="handleRemoveMain(item)"
+                        ></Icon>
                       </div>
                     </div>
                   </template>
                   <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      hide-info
+                    ></Progress>
                   </template>
                 </div>
                 <IViewUpload
@@ -429,7 +509,10 @@
                   file-dir="activity"
                   @on-success="handleSuccessMain"
                 >
-                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                  <div
+                    slot="content"
+                    style="width: 58px; height: 58px; line-height: 58px"
+                  >
                     <Icon type="ios-camera" size="20"></Icon>
                   </div>
                 </IViewUpload>
@@ -524,7 +607,11 @@
           <Row>
             <i-col span="12">
               <FormItem label="成团人数:" prop="fullUserNum">
-                <InputNumber :min="0" v-model="teambuyDetail.fullUserNum" style="width: 200px"></InputNumber>
+                <InputNumber
+                  :min="0"
+                  v-model="teambuyDetail.fullUserNum"
+                  style="width: 200px"
+                ></InputNumber>
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -537,21 +624,24 @@
                   :readonly="tempModalType === modalType.edit"
                   style="width: 60px"
                   @on-change="validSecondsChange"
-                ></InputNumber>&nbsp;时
+                ></InputNumber
+                >&nbsp;时
                 <InputNumber
                   :min="0"
                   v-model="teambuyDetail.minute"
                   :readonly="tempModalType === modalType.edit"
                   style="width: 60px"
                   @on-change="validSecondsChange"
-                ></InputNumber>&nbsp;分
+                ></InputNumber
+                >&nbsp;分
                 <InputNumber
                   :min="0"
                   v-model="teambuyDetail.second"
                   :readonly="tempModalType === modalType.edit"
                   style="width: 60px"
                   @on-change="validSecondsChange"
-                ></InputNumber>&nbsp;秒
+                ></InputNumber
+                >&nbsp;秒
               </FormItem>
             </i-col>
           </Row>
@@ -563,24 +653,29 @@
                     v-for="item in teamBuyStatus"
                     :value="item.value"
                     :key="item.value"
-                    :disabled="item.value=='expire'"
+                    :disabled="item.value == 'expire'"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="参团信息列表:" prop="joinInfoStatus">
-                <Select v-model="teambuyDetail.joinInfoStatus" style="width: 200px">
+                <Select
+                  v-model="teambuyDetail.joinInfoStatus"
+                  style="width: 200px"
+                >
                   <Option
                     v-for="item in teamBuyStatus"
                     :value="item.value"
                     :key="item.value"
-                    :disabled="item.value=='expire'"
+                    :disabled="item.value == 'expire'"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
@@ -588,7 +683,11 @@
           <Row>
             <i-col span="12">
               <FormItem label="商品规格:" prop="standardId">
-                <Input v-model="teambuyDetail.standardId" readonly="readonly" style="width: 200px">
+                <Input
+                  v-model="teambuyDetail.standardId"
+                  readonly="readonly"
+                  style="width: 200px"
+                >
                   <Button
                     v-show="tempModalType !== modalType.edit"
                     slot="append"
@@ -600,12 +699,18 @@
             </i-col>
             <i-col span="12">
               <FormItem label="多少秒后虚位补齐:" prop="robotStartSecond">
-                <Input v-model="teambuyDetail.robotStartSecond" style="width: 200px"></Input>
+                <Input
+                  v-model="teambuyDetail.robotStartSecond"
+                  style="width: 200px"
+                ></Input>
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="规格描述:" prop="standardDesc">
-                <Input v-model="teambuyDetail.standardDesc" style="width: 585px"></Input>
+                <Input
+                  v-model="teambuyDetail.standardDesc"
+                  style="width: 585px"
+                ></Input>
               </FormItem>
             </i-col>
           </Row>
@@ -669,12 +774,16 @@
             </i-col>
             <i-col span="12">
               <FormItem label="已售份数:" prop="saleQuantity">
-                <InputNumber :min="0" v-model="teambuyDetail.saleQuantity" style="width: 200px"></InputNumber>
+                <InputNumber
+                  :min="0"
+                  v-model="teambuyDetail.saleQuantity"
+                  style="width: 200px"
+                ></InputNumber>
               </FormItem>
             </i-col>
           </Row>
           <Row>
-            <i-col v-if="teambuyDetail.teamBuyType!=='OLD_AND_NEW'" span="12">
+            <!-- <i-col v-if="teambuyDetail.teamBuyType!=='OLD_AND_NEW'" span="12">
               <FormItem label="单人团购价格:" prop="singleTeambuyPrice">
                 <InputNumber
                   :min="0"
@@ -684,25 +793,13 @@
                   @on-change="singleTeambuyPriceInputNumberOnchange"
                 ></InputNumber>
               </FormItem>
-            </i-col>
-            <i-col span="12">
-              <FormItem label="红包活动设置:" prop="rewardActivitySetting">
-                <Select v-model="teambuyDetail.rewardActivitySetting" style="width: 200px">
-                  <Option
-                    v-for="item in rewardActivitySettingEnum"
-                    :value="item.value"
-                    :key="item.value"
-                    class="ptb2-5"
-                    style="padding-left: 5px"
-                  >{{ item.label }}</Option>
-                </Select>
-              </FormItem>
-            </i-col>
-          </Row>
-          <Row>
+            </i-col> -->
             <i-col span="12">
               <FormItem label="关联门店:">
-                <Select v-model="teambuyDetail.relationStoreType" style="width: 200px">
+                <Select
+                  v-model="teambuyDetail.relationStoreType"
+                  style="width: 200px"
+                >
                   <Option
                     v-for="item in relationStoreTypeEnum"
                     :value="item.value"
@@ -710,28 +807,58 @@
                     class="ptb2-5"
                     style="padding-left: 5px"
                     @click.native="selectStore(item)"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
+                </Select>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="红包活动设置:" prop="rewardActivitySetting">
+                <Select
+                  v-model="teambuyDetail.rewardActivitySetting"
+                  style="width: 200px"
+                >
+                  <Option
+                    v-for="item in rewardActivitySettingEnum"
+                    :value="item.value"
+                    :key="item.value"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
           </Row>
+          <Row> </Row>
           <Row v-show="showStoreList">
             <i-col span="24">
               <FormItem label="门店列表:">
-                <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
+                <div
+                  style="
+                    border-bottom: 1px solid #e9e9e9;
+                    padding-bottom: 6px;
+                    margin-bottom: 6px;
+                  "
+                >
                   <Checkbox
                     :indeterminate="indeterminate"
                     :value="checkAll"
                     @click.prevent.native="handleCheckAll"
-                  >全选/反选</Checkbox>
+                    >全选/反选</Checkbox
+                  >
                 </div>
-                <CheckboxGroup v-model="storeIds" @on-change="checkAllGroupChange">
+                <CheckboxGroup
+                  v-model="storeIds"
+                  @on-change="checkAllGroupChange"
+                >
                   <Checkbox
                     v-for="item in storeList"
                     ref="checkBox"
                     :key="item.storeId"
                     :label="item.storeId"
-                  >{{ item.storeName }}</Checkbox>
+                    >{{ item.storeName }}</Checkbox
+                  >
                 </CheckboxGroup>
               </FormItem>
             </i-col>
@@ -740,7 +867,9 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit"
+          >确定</Button
+        >
       </div>
     </Modal>
 
@@ -797,7 +926,7 @@
             </Row>
           </div>
         </tables>
-        <div style="margin: 10px;overflow: hidden">
+        <div style="margin: 10px; overflow: hidden">
           <Row type="flex" justify="end">
             <Page
               :total="productTotal"
@@ -825,7 +954,7 @@ import {
   createTeamBuy,
   getStorePages,
   getProductStandardsPages,
-  deletePicture
+  deletePicture,
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -833,13 +962,13 @@ import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 import {
   teamBuyStatusConvert,
-  customPlanStatusConvert
+  customPlanStatusConvert,
 } from "@/libs/converStatus";
 import {
   teamBuyStatusEnum,
   teamBuyTypeEnum,
   rewardActivitySettingEnum,
-  relationStoreTypeEnum
+  relationStoreTypeEnum,
 } from "@/libs/enumerate";
 import {
   fenToYuanDot2,
@@ -847,7 +976,7 @@ import {
   yuanToFenNumber,
   compareData,
   secondsToDate,
-  compareCouponData
+  compareCouponData,
 } from "@/libs/util";
 
 const teambuyDetail = {
@@ -856,7 +985,7 @@ const teambuyDetail = {
   teamGuaranteeURL: "",
   storeId: 0,
   storeIds: "",
-  singleTeambuyPrice: null,
+  // singleTeambuyPrice: null,
   originalPrice: null,
   saleQuantity: 0,
   createTime: "",
@@ -893,7 +1022,7 @@ const teambuyDetail = {
   minute: null,
   second: null,
   relationStoreType: "ALL",
-  content: ""
+  content: "",
 };
 
 const roleRowData = {
@@ -905,7 +1034,7 @@ const roleRowData = {
   rows: 10,
   sidx: "rank",
   sort: "asc",
-  content: ""
+  content: "",
 };
 
 const productStandardDetail = {
@@ -949,7 +1078,7 @@ const productStandardDetail = {
   invNum: null,
   saleCount: null,
   positionName: null,
-  dbId: null
+  dbId: null,
 };
 
 const productRowData = {
@@ -961,13 +1090,13 @@ const productRowData = {
   minPrice: "",
   maxPrice: "",
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 export default {
   components: {
     Tables,
-    IViewUpload
+    IViewUpload,
   },
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
@@ -982,8 +1111,8 @@ export default {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         activityName: [{ required: true, message: "请输入活动名称" }],
         teamBuyType: [{ required: true, message: "请选择活动类型" }],
@@ -1003,8 +1132,8 @@ export default {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         joinInfoStatus: [{ required: true, message: "请选择参团信息列表状态" }],
         robot: [{ required: true, message: "请选择是否模拟成团" }],
@@ -1017,8 +1146,8 @@ export default {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         standardId: [{ required: true, message: "请选择商品规格" }],
         standardDesc: [{ required: true, message: "请输入规格描述" }],
@@ -1026,15 +1155,15 @@ export default {
           { required: true, message: "请输入商品原价" },
           {
             message: "必须为大于0的数字",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+          },
         ],
         activityPrice: [
           { required: true, message: "请输入商品活动价" },
           {
             message: "必须为大于0的数字",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+          },
         ],
         tourDiscount: [{ required: true, message: "请选择团长优惠" }],
         triesLimit: [
@@ -1046,8 +1175,8 @@ export default {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         productNum: [
           { required: true, message: "请选择库存数量" },
@@ -1058,8 +1187,8 @@ export default {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         saleQuantity: [
           { required: true, message: "请输入已售份数" },
@@ -1070,30 +1199,30 @@ export default {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
-        singleTeambuyPrice: [
-          { required: true, message: "请输入单人团购价格" },
-          {
-            message: "必须为大于0的数字",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
-        ],
+        // singleTeambuyPrice: [
+        //   { required: true, message: "请输入单人团购价格" },
+        //   {
+        //     message: "必须为大于0的数字",
+        //     pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+        //   },
+        // ],
         rewardActivitySetting: [
-          { required: true, message: "请选择红包活动设置" }
-        ]
+          { required: true, message: "请选择红包活动设置" },
+        ],
       },
       defaultListMain: [],
       uploadListMain: [],
       activityStatus: [
         { label: "未开始", value: "off" },
         { label: "进行中", value: "on" },
-        { label: "已结束", value: "expire" }
+        { label: "已结束", value: "expire" },
       ],
       teamBuyStatus: [
         { label: "关闭", value: "off" },
-        { label: "开启", value: "on" }
+        { label: "开启", value: "on" },
       ],
       teamBuyStatusEnum,
       teamBuyTypeEnum,
@@ -1118,7 +1247,7 @@ export default {
           key: "activityName",
           align: "center",
           fixed: "left",
-          minWidth: 200
+          minWidth: 200,
         },
         {
           title: "活动状态",
@@ -1157,19 +1286,19 @@ export default {
                 <tag color="primary">{row.status}</tag>
               </div>
             );
-          }
+          },
         },
         {
           title: "活动内容",
           align: "center",
           minWidth: 160,
-          key: "content"
+          key: "content",
         },
         {
           title: "有效期起",
           align: "center",
           minWidth: 160,
-          key: "startTime"
+          key: "startTime",
         },
         {
           title: "有效期止",
@@ -1184,13 +1313,13 @@ export default {
             } else {
               return <div>{params.row.endTime}</div>;
             }
-          }
+          },
         },
         {
           title: "商品库存",
           align: "center",
           minWidth: 90,
-          key: "productNum"
+          key: "productNum",
         },
         {
           title: "活动价",
@@ -1199,7 +1328,7 @@ export default {
           align: "center",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.activityPrice)}</div>;
-          }
+          },
         },
         {
           title: "团长优惠",
@@ -1208,7 +1337,7 @@ export default {
           key: "tourDiscount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.tourDiscount)}</div>;
-          }
+          },
         },
         {
           title: "成团有效时长",
@@ -1217,13 +1346,13 @@ export default {
           key: "validSeconds",
           render(h, params) {
             return <div>{secondsToDate(params.row.validSeconds)}</div>;
-          }
+          },
         },
         {
           title: "提货截至时间",
           align: "center",
           minWidth: 160,
-          key: "deliveryEndTime"
+          key: "deliveryEndTime",
         },
         {
           title: "规格ID",
@@ -1236,19 +1365,19 @@ export default {
           align: "center",
           minWidth: 120,
           key: "standardDesc",
-          tooltip: true
+          tooltip: true,
         },
         {
           title: "限购次数",
           align: "center",
           minWidth: 90,
-          key: "triesLimit"
+          key: "triesLimit",
         },
         {
           title: "排序",
           align: "center",
           minWidth: 80,
-          key: "rank"
+          key: "rank",
         },
         {
           title: "是否模拟成团",
@@ -1279,7 +1408,7 @@ export default {
                 <tag color="primary">{row.robot}</tag>
               </div>
             );
-          }
+          },
         },
         {
           title: "操作",
@@ -1287,8 +1416,8 @@ export default {
           align: "center",
           fixed: "right",
           key: "handle",
-          options: ["view", "edit"]
-        }
+          options: ["view", "edit"],
+        },
       ],
       productColumns: [
         // {
@@ -1302,37 +1431,37 @@ export default {
           title: "规格ID",
           align: "center",
           key: "id",
-          minWidth: 80
+          minWidth: 80,
         },
         {
           title: "商品条码",
           key: "barcode",
           align: "center",
-          minWidth: 80
+          minWidth: 80,
         },
         {
           title: "商品编号",
           key: "productCode",
           align: "center",
-          minWidth: 130
+          minWidth: 130,
         },
         {
           title: "商品名称",
           align: "center",
           key: "productName",
-          minWidth: 150
+          minWidth: 150,
         },
         {
           title: "商品规格",
           align: "center",
           key: "specification",
-          minWidth: 100
+          minWidth: 100,
         },
         {
           title: "商品单位",
           align: "center",
           minWidth: 100,
-          key: "productUnit"
+          key: "productUnit",
         },
         {
           title: "商品原价",
@@ -1342,7 +1471,7 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.price);
             return <div>{amount}</div>;
-          }
+          },
         },
         {
           title: "优惠价格",
@@ -1352,7 +1481,7 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.salePrice);
             return <div>{amount}</div>;
-          }
+          },
         },
         {
           title: "商品状态",
@@ -1385,14 +1514,14 @@ export default {
                 </tag>
               </div>
             );
-          }
+          },
         },
         {
           title: "商品排序",
           align: "center",
           minWidth: 100,
-          key: "rank"
-        }
+          key: "rank",
+        },
       ],
       productData: [],
       productTotal: 0,
@@ -1409,7 +1538,7 @@ export default {
       searchRowData: _.cloneDeep(roleRowData),
       searchProductRowData: _.cloneDeep(productRowData),
       productDetail: _.cloneDeep(productStandardDetail),
-      teambuyDetail: _.cloneDeep(teambuyDetail)
+      teambuyDetail: _.cloneDeep(teambuyDetail),
     };
   },
   computed: {
@@ -1419,9 +1548,9 @@ export default {
     activityPriceComputed() {
       return fenToYuanDot2Number(this.teambuyDetail.activityPrice);
     },
-    singleTeambuyPriceComputed() {
-      return fenToYuanDot2Number(this.teambuyDetail.singleTeambuyPrice);
-    },
+    // singleTeambuyPriceComputed() {
+    //   return fenToYuanDot2Number(this.teambuyDetail.singleTeambuyPrice);
+    // },
     tourDiscountComputed() {
       return fenToYuanDot2Number(this.teambuyDetail.tourDiscount);
     },
@@ -1435,13 +1564,13 @@ export default {
       const list = this.storeList;
       let str = "";
       if (list.length > 0) {
-        ids.forEach(id => {
-          const item = list.find(item => item.storeId == id);
+        ids.forEach((id) => {
+          const item = list.find((item) => item.storeId == id);
           str += item.storeName + ",";
         });
         return str.substring(0, str.length - 1);
       }
-    }
+    },
   },
   watch: {
     numberInput(v) {
@@ -1449,7 +1578,7 @@ export default {
       this.$nextTick(() => {
         this.testInput = String(v).replace(/\D/g, "");
       });
-    }
+    },
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
@@ -1476,7 +1605,7 @@ export default {
       //   };
       //   _this.deletePicture(urls);
       // }
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (
             _this.teambuyDetail.teamBuyType === "OLD_AND_NEW" &&
@@ -1605,7 +1734,7 @@ export default {
       this.modalViewLoading = true;
       this.teambuyDetail.id = null; // 新建时不需要传递id
       createTeamBuy(this.teambuyDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success("创建成功!");
@@ -1635,8 +1764,9 @@ export default {
         ).format("YYYY-MM-DD HH:mm:ss");
       }
       editTeamBuy(this.teambuyDetail)
-        .then(res => {
+        .then((res) => {
           this.getTableData();
+          this.$Message.success("操作成功!");
           this.modalEdit = false;
           this.modalViewLoading = false;
         })
@@ -1679,7 +1809,7 @@ export default {
         this.currentTableRowSelected.storeIds = null;
         this.currentTableRowSelected.relationStoreType = "ALL";
         this.currentTableRowSelected.activityPrice = null;
-        this.currentTableRowSelected.singleTeambuyPrice = null;
+        // this.currentTableRowSelected.singleTeambuyPrice = null;
         this.currentTableRowSelected.hour = hourTime;
         this.currentTableRowSelected.minute = minuteTime;
         this.currentTableRowSelected.second = secondTime;
@@ -1698,9 +1828,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteTeamBuy({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -1712,7 +1842,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -1763,7 +1893,7 @@ export default {
         const storeIds = this.teambuyDetail.storeIds
           .substring(1, this.teambuyDetail.storeIds.length - 1)
           .split("][");
-        storeIds.forEach(element => {
+        storeIds.forEach((element) => {
           this.storeIds.push(parseInt(element));
         });
         // 全选/反选按钮的样式
@@ -1781,10 +1911,10 @@ export default {
     },
     handleDownload() {
       this.exportExcelLoading = true;
-      getTeamBuyPages(this.searchRowData).then(res => {
+      getTeamBuyPages(this.searchRowData).then((res) => {
         const tableData = res.rows;
         // 表格数据导出字段翻译
-        tableData.forEach(item => {
+        tableData.forEach((item) => {
           item["groupId"] = item["groupName"];
           item["status"] = teamBuyStatusConvert(item["status"]).label;
           item["activityPrice"] = (item["activityPrice"] / 100.0).toFixed(2);
@@ -1794,7 +1924,7 @@ export default {
         const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
           filename: `拼团活动信息-${date}`,
-          data: tableData
+          data: tableData,
         });
         this.exportExcelLoading = false;
       });
@@ -1805,14 +1935,14 @@ export default {
         this.searchRowData.sort = "desc";
       }
       getTeamBuyPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -1887,9 +2017,9 @@ export default {
     activityPriceInputNumberOnchange(value) {
       this.teambuyDetail.activityPrice = yuanToFenNumber(value);
     },
-    singleTeambuyPriceInputNumberOnchange(value) {
-      this.teambuyDetail.singleTeambuyPrice = yuanToFenNumber(value);
-    },
+    // singleTeambuyPriceInputNumberOnchange(value) {
+    //   this.teambuyDetail.singleTeambuyPrice = yuanToFenNumber(value);
+    // },
     tourDiscountInputNumberOnchange(value) {
       this.teambuyDetail.tourDiscount = yuanToFenNumber(value);
     },
@@ -1909,10 +2039,10 @@ export default {
     // TODO 选择门店id方法
     getStore() {
       getStorePages({ page: 1, rows: -1 })
-        .then(res => {
+        .then((res) => {
           this.storeList = res.rows;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -1925,7 +2055,7 @@ export default {
       this.indeterminate = false;
       if (this.checkAll) {
         const allIds = [];
-        this.storeList.forEach(item => {
+        this.storeList.forEach((item) => {
           allIds.push(item.storeId);
         });
         this.storeIds = allIds;
@@ -1960,14 +2090,14 @@ export default {
     },
     getProductTableData() {
       getProductStandardsPages(this.searchProductRowData)
-        .then(res => {
+        .then((res) => {
           this.productData = res.rows;
           this.productTotal = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -2015,8 +2145,8 @@ export default {
       } else {
         this.currentTableRowSelected = null;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
