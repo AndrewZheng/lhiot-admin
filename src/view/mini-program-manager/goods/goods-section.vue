@@ -8,9 +8,11 @@
         <Card>
           <h6>
             当前选中：
-            <span
-              class="brand-red font-sm"
-            >{{ currentCategory.sectionName!=''? currentCategory.sectionName : '所有板块' }}</span>
+            <span class="brand-red font-sm">{{
+              currentCategory.sectionName != ""
+                ? currentCategory.sectionName
+                : "所有板块"
+            }}</span>
           </h6>
           <tables
             ref="tables"
@@ -94,7 +96,7 @@
               </Button>
             </div>
           </tables>
-          <div style="margin: 10px;overflow: hidden">
+          <div style="margin: 10px; overflow: hidden">
             <Row type="flex" justify="end">
               <Page
                 :total="total"
@@ -112,10 +114,16 @@
     <!-- 添加 -->
     <Modal v-model="modalEdit" :mask-closable="false" :width="1200">
       <p slot="header">
-        <span>{{ tempModalType == modalType.create? '添加板块商品':'编辑板块' }}</span>
+        <span>{{
+          tempModalType == modalType.create ? "添加板块商品" : "编辑板块"
+        }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="productStandardRelation" :rules="ruleInline">
+        <Form
+          ref="editForm"
+          :model="productStandardRelation"
+          :rules="ruleInline"
+        >
           <!-- 编辑 -->
           <Row v-if="tempModalType == modalType.edit">
             <FormItem label="请选择要更换的商品板块:">
@@ -180,7 +188,7 @@
                   </Row>
                 </div>
               </tables>
-              <div style="margin: 10px;overflow: hidden">
+              <div style="margin: 10px; overflow: hidden">
                 <Row type="flex" justify="end">
                   <Page
                     :total="productTotal"
@@ -194,21 +202,38 @@
               </div>
             </FormItem>
           </Row>
-          <FormItem v-if="tempModalType == modalType.create" label="排序:" prop="rank">
+          <FormItem
+            v-if="tempModalType == modalType.create"
+            label="排序:"
+            prop="rank"
+          >
             <InputNumber v-model="productStandardRelation.rank"></InputNumber>
           </FormItem>
           <FormItem v-else label="排序:" prop="productSectionRank">
-            <InputNumber v-model="productStandardRelation.productSectionRank"></InputNumber>
+            <InputNumber
+              v-model="productStandardRelation.productSectionRank"
+            ></InputNumber>
           </FormItem>
         </Form>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')">确认</Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('editForm')"
+          >确认</Button
+        >
       </div>
     </Modal>
     <!-- 查看 -->
-    <Modal v-model="modalView" :width="800" draggable scrollable :mask-closable="false">
+    <Modal
+      v-model="modalView"
+      :width="800"
+      draggable
+      scrollable
+      :mask-closable="false"
+    >
       <p slot="header">
         <span>折扣商品价格展示</span>
       </p>
@@ -220,17 +245,48 @@
               <i-col span="16">{{ discount.productName }}</i-col>
             </Row>
           </i-col>
-          <i-col span="12">
+      <i-col span="12">
             <Row>
               <i-col span="8">商品类型:</i-col>
-              <i-col span="16" v-if="discount.expandType === 'DISCOUNT_PRODUCT'">
+              <i-col
+                span="16"
+                v-if="discount.expandType === 'DISCOUNT_PRODUCT'"
+              >
                 <tag color="magenta">{{ "折扣商品" }}</tag>
               </i-col>
-              <i-col span="16" v-else-if="discount.expandType === 'PULL_NEW_PRODUCT'">
+              <i-col
+                span="16"
+                v-else-if="discount.expandType === 'PULL_NEW_PRODUCT'"
+              >
                 <tag color="orange">{{ "老拉新商品" }}</tag>
+              </i-col>
+              <i-col
+                span="16"
+                v-else-if="discount.expandType === 'NEW_TRY_PRODUCT'"
+              >
+                <tag color="orange">{{ "新品尝鲜商品" }}</tag>
+              </i-col>
+              <i-col
+                span="16"
+                v-else-if="discount.expandType === 'SHARE_PRODUCT'"
+              >
+                <tag color="orange">{{ "分享赚商品" }}</tag>
+              </i-col>
+              <i-col
+                span="16"
+                v-else-if="discount.expandType === 'ASSIST_PRODUCT'"
+              >
+                <tag color="orange">{{ "助力商品" }}</tag>
+              </i-col>
+              <i-col
+                span="16"
+                v-else-if="discount.expandType === 'SECKILL_PRODUCT'"
+              >
+                <tag color="orange">{{ "限时秒杀商品" }}</tag>
               </i-col>
             </Row>
           </i-col>
+
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
@@ -247,7 +303,7 @@
           </i-col>
         </Row>
         <Row class-name="mb20">
-          <i-col span="12" style="color:red">
+          <i-col span="12" style="color: red">
             <Row>
               <i-col span="8">折扣价:</i-col>
               <i-col span="16">{{ discount.discountPrice }}</i-col>
@@ -256,7 +312,7 @@
           <i-col span="12">
             <Row>
               <i-col span="8">折扣率:</i-col>
-              <i-col span="16">{{ discount.discountRate+"折" }}</i-col>
+              <i-col span="16">{{ discount.discountRate + "折" }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -292,7 +348,7 @@ import {
   getProductStandardsPages,
   editProductSectionRelation,
   getProductSectionTree,
-  getProStandardExpand
+  getProStandardExpand,
 } from "@/api/mini-program";
 import { buildMenu, convertTree, convertTreeCategory } from "@/libs/util";
 import CommonIcon from "_c/common-icon";
@@ -304,7 +360,7 @@ import { fenToYuanDot2 } from "@/libs/util";
 import {
   customPlanStatusConvert,
   appTypeConvert,
-  expandTypeConvert
+  expandTypeConvert,
 } from "@/libs/converStatus";
 import { appTypeEnum, expandTypeEnum } from "@/libs/enumerate";
 
@@ -344,7 +400,7 @@ const productStandardDetail = {
   status: "",
   unitId: 0,
   videoImage: "",
-  videoUrl: ""
+  videoUrl: "",
 };
 
 const currentCategory = {
@@ -356,21 +412,21 @@ const currentCategory = {
   sectionImg: "",
   rankNo: 0,
   productStandardList: [],
-  positionName: ""
+  positionName: "",
 };
 
 const roleRowData = {
   productName: null,
   page: 1,
   rows: 10,
-  sidx: "product_section_rank"
+  sidx: "product_section_rank",
 };
 
 const relationData = {
   id: 0,
   productStandardIds: 0,
   productSectionId: 0,
-  productSectionRank: 0
+  productSectionRank: 0,
 };
 
 const productRowData = {
@@ -384,7 +440,7 @@ const productRowData = {
   maxPrice: "",
   page: 1,
   rows: 10,
-  expandType: ""
+  productType: "",
 };
 
 const productColumns = [
@@ -393,37 +449,37 @@ const productColumns = [
     key: "",
     width: 60,
     align: "center",
-    fixed: "left"
+    fixed: "left",
   },
   {
     title: "商品条码",
     key: "barcode",
     minWidth: 70,
-    align: "center"
+    align: "center",
   },
   {
     title: "商品编号",
     key: "productCode",
     align: "center",
-    minWidth: 120
+    minWidth: 120,
   },
   {
     title: "商品名称",
     key: "productName",
     minWidth: 100,
-    align: "center"
+    align: "center",
   },
   {
     title: "商品规格",
     key: "specification",
     minWidth: 80,
-    align: "center"
+    align: "center",
   },
   {
     title: "商品单位",
     key: "productUnit",
     minWidth: 80,
-    align: "center"
+    align: "center",
   },
   {
     title: "商品价格",
@@ -433,7 +489,7 @@ const productColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "折扣价格",
@@ -449,72 +505,61 @@ const productColumns = [
       } else {
         return <div>N/A</div>;
       }
-    }
+    },
   },
   {
     title: "起购份数",
     key: "startNum",
     minWidth: 80,
-    align: "center"
+    align: "center",
   },
   {
     title: "商品类型",
     minWidth: 120,
-    key: "expandType",
+    key: "productType",
     align: "center",
     render: (h, params, vm) => {
       const { row } = params;
-
-      if (row.productStandardExpand != null) {
-        if (row.productStandardExpand.expandType == "DISCOUNT_PRODUCT") {
-          return (
-            <div>
-              <tag color="magenta">
-                {expandTypeConvert(row.productStandardExpand.expandType).label}
-              </tag>
-            </div>
-          );
-        } else if (row.productStandardExpand.expandType == "PULL_NEW_PRODUCT") {
-          return (
-            <div>
-              <tag color="orange">
-                {expandTypeConvert(row.productStandardExpand.expandType).label}
-              </tag>
-            </div>
-          );
-        } else if (row.productStandardExpand.expandType == "SECKILL_PRODUCT") {
-          return (
-            <div>
-              <tag color="blue">
-                {expandTypeConvert(row.productStandardExpand.expandType).label}
-              </tag>
-            </div>
-          );
-        } else if (row.productStandardExpand.expandType == "SHARE_PRODUCT") {
-          return (
-            <div>
-              <tag color="blue">
-                {expandTypeConvert(row.productStandardExpand.expandType).label}
-              </tag>
-            </div>
-          );
-        } else if (row.productStandardExpand.expandType == "ASSIST_PRODUCT") {
-          return (
-            <div>
-              <tag color="green">
-                {expandTypeConvert(row.productStandardExpand.expandType).label}
-              </tag>
-            </div>
-          );
-        }
-      } else {
+      if (row.productType == "DISCOUNT_PRODUCT") {
         return (
           <div>
-            <tag color="cyan">{"普通商品"}</tag>
+            <tag color="magenta">
+              {expandTypeConvert(row.productType).label}
+            </tag>
+          </div>
+        );
+      } else if (row.productType == "PULL_NEW_PRODUCT") {
+        return (
+          <div>
+            <tag color="orange">{expandTypeConvert(row.productType).label}</tag>
+          </div>
+        );
+      } else if (row.productType == "SECKILL_PRODUCT") {
+        return (
+          <div>
+            <tag color="blue">{expandTypeConvert(row.productType).label}</tag>
+          </div>
+        );
+      } else if (row.productType == "SHARE_PRODUCT") {
+        return (
+          <div>
+            <tag color="blue">{expandTypeConvert(row.productType).label}</tag>
+          </div>
+        );
+      } else if (row.productType == "ASSIST_PRODUCT") {
+        return (
+          <div>
+            <tag color="green">{expandTypeConvert(row.productType).label}</tag>
+          </div>
+        );
+      } else if (row.productType == "ORDINARY_PRODUCT") {
+        return (
+          <div>
+            <tag color="green">{expandTypeConvert(row.productType).label}</tag>
           </div>
         );
       }
-    }
+    },
   },
   {
     title: "商品状态",
@@ -547,19 +592,19 @@ const productColumns = [
           </tag>
         </div>
       );
-    }
+    },
   },
   {
     title: "排序",
     key: "rank",
     minWidth: 60,
-    align: "center"
-  }
+    align: "center",
+  },
 ];
 export default {
   components: {
     Tables,
-    CommonIcon
+    CommonIcon,
   },
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
@@ -569,8 +614,8 @@ export default {
           { required: true, message: "请选择关联商品" },
           {
             message: "请选择要关联的商品",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+          },
         ],
         specificationQty: [
           { required: true, message: "请输入安全库存" },
@@ -581,9 +626,9 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
-        ]
+            },
+          },
+        ],
         // rank: [{ required: true, message: "请输入商品排序" }]
       },
       appTypeEnum,
@@ -595,33 +640,33 @@ export default {
           type: "selection",
           width: 60,
           align: "center",
-          fixed: "left"
+          fixed: "left",
         },
         {
           title: "商品条码",
           key: "barcode",
-          align: "center"
+          align: "center",
         },
         {
           title: "商品编号",
           key: "productCode",
           align: "center",
-          width: 150
+          width: 150,
         },
         {
           title: "商品名称",
           key: "productName",
-          align: "center"
+          align: "center",
         },
         {
           title: "商品规格",
           key: "specification",
-          align: "center"
+          align: "center",
         },
         {
           title: "商品单位",
           key: "productUnit",
-          align: "center"
+          align: "center",
         },
         {
           title: "商品价格",
@@ -630,7 +675,7 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.price);
             return <div>{amount}</div>;
-          }
+          },
         },
         {
           title: "商品状态",
@@ -661,21 +706,21 @@ export default {
                 </div>
               );
             }
-          }
+          },
         },
         {
           title: "排序",
           key: "productSectionRank",
           sortable: "true",
-          align: "center"
+          align: "center",
         },
         {
           title: "操作",
           align: "center",
           key: "handle",
           width: 200,
-          options: ["view", "exchange", "edit", "delete"]
-        }
+          options: ["view", "exchange", "edit", "delete"],
+        },
       ],
       productColumns: productColumns,
       modalEdit: false,
@@ -694,7 +739,7 @@ export default {
       goodsSectionData: [],
       defaultGoodsSectionData: [41],
       productData: [],
-      productTotal: 0
+      productTotal: 0,
     };
   },
   computed: {},
@@ -723,7 +768,7 @@ export default {
       this.searchLoading = true;
       this.getTableData();
       this.$refs.tables.exportCsv({
-        filename: filename + "-" + new Date().valueOf() + ".csv"
+        filename: filename + "-" + new Date().valueOf() + ".csv",
       });
     },
     handleBack() {
@@ -738,7 +783,7 @@ export default {
               display: "inline-block",
               width: "100%",
               fontSize: "14px",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
           >
             <span>
@@ -756,7 +801,7 @@ export default {
               display: "inline-block",
               width: "100%",
               fontSize: "14px",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
           >
             <span>
@@ -779,20 +824,21 @@ export default {
         this.$Message.warning("请先从左侧选择一个板块");
         return;
       }
+      this.searchProductRowData.page = 1;
       if (this.currentSectionCode === "PULL_NEW") {
-        this.searchProductRowData.expandType = "PULL_NEW_PRODUCT";
+        this.searchProductRowData.productType = "PULL_NEW_PRODUCT";
       } else if (this.currentSectionCode === "ZKSP") {
-        this.searchProductRowData.expandType = "DISCOUNT_PRODUCT";
+        this.searchProductRowData.productType = "DISCOUNT_PRODUCT";
       } else if (this.currentSectionCode === "SECKILL") {
-        this.searchProductRowData.expandType = "SECKILL_PRODUCT";
+        this.searchProductRowData.productType = "SECKILL_PRODUCT";
       } else if (this.currentSectionCode === "ASSIST") {
-        this.searchProductRowData.expandType = "ASSIST_PRODUCT";
+        this.searchProductRowData.productType = "ASSIST_PRODUCT";
       } else if (this.currentSectionCode === "SHARE") {
-        this.searchProductRowData.expandType = "SHARE_PRODUCT";
+        this.searchProductRowData.productType = "SHARE_PRODUCT";
       } else if (this.currentSectionCode === "SVIP") {
-        this.searchProductRowData.expandType = "";
+        this.searchProductRowData.productType = "";
       } else {
-        this.searchProductRowData.expandType = "IGNORE_TYPE";
+        this.searchProductRowData.productType = "ORDINARY_PRODUCT";
       }
       this.$refs.editForm.resetFields();
       this.getProductTableData();
@@ -817,7 +863,7 @@ export default {
       this.modalEdit = true;
     },
     handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (!this.productStandardRelation.productSectionId) {
             this.$Message.warning("商品板块id不能为空");
@@ -829,7 +875,7 @@ export default {
           }
           if (this.tempModalType === this.modalType.create) {
             createProductSectionRelation(this.productStandardRelation).then(
-              res => {
+              (res) => {
                 this.initMenuList();
                 this.modalEditLoading = false;
                 this.modalEdit = false;
@@ -837,7 +883,7 @@ export default {
             );
           } else if (this.tempModalType === this.modalType.edit) {
             editProductSectionRelation(this.productStandardRelation).then(
-              res => {
+              (res) => {
                 this.initMenuList();
                 this.modalEditLoading = false;
                 this.modalEdit = false;
@@ -849,15 +895,10 @@ export default {
     },
     handleView(params) {
       getProStandardExpand({
-        id: params.row.productStandardId
-      }).then(res => {
-        this.discount = res;
-        console.log("回调", res);
-        if (!res) {
-          this.modalView = false;
-          this.$Message.error("当前商品不是活动商品");
-          return;
-        } else {
+        id: params.row.productStandardId,
+      }).then((res) => {
+        if (res) {
+          this.discount = res;
           this.discount.discountPrice = fenToYuanDot2(
             this.discount.discountPrice
           );
@@ -865,6 +906,9 @@ export default {
           this.discount.price = fenToYuanDot2(params.row.price);
           this.discount.salePrice = fenToYuanDot2(params.row.salePrice);
           this.modalView = true;
+        } else {
+          this.$Message.error("当前商品不是活动商品");
+          return;
         }
       });
     },
@@ -875,9 +919,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteProductSectionRelation({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&
@@ -895,7 +939,7 @@ export default {
     },
     getTableData() {
       this.loading = true;
-      getProductSectionRelationPages(this.searchRowData).then(res => {
+      getProductSectionRelationPages(this.searchRowData).then((res) => {
         // if (this.menuData.length > 0) {
         this.tableData = res.rows;
         this.total = res.total;
@@ -906,7 +950,7 @@ export default {
       });
     },
     getProductTableData() {
-      getProductStandardsPages(this.searchProductRowData).then(res => {
+      getProductStandardsPages(this.searchProductRowData).then((res) => {
         if (this.menuData.length > 0) {
           this.productData = res.rows;
           this.productTotal = res.total;
@@ -919,12 +963,12 @@ export default {
     },
     // 初始化商品菜单列表
     initMenuList() {
-      getProductSectionTree(this.treeData).then(res => {
+      getProductSectionTree(this.treeData).then((res) => {
         // if (res && res.array.length > 0) {
         const menuList = buildMenu(res.array);
         const map = {
           title: "title",
-          children: "children"
+          children: "children",
         };
         this.menuData = convertTree(menuList, map, true);
         this.goodsSectionData = convertTreeCategory(menuList, map, true);
@@ -955,7 +999,7 @@ export default {
       this.getTableData();
     },
     expandChildren(array) {
-      array.forEach(item => {
+      array.forEach((item) => {
         if (typeof item.expand === "undefined") {
           this.$set(item, "expend", false);
         } else {
@@ -971,7 +1015,7 @@ export default {
     },
     onSelectionChange(selection) {
       this.productStandardRelation.productStandardIds = selection
-        .map(item => item.id.toString())
+        .map((item) => item.id.toString())
         .join(",");
     },
     onRelationSelectionChange(selection) {
@@ -980,10 +1024,10 @@ export default {
       //   return;
       // }
       this.productStandardRelation.productStandardIds = selection
-        .map(item => item.productStandardId.toString())
+        .map((item) => item.productStandardId.toString())
         .join(",");
       this.productStandardRelation.id = selection
-        .map(item => item.id.toString())
+        .map((item) => item.id.toString())
         .join(",");
     },
     // 选择分类
@@ -1013,8 +1057,8 @@ export default {
       this.searchRowData.page = 1;
       this.searchRowData.rows = pageSize;
       this.getTableData();
-    }
-  }
+    },
+  },
 };
 </script>
 
