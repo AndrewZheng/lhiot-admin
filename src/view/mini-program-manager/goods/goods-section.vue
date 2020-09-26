@@ -245,7 +245,7 @@
               <i-col span="16">{{ discount.productName }}</i-col>
             </Row>
           </i-col>
-      <i-col span="12">
+          <i-col span="12">
             <Row>
               <i-col span="8">商品类型:</i-col>
               <i-col
@@ -286,7 +286,6 @@
               </i-col>
             </Row>
           </i-col>
-
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
