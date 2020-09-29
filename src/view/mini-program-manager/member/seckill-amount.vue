@@ -45,7 +45,8 @@
               <Select
                 v-model="searchRowData.sidx"
                 placeholder="排序"
-                style="padding-right: 5px;width: 100px"
+                style="padding-right: 5px;width: 120px"
+                clearable
               >
                 <Option
                   v-for="(item,index) in rankType"
@@ -254,7 +255,8 @@ export default {
         {
           title: "用户昵称",
           align: "center",
-          key: "nickName"
+          key: "nickName",
+          minWidth: 200
         },
         {
           title: "手机号",
@@ -270,7 +272,7 @@ export default {
           title: "秒杀总数",
           align: "center",
           key: "seckillCount",
-          minWidth: 60
+          
         }
       ],
       columns1: [
@@ -287,7 +289,8 @@ export default {
         {
           title: "商品名称(上架商品名称)",
           align: "center",
-          key: "productName"
+          key: "productName",
+          minWidth: 200
         },
         {
           title: "购买总数量",
@@ -378,7 +381,6 @@ export default {
         return;
       }
       this.topStatus = index;
-      // console.log("数据", this.topStatus);
     },
     changePage2(page) {
       this.searchRowData1.page = page;

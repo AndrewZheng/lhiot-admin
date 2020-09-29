@@ -159,7 +159,7 @@
         <i-col>{{ tempModalType===modalType.edit?'修改机器人信息':'创建机器人信息' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="robotDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="modalEdit" :model="robotDetail" :rules="ruleInline" :label-width="90">
           <Row>
             <Col span="18">
             <FormItem :label-width="85" label="所属门店:" prop="storeId">

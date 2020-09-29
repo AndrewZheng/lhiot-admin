@@ -131,7 +131,7 @@
             ref="addForm"
             :model="addRelationDetail"
             :rules="relationRuleInline"
-            :label-width="80"
+            :label-width="100"
           >
             <Row>
               <i-col span="6">
@@ -523,25 +523,25 @@ const dataColumns = [
   {
     type: "selection",
     width: 60,
-    align: "center"
+    align: "center",
   },
   {
     title: "商品条码",
     align: "center",
     key: "barcode",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "商品名称",
     align: "center",
     key: "productName",
-    minWidth: 80
+    minWidth: 160,
   },
   {
     title: "商品规格",
     align: "center",
-    key: "standardQty",
-    minWidth: 80
+    key: "specification",
+    minWidth: 80,
   },
   {
     title: "商品状态",
@@ -565,7 +565,7 @@ const dataColumns = [
       } else {
         return <div>N/A</div>;
       }
-    }
+    },
   },
   {
     title: "用户范围",
@@ -580,21 +580,21 @@ const dataColumns = [
       }
       return <div>{row.memberLimitType}</div>;
     },
-    minWidth: 40
+    minWidth: 40,
   },
   {
     title: "创建时间",
     align: "center",
     key: "createTime",
-    minWidth: 80
+    minWidth: 100,
   },
   {
     title: "操作",
     align: "center",
     minWidth: 80,
     key: "handle",
-    options: ["proStatus", "edit", "delete"]
-  }
+    options: ["proStatus", "edit", "delete"],
+  },
 ];
 
 const proStandardColumns = [
@@ -603,43 +603,43 @@ const proStandardColumns = [
     key: "",
     minWidth: 60,
     align: "center",
-    fixed: "left"
+    fixed: "left",
   },
   {
     title: "规格ID",
     align: "center",
     key: "id",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "商品条码",
     key: "barcode",
     align: "center",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "商品编号",
     align: "center",
     key: "productCode",
-    minWidth: 120
+    minWidth: 120,
   },
   {
     title: "商品名称",
     align: "center",
     key: "productName",
-    minWidth: 100
+    minWidth: 100,
   },
   {
     title: "商品规格",
     align: "center",
     key: "specification",
-    minWidth: 100
+    minWidth: 100,
   },
   {
     title: "商品单位",
     align: "center",
     minWidth: 100,
-    key: "productUnit"
+    key: "productUnit",
   },
   {
     title: "商品原价",
@@ -649,7 +649,7 @@ const proStandardColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "售卖价格",
@@ -659,7 +659,7 @@ const proStandardColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.salePrice);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "商品状态",
@@ -692,9 +692,10 @@ const proStandardColumns = [
           </tag>
         </div>
       );
-    }
-  }
+    },
+  },
 ];
+
 
 export default {
   components: {

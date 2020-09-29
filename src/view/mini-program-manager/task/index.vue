@@ -33,7 +33,7 @@
             clearable
           >
             <Option
-              v-for="(item,index) in taskTypeEnum"
+              v-for="(item, index) in taskTypeEnum"
               :key="index"
               :value="item.value"
               class="ptb2-5"
@@ -77,7 +77,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -93,13 +93,22 @@
 
     <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
-        <span>{{ isCreate?'创建任务':'编辑任务' }}</span>
+        <span>{{ isCreate ? "创建任务" : "编辑任务" }}</span>
       </p>
       <div class="modal-content" style="margin-top: 20px">
-        <Form ref="editForm" :label-width="100" :model="taskDetail" :rules="ruleInline">
+        <Form
+          ref="editForm"
+          :label-width="100"
+          :model="taskDetail"
+          :rules="ruleInline"
+        >
           <Row>
             <FormItem label="任务名称:" prop="taskName">
-              <Input v-model="taskDetail.taskName" placeholder="请输入任务名称" style="width: 200px"></Input>
+              <Input
+                v-model="taskDetail.taskName"
+                placeholder="请输入任务名称"
+                style="width: 200px"
+              ></Input>
             </FormItem>
           </Row>
           <Row>
@@ -108,7 +117,7 @@
                 v-model="taskDetail.taskType"
                 class="search-col mr5"
                 placeholder="请选择"
-                style="width:200px"
+                style="width: 200px"
                 clearable
               >
                 <Option
@@ -124,25 +133,50 @@
           </Row>
           <Row>
             <FormItem label="任务积分:" prop="taskIntegral">
-              <Input v-model="taskDetail.taskIntegral" placeholder="请输入任务积分" style="width: 200px"></Input>
+              <Input
+                v-model="taskDetail.taskIntegral"
+                placeholder="请输入任务积分"
+                style="width: 200px"
+              ></Input>
             </FormItem>
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="任务图标(推荐尺寸为36*36(单位:px)):" prop="taskImage">
-                <Input v-show="false" v-model="taskDetail.taskImage" style="width: auto"></Input>
-                <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+              <FormItem
+                label="任务图标(推荐尺寸为36*36(单位:px)):"
+                prop="taskImage"
+              >
+                <Input
+                  v-show="false"
+                  v-model="taskDetail.taskImage"
+                  style="width: auto"
+                ></Input>
+                <div
+                  v-for="item in uploadListMain"
+                  :key="item.url"
+                  class="demo-upload-list"
+                >
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url">
+                      <img :src="item.url" />
                       <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                        <Icon
+                          type="ios-eye-outline"
+                          @click.native="handleUploadView(item)"
+                        ></Icon>
+                        <Icon
+                          type="ios-trash-outline"
+                          @click.native="handleRemoveMain(item)"
+                        ></Icon>
                       </div>
                     </div>
                   </template>
                   <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      hide-info
+                    ></Progress>
                   </template>
                 </div>
                 <IViewUpload
@@ -153,7 +187,10 @@
                   file-dir="task"
                   @on-success="handleSuccessMain"
                 >
-                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                  <div
+                    slot="content"
+                    style="width: 58px; height: 58px; line-height: 58px"
+                  >
                     <Icon type="ios-camera" size="20"></Icon>
                   </div>
                 </IViewUpload>
@@ -193,7 +230,10 @@
           </Row>
           <Row>
             <FormItem label="任务描述:" prop="taskDesc">
-              <Input v-model="taskDetail.taskDesc" placeholder="请输入任务描述"></Input>
+              <Input
+                v-model="taskDetail.taskDesc"
+                placeholder="请输入任务描述"
+              ></Input>
             </FormItem>
           </Row>
           <Row>
@@ -208,57 +248,62 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button
+          :loading="modalEditLoading"
+          type="primary"
+          @click="handleSubmit"
+        >
           确定
         </Button>
       </div>
+    </Modal>
+    <Modal v-model="uploadVisible" title="图片预览">
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
+import Tables from "_c/tables";
+import IViewUpload from "_c/iview-upload";
 import {
   getTaskPages,
   editTask,
   deleteTask,
   createTask,
-  deletePicture
-} from '@/api/mini-program';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import uploadMixin from '@/mixins/uploadMixin.js';
-import { taskTypeEnum } from '@/libs/enumerate';
-import { taskTypeConvert } from '@/libs/converStatus';
+  deletePicture,
+} from "@/api/mini-program";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import uploadMixin from "@/mixins/uploadMixin.js";
+import { taskTypeEnum } from "@/libs/enumerate";
+import { taskTypeConvert } from "@/libs/converStatus";
 
 const taskDetail = {
-  createTime: '',
+  createTime: "",
   id: 0,
-  taskBannerImage: '',
-  taskDesc: '',
-  taskImage: '',
+  taskBannerImage: "",
+  taskDesc: "",
+  taskImage: "",
   taskIntegral: 0,
-  taskName: '',
-  taskRuleDesc: '',
-  taskType: ''
+  taskName: "",
+  taskRuleDesc: "",
+  taskType: "",
 };
 
 const searchRowData = {
-  taskName: '',
-  taskType: '',
+  taskName: "",
+  taskType: "",
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 export default {
   components: {
     Tables,
-    IViewUpload
+    IViewUpload,
   },
   mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin],
   data() {
@@ -277,54 +322,56 @@ export default {
       taskDetail: this._.cloneDeep(taskDetail),
       columns: [
         {
-          type: 'selection',
-          key: '',
-          align: 'center',
-          width: 60
+          title: "编号",
+          align: "center",
+          key: "id",
+          width: 80,
         },
         {
-          title: '编号',
-          align: 'center',
-          key: 'id',
-          width: 80
-        },
-        {
-          title: '任务图标',
-          align: 'center',
-          key: 'taskImage',
-          width: '120',
+          title: "任务图标",
+          align: "center",
+          key: "taskImage",
+          width: "100",
           render: (h, params, vm) => {
             const { row } = params;
-            const str = <img src={row.taskImage ? row.taskImage : this.defaultImg} height='60' width='60' class='img' />;
+            const str = (
+              <img
+                src={row.taskImage ? row.taskImage : this.defaultImg}
+                height="60"
+                width="60"
+                class="img"
+              />
+            );
             return <div>{str}</div>;
-          }
+          },
         },
         {
-          title: '任务名称',
-          align: 'center',
-          key: 'taskName',
+          title: "任务名称",
+          align: "center",
+          key: "taskName",
           resizable: true,
-          width: '150'
+          width: "150",
         },
         {
-          title: '任务类型',
-          align: 'center',
-          key: 'taskType',
+          title: "任务类型",
+          align: "center",
+          key: "taskType",
+          width: "160",
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{taskTypeConvert(row.taskType)}</div>;
-          }
+          },
         },
         {
-          title: '任务积分',
-          align: 'center',
-          key: 'taskIntegral',
-          width: '100'
+          title: "任务积分",
+          align: "center",
+          key: "taskIntegral",
+          width: "100",
         },
         {
-          title: '任务描述',
-          align: 'center',
-          key: 'taskDesc'
+          title: "任务描述",
+          align: "center",
+          key: "taskDesc",
         },
         //   {
         //     title: '任务规则',
@@ -334,24 +381,26 @@ export default {
         //     width: '150px'
         //   },
         {
-          title: '创建时间',
-          align: 'center',
-          key: 'createTime'
+          title: "创建时间",
+          align: "center",
+          key: "createTime",
+          width: "200",
         },
         {
-          title: '操作',
-          align: 'center',
-          key: 'handle',
-          options: ['edit', 'delete']
-        }
+          title: "操作",
+          align: "center",
+          key: "handle",
+          width: "160",
+          options: ["edit", "delete"],
+        },
       ],
       ruleInline: {
-        taskBannerImage: { required: false, message: '请上传任务Banner图标' },
-        taskImage: { required: false, message: '请上传任务小图标' },
-        taskIntegral: { required: true, message: '请填写任务积分' },
-        taskType: { required: true, message: '请选择任务类型' },
-        taskName: { required: true, message: '请填写任务名称' }
-      }
+        taskBannerImage: { required: false, message: "请上传任务Banner图标" },
+        taskImage: { required: false, message: "请上传任务小图标" },
+        taskIntegral: { required: true, message: "请填写任务积分" },
+        taskType: { required: true, message: "请选择任务类型" },
+        taskName: { required: true, message: "请填写任务名称" },
+      },
     };
   },
   created() {
@@ -361,14 +410,16 @@ export default {
   methods: {
     getTableData() {
       this.loading = true;
-      getTaskPages(this.searchRowData).then(res => {
-        this.tableData = res.rows;
-        this.total = res.total;
-      }).finally(() => {
-        this.loading = false;
-        this.searchLoading = false;
-        this.clearSearchLoading = false;
-      });
+      getTaskPages(this.searchRowData)
+        .then((res) => {
+          this.tableData = res.rows;
+          this.total = res.total;
+        })
+        .finally(() => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
     },
     resetFields() {
       this.$refs.editForm.resetFields();
@@ -386,17 +437,24 @@ export default {
       this.$refs.editForm.resetFields();
       this.tempModalType = this.modalType.edit;
       this.taskDetail = this._.cloneDeep(params.row);
+      this.setDefaultUploadList(params.row);
       if (this.taskDetail.taskRuleDesc) {
-        this.taskDetail.taskRuleDesc = this.taskDetail.taskRuleDesc.replace(/&/g, '\n');
+        this.taskDetail.taskRuleDesc = this.taskDetail.taskRuleDesc.replace(
+          /&/g,
+          "\n"
+        );
       }
       this.modalEdit = true;
     },
     handleSubmit() {
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           // 任务规则换行用“&”拼接
           if (this.taskDetail.taskRuleDesc) {
-            this.taskDetail.taskRuleDesc = this.taskDetail.taskRuleDesc.replace(/\n|\r/g, '&');
+            this.taskDetail.taskRuleDesc = this.taskDetail.taskRuleDesc.replace(
+              /\n|\r/g,
+              "&"
+            );
           }
           if (this.isCreate) {
             this.createTableRow();
@@ -404,37 +462,40 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error('请完善任务信息!');
+          this.$Message.error("请完善任务信息!");
         }
       });
     },
     editTableRow() {
       this.modalEditLoading = true;
-      editTask(this.taskDetail).then(res => {
-        this.modalEdit = false;
-        this.getTableData();
-        this.resetFields();
-      }).finally(() => {
-        this.modalEditLoading = false;
-      });
-    },
-    createTableRow() {
-      createTask(this.taskDetail)
-        .then(res => {})
-        .finally(res => {
+      editTask(this.taskDetail)
+        .then((res) => {
           this.modalEdit = false;
           this.getTableData();
           this.resetFields();
-        }).finally(() => {
+        })
+        .finally(() => {
+          this.modalEditLoading = false;
+        });
+    },
+    createTableRow() {
+      createTask(this.taskDetail)
+        .then((res) => {})
+        .finally((res) => {
+          this.modalEdit = false;
+          this.getTableData();
+          this.resetFields();
+        })
+        .finally(() => {
           this.modalEditLoading = false;
         });
     },
     deleteTable(ids) {
       this.loading = true;
       deleteTask({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&
@@ -453,7 +514,7 @@ export default {
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.taskImage != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.taskImage;
         mainImgArr.push(map);
@@ -497,14 +558,14 @@ export default {
       this.taskDetail.taskBannerImage = fileList[0].url;
       this.newPicture.push(fileList[0].url);
       this.oldPicture = this.save;
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
 .img {
-    margin-top: .25rem !important;
-    vertical-align: middle;
+  margin-top: 0.25rem !important;
+  vertical-align: middle;
 }
 </style>
 

@@ -213,7 +213,7 @@
             ref="editForm"
             :model="activitySeckillDetail"
             :rules="ruleInline"
-            :label-width="100"
+            :label-width="120"
           >
             <Row>
               <i-col span="18">
@@ -230,13 +230,14 @@
               <i-col span="18">
                 <FormItem label="有效期起:" prop="beginTime">
                   <DatePicker
-                    v-model="activitySeckillDetail.beginTime"
+                    :value="activitySeckillDetail.beginTime"
                     format="yyyy-MM-dd HH:mm:ss"
                     type="datetime"
                     placeholder="有效期起"
                     class="search-input"
                     style="width: 170px"
-                    @on-change="startTimeChange"
+                    :readonly="editStatus"
+                    @on-change="activitySeckillDetail.beginTime = $event"
                   />
                 </FormItem>
               </i-col>
@@ -245,13 +246,14 @@
               <i-col span="18">
                 <FormItem label="有效期止:" prop="endTime">
                   <DatePicker
-                    v-model="activitySeckillDetail.endTime"
+                    :value="activitySeckillDetail.endTime"
                     format="yyyy-MM-dd HH:mm:ss"
                     type="datetime"
                     placeholder="有效期止"
                     class="search-input"
                     style="width: 170px"
-                    @on-change="endTimeChange"
+                    :readonly="editStatus"
+                    @on-change="activitySeckillDetail.endTime = $event"
                   />
                 </FormItem>
               </i-col>
@@ -380,49 +382,11 @@
                 ref="modalCreate"
                 :model="addRelationDetail"
                 :rules="relationRuleInline"
-                :label-width="80"
+                :label-width="90"
               >
-                <!-- <Row>
-                  <i-col span="6">
-                    <FormItem label="商品名称:" prop="productName" :label-width="100">
-                      <Input
-                        v-model="addRelationDetail.productName"
-                        clearable
-                        style="padding-right: 5px;width: 140px"
-                      ></Input>
-                    </FormItem>
-                  </i-col>
-                  <i-col span="6">
-                    <FormItem label="商品规格:" prop="specification" :label-width="100">
-                      <Input
-                        v-model="addRelationDetail.specification"
-                        clearable
-                        style="padding-right: 5px;width: 140px"
-                      ></Input>
-                    </FormItem>
-                  </i-col>
-                  <i-col span="6">
-                    <FormItem label="商品单位:" prop="productUnit" :label-width="100">
-                      <Input
-                        v-model="addRelationDetail.productUnit"
-                        clearable
-                        style="padding-right: 5px;width: 140px"
-                      ></Input>
-                    </FormItem>
-                  </i-col>
-                  <i-col span="6">
-                    <FormItem label="商品价格:" prop="discountPrice" :label-width="100">
-                      <Input
-                        v-model="addRelationDetail.discountPrice"
-                        clearable
-                        style="padding-right: 5px;width: 140px"
-                      ></Input>
-                    </FormItem>
-                  </i-col>
-                </Row>-->
                 <Row>
                   <i-col span="5">
-                    <FormItem label="商品库存总数:" prop="activityLimit">
+                    <FormItem label="库存总数:" prop="activityLimit">
                       <Input
                         :min="0"
                         v-model="addRelationDetail.activityLimit"
@@ -555,14 +519,12 @@ const activitySeckillDetail = {
   status: "",
   title: "",
   updateTime: null,
+  activityType: "SECKILL_ACTIVITY",
   userActivityLimit: "",
   userActivitySurplus: "",
 };
 
 const relationDetail = {
-  // baseProductName: "123",
-  // price: 0,
-  // standardIds: "",
   id: 0,
   activityId: 0,
   standardId: 0,
@@ -625,9 +587,10 @@ const roleRowData = {
   beginTime: null,
   endTime: null,
   title: "",
+  activityType: "SECKILL_ACTIVITY",
   page: 1,
   rows: 10,
-  sidx: "create_time",
+  sidx: "createTime",
   sort: "desc",
 };
 
@@ -651,20 +614,20 @@ const productRowData = {
 
 const relationTempColumns = [
   {
-    title: "商品规格ID",
+    title: "规格ID",
     key: "standardId",
     align: "center",
     minWidth: 100,
   },
   {
     title: "商品名称",
-    key: "baseProductName",
-    minWidth: 100,
+    key: "productName",
+    minWidth: 200,
     align: "center",
     render: (h, params, vm) => {
       const { row } = params;
       if (row.productStandard != null) {
-        return <div>{row.productStandard.baseProductName}</div>;
+        return <div>{row.productStandard.productName}</div>;
       }
     },
   },
@@ -693,7 +656,7 @@ const relationTempColumns = [
     },
   },
   {
-    title: "商品秒杀价",
+    title: "秒杀价",
     key: "discountPrice",
     minWidth: 100,
     align: "center",
@@ -758,7 +721,7 @@ const relationTempColumns = [
     },
   },
   {
-    title: "商品库存总数",
+    title: "库存总数",
     key: "activityLimit",
     align: "center",
     minWidth: 100,
@@ -869,7 +832,7 @@ const productColumns = [
     align: "center",
   },
   {
-    title: "规格id",
+    title: "规格ID",
     key: "id",
     minWidth: 60,
     align: "center",
@@ -889,7 +852,7 @@ const productColumns = [
   {
     title: "商品名称",
     key: "productName",
-    minWidth: 100,
+    minWidth: 160,
     align: "center",
   },
   {
@@ -948,6 +911,14 @@ const productColumns = [
               </tag>
             </div>
           );
+        } else if (row.productStandardExpand.expandType == "NEW_TRY_PRODUCT") {
+          return (
+            <div>
+              <tag color="blue">
+                {expandTypeConvert(row.productStandardExpand.expandType).label}
+              </tag>
+            </div>
+          );
         } else if (row.productStandardExpand.expandType == "ASSIST_PRODUCT") {
           return (
             <div>
@@ -965,12 +936,6 @@ const productColumns = [
         );
       }
     },
-  },
-  {
-    title: "排序",
-    key: "rank",
-    minWidth: 60,
-    align: "center",
   },
 ];
 
@@ -992,7 +957,7 @@ export default {
       },
       relationRuleInline: {
         activityLimit: [
-          { required: true, message: "请输入商品库存总数" },
+          { required: true, message: "请输入库存总数" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
@@ -1036,30 +1001,28 @@ export default {
       onSaleStatusEnum,
       columns: [
         {
-          type: "selection",
-          width: 60,
-          align: "center",
-        },
-        {
           title: "活动ID",
           align: "center",
           key: "id",
+          minWidth: 90,
         },
         {
           title: "活动标题",
           align: "center",
           key: "title",
+          minWidth: 130,
         },
         {
           title: "开始时间",
           align: "center",
           key: "beginTime",
+          width: 120,
         },
         {
           title: "结束时间",
           align: "center",
           key: "endTime",
-          width: 200,
+          minWidth: 200,
           render: (h, params, vm) => {
             const { row } = params;
             if (!compareCouponData(row.endTime)) {
@@ -1073,11 +1036,13 @@ export default {
           title: "修改时间",
           align: "center",
           key: "updateTime",
+          width: 120,
         },
         {
-          title: "活动状态",
+          title: "状态",
           align: "center",
           key: "status",
+          minWidth: 80,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.status === "ON") {
@@ -1105,9 +1070,10 @@ export default {
           },
         },
         {
-          title: "活动每人限购份数",
+          title: "每人限购份数",
           align: "center",
           key: "userActivityLimit",
+          minWidth: 130,
         },
         // {
         //   title: "活动个人剩余份数",
@@ -1117,7 +1083,7 @@ export default {
         {
           title: "操作",
           align: "center",
-          minWidth: 80,
+          minWidth: 200,
           key: "handle",
           //"delete",
           options: ["onSale", "view", "edit", "settings"],
@@ -1137,6 +1103,7 @@ export default {
       addTempDataLoading: false,
       tempTableLoading: false,
       createLoading: false,
+      editStatus: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
@@ -1239,6 +1206,7 @@ export default {
     },
     addFlashsale() {
       // this.resetFields();
+      this.editStatus = false;
       this.tempModalType = this.modalType.create;
       this.activitySeckillDetail = _.cloneDeep(activitySeckillDetail);
       this.modalEdit = true;
@@ -1278,6 +1246,7 @@ export default {
     },
     handleEdit(params) {
       // this.resetFields();
+      this.editStatus = !compareCouponData(params.row.beginTime);
       this.tempModalType = this.modalType.edit;
       this.activitySeckillDetail = _.cloneDeep(params.row);
       this.modalEdit = true;
@@ -1402,6 +1371,7 @@ export default {
       // row.remainCount = row.goodsLimit;
       editSeckillProductRelation(row)
         .then((res) => {
+          this.$Message.success("操作成功");
           this.getRelationTableData();
         })
         .finally((res) => {
@@ -1466,8 +1436,6 @@ export default {
     },
     // 选中商品
     handleTemplateChange(currentRow, oldCurrentRow) {
-      // console.log("活动商品列表", this.relationProducts);
-      // console.log("选中商品列表", currentRow.productStandardExpand.standardId);
       let activityProducts = this.relationProducts;
       let standardIds = [];
       for (var item = 0; item < activityProducts.length; item++) {
@@ -1506,8 +1474,10 @@ export default {
       createSeckillProductRelation(this.addRelationDetail)
         .then((res) => {
           this.modalViewLoading = false;
-          this.modalEdit = false;
           this.$Message.success("创建成功!");
+          this.addRelationDetail.activityLimit = "";
+          this.addRelationDetail.userLimit = "";
+          this.addRelationDetail.rank = "";
           this.getRelationTableData();
         })
         .catch(() => {
@@ -1524,7 +1494,6 @@ export default {
         params.row.status = "ON";
       }
       this.loading = true;
-      // console.log("上下架", params.row);
       editSeckillProductRelation(params.row)
         .then((res) => {
           this.getRelationTableData();

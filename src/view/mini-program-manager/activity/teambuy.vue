@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="18"
+        :search-area-column="24"
         :operate-area-column="6"
         editable
         searchable
@@ -24,8 +24,8 @@
           <Row>
             <Select
               v-model="searchRowData.status"
-              placeholder="活动状态"
-              style="padding-right: 5px; width: 100px"
+              placeholder="状态"
+              style="padding-right: 5px; width: 70px"
               clearable
               @on-change="activityStatusChange"
             >
@@ -34,7 +34,7 @@
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
-                style="padding-left: 5px; width: 100px"
+                style="padding-left: 5px; width: 80px"
                 >{{ item.label }}</Option
               >
             </Select>
@@ -87,30 +87,28 @@
             >
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
+            <Button
+              v-waves
+              :loading="createLoading"
+              type="success"
+              class="mr5"
+              @click="addStore"
+            >
+              <Icon type="md-add" />添加
+            </Button>
+            <Button
+              v-waves
+              :loading="exportExcelLoading"
+              type="primary"
+              class="mr5"
+              @click="handleDownload"
+            >
+              <Icon type="md-download" />导出
+            </Button>
           </Row>
           <div class="ml15 mt10">
             <i style="color: red">*</i> 选中单条数据再点击添加,可复制当前数据
           </div>
-        </div>
-        <div slot="operations">
-          <Button
-            v-waves
-            :loading="createLoading"
-            type="success"
-            class="mr5"
-            @click="addStore"
-          >
-            <Icon type="md-add" />添加
-          </Button>
-          <Button
-            v-waves
-            :loading="exportExcelLoading"
-            type="primary"
-            class="mr5"
-            @click="handleDownload"
-          >
-            <Icon type="md-download" />导出
-          </Button>
         </div>
       </tables>
       <div style="margin: 10px; overflow: hidden">
@@ -383,7 +381,7 @@
           ref="editForm"
           :model="teambuyDetail"
           :rules="ruleInline"
-          :label-width="130"
+          :label-width="140"
         >
           <Row v-show="tempModalType === modalType.edit">
             <i-col span="12">
@@ -1235,7 +1233,7 @@ export default {
       oldPicture: [],
       newPicture: [],
       save: [],
-      columns: [
+       columns: [
         // {
         //   type: "selection",
         //   width: 60,
@@ -1253,7 +1251,7 @@ export default {
           title: "活动状态",
           align: "center",
           key: "status",
-          minWidth: 90,
+          minWidth: 100,
           render: (h, params) => {
             const { row } = params;
             if (row.status == "on") {
@@ -1297,13 +1295,13 @@ export default {
         {
           title: "有效期起",
           align: "center",
-          minWidth: 160,
+          width: 120,
           key: "startTime",
         },
         {
           title: "有效期止",
           align: "center",
-          minWidth: 160,
+          width: 180,
           key: "endTime",
           render(h, params) {
             if (!compareCouponData(params.row.endTime)) {
@@ -1316,14 +1314,14 @@ export default {
           },
         },
         {
-          title: "商品库存",
+          title: "库存",
           align: "center",
-          minWidth: 90,
+          minWidth: 80,
           key: "productNum",
         },
         {
           title: "活动价",
-          minWidth: 80,
+          minWidth: 90,
           key: "activityPrice",
           align: "center",
           render(h, params) {
@@ -1331,9 +1329,49 @@ export default {
           },
         },
         {
+          title: "成本价",
+          minWidth: 90,
+          key: "costPrice",
+          align: "center",
+          render(h, params) {
+            return <div>{fenToYuanDot2(params.row.costPrice)}</div>;
+          },
+        },
+        {
+          title: "毛利",
+          minWidth: 90,
+          key: "productProfitPrice",
+          align: "center",
+          render(h, params) {
+            return <div>{fenToYuanDot2(params.row.productProfitPrice)}</div>;
+          },
+        },
+        {
+          title: "佣金比例",
+          minWidth: 100,
+          key: "commissionScale",
+          align: "center",
+          render(h, params) {
+            if (params.row.commissionScale) {
+              return <div>{params.row.commissionScale + "%"}</div>;
+            } else {
+              return <div>{"N/A"}</div>;
+            }
+          },
+        },
+        {
+          title: "佣金金额",
+          minWidth: 100,
+          key: "commissionPrice",
+          align: "center",
+          render(h, params) {
+            return <div>{fenToYuanDot2(params.row.commissionPrice)}</div>;
+          },
+        },
+        {
           title: "团长优惠",
           align: "center",
-          minWidth: 90,
+          minWidth: 100,
           key: "tourDiscount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.tourDiscount)}</div>;
@@ -1342,17 +1380,25 @@ export default {
         {
           title: "成团有效时长",
           align: "center",
-          minWidth: 110,
+          minWidth: 130,
           key: "validSeconds",
           render(h, params) {
             return <div>{secondsToDate(params.row.validSeconds)}</div>;
           },
         },
         {
-          title: "提货截至时间",
+          title: "提货截止时间/天数",
           align: "center",
-          minWidth: 160,
+          minWidth: 180,
           key: "deliveryEndTime",
+          render: (h, params) => {
+            const { row } = params;
+            if (row.deliveryEndTimeDay > 0) {
+              return <div>{row.deliveryEndTimeDay}天</div>;
+            } else {
+              return <div>{row.deliveryEndTime}</div>;
+            }
+          },
         },
         {
           title: "规格ID",
@@ -1370,19 +1416,19 @@ export default {
         {
           title: "限购次数",
           align: "center",
-          minWidth: 90,
+          minWidth: 100,
           key: "triesLimit",
         },
         {
           title: "排序",
           align: "center",
-          minWidth: 80,
+          minWidth: 70,
           key: "rank",
         },
         {
           title: "是否模拟成团",
           align: "center",
-          minWidth: 120,
+          minWidth: 130,
           key: "robot",
           render: (h, params) => {
             const { row } = params;
@@ -1431,19 +1477,19 @@ export default {
           title: "规格ID",
           align: "center",
           key: "id",
-          minWidth: 80,
+          minWidth: 90,
         },
         {
           title: "商品条码",
           key: "barcode",
           align: "center",
-          minWidth: 80,
+          minWidth: 150,
         },
         {
           title: "商品编号",
           key: "productCode",
           align: "center",
-          minWidth: 130,
+          minWidth: 150,
         },
         {
           title: "商品名称",
@@ -1452,21 +1498,21 @@ export default {
           minWidth: 150,
         },
         {
-          title: "商品规格",
+          title: "规格",
           align: "center",
           key: "specification",
-          minWidth: 100,
+          minWidth: 80,
         },
         {
-          title: "商品单位",
+          title: "单位",
           align: "center",
-          minWidth: 100,
+          minWidth: 80,
           key: "productUnit",
         },
         {
-          title: "商品原价",
+          title: "原价",
           align: "center",
-          minWidth: 120,
+          minWidth: 80,
           key: "price",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.price);
@@ -1474,9 +1520,9 @@ export default {
           },
         },
         {
-          title: "优惠价格",
+          title: "优惠价",
           align: "center",
-          minWidth: 120,
+          minWidth: 80,
           key: "salePrice",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.salePrice);
@@ -1484,9 +1530,9 @@ export default {
           },
         },
         {
-          title: "商品状态",
+          title: "状态",
           align: "center",
-          minWidth: 100,
+          minWidth: 80,
           key: "shelvesStatus",
           render: (h, params, vm) => {
             const { row } = params;
@@ -1517,9 +1563,9 @@ export default {
           },
         },
         {
-          title: "商品排序",
+          title: "排序",
           align: "center",
-          minWidth: 100,
+          minWidth: 70,
           key: "rank",
         },
       ],

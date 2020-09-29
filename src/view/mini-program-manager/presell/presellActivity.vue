@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="22"
+        :search-area-column="24"
         :operate-area-column="6"
         editable
         searchable
@@ -25,58 +25,61 @@
           <Row>
             <Select
               v-model="searchRowData.status"
-              placeholder="活动状态"
-              style="padding-right: 5px;width: 100px"
-              clearable
+              placeholder="状态"
+              style="width: 70px"
+              :clearable="false"
             >
               <Option
-                v-for="(item,index) in activityStatus"
+                v-for="(item, index) in activityStatus"
                 :key="index"
                 :value="item.value"
                 class="ptb2-5"
-                style="padding-left: 5px;width: 100px"
-              >{{ item.label }}</Option>
+                style="width: 70px"
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.startedFlag"
               placeholder="是否开始"
-              style="padding-right: 5px;width: 100px"
-              clearable
+              style="width: 105px"
+              :clearable="false"
             >
               <Option
-                v-for="(item,index) in startedFlagStatus"
+                v-for="(item, index) in startedFlagStatus"
                 :key="index"
                 :value="item.value"
                 class="ptb2-5"
-                style="padding-left: 5px;width: 100px"
-              >{{ item.label }}</Option>
+                style="padding-left: 5px; width: 100px"
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.validDateType"
               placeholder="时间类型"
-              style="padding-right: 5px;width: 100px"
+              style="width: 90px"
               clearable
             >
               <Option
-                v-for="(item,index) in validDateTypeEnum"
+                v-for="(item, index) in validDateTypeEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
-                style="padding-left: 5px;width: 100px"
-              >{{ item.label }}</Option>
+                style="padding-left: 5px; width: 100px"
+                >{{ item.label }}</Option
+              >
             </Select>
             <Input
               v-model="searchRowData.activityName"
               placeholder="活动名称"
-              class="search-input mr5"
-              style="width: auto"
+              class=""
+              style="width: 150px"
               clearable
             ></Input>
             <Input
               v-model="searchRowData.content"
               placeholder="活动内容"
-              class="search-input mr5"
-              style="width: auto"
+              class=""
+              style="width: 150px"
               clearable
             ></Input>
             <DatePicker
@@ -84,7 +87,7 @@
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
               placeholder="有效时间起"
-              class="mr5"
+              class=""
               style="width: 160px"
               @on-change="createTimeStartChange"
             />
@@ -93,13 +96,13 @@
               v-model="searchRowData.endTime"
               format="yyyy-MM-dd HH:mm:ss"
               placeholder="有效时间止"
-              class="mr5"
+              class=""
               style="width: 160px"
               @on-change="createTimeEndChange"
             />
             <Button
               :loading="searchLoading"
-              class="search-btn mr5"
+              class="search-btn"
               type="primary"
               @click="handleSearch"
             >
@@ -108,18 +111,24 @@
             <Button
               v-waves
               :loading="clearSearchLoading"
-              class="search-btn mr5"
+              class="search-btn"
               type="info"
               @click="handleClear"
             >
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
-            <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
+            <Button
+              v-waves
+              :loading="createLoading"
+              type="success"
+              class=""
+              @click="addStore"
+            >
               <Icon type="md-add" />添加
             </Button>
           </Row>
           <div class="ml15 mt10">
-            <i style="color:red">*</i> 选中单条数据再点击添加,可复制当前数据
+            <i style="color: red">*</i> 选中单条数据再点击添加,可复制当前数据
           </div>
         </div>
         <div slot="operations">
@@ -134,7 +143,7 @@
           </Button>-->
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -177,8 +186,10 @@
           <i-col span="12">
             <Row>
               <i-col span="6">活动状态:</i-col>
-              <i-col v-if="presellDetail.status==='VALID'" span="18">{{ '上架' }}</i-col>
-              <i-col v-else span="18">{{ '下架' }}</i-col>
+              <i-col v-if="presellDetail.status === 'VALID'" span="18">{{
+                "上架"
+              }}</i-col>
+              <i-col v-else span="18">{{ "下架" }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -203,9 +214,11 @@
             <Row>
               <i-col span="6">活动开始时间:</i-col>
               <i-col span="18">
-                {{ this.$moment(
-                presellDetail.startTime
-                ).format("YYYY-MM-DD HH:mm:ss") }}
+                {{
+                  this.$moment(presellDetail.startTime).format(
+                    "YYYY-MM-DD HH:mm:ss"
+                  )
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -213,9 +226,11 @@
             <Row>
               <i-col span="6">活动结束时间:</i-col>
               <i-col span="18">
-                {{ this.$moment(
-                presellDetail.endTime
-                ).format("YYYY-MM-DD HH:mm:ss") }}
+                {{
+                  this.$moment(presellDetail.endTime).format(
+                    "YYYY-MM-DD HH:mm:ss"
+                  )
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -224,25 +239,37 @@
           <i-col span="12">
             <Row>
               <i-col span="6">提货时间类型:</i-col>
-              <i-col v-if="presellDetail.validDateType==='FIXED_DATE'" span="18">{{ '绝对时间' }}</i-col>
-              <i-col v-else span="18">{{ '相对时间' }}</i-col>
+              <i-col
+                v-if="presellDetail.validDateType === 'FIXED_DATE'"
+                span="18"
+                >{{ "绝对时间" }}</i-col
+              >
+              <i-col v-else span="18">{{ "相对时间" }}</i-col>
             </Row>
           </i-col>
-          <i-col v-show="presellDetail.validDateType==='UN_FIXED_DATE'" span="12">
+          <i-col
+            v-show="presellDetail.validDateType === 'UN_FIXED_DATE'"
+            span="12"
+          >
             <Row>
               <i-col span="6">几天后提货:</i-col>
-              <i-col span="18">{{ presellDetail.beginDay+"天" }}</i-col>
+              <i-col span="18">{{ presellDetail.beginDay + "天" }}</i-col>
             </Row>
           </i-col>
         </Row>
-        <Row v-show="presellDetail.validDateType==='FIXED_DATE'" class-name="mb20">
+        <Row
+          v-show="presellDetail.validDateType === 'FIXED_DATE'"
+          class-name="mb20"
+        >
           <i-col span="12">
             <Row>
               <i-col span="6">提货开始时间:</i-col>
               <i-col span="18">
-                {{ this.$moment(
-                presellDetail.deliveryStartTime
-                ).format("YYYY-MM-DD") }}
+                {{
+                  this.$moment(presellDetail.deliveryStartTime).format(
+                    "YYYY-MM-DD"
+                  )
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -250,9 +277,11 @@
             <Row>
               <i-col span="6">提货结束时间:</i-col>
               <i-col v-if="presellDetail.deliveryEndTime" span="18">
-                {{ this.$moment(
-                presellDetail.deliveryEndTime
-                ).format("YYYY-MM-DD") }}
+                {{
+                  this.$moment(presellDetail.deliveryEndTime).format(
+                    "YYYY-MM-DD"
+                  )
+                }}
               </i-col>
               <i-col v-else span="18">{{ "N/A" }}</i-col>
             </Row>
@@ -266,7 +295,9 @@
             </Row>
           </i-col>
           <i-col span="12" style>
-            <Button v-waves type="warning" @click="aboutGoods">关联商品详情</Button>
+            <Button v-waves type="warning" @click="aboutGoods"
+              >关联商品详情</Button
+            >
           </i-col>
         </Row>
         <Row class-name="mb20">
@@ -281,13 +312,17 @@
           <i-col span="12">
             <Row>
               <i-col span="6">原价:</i-col>
-              <i-col span="18">{{ presellDetail.originalPrice | fenToYuanDot2Filters }}</i-col>
+              <i-col span="18">{{
+                presellDetail.originalPrice | fenToYuanDot2Filters
+              }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
               <i-col span="6">活动价:</i-col>
-              <i-col span="18">{{ presellDetail.activityPrice | fenToYuanDot2Filters }}</i-col>
+              <i-col span="18">{{
+                presellDetail.activityPrice | fenToYuanDot2Filters
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -323,7 +358,9 @@
           <i-col span="24">
             <Row>
               <i-col span="3">关联门店:</i-col>
-              <i-col span="21">{{ getRelationStore(presellDetail.storeIds) }}</i-col>
+              <i-col span="21">{{
+                getRelationStore(presellDetail.storeIds)
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -333,15 +370,29 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :z-index="1000" :width="800" :mask-closable="false">
+    <Modal
+      v-model="modalEdit"
+      :z-index="1000"
+      :width="800"
+      :mask-closable="false"
+    >
       <p slot="header">
-        <i-col>{{ tempModalType === modalType.edit?'修改预售活动':'创建预售活动' }}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit ? "修改预售活动" : "创建预售活动"
+        }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="presellDetail" :rules="ruleInline" :label-width="130">
-          <Row v-show="tempModalType===modalType.edit">
+        <Form
+          ref="editForm"
+          :model="presellDetail"
+          :rules="ruleInline"
+          :label-width="130"
+        >
+          <Row v-show="tempModalType === modalType.edit">
             <i-col span="12">
-              <FormItem label="预售ID:" prop="id">{{ presellDetail.id }}</FormItem>
+              <FormItem label="预售ID:" prop="id">{{
+                presellDetail.id
+              }}</FormItem>
             </i-col>
           </Row>
           <Row>
@@ -350,7 +401,10 @@
                 <Input
                   v-model="presellDetail.activityName"
                   style="width: 200px"
-                  :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
+                  :readonly="
+                    presellDetail.startedFlag === true &&
+                    tempModalType === modalType.edit
+                  "
                 ></Input>
               </FormItem>
             </i-col>
@@ -363,7 +417,8 @@
                     :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
@@ -374,25 +429,50 @@
                 <Input
                   v-model="presellDetail.content"
                   style="width: 200px"
-                  :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
+                  :readonly="
+                    presellDetail.startedFlag === true &&
+                    tempModalType === modalType.edit
+                  "
                 ></Input>
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem :label-width="130" label="活动Banner 推荐尺寸750*304(单位:px):" prop="banner">
-                <Input v-show="false" v-model="presellDetail.banner" style="width: auto"></Input>
-                <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+              <FormItem
+                :label-width="130"
+                label="活动Banner 推荐尺寸750*304(单位:px):"
+                prop="banner"
+              >
+                <Input
+                  v-show="false"
+                  v-model="presellDetail.banner"
+                  style="width: auto"
+                ></Input>
+                <div
+                  v-for="item in uploadListMain"
+                  :key="item.url"
+                  class="demo-upload-list"
+                >
                   <template v-if="item.status === 'finished'">
                     <div>
                       <img :src="item.url" />
                       <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                        <Icon
+                          type="ios-eye-outline"
+                          @click.native="handleUploadView(item)"
+                        ></Icon>
+                        <Icon
+                          type="ios-trash-outline"
+                          @click.native="handleRemoveMain(item)"
+                        ></Icon>
                       </div>
                     </div>
                   </template>
                   <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      hide-info
+                    ></Progress>
                   </template>
                 </div>
                 <IViewUpload
@@ -403,7 +483,10 @@
                   file-dir="activity"
                   @on-success="handleSuccessMain"
                 >
-                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                  <div
+                    slot="content"
+                    style="width: 58px; height: 58px; line-height: 58px"
+                  >
                     <Icon type="ios-camera" size="20"></Icon>
                   </div>
                 </IViewUpload>
@@ -418,10 +501,13 @@
                   type="datetime"
                   format="yyyy-MM-dd HH:mm:ss"
                   placeholder="活动开始时间"
-                  :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
+                  :readonly="
+                    presellDetail.startedFlag === true &&
+                    tempModalType === modalType.edit
+                  "
                   class="search-input"
                   style="width: 200px"
-                  @on-change="presellDetail.startTime=$event"
+                  @on-change="presellDetail.startTime = $event"
                 />
               </FormItem>
             </i-col>
@@ -432,10 +518,13 @@
                   type="datetime"
                   format="yyyy-MM-dd HH:mm:ss"
                   placeholder="活动结束时间"
-                  :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
+                  :readonly="
+                    presellDetail.startedFlag === true &&
+                    tempModalType === modalType.edit
+                  "
                   class="search-input"
                   style="width: 200px"
-                  @on-change="presellDetail.endTime=$event"
+                  @on-change="presellDetail.endTime = $event"
                 />
               </FormItem>
             </i-col>
@@ -446,44 +535,58 @@
                 <Select
                   v-model="presellDetail.validDateType"
                   placeholder="券有效期类型"
-                  style="padding-right: 5px;width: 200px"
-                  :disabled="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
+                  style="padding-right: 5px; width: 200px"
+                  :disabled="
+                    presellDetail.startedFlag === true &&
+                    tempModalType === modalType.edit
+                  "
                   @on-change="handleChange"
                 >
                   <Option
-                    v-for="(item,index) in validDateTypeEnum"
+                    v-for="(item, index) in validDateTypeEnum"
                     :key="index"
                     :value="item.value"
                     class="ptb2-5"
-                    style="padding-left: 5px;width: 100px"
-                  >{{ item.label }}</Option>
+                    style="padding-left: 5px; width: 100px"
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
-            <template v-if="presellDetail.validDateType=='UN_FIXED_DATE'">
+            <template v-if="presellDetail.validDateType == 'UN_FIXED_DATE'">
               <i-col span="12">
                 <FormItem label="下单成功后第:" prop="beginDay">
                   <InputNumber
                     v-model="presellDetail.beginDay"
                     :min="0"
-                    :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
+                    :readonly="
+                      presellDetail.startedFlag === true &&
+                      tempModalType === modalType.edit
+                    "
                     label="生效开始"
                     style="width: 60px"
-                  ></InputNumber>天提货
+                  ></InputNumber
+                  >天提货
                 </FormItem>
               </i-col>
             </template>
             <template>
-              <i-col v-if="presellDetail.validDateType=='FIXED_DATE'" span="12">
+              <i-col
+                v-if="presellDetail.validDateType == 'FIXED_DATE'"
+                span="12"
+              >
                 <FormItem label="提货开始时间:" prop="deliveryStartTime">
                   <DatePicker
                     :value="presellDetail.deliveryStartTime"
                     format="yyyy-MM-dd"
                     type="date"
-                    :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
+                    :readonly="
+                      presellDetail.startedFlag === true &&
+                      tempModalType === modalType.edit
+                    "
                     placeholder="提货开始时间"
                     style="width: 200px"
-                    @on-change="presellDetail.deliveryStartTime=$event"
+                    @on-change="presellDetail.deliveryStartTime = $event"
                   />
                 </FormItem>
               </i-col>
@@ -493,22 +596,31 @@
                     :value="presellDetail.deliveryEndTime"
                     format="yyyy-MM-dd"
                     type="date"
-                    :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
+                    :readonly="
+                      presellDetail.startedFlag === true &&
+                      tempModalType === modalType.edit
+                    "
                     placeholder="提货截止时间"
                     style="width: 200px"
-                    @on-change="presellDetail.deliveryEndTime=$event"
+                    @on-change="presellDetail.deliveryEndTime = $event"
                   />
                 </FormItem>
               </i-col>
             </template>
             <i-col span="12">
-              <FormItem label="原价:">{{ presellDetail.originalPrice | fenToYuanDot2Filters }}</FormItem>
+              <FormItem label="原价:">{{
+                presellDetail.originalPrice | fenToYuanDot2Filters
+              }}</FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
               <FormItem label="商品规格:" prop="standardId">
-                <Input v-model="presellDetail.standardId" readonly="readonly" style="width: 200px">
+                <Input
+                  v-model="presellDetail.standardId"
+                  readonly="readonly"
+                  style="width: 200px"
+                >
                   <Button
                     v-show="tempModalType !== modalType.edit"
                     slot="append"
@@ -524,7 +636,10 @@
                   :min="0"
                   :value="activityPriceComputed"
                   placeholder="活动价"
-                  :readonly="presellDetail.startedFlag===true&&tempModalType===modalType.edit"
+                  :readonly="
+                    presellDetail.startedFlag === true &&
+                    tempModalType === modalType.edit
+                  "
                   style="width: 200px"
                   @on-change="activityPriceInputNumberOnchange"
                 ></InputNumber>
@@ -532,29 +647,43 @@
             </i-col>
           </Row>
           <Row v-show="presellDetail.standardId">
-            <i-col span="12" style="margin-left:130px;margin-bottom:20px">
-              <Button v-waves type="warning" @click="aboutGoods">关联商品详情</Button>
+            <i-col span="12" style="margin-left: 130px; margin-bottom: 20px">
+              <Button v-waves type="warning" @click="aboutGoods"
+                >关联商品详情</Button
+              >
             </i-col>
           </Row>
-          <Divider v-show="tempModalType === modalType.edit">可修改部分</Divider>
+          <Divider v-show="tempModalType === modalType.edit"
+            >可修改部分</Divider
+          >
           <Row>
             <i-col span="12">
               <FormItem label="规格描述:" prop="standardDesc">
-                <Input v-model="presellDetail.standardDesc" style="width: 585px"></Input>
+                <Input
+                  v-model="presellDetail.standardDesc"
+                  style="width: 585px"
+                ></Input>
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
               <FormItem label="排序序号:" prop="rank">
-                <InputNumber v-model="presellDetail.rank" style="width: 200px"></InputNumber>
+                <InputNumber
+                  v-model="presellDetail.rank"
+                  style="width: 200px"
+                ></InputNumber>
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
               <FormItem label="库存数量:" prop="invNum">
-                <InputNumber v-model="presellDetail.invNum" placeholder="库存数量" style="width: 200px"></InputNumber>
+                <InputNumber
+                  v-model="presellDetail.invNum"
+                  placeholder="库存数量"
+                  style="width: 200px"
+                ></InputNumber>
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -571,7 +700,10 @@
           <Row>
             <i-col span="12">
               <FormItem label="关联门店:">
-                <Select v-model="presellDetail.relationStoreType" style="width: 200px">
+                <Select
+                  v-model="presellDetail.relationStoreType"
+                  style="width: 200px"
+                >
                   <Option
                     v-for="item in relationStoreTypeEnum"
                     :key="item.value"
@@ -579,13 +711,18 @@
                     class="ptb2-5"
                     style="padding-left: 5px"
                     @click.native="selectStore(item)"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="已售份数:" prop="saleQuantity">
-                <InputNumber v-model="presellDetail.saleQuantity" :min="0" style="width: 200px"></InputNumber>
+                <InputNumber
+                  v-model="presellDetail.saleQuantity"
+                  :min="0"
+                  style="width: 200px"
+                ></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -593,20 +730,31 @@
           <Row v-show="showStoreList">
             <i-col span="24">
               <FormItem label="门店列表:">
-                <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
+                <div
+                  style="
+                    border-bottom: 1px solid #e9e9e9;
+                    padding-bottom: 6px;
+                    margin-bottom: 6px;
+                  "
+                >
                   <Checkbox
                     :indeterminate="indeterminate"
                     :value="checkAll"
                     @click.prevent.native="handleCheckAll"
-                  >全选/反选</Checkbox>
+                    >全选/反选</Checkbox
+                  >
                 </div>
-                <CheckboxGroup v-model="storeIds" @on-change="checkAllGroupChange">
+                <CheckboxGroup
+                  v-model="storeIds"
+                  @on-change="checkAllGroupChange"
+                >
                   <Checkbox
                     v-for="item in storeList"
                     ref="checkBox"
                     :key="item.storeId"
                     :label="item.storeId"
-                  >{{ item.storeName }}</Checkbox>
+                    >{{ item.storeName }}</Checkbox
+                  >
                 </CheckboxGroup>
               </FormItem>
             </i-col>
@@ -615,7 +763,9 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit"
+          >确定</Button
+        >
       </div>
     </Modal>
 
@@ -672,7 +822,7 @@
             </Row>
           </div>
         </tables>
-        <div style="margin: 10px;overflow: hidden">
+        <div style="margin: 10px; overflow: hidden">
           <Row type="flex" justify="end">
             <Page
               :total="productTotal"
@@ -703,7 +853,9 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品名称:</i-col>
-              <i-col span="16">{{ productStandardDetail.baseProductName }}</i-col>
+              <i-col span="16">{{
+                productStandardDetail.baseProductName
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -740,7 +892,11 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品主图:</i-col>
               <i-col span="16">
-                <img :src="productStandardDetail.baseImage" width="100" height="100" />
+                <img
+                  :src="productStandardDetail.baseImage"
+                  width="100"
+                  height="100"
+                />
               </i-col>
             </Row>
           </i-col>
@@ -749,7 +905,9 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品描述:</i-col>
-              <i-col span="16">{{ productStandardDetail.baseProductDescription }}</i-col>
+              <i-col span="16">{{
+                productStandardDetail.baseProductDescription
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -764,7 +922,9 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">上架商品描述:</i-col>
-              <i-col span="16">{{ productStandardDetail.productDescription }}</i-col>
+              <i-col span="16">{{
+                productStandardDetail.productDescription
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -773,7 +933,11 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">上架商品主图:</i-col>
               <i-col v-if="productStandardDetail.image" span="16">
-                <img :src="productStandardDetail.image" width="100" height="100" />
+                <img
+                  :src="productStandardDetail.image"
+                  width="100"
+                  height="100"
+                />
               </i-col>
             </Row>
           </i-col>
@@ -796,7 +960,9 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品状态:</i-col>
-              <i-col span="16">{{ productStandardDetail.shelvesStatus | customPlanStatusFilters }}</i-col>
+              <i-col span="16">{{
+                productStandardDetail.shelvesStatus | customPlanStatusFilters
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -818,13 +984,17 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品原价:</i-col>
-              <i-col span="16">{{ productStandardDetail.price| fenToYuanDot2Filters }}</i-col>
+              <i-col span="16">{{
+                productStandardDetail.price | fenToYuanDot2Filters
+              }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">售卖价格:</i-col>
-              <i-col span="16">{{ productStandardDetail.salePrice | fenToYuanDot2Filters }}</i-col>
+              <i-col span="16">{{
+                productStandardDetail.salePrice | fenToYuanDot2Filters
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -1135,7 +1305,7 @@ export default {
           title: "活动状态",
           align: "center",
           key: "status",
-          minWidth: 90,
+          minWidth: 100,
           render: (h, params) => {
             const { row } = params;
             if (row.status == "VALID") {
@@ -1158,7 +1328,7 @@ export default {
           title: "是否开始",
           align: "center",
           key: "startedFlag",
-          minWidth: 90,
+          minWidth: 100,
           render: (h, params) => {
             const { row } = params;
             if (row.startedFlag) {
@@ -1184,15 +1354,15 @@ export default {
           key: "content",
         },
         {
-          title: "活动开始时间",
+          title: "开始时间",
           align: "center",
-          minWidth: 160,
+          width: 120,
           key: "startTime",
         },
         {
-          title: "活动结束时间",
+          title: "结束时间",
           align: "center",
-          minWidth: 160,
+          width: 180,
           key: "endTime",
           render(h, params) {
             if (!compareCouponData(params.row.endTime)) {
@@ -1207,12 +1377,12 @@ export default {
         {
           title: "商品库存",
           align: "center",
-          minWidth: 90,
+          minWidth: 100,
           key: "invNum",
         },
         {
           title: "原价",
-          minWidth: 80,
+          minWidth: 90,
           key: "originalPrice",
           align: "center",
           render(h, params) {
@@ -1221,7 +1391,7 @@ export default {
         },
         {
           title: "活动价",
-          minWidth: 80,
+          minWidth: 90,
           key: "activityPrice",
           align: "center",
           render(h, params) {
@@ -1229,9 +1399,49 @@ export default {
           },
         },
         {
+          title: "成本价",
+          minWidth: 90,
+          key: "costPrice",
+          align: "center",
+          render(h, params) {
+            return <div>{fenToYuanDot2(params.row.costPrice)}</div>;
+          },
+        },
+        {
+          title: "毛利",
+          minWidth: 90,
+          key: "productProfitPrice",
+          align: "center",
+          render(h, params) {
+            return <div>{fenToYuanDot2(params.row.productProfitPrice)}</div>;
+          },
+        },
+        {
+          title: "佣金比例",
+          minWidth: 100,
+          key: "commissionScale",
+          align: "center",
+          render(h, params) {
+            if (params.row.commissionScale) {
+              return <div>{params.row.commissionScale + "%"}</div>;
+            } else {
+              return <div>{"N/A"}</div>;
+            }
+          },
+        },
+        {
+          title: "佣金金额",
+          minWidth: 100,
+          key: "commissionPrice",
+          align: "center",
+          render(h, params) {
+            return <div>{fenToYuanDot2(params.row.commissionPrice)}</div>;
+          },
+        },
+        {
           title: "提货开始时间",
           align: "center",
-          minWidth: 160,
+          minWidth: 125,
           key: "deliveryStartTime",
           render(h, params) {
             if (params.row.deliveryStartTime) {
@@ -1242,7 +1452,7 @@ export default {
         {
           title: "提货截止时间",
           align: "center",
-          minWidth: 160,
+          minWidth: 125,
           key: "deliveryEndTime",
           render(h, params) {
             if (params.row.deliveryEndTime) {
@@ -1253,7 +1463,7 @@ export default {
         {
           title: "几天后开始提货",
           align: "center",
-          minWidth: 160,
+          minWidth: 140,
           key: "beginDay",
           render(h, params) {
             if (params.row.beginDay === 0) {
@@ -1278,13 +1488,13 @@ export default {
         {
           title: "限购次数",
           align: "center",
-          minWidth: 90,
+          minWidth: 100,
           key: "triesLimit",
         },
         {
           title: "排序",
           align: "center",
-          minWidth: 80,
+          minWidth: 70,
           key: "rank",
         },
         {
@@ -1314,13 +1524,13 @@ export default {
           title: "商品条码",
           key: "barcode",
           align: "center",
-          minWidth: 80,
+          minWidth: 150,
         },
         {
           title: "商品编号",
           key: "productCode",
           align: "center",
-          minWidth: 130,
+          minWidth: 150,
         },
         {
           title: "商品名称",
@@ -1329,21 +1539,21 @@ export default {
           minWidth: 150,
         },
         {
-          title: "商品规格",
+          title: "规格",
           align: "center",
           key: "specification",
-          minWidth: 100,
+          minWidth: 90,
         },
         {
-          title: "商品单位",
+          title: "单位",
           align: "center",
-          minWidth: 100,
+          minWidth: 90,
           key: "productUnit",
         },
         {
-          title: "商品原价",
+          title: "原价",
           align: "center",
-          minWidth: 120,
+          minWidth: 90,
           key: "price",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.price);
@@ -1351,9 +1561,9 @@ export default {
           },
         },
         {
-          title: "优惠价格",
+          title: "优惠价",
           align: "center",
-          minWidth: 120,
+          minWidth: 90,
           key: "salePrice",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.salePrice);
@@ -1361,9 +1571,9 @@ export default {
           },
         },
         {
-          title: "商品状态",
+          title: "状态",
           align: "center",
-          minWidth: 100,
+          minWidth: 90,
           key: "shelvesStatus",
           render: (h, params, vm) => {
             const { row } = params;
@@ -1394,9 +1604,9 @@ export default {
           },
         },
         {
-          title: "商品排序",
+          title: "排序",
           align: "center",
-          minWidth: 100,
+          minWidth: 70,
           key: "rank",
         },
       ],

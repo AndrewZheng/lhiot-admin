@@ -61,7 +61,6 @@ export default {
       this.$refs.changePhones.resetFields();
     },
     handleSubmit() {
-      console.log("手机详情", this.handPhonesDetail);
       if (
         !/^1[3578][0-9]{9}(,1[3578][0-9]{9})*$/.test(
           this.handPhonesDetail.oldPhone

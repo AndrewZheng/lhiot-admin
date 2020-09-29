@@ -58,7 +58,7 @@
               </Button>
               <!-- <Button class="search-btn mr2" type="warning" @click="handleDownload">
                 <Icon type="md-download" />导出数据
-              </Button> -->
+              </Button>-->
             </Row>
             <div class="ml15 mt10">
               <i style="color: red">*</i> 默认展示当天的数据

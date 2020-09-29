@@ -6,6 +6,8 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
+        :search-area-column="18"
+        :operate-area-column="6"
         editable
         searchable
         border
@@ -30,7 +32,7 @@
             v-model="searchRowData.positionId"
             class="search-col mr5"
             placeholder="广告位置"
-            style="width:150px"
+            style="width: 150px"
             clearable
           >
             <Option
@@ -38,13 +40,14 @@
               :value="item.id"
               :key="`search-col-${item.id}`"
               class="pt5 pb5 pl15"
-            >{{ item.description }}</Option>
+              >{{ item.description }}</Option
+            >
           </Select>
           <Select
             v-model="searchRowData.status"
             class="search-col mr5"
             placeholder="状态"
-            style="width:100px"
+            style="width: 100px"
             clearable
           >
             <Option
@@ -52,9 +55,15 @@
               :value="item.value"
               :key="`search-col-${item.id}`"
               class="pt5 pb5 pl15"
-            >{{ item.label }}</Option>
+              >{{ item.label }}</Option
+            >
           </Select>
-          <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch">
+          <Button
+            v-waves
+            class="search-btn mr5"
+            type="primary"
+            @click="handleSearch"
+          >
             <Icon type="md-search" />&nbsp;搜索
           </Button>
           <Button
@@ -84,7 +93,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -113,7 +122,9 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">广告名称:</i-col>
-              <i-col span="16">{{ advertisementDetail.advertisementName }}</i-col>
+              <i-col span="16">{{
+                advertisementDetail.advertisementName
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -130,7 +141,10 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">广告图:</i-col>
               <i-col span="16">
-                <img :src="advertisementDetail.imageUrl" style="width: 100%;height: auto" />
+                <img
+                  :src="advertisementDetail.imageUrl"
+                  style="width: 100%; height: auto"
+                />
               </i-col>
             </Row>
           </i-col>
@@ -139,7 +153,9 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">广告状态:</i-col>
-              <i-col span="16">{{ advertisementDetail.status | couponStatusFilter }}</i-col>
+              <i-col span="16">{{
+                advertisementDetail.status | couponStatusFilter
+              }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -153,38 +169,24 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">链接类型:</i-col>
-              <i-col span="16">{{ advertisementDetail.linkType | advertisementLinkTypeFilter }}</i-col>
+              <i-col span="16">{{
+                advertisementDetail.linkType | advertisementLinkTypeFilter
+              }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">链接目标:</i-col>
-              <i-col span="16">{{ advertisementDetail.advertiseRelation }}</i-col>
+              <i-col span="16">{{
+                advertisementDetail.advertiseRelation
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-          <i-col span="16">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">有效时间:</i-col>
-              <i-col span="16">{{ validityPeriodComputed }}</i-col>
-            </Row>
-          </i-col>
+          <i-col span="4">有效时间:</i-col>
+          <i-col span="16">{{ validityPeriodComputed }}</i-col>
         </Row>
-        <!-- <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">有效时间:</i-col>
-              <i-col span="16">{{ advertisementDetail.validTime }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">失效时间:</i-col>
-              <i-col span="16">{{ advertisementDetail.invalidTime }}</i-col>
-            </Row>
-          </i-col>
-        </Row>-->
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
@@ -207,10 +209,17 @@
 
     <Modal v-model="modalEdit" :width="750" :mask-closable="false">
       <p slot="header">
-        <span>{{ tempModalType===modalType.edit?'修改广告':'创建广告' }}</span>
+        <span>{{
+          tempModalType === modalType.edit ? "修改广告" : "创建广告"
+        }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="advertisementDetail" :rules="ruleInline" :label-width="80">
+        <Form
+          ref="modalEdit"
+          :model="advertisementDetail"
+          :rules="ruleInline"
+          :label-width="100"
+        >
           <Row>
             <i-col span="12">
               <FormItem label="广告位置:" prop="positionId">
@@ -224,7 +233,8 @@
                     :value="item.id"
                     :key="`search-col-${item.id}`"
                     class="pt5 pb5 pl15"
-                  >{{ item.description }}</Option>
+                    >{{ item.description }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
@@ -256,35 +266,58 @@
                   @on-change="advertiseTypeChange"
                 >
                   <Option
-                    v-for="(item,index) in advertiseType"
+                    v-for="(item, index) in advertiseType"
                     :value="item.value"
                     :key="index"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem
                 :label-width="80"
-                :label="advertisementDetail.advertiseType ===&quot;IMAGE&quot;?&quot;广告图片:建议尺寸 (xxx*xxx):&quot;:&quot;广告文字:&quot;"
+                :label="
+                  advertisementDetail.advertiseType === 'IMAGE'
+                    ? '广告图片:建议尺寸 (xxx*xxx):'
+                    : '广告文字:'
+                "
                 prop="imageUrl"
               >
-                <div v-if="advertisementDetail.advertiseType ==='IMAGE'">
-                  <Input v-show="false" v-model="advertisementDetail.imageUrl" style="width: auto"></Input>
-                  <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+                <div v-if="advertisementDetail.advertiseType === 'IMAGE'">
+                  <Input
+                    v-show="false"
+                    v-model="advertisementDetail.imageUrl"
+                    style="width: auto"
+                  ></Input>
+                  <div
+                    v-for="item in uploadListMain"
+                    :key="item.url"
+                    class="demo-upload-list"
+                  >
                     <template v-if="item.status === 'finished'">
                       <div>
                         <img :src="item.url" />
                         <div class="demo-upload-list-cover">
-                          <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                          <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                          <Icon
+                            type="ios-eye-outline"
+                            @click.native="handleUploadView(item)"
+                          ></Icon>
+                          <Icon
+                            type="ios-trash-outline"
+                            @click.native="handleRemoveMain(item)"
+                          ></Icon>
                         </div>
                       </div>
                     </template>
                     <template v-else>
-                      <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                      <Progress
+                        v-if="item.showProgress"
+                        :percent="item.percentage"
+                        hide-info
+                      ></Progress>
                     </template>
                   </div>
                   <IViewUpload
@@ -295,7 +328,10 @@
                     file-dir="activity"
                     @on-success="handleSuccessMain"
                   >
-                    <div slot="content" style="width:58px;height:58px;line-height:58px">
+                    <div
+                      slot="content"
+                      style="width: 58px; height: 58px; line-height: 58px"
+                    >
                       <Icon type="ios-camera" size="20"></Icon>
                     </div>
                   </IViewUpload>
@@ -312,12 +348,13 @@
                   @on-change="advertisementDetailStatusChange"
                 >
                   <Option
-                    v-for="(item,index) in status"
+                    v-for="(item, index) in status"
                     :value="item.value"
                     :key="index"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
@@ -341,11 +378,12 @@
                   @on-change="advertiseLinkTypeChange"
                 >
                   <Option
-                    v-for="(item,index) in linkType"
+                    v-for="(item, index) in linkType"
                     :value="item.value"
                     :key="index"
                     class="ptb2-5"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
@@ -353,13 +391,18 @@
               <Row span="24" align="middle" type="flex">
                 <FormItem label="链接目标:" prop="advertisementRelation">
                   <Row v-if="isTargetLink">
-                    <Input v-model="advertisementDetail.advertisementRelation" style="width:200px;"></Input>
+                    <Input
+                      v-model="advertisementDetail.advertisementRelation"
+                      style="width: 200px"
+                    ></Input>
                   </Row>
                   <Row v-else>
                     <i-col span="24">
                       <Input
                         v-model="advertisementDetail.advertisementRelationText"
-                        :disabled="advertisementDetail.linkType !== 'EXTERNALLINK'"
+                        :disabled="
+                          advertisementDetail.linkType !== 'EXTERNALLINK'
+                        "
                       >
                         <Button
                           v-waves
@@ -388,13 +431,18 @@
                   @on-change="advertiseTimeChange"
                 >
                   <Option
-                    v-for="(item,index) in validityTimeList"
+                    v-for="(item, index) in validityTimeList"
                     :value="item.value"
                     :key="index"
                     class="ptb2-5"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
                 </Select>
-                <Row v-if="advertisementDetail.isPermanent ==='OFF'" span="24" class="mt15">
+                <Row
+                  v-if="advertisementDetail.isPermanent === 'OFF'"
+                  span="24"
+                  class="mt15"
+                >
                   <DatePicker
                     :value="advertisementDetail.validTime"
                     format="yyyy-MM-dd HH:mm:ss"
@@ -420,7 +468,12 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+          >确定</Button
+        >
       </div>
     </Modal>
 
@@ -428,7 +481,12 @@
       <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
 
-    <Modal :mask-closable="false" :width="1200" v-model="relationTargetShow" title="关联商品规格">
+    <Modal
+      :mask-closable="false"
+      :width="1200"
+      v-model="relationTargetShow"
+      title="关联商品规格"
+    >
       <div class="modal-content">
         Tips：点击要选择的行
         <tables
@@ -477,7 +535,7 @@
           </div>
         </tables>
 
-        <div style="margin: 10px;overflow: hidden">
+        <div style="margin: 10px; overflow: hidden">
           <Row type="flex" justify="end">
             <Page
               :total="relationTotal"
@@ -505,7 +563,7 @@ import {
   getAdvertisementPages,
   getAdvertisement,
   getProductStandardsPages,
-  deletePicture
+  deletePicture,
 } from "@/api/mini-program";
 import deleteMixin from "@/mixins/deleteMixin.js";
 import tableMixin from "@/mixins/tableMixin.js";
@@ -516,7 +574,7 @@ import { compareData } from "@/libs/util";
 import { linkType, linkTypeEnum } from "@/libs/enumerate";
 import {
   couponStatusConvert,
-  advertisementLinkTypeConvert
+  advertisementLinkTypeConvert,
 } from "@/libs/converStatus";
 import { miniGoodsStandardColumns } from "@/libs/columns";
 
@@ -539,7 +597,7 @@ const advertisementDetail = {
   isPermanent: "OFF",
   advertiseType: "IMAGE",
   validityPeriod: "",
-  advertisementRelationText: ""
+  advertisementRelationText: "",
 };
 const roleRowData = {
   applicationType: null,
@@ -547,7 +605,9 @@ const roleRowData = {
   positionId: null,
   status: null,
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx: "createTime",
+  sort: "desc",
 };
 
 const relationRowData = {
@@ -555,13 +615,13 @@ const relationRowData = {
   productName: null,
   shelvesStatus: "VALID",
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 export default {
   components: {
     Tables,
-    IViewUpload
+    IViewUpload,
   },
   mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
   data() {
@@ -588,42 +648,42 @@ export default {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
       advertiseType: [
         { value: "IMAGE", label: "图片广告" },
-        { value: "TEXT", label: "文字广告" }
+        { value: "TEXT", label: "文字广告" },
       ],
       linkType: [
         {
           value: linkType.GOODSINFO,
           label: "商品详情",
           api: getProductStandardsPages,
-          columns: miniGoodsStandardColumns
+          columns: miniGoodsStandardColumns,
         },
         {
           value: linkType.INVITEACTIVE,
           label: "邀请有礼",
           api: getProductStandardsPages,
-          columns: miniGoodsStandardColumns
+          columns: miniGoodsStandardColumns,
         },
         {
           value: linkType.FLASHACTIVE,
           label: "抢购商品",
           api: getProductStandardsPages,
-          columns: miniGoodsStandardColumns
+          columns: miniGoodsStandardColumns,
         },
         {
           value: linkType.RECHARGE,
           label: "充值页面",
           api: getProductStandardsPages,
-          columns: miniGoodsStandardColumns
+          columns: miniGoodsStandardColumns,
         },
         { value: linkType.EXTERNALLINK, label: "外部链接" },
         { value: linkType.INTERNALLINK, label: "内部链接" },
-        { value: linkType.TABLINK, label: "底部导航" }
+        { value: linkType.TABLINK, label: "底部导航" },
       ],
       tempColumns: [],
       linkTypeEnum,
@@ -631,42 +691,37 @@ export default {
       relationTypeKeys: [],
       status: [
         { label: "有效", value: "VALID" },
-        { label: "无效", value: "INVALID" }
+        { label: "无效", value: "INVALID" },
       ],
       validityTimeList: [{ label: "定时生效", value: "OFF" }],
       columns: [
         {
-          type: "selection",
-          key: "",
-          width: 60,
-          align: "center",
-          fixed: "left"
-        },
-        {
           title: "ID",
           align: "center",
           key: "id",
-          sortable: true,
-          minWidth: 70
+          fixed: "left",
+          minWidth: 70,
+        },
+        {
+          title: "广告名称",
+          align: "center",
+          minWidth: 140,
+          fixed: "left",
+          key: "advertisementName",
         },
         {
           title: "链接类型",
           align: "center",
           minWidth: 100,
+          fixed: "left",
           key: "linkType",
           render: (h, params, vm) => {
             const { row } = params;
             return (
               <div>{advertisementLinkTypeConvert(row.linkType).label}</div>
             );
-          }
+          },
         },
-        // {
-        //   title: '序号',
-        //   key: 'rankNo',
-        //   sortable: true,
-        //   minWidth: 80
-        // },
         {
           title: "图片",
           align: "center",
@@ -676,25 +731,19 @@ export default {
             const { row } = params;
             const str = <img src={row.imageUrl} height="60" width="100" />;
             return <div>{str}</div>;
-          }
+          },
         },
         {
           title: "广告关联",
           align: "center",
-          minWidth: 110,
-          key: "advertisementRelation"
-        },
-        {
-          title: "广告名称",
-          align: "center",
-          minWidth: 150,
-          key: "advertisementName"
+          minWidth: 260,
+          key: "advertisementRelation",
         },
         {
           title: "创建时间",
           align: "center",
-          minWidth: 170,
-          key: "createTime"
+          minWidth: 180,
+          key: "createTime",
         },
         {
           title: "当前状态",
@@ -725,28 +774,28 @@ export default {
                 <tag color="primary">{row.status}</tag>
               </div>
             );
-          }
+          },
         },
         {
           title: "生效时间",
           align: "center",
-          minWidth: 170,
-          key: "validTime"
+          minWidth: 180,
+          key: "validTime",
         },
         {
           title: "失效时间",
           align: "center",
-          minWidth: 170,
-          key: "invalidTime"
+          minWidth: 180,
+          key: "invalidTime",
         },
         {
           title: "广告位置",
           align: "center",
-          minWidth: 160,
+          minWidth: 170,
           key: "positionId",
           render: (h, params, vm) => {
             const { row } = params;
-            const obj = this.advertisementList.find(item => {
+            const obj = this.advertisementList.find((item) => {
               return item.id === row.positionId;
             });
             if (obj) {
@@ -754,28 +803,23 @@ export default {
             } else {
               return h("span", row.positionId + "");
             }
-          }
-        },
-        {
-          title: "创建人",
-          align: "center",
-          minWidth: 150,
-          key: "createUser"
+          },
         },
         {
           title: "内容描述",
           align: "center",
-          minWidth: 150,
+          minWidth: 200,
           key: "contentDesc",
-          tooltip: true
+          tooltip: true,
         },
         {
           title: "操作",
           align: "center",
           minWidth: 200,
+          fixed: "right",
           key: "handle",
-          options: ["customOnSale", "view", "edit", "delete"]
-        }
+          options: ["customOnSale", "view", "edit", "delete"],
+        },
       ],
       defaultListMain: [],
       uploadListMain: [],
@@ -787,7 +831,7 @@ export default {
       relationTotal: 0,
       oldPicture: [],
       newPicture: [],
-      save: []
+      save: [],
     };
   },
   computed: {
@@ -800,7 +844,7 @@ export default {
     },
     advertisementPositionComputed() {
       const tempObj = this.advertisementList.find(
-        item => item.id === this.advertisementDetail.positionId
+        (item) => item.id === this.advertisementDetail.positionId
       );
       if (tempObj) {
         return tempObj.description;
@@ -823,17 +867,17 @@ export default {
       } else {
         return (
           this.advertisementDetail.validTime +
-          "--" +
+          "～" +
           this.advertisementDetail.invalidTime
         );
       }
-    }
+    },
   },
   created() {
     getAdvertisementPositionPages({
       page: 0,
-      rows: 0
-    }).then(res => {
+      rows: 0,
+    }).then((res) => {
       this.selectDisable = false;
       this.advertisementList = res.rows;
       this.getTableData();
@@ -841,7 +885,6 @@ export default {
   },
   methods: {
     advertiseTypeChange(value) {
-      console.log(value);
       if (value === "TEXT") {
         if (this.$refs.uploadMain) {
           this.$refs.uploadMain.clearFileList();
@@ -869,9 +912,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteAdvertisement({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&
@@ -900,7 +943,7 @@ export default {
       //   };
       //   this.deletePicture(urls);
       // }
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.advertisementDetail.isPermanent === "OFF") {
             if (this.advertisementDetail.validTime === "") {
@@ -929,16 +972,8 @@ export default {
             }
           }
           if (this.tempModalType === this.modalType.create) {
-            // 添加状态
-            console.log(
-              "createTableRow" + JSON.stringify(this.advertisementDetail)
-            );
             this.createTableRow();
           } else if (this.tempModalType === this.modalType.edit) {
-            // 编辑状态
-            console.log(
-              "editTableRow" + JSON.stringify(this.advertisementDetail)
-            );
             this.editTableRow();
           }
         } else {
@@ -967,8 +1002,8 @@ export default {
     editTableRow() {
       this.modalViewLoading = true;
       editAdvertisement({
-        ...this.advertisementDetail
-      }).then(res => {
+        ...this.advertisementDetail,
+      }).then((res) => {
         this.resetFields();
         this.modalEdit = false;
         this.modalViewLoading = false;
@@ -977,7 +1012,7 @@ export default {
     },
     createTableRow() {
       this.modalViewLoading = true;
-      createAdvertisement(this.advertisementDetail).then(res => {
+      createAdvertisement(this.advertisementDetail).then((res) => {
         this.modalViewLoading = false;
         this.modalEdit = false;
         this.$Message.success("创建成功!");
@@ -997,14 +1032,12 @@ export default {
     },
     getRelationTable() {
       this.searchModalTableLoading = true;
-      const tempObj = this.linkType.find(item => {
+      const tempObj = this.linkType.find((item) => {
         return item.value === this.advertisementDetail.linkType;
       });
-      console.log(tempObj);
       if (tempObj) {
         this.tempColumns = tempObj.columns;
-        console.log(this.tempColumns);
-        tempObj.api(this.searchRelationRowData).then(res => {
+        tempObj.api(this.searchRelationRowData).then((res) => {
           this.searchModalTableLoading = false;
           this.relationTargetShow = true;
           this.tempModalTableData = res.rows;
@@ -1057,7 +1090,7 @@ export default {
       this.tempImage = null;
       this.loading = true;
       getAdvertisement({ id: params.row.id, flag: "yes" })
-        .then(res => {
+        .then((res) => {
           this.advertisementDetail = res;
           this.setDefaultUploadList(this.advertisementDetail);
           if (
@@ -1092,7 +1125,6 @@ export default {
     },
     advertiseLinkTypeChange(value) {
       this.advertisementDetail.linkType = value;
-      console.log(value);
     },
     advertisementDetailStatusChange(value) {
       this.advertisementDetail.status = value;
@@ -1100,7 +1132,7 @@ export default {
     advertiseTimeChange() {},
     getTableData() {
       this.searchRowData.applicationType = this.applicationType;
-      getAdvertisementPages(this.searchRowData).then(res => {
+      getAdvertisementPages(this.searchRowData).then((res) => {
         this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;
@@ -1151,8 +1183,8 @@ export default {
     },
     relationTextChange(event) {
       this.advertisementDetail.advertisementRelation = event;
-    }
-  }
+    },
+  },
 };
 </script>
 

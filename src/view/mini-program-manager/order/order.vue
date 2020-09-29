@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="19"
+        :search-area-column="24"
         :operate-area-column="5"
         editable
         searchable
@@ -26,15 +26,15 @@
             <Input
               v-model="searchRowData.orderCode"
               placeholder="订单编码"
-              class="search-input mr5"
-              style="width: 150px"
+              class="search-input"
+              style="width: 170px"
               clearable
               v-show="this.$route.name != 'small-skip-order'"
             ></Input>
             <Input
               v-model="searchRowData.phone"
               placeholder="用户手机号"
-              class="search-input mr5"
+              class="search-input"
               style="width: 110px"
               clearable
               v-show="this.$route.name != 'small-skip-order'"
@@ -42,7 +42,7 @@
             <Input
               v-model="searchRowData.productName"
               placeholder="商品名称"
-              class="search-input mr5"
+              class="search-input"
               style="width: 120px"
               clearable
               v-show="this.$route.name != 'small-skip-order'"
@@ -50,7 +50,7 @@
             <Input
               v-model="searchRowData.storeName"
               placeholder="下单门店"
-              class="search-input mr5"
+              class="search-input"
               style="width: 120px"
               clearable
               v-show="this.$route.name != 'small-skip-order'"
@@ -58,7 +58,7 @@
             <Select
               v-model="searchRowData.apply"
               :clearable="true"
-              style="padding-right: 5px;width: 100px"
+              style="width: 110px"
               placeholder="应用类型"
               v-show="this.$route.name != 'small-skip-order'"
             >
@@ -68,13 +68,14 @@
                 :value="item.value"
                 class="ml15 mt10"
                 style="padding-left: 5px"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.orderType"
-              class="search-col mr5"
+              class="search-col"
               placeholder="订单类型"
-              style="width: 100px"
+              style="width: 120px"
               clearable
               v-show="this.$route.name != 'small-skip-order'"
             >
@@ -83,11 +84,12 @@
                 :key="`orderType-col-${item.value}`"
                 :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.receivingWay"
-              class="search-col mr5"
+              class="search-col"
               placeholder="提货方式"
               style="width: 90px"
               clearable
@@ -98,11 +100,12 @@
                 :key="`search-col-${item.value}`"
                 :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.status"
-              class="search-col mr5"
+              class="search-col"
               placeholder="订单状态"
               style="width: 90px"
               clearable
@@ -113,11 +116,12 @@
                 :key="`search-col-${item.value}`"
                 :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.hdStatus"
-              class="search-col mr5"
+              class="search-col"
               placeholder="海鼎状态"
               style="width: 90px"
               clearable
@@ -128,129 +132,134 @@
                 :key="`search-col-${item.value}`"
                 :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
-            <div style="margin-top:5px">
-              <RadioGroup
-                v-model="button"
-                type="button"
-                style="float:left;margin-right:5px"
-                @on-change="timeChange"
-                v-show="this.$route.name != 'small-skip-order'"
-              >
-                <Radio label="今日"></Radio>
-                <Radio label="自定义时间"></Radio>
-              </RadioGroup>
-              <DatePicker
-                v-show="mark===true||this.$route.name == 'small-skip-order'"
-                v-model="searchRowData.startTime"
-                format="yyyy-MM-dd HH:mm:ss"
-                type="datetime"
-                placeholder="开始时间"
-                class="mr5"
-                style="width: 150px"
-                @on-change="startTimeChange"
-              />
-              <i v-show="mark===true||this.$route.name == 'small-skip-order'">-</i>
-              <DatePicker
-                v-show="mark===true||this.$route.name == 'small-skip-order'"
-                v-model="searchRowData.endTime"
-                format="yyyy-MM-dd HH:mm:ss"
-                type="datetime"
-                placeholder="结束时间"
-                class="mr20"
-                style="width: 150px"
-                @on-change="endTimeChange"
-              />
-              <!-- 提货时间 -->
-              <DatePicker
-                v-model="searchRowData.recieveStartTime"
-                format="yyyy-MM-dd HH:mm:ss"
-                type="datetime"
-                placeholder="提货时间起"
-                class="mr5"
-                style="width: 150px"
-                @on-change="recieveStartTimeChange"
-                v-show="this.$route.name != 'small-skip-order'"
-              />
-              <i v-show="this.$route.name != 'small-skip-order'">-</i>
-              <DatePicker
-                v-model="searchRowData.recieveEndTime"
-                format="yyyy-MM-dd HH:mm:ss"
-                type="datetime"
-                placeholder="提货时间止"
-                class="mr5"
-                style="width: 150px"
-                @on-change="recieveEndTimeChange"
-                v-show="this.$route.name != 'small-skip-order'"
-              />
-              <Button
-                v-waves
-                :loading="searchLoading"
-                class="search-btn ml5"
-                type="primary"
-                @click="handleSearch"
-              >
-                <Icon type="md-search" />&nbsp;搜索
-              </Button>
-              <Button
-                v-waves
-                :loading="clearSearchLoading"
-                class="search-btn"
-                type="info"
-                @click="handleClear"
-                v-show="this.$route.name != 'small-skip-order'"
-              >
-                <Icon type="md-refresh" />&nbsp;清除
-              </Button>
-              <Button
-                v-waves
-                v-show="this.$route.name == 'small-skip-order'"
-                class="search-btn ml5 mr5"
-                type="warning"
-                @click="goBack"
-              >
-                <Icon type="md-home" />&nbsp;返回首页
-              </Button>
-            </div>
+            <!-- 提货时间 -->
+            <DatePicker
+              v-model="searchRowData.recieveStartTime"
+              format="yyyy-MM-dd HH:mm:ss"
+              type="datetime"
+              placeholder="提货时间起"
+              style="width: 160px; margin-top: 10px"
+              @on-change="recieveStartTimeChange"
+              v-show="this.$route.name != 'small-skip-order'"
+            />
+            <i v-show="this.$route.name != 'small-skip-order'">-</i>
+            <DatePicker
+              v-model="searchRowData.recieveEndTime"
+              format="yyyy-MM-dd HH:mm:ss"
+              type="datetime"
+              placeholder="提货时间止"
+              style="width: 160px; margin-top: 10px"
+              @on-change="recieveEndTimeChange"
+              v-show="this.$route.name != 'small-skip-order'"
+            />
+            <RadioGroup
+              v-model="button"
+              type="button"
+              @on-change="timeChange"
+              v-show="this.$route.name != 'small-skip-order'"
+            >
+              <Radio label="今日"></Radio>
+              <Radio label="自定义时间"></Radio>
+            </RadioGroup>
+            <DatePicker
+              v-show="mark === true || this.$route.name == 'small-skip-order'"
+              v-model="searchRowData.startTime"
+              format="yyyy-MM-dd HH:mm:ss"
+              type="datetime"
+              placeholder="开始时间"
+              style="width: 160px; margin-top: 10px"
+              @on-change="startTimeChange"
+            />
+            <i v-show="mark === true || this.$route.name == 'small-skip-order'"
+              >-</i
+            >
+            <DatePicker
+              v-show="mark === true || this.$route.name == 'small-skip-order'"
+              v-model="searchRowData.endTime"
+              format="yyyy-MM-dd HH:mm:ss"
+              type="datetime"
+              class="mr20"
+              placeholder="结束时间"
+              style="width: 160px; margin-top: 10px"
+              @on-change="endTimeChange"
+            />
+            <Button
+              v-waves
+              :loading="searchLoading"
+              class="search-btn"
+              type="primary"
+              @click="handleSearch"
+            >
+              <Icon type="md-search" />&nbsp;搜索
+            </Button>
+            <Button
+              v-waves
+              :loading="clearSearchLoading"
+              class="search-btn"
+              type="info"
+              @click="handleClear"
+              v-show="this.$route.name != 'small-skip-order'"
+            >
+              <Icon type="md-refresh" />&nbsp;清除
+            </Button>
+            <Button
+              v-waves
+              v-show="this.$route.name == 'small-skip-order'"
+              class="search-btn"
+              type="warning"
+              @click="goBack"
+            >
+              <Icon type="md-home" />&nbsp;返回首页
+            </Button>
           </Row>
-        </div>
-        <div
-          slot="operations"
-          style="margin-left:-30px"
-          v-show="this.$route.name != 'small-skip-order'"
-        >
-          <Button
-            v-waves
-            :loading="deliverOrderLoading"
-            class="search-btn mr2"
-            type="primary"
-            @click="deliverOrder"
-          >门店调货</Button>
-          <Button v-waves class="search-btn ml2 mr2" type="warning" @click="resendToHd">海鼎重发</Button>
-          <!-- 多类型导出 -->
-          <!-- <BookTypeOption v-model="exportType" class="mr5"/> -->
-          <Button
-            :loading="downloadLoading"
-            class="search-btn mr2"
-            type="info"
-            @click="handleDownload"
-          >
-            <Icon type="md-download" />导出
-          </Button>
-          <Button :loading="downloadLoading" class="search-btn" type="info" @click="couponDetails">
-            <Icon type="md-search" />&nbsp;用券数据
-          </Button>
-          <Button
-            :loading="downloadLoading"
-            class="search-btn"
-            style="margin-top:5px"
-            type="info"
-            @click="monthOrder"
-          >
-            <Icon type="md-search" />&nbsp;跨月退款数据
-          </Button>
-          <!-- <Poptip
+          <Row v-show="this.$route.name != 'small-skip-order'" style="float:right;margin-top:10px">
+            <Button
+              v-waves
+              :loading="deliverOrderLoading"
+              class="search-btn mr2"
+              type="success"
+              @click="deliverOrder"
+              >门店调货</Button
+            >
+            <Button
+              v-waves
+              class="search-btn ml2 mr2"
+              type="success"
+              @click="resendToHd"
+              >海鼎重发</Button
+            >
+            <!-- 多类型导出 -->
+            <!-- <BookTypeOption v-model="exportType" class="mr5"/> -->
+            <Button
+              :loading="downloadLoading"
+              class="search-btn mr2"
+              type="warning"
+              @click="handleDownload"
+            >
+              <Icon type="md-download" />导出
+            </Button>
+            <Button
+              :loading="downloadLoading"
+              class="search-btn"
+              type="success"
+              ghost
+              @click="couponDetails"
+            >
+              <Icon type="md-search" />&nbsp;用券数据
+            </Button>
+            <Button
+              :loading="downloadLoading"
+              class="search-btn"
+              type="success"
+              ghost
+              @click="monthOrder"
+            >
+              <Icon type="md-search" />&nbsp;跨月退款数据
+            </Button>
+            <!-- <Poptip
             confirm
             placement="bottom"
             style="width: 100px"
@@ -261,6 +270,7 @@
               <Icon type="md-money"/>手动退款
             </Button>
           </Poptip>-->
+          </Row>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -730,7 +740,7 @@ export default {
   mixins: [tableMixin, searchMixin],
   data() {
     return {
-      mark: false,
+      mark: true,
       button: "今日",
       num: 0,
       searchMark: true,
@@ -895,7 +905,7 @@ export default {
           title: "订单编号",
           key: "code",
           sortable: true,
-          width: 170,
+          width: 190,
           fixed: "left",
           align: "center",
         },
@@ -903,7 +913,7 @@ export default {
           title: "应用类型",
           align: "center",
           key: "apply",
-          width: 120,
+          width: 110,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.apply === "WXSMALL_SHOP") {
@@ -926,7 +936,7 @@ export default {
         {
           title: "支付类型",
           align: "center",
-          width: 120,
+          width: 110,
           key: "payType",
           render: (h, params, vm) => {
             const { row } = params;
@@ -962,13 +972,13 @@ export default {
         {
           title: "创建时间",
           align: "center",
-          width: 160,
+          width: 120,
           key: "createAt",
         },
         {
           title: "提货时间",
           align: "center",
-          width: 160,
+          width: 120,
           key: "recieveTime",
         },
         {
@@ -980,14 +990,14 @@ export default {
         {
           title: "手机号码",
           align: "center",
-          width: 120,
+          width: 130,
           key: "contactPhone",
         },
         { align: "center", title: "商品名称", width: 150, key: "productNames" },
         {
           title: "下单门店",
           align: "center",
-          width: 120,
+          width: 140,
           key: "storeId",
           render: (h, params) => {
             const { row } = params;
@@ -1001,9 +1011,9 @@ export default {
           },
         },
         {
-          title: "订单总价",
+          title: "商品总价",
           align: "center",
-          width: 120,
+          width: 100,
           key: "totalAmount",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.totalAmount);
@@ -1011,9 +1021,31 @@ export default {
           },
         },
         {
+          title: "运费",
+          align: "center",
+          width: 100,
+          key: "deliveryAmount",
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(params.row.deliveryAmount);
+            return <div>{amount || "N/A"}</div>;
+          },
+        },
+        {
+          title: "订单总价",
+          align: "center",
+          width: 100,
+          key: "allAmount",
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(
+              params.row.totalAmount + params.row.deliveryAmount
+            );
+            return <div>{amount || "N/A"}</div>;
+          },
+        },
+        {
           title: "优惠金额",
           align: "center",
-          width: 120,
+          width: 100,
           key: "couponAmount",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.couponAmount);
@@ -1023,7 +1055,7 @@ export default {
         {
           title: "优惠券金额",
           align: "center",
-          width: 120,
+          width: 110,
           key: "couponTicketAmount",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.couponTicketAmount);
@@ -1031,19 +1063,9 @@ export default {
           },
         },
         {
-          title: "运费",
-          align: "center",
-          width: 120,
-          key: "deliveryAmount",
-          render(h, params, vm) {
-            const amount = fenToYuanDot2(params.row.deliveryAmount);
-            return <div>{amount || "N/A"}</div>;
-          },
-        },
-        {
           title: "应付金额",
           align: "center",
-          width: 120,
+          width: 100,
           key: "amountPayable",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.amountPayable);
@@ -1065,7 +1087,7 @@ export default {
         {
           title: "提货类型",
           align: "center",
-          width: 120,
+          width: 100,
           key: "receivingWay",
           render: (h, params, vm) => {
             const { row } = params;
@@ -1093,7 +1115,7 @@ export default {
         {
           title: "是否退款",
           align: "center",
-          width: 120,
+          width: 100,
           key: "isAllRefund",
           render: (h, params, vm) => {
             const { row } = params;
@@ -1130,7 +1152,7 @@ export default {
         {
           title: "订单状态",
           align: "center",
-          width: 120,
+          width: 100,
           key: "orderStatus",
           render: (h, params, vm) => {
             const { row } = params;
@@ -1190,7 +1212,7 @@ export default {
         {
           title: "海鼎状态",
           align: "center",
-          width: 120,
+          width: 100,
           key: "hdStatus",
           render: (h, params, vm) => {
             const { row } = params;
@@ -1572,7 +1594,7 @@ export default {
     },
     timeChange(value) {
       if (value === "今日") {
-        this.mark = false;
+        this.mark = true;
         this.getTableData();
       } else if (value === "自定义时间") {
         this.mark = true;

@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="18"
+        :search-area-column="24"
         :operate-area-column="6"
         editable
         searchable
@@ -22,76 +22,86 @@
         @on-selection-change="onSelectionChange"
       >
         <div slot="searchCondition">
-          <Row v-show="!showBack">
+          <Row>
             <Input
               v-model="searchRowData.barcode"
               placeholder="商品条码"
               class="search-input mr5"
-              style="width: auto"
+              style="width: 100px"
               clearable
+              v-show="!showBack"
             ></Input>
             <Input
               v-model="searchRowData.productCode"
               placeholder="商品编号"
               class="search-input mr5"
-              style="width: auto"
+              style="width: 120px"
               clearable
+              v-show="!showBack"
             ></Input>
             <Input
               v-model="searchRowData.productName"
               placeholder="商品名称"
               class="search-input mr5"
-              style="width: auto"
+              style="width: 140px"
               clearable
+              v-show="!showBack"
             ></Input>
             <Select
               v-model="searchRowData.shelvesStatus"
               class="search-col"
-              placeholder="上架状态"
-              style="width:100px"
+              placeholder="状态"
+              style="width: 70px"
               clearable
+              v-show="!showBack"
             >
               <Option
                 v-for="item in shelvesStatus"
                 :value="item.value"
                 :key="item.value"
                 class="ml15 mt10 mr15"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.productType"
               class="ml5"
               placeholder="商品类型"
-              style="width:100px"
+              style="width: 120px"
               clearable
+              v-show="!showBack"
             >
               <Option
                 v-for="item in expandTypeEnum"
                 :value="item.value"
                 :key="item.value"
                 class="ml15 mt10 mr15"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <InputNumber
               v-model="searchMinPrice"
               placeholder="最低价格"
               class="search-input mr5"
-              style="width: auto"
+              style="width: 90px"
               clearable
+              v-show="!showBack"
               @on-change="searchMinPriceChange"
             ></InputNumber>
             <InputNumber
               v-model="searchMaxPrice"
               placeholder="最高价格"
               class="search-input mr5"
-              style="width: auto"
+              style="width: 90px"
               clearable
+              v-show="!showBack"
               @on-change="searchMaxPriceChange"
             ></InputNumber>
             <Button
               :searchLoading="searchLoading"
               class="search-btn mr5"
               type="primary"
+              v-show="!showBack"
               @click="handleSearch"
             >
               <Icon type="md-search" />&nbsp;搜索
@@ -101,29 +111,29 @@
               :loading="clearSearchLoading"
               class="search-btn"
               type="info"
+              v-show="!showBack"
               @click="handleClear"
             >
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
-          </Row>
-          <div class="ml15 mt10">
-            <i style="color:red">*</i> 选中单条数据再点击添加,可复制当前数据
-          </div>
-        </div>
-        <div slot="operations">
-          <Button
-            v-waves
-            v-show="showBack"
-            class="search-btn ml5 mr5"
-            type="primary"
-            @click="goBack"
-          >
-            <Icon type="ios-arrow-back" />&nbsp;返回
-          </Button>
-          <Button v-waves class="search-btn ml5 mr5" type="success" @click="handleCreateView">
-            <Icon type="md-add" />&nbsp;添加
-          </Button>
-          <!-- <Poptip
+            <Button
+              v-waves
+              v-show="showBack"
+              class="search-btn ml5 mr5"
+              type="primary"
+              @click="goBack"
+            >
+              <Icon type="ios-arrow-back" />&nbsp;返回
+            </Button>
+            <Button
+              v-waves
+              class="search-btn ml5 mr5"
+              type="success"
+              @click="handleCreateView"
+            >
+              <Icon type="md-add" />&nbsp;添加
+            </Button>
+            <!-- <Poptip
             confirm
             placement="bottom"
             style="width: 100px"
@@ -133,13 +143,21 @@
             <Button type="error" class="mr5">
               <Icon type="md-trash" />批量删除
             </Button>
-          </Poptip>-->
-          <Button class="search-btn mr2" type="warning" @click="handleDownload">
-            <Icon type="md-download" />导出
-          </Button>
+            </Poptip>-->
+            <Button
+              class="search-btn mr2"
+              type="warning"
+              @click="handleDownload"
+            >
+              <Icon type="md-download" />导出
+            </Button>
+          </Row>
+          <div class="ml15 mt10">
+            <i style="color: red">*</i> 选中单条数据再点击添加,可复制当前数据
+          </div>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -168,7 +186,9 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品名称:</i-col>
-              <i-col span="16">{{ productStandardDetail.baseProductName }}</i-col>
+              <i-col span="16">{{
+                productStandardDetail.baseProductName
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -205,7 +225,11 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品主图:</i-col>
               <i-col span="16">
-                <img :src="productStandardDetail.baseImage" width="100" height="100" />
+                <img
+                  :src="productStandardDetail.baseImage"
+                  width="100"
+                  height="100"
+                />
               </i-col>
             </Row>
           </i-col>
@@ -214,7 +238,9 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品描述:</i-col>
-              <i-col span="16">{{ productStandardDetail.baseProductDescription }}</i-col>
+              <i-col span="16">{{
+                productStandardDetail.baseProductDescription
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -229,7 +255,9 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">上架商品描述:</i-col>
-              <i-col span="16">{{ productStandardDetail.productDescription }}</i-col>
+              <i-col span="16">{{
+                productStandardDetail.productDescription
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -238,7 +266,11 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">上架商品主图:</i-col>
               <i-col v-if="productStandardDetail.image" span="16">
-                <img :src="productStandardDetail.image" width="100" height="100" />
+                <img
+                  :src="productStandardDetail.image"
+                  width="100"
+                  height="100"
+                />
               </i-col>
             </Row>
           </i-col>
@@ -261,7 +293,9 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品状态:</i-col>
-              <i-col span="16">{{ productStandardDetail.shelvesStatus | customPlanStatusFilters }}</i-col>
+              <i-col span="16">{{
+                productStandardDetail.shelvesStatus | customPlanStatusFilters
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -283,13 +317,17 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品原价:</i-col>
-              <i-col span="16">{{ productStandardDetail.price| fenToYuanDot2Filters }}</i-col>
+              <i-col span="16">{{
+                productStandardDetail.price | fenToYuanDot2Filters
+              }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">售卖价格:</i-col>
-              <i-col span="16">{{ productStandardDetail.salePrice | fenToYuanDot2Filters }}</i-col>
+              <i-col span="16">{{
+                productStandardDetail.salePrice | fenToYuanDot2Filters
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -329,7 +367,10 @@
                 >
                   <img :src="item" />
                   <div class="demo-upload-list-cover">
-                    <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                    <Icon
+                      type="ios-eye-outline"
+                      @click.native="handleUploadView(item)"
+                    ></Icon>
                   </div>
                 </div>
               </i-col>
@@ -341,7 +382,11 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">分享图片:</i-col>
               <i-col span="16">
-                <img :src="productStandardDetail.shareImage" width="100" height="100" />
+                <img
+                  :src="productStandardDetail.shareImage"
+                  width="100"
+                  height="100"
+                />
               </i-col>
             </Row>
           </i-col>
@@ -354,46 +399,77 @@
     <!-- 添加 -->
     <Modal v-model="modalEdit" :mask-closable="false" :width="900">
       <p slot="header">
-        <span>{{ clickFlag==false?'编辑商品规格':'创建商品规格' }}</span>
+        <span>{{ clickFlag == false ? "编辑商品规格" : "创建商品规格" }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="productStandardDetail" :rules="ruleInline" :label-width="100">
+        <Form
+          ref="editForm"
+          :model="productStandardDetail"
+          :rules="ruleInline"
+          :label-width="120"
+        >
           <Row>
             <i-col span="12">
               <FormItem label="商品ID:" prop="productId">
-                <Input v-model="productStandardDetail.productId" readonly="readonly">
-                  <Button slot="append" icon="ios-search" @click="handleRelation"></Button>
+                <Input
+                  v-model="productStandardDetail.productId"
+                  readonly="readonly"
+                >
+                  <Button
+                    slot="append"
+                    icon="ios-search"
+                    @click="handleRelation"
+                  ></Button>
                 </Input>
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="商品名称:">{{ productStandardDetail.baseProductName }}</FormItem>
+              <FormItem label="商品名称:">{{
+                productStandardDetail.baseProductName
+              }}</FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="商品分类:">{{ productStandardDetail.groupName }}</FormItem>
+              <FormItem label="商品分类:">{{
+                productStandardDetail.groupName
+              }}</FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="基础单位:">{{ productStandardDetail.baseUnit }}</FormItem>
-            </i-col>
-          </Row>
-          <Row>
-            <i-col span="12">
-              <FormItem label="商品编号:">{{ productStandardDetail.productCode }}</FormItem>
-            </i-col>
-            <i-col span="12">
-              <FormItem label="商品条码:">{{ productStandardDetail.baseBarcode }}</FormItem>
+              <FormItem label="基础单位:">{{
+                productStandardDetail.baseUnit
+              }}</FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem v-if="productStandardDetail.baseImage" label="商品主图:">
-                <img :src="productStandardDetail.baseImage" width="100" height="100" />
+              <FormItem label="商品编号:">{{
+                productStandardDetail.productCode
+              }}</FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="商品条码:">{{
+                productStandardDetail.baseBarcode
+              }}</FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
+              <FormItem
+                v-if="productStandardDetail.baseImage"
+                label="商品主图:"
+              >
+                <img
+                  :src="productStandardDetail.baseImage"
+                  width="100"
+                  height="100"
+                />
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="商品描述:">{{ productStandardDetail.baseProductDescription }}</FormItem>
+              <FormItem label="商品描述:">{{
+                productStandardDetail.baseProductDescription
+              }}</FormItem>
             </i-col>
           </Row>
           <Divider orientation="center">规格信息</Divider>
@@ -405,14 +481,23 @@
             </i-col>
             <i-col span="12">
               <FormItem label="上架商品描述:" prop="productDescription">
-                <Input v-model="productStandardDetail.productDescription"></Input>
+                <Input
+                  v-model="productStandardDetail.productDescription"
+                ></Input>
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="上架商品主图:建议尺寸;400x400(单位:px):" prop="image">
-                <Input v-show="false" v-model="productStandardDetail.image" style="width: auto"></Input>
+              <FormItem
+                label="上架商品主图:建议尺寸;400x400(单位:px):"
+                prop="image"
+              >
+                <Input
+                  v-show="false"
+                  v-model="productStandardDetail.image"
+                  style="width: auto"
+                ></Input>
                 <div
                   v-for="item in uploadListMain"
                   :key="item.url"
@@ -423,13 +508,23 @@
                     <div>
                       <img :src="item.url" />
                       <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                        <Icon
+                          type="ios-eye-outline"
+                          @click.native="handleUploadView(item)"
+                        ></Icon>
+                        <Icon
+                          type="ios-trash-outline"
+                          @click.native="handleRemoveMain(item)"
+                        ></Icon>
                       </div>
                     </div>
                   </template>
                   <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      hide-info
+                    ></Progress>
                   </template>
                 </div>
                 <IViewUpload
@@ -441,7 +536,10 @@
                   file-dir="product"
                   @on-success="handleSuccessMain"
                 >
-                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                  <div
+                    slot="content"
+                    style="width: 58px; height: 58px; line-height: 58px"
+                  >
                     <Icon type="ios-camera" size="20"></Icon>
                   </div>
                 </IViewUpload>
@@ -488,7 +586,10 @@
             </i-col>-->
             <!-- 轮播图 -->
             <i-col span="12">
-              <FormItem label="上架商品轮播图:建议尺寸;710x710(单位:px)" prop="rotationImage">
+              <FormItem
+                label="上架商品轮播图:建议尺寸;710x710(单位:px)"
+                prop="rotationImage"
+              >
                 <Input
                   v-show="false"
                   v-model="productStandardDetail.rotationImage"
@@ -504,13 +605,23 @@
                     <div>
                       <img :src="item.url" />
                       <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveMultiple_(item)"></Icon>
+                        <Icon
+                          type="ios-eye-outline"
+                          @click.native="handleUploadView(item)"
+                        ></Icon>
+                        <Icon
+                          type="ios-trash-outline"
+                          @click.native="handleRemoveMultiple_(item)"
+                        ></Icon>
                       </div>
                     </div>
                   </template>
                   <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      hide-info
+                    ></Progress>
                   </template>
                 </div>
                 <IViewUpload
@@ -523,7 +634,10 @@
                   multiple
                   @on-success="handleSuccessMultiple_"
                 >
-                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                  <div
+                    slot="content"
+                    style="width: 58px; height: 58px; line-height: 58px"
+                  >
                     <Icon type="ios-camera" size="20"></Icon>
                   </div>
                 </IViewUpload>
@@ -540,14 +654,13 @@
               <FormItem label="商品状态:" prop="shelvesStatus">
                 <Select v-model="productStandardDetail.shelvesStatus">
                   <Option
-                    v-for="(item,index) in shelvesStatus"
+                    v-for="(item, index) in shelvesStatus"
                     :value="item.value"
                     :key="index"
                     class="ptb2-5"
                     style="padding-left: 5px"
                   >
-                    {{ item.label
-                    }}
+                    {{ item.label }}
                   </Option>
                 </Select>
               </FormItem>
@@ -564,34 +677,48 @@
             </i-col>
             <i-col span="12">
               <FormItem label="数量/重量:" prop="standardQty">
-                <InputNumber :min="0" v-model="productStandardDetail.standardQty"></InputNumber>
+                <InputNumber
+                  :min="0"
+                  v-model="productStandardDetail.standardQty"
+                ></InputNumber>
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
               <FormItem label="商品单位:" prop="unitId">
-                <Select v-model="productStandardDetail.unitId" @on-change="unitChange">
+                <Select
+                  v-model="productStandardDetail.unitId"
+                  @on-change="unitChange"
+                >
                   <Option
-                    v-for="(item,index) in unitsList"
+                    v-for="(item, index) in unitsList"
                     :value="item.value"
                     :key="index"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="商品排序:" prop="rank">
-                <InputNumber :min="0" v-model="productStandardDetail.rank"></InputNumber>
+                <InputNumber
+                  :min="0"
+                  v-model="productStandardDetail.rank"
+                ></InputNumber>
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
               <FormItem label="商品原价:" prop="price">
-                <InputNumber :min="0" :value="priceComputed" @on-change="priceInputNumberOnchange"></InputNumber>
+                <InputNumber
+                  :min="0"
+                  :value="priceComputed"
+                  @on-change="priceInputNumberOnchange"
+                ></InputNumber>
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -611,23 +738,30 @@
                 <Select
                   v-model="productStandardDetail.productType"
                   placeholder="请选择"
-                  style="padding-right: 5px;width: 120px"
+                  style="padding-right: 5px; width: 120px"
                   @on-change="productTypeChange"
                 >
                   <Option
-                    v-for="(item,index) in expandTypeEnum"
+                    v-for="(item, index) in expandTypeEnum"
                     :value="item.value"
                     :key="index"
-                    :disabled="clickFlag==false"
+                    :disabled="clickFlag == false"
                     class="ptb2-5"
-                    style="padding-left: 5px;width: 100px"
-                  >{{ item.label }}</Option>
+                    style="padding-left: 5px; width: 100px"
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
-            <i-col v-show="productStandardDetail.productType==='ORDINARY_PRODUCT'" span="12">
+            <i-col
+              v-show="productStandardDetail.productType === 'ORDINARY_PRODUCT'"
+              span="12"
+            >
               <FormItem label="起购份数:" prop="startNum">
-                <InputNumber :min="1" v-model="productStandardDetail.startNum"></InputNumber>
+                <InputNumber
+                  :min="1"
+                  v-model="productStandardDetail.startNum"
+                ></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -641,13 +775,21 @@
                 ></InputNumber>
               </FormItem>
             </i-col>-->
-            <i-col span="12" style="float:right;margin-bottom:15px;margin-right:-30px">
-              <Button v-waves type="warning" @click="handleHdSvipPrice">海鼎价格参考</Button>
+            <i-col
+              span="12"
+              style="float: right; margin-bottom: 15px; margin-right: -30px"
+            >
+              <Button v-waves type="warning" @click="handleHdSvipPrice"
+                >海鼎价格参考</Button
+              >
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="规格描述(推荐宽度为750px，高度自适应):" prop="description">
+              <FormItem
+                label="规格描述(推荐宽度为750px，高度自适应):"
+                prop="description"
+              >
                 <Input
                   v-show="false"
                   v-model="productStandardDetail.description"
@@ -663,13 +805,23 @@
                     <div>
                       <img :src="item.url" />
                       <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveMultiple(item)"></Icon>
+                        <Icon
+                          type="ios-eye-outline"
+                          @click.native="handleUploadView(item)"
+                        ></Icon>
+                        <Icon
+                          type="ios-trash-outline"
+                          @click.native="handleRemoveMultiple(item)"
+                        ></Icon>
                       </div>
                     </div>
                   </template>
                   <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      hide-info
+                    ></Progress>
                   </template>
                 </div>
                 <IViewUpload
@@ -682,20 +834,31 @@
                   multiple
                   @on-success="handleSuccessMultiple"
                 >
-                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                  <div
+                    slot="content"
+                    style="width: 58px; height: 58px; line-height: 58px"
+                  >
                     <Icon type="ios-camera" size="20"></Icon>
                   </div>
                 </IViewUpload>
               </FormItem>
             </i-col>
-            <i-col span="12" style="float:right;margin-bottom:15px;margin-right:-30px">
-              <Button v-waves type="info" @click="handleImageSort">规格描述排序</Button>
+            <i-col
+              span="12"
+              style="float: right; margin-bottom: 15px; margin-right: -30px"
+            >
+              <Button v-waves type="info" @click="handleImageSort"
+                >规格描述排序</Button
+              >
             </i-col>
           </Row>
           <!-- 分享图片 -->
           <Row>
             <i-col span="12">
-              <FormItem label="商品分享图片:建议尺寸;400x400(单位:px):" prop="shareImage">
+              <FormItem
+                label="商品分享图片:建议尺寸;400x400(单位:px):"
+                prop="shareImage"
+              >
                 <Input
                   v-show="false"
                   v-model="productStandardDetail.shareImage"
@@ -711,13 +874,23 @@
                     <div>
                       <img :src="item.url" />
                       <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveShar(item)"></Icon>
+                        <Icon
+                          type="ios-eye-outline"
+                          @click.native="handleUploadView(item)"
+                        ></Icon>
+                        <Icon
+                          type="ios-trash-outline"
+                          @click.native="handleRemoveShar(item)"
+                        ></Icon>
                       </div>
                     </div>
                   </template>
                   <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      hide-info
+                    ></Progress>
                   </template>
                 </div>
                 <IViewUpload
@@ -729,7 +902,10 @@
                   file-dir="product"
                   @on-success="handleSuccessShar"
                 >
-                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                  <div
+                    slot="content"
+                    style="width: 58px; height: 58px; line-height: 58px"
+                  >
                     <Icon type="ios-camera" size="20"></Icon>
                   </div>
                 </IViewUpload>
@@ -740,11 +916,21 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')">确定</Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('editForm')"
+          >确定</Button
+        >
       </div>
     </Modal>
     <!-- 折扣配置 -->
-    <Modal v-model="modalDiscount" :mask-closable="false" :width="700" title="折扣配置">
+    <Modal
+      v-model="modalDiscount"
+      :mask-closable="false"
+      :width="700"
+      title="折扣配置"
+    >
       <p slot="header">
         <span>折扣配置</span>
       </p>
@@ -758,19 +944,31 @@
             </i-col>
             <i-col span="12">
               <FormItem label="上架商品名称:" prop="productName">
-                <Input v-model="productStandardDetail.productName" disabled></Input>
+                <Input
+                  v-model="productStandardDetail.productName"
+                  disabled
+                ></Input>
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
               <FormItem label="商品原价:" prop="price">
-                <InputNumber :min="0" :value="priceComputed" placeholder="商品原价" disabled></InputNumber>
+                <InputNumber
+                  :min="0"
+                  :value="priceComputed"
+                  placeholder="商品原价"
+                  disabled
+                ></InputNumber>
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="售卖价格:">
-                <InputNumber :min="0" :value="salePriceComputed" disabled></InputNumber>
+                <InputNumber
+                  :min="0"
+                  :value="salePriceComputed"
+                  disabled
+                ></InputNumber>
               </FormItem>
             </i-col>
             <!-- <i-col span="12">
@@ -781,30 +979,53 @@
           </Row>
           <Row>
             <i-col span="12">
-              <Row style="margin-left:36px">
+              <Row style="margin-left: 36px">
                 <i-col span="5">商品类型:</i-col>
-                <i-col v-if="productStandardDetail.productType === 'DISCOUNT_PRODUCT'" span="16">
+                <i-col
+                  v-if="
+                    productStandardDetail.productType === 'DISCOUNT_PRODUCT'
+                  "
+                  span="16"
+                >
                   <tag color="magenta">{{ "折扣商品" }}</tag>
                 </i-col>
                 <i-col
-                  v-else-if="productStandardDetail.productType === 'PULL_NEW_PRODUCT'"
+                  v-else-if="
+                    productStandardDetail.productType === 'PULL_NEW_PRODUCT'
+                  "
                   span="16"
                 >
                   <tag color="orange">{{ "老拉新商品" }}</tag>
                 </i-col>
                 <i-col
-                  v-else-if="productStandardDetail.productType === 'SECKILL_PRODUCT'"
+                  v-else-if="
+                    productStandardDetail.productType === 'SECKILL_PRODUCT'
+                  "
                   span="16"
                 >
                   <tag color="blue">{{ "限时秒杀商品" }}</tag>
                 </i-col>
-                <i-col v-else-if="productStandardDetail.productType === 'ASSIST_PRODUCT'" span="16">
+                <i-col
+                  v-else-if="
+                    productStandardDetail.productType === 'ASSIST_PRODUCT'
+                  "
+                  span="16"
+                >
                   <tag color="green">{{ "助力抢爆品商品" }}</tag>
                 </i-col>
-                <i-col v-else-if="productStandardDetail.productType === 'SHARE_PRODUCT'" span="16">
+                <i-col
+                  v-else-if="
+                    productStandardDetail.productType === 'SHARE_PRODUCT'
+                  "
+                  span="16"
+                >
                   <tag color="green">{{ "分享赚商品" }}</tag>
                 </i-col>
-                <i-col v-else-if="productStandardDetail.productType === null" span="16">{{ "N/A" }}</i-col>
+                <i-col
+                  v-else-if="productStandardDetail.productType === null"
+                  span="16"
+                  >{{ "N/A" }}</i-col
+                >
               </Row>
             </i-col>
             <i-col span="12">
@@ -813,7 +1034,7 @@
               </FormItem>
             </i-col>
           </Row>
-          <Row v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'">
+          <Row v-if="productStandardDetail.productType === 'DISCOUNT_PRODUCT'">
             <i-col span="12">
               <FormItem label="限购份数:" prop="limitNum">
                 <Input v-model="proStandardExpand.limitNum"></Input>
@@ -830,22 +1051,41 @@
               <FormItem label="活动价:">
                 <InputNumber
                   :min="0"
-                  :max="salePriceComputed > 0? salePriceComputed: priceComputed"
+                  :max="
+                    salePriceComputed > 0 ? salePriceComputed : priceComputed
+                  "
                   :value="discountPriceComputed"
                   @on-change="calDiscountRate"
                 ></InputNumber>
-                <div v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'">（以售卖价格优先计算折扣率）</div>
+                <div
+                  v-if="
+                    productStandardDetail.productType === 'DISCOUNT_PRODUCT'
+                  "
+                >
+                  （以售卖价格优先计算折扣率）
+                </div>
               </FormItem>
             </i-col>
             <!-- v1.8.0 -->
-            <i-col v-if="productStandardDetail.productType==='SHARE_PRODUCT'" span="8">
+            <i-col
+              v-if="productStandardDetail.productType === 'SHARE_PRODUCT'"
+              span="8"
+            >
               <FormItem label="佣金比例(单位%):" prop="commissionRate">
-                <InputNumber v-model="proStandardExpand.commissionRate"></InputNumber>
+                <InputNumber
+                  v-model="proStandardExpand.commissionRate"
+                ></InputNumber>
               </FormItem>
             </i-col>
-            <i-col v-if="productStandardDetail.productType==='DISCOUNT_PRODUCT'" span="8">
+            <i-col
+              v-if="productStandardDetail.productType === 'DISCOUNT_PRODUCT'"
+              span="8"
+            >
               <FormItem label="折扣率:" prop="discountRate">
-                <Input v-model="proStandardExpand.discountRate" readonly></Input>
+                <Input
+                  v-model="proStandardExpand.discountRate"
+                  readonly
+                ></Input>
               </FormItem>
             </i-col>
           </Row>
@@ -853,7 +1093,12 @@
       </div>
       <div slot="footer">
         <Button @click="handleDiscountClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmitDiscount">确定</Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmitDiscount"
+          >确定</Button
+        >
       </div>
     </Modal>
 
@@ -906,7 +1151,7 @@
             </Row>
           </div>
         </tables>
-        <div style="margin: 10px;overflow: hidden">
+        <div style="margin: 10px; overflow: hidden">
           <Row type="flex" justify="end">
             <Page
               :total="productTotal"
@@ -947,12 +1192,18 @@
         </drag-list>
       </div>
       <div slot="footer">
-        <Button @click="modalSort=false">关闭</Button>
+        <Button @click="modalSort = false">关闭</Button>
         <Button type="primary" @click="handleImgSort">确定</Button>
       </div>
     </Modal>
     <!-- 海鼎会员价 -->
-    <Modal v-model="modalHdSvip" :width="800" :mask-closable="false" draggable scrollable>
+    <Modal
+      v-model="modalHdSvip"
+      :width="800"
+      :mask-closable="false"
+      draggable
+      scrollable
+    >
       <p slot="header">
         <span>海鼎SVIP价格参考</span>
       </p>
@@ -1064,7 +1315,7 @@ import {
   getProductUnits,
   getProductPages,
   getHdProductInfo,
-  deletePicture
+  deletePicture,
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -1074,13 +1325,13 @@ import {
   getSmallGoodsStandard,
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber
+  yuanToFenNumber,
 } from "@/libs/util";
 import { expandTypeEnum } from "@/libs/enumerate";
 import {
   customPlanStatusConvert,
   productStatusConvert,
-  expandTypeConvert
+  expandTypeConvert,
 } from "@/libs/converStatus";
 
 const productStandardDetail = {
@@ -1130,7 +1381,7 @@ const productStandardDetail = {
   positionName: null,
   dbId: null,
   svipPrice: null,
-  shareImage: null
+  shareImage: null,
 };
 
 const roleRowData = {
@@ -1143,7 +1394,7 @@ const roleRowData = {
   minPrice: "",
   maxPrice: "",
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 const productDetail = {
@@ -1167,7 +1418,7 @@ const productDetail = {
   unitName: "",
   groupName: "",
   createUser: "",
-  expandType: ""
+  expandType: "",
 };
 
 const productRowData = {
@@ -1176,7 +1427,7 @@ const productRowData = {
   productName: null,
   status: "NORMAL",
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 const proStandardExpand = {
@@ -1188,14 +1439,14 @@ const proStandardExpand = {
   startNum: 1,
   // expandType: "DISCOUNT_PRODUCT",
   limitQty: 0,
-  commissionRate: 0
+  commissionRate: 0,
 };
 
 export default {
   components: {
     Tables,
     IViewUpload,
-    DragList
+    DragList,
   },
   mixins: [uploadMixin, deleteMixin, searchMixin, tableMixin],
   data() {
@@ -1217,25 +1468,25 @@ export default {
       clickFlag: "",
       ruleValidate: {
         limitNum: [
-          { required: false, message: "请输入限购份数", trigger: "blur" }
+          { required: false, message: "请输入限购份数", trigger: "blur" },
         ],
         startNum: [
-          { required: false, message: "请输入起购份数", trigger: "blur" }
+          { required: false, message: "请输入起购份数", trigger: "blur" },
         ],
         discountPrice: [
-          { required: true, message: "请输入活动价格", trigger: "change" }
+          { required: true, message: "请输入活动价格", trigger: "change" },
         ],
         discountRate: [
-          { required: false, message: "请计算折扣率", trigger: "change" }
-        ]
+          { required: false, message: "请计算折扣率", trigger: "change" },
+        ],
       },
       ruleInline: {
         productId: [
           { required: true, message: "请选择关联商品" },
           {
             message: "请选择要关联的商品",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+          },
         ],
         productName: [{ required: true, message: "请选择上架商品名称" }],
         description: [{ required: true, message: "请上传规格描述图" }],
@@ -1250,18 +1501,18 @@ export default {
           { required: true, message: "请输入商品价格" },
           {
             message: "必须为大于0的数字",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+          },
         ],
         salePrice: [
           { required: true, message: "请输入售卖价格" },
           {
             message: "必须为大于0的数字",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+          },
         ],
         barcode: [
-          { required: true, message: "请输入商品条码" }
+          { required: true, message: "请输入商品条码" },
           // {
           //   validator(rule, value, callback, source, options) {
           //     const errors = [];
@@ -1281,8 +1532,8 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         rank: [
           { required: true, message: "请输入商品排序" },
@@ -1293,8 +1544,8 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         standardQty: [
           { required: true, message: "请输入重量" },
@@ -1305,73 +1556,75 @@ export default {
                 errors.push(new Error("必须为大于0的数字"));
               }
               callback(errors);
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
       columns: [
         {
           type: "selection",
           key: "",
-          minWidth: 50,
+          minWidth: 60,
           align: "center",
-          fixed: "left"
+          fixed: "left",
         },
         {
           title: "规格ID",
           align: "center",
           key: "id",
-          minWidth: 50
+          minWidth: 90,
+          fixed: "left",
         },
         {
-          title: "商品条码",
-          align: "center",
-          key: "barcode",
-          minWidth: 70
-        },
-        {
-          title: "商品编号",
-          key: "productCode",
-          align: "center",
-          minWidth: 100
-        },
-        {
-          title: "商品名称",
+          title: "名称",
           align: "center",
           key: "productName",
-          minWidth: 100
+          minWidth: 160,
+          fixed: "left",
         },
         {
-          title: "商品规格",
+          title: "条码",
+          align: "center",
+          key: "barcode",
+          minWidth: 150,
+        },
+        {
+          title: "编号",
+          key: "productCode",
+          align: "center",
+          minWidth: 150,
+        },
+        {
+          title: "规格",
           align: "center",
           key: "specification",
-          minWidth: 80
+          minWidth: 80,
         },
         {
-          title: "商品单位",
+          title: "单位",
           align: "center",
           minWidth: 80,
-          key: "productUnit"
+          key: "productUnit",
         },
         {
           title: "商品原价",
           align: "center",
-          minWidth: 60,
+          minWidth: 100,
           key: "price",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.price);
             return <div>{amount}</div>;
-          }
+          },
         },
         {
           title: "售卖价格",
           align: "center",
-          minWidth: 60,
+          minWidth: 100,
           key: "salePrice",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.salePrice);
             return <div>{amount}</div>;
-          }
+          },
         },
         // {
         //   title: "SVIP价格",
@@ -1385,7 +1638,7 @@ export default {
         // },
         {
           title: "商品类型",
-          minWidth: 100,
+          minWidth: 120,
           key: "productType",
           align: "center",
           render: (h, params, vm) => {
@@ -1407,6 +1660,14 @@ export default {
                 </div>
               );
             } else if (row.productType == "SECKILL_PRODUCT") {
+              return (
+                <div>
+                  <tag color="blue">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.productType == "NEW_TRY_PRODUCT") {
               return (
                 <div>
                   <tag color="blue">
@@ -1439,11 +1700,11 @@ export default {
                 </div>
               );
             }
-          }
+          },
         },
         {
           title: "商品状态",
-          minWidth: 80,
+          minWidth: 100,
           key: "shelvesStatus",
           align: "center",
           render: (h, params, vm) => {
@@ -1472,27 +1733,28 @@ export default {
                 </tag>
               </div>
             );
-          }
+          },
         },
         {
           title: "起购份数",
           key: "startNum",
-          minWidth: 60,
-          align: "center"
+          minWidth: 100,
+          align: "center",
         },
         {
-          title: "商品排序",
+          title: "排序",
           align: "center",
-          minWidth: 60,
-          key: "rank"
+          minWidth: 70,
+          key: "rank",
         },
         {
           title: "操作",
           align: "center",
           minWidth: 180,
+          fixed: "right",
           key: "handle",
-          options: ["customOnSale", "view", "edit", "discount"]
-        }
+          options: ["customOnSale", "view", "edit", "discount"],
+        },
       ],
       productColumns: [
         {
@@ -1504,44 +1766,44 @@ export default {
             const { row } = params;
             const str = <img src={row.image} height="60" width="60" />;
             return <div>{str}</div>;
-          }
+          },
         },
         {
           title: "商品编码",
           key: "productCode",
           sortable: true,
           align: "center",
-          minWidth: 140
+          minWidth: 140,
         },
         {
           title: "商品名称",
           align: "center",
           sortable: true,
           key: "productName",
-          minWidth: 120
+          minWidth: 120,
         },
         {
           title: "商品类别",
           align: "center",
           key: "groupName",
-          minWidth: 120
+          minWidth: 100,
         },
         {
           title: "基础单位",
           align: "center",
-          minWidth: 90,
-          key: "unitName"
+          minWidth: 80,
+          key: "unitName",
         },
         {
           title: "基础重量(kg)",
           align: "center",
-          minWidth: 90,
-          key: "baseQty"
+          minWidth: 100,
+          key: "baseQty",
         },
         {
           title: "商品状态",
           align: "center",
-          minWidth: 90,
+          minWidth: 80,
           key: "status",
           render: (h, params, vm) => {
             const { row } = params;
@@ -1567,17 +1829,17 @@ export default {
                 <tag color="primary">{row.status}</tag>
               </div>
             );
-          }
-        }
+          },
+        },
       ],
       modalType: {
         view: "view",
         edit: "edit",
-        create: "create"
+        create: "create",
       },
       dropConClass: {
         left: ["drop-box", "left-drop-box"],
-        right: ["drop-box", "right-drop-box"]
+        right: ["drop-box", "right-drop-box"],
       },
       tempModalType: "create",
       tableData: [],
@@ -1607,15 +1869,15 @@ export default {
       shelvesStatus: [
         {
           label: "上架",
-          value: "VALID"
+          value: "VALID",
         },
         {
           label: "下架",
-          value: "INVALID"
-        }
+          value: "INVALID",
+        },
       ],
       searchMinPrice: null,
-      searchMaxPrice: null
+      searchMaxPrice: null,
     };
   },
   computed: {
@@ -1630,15 +1892,15 @@ export default {
     },
     discountPriceComputed() {
       return fenToYuanDot2Number(this.proStandardExpand.discountPrice);
-    }
+    },
   },
   created() {
     this.showBack = this.$route.name === "small-goods-relation-standard";
     this.getTableData();
   },
   mounted() {
-    getProductUnits().then(res => {
-      res.array.forEach(value => {
+    getProductUnits().then((res) => {
+      res.array.forEach((value) => {
         const map = { label: "label", value: "value" };
         map.value = value.id;
         map.label = value.unitName;
@@ -1702,7 +1964,7 @@ export default {
         return;
       }
       const tempDeleteList = [];
-      this.tableDataSelected.filter(value => {
+      this.tableDataSelected.filter((value) => {
         tempDeleteList.push(value.id);
       });
       const strTempDelete = tempDeleteList.join(",");
@@ -1712,9 +1974,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteProductStandard({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -1735,7 +1997,7 @@ export default {
     },
     handleImgSort() {
       this.descriptionList = [];
-      this.uploadListMultiple.forEach(item => {
+      this.uploadListMultiple.forEach((item) => {
         if (item.url) {
           this.descriptionList.push(item.url);
         }
@@ -1809,9 +2071,9 @@ export default {
       // 请求数据展示
       this.modalDiscount = true;
       getProStandardExpand({
-        id: this.productStandardDetail.id
+        id: this.productStandardDetail.id,
       })
-        .then(res => {
+        .then((res) => {
           res.expandType = this.productStandardDetail.productType;
           this.proStandardExpand = res;
           this.modalDiscount = true;
@@ -1831,7 +2093,7 @@ export default {
       this.loading = true;
       const code = this.productStandardDetail.barcode;
       getHdProductInfo({ code: code })
-        .then(res => {
+        .then((res) => {
           this.HdSvipInfo = res;
           this.loading = false;
           this.modalHdSvip = true;
@@ -1898,9 +2160,9 @@ export default {
       this.modalViewLoading = true;
       createProductStandard({
         productId: this.$route.params.id,
-        ...this.productStandardDetail
+        ...this.productStandardDetail,
       })
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success("创建成功!");
@@ -1917,14 +2179,14 @@ export default {
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
       let pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
-      getProductStandardsPages(this.searchRowData).then(res => {
+      getProductStandardsPages(this.searchRowData).then((res) => {
         const tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 10;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
         const _this = this;
-        tableData.forEach(item => {
+        tableData.forEach((item) => {
           item["price"] = (item["price"] / 100.0).toFixed(2);
           item["salePrice"] = (item["salePrice"] / 100.0).toFixed(2);
           item["svipPrice"] = (item["svipPrice"] / 100.0).toFixed(2);
@@ -1935,7 +2197,7 @@ export default {
         const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
           filename: `商品规格-${date}`,
-          data: tableData
+          data: tableData,
         });
       });
     },
@@ -1948,7 +2210,7 @@ export default {
       //   this.deletePicture(urls);
       // }
 
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (!this.productStandardDetail.salePrice) {
             this.$Message.error("请输入售卖价格");
@@ -2010,7 +2272,7 @@ export default {
     // },
     handleSubmitDiscount() {
       this.proStandardExpand.expandType = this.productStandardDetail.productType;
-      this.$refs.modalDiscount.validate(valid => {
+      this.$refs.modalDiscount.validate((valid) => {
         if (valid) {
           if (this.proStandardExpand.discountPrice <= 0) {
             this.$Message.warning("活动价不能为0");
@@ -2046,9 +2308,9 @@ export default {
       this.modalViewLoading = true;
       // 新增或修改
       modifyProStandardExpand({
-        ...this.proStandardExpand
+        ...this.proStandardExpand,
       })
-        .then(res => {
+        .then((res) => {
           const msg = this.proStandardExpand.id ? "修改成功!" : "创建成功";
           this.modalDiscount = false;
           this.modalViewLoading = false;
@@ -2063,9 +2325,9 @@ export default {
     editProductStandard() {
       this.modalViewLoading = true;
       editProductStandard({
-        ...this.productStandardDetail
+        ...this.productStandardDetail,
       })
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           // this.productStandardDetail = productStandardDetail;
@@ -2114,7 +2376,7 @@ export default {
       }
 
       getProductStandardsPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
@@ -2161,7 +2423,7 @@ export default {
       this.uploadListMultiple = fileList;
       this.descriptionList = [];
       // this.newPicture = "";
-      fileList.forEach(value => {
+      fileList.forEach((value) => {
         if (value.url) {
           this.descriptionList.push(value.url);
         }
@@ -2177,7 +2439,7 @@ export default {
       this.uploadListMultiple_ = fileList;
       this.rotationImageList = [];
       // this.newPicture = "";
-      fileList.forEach(value => {
+      fileList.forEach((value) => {
         if (value.url) {
           this.rotationImageList.push(value.url);
         }
@@ -2219,7 +2481,7 @@ export default {
       if (res.description != null) {
         const descriptionImgArr = [];
         const descriptionArr = res.description.split(",");
-        descriptionArr.forEach(value => {
+        descriptionArr.forEach((value) => {
           const innerMapDetailImg = { status: "finished", url: "url" };
           innerMapDetailImg.url = value;
           descriptionImgArr.push(innerMapDetailImg);
@@ -2235,7 +2497,7 @@ export default {
         const rotationImageArr = [];
         const rotationArr = res.rotationImage.split(",");
         console.log("图片展示列表", rotationArr);
-        rotationArr.forEach(value => {
+        rotationArr.forEach((value) => {
           const innerMapDetailImg_ = { status: "finished", url: "url" };
           innerMapDetailImg_.url = value;
           rotationImageArr.push(innerMapDetailImg_);
@@ -2300,10 +2562,10 @@ export default {
       }
       this.loading = true;
       editProductStandard(rowData)
-        .then(res => {
+        .then((res) => {
           this.$Message.success("修改成功!");
         })
-        .finally(res => {
+        .finally((res) => {
           this.loading = false;
           this.modalViewLoading = false;
           this.getTableData();
@@ -2318,7 +2580,7 @@ export default {
     },
     findUnit(unitId) {
       if (this.unitsList != null) {
-        const obj = this.unitsList.find(item => item.value === unitId);
+        const obj = this.unitsList.find((item) => item.value === unitId);
         if (obj) {
           return obj.label;
         }
@@ -2330,14 +2592,14 @@ export default {
     },
     getProductTableData() {
       getProductPages(this.searchProductRowData)
-        .then(res => {
+        .then((res) => {
           this.productData = res.rows;
           this.productTotal = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -2413,8 +2675,8 @@ export default {
       } else {
         this.productStandardDetail.standardQty = 1;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

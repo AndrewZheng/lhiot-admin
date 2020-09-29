@@ -212,7 +212,6 @@ export default {
       dataStatistics(this.searchRowData)
         .then(res => {
           this.tableData = res;
-          console.log("数据",this.tableData)
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

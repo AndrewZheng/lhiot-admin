@@ -8,16 +8,16 @@
         <Card>
           <h6>
             当前选中：
-            <span
-              class="brand-red font-sm"
-            >{{ parentCategory.groupName? parentCategory.groupName: '全部板块' }}</span>
+            <span class="brand-red font-sm">{{
+              parentCategory.groupName ? parentCategory.groupName : "全部板块"
+            }}</span>
           </h6>
           <tables
             ref="tables"
             v-model="tableData"
             :columns="columns"
             :loading="loading"
-            :search-area-column="16"
+            :search-area-column="13"
             :operate-area-column="6"
             editable
             searchable
@@ -56,8 +56,14 @@
                 </Button>
               </Row>
             </div>
-            <div slot="operations">
-              <Button v-waves :loading="clearSearchLoading" type="warning" @click="handleBack">
+            <div slot="operations" style="width: 400px; margin-left: -90px">
+              <Button
+                v-waves
+                :loading="clearSearchLoading"
+                type="warning"
+                class="mr5"
+                @click="handleBack"
+              >
                 <Icon type="ios-arrow-back" />&nbsp;返回全部板块
               </Button>
               <Button v-waves type="success" class="mr5" @click="addSection">
@@ -76,7 +82,7 @@
               </Poptip>
             </div>
           </tables>
-          <div style="margin: 10px;overflow: hidden">
+          <div style="margin: 10px; overflow: hidden">
             <Row type="flex" justify="end">
               <Page
                 :total="total"
@@ -95,17 +101,22 @@
     <!--编辑菜单 -->
     <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
-        <span>{{ currentCategory.id == ''?'创建板块':'编辑板块' }}</span>
+        <span>{{ currentCategory.id == "" ? "创建板块" : "编辑板块" }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="currentCategory" :rules="ruleInline" :label-width="130">
+        <Form
+          ref="modalEdit"
+          :model="currentCategory"
+          :rules="ruleInline"
+          :label-width="140"
+        >
           <FormItem label="父级ID:">
             <i-col>{{ parentCategory.id }}</i-col>
           </FormItem>
           <FormItem label="父级名称:">
-            <i-col
-              style="color:red;font-weight:bold;"
-            >{{ parentCategory.groupName?parentCategory.groupName:'全部板块' }}</i-col>
+            <i-col style="color: red; font-weight: bold">{{
+              parentCategory.groupName ? parentCategory.groupName : "全部板块"
+            }}</i-col>
           </FormItem>
           <FormItem label="板块名称:" prop="sectionName">
             <Input v-model="currentCategory.sectionName"></Input>
@@ -120,19 +131,37 @@
             <InputNumber v-model="currentCategory.rankNo"></InputNumber>
           </FormItem>
           <FormItem label="板块图片:建议尺寸;45x45(单位:px):" prop="sectionImg">
-            <Input v-show="false" v-model="currentCategory.sectionImg" style="width: auto"></Input>
-            <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+            <Input
+              v-show="false"
+              v-model="currentCategory.sectionImg"
+              style="width: auto"
+            ></Input>
+            <div
+              v-for="item in uploadListMain"
+              :key="item.url"
+              class="demo-upload-list"
+            >
               <template v-if="item.status === 'finished'">
                 <div>
                   <img :src="item.url" />
                   <div class="demo-upload-list-cover">
-                    <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                    <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                    <Icon
+                      type="ios-eye-outline"
+                      @click.native="handleUploadView(item)"
+                    ></Icon>
+                    <Icon
+                      type="ios-trash-outline"
+                      @click.native="handleRemoveMain(item)"
+                    ></Icon>
                   </div>
                 </div>
               </template>
               <template v-else>
-                <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                <Progress
+                  v-if="item.showProgress"
+                  :percent="item.percentage"
+                  hide-info
+                ></Progress>
               </template>
             </div>
             <IViewUpload
@@ -143,20 +172,31 @@
               file-dir="plate"
               @on-success="handleSuccessMain"
             >
-              <div slot="content" style="width:58px;height:58px;line-height:58px">
+              <div
+                slot="content"
+                style="width: 58px; height: 58px; line-height: 58px"
+              >
                 <Icon type="ios-camera" size="20"></Icon>
               </div>
             </IViewUpload>
-          </FormItem>
-        </Form>*Tips：如果添加
-        <b style="color:red">父级板块</b>&nbsp;,板块位置英文描述需添加
-        <b style="color:red">-F</b>&nbsp;后缀,如
-        <b style="color:red">XXXX-F</b>
+          </FormItem> </Form
+        >*Tips：如果添加
+        <b style="color: red">父级板块</b>&nbsp;,板块位置英文描述需添加
+        <b style="color: red">-F</b>&nbsp;后缀,如
+        <b style="color: red">XXXX-F</b>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="asyncEditOK('modalEdit')">确定</Button>
+        <Button
+          :loading="modalEditLoading"
+          type="primary"
+          @click="asyncEditOK('modalEdit')"
+          >确定</Button
+        >
       </div>
+    </Modal>
+    <Modal v-model="uploadVisible" title="图片预览">
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
   </div>
 </template>
@@ -171,7 +211,7 @@ import {
   getProductSectionTree,
   editProductSection,
   deleteProductSectionValidation,
-  deletePicture
+  deletePicture,
 } from "@/api/mini-program";
 import { buildMenu, convertTree } from "@/libs/util";
 import CommonIcon from "_c/common-icon";
@@ -193,14 +233,14 @@ const currentCategory = {
   rankNo: 0,
   productStandardList: [],
   positionName: "",
-  sectionRemarks: ""
+  sectionRemarks: "",
 };
 
 const roleRowData = {
   sectionName: null,
   page: 1,
   rows: 10,
-  sidx: "rank_no"
+  sidx: "rank_no",
 };
 
 const dataColumns = [
@@ -209,64 +249,64 @@ const dataColumns = [
     key: "",
     width: 60,
     align: "center",
-    fixed: "left"
+    fixed: "left",
   },
   {
     title: "板块ID",
     key: "id",
     align: "center",
-    minWidth: 150
+    minWidth: 80,
   },
   {
     title: "板块名称",
     key: "sectionName",
     align: "center",
-    minWidth: 150
+    minWidth: 150,
   },
   {
     title: "板块描述",
     key: "sectionRemarks",
     align: "center",
-    minWidth: 150
+    minWidth: 150,
   },
   {
     title: "板块图片",
     key: "sectionImg",
     align: "center",
-    minWidth: 150,
+    minWidth: 120,
     render: (h, params, vm) => {
       const { row } = params;
       const str = <img src={row.sectionImg} height="60" width="60" />;
       return <div>{str}</div>;
-    }
+    },
   },
   {
     title: "位置英文描述",
     key: "positionName",
     align: "center",
-    minWidth: 150
+    minWidth: 150,
   },
   {
     title: "排序",
     key: "rankNo",
     sortable: true,
     align: "center",
-    minWidth: 150
+    minWidth: 70,
   },
   {
     title: "操作",
     key: "handle",
     align: "center",
-    minWidth: 150,
-    options: ["edit", "delete"]
-  }
+    minWidth: 120,
+    options: ["edit", "delete"],
+  },
 ];
 
 export default {
   components: {
     Tables,
     CommonIcon,
-    IViewUpload
+    IViewUpload,
   },
   mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin],
   data() {
@@ -279,8 +319,8 @@ export default {
         positionName: [
           {
             required: true,
-            message: "请输入板块位置英文描述,父级板块需添加 -F 后缀,如 XXXX-F"
-          }
+            message: "请输入板块位置英文描述,父级板块需添加 -F 后缀,如 XXXX-F",
+          },
         ],
         sectionImg: [{ required: true, message: "请上传上板块图片" }],
         rankNo: [
@@ -292,9 +332,9 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
       columns: dataColumns,
       modalEdit: false,
@@ -314,7 +354,7 @@ export default {
       save: [],
       imageSize: 2048,
       imgUploadViewItem: "",
-      uploadVisible: false
+      uploadVisible: false,
     };
   },
   created() {
@@ -330,7 +370,7 @@ export default {
               display: "inline-block",
               width: "100%",
               fontSize: "14px",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
           >
             <span>
@@ -348,7 +388,7 @@ export default {
               display: "inline-block",
               width: "100%",
               fontSize: "14px",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
           >
             <span>
@@ -382,22 +422,22 @@ export default {
       } else {
         this.currentCategory.parentId = this.parentCategory.id;
       }
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           this.modalEditLoading = true;
           this.modalViewLoading = true;
           if (this.tempModalType === this.modalType.create) {
             createProductSection(this.currentCategory)
-              .then(res => {})
-              .finally(res => {
+              .then((res) => {})
+              .finally((res) => {
                 this.initMenuList();
                 this.modalEditLoading = false;
                 this.modalEdit = false;
               });
           } else if (this.tempModalType === this.modalType.edit) {
             editProductSection(this.currentCategory)
-              .then(res => {})
-              .finally(res => {
+              .then((res) => {})
+              .finally((res) => {
                 this.initMenuList();
                 this.modalEditLoading = false;
                 this.modalEdit = false;
@@ -437,14 +477,14 @@ export default {
     deleteTable(ids) {
       // this.loading = true;
       deleteProductSectionValidation({ ids })
-        .then(res => {
+        .then((res) => {
           if (!res) {
             this.$Message.info("该板块或其子板块关联了商品，删除失败！");
           } else if (res) {
             deleteProductSection({
-              ids
+              ids,
             })
-              .then(res => {
+              .then((res) => {
                 const totalPage = Math.ceil(this.total / this.pageSize);
                 if (
                   this.tableData.length === this.tableDataSelected.length &&
@@ -487,7 +527,8 @@ export default {
     },
     handleBack() {
       this.parentCategory.groupName = "全部版块";
-      this.handleClear();
+      this.initMenuList();
+      this.resetSearchRowData();
     },
     handleSearch() {
       this.searchRowData.page = 1;
@@ -504,7 +545,7 @@ export default {
     },
     getTableData() {
       this.loading = true;
-      getProductSectionPages(this.searchRowData).then(res => {
+      getProductSectionPages(this.searchRowData).then((res) => {
         // if (this.menuData.length > 0) {
         // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
         this.tableData = res.rows;
@@ -517,12 +558,12 @@ export default {
     },
     // 初始化商品菜单列表
     initMenuList() {
-      getProductSectionTree(this.treeData).then(res => {
+      getProductSectionTree(this.treeData).then((res) => {
         // if (res && res.array.length > 0) {
         const menuList = buildMenu(res.array);
         const map = {
           title: "title",
-          children: "children"
+          children: "children",
         };
         this.menuData = convertTree(menuList, map, false);
         this.getTableData();
@@ -550,7 +591,7 @@ export default {
       this.getTableData();
     },
     expandChildren(array) {
-      array.forEach(item => {
+      array.forEach((item) => {
         if (typeof item.expand === "undefined") {
           // this.$set(item, 'expend', true);
           this.$set(item, "expend", false);
@@ -590,8 +631,8 @@ export default {
     },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -15,7 +15,7 @@
           v-model="tableData"
           :columns="columns"
           :loading="loading"
-          :search-area-column="22"
+          :search-area-column="24"
           :operate-area-column="6"
           editable
           searchable
@@ -33,29 +33,29 @@
               </RadioGroup>
               <div class="mark" v-show="mark===true">
                 <DatePicker
-                  v-model="searchRowData.startDate"
+                  :value="searchRowData.startDate"
                   format="yyyy-MM-dd"
                   type="date"
-                  placeholder="自定义开始时间"
+                  placeholder="开始时间"
                   class="search-input"
-                  style="width: 150px"
-                  @on-change="startTimeChange"
+                  style="width: 120px"
+                  @on-change="searchRowData.startDate=$event"
                 />
                 <i>-</i>
                 <DatePicker
-                  v-model="searchRowData.endDate"
+                  :value="searchRowData.endDate"
                   format="yyyy-MM-dd"
                   type="date"
-                  placeholder="自定义结束时间"
-                  class="search-input mr5"
-                  style="width: 150px"
-                  @on-change="endTimeChange"
+                  placeholder="结束时间"
+                  class="search-input mr2"
+                  style="width: 120px"
+                  @on-change="searchRowData.endDate=$event"
                 />
               </div>
               <Select
                 v-model="searchRowData.source"
                 placeholder="发券平台"
-                style="padding-right: 5px;width: 100px"
+                style="width: 90px"
               >
                 <Option
                   v-for="(item,index) in sourceType"
@@ -67,7 +67,7 @@
               <Select
                 v-model="searchRowData.couponWay"
                 placeholder="发券途径"
-                style="padding-right: 5px;width: 100px"
+                style="width: 150px"
               >
                 <Option
                   v-for="(item,index) in couponWayList"
@@ -78,7 +78,7 @@
               </Select>
               <Select
                 v-model="searchRowData.couponType"
-                placeholder="优惠券类型"
+                placeholder="券类型"
                 style="padding-right: 5px;width: 100px"
                 clearable
               >
@@ -97,7 +97,13 @@
                 style="width: auto"
                 clearable
               ></Input>
-              <Button
+            </Row>
+            <Row style="margin-top:10px;">
+            <div class="ml15 mt10" style="float:left">
+              发券总数<i style="color:red">{{totalNum}}</i> 张
+            </div>
+            <div style="float:right">
+                <Button
                 :loading="searchLoading"
                 class="search-btn mr5"
                 type="primary"
@@ -117,10 +123,8 @@
               <Button class="search-btn mr2" type="warning" @click="handleDownload('issue')">
                 <Icon type="md-download" />导出数据
               </Button>
-            </Row>
-              <div class="ml15 mt10">
-              发券总数<i style="color:red">{{totalNum}}</i> 张
             </div>
+            </Row>
           </div>
         </tables>
         <div style="margin: 10px;overflow: hidden">
@@ -142,7 +146,7 @@
           v-model="tableData1"
           :columns="columns1"
           :loading="loading"
-          :search-area-column="22"
+          :search-area-column="24"
           :operate-area-column="6"
           editable
           searchable
@@ -152,37 +156,37 @@
           <div slot="searchCondition">
             <Row>
               <RadioGroup v-model="button1" type="button" @on-change="timeChange1">
-                <Radio label="今日"></Radio>
-                <Radio label="昨日"></Radio>
-                <Radio label="最近7天"></Radio>
-                <Radio label="最近30天"></Radio>
-                <Radio label="自定义时间"></Radio>
+                <Radio label="今日" class="mt5"></Radio>
+                <Radio label="昨日" class="mt5"></Radio>
+                <Radio label="最近7天" class="mt5"></Radio>
+                <Radio label="最近30天" class="mt5"></Radio>
+                <Radio label="自定义时间" class="mt5"></Radio>
               </RadioGroup>
               <div class="mark" v-show="mark1===true">
                 <DatePicker
-                  v-model="searchRowData1.startDate"
+                  :value="searchRowData1.startDate"
                   format="yyyy-MM-dd"
                   type="date"
-                  placeholder="自定义开始时间"
-                  class="search-input"
-                  style="width: 150px"
-                  @on-change="startTimeChange1"
+                  placeholder="开始时间"
+                  style="width: 120px;"
+                  @on-change="searchRowData1.startDate=$event"
                 />
-                <i>-</i>
+                <i class="">-</i>
                 <DatePicker
-                  v-model="searchRowData1.endDate"
+                  :value="searchRowData1.endDate"
                   format="yyyy-MM-dd"
                   type="date"
-                  placeholder="自定义结束时间"
-                  class="search-input mr5"
-                  style="width: 150px"
-                  @on-change="endTimeChange1"
+                  placeholder="结束时间"
+                  class="mr2 "
+                  style="width: 120px"
+                  @on-change="searchRowData1.endDate=$event"
                 />
               </div>               
               <Select
                 v-model="searchRowData1.source"
                 placeholder="发券平台"
-                style="padding-right: 5px;width: 100px"
+                style="width: 90px"
+                class="mt5"
               >
                 <Option
                   v-for="(item,index) in sourceType"
@@ -194,7 +198,8 @@
               <Select
                 v-model="searchRowData1.storeId"
                 placeholder="用券门店"
-                style="padding-right: 5px;width: 150px"
+                style="width: 160px"
+                class="mt5"
                 :clearable="true"
                 :filterable="true"
               >
@@ -209,7 +214,8 @@
               <Select
                 v-model="searchRowData1.couponWay"
                 placeholder="发券途径"
-                style="padding-right: 5px;width: 100px"
+                style="width: 150px"
+                class="mt5"
               >
                 <Option
                   v-for="(item,index) in couponWayList"
@@ -220,8 +226,9 @@
               </Select>
               <Select
                 v-model="searchRowData1.couponType"
-                placeholder="优惠券类型"
-                style="padding-right: 5px;width: 100px"
+                placeholder="券类型"
+                style="width: 90px"
+                class="mt5"
                 clearable
               >
                 <Option
@@ -229,19 +236,25 @@
                   :value="item.key"
                   :key="index"
                   class="ptb2-5"
-                  style="padding-left: 5px;width: 100px"
+                  style="width: 100px;"
                 >{{ item.value }}</Option>
               </Select>
               <Input
                 v-model="searchRowData1.couponName"
                 placeholder="优惠券名称"
-                class="search-input mr5"
-                style="width: auto"
+                class="search-input mt5"
+                style="width: 120px"
                 clearable
               ></Input>
-              <Button
+            </Row>
+            <Row style="margin-top:10px">
+            <div class="ml15 mt10" style="float:left">
+              用券总数<i style="color:red">{{totalNum1}}</i> 张；总抵扣金额<i style="color:red">{{totalCouponAmount}}</i> 元；实收总金额<i style="color:red">{{totalAmountPayable}}</i> 元
+            </div>
+              <div style="float:right">
+                <Button
                 :loading="searchLoading"
-                class="search-btn mr5"
+                class="search-btn mr2"
                 type="primary"
                 @click="handleSearch1"
               >
@@ -257,12 +270,10 @@
                 <Icon type="md-refresh" />&nbsp;清除
               </Button>
               <Button class="search-btn mr2" type="warning" @click="handleDownload('use')">
-                <Icon type="md-download" />导出数据
+                <Icon type="md-download" />导出
               </Button>
+              </div>
             </Row>
-            <div class="ml15 mt10">
-              用券总数<i style="color:red">{{totalNum1}}</i> 张；总抵扣金额<i style="color:red">{{totalCouponAmount}}</i> 元；实收总金额<i style="color:red">{{totalAmountPayable}}</i> 元
-            </div>
           </div>
         </tables>
         <div style="margin: 10px;overflow: hidden">
@@ -289,7 +300,7 @@ import {
   getSendCouponPages,
   getComboBoxs,
   getUseCouponPages,
-  getStorePages
+  getStorePages,
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -300,7 +311,7 @@ import searchMixin from "@/mixins/searchMixin.js";
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber
+  yuanToFenNumber,
 } from "@/libs/util";
 
 const couponTemplateDetail = {};
@@ -311,22 +322,26 @@ const roleRowData = {
   page: 1,
   rows: 10,
   couponType: null,
-  couponName: null
+  couponName: null,
+  startDate: null,
+  endDate: null,
 };
 
 const roleRowData1 = {
   source: null,
   page: 1,
   rows: 10,
-  couponWay:null,
+  couponWay: null,
   storeName: null,
   couponType: null,
-  couponName: null
+  couponName: null,
+  startDate: null,
+  endDate: null,
 };
 
 export default {
   components: {
-    Tables
+    Tables,
   },
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
@@ -335,7 +350,7 @@ export default {
       mark: false,
       mark1: false,
       num: 0,
-      num1:0,
+      num1: 0,
       couponTypeList: [],
       couponWayList: [],
       button: "今日",
@@ -346,21 +361,23 @@ export default {
       totalCouponAmount: "0.00",
       totalAmountPayable: "0.00",
       totalPage: 0,
-      storeList:[],
+      storeList: [],
       sourceType: [
         { label: "海鼎券", value: "HD" },
-        { label: "系统券", value: "SMALL" }
+        { label: "系统券", value: "SMALL" },
       ],
       columns: [
         {
           title: "发券日期",
           align: "center",
-          key: "receiveTime"
+          key: "receiveTime",
+          width: 130,
         },
         {
           title: "发券平台",
           align: "center",
           key: "source",
+          width: 120,
           render(h, params, vm) {
             const { row } = params;
             if (row.source === "SMALL") {
@@ -368,29 +385,29 @@ export default {
             } else {
               return <tag color="cyan">{"海鼎"}</tag>;
             }
-          }
+          },
         },
         {
           title: "发券途径",
           align: "center",
-          key: "couponWay"
+          key: "couponWay",
+          width: 180,
         },
         {
           title: "券名称",
           align: "center",
-          key: "couponName"
+          key: "couponName",
         },
         {
           title: "活动名称",
           align: "center",
           key: "activityName",
-          minWidth: 60
         },
         {
           title: "券类型",
           align: "center",
           key: "couponType",
-          minWidth: 60,
+          width: 120,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.couponType === "FULL_CUT_COUPON") {
@@ -427,31 +444,33 @@ export default {
               );
             }
             return <div>{row.couponType}</div>;
-          }
+          },
         },
         {
           title: "发券数量",
           align: "center",
           key: "countNum",
-          minWidth: 60
+          width: 120,
         },
         {
           title: "发券人数",
           align: "center",
           key: "countUser",
-          minWidth: 60
-        }
+          width: 120,
+        },
       ],
       columns1: [
         {
           title: "用券日期",
           align: "center",
-          key: "useTime"
+          key: "useTime",
+          width: 120,
         },
         {
           title: "发券平台",
           align: "center",
           key: "source",
+          width: 150,
           render(h, params, vm) {
             const { row } = params;
             if (row.source === "SMALL") {
@@ -459,28 +478,29 @@ export default {
             } else {
               return <tag color="cyan">{"海鼎"}</tag>;
             }
-          }
+          },
         },
         {
           title: "发券途径",
           align: "center",
-          key: "couponWay"
+          key: "couponWay",
+          width: 160,
         },
         {
           title: "券名称",
           align: "center",
-          key: "couponName"
+          key: "couponName",
         },
         {
           title: "活动名称",
           align: "center",
           key: "activityName",
-          minWidth: 60
         },
         {
           title: "券类型",
           align: "center",
           key: "couponType",
+          width: 140,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.couponType === "FULL_CUT_COUPON") {
@@ -517,28 +537,31 @@ export default {
               );
             }
             return <div>{row.couponType}</div>;
-          }
+          },
         },
         {
           title: "用券门店",
           align: "center",
           key: "storeName",
+          width: 180,
         },
         {
           title: "抵扣金额",
           align: "center",
           key: "couponAmount",
+          width: 120,
         },
         {
           title: "实收金额",
           align: "center",
+          width: 120,
           key: "amountPayable",
-        }
+        },
       ],
       searchRowData: _.cloneDeep(roleRowData),
       searchRowData1: _.cloneDeep(roleRowData1),
       couponTemplateDetail: _.cloneDeep(couponTemplateDetail),
-      tableData1: []
+      tableData1: [],
     };
   },
   computed: {},
@@ -617,19 +640,26 @@ export default {
         this.searchRowData.startDate = toMonth;
         this.searchRowData.endDate = today;
       }
+      // this.searchRowData.startDate = this
+      //   .$moment(this.searchRowData.startDate)
+      //   .format("YYYY-MM-DD HH:mm:ss");
+      // this.searchRowData.endDate = this
+      //   .$moment(this.searchRowData.endDate)
+      //   .format("YYYY-MM-DD HH:mm:ss");
+
       getSendCouponPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.totalNum = res.totalNum;
           this.tableData = res.pagingResultDto.rows;
           this.total = res.pagingResultDto.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
-           if (this.num < 2) {
+          if (this.num < 2) {
             this.handleSearch();
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -694,7 +724,7 @@ export default {
         this.searchRowData1.endDate = today;
       }
       getUseCouponPages(this.searchRowData1)
-        .then(res => {
+        .then((res) => {
           this.totalNum1 = res.totalNum;
           this.totalCouponAmount = res.totalCouponAmount;
           this.totalAmountPayable = res.totalAmountPayable;
@@ -704,7 +734,7 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -713,23 +743,23 @@ export default {
     },
     getComboBoxs() {
       getComboBoxs()
-        .then(res => {
+        .then((res) => {
           this.couponTypeList = res.couponTypeList;
           this.couponWayList = res.couponWayList;
         })
-        .catch(error => {});
+        .catch((error) => {});
     },
     getStore() {
       getStorePages({ page: 1, rows: -1 })
-        .then(res => {
-              res.rows.forEach(value => {
-              const map = { label: "label", value: "value" };
-              map.value = value.storeId;
-              map.label = value.storeName;
-              this.storeList.push(map);
-            });
+        .then((res) => {
+          res.rows.forEach((value) => {
+            const map = { label: "label", value: "value" };
+            map.value = value.storeId;
+            map.label = value.storeName;
+            this.storeList.push(map);
+          });
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -756,23 +786,22 @@ export default {
       this.pageSize = 10;
       this.clearSearchLoading = true;
       this.handleSearch1();
-      
     },
     assistDataChange(e) {
       let index = e.currentTarget.dataset.index;
       if (this.topStatus === index) {
         return;
       }
-      if (index==="use") {
-          this.handleSearch1();
+      if (index === "use") {
+        this.handleSearch1();
       }
-      this.button="今日",
-      this.button1="今日",
-      this.totalNum=0,
-      this. totalNum1=0,
-      this.totalCouponAmount= "0.00",
-      this.totalAmountPayable="0.00",
-      this.topStatus = index;
+      (this.button = "今日"),
+        (this.button1 = "今日"),
+        (this.totalNum = 0),
+        (this.totalNum1 = 0),
+        (this.totalCouponAmount = "0.00"),
+        (this.totalAmountPayable = "0.00"),
+        (this.topStatus = index);
     },
     changePage2(page) {
       this.searchRowData1.page = page;
@@ -846,63 +875,63 @@ export default {
       this.clearSearchLoading = true;
       this.handleSearch();
     },
-        // 导出数据
+    // 导出数据
     handleDownload(name) {
-        if (name==="issue") {
+      if (name === "issue") {
         // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
         this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-        console.log("用券数据统计",this.searchRowData)
         let pageSize = this.searchRowData.page;
         this.searchRowData.page = 1;
-        getSendCouponPages(this.searchRowData).then(res => {
-            const tableData = res.pagingResultDto.rows;
-            // 恢复正常页数
-            this.searchRowData.rows = 10;
-            this.searchRowData.page = pageSize;
-            // 表格数据导出字段翻译
-            let _this = this;
-            tableData.forEach(item => {
-              item["couponType"] = couponTypeConvert(item["couponType"]).label;
-            if (item["source"]==="SMALL") {
-                item["source"]="小程序"
-            }else{
-              item["source"]="海鼎"
+        getSendCouponPages(this.searchRowData).then((res) => {
+          const tableData = res.pagingResultDto.rows;
+          // 恢复正常页数
+          this.searchRowData.rows = 10;
+          this.searchRowData.page = pageSize;
+          // 表格数据导出字段翻译
+          let _this = this;
+          tableData.forEach((item) => {
+            item["couponType"] = couponTypeConvert(item["couponType"]).label;
+            if (item["source"] === "SMALL") {
+              item["source"] = "小程序";
+            } else {
+              item["source"] = "海鼎";
             }
-        });
-            const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
-            this.$refs.tables.handleDownload({
+          });
+          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+          this.$refs.tables.handleDownload({
             filename: `发券数据统计-${date}`,
-            data: tableData
-            });
+            data: tableData,
+          });
         });
-        }else{
-        this.searchRowData1.rows = this.totalPage > 5000 ? 5000 : this.totalPage;
+      } else {
+        this.searchRowData1.rows =
+          this.totalPage > 5000 ? 5000 : this.totalPage;
         let pageSize = this.searchRowData1.page;
         this.searchRowData1.page = 1;
-        getUseCouponPages(this.searchRowData1).then(res => {
-            const tableData1 = res.pagingResultDto.rows;
-            // 恢复正常页数
-            this.searchRowData1.rows = 10;
-            this.searchRowData1.page = pageSize;
-            // 表格数据导出字段翻译
-            let _this = this;
-            tableData1.forEach(item => {
-              item["couponType"] = couponTypeConvert(item["couponType"]).label;
-            if (item["source"]==="SMALL") {
-                item["source"]="小程序"
-            }else{
-              item["source"]="海鼎"
+        getUseCouponPages(this.searchRowData1).then((res) => {
+          const tableData1 = res.pagingResultDto.rows;
+          // 恢复正常页数
+          this.searchRowData1.rows = 10;
+          this.searchRowData1.page = pageSize;
+          // 表格数据导出字段翻译
+          let _this = this;
+          tableData1.forEach((item) => {
+            item["couponType"] = couponTypeConvert(item["couponType"]).label;
+            if (item["source"] === "SMALL") {
+              item["source"] = "小程序";
+            } else {
+              item["source"] = "海鼎";
             }
-        });
-            const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
-            this.$refs.tables1.handleDownload({
+          });
+          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+          this.$refs.tables1.handleDownload({
             filename: `用券数据统计-${date}`,
-            data: tableData1
-            });
+            data: tableData1,
+          });
         });
-        }
-    }
-  }
+      }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -915,7 +944,6 @@ export default {
   font-size: 14px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   position: relative;
   bottom: -5px;
   left: 0;

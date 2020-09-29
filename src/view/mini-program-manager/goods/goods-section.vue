@@ -69,6 +69,10 @@
                   <Icon type="md-refresh" />&nbsp;清除
                 </Button>
               </Row>
+              <div class="ml15 mt10">
+                <i style="color: red">*</i>
+                活动商品可点击查看按钮查看活动配置信息
+              </div>
             </div>
             <div slot="operations">
               <Button v-waves type="success" class="mr5" @click="addProSection">
@@ -453,35 +457,35 @@ const productColumns = [
   {
     title: "商品条码",
     key: "barcode",
-    minWidth: 70,
+    minWidth: 150,
     align: "center",
   },
-  {
-    title: "商品编号",
-    key: "productCode",
-    align: "center",
-    minWidth: 120,
-  },
+  // {
+  //   title: "商品编号",
+  //   key: "productCode",
+  //   align: "center",
+  //   minWidth: 150,
+  // },
   {
     title: "商品名称",
     key: "productName",
-    minWidth: 100,
+    minWidth: 150,
     align: "center",
   },
   {
-    title: "商品规格",
+    title: "规格",
     key: "specification",
     minWidth: 80,
     align: "center",
   },
   {
-    title: "商品单位",
+    title: "单位",
     key: "productUnit",
     minWidth: 80,
     align: "center",
   },
   {
-    title: "商品价格",
+    title: "原价",
     key: "price",
     minWidth: 80,
     align: "center",
@@ -491,34 +495,41 @@ const productColumns = [
     },
   },
   {
-    title: "折扣价格",
+    title: "售价",
     key: "discountPrice",
     minWidth: 80,
     align: "center",
     render(h, params, vm) {
-      if (params.row.productStandardExpand) {
-        const amount = fenToYuanDot2(
-          params.row.productStandardExpand.discountPrice
-        );
+      const { row } = params;
+      if (row.productType == "SHARE_PRODUCT") {
+        const amount = fenToYuanDot2(params.row.salePrice);
         return <div>{amount}</div>;
       } else {
-        return <div>N/A</div>;
+        if (params.row.productStandardExpand) {
+          const amount = fenToYuanDot2(
+            params.row.productStandardExpand.discountPrice
+          );
+          return <div>{amount}</div>;
+        } else {
+          return <div>N/A</div>;
+        }
       }
     },
   },
   {
     title: "起购份数",
     key: "startNum",
-    minWidth: 80,
+    minWidth: 100,
     align: "center",
   },
   {
     title: "商品类型",
-    minWidth: 120,
+    minWidth: 110,
     key: "productType",
     align: "center",
     render: (h, params, vm) => {
       const { row } = params;
+
       if (row.productType == "DISCOUNT_PRODUCT") {
         return (
           <div>
@@ -561,8 +572,8 @@ const productColumns = [
     },
   },
   {
-    title: "商品状态",
-    minWidth: 100,
+    title: "状态",
+    minWidth: 90,
     key: "shelvesStatus",
     align: "center",
     render: (h, params, vm) => {
@@ -596,7 +607,7 @@ const productColumns = [
   {
     title: "排序",
     key: "rank",
-    minWidth: 60,
+    minWidth: 70,
     align: "center",
   },
 ];
@@ -668,11 +679,11 @@ export default {
           align: "center",
         },
         {
-          title: "商品价格",
-          key: "price",
+          title: "商品售价",
+          key: "salePrice",
           align: "center",
           render(h, params, vm) {
-            const amount = fenToYuanDot2(params.row.price);
+            const amount = fenToYuanDot2(params.row.salePrice);
             return <div>{amount}</div>;
           },
         },

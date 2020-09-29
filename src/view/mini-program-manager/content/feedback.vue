@@ -186,7 +186,7 @@
           ref="modalEdit"
           :model="feedbackDetail"
           :rules="ruleInline"
-          :label-width="80"
+          :label-width="100"
         >
           <FormItem label="回复内容:" prop="backMessage">
             <Input v-model="feedbackDetail.backMessage" type="textarea"></Input>
@@ -255,7 +255,7 @@ export default {
           title: "ID",
           align: "center",
           key: "id",
-          minWidth: 60
+          width: 70
         },
         {
           title: "标题",
@@ -267,14 +267,14 @@ export default {
         {
           title: "内容",
           align: "center",
-          width: 300,
+          minWidth: 170,
           key: "content",
           tooltip: true
         },
         {
           title: "用户电话",
           align: "center",
-          width: 120,
+          width: 130,
           key: "phone"
         },
         {
@@ -305,14 +305,14 @@ export default {
         {
           title: "回复内容",
           align: "center",
-          width: 170,
+          minWidth: 170,
           key: "backMessage",
           tooltip: true
         },
         {
           title: "操作",
           align: "center",
-          minWidth: 150,
+          width: 120,
           key: "handle",
           options: ["view", "feedback"]
         }
@@ -391,12 +391,10 @@ export default {
         });
     },
     getSystemParameters() {
-      console.log("123");
       let code = "FEEDBACK_TITLE_TYPE";
       getSystemParameter(code)
         .then(res => {
           this.feedbackClassify = res.systemSettings;
-          console.log("系统参数", this.feedbackClassify);
         })
         .catch(error => {
           console.log(error);
