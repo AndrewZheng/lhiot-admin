@@ -255,7 +255,6 @@ export default {
   },
   methods: {
     orderStatusesOnChange(value) {
-      console.log(value);
       if (value.length === 0) {
         this.searchRowData.orderStatuses = null;
       }

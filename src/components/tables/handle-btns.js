@@ -138,10 +138,10 @@ const btns = {
         },
         on: {
           'on-ok': () => {
-            vm.$emit('on-audit', { params, checkStatus: 'agree' });
+            vm.$emit('on-audit', { params, checkStatus: 'PASSED' });
           },
           'on-cancel': () => {
-            vm.$emit('on-audit', { params, checkStatus: 'reject' });
+            vm.$emit('on-audit', { params, checkStatus: 'REJECTED' });
           }
         }
       }, [
@@ -888,6 +888,43 @@ const btns = {
       ])
     ]);
   },
+  afterSale: (h, params, vm) => {
+    return h('Poptip', {
+      props: {
+        confirm: true,
+        transfer: true,
+        title: '是否确认要售后?',
+        placement: params.index === 0 ? 'left' : 'top'
+      },
+      style: {
+        marginRight: '5px'
+      },
+      on: {
+        'on-ok': () => {
+          vm.$emit('on-afterSale', params);
+        }
+      }
+    }, [
+      h('Tooltip', {
+        props: { placement: 'top', transfer: true, content: '手动售后' }
+      }, [
+        h('Button', {
+          props: {
+            type: 'primary',
+            size: 'small'
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-hand',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])
+      ])
+    ]);
+  },
   // 邮费复制操作
   copy: (h, params, vm) => {
     return h('Button', {
@@ -1166,6 +1203,54 @@ const btns = {
       }, [h('Icon', {
         props: {
           type: 'md-create',
+          size: 16,
+          color: '#fff'
+        }
+      })]);
+    } else {
+      return h('Button', {
+        props: {
+          type: 'success',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-inline-save', params);
+          }
+        }
+      }, [h('Icon', {
+        props: {
+          type: 'md-checkmark',
+          size: 16,
+          color: '#green'
+        }
+      })]);
+    }
+  },
+  amendEdit: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.isEdit === false) {
+      return h('Button', {
+        props: {
+          type: 'warning',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-inline-edit', params);
+          }
+        }
+      }, [h('Icon', {
+        props: {
+          type: 'ios-create',
           size: 16,
           color: '#fff'
         }
@@ -1548,7 +1633,7 @@ const btns = {
         props: {
           confirm: true,
           transfer: true,
-          title: '将此用户升级为内部用户?',
+          title: '将此用户升级为白名单?',
           placement: params.index === 0 ? 'right' : 'top'
         },
         style: {
@@ -1561,7 +1646,7 @@ const btns = {
         }
       }, [
         h('Tooltip', {
-          props: { placement: 'top', transfer: true, content: '升级为内部用户' }
+          props: { placement: 'top', transfer: true, content: '升级为白名单' }
         }, [
           h('Button', {
             props: {
@@ -1584,7 +1669,7 @@ const btns = {
         props: {
           confirm: true,
           transfer: true,
-          title: '将此白名单用户变为普通用户?',
+          title: '将此用户取消白名单?',
           placement: params.index === 0 ? 'right' : 'top'
         },
         style: {
@@ -1597,7 +1682,7 @@ const btns = {
         }
       }, [
         h('Tooltip', {
-          props: { placement: 'top', transfer: true, content: '降级为普通用户' }
+          props: { placement: 'top', transfer: true, content: '取消白名单' }
         }, [
           h('Button', {
             props: {
@@ -1615,6 +1700,87 @@ const btns = {
           ])
         ])
       ]);
+    }
+  },
+  // 员工特权
+  staff: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.phone) {
+      if (row.userType === 'CONSUMER') {
+        return h('Poptip', {
+          props: {
+            confirm: true,
+            transfer: true,
+            title: '将此用户设为员工?',
+            placement: params.index === 0 ? 'right' : 'top'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            'on-ok': () => {
+              vm.$emit('on-staff', params);
+            }
+          }
+        }, [
+          h('Tooltip', {
+            props: { placement: 'top', transfer: true, content: '设为员工' }
+          }, [
+            h('Button', {
+              props: {
+                type: 'success',
+                size: 'small'
+              }
+            }, [
+              h('Icon', {
+                props: {
+                  type: 'ios-checkmark-circle-outline',
+                  size: 16,
+                  color: '#fff'
+                }
+              })
+            ])
+          ])
+        ]);
+      } else {
+        return h('Poptip', {
+          props: {
+            confirm: true,
+            transfer: true,
+            title: '取消此用户员工特权?',
+            placement: params.index === 0 ? 'right' : 'top'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            'on-ok': () => {
+              vm.$emit('on-staff', params);
+            }
+          }
+        }, [
+          h('Tooltip', {
+            props: { placement: 'top', transfer: true, content: '取消员工' }
+          }, [
+            h('Button', {
+              props: {
+                type: 'error',
+                size: 'small'
+              }
+            }, [
+              h('Icon', {
+                props: {
+                  type: 'ios-close-circle-outline',
+                  size: 16,
+                  color: '#fff'
+                }
+              })
+            ])
+          ])
+        ]);
+      }
     }
   },
   // 评论 置顶
@@ -1887,7 +2053,56 @@ const btns = {
         ])
       ])
     ]);
-  }
+  },
+  staffAudit: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.auditStatus === 'UNAUDITED') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '是否通过员工特权申请?',
+          placement: params.index === 0 ? 'right' : 'top',
+          'ok-text': '通过',
+          'cancel-text': '拒绝'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-staffAudit', { params, checkStatus: 'PASSED' });
+          },
+          'on-cancel': () => {
+            vm.$emit('on-staffAudit', { params, checkStatus: 'REJECTED' });
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '审核员工' }
+        }, [
+          h('Button', {
+            props: {
+              type: 'primary',
+              size: 'small'
+            }
+          }, [
+            h('Icon', {
+              props: {
+                type: 'md-person-add',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
+        ])
+      ]);
+    } else {
+      return "N/A"
+    }
+  },
 };
 
 export default btns;

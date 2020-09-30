@@ -37,7 +37,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -76,7 +76,9 @@
           <i-col span="24">
             <Row>
               <i-col span="6">活动状态:</i-col>
-              <i-col span="18">{{ registerDetail.onOff | imageStatusFilter }}</i-col>
+              <i-col span="18">{{
+                registerDetail.onOff | imageStatusFilter
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -93,9 +95,11 @@
             <Row>
               <i-col span="6">开始时间:</i-col>
               <i-col span="18">
-                {{ this.registerDetail.beginTime = this.$moment(
-                this.registerDetail.beginTime
-                ).format("YYYY-MM-DD HH:mm:ss") }}
+                {{
+                  (this.registerDetail.beginTime = this.$moment(
+                    this.registerDetail.beginTime
+                  ).format("YYYY-MM-DD HH:mm:ss"))
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -105,9 +109,11 @@
             <Row>
               <i-col span="6">结束时间:</i-col>
               <i-col span="18">
-                {{ this.registerDetail.endTime = this.$moment(
-                this.registerDetail.endTime
-                ).format("YYYY-MM-DD HH:mm:ss") }}
+                {{
+                  (this.registerDetail.endTime = this.$moment(
+                    this.registerDetail.endTime
+                  ).format("YYYY-MM-DD HH:mm:ss"))
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -149,31 +155,53 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :width="1200" :z-index="1000" :mask-closable="false">
+    <Modal
+      v-model="modalEdit"
+      :width="800"
+      :z-index="1000"
+      :mask-closable="false"
+    >
       <p slot="header">
-        <i-col>{{ tempModalType === modalType.edit?'修改注册送礼优惠券活动': '创建注册送礼优惠券活动'}}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit
+            ? "修改注册送礼优惠券活动"
+            : "创建注册送礼优惠券活动"
+        }}</i-col>
       </p>
       <div class="modal-content">
         <Row>
-          <Form ref="editForm" :model="registerDetail" :rules="ruleInline" :label-width="80">
+          <Form
+            ref="editForm"
+            :model="registerDetail"
+            :rules="ruleInline"
+            :label-width="90"
+          >
             <Row>
               <Col span="18">
                 <FormItem label="活动名称:" prop="activityName">
-                  <Input v-model="registerDetail.activityName" style="width: 170px"></Input>
+                  <Input
+                    v-model="registerDetail.activityName"
+                    style="width: 170px"
+                  ></Input>
                 </FormItem>
               </Col>
             </Row>
             <Row>
               <Col span="18">
                 <FormItem label="活动状态:" prop="onOff">
-                  <Select v-model="registerDetail.onOff" clearable style="width: 170px">
+                  <Select
+                    v-model="registerDetail.onOff"
+                    clearable
+                    style="width: 170px"
+                  >
                     <Option
-                      v-for="(item,index) in imageStatusEnum"
+                      v-for="(item, index) in imageStatusEnum"
                       :value="item.value"
                       :key="index"
                       class="ptb2-5"
-                      style="padding-left: 5px;width: 170px"
-                    >{{ item.label }}</Option>
+                      style="padding-left: 5px; width: 170px"
+                      >{{ item.label }}</Option
+                    >
                   </Select>
                 </FormItem>
               </Col>
@@ -182,14 +210,19 @@
             <Row>
               <Col span="18">
                 <FormItem label="领券方式:" prop="receiveType">
-                  <Select v-model="registerDetail.receiveType" clearable style="width: 170px">
+                  <Select
+                    v-model="registerDetail.receiveType"
+                    clearable
+                    style="width: 170px"
+                  >
                     <Option
-                      v-for="(item,index) in receiveTypeEnum"
+                      v-for="(item, index) in receiveTypeEnum"
                       :value="item.value"
                       :key="index"
                       class="ptb2-5"
-                      style="padding-left: 5px;width: 170px"
-                    >{{ item.label }}</Option>
+                      style="padding-left: 5px; width: 170px"
+                      >{{ item.label }}</Option
+                    >
                   </Select>
                 </FormItem>
               </Col>
@@ -243,7 +276,9 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit"
+          >确定</Button
+        >
       </div>
     </Modal>
   </div>
@@ -360,28 +395,32 @@ export default {
           title: "ID",
           align: "center",
           key: "id",
+          minWidth: 50,
         },
         {
           title: "活动名称",
           align: "center",
           key: "activityName",
+          minWidth: 130,
         },
         {
           title: "活动规则",
           key: "activityRule",
           align: "center",
-          tooltips: true,
+          minWidth: 130,
+          tooltip: true,
         },
         {
           title: "开始时间",
           align: "center",
           key: "beginTime",
+          minWidth: 160,
         },
         {
           title: "结束时间",
           align: "center",
           key: "endTime",
-          width: 165,
+          minWidth: 200,
           render: (h, params, vm) => {
             const { row } = params;
             if (!compareCouponData(row.endTime)) {
@@ -395,6 +434,7 @@ export default {
           title: "活动状态",
           align: "center",
           key: "onOff",
+          minWidth: 90,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.onOff === "ON") {
@@ -416,14 +456,9 @@ export default {
           },
         },
         {
-          title: "创建人",
-          align: "center",
-          key: "createBy",
-        },
-        {
           title: "操作",
           align: "center",
-          minWidth: 80,
+          minWidth: 200,
           key: "handle",
           options: ["onSale", "view", "edit", "delete", "settings"],
         },

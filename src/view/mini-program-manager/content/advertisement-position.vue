@@ -22,19 +22,19 @@
             v-model="searchRowData.description"
             placeholder="广告位描述"
             class="search-input mr5"
-            style="width: auto"
+            style="width: 150px"
           ></Input>
           <Input
             :clearable="true"
             v-model="searchRowData.postionName"
             placeholder="广告位英文名"
             class="search-input mr5"
-            style="width: auto"
+            style="width: 150px"
           ></Input>
           <Select
             v-model="searchRowData.timeLimited"
             :clearable="true"
-            style="padding-right: 5px;width: 120px"
+            style="padding-right: 5px; width: 100px"
             placeholder="时间限制"
           >
             <Option
@@ -43,35 +43,34 @@
               :key="`search-col-${item.value}`"
               class="ml15 mt10"
               style="padding-left: 5px"
-            >{{ item.label }}</Option>
+              >{{ item.label }}</Option
+            >
           </Select>
           <Select
             v-model="searchRowData.applicationType"
             :clearable="true"
-            style="padding-right: 5px;width: 120px"
+            style="padding-right: 5px; width: 100px"
             placeholder="应用类型"
           >
             <Option
               v-for="item in appTypesEnum"
               :value="item.value"
               :key="`search-col-${item.value}`"
-              class="ml15 mt10"
-              style="padding-left: 5px"
-            >{{ item.label }}</Option>
+              >{{ item.label }}</Option
+            >
           </Select>
           <Select
             v-model="searchRowData.positionType"
             :clearable="true"
-            style="padding-right: 5px;width: 120px"
+            style="padding-right: 5px; width: 120px"
             placeholder="广告位类型"
           >
             <Option
               v-for="item in advertisementPositionTypeEnum"
               :value="item.value"
               :key="`search-col-${item.value}`"
-              class="ml15 mt10"
-              style="padding-left: 5px"
-            >{{ item.label }}</Option>
+              >{{ item.label }}</Option
+            >
           </Select>
           <Button
             v-waves
@@ -109,7 +108,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -140,7 +139,9 @@
           <i-col span="24">
             <Row>
               <i-col span="6">广告位描述:</i-col>
-              <i-col span="18">{{ advertisementPositionDetail.description }}</i-col>
+              <i-col span="18">{{
+                advertisementPositionDetail.description
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -148,7 +149,9 @@
           <i-col span="24">
             <Row>
               <i-col span="6">广告位英文名:</i-col>
-              <i-col span="18">{{ advertisementPositionDetail.postionName }}</i-col>
+              <i-col span="18">{{
+                advertisementPositionDetail.postionName
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -156,7 +159,9 @@
           <i-col span="24">
             <Row>
               <i-col span="6">时间限制:</i-col>
-              <i-col span="18">{{ advertisementPositionDetail.timeLimited | timeLimitedFilter }}</i-col>
+              <i-col span="18">{{
+                advertisementPositionDetail.timeLimited | timeLimitedFilter
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -164,7 +169,9 @@
           <i-col span="24">
             <Row>
               <i-col span="6">应用类型:</i-col>
-              <i-col span="18">{{ advertisementPositionDetail.applicationType | appTypeFilter }}</i-col>
+              <i-col span="18">{{
+                advertisementPositionDetail.applicationType | appTypeFilter
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -172,9 +179,10 @@
           <i-col span="24">
             <Row>
               <i-col span="6">广告位类型:</i-col>
-              <i-col
-                span="18"
-              >{{ advertisementPositionDetail.positionType | advertisementPositionTypeFilter }}</i-col>
+              <i-col span="18">{{
+                advertisementPositionDetail.positionType
+                  | advertisementPositionTypeFilter
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -187,74 +195,90 @@
     <!--编辑菜单 -->
     <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
-        <span>{{ tempModalType===modalType.edit?'修改广告位':'创建广告' }}</span>
+        <span>{{
+          tempModalType === modalType.edit ? "修改广告位" : "创建广告"
+        }}</span>
       </p>
       <div class="modal-content">
         <Form
           ref="modalEdit"
-          :label-width="100"
+          :label-width="120"
           :model="advertisementPositionDetail"
           :rules="ruleInline"
         >
           <FormItem label="广告位描述:" prop="description">
-            <Input v-model="advertisementPositionDetail.description" placeholder="标题"></Input>
+            <Input
+              v-model="advertisementPositionDetail.description"
+              placeholder="标题"
+            ></Input>
           </FormItem>
           <FormItem label="广告位英文名:" prop="postionName">
-            <Input v-model="advertisementPositionDetail.postionName" placeholder="内容"></Input>
+            <Input
+              v-model="advertisementPositionDetail.postionName"
+              placeholder="内容"
+            ></Input>
           </FormItem>
           <FormItem label="时间限制:" prop="timeLimited">
             <Select
               v-model="advertisementPositionDetail.timeLimited"
               placeholder="时间限制"
-              style="padding-right: 5px;width: 100px"
+              style="padding-right: 5px; width: 120px"
               clearable
             >
               <Option
-                v-for="(item,index) in timeLimitedEnum"
+                v-for="(item, index) in timeLimitedEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
                 style="padding-left: 5px"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
           </FormItem>
           <FormItem label="应用类型:" prop="applicationType">
             <Select
               v-model="advertisementPositionDetail.applicationType"
               placeholder="应用类型"
-              style="padding-right: 5px;width: 100px"
+              style="padding-right: 5px; width: 120px"
               clearable
             >
               <Option
-                v-for="(item,index) in appTypesEnum"
+                v-for="(item, index) in appTypesEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
                 style="padding-left: 5px"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
           </FormItem>
           <FormItem label="广告位类型:" prop="positionType">
             <Select
               v-model="advertisementPositionDetail.positionType"
               placeholder="广告位类型"
-              style="padding-right: 5px;width: 100px"
+              style="padding-right: 5px; width: 120px"
               clearable
             >
               <Option
-                v-for="(item,index) in advertisementPositionTypeEnum"
+                v-for="(item, index) in advertisementPositionTypeEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
                 style="padding-left: 5px"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
           </FormItem>
         </Form>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button
+          :loading="modalEditLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+          >确定</Button
+        >
       </div>
     </Modal>
 
@@ -273,7 +297,7 @@ import {
   getAdvertisementPositionPages,
   createAdvertisementPosition,
   deleteAdvertisementPosition,
-  editAdvertisementPosition
+  editAdvertisementPosition,
 } from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
@@ -282,12 +306,12 @@ import uploadMixin from "@/mixins/uploadMixin";
 import {
   appTypesEnum,
   timeLimitedEnum,
-  advertisementPositionTypeEnum
+  advertisementPositionTypeEnum,
 } from "@/libs/enumerate";
 import {
   appTypesConvert,
   timeLimitedConvert,
-  advertisementPositionTypeConvert
+  advertisementPositionTypeConvert,
 } from "@/libs/converStatus";
 
 const advertisementPositionDetail = {
@@ -297,7 +321,7 @@ const advertisementPositionDetail = {
   postionName: "",
   timeLimited: null,
   applicationType: "S_MALL",
-  positionType: null
+  positionType: null,
 };
 
 const roleRowData = {
@@ -307,13 +331,13 @@ const roleRowData = {
   applicationType: null,
   positionType: null,
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 export default {
   components: {
     Tables,
-    IViewUpload
+    IViewUpload,
   },
   mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin],
   data() {
@@ -323,46 +347,35 @@ export default {
         postionName: [{ required: true, message: "请输入广告位英文名" }],
         timeLimited: [{ required: true, message: "请选择时间限制类型" }],
         applicationType: [{ required: true, message: "请选择应用类型" }],
-        positionType: [{ required: true, message: "请选择广告位类型" }]
+        positionType: [{ required: true, message: "请选择广告位类型" }],
       },
       appTypesEnum,
       timeLimitedEnum,
       advertisementPositionTypeEnum,
       columns: [
-        // {
-        //   title: '广告图',
-        //   render: (h, params, vm) => {
-        //     const { row } = params;
-        //     const str = <img src={row.image} style='margin-top:5px' height='60' width='60' margin-top='10px'/>;
-        //     return <div>{str}</div>;
-        //   }
-        // },
-        {
-          type: "selection",
-          key: "",
-          width: 60,
-          align: "center",
-          fixed: "left"
-        },
         {
           title: "ID",
           align: "center",
-          key: "id"
+          key: "id",
+          minWidth: 60,
         },
         {
           title: "广告位描述",
           align: "center",
-          key: "description"
+          key: "description",
+          minWidth: 170,
         },
         {
           title: "广告位英文名",
           align: "center",
-          key: "postionName"
+          key: "postionName",
+          minWidth: 280,
         },
         {
           title: "时间限制",
           align: "center",
           key: "timeLimited",
+          minWidth: 100,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.timeLimited === "LIMITED") {
@@ -384,14 +397,14 @@ export default {
             } else {
               return <div>{row.timeLimited}</div>;
             }
-          }
+          },
         },
         {
           title: "应用类型",
           key: "applicationType",
           sortable: true,
           align: "center",
-          minWidth: 120,
+          minWidth: 100,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.applicationType === "S_MALL") {
@@ -405,12 +418,13 @@ export default {
             } else {
               return <div>{row.applicationType}</div>;
             }
-          }
+          },
         },
         {
           title: "广告位类型",
           key: "positionType",
           align: "center",
+          minWidth: 120,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.positionType === "WORD") {
@@ -440,15 +454,15 @@ export default {
             } else {
               return <div>{row.positionType}</div>;
             }
-          }
+          },
         },
         {
           title: "操作",
           key: "handle",
           align: "center",
-          minWidth: 120,
-          options: ["view", "edit", "delete"]
-        }
+          minWidth: 130,
+          options: ["view", "edit", "delete"],
+        },
       ],
       searchRowData: _.cloneDeep(roleRowData),
       advertisementPositionDetail: _.cloneDeep(advertisementPositionDetail),
@@ -456,7 +470,7 @@ export default {
       modalViewLoading: false,
       modalEditLoading: false,
       defaultListMain: [],
-      uploadListMain: []
+      uploadListMain: [],
     };
   },
   created() {
@@ -470,7 +484,7 @@ export default {
     handleView(params) {
       this.loading = true;
       getAdvertisementPosition({ id: params.row.id })
-        .then(res => {
+        .then((res) => {
           this.advertisementPositionDetail = res;
           this.modalView = true;
           this.loading = false;
@@ -483,7 +497,7 @@ export default {
     getTableData() {
       // this.searchRowData.applicationType = this.applicationType;
       getAdvertisementPositionPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
@@ -500,9 +514,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteAdvertisementPosition({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&
@@ -542,7 +556,7 @@ export default {
       );
     },
     handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -559,7 +573,7 @@ export default {
     createAdvertisementPosition() {
       this.modalViewLoading = true;
       createAdvertisementPosition(this.advertisementPositionDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success("创建成功!");
@@ -573,7 +587,7 @@ export default {
     editAdvertisementPosition() {
       this.modalViewLoading = true;
       editAdvertisementPosition(this.advertisementPositionDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
@@ -588,8 +602,8 @@ export default {
       this.uploadListMain = fileList;
       this.storeDetail.storeImage = null;
       this.storeDetail.storeImage = fileList[0].url;
-    }
-  }
+    },
+  },
 };
 </script>
 

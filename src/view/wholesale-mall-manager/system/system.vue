@@ -489,7 +489,7 @@ export default {
           title: "分类ID",
           align: "center",
           key: "categoryId",
-          width: 80
+          width: 100
         },
         {
           title: "参数类型",

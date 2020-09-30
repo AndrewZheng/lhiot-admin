@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="16"
+        :search-area-column="24"
         :operate-area-column="6"
         editable
         searchable
@@ -201,12 +201,6 @@ const roleRowData = {
 
 const userColumns = [
   {
-    type: "selection",
-    key: "",
-    width: 60,
-    align: "center"
-  },
-  {
     title: "编号",
     align: "center",
     key: "id",
@@ -233,7 +227,7 @@ const userColumns = [
     title: "店长姓名",
     align: "center",
     key: "userName",
-    minWidth: 60
+    minWidth: 70
   },
   {
     title: "手机号码",
@@ -245,7 +239,7 @@ const userColumns = [
     title: "注册时间",
     align: "center",
     key: "registerTime",
-    minWidth: 50
+    minWidth: 70
   },
   // {
   //   title: "用户类型",
@@ -297,7 +291,7 @@ const userColumns = [
     title: "累计消费/频次",
     align: "center",
     key: "accumulative",
-    minWidth: 80,
+    minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
       return <div>{row.accumulative ? row.accumulative : "N/A"}</div>;
@@ -307,7 +301,7 @@ const userColumns = [
     title: "最近消费时间",
     align: "center",
     key: "lastCreateTime",
-    minWidth: 50,
+    minWidth: 130,
     render: (h, params, vm) => {
       const { row } = params;
       return <div>{row.lastCreateTime ? row.lastCreateTime : "N/A"}</div>;

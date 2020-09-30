@@ -55,7 +55,7 @@
             <Select
               v-model="searchRowData.isConvertCoupon"
               placeholder="是否兑换券"
-              style="padding-right: 5px;width: 100px"
+              style="padding-right: 5px;width: 110px"
               clearable
             >
               <Option
@@ -63,7 +63,7 @@
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
-                style="padding-left: 5px;width: 100px"
+                style="padding-left: 5px;width: 110px"
               >{{ item.label }}</Option>
             </Select>
             <Button
@@ -124,7 +124,7 @@
         </Row>
       </div>
       <Divider orientation="center">填写发送对象手机号</Divider>
-      <Form ref="modalSendWord" :model="sendWordToPhone" :label-width="150" :rules="ruleInline">
+      <Form ref="modalSendWord" :model="sendWordToPhone" :label-width="170" :rules="ruleInline">
         <Row>
           <i-col span="15">
             <Row class-name="mb10">
@@ -244,13 +244,13 @@ export default {
           title: "字ID",
           align: "center",
           key: "id",
-          width: 90,
+          width: 80,
         },
         {
           title: "集字名称",
           align: "center",
           key: "wordKeyName",
-          minWidth: 5,
+          minWidth: 30,
         },
         {
           title: "来源",
@@ -278,25 +278,25 @@ export default {
           title: "领取时间",
           align: "center",
           key: "receiveTime",
-          minWidth: 50,
+          minWidth: 90,
         },
         {
           title: "领取用户名称",
           align: "center",
           key: "userName",
-          minWidth: 40,
+          minWidth: 200,
         },
         {
-          title: "领取用户手机",
+          title: "用户手机",
           align: "center",
           key: "phone",
-          minWidth: 40,
+          minWidth: 70,
         },
         {
-          title: "领取用户ID",
+          title: "用户ID",
           align: "center",
           key: "userId",
-          minWidth: 10,
+          minWidth: 60,
         },
         // {
         //   title: "状态",
@@ -329,7 +329,7 @@ export default {
         {
           title: "是否兑换券",
           align: "center",
-          minWidth: 10,
+          minWidth: 30,
           key: "isConvertCoupon",
           render(h, params, vm) {
             const { row } = params;
@@ -463,7 +463,6 @@ export default {
           if (!this.sendWordToPhone.id) {
             this.$Message.info("请先选中一条集字数据!");
           } else {
-            console.log("调用函数");
             this.sendCollectWord();
           }
         } else {
@@ -473,7 +472,6 @@ export default {
     },
     // 发送集字
     sendCollectWord() {
-      console.log("123312323", this.sendWordToPhone);
       sendCollectWord(this.sendWordToPhone)
         .then((res) => {
           console.log("res", res);

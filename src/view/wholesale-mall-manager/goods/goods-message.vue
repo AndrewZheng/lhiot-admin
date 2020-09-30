@@ -15,7 +15,7 @@
             v-model="tableData"
             :columns="columns"
             :loading="loading"
-            :search-area-column="18"
+            :search-area-column="14"
             :operate-area-column="6"
             editable
             searchable
@@ -257,7 +257,7 @@
         <span>{{ isCreate?'创建基础商品信息':'编辑基础商品信息' }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="productDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="editForm" :model="productDetail" :rules="ruleInline" :label-width="90">
           <Row>
             <!-- <i-col span="12">
               <FormItem label="商品编码:" prop="goodsCode">
@@ -640,7 +640,7 @@ export default {
           title: '商品图片',
           key: 'goodsImage',
           align: 'center',
-          minWidth: 120,
+          minWidth: 110,
           render: (h, params, vm) => {
             const { row } = params;
             const str = <img src={row.goodsImage} height='60' width='60' />;
@@ -681,7 +681,7 @@ export default {
         {
           title: '商品区域',
           align: 'center',
-          minWidth: 90,
+          minWidth: 100,
           key: 'goodsArea',
           render: (h, params, vm) => {
             const { row } = params;
@@ -696,13 +696,13 @@ export default {
         {
           title: '商品品牌',
           align: 'center',
-          minWidth: 90,
+          minWidth: 100,
           key: 'goodsBrand'
         },
         {
           title: '商品产地',
           align: 'center',
-          minWidth: 90,
+          minWidth: 100,
           key: 'placeOfOrigin'
         },
         {
@@ -715,17 +715,18 @@ export default {
         {
           title: '基础单位',
           align: 'center',
-          minWidth: 90,
+          minWidth: 100,
           key: 'unitName'
         },
         {
           title: '安全库存',
           align: 'center',
-          minWidth: 90,
+          minWidth: 100,
           key: 'stockLimit'
         },
         {
           title: '操作',
+          align: 'center',
           minWidth: 150,
           key: 'handle',
           options: ['view', 'edit', 'settings']
@@ -805,7 +806,8 @@ export default {
     },
     handleBack() {
       this.currentName = '全部分类';
-      this.handleClear();
+      this.searchRowData = _.cloneDeep(roleRowData);
+      this.initMenuList();
     },
     handleCreate() {
       if (this.tempModalType !== this.modalType.create) {

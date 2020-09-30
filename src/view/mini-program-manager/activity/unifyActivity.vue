@@ -580,16 +580,16 @@ const templateColumns = [
     align: "center",
   },
   {
-    title: "优惠券名称",
+    title: "券名称",
     key: "couponName",
     align: "center",
-    minWidth: 80,
+    minWidth: 90,
   },
   {
-    title: "优惠券类型",
+    title: "券类型",
     align: "center",
     key: "couponType",
-    minWidth: 80,
+    minWidth: 90,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.couponType === "FULL_CUT_COUPON") {
@@ -624,7 +624,7 @@ const templateColumns = [
     title: "优惠/折扣额度",
     align: "center",
     key: "couponFee",
-    minWidth: 50,
+    minWidth: 130,
     render(h, params) {
       const { row } = params;
       if (row.couponType === "DISCOUNT_COUPON") {
@@ -638,7 +638,7 @@ const templateColumns = [
     title: "最小购买金额",
     key: "minBuyFee",
     align: "center",
-    minWidth: 80,
+    minWidth:120,
     render(h, params) {
       return <div>{fenToYuanDot2(params.row.minBuyFee)}</div>;
     },
@@ -647,7 +647,7 @@ const templateColumns = [
     title: "最高优惠金额",
     align: "center",
     key: "maxDiscountFee",
-    minWidth: 80,
+    minWidth: 120,
     render(h, params) {
       if (params.row.maxDiscountFee) {
         return <div>{fenToYuanDot2(params.row.maxDiscountFee)}</div>;
@@ -657,7 +657,7 @@ const templateColumns = [
     },
   },
   {
-    title: "优惠券状态",
+    title: "券状态",
     key: "couponStatus",
     align: "center",
     minWidth: 80,
@@ -683,12 +683,12 @@ const templateColumns = [
       return <div>{row.couponStatus}</div>;
     },
   },
-  {
-    title: "创建时间",
-    align: "center",
-    minWidth: 120,
-    key: "createTime",
-  },
+  // {
+  //   title: "创建时间",
+  //   align: "center",
+  //   minWidth: 120,
+  //   key: "createTime",
+  // },
 ];
 
 export default {
@@ -735,41 +735,28 @@ export default {
       templateColumns: templateColumns,
       columns: [
         {
-          type: "selection",
-          width: 60,
-          align: "center",
-        },
-        {
           title: "活动ID",
           align: "center",
           key: "id",
-          width: 80,
+          minWidth: 90,
         },
         {
           title: "活动名称",
           align: "center",
           key: "activityName",
+          minWidth: 260,
         },
-        // {
-        //   title: "活动图片",
-        //   align: "center",
-        //   key: "banner",
-        //   render: (h, params, vm) => {
-        //     const { row } = params;
-        //     const str = <img src={row.banner} height="60" width="60" />;
-        //     return <div>{str}</div>;
-        //   },
-        // },
         {
           title: "开始时间",
           align: "center",
           key: "startTime",
+          minWidth: 120,
         },
         {
           title: "结束时间",
           align: "center",
           key: "endTime",
-          width: 165,
+          minWidth: 180,
           render: (h, params, vm) => {
             const { row } = params;
             if (!compareCouponData(row.endTime)) {
@@ -782,7 +769,7 @@ export default {
         {
           title: "默认次数",
           align: "center",
-          width: 120,
+          minWidth: 100,
           key: "defaultCount",
           render: (h, params, vm) => {
             const { row } = params;
@@ -793,7 +780,7 @@ export default {
         {
           title: "分享次数",
           align: "center",
-          width: 120,
+          minWidth: 100,
           key: "shareCount",
           render: (h, params, vm) => {
             const { row } = params;
@@ -805,6 +792,7 @@ export default {
           title: "活动状态",
           align: "center",
           key: "status",
+          minWidth: 100,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.status === "VALID") {
@@ -834,7 +822,7 @@ export default {
         {
           title: "操作",
           align: "center",
-          minWidth: 80,
+          minWidth: 200,
           key: "handle",
           options: ["onSale", "view", "edit", "settings"],
         },
@@ -845,7 +833,7 @@ export default {
           title: "券名称",
           align: "center",
           key: "couponName",
-          minWidth: 70,
+          minWidth: 100,
         },
         {
           title: "券类型",
@@ -888,13 +876,13 @@ export default {
             }
             return <div>{row.couponType}</div>;
           },
-          minWidth: 40,
+          minWidth: 90,
         },
         {
           title: "优惠/折扣额度",
           align: "center",
           key: "couponFee",
-          minWidth: 50,
+          minWidth: 120,
           render(h, params) {
             const { row } = params;
             if (row.couponType === "DISCOUNT_COUPON") {
@@ -908,7 +896,7 @@ export default {
           title: "最小购买金额",
           align: "center",
           key: "minBuyFee",
-          minWidth: 40,
+          minWidth: 130,
           render(h, params) {
             return h("div", fenToYuanDot2(params.row.minBuyFee));
           },
@@ -917,7 +905,7 @@ export default {
           title: "最高优惠金额",
           align: "center",
           key: "maxDiscountFee",
-          minWidth: 40,
+          minWidth: 130,
           render(h, params) {
             const { row } = params;
             if (row.maxDiscountFee != null) {
@@ -931,7 +919,7 @@ export default {
           title: "生效时间",
           key: "effectiveStartTime",
           align: "center",
-          minWidth: 40,
+          minWidth: 100,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
@@ -952,7 +940,7 @@ export default {
           title: "失效时间",
           key: "effectiveEndTime",
           align: "center",
-          minWidth: 90,
+          minWidth: 100,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
@@ -984,6 +972,7 @@ export default {
         {
           title: "排序",
           align: "center",
+          minWidth: 70,
           key: "rank",
           render(h, params) {
             const { row } = params;
@@ -994,7 +983,7 @@ export default {
           title: "状态",
           align: "center",
           key: "status",
-          minWidth: 30,
+          minWidth: 70,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.status === "ON") {
@@ -1016,7 +1005,7 @@ export default {
         {
           title: "操作",
           align: "center",
-          minWidth: 90,
+          minWidth: 70,
           key: "handle",
           options: ["delete"],
         },

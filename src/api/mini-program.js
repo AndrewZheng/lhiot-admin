@@ -1,6 +1,7 @@
 import Vue from 'vue';
 const $http = Vue.prototype.$http;
 const $imgService = Vue.prototype.$imgService;
+const $exporService = Vue.prototype.$exporService;
 
 //获取首页头部订单数据
 export const getWaitOrder = () => {
@@ -41,7 +42,7 @@ export const productRanking = (data) => {
 //规格商品排行 
 export const productStanardRanking = (data) => {
   return $http.request({
-    url: `/minapp/index/statistics/product-stanard/sale-ranking?rankingType=${data.rankingType}&beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    url: `/minapp/index/statistics/product-stanard/sale-ranking?rankingType=${data.rankingType}&beginDate=${data.beginDate}&endDate=${data.endDate}&productName=${data.productName}&productType=${data.productType?data.productType:''}`,
     method: 'get',
     headers: {
       'page': data.page,
@@ -58,6 +59,14 @@ export const deletePicture = ({
     url: '/v2/upload',
     data: urls,
     method: 'delete'
+  });
+};
+
+// 统一导出
+export const getUnifyExportList = (projectName) => {
+  return $exporService.request({
+    url: projectName,
+    method: 'get'
   });
 };
 /* -------------------------
@@ -192,6 +201,14 @@ export const getStorePages = (data) => {
       'page': data.page,
       'rows': data.rows
     }
+  });
+};
+
+// 根据位置查询门店所有列表分区域
+export const getAreaStorePages = () => {
+  return $http.request({
+    url: '/minapp/stores/area',
+    method: 'get',
   });
 };
 
@@ -1071,7 +1088,7 @@ export const shareProdStatistics = (data) => {
 //分享赚用户数据统计 /minapp/share/user/share-total
 export const shareUserStatistics = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/share/user/share-total?nickName=${data.nickName}&phone=${data.phone}&beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    url: `/minapp/share/user/share-total?nickName=${data.nickName}&deptName=${data.deptName}&phone=${data.phone}`,
     method: 'get',
     headers: {
       'page': data.page,
@@ -1081,13 +1098,83 @@ export const shareUserStatistics = (data) => {
     }
   });
 };
-//分佣金数据统计 /minapp/share/user/share-total
-export const commissionStatistics = () => {
+//分享赚佣金明细数据统计/minapp/award-amount/detail-total
+export const shareawardAmountDetailTotal = (data) => {
   return Vue.prototype.$http.request({
-    url: '/minapp/commission-data/total',
+    url: `/minapp/award-amount/detail-total`,
+    method: 'post',
+    data,
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+//分佣金数据统计 /minapp/share/user/share-total
+export const commissionStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/commission-data/total?beginDate=${data.beginDate}&endDate=${data.endDate}`,
     method: 'get',
   });
 };
+
+//分佣结算据统计 /minapp/settle-data/total
+export const commissionSettleData = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/settle-data/total?beginDate=${data.beginDate ? data.beginDate : ""}&endDate=${data.endDate ? data.endDate : ""}`,
+    method: 'get',
+  });
+};
+
+//分佣订单据统计 /minapp/order-data/total
+export const commissionOrderData = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/order-data/total?beginDate=${data.beginDate ? data.beginDate : ""}&endDate=${data.endDate ? data.endDate : ""}`,
+    method: 'get',
+  });
+};
+
+//分佣金明细统计 /minapp/award-amount/detail-total
+export const awardAmountDetail = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/award-amount/detail-total',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// 佣金数据统计趋势 
+export const commissionDataTotalTrend = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/commission-data/total-trend?queryMonth=${data ? data : ""}`,
+    method: 'get',
+  });
+};
+
+// 订单数据统计趋势 /minapp/order-data/total-trend
+export const orderDataTotalTrend = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/order-data/total-trend?queryMonth=${data ? data : ""}`,
+    method: 'get',
+  });
+};
+
+// 结算数据统计趋势 /minapp/settle-data/total-trend
+export const settleDataTotalTrend = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/settle-data/total-trend?queryMonth=${data ? data : ""}`,
+    method: 'get',
+  });
+};
+
 // =========================助力抢爆品
 // 根据条件分页查询助力抢爆品列表
 export const getAssistPages = (data) => {
@@ -2966,11 +3053,119 @@ export const getCollectWordStatistics = () => {
   });
 };
 
-//添加新品上市活动 /minapp/user/user-class/{userId}
 export const setUserClass = (data) => {
   return $http.request({
     url: `/minapp/user/user-class/${data.id}?userClass=${data.userClass}`,
     data,
     method: 'post',
+  });
+};
+
+// 员工特权 
+export const setStaff = (data) => {
+  return $http.request({
+    url: `/minapp/user/user-type/${data.id}?userType=${data.userType}`,
+    data,
+    method: 'post',
+  });
+};
+
+//员工管理列表 /minapp/user/users-info
+export const getStaffManage = (data) => {
+  return $http.request({
+    url: '/minapp/staff/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+    }
+  });
+};
+
+//员工审核 
+export const StaffAudit = (data) => {
+  return $http.request({
+    url: `/minapp/staff/audit/${data.id}?auditStatus=${data.checkStatus}`,
+    data,
+    method: 'post',
+  });
+};
+
+// 修改 
+export const staffUpdate = (data) => {
+  return $http.request({
+    url: '/minapp/staff/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+//服务满意度调研 
+export const serviceFeedback = (data) => {
+  return $http.request({
+    url: `/minapp/store-service-feedback/pages`,
+    data,
+    method: 'post',
+  });
+};
+
+// 用户来源统计 minapp/user-source-record/total
+export const userSourceRecordTotal = (data) => {
+  return $http.request({
+    url: `/minapp/user-source-record/total?beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    method: 'get'
+  });
+};
+
+//门店物料统计 /minapp/store-materiel/pages
+export const getStoreMateriel = (data) => {
+  return $http.request({
+    url: `/minapp/store-materiel/user_total`,
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+//添加门店物料 /minapp/store-materiel/create
+export const storeMaterielCreate = (data) => {
+  return $http.request({
+    url: '/minapp/store-materiel/create',
+    data,
+    method: 'post',
+  });
+};
+
+//修改门店物料 /minapp/store-materiel/update/{id}
+export const storeMaterielUpdate = (data) => {
+  return $http.request({
+    url: '/minapp/store-materiel/update/' + data.id,
+    data,
+    method: 'put',
+  });
+};
+
+// 根据门店物料Ids删除
+export const deleteMateriel = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/store-materiel/' + ids,
+    method: 'delete'
+  });
+};
+// 根据门店物料Ids查看
+export const getStoreMaterielDel = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/store-materiel/' + ids,
+    method: 'get'
   });
 };

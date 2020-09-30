@@ -67,7 +67,13 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addFlashsale">
+          <Button
+            v-waves
+            :loading="createLoading"
+            type="success"
+            class="mr5"
+            @click="addFlashsale"
+          >
             <Icon type="md-add" />添加
           </Button>
           <!-- <Poptip
@@ -83,7 +89,7 @@
           </Poptip>-->
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -141,7 +147,10 @@
               <i-col span="18" v-if="activitySeckillDetail.status === 'ON'">
                 <tag color="success">{{ "开启" | imageStatusFilter }}</tag>
               </i-col>
-              <i-col span="18" v-else-if="activitySeckillDetail.status === 'OFF'">
+              <i-col
+                span="18"
+                v-else-if="activitySeckillDetail.status === 'OFF'"
+              >
                 <tag color="error">{{ "关闭" | imageStatusFilter }}</tag>
               </i-col>
             </Row>
@@ -151,7 +160,9 @@
           <i-col span="24">
             <Row>
               <i-col span="6">活动每人限购份数:</i-col>
-              <i-col span="18">{{ activitySeckillDetail.userActivityLimit }}</i-col>
+              <i-col span="18">{{
+                activitySeckillDetail.userActivityLimit
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -177,17 +188,32 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :width="1200" :z-index="1000" :mask-closable="false">
+    <Modal
+      v-model="modalEdit"
+      :width="1200"
+      :z-index="1000"
+      :mask-closable="false"
+    >
       <p slot="header">
-        <i-col>{{ tempModalType==modalType.edit?'修改新品尝鲜活动':(tempModalType==modalType.create?'创建新品尝鲜活动': '添加新品尝鲜活动和商品关联') }}</i-col>
+        <i-col>{{
+          tempModalType == modalType.edit
+            ? "修改新品尝鲜活动"
+            : tempModalType == modalType.create
+            ? "创建新品尝鲜活动"
+            : "添加新品尝鲜活动和商品关联"
+        }}</i-col>
       </p>
       <div class="modal-content">
-        <Row v-if="tempModalType == modalType.edit || tempModalType == modalType.create">
+        <Row
+          v-if="
+            tempModalType == modalType.edit || tempModalType == modalType.create
+          "
+        >
           <Form
             ref="editForm"
             :model="activitySeckillDetail"
             :rules="ruleInline"
-            :label-width="100"
+            :label-width="120"
           >
             <Row>
               <i-col span="18">
@@ -211,7 +237,7 @@
                     class="search-input"
                     style="width: 170px"
                     :readonly="editStatus"
-                    @on-change="activitySeckillDetail.beginTime=$event"
+                    @on-change="activitySeckillDetail.beginTime = $event"
                   />
                 </FormItem>
               </i-col>
@@ -227,7 +253,7 @@
                     class="search-input"
                     style="width: 170px"
                     :readonly="editStatus"
-                    @on-change="activitySeckillDetail.endTime=$event"
+                    @on-change="activitySeckillDetail.endTime = $event"
                   />
                 </FormItem>
               </i-col>
@@ -235,14 +261,19 @@
             <Row>
               <i-col span="18">
                 <FormItem label="活动状态:" prop="status">
-                  <Select v-model="activitySeckillDetail.status" clearable style="width: 170px">
+                  <Select
+                    v-model="activitySeckillDetail.status"
+                    clearable
+                    style="width: 170px"
+                  >
                     <Option
-                      v-for="(item,index) in imageStatusEnum"
+                      v-for="(item, index) in imageStatusEnum"
                       :value="item.value"
                       :key="index"
                       class="ptb2-5"
-                      style="padding-left: 5px;width: 170px"
-                    >{{ item.label }}</Option>
+                      style="padding-left: 5px; width: 170px"
+                      >{{ item.label }}</Option
+                    >
                   </Select>
                 </FormItem>
               </i-col>
@@ -250,7 +281,10 @@
             <Row>
               <Col span="18">
                 <FormItem label="每人限购份数:" prop="userActivityLimit">
-                  <Input v-model="activitySeckillDetail.userActivityLimit" style="width: 170px"></Input>
+                  <Input
+                    v-model="activitySeckillDetail.userActivityLimit"
+                    style="width: 170px"
+                  ></Input>
                 </FormItem>
               </Col>
             </Row>
@@ -267,7 +301,7 @@
                   <Input
                     v-model="activitySeckillDetail.remark"
                     type="textarea"
-                    :autosize="{minRows: 3,maxRows: 8}"
+                    :autosize="{ minRows: 3, maxRows: 8 }"
                     placeholder="请输入活动描述"
                   ></Input>
                 </FormItem>
@@ -310,17 +344,26 @@
                       style="width: auto"
                       clearable
                     ></Input>
-                    <Button class="search-btn mr5" type="primary" @click="handleProductSearch">
+                    <Button
+                      class="search-btn mr5"
+                      type="primary"
+                      @click="handleProductSearch"
+                    >
                       <Icon type="md-search" />&nbsp;搜索
                     </Button>
-                    <Button v-waves class="search-btn" type="info" @click="handleProductClear">
+                    <Button
+                      v-waves
+                      class="search-btn"
+                      type="info"
+                      @click="handleProductClear"
+                    >
                       <Icon type="md-refresh" />&nbsp;清除
                     </Button>
                   </Row>
                 </div>
               </tables>
 
-              <div style="margin: 10px 10px 20px 10px;overflow: hidden">
+              <div style="margin: 10px 10px 20px 10px; overflow: hidden">
                 <Row type="flex" justify="end">
                   <Page
                     :total="productTotal"
@@ -339,55 +382,17 @@
                 ref="modalCreate"
                 :model="addRelationDetail"
                 :rules="relationRuleInline"
-                :label-width="80"
+                :label-width="90"
               >
-                <!-- <Row>
-                  <i-col span="6">
-                    <FormItem label="商品名称:" prop="productName" :label-width="100">
-                      <Input
-                        v-model="addRelationDetail.productName"
-                        clearable
-                        style="padding-right: 5px;width: 140px"
-                      ></Input>
-                    </FormItem>
-                  </i-col>
-                  <i-col span="6">
-                    <FormItem label="商品规格:" prop="specification" :label-width="100">
-                      <Input
-                        v-model="addRelationDetail.specification"
-                        clearable
-                        style="padding-right: 5px;width: 140px"
-                      ></Input>
-                    </FormItem>
-                  </i-col>
-                  <i-col span="6">
-                    <FormItem label="商品单位:" prop="productUnit" :label-width="100">
-                      <Input
-                        v-model="addRelationDetail.productUnit"
-                        clearable
-                        style="padding-right: 5px;width: 140px"
-                      ></Input>
-                    </FormItem>
-                  </i-col>
-                  <i-col span="6">
-                    <FormItem label="商品价格:" prop="discountPrice" :label-width="100">
-                      <Input
-                        v-model="addRelationDetail.discountPrice"
-                        clearable
-                        style="padding-right: 5px;width: 140px"
-                      ></Input>
-                    </FormItem>
-                  </i-col>
-                </Row>-->
                 <Row>
                   <i-col span="5">
-                    <FormItem label="商品库存总数:" prop="activityLimit">
+                    <FormItem label="库存总数:" prop="activityLimit">
                       <Input
                         :min="0"
                         v-model="addRelationDetail.activityLimit"
                         class="ml20"
                         label="商品库存总数"
-                        style="padding-right: 5px;width: 100px"
+                        style="padding-right: 5px; width: 100px"
                       ></Input>
                     </FormItem>
                   </i-col>
@@ -398,7 +403,7 @@
                         v-model="addRelationDetail.userLimit"
                         class="ml20"
                         label="每人限购"
-                        style="padding-right: 5px;width: 100px"
+                        style="padding-right: 5px; width: 100px"
                       ></Input>
                     </FormItem>
                   </i-col>
@@ -409,7 +414,7 @@
                         v-model="addRelationDetail.rank"
                         class="ml20"
                         label="排序"
-                        style="padding-right: 5px;width: 100px"
+                        style="padding-right: 5px; width: 100px"
                       ></Input>
                     </FormItem>
                   </i-col>
@@ -433,15 +438,15 @@
                       span="4"
                       class="search-btn"
                       type="primary"
-                      style="margin-left: 50px;"
+                      style="margin-left: 50px"
                       @click="addTempData('modalCreate')"
-                      v-show="this.proFlag===true"
+                      v-show="this.proFlag === true"
                     >
                       <Icon type="md-add" />&nbsp;关联尝鲜商品
                     </Button>
                   </i-col>
-                </Row>
-              </Form>*Tips：请先选择要关联的商品，然后输入关联配置信息，添加完成后可在下方表格修改.
+                </Row> </Form
+              >*Tips：请先选择要关联的商品，然后输入关联配置信息，添加完成后可在下方表格修改.
             </Card>
           </Row>
 
@@ -464,8 +469,11 @@
           :loading="modalViewLoading"
           type="primary"
           @click="handleSubmit('editForm')"
-          v-if="tempModalType == modalType.edit || tempModalType == modalType.create"
-        >确定</Button>
+          v-if="
+            tempModalType == modalType.edit || tempModalType == modalType.create
+          "
+          >确定</Button
+        >
       </div>
     </Modal>
   </div>
@@ -609,20 +617,20 @@ const productRowData = {
 
 const relationTempColumns = [
   {
-    title: "商品规格ID",
+    title: "规格ID",
     key: "standardId",
     align: "center",
     minWidth: 100,
   },
   {
     title: "商品名称",
-    key: "baseProductName",
-    minWidth: 100,
+    key: "productName",
+    minWidth: 200,
     align: "center",
     render: (h, params, vm) => {
       const { row } = params;
       if (row.productStandard != null) {
-        return <div>{row.productStandard.baseProductName}</div>;
+        return <div>{row.productStandard.productName}</div>;
       }
     },
   },
@@ -651,7 +659,7 @@ const relationTempColumns = [
     },
   },
   {
-    title: "商品尝鲜价",
+    title: "尝鲜价",
     key: "discountPrice",
     minWidth: 100,
     align: "center",
@@ -684,46 +692,70 @@ const relationTempColumns = [
     minWidth: 100,
     render: (h, params) => {
       if (params.row.isEdit) {
-        return h("div", [
-          h("InputNumber", {
-            domProps: {
-              value: params.row.rank,
+        return h(
+          "Div",
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
             },
-            on: {
-              input: function (event) {
-                // if (event > 0) {
-                  params.row.rank = event;
-                // }
+          },
+          [
+            h("Input", {
+              style: {
+                marginLeft: "4px",
+                width: "100%",
               },
-            },
-          }),
-        ]);
+              props: {
+                type: "number",
+                value: params.row.rank, // 使用key的键值
+              },
+              on: {
+                input: (event) => {
+                  params.row.rank = event;
+                },
+              },
+            }),
+          ]
+        );
       } else {
         return h("div", params.row.rank);
       }
     },
   },
   {
-    title: "商品库存总数",
+    title: "库存总数",
     key: "activityLimit",
     align: "center",
     minWidth: 100,
     render: (h, params) => {
       if (params.row.isEdit) {
-        return h("div", [
-          h("InputNumber", {
-            domProps: {
-              value: params.row.activityLimit,
+        return h(
+          "Div",
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
             },
-            on: {
-              input: function (event) {
-                if (event > 0) {
-                  params.row.activityLimit = event;
-                }
+          },
+          [
+            h("Input", {
+              style: {
+                marginLeft: "4px",
+                width: "100%",
               },
-            },
-          }),
-        ]);
+              props: {
+                type: "number",
+                value: params.row.activityLimit, // 使用key的键值
+              },
+              on: {
+                input: (event) => {
+                  params.row.activityLimit = event;
+                },
+              },
+            }),
+          ]
+        );
       } else {
         return h("div", params.row.activityLimit);
       }
@@ -736,20 +768,32 @@ const relationTempColumns = [
     minWidth: 100,
     render: (h, params) => {
       if (params.row.isEdit) {
-        return h("div", [
-          h("InputNumber", {
-            domProps: {
-              value: params.row.userLimit,
+        return h(
+          "Div",
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
             },
-            on: {
-              input: function (event) {
-                if (event > 0) {
-                  params.row.userLimit = event;
-                }
+          },
+          [
+            h("Input", {
+              style: {
+                marginLeft: "4px",
+                width: "100%",
               },
-            },
-          }),
-        ]);
+              props: {
+                type: "number",
+                value: params.row.userLimit, // 使用key的键值
+              },
+              on: {
+                input: (event) => {
+                  params.row.userLimit = event;
+                },
+              },
+            }),
+          ]
+        );
       } else {
         return h("div", params.row.userLimit);
       }
@@ -791,7 +835,7 @@ const productColumns = [
     align: "center",
   },
   {
-    title: "规格id",
+    title: "规格ID",
     key: "id",
     minWidth: 60,
     align: "center",
@@ -811,7 +855,7 @@ const productColumns = [
   {
     title: "商品名称",
     key: "productName",
-    minWidth: 100,
+    minWidth: 160,
     align: "center",
   },
   {
@@ -896,12 +940,6 @@ const productColumns = [
       }
     },
   },
-  {
-    title: "排序",
-    key: "rank",
-    minWidth: 60,
-    align: "center",
-  },
 ];
 
 export default {
@@ -922,7 +960,7 @@ export default {
       },
       relationRuleInline: {
         activityLimit: [
-          { required: true, message: "请输入商品库存总数" },
+          { required: true, message: "请输入库存总数" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
@@ -966,30 +1004,28 @@ export default {
       onSaleStatusEnum,
       columns: [
         {
-          type: "selection",
-          width: 60,
-          align: "center",
-        },
-        {
           title: "活动ID",
           align: "center",
           key: "id",
+          minWidth: 90,
         },
         {
           title: "活动标题",
           align: "center",
           key: "title",
+          minWidth: 130,
         },
         {
           title: "开始时间",
           align: "center",
           key: "beginTime",
+          width: 120,
         },
         {
           title: "结束时间",
           align: "center",
           key: "endTime",
-          width: 200,
+          minWidth: 200,
           render: (h, params, vm) => {
             const { row } = params;
             if (!compareCouponData(row.endTime)) {
@@ -1003,11 +1039,13 @@ export default {
           title: "修改时间",
           align: "center",
           key: "updateTime",
+          width: 120,
         },
         {
-          title: "活动状态",
+          title: "状态",
           align: "center",
           key: "status",
+          minWidth: 80,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.status === "ON") {
@@ -1035,9 +1073,10 @@ export default {
           },
         },
         {
-          title: "活动每人限购份数",
+          title: "每人限购份数",
           align: "center",
           key: "userActivityLimit",
+          minWidth: 130,
         },
         // {
         //   title: "活动个人剩余份数",
@@ -1047,7 +1086,7 @@ export default {
         {
           title: "操作",
           align: "center",
-          minWidth: 80,
+          minWidth: 200,
           key: "handle",
           //"delete",
           options: ["onSale", "view", "edit", "settings"],
@@ -1068,7 +1107,7 @@ export default {
       tempTableLoading: false,
       createLoading: false,
       modalViewLoading: false,
-       editStatus: false,
+      editStatus: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
       searchProductRowData: _.cloneDeep(productRowData),
@@ -1210,7 +1249,7 @@ export default {
     },
     handleEdit(params) {
       // this.resetFields();
-       this.editStatus = !compareCouponData(params.row.beginTime);
+      this.editStatus = !compareCouponData(params.row.beginTime);
       this.tempModalType = this.modalType.edit;
       this.activitySeckillDetail = _.cloneDeep(params.row);
       this.modalEdit = true;
@@ -1304,7 +1343,6 @@ export default {
             this.$Message.error("每人限购数量不能大于商品库存总数");
             return;
           }
-
           this.createRelation();
         } else {
           this.$Message.error("请完善信息!");
@@ -1336,6 +1374,7 @@ export default {
       editSeckillProductRelation(row)
         .then((res) => {
           this.getRelationTableData();
+          this.$Message.success("操作成功");
         })
         .finally((res) => {
           this.tempTableLoading = false;
@@ -1399,8 +1438,6 @@ export default {
     },
     // 选中商品
     handleTemplateChange(currentRow, oldCurrentRow) {
-      // console.log("活动商品列表", this.relationProducts);
-      // console.log("选中商品列表", currentRow.productStandardExpand.standardId);
       let activityProducts = this.relationProducts;
       let standardIds = [];
       for (var item = 0; item < activityProducts.length; item++) {
@@ -1439,7 +1476,9 @@ export default {
       createSeckillProductRelation(this.addRelationDetail)
         .then((res) => {
           this.modalViewLoading = false;
-          this.modalEdit = false;
+          this.addRelationDetail.activityLimit = "";
+          this.addRelationDetail.userLimit = "";
+          this.addRelationDetail.rank = "";
           this.$Message.success("创建成功!");
           this.getRelationTableData();
         })
@@ -1457,7 +1496,6 @@ export default {
         params.row.status = "ON";
       }
       this.loading = true;
-      // console.log("上下架", params.row);
       editSeckillProductRelation(params.row)
         .then((res) => {
           this.getRelationTableData();

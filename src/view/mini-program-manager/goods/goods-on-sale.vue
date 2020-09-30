@@ -724,8 +724,6 @@ export default {
         rows: "5"
       })
         .then(res => {
-          console.log(res.array.length);
-          console.log(this.optionsShelfSpecification);
           if (res.array.length > 0) {
             this.optionsShelfSpecification.length = 0;
             this.optionsShelfSpecification = this.optionsShelfSpecification.concat(
@@ -831,8 +829,6 @@ export default {
       this.modalEdit = true;
     },
     onSale(params) {
-      console.log(params.row.shelfStatus);
-      // this.tableData[params.index].onSale = !this.tableData[params.index].onSale;
       this.productDetail = this._.cloneDeep(params.row);
       if (params.row.shelfStatus === "ON") {
         this.productDetail.shelfStatus = "OFF";
@@ -865,7 +861,6 @@ export default {
       this.optionsShelfSpecification = [];
       this.productDetail = {};
       this.productDetail = this._.cloneDeep(productDetail);
-      console.log("this.productDetail" + JSON.stringify(this.productDetail));
     },
     setDefaultUploadList(res) {
       if (res.image != null) {

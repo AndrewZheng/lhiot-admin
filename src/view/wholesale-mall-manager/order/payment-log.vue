@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="18"
+        :search-area-column="24"
         :operate-area-column="6"
         editable
         searchable
@@ -18,29 +18,29 @@
             <Input
               v-model="searchRowData.orderCode"
               placeholder="订单编码"
-              class="search-input mr5"
-              style="width: auto"
+              class="search-input"
+              style="width: 170px"
               clearable
             ></Input>
             <Input
               v-model="searchRowData.userName"
               placeholder="用户名"
-              class="search-input mr5"
-              style="width: 90px"
+              class="search-input"
+              style="width: 120px"
               clearable
             ></Input>
             <Input
               v-model="searchRowData.phone"
               placeholder="用户手机号"
-              class="search-input mr5"
-              style="width: 105px"
+              class="search-input"
+              style="width: 110px"
               clearable
             ></Input>
             <Select
               v-model="searchRowData.paymentType"
-              class="search-col mr5"
+              class="search-col"
               placeholder="支付方式"
-              style="width: 150px"
+              style="width: 160px"
               clearable
             >
               <Option
@@ -52,9 +52,9 @@
             </Select>
             <Select
               v-model="searchRowData.paymentFrom"
-              class="search-col mr5"
+              class="search-col"
               placeholder="支付来源"
-              style="width: 150px"
+              style="width: 100px"
               clearable
             >
               <Option
@@ -69,8 +69,7 @@
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
               placeholder="支付时间起"
-              class="mr5"
-              style="width: 150px"
+              style="width: 160px"
               @on-change="startTimeChange"
             />
             <i>-</i>
@@ -79,13 +78,12 @@
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
               placeholder="支付时间止"
-              class="mr5"
-              style="width: 150px"
+              style="width: 160px"
               @on-change="endTimeChange"
             />
             <Button
               :loading="searchLoading"
-              class="search-btn mr5"
+              class="search-btn"
               type="primary"
               @click="handleSearch"
             >
@@ -163,7 +161,7 @@ const paymentLog = {
 
 const rowData = {
   orderCode: "",
-  paymentFrom: "recharge",
+  paymentFrom: "order",
   paymentType: "",
   paymentStep: "paid",
   paymentTimeBegin: null,
@@ -194,28 +192,25 @@ export default {
           title: "编号",
           key: "id",
           align: "center",
-          fixed: "left",
-          minWidth: 40
+          minWidth: 70
         },
         {
           title: "订单编码",
           key: "orderCode",
           align: "center",
-          fixed: "left",
-          minWidth: 150
+          minWidth: 190
         },
         {
           title: "微信交易流水号",
           key: "transactionId",
           align: "center",
-          fixed: "left",
-          minWidth: 200
+          minWidth: 160
         },
         {
           title: "门店名称",
           align: "center",
           key: "shopName",
-          minWidth: 80
+          minWidth: 130
         },
         {
           title: "用户名",
@@ -227,19 +222,19 @@ export default {
           title: "手机号",
           align: "center",
           key: "phone",
-          minWidth: 120
+          minWidth: 130
         },
         {
           title: "所属业务员",
           align: "center",
           key: "saleUserName",
-          minWidth: 80
+          minWidth: 140
         },
         {
           title: "支付来源",
           align: "center",
           key: "paymentFrom",
-          minWidth: 80,
+          minWidth: 100,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.paymentFrom === "order") {
@@ -259,7 +254,7 @@ export default {
           title: "支付类型",
           align: "center",
           key: "paymentType",
-          minWidth: 80,
+          minWidth: 100,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.paymentType === "wechat") {
@@ -312,7 +307,7 @@ export default {
           title: "支付金额",
           align: "center",
           key: "totalFee",
-          minWidth: 150,
+          minWidth: 100,
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.totalFee);
             return <div>{amount}</div>;
@@ -321,7 +316,7 @@ export default {
         {
           title: "支付时间",
           align: "center",
-          minWidth: 130,
+          minWidth: 100,
           key: "paymentTime"
         }
       ]

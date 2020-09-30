@@ -11,6 +11,7 @@ import config from '@/config';
 import importDirective from '@/directive';
 import axiosPlugin from '@/libs/api.request';
 import { enums, PcEncrypt, PcLockr, PcCookie } from '@/util/';
+import VCharts from 'v-charts'
 
 import 'view-design/dist/styles/iview.css';
 import './index.less';
@@ -22,6 +23,7 @@ import lodashLib from 'lodash';
 
 Vue.mixin(Mixin);
 Vue.use(axiosPlugin);
+Vue.use(VCharts);
 
 Vue.use(iView, {
   i18n: (key, value) => i18n.t(key, value)

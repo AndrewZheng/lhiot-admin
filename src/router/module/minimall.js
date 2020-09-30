@@ -491,6 +491,15 @@ const miniMallRouter = [
         component: () => import('@/view/mini-program-manager/content/evaluate.vue')
       },
       {
+        path: '/small-serveFeedback',
+        name: 'small-serveFeedback',
+        meta: {
+          icon: 'ios-chatboxes',
+          title: '满意度调研'
+        },
+        component: () => import('@/view/mini-program-manager/content/serveFeedback.vue')
+      },
+      {
         path: '/small-advertisement-position',
         name: 'small-advertisement-position',
         meta: {
@@ -507,6 +516,15 @@ const miniMallRouter = [
           title: '广告管理'
         },
         component: () => import('@/view/mini-program-manager/content/advertisement.vue')
+      },
+      {
+        path: '/small-unifyExport',
+        name: 'small-unifyExport',
+        meta: {
+          icon: 'md-archive',
+          title: '统一后台导出'
+        },
+        component: () => import('@/view/mini-program-manager/content/unifyExport.vue')
       },
       {
         path: '/small-share-setting',
@@ -556,13 +574,31 @@ const miniMallRouter = [
         component: () => import('@/view/mini-program-manager/member/member-management.vue')
       },
       {
+        path: '/small-member-handCheck',
+        name: 'small-member-handCheck',
+        meta: {
+          icon: 'md-checkmark-circle',
+          title: '员工管理'
+        },
+        component: () => import('@/view/mini-program-manager/member/handCheck.vue')
+      },
+      {
         path: '/small-phones',
         name: 'small-phones',
         meta: {
           icon: 'md-phone-portrait',
-          title: '换绑会员手机号'
+          title: '换绑会员手机'
         },
         component: () => import('@/view/mini-program-manager/member/phones.vue')
+      },
+      {
+        path: '/small-user-source-statistics',
+        name: 'small-user-source-statistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '用户来源统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/user-source-statistics.vue')
       },
       {
         path: '/small-system-data-statistics',

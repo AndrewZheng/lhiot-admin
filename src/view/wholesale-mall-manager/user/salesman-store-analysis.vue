@@ -128,7 +128,7 @@
               v-model="searchUserRowData.salesUserStatus"
               class="search-col mr5"
               placeholder="业务员状态"
-              style="width:100px"
+              style="width:120px"
               clearable
             >
               <Option
@@ -367,12 +367,6 @@ export default {
       userDetail: _.cloneDeep(userDetail),
       columns: [
         {
-          type: 'selection',
-          key: '',
-          width: 60,
-          align: 'center'
-        },
-        {
           title: '店铺名称',
           align: 'center',
           key: 'shopName',
@@ -388,7 +382,7 @@ export default {
           title: '店长手机',
           align: 'center',
           key: 'phone',
-          minWidth: 80
+          minWidth: 90
         },
         {
           title: '区域',
@@ -406,7 +400,7 @@ export default {
           title: '累计业绩/频次',
           align: 'center',
           key: 'performanceTotalStr',
-          minWidth: 80
+          minWidth: 100
           // render(h, params, vm) {
           //   const amount = fenToYuanDot2(
           //     params.row.performanceTotalStr
@@ -429,7 +423,7 @@ export default {
         {
           title: '用户状态',
           align: 'center',
-          minWidth: 30,
+          minWidth: 60,
           key: 'userStatus',
           render: (h, params, vm) => {
             const { row } = params;
@@ -470,7 +464,7 @@ export default {
         {
           title: '操作',
           align: 'center',
-          minWidth: 100,
+          minWidth: 60,
           key: 'handle',
           options: ['exchange']
         }

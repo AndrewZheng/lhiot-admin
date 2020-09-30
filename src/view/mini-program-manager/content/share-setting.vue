@@ -63,7 +63,7 @@
           </Row>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -102,7 +102,9 @@
           <i-col span="24">
             <Row>
               <i-col span="6">活动状态:</i-col>
-              <i-col span="18">{{ shareDetail.onOff | imageStatusFilter }}</i-col>
+              <i-col span="18">{{
+                shareDetail.onOff | imageStatusFilter
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -119,9 +121,11 @@
             <Row>
               <i-col span="6">开始时间:</i-col>
               <i-col span="18">
-                {{ this.shareDetail.beginTime = this.$moment(
-                this.shareDetail.beginTime
-                ).format("YYYY-MM-DD HH:mm:ss") }}
+                {{
+                  (this.shareDetail.beginTime = this.$moment(
+                    this.shareDetail.beginTime
+                  ).format("YYYY-MM-DD HH:mm:ss"))
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -131,9 +135,11 @@
             <Row>
               <i-col span="6">结束时间:</i-col>
               <i-col span="18">
-                {{ this.shareDetail.endTime = this.$moment(
-                this.shareDetail.endTime
-                ).format("YYYY-MM-DD HH:mm:ss") }}
+                {{
+                  (this.shareDetail.endTime = this.$moment(
+                    this.shareDetail.endTime
+                  ).format("YYYY-MM-DD HH:mm:ss"))
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -175,13 +181,27 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :width="800" :z-index="1000" :mask-closable="false">
+    <Modal
+      v-model="modalEdit"
+      :width="800"
+      :z-index="1000"
+      :mask-closable="false"
+    >
       <p slot="header">
-        <i-col>{{ tempModalType === modalType.edit?'修改板块活动分享配置': '创建板块活动分享配置'}}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit
+            ? "修改板块活动分享配置"
+            : "创建板块活动分享配置"
+        }}</i-col>
       </p>
       <div class="modal-content">
         <Row>
-          <Form ref="editForm" :model="shareDetail" :rules="ruleInline" :label-width="130">
+          <Form
+            ref="editForm"
+            :model="shareDetail"
+            :rules="ruleInline"
+            :label-width="130"
+          >
             <Row>
               <Col span="22">
                 <FormItem label="分享页面名称:" prop="sharePageName">
@@ -208,21 +228,41 @@
                 <!-- <FormItem label="分享图片路径:" prop="shareUrl">
                   <Input v-model="shareDetail.shareUrl"></Input>
                 </FormItem>-->
-                <p style="color:#ff3861;margin-left:67px">请上传JPG&PNG格式的图片!</p>
+                <p style="color: #ff3861; margin-left: 59px">
+                  请上传JPG&PNG格式的图片!
+                </p>
                 <FormItem label="分享图片:">
-                  <Input v-show="false" v-model="shareDetail.shareUrl" style="width: auto"></Input>
-                  <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+                  <Input
+                    v-show="false"
+                    v-model="shareDetail.shareUrl"
+                    style="width: auto"
+                  ></Input>
+                  <div
+                    v-for="item in uploadListMain"
+                    :key="item.url"
+                    class="demo-upload-list"
+                  >
                     <template v-if="item.status === 'finished'">
                       <div>
                         <img :src="item.url" />
                         <div class="demo-upload-list-cover">
-                          <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                          <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                          <Icon
+                            type="ios-eye-outline"
+                            @click.native="handleUploadView(item)"
+                          ></Icon>
+                          <Icon
+                            type="ios-trash-outline"
+                            @click.native="handleRemoveMain(item)"
+                          ></Icon>
                         </div>
                       </div>
                     </template>
                     <template v-else>
-                      <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                      <Progress
+                        v-if="item.showProgress"
+                        :percent="item.percentage"
+                        hide-info
+                      ></Progress>
                     </template>
                   </div>
                   <IViewUpload
@@ -233,7 +273,10 @@
                     file-dir="activity"
                     @on-success="handleSuccessMain"
                   >
-                    <div slot="content" style="width:58px;height:58px;line-height:58px">
+                    <div
+                      slot="content"
+                      style="width: 58px; height: 58px; line-height: 58px"
+                    >
                       <Icon type="ios-camera" size="20"></Icon>
                     </div>
                   </IViewUpload>
@@ -243,7 +286,14 @@
             <Row>
               <Col span="22">
                 <FormItem label="分享图片路径:" prop="shareUrl">
-                  <Input v-model="shareDetail.shareUrl"></Input>
+                  <!-- <Input v-model="shareDetail.shareUrl"></Input> -->
+                  <Input
+                    v-model="shareDetail.shareUrl"
+                    :autosize="{ minRows: 3, maxRows: 8 }"
+                    type="textarea"
+                    placeholder="分享图片路径..."
+                    readonly
+                  ></Input>
                 </FormItem>
               </Col>
             </Row>
@@ -252,8 +302,13 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit"
+          >确定</Button
+        >
       </div>
+    </Modal>
+    <Modal v-model="uploadVisible" title="图片预览">
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
   </div>
 </template>
@@ -340,12 +395,6 @@ export default {
       receiveTypeEnum,
       columns: [
         {
-          type: "selection",
-          key: "",
-          align: "center",
-          width: 60,
-        },
-        {
           title: "ID",
           align: "center",
           key: "id",
@@ -355,21 +404,25 @@ export default {
           title: "分享页面名称",
           align: "center",
           key: "sharePageName",
+          minWidth: 80,
         },
         {
           title: "分享页面路径",
           align: "center",
           key: "sharePagePath",
+          minWidth: 160,
         },
         {
           title: "分享内容",
           align: "center",
           key: "shareContext",
+          minWidth: 130,
         },
         {
           title: "分享图片",
           align: "center",
           key: "shareUrl",
+          minWidth: 80,
           render: (h, params, vm) => {
             const { row } = params;
             const str = <img src={row.shareUrl} height="60" width="60" />;
@@ -380,11 +433,13 @@ export default {
           title: "分享图片路径",
           align: "center",
           key: "shareUrl",
+          minWidth: 180,
         },
         {
           title: "操作",
           align: "center",
           key: "handle",
+          minWidth: 80,
           options: ["edit", "delete"],
         },
       ],
@@ -496,7 +551,7 @@ export default {
           this.getTableData();
         })
         .catch((err) => {
-          console.log(err);
+          err;
           this.loading = false;
         });
     },
@@ -514,6 +569,7 @@ export default {
       this.tempModalType = this.modalType.edit;
       this.resetFields();
       this.shareDetail = _.cloneDeep(params.row);
+      this.setDefaultUploadList(params.row);
       this.modalEdit = true;
     },
     getTableData() {

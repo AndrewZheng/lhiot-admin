@@ -180,6 +180,15 @@ export const constantRouterMap = [
     component: Main,
     children: [
       {
+        path: 'small-member-relation-handCheck',
+        name: 'small-member-relation-handCheck',
+        meta: {
+          icon: 'md-checkmark-circle',
+          title: '员工管理'
+        },
+        component: () => import('@/view/mini-program-manager/member/handCheck.vue')
+      },
+      {
         path: 'small-goods-relation-standard',
         name: 'small-goods-relation-standard',
         meta: {

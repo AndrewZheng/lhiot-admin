@@ -6,13 +6,14 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="18"
+        :search-area-column="22"
         :operate-area-column="6"
         editable
         searchable
         border
         search-place="top"
         @on-upgrade="onUpgrade"
+        @on-staff="onStaff"
       >
         <div slot="searchCondition">
           <Row>
@@ -40,11 +41,25 @@
             <Select
               v-model="searchRowData.isCommunity"
               placeholder="是否社群用户"
-              style="padding-right: 5px;width: 120px"
+              style="padding-right: 5px;width: 130px"
               clearable
             >
               <Option
                 v-for="(item,index) in communityEnum"
+                :value="item.value"
+                :key="index"
+                class="ptb2-5"
+                style="padding-left: 5px"
+              >{{ item.label }}</Option>
+            </Select>
+            <Select
+              v-model="searchRowData.userType"
+              placeholder="用户类型"
+              style="padding-right: 5px;width: 100px"
+              clearable
+            >
+              <Option
+                v-for="(item,index) in userEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
@@ -70,21 +85,6 @@
               style="width: 150px"
               @on-change="endTimeChange"
             />
-            <!-- v1.8.3 -->
-            <!-- <Select
-              v-model="searchRowData.userType"
-              placeholder="用户类型"
-              style="padding-right: 5px;width: 100px"
-              clearable
-            >
-              <Option
-                v-for="(item,index) in userEnum"
-                :value="item.value"
-                :key="index"
-                class="ptb2-5"
-                style="padding-left: 5px"
-              >{{ item.label }}</Option>
-            </Select>-->
             <Button
               v-waves
               :loading="searchLoading"
@@ -126,9 +126,10 @@
 import Tables from "_c/tables";
 import CountTo from "_c/count-to";
 import _ from "lodash";
-import { getUsersInfo, setUserClass } from "@/api/mini-program";
+import { getUsersInfo, setUserClass, setStaff } from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
+import { setSmallGoodsStandard } from "@/libs/util";
 
 const userDetail = {
   nickName: "",
@@ -168,7 +169,7 @@ export default {
           title: "会员ID",
           key: "id",
           align: "center",
-          width: "80px",
+          width: "90px",
         },
         {
           title: "昵称",
@@ -239,7 +240,13 @@ export default {
             if (row.userType === "CONSUMER") {
               return (
                 <div>
-                  <tag color="green">{"普通用户"}</tag>
+                  <tag color="blue">{"普通用户"}</tag>
+                </div>
+              );
+            } else if (row.userType === "STAFF") {
+              return (
+                <div>
+                  <tag color="gold">{"员工特权"}</tag>
                 </div>
               );
             } else {
@@ -259,9 +266,9 @@ export default {
         {
           title: "操作",
           align: "center",
-          width: 90,
+          width: 120,
           key: "handle",
-          options: ["upgrade"],
+          options: ["upgrade", "staff"],
         },
       ],
       genderEnum: [
@@ -273,7 +280,10 @@ export default {
         { label: "是", value: "YES" },
         { label: "否", value: "NO" },
       ],
-      userEnum: [{ label: "普通用户", value: "CONSUMER" }],
+      userEnum: [
+        { label: "普通用户", value: "CONSUMER" },
+        { label: "员工特权", value: "STAFF" },
+      ],
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
@@ -323,6 +333,28 @@ export default {
         .then((res) => {
           this.$Message.info("操作成功");
           this.getTableData();
+        })
+        .catch((error) => {});
+    },
+    onStaff(params) {
+      let rows = params.row;
+      let _this = this;
+      rows.topStatus = "manage";
+      this.userDetail = _.cloneDeep(params.row);
+      this.userDetail.userType =
+        params.row.userType == "CONSUMER" ? "STAFF" : "CONSUMER";
+      setStaff(this.userDetail)
+        .then((res) => {
+          this.$Message.info("操作成功");
+          this.getTableData();
+          if (this.userDetail.userType === "STAFF") {
+            setTimeout(function () {
+              setSmallGoodsStandard(rows);
+              _this.turnToPage({
+                name: "small-member-relation-handCheck",
+              });
+            }, 2000);
+          }
         })
         .catch((error) => {});
     },

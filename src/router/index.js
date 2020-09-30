@@ -87,7 +87,10 @@ router.beforeEach((to, from, next) => {
             next();
           }
         } else {
-          next({ path: '/401', replace: true });
+          // next({ path: '/401', replace: true });
+          next({
+            name: LOGIN_PAGE_NAME
+          });
         }
       }
     }

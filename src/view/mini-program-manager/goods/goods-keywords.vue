@@ -47,7 +47,13 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addKeywords">
+          <Button
+            v-waves
+            :loading="createLoading"
+            type="success"
+            class="mr5"
+            @click="addKeywords"
+          >
             <Icon type="md-add" />添加
           </Button>
           <Poptip
@@ -63,7 +69,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -112,24 +118,47 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000" :width="800">
+    <Modal
+      v-model="modalEdit"
+      :mask-closable="false"
+      :z-index="1000"
+      :width="800"
+    >
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改关键词':'创建关键词' }}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit ? "修改关键词" : "创建关键词"
+        }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="keywordDetail" :rules="ruleInline" :label-width="120">
+        <Form
+          ref="modalEdit"
+          :model="keywordDetail"
+          :rules="ruleInline"
+          :label-width="130"
+        >
           <Row>
             <Col span="18">
               <FormItem label="关键词:" prop="keyword">
-                <Input v-model="keywordDetail.keyword" placeholder="请选择关键词"></Input>
+                <Input
+                  v-model="keywordDetail.keyword"
+                  placeholder="请选择关键词"
+                ></Input>
               </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
               <FormItem label="关联规格ID:" prop="mappingId">
-                <Input v-model="keywordDetail.mappingId" placeholder="请选择关联规格ID" readonly>
-                  <Button slot="append" icon="ios-search" @click="handleRelation"></Button>
+                <Input
+                  v-model="keywordDetail.mappingId"
+                  placeholder="请选择关联规格ID"
+                  readonly
+                >
+                  <Button
+                    slot="append"
+                    icon="ios-search"
+                    @click="handleRelation"
+                  ></Button>
                 </Input>
               </FormItem>
             </Col>
@@ -138,13 +167,16 @@
             <Col span="18">
               <FormItem label="商品规格列表:">
                 <div
-                  v-for="(item,index) in standardIdsArray"
+                  v-for="(item, index) in standardIdsArray"
                   :value="item.value"
                   :key="index"
                   class="standardidList"
                 >
                   {{ item.label }}
-                  <p class="delete" @click.stop="deleteGoods(index,item.value)"></p>
+                  <p
+                    class="delete"
+                    @click.stop="deleteGoods(index, item.value)"
+                  ></p>
                 </div>
               </FormItem>
             </Col>
@@ -154,7 +186,7 @@
               <FormItem label="关联商品规格名称:" prop="productName">
                 <Input
                   v-model="keywordDetail.productName"
-                  :autosize="{minRows: 3,maxRows: 8}"
+                  :autosize="{ minRows: 3, maxRows: 8 }"
                   type="textarea"
                   readonly
                   placeholder="关联商品规格名称"
@@ -166,14 +198,24 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+          >确定</Button
+        >
       </div>
     </Modal>
 
     <!-- 关联规格商品 -->
-    <Modal v-model="modalProduct" :mask-closable="false" :width="1200" :z-index="1000">
+    <Modal
+      v-model="modalProduct"
+      :mask-closable="false"
+      :width="1200"
+      :z-index="1000"
+    >
       <p slot="header">
-        <span>{{ '关联规格商品' }}</span>
+        <span>{{ "关联规格商品" }}</span>
       </p>
       <div class="modal-content">
         <Form ref="goodsForm" :model="productStandardRelation">
@@ -226,7 +268,7 @@
                   </Row>
                 </div>
               </tables>
-              <div style="margin: 10px;overflow: hidden">
+              <div style="margin: 10px; overflow: hidden">
                 <Row type="flex" justify="end">
                   <Page
                     :total="productTotal"
@@ -244,13 +286,23 @@
       </div>
       <div slot="footer">
         <Button @click="handleGoodsClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleGoodsSubmit">确认</Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleGoodsSubmit"
+          >确认</Button
+        >
       </div>
     </Modal>
-    <Modal v-model="deleteAffirm" title="正在进行删除操作" @on-ok="affirmOk" @on-cancel="affirmCancel">
+    <Modal
+      v-model="deleteAffirm"
+      title="正在进行删除操作"
+      @on-ok="affirmOk"
+      @on-cancel="affirmCancel"
+    >
       <p>
         是否确认删除规格ID为
-        <b style="color:#ff3861">{{deleteStandardId}}</b>
+        <b style="color: #ff3861">{{ deleteStandardId }}</b>
         的商品?
       </p>
     </Modal>
@@ -304,37 +356,37 @@ const productColumns = [
   {
     title: "商品条码",
     key: "barcode",
-    minWidth: 70,
+    minWidth: 150,
     align: "center",
   },
   {
     title: "商品编号",
     key: "productCode",
     align: "center",
-    minWidth: 120,
+    minWidth: 150,
   },
   {
     title: "商品名称",
     key: "productName",
-    minWidth: 100,
+    minWidth: 150,
     align: "center",
   },
   {
-    title: "商品规格",
+    title: "规格",
     key: "specification",
-    minWidth: 80,
+    minWidth: 90,
     align: "center",
   },
   {
-    title: "商品单位",
+    title: "单位",
     key: "productUnit",
-    minWidth: 80,
+    minWidth: 90,
     align: "center",
   },
   {
-    title: "商品价格",
+    title: "售价",
     key: "price",
-    minWidth: 80,
+    minWidth: 90,
     align: "center",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
@@ -344,7 +396,7 @@ const productColumns = [
   {
     title: "起购份数",
     key: "startNum",
-    minWidth: 80,
+    minWidth: 100,
     align: "center",
   },
   {
@@ -481,16 +533,19 @@ export default {
           title: "ID",
           align: "center",
           key: "id",
+          width: 60,
         },
         {
           title: "关键词",
           align: "center",
           key: "keyword",
+          width: 180,
         },
         {
           title: "关联规格ID",
           align: "center",
           key: "mappingId",
+          width: 260,
         },
         {
           title: "关联商品规格名称",
@@ -500,7 +555,7 @@ export default {
         {
           title: "操作",
           align: "center",
-          minWidth: 80,
+          width: 180,
           key: "handle",
           options: ["view", "edit", "delete"],
         },

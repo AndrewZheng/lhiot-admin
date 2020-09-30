@@ -173,7 +173,7 @@
         <i-col>{{ tempModalType===modalType.edit?'修改系统参数':'创建系统参数' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="systemDetail" :rules="ruleInline" :label-width="100">
+        <Form ref="modalEdit" :model="systemDetail" :rules="ruleInline" :label-width="120">
           <Row>
             <Col span="12">
               <FormItem label="键:" prop="indexName">

@@ -36,45 +36,48 @@
             <Select
               v-model="searchRowData.storeArea"
               placeholder="所属区域"
-              style="padding-right: 5px;width: 100px"
+              style="padding-right: 5px; width: 100px"
               clearable
             >
               <Option
-                v-for="(item,index) in areaList"
+                v-for="(item, index) in areaList"
                 :value="item.area"
                 :key="index"
                 class="ptb2-5"
-                style="padding-left: 5px;width: 100px"
-              >{{ item.areaName }}</Option>
+                style="padding-left: 5px; width: 100px"
+                >{{ item.areaName }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.storeStatus"
               placeholder="营业状态"
-              style="padding-right: 5px;width: 100px"
+              style="padding-right: 5px; width: 100px"
               clearable
             >
               <Option
-                v-for="(item,index) in storeStatusEnum"
+                v-for="(item, index) in storeStatusEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
-                style="padding-left: 5px;width: 100px"
-              >{{ item.label }}</Option>
+                style="padding-left: 5px; width: 100px"
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-if="applicationType == null"
               v-model="searchRowData.applicationType"
               placeholder="应用类型"
-              style="padding-right: 5px;width: 100px"
+              style="padding-right: 5px; width: 100px"
               clearable
             >
               <Option
-                v-for="(item,index) in applicationTypeList"
+                v-for="(item, index) in applicationTypeList"
                 :value="item.storeCode"
                 :key="index"
                 class="ptb2-5"
                 style="padding-left: 5px"
-              >{{ item.name }}</Option>
+                >{{ item.name }}</Option
+              >
             </Select>
             <Button
               :loading="searchLoading"
@@ -96,12 +99,18 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
+          <Button
+            v-waves
+            :loading="createLoading"
+            type="success"
+            class="mr5"
+            @click="addStore"
+          >
             <Icon type="md-add" />添加
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -153,7 +162,9 @@
           <i-col span="12">
             <Row>
               <i-col span="6">门店状态:</i-col>
-              <i-col span="18">{{ storeDetail.storeStatus | storeStatusFilters }}</i-col>
+              <i-col span="18">{{
+                storeDetail.storeStatus | storeStatusFilters
+              }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
@@ -167,13 +178,17 @@
           <i-col span="12">
             <Row>
               <i-col span="6">开始时间:</i-col>
-              <i-col span="18">{{ storeDetail.beginTime | storeStatusFilters }}</i-col>
+              <i-col span="18">{{
+                storeDetail.beginTime | storeStatusFilters
+              }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
               <i-col span="6">结束时间:</i-col>
-              <i-col span="18">{{ storeDetail.endTime | storeStatusFilters }}</i-col>
+              <i-col span="18">{{
+                storeDetail.endTime | storeStatusFilters
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -195,8 +210,18 @@
           <i-col span="12">
             <Row>
               <i-col span="6">配送方式:</i-col>
-              <i-col span="18" v-if="storeDetail.deliverType==='MEITUAN'">{{ "美团" }}</i-col>
+              <i-col span="18" v-if="storeDetail.deliverType === 'MEITUAN'">{{
+                "美团"
+              }}</i-col>
               <i-col span="18" v-else>{{ "达达" }}</i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">企业微信ID:</i-col>
+              <i-col span="18" style="font-size: 12px">{{
+                storeDetail.enterpriseWxId
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -221,7 +246,9 @@
         <Row class-name="mb20">
           <i-col span="3">录播地址:</i-col>
           <i-col span="21">
-            <a :href="storeDetail.tapeUrl" target="_blank">{{ storeDetail.tapeUrl }}</a>
+            <a :href="storeDetail.tapeUrl" target="_blank">{{
+              storeDetail.tapeUrl
+            }}</a>
           </i-col>
         </Row>
         <Row class-name="mb20">
@@ -274,7 +301,12 @@
         <span>门店基础信息</span>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="storeDetail" :rules="ruleInline" :label-width="80">
+        <Form
+          ref="modalEdit"
+          :model="storeDetail"
+          :rules="ruleInline"
+          :label-width="90"
+        >
           <Row>
             <i-col span="12">
               <FormItem label="门店编码:" prop="storeCode">
@@ -292,25 +324,31 @@
               <FormItem :label-width="85" label="所属区域:" prop="storeArea">
                 <Select v-model="storeDetail.storeArea">
                   <Option
-                    v-for="(item,index) in areaList"
+                    v-for="(item, index) in areaList"
                     :value="item.area"
                     :key="index"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.areaName }}</Option>
+                    >{{ item.areaName }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem :label-width="85" label="所属旗舰店:" prop="storeFlagship">
+              <FormItem
+                :label-width="85"
+                label="所属旗舰店:"
+                prop="storeFlagship"
+              >
                 <Select v-model="storeDetail.storeFlagship">
                   <Option
-                    v-for="(item,index) in flagShipList"
+                    v-for="(item, index) in flagShipList"
                     :value="item.storeFlagship"
                     :key="index"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.storeName }}</Option>
+                    >{{ item.storeName }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
@@ -320,13 +358,39 @@
               <FormItem :label-width="85" label="门店状态:" prop="storeStatus">
                 <Select v-model="storeDetail.storeStatus">
                   <Option
-                    v-for="(item,index) in storeStatusEnum"
+                    v-for="(item, index) in storeStatusEnum"
                     :value="item.value"
                     :key="index"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
                 </Select>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem :label-width="85" label="门店类型:" prop="storeType">
+                <Select v-model="storeDetail.storeType">
+                  <Option
+                    v-for="(item, index) in storeTypeEnum"
+                    :value="item.value"
+                    :key="index"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                    >{{ item.label }}</Option
+                  >
+                </Select>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
+              <FormItem
+                :label-width="85"
+                label="店长姓名:"
+                prop="shopownerName"
+              >
+                <Input v-model="storeDetail.shopownerName"></Input>
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -371,62 +435,69 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="企业微信ID:" prop="enterpriseWxId">
-                <Input v-model="storeDetail.enterpriseWxId"></Input>
-              </FormItem>
-            </i-col>
-            <i-col span="12">
-              <FormItem :label-width="85" label="门店类型:" prop="storeType">
-                <Select v-model="storeDetail.storeType">
-                  <Option
-                    v-for="(item,index) in storeTypeEnum"
-                    :value="item.value"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px"
-                  >{{ item.label }}</Option>
-                </Select>
-              </FormItem>
-            </i-col>
-          </Row>
-          <Row>
-            <i-col span="12">
               <FormItem :label-width="85" label="配送方式:" prop="deliverType">
                 <Select v-model="storeDetail.deliverType">
                   <Option
-                    v-for="(item,index) in deliverTypeEnum"
+                    v-for="(item, index) in deliverTypeEnum"
                     :value="item.value"
                     :key="index"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
                 </Select>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="企业微信ID:" prop="enterpriseWxId">
+                <Input v-model="storeDetail.enterpriseWxId"></Input>
               </FormItem>
             </i-col>
           </Row>
           <Row align="middle" type="flex">
             <i-col span="24">
               <FormItem label="门店地址:" prop="storeAddress">
-                <Input v-model="storeDetail.storeAddress" type="textarea"></Input>
+                <Input
+                  v-model="storeDetail.storeAddress"
+                  type="textarea"
+                ></Input>
               </FormItem>
             </i-col>
           </Row>
           <!-- 门店店照 -->
           <Row>
             <FormItem label="推荐使用尺寸为400X225(单位:px):" prop="storeImage">
-              <Input v-show="false" v-model="storeDetail.storeImage" style="width: auto"></Input>
-              <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+              <Input
+                v-show="false"
+                v-model="storeDetail.storeImage"
+                style="width: auto"
+              ></Input>
+              <div
+                v-for="item in uploadListMain"
+                :key="item.url"
+                class="demo-upload-list"
+              >
                 <template v-if="item.status === 'finished'">
                   <div>
                     <img :src="item.url" />
                     <div class="demo-upload-list-cover">
-                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                      <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                      <Icon
+                        type="ios-eye-outline"
+                        @click.native="handleUploadView(item)"
+                      ></Icon>
+                      <Icon
+                        type="ios-trash-outline"
+                        @click.native="handleRemoveMain(item)"
+                      ></Icon>
                     </div>
                   </div>
                 </template>
                 <template v-else>
-                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                  <Progress
+                    v-if="item.showProgress"
+                    :percent="item.percentage"
+                    hide-info
+                  ></Progress>
                 </template>
               </div>
               <IViewUpload
@@ -437,7 +508,10 @@
                 file-dir="store"
                 @on-success="handleSuccessMain"
               >
-                <div slot="content" style="width:58px;height:58px;line-height:58px">
+                <div
+                  slot="content"
+                  style="width: 58px; height: 58px; line-height: 58px"
+                >
                   <Icon type="ios-camera" size="20"></Icon>
                 </div>
               </IViewUpload>
@@ -447,19 +521,37 @@
           <Row>
             <i-col span="12">
               <FormItem label="门店微信" prop="wxImage">
-                <Input v-show="false" v-model="storeDetail.wxImage" style="width: auto"></Input>
-                <div v-for="item in uploadwxImageList" :key="item.url" class="demo-upload-list">
+                <Input
+                  v-show="false"
+                  v-model="storeDetail.wxImage"
+                  style="width: auto"
+                ></Input>
+                <div
+                  v-for="item in uploadwxImageList"
+                  :key="item.url"
+                  class="demo-upload-list"
+                >
                   <template v-if="item.status === 'finished'">
                     <div>
                       <img :src="item.url" />
                       <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveWxImage(item)"></Icon>
+                        <Icon
+                          type="ios-eye-outline"
+                          @click.native="handleUploadView(item)"
+                        ></Icon>
+                        <Icon
+                          type="ios-trash-outline"
+                          @click.native="handleRemoveWxImage(item)"
+                        ></Icon>
                       </div>
                     </div>
                   </template>
                   <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      hide-info
+                    ></Progress>
                   </template>
                 </div>
                 <IViewUpload
@@ -471,7 +563,10 @@
                   file-dir="store"
                   @on-success="handleSuccessWxImage"
                 >
-                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                  <div
+                    slot="content"
+                    style="width: 58px; height: 58px; line-height: 58px"
+                  >
                     <Icon type="ios-camera" size="20"></Icon>
                   </div>
                 </IViewUpload>
@@ -490,7 +585,12 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+          >确定</Button
+        >
       </div>
     </Modal>
 
@@ -511,7 +611,7 @@ import {
   getStoreAreas,
   editStore,
   createStore,
-  deletePicture
+  deletePicture,
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -522,12 +622,12 @@ import {
   storeStatus,
   storeStatusEnum,
   storeTypeEnum,
-  coordinateTypeEnum
+  coordinateTypeEnum,
 } from "@/libs/enumerate";
 import {
   storeStatusConvert,
   storeTypeConvert,
-  coordinateTypeConvert
+  coordinateTypeConvert,
 } from "@/libs/converStatus";
 
 const storeDetail = {
@@ -537,6 +637,7 @@ const storeDetail = {
   storeAddress: "",
   storePhone: "",
   storeImage: "",
+  shopownerName: "",
   storeArea: "",
   storeStatus: "",
   storeFlagship: "",
@@ -550,7 +651,7 @@ const storeDetail = {
   coordinateType: null,
   wxImage: "",
   enterpriseWxId: "",
-  deliverType: "MEITUAN"
+  deliverType: "MEITUAN",
 };
 
 const roleRowData = {
@@ -559,13 +660,13 @@ const roleRowData = {
   storeArea: null,
   storeStatus: null,
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 export default {
   components: {
     Tables,
-    IViewUpload
+    IViewUpload,
   },
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
@@ -583,8 +684,8 @@ export default {
                 errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         storeName: [{ required: true, message: "请输入门店名称" }],
         storeStatus: [{ required: true, message: "请选择门店状态" }],
@@ -596,15 +697,15 @@ export default {
           {
             required: true,
             message: "请填写正确的经度",
-            pattern: /(^[\-0-9][0-9]*(.[0-9]+)?)$/
-          }
+            pattern: /(^[\-0-9][0-9]*(.[0-9]+)?)$/,
+          },
         ],
         storeCoordx: [
           {
             required: true,
             message: "请填写正确的维度",
-            pattern: /(^[\-0-9][0-9]*(.[0-9]+)?)$/
-          }
+            pattern: /(^[\-0-9][0-9]*(.[0-9]+)?)$/,
+          },
         ],
         coordinateType: [{ required: true, message: "请选择坐标系类型" }],
         storeImage: [{ required: true, message: "请上传门店图片" }],
@@ -612,11 +713,12 @@ export default {
           {
             required: true,
             message: "请填写正确电话号码",
-            pattern: /^1\d{10}$/
-          }
+            pattern: /^1\d{10}$/,
+          },
         ],
         storeType: [{ required: true, message: "请选择门店类型" }],
-        storeAddress: [{ required: true, message: "请填写门店地址" }]
+        storeAddress: [{ required: true, message: "请填写门店地址" }],
+        shopownerName: [{ required: true, message: "请填写店长姓名" }],
       },
       defaultListMain: [],
       defaultWxImageList: [],
@@ -629,35 +731,35 @@ export default {
       save: [],
       deliverTypeEnum: [
         { label: "美团", value: "MEITUAN" },
-        { label: "达达", value: "DADA" }
+        { label: "达达", value: "DADA" },
       ],
       columns: [
         {
           title: "门店编码",
           key: "storeCode",
           align: "center",
-          minWidth: 100
+          minWidth: 110,
         },
         {
           title: "门店名称",
           align: "center",
           key: "storeName",
-          minWidth: 150
+          minWidth: 170,
         },
-        {
-          title: "企业微信ID",
-          key: "enterpriseWxId",
-          align: "center",
-          minWidth: 130
-        },
+        // {
+        //   title: "企业微信ID",
+        //   key: "enterpriseWxId",
+        //   align: "center",
+        //   minWidth: 130,
+        // },
         {
           title: "所属区域",
           align: "center",
-          minWidth: 90,
+          minWidth: 100,
           key: "storeArea",
           render: (h, params, vm) => {
             const { row } = params;
-            const obj = this.areaList.find(item => {
+            const obj = this.areaList.find((item) => {
               return item.area === row.storeArea;
             });
             if (obj) {
@@ -665,28 +767,28 @@ export default {
             } else {
               return h("span", row.storeArea + "");
             }
-          }
+          },
         },
         {
           title: "区域旗舰店",
           align: "center",
-          minWidth: 130,
+          minWidth: 120,
           key: "storeFlagship",
           render: (h, params, vm) => {
             const { row } = params;
             const obj = this.flagShipList.find(
-              item => row.storeFlagship === item.storeFlagship
+              (item) => row.storeFlagship === item.storeFlagship
             );
             if (obj) {
               return h("span", obj.storeName);
             }
             return h("span", row.storeFlagship);
-          }
+          },
         },
         {
           title: "门店状态",
           align: "center",
-          minWidth: 120,
+          minWidth: 100,
           key: "storeStatus",
           render: (h, params, vm) => {
             const { row } = params;
@@ -712,30 +814,36 @@ export default {
                 <tag color="primary">{row.storeStatus}</tag>
               </div>
             );
-          }
+          },
         },
         {
           title: "营业时间(起)",
           align: "center",
-          minWidth: 130,
-          key: "beginTime"
+          minWidth: 120,
+          key: "beginTime",
         },
         {
           title: "营业时间(止)",
           align: "center",
-          minWidth: 130,
-          key: "endTime"
+          minWidth: 120,
+          key: "endTime",
+        },
+        {
+          title: "店长姓名",
+          align: "center",
+          minWidth: 100,
+          key: "shopownerName",
         },
         {
           title: "联系方式",
           align: "center",
-          minWidth: 140,
-          key: "storePhone"
+          minWidth: 130,
+          key: "storePhone",
         },
         {
           title: "门店类型",
           align: "center",
-          minWidth: 140,
+          minWidth: 110,
           render: (h, params) => {
             const { row } = params;
             if (row.storeType === "FLAGSHIP_STORE") {
@@ -765,34 +873,34 @@ export default {
             } else {
               return <div>{row.storeType}</div>;
             }
-          }
+          },
         },
         {
           title: "操作",
           align: "center",
-          minWidth: 230,
+          minWidth: 200,
           key: "handle",
-          options: ["onStoreStatus", "view", "edit", "delete"]
-        }
+          options: ["onStoreStatus", "view", "edit", "delete"],
+        },
       ],
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
-      storeDetail: _.cloneDeep(storeDetail)
+      storeDetail: _.cloneDeep(storeDetail),
     };
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
     this.loading = true;
     this.createLoading = true;
-    getStoreAreas().then(res => {
+    getStoreAreas().then((res) => {
       this.areaList = res;
       getStorePages({
         // 数据库数据不完整，暂时先注释掉门店类型条件
         // storeType: storeType.FLAGSHIP_STORE,
         page: 1,
-        rows: 10
-      }).then(res => {
+        rows: 10,
+      }).then((res) => {
         this.flagShipList = res.rows;
         this.getTableData();
         this.createLoading = false;
@@ -820,7 +928,7 @@ export default {
       //   };
       //   this.deletePicture(urls);
       // }
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -855,7 +963,7 @@ export default {
     createStore() {
       this.modalViewLoading = true;
       createStore(this.storeDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success("创建成功!");
@@ -869,9 +977,10 @@ export default {
     editStore() {
       this.modalViewLoading = true;
       editStore(this.storeDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
+          this.$Message.success("操作成功!");
           this.getTableData();
         })
         .catch(() => {
@@ -896,9 +1005,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteStore({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -910,17 +1019,17 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
-      if (res.image != null) {
+      if (res.storeImage != null) {
         const map = { status: "finished", url: "url" };
         const mainImgArr = [];
-        map.url = res.image;
+        map.url = res.storeImage;
         mainImgArr.push(map);
         this.$refs.uploadMain.setDefaultFileList(mainImgArr);
         this.uploadListMain = mainImgArr;
@@ -950,7 +1059,6 @@ export default {
       this.modalEdit = true;
     },
     onStoreStatus(params) {
-      console.log(params);
       this.storeDetail = this._.cloneDeep(params.row);
       if (params.row.storeStatus === storeStatus.ENABLED) {
         this.storeDetail.storeStatus = storeStatus.DISABLED;
@@ -962,14 +1070,14 @@ export default {
     },
     getTableData() {
       getStorePages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -996,8 +1104,8 @@ export default {
       this.uploadwxImageList = fileList;
       this.storeDetail.wxImage = null;
       this.storeDetail.wxImage = fileList[0].url;
-    }
-  }
+    },
+  },
 };
 </script>
 

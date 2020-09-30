@@ -730,6 +730,15 @@ export const getFinanceRefuse = (data) => {
   });
 };
 
+//根据id 手动发起售后 /wholesale-small/post-sale/submit
+export const handSubmitRefuse = (data) => {
+  return $http.request({
+    url: `/wholesale-small/post-sale/submit?orderId=${data.id}`,
+    data,
+    method: 'post'
+  });
+};
+
 // 导出售后商品
 export const getOrderGoods = (data) => {
   return $imsService.request({

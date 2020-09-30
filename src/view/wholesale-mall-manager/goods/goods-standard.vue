@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="18"
+        :search-area-column="24"
         :operate-area-column="6"
         editable
         searchable
@@ -18,6 +18,8 @@
         @on-discount="handleRegin"
         @on-delete="handleDelete"
         @custom-on-sale="handlePublish"
+        @on-inline-edit="modalHandleEdit"
+        @on-inline-save="modalHandleSave"
         @on-selection-change="handleSelectionChange"
       >
         <div slot="searchCondition">
@@ -25,22 +27,31 @@
             <Input
               v-model="searchRowData.barCode"
               placeholder="商品条码"
-              class="search-input mr5"
-              style="width: auto"
+              class="search-input"
+              style="width: 130px"
               clearable
             ></Input>
             <Input
               v-model="searchRowData.goodsName"
               placeholder="商品名称"
-              class="search-input mr5"
-              style="width: auto"
+              class="search-input"
+              style="width: 120px"
               clearable
             ></Input>
+            <Cascader
+              :data="goodsCategoryData"
+              change-on-select
+              ref="showClass"
+              style="width: 170px"
+              placeholder="请选择商品分类"
+              class="search-col"
+              @on-change="goodsCategoryChange"
+            ></Cascader>
             <Select
               v-model="searchRowData.vaild"
               class="search-col"
               placeholder="上架状态"
-              style="width:100px"
+              style="width: 70px"
               clearable
             >
               <Option
@@ -48,13 +59,14 @@
                 :value="item.value"
                 :key="item.value"
                 class="ml15 mt10 mr15"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.goodsType"
-              class="ml5 mr5"
+              class=""
               placeholder="商品类型"
-              style="width:120px"
+              style="width: 120px"
               clearable
             >
               <Option
@@ -62,13 +74,13 @@
                 :value="item.value"
                 :key="item.value"
                 class="ml15 mt10 mr15"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.isHasPriceRegion"
-              class="ml5 mr5"
-              placeholder="区间价状态"
-              style="width:90px"
+              placeholder="区间价"
+              style="width: 90px"
               clearable
             >
               <Option
@@ -76,7 +88,8 @@
                 :value="item.value"
                 :key="item.value"
                 class="ml15 mt10 mr15"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <!-- <InputNumber
               v-model="searchMinPrice"
@@ -96,7 +109,7 @@
             ></InputNumber>-->
             <Button
               :searchLoading="searchLoading"
-              class="search-btn mr5"
+              class="search-btn"
               type="primary"
               @click="handleSearch"
             >
@@ -111,33 +124,32 @@
             >
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
-          </Row>
-          <!-- <div class="ml15 mt10">
-            <i style="color:red">*</i> 选中单条数据再点击添加,可复制当前数据
-          </div>-->
-        </div>
-        <div slot="operations">
-          <Button
-            v-waves
-            v-show="showBack"
-            class="search-btn ml5 mr5"
-            type="warning"
-            @click="goBack"
-          >
-            <Icon type="ios-arrow-back" />&nbsp;返回
-          </Button>
-          <Button v-waves class="search-btn ml5 mr5" type="success" @click="handleCreate">
-            <Icon type="md-add" />&nbsp;添加
-          </Button>
-          <!-- <Button
+            <Button
+              v-waves
+              v-show="showBack"
+              class="search-btn"
+              type="warning"
+              @click="goBack"
+            >
+              <Icon type="ios-arrow-back" />&nbsp;返回
+            </Button>
+            <Button
+              v-waves
+              class="search-btn"
+              type="success"
+              @click="handleCreate"
+            >
+              <Icon type="md-add" />&nbsp;添加
+            </Button>
+            <!-- <Button
             :loading="downloadLoading"
-            class="search-btn mr2"
-            type="primary"
+            class="search-btn"
+            type="warning"
             @click="handleDownload"
           >
-            <Icon type="md-download" />导出商品规格
+            <Icon type="md-download" />导出
           </Button> -->
-          <!-- <Poptip
+            <!-- <Poptip
             confirm
             placement="bottom"
             style="width: 100px"
@@ -148,9 +160,13 @@
               <Icon type="md-trash" />批量删除
             </Button>
           </Poptip>-->
+          </Row>
+          <!-- <div class="ml15 mt10">
+            <i style="color:red">*</i> 选中单条数据再点击添加,可复制当前数据
+          </div>-->
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -219,7 +235,11 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品主图:</i-col>
               <i-col span="16">
-                <img :src="productStandardDetail.goodsImage" width="100" height="100" />
+                <img
+                  :src="productStandardDetail.goodsImage"
+                  width="100"
+                  height="100"
+                />
               </i-col>
             </Row>
           </i-col>
@@ -229,7 +249,9 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">上架商品名称:</i-col>
-              <i-col span="16">{{ productStandardDetail.standardGoodsName }}</i-col>
+              <i-col span="16">{{
+                productStandardDetail.standardGoodsName
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -269,13 +291,17 @@
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品价格:</i-col>
-              <i-col span="16">{{ productStandardDetail.price | fenToYuanDot2Filters }}</i-col>
+              <i-col span="16">{{
+                productStandardDetail.price | fenToYuanDot2Filters
+              }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">进货价:</i-col>
-              <i-col span="16">{{ productStandardDetail.purchasePrice | fenToYuanDot2Filters }}</i-col>
+              <i-col span="16">{{
+                productStandardDetail.purchasePrice | fenToYuanDot2Filters
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -302,45 +328,74 @@
     <!-- 编辑 -->
     <Modal v-model="modalEdit" :mask-closable="false" :width="900">
       <p slot="header">
-        <span>{{ isCreate ? '创建商品规格':'编辑商品规格' }}</span>
+        <span>{{ isCreate ? "创建商品规格" : "编辑商品规格" }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="productStandardDetail" :rules="ruleInline" :label-width="100">
+        <Form
+          ref="editForm"
+          :model="productStandardDetail"
+          :rules="ruleInline"
+          :label-width="120"
+        >
           <Row>
             <i-col span="12">
               <FormItem label="商品ID:" prop="goodsId">
-                <Input v-model="productStandardDetail.goodsId" readonly="readonly">
-                  <Button slot="append" icon="ios-search" @click="handleRelation"></Button>
+                <Input
+                  v-model="productStandardDetail.goodsId"
+                  readonly="readonly"
+                >
+                  <Button
+                    slot="append"
+                    icon="ios-search"
+                    @click="handleRelation"
+                  ></Button>
                 </Input>
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="商品名称:">{{ productStandardDetail.baseGoodsName }}</FormItem>
+              <FormItem label="商品名称:">{{
+                productStandardDetail.baseGoodsName
+              }}</FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="商品分类:">{{ productStandardDetail.categoryName }}</FormItem>
+              <FormItem label="商品分类:">{{
+                productStandardDetail.categoryName
+              }}</FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="基础单位:">{{ productStandardDetail.unitName }}</FormItem>
+              <FormItem label="基础单位:">{{
+                productStandardDetail.unitName
+              }}</FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem v-if="productStandardDetail.goodsImage" label="商品主图:">
-                <img :src="productStandardDetail.goodsImage" width="100" height="100" />
+              <FormItem
+                v-if="productStandardDetail.goodsImage"
+                label="商品主图:"
+              >
+                <img
+                  :src="productStandardDetail.goodsImage"
+                  width="100"
+                  height="100"
+                />
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="商品条码:">{{ productStandardDetail.barCode }}</FormItem>
+              <FormItem label="商品条码:">{{
+                productStandardDetail.barCode
+              }}</FormItem>
             </i-col>
           </Row>
           <Divider orientation="center">规格信息</Divider>
           <Row>
             <i-col span="12">
               <FormItem label="上架商品名称:" prop="standardGoodsName">
-                <Input v-model="productStandardDetail.standardGoodsName"></Input>
+                <Input
+                  v-model="productStandardDetail.standardGoodsName"
+                ></Input>
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -350,9 +405,12 @@
             </i-col>
           </Row>
           <Row>
-            <!-- 主图 ==== -->
+            <!-- 主图 -->
             <i-col span="12">
-              <FormItem label="上架商品主图:建议尺寸;690x690(单位:px):" prop="goodsImage">
+              <FormItem
+                label="上架商品主图:建议尺寸;690x690(单位:px):"
+                prop="goodsImage"
+              >
                 <Input
                   v-show="false"
                   v-model="productStandardDetail.goodsImage"
@@ -368,13 +426,23 @@
                     <div>
                       <img :src="item.url" />
                       <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                        <Icon
+                          type="ios-eye-outline"
+                          @click.native="handleUploadView(item)"
+                        ></Icon>
+                        <Icon
+                          type="ios-trash-outline"
+                          @click.native="handleRemoveMain(item)"
+                        ></Icon>
                       </div>
                     </div>
                   </template>
                   <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      hide-info
+                    ></Progress>
                   </template>
                 </div>
                 <IViewUpload
@@ -386,7 +454,70 @@
                   file-dir="product"
                   @on-success="handleSuccessMain"
                 >
-                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                  <div
+                    slot="content"
+                    style="width: 58px; height: 58px; line-height: 58px"
+                  >
+                    <Icon type="ios-camera" size="20"></Icon>
+                  </div>
+                </IViewUpload>
+              </FormItem>
+            </i-col>
+
+            <!-- 主图轮播 -->
+            <i-col span="12">
+              <FormItem
+                label="上架商品轮播图:建议尺寸;710x710(单位:px)"
+                prop="rotationImage"
+              >
+                <Input
+                  v-show="false"
+                  v-model="productStandardDetail.rotationImage"
+                  style="width: auto"
+                ></Input>
+                <div
+                  v-for="item in uploadListMultiple_"
+                  :key="item.url"
+                  :v-show="productStandardDetail.rotationImage"
+                  class="demo-upload-list"
+                >
+                  <template v-if="item.status === 'finished'">
+                    <div>
+                      <img :src="item.url" />
+                      <div class="demo-upload-list-cover">
+                        <Icon
+                          type="ios-eye-outline"
+                          @click.native="handleUploadView(item)"
+                        ></Icon>
+                        <Icon
+                          type="ios-trash-outline"
+                          @click.native="handleRemoveMultiple_(item)"
+                        ></Icon>
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      hide-info
+                    ></Progress>
+                  </template>
+                </div>
+                <IViewUpload
+                  ref="uploadMultiple_"
+                  :default-list="defaultListMultiple_"
+                  :image-size="imageSize"
+                  :max-num="10"
+                  group-type="base_image"
+                  file-dir="product"
+                  multiple
+                  @on-success="handleSuccessMultiple_"
+                >
+                  <div
+                    slot="content"
+                    style="width: 58px; height: 58px; line-height: 58px"
+                  >
                     <Icon type="ios-camera" size="20"></Icon>
                   </div>
                 </IViewUpload>
@@ -394,7 +525,10 @@
             </i-col>
             <!-- 详情图 ==== -->
             <i-col span="12">
-              <FormItem label="商品详情(推荐宽度为750px，高度自适应):" prop="goodsImages">
+              <FormItem
+                label="商品详情(推荐宽度为750px，高度自适应):"
+                prop="goodsImages"
+              >
                 <Input
                   v-show="false"
                   v-model="productStandardDetail.goodsImages"
@@ -410,13 +544,23 @@
                     <div>
                       <img :src="item.url" />
                       <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveMultiple(item)"></Icon>
+                        <Icon
+                          type="ios-eye-outline"
+                          @click.native="handleUploadView(item)"
+                        ></Icon>
+                        <Icon
+                          type="ios-trash-outline"
+                          @click.native="handleRemoveMultiple(item)"
+                        ></Icon>
                       </div>
                     </div>
                   </template>
                   <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      hide-info
+                    ></Progress>
                   </template>
                 </div>
                 <IViewUpload
@@ -428,9 +572,12 @@
                   file-dir="product"
                   multiple
                   @on-success="handleSuccessMultiple"
-                  v-show="fileListLength<15"
+                  v-show="fileListLength < 15"
                 >
-                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                  <div
+                    slot="content"
+                    style="width: 58px; height: 58px; line-height: 58px"
+                  >
                     <Icon type="ios-camera" size="20"></Icon>
                   </div>
                 </IViewUpload>
@@ -438,24 +585,30 @@
             </i-col>
           </Row>
           <Row>
-            <i-col span="9" style="float:right;margin-bottom:10px;margin-right:9px">
-              <Button v-waves type="info" @click="modalSort = true">商品详情图排序</Button>
+            <i-col
+              span="9"
+              style="float: right; margin-bottom: 10px; margin-right: 9px"
+            >
+              <Button v-waves type="info" @click="modalSort = true"
+                >商品详情图排序</Button
+              >
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="商品类型:" prop="goodsType" style="width:200px;">
+              <FormItem label="商品类型:" prop="goodsType" style="width: 200px">
                 <Select
                   v-model="productStandardDetail.goodsType"
-                  :disabled="tempModalType===modalType.edit"
+                  :disabled="tempModalType === modalType.edit"
                 >
                   <Option
-                    v-for="(item,index) in pfExpandTypeEnum"
+                    v-for="(item, index) in pfExpandTypeEnum"
                     :value="item.value"
                     :key="index"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
@@ -464,41 +617,47 @@
                 <InputNumber
                   v-model="productStandardDetail.stockLimit"
                   placeholder="安全库存"
-                  style="width:100px;"
+                  style="width: 100px"
                 ></InputNumber>
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="商品状态:" prop="vaild" style="width:200px;">
+              <FormItem label="商品状态:" prop="vaild" style="width: 200px">
                 <Select v-model="productStandardDetail.vaild">
                   <Option
-                    v-for="(item,index) in vaild"
+                    v-for="(item, index) in vaild"
                     :value="item.value"
                     :key="index"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
             <i-col span="12">
               <Row>
                 <i-col span="12">
-                  <FormItem label="商品单位:" prop="unitCode" style="width:180px;">
+                  <FormItem
+                    label="商品单位:"
+                    prop="unitCode"
+                    style="width: 180px"
+                  >
                     <Select
                       v-model="productStandardDetail.unitCode"
                       @on-change="unitChange"
-                      style="width:100px;"
+                      style="width: 100px"
                     >
                       <Option
-                        v-for="(item,index) in unitsList"
+                        v-for="(item, index) in unitsList"
                         :value="item.value"
                         :key="index"
                         class="ptb2-5"
                         style="padding-left: 5px"
-                      >{{ item.label }}</Option>
+                        >{{ item.label }}</Option
+                      >
                     </Select>
                   </FormItem>
                 </i-col>
@@ -508,12 +667,20 @@
           <Row>
             <i-col span="12">
               <FormItem label="数量/重量:" prop="weight">
-                <InputNumber :min="0" v-model="productStandardDetail.weight" style="width:100px;"></InputNumber>
+                <InputNumber
+                  :min="0"
+                  v-model="productStandardDetail.weight"
+                  style="width: 100px"
+                ></InputNumber>
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="商品净重:" prop="netWeight">
-                <Input v-model="productStandardDetail.netWeight" style="width:100px;"></Input>千克
+                <Input
+                  v-model="productStandardDetail.netWeight"
+                  style="width: 100px"
+                ></Input
+                >千克
               </FormItem>
             </i-col>
           </Row>
@@ -524,7 +691,7 @@
                   :min="0"
                   :value="priceComputed"
                   @on-change="priceOnchange"
-                  style="width:100px;"
+                  style="width: 100px"
                 ></InputNumber>
               </FormItem>
             </i-col>
@@ -534,7 +701,7 @@
                   :min="0"
                   :value="purchasePriceComputed"
                   @on-change="purchasePriceOnchange"
-                  style="width:100px;"
+                  style="width: 100px"
                 ></InputNumber>
               </FormItem>
             </i-col>
@@ -545,15 +712,16 @@
                 <Select
                   :value="productStandardDetail.goodsArea"
                   @on-change="goodsAreaChange"
-                  style="width:100px;"
+                  style="width: 100px"
                 >
                   <Option
-                    v-for="(item,index) in goodsAreaList"
+                    v-for="(item, index) in goodsAreaList"
                     :value="item.value"
                     :key="index"
                     class="ptb2-5"
-                    style="padding-left: 5px;"
-                  >{{ item.label }}</Option>
+                    style="padding-left: 5px"
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
@@ -562,7 +730,7 @@
                 <Input
                   v-model="productStandardDetail.goodsBrand"
                   placeholder="品牌"
-                  style="width:100px;"
+                  style="width: 100px"
                 ></Input>
               </FormItem>
             </i-col>
@@ -573,7 +741,7 @@
                 <Input
                   v-model="productStandardDetail.placeOfOrigin"
                   placeholder="产地"
-                  style="width:100px;"
+                  style="width: 100px"
                 ></Input>
               </FormItem>
             </i-col>
@@ -584,7 +752,7 @@
                 <FormItem label="商品规格:" prop="standard">
                   <Input
                     v-model="productStandardDetail.standard"
-                    :autosize="{minRows: 2,maxRows: 6}"
+                    :autosize="{ minRows: 2, maxRows: 6 }"
                     type="textarea"
                     placeholder="请输入商品规格..."
                   ></Input>
@@ -594,7 +762,7 @@
                 <FormItem label="规格描述:" prop="standardDesc">
                   <Input
                     v-model="productStandardDetail.standardDesc"
-                    :autosize="{minRows: 2,maxRows: 6}"
+                    :autosize="{ minRows: 2, maxRows: 6 }"
                     type="textarea"
                     placeholder="请输入规格描述..."
                   ></Input>
@@ -611,7 +779,7 @@
               <FormItem label="商品特征:" prop="goodsDes">
                 <Input
                   v-model="productStandardDetail.goodsDes"
-                  :autosize="{minRows: 6,maxRows: 6}"
+                  :autosize="{ minRows: 6, maxRows: 6 }"
                   placeholder="请输入商品特征..."
                   type="textarea"
                 ></Input>
@@ -621,7 +789,7 @@
               <FormItem label="售后标准:" prop="afterDes">
                 <Input
                   v-model="productStandardDetail.afterDes"
-                  :autosize="{minRows: 6,maxRows: 6}"
+                  :autosize="{ minRows: 6, maxRows: 6 }"
                   placeholder="请输入售后标准..."
                   type="textarea"
                 ></Input>
@@ -632,7 +800,9 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit"
+          >确定</Button
+        >
       </div>
     </Modal>
     <Modal v-model="modalSort" :mask-closable="false" title="图片排序">
@@ -640,7 +810,11 @@
         <span>图片排序</span>
       </p>
       <div class="modal-content">
-        <drag-list :list1.sync="uploadListMultiple" :drop-con-class="dropConClass" class="clearfix">
+        <drag-list
+          :list1.sync="uploadListMultiple"
+          :drop-con-class="dropConClass"
+          class="clearfix"
+        >
           <img
             slot="left"
             slot-scope="left"
@@ -652,7 +826,7 @@
         </drag-list>
       </div>
       <div slot="footer">
-        <Button @click="modalSort=false">关闭</Button>
+        <Button @click="modalSort = false">关闭</Button>
         <Button type="primary" @click="handleImgSort">确定</Button>
       </div>
     </Modal>
@@ -706,7 +880,7 @@
             </Row>
           </div>
         </tables>
-        <div style="margin: 10px;overflow: hidden">
+        <div style="margin: 10px; overflow: hidden">
           <Row type="flex" justify="end">
             <Page
               :total="productTotal"
@@ -722,7 +896,12 @@
     </Modal>
 
     <!-- 价格区间弹窗-->
-    <Modal v-model="modalRegion" :width="1200" :z-index="1000" title="区间价格管理">
+    <Modal
+      v-model="modalRegion"
+      :width="1200"
+      :z-index="1000"
+      title="区间价格管理"
+    >
       <Card>
         <tables
           ref="dataTables"
@@ -740,10 +919,19 @@
           @on-delete="handleDeleteRegion"
         >
           <div slot="searchCondition">
-            <i-col span="12">{{ productStandardDetail.standardGoodsName }}--区间价格设置</i-col>
+            <i-col span="12"
+              >{{
+                productStandardDetail.standardGoodsName
+              }}--区间价格设置</i-col
+            >
           </div>
           <div slot="operations">
-            <Button v-waves class="search-btn ml5 mr5" type="success" @click="handleRegionAdd">
+            <Button
+              v-waves
+              class="search-btn ml5 mr5"
+              type="success"
+              @click="handleRegionAdd"
+            >
               <Icon type="md-add" />&nbsp;添加
             </Button>
             <Poptip
@@ -759,7 +947,7 @@
             </Poptip>
           </div>
         </tables>
-        <div style="margin: 10px;overflow: hidden">
+        <div style="margin: 10px; overflow: hidden">
           <Row type="flex" justify="end">
             <Page
               :total="regionTotal"
@@ -777,7 +965,9 @@
     <!-- 价格区间的创建或修改-->
     <Modal v-model="modalEditRegion" :mask-closable="false">
       <p slot="header">
-        <span>{{ goodsPriceRegion.id ===0 ? '创建商品区间价格':'编辑商品区间价格' }}</span>
+        <span>{{
+          goodsPriceRegion.id === 0 ? "创建商品区间价格" : "编辑商品区间价格"
+        }}</span>
       </p>
       <div class="modal-content">
         <Form
@@ -788,11 +978,17 @@
         >
           <Row>
             <i-col span="12">
-              <FormItem label="商品名称:">{{ productStandardDetail.standardGoodsName }}</FormItem>
+              <FormItem label="商品名称:">{{
+                productStandardDetail.standardGoodsName
+              }}</FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="商品价格:" prop="price">
-                <InputNumber :min="0" :value="reginPriceComputed" @on-change="reginPriceOnchange"></InputNumber>
+                <InputNumber
+                  :min="0"
+                  :value="reginPriceComputed"
+                  @on-change="reginPriceOnchange"
+                ></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -803,7 +999,11 @@
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="最高购买:" prop="maxQuantity" style="width:200px">
+              <FormItem
+                label="最高购买:"
+                prop="maxQuantity"
+                style="width: 200px"
+              >
                 <Input v-model="goodsPriceRegion.maxQuantity"></Input>
               </FormItem>
             </i-col>
@@ -816,7 +1016,10 @@
             </i-col>
             <i-col span="12">
               <FormItem label="商品排序:" prop="reorder">
-                <InputNumber :min="0" v-model="goodsPriceRegion.reorder"></InputNumber>
+                <InputNumber
+                  :min="0"
+                  v-model="goodsPriceRegion.reorder"
+                ></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -824,7 +1027,12 @@
       </div>
       <div slot="footer">
         <Button @click="modalEditRegion = false">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="handleSubmitRegin">确定</Button>
+        <Button
+          :loading="modalEditLoading"
+          type="primary"
+          @click="handleSubmitRegin"
+          >确定</Button
+        >
       </div>
     </Modal>
 
@@ -850,7 +1058,8 @@ import {
   editProductStandard,
   editGoodsPriceRegion,
   exporGoodsStandard,
-  deletePicture
+  deletePicture,
+  getProductCategoriesTree,
 } from "@/api/wholesale";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -860,11 +1069,15 @@ import {
   getWholesaleGoods,
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber
+  yuanToFenNumber,
+  buildMenu,
+  convertTreeCategory,
+  setWholesaleGoods,
+  convertTree,
 } from "@/libs/util";
 import {
   customPlanStatusConvert,
-  pfExpandTypeConvert
+  pfExpandTypeConvert,
 } from "@/libs/converStatus";
 import { pfExpandTypeEnum } from "@/libs/enumerate";
 
@@ -876,6 +1089,7 @@ const productStandardDetail = {
   goodsId: 0,
   goodsImage: null,
   goodsImages: null,
+  rotationImage: null,
   goodsName: "",
   goodsPriceRegionList: [], // 商品价格区间
   goodsUnit: "",
@@ -900,7 +1114,7 @@ const productStandardDetail = {
   goodsBrand: "",
   placeOfOrigin: "",
   goodsDes: "",
-  afterDes: ""
+  afterDes: "",
 };
 
 const roleRowData = {
@@ -914,7 +1128,9 @@ const roleRowData = {
   maxPrice: "",
   page: 1,
   rows: 20,
-  isHasPriceRegion: ""
+  isHasPriceRegion: "",
+  categoryName: "",
+  categoryId: null,
 };
 
 const productDetail = {
@@ -931,7 +1147,7 @@ const productDetail = {
   baseBar: "",
   baseUnit: "",
   unitName: "",
-  categoryName: ""
+  categoryName: "",
 };
 
 const productRowData = {
@@ -940,13 +1156,13 @@ const productRowData = {
   goodsName: null,
   baseBar: null,
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 const priceRegionRowData = {
   goodsStandardId: 0,
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 const goodsPriceRegion = {
@@ -956,81 +1172,202 @@ const goodsPriceRegion = {
   maxQuantity: 0,
   price: 0,
   reorder: 0, // 排序
-  standardDes: "" // 价格区间描述
+  standardDes: "", // 价格区间描述
 };
 
 const standardColumns = [
   {
-    type: "selection",
-    key: "",
-    minWidth: 50,
-    align: "center",
-    fixed: "left"
-  },
-  {
     title: "规格ID",
     align: "center",
     key: "id",
-    minWidth: 50
+    fixed: "left",
+    minWidth: 90,
   },
   {
     title: "商品条码",
     align: "center",
     key: "barCode",
-    minWidth: 70
+    fixed: "left",
+    minWidth: 100,
   },
   {
-    title: "上架商品名称",
+    title: "商品名称",
     align: "center",
+    fixed: "left",
     key: "standardGoodsName",
-    minWidth: 100
+    minWidth: 120,
   },
   {
     title: "商品图片",
     key: "goodsImage",
     align: "center",
-    minWidth: 120,
+    minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
       const str = <img src={row.goodsImage} height="60" width="60" />;
       return <div>{str}</div>;
-    }
+    },
   },
   {
     title: "商品规格",
     align: "center",
     key: "standard",
-    minWidth: 80
+    minWidth: 120,
   },
   {
-    title: "商品单位",
+    title: "单位",
     align: "center",
     minWidth: 80,
-    key: "goodsUnit"
+    key: "goodsUnit",
   },
   {
     title: "商品价格",
     align: "center",
-    minWidth: 60,
+    minWidth: 100,
     key: "price",
     render(h, params, vm) {
-      const amount = fenToYuanDot2(params.row.price);
-      return <div>{amount}</div>;
-    }
+      const { row } = params;
+      if (row.isEdit) {
+        return h(
+          "Div",
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+            },
+          },
+          [
+            h(
+              "Span",
+              {
+                style: {
+                  lineHeight: "32px",
+                  marginLeft: "2px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                },
+                on: {},
+              },
+              fenToYuanDot2(row.afterPrice)
+            ),
+            h("Input", {
+              style: {
+                marginLeft: "4px",
+                width: "100%",
+              },
+              props: {
+                type: "number",
+                value: "", // 使用key的键值
+              },
+              on: {
+                input: (event) => {
+                  row.price = event;
+                },
+              },
+            }),
+          ]
+        );
+      } else {
+        return h("div", fenToYuanDot2(row.price));
+      }
+    },
   },
   {
     title: "进货价",
     align: "center",
-    minWidth: 60,
+    minWidth: 100,
     key: "purchasePrice",
     render(h, params, vm) {
-      const amount = fenToYuanDot2(params.row.purchasePrice);
-      return <div>{amount}</div>;
-    }
+      const { row } = params;
+      if (row.isEdit) {
+        return h(
+          "Div",
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+            },
+          },
+          [
+            h(
+              "Span",
+              {
+                style: {
+                  lineHeight: "32px",
+                  marginLeft: "2px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                },
+                on: {},
+              },
+              fenToYuanDot2(row.afterPurchasePrice)
+            ),
+            h("Input", {
+              style: {
+                marginLeft: "4px",
+                width: "100%",
+              },
+              props: {
+                type: "number",
+                value: "",
+              },
+              on: {
+                input: (event) => {
+                  row.purchasePrice = event;
+                },
+              },
+            }),
+          ]
+        );
+      } else {
+        return h("div", fenToYuanDot2(row.purchasePrice));
+      }
+    },
+  },
+  {
+    title: "库存",
+    align: "center",
+    key: "stockLimit",
+    minWidth: 90,
+    render(h, params, vm) {
+      const { row } = params;
+      if (row.isEdit) {
+        return h(
+          "Div",
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+            },
+          },
+          [
+            h("Input", {
+              style: {
+                marginLeft: "4px",
+                width: "100%",
+              },
+              props: {
+                type: "number",
+                value: row.stockLimit, // 使用key的键值
+              },
+              on: {
+                input: (event) => {
+                  row.stockLimit = event;
+                },
+              },
+            }),
+          ]
+        );
+      } else {
+        return h("div", row.stockLimit);
+      }
+    },
   },
   {
     title: "商品类型",
-    minWidth: 80,
+    minWidth: 140,
     key: "goodsType",
     align: "center",
     render: (h, params, vm) => {
@@ -1059,10 +1396,10 @@ const standardColumns = [
           <tag color="primary">N/A</tag>
         </div>
       );
-    }
+    },
   },
   {
-    title: "商品状态",
+    title: "状态",
     minWidth: 80,
     key: "vaild",
     align: "center",
@@ -1086,10 +1423,10 @@ const standardColumns = [
           <tag color="primary">N/A</tag>
         </div>
       );
-    }
+    },
   },
   {
-    title: "是否有区间价",
+    title: "区间价",
     minWidth: 80,
     key: "isHasPriceRegion",
     align: "center",
@@ -1113,21 +1450,16 @@ const standardColumns = [
           <tag color="primary">N/A</tag>
         </div>
       );
-    }
+    },
   },
-  // {
-  //   title: "商品排序 ",
-  //   align: "center",
-  //   minWidth: 60,
-  //   key: "rank"
-  // },
   {
     title: "操作",
     align: "center",
-    minWidth: 180,
+    fixed: "right",
+    minWidth: 220,
     key: "handle",
-    options: ["customOnSale", "view", "edit", "discount"]
-  }
+    options: ["amendEdit", "customOnSale", "view", "edit", "discount"],
+  },
 ];
 
 const productColumns = [
@@ -1140,34 +1472,34 @@ const productColumns = [
       const { row } = params;
       const str = <img src={row.goodsImage} height="60" width="60" />;
       return <div>{str}</div>;
-    }
+    },
   },
   {
     title: "基础条码",
     align: "center",
     sortable: true,
     key: "baseBar",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "商品名称",
     align: "center",
     sortable: true,
     key: "goodsName",
-    minWidth: 120
+    minWidth: 120,
   },
   {
     title: "商品类别",
     align: "center",
     key: "categoryName",
-    minWidth: 120
+    minWidth: 120,
   },
   {
     title: "基础单位",
     align: "center",
     minWidth: 90,
-    key: "unitName"
-  }
+    key: "unitName",
+  },
 ];
 
 const goodsPriceRegionColumns = [
@@ -1175,13 +1507,13 @@ const goodsPriceRegionColumns = [
     type: "selection",
     key: "",
     minWidth: 40,
-    align: "center"
+    align: "center",
   },
   {
     title: "规格ID",
     align: "center",
     key: "goodsStandardId",
-    minWidth: 40
+    minWidth: 60,
   },
   {
     title: "商品价格",
@@ -1191,46 +1523,46 @@ const goodsPriceRegionColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "最低购买数量",
     align: "center",
     key: "minQuantity",
-    minWidth: 120
+    minWidth: 120,
   },
   {
     title: "最高购买数量",
     align: "center",
     key: "maxQuantity",
-    minWidth: 120
+    minWidth: 120,
   },
   {
     title: "排序",
     align: "center",
     key: "reorder",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "规格数量描述",
     align: "center",
     key: "standardDes",
-    minWidth: 150
+    minWidth: 150,
   },
   {
     title: "操作",
     align: "center",
     minWidth: 200,
     key: "handle",
-    options: ["delete", "edit"]
-  }
+    options: ["delete", "edit"],
+  },
 ];
 
 export default {
   components: {
     Tables,
     IViewUpload,
-    DragList
+    DragList,
   },
   mixins: [uploadMixin, deleteMixin, searchMixin, tableMixin],
   data() {
@@ -1238,7 +1570,7 @@ export default {
       templatePageOpts: [20, 50],
       hasPriceRegionList: [
         { label: "有", value: "no" },
-        { label: "无", value: "yes" }
+        { label: "无", value: "yes" },
       ],
       productTotal: 0,
       downloadLoading: false,
@@ -1246,27 +1578,36 @@ export default {
       fileListLength: 0,
       unitsList: [],
       productDetailsList: [],
+      masterProductDetailsList: [],
       defaultListMultiple: [],
       oldPicture: [],
       newPicture: [],
       save: [],
       // ====
       uploadListMain: [],
-      defaultListMain: [],
       uploadListMultiple: [],
       productData: [],
+      defaultListMain: [],
+      masterImage: "",
       priceRegionData: [],
+      goodsImageList: [],
       tableDataSelected: [],
+      goodsCategoryData: [],
       regionTableDataSelected: [],
+      uploadListMultiple_: [],
+      defaultListMultiple_: [],
       modalEditLoading: false,
       modalDiscount: false,
       modalProduct: false,
       modalSort: false,
       modalRegion: false,
+      openStatus: false,
       modalEditRegion: false,
       loadingProduct: false,
       loadingRegion: false,
       showBack: false,
+      afterPurchasePrice: 0,
+      afterPrice: 0,
       pfExpandTypeEnum,
       searchRowData: _.cloneDeep(roleRowData),
       priceRegionRowData: _.cloneDeep(priceRegionRowData),
@@ -1282,46 +1623,46 @@ export default {
       currentTableRowSelected: null,
       dropConClass: {
         left: ["drop-box", "left-drop-box"],
-        right: ["drop-box", "right-drop-box"]
+        right: ["drop-box", "right-drop-box"],
       },
       goodsAreaList: [
         { label: "国产", value: "domestic" },
-        { label: "进口", value: "imported" }
+        { label: "进口", value: "imported" },
       ],
       vipEnum: [
         {
           label: "是",
-          value: "yes"
+          value: "yes",
         },
         {
           label: "否",
-          value: "no"
-        }
+          value: "no",
+        },
       ],
       vaild: [
         {
           label: "上架",
-          value: "yes"
+          value: "yes",
         },
         {
           label: "下架",
-          value: "no"
-        }
+          value: "no",
+        },
       ],
       ruleInlineRegion: {
         goodsStandardId: [
           { required: true, message: "请先选择规格商品" },
           {
             message: "请先选择规格商品",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+          },
         ],
         price: [
           { required: true, message: "请输入商品价格" },
           {
             message: "必须为大于0的数字",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+          },
         ],
         reorder: [
           { required: false, message: "请输入商品排序" },
@@ -1332,8 +1673,8 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         minQuantity: [
           { required: true, message: "请输入最低购买数量" },
@@ -1344,8 +1685,8 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         maxQuantity: [
           { required: true, message: "请输入最高购买数量" },
@@ -1356,21 +1697,22 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
       ruleInline: {
         goodsId: [
           { required: true, message: "请选择关联商品" },
           {
             message: "请选择要关联的商品",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+          },
         ],
         isVip: [{ required: true, message: "请选择商品的类型" }],
         standardGoodsName: [{ required: true, message: "请输入上架商品名称" }],
         goodsImage: [{ required: true, message: "请上传上架商品主图" }],
+        rotationImage: [{ required: true, message: "请上传上架商品轮播图" }],
         goodsImages: [{ required: true, message: "请上传上架商品详情图" }],
         unitCode: [{ required: true, message: "请选择商品单位" }],
         vaild: [{ required: true, message: "请选择商品状态" }],
@@ -1383,15 +1725,15 @@ export default {
           { required: true, message: "请输入商品价格" },
           {
             message: "必须为大于0的数字",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+          },
         ],
         purchasePrice: [
           { required: true, message: "请输入商品进货价" },
           {
             message: "必须为大于0的数字",
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/,
+          },
         ],
         barCode: [{ required: true, message: "请输入商品条码" }],
         standard: [
@@ -1403,8 +1745,8 @@ export default {
                 errors.push(new Error("字数不得超过25个字"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         weight: [
           { required: true, message: "请输入重量" },
@@ -1415,9 +1757,9 @@ export default {
                 errors.push(new Error("必须为大于0的数字"));
               }
               callback(errors);
-            }
-          }
-        ]
+            },
+          },
+        ],
         // netWeight: [
         //   { required: false, message: "请输入商品净重" },
         //   {
@@ -1430,7 +1772,7 @@ export default {
         //     }
         //   }
         // ]
-      }
+      },
     };
   },
   computed: {
@@ -1442,7 +1784,7 @@ export default {
     },
     purchasePriceComputed() {
       return fenToYuanDot2Number(this.productStandardDetail.purchasePrice);
-    }
+    },
   },
   created() {
     this.showBack = this.$route.name === "wholesale-goods-relation-standard";
@@ -1450,6 +1792,7 @@ export default {
   },
   mounted() {
     this.getProductUnits();
+    this.getProductCategoriesTree();
   },
   methods: {
     // 变化函数
@@ -1494,7 +1837,12 @@ export default {
         this.searchRowData.goodsId = 0;
       }
       getProductStandardsPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
+          res.rows.forEach((element) => {
+            element.isEdit = false;
+            element.afterPurchasePrice = element.purchasePrice;
+            element.afterPrice = element.price;
+          });
           this.tableData = res.rows;
           this.total = res.total;
         })
@@ -1506,7 +1854,7 @@ export default {
     },
     getProductTableData() {
       getProductPages(this.searchProductRowData)
-        .then(res => {
+        .then((res) => {
           this.productData = res.rows;
           this.productTotal = res.total;
         })
@@ -1519,7 +1867,7 @@ export default {
     getPriceRegionTableData() {
       this.loadingRegion = true;
       getGoodsPriceRegionPages(this.priceRegionRowData)
-        .then(res => {
+        .then((res) => {
           this.priceRegionData = res.rows;
           this.regionTotal = res.total;
         })
@@ -1530,8 +1878,8 @@ export default {
         });
     },
     getProductUnits() {
-      getProductUnits().then(res => {
-        res.forEach(value => {
+      getProductUnits().then((res) => {
+        res.forEach((value) => {
           const map = { label: "label", value: "value" };
           map.value = value.unitCode;
           map.label = value.unitName;
@@ -1544,9 +1892,9 @@ export default {
     createPriceRegion() {
       this.modalEditLoading = true;
       createGoodsPriceRegion({
-        ...this.goodsPriceRegion
+        ...this.goodsPriceRegion,
       })
-        .then(res => {
+        .then((res) => {
           this.$Message.success("创建成功!");
           this.getPriceRegionTableData();
         })
@@ -1558,9 +1906,9 @@ export default {
     editPriceRegion() {
       this.modalEditLoading = true;
       editGoodsPriceRegion({
-        ...this.goodsPriceRegion
+        ...this.goodsPriceRegion,
       })
-        .then(res => {
+        .then((res) => {
           this.$Message.success("修改成功");
           this.getPriceRegionTableData();
         })
@@ -1572,9 +1920,9 @@ export default {
     createProductStandard() {
       this.modalEditLoading = true;
       createProductStandard({
-        ...this.productStandardDetail
+        ...this.productStandardDetail,
       })
-        .then(res => {
+        .then((res) => {
           this.$Message.success("创建成功!");
           this.getTableData();
         })
@@ -1583,14 +1931,18 @@ export default {
           this.modalEdit = false;
         });
     },
-    editProductStandard() {
+    editProductStandard(row) {
       this.modalEditLoading = true;
-      editProductStandard({
-        ...this.productStandardDetail
-      })
-        .then(res => {
+      const data = row
+        ? row
+        : {
+            ...this.productStandardDetail,
+          };
+      editProductStandard(data)
+        .then((res) => {
           this.$Message.success("修改成功");
           this.getTableData();
+          this.openStatus = false;
         })
         .finally(() => {
           this.modalEdit = false;
@@ -1601,9 +1953,9 @@ export default {
     deleteRegionTable(ids) {
       this.loadingRegion = true;
       deleteGoodsPriceRegion({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(
             this.regionTotal / this.priceRegionRowData.rows
           );
@@ -1625,9 +1977,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteProductStandard({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -1655,6 +2007,7 @@ export default {
       this.tempModalType = this.modalType.edit;
       this.uploadListMain = [];
       this.uploadListMultiple = [];
+      this.uploadListMultiple_ = [];
       this.setDefaultUploadList(params.row);
       this.productStandardDetail = _.cloneDeep(params.row);
       this.$refs.editForm.resetFields();
@@ -1662,6 +2015,12 @@ export default {
       this.productDetailsList = this.productStandardDetail.goodsImages.split(
         ","
       );
+      if (this.productStandardDetail.rotationImage != null) {
+        this.goodsImageList = this.productStandardDetail.rotationImage.split(
+          ","
+        );
+        this.masterImage = this.goodsImageList[0];
+      }
     },
     handleEditRegion(params) {
       this.goodsPriceRegion = _.cloneDeep(params.row);
@@ -1677,6 +2036,7 @@ export default {
       if (this.tempModalType !== this.modalType.create) {
         this.uploadListMain = [];
         this.uploadListMultiple = [];
+        this.uploadListMultiple_ = [];
         this.$refs.editForm.resetFields();
         this.productStandardDetail = _.cloneDeep(productStandardDetail);
       }
@@ -1689,7 +2049,7 @@ export default {
     },
     handleImgSort() {
       this.descriptionList = [];
-      this.uploadListMultiple.forEach(item => {
+      this.uploadListMultiple.forEach((item) => {
         if (item.url) {
           this.descriptionList.push(item.url);
         }
@@ -1699,13 +2059,14 @@ export default {
       this.modalSort = false;
     },
     handleSubmit() {
+      this.defaultListMultiple_ = [];
       // if (this.oldPicture.length > 0) {
       //   const urls = {
       //     urls: this.oldPicture
       //   };
       //   this.deletePicture(urls);
       // }
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (this.isCreate) {
             this.createProductStandard();
@@ -1724,6 +2085,7 @@ export default {
       //   };
       //   this.deletePicture(urls);
       // }
+      this.defaultListMultiple_ = [];
       this.modalEdit = false;
       this.oldPicture = [];
       this.newPicture = [];
@@ -1741,7 +2103,7 @@ export default {
     handleSubmitRegin() {
       // 把规格ID赋值给goodsPriceRegion  goodsPriceRegion.maxQuantity minQuantity
       this.goodsPriceRegion.goodsStandardId = this.productStandardDetail.id;
-      this.$refs.editRegionForm.validate(valid => {
+      this.$refs.editRegionForm.validate((valid) => {
         if (valid) {
           if (this.goodsPriceRegion.price > this.productStandardDetail.price) {
             this.$Message.error("区间价不能高于商品原价!");
@@ -1776,16 +2138,46 @@ export default {
         }
       });
     },
+    //v1.2.2
+    modalHandleEdit(params) {
+      if (!this.openStatus) {
+        this.openStatus = true;
+        this.$set(params.row, "isEdit", true);
+        this.afterPurchasePrice = params.row.purchasePrice;
+        this.afterPrice = params.row.price;
+      } else {
+        this.$Message.info("已有打开正在编辑中的窗口!");
+      }
+    },
+    modalHandleSave(params) {
+      const { row } = params;
+      if (row.purchasePrice <= 0) {
+        this.$Message.info("进货价不能小于0!");
+        return;
+      }
+      if (row.price <= 0) {
+        this.$Message.info("商品价格不能小于0!");
+        return;
+      }
+      if (this.afterPurchasePrice != row.purchasePrice) {
+        row.purchasePrice = row.purchasePrice * 100;
+      }
+      if (this.afterPrice != row.price) {
+        row.price = row.price * 100;
+      }
+      this.editProductStandard(row);
+      this.openStatus = false;
+    },
     handlePublish(params) {
       const rowData = _.cloneDeep(params.row);
       rowData.vaild = rowData.vaild === "yes" ? "no" : "yes";
       this.loading = true;
       editProductStandard(rowData)
-        .then(res => {
-          this.$Message.success("操作成功!");
+        .then((res) => {
           this.getTableData();
+          this.$Message.success("操作成功!");
         })
-        .finally(res => {
+        .finally((res) => {
           this.loading = false;
         });
     },
@@ -1795,7 +2187,7 @@ export default {
         return;
       }
       const tempDeleteList = [];
-      this.regionTableDataSelected.filter(value => {
+      this.regionTableDataSelected.filter((value) => {
         tempDeleteList.push(value.id);
       });
       const strTempDelete = tempDeleteList.join(",");
@@ -1823,6 +2215,7 @@ export default {
     },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
+      this.$refs.showClass.clearSelect();
     },
     resetSearchProductRowData() {
       this.searchProductRowData = _.cloneDeep(productRowData);
@@ -1889,7 +2282,7 @@ export default {
       let pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       this.searchRowData.page = pageSize;
-      getProductStandardsPages(this.searchRowData).then(res => {
+      getProductStandardsPages(this.searchRowData).then((res) => {
         tableData = res.rows;
         this.searchRowData.rows = 20;
         this.searchRowData.page = pageSize;
@@ -1898,10 +2291,10 @@ export default {
     },
     handleDown(tableData) {
       exporGoodsStandard({
-        exportType: "GOODS_STANDARD"
-      }).then(res => {
+        exportType: "GOODS_STANDARD",
+      }).then((res) => {
         const tableColumns = res;
-        tableData.forEach(item => {
+        tableData.forEach((item) => {
           item["price"] = (item["price"] / 100.0).toFixed(2);
           item["salePrice"] = (item["salePrice"] / 100.0).toFixed(2);
           item["svipPrice"] = (item["svipPrice"] / 100.0).toFixed(2);
@@ -1920,7 +2313,7 @@ export default {
         this.$refs.tables.handleCustomDownload({
           filename: `商品规格-${date}`,
           data: tableData,
-          columns: tableColumns
+          columns: tableColumns,
         });
       });
     },
@@ -1929,7 +2322,7 @@ export default {
     },
     findUnit(unitCode) {
       if (this.unitsList != null) {
-        const obj = this.unitsList.find(item => item.value === unitCode);
+        const obj = this.unitsList.find((item) => item.value === unitCode);
         if (obj) {
           return obj.label;
         }
@@ -1941,6 +2334,7 @@ export default {
       // 图片上传列表清除
       this.uploadListMain = [];
       this.uploadListMultiple = [];
+      this.uploadListMultiple_ = [];
     },
     // 上架商品主图
     handleSuccessMain(response, file, fileList) {
@@ -1950,12 +2344,27 @@ export default {
       this.newPicture.push(fileList[0].url);
       this.oldPicture = this.save;
     },
+
+    // 上架轮播图
+    handleSuccessMultiple_(response, file, fileList) {
+      this.uploadListMultiple_ = fileList;
+      this.goodsImageList = [];
+      fileList.forEach((value) => {
+        if (value.url) {
+          this.goodsImageList.push(value.url);
+        }
+      });
+
+      this.productStandardDetail.rotationImage = null;
+      this.productStandardDetail.rotationImage = this.goodsImageList.join(",");
+      this.masterImage = this.goodsImageList[0];
+    },
     // 上架规格描述图
     handleSuccessMultiple(response, file, fileList) {
       this.fileListLength = fileList.length;
       this.uploadListMultiple = fileList;
       this.productDetailsList = [];
-      fileList.forEach(value => {
+      fileList.forEach((value) => {
         if (value.url) {
           this.productDetailsList.push(value.url);
         }
@@ -1964,7 +2373,6 @@ export default {
       this.productStandardDetail.goodsImages = this.productDetailsList.join(
         ","
       );
-      this.newPicture.push(response.fileUrl);
     },
     handleRemoveMultiple(file) {
       this.$refs.uploadMultiple.deleteFile(file);
@@ -1991,10 +2399,11 @@ export default {
         this.$refs.uploadMain.setDefaultFileList(mainImgArr);
         this.uploadListMain = mainImgArr;
       }
+
       if (res.goodsImages != null) {
         const descriptionImgArr = [];
         const descriptionArr = res.goodsImages.split(",");
-        descriptionArr.forEach(value => {
+        descriptionArr.forEach((value) => {
           const innerMapDetailImg = { status: "finished", url: "url" };
           innerMapDetailImg.url = value;
           descriptionImgArr.push(innerMapDetailImg);
@@ -2002,15 +2411,75 @@ export default {
         this.$refs.uploadMultiple.setDefaultFileList(descriptionImgArr);
         this.uploadListMultiple = descriptionImgArr;
       }
+      if (
+        res.rotationImage != null &&
+        res.rotationImage != "" &&
+        res.rotationImage != "null"
+      ) {
+        const goodsImageArr = [];
+        const rotationArr = res.rotationImage.split(",");
+        rotationArr.forEach((value) => {
+          const innerMapDetailImg_ = { status: "finished", url: "url" };
+          innerMapDetailImg_.url = value;
+          goodsImageArr.push(innerMapDetailImg_);
+        });
+        this.$refs.uploadMultiple_.setDefaultFileList(goodsImageArr);
+        this.uploadListMultiple_ = goodsImageArr;
+      }
+    },
+    handleRemoveMultiple_(file) {
+      this.$refs.uploadMultiple_.deleteFile(file);
+      const index = this.goodsImageList.indexOf(file.url);
+      if (index > -1) {
+        this.goodsImageList.splice(index, 1);
+        this.productStandardDetail.rotationImage = this.goodsImageList.join(
+          ","
+        );
+        this.masterImage = this.goodsImageList[0];
+      }
+      if (this.goodsImageList.length === 0) {
+        this.$refs.uploadMultiple_.clearFileList();
+        this.goodsImageList = [];
+        this.productStandardDetail.rotationImage = "";
+      }
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
       this.productStandardDetail.goodsImage = null;
     },
+
     goodsAreaChange(value) {
       this.productStandardDetail.goodsArea = value;
-    }
-  }
+    },
+    getProductCategoriesTree() {
+      this.loading = true;
+      getProductCategoriesTree()
+        .then((res) => {
+          if (res && res.length > 0) {
+            const menuList = buildMenu(res);
+            const map = {
+              id: "id",
+              title: "title",
+              children: "children",
+            };
+            this.goodsCategoryData = convertTreeCategory(menuList, map, true);
+            console.log("21312321321313=========", this.goodsCategoryData);
+          }
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+      this.getTableData();
+    },
+    goodsCategoryChange(value, selectedData) {
+      if (selectedData.length > 0) {
+        this.searchRowData.categoryId =
+          selectedData[selectedData.length - 1].id;
+      } else {
+        this.searchRowData.categoryId = null;
+      }
+    },
+  },
 };
 </script>
 

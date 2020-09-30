@@ -267,7 +267,7 @@ const configColumns = [
     title: 'ID',
     align: 'center',
     key: 'id',
-    maxWidth: 80
+    minWidth: 70
   },
   {
     title: '优惠券名称',
@@ -335,18 +335,6 @@ const configColumns = [
       }
     }
   },
-  // {
-  //   title: "生效时间",
-  //   align: "center",
-  //   key: "effectiveTime",
-  //   minWidth: 80
-  // },
-  // {
-  //   title: "失效时间",
-  //   align: "center",
-  //   key: "failureTime",
-  //   minWidth: 80
-  // },
   {
     title: '生效时间',
     align: 'center',
@@ -365,14 +353,14 @@ const configColumns = [
     title: '失效时间',
     align: 'center',
     key: 'failureTime',
-    width: 220,
+    width: 230,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.vaildDays) {
         return <div>{'N/A'}</div>;
       } else {
         if (!compareCouponData(row.failureTime)) {
-          return <div style='color:red'>{row.failureTime + '　已过期'}</div>;
+          return <div style='color:red'>{row.failureTime + '已过期'}</div>;
         } else {
           return <div>{row.failureTime}</div>;
         }
@@ -413,6 +401,7 @@ const configColumns = [
     }
   }
 ];
+
 
 const relationTempColumns = [
   {

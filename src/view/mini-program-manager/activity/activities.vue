@@ -254,7 +254,8 @@ export default {
         {
           title: "活动ID",
           align: "center",
-          key: "id"
+          key: "id",
+          width: 100,
         },
         {
           title: "活动编码",
@@ -269,6 +270,7 @@ export default {
         {
           title: "活动状态",
           align: "center",
+          width: 120,
           key: "onOff",
           render: (h, params, vm) => {
             const { row } = params;
@@ -297,12 +299,13 @@ export default {
         {
           title: "活动详情链接",
           align: "center",
-          key: "activityUrl"
+          key: "activityUrl",
+          width: 130,
         },
         {
           title: "操作",
           align: "center",
-          minWidth: 80,
+          width: 200,
           key: "handle",
           options: ["onSale", "view", "edit", "delete"]
         }

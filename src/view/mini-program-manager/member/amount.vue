@@ -1,6 +1,6 @@
 <template>
   <div class="m-role">
-    <div style="margin-bottom:30px">
+    <div style="margin-bottom: 30px">
       <Card>
         <h4>邀请有礼活动基础数据分析</h4>
         <tables
@@ -16,14 +16,18 @@
         >
           <div slot="searchCondition">
             <Row>
-              <RadioGroup v-model="button" type="button" @on-change="timeChange">
+              <RadioGroup
+                v-model="button"
+                type="button"
+                @on-change="timeChange"
+              >
                 <Radio label="今日"></Radio>
                 <Radio label="昨日"></Radio>
                 <Radio label="最近7天"></Radio>
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
               </RadioGroup>
-              <div class="mark" v-show="mark===true">
+              <div class="mark" v-show="mark === true">
                 <DatePicker
                   v-model="searchRowData1.beginDate"
                   format="yyyy-MM-dd"
@@ -48,13 +52,13 @@
                 class="search-btn mr5"
                 type="primary"
                 @click="handleSearch1"
-                v-show="mark===true"
+                v-show="mark === true"
               >
                 <Icon type="md-search" />&nbsp;搜索
               </Button>
             </Row>
             <div class="ml15 mt10">
-              <i style="color:red">*</i> 默认展示当天的数据
+              <i style="color: red">*</i> 默认展示当天的数据
             </div>
           </div>
         </tables>
@@ -94,16 +98,17 @@
               <Select
                 v-model="searchRowData.sidx"
                 placeholder="排序"
-                style="padding-right: 5px;width: 100px"
+                style="padding-right: 5px; width: 120px"
                 clearable
               >
                 <Option
-                  v-for="(item,index) in rankType"
+                  v-for="(item, index) in rankType"
                   :value="item.value"
                   :key="index"
                   class="ptb2-5"
-                  style="padding-left: 5px;width: 100px"
-                >{{ item.label }}</Option>
+                  style="padding-left: 5px; width: 120px"
+                  >{{ item.label }}</Option
+                >
               </Select>
               <Button
                 :loading="searchLoading"
@@ -122,13 +127,17 @@
               >
                 <Icon type="md-refresh" />&nbsp;清除
               </Button>
-              <Button class="search-btn mr2" type="warning" @click="handleDownload">
+              <Button
+                class="search-btn mr2"
+                type="warning"
+                @click="handleDownload"
+              >
                 <Icon type="md-download" />导出数据
               </Button>
             </Row>
           </div>
         </tables>
-        <div style="margin: 10px;overflow: hidden">
+        <div style="margin: 10px; overflow: hidden">
           <Row type="flex" justify="end">
             <Page
               :total="total"
@@ -151,7 +160,7 @@ import _ from "lodash";
 import {
   userDataStatistics,
   dataStatistics,
-  basicsDataStatistics
+  basicsDataStatistics,
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -160,7 +169,7 @@ import searchMixin from "@/mixins/searchMixin.js";
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber
+  yuanToFenNumber,
 } from "@/libs/util";
 
 const couponTemplateDetail = {
@@ -183,19 +192,19 @@ const roleRowData = {
   page: 1,
   rows: 10,
   sidx: "all_amount",
-  sort: "desc"
+  sort: "desc",
 };
 
 // 第一个tables
 const roleRowData1 = {
   beginDate: null,
-  endDate: null
+  endDate: null,
   //   dateGroup: false
 };
 
 export default {
   components: {
-    Tables
+    Tables,
   },
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
@@ -206,75 +215,80 @@ export default {
       rankType: [
         {
           label: "奖励总金额",
-          value: "all_amount"
+          value: "all_amount",
         },
         {
           label: "邀请人数",
-          value: "invite_count"
+          value: "invite_count",
         },
         {
           label: "待入账金额",
-          value: "wait_amount"
+          value: "wait_amount",
         },
         {
           label: "可提现金额",
-          value: "can_out_amount"
+          value: "can_out_amount",
         },
         {
           label: "已提现金额",
-          value: "all_out_amount"
-        }
+          value: "all_out_amount",
+        },
       ],
       // 袁木
       columns: [
         {
           title: "用户昵称",
           align: "center",
-          key: "nickName"
+          key: "nickName",
         },
         {
           title: "手机号",
           align: "center",
-          key: "phone"
+          key: "phone",
+          width: 180,
         },
         {
           title: "奖励总金额",
           align: "center",
           key: "allAmount",
+          width: 150,
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.allAmount)}</div>;
-          }
+          },
         },
         {
           title: "邀请人数",
           align: "center",
           key: "inviteCount",
-          minWidth: 60
+          width: 150,
         },
         {
           title: "待入账金额",
           align: "center",
+          width: 150,
           key: "waitAmount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.waitAmount)}</div>;
-          }
+          },
         },
         {
           title: "可提现金额",
           align: "center",
           key: "canOutAmount",
+          width: 150,
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.canOutAmount)}</div>;
-          }
+          },
         },
         {
           title: "已提现金额",
           align: "center",
+          width: 150,
           key: "allOutAmount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.allOutAmount)}</div>;
-          }
-        }
+          },
+        },
       ],
       dataColumns: [
         {
@@ -283,7 +297,7 @@ export default {
           align: "center",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.allAmount)}</div>;
-          }
+          },
         },
         {
           title: "已提现总金额",
@@ -291,7 +305,7 @@ export default {
           align: "center",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.outAmount)}</div>;
-          }
+          },
         },
         {
           title: "可提现总金额",
@@ -299,7 +313,7 @@ export default {
           align: "center",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.canOutAmount)}</div>;
-          }
+          },
         },
         {
           title: "待入账总金额",
@@ -307,22 +321,22 @@ export default {
           key: "waitAmount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.waitAmount)}</div>;
-          }
+          },
         },
         {
           title: "参与总人数",
           align: "center",
-          key: "joinUser"
+          key: "joinUser",
         },
         {
           title: "邀请总人数",
           align: "center",
-          key: "inviteUser"
-        }
+          key: "inviteUser",
+        },
       ],
       searchRowData: _.cloneDeep(roleRowData),
       searchRowData1: _.cloneDeep(roleRowData1),
-      couponTemplateDetail: _.cloneDeep(couponTemplateDetail)
+      couponTemplateDetail: _.cloneDeep(couponTemplateDetail),
     };
   },
   computed: {},
@@ -341,14 +355,14 @@ export default {
     },
     getTableData() {
       userDataStatistics(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -403,15 +417,14 @@ export default {
         this.searchRowData1.endDate = today;
       }
       basicsDataStatistics(this.searchRowData1)
-        .then(res => {
-          //   console.log("接受数据", res);
+        .then((res) => {
           this.inviteData.push(res);
           // this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -464,14 +477,14 @@ export default {
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
       let pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
-      userDataStatistics(this.searchRowData).then(res => {
+      userDataStatistics(this.searchRowData).then((res) => {
         const tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 10;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
         let _this = this;
-        tableData.forEach(item => {
+        tableData.forEach((item) => {
           // const obj = _this.storeList.find(x => item.storeId === x.storeId);
           item["nickName"] = item["nickName"] + "";
           item["phone"] = item["phone"] + "";
@@ -484,11 +497,11 @@ export default {
         const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
           filename: `邀请有礼数据统计-${date}`,
-          data: tableData
+          data: tableData,
         });
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

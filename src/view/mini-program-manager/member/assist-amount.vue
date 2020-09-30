@@ -105,7 +105,7 @@
               <Select
                 v-model="searchRowData.sidx"
                 placeholder="排序"
-                style="padding-right: 5px;width: 120px"
+                style="padding-right: 5px;width: 140px"
                 clearable
               >
                 <Option
@@ -167,7 +167,7 @@
               <Select
                 v-model="searchRowData2.sidx"
                 placeholder="排序"
-                style="padding-right: 5px;width: 130px"
+                style="padding-right: 5px;width: 150px"
                 @on-change="handRankType"
               >
                 <Option
@@ -303,7 +303,6 @@ export default {
           value: "buy_count"
         }
       ],
-      // 袁木
       columns: [
         {
           title: "用户昵称",
@@ -318,22 +317,25 @@ export default {
         {
           title: "邀请助力人数",
           align: "center",
+          width:160,
           key: "inviteAssistUser"
         },
         {
           title: "助力参与数量",
           align: "center",
           key: "assistJoinCount",
-          minWidth: 60
+          width:160,
         },
         {
           title: "助力成功数量",
           align: "center",
+          width:160,
           key: "assistSuccessCount"
         },
         {
           title: "购买总数量",
           align: "center",
+          width:160,
           key: "buyCount"
         }
       ],
@@ -383,7 +385,7 @@ export default {
           title: "类型",
           align: "center",
           key: "type",
-
+          minWidth:90,
           render(h, params) {
             const { row } = params;
             if (row.type === "COUPON") {
@@ -402,8 +404,9 @@ export default {
           }
         },
         {
-          title: "商品规格ID",
+          title: "规格ID",
           align: "center",
+          minWidth:100,
           key: "standardId",
           render(h, params) {
             const { row } = params;
@@ -418,6 +421,7 @@ export default {
           title: "商品条码",
           align: "center",
           key: "barcode",
+          minWidth:100,
           render(h, params) {
             const { row } = params;
             if (row.barcode != null) {
@@ -430,6 +434,7 @@ export default {
         {
           title: "商品名称",
           align: "center",
+          minWidth:130,
           key: "productName",
           render(h, params) {
             const { row } = params;
@@ -443,6 +448,7 @@ export default {
         {
           title: "券配置ID",
           align: "center",
+          minWidth:110,
           key: "couponConfigId",
           render(h, params) {
             const { row } = params;
@@ -456,6 +462,7 @@ export default {
         {
           title: "优惠券名称",
           align: "center",
+          minWidth:120,
           key: "couponName",
           render(h, params) {
             const { row } = params;
@@ -469,22 +476,25 @@ export default {
         {
           title: "需助力人数",
           align: "center",
+          minWidth:110,
           key: "allPeopleNumber"
         },
         {
           title: "助力总次数",
           align: "center",
+          minWidth:110,
           key: "assistCount"
         },
         {
           title: "助力成功总次数",
           align: "center",
           key: "assistSuccessCount",
-          minWidth: 60
+          minWidth:140,
         },
         {
           title: "助力成功率",
           align: "center",
+          minWidth:110,
           key: "assistSuccessRate",
           render(h, params) {
             return h("div", params.row.assistSuccessRate + "%");
@@ -494,7 +504,7 @@ export default {
           title: "购买总数量",
           align: "center",
           key: "buyCount",
-          minWidth: 60
+          minWidth:110,
         }
       ],
       searchRowData: _.cloneDeep(roleRowData),
@@ -594,9 +604,7 @@ export default {
       }
       assistDataStatistics(this.searchRowData1)
         .then(res => {
-          //   console.log("接受数据", res);
           this.inviteData.push(res);
-          // this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

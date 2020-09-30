@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="16"
+        :search-area-column="18"
         :operate-area-column="6"
         editable
         searchable
@@ -144,13 +144,13 @@ export default {
           title: '业务员姓名',
           align: 'center',
           key: 'salesmanName',
-          minWidth: 60
+          minWidth: 70
         },
         {
           title: '手机号码',
           align: 'center',
           key: 'salesmanPhone',
-          minWidth: 80
+          minWidth: 90
         },
         {
           title: '上月业绩',
@@ -183,25 +183,25 @@ export default {
           }
         },
         {
-          title: '上月招募人数',
+          title: '上月招募数',
           align: 'center',
           key: 'perMonthNewShopNum',
           minWidth: 80
         },
         {
-          title: '本月招募人数',
+          title: '本月招募数',
           align: 'center',
           key: 'thisMonthNewShopNum',
           minWidth: 80
         },
         {
-          title: '累计招募人数',
+          title: '累计招募数',
           align: 'center',
           key: 'newShopNumTotal',
           minWidth: 80
         },
         {
-          title: '业务员状态',
+          title: '状态',
           align: 'center',
           key: 'salesUserStatus',
           minWidth: 60,

@@ -13,7 +13,7 @@
             @click="handleSubmit('editForm')">保存</Button>
         </i-col>
         <i-col span="24" class="mt10">
-          <Form ref="editForm" :model="articleDetail" :rules="ruleInline" :label-width="80">
+          <Form ref="editForm" :model="articleDetail" :rules="ruleInline" :label-width="100">
             <Row>
               <i-col span="12">
                 <FormItem label="文章标题:" prop="articleTitle">

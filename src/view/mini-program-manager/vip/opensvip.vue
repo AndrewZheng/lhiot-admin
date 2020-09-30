@@ -940,7 +940,6 @@ export default {
         return;
       }
       this.$refs.addForm.validate(valid => {
-        console.log(this.$refs.addForm)
         if (valid) {
           _this.replaceTextByTag();
           _this.createRelation();
@@ -949,24 +948,6 @@ export default {
         }
       });
     },
-    //  getSvipPackagePages(this.searchRowData).then(res => {
-    //   let svipPages = res.rows;
-    //   svipPages.forEach(item => {
-    // console.log(item.packageType)
-    // if (
-    //   // item.packageType.indexOf("SEASON") != null ||
-    //   // item.packageType.indexOf("YEAR_CARD") != -1 ||
-    //   // item.packageType.indexOf("MONTH_CARD") != -1
-    //   item.packageType.length >= 3
-    // ) {
-    //   this.$Message.error("相同的套餐类型配置只能开启1个");
-    //   return;
-    // } else {
-    //   this.tempModalType = "addTemplate";
-    //   this.modalAdd = true;
-    // }
-    // });
-    // });
     createRelation() {
       this.modalViewLoading = true;
       createSvipPackage(this.addRelationDetail)
@@ -997,9 +978,6 @@ export default {
     addPackageTemplate() {
       getSvipPackagePages(this.searchRowData).then(res => {
         let svipPages = res.rows;
-        //   svipPages.forEach(item => {
-        // console.log(item.packageType)
-        // });
         console.log(svipPages)
       });
       this.modalAdd = true;

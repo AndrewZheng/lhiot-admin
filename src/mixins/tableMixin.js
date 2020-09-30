@@ -29,11 +29,13 @@ const mixin = {
     changePage(page) {
       this.searchRowData.page = page;
       this.getTableData();
+      this.openStatus = false;
     },
     changePageSize(pageSize) {
       this.searchRowData.page = 1;
       this.searchRowData.rows = pageSize;
       this.getTableData();
+      this.openStatus = false;
     },
     handleEditClose() {
       this.modalEdit = false;

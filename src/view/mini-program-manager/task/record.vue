@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="16"
+        :search-area-column="22"
         :operate-area-column="6"
         editable
         searchable
@@ -197,7 +197,7 @@ export default {
           align: 'center',
           key: 'nickName',
           resizable: true,
-          width: '150'
+          minWidth: 160
         },
 
         {
@@ -217,6 +217,7 @@ export default {
         {
           title: '任务类型',
           align: 'center',
+          width: '150',
           key: 'taskType',
           render: (h, params, vm) => {
             const { row } = params;
@@ -233,6 +234,7 @@ export default {
           title: '奖励类型',
           align: 'center',
           key: 'rewardType',
+          width: '120',
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{rewardTypeConvert(row.rewardType)}</div>;
@@ -242,6 +244,7 @@ export default {
           title: '礼包类型',
           align: 'center',
           key: 'giftPackType',
+          width: '150',
           render: (h, params, vm) => {
             const { row } = params;
             const str = row.giftPackType === 'COUPON' ? '优惠券' : 'N/A';
@@ -262,11 +265,13 @@ export default {
         {
           title: '领取时间',
           align: 'center',
-          key: 'receiveTime'
+          key: 'receiveTime',
+          width: '120',
         },
         {
           title: '创建时间',
           align: 'center',
+          width: '120',
           key: 'createTime'
         }
       ]

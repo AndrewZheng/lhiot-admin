@@ -115,6 +115,7 @@ export default {
           title: "日期",
           key: "totalDate",
           align: "center",
+          width:120,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.totalDate != null) {
@@ -153,11 +154,13 @@ export default {
         {
           title: "开始日期",
           key: "beginDate",
+          width:120,
           align: "center"
         },
         {
           title: "结束日期",
           key: "endDate",
+          width:120,
           align: "center"
         }
       ],

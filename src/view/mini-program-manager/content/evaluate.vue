@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="22"
+        :search-area-column="24"
         :operate-area-column="6"
         editable
         searchable
@@ -24,29 +24,29 @@
             <Input
               v-model="searchRowData.storeName"
               placeholder="门店名称"
-              class="search-input mr5"
-              style="width: auto"
+              class="search-input mr2"
+              style="width: 130px"
               clearable
             ></Input>
             <Input
               v-model="searchRowData.nickName"
               placeholder="用户名称"
-              class="search-input mr5"
-              style="width: auto"
+              class="search-input mr2"
+              style="width: 120px"
               clearable
             ></Input>
             <Input
               v-model="searchRowData.phone"
               placeholder="手机号码"
-              class="search-input mr5"
-              style="width: auto"
+              class="search-input mr2"
+              style="width: 120px"
               clearable
             ></Input>
             <Select
               v-model="searchRowData.deliveryComment"
-              class="search-col mr5"
+              class="search-col mr2"
               placeholder="骑手评价"
-              style="width: 100px"
+              style="width: 90px"
               clearable
             >
               <Option
@@ -54,13 +54,14 @@
                 :key="`orderType-col-${item.value}`"
                 :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.commentScore"
-              class="search-col mr5"
+              class="search-col mr2"
               placeholder="门店评价"
-              style="width: 100px"
+              style="width: 90px"
               clearable
             >
               <Option
@@ -68,13 +69,14 @@
                 :key="`orderType-col-${item.value}`"
                 :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.orderType"
-              class="search-col mr5"
+              class="search-col mr2"
               placeholder="订单类型"
-              style="width: 100px"
+              style="width: 110px"
               clearable
             >
               <Option
@@ -82,11 +84,12 @@
                 :key="`orderType-col-${item.value}`"
                 :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.istop"
-              class="search-col mr5"
+              class="search-col mr2"
               placeholder="是否置顶"
               style="width: 90px"
               clearable
@@ -96,7 +99,8 @@
                 :key="`orderType-col-${item.value}`"
                 :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <DatePicker
               v-model="searchRowData.beginDate"
@@ -104,7 +108,7 @@
               type="date"
               placeholder="开始时间起"
               class="search-input"
-              style="width: 150px"
+              style="width: 160px"
               @on-change="beginTimeChange"
             />
             <i>-</i>
@@ -113,13 +117,15 @@
               format="yyyy-MM-dd HH:mm:ss"
               type="date"
               placeholder="开始时间止"
-              class="search-input mr5"
-              style="width: 150px"
+              class="search-input mr2"
+              style="width: 160px"
               @on-change="endTimeChange"
             />
+          </Row>
+          <Row style="margin-top: 10px; float: right">
             <Button
               :loading="searchLoading"
-              class="search-btn mr5"
+              class="search-btn mr2"
               type="primary"
               @click="handleSearch"
             >
@@ -134,13 +140,13 @@
             >
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
-            <Button class="search-btn mr2" type="warning" @click="handleDownload">
-              <Icon type="md-download" />导出数据
+            <Button class="search-btn" type="warning" @click="handleDownload">
+              <Icon type="md-download" />导出
             </Button>
           </Row>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -225,9 +231,21 @@
           <i-col span="12">
             <Row>
               <i-col span="6">骑手评价:</i-col>
-              <i-col v-if="evaluateDetail.deliveryComment==='GOOD'" span="18">{{ "超赞" }}</i-col>
-              <i-col v-else-if="evaluateDetail.deliveryComment==='GENERAL'" span="18">{{ "一般" }}</i-col>
-              <i-col v-else-if="evaluateDetail.deliveryComment==='NEGATIVE'" span="18">{{ "很差" }}</i-col>
+              <i-col
+                v-if="evaluateDetail.deliveryComment === 'GOOD'"
+                span="18"
+                >{{ "超赞" }}</i-col
+              >
+              <i-col
+                v-else-if="evaluateDetail.deliveryComment === 'GENERAL'"
+                span="18"
+                >{{ "一般" }}</i-col
+              >
+              <i-col
+                v-else-if="evaluateDetail.deliveryComment === 'NEGATIVE'"
+                span="18"
+                >{{ "很差" }}</i-col
+              >
               <i-col v-else span="18">{{ "N/A" }}</i-col>
             </Row>
           </i-col>
@@ -242,7 +260,9 @@
           <i-col span="12">
             <Row>
               <i-col span="6">是否置顶:</i-col>
-              <i-col v-if="evaluateDetail.istop==='YES'" span="18">{{ "是" }}</i-col>
+              <i-col v-if="evaluateDetail.istop === 'YES'" span="18">{{
+                "是"
+              }}</i-col>
               <i-col v-else span="18">{{ "否" }}</i-col>
             </Row>
           </i-col>
@@ -251,7 +271,9 @@
           <i-col span="12">
             <Row>
               <i-col span="6">状态:</i-col>
-              <i-col v-if="evaluateDetail.status==='VIEW'" span="18">{{ "显示" }}</i-col>
+              <i-col v-if="evaluateDetail.status === 'VIEW'" span="18">{{
+                "显示"
+              }}</i-col>
               <i-col v-else span="18">{{ "隐藏" }}</i-col>
             </Row>
           </i-col>
@@ -274,9 +296,11 @@
           <i-col span="22">
             <Row>
               <i-col span="3">历史评价:</i-col>
-              <i-col
-                span="18"
-              >{{ evaluateDetail.historyCommentContent?evaluateDetail.historyCommentContent:"N/A" }}</i-col>
+              <i-col span="18">{{
+                evaluateDetail.historyCommentContent
+                  ? evaluateDetail.historyCommentContent
+                  : "N/A"
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -284,7 +308,9 @@
           <i-col span="12">
             <Row>
               <i-col span="6">修改时间:</i-col>
-              <i-col span="18">{{ evaluateDetail.updateTime?evaluateDetail.updateTime:"N/A" }}</i-col>
+              <i-col span="18">{{
+                evaluateDetail.updateTime ? evaluateDetail.updateTime : "N/A"
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -297,11 +323,14 @@
                   v-for="item in evaluateList"
                   :key="item.id"
                   class="demo-upload-list"
-                  style="width:100px;height:100px;"
+                  style="width: 100px; height: 100px"
                 >
                   <img :src="item" />
                   <div class="demo-upload-list-cover">
-                    <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                    <Icon
+                      type="ios-eye-outline"
+                      @click.native="handleUploadView(item)"
+                    ></Icon>
                   </div>
                 </div>
               </i-col>
@@ -314,12 +343,22 @@
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000" :width="800">
+    <Modal
+      v-model="modalEdit"
+      :mask-closable="false"
+      :z-index="1000"
+      :width="800"
+    >
       <p slot="header">
         <i-col>{{ "回复评论" }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="evaluateDetail" :rules="ruleInline" :label-width="100">
+        <Form
+          ref="modalEdit"
+          :model="evaluateDetail"
+          :rules="ruleInline"
+          :label-width="100"
+        >
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
@@ -348,9 +387,21 @@
             <i-col span="20">
               <Row>
                 <i-col span="6">骑手评价:</i-col>
-                <i-col span="18" v-if="evaluateDetail.deliveryComment=='GOOD'">{{ "超赞" }}</i-col>
-                <i-col span="18" v-else-if="evaluateDetail.deliveryComment=='GENERAL'">{{ "一般"}}</i-col>
-                <i-col span="18" v-else-if="evaluateDetail.deliveryComment=='NEGATIVE'">{{ "很差" }}</i-col>
+                <i-col
+                  span="18"
+                  v-if="evaluateDetail.deliveryComment == 'GOOD'"
+                  >{{ "超赞" }}</i-col
+                >
+                <i-col
+                  span="18"
+                  v-else-if="evaluateDetail.deliveryComment == 'GENERAL'"
+                  >{{ "一般" }}</i-col
+                >
+                <i-col
+                  span="18"
+                  v-else-if="evaluateDetail.deliveryComment == 'NEGATIVE'"
+                  >{{ "很差" }}</i-col
+                >
                 <i-col span="18" v-else>{{ "N/A" }}</i-col>
               </Row>
             </i-col>
@@ -375,9 +426,11 @@
             <i-col span="20">
               <Row>
                 <i-col span="6">历史评价:</i-col>
-                <i-col
-                  span="18"
-                >{{ evaluateDetail.historyCommentContent?evaluateDetail.historyCommentContent:"N/A" }}</i-col>
+                <i-col span="18">{{
+                  evaluateDetail.historyCommentContent
+                    ? evaluateDetail.historyCommentContent
+                    : "N/A"
+                }}</i-col>
               </Row>
             </i-col>
           </Row>
@@ -385,7 +438,9 @@
             <i-col span="20">
               <Row>
                 <i-col span="6">修改时间:</i-col>
-                <i-col span="18">{{ evaluateDetail.updateTime?evaluateDetail.updateTime:"N/A" }}</i-col>
+                <i-col span="18">{{
+                  evaluateDetail.updateTime ? evaluateDetail.updateTime : "N/A"
+                }}</i-col>
               </Row>
             </i-col>
           </Row>
@@ -399,11 +454,14 @@
                     v-for="item in evaluateList"
                     :key="item.id"
                     class="demo-upload-list"
-                    style="width:100px;height:100px;"
+                    style="width: 100px; height: 100px"
                   >
                     <img :src="item" />
                     <div class="demo-upload-list-cover">
-                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                      <Icon
+                        type="ios-eye-outline"
+                        @click.native="handleUploadView(item)"
+                      ></Icon>
                     </div>
                   </div>
                 </i-col>
@@ -424,10 +482,14 @@
               </FormItem>
             </i-col>-->
             <i-col span="20">
-              <FormItem :label-width="100" label="回复评价:" prop="answerContent">
+              <FormItem
+                :label-width="100"
+                label="回复评价:"
+                prop="answerContent"
+              >
                 <Input
                   v-model="evaluateDetail.answerContent"
-                  :autosize="{minRows: 3,maxRows: 8}"
+                  :autosize="{ minRows: 3, maxRows: 8 }"
                   type="textarea"
                   placeholder="请输入回复内容..."
                 ></Input>
@@ -438,7 +500,12 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit()">确定</Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit()"
+          >确定</Button
+        >
       </div>
     </Modal>
     <Modal v-model="uploadVisible" title="图片预览">
@@ -547,14 +614,10 @@ export default {
       ],
       columns: [
         {
-          type: "selection",
-          width: 60,
-          align: "center",
-        },
-        {
           title: "订单编号",
           align: "center",
-          width: 170,
+          width: 190,
+          fixed: "left",
           key: "orderCode",
           render: (h, params, vm) => {
             const { row } = params;
@@ -571,31 +634,37 @@ export default {
           align: "center",
           key: "productNames",
           tooltip: true,
+          minWidth: 160,
         },
         {
           title: "门店名称",
           align: "center",
           key: "storeName",
+          minWidth: 160,
         },
         {
           title: "用户名称",
           align: "center",
           key: "nickName",
+          minWidth: 160,
         },
         {
           title: "手机号码",
           align: "center",
           key: "phone",
+          minWidth: 130,
         },
         {
           title: "评价时间",
           align: "center",
           key: "createTime",
+          minWidth: 180,
         },
         {
           title: "骑手评价",
           align: "center",
           key: "deliveryComment",
+          minWidth: 100,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.deliveryComment === "GOOD") {
@@ -627,8 +696,23 @@ export default {
           },
         },
         {
+          title: "是否给小票",
+          align: "center",
+          key: "whetherGiveReceipt",
+          minWidth: 110,
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.whetherGiveReceipt === "YES") {
+              return <div>{"是"}</div>;
+            } else {
+              return <div>{"否"}</div>;
+            }
+          },
+        },
+        {
           title: "门店评价",
           align: "center",
+          minWidth: 100,
           key: "commentScore",
           render: (h, params, vm) => {
             const { row } = params;
@@ -638,7 +722,7 @@ export default {
         {
           title: "评价内容",
           align: "center",
-          width: 200,
+          minWidth: 200,
           key: "commentContent",
           tooltip: true,
           render: (h, params, vm) => {
@@ -653,14 +737,15 @@ export default {
         {
           title: "回复评价",
           align: "center",
-          width: 200,
+          minWidth: 200,
           key: "answerContent",
           tooltip: true,
         },
         {
           title: "操作",
           align: "center",
-          minWidth: 80,
+          minWidth: 200,
+          fixed: "right",
           key: "handle",
           options: ["view", "setTop", "setSta", "edit"],
         },
@@ -707,7 +792,9 @@ export default {
       this.resetFields();
       this.tempModalType = this.modalType.view;
       this.evaluateDetail = _.cloneDeep(params.row);
-      (this.evaluateList = []), (this.evaluateDetail = _.cloneDeep(params.row));
+      this.evaluateList = [];
+      this.evaluateDetail = _.cloneDeep(params.row);
+
       const arr = params.row.commentImages.split(",");
       for (let i = 0; i < arr.length; i++) {
         if (arr[i] != "") {
@@ -718,14 +805,15 @@ export default {
     },
     handleEdit(params) {
       this.resetFields();
-      (this.evaluateList = []), (this.evaluateDetail = _.cloneDeep(params.row));
-      console.log("当前数据", params.row.deliveryComment);
+      this.evaluateList = [];
+      this.evaluateDetail = _.cloneDeep(params.row);
       const arr = params.row.commentImages.split(",");
       for (let i = 0; i < arr.length; i++) {
         if (arr[i] != "") {
           this.evaluateList.push(arr[i]);
         }
       }
+      console.log("121232", this.evaluateList);
       params.row.answerContent
         ? (this.evaluateStatus = true)
         : (this.evaluateStatus = false);
@@ -796,6 +884,8 @@ export default {
           item["deliveryComment"] = deliveryTypeConvert(
             item["deliveryComment"]
           ).label;
+          item["whetherGiveReceipt"] =
+            item["whetherGiveReceipt"] === "YES" ? "是" : "否";
           item["commentScore"] = item["commentScore"] + "星";
         });
         const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");

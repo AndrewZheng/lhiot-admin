@@ -2,14 +2,16 @@
   <div class="m-role">
     <Card>
       <Row v-show="isSalesmanAnalysis">
-        <i-col span="24" class="brand-red font-sm">{{ salesmanName }}--旗下门店订单信息明细</i-col>
+        <i-col span="24" class="brand-red font-sm"
+          >{{ salesmanName }}--旗下门店订单信息明细</i-col
+        >
       </Row>
       <tables
         ref="tables"
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="17"
+        :search-area-column="24"
         :operate-area-column="7"
         :need-permission="true"
         editable
@@ -21,6 +23,7 @@
         @on-hand="handleReimburse"
         @on-receive="handSureReceive"
         @on-send-hd="sendHdManual"
+        @on-afterSale="onAfterSale"
         @on-current-change="onCurrentChange"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
@@ -31,35 +34,35 @@
               v-model="searchRowData.orderCode"
               placeholder="订单编码"
               class="search-input mr5"
-              style="width: 150px"
+              style="width: 170px"
               clearable
             ></Input>
             <Input
               v-model="searchRowData.hdCode"
               placeholder="海鼎编码"
-              class="search-input mr5"
-              style="width: 120px"
+              class="search-input"
+              style="width: 150px"
               clearable
             ></Input>
             <Input
               v-model="searchRowData.userName"
               placeholder="用户名"
-              class="search-input mr5"
-              style="width: 70px"
+              class="search-input"
+              style="width: 100px"
               clearable
             ></Input>
             <Input
               v-model="searchRowData.phone"
               placeholder="用户手机号"
-              class="search-input mr5"
-              style="width: 90px"
+              class="search-input"
+              style="width: 120px"
               clearable
             ></Input>
             <Select
               v-model="searchRowData.payStatus"
-              class="search-col mr5"
+              class="search-col"
               placeholder="支付状态"
-              style="width: 85px"
+              style="width: 90px"
               clearable
             >
               <Option
@@ -67,13 +70,14 @@
                 :key="`search-col-${item.value}`"
                 :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.orderStatus"
-              class="search-col mr5"
+              class="search-col"
               placeholder="订单状态"
-              style="width: 85px"
+              style="width: 90px"
               clearable
             >
               <Option
@@ -81,13 +85,14 @@
                 :key="`search-col-${item.value}`"
                 :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.hdStatus"
-              class="search-col mr5"
+              class="search-col"
               placeholder="海鼎状态"
-              style="width: 85px"
+              style="width: 90px"
               clearable
             >
               <Option
@@ -95,15 +100,15 @@
                 :key="`search-col-${item.value}`"
                 :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <DatePicker
               v-model="searchRowData.createTimeBegin"
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
               placeholder="开始时间"
-              class="mr5"
-              style="width: 150px"
+              style="width: 160px"
               @on-change="startTimeChange"
             />
             <i>-</i>
@@ -112,21 +117,21 @@
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
               placeholder="结束时间"
-              class="mr5"
-              style="width: 150px"
+              style="width: 160px"
               @on-change="endTimeChange"
             />
             <Cascader
               :data="data"
               change-on-select
               placeholder="请选择区域"
-              class="search-col"
+              ref="showClass"
+              class="search-col mt5"
               @on-change="onChangeCity"
             ></Cascader>
             <Button
               v-waves
               :loading="searchLoading"
-              class="search-btn ml5 mr5 mt5"
+              class="search-btn"
               type="primary"
               @click="handleSearch"
             >
@@ -135,71 +140,70 @@
             <Button
               v-waves
               :loading="clearSearchLoading"
-              class="search-btn mt5"
+              class="search-btn"
               type="info"
               @click="handleClear"
             >
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
-          <div v-if="printFlag===true" class="ml15 mt10">
+          <Row style="margin-top: 15px; float: right">
+            <Button
+              v-waves
+              type="warning"
+              @click="handleBack"
+              v-show="isSalesmanAnalysis"
+            >
+              <Icon type="ios-arrow-back" />返回
+            </Button>
+            <Button
+              v-has="'export_order'"
+              :loading="downloadLoading"
+              class="search-btn"
+              type="primary"
+              @click="handleDownload"
+            >
+              <Icon type="md-download" />导出订单
+            </Button>
+            <Button
+              v-has="'export_order_goods'"
+              :loading="downloadLoading"
+              class="search-btn"
+              type="success"
+              @click="handleExport('ORDER_GOODS')"
+            >
+              <Icon type="md-download" />导出订单商品
+            </Button>
+            <Button
+              :loading="downloadLoading"
+              class="search-btn"
+              type="success"
+              v-has="'export_delivery_order'"
+              @click="handleExport('DELIVERY_NOTE')"
+            >
+              <Icon type="md-download" />导出配送单
+            </Button>
+            <Button
+              v-if="flag"
+              :loading="downloadLoading"
+              class="search-btn"
+              type="success"
+              v-has="'online_printing'"
+              @click="onlinePrinting"
+            >
+              <Icon type="md-download" />在线打印
+            </Button>
+            <Button v-if="!flag" class="search-btn mr2" type="success">
+              <Icon type="md-download" />正在打印中...
+            </Button>
+          </Row>
+          <div v-if="printFlag === true" class="ml15 mt10">
             已完成打印
-            <i style="color:red">{{ printNum }}</i> 条配送单
+            <i style="color: red">{{ printNum }}</i> 条配送单
           </div>
         </div>
-        <div slot="operations" style="margin-left:-30px">
-          <Button
-            v-show="isSalesmanAnalysis"
-            v-waves
-            type="warning"
-            class="mr5"
-            @click="handleBack"
-          >
-            <Icon type="ios-arrow-back" />返回
-          </Button>
-          <Button
-            v-has="'export_order'"
-            :loading="downloadLoading"
-            class="search-btn mr2"
-            type="primary"
-            @click="handleDownload"
-          >
-            <Icon type="md-download" />导出订单
-          </Button>
-          <!-- <Button
-            v-has="'export_order_goods'"
-            :loading="downloadLoading"
-            class="search-btn mr2"
-            type="success"
-            @click="handleExport('ORDER_GOODS')"
-          >
-            <Icon type="md-download" />导出订单商品
-          </Button> -->
-          <Button
-            v-has="'export_delivery_order'"
-            :loading="downloadLoading"
-            class="search-btn mr2"
-            type="success"
-            @click="handleExport('DELIVERY_NOTE')"
-          >
-            <Icon type="md-download" />导出配送单
-          </Button>
-          <Button
-            v-if="flag"
-            v-has="'online_printing'"
-            :loading="downloadLoading"
-            class="search-btn mr2"
-            type="success"
-            @click="onlinePrinting"
-          >
-            <Icon type="md-download" />在线打印
-          </Button>
-          <Button v-if="!flag" class="search-btn mr2" type="success">
-            <Icon type="md-download" />正在打印中...
-          </Button>
-        </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -231,7 +235,9 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="6">订单状态:</i-col>
-              <i-col span="18">{{ orderDetail.orderStatus| wholesaleOrderStatusFilter }}</i-col>
+              <i-col span="18">{{
+                orderDetail.orderStatus | wholesaleOrderStatusFilter
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -245,7 +251,9 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="6">海鼎状态:</i-col>
-              <i-col span="18">{{ orderDetail.hdStatus | wholesaleHdStatusFilter }}</i-col>
+              <i-col span="18">{{
+                orderDetail.hdStatus | wholesaleHdStatusFilter
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -263,13 +271,17 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="6">支付类型:</i-col>
-              <i-col span="18">{{ orderDetail.settlementType | wholeslaePayTypeFilter }}</i-col>
+              <i-col span="18">{{
+                orderDetail.settlementType | wholeslaePayTypeFilter
+              }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="6">支付状态:</i-col>
-              <i-col span="18">{{ orderDetail.payStatus | payStatusFilter }}</i-col>
+              <i-col span="18">{{
+                orderDetail.payStatus | payStatusFilter
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -277,15 +289,20 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="6">余额支付:</i-col>
-              <i-col span="18">{{ orderDetail.currencyFee | fenToYuanDot2Filters }}</i-col>
+              <i-col span="18">{{
+                orderDetail.currencyFee | fenToYuanDot2Filters
+              }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="6">微信支付:</i-col>
-              <i-col
-                span="18"
-              >{{ orderDetail.payableFee + orderDetail.deliveryFee - orderDetail.currencyFee | fenToYuanDot2Filters }}</i-col>
+              <i-col span="18">{{
+                (orderDetail.payableFee +
+                  orderDetail.deliveryFee -
+                  orderDetail.currencyFee)
+                  | fenToYuanDot2Filters
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -293,13 +310,17 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="6">订单金额:</i-col>
-              <i-col span="18">{{ orderDetail.totalFee | fenToYuanDot2Filters }}</i-col>
+              <i-col span="18">{{
+                orderDetail.totalFee | fenToYuanDot2Filters
+              }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="6">优惠金额:</i-col>
-              <i-col span="18">{{ orderDetail.discountFee | fenToYuanDot2Filters }}</i-col>
+              <i-col span="18">{{
+                orderDetail.discountFee | fenToYuanDot2Filters
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -307,15 +328,18 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="6">配送费:</i-col>
-              <i-col span="18">{{ orderDetail.deliveryFee | fenToYuanDot2Filters }}</i-col>
+              <i-col span="18">{{
+                orderDetail.deliveryFee | fenToYuanDot2Filters
+              }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="6">应付金额:</i-col>
-              <i-col
-                span="18"
-              >{{ orderDetail.payableFee + orderDetail.deliveryFee | fenToYuanDot2Filters }}</i-col>
+              <i-col span="18">{{
+                (orderDetail.payableFee + orderDetail.deliveryFee)
+                  | fenToYuanDot2Filters
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -323,7 +347,9 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="6">支付时间:</i-col>
-              <i-col span="18">{{ orderDetail.paymentTime? orderDetail.paymentTime: 'N/A' }}</i-col>
+              <i-col span="18">{{
+                orderDetail.paymentTime ? orderDetail.paymentTime : "N/A"
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -361,7 +387,9 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="6">用户备注:</i-col>
-              <i-col span="18">{{ orderDetail.remarks?orderDetail.remarks:'N/A' }}</i-col>
+              <i-col span="18">{{
+                orderDetail.remarks ? orderDetail.remarks : "N/A"
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -370,7 +398,9 @@
           <i-col span="12">
             <Row class-name="mb10">
               <i-col span="6">用户备注:</i-col>
-              <i-col span="18">{{ orderDetail.remarks?orderDetail.remarks:'N/A' }}</i-col>
+              <i-col span="18">{{
+                orderDetail.remarks ? orderDetail.remarks : "N/A"
+              }}</i-col>
             </Row>
           </i-col>
         </Row>
@@ -406,7 +436,11 @@
 
         <Divider orientation="center">商品信息</Divider>
         <Row>
-          <tables v-model="orderDetail.orderGoodsList" :columns="goodsColumns" border></tables>
+          <tables
+            v-model="orderDetail.orderGoodsList"
+            :columns="goodsColumns"
+            border
+          ></tables>
         </Row>
       </div>
       <div slot="footer">
@@ -414,40 +448,62 @@
       </div>
     </Modal>
     <!-- 在线打印-->
-    <div ref="printTable" style="display:none">
+    <div ref="printTable" style="display: none">
       <table
         border="1"
         width="800"
         cellspacing="0"
         cellpadding="0"
         align="center"
-        style="fontSize:16px"
+        style="fontsize: 16px"
       >
         <thead>
           <tr align="center">
-            <th colspan="10" style="font-size:26px;height:60px">
+            <th colspan="10" style="font-size: 26px; height: 60px">
               <img
                 src="http://resource.shuiguoshule.com.cn/product_image/2020-03-31/OVFftIF74gHs2Qa01dF2.png"
-                style="width:120px;height:39px;float:left;"
+                style="width: 120px; height: 39px; float: left"
               />
-              <p style="margin-right:120px;color:#666666">万翼果联销售单</p>
+              <p style="margin-right: 120px; color: #666666">万翼果联销售单</p>
             </th>
           </tr>
         </thead>
         <tbody id="tabInfo"></tbody>
         <tbody id="tab"></tbody>
         <tbody id="tabTotal"></tbody>
-        <tr style="height:80px;">
+        <tr style="height: 80px">
           <td colspan="10">
-            <p style="margin-top:-40px">发货备注:</p>
+            <p style="margin-top: -40px">发货备注:</p>
           </td>
         </tr>
         <tfoot>
-          <tr style="height:50px;border: 0 solid red;border-collapse:collapse;">
-            <td colspan="3" style="border: 0 solid red;border-collapse:collapse;">配送员签字:</td>
-            <td colspan="2" style="border: 0 solid red;border-collapse:collapse;">司机签字:</td>
-            <td colspan="3" style="border: 0 solid red;border-collapse:collapse;">客户签字:</td>
-            <td colspan="2" style="border: 0 solid red;border-collapse:collapse;">仓库审核:</td>
+          <tr
+            style="height: 50px; border: 0 solid red; border-collapse: collapse"
+          >
+            <td
+              colspan="3"
+              style="border: 0 solid red; border-collapse: collapse"
+            >
+              配送员签字:
+            </td>
+            <td
+              colspan="2"
+              style="border: 0 solid red; border-collapse: collapse"
+            >
+              司机签字:
+            </td>
+            <td
+              colspan="3"
+              style="border: 0 solid red; border-collapse: collapse"
+            >
+              客户签字:
+            </td>
+            <td
+              colspan="2"
+              style="border: 0 solid red; border-collapse: collapse"
+            >
+              仓库审核:
+            </td>
           </tr>
         </tfoot>
       </table>
@@ -465,7 +521,8 @@ import {
   getOrder,
   getPrintOrder,
   sendHdManual,
-  exportOrder
+  handSubmitRefuse,
+  exportOrder,
 } from "@/api/wholesale";
 import getLodop from "@/assets/lodop/lodopFuncs.js";
 import tableMixin from "@/mixins/tableMixin.js";
@@ -477,12 +534,12 @@ import {
   payStatusEnum,
   payTypeEnum,
   wholesaleOrderStatusEnum,
-  wholesaleHdStatusEnum
+  wholesaleHdStatusEnum,
 } from "@/libs/enumerate";
 import {
   thirdDeliverStatusConvert,
   wholesalePayTypeConvert,
-  wholesaleOrderStatusConvert
+  wholesaleOrderStatusConvert,
 } from "@/libs/converStatus";
 
 const orderDetail = {
@@ -515,7 +572,7 @@ const orderDetail = {
   totalFee: 0,
   userId: 0,
   createTimeBegin: null,
-  createTimeEnd: null
+  createTimeEnd: null,
 };
 
 const roleRowData = {
@@ -535,7 +592,7 @@ const roleRowData = {
   orderCodes: "",
   userName: "",
   hdCode: "",
-  deliveryAddress: ""
+  deliveryAddress: "",
 };
 
 const goodsDetail = {
@@ -556,7 +613,7 @@ const goodsDetail = {
   standard: "",
   standardWeight: 0,
   unitName: "",
-  userId: 0
+  userId: 0,
 };
 
 const deliveryInfo = {
@@ -567,40 +624,38 @@ const deliveryInfo = {
   addressArea: "",
   isDefault: "",
   userId: 0,
-  contactsName: ""
+  contactsName: "",
 };
 const orderColumns = [
-  {
-    type: "selection",
-    key: "",
-    width: 60,
-    align: "center",
-    fixed: "left"
-  },
+  // {
+  //   type: "selection",
+  //   key: "",
+  //   width: 60,
+  //   align: "center",
+  //   fixed: "left",
+  // },
   {
     title: "订单编号",
     key: "orderCode",
     sortable: true,
     resizable: true,
-    width: 170,
+    width: 190,
     fixed: "left",
-    align: "center"
+    align: "center",
   },
   {
     title: "海鼎单号",
     key: "hdCode",
     sortable: true,
     resizable: true,
-    width: 150,
-    fixed: "left",
-    align: "center"
+    width: 160,
+    align: "center",
   },
   {
     title: "创建时间",
     align: "center",
-    width: 160,
-    fixed: "left",
-    key: "createTime"
+    width: 190,
+    key: "createTime",
   },
   {
     title: "订单总价",
@@ -610,7 +665,7 @@ const orderColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.totalFee);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "优惠金额",
@@ -620,7 +675,7 @@ const orderColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.discountFee);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "应付金额",
@@ -630,7 +685,7 @@ const orderColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.payableFee);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "配送费",
@@ -640,7 +695,7 @@ const orderColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.deliveryFee);
       return <div>{amount || "N/A"}</div>;
-    }
+    },
   },
   {
     title: "实付金额",
@@ -652,7 +707,7 @@ const orderColumns = [
         params.row.payableFee + params.row.deliveryFee
       );
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "支付类型",
@@ -705,7 +760,7 @@ const orderColumns = [
       } else {
         return <div>{"N/A"}</div>;
       }
-    }
+    },
   },
   {
     title: "余额支付金额",
@@ -716,7 +771,7 @@ const orderColumns = [
       const { row } = params;
       const amount = fenToYuanDot2(row.currencyFee);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "微信支付金额",
@@ -729,19 +784,19 @@ const orderColumns = [
         row.payableFee + row.deliveryFee - row.currencyFee
       );
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "门店名称",
     align: "center",
     minWidth: 150,
-    key: "shopName"
+    key: "shopName",
   },
   {
     title: "店长名称",
     align: "center",
     width: 120,
-    key: "userName"
+    key: "userName",
   },
   {
     title: "配送区域",
@@ -752,13 +807,13 @@ const orderColumns = [
       const { row } = params;
       const address = JSON.parse(row.deliveryAddress);
       return <div>{address.addressArea}</div>;
-    }
+    },
   },
   {
     title: "店长手机",
     align: "center",
-    width: 120,
-    key: "phone"
+    width: 130,
+    key: "phone",
   },
   {
     title: "订单状态",
@@ -813,7 +868,7 @@ const orderColumns = [
       } else {
         return <div>N/A</div>;
       }
-    }
+    },
   },
   {
     title: "海鼎状态",
@@ -838,70 +893,85 @@ const orderColumns = [
       } else {
         return <div>N/A</div>;
       }
-    }
+    },
   },
+  //  "afterSale"
   {
     title: "操作",
-    minWidth: 120,
-    resizable: true,
+    width: 160,
     align: "center",
     fixed: "right",
     key: "handle",
-    options: ["view", "sendHd"]
-  }
+    options: ["view", "sendHd",],
+  },
 ];
 
 const goodsColumns = [
   {
-    title: "商品编号",
-    key: "goodsId"
+    title: "编号",
+    key: "goodsId",
+    align: "center",
+    width: 80,
   },
   {
     title: "商品名称",
-    key: "goodsName"
+    align: "center",
+    key: "goodsName",
   },
   {
     title: "商品图片",
     key: "goodsImage",
     align: "center",
-    maxWidth: 100,
+    width: 100,
     render: (h, params, vm) => {
       const { row } = params;
       const str = <img src={row.goodsImage} height="60" width="60" />;
       return <div>{str}</div>;
-    }
+    },
   },
   {
-    title: "商品规格",
-    key: "standard"
+    title: "规格",
+    key: "standard",
+    align: "center",
+    width: 80,
   },
   {
-    title: "购买数量",
-    key: "quanity"
+    title: "数量",
+    key: "quanity",
+    align: "center",
+    width: 80,
   },
   {
-    title: "商品单位",
-    key: "unitName"
+    title: "单位",
+    key: "unitName",
+    align: "center",
+    width: 80,
   },
   {
-    title: "商品单价",
+    title: "单价",
+    align: "center",
     key: "goodsPrice",
+    width: 90,
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.goodsPrice);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "折扣价",
+    align: "center",
+    width: 90,
     key: "discountGoodsPrice",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.discountGoodsPrice);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
-    title: "是否限时抢购",
+    title: "商品类型",
     key: "flash",
+    align: "center",
+    width: 110,
     render(h, params, vm) {
       if (params.row.flash === 0) {
         return (
@@ -916,13 +986,13 @@ const goodsColumns = [
           </div>
         );
       }
-    }
+    },
   },
   {
     title: "退货状态",
-    minWidth: 80,
     key: "refundStatus",
     align: "center",
+    width: 100,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.refundStatus === "yes") {
@@ -938,13 +1008,13 @@ const goodsColumns = [
           </div>
         );
       }
-    }
-  }
+    },
+  },
 ];
 
 export default {
   components: {
-    Tables
+    Tables,
   },
   mixins: [tableMixin, searchMixin],
   data() {
@@ -974,7 +1044,7 @@ export default {
       selectedOrderCodes: "",
       flag: true,
       printFlag: null,
-      printNum: 0
+      printNum: 0,
     };
   },
   computed: {
@@ -986,7 +1056,7 @@ export default {
     },
     isSalesmanAnalysis() {
       return this.$route.query.id > 0;
-    }
+    },
   },
   created() {
     this.salesmanName = this.$route.query.salesmanName
@@ -1030,7 +1100,7 @@ export default {
         params.row.orderStatus === "DISPATCHING"
       ) {
         sureReceive({ orderId: params.row.id })
-          .then(res => {
+          .then((res) => {
             this.loading = false;
             this.$Message.success("确认收货成功");
             this.getTableData();
@@ -1040,6 +1110,18 @@ export default {
           });
       } else {
         this.$Message.error("只有已发货和配送中的订单才能操作收货");
+      }
+    },
+    // 手动售后
+    onAfterSale(params) {
+      if (params.row.orderStatus === "received") {
+        handSubmitRefuse(params.row)
+          .then((res) => {
+            this.$Message.success("操作成功");
+          })
+          .finally(() => {});
+      } else {
+        this.$Message.error("只有已收货的订单能操作售后");
       }
     },
     handleSubmit() {
@@ -1055,12 +1137,13 @@ export default {
     resetSearchRowData() {
       this.clearSearchLoading = true;
       this.searchRowData = this._.cloneDeep(roleRowData);
+      this.$refs.showClass.clearSelect();
       this.getTableData();
     },
     handleView(params) {
       this.loading = true;
       getOrder({ id: params.row.id })
-        .then(res => {
+        .then((res) => {
           this.orderDetail = res;
           if (this.orderDetail.deliveryAddress) {
             const deliveryInfo = JSON.parse(this.orderDetail.deliveryAddress);
@@ -1080,7 +1163,7 @@ export default {
         this.searchRowData.salesmanId = this.$route.query.id;
       }
       getOrderPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })
@@ -1097,7 +1180,7 @@ export default {
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
       const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
-      getOrderPages(this.searchRowData).then(res => {
+      getOrderPages(this.searchRowData).then((res) => {
         tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 20;
@@ -1107,11 +1190,11 @@ export default {
     },
     handleDown(tableData) {
       exporGoodsStandard({
-        exportType: "ORDER_INFO"
-      }).then(res => {
+        exportType: "ORDER_INFO",
+      }).then((res) => {
         const tableColumns = res;
         // 表格数据导出字段翻译
-        tableData.forEach(item => {
+        tableData.forEach((item) => {
           const deliveryAddress = JSON.parse(item["deliveryAddress"]);
           item["orderCode"] = item["orderCode"] + "";
           item["hdCode"] = item["hdCode"] + "";
@@ -1167,7 +1250,7 @@ export default {
         this.$refs.tables.handleCustomDownload({
           filename: `普通订单信息-${date}`,
           data: tableData,
-          columns: tableColumns
+          columns: tableColumns,
         });
       });
     },
@@ -1178,14 +1261,14 @@ export default {
         // 导出订单商品
         exportOrder({
           exportType: name,
-          searchParam: this.searchRowData
-        }).then(res => {
+          searchParam: this.searchRowData,
+        }).then((res) => {
           const tableData = res.rows;
           const tableColumns = res.columns;
           this.$refs.tables.handleCustomDownload({
             filename: `订单商品信息-${date}`,
             data: tableData,
-            columns: tableColumns
+            columns: tableColumns,
           });
         });
       } else {
@@ -1193,14 +1276,14 @@ export default {
         const orderCodes = { orderCodes: this.selectedOrderCodes };
         exportOrder({
           exportType: name,
-          searchParam: orderCodes
-        }).then(res => {
+          searchParam: orderCodes,
+        }).then((res) => {
           const tableData = res.rows;
           const tableColumns = res.columns;
           this.$refs.tables.handleCustomDownload({
             filename: `配送单-${date}`,
             data: tableData,
-            columns: tableColumns
+            columns: tableColumns,
           });
         });
       }
@@ -1212,7 +1295,7 @@ export default {
       }
 
       if (this.tableDataSelected.length > 0) {
-        sendHdManual({ orderCode: this.selectedOrderCodes }).then(res => {
+        sendHdManual({ orderCode: this.selectedOrderCodes }).then((res) => {
           this.$Message.info("海鼎重发成功");
           this.getTableData();
         });
@@ -1221,18 +1304,18 @@ export default {
     onSelectionAll(selection) {
       this.tableDataSelected = selection;
       this.selectedOrderCodes = selection
-        .map(item => item.orderCode.toString())
+        .map((item) => item.orderCode.toString())
         .join(",");
     },
     onSelectionChange(selection) {
       this.tableDataSelected = selection;
       this.selectedOrderCodes = selection
-        .map(item => item.orderCode.toString())
+        .map((item) => item.orderCode.toString())
         .join(",");
     },
     handleBack() {
       this.turnToPage({
-        name: "wholesale-salesman-analysis"
+        name: "wholesale-salesman-analysis",
       });
     },
     onCurrentChange(currentRow, oldCurrentRow) {
@@ -1260,7 +1343,7 @@ export default {
       var otabTotal = document.getElementById("tabTotal");
       var _this = this;
       getPrintOrder(data)
-        .then(res => {
+        .then((res) => {
           this.$nextTick(() => {
             var LODOP; // 声明为全局变量
             LODOP = getLodop();
@@ -1451,8 +1534,8 @@ export default {
         index++;
       }
       this.searchRowData.deliveryAddress = city;
-    }
-  }
+    },
+  },
 };
 </script>
 
