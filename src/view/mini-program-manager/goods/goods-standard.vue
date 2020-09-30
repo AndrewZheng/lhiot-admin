@@ -1978,7 +1978,7 @@ export default {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^([1-4]?\d(\.[05])?|50(\.0)?)$/.test(value)) {
-                errors.push(new Error("必须为0~50的数字"));
+                errors.push(new Error("必须为0~50的整数"));
               }
               callback(errors);
             },
