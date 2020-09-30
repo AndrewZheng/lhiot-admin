@@ -88,7 +88,7 @@ module.exports = {
     open: true, // 配置自动启动浏览器
     proxy: {
       '/api': {
-        target: 'http://172.16.10.194:1311/ims-service-v1-5-0', //194测试环境 196开发环境 203 pre环境 http://172.16.10.203:1311/ims-service-v1-5-0
+        target: 'http://172.16.10.196:1311/ims-service-v1-5-0', //194测试环境 196开发环境 203 pre环境 http://172.16.10.203:1311/ims-service-v1-5-0
         ws: true,
         logLevel: 'debug',
         changeOrigin: true,

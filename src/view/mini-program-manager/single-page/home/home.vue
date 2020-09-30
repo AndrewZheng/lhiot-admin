@@ -178,7 +178,7 @@
                   v-for="item in expandTypeEnum"
                   :value="item.value"
                   :key="item.value"
-                  style="margin:-10px 0 0 -5px"
+                  style="margin: -10px 0 0 -5px"
                   >{{ item.label }}</Option
                 >
               </Select>
@@ -812,7 +812,7 @@ export default {
       }
     },
     handleGoodsClear() {
-      this.goodsSearchRowData.productName = "";
+      this.goodsSearchRowData = _.cloneDeep(goodsRoleRowData);
       this.button = "今日";
       this.getGoodsTableData("今日");
       this.mark = false;

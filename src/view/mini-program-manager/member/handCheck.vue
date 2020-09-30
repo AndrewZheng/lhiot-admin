@@ -252,11 +252,6 @@ export default {
           key: "nickName",
         },
         {
-          title: "员工姓名",
-          align: "center",
-          key: "staffName",
-        },
-        {
           title: "联系方式",
           align: "center",
           width: 140,
@@ -267,6 +262,44 @@ export default {
           align: "center",
           width: 180,
           key: "applyTime",
+        },
+        {
+          title: "员工姓名",
+          align: "center",
+          key: "staffName",
+          render(h, params, vm) {
+            const { row } = params;
+            if (row.isEdit) {
+              return h(
+                "Div",
+                {
+                  style: {
+                    display: "flex",
+                    flexDirection: "column",
+                  },
+                },
+                [
+                  h("Input", {
+                    style: {
+                      marginLeft: "4px",
+                      width: "100%",
+                    },
+                    props: {
+                      type: "text",
+                      value: row.staffName, // 使用key的键值
+                    },
+                    on: {
+                      input: (event) => {
+                        row.staffName = event;
+                      },
+                    },
+                  }),
+                ]
+              );
+            } else {
+              return h("div", row.staffName);
+            }
+          },
         },
         {
           title: "所在部门",

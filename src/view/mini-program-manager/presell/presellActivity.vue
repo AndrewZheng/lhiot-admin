@@ -681,7 +681,7 @@
                 </i-col>
               </Row>
               <Row>
-                <i-col span="12">
+                <!-- <i-col span="12">
                   <FormItem label="成本价:" prop="costPrice">
                     <InputNumber
                       :min="0"
@@ -691,6 +691,11 @@
                       style="width: 200px"
                     ></InputNumber>
                   </FormItem>
+                </i-col> -->
+                <i-col span="12">
+                  <FormItem label="成本价:" prop="costPrice">{{
+                    presellDetail.costPrice | fenToYuanDot2Filters
+                  }}</FormItem>
                 </i-col>
                 <i-col span="12">
                   <FormItem label="商品毛利:" prop="productProfitPrice">{{
