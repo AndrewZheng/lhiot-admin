@@ -77,6 +77,7 @@
         search-place="top"
         @on-inline-edit="modalHandleEdit"
         @on-inline-save="modalHandleSave"
+        @on-abolish="modalHandleAbolish"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
@@ -382,7 +383,7 @@ export default {
           align: "center",
           width: 140,
           key: "handle",
-          options: ["amendEdit"],
+          options: ["amendEdit", "abolish"],
         },
       ],
       checkStatus: [
@@ -602,6 +603,10 @@ export default {
           this.getTableDataManage();
         })
         .finally((res) => {});
+    },
+    modalHandleAbolish(params) {
+      this.$set(params.row, "isEdit", false);
+      this.openStatus = false;
     },
     goBack() {
       this.$router.back();

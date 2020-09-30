@@ -460,6 +460,7 @@
             @on-delete="modalHandleDelete"
             @on-inline-edit="modalHandleEdit"
             @on-inline-save="modalHandleSave"
+            @on-abolish="modalHandleAbolish"
           ></tables>
         </Row>
       </div>
@@ -1096,7 +1097,7 @@ export default {
           align: "center",
           minWidth: 140,
           key: "handle",
-          options: ["onSale", "inlineEdit"],
+          options: ["onSale", "inlineEdit", "abolish"],
         },
       ],
       productColumns: _.cloneDeep(productColumns),
@@ -1378,6 +1379,9 @@ export default {
           this.tempTableLoading = false;
         });
       this.tempTableLoading = false;
+      this.$set(params.row, "isEdit", false);
+    },
+    modalHandleAbolish(params) {
       this.$set(params.row, "isEdit", false);
     },
     modalHandleDelete(params) {

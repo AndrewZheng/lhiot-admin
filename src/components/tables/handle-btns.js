@@ -26,6 +26,40 @@ const btns = {
         })
       ])]);
   },
+  abolish: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.isEdit) {
+      return h('Tooltip', {
+        props: { placement: 'top', transfer: true, content: '取消' }
+      }, [
+        h('Button', {
+          props: {
+            type: 'info',
+            size: 'small'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            click: () => {
+              vm.$emit('on-abolish', params);
+            }
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-close',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])]);
+    } else {
+      return ''
+    }
+  },
   edit: (h, params, vm) => {
     return h('Tooltip', {
       props: { placement: 'top', transfer: true, content: '修改' }

@@ -20,6 +20,7 @@
         @custom-on-sale="handlePublish"
         @on-inline-edit="modalHandleEdit"
         @on-inline-save="modalHandleSave"
+        @on-abolish="modalHandleAbolish"
         @on-selection-change="handleSelectionChange"
       >
         <div slot="searchCondition">
@@ -1456,9 +1457,16 @@ const standardColumns = [
     title: "操作",
     align: "center",
     fixed: "right",
-    minWidth: 220,
+    minWidth: 240,
     key: "handle",
-    options: ["amendEdit", "customOnSale", "view", "edit", "discount"],
+    options: [
+      "amendEdit",
+      "abolish",
+      "customOnSale",
+      "view",
+      "edit",
+      "discount",
+    ],
   },
 ];
 
@@ -2166,6 +2174,10 @@ export default {
         row.price = row.price * 100;
       }
       this.editProductStandard(row);
+      this.openStatus = false;
+    },
+    modalHandleAbolish(params) {
+      this.$set(params.row, "isEdit", false);
       this.openStatus = false;
     },
     handlePublish(params) {
