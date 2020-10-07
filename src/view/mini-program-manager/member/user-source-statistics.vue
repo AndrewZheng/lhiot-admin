@@ -1,19 +1,21 @@
 <template>
   <div class="m-role">
-    <div style="margin-bottom:30px">
+    <div style="margin-bottom: 30px">
       <div class="tabChange">
         <b
           data-index="source"
           @click="assistDataChange"
-          :class=" topStatus=='source' ? 'hot' : '' "
-        >用户来源汇总</b>
+          :class="topStatus == 'source' ? 'hot' : ''"
+          >用户来源汇总</b
+        >
         <b
           data-index="material"
           @click="assistDataChange"
-          :class=" topStatus=='material' ? 'hot' : '' "
-        >门店物料用户统计</b>
+          :class="topStatus == 'material' ? 'hot' : ''"
+          >门店物料用户统计</b
+        >
       </div>
-      <Card v-show="topStatus==='source'">
+      <Card v-show="topStatus === 'source'">
         <tables
           ref="tableDatas"
           v-model="tableData"
@@ -28,14 +30,18 @@
         >
           <div slot="searchCondition">
             <Row>
-              <RadioGroup v-model="button" type="button" @on-change="timeChange">
+              <RadioGroup
+                v-model="button"
+                type="button"
+                @on-change="timeChange"
+              >
                 <Radio label="今日"></Radio>
                 <Radio label="昨日"></Radio>
                 <Radio label="最近7天"></Radio>
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
               </RadioGroup>
-              <div class="mark" v-show="mark===true">
+              <div class="mark" v-show="mark === true">
                 <DatePicker
                   v-model="searchRowData.beginDate"
                   format="yyyy-MM-dd"
@@ -60,27 +66,31 @@
                 class="search-btn mr5"
                 type="primary"
                 @click="handleSearch"
-                v-show="mark===true"
+                v-show="mark === true"
               >
                 <Icon type="md-search" />&nbsp;搜索
               </Button>
-              <Button class="search-btn mr2" type="warning" @click="handleDownload('userSource')">
+              <Button
+                class="search-btn mr2"
+                type="warning"
+                @click="handleDownload('userSource')"
+              >
                 <Icon type="md-download" />导出数据
               </Button>
             </Row>
             <div class="ml15 mt10">
-              <i style="color:red">*</i> 默认展示当天的数据
+              <i style="color: red">*</i> 默认展示当天的数据
             </div>
           </div>
         </tables>
       </Card>
-      <Card v-show="topStatus==='material'">
+      <Card v-show="topStatus === 'material'">
         <tables
           ref="tables1"
           v-model="tableDataMaterial"
           :columns="columnsMaterial"
           :loading="loading"
-          :search-area-column="18"
+          :search-area-column="24"
           :operate-area-column="6"
           editable
           searchable
@@ -93,14 +103,18 @@
         >
           <div slot="searchCondition">
             <Row>
-              <RadioGroup v-model="buttonMaterial" type="button" @on-change="timeChangeMaterial">
+              <RadioGroup
+                v-model="buttonMaterial"
+                type="button"
+                @on-change="timeChangeMaterial"
+              >
                 <Radio label="今日"></Radio>
                 <Radio label="昨日"></Radio>
                 <Radio label="最近7天"></Radio>
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
               </RadioGroup>
-              <div class="mark" v-show="markMaterial===true">
+              <div class="mark" v-show="markMaterial === true">
                 <DatePicker
                   :value="searchRowDataMaterial.createTimeBegin"
                   format="yyyy-MM-dd"
@@ -108,7 +122,7 @@
                   placeholder="自定义开始时间"
                   class="search-input"
                   style="width: 150px"
-                  @on-change="searchRowDataMaterial.createTimeBegin=$event"
+                  @on-change="searchRowDataMaterial.createTimeBegin = $event"
                 />
                 <i>-</i>
                 <DatePicker
@@ -118,49 +132,73 @@
                   placeholder="自定义结束时间"
                   class="search-input mr5"
                   style="width: 150px"
-                  @on-change="searchRowDataMaterial.createTimeEnd=$event"
+                  @on-change="searchRowDataMaterial.createTimeEnd = $event"
                 />
               </div>
               <Select
                 v-model="searchRowDataMaterial.sidx"
                 placeholder="排序"
-                style="padding-right: 5px;width: 120px"
+                style="width: 120px"
                 @on-change="handRankType"
               >
                 <Option
-                  v-for="(item,index) in rankType"
+                  v-for="(item, index) in rankType"
                   :value="item.value"
                   :key="index"
                   class="ptb2-5"
-                  style="padding-left: 5px;width: 100px"
-                >{{ item.label }}</Option>
+                  style="width: 100px"
+                  >{{ item.label }}</Option
+                >
               </Select>
+              <Input
+                v-model="searchRowDataMaterial.materielName"
+                placeholder="物料名称"
+                class="search-input"
+                style="width: 170px"
+                clearable
+              ></Input>
+              <Input
+                v-model="searchRowDataMaterial.storeName"
+                placeholder="门店名称"
+                class="search-input"
+                style="width: 140px"
+                clearable
+              ></Input>
               <Button
                 :loading="searchLoading"
-                class="search-btn mr5"
+                class="search-btn"
                 type="primary"
                 @click="handleSearchMaterial"
               >
                 <Icon type="md-search" />&nbsp;搜索
               </Button>
+              <Button
+                :loading="searchLoading"
+                class="search-btn mr5"
+                type="info"
+                @click="handleClearMaterial"
+              >
+                <Icon type="md-refresh" />&nbsp;搜索
+              </Button>
+              <Button
+                v-waves
+                :loading="createLoading"
+                type="success"
+                @click="addStoreMateriel"
+              >
+                <Icon type="md-add" />添加
+              </Button>
+              <Button
+                class="search-btn"
+                type="warning"
+                @click="handleDownload('material')"
+              >
+                <Icon type="md-download" />导出
+              </Button>
             </Row>
           </div>
-          <div slot="operations">
-            <Button
-              v-waves
-              :loading="createLoading"
-              type="success"
-              class="mr5"
-              @click="addStoreMateriel"
-            >
-              <Icon type="md-add" />添加
-            </Button>
-            <Button class="search-btn mr2" type="warning" @click="handleDownload('material')">
-              <Icon type="md-download" />导出数据
-            </Button>
-          </div>
         </tables>
-        <div style="margin: 10px;overflow: hidden">
+        <div style="margin: 10px; overflow: hidden">
           <Row type="flex" justify="end">
             <Page
               :total="totalPage"
@@ -224,7 +262,10 @@
             <Row>
               <i-col span="6">二维码:</i-col>
               <i-col v-show="storeMaterielDetail.qrCodePath" span="18">
-                <div class="demo-upload-list" style="width:300px;height:300px">
+                <div
+                  class="demo-upload-list"
+                  style="width: 300px; height: 300px"
+                >
                   <img :src="storeMaterielDetail.qrCodePath" />
                 </div>
               </i-col>
@@ -236,12 +277,24 @@
         <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
-    <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000" :width="800">
+    <Modal
+      v-model="modalEdit"
+      :mask-closable="false"
+      :z-index="1000"
+      :width="800"
+    >
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改门店物料':'创建门店物料' }}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit ? "修改门店物料" : "创建门店物料"
+        }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="storeMaterielDetail" :rules="ruleInline" :label-width="100">
+        <Form
+          ref="modalEdit"
+          :model="storeMaterielDetail"
+          :rules="ruleInline"
+          :label-width="100"
+        >
           <Row>
             <Col span="22">
               <FormItem label="物料名称:" prop="materielName">
@@ -256,28 +309,40 @@
               </FormItem>
             </Col>
           </Row>
-          <Row v-if="tempModalType===modalType.edit">
+          <Row v-if="tempModalType === modalType.edit">
             <Col span="22">
-              <FormItem label="已关联门店:" prop="storeName">{{ storeMaterielDetail.storeName}}</FormItem>
+              <FormItem label="已关联门店:" prop="storeName">{{
+                storeMaterielDetail.storeName
+              }}</FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="22">
-              <FormItem :label="tempModalType===modalType.edit?'更换门店:':'关联门店:'" prop="storeId">
+              <FormItem
+                :label="
+                  tempModalType === modalType.edit ? '更换门店:' : '关联门店:'
+                "
+                prop="storeId"
+              >
                 <Select
                   v-model="storeMaterielDetail.storeId"
                   class="search-col"
-                  :placeholder="tempModalType===modalType.edit?'请选择需更换的门店':'请选择需关联的门店'"
+                  :placeholder="
+                    tempModalType === modalType.edit
+                      ? '请选择需更换的门店'
+                      : '请选择需关联的门店'
+                  "
                   :label-in-value="true"
                   :filterable="true"
                   @on-change="handleStoreId"
                 >
                   <Option
-                    style="padding: 0 8px;"
+                    style="padding: 0 8px"
                     v-for="item in storeList"
                     :key="`search-col-${item.value}`"
                     :value="item.value"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </Col>
@@ -286,7 +351,12 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+          >确定</Button
+        >
       </div>
     </Modal>
   </div>
@@ -342,6 +412,8 @@ const roleRowDataMaterial = {
   createTimeEnd: "",
   sidx: "amountPayableCount",
   sort: "desc",
+  materielName: "",
+  storeName: "",
   page: 1,
   rows: 10,
 };
@@ -816,9 +888,8 @@ export default {
     },
     handleClearMaterial() {
       // 重置数据
-      this.page = 1;
-      this.pageSize = 10;
-      this.handleSearchMaterial();
+      this.searchRowDataMaterial = _.cloneDeep(roleRowDataMaterial);
+      this.getTableDataMaterial();
     },
     changePageMaterial(page) {
       this.searchRowDataMaterial.page = page;
