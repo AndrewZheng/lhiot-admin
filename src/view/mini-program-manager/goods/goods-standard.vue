@@ -1963,6 +1963,7 @@ export default {
         ],
         productName: [{ required: true, message: "请选择上架商品名称" }],
         description: [{ required: true, message: "请上传规格描述图" }],
+        shareImage: [{ required: true, message: "请上传商品分享图" }],
         image: [{ required: true, message: "请上传上架商品主图" }],
         availableStatus: [{ required: true, message: "请选择商品分类" }],
         unitId: [{ required: true, message: "请选择商品单位" }],
