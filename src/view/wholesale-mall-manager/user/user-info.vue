@@ -172,15 +172,16 @@
           >
             <Icon type="md-refresh" />&nbsp;清除
           </Button>
-          <!-- <Button
+          <Button
             v-waves
+            v-has="'export_user_info'"
             :loading="exportExcelLoading"
             type="primary"
             class="mr5 mt5"
             @click="handleDownload"
           >
             <Icon type="md-download" />导出
-          </Button> -->
+          </Button>
         </div>
       </tables>
       <div style="margin: 10px; overflow: hidden">
