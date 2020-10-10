@@ -162,6 +162,8 @@ const roleRowData = {
   whetherGiveReceipt: "",
   page: 1,
   rows: 10,
+  sidx: "commentTime",
+  sort: "desc",
 };
 
 export default {

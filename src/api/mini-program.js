@@ -42,7 +42,7 @@ export const productRanking = (data) => {
 //规格商品排行 
 export const productStanardRanking = (data) => {
   return $http.request({
-    url: `/minapp/index/statistics/product-stanard/sale-ranking?rankingType=${data.rankingType}&beginDate=${data.beginDate}&endDate=${data.endDate}&productName=${data.productName}&productType=${data.productType?data.productType:''}`,
+    url: `/minapp/index/statistics/product-stanard/sale-ranking?rankingType=${data.rankingType}&beginDate=${data.beginDate}&endDate=${data.endDate}&productName=${data.productName}&productType=${data.productType ? data.productType : ''}`,
     method: 'get',
     headers: {
       'page': data.page,
@@ -3107,6 +3107,12 @@ export const serviceFeedback = (data) => {
     url: `/minapp/store-service-feedback/pages`,
     data,
     method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
   });
 };
 
