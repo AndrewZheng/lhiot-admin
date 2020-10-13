@@ -159,7 +159,7 @@
         <i-col>{{ tempModalType===modalType.edit?'修改机器人信息':'创建机器人信息' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="robotDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="modalEdit" :model="robotDetail" :rules="ruleInline" :label-width="90">
           <Row>
             <Col span="18">
             <FormItem :label-width="85" label="所属门店:" prop="storeId">
@@ -403,6 +403,12 @@ export default {
       this.robotDetail.storeImage = null;
     },
     handleSubmit(name) {
+      // if (this.oldPicture.length > 0) {
+      //   const urls = {
+      //     urls: this.oldPicture
+      //   };
+      //   this.deletePicture(urls);
+      // }
       this.$refs[name].validate(valid => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
@@ -418,10 +424,23 @@ export default {
       });
     },
     handleEditClose() {
+      // if (this.newPicture.length > 0) {
+      //   const urls = {
+      //     urls: this.newPicture
+      //   };
+      //   this.deletePicture(urls);
+      // }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
     },
+    // deletePicture(urls) {
+    //   deletePicture({
+    //     urls
+    //   })
+    //     .then(res => {})
+    //     .catch(() => {});
+    // },
     createStore() {
       this.modalViewLoading = true;
       createRobot(this.robotDetail)

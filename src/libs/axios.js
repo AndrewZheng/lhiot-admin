@@ -26,13 +26,19 @@ class HttpRequest {
 
     const imsServiceOps = _.merge({}, defaultOps, {
       baseURL: this.baseUrl,
-      response: this.responseType
+      responseType: this.responseType
     });
 
     // 删除图片
     const imgServiceOps = _.merge({}, defaultOps, {
       baseURL: this.baseUrl,
-      response: this.responseType
+      responseType: this.responseType
+    });
+
+    // 导出 
+    const exportAxiosOps = _.merge({}, defaultOps, {
+      baseURL: this.baseUrl,
+      responseType: this.responseType
     });
 
     // 后端微服务有需求再扩展
@@ -41,6 +47,8 @@ class HttpRequest {
         return imsServiceOps;
       case 'IMG_SERVICE':
         return imgServiceOps;
+      case 'EXPORT_SERVICE':
+        return exportAxiosOps;
       default:
         return defaultOps;
     }
@@ -104,8 +112,7 @@ class HttpRequest {
       this.destory(url);
       // 导出
       const { data, status, headers } = res;
-      // console.log('res frombackend: ', res);
-      if (headers['content-type'] === 'application/vnd.ms-excel;charset=UTF-8') {
+      if (headers['content-type'] === 'application/vnd.ms-excel;charset=utf-8') {
         return res.data;
       }
       // 后续再做修改

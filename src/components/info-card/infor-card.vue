@@ -55,7 +55,8 @@ export default {
 
 <style lang="less">
 .common{
-  float: left;
+  position: absolute;
+  top: 0px;
   height: 100%;
   display: table;
   text-align: center;
@@ -79,12 +80,14 @@ export default {
     position: relative;
     .left-area{
       .common;
+      left: 0px;
       & > .icon{
         .middle-center;
       }
     }
     .right-area{
       .common;
+      right: 0px;
       & > div{
         .middle-center;
       }

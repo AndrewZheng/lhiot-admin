@@ -1,32 +1,37 @@
 <template>
   <div id="app">
-    <router-view v-cloak v-if="isRouterAlive"/>
+    <router-view v-cloak v-if="isRouterAlive" />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
+  name: "App",
   provide() {
     return {
-      reload: this.reload
+      reload: this.reload,
     };
   },
   data() {
     return {
-      isRouterAlive: true
+      isRouterAlive: true,
     };
   },
   created() {},
-  mounted() {},
+  mounted() {
+    window.onbeforeunload = function (e) {
+      let storage = window.localStorage;
+      storage.clear();
+    };
+  },
   methods: {
     reload() {
       this.isRouterAlive = false;
-      this.$nextTick(function() {
+      this.$nextTick(function () {
         this.isRouterAlive = true;
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

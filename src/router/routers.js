@@ -158,7 +158,7 @@ export const constantRouterMap = [
       title: '文章新增/编辑'
     },
     component: Main,
-    children: [      
+    children: [
       {
         path: 'article-edit',
         name: 'article-edit',
@@ -180,6 +180,15 @@ export const constantRouterMap = [
     component: Main,
     children: [
       {
+        path: 'small-member-relation-handCheck',
+        name: 'small-member-relation-handCheck',
+        meta: {
+          icon: 'md-checkmark-circle',
+          title: '员工管理'
+        },
+        component: () => import('@/view/mini-program-manager/member/handCheck.vue')
+      },
+      {
         path: 'small-goods-relation-standard',
         name: 'small-goods-relation-standard',
         meta: {
@@ -187,6 +196,25 @@ export const constantRouterMap = [
           title: '商品关联规格'
         },
         component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
+      },
+      {
+        path: '/small-skip-order',
+        name: 'small-skip-order',
+        meta: {
+          hideInMenu: true,
+          icon: 'ios-paper',
+          title: '订单管理'
+        },
+        component: () => import('@/view/mini-program-manager/order/order.vue')
+      },
+      {
+        path: 'small-relation-system',
+        name: 'small-relation-system',
+        meta: {
+          icon: 'logo-buffer',
+          title: '系统参数管理'
+        },
+        component: () => import('@/view/mini-program-manager/system/system.vue')
       },
       {
         path: 'small-activity-relation-coupon',
@@ -205,7 +233,7 @@ export const constantRouterMap = [
           title: '活动关联优惠券模板'
         },
         component: () => import('@/view/mini-program-manager/vip/activities-associated.vue')
-      },{
+      }, {
         path: 'small-order-coupon-details',
         name: 'small-order-coupon-details',
         meta: {
@@ -213,7 +241,7 @@ export const constantRouterMap = [
           title: '用券数据'
         },
         component: () => import('@/view/mini-program-manager/order/coupon-details.vue')
-      },{
+      }, {
         path: 'small-order-month-orders',
         name: 'small-order-month-orders',
         meta: {
@@ -221,8 +249,17 @@ export const constantRouterMap = [
           title: '跨月退款订单'
         },
         component: () => import('@/view/mini-program-manager/order/month-orders.vue')
+      },
+      {
+        path: '/wechat-home',
+        name: 'wechat-home',
+        meta: {
+          icon: 'md-home',
+          title: '首页',
+          notCache: true
+        },
+        component: () => import('@/view/mini-program-manager/single-page/home')
       }
-      
     ],
   },
   {
@@ -260,6 +297,16 @@ export const constantRouterMap = [
           title: '业务员门店业绩分析'
         },
         component: () => import('@/view/wholesale-mall-manager/user/salesman-store-analysis.vue')
+      },
+      {
+        path: '/wholesale-home',
+        name: 'wholesale-home',
+        meta: {
+          icon: 'md-home',
+          title: '首页',
+          notCache: true
+        },
+        component: () => import('@/view/wholesale-mall-manager/single-page/home')
       }
     ]
   }

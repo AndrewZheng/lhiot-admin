@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="19"
+        :search-area-column="24"
         :operate-area-column="5"
         editable
         searchable
@@ -18,6 +18,8 @@
         @on-audit="hanldeAudit"
         @on-user="hanldeUser"
         @on-set-vip="handleSetVip"
+        @on-userChange="handleExchange"
+        @on-unlock="handleUnlock"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
@@ -25,82 +27,137 @@
           <Input
             v-model="searchRowData.phone"
             placeholder="用户电话"
-            class="search-input mr5"
+            class="search-input"
             style="width: 100px"
             clearable
           ></Input>
           <Input
             v-model="searchRowData.userName"
             placeholder="用户姓名"
-            class="search-input mr5"
+            class="search-input"
             style="width: 100px"
             clearable
           ></Input>
           <Select
             v-model="searchRowData.userType"
-            class="search-col mr5"
+            class="search-col"
             placeholder="用户类型"
-            style="width:100px"
+            style="width: 90px"
             clearable
           >
             <Option
               v-for="item in userTypeEnum"
-              :value="item.value"
               :key="item.value"
+              :value="item.value"
               class="ptb2-5"
-            >{{ item.label }}</Option>
+              >{{ item.label }}</Option
+            >
           </Select>
           <Select
             v-model="searchRowData.userStatus"
-            class="search-col mr5"
+            class="search-col"
             placeholder="用户状态"
-            style="width:100px"
+            style="width: 90px"
             clearable
           >
             <Option
               v-for="item in userStatusEnum"
-              :value="item.value"
               :key="item.value"
+              :value="item.value"
               class="ptb2-5"
-            >{{ item.label }}</Option>
+              >{{ item.label }}</Option
+            >
+          </Select>
+          <Select
+            v-model="searchRowData.userGrade"
+            class="search-col"
+            placeholder="用户等级"
+            style="width: 90px"
+            clearable
+          >
+            <Option
+              v-for="item in userGrade"
+              :key="item.value"
+              :value="item.value"
+              class="ptb2-5"
+              >{{ item.label }}</Option
+            >
+          </Select>
+          <Select
+            v-model="searchRowData.isVip"
+            class="search-col"
+            placeholder="是否VIP"
+            style="width: 90px"
+            clearable
+          >
+            <Option
+              v-for="item in isVipStatus"
+              :key="item.value"
+              :value="item.value"
+              class="ptb2-5"
+              >{{ item.label }}</Option
+            >
           </Select>
           <Select
             v-model="searchRowData.salesUserStatus"
-            class="search-col mr5"
+            class="search-col"
             placeholder="业务员状态"
-            style="width:100px"
+            style="width: 110px"
             clearable
           >
             <Option
               v-for="item in userStatusEnum"
-              :value="item.value"
               :key="item.value"
+              :value="item.value"
               class="ptb2-5"
-            >{{ item.label }}</Option>
+              >{{ item.label }}</Option
+            >
           </Select>
+          <Select
+            v-model="searchRowData.shopType"
+            class="search-col"
+            placeholder="门店类型"
+            style="width: 90px"
+            clearable
+          >
+            <Option
+              v-for="item in shopType"
+              :key="item.value"
+              :value="item.value"
+              class="ptb2-5"
+              >{{ item.label }}</Option
+            >
+          </Select>
+          <Cascader
+            change-on-select
+            :data="data"
+            placeholder="请选择区域"
+            class="search-col"
+            @on-change="onChangeCity"
+          ></Cascader>
           <DatePicker
             v-model="searchRowData.regBeginTime"
-            format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
+            format="yyyy-MM-dd"
+            type="date"
             placeholder="开始时间起"
             class="search-input"
-            style="width: 150px"
+            style="width: 120px"
             @on-change="beginTimeChange"
           />
           <i>-</i>
           <DatePicker
             v-model="searchRowData.regEndTime"
-            format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
+            format="yyyy-MM-dd"
+            type="date"
             placeholder="开始时间止"
-            class="search-input mr5"
-            style="width: 150px"
+            class="search-input"
+            style="width: 120px"
             @on-change="endTimeChange"
           />
           <Button
             v-waves
-            :searchLoading="searchLoading"
-            class="search-btn mr5"
+            :search-loading="searchLoading"
+            class="search-btn"
             type="primary"
             @click="handleSearch"
           >
@@ -115,20 +172,19 @@
           >
             <Icon type="md-refresh" />&nbsp;清除
           </Button>
-        </div>
-        <div slot="operations">
           <Button
             v-waves
+            v-has="'export_user_info'"
             :loading="exportExcelLoading"
             type="primary"
-            class="mr5"
+            class="mr5 mt5"
             @click="handleDownload"
           >
             <Icon type="md-download" />导出
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -152,7 +208,9 @@
         <Form ref="editForm" :label-width="100" :model="userDetail">
           <Row>
             <i-col span="12">
-              <FormItem label="门店名称:" prop="shopName">{{ userDetail.shopName }}</FormItem>
+              <FormItem label="门店名称:" prop="shopName">{{
+                userDetail.shopName
+              }}</FormItem>
             </i-col>
             <i-col span="12">
               <!-- <FormItem label="店长名称:" prop="userName">{{ userDetail.userName }}</FormItem> -->
@@ -163,10 +221,14 @@
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="手机号码:" prop="phone">{{ userDetail.phone }}</FormItem>
+              <FormItem label="手机号码:" prop="phone">{{
+                userDetail.phone
+              }}</FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="微信昵称:" prop="nickname">{{ userDetail.nickname }}</FormItem>
+              <FormItem label="微信昵称:" prop="nickname">{{
+                userDetail.nickname
+              }}</FormItem>
             </i-col>
           </Row>
           <Row>
@@ -177,38 +239,82 @@
             </i-col>
             <i-col span="12">
               <FormItem label="性别:" prop="sex">{{ sexConvertName }}</FormItem>
-              <FormItem label="余额:" prop="balance">{{ userBalance }}</FormItem>
+              <FormItem label="余额:" prop="balance">{{
+                userBalance
+              }}</FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
               <FormItem label="用户状态:" prop="userStatus">
-                <Select v-model="userDetail.userStatus" style="width: 200px">
+                <Select
+                  v-model="userDetail.userStatus"
+                  style="width: 200px"
+                  disabled
+                >
                   <Option
-                    v-for="(item,index) in userStatusEnum"
-                    :value="item.value"
+                    v-for="(item, index) in userStatusEnum"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="所属业务员:" prop="saleUserName">{{ userDetail.saleUserName }}</FormItem>
+              <FormItem label="所属业务员:" prop="saleUserName">{{
+                userDetail.saleUserName
+              }}</FormItem>
             </i-col>
           </Row>
-          <Row v-show="userDetail.userType==='sale'">
+          <Row v-show="userDetail.userType === 'sale'">
             <i-col span="12">
               <FormItem label="业务员状态:" prop="salesUserStatus">
-                <Select v-model="userDetail.salesUserStatus" style="width: 200px">
+                <Select
+                  v-model="userDetail.salesUserStatus"
+                  style="width: 200px"
+                  disabled
+                >
                   <Option
-                    v-for="(item,index) in userStatusEnum"
-                    :value="item.value"
+                    v-for="(item, index) in userStatusEnum"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
+                </Select>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col span="12">
+              <FormItem label="门店类型:" prop="shopType">
+                <Select v-model="userDetail.shopType" style="width: 200px">
+                  <Option
+                    v-for="(item, index) in shopType"
+                    :key="index"
+                    :value="item.value"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                    >{{ item.label }}</Option
+                  >
+                </Select>
+              </FormItem>
+            </i-col>
+            <i-col span="12">
+              <FormItem label="用户等级:" prop="userGrade">
+                <Select v-model="userDetail.userGrade" style="width: 200px">
+                  <Option
+                    v-for="(item, index) in userGrade"
+                    :key="index"
+                    :value="item.value"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
@@ -218,7 +324,7 @@
               <FormItem label="区域:" prop="city">
                 <Input
                   v-model="userDetail.city"
-                  :autosize="{minRows: 2,maxRows: 6}"
+                  :autosize="{ minRows: 2, maxRows: 6 }"
                   type="textarea"
                   style="width: 400px"
                 ></Input>
@@ -231,7 +337,7 @@
               <FormItem label="详细地址:" prop="addressDetail">
                 <Input
                   v-model="userDetail.addressDetail"
-                  :autosize="{minRows: 2,maxRows: 6}"
+                  :autosize="{ minRows: 2, maxRows: 6 }"
                   type="textarea"
                   style="width: 400px"
                 ></Input>
@@ -242,7 +348,94 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit"
+          >确定</Button
+        >
+      </div>
+    </Modal>
+
+    <Modal v-model="modalUser" :width="1000" title="业务员选择">
+      <Card>
+        <tables
+          ref="dataTables"
+          v-model="userData"
+          :columns="userColumns"
+          :loading="loadingUser"
+          editable
+          searchable
+          border
+          search-place="top"
+          @on-select-all="onSelectionAllUser"
+          @on-selection-change="onSelectionChangeUser"
+        >
+          <div slot="searchCondition">
+            <Input
+              v-model="searchUserRowData.phone"
+              placeholder="用户电话"
+              class="search-input mr5"
+              style="width: 100px"
+              clearable
+            ></Input>
+            <Input
+              v-model="searchUserRowData.userName"
+              placeholder="用户姓名"
+              class="search-input mr5"
+              style="width: 100px"
+              clearable
+            ></Input>
+            <Select
+              v-model="searchUserRowData.salesUserStatus"
+              class="search-col mr5"
+              placeholder="业务员状态"
+              style="width: 120px"
+              clearable
+            >
+              <Option
+                v-for="item in userStatusEnum"
+                :key="item.value"
+                :value="item.value"
+                class="ptb2-5"
+                >{{ item.label }}</Option
+              >
+            </Select>
+            <Button
+              v-waves
+              :search-loading="searchLoading"
+              class="search-btn mr5"
+              type="primary"
+              @click="handleSearch1"
+            >
+              <Icon type="md-search" />&nbsp;搜索
+            </Button>
+            <Button
+              v-waves
+              :loading="clearSearchLoading"
+              class="search-btn"
+              type="info"
+              @click="handleClear1"
+            >
+              <Icon type="md-refresh" />&nbsp;清除
+            </Button>
+          </div>
+        </tables>
+        <div style="margin: 10px; overflow: hidden">
+          <Row type="flex" justify="end">
+            <Page
+              :total="usersTotal"
+              :current="searchUserRowData.page"
+              show-sizer
+              show-total
+              @on-change="changeUserPage"
+              @on-page-size-change="changeUserPageSize"
+            ></Page>
+          </Row>
+        </div>
+      </Card>
+      <div slot="footer">
+        <Button @click="modalUser = false">关闭</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleAssgin"
+          >确定</Button
+        >
       </div>
     </Modal>
   </div>
@@ -257,21 +450,27 @@ import {
   deleteUser,
   auditUser,
   changeUser,
-  createUser
+  createUser,
+  getAllSalesman,
+  storeAssign,
+  unlockSalesman,
+  getShopType,
+  getUserGrade,
 } from "@/api/wholesale";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 import deleteMixin from "@/mixins/deleteMixin.js";
+import city from "@/assets/city/city.js";
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber
+  yuanToFenNumber,
 } from "@/libs/util";
 import { userStatusEnum, sexEnum, userTypeEnum } from "@/libs/enumerate";
 import {
   userTypeConvert,
   userStatusConvert,
-  sexConvert
+  sexConvert,
 } from "@/libs/converStatus";
 
 const userDetail = {
@@ -294,7 +493,9 @@ const userDetail = {
   unionId: "",
   userName: "",
   userStatus: "",
-  userType: ""
+  userType: "",
+  userGrade: "",
+  shopType: "",
 };
 
 const roleRowData = {
@@ -308,76 +509,77 @@ const roleRowData = {
   salesUserStatus: "",
   page: 1,
   rows: 20,
+  shopType: "",
+  userGrade: "",
   sidx: "registerTime",
-  sort: "desc"
+  sort: "desc",
 };
 
-const userColumns = [
-  {
-    type: "selection",
-    key: "",
-    width: 60,
-    fixed: "left",
-    align: "center"
-  },
+const columns = [
   {
     title: "编号",
     align: "center",
     key: "id",
     fixed: "left",
-    width: 70
+    width: 70,
   },
   {
     title: "所属地区",
     align: "center",
     key: "city",
-    width: 180
+    width: 180,
   },
   {
     title: "门店代码",
     align: "center",
     key: "shopCode",
-    width: 100
+    width: 120,
   },
   {
     title: "门店名称",
     align: "center",
     key: "shopName",
-    width: 140
+    width: 150,
+  },
+  {
+    title: "门店类型",
+    align: "center",
+    key: "shopTypeName",
+    width: 120,
   },
   {
     title: "店长姓名",
     align: "center",
     key: "userName",
-    width: 100
+    width: 100,
   },
   {
     title: "手机号码",
     align: "center",
     key: "phone",
-    width: 120
+    width: 130,
   },
   {
     title: "注册时间",
     align: "center",
     key: "registerTime",
-    width: 160
+    width: 180,
   },
   {
     title: "用户余额",
     align: "center",
     key: "balance",
-    width: 100,
+    width: 130,
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.balance);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "是否VIP",
     align: "center",
     key: "isVip",
-    width: 120,
+    width: 110,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.isVip === "yes") {
@@ -393,62 +595,68 @@ const userColumns = [
           </div>
         );
       }
-    }
+    },
   },
   {
     title: "用户类型",
     align: "center",
     key: "userType",
-    width: 120,
+    width: 110,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.userType === "consumer") {
         return (
           <div>
-            <tag color="primary">{userTypeConvert(row.userType).label}</tag>
+            <tag color="primary">{userTypeConvert(row.userType)}</tag>
           </div>
         );
       } else if (row.userType === "sale") {
         return (
           <div>
-            <tag color="warning">{userTypeConvert(row.userType).label}</tag>
+            <tag color="warning">{userTypeConvert(row.userType)}</tag>
           </div>
         );
       }
-    }
+    },
+  },
+  {
+    title: "用户等级",
+    align: "center",
+    key: "userGradeName",
+    width: 100,
   },
   {
     title: "用户状态",
     align: "center",
     key: "userStatus",
-    width: 120,
+    width: 100,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.userStatus === "certified") {
         return (
           <div>
-            <tag color="success">{userStatusConvert(row.userStatus).label}</tag>
+            <tag color="success">{userStatusConvert(row.userStatus)}</tag>
           </div>
         );
       } else if (row.userStatus === "locking") {
         return (
           <div>
-            <tag color="error">{userStatusConvert(row.userStatus).label}</tag>
+            <tag color="error">{userStatusConvert(row.userStatus)}</tag>
           </div>
         );
       } else if (row.userStatus === "unaudited") {
         return (
           <div>
-            <tag color="warning">{userStatusConvert(row.userStatus).label}</tag>
+            <tag color="warning">{userStatusConvert(row.userStatus)}</tag>
           </div>
         );
       }
       return (
         <div>
-          <tag color="primary">{userStatusConvert(row.userStatus).label}</tag>
+          <tag color="primary">{userStatusConvert(row.userStatus)}</tag>
         </div>
       );
-    }
+    },
   },
   {
     title: "业务员状态",
@@ -460,42 +668,36 @@ const userColumns = [
       if (row.salesUserStatus === "certified") {
         return (
           <div>
-            <tag color="success">
-              {userStatusConvert(row.salesUserStatus).label}
-            </tag>
+            <tag color="success">{userStatusConvert(row.salesUserStatus)}</tag>
           </div>
         );
       } else if (row.salesUserStatus === "locking") {
         return (
           <div>
-            <tag color="error">
-              {userStatusConvert(row.salesUserStatus).label}
-            </tag>
+            <tag color="error">{userStatusConvert(row.salesUserStatus)}</tag>
           </div>
         );
       } else if (row.salesUserStatus === "unaudited") {
         return (
           <div>
-            <tag color="warning">
-              {userStatusConvert(row.salesUserStatus).label}
-            </tag>
+            <tag color="warning">{userStatusConvert(row.salesUserStatus)}</tag>
           </div>
         );
       }
-      return <div>{userStatusConvert(row.salesUserStatus).label}</div>;
-    }
+      return <div>{userStatusConvert(row.salesUserStatus)}</div>;
+    },
   },
   {
     title: "所属业务员",
     align: "center",
     key: "saleUserName",
-    width: 120
+    width: 120,
   },
   {
     title: "邀请码",
     align: "center",
     key: "inviteCode",
-    width: 80
+    width: 80,
   },
   {
     title: "详细地址",
@@ -504,54 +706,185 @@ const userColumns = [
     width: 300,
     render(h, params, vm) {
       const { row } = params;
-      let city = row.city.replace(/\//g, "");
-      return <div>{city + row.addressDetail}</div>;
-    }
+      return <div>{row.city + row.addressDetail}</div>;
+    },
   },
   {
     title: "操作",
     align: "center",
     key: "handle",
     fixed: "right",
-    width: 180,
-    options: ["setVip", "edit", "saleAudit", "onUser"]
-  }
+    width: 240,
+    options: ["setVip", "edit", "saleAudit", "onUser", "userChange", "unlock"],
+  },
 ];
 
+// v1.2.0
+const userDetailChange = {
+  addressDetail: "",
+  balance: 0,
+  city: "",
+  id: 0,
+  inviteCode: "",
+  isVip: "",
+  nickname: "",
+  openId: "",
+  phone: "",
+  profilePhoto: "",
+  registerTime: "",
+  salesUserId: "",
+  saleUserName: "",
+  salesUserStatus: "",
+  sex: "",
+  shopName: "",
+  unionId: "",
+  userName: "",
+  userStatus: "",
+  userType: "",
+};
+
+const userRowData = {
+  userName: "",
+  phone: "",
+  userType: "sale",
+  isVip: "",
+  city: "",
+  page: 1,
+  rows: 10,
+};
+
+const userColumns = [
+  {
+    type: "selection",
+    key: "",
+    width: 60,
+    fixed: "left",
+    align: "center",
+  },
+  {
+    title: "编号",
+    align: "center",
+    key: "id",
+    fixed: "left",
+    maxWidth: 80,
+  },
+
+  {
+    title: "店长姓名",
+    align: "center",
+    key: "userName",
+  },
+  {
+    title: "手机号码",
+    align: "center",
+    key: "phone",
+    minWidth: 60,
+  },
+  {
+    title: "注册时间",
+    align: "center",
+    key: "registerTime",
+    minWidth: 80,
+  },
+  {
+    title: "业务员状态",
+    align: "center",
+    key: "salesUserStatus",
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.salesUserStatus === "certified") {
+        return (
+          <div>
+            <tag color="success">{userStatusConvert(row.salesUserStatus)}</tag>
+          </div>
+        );
+      } else if (row.salesUserStatus === "locking") {
+        return (
+          <div>
+            <tag color="error">{userStatusConvert(row.salesUserStatus)}</tag>
+          </div>
+        );
+      } else if (row.salesUserStatus === "unaudited") {
+        return (
+          <div>
+            <tag color="warning">{userStatusConvert(row.salesUserStatus)}</tag>
+          </div>
+        );
+      }
+      return <div>{userStatusConvert(row.salesUserStatus)}</div>;
+    },
+  },
+  {
+    title: "邀请码",
+    align: "center",
+    key: "inviteCode",
+    maxWidth: 100,
+  },
+];
 export default {
   components: {
-    Tables
+    Tables,
   },
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
     return {
       ids: [],
+      userData: [],
+      shopType: [],
+      userGrade: [],
+      salesManList: [],
+      selectedUserIds: [],
+      data: [],
+      isVipStatus: [
+        { label: "是", value: "yes" },
+        { label: "否", value: "no" },
+      ],
+      loginName: "",
+      currentSalesId: null,
+      assginSalesUserId: null,
+      modalUser: false,
+      loadingUser: false,
+      usersTotal: 0,
       templatePageOpts: [20, 50],
       userStatusEnum,
       userTypeEnum,
       sexEnum,
+      userColumns,
+      cityDaty: "",
       modalViewLoading: false,
       clearSearchLoading: false,
       exportExcelLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       userDetail: _.cloneDeep(userDetail),
-      columns: userColumns
+      columns: columns,
+      userDetailChange: _.cloneDeep(userDetailChange),
+      searchUserRowData: _.cloneDeep(userRowData),
     };
   },
   computed: {
     sexConvertName() {
-      return sexConvert(this.userDetail.sex).label;
+      return sexConvert(this.userDetail.sex);
     },
     userBalance() {
       return fenToYuanDot2(this.userDetail.balance);
-    }
+    },
   },
   created() {
+    this.data = city;
     this.getTableData();
+    this.getShopType();
+    this.getUserGrade();
+    this.loginName = sessionStorage.getItem("loginName");
   },
   methods: {
+    resetSearchUserRowData() {
+      this.searchUserRowData = _.cloneDeep(userRowData);
+    },
     getTableData() {
-      getUserPages(this.searchRowData).then(res => {
+      getUserPages(this.searchRowData).then((res) => {
+        for (let i = 0; i < res.rows.length; i++) {
+          res.rows[i].loginName = this.loginName;
+        }
         this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;
@@ -584,14 +917,13 @@ export default {
       }
       auditUser({
         id: params.row.id,
-        checkStatus
-      }).then(res => {
+        checkStatus,
+      }).then((res) => {
         this.$Message.info("审核成功");
         this.getTableData();
       });
     },
     hanldeUser(params) {
-      console.log("转换会员类型", params.row.id);
       let userType = "";
       if (params.row.userType === "consumer") {
         userType = "sale";
@@ -600,14 +932,14 @@ export default {
       }
       changeUser({
         id: params.row.id,
-        userType
-      }).then(res => {
+        userType,
+      }).then((res) => {
         this.$Message.info("转换会员类型成功");
         this.getTableData();
       });
     },
     handleSubmit() {
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (this.isCreate) {
             this.createTableRow();
@@ -621,17 +953,45 @@ export default {
     },
     editTableRow() {
       this.modalViewLoading = true;
-      editUser(this.userDetail).then(res => {
+      editUser(this.userDetail).then((res) => {
         this.modalViewLoading = false;
         this.modalEdit = false;
+        this.$Message.success("操作成功!");
         this.getTableData();
         this.resetFields();
       });
     },
+    //获取信息 getShopType getUserGrade
+    getShopType() {
+      getShopType()
+        .then((res) => {
+          let indexValue = JSON.parse(res.indexValue);
+          for (let i = 0; i < indexValue.length; i++) {
+            const map = { label: "label", value: "value" };
+            map.value = indexValue[i].shopType;
+            map.label = indexValue[i].shopTypeName;
+            this.shopType.push(map);
+          }
+        })
+        .finally((res) => {});
+    },
+    getUserGrade() {
+      getUserGrade()
+        .then((res) => {
+          let indexValue = JSON.parse(res.indexValue);
+          for (let i = 0; i < indexValue.length; i++) {
+            const map = { label: "label", value: "value" };
+            map.value = indexValue[i].userGrade;
+            map.label = indexValue[i].userGradeName;
+            this.userGrade.push(map);
+          }
+        })
+        .finally((res) => {});
+    },
     createTableRow() {
       createUser(this.userDetail)
-        .then(res => {})
-        .finally(res => {
+        .then((res) => {})
+        .finally((res) => {
           this.modalEditLoading = false;
           this.modalEdit = false;
           this.getTableData();
@@ -656,9 +1016,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteUser({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&
@@ -679,32 +1039,143 @@ export default {
     handleDownload() {
       this.exportExcelLoading = true;
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      const pageSize = this.searchRowData.page;
+      this.searchRowData.page = 1;
       getUserPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           const tableData = res.rows;
           // 恢复正常页数
-          this.searchRowData.rows = 10;
+          this.searchRowData.rows = 20;
+          this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
-          tableData.forEach(item => {
+          tableData.forEach((item) => {
             item["userType"] =
               item["userType"] === "sale" ? "业务员" : "普通用户";
-            item["userStatus"] = userStatusConvert(item["userStatus"]).label;
+            item["userStatus"] = userStatusConvert(item["userStatus"]);
             item["salesUserStatus"] = userStatusConvert(
               item["salesUserStatus"]
-            ).label;
+            );
             item["balance"] = (item["balance"] / 100.0).toFixed(2);
             item["addressDetail"] = item["city"] + item["addressDetail"];
           });
+          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
           this.$refs.tables.handleDownload({
-            filename: `会员信息-${new Date().valueOf()}`,
-            data: tableData
+            filename: `会员信息-${date}`,
+            data: tableData,
           });
         })
         .finally(() => {
           this.exportExcelLoading = false;
         });
-    }
-  }
+    },
+    // v1.2.0
+    getUserTableData() {
+      getUserPages(this.searchUserRowData)
+        .then((res) => {
+          this.userData = res.rows;
+          this.usersTotal = res.total;
+        })
+        .finally(() => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    onSelectionAllUser(selection) {
+      if (selection.length > 1) {
+        this.$Message.warning("每次只能选择一个业务员");
+        return;
+      }
+      this.assginSalesUserId = selection[0].id.toString();
+    },
+    onSelectionChangeUser(selection) {
+      if (selection.length > 1) {
+        this.$Message.warning("每次只能选择一个业务员");
+        return;
+      }
+      this.assginSalesUserId = selection[0].id.toString();
+    },
+    handleAssgin() {
+      if (this.selectedUserIds.length === 0) {
+        this.$Message.error("请先选择要转让的用户");
+        return;
+      }
+      if (!this.assginSalesUserId) {
+        this.$Message.error("请先选择要转让的业务员");
+        return;
+      }
+      const userIds = this.selectedUserIds.join(",");
+      storeAssign({
+        userIds,
+        assginSalesUserId: this.assginSalesUserId,
+      }).then((res) => {
+        this.$Message.info("门店转让成功");
+        this.getTableData();
+        this.modalUser = false;
+      });
+    },
+    getAllSalesman() {
+      getAllSalesman().then((res) => {
+        this.salesManList = res;
+      });
+    },
+    handleExchange(params) {
+      // 转让业务员旗下门店
+      this.assginSalesUserId = null;
+      this.selectedUserIds = [];
+      this.selectedUserIds.push(params.row.id);
+      this.searchUserRowData = _.cloneDeep(userRowData);
+      this.getUserTableData();
+      this.modalUser = true;
+    },
+    changeUserPage(page) {
+      this.searchUserRowData.page = page;
+      this.getUserTableData();
+    },
+    changeUserPageSize(pageSize) {
+      this.searchUserRowData.page = 1;
+      this.searchUserRowData.rows = pageSize;
+      this.getUserTableData();
+    },
+    handleSearch1() {
+      this.searchUserRowData.page = 1;
+      this.searchLoading = true;
+      this.getUserTableData();
+    },
+    handleClear1() {
+      // 重置数据
+      this.resetSearchUserRowData();
+      this.page = 1;
+      this.pageSize = 10;
+      this.clearSearchLoading = true;
+      this.handleSearch1();
+    },
+    onSelectionChange(selection) {
+      this.selectedUserIds = selection.map((item) => item.id.toString());
+    },
+    handleUnlock(params) {
+      const data = params.row;
+      data.userStatus =
+        params.row.userStatus === "certified" ? "locking" : "certified";
+      unlockSalesman(data).then((res) => {
+        this.$Message.success("操作成功");
+        this.getTableData();
+      });
+    },
+    onChangeCity(value, selectedData) {
+      let city = "";
+      let index = 1;
+      for (let i = 0; i < value.length; i++) {
+        if (value.length - index > 0) {
+          city += value[i] + "/";
+        } else {
+          city += value[i];
+        }
+        index++;
+      }
+      this.searchRowData.city = city;
+    },
+  },
 };
 </script>
 

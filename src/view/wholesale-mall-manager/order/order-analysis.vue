@@ -23,9 +23,28 @@
             style="width: 100px"
             clearable
           ></Input>
+          <DatePicker
+            v-model="searchRowData.startDate"
+            format="yyyy-MM-dd"
+            type="date"
+            placeholder="开始时间"
+            class="mr5"
+            style="width: 150px"
+            @on-change="startTimeChange"
+          />
+          <i>-</i>
+          <DatePicker
+            v-model="searchRowData.endDate"
+            format="yyyy-MM-dd"
+            type="date"
+            placeholder="结束时间"
+            class="mr5"
+            style="width: 150px"
+            @on-change="endTimeChange"
+          />
           <Button
             v-waves
-            :searchLoading="searchLoading"
+            :search-loading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
@@ -41,6 +60,10 @@
           >
             <Icon type="md-refresh" />&nbsp;清除
           </Button>
+          <div class="ml15 mt10">
+            <i style="color: red">*</i>
+            当天中午12点前默认为昨日订单,12点后为今日订单
+          </div>
         </div>
         <div slot="operations">
           <Button
@@ -54,7 +77,7 @@
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -82,13 +105,13 @@ import deleteMixin from "@/mixins/deleteMixin.js";
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber
+  yuanToFenNumber,
 } from "@/libs/util";
 import { userStatusEnum, sexEnum, userTypeEnum } from "@/libs/enumerate";
 import {
   userTypeConvert,
   userStatusConvert,
-  sexConvert
+  sexConvert,
 } from "@/libs/converStatus";
 
 const goodsToday = {
@@ -100,18 +123,20 @@ const goodsToday = {
   standard: "",
   goodsSumPrice: "",
   goodsPrice: "",
-  categoryName: ""
+  categoryName: "",
 };
 
 const roleRowData = {
   goodsName: "",
+  startDate: null,
+  endDate: null,
   page: 1,
-  rows: 20
+  rows: 20,
 };
 
 export default {
   components: {
-    Tables
+    Tables,
   },
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
@@ -132,72 +157,99 @@ export default {
           title: "商品条码",
           align: "center",
           key: "baseBar",
-          minWidth: 60
+          minWidth: 90,
         },
         {
           title: "商品分类",
           align: "center",
           key: "categoryName",
-          minWidth: 60
+          minWidth: 80,
         },
         {
           title: "商品名称",
           align: "center",
           key: "goodsName",
-          minWidth: 100
+          minWidth: 160,
         },
         {
           title: "商品规格",
           align: "center",
           key: "standard",
-          minWidth: 80
+          minWidth: 100,
         },
         {
           title: "商品单价",
           align: "center",
           key: "goodsPrice",
-          minWidth: 80
+          minWidth: 80,
+          render(h, params, vm) {
+            const amount = "¥" + params.row.goodsPrice;
+            return <div>{amount}</div>;
+          },
         },
         {
           title: "商品数量",
           align: "center",
           key: "quanity",
-          minWidth: 80
+          minWidth: 80,
         },
         {
           title: "商品重量",
           align: "center",
           key: "goodsWeight",
-          minWidth: 80
+          minWidth: 80,
+          render(h, params, vm) {
+            const amount = params.row.goodsWeight + "Kg";
+            return <div>{amount}</div>;
+          },
         },
         {
           title: "商品净重",
           align: "center",
           key: "netWeight",
-          minWidth: 80
+          minWidth: 80,
+          render(h, params, vm) {
+            const { row } = params;
+            if (row.netWeight) {
+              const amount = params.row.netWeight + "Kg";
+              return <div>{amount}</div>;
+            } else {
+              return <div>{"N/A"}</div>;
+            }
+          },
         },
         {
           title: "商品总额",
           align: "center",
           key: "goodsSumPrice",
-          minWidth: 80
-        }
-      ]
+          minWidth: 80,
+          render(h, params, vm) {
+            const amount = "¥" + params.row.goodsSumPrice;
+            return <div>{amount}</div>;
+          },
+        },
+        {
+          title: "下单日期",
+          align: "center",
+          key: "createDate",
+          minWidth: 90,
+        },
+      ],
     };
   },
+  computed: {},
   created() {
     this.getTableData();
   },
   mounted() {},
-  computed: {},
   methods: {
     getTableData() {
       getOrderGoodsToday(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })
-        .finally(res => {
+        .finally((res) => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -226,26 +278,36 @@ export default {
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
     },
+    startTimeChange(value, date) {
+      this.searchRowData.startDate = value;
+    },
+    endTimeChange(value, data) {
+      this.searchRowData.endDate = value;
+    },
     handleDownload() {
       this.exportExcelLoading = true;
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      const pageSize = this.searchRowData.page;
+      this.searchRowData.page = 1;
       getOrderGoodsToday(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           const tableData = res.rows;
           // 恢复正常页数
           this.searchRowData.rows = 10;
+          this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
           //  tableData.forEach(item => {});
+          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
           this.$refs.tables.handleDownload({
-            filename: `新品需求信息-${new Date().valueOf()}`,
-            data: tableData
+            filename: `订单商品导出-${date}`,
+            data: tableData,
           });
         })
         .finally(() => {
           this.exportExcelLoading = false;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

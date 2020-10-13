@@ -35,13 +35,13 @@
               clearable
             ></Input>
             <Cascader
-              :data="systemCategoryData"
               v-model="defaultSystemCategoryData"
+              :data="systemCategoryData"
               class="search-col mr5"
               @on-change="systemCategoryChange1"
             ></Cascader>
             <Button
-              :searchLoading="searchLoading"
+              :search-loading="searchLoading"
               class="search-btn mr5"
               type="primary"
               @click="handleSearch"
@@ -171,8 +171,8 @@
             <i-col span="12">
               <FormItem label="分类ID:" prop="categoryId">
                 <Cascader
-                  :data="systemCategoryData"
                   v-model="defaultSystemCategoryData"
+                  :data="systemCategoryData"
                   span="21"
                   @on-change="systemCategoryChange"
                 ></Cascader>
@@ -234,8 +234,8 @@
                 <Select v-model="systemDetail.showType">
                   <Option
                     v-for="(item,index) in showTypeEnum"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px;width: 100%"
                   >{{ item.label }}</Option>
@@ -267,17 +267,46 @@
               justify="start"
               class="mt10"
             >
-              <i-col span="10">
+              <i-col span="17">
                 <Row v-for="(objKey,sindex) in keys" :key="sindex" type="flex" justify="start">
                   <i-col span="12 mt5">
                     <Input
+                      v-if="sindex===0"
+                      v-model="item[objKey]"
+                      style="width:300px;"
+                      :disabled="item.new!='new'&&editableStatus"
+                      @on-change="handleInputChange"
+                    >
+                      <span slot="prepend">{{ findKeyName(objKey) }}</span>
+                    </Input>
+                    <Input
+                      v-if="sindex===1"
                       v-model="item[objKey]"
                       style="width:300px;"
                       @on-change="handleInputChange"
                     >
                       <span slot="prepend">{{ findKeyName(objKey) }}</span>
                     </Input>
+                    <Input
+                      v-if="sindex===2"
+                      v-model="item[objKey]"
+                      style="width:300px;"
+                      readonly
+                      @on-change="handleInputChange"
+                    >
+                      <span slot="prepend">{{ findKeyName(objKey) }}</span>
+                    </Input>
                   </i-col>
+                  <Cascader
+                    v-show="sindex===2"
+                    change-on-select
+                    :data="cityData"
+                    placeholder="请选择区域"
+                    class="search-col"
+                    style="margin-top:6px"
+                    @on-visible-change="findIndex(index)"
+                    @on-change="onChangeCity"
+                  ></Cascader>
                 </Row>
               </i-col>
               <i-col span="14 mt5">
@@ -285,8 +314,8 @@
                   <Icon type="md-add" />
                 </Button>
                 <Button
-                  v-waves
                   v-show="index>0"
+                  v-waves
                   size="small"
                   type="error"
                   class="mr5"
@@ -304,7 +333,6 @@
               :key="index"
               type="flex"
               justify="start"
-              class="mt10"
             >
               <i-col span="9">
                 <Input :value="item" style="width:300px;" @on-change="handleItemChange">
@@ -347,6 +375,7 @@
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
 import IViewUpload from "_c/iview-upload";
+import city from "@/assets/city/city.js";
 
 import {
   deleteSystemSetting,
@@ -407,7 +436,10 @@ export default {
       paramObjectList: [],
       paramObject: {},
       keys: [],
+      cityData: [],
+      findIdx: "",
       newItem: "",
+      editableStatus: null,
       showImage: false,
       createLoading: false,
       modalViewLoading: false,
@@ -457,7 +489,7 @@ export default {
           title: "分类ID",
           align: "center",
           key: "categoryId",
-          width: 80
+          width: 100
         },
         {
           title: "参数类型",
@@ -467,11 +499,11 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             if (row.showType === "normal") {
-              return <div>{showTypeConvert(row.showType).label}</div>;
+              return <div>{showTypeConvert(row.showType)}</div>;
             } else if (row.showType === "list") {
-              return <div>{showTypeConvert(row.showType).label}</div>;
+              return <div>{showTypeConvert(row.showType)}</div>;
             } else {
-              return <div>{showTypeConvert(row.showType).label}</div>;
+              return <div>{showTypeConvert(row.showType)}</div>;
             }
           }
         },
@@ -504,7 +536,9 @@ export default {
     this.getTableData();
     this.getSystemSettingCategoryTree();
   },
-  created() {},
+  created() {
+    this.cityData = city;
+  },
   methods: {
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
@@ -523,12 +557,21 @@ export default {
     handleSubmit() {
       this.$refs.editForm.validate(valid => {
         if (valid) {
-          console.log(this.systemDetail.indexValue);
-          console.log(this.systemDetail.categoryId);
           this.systemDetail.indexValue = this.systemDetail.indexValue.replace(
             /\n|\r/g,
             "&"
           );
+          if (this.editableStatus) {
+            let data = JSON.parse(this.systemDetail.indexValue);
+            for (let i = 0; i < data.length; i++) {
+              if (data[i].new) {
+                let strData = data[i];
+                delete strData["new"];
+                data[i] = strData;
+              }
+            }
+            this.systemDetail.indexValue = JSON.stringify(data);
+          }
           if (this.isCreate) {
             // 添加状态
             this.createStore();
@@ -591,6 +634,7 @@ export default {
       this.keys.forEach(key => {
         obj[key] = "";
       });
+      obj.new = "new";
       this.paramObjectList.push(obj);
       this.systemDetail.indexValue = JSON.stringify(this.paramObjectList);
     },
@@ -614,7 +658,6 @@ export default {
     },
     handleTimeChange(timerange) {
       // ["09:00", "09:00"]
-      console.log("time:", timerange);
       this.systemDetail.orderTimeSpan = timerange;
       this.systemDetail.indexValue = timerange.join("-");
     },
@@ -658,7 +701,6 @@ export default {
       this.systemDetail.orderTimeSpan = [];
       this.tempModalType = this.modalType.edit;
       this.systemDetail = _.cloneDeep(params.row);
-      console.log("数据", this.systemDetail);
       if (this.systemDetail.description != null) {
         this.showImage = this.systemDetail.description.indexOf("http") != -1;
       }
@@ -670,16 +712,18 @@ export default {
         this.systemDetail.orderTimeSpan = this.systemDetail.indexValue.split(
           "-"
         );
-        console.log("timespan", this.systemDetail.orderTimeSpan);
       }
       // 如果有参数配置参考则读取
       if (this.hasParamRule) {
         this.paramRuleSetting = JSON.parse(this.systemDetail.paramRuleSetting);
         this.paramRuleSetting.forEach(item => this.keys.push(item.key));
-        // const obj = {};
-        // this.keys.forEach(key => { obj[key] = ''; });
-        // this.paramObject = _.cloneDeep(obj);
-        // console.log('paramObject', this.paramObject);
+        this.editableStatus = null;
+        if (this.systemDetail.paramRuleSetting) {
+          let data = JSON.parse(this.systemDetail.paramRuleSetting);
+          if (data[0].editable) {
+            this.editableStatus = data[0].editable == "false" ? true : false;
+          }
+        }
       }
 
       if (this.hasParamRule && this.systemDetail.indexValue) {
@@ -743,14 +787,12 @@ export default {
           if (res && res.array.length > 0) {
             this.systemCategoriesTreeList = res.array;
             const menuList = buildMenu(res.array);
-            console.log("menuList from server:", menuList);
             const map = {
               id: "id",
               title: "title",
               children: "children"
             };
             this.systemCategoryData = convertTreeCategory(menuList, map, true);
-            console.log("menuList after covert:", this.systemCategoryData);
             this.createLoading = false;
           }
         })
@@ -796,6 +838,24 @@ export default {
       if (obj && obj.parentid !== 0) {
         this.findGroupId(obj.parentid);
       }
+    },
+    findIndex(index) {
+      const idx = index;
+      this.findIdx = idx;
+    },
+    onChangeCity(value, selectedData) {
+      let city = "";
+      let index = 1;
+      for (let i = 0; i < value.length; i++) {
+        if (value.length - index > 0) {
+          city += value[i] + "/";
+        } else {
+          city += value[i];
+        }
+        index++;
+      }
+      this.paramObjectList[this.findIdx].addressArea = city;
+      this.systemDetail.indexValue = JSON.stringify(this.paramObjectList);
     }
   }
 };

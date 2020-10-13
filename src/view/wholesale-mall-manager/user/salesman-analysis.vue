@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="16"
+        :search-area-column="18"
         :operate-area-column="6"
         editable
         searchable
@@ -35,7 +35,7 @@
           ></Input>
           <Button
             v-waves
-            :searchLoading="searchLoading"
+            :search-loading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
@@ -51,20 +51,19 @@
           >
             <Icon type="md-refresh" />&nbsp;清除
           </Button>
-        </div>
-        <div slot="operations">
-          <!-- <Button
+          <Button
             v-waves
+            v-has="'export_salesman_analysis'"
             :loading="exportExcelLoading"
             type="primary"
             class="mr5"
             @click="handleDownload"
           >
             <Icon type="md-download" />导出
-          </Button>-->
+          </Button>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -93,7 +92,7 @@ import {
   getWholesaleGoods,
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber
+  yuanToFenNumber,
 } from "@/libs/util";
 import { userStatusEnum, sexEnum, userTypeEnum } from "@/libs/enumerate";
 import { userStatusConvert, sexConvert } from "@/libs/converStatus";
@@ -111,19 +110,19 @@ const userAnalysis = {
   thisMonthNewShopNum: 0,
   thisMonthPerformance: "",
   unionId: "",
-  userType: ""
+  userType: "",
 };
 
 const roleRowData = {
   userName: "",
   phone: "",
   page: 1,
-  rows: 20
+  rows: 20,
 };
 
 export default {
   components: {
-    Tables
+    Tables,
   },
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
@@ -144,13 +143,13 @@ export default {
           title: "业务员姓名",
           align: "center",
           key: "salesmanName",
-          minWidth: 60
+          minWidth: 70,
         },
         {
           title: "手机号码",
           align: "center",
           key: "salesmanPhone",
-          minWidth: 80
+          minWidth: 90,
         },
         {
           title: "上月业绩",
@@ -160,7 +159,7 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.perMonthPerformance);
             return <div>{amount}</div>;
-          }
+          },
         },
         {
           title: "本月业绩",
@@ -170,7 +169,7 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.thisMonthPerformance);
             return <div>{amount}</div>;
-          }
+          },
         },
         {
           title: "累计业绩",
@@ -180,28 +179,28 @@ export default {
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.performanceTotal);
             return <div>{amount}</div>;
-          }
+          },
         },
         {
-          title: "上月招募人数",
+          title: "上月招募数",
           align: "center",
           key: "perMonthNewShopNum",
-          minWidth: 80
+          minWidth: 80,
         },
         {
-          title: "本月招募人数",
+          title: "本月招募数",
           align: "center",
           key: "thisMonthNewShopNum",
-          minWidth: 80
+          minWidth: 80,
         },
         {
-          title: "累计招募人数",
+          title: "累计招募数",
           align: "center",
           key: "newShopNumTotal",
-          minWidth: 80
+          minWidth: 80,
         },
         {
-          title: "业务员状态",
+          title: "状态",
           align: "center",
           key: "salesUserStatus",
           minWidth: 60,
@@ -211,7 +210,7 @@ export default {
               return (
                 <div>
                   <tag color="success">
-                    {userStatusConvert(row.salesUserStatus).label}
+                    {userStatusConvert(row.salesUserStatus)}
                   </tag>
                 </div>
               );
@@ -219,7 +218,7 @@ export default {
               return (
                 <div>
                   <tag color="error">
-                    {userStatusConvert(row.salesUserStatus).label}
+                    {userStatusConvert(row.salesUserStatus)}
                   </tag>
                 </div>
               );
@@ -227,7 +226,7 @@ export default {
               return (
                 <div>
                   <tag color="warning">
-                    {userStatusConvert(row.salesUserStatus).label}
+                    {userStatusConvert(row.salesUserStatus)}
                   </tag>
                 </div>
               );
@@ -235,29 +234,29 @@ export default {
             return (
               <div>
                 <tag color="primary">
-                  {userStatusConvert(row.salesUserStatus).label}
+                  {userStatusConvert(row.salesUserStatus)}
                 </tag>
               </div>
             );
-          }
+          },
         },
         {
           title: "操作",
           align: "center",
           minWidth: 100,
           key: "handle",
-          options: ["view", "analytics"]
-        }
-      ]
+          options: ["view", "analytics"],
+        },
+      ],
     };
   },
   computed: {
     sexConvertName() {
-      return sexConvert(this.userAnalysis.sex).label;
+      return sexConvert(this.userAnalysis.sex);
     },
     userBalance() {
       return fenToYuanDot2(this.userAnalysis.balance);
-    }
+    },
   },
   created() {
     this.getTableData();
@@ -267,7 +266,7 @@ export default {
   methods: {
     getTableData() {
       getPerformancePages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })
@@ -278,7 +277,7 @@ export default {
         });
     },
     getAllSalesman() {
-      getAllSalesman().then(res => {
+      getAllSalesman().then((res) => {
         this.salesManList = res;
       });
     },
@@ -299,8 +298,8 @@ export default {
         name: "wholesale-order",
         query: {
           id: params.row.salesUserId,
-          salesmanName: params.row.salesmanName
-        }
+          salesmanName: params.row.salesmanName,
+        },
       });
     },
     handleAnalysis(params) {
@@ -308,8 +307,8 @@ export default {
         name: "wholesale-salesman-store-analysis",
         query: {
           id: params.row.salesUserId,
-          salesmanName: params.row.salesmanName
-        }
+          salesmanName: params.row.salesmanName,
+        },
       });
     },
     handleAdd() {
@@ -321,30 +320,33 @@ export default {
     handleDownload() {
       this.exportExcelLoading = true;
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      const pageSize = this.searchRowData.page;
+      this.searchRowData.page = 1;
       getPerformancePages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           const tableData = res.rows;
           // 恢复正常页数
-          this.searchRowData.rows = 10;
+          this.searchRowData.rows = 20;
+          this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
-          tableData.forEach(item => {
+          tableData.forEach((item) => {
             item["userType"] =
               item["userType"] === "sale" ? "业务员" : "普通用户";
-            item["userStatus"] = userStatusConvert(item["userStatus"]).label;
+            item["userStatus"] = userStatusConvert(item["userStatus"]);
             item["salesUserStatus"] = userStatusConvert(
               item["salesUserStatus"]
-            ).label;
+            );
           });
           this.$refs.tables.handleDownload({
             filename: `会员分析信息-${new Date().valueOf()}`,
-            data: tableData
+            data: tableData,
           });
         })
         .finally(() => {
           this.exportExcelLoading = false;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

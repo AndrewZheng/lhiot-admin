@@ -16,13 +16,13 @@
         @on-edit="handleEdit"
       >
         <div slot="searchCondition">
-          <Input
+          <!-- <Input
             v-model="searchRowData.title"
             placeholder="标题"
             class="search-input mr5"
             style="width: 150px"
             clearable
-          ></Input>
+          ></Input>-->
           <Input
             v-model="searchRowData.content"
             placeholder="内容"
@@ -32,7 +32,7 @@
           ></Input>
           <Select
             v-model="searchRowData.status"
-            class="search-col"
+            class="search-col mr5"
             placeholder="反馈状态"
             style="width: 150px"
             clearable
@@ -43,6 +43,19 @@
               :key="item.value"
               class="ml15 mt10"
             >{{ item.label }}</Option>
+          </Select>
+          <Select
+            v-model="searchRowData.title"
+            placeholder="活动类型"
+            style="padding-right: 5px;width: 120px"
+            @on-change="handCouponType"
+          >
+            <Option
+              v-for="(item,index) in feedbackClassify"
+              :value="item.indexValue"
+              :key="index"
+              class="ptb2-5"
+            >{{ item.indexValue }}</Option>
           </Select>
           <Button
             v-waves
@@ -115,6 +128,14 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">用户电话:</i-col>
+              <i-col span="16">{{ feedbackDetail.phone }}</i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">标题:</i-col>
               <i-col span="16">{{ feedbackDetail.title }}</i-col>
             </Row>
@@ -165,7 +186,7 @@
           ref="modalEdit"
           :model="feedbackDetail"
           :rules="ruleInline"
-          :label-width="80"
+          :label-width="100"
         >
           <FormItem label="回复内容:" prop="backMessage">
             <Input v-model="feedbackDetail.backMessage" type="textarea"></Input>
@@ -186,7 +207,11 @@
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
 import _ from "lodash";
-import { getFeedbackPages, editFeedback } from "@/api/mini-program";
+import {
+  getFeedbackPages,
+  editFeedback,
+  getSystemParameter
+} from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 import { appTypeConvert } from "@/libs/converStatus";
@@ -211,8 +236,8 @@ const roleRowData = {
   rows: 10,
   status: null,
   title: "",
-  sidx: "create_time",
-  sort: "desc"
+  sidx: "createTime",
+  sord: "desc"
 };
 
 export default {
@@ -230,7 +255,7 @@ export default {
           title: "ID",
           align: "center",
           key: "id",
-          minWidth: 50
+          width: 70
         },
         {
           title: "标题",
@@ -242,15 +267,15 @@ export default {
         {
           title: "内容",
           align: "center",
-          width: 300,
+          minWidth: 170,
           key: "content",
           tooltip: true
         },
         {
-          title: "反馈用户",
+          title: "用户电话",
           align: "center",
-          width: 185,
-          key: "userId"
+          width: 130,
+          key: "phone"
         },
         {
           title: "创建时间",
@@ -278,55 +303,21 @@ export default {
           }
         },
         {
-          title: "回复人",
-          align: "center",
-          width: 100,
-          key: "backEditor",
-          tooltip: true
-        },
-        {
           title: "回复内容",
           align: "center",
-          width: 170,
+          minWidth: 170,
           key: "backMessage",
           tooltip: true
         },
         {
-          title: "应用类型",
-          align: "center",
-          width: 160,
-          key: "applicationType",
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.applicationType === "WXSMALL_SHOP") {
-              return (
-                <div>
-                  <tag color="green">
-                    {appTypeConvert(row.applicationType).label}
-                  </tag>
-                </div>
-              );
-            } else if (row.applicationType === "S_MALL") {
-              return (
-                <div>
-                  <tag color="gold">
-                    {appTypeConvert(row.applicationType).label}
-                  </tag>
-                </div>
-              );
-            } else {
-              return <div>{row.applicationType}</div>;
-            }
-          }
-        },
-        {
           title: "操作",
           align: "center",
-          minWidth: 150,
+          width: 120,
           key: "handle",
           options: ["view", "feedback"]
         }
       ],
+      feedbackClassify: [],
       feedbackDetail: _.cloneDeep(feedbackDetail),
       searchRowData: _.cloneDeep(roleRowData),
       feedbackLoading: false,
@@ -351,6 +342,7 @@ export default {
   mounted() {},
   created() {
     this.getTableData();
+    this.getSystemParameters();
   },
   methods: {
     resetSearchRowData() {
@@ -397,6 +389,22 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
+    },
+    getSystemParameters() {
+      let code = "FEEDBACK_TITLE_TYPE";
+      getSystemParameter(code)
+        .then(res => {
+          this.feedbackClassify = res.systemSettings;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    handCouponType(value) {
+      this.searchRowData.page = 1;
+      this.searchLoading = true;
+      this.getTableData();
+      this.searchRowData.title = value;
     }
   }
 };

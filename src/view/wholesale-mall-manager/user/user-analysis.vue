@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="16"
+        :search-area-column="24"
         :operate-area-column="6"
         editable
         searchable
@@ -50,15 +50,16 @@
             v-model="searchRowData.userStatus"
             class="search-col mr5"
             placeholder="用户状态"
-            style="width:100px"
+            style="width: 100px"
             clearable
           >
             <Option
               v-for="item in userStatusEnum"
-              :value="item.value"
               :key="item.value"
+              :value="item.value"
               class="ptb2-5"
-            >{{ item.label }}</Option>
+              >{{ item.label }}</Option
+            >
           </Select>
           <!-- <Select
             v-model="searchRowData.salesUserId"
@@ -95,7 +96,7 @@
           />
           <Button
             v-waves
-            :searchLoading="searchLoading"
+            :search-loading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
@@ -111,10 +112,9 @@
           >
             <Icon type="md-refresh" />&nbsp;清除
           </Button>
-        </div>
-        <div slot="operations">
           <Button
             v-waves
+            v-has="'export_user_analysis'"
             :loading="exportExcelLoading"
             type="primary"
             class="mr5"
@@ -124,11 +124,12 @@
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
             :current="page"
+            :page-size="20"
             :page-size-opts="templatePageOpts"
             show-sizer
             show-total
@@ -148,7 +149,7 @@ import {
   getAllSalesman,
   editUser,
   deleteUser,
-  createUser
+  createUser,
 } from "@/api/wholesale";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
@@ -156,13 +157,13 @@ import deleteMixin from "@/mixins/deleteMixin.js";
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber
+  yuanToFenNumber,
 } from "@/libs/util";
 import { userStatusEnum, sexEnum, userTypeEnum } from "@/libs/enumerate";
 import {
   userTypeConvert,
   userStatusConvert,
-  sexConvert
+  sexConvert,
 } from "@/libs/converStatus";
 
 const userAnalysis = {
@@ -182,7 +183,7 @@ const userAnalysis = {
   shopName: "",
   thisMonth: "",
   userName: "",
-  userStatus: ""
+  userStatus: "",
 };
 
 const roleRowData = {
@@ -195,45 +196,50 @@ const roleRowData = {
   userStatus: "",
   salesUserStatus: "",
   page: 1,
-  rows: 20
+  rows: 20,
 };
 
 const userColumns = [
   {
-    type: "selection",
-    key: "",
-    width: 60,
-    align: "center"
-  },
-  {
     title: "编号",
     align: "center",
     key: "id",
-    minWidth: 40
+    minWidth: 40,
   },
   {
     title: "门店名称",
     align: "center",
     key: "shopName",
-    minWidth: 100
+    minWidth: 100,
+  },
+  {
+    title: "门店地址",
+    align: "center",
+    key: "addressDetail",
+    minWidth: 100,
+    tooltip: true,
+    render: (h, params, vm) => {
+      const { row } = params;
+      return <div>{row.city + row.addressDetail}</div>;
+    },
   },
   {
     title: "店长姓名",
     align: "center",
     key: "userName",
-    minWidth: 60
+    minWidth: 70,
   },
   {
     title: "手机号码",
     align: "center",
     key: "phone",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "注册时间",
     align: "center",
     key: "registerTime",
-    minWidth: 100
+    minWidth: 70,
   },
   // {
   //   title: "用户类型",
@@ -246,7 +252,7 @@ const userColumns = [
   //       return (
   //         <div>
   //           <tag color="primary">
-  //             {userTypeConvert(row.userType).label}
+  //             {userTypeConvert(row.userType)}
   //           </tag>
   //         </div>
   //       );
@@ -254,7 +260,7 @@ const userColumns = [
   //       return (
   //         <div>
   //           <tag color="warning">
-  //             {userTypeConvert(row.userType).label}
+  //             {userTypeConvert(row.userType)}
   //           </tag>
   //         </div>
   //       );
@@ -269,7 +275,7 @@ const userColumns = [
     render: (h, params, vm) => {
       const { row } = params;
       return <div>{row.lastMonth ? row.lastMonth : "N/A"}</div>;
-    }
+    },
   },
   {
     title: "本月消费/频次",
@@ -279,27 +285,27 @@ const userColumns = [
     render: (h, params, vm) => {
       const { row } = params;
       return <div>{row.thisMonth ? row.thisMonth : "N/A"}</div>;
-    }
+    },
   },
   {
     title: "累计消费/频次",
     align: "center",
     key: "accumulative",
-    minWidth: 80,
+    minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
       return <div>{row.accumulative ? row.accumulative : "N/A"}</div>;
-    }
+    },
   },
   {
     title: "最近消费时间",
     align: "center",
     key: "lastCreateTime",
-    minWidth: 100,
+    minWidth: 130,
     render: (h, params, vm) => {
       const { row } = params;
       return <div>{row.lastCreateTime ? row.lastCreateTime : "N/A"}</div>;
-    }
+    },
   },
   {
     title: "用户状态",
@@ -311,40 +317,40 @@ const userColumns = [
       if (row.userStatus === "certified") {
         return (
           <div>
-            <tag color="success">{userStatusConvert(row.userStatus).label}</tag>
+            <tag color="success">{userStatusConvert(row.userStatus)}</tag>
           </div>
         );
       } else if (row.userStatus === "locking") {
         return (
           <div>
-            <tag color="error">{userStatusConvert(row.userStatus).label}</tag>
+            <tag color="error">{userStatusConvert(row.userStatus)}</tag>
           </div>
         );
       } else if (row.userStatus === "unaudited") {
         return (
           <div>
-            <tag color="warning">{userStatusConvert(row.userStatus).label}</tag>
+            <tag color="warning">{userStatusConvert(row.userStatus)}</tag>
           </div>
         );
       }
       return (
         <div>
-          <tag color="primary">{userStatusConvert(row.userStatus).label}</tag>
+          <tag color="primary">{userStatusConvert(row.userStatus)}</tag>
         </div>
       );
-    }
+    },
   },
   {
     title: "所属业务员",
     align: "center",
     key: "saleUserName",
-    minWidth: 60
-  }
+    minWidth: 60,
+  },
 ];
 
 export default {
   components: {
-    Tables
+    Tables,
   },
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
@@ -360,16 +366,16 @@ export default {
       exportExcelLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       userAnalysis: _.cloneDeep(userAnalysis),
-      columns: userColumns
+      columns: userColumns,
     };
   },
   computed: {
     sexConvertName() {
-      return sexConvert(this.userAnalysis.sex).label;
+      return sexConvert(this.userAnalysis.sex);
     },
     userBalance() {
       return fenToYuanDot2(this.userAnalysis.balance);
-    }
+    },
   },
   created() {
     this.getTableData();
@@ -378,7 +384,7 @@ export default {
   mounted() {},
   methods: {
     getTableData() {
-      getUserAnalysisPages(this.searchRowData).then(res => {
+      getUserAnalysisPages(this.searchRowData).then((res) => {
         this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;
@@ -387,7 +393,7 @@ export default {
       });
     },
     getAllSalesman() {
-      getAllSalesman().then(res => {
+      getAllSalesman().then((res) => {
         this.salesManList = res;
       });
     },
@@ -401,7 +407,7 @@ export default {
       this.$refs.editForm.resetFields();
     },
     handleSubmit() {
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (this.isCreate) {
             this.createTableRow();
@@ -415,7 +421,7 @@ export default {
     },
     editTableRow() {
       this.modalViewLoading = true;
-      editUser(this.userAnalysis).then(res => {
+      editUser(this.userAnalysis).then((res) => {
         this.modalViewLoading = false;
         this.modalEdit = false;
         this.getTableData();
@@ -424,8 +430,8 @@ export default {
     },
     createTableRow() {
       createUser(this.userAnalysis)
-        .then(res => {})
-        .finally(res => {
+        .then((res) => {})
+        .finally((res) => {
           this.modalEditLoading = false;
           this.modalEdit = false;
           this.getTableData();
@@ -450,9 +456,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteUser({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&
@@ -472,30 +478,36 @@ export default {
     handleDownload() {
       this.exportExcelLoading = true;
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      const pageSize = this.searchRowData.page;
+      this.searchRowData.page = 1;
       getUserAnalysisPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           const tableData = res.rows;
           // 恢复正常页数
-          this.searchRowData.rows = 10;
+          this.searchRowData.rows = 20;
+          this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
-          tableData.forEach(item => {
+          tableData.forEach((item) => {
             item["userType"] =
               item["userType"] === "sale" ? "业务员" : "普通用户";
-            item["userStatus"] = userStatusConvert(item["userStatus"]).label;
+            item["userStatus"] = userStatusConvert(item["userStatus"]);
             item["salesUserStatus"] = userStatusConvert(
               item["salesUserStatus"]
-            ).label;
+            );
+            item["addressDetail"] = item["city"] + item["addressDetail"];
+            //  row.city + row.addressDetail
           });
+          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
           this.$refs.tables.handleDownload({
-            filename: `会员分析信息-${new Date().valueOf()}`,
-            data: tableData
+            filename: `会员分析信息-${date}`,
+            data: tableData,
           });
         })
         .finally(() => {
           this.exportExcelLoading = false;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -33,7 +33,8 @@
                 :value="item.value"
                 :key="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.vaild"
@@ -47,15 +48,15 @@
                 :value="item.value"
                 :key="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <DatePicker
               v-model="searchRowData.startTimeBegin"
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
               placeholder="活动开始时间起"
-              class="mr5"
-              style="width: 150px"
+              style="width: 160px"
               @on-change="startTimeChange"
             />
             <i>-</i>
@@ -65,7 +66,7 @@
               type="datetime"
               placeholder="活动开始时间止"
               class="mr5"
-              style="width: 150px"
+              style="width: 160px"
               @on-change="endTimeChange"
             />
             <Button
@@ -86,12 +87,18 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
             <div class="ml15 mt10">
-              <i style="color:red">*</i> 设置活动时间后,不可修改
+              <i style="color: red">*</i> 设置活动时间后,不可修改
             </div>
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="handleCreate">
+          <Button
+            v-waves
+            :loading="createLoading"
+            type="success"
+            class="mr5"
+            @click="handleCreate"
+          >
             <Icon type="md-add" />添加
           </Button>
           <!-- <Poptip
@@ -107,7 +114,7 @@
           </Poptip>-->
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -123,53 +130,74 @@
       </div>
     </Card>
 
-    <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000" :width="750">
+    <Modal
+      v-model="modalEdit"
+      :mask-closable="false"
+      :z-index="1000"
+      :width="750"
+    >
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改活动':'创建活动' }}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit ? "修改活动" : "创建活动"
+        }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="activityDetail" :rules="ruleInline" :label-width="100">
+        <Form
+          ref="editForm"
+          :model="activityDetail"
+          :rules="ruleInline"
+          :label-width="100"
+        >
           <Row>
             <i-col span="12">
               <FormItem
-                v-show="tempModalType===modalType.create"
+                v-show="tempModalType === modalType.create"
                 label="活动类型:"
                 prop="activityType"
-                style="width:260px;"
+                style="width: 260px"
               >
                 <Select v-model="activityDetail.activityType">
                   <Option
-                    v-for="(item,index) in activityTypeEnum"
+                    v-for="(item, index) in activityTypeEnum"
                     :value="item.value"
                     :key="index"
                     class="ptb2-5"
-                    style="padding-left: 5px;width: 100%"
-                  >{{ item.label }}</Option>
+                    style="padding-left: 5px; width: 100%"
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
               <FormItem
-                v-show="tempModalType===modalType.edit"
+                v-show="tempModalType === modalType.edit"
                 label="活动类型:"
                 prop="activityType"
-              >{{ activityDetail.activityType | pfActivityTypeFilter }}</FormItem>
+                >{{
+                  activityDetail.activityType | pfActivityTypeFilter
+                }}</FormItem
+              >
             </i-col>
             <i-col span="12">
-              <FormItem label="活动状态:" prop="vaild" style="width:260px;">
+              <FormItem label="活动状态:" prop="vaild" style="width: 260px">
                 <Select v-model="activityDetail.vaild">
                   <Option
-                    v-for="(item,index) in activityStatusEnum"
+                    v-for="(item, index) in activityStatusEnum"
                     :value="item.value"
                     :key="index"
                     class="ptb2-5"
-                    style="padding-left: 5px;width: 100%"
-                  >{{ item.label }}</Option>
+                    style="padding-left: 5px; width: 100%"
+                    >{{ item.label }}</Option
+                  >
                 </Select>
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem v-show="tempModalType===modalType.create" label="开始时间:" prop="startTime">
+              <FormItem
+                v-show="tempModalType === modalType.create"
+                label="开始时间:"
+                prop="startTime"
+              >
                 <DatePicker
                   :value="activityDetail.startTime"
                   format="yyyy-MM-dd HH:mm:ss"
@@ -179,7 +207,11 @@
                   @on-change="handleStartTimeChange"
                 />
               </FormItem>
-              <FormItem v-show="tempModalType===modalType.edit" label="开始时间:" prop="startTime">
+              <FormItem
+                v-show="tempModalType === modalType.edit"
+                label="开始时间:"
+                prop="startTime"
+              >
                 <DatePicker
                   :value="activityDetail.startTime"
                   format="yyyy-MM-dd HH:mm:ss"
@@ -191,7 +223,11 @@
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem v-show="tempModalType===modalType.create" label="结束时间:" prop="endTime">
+              <FormItem
+                v-show="tempModalType === modalType.create"
+                label="结束时间:"
+                prop="endTime"
+              >
                 <DatePicker
                   :value="activityDetail.endTime"
                   format="yyyy-MM-dd HH:mm:ss"
@@ -201,7 +237,11 @@
                   @on-change="handleEndTimeChange"
                 />
               </FormItem>
-              <FormItem v-show="tempModalType===modalType.edit" label="结束时间:" prop="endTime">
+              <FormItem
+                v-show="tempModalType === modalType.edit"
+                label="结束时间:"
+                prop="endTime"
+              >
                 <DatePicker
                   :value="activityDetail.endTime"
                   format="yyyy-MM-dd HH:mm:ss"
@@ -216,7 +256,10 @@
           <Row>
             <i-col span="20">
               <FormItem label="活动链接:" prop="linkUrl">
-                <Input v-model="activityDetail.linkUrl" placeholder="http://"></Input>
+                <Input
+                  v-model="activityDetail.linkUrl"
+                  placeholder="http://"
+                ></Input>
               </FormItem>
             </i-col>
           </Row>
@@ -225,7 +268,7 @@
               <FormItem label="活动描述:" prop="activityDesc">
                 <Input
                   v-model="activityDetail.activityDesc"
-                  :autosize="{minRows: 2,maxRows: 6}"
+                  :autosize="{ minRows: 2, maxRows: 6 }"
                   type="textarea"
                   placeholder="请输入活动描述..."
                 ></Input>
@@ -236,7 +279,9 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit"
+          >确定</Button
+        >
       </div>
     </Modal>
   </div>
@@ -249,17 +294,17 @@ import {
   deletActivity,
   getActivityPages,
   editActivity,
-  createActivity
+  createActivity,
 } from "@/api/wholesale";
 import deleteMixin from "@/mixins/deleteMixin.js";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
 import {
   activityStatusConvert,
-  activityTypeConvert
+  activityTypeConvert,
 } from "@/libs/converStatus";
 import { activityTypeEnum, activityStatusEnum } from "@/libs/enumerate";
-import { setActivity, compareCouponData } from "@/libs/util";
+import { setActivity, compareCouponData, compareData } from "@/libs/util";
 
 const activityDetail = {
   activityCode: "",
@@ -271,7 +316,7 @@ const activityDetail = {
   startTime: null,
   startTimeBegin: "",
   startTimeEnd: "",
-  id: ""
+  id: "",
 };
 
 const roleRowData = {
@@ -285,12 +330,12 @@ const roleRowData = {
   page: 1,
   rows: 20,
   sidx: "endTime",
-  sort: "desc"
+  sort: "desc",
 };
 
 export default {
   components: {
-    Tables
+    Tables,
   },
   mixins: [deleteMixin, tableMixin, searchMixin],
   data() {
@@ -309,24 +354,25 @@ export default {
         activityType: [{ required: true, message: "请选择活动类型" }],
         startTime: [{ required: true, message: "请选择开始时间" }],
         endTime: [{ required: true, message: "请选择结束时间" }],
-        vaild: [{ required: true, message: "请选择活动状态" }]
+        vaild: [{ required: true, message: "请选择活动状态" }],
       },
       columns: [
         {
           type: "selection",
           width: 60,
-          align: "center"
+          align: "center",
         },
         {
           title: "活动ID",
           align: "center",
           key: "id",
-          maxWidth: 80
+          minWidth: 90,
         },
         {
           title: "活动类型",
           align: "center",
           key: "activityType",
+          minWidth: 100,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.activityType === "flashsale") {
@@ -354,18 +400,19 @@ export default {
                 </div>
               );
             }
-          }
+          },
         },
         {
           title: "开始时间",
           align: "center",
-          key: "startTime"
+          key: "startTime",
+          minWidth: 160,
         },
         {
           title: "结束时间",
           align: "center",
           key: "endTime",
-          width: "220",
+          minWidth: 220,
           render: (h, params, vm) => {
             const { row } = params;
             if (!compareCouponData(row.endTime)) {
@@ -373,7 +420,7 @@ export default {
             } else {
               return <div>{row.endTime}</div>;
             }
-          }
+          },
         },
         // {
         //   title: "活动链接",
@@ -384,12 +431,14 @@ export default {
         {
           title: "活动描述",
           align: "center",
-          key: "activityDesc"
+          minWidth: 220,
+          key: "activityDesc",
         },
         {
           title: "活动状态",
           align: "center",
           key: "vaild",
+          minWidth: 100,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.vaild === "yes") {
@@ -410,16 +459,16 @@ export default {
                 <tag color="primary">N/A</tag>
               </div>
             );
-          }
+          },
         },
         {
           title: "操作",
           align: "center",
-          minWidth: 80,
+          minWidth: 120,
           key: "handle",
-          options: ["onSale", "edit", "settings"]
-        }
-      ]
+          options: ["onSale", "edit", "settings"],
+        },
+      ],
     };
   },
   mounted() {
@@ -430,14 +479,14 @@ export default {
   methods: {
     getTableData() {
       getActivityPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -464,7 +513,7 @@ export default {
       }
       this.turnToPage({
         name: pageName,
-        params: { activityId: params.row.id }
+        params: { activityId: params.row.id },
       });
     },
     handleCreate() {
@@ -491,22 +540,6 @@ export default {
       let registrationIndex = 0;
       let rechargeIndex = 0;
       for (let i = 0; i < this.tableData.length; i++) {
-        if (
-          params.row.activityType === "flashsale" &&
-          params.row.vaild === "no"
-        ) {
-          if (
-            this.tableData[i].activityType === "flashsale" &&
-            this.tableData[i].vaild === "yes" &&
-            compareCouponData(this.tableData[i].endTime) === true
-          ) {
-            flashsaleIndex++;
-          }
-          if (flashsaleIndex === 2) {
-            this.$Message.info("已有2个有效且开启中的限时抢购活动!");
-            return;
-          }
-        }
         if (
           params.row.activityType === "registration" &&
           params.row.vaild === "no"
@@ -545,7 +578,7 @@ export default {
       this.editActivity();
     },
     handleSubmit() {
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         let flashsaleIndex = 0;
         let registrationIndex = 0;
         let rechargeIndex = 0;
@@ -560,11 +593,17 @@ export default {
                 this.tableData[i].vaild === "yes" &&
                 compareCouponData(this.tableData[i].endTime) === true
               ) {
-                flashsaleIndex++;
-              }
-              if (flashsaleIndex === 2) {
-                this.$Message.info("已有2个有效且开启中的限时抢购活动!");
-                return;
+                if (
+                  compareData(
+                    this.tableData[i].endTime,
+                    this.activityDetail.startTime
+                  )
+                ) {
+                  this.$Message.error(
+                    "下期限时抢购开始时间必须大于以后活动结束时间!"
+                  );
+                  return;
+                }
               }
             }
             if (
@@ -614,7 +653,7 @@ export default {
       this.modalViewLoading = true;
       this.activityDetail.id = "";
       createActivity(this.activityDetail)
-        .then(res => {
+        .then((res) => {
           this.$Message.success("创建成功!");
           this.getTableData();
         })
@@ -626,7 +665,7 @@ export default {
     editActivity() {
       this.modalViewLoading = true;
       editActivity(this.activityDetail)
-        .then(res => {
+        .then((res) => {
           this.getTableData();
         })
         .finally(() => {
@@ -658,9 +697,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deletActivity({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -672,12 +711,12 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

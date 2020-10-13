@@ -118,8 +118,7 @@
     <Modal
       v-model="modalAdd"
       :width="1000"
-      draggable
-      scrollable
+      :mask-closable="false"
       @on-visible-change="handleModalAdd"
     >
       <p slot="header">
@@ -131,7 +130,7 @@
             ref="addForm"
             :model="addRelationDetail"
             :rules="relationRuleInline"
-            :label-width="80"
+            :label-width="100"
           >
             <Row>
               <i-col span="6">
@@ -293,6 +292,200 @@
                 </FormItem>
               </i-col>
             </Row>
+            <Row>
+              <i-col span="12">
+                <FormItem label="关联门店:">
+                  <Select v-model="addRelationDetail.relationStoreType" style="width: 220px">
+                    <Option
+                      v-for="item in relationStoreTypeEnum"
+                      :value="item.value"
+                      :key="item.value"
+                      class="ptb2-5"
+                      style="padding-left: 5px"
+                      @click.native="selectStore(item)"
+                    >{{ item.label }}</Option>
+                  </Select>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row v-show="showStoreList">
+              <i-col span="24">
+                <FormItem>
+                  <div
+                    style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                  >
+                    <div style="margin-left:-54px;margin-right:18px">{{storeNameList[0]}}</div>
+                    <Checkbox
+                      :indeterminate="indeterminate"
+                      :value="checkAll"
+                      @click.prevent.native="handleCheckAll(0)"
+                    >全选/反选</Checkbox>
+                  </div>
+                  <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange">
+                    <Checkbox
+                      v-for="item in storeData"
+                      ref="checkBox"
+                      :key="item.storeId"
+                      :label="item.storeId"
+                    >{{ item.storeName }}</Checkbox>
+                  </CheckboxGroup>
+                </FormItem>
+              </i-col>
+              <i-col span="24">
+                <FormItem>
+                  <div
+                    style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                  >
+                    <div style="margin-left:-54px;margin-right:18px">{{storeNameList[1]}}</div>
+                    <Checkbox
+                      :indeterminate="indeterminate1"
+                      :value="checkAll1"
+                      @click.prevent.native="handleCheckAll(1)"
+                    >全选/反选</Checkbox>
+                  </div>
+                  <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange1">
+                    <Checkbox
+                      v-for="item in storeData1"
+                      ref="checkBox"
+                      :key="item.storeId"
+                      :label="item.storeId"
+                    >{{ item.storeName }}</Checkbox>
+                  </CheckboxGroup>
+                </FormItem>
+              </i-col>
+              <i-col span="24">
+                <FormItem>
+                  <div
+                    style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                  >
+                    <div style="margin-left:-54px;margin-right:18px">{{storeNameList[2]}}</div>
+                    <Checkbox
+                      :indeterminate="indeterminate2"
+                      :value="checkAll2"
+                      @click.prevent.native="handleCheckAll(2)"
+                    >全选/反选</Checkbox>
+                  </div>
+                  <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange2">
+                    <Checkbox
+                      v-for="item in storeData2"
+                      ref="checkBox"
+                      :key="item.storeId"
+                      :label="item.storeId"
+                    >{{ item.storeName }}</Checkbox>
+                  </CheckboxGroup>
+                </FormItem>
+              </i-col>
+              <i-col span="24">
+                <FormItem>
+                  <div
+                    style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                  >
+                    <div style="margin-left:-54px;margin-right:18px">{{storeNameList[3]}}</div>
+                    <Checkbox
+                      :indeterminate="indeterminate3"
+                      :value="checkAll3"
+                      @click.prevent.native="handleCheckAll(3)"
+                    >全选/反选</Checkbox>
+                  </div>
+                  <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange3">
+                    <Checkbox
+                      v-for="item in storeData3"
+                      ref="checkBox"
+                      :key="item.storeId"
+                      :label="item.storeId"
+                    >{{ item.storeName }}</Checkbox>
+                  </CheckboxGroup>
+                </FormItem>
+              </i-col>
+              <i-col span="24">
+                <FormItem>
+                  <div
+                    style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                  >
+                    <div style="margin-left:-54px;margin-right:18px">{{storeNameList[4]}}</div>
+                    <Checkbox
+                      :indeterminate="indeterminate4"
+                      :value="checkAll4"
+                      @click.prevent.native="handleCheckAll(4)"
+                    >全选/反选</Checkbox>
+                  </div>
+                  <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange4">
+                    <Checkbox
+                      v-for="item in storeData4"
+                      ref="checkBox"
+                      :key="item.storeId"
+                      :label="item.storeId"
+                    >{{ item.storeName }}</Checkbox>
+                  </CheckboxGroup>
+                </FormItem>
+              </i-col>
+              <i-col span="24">
+                <FormItem>
+                  <div
+                    style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                  >
+                    <div style="margin-left:-54px;margin-right:18px">{{storeNameList[5]}}</div>
+                    <Checkbox
+                      :indeterminate="indeterminate5"
+                      :value="checkAll5"
+                      @click.prevent.native="handleCheckAll(5)"
+                    >全选/反选</Checkbox>
+                  </div>
+                  <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange5">
+                    <Checkbox
+                      v-for="item in storeData5"
+                      ref="checkBox"
+                      :key="item.storeId"
+                      :label="item.storeId"
+                    >{{ item.storeName }}</Checkbox>
+                  </CheckboxGroup>
+                </FormItem>
+              </i-col>
+              <i-col span="24">
+                <FormItem>
+                  <div
+                    style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                  >
+                    <div style="margin-left:-54px;margin-right:18px">{{storeNameList[6]}}</div>
+                    <Checkbox
+                      :indeterminate="indeterminate6"
+                      :value="checkAll6"
+                      @click.prevent.native="handleCheckAll(6)"
+                    >全选/反选</Checkbox>
+                  </div>
+                  <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange6">
+                    <Checkbox
+                      v-for="item in storeData6"
+                      ref="checkBox"
+                      :key="item.storeId"
+                      :label="item.storeId"
+                    >{{ item.storeName }}</Checkbox>
+                  </CheckboxGroup>
+                </FormItem>
+              </i-col>
+              <!-- <i-col span="24">
+                <FormItem>
+                  <div
+                    style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                  >
+                    <div style="margin-left:-54px;margin-right:18px">{{storeNameList[7]}}</div>
+                    <Checkbox
+                      :indeterminate="indeterminate7"
+                      :value="checkAll7"
+                      @click.prevent.native="handleCheckAll(7)"
+                    >全选/反选</Checkbox>
+                  </div>
+                  <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange7">
+                    <Checkbox
+                      v-for="item in storeData7"
+                      ref="checkBox"
+                      :key="item.storeId"
+                      :label="item.storeId"
+                    >{{ item.storeName }}</Checkbox>
+                  </CheckboxGroup>
+                </FormItem>
+              </i-col>-->
+            </Row>
           </Form>
         </Row>
       </div>
@@ -397,7 +590,8 @@ import {
   getEntityTemplatePages,
   getProductStandardsPages,
   getHdCouponActivitiesPages,
-  getProductUnits
+  getProductUnits,
+  getAreaStorePages,
 } from "@/api/mini-program";
 import uploadMixin from "@/mixins/uploadMixin";
 import deleteMixin from "@/mixins/deleteMixin.js";
@@ -409,7 +603,7 @@ import {
   couponScopeConvert,
   couponUseLimitConvert,
   customPlanStatusConvert,
-  memberLimitConvert
+  memberLimitConvert,
 } from "@/libs/converStatus";
 import {
   couponStatusEnum,
@@ -418,7 +612,8 @@ import {
   couponUseLimitEnum,
   validDateTypeEnum,
   entityTypeEnum,
-  memberLimitEnum
+  memberLimitEnum,
+  relationStoreTypeEnum,
 } from "@/libs/enumerate";
 import {
   compareData,
@@ -427,7 +622,7 @@ import {
   fenToYuanDot2Number,
   yuanToFenNumber,
   replaceByTag,
-  replaceByTab
+  replaceByTab,
 } from "@/libs/util";
 
 const relationDetail = {
@@ -453,8 +648,10 @@ const relationDetail = {
   status: "VALID",
   unitId: 0,
   baseUnitName: null,
+  stores: null,
+  relationStoreType: "ALL",
   barcode: "", // inherit
-  specification: ""
+  specification: "",
 };
 
 const productStandardDetail = {
@@ -498,7 +695,7 @@ const productStandardDetail = {
   invNum: null,
   saleCount: null,
   positionName: null,
-  dbId: null
+  dbId: null,
 };
 
 const roleRowData = {
@@ -506,7 +703,9 @@ const roleRowData = {
   productName: null,
   // barcode: '',
   page: 1,
-  rows: 10
+  rows: 10,
+  sidx: "createTime",
+  sort: "desc",
 };
 
 const templateRowData = {
@@ -516,32 +715,32 @@ const templateRowData = {
   productName: "",
   shelvesStatus: "VALID",
   page: 1,
-  rows: 5
+  rows: 5,
 };
 
 const dataColumns = [
   {
     type: "selection",
     width: 60,
-    align: "center"
+    align: "center",
   },
   {
     title: "商品条码",
     align: "center",
     key: "barcode",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "商品名称",
     align: "center",
     key: "productName",
-    minWidth: 80
+    minWidth: 160,
   },
   {
     title: "商品规格",
     align: "center",
-    key: "standardQty",
-    minWidth: 80
+    key: "specification",
+    minWidth: 80,
   },
   {
     title: "商品状态",
@@ -565,7 +764,7 @@ const dataColumns = [
       } else {
         return <div>N/A</div>;
       }
-    }
+    },
   },
   {
     title: "用户范围",
@@ -580,21 +779,21 @@ const dataColumns = [
       }
       return <div>{row.memberLimitType}</div>;
     },
-    minWidth: 40
+    minWidth: 40,
   },
   {
     title: "创建时间",
     align: "center",
     key: "createTime",
-    minWidth: 80
+    minWidth: 100,
   },
   {
     title: "操作",
     align: "center",
     minWidth: 80,
     key: "handle",
-    options: ["proStatus", "edit", "delete"]
-  }
+    options: ["proStatus", "edit", "delete"],
+  },
 ];
 
 const proStandardColumns = [
@@ -603,43 +802,43 @@ const proStandardColumns = [
     key: "",
     minWidth: 60,
     align: "center",
-    fixed: "left"
+    fixed: "left",
   },
   {
     title: "规格ID",
     align: "center",
     key: "id",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "商品条码",
     key: "barcode",
     align: "center",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "商品编号",
     align: "center",
     key: "productCode",
-    minWidth: 120
+    minWidth: 120,
   },
   {
     title: "商品名称",
     align: "center",
     key: "productName",
-    minWidth: 100
+    minWidth: 100,
   },
   {
     title: "商品规格",
     align: "center",
     key: "specification",
-    minWidth: 100
+    minWidth: 100,
   },
   {
     title: "商品单位",
     align: "center",
     minWidth: 100,
-    key: "productUnit"
+    key: "productUnit",
   },
   {
     title: "商品原价",
@@ -649,7 +848,7 @@ const proStandardColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "售卖价格",
@@ -659,7 +858,7 @@ const proStandardColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.salePrice);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "商品状态",
@@ -692,14 +891,14 @@ const proStandardColumns = [
           </tag>
         </div>
       );
-    }
-  }
+    },
+  },
 ];
 
 export default {
   components: {
     Tables,
-    IViewUpload
+    IViewUpload,
   },
   mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
   data() {
@@ -719,8 +918,8 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         realPoints: [
           { required: true, message: "请输入促销积分" },
@@ -731,8 +930,8 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         receiveLimit: [
           { required: true, message: "请输入每人限兑数量" },
@@ -743,8 +942,8 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         entityLimit: [
           { required: true, message: "请输入兑换限制的总数" },
@@ -755,15 +954,16 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
       unitsList: [],
       couponStatusEnum,
+      relationStoreTypeEnum,
       couponTypeEnum,
       couponScopeEnum,
       couponUseLimitEnum,
@@ -784,9 +984,40 @@ export default {
       addRelationList: [],
       couponTemplateData: [],
       hdCouponTemplateData: [],
+      storeNameList: [],
+      storeList: [],
+      storeData: [],
+      storeData1: [],
+      storeData2: [],
+      storeData3: [],
+      storeData4: [],
+      storeData5: [],
+      storeData6: [],
+      storeData7: [],
+      stores: [],
+      storeListData: [],
+      showStoreList: false,
+      showValidDate: true,
+      indeterminate: false,
+      indeterminate1: false,
+      indeterminate2: false,
+      indeterminate3: false,
+      indeterminate4: false,
+      indeterminate5: false,
+      indeterminate6: false,
+      indeterminate7: false,
+      checkAll: false,
+      checkAll1: false,
+      checkAll2: false,
+      checkAll3: false,
+      checkAll4: false,
+      checkAll5: false,
+      checkAll6: false,
+      checkAll7: false,
+      showStoreName: "",
       couponTemplateTotal: 0,
       couponHdTemplateTotal: 0,
-      modalRelation: false
+      modalRelation: false,
     };
   },
   computed: {
@@ -795,11 +1026,11 @@ export default {
     },
     minBuyFeeComputed() {
       return fenToYuanDot2Number(this.addRelationDetail.minBuyFee);
-    }
+    },
   },
   created() {
-    getProductUnits().then(res => {
-      res.array.forEach(item => {
+    getProductUnits().then((res) => {
+      res.array.forEach((item) => {
         let map = { label: "label", value: "value" };
         map.value = item.id;
         map.label = item.unitName;
@@ -809,6 +1040,7 @@ export default {
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData); // 刷新清除上次搜索结果
+    this.getStore();
     this.getTableData();
   },
   methods: {
@@ -832,13 +1064,186 @@ export default {
       this.editEntityExchange();
     },
     unitChange(value) {
-      const unit = this.unitsList.find(x => x.value == value);
+      const unit = this.unitsList.find((x) => x.value == value);
       this.addRelationDetail.unitId = value;
-      this.addRelationDetail.unitName = unit.label;
+      this.addRelationDetail.unitName = unit;
     },
     handleEdit(params) {
+      const _this = this;
+      this.stores = [];
+      this.addRelationDetail.relationStoreType = "ALL";
       this.tempModalType = this.modalType.edit;
       this.addRelationDetail = _.cloneDeep(params.row);
+      if (
+        this.addRelationDetail.stores !== null &&
+        this.addRelationDetail.stores !== ""
+      ) {
+        this.showStoreList = true;
+        this.addRelationDetail.relationStoreType = "PART";
+        const stores = this.addRelationDetail.stores
+          .substring(1, this.addRelationDetail.stores.length - 1)
+          .split("][");
+        stores.forEach((element) => {
+          this.stores.push(parseInt(element));
+        });
+        // 全选/反选按钮的样式
+        let sameArray = _this.storeList[0].storeList.filter(function (item) {
+          return _this.stores.indexOf(item.storeId) != -1;
+        });
+
+        if (
+          sameArray.length > 0 &&
+          sameArray.length === this.storeList[0].storeList.length
+        ) {
+          this.indeterminate = false;
+          this.checkAll = true;
+        } else if (
+          sameArray.length > 0 &&
+          sameArray.length < this.storeList[0].storeList.length
+        ) {
+          this.indeterminate = true;
+          this.checkAll = false;
+        } else {
+          this.indeterminate = false;
+          this.checkAll = false;
+        }
+        let sameArray1 = _this.storeList[1].storeList.filter(function (item) {
+          return _this.stores.indexOf(item.storeId) != -1;
+        });
+        if (
+          sameArray1.length > 0 &&
+          sameArray1.length === this.storeList[1].storeList.length
+        ) {
+          this.indeterminate1 = false;
+          this.checkAll1 = true;
+        } else if (
+          sameArray1.length > 0 &&
+          sameArray1.length < this.storeList[1].storeList.length
+        ) {
+          this.indeterminate1 = true;
+          this.checkAll1 = false;
+        } else {
+          this.indeterminate1 = false;
+          this.checkAll1 = false;
+        }
+        let sameArray2 = _this.storeList[2].storeList.filter(function (item) {
+          return _this.stores.indexOf(item.storeId) != -1;
+        });
+        if (
+          sameArray2.length > 0 &&
+          sameArray2.length === this.storeList[2].storeList.length
+        ) {
+          this.indeterminate2 = false;
+          this.checkAll2 = true;
+        } else if (
+          sameArray2.length > 0 &&
+          sameArray2.length < this.storeList[2].storeList.length
+        ) {
+          this.indeterminate2 = true;
+          this.checkAll2 = false;
+        } else {
+          this.indeterminate2 = false;
+          this.checkAll2 = false;
+        }
+        let sameArray3 = _this.storeList[3].storeList.filter(function (item) {
+          return _this.stores.indexOf(item.storeId) != -1;
+        });
+        if (
+          sameArray3.length > 0 &&
+          sameArray3.length === this.storeList[3].storeList.length
+        ) {
+          this.indeterminate3 = false;
+          this.checkAll3 = true;
+        } else if (
+          sameArray3.length > 0 &&
+          sameArray3.length < this.storeList[3].storeList.length
+        ) {
+          this.indeterminate3 = true;
+          this.checkAll3 = false;
+        } else {
+          this.indeterminate3 = false;
+          this.checkAll3 = false;
+        }
+        let sameArray4 = _this.storeList[4].storeList.filter(function (item) {
+          return _this.stores.indexOf(item.storeId) != -1;
+        });
+        if (
+          sameArray4.length > 0 &&
+          sameArray4.length === this.storeList[4].storeList.length
+        ) {
+          this.indeterminate4 = false;
+          this.checkAll4 = true;
+        } else if (
+          sameArray4.length > 0 &&
+          sameArray4.length < this.storeList[4].storeList.length
+        ) {
+          this.indeterminate4 = true;
+          this.checkAll4 = false;
+        } else {
+          this.indeterminate4 = false;
+          this.checkAll4 = false;
+        }
+        let sameArray5 = _this.storeList[5].storeList.filter(function (item) {
+          return _this.stores.indexOf(item.storeId) != -1;
+        });
+        if (
+          sameArray5.length > 0 &&
+          sameArray5.length === this.storeList[5].storeList.length
+        ) {
+          this.indeterminate5 = false;
+          this.checkAll5 = true;
+        } else if (
+          sameArray5.length > 0 &&
+          sameArray5.length < this.storeList[5].storeList.length
+        ) {
+          this.indeterminate5 = true;
+          this.checkAll5 = false;
+        } else {
+          this.indeterminate5 = false;
+          this.checkAll5 = false;
+        }
+        let sameArray6 = _this.storeList[6].storeList.filter(function (item) {
+          return _this.stores.indexOf(item.storeId) != -1;
+        });
+        if (
+          sameArray6.length > 0 &&
+          sameArray6.length === this.storeList[6].storeList.length
+        ) {
+          this.indeterminate6 = false;
+          this.checkAll6 = true;
+        } else if (
+          sameArray6.length > 0 &&
+          sameArray6.length < this.storeList[6].storeList.length
+        ) {
+          this.indeterminate6 = true;
+          this.checkAll6 = false;
+        } else {
+          this.indeterminate6 = false;
+          this.checkAll6 = false;
+        }
+        // let sameArray7 = _this.storeList[7].storeList.filter(function (item) {
+        //   return _this.stores.indexOf(item.storeId) != -1;
+        // });
+        // if (
+        //   sameArray7.length > 0 &&
+        //   sameArray7.length === this.storeList[7].storeList.length
+        // ) {
+        //   this.indeterminate7 = false;
+        //   this.checkAll7 = true;
+        // } else if (
+        //   sameArray7.length > 0 &&
+        //   sameArray7.length < this.storeList[7].storeList.length
+        // ) {
+        //   this.indeterminate7 = true;
+        //   this.checkAll7 = false;
+        // } else {
+        //   this.indeterminate7 = false;
+        //   this.checkAll7 = false;
+        // }
+      } else {
+        this.showStoreList = false;
+        this.addRelationDetail.relationStoreType = "ALL"; // storeIds为''默认关联的门店则是全部门店
+      }
       this.replaceTextByTab();
       this.modalAdd = true;
       this.getProStandardData();
@@ -850,6 +1255,8 @@ export default {
       }
     },
     addEntityExchange() {
+      this.showStoreList = false;
+      this.stores = [];
       this.tempModalType = this.modalType.create;
       this.modalAdd = true;
       this.getProStandardData();
@@ -857,6 +1264,503 @@ export default {
     handleRelation() {
       this.modalRelation = true;
     },
+    selectStore(options) {
+      if (options.value === "ALL") {
+        this.addRelationDetail.relationStoreType = "ALL";
+        this.tempModalType === "edit"
+          ? (this.addRelationDetail.stores = "")
+          : (this.addRelationDetail.stores = null);
+        this.showStoreList = false;
+      } else if (options.value === "PART") {
+        this.addRelationDetail.relationStoreType = "PART";
+        this.indeterminate = false;
+        this.checkAll = false;
+        this.indeterminate1 = false;
+        this.checkAll1 = false;
+        this.indeterminate2 = false;
+        this.checkAll2 = false;
+        this.indeterminate3 = false;
+        this.checkAll3 = false;
+        this.indeterminate4 = false;
+        this.checkAll4 = false;
+        this.indeterminate5 = false;
+        this.checkAll5 = false;
+        this.indeterminate6 = false;
+        this.checkAll6 = false;
+        this.indeterminate7 = false;
+        this.checkAll7 = false;
+        this.stores = [];
+        this.addRelationDetail.stores = "";
+        this.showStoreList = true;
+      }
+    },
+    getStore() {
+      getAreaStorePages()
+        .then((res) => {
+          this.storeList = res.array;
+          this.storeData = res.array[0].storeList;
+          this.storeData1 = res.array[1].storeList;
+          this.storeData2 = res.array[2].storeList;
+          this.storeData3 = res.array[3].storeList;
+          this.storeData4 = res.array[4].storeList;
+          this.storeData5 = res.array[5].storeList;
+          this.storeData6 = res.array[6].storeList;
+          // this.storeData7 = res.array[7].storeList;
+          let data = [];
+          for (let val of res.array) {
+            this.storeNameList.push(val.storeName);
+            data.push(val.storeList);
+          }
+          for (let value of data) {
+            this.storeListData = this.storeListData.concat(value);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    handleCheckAll(value) {
+      const _this = this;
+      if (value === 0) {
+        const allIds = [];
+        let beforeIds = [];
+        if (this.indeterminate) {
+          this.checkAll = false;
+        } else {
+          this.checkAll = !this.checkAll;
+        }
+        this.indeterminate = false;
+        if (this.checkAll) {
+          if (this.stores != null) {
+            for (let val of this.stores) {
+              allIds.push(val);
+            }
+          }
+          this.storeList[value].storeList.forEach((item) => {
+            allIds.push(item.storeId);
+          });
+          this.stores = allIds;
+          this.addRelationDetail.stores = "[" + allIds.join("][") + "]";
+        } else {
+          this.storeList[value].storeList.forEach((item) => {
+            beforeIds.push(item.storeId);
+          });
+          let newArray = _this.stores.filter(function (item) {
+            return beforeIds.indexOf(item) == -1;
+          });
+          this.stores = newArray;
+          this.addRelationDetail.stores = "[" + newArray.join("][") + "]";
+        }
+      }
+      if (value === 1) {
+        const allIds1 = [];
+        let beforeIds = [];
+        if (this.indeterminate1) {
+          this.checkAll1 = false;
+        } else {
+          this.checkAll1 = !this.checkAll1;
+        }
+        this.indeterminate1 = false;
+        if (this.checkAll1) {
+          if (this.stores != null) {
+            for (let val of this.stores) {
+              allIds1.push(val);
+            }
+          }
+          this.storeList[value].storeList.forEach((item) => {
+            allIds1.push(item.storeId);
+            beforeIds.push(item.storeId);
+          });
+          this.stores = allIds1;
+          this.addRelationDetail.stores = "[" + allIds1.join("][") + "]";
+        } else {
+          this.storeList[value].storeList.forEach((item) => {
+            beforeIds.push(item.storeId);
+          });
+          let newArray = _this.stores.filter(function (item) {
+            return beforeIds.indexOf(item) == -1;
+          });
+          this.stores = newArray;
+          this.addRelationDetail.stores = "[" + newArray.join("][") + "]";
+        }
+      }
+      if (value === 2) {
+        const allIds2 = [];
+        let beforeIds = [];
+        if (this.indeterminate2) {
+          this.checkAll2 = false;
+        } else {
+          this.checkAll2 = !this.checkAll2;
+        }
+        this.indeterminate2 = false;
+        if (this.checkAll2) {
+          if (this.stores != null) {
+            for (let val of this.stores) {
+              allIds2.push(val);
+            }
+          }
+          this.storeList[value].storeList.forEach((item) => {
+            allIds2.push(item.storeId);
+            beforeIds.push(item.storeId);
+          });
+          this.stores = allIds2;
+          this.addRelationDetail.stores = "[" + allIds2.join("][") + "]";
+        } else {
+          this.storeList[value].storeList.forEach((item) => {
+            beforeIds.push(item.storeId);
+          });
+          let newArray = _this.stores.filter(function (item) {
+            return beforeIds.indexOf(item) == -1;
+          });
+          this.stores = newArray;
+          this.addRelationDetail.stores = "[" + newArray.join("][") + "]";
+        }
+      }
+      if (value === 3) {
+        const allIds3 = [];
+        let beforeIds = [];
+        if (this.indeterminate3) {
+          this.checkAll3 = false;
+        } else {
+          this.checkAll3 = !this.checkAll3;
+        }
+        this.indeterminate3 = false;
+        if (this.checkAll3) {
+          if (this.stores != null) {
+            for (let val of this.stores) {
+              allIds3.push(val);
+            }
+          }
+          this.storeList[value].storeList.forEach((item) => {
+            allIds3.push(item.storeId);
+            beforeIds.push(item.storeId);
+          });
+          this.stores = allIds3;
+          this.addRelationDetail.stores = "[" + allIds3.join("][") + "]";
+        } else {
+          this.storeList[value].storeList.forEach((item) => {
+            beforeIds.push(item.storeId);
+          });
+          let newArray = _this.stores.filter(function (item) {
+            return beforeIds.indexOf(item) == -1;
+          });
+          this.stores = newArray;
+          this.addRelationDetail.stores = "[" + newArray.join("][") + "]";
+        }
+      }
+      if (value === 4) {
+        const allIds4 = [];
+        let beforeIds = [];
+        if (this.indeterminate4) {
+          this.checkAll4 = false;
+        } else {
+          this.checkAll4 = !this.checkAll4;
+        }
+        this.indeterminate4 = false;
+        if (this.checkAll4) {
+          if (this.stores != null) {
+            for (let val of this.stores) {
+              allIds4.push(val);
+            }
+          }
+          this.storeList[value].storeList.forEach((item) => {
+            allIds4.push(item.storeId);
+            beforeIds.push(item.storeId);
+          });
+          this.stores = allIds4;
+          this.addRelationDetail.stores = "[" + allIds4.join("][") + "]";
+        } else {
+          this.storeList[value].storeList.forEach((item) => {
+            beforeIds.push(item.storeId);
+          });
+          let newArray = _this.stores.filter(function (item) {
+            return beforeIds.indexOf(item) == -1;
+          });
+          this.stores = newArray;
+          this.addRelationDetail.stores = "[" + newArray.join("][") + "]";
+        }
+      }
+      if (value === 5) {
+        const allIds5 = [];
+        let beforeIds = [];
+        if (this.indeterminate5) {
+          this.checkAll5 = false;
+        } else {
+          this.checkAll5 = !this.checkAll5;
+        }
+        this.indeterminate5 = false;
+        if (this.checkAll5) {
+          if (this.stores != null) {
+            for (let val of this.stores) {
+              allIds5.push(val);
+            }
+          }
+          this.storeList[value].storeList.forEach((item) => {
+            allIds5.push(item.storeId);
+            beforeIds.push(item.storeId);
+          });
+          this.stores = allIds5;
+          this.addRelationDetail.stores = "[" + allIds5.join("][") + "]";
+        } else {
+          this.storeList[value].storeList.forEach((item) => {
+            beforeIds.push(item.storeId);
+          });
+          let newArray = _this.stores.filter(function (item) {
+            return beforeIds.indexOf(item) == -1;
+          });
+          this.stores = newArray;
+          this.addRelationDetail.stores = "[" + newArray.join("][") + "]";
+        }
+      }
+      if (value === 6) {
+        const allIds6 = [];
+        let beforeIds = [];
+        if (this.indeterminate6) {
+          this.checkAll6 = false;
+        } else {
+          this.checkAll6 = !this.checkAll6;
+        }
+        this.indeterminate6 = false;
+        if (this.checkAll6) {
+          if (this.stores != null) {
+            for (let val of this.stores) {
+              allIds6.push(val);
+            }
+          }
+          this.storeList[value].storeList.forEach((item) => {
+            allIds6.push(item.storeId);
+            beforeIds.push(item.storeId);
+          });
+          this.stores = allIds6;
+          this.addRelationDetail.stores = "[" + allIds6.join("][") + "]";
+        } else {
+          this.storeList[value].storeList.forEach((item) => {
+            beforeIds.push(item.storeId);
+          });
+          let newArray = _this.stores.filter(function (item) {
+            return beforeIds.indexOf(item) == -1;
+          });
+          this.stores = newArray;
+          this.addRelationDetail.stores = "[" + newArray.join("][") + "]";
+        }
+      }
+      if (value === 7) {
+        const allIds7 = [];
+        let beforeIds = [];
+        if (this.indeterminate7) {
+          this.checkAll7 = false;
+        } else {
+          this.checkAll7 = !this.checkAll7;
+        }
+        this.indeterminate7 = false;
+        if (this.checkAll7) {
+          if (this.stores != null) {
+            for (let val of this.stores) {
+              allIds7.push(val);
+            }
+          }
+          this.storeList[value].storeList.forEach((item) => {
+            allIds7.push(item.storeId);
+            beforeIds.push(item.storeId);
+          });
+          this.stores = allIds7;
+          this.addRelationDetail.stores = "[" + allIds7.join("][") + "]";
+        } else {
+          this.storeList[value].storeList.forEach((item) => {
+            beforeIds.push(item.storeId);
+          });
+          let newArray = _this.stores.filter(function (item) {
+            return beforeIds.indexOf(item) == -1;
+          });
+          this.stores = newArray;
+          this.addRelationDetail.stores = "[" + newArray.join("][") + "]";
+        }
+      }
+    },
+    checkAllGroupChange(data) {
+      let sameArray = this.storeList[0].storeList.filter(function (item) {
+        return data.indexOf(item.storeId) != -1;
+      });
+      if (
+        data.length > 0 &&
+        sameArray.length === this.storeList[0].storeList.length
+      ) {
+        this.indeterminate = false;
+        this.checkAll = true;
+      } else if (
+        data.length > 0 &&
+        sameArray.length < this.storeList[0].storeList.length
+      ) {
+        this.indeterminate = true;
+        this.checkAll = false;
+        this.addRelationDetail.stores = "[" + data.join("][") + "]";
+      }
+      if (sameArray.length === 0) {
+        this.indeterminate = false;
+        this.checkAll = false;
+      }
+    },
+    checkAllGroupChange1(data) {
+      let sameArray1 = this.storeList[1].storeList.filter(function (item) {
+        return data.indexOf(item.storeId) != -1;
+      });
+      if (
+        data.length > 0 &&
+        sameArray1.length === this.storeList[1].storeList.length
+      ) {
+        this.indeterminate1 = false;
+        this.checkAll1 = true;
+      } else if (
+        data.length > 0 &&
+        sameArray1.length < this.storeList[1].storeList.length
+      ) {
+        this.indeterminate1 = true;
+        this.checkAll1 = false;
+        this.addRelationDetail.stores = "[" + data.join("][") + "]";
+      }
+      if (sameArray1.length == 0) {
+        this.indeterminate1 = false;
+        this.checkAll1 = false;
+      }
+    },
+    checkAllGroupChange2(data) {
+      let sameArray2 = this.storeList[2].storeList.filter(function (item) {
+        return data.indexOf(item.storeId) != -1;
+      });
+      if (
+        data.length > 0 &&
+        sameArray2.length === this.storeList[2].storeList.length
+      ) {
+        this.indeterminate2 = false;
+        this.checkAll2 = true;
+      } else if (
+        data.length > 0 &&
+        sameArray2.length < this.storeList[2].storeList.length
+      ) {
+        this.indeterminate2 = true;
+        this.checkAll2 = false;
+        this.addRelationDetail.stores = "[" + data.join("][") + "]";
+      }
+      if (sameArray2.length == 0) {
+        this.indeterminate2 = false;
+        this.checkAll2 = false;
+      }
+    },
+    checkAllGroupChange3(data) {
+      let sameArray3 = this.storeList[3].storeList.filter(function (item) {
+        return data.indexOf(item.storeId) != -1;
+      });
+      if (
+        data.length > 0 &&
+        sameArray3.length === this.storeList[3].storeList.length
+      ) {
+        this.indeterminate3 = false;
+        this.checkAll3 = true;
+      } else if (
+        data.length > 0 &&
+        sameArray3.length < this.storeList[3].storeList.length
+      ) {
+        this.indeterminate3 = true;
+        this.checkAll3 = false;
+        this.addRelationDetail.stores = "[" + data.join("][") + "]";
+      }
+      if (sameArray3.length === 0) {
+        this.indeterminate3 = false;
+        this.checkAll3 = false;
+      }
+    },
+    checkAllGroupChange4(data) {
+      let sameArray4 = this.storeList[4].storeList.filter(function (item) {
+        return data.indexOf(item.storeId) != -1;
+      });
+      if (
+        data.length > 0 &&
+        sameArray4.length === this.storeList[4].storeList.length
+      ) {
+        this.indeterminate4 = false;
+        this.checkAll4 = true;
+      } else if (
+        data.length > 0 &&
+        sameArray4.length < this.storeList[4].storeList.length
+      ) {
+        this.indeterminate4 = true;
+        this.checkAll4 = false;
+        this.addRelationDetail.stores = "[" + data.join("][") + "]";
+      }
+      if (sameArray4.length === 0) {
+        this.indeterminate4 = false;
+        this.checkAll4 = false;
+      }
+    },
+    checkAllGroupChange5(data) {
+      let sameArray5 = this.storeList[5].storeList.filter(function (item) {
+        return data.indexOf(item.storeId) != -1;
+      });
+      if (
+        data.length > 0 &&
+        sameArray5.length === this.storeList[5].storeList.length
+      ) {
+        this.indeterminate5 = false;
+        this.checkAll5 = true;
+      } else if (
+        data.length > 0 &&
+        sameArray5.length < this.storeList[5].storeList.length
+      ) {
+        this.indeterminate5 = true;
+        this.checkAll5 = false;
+        this.addRelationDetail.stores = "[" + data.join("][") + "]";
+      }
+      if (sameArray5.length === 0) {
+        this.indeterminate5 = false;
+        this.checkAll5 = false;
+      }
+    },
+    checkAllGroupChange6(data) {
+      let sameArray6 = this.storeList[6].storeList.filter(function (item) {
+        return data.indexOf(item.storeId) != -1;
+      });
+      if (
+        data.length > 0 &&
+        sameArray6.length === this.storeList[6].storeList.length
+      ) {
+        this.indeterminate6 = false;
+        this.checkAll6 = true;
+      } else if (
+        data.length > 0 &&
+        sameArray6.length < this.storeList[6].storeList.length
+      ) {
+        this.indeterminate6 = true;
+        this.checkAll6 = false;
+        this.addRelationDetail.stores = "[" + data.join("][") + "]";
+      }
+      if (sameArray6.length === 0) {
+        this.indeterminate6 = false;
+        this.checkAll6 = false;
+      }
+    },
+    // checkAllGroupChange7(data) {
+    //   let sameArray7 = this.storeList[7].storeList.filter(function (item) {
+    //     return data.indexOf(item.storeId) != -1;
+    //   });
+    //   if (
+    //     data.length > 0 &&
+    //     sameArray7.length === this.storeList[7].storeList.length
+    //   ) {
+    //     this.indeterminate7 = false;
+    //     this.checkAll7 = true;
+    //   } else if (
+    //     data.length > 0 &&
+    //     sameArray7.length < this.storeList[7].storeList.length
+    //   ) {
+    //     this.indeterminate7 = true;
+    //     this.checkAll7 = false;
+    //     this.addRelationDetail.stores = "[" + data.join("][") + "]";
+    //   }
+    //   if (sameArray7.length === 0) {
+    //     this.indeterminate7 = false;
+    //     this.checkAll7 = false;
+    //   }
+    // },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
       this.getTableData();
@@ -867,14 +1771,14 @@ export default {
     },
     getTableData() {
       getEntityExchangePages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -883,7 +1787,7 @@ export default {
     },
     getProStandardData() {
       getProductStandardsPages(this.searchTemplateRowData)
-        .then(res => {
+        .then((res) => {
           this.couponTemplateData = res.rows;
           this.couponTemplateTotal = res.total;
           this.loading = false;
@@ -922,7 +1826,7 @@ export default {
       }
       this.modalViewLoading = true;
       createEntityExchange(this.addRelationDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.$Message.success("创建成功!");
           this.modalAdd = false;
@@ -935,7 +1839,7 @@ export default {
     editEntityExchange() {
       this.modalViewLoading = true;
       editEntityExchange(this.addRelationDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalAdd = false;
           this.$Message.success("修改成功!");
@@ -960,8 +1864,7 @@ export default {
       }
     },
     handleTemplateAdd(name) {
-      console.log("before create:", this.addRelationDetail);
-      this.$refs.addForm.validate(valid => {
+      this.$refs.addForm.validate((valid) => {
         if (valid) {
           this.replaceTextByTag();
           if (name === "add") {
@@ -997,7 +1900,7 @@ export default {
     deleteTable(ids) {
       this.tempTableLoading = true;
       deleteEntityExchange({ ids })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -1009,11 +1912,11 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .finally(res => {
+        .finally((res) => {
           this.tempTableLoading = false;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -89,11 +89,11 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import { getOrderCouponDetails } from "@/api/mini-program";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { fenToYuanDot2 } from "@/libs/util";
+import Tables from '_c/tables';
+import { getOrderCouponDetails } from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import { fenToYuanDot2 } from '@/libs/util';
 import {
   receivingWayEnum,
   receivingWay,
@@ -104,7 +104,7 @@ import {
   miniOrderStatus,
   miniHdStatusEnum,
   miniHdStatus
-} from "@/libs/enumerate";
+} from '@/libs/enumerate';
 import {
   orderTypeConvert,
   thirdDeliverStatusConvert,
@@ -112,27 +112,27 @@ import {
   miniHdStatusConvert,
   receivingWayConvert,
   appTypeConvert
-} from "@/libs/converStatus";
-import BookTypeOption from "_c/book-type-option";
+} from '@/libs/converStatus';
+import BookTypeOption from '_c/book-type-option';
 const orderDetail = {
   id: 0,
-  amountPayable: "", //应付金额
-  code: "", //订单编号
-  couponAmount: "", //优惠金额
-  couponEntityStatus: "", //优惠券实体状态
-  couponFee: "", //优惠金额
-  couponName: "", //优惠券名称
-  couponType: null, //优惠券类型
-  createAt: "", //创建时间
-  minBuyFee: "", //
-  nickname: "", //用户昵称
-  receiveTime: "", //用户领取时间
-  source: "",
-  storeCode: "", //门店编码
-  storeName: "", //门店名称
-  totalAmount: "", //订单总价
-  useTime: "", //使用时间
-  userId: "", //订单用户
+  amountPayable: '', // 应付金额
+  code: '', // 订单编号
+  couponAmount: '', // 优惠金额
+  couponEntityStatus: '', // 优惠券实体状态
+  couponFee: '', // 优惠金额
+  couponName: '', // 优惠券名称
+  couponType: null, // 优惠券类型
+  createAt: '', // 创建时间
+  minBuyFee: '', //
+  nickname: '', // 用户昵称
+  receiveTime: '', // 用户领取时间
+  source: '',
+  storeCode: '', // 门店编码
+  storeName: '', // 门店名称
+  totalAmount: '', // 订单总价
+  useTime: '', // 使用时间
+  userId: '', // 订单用户
   createTimeBegin: null,
   createTimeEnd: null
 };
@@ -160,75 +160,75 @@ export default {
       deliverOrderLoading: false,
       columns: [
         {
-          type: "selection",
-          key: "",
+          type: 'selection',
+          key: '',
           width: 60,
-          align: "center"
+          align: 'center'
         },
         {
-          title: "订单编号",
-          key: "code",
+          title: '订单编号',
+          key: 'code',
           minWidth: 80,
-          align: "center",
+          align: 'center',
           sortable: true
         },
         {
-          title: "门店名称",
-          align: "center",
-          key: "storeName"
+          title: '门店名称',
+          align: 'center',
+          key: 'storeName'
         },
         {
-          title: "用户名称",
-          align: "center",
-          key: "nickname"
+          title: '用户名称',
+          align: 'center',
+          key: 'nickname'
         },
         {
-          title: "券名称",
-          align: "center",
-          key: "couponName"
+          title: '券名称',
+          align: 'center',
+          key: 'couponName'
         },
         {
-          title: "用券时间",
-          align: "center",
-          key: "useTime",
+          title: '用券时间',
+          align: 'center',
+          key: 'useTime',
           minWidth: 80
         },
         {
-          title: "订单金额",
-          align: "center",
-          key: "totalAmount",
+          title: '订单金额',
+          align: 'center',
+          key: 'totalAmount',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.totalAmount);
             return <div>{amount}</div>;
           }
         },
         {
-          title: "优惠金额",
-          align: "center",
-          key: "couponAmount",
+          title: '优惠金额',
+          align: 'center',
+          key: 'couponAmount',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.couponAmount);
             return <div>{amount}</div>;
           }
         },
         {
-          title: "应付金额",
-          align: "center",
-          key: "amountPayable",
+          title: '应付金额',
+          align: 'center',
+          key: 'amountPayable',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.amountPayable);
             return <div>{amount}</div>;
           }
         },
         {
-          title: "来源",
-          align: "center",
-          key: "source",
+          title: '来源',
+          align: 'center',
+          key: 'source',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.source === "SMALL") {
+            if (row.source === 'SMALL') {
               return <div>小程序</div>;
-            } else if (row.source === "HD") {
+            } else if (row.source === 'HD') {
               return <div>海鼎</div>;
             } else {
               return <div>N/A</div>;
@@ -245,7 +245,7 @@ export default {
       currentTableRowSelected: null,
       searchRowData: _.cloneDeep(roleRowData),
       orderDetail: _.cloneDeep(orderDetail),
-      exportType: "xlsx",
+      exportType: 'xlsx',
       downloadLoading: false,
       tableDataSelected: []
     };
@@ -255,7 +255,6 @@ export default {
   },
   methods: {
     orderStatusesOnChange(value) {
-      console.log(value);
       if (value.length === 0) {
         this.searchRowData.orderStatuses = null;
       }
@@ -281,7 +280,7 @@ export default {
       this.getTableData();
     },
     goBack() {
-      this.turnToPage("small-order");
+      this.turnToPage('small-order');
     },
     getTableData() {
       this.loading = true;
@@ -302,36 +301,40 @@ export default {
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      const pageSize = this.searchRowData.page;
+      this.searchRowData.page = 1;
       getOrderCouponDetails(this.searchRowData).then(res => {
         const tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 10;
+        this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
-        let _this = this;
+        const _this = this;
         tableData.forEach(item => {
           const obj = _this.storeList.find(x => item.storeId === x.storeId);
-          item["code"] = item["code"] + "";
-          item["apply"] = appTypeConvert(item["apply"]).label;
-          item["storeId"] =
-            obj && obj.storeName ? obj.storeName : item["storeId"]; // 如果找不到就显示门店Id
-          item["totalAmount"] = (item["totalAmount"] / 100.0).toFixed(2);
-          item["couponAmount"] = (item["couponAmount"] / 100.0).toFixed(2);
-          item["amountPayable"] = (item["amountPayable"] / 100.0).toFixed(2);
-          item["orderType"] = orderTypeConvert(item["orderType"]).label;
-          item["deliverStatus"] = thirdDeliverStatusConvert(
-            item["deliverStatus"]
+          item['code'] = item['code'] + '';
+          item['apply'] = appTypeConvert(item['apply']).label;
+          item['storeId'] =
+            obj && obj.storeName ? obj.storeName : item['storeId']; // 如果找不到就显示门店Id
+          item['totalAmount'] = (item['totalAmount'] / 100.0).toFixed(2);
+          item['couponAmount'] = (item['couponAmount'] / 100.0).toFixed(2);
+          item['amountPayable'] = (item['amountPayable'] / 100.0).toFixed(2);
+          item['orderType'] = orderTypeConvert(item['orderType']);
+          item['deliverStatus'] = thirdDeliverStatusConvert(
+            item['deliverStatus']
+          );
+          item['orderStatus'] = miniOrderStatusConvert(
+            item['orderStatus']
           ).label;
-          item["orderStatus"] = miniOrderStatusConvert(
-            item["orderStatus"]
-          ).label;
-          item["hdStatus"] = miniHdStatusConvert(item["hdStatus"]).label;
-          item["receivingWay"] = receivingWayConvert(
-            item["receivingWay"]
-          ).label;
-          item["status"] = miniOrderStatusConvert(item["status"]).label;
+          item['hdStatus'] = miniHdStatusConvert(item['hdStatus']).label;
+          item['receivingWay'] = receivingWayConvert(
+            item['receivingWay']
+          );
+          item['status'] = miniOrderStatusConvert(item['status']).label;
         });
+        const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
         this.$refs.tables.handleDownload({
-          filename: `用券数据信息-${new Date().valueOf()}`,
+          filename: `用券数据信息-${date}`,
           data: tableData
         });
       });

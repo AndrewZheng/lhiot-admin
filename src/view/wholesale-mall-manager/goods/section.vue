@@ -8,16 +8,16 @@
         <Card>
           <h6>
             当前选中：
-            <span
-              class="brand-red font-sm"
-            >{{ parentCategory.plateName? parentCategory.plateName: '全部板块' }}</span>
+            <span class="brand-red font-sm">{{
+              parentCategory.plateName ? parentCategory.plateName : "全部板块"
+            }}</span>
           </h6>
           <tables
             ref="tables"
             v-model="tableData"
             :columns="columns"
             :loading="loading"
-            :search-area-column="16"
+            :search-area-column="12"
             :operate-area-column="6"
             editable
             searchable
@@ -38,7 +38,7 @@
                   clearable
                 ></Input>
                 <Button
-                  :searchLoading="searchLoading"
+                  :search-loading="searchLoading"
                   class="search-btn mr5"
                   type="primary"
                   @click="handleSearch"
@@ -56,7 +56,7 @@
                 </Button>
               </Row>
             </div>
-            <div slot="operations">
+            <div slot="operations" style="margin-left: -90px">
               <Button
                 v-waves
                 :loading="clearSearchLoading"
@@ -82,7 +82,7 @@
               </Poptip>
             </div>
           </tables>
-          <div style="margin: 10px;overflow: hidden">
+          <div style="margin: 10px; overflow: hidden">
             <Row type="flex" justify="end">
               <Page
                 :total="total"
@@ -103,20 +103,31 @@
     <!--编辑 -->
     <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
-        <span>{{ isCreate?'创建板块':'编辑板块' }}</span>
+        <span>{{ isCreate ? "创建板块" : "编辑板块" }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="currentCategory" :rules="ruleInline" :label-width="100">
+        <Form
+          ref="editForm"
+          :model="currentCategory"
+          :rules="ruleInline"
+          :label-width="100"
+        >
           <FormItem v-show="isCreate" label="父级ID:">
             <i-col>{{ parentCategory.id }}</i-col>
           </FormItem>
           <FormItem v-show="isCreate" label="父级名称:">
-            <i-col
-              style="color:red;font-weight:bold;"
-            >{{ parentCategory.plateName?parentCategory.plateName:'全部板块' }}</i-col>
+            <i-col style="color: red; font-weight: bold">{{
+              parentCategory.plateName ? parentCategory.plateName : "全部板块"
+            }}</i-col>
           </FormItem>
+          <p style="color: #ff3861; margin-left: 28px">
+            新建VIP板块下的子版块必须带前缀VIP
+          </p>
           <FormItem :label-width="100" label="板块名称:" prop="plateName">
-            <Input v-model="currentCategory.plateName" style="width:200px;"></Input>
+            <Input
+              v-model="currentCategory.plateName"
+              style="width: 200px"
+            ></Input>
           </FormItem>
           <FormItem :label-width="100" label="板块顺序:" prop="rank">
             <InputNumber v-model="currentCategory.rank"></InputNumber>
@@ -125,30 +136,52 @@
             <Select
               v-model="currentCategory.layout"
               placeholder="请选择布局方式"
-              style="padding-right: 5px; width:205px;"
+              style="padding-right: 5px; width: 205px"
             >
               <Option
-                v-for="(item,index) in layoutEnum"
-                :value="item.value"
+                v-for="(item, index) in layoutEnum"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
           </FormItem>
-          <FormItem label="板块图片:建议尺寸;750x338(单位:px):" prop="plateImage">
-            <Input v-show="false" v-model="currentCategory.plateImage" style="width: auto"></Input>
-            <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+          <FormItem
+            label="板块图片:建议尺寸;750x338(单位:px):"
+            prop="plateImage"
+          >
+            <Input
+              v-show="false"
+              v-model="currentCategory.plateImage"
+              style="width: auto"
+            ></Input>
+            <div
+              v-for="item in uploadListMain"
+              :key="item.url"
+              class="demo-upload-list"
+            >
               <template v-if="item.status === 'finished'">
                 <div>
-                  <img :src="item.url" >
+                  <img :src="item.url" />
                   <div class="demo-upload-list-cover">
-                    <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                    <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                    <Icon
+                      type="ios-eye-outline"
+                      @click.native="handleUploadView(item)"
+                    ></Icon>
+                    <Icon
+                      type="ios-trash-outline"
+                      @click.native="handleRemoveMain(item)"
+                    ></Icon>
                   </div>
                 </div>
               </template>
               <template v-else>
-                <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                <Progress
+                  v-if="item.showProgress"
+                  :percent="item.percentage"
+                  hide-info
+                ></Progress>
               </template>
             </div>
             <IViewUpload
@@ -159,7 +192,10 @@
               file-dir="product"
               @on-success="handleSuccessMain"
             >
-              <div slot="content" style="width:58px;height:58px;line-height:58px">
+              <div
+                slot="content"
+                style="width: 58px; height: 58px; line-height: 58px"
+              >
                 <Icon type="ios-camera" size="20"></Icon>
               </div>
             </IViewUpload>
@@ -168,16 +204,21 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit"
+          >确定</Button
+        >
       </div>
+    </Modal>
+    <Modal v-model="uploadVisible" title="图片预览">
+      <img :src="imgUploadViewItem" style="width: 100%" />
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import CommonIcon from '_c/common-icon';
-import IViewUpload from '_c/iview-upload';
+import Tables from "_c/tables";
+import CommonIcon from "_c/common-icon";
+import IViewUpload from "_c/iview-upload";
 
 import {
   createProductSection,
@@ -185,97 +226,97 @@ import {
   getProductSectionPages,
   getProductSectionTree,
   editProductSection,
-  deletePicture
-} from '@/api/wholesale';
-import { layoutEnum } from '@/libs/enumerate';
-import { layoutConvert } from '@/libs/converStatus';
-import { buildMenu, convertTree } from '@/libs/util';
+  deletePicture,
+} from "@/api/wholesale";
+import { layoutEnum } from "@/libs/enumerate";
+import { layoutConvert } from "@/libs/converStatus";
+import { buildMenu, convertTree } from "@/libs/util";
 
-import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
 
 const currentCategory = {
   id: 0,
   rank: 0,
   levels: 0,
   parentId: 0,
-  plateName: '',
-  plateImage: '',
-  layout: '', // xlayout-横向布局 ylayout-纵向布局 roll-滚动布局 list-列表-用于推荐商品
-  parentPlateName: '',
-  channelGoods: []
+  plateName: "",
+  plateImage: "",
+  layout: "", // xlayout-横向布局 ylayout-纵向布局 roll-滚动布局 list-列表-用于推荐商品
+  parentPlateName: "",
+  channelGoods: [],
 };
 
 const roleRowData = {
-  plateName: '',
+  plateName: "",
   page: 1,
   rows: 20,
-  sidx: 'rank'
+  sidx: "rank",
 };
 
 const dataColumns = [
   {
-    type: 'selection',
-    key: '',
+    type: "selection",
+    key: "",
     width: 60,
-    align: 'center'
+    align: "center",
   },
   {
-    title: '板块ID',
-    key: 'id',
-    align: 'center',
-    maxWidth: 80
+    title: "板块ID",
+    key: "id",
+    align: "center",
+    minWidth: 100,
   },
   {
-    title: '板块名称',
-    key: 'plateName',
-    align: 'center',
-    minWidth: 150
+    title: "板块名称",
+    key: "plateName",
+    align: "center",
+    minWidth: 150,
   },
   {
-    title: '板块布局',
-    key: 'layout',
-    align: 'center',
+    title: "板块布局",
+    key: "layout",
+    align: "center",
     minWidth: 150,
     render: (h, params, vm) => {
       const { row } = params;
-      return <div>{layoutConvert(row.layout).label}</div>;
-    }
+      return <div>{layoutConvert(row.layout)}</div>;
+    },
   },
   {
-    title: '板块图片',
-    key: 'plateImage',
-    align: 'center',
-    maxWidth: 790,
+    title: "板块图片",
+    key: "plateImage",
+    align: "center",
+    minWidth: 110,
     render: (h, params, vm) => {
       const { row } = params;
-      const str = <img src={row.plateImage} height='60' width='100%' />;
+      const str = <img src={row.plateImage} height="60" width="100%" />;
       return <div>{str}</div>;
-    }
+    },
   },
   {
-    title: '排序',
-    key: 'rank',
+    title: "排序",
+    key: "rank",
     sortable: true,
-    align: 'center',
-    minWidth: 150
+    align: "center",
+    minWidth: 150,
   },
   {
-    title: '操作',
-    key: 'handle',
-    align: 'center',
+    title: "操作",
+    key: "handle",
+    align: "center",
     minWidth: 150,
-    options: ['edit', 'delete']
-  }
+    options: ["edit", "delete"],
+  },
 ];
 
 export default {
   components: {
     Tables,
     CommonIcon,
-    IViewUpload
+    IViewUpload,
   },
   mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin],
   data() {
@@ -293,8 +334,8 @@ export default {
       modalEditLoading: false,
       uploadVisible: false,
       clearSearchLoading: false,
-      currentParentName: '',
-      imgUploadViewItem: '',
+      currentParentName: "",
+      imgUploadViewItem: "",
       imageSize: 2048,
       currentParentId: 0,
       currentCategory: _.cloneDeep(currentCategory),
@@ -302,31 +343,31 @@ export default {
       searchRowData: _.cloneDeep(roleRowData),
       columns: dataColumns,
       ruleInline: {
-        plateName: [{ required: true, message: '请输入板块名称' }],
-        plateImage: [{ required: false, message: '请上传上板块图片' }],
+        plateName: [{ required: true, message: "请输入板块名称" }],
+        plateImage: [{ required: false, message: "请上传上板块图片" }],
         rank: [
-          { required: true, message: '请输入板块排序' },
+          { required: true, message: "请输入板块排序" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
+                errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
-        ]
-      }
+            },
+          },
+        ],
+      },
     };
   },
   created() {
     this.initMenuList();
-    this.parentCategory.plateName = '全部版块';
+    this.parentCategory.plateName = "全部版块";
   },
   methods: {
     getTableData() {
       this.loading = true;
-      getProductSectionPages(this.searchRowData).then(res => {
+      getProductSectionPages(this.searchRowData).then((res) => {
         if (this.menuData.length > 0) {
           this.tableData = res.rows;
           this.total = res.total;
@@ -349,7 +390,7 @@ export default {
     handleSubmit() {
       this.currentCategory.parentId =
         this.parentCategory.id !== 0 ? this.parentCategory.id : 0;
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           this.modalEditLoading = true;
           this.modalViewLoading = true;
@@ -359,23 +400,36 @@ export default {
             this.editProductSection();
           }
         } else {
-          this.$Message.error('请完善板块信息!');
+          this.$Message.error("请完善板块信息!");
         }
       });
     },
     handleEditClose() {
+      // if (this.newPicture.length > 0) {
+      //   const urls = {
+      //     urls: this.newPicture
+      //   };
+      //   this.deletePicture(urls);
+      // }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
     },
+    // deletePicture(urls) {
+    //   deletePicture({
+    //     urls
+    //   })
+    //     .then(res => {})
+    //     .catch(() => {});
+    // },
     createProductSection() {
       this.modalEditLoading = true;
       this.modalViewLoading = true;
       createProductSection(this.currentCategory)
-        .then(res => {
-          this.$Message.info('添加成功!');
+        .then((res) => {
+          this.$Message.info("添加成功!");
         })
-        .finally(res => {
+        .finally((res) => {
           this.initMenuList();
           this.modalEditLoading = false;
           this.modalEdit = false;
@@ -385,10 +439,10 @@ export default {
       this.modalEditLoading = true;
       this.modalViewLoading = true;
       editProductSection(this.currentCategory)
-        .then(res => {
-          this.$Message.info('修改成功!');
+        .then((res) => {
+          this.$Message.info("修改成功!");
         })
-        .finally(res => {
+        .finally((res) => {
           this.initMenuList();
           this.modalEditLoading = false;
           this.modalEdit = false;
@@ -396,8 +450,8 @@ export default {
     },
     // 编辑分类
     handleEdit(params) {
-      if (this.parentCategory.plateName === '全部版块') {
-        this.$Message.warning('请先从左侧选择一个板块');
+      if (this.parentCategory.plateName === "全部版块") {
+        this.$Message.warning("请先从左侧选择一个板块");
         return;
       }
       this.save = [];
@@ -411,14 +465,15 @@ export default {
     },
     handleBack() {
       this.parentCategory.id = 0;
-      this.parentCategory.plateName = '全部版块';
-      this.handleClear();
+      this.parentCategory.plateName = "全部版块";
+      this.searchRowData = _.cloneDeep(roleRowData);
+      this.initMenuList();
     },
     deleteTable(ids) {
       deleteProductSection({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&
@@ -438,12 +493,12 @@ export default {
     },
     // 初始化商品菜单列表
     initMenuList() {
-      getProductSectionTree().then(res => {
+      getProductSectionTree().then((res) => {
         if (res && res.length > 0) {
           const menuList = buildMenu(res);
           const map = {
-            title: 'title',
-            children: 'children'
+            title: "title",
+            children: "children",
           };
           this.menuData = convertTree(menuList, map, true);
           if (this.menuData.length > 0) {
@@ -453,18 +508,18 @@ export default {
       });
     },
     renderContent(h, { root, node, data }) {
-      if (data.type == 'PARENT') {
+      if (data.type == "PARENT") {
         return (
           <div
             style={{
-              display: 'inline-block',
-              width: '100%',
-              fontSize: '14px',
-              cursor: 'pointer'
+              display: "inline-block",
+              width: "100%",
+              fontSize: "14px",
+              cursor: "pointer",
             }}
           >
             <span>
-              <CommonIcon type='ios-folder' class='mr10' />
+              <CommonIcon type="ios-folder" class="mr10" />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -475,14 +530,14 @@ export default {
         return (
           <div
             style={{
-              display: 'inline-block',
-              width: '100%',
-              fontSize: '14px',
-              cursor: 'pointer'
+              display: "inline-block",
+              width: "100%",
+              fontSize: "14px",
+              cursor: "pointer",
             }}
           >
             <span>
-              <CommonIcon type='ios-paper' class='mr10' />
+              <CommonIcon type="ios-paper" class="mr10" />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -494,9 +549,9 @@ export default {
     handleClick({ root, node, data }) {
       this.loading = true;
       // 展开当前节点
-      if (typeof data.expand === 'undefined') {
+      if (typeof data.expand === "undefined") {
         // this.$set(data, 'expend', true);
-        this.$set(data, 'expend', false);
+        this.$set(data, "expend", false);
         if (data.children) {
           this.expandChildren(data.children);
         }
@@ -513,7 +568,7 @@ export default {
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.plateImage != null) {
-        const map = { status: 'finished', url: 'url' };
+        const map = { status: "finished", url: "url" };
         const mainImgArr = [];
         map.url = res.plateImage;
         mainImgArr.push(map);
@@ -541,8 +596,8 @@ export default {
     },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="18"
+        :search-area-column="24"
         :operate-area-column="6"
         editable
         searchable
@@ -16,21 +16,19 @@
       >
         <div slot="searchCondition">
           <Row>
-            <!-- 金额总计 -->
-            <div class="sum">
-              金额总计：&yen;{{ sum }} 元
-              <!-- <count-to :simplify="true" :delay="500" :end="sum" count-class="count-text" unit-class="unit-class">
-                  <span slot="left" class="slot-text">金额总计：&yen;{{sum }}&nbsp;</span>
-                  <span slot="right" class="slot-text">&nbsp;元</span>
-              </count-to>-->
-            </div>
+            <Input
+              v-model="sum"
+              class="search-input sum"
+              style="width: 200px"
+              readonly
+            ></Input>
             <DatePicker
               v-model="searchRowData.startTime"
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
               placeholder="支付时间起"
               class="search-input"
-              style="width: 150px"
+              style="width: 160px"
               @on-change="startTimeChange"
             />
             <i>-</i>
@@ -39,69 +37,73 @@
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
               placeholder="支付时间止"
-              class="search-input mr5"
-              style="width: 150px"
+              class="search-input"
+              style="width: 160px"
               @on-change="endTimeChange"
             />
             <Select
               v-model="searchRowData.app_type"
               placeholder="应用类型"
-              style="padding-right: 5px;width: 100px"
+              style="width: 110px"
               clearable
             >
               <Option
-                v-for="(item,index) in appTypeEnum"
+                v-for="(item, index) in appTypeEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
                 style="padding-left: 5px"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.payType"
               placeholder="支付类型"
-              style="padding-right: 5px;width: 100px"
+              style="width: 90px"
               clearable
             >
               <Option
-                v-for="(item,index) in payTypeEnum"
+                v-for="(item, index) in payTypeEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
                 style="padding-left: 5px"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.payStep"
               placeholder="支付步骤"
-              style="padding-right: 5px;width: 100px"
+              style="width: 90px"
               clearable
             >
               <Option
-                v-for="(item,index) in payStepEnum"
+                v-for="(item, index) in payStepEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
                 style="padding-left: 5px"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <Select
               v-model="searchRowData.sourceType"
               placeholder="支付来源"
-              style="padding-right: 5px;width: 100px"
+              style="width: 90px"
               clearable
             >
               <Option
-                v-for="(item,index) in sourceTypeEnum"
+                v-for="(item, index) in sourceTypeEnum"
                 :value="item.value"
                 :key="index"
                 class="ptb2-5"
                 style="padding-left: 5px"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <Button
               :loading="searchLoading"
-              class="search-btn mr5"
+              class="search-btn"
               type="primary"
               @click="handleSearch"
             >
@@ -110,19 +112,23 @@
             <Button
               v-waves
               :loading="clearSearchLoading"
-              class="search-btn mr5"
+              class="search-btn"
               type="info"
               @click="handleClear"
             >
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
-            <Button class="search-btn mr2" type="warning" @click="handleDownload">
+            <Button
+              class="search-btn"
+              type="warning"
+              @click="handleDownload"
+            >
               <Icon type="md-download" />导出
             </Button>
           </Row>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -229,13 +235,13 @@ import {
   payTypeConvert,
   payStepConvert,
   sourceTypeConvert,
-  bankTypeConvert
+  bankTypeConvert,
 } from "@/libs/converStatus";
 import {
   appTypeEnum,
   payTypeEnum,
   payStepEnum,
-  sourceTypeEnum
+  sourceTypeEnum,
 } from "@/libs/enumerate";
 
 const paymentLogDetail = {
@@ -248,6 +254,7 @@ const paymentLogDetail = {
   payStep: null,
   payFee: 0,
   tradeId: "",
+  rechargeAmount: 0,
   signAt: null,
   payAt: null,
   bankType: null,
@@ -255,7 +262,7 @@ const paymentLogDetail = {
   orderCode: "",
   startTime: null,
   endTime: null,
-  nickName: ""
+  nickName: "",
 };
 
 const roleRowData = {
@@ -267,13 +274,15 @@ const roleRowData = {
   app_type: null,
   page: 1,
   rows: 10,
-  sum: null
+  sum: null,
+  sidx: "signAt",
+  sort: "desc",
 };
 
 export default {
   components: {
     Tables,
-    CountTo
+    CountTo,
   },
   mixins: [tableMixin, searchMixin],
   data() {
@@ -282,15 +291,15 @@ export default {
         {
           title: "订单ID",
           key: "orderId",
-          width: 170,
+          width: 190,
           align: "center",
-          fixed: "left"
+          fixed: "left",
         },
         {
           title: "用户ID",
           key: "userId",
           align: "center",
-          width: 80
+          width: 90,
         },
         {
           title: "应用类型",
@@ -314,11 +323,11 @@ export default {
             } else {
               return <div>{row.app_type}</div>;
             }
-          }
+          },
         },
         {
           title: "支付类型",
-          width: 120,
+          width: 110,
           key: "payType",
           align: "center",
           render: (h, params, vm) => {
@@ -350,11 +359,11 @@ export default {
             } else {
               return <div>{row.payType}</div>;
             }
-          }
+          },
         },
         {
           title: "支付来源",
-          width: 120,
+          width: 100,
           align: "center",
           key: "sourceType",
           render: (h, params, vm) => {
@@ -378,23 +387,37 @@ export default {
             } else {
               return <div>{row.sourceType}</div>;
             }
-          }
+          },
         },
         {
           title: "第三方支付金额",
-          width: 130,
+          width: 100,
           key: "payFee",
           align: "center",
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.payFee);
             return <div>{amount}</div>;
-          }
+          },
+        },
+        {
+          title: "实际到账金额",
+          width: 100,
+          key: "rechargeAmount",
+          align: "center",
+          render(h, params, vm) {
+            if (params.row.sourceType === "recharge") {
+              const amount = fenToYuanDot2(params.row.rechargeAmount);
+              return <div>{amount}</div>;
+            } else {
+              return <div>{"N/A"}</div>;
+            }
+          },
         },
         {
           title: "第三方单号",
           key: "tradeId",
           align: "center",
-          width: 170
+          width: 190,
         },
         {
           title: "支付步骤",
@@ -418,19 +441,19 @@ export default {
             } else {
               return <div>{row.payStep}</div>;
             }
-          }
+          },
         },
         {
           title: "签名时间",
           key: "signAt",
           align: "center",
-          width: 160
+          width: 120,
         },
         {
           title: "支付时间",
           align: "center",
           key: "payAt",
-          width: 160
+          width: 120,
         },
         {
           title: "银行类型",
@@ -440,19 +463,14 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{bankTypeConvert(row.bankType).label}</div>;
-          }
+          },
         },
         {
           title: "用户昵称",
           align: "center",
-          key: "nickName"
-        }
-        // {
-        //   title: '操作',
-        //   minWidth: 80,
-        //   key: 'handle',
-        //   options: ['view']
-        // }
+          key: "nickName",
+          width: 140,
+        },
       ],
       createLoading: false,
       modalViewLoading: false,
@@ -462,7 +480,7 @@ export default {
       payTypeEnum,
       payStepEnum,
       sourceTypeEnum,
-      sum: 0
+      sum: 0,
     };
   },
   mounted() {
@@ -475,15 +493,16 @@ export default {
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      console.log(this.searchRowData.rows);
-      getPaymentLogPages(this.searchRowData).then(res => {
+      let pageSize = this.searchRowData.page;
+      this.searchRowData.page = 1;
+      getPaymentLogPages(this.searchRowData).then((res) => {
         const tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 10;
-        console.log(this.searchRowData.rows);
+        this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
         const _this = this;
-        tableData.forEach(item => {
+        tableData.forEach((item) => {
           item["app_type"] = appTypeConvert(item["app_type"]).label;
           item["payType"] = payTypeConvert(item["payType"]).label;
           item["sourceType"] = sourceTypeConvert(item["app_type"]).label;
@@ -493,7 +512,7 @@ export default {
         });
         _this.$refs.tables.handleDownload({
           filename: `鲜果币流水信息-${new Date().valueOf()}`,
-          data: tableData
+          data: tableData,
         });
       });
     },
@@ -509,23 +528,22 @@ export default {
     getTableData() {
       const _this = this;
       getPaymentLogPages(this.searchRowData)
-        .then(res => {
-          console.log("12312312", res);
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
       // 金额统计
-      getPaymentLogSum(this.searchRowData).then(function(result) {
-        _this.sum = fenToYuanDot2Number(result);
+      getPaymentLogSum(this.searchRowData).then(function (result) {
+        _this.sum = `金额总计: ¥${fenToYuanDot2Number(result)} 元`;
       });
     },
     startTimeChange(value, date) {
@@ -535,26 +553,10 @@ export default {
     endTimeChange(value, date) {
       this.paymentLogDetail.endTime = value;
       this.searchRowData.endTime = value;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-.sum {
-  display: inline-block;
-  min-width: 125px;
-  height: 32px;
-  border: 1px solid #dcdee2;
-  border-radius: 5px;
-  line-height: 32px;
-  text-align: center;
-  padding: 0 10px;
-  margin-right: 5px;
-  font-size: 14px;
-}
-.sum:hover {
-  border: 1px solid #57a3f3;
-  color: red;
-}
 </style>

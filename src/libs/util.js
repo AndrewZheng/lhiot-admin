@@ -408,7 +408,7 @@ export const getArrayFromFile = (file) => {
     const reader = new FileReader();
     reader.readAsText(file); // 以文本格式读取
     let arr = [];
-    reader.onload = function(evt) {
+    reader.onload = function (evt) {
       const data = evt.target.result; // 读到的数据
       const pasteData = data.trim();
       arr = pasteData.split((/[\n\u0085\u2028\u2029]|\r\n?/g)).map(row => {
@@ -517,7 +517,7 @@ export const routeHasExist = (tagNavList, routeItem) => {
 };
 
 // sessionStorage
-export const session = function(key, value) {
+export const session = function (key, value) {
   if (value === void (0)) {
     var lsVal = sessionStorage.getItem(key);
     if (lsVal && lsVal.indexOf('autostringify-') === 0) {
@@ -534,7 +534,7 @@ export const session = function(key, value) {
 };
 
 // 生成随机数
-export const getUUID = function(len) {
+export const getUUID = function (len) {
   len = len || 6;
   len = parseInt(len, 10);
   len = isNaN(len) ? 6 : len;
@@ -548,7 +548,7 @@ export const getUUID = function(len) {
 };
 
 // 深拷贝
-export const deepcopy = function(source) {
+export const deepcopy = function (source) {
   if (!source) return source;
   const sourceCopy = source instanceof Array ? [] : {};
   for (const item in source) {
@@ -607,7 +607,7 @@ export const buildMenu = (array, ckey, isFind = true) => {
 
 export const getRoutes = (routeList) => {
   const routeHash = {};
-  const setMenu2Hash = function(array, base) {
+  const setMenu2Hash = function (array, base) {
     array.map(key => {
       if (key.path) {
         const hashKey = ((base ? base + '/' : '') + key.path).replace(/^\//, '');
@@ -652,14 +652,15 @@ export const convertTree = (tree, map, isExpand = false) => {
       selected: false,
       checked: false
     };
+
+    const newItem = Object.assign({}, obj, item);
     // 如果有子节点，递归
     if (children) {
       children = convertTree(children, map, isExpand);
     }
 
     result.push({
-      ...item,
-      ...obj,
+      ...newItem,
       title,
       children
     });
@@ -700,7 +701,7 @@ export const convertTreeCategory = (tree, map, isExpand = false) => {
 };
 
 export const setTreeNodeChecked = (tree, ids) => {
-  if (ids.length != 0) {
+  if (ids.length > 0) {
     ids.forEach(id => {
       tree.forEach(node => {
         if (id == node.id && node.type === 'SON') {
@@ -792,7 +793,7 @@ export const compareData = (date1, date2) => {
   if (!(date1 && date2)) { return false; }
   const oDate1 = new Date(date1);
   const oDate2 = new Date(date2);
-  return oDate1.getTime() > oDate2.getTime();
+  return oDate1.getTime() >= oDate2.getTime();
 };
 
 export const compareCouponData = (date) => {
@@ -843,10 +844,11 @@ export const gitTime = (time) => {
 
 // hd折扣
 export const HdDiscount = (number) => {
-  if (typeof number === 'number') {
-    return (number * 10.00) + '折';
+  const num = Number(number) * 100
+  if (typeof num === 'number') {
+    return num / 10 + '折';
   }
-  return number;
+  return num;
 };
 // 加¥和天数
 export const addRnb = (number) => {
@@ -907,14 +909,6 @@ export const replaceByTab = (value) => {
   return value.replace(/&/g, '\n');
 }
 
-export const localSave = (key, value) => {
-  localStorage.setItem(key, value)
-}
-
-export const localRead = (key) => {
-  return localStorage.getItem(key) || ''
-}
-
 export const download = (data, name) => {
   const content = data;
   const blob = new Blob([content], { type: 'application/vnd.ms-excel' });
@@ -941,10 +935,10 @@ export const getSystemHomeName = () => {
     const currentSystem = JSON.parse(PcLockr.get(enums.SYSTEM));
     name = currentSystem.code.split('_')[0] + '-home';
     name = name === 'manager-home' ? 'home' : name; // 如果是综合管理系统还是跳转公共首页
-    console.log('current system home: ', name);
   }
   return name;
 }
+
 // 根据当前系统获取应该跳转的home页面的routerName
 export const getSystemHomeNameNew = (toLodop) => {
   if (toLodop != '' && toLodop.indexOf('.exe') > 0) {

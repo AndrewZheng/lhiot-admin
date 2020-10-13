@@ -15,7 +15,7 @@
             v-model="tableData"
             :columns="columns"
             :loading="loading"
-            :search-area-column="18"
+            :search-area-column="14"
             :operate-area-column="6"
             editable
             searchable
@@ -51,7 +51,7 @@
                   clearable
                 ></Input>
                 <Button
-                  :searchLoading="searchLoading"
+                  :search-loading="searchLoading"
                   class="search-btn mr5"
                   type="primary"
                   @click="handleSearch"
@@ -82,7 +82,7 @@
               >
                 <Icon type="md-add" />添加
               </Button>
-              <Button
+              <!-- <Button
                 v-waves
                 :loading="exportExcelLoading"
                 type="primary"
@@ -90,7 +90,7 @@
                 @click="handleDownload"
               >
                 <Icon type="md-download" />导出
-              </Button>
+              </Button> -->
             </div>
           </tables>
           <div style="margin: 10px;overflow: hidden">
@@ -117,54 +117,72 @@
       </p>
       <div class="modal-content">
         <Row class-name="mb20">
-          <i-col span="12">
+          <!-- <i-col span="12">
             <Row>
               <i-col span="6">商品编码:</i-col>
               <i-col span="18">{{ productDetail.goodsCode }}</i-col>
             </Row>
+          </i-col>-->
+          <i-col span="12">
+            <Row>
+              <i-col span="8">
+                商品名称:
+              </i-col>
+              <i-col span="16">
+                {{ productDetail.goodsName }}
+              </i-col>
+            </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">商品名称:</i-col>
-              <i-col span="16">{{ productDetail.goodsName }}</i-col>
+              <i-col span="6">
+                商品分类:
+              </i-col>
+              <i-col span="18">
+                {{ findGroupName(productDetail.categoryId) }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
-        <Row class-name="mb20">
-          <i-col span="12">
-            <Row>
-              <i-col span="6">商品分类:</i-col>
-              <i-col span="18">{{ findGroupName(productDetail.categoryId) }}</i-col>
-            </Row>
-          </i-col>
+        <!-- <Row class-name="mb20">
           <i-col span="12">
             <Row>
               <i-col span="8">安全库存:</i-col>
               <i-col span="16">{{ productDetail.stockLimit }}</i-col>
             </Row>
           </i-col>
-        </Row>
+        </Row>-->
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">基础单位:</i-col>
-              <i-col span="18">{{ productDetail.unitName }}</i-col>
+              <i-col span="6">
+                基础单位:
+              </i-col>
+              <i-col span="18">
+                {{ productDetail.unitName }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">基础条码:</i-col>
-              <i-col span="16">{{ productDetail.baseBar }}</i-col>
+              <i-col span="8">
+                基础条码:
+              </i-col>
+              <i-col span="16">
+                {{ productDetail.baseBar }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">商品主图:</i-col>
+              <i-col span="8">
+                商品主图:
+              </i-col>
               <i-col v-show="productDetail.goodsImage" span="16">
                 <div class="demo-upload-list">
-                  <img :src="productDetail.goodsImage" >
+                  <img :src="productDetail.goodsImage">
                   <div class="demo-upload-list-cover">
                     <Icon
                       type="ios-eye-outline"
@@ -210,7 +228,7 @@
             </div>
           </i-col>
         </Row>-->
-        <Row class-name="mb20">
+        <!-- <Row class-name="mb20">
           <i-col span="24">
             <Row>
               <i-col span="3">商品特征:</i-col>
@@ -225,10 +243,12 @@
               <i-col span="21">{{ productDetail.afterDes }}</i-col>
             </Row>
           </i-col>
-        </Row>
+        </Row>-->
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -237,7 +257,7 @@
         <span>{{ isCreate?'创建基础商品信息':'编辑基础商品信息' }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="productDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="editForm" :model="productDetail" :rules="ruleInline" :label-width="90">
           <Row>
             <!-- <i-col span="12">
               <FormItem label="商品编码:" prop="goodsCode">
@@ -249,36 +269,38 @@
                 <Input v-model="productDetail.goodsName" placeholder="商品名称"></Input>
               </FormItem>
             </i-col>
-          </Row>
-          <Row>
             <i-col span="12">
               <FormItem label="商品分类:" prop="categoryId">
                 <Cascader
-                  :data="goodsCategoryData"
                   v-model="defaultGoodsCategoryData"
+                  :data="goodsCategoryData"
                   span="21"
                   style="width: 100%"
                   @on-change="goodsCategoryChange"
                 ></Cascader>
               </FormItem>
             </i-col>
+          </Row>
+          <!-- <Row>
             <i-col span="12">
               <FormItem label="安全库存:" prop="stockLimit">
                 <InputNumber v-model="productDetail.stockLimit" placeholder="安全库存"></InputNumber>
               </FormItem>
             </i-col>
-          </Row>
+          </Row>-->
           <Row>
             <i-col span="12">
               <FormItem label="基础单位:" prop="baseUnit">
                 <Select :value="productDetail.baseUnit" @on-change="uniteChange">
                   <Option
                     v-for="(item,index) in unitsList"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                  >
+                    {{ item.label }}
+                  </Option>
                 </Select>
               </FormItem>
             </i-col>
@@ -295,7 +317,7 @@
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" >
+                      <img :src="item.url">
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -397,7 +419,7 @@
               <Button v-waves type="info" @click="modalSort = true">规格描述排序</Button>
             </i-col>
           </Row>-->
-          <Row>
+          <!-- <Row>
             <i-col span="12">
               <FormItem label="区域:" prop="goodsArea">
                 <Select :value="productDetail.goodsArea" @on-change="goodsAreaChange">
@@ -447,17 +469,21 @@
                 ></Input>
               </FormItem>
             </i-col>
-          </Row>
+          </Row>-->
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">
+          确定
+        </Button>
       </div>
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" >
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
 
     <Modal v-model="modalSort" :mask-closable="false" title="图片排序">
@@ -477,8 +503,12 @@
         </drag-list>
       </div>
       <div slot="footer">
-        <Button @click="modalSort=false">关闭</Button>
-        <Button type="primary" @click="handleImgSort">确定</Button>
+        <Button @click="modalSort=false">
+          关闭
+        </Button>
+        <Button type="primary" @click="handleImgSort">
+          确定
+        </Button>
       </div>
     </Modal>
   </div>
@@ -583,20 +613,20 @@ export default {
         { label: '进口', value: 'imported' }
       ],
       ruleInline: {
-        goodsCode: [{ required: false, message: '请输入商品编码' }],
+        // goodsCode: [{ required: false, message: "请输入商品编码" }],
         goodsName: [{ required: true, message: '请输入商品名称' }],
         baseUnit: [{ required: true, message: '请选择商品单位' }],
         baseBar: [{ required: true, message: '请输入基础条码' }],
-        goodsDes: [{ required: true, message: '请输入商品特诊' }],
-        afterDes: [{ required: true, message: '请输入售后标准' }],
+        // goodsDes: [{ required: true, message: "请输入商品特征" }],
+        // afterDes: [{ required: true, message: "请输入售后标准" }],
         // goodsArea: [{ required: true, message: "请选择商品区域" }],
         // goodsBrand: [{ required: true, message: "请输入商品品牌" }],
         // placeOfOrigin: [{ required: true, message: "请输入商品产地" }],
-        categoryId: [{ required: true, message: '请选择商品分类' }],
-        goodsImage: [{ required: true, message: '请上传商品主图' }],
+        categoryId: [{ required: true, message: "请选择商品分类" }],
+        goodsImage: [{ required: true, message: "请上传商品主图" }]
         // goodsImages: [{ required: true, message: "请上传商品详情图" }],
         // otherImage: [{ required: true, message: '请上传服务保障图' }],
-        stockLimit: [{ required: true, message: '请输入安全库存' }]
+        // stockLimit: [{ required: true, message: "请输入安全库存" }]
       },
       columns: [
         {
@@ -610,7 +640,7 @@ export default {
           title: '商品图片',
           key: 'goodsImage',
           align: 'center',
-          minWidth: 120,
+          minWidth: 110,
           render: (h, params, vm) => {
             const { row } = params;
             const str = <img src={row.goodsImage} height='60' width='60' />;
@@ -651,7 +681,7 @@ export default {
         {
           title: '商品区域',
           align: 'center',
-          minWidth: 90,
+          minWidth: 100,
           key: 'goodsArea',
           render: (h, params, vm) => {
             const { row } = params;
@@ -666,13 +696,13 @@ export default {
         {
           title: '商品品牌',
           align: 'center',
-          minWidth: 90,
+          minWidth: 100,
           key: 'goodsBrand'
         },
         {
           title: '商品产地',
           align: 'center',
-          minWidth: 90,
+          minWidth: 100,
           key: 'placeOfOrigin'
         },
         {
@@ -685,17 +715,18 @@ export default {
         {
           title: '基础单位',
           align: 'center',
-          minWidth: 90,
+          minWidth: 100,
           key: 'unitName'
         },
         {
           title: '安全库存',
           align: 'center',
-          minWidth: 90,
+          minWidth: 100,
           key: 'stockLimit'
         },
         {
           title: '操作',
+          align: 'center',
           minWidth: 150,
           key: 'handle',
           options: ['view', 'edit', 'settings']
@@ -775,7 +806,8 @@ export default {
     },
     handleBack() {
       this.currentName = '全部分类';
-      this.handleClear();
+      this.searchRowData = _.cloneDeep(roleRowData);
+      this.initMenuList();
     },
     handleCreate() {
       if (this.tempModalType !== this.modalType.create) {
@@ -860,6 +892,12 @@ export default {
         });
     },
     handleSubmit() {
+      // if (this.oldPicture.length > 0) {
+      //   const urls = {
+      //     urls: this.oldPicture
+      //   };
+      //   this.deletePicture(urls);
+      // }
       this.$refs.editForm.validate(valid => {
         if (valid) {
           if (this.isCreate) {
@@ -873,18 +911,34 @@ export default {
       });
     },
     handleEditClose() {
+      // if (this.newPicture.length > 0) {
+      //   const urls = {
+      //     urls: this.newPicture
+      //   };
+      //   this.deletePicture(urls);
+      // }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
     },
+    // deletePicture(urls) {
+    //   deletePicture({
+    //     urls
+    //   })
+    //     .then(res => {})
+    //     .catch(() => {});
+    // },
     handleDownload() {
       this.exportExcelLoading = true;
       // TODO：测试导出不带分页搜索条件 目前默认导出10条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
+      let pageSize = this.searchRowData.page;
+      this.searchRowData.page = 1;
       getProductPages(this.searchRowData).then(res => {
         const tableData = res.rows;
         // 恢复正常页数
-        this.searchRowData.rows = 10;
+        this.searchRowData.rows = 20;
+        this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
         tableData.forEach(item => {
           item.categoryId = this.findGroupName(item.categoryId);
@@ -897,8 +951,9 @@ export default {
             item.goodsArea = '';
           }
         });
+        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
         this.$refs.tables.handleDownload({
-          filename: `商品基础信息-${new Date().valueOf()}`,
+          filename: `商品基础信息-${date}`,
           data: tableData
         });
         this.exportExcelLoading = false;

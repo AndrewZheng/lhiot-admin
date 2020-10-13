@@ -1,6 +1,7 @@
 import Vue from 'vue';
 const $http = Vue.prototype.$http;
 const $imgService = Vue.prototype.$imgService;
+const $imsService = Vue.prototype.$imsService;
 
 // 删除图片
 export const deletePicture = ({
@@ -585,6 +586,20 @@ export const storeAssign = (data) => {
     method: 'post'
   });
 }
+///wholesale-small/system-setting/findByName/{name} SHOP_TYPE USER_GRADE
+// 会员查询 门店类型与用户类型
+export const getShopType = () => {
+  return $http.request({
+    url: '/wholesale-small/system-setting/findByName/SHOP_TYPE',
+    method: 'get'
+  });
+}
+export const getUserGrade = () => {
+  return $http.request({
+    url: '/wholesale-small/system-setting/findByName/USER_GRADE',
+    method: 'get'
+  });
+}
 
 // 查询所有业务员
 export const getAllSalesman = () => {
@@ -650,6 +665,109 @@ export const getOrderPages = (data) => {
     }
   });
 };
+// 售后订单
+export const getAfterSalePages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/post-sale/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+// /wholesale-small/post-sale/review/pages 财务审核列表
+export const getFinanceAuditPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/post-sale/review/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// id查看售后订单
+export const getOrderDetail = ({
+  id
+}) => {
+  return $http.request({
+    url: '/wholesale-small/post-sale/' + id,
+    method: 'get'
+  });
+};
+
+// 完成订单
+export const getSaleFinish = (data) => {
+  return $http.request({
+    url: `/wholesale-small/post-sale/audit/finish/${data.id}`,
+    data,
+    method: 'post'
+  });
+};
+
+// 财务审核通过
+export const getFinanceAudit = (data) => {
+  return $http.request({
+    url: `/wholesale-small/post-sale/review/pass/${data.id}`,
+    data,
+    method: 'post'
+  });
+};
+// 财务审核拒绝
+export const getFinanceRefuse = (data) => {
+  return $http.request({
+    url: `/wholesale-small/post-sale/review/reject/${data.id}`,
+    data,
+    method: 'post'
+  });
+};
+
+//根据id 手动发起售后 /wholesale-small/post-sale/submit
+export const handSubmitRefuse = (data) => {
+  return $http.request({
+    url: `/wholesale-small/post-sale/submit?orderId=${data.id}`,
+    data,
+    method: 'post'
+  });
+};
+
+// 导出售后商品
+export const getOrderGoods = (data) => {
+  return $imsService.request({
+    url: `/wholesale-small/post-sale/export/${data.name}`,
+    method: 'post',
+    data: data,
+    headers: {
+      'rows': -1,
+    }
+  });
+};
+
+// 通过审核
+export const getPassAudit = (data) => {
+  return $http.request({
+    url: '/wholesale-small/post-sale/audit/pass',
+    data,
+    method: 'post'
+  });
+};
+
+// 审核拒绝
+export const getRefuseAudit = (data) => {
+  return $http.request({
+    url: '/wholesale-small/post-sale/audit/reject',
+    data,
+    method: 'post'
+  });
+};
 
 export const getPaymentLogPages = (data) => {
   return $http.request({
@@ -665,6 +783,19 @@ export const getPaymentLogPages = (data) => {
   });
 };
 
+export const getrefundLogPages = (data) => {
+  return $http.request({
+    url: '/wholesale-small/refund-log/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
 export const getOrderGoodsToday = (data) => {
   return $http.request({
     url: '/wholesale-small/order/order-goods-today',
@@ -1419,6 +1550,15 @@ export const getAnalysisDatas = (data) => {
       'sidx': data.sidx,
       'sort': data.sort
     }
+  });
+};
+
+// 解锁业务员
+export const unlockSalesman = (data) => {
+  return $http.request({
+    url: `/wholesale-small/user/unlock-user/${data.id}?userStatus=${data.userStatus}`,
+    data,
+    method: 'put'
   });
 };
 

@@ -1709,20 +1709,7 @@ export default {
       if (currentRow.couponType === "DISCOUNT_COUPON") {
         this.addRelationDetail.couponFee =
           parseFloat(currentRow.discount) * 100;
-        console.log(
-          "DISCOUNT_COUPON couponFee:",
-          this.addRelationDetail.couponFee
-        );
       }
-      // const disIndex = currentRow.couponName.indexOf("折");
-      // if (currentRow.couponType === "DISCOUNT_COUPON") {
-      //   this.addRelationDetail.couponFee =
-      //     parseFloat(currentRow.couponName.substring(0, disIndex)) * 10;
-      //   console.log(
-      //     "DISCOUNT_COUPON couponFee:",
-      //     this.addRelationDetail.couponFee
-      //   );
-      // }
       this.addRelationDetail.hdActivityId = currentRow.activityId;
       this.addRelationDetail.minBuyFee = minBuyFee * 100;
       this.addRelationDetail.effectiveStartTime = currentRow.beginDate; //海鼎活动开始时间
@@ -1738,7 +1725,6 @@ export default {
       this.modalViewLoading = true;
       // 添加的是系统券，填写来源为系统优惠券
       this.addRelationDetail.source = "SMALL";
-      console.log("before create:", this.addRelationDetail);
       createSvipGift(this.addRelationDetail)
         .then(res => {
           this.modalViewLoading = false;
