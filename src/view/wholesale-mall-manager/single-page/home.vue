@@ -20,7 +20,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="16"
+        :search-area-column="24"
         :operate-area-column="6"
         editable
         searchable

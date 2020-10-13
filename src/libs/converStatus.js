@@ -56,7 +56,6 @@ import {
   miniOrderStatusEnum,
   miniHdStatusEnum,
   miniOrderTypeEnum,
-  YesNoEnum,
   yesNoEnum,
   deliverStatusEnum,
   validDateTypeEnum,
@@ -90,11 +89,9 @@ import {
 } from './enumerate';
 
 const convertFunction = (value, list) => {
-  const filterObj = list.find(item => {
-    return item.value === value;
-  });
-  if (filterObj) {
-    return filterObj;
+  const obj = list.find(item => item.value === value);
+  if (obj) {
+    return obj;
   } else {
     return {
       label: value || 'N/A'
@@ -103,156 +100,159 @@ const convertFunction = (value, list) => {
 };
 
 export const receiveStatusConvert = (value) => {
-  return convertFunction(value, receiveStatusEnum);
+  return convertFunction(value, receiveStatusEnum).label;
 };
+
 export const serviceModeConvert = (value) => {
-  return convertFunction(value, serviceModeEnum);
+  return convertFunction(value, serviceModeEnum).label;
 };
+
 export const serviceStatusConvert = (value) => {
-  return convertFunction(value, serviceStatusEnum);
+  return convertFunction(value, serviceStatusEnum).label;
 };
+
 export const rewardTypeConvert = (value) => {
-  return convertFunction(value, rewardTypeEnum);
+  return convertFunction(value, rewardTypeEnum).label;
 };
 
 export const deliveryTypeConvert = (value) => {
-  return convertFunction(value, deliveryTypeEnum);
+  return convertFunction(value, deliveryTypeEnum).label;
 };
 
 export const commentScoreConvert = (value) => {
-  return convertFunction(value, commentScoreTypeEnum);
+  return convertFunction(value, commentScoreTypeEnum).label;
 };
 
 export const taskTypeConvert = (value) => {
-  return convertFunction(value, taskTypeEnum);
+  return convertFunction(value, taskTypeEnum).label;
 };
 
 export const paymentFromConvert = (value) => {
-  return convertFunction(value, paymentFromEnum);
+  return convertFunction(value, paymentFromEnum).label;
 };
 
 export const showTypeConvert = (value) => {
-  return convertFunction(value, showTypeEnum);
+  return convertFunction(value, showTypeEnum).label;
 };
 
 export const layoutConvert = (value) => {
-  return convertFunction(value, layoutEnum);
+  return convertFunction(value, layoutEnum).label;
 };
 
 export const articleTypeConvert = (value) => {
-  return convertFunction(value, articleTypeEnum);
+  return convertFunction(value, articleTypeEnum).label;
 };
 
 export const createTypeConvert = (value) => {
-  return convertFunction(value, createTypeEnum);
+  return convertFunction(value, createTypeEnum).label;
 };
 
 export const faqStatusConvert = (value) => {
-  return convertFunction(value, faqStatusEnum);
+  return convertFunction(value, faqStatusEnum).label;
 };
 
 export const advPositionConvert = (value) => {
-  return convertFunction(value, advPositionEnum);
+  return convertFunction(value, advPositionEnum).label;
 };
 
 export const couponFromConvert = (value) => {
-  return convertFunction(value, couponFromEnum);
+  return convertFunction(value, couponFromEnum).label;
 };
 
 export const couponUseStatusConvert = (value) => {
-  return convertFunction(value, couponUseStatusEnum);
+  return convertFunction(value, couponUseStatusEnum).label;
 };
 
 export const couponTemplateTypeConvert = (value) => {
-  return convertFunction(value, couponTemplateTypeEnum);
+  return convertFunction(value, couponTemplateTypeEnum).label;
 };
 
 export const activityStatusConvert = (value) => {
-  return convertFunction(value, activityStatusEnum);
+  return convertFunction(value, activityStatusEnum).label;
 };
 
 export const activityTypeConvert = (value) => {
-  return convertFunction(value, activityTypeEnum);
+  return convertFunction(value, activityTypeEnum).label;
 };
 
 export const payStatusConvert = (value) => {
-  return convertFunction(value, payStatusEnum);
+  return convertFunction(value, payStatusEnum).label;
 };
 
 export const wholesaleHdStatusConvert = (value) => {
-  return convertFunction(value, wholesaleHdStatusEnum);
+  return convertFunction(value, wholesaleHdStatusEnum).label;
 };
 
 export const wholesaleOrderStatusConvert = (value) => {
-  return convertFunction(value, wholesaleOrderStatusEnum);
+  return convertFunction(value, wholesaleOrderStatusEnum).label;
 };
 
 export const wholesalePayTypeConvert = (value) => {
-  return convertFunction(value, wholesalePayTypeEnum);
+  return convertFunction(value, wholesalePayTypeEnum).label;
 };
 
 export const sexConvert = (value) => {
-  return convertFunction(value, sexEnum);
+  return convertFunction(value, sexEnum).label;
 };
 
 export const userTypeConvert = (value) => {
-  return convertFunction(value, userTypeEnum);
+  return convertFunction(value, userTypeEnum).label;
 };
 
 export const userStatusConvert = (value) => {
-  return convertFunction(value, userStatusEnum);
+  return convertFunction(value, userStatusEnum).label;
 };
 
 export const customOrderStatusConvert = (value) => {
-  return convertFunction(value, customOrderStatusEnum);
+  return convertFunction(value, customOrderStatusEnum).label;
 };
 
 export const customPeriodConvert = (value) => {
-  return convertFunction(value, customPeriodEnum);
+  return convertFunction(value, customPeriodEnum).label;
 };
 
 export const deliveryTypeCustomConvert = (value) => {
-  return convertFunction(value, deliveryTypeCustomEnum);
+  return convertFunction(value, deliveryTypeCustomEnum).label;
 };
 
 export const customDeliverStatusConvert = (value) => {
-  return convertFunction(value, customDeliverStatusEnum);
+  return convertFunction(value, customDeliverStatusEnum).label;
 };
 
 export const orderTypeConvert = (value) => {
-  return convertFunction(value, orderTypeEnum);
+  return convertFunction(value, orderTypeEnum).label;
 };
 
 export const thirdDeliverStatusConvert = (value) => {
-  return convertFunction(value, thirdDelieverStatusEnum);
+  return convertFunction(value, thirdDelieverStatusEnum).label;
 };
 
 export const receivingWayConvert = (value) => {
-  return convertFunction(value, receivingWayEnum);
+  return convertFunction(value, receivingWayEnum).label;
 };
 
 export const isAllRefundConvert = (value) => {
-  return convertFunction(value, isAllRefundEnum);
+  return convertFunction(value, isAllRefundEnum).label;
 };
 
 export const orderStatusConvert = (value) => {
-  return convertFunction(value, orderStatusEnum);
+  return convertFunction(value, orderStatusEnum).label;
 };
 
 export const settlementStatusConvert = (value) => {
-  return convertFunction(value, settlementStatusEnum);
+  return convertFunction(value, settlementStatusEnum).label;
 };
 
 export const doctorLevelConvert = (value) => {
-  return convertFunction(value, doctorLevelEnum);
+  return convertFunction(value, doctorLevelEnum).label;
 };
 
 export const doctorStatusConvert = (value) => {
-  return convertFunction(value, doctorStatusEnum);
+  return convertFunction(value, doctorStatusEnum).label;
 };
 
 export const hotConvert = (value) => {
-  return convertFunction(value, hotEnum);
+  return convertFunction(value, hotEnum).label;
 };
 
 export const deliveryAtTypeConvert = (value) => {

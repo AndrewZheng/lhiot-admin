@@ -6,7 +6,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="18"
+        :search-area-column="24"
         :operate-area-column="6"
         editable
         searchable
@@ -18,27 +18,27 @@
             <Input
               v-model="searchRowData.orderCode"
               placeholder="订单编码"
-              class="search-input mr5"
-              style="width: auto"
+              class="search-input"
+              style="width: 170px"
               clearable
             ></Input>
             <Input
               v-model="searchRowData.userName"
               placeholder="用户名"
-              class="search-input mr5"
-              style="width: 90px"
+              class="search-input"
+              style="width: 140px"
               clearable
             ></Input>
             <Input
               v-model="searchRowData.phone"
               placeholder="用户手机号"
-              class="search-input mr5"
-              style="width: 105px"
+              class="search-input"
+              style="width: 110px"
               clearable
             ></Input>
             <Select
               v-model="searchRowData.refundType"
-              class="search-col mr5"
+              class="search-col"
               placeholder="退款方式"
               style="width: 100px"
               clearable
@@ -52,7 +52,7 @@
             </Select>
             <Select
               v-model="searchRowData.refundReason"
-              class="search-col mr5"
+              class="search-col"
               placeholder="退款原因"
               style="width: 100px"
               clearable
@@ -69,8 +69,7 @@
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
               placeholder="退款时间起"
-              class="mr5"
-              style="width: 150px"
+              style="width: 160px"
               @on-change="startTimeChange"
             />
             <i>-</i>
@@ -79,13 +78,12 @@
               format="yyyy-MM-dd HH:mm:ss"
               type="datetime"
               placeholder="退款时间止"
-              class="mr5"
-              style="width: 150px"
+              style="width: 160px"
               @on-change="endTimeChange"
             />
             <Button
               :loading="searchLoading"
-              class="search-btn mr5"
+              class="search-btn"
               type="primary"
               @click="handleSearch"
             >
@@ -102,7 +100,7 @@
             </Button>
           </Row>
         </div>
-        <div slot="operations">
+        <!-- <div slot="operations">
           <Button
             :loading="downloadLoading"
             class="search-btn mr2"
@@ -111,7 +109,7 @@
           >
             <Icon type="md-download" />导出
           </Button>
-        </div>
+        </div> -->
       </tables>
       <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
@@ -215,43 +213,43 @@ export default {
           title: "编号",
           key: "id",
           align: "center",
-          minWidth: 40
+          minWidth: 70
         },
         {
           title: "订单编码",
           key: "orderCode",
           align: "center",
-          minWidth: 150
+          minWidth: 190
         },
         {
           title: "微信交易流水号",
           key: "transactionId",
           align: "center",
-          minWidth: 200
+          minWidth: 160
         },
         {
           title: "门店名称",
           align: "center",
           key: "shopName",
-          minWidth: 80
+          minWidth: 130
         },
         {
           title: "用户名",
           align: "center",
           key: "userName",
-          minWidth: 80
+          minWidth: 100
         },
         {
           title: "手机号",
           align: "center",
           key: "phone",
-          minWidth: 120
+          minWidth: 130
         },
         {
           title: "退款方式",
           align: "center",
           key: "refundType",
-          minWidth: 80,
+          minWidth: 100,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.refundType === "balanceRefund") {
@@ -269,7 +267,7 @@ export default {
           title: "退款金额",
           align: "center",
           key: "refundFee",
-          minWidth: 150,
+          minWidth: 100,
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.refundFee);
             return <div>{amount}</div>;
@@ -278,13 +276,13 @@ export default {
         {
           title: "退款原因",
           align: "center",
-          minWidth: 130,
+          minWidth: 100,
           key: "refundReason"
         },
         {
           title: "退款时间",
           align: "center",
-          minWidth: 130,
+          minWidth: 80,
           key: "refundTime"
         }
       ]
@@ -331,7 +329,7 @@ export default {
       getrefundLogPages(this.searchRowData).then(res => {
         const tableData = res.rows;
         // 恢复正常页数
-        this.searchRowData.rows = 10;
+        this.searchRowData.rows = 20;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
         tableData.forEach(item => {

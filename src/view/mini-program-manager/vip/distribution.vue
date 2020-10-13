@@ -1432,7 +1432,6 @@ export default {
       this.modalViewLoading = true;
       // 添加的是系统券，填写来源为系统优惠券
       this.addRelationDetail.source = "SMALL";
-      console.log("before create:", this.addRelationDetail);
       createSvipGift(this.addRelationDetail)
         .then(res => {
           this.modalViewLoading = false;

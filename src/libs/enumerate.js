@@ -736,7 +736,6 @@ export const relationStoreTypeEnum = [{
 }
 ]
 
-
 export const couponStatusEnum = [{
   label: '有效',
   value: 'VALID'
@@ -875,6 +874,10 @@ export const giftTypeEnum = [{
 // 折扣商品类型 DISCOUNT_PRODUCT(“折扣商品”), PULL_NEW_PRODUCT(“老拉新商品”)
 export const expandTypeEnum = [
   {
+    label: '普通商品',
+    value: 'ORDINARY_PRODUCT'
+  },
+  {
     label: '折扣商品',
     value: 'DISCOUNT_PRODUCT'
   },
@@ -887,13 +890,17 @@ export const expandTypeEnum = [
     value: 'SECKILL_PRODUCT'
   },
   {
+    label: '新品尝鲜商品',
+    value: 'NEW_TRY_PRODUCT'
+  },
+  {
+    label: '分享赚商品',
+    value: 'SHARE_PRODUCT'
+  },
+  {
     label: '助力商品',
     value: 'ASSIST_PRODUCT'
   },
-  {
-    label: '普通商品',
-    value: 'ORDINARY_PRODUCT'
-  }
 ];
 
 export const pfExpandTypeEnum = [
@@ -984,11 +991,11 @@ export const couponTypeEnum = [{
 {
   label: '现金券',
   value: couponType.CASH_COUPON
-},
-{
-  label: '运费券',
-  value: couponType.FREIGHT_COUPON
 }
+  // {
+  //   label: '运费券',
+  //   value: couponType.FREIGHT_COUPON
+  // }
 ];
 
 // 小程序SVIP身份识别(SUPER_VIP svip   PROBATION_VIP  试用vip)
@@ -1008,7 +1015,6 @@ export const svipTypeEnum = [{
 ];
 
 // 小程序应用类型 appType WXSMALL_SHOP 微信小程序; S_MALL 拼团小程序;
-
 export const appType = {
   WXSMALL_SHOP: 'WXSMALL_SHOP',
   S_MALL: 'S_MALL'
@@ -1039,7 +1045,7 @@ export const payType = {
   weixin: 'weixin',
   balance: 'balance',
   points: 'points',
-  haiding: 'haiding',
+  haiding: 'haiding'
 };
 
 export const payTypeEnum = [{
@@ -2427,10 +2433,11 @@ export const miniHdStatusEnum = [{
 ];
 
 // 小程序订单类型 SHOPPING("导购订单"),SELF_BUYING("自购订单"),TEAM_BUYING("团购订单"),PICKING("提货订单");
-
+//              TEAM_BUYING-团购订单 SELF_BUYING-微商城小程序订单 POINTS_BUYING-积分兑换订单 PRESAL_ORDER-预售订单
 export const miniOrderType = {
   SELF_BUYING: 'SELF_BUYING',
   TEAM_BUYING: 'TEAM_BUYING',
+  PRESAL_ORDER: 'PRESAL_ORDER',
   POINTS_BUYING: 'POINTS_BUYING'
 };
 
@@ -2441,6 +2448,10 @@ export const miniOrderTypeEnum = [{
 {
   label: '团购订单',
   value: miniOrderType.TEAM_BUYING
+},
+{
+  label: '预售订单',
+  value: miniOrderType.PRESAL_ORDER
 },
 {
   label: '积分兑换订单',
@@ -2537,6 +2548,14 @@ export const wholesalePayTypeEnum = [{
 {
   label: '鼎付通',
   value: 'haiding'
+},
+{
+  label: '组合支付(余额微信)',
+  value: 'balance_wechat'
+},
+{
+  label: '组合支付(余额海鼎)',
+  value: 'balance_haiding'
 }
 ]
 
@@ -2663,7 +2682,11 @@ export const couponFromEnum = [{
 {
   label: '限时抢购',
   value: 'flashsale'
-}
+},
+{
+  label: '活动送券',
+  value: 'activity'
+},
 ];
 
 export const layoutEnum = [{
@@ -2684,22 +2707,15 @@ export const layoutEnum = [{
 }
 ]
 
-export const advPositionEnum = [{
-  label: '首页弹窗',
-  value: 'poppup'
-},
-{
-  label: '顶部轮播图',
-  value: 'top'
-},
-{
-  label: '限时抢购',
-  value: 'flashsale'
-},
-{
-  label: '底部banner图',
-  value: 'bottom'
-}
+export const advPositionEnum = [
+  {
+    label: '顶部轮播图',
+    value: 'top'
+  },
+  {
+    label: '限时抢购',
+    value: 'flashsale'
+  }
 ]
 
 export const faqStatusEnum = [{
@@ -2758,14 +2774,14 @@ export const paymentFromEnum = [{
   label: '订单',
   value: 'order'
 },
-{
-  label: '发票',
-  value: 'invoice'
-},
-{
-  label: '账款',
-  value: 'debt'
-}
+  // {
+  //   label: '发票',
+  //   value: 'invoice'
+  // },
+  // {
+  //   label: '账款',
+  //   value: 'debt'
+  // }
 ];
 
 // MRQD-每日签到、WSGRZL-完善个人资料、XRXSSDXF-新人线上首单消费、XSSCCZ-线上首次充值、XSYDCZ-线上月度充值、XSYDXF-线上月度消费
@@ -2849,7 +2865,8 @@ export const receiveStatusEnum = [{
   label: '未领取',
   value: 'NO'
 }]
-//售后方式
+
+// 售后方式
 export const serviceModeEnum = [{
   label: '补货',
   value: 'REPLENISH'
@@ -2861,11 +2878,11 @@ export const serviceModeEnum = [{
 {
   label: '返仓',
   value: 'REVERT'
-},{
+}, {
   label: '退运费',
   value: 'ABNORMAL'
-},]
-//售后状态 
+}]
+// 售后状态
 export const serviceStatusEnum = [{
   label: '待审核',
   value: 'WAIT'
@@ -2873,7 +2890,7 @@ export const serviceStatusEnum = [{
 {
   label: '审核拒绝',
   value: 'AUDIT_REJECT'
-},{
+}, {
   label: '客户取消',
   value: 'CANCEL'
 },

@@ -25,36 +25,40 @@
               v-model="searchRowData.couponName"
               placeholder="优惠券名称"
               class="search-input mr5"
-              style="width: auto"
+              style="width: 130px"
               clearable
             ></Input>
             <Select
               v-model="searchRowData.couponType"
               placeholder="优惠券类型"
-              style="padding-right: 5px;width: 100px"
+              style="padding-right: 5px; width: 120px"
               clearable
             >
               <Option
-                v-for="(item,index) in couponTypeEnum"
-                :value="item.value"
+                v-for="(item, index) in couponTypeEnum"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
-                style="padding-left: 5px;width: 100px"
-              >{{ item.label }}</Option>
+                style="padding-left: 5px; width: 120px"
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.couponStatus"
               placeholder="优惠券状态"
-              style="padding-right: 5px;width: 100px"
+              style="padding-right: 5px; width: 120px"
               clearable
             >
               <Option
-                v-for="(item,index) in couponStatusEnum"
-                :value="item.value"
+                v-for="(item, index) in couponStatusEnum"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
-                style="padding-left: 5px;width: 100px"
-              >{{ item.label }}</Option>
+                style="padding-left: 5px; width: 120px"
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <Button
               :loading="searchLoading"
@@ -98,7 +102,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -120,84 +124,11 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">优惠券模板ID:</i-col>
-              <i-col span="18">{{ couponTemplateDetail.id }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">优惠券名称:</i-col>
-              <i-col span="18">{{ couponTemplateDetail.couponName }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">优惠券类型:</i-col>
-              <i-col v-if="couponTemplateDetail.couponType === 'FULL_CUT_COUPON'" span="16">
-                <tag color="magenta">{{ "满减券" }}</tag>
+              <i-col span="6">
+                优惠券模板ID:
               </i-col>
-              <i-col v-else-if="couponTemplateDetail.couponType === 'DISCOUNT_COUPON'" span="16">
-                <tag color="orange">{{ "折扣券" }}</tag>
-              </i-col>
-              <i-col v-else-if="couponTemplateDetail.couponType === 'CASH_COUPON'" span="16">
-                <tag color="cyan">{{ "现金券" }}</tag>
-              </i-col>
-              <i-col v-else-if="couponTemplateDetail.couponType === 'FREIGHT_COUPON'" span="16">
-                <tag color="blue">{{ "运费券" }}</tag>
-              </i-col>
-              <i-col v-else-if="couponTemplateDetail.couponType === null" span="16">{{ "N/A" }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">优惠金额:</i-col>
-              <i-col v-if="couponTemplateDetail.couponType==='FREIGHT_COUPON'" span="18">{{ "N/A" }}</i-col>
-              <i-col v-else span="18">{{ couponTemplateDetail.couponFee | fenToYuanDot2Filters }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">小购买金额:</i-col>
-              <i-col span="18">{{ couponTemplateDetail.minBuyFee | fenToYuanDot2Filters }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">最高优惠金额:</i-col>
-              <i-col span="18">{{ couponTemplateDetail.maxDiscountFee | fenToYuanDot2Filters }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">优惠券状态:</i-col>
-              <i-col v-if="couponTemplateDetail.couponStatus === 'VALID'" span="16">
-                <tag color="success">{{ "有效" }}</tag>
-              </i-col>
-              <i-col v-else-if="couponTemplateDetail.couponStatus === 'INVALID'" span="16">
-                <tag color="error">{{ "无效" }}</tag>
-              </i-col>
-              <i-col v-else-if="couponTemplateDetail.couponStatus === null" span="16">{{ "N/A" }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">优惠券图片:</i-col>
               <i-col span="18">
-                <img :src="couponTemplateDetail.couponImage" width="80%" >
+                {{ couponTemplateDetail.id }}
               </i-col>
             </Row>
           </i-col>
@@ -205,26 +136,11 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">使用范围:</i-col>
-              <i-col v-if="couponTemplateDetail.couponScope === 'STORE'" span="16">
-                <tag color="magenta">{{ "门店" }}</tag>
+              <i-col span="6">
+                优惠券名称:
               </i-col>
-              <i-col v-else-if="couponTemplateDetail.couponScope === 'SMALL'" span="16">
-                <tag color="cyan">{{ "商城" }}</tag>
-              </i-col>
-              <i-col v-else-if="couponTemplateDetail.couponScope === 'STORE_AND_SMALL'" span="16">
-                <tag color="orange">{{ "全场通用" }}</tag>
-              </i-col>
-              <i-col v-else-if="couponTemplateDetail.couponScope === null" span="16">{{ "N/A" }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">使用规则:</i-col>
               <i-col span="18">
-                <Input v-model="couponTemplateDetail.couponRules" :rows="6" type="textarea"></Input>
+                {{ couponTemplateDetail.couponName }}
               </i-col>
             </Row>
           </i-col>
@@ -232,56 +148,312 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">创建人:</i-col>
-              <i-col span="18">{{ couponTemplateDetail.createUser }}</i-col>
+              <i-col span="6">
+                优惠券类型:
+              </i-col>
+              <i-col
+                v-if="couponTemplateDetail.couponType === 'FULL_CUT_COUPON'"
+                span="16"
+              >
+                <tag color="magenta">
+                  {{ "满减券" }}
+                </tag>
+              </i-col>
+              <i-col
+                v-else-if="
+                  couponTemplateDetail.couponType === 'DISCOUNT_COUPON'
+                "
+                span="16"
+              >
+                <tag color="orange">
+                  {{ "折扣券" }}
+                </tag>
+              </i-col>
+              <i-col
+                v-else-if="couponTemplateDetail.couponType === 'CASH_COUPON'"
+                span="16"
+              >
+                <tag color="cyan">
+                  {{ "现金券" }}
+                </tag>
+              </i-col>
+              <i-col
+                v-else-if="couponTemplateDetail.couponType === 'FREIGHT_COUPON'"
+                span="16"
+              >
+                <tag color="blue">
+                  {{ "运费券" }}
+                </tag>
+              </i-col>
+              <i-col
+                v-else-if="couponTemplateDetail.couponType === null"
+                span="16"
+              >
+                {{ "N/A" }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">创建时间:</i-col>
-              <i-col span="18">{{ couponTemplateDetail.createTime }}</i-col>
+              <i-col span="6">
+                优惠金额:
+              </i-col>
+              <i-col
+                v-if="couponTemplateDetail.couponType === 'FREIGHT_COUPON'"
+                span="18"
+              >
+                {{ "N/A" }}
+              </i-col>
+              <i-col v-else span="18">
+                {{
+                  couponTemplateDetail.couponFee | fenToYuanDot2Filters
+                }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">
+                小购买金额:
+              </i-col>
+              <i-col span="18">
+                {{
+                  couponTemplateDetail.minBuyFee | fenToYuanDot2Filters
+                }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">
+                最高优惠金额:
+              </i-col>
+              <i-col v-if="couponTemplateDetail.maxDiscountFee" span="18">
+                {{
+                  couponTemplateDetail.maxDiscountFee | fenToYuanDot2Filters
+                }}
+              </i-col>
+              <i-col v-else span="18">
+                {{ "N/A" }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">
+                优惠券状态:
+              </i-col>
+              <i-col
+                v-if="couponTemplateDetail.couponStatus === 'VALID'"
+                span="16"
+              >
+                <tag color="success">
+                  {{ "有效" }}
+                </tag>
+              </i-col>
+              <i-col
+                v-else-if="couponTemplateDetail.couponStatus === 'INVALID'"
+                span="16"
+              >
+                <tag color="error">
+                  {{ "无效" }}
+                </tag>
+              </i-col>
+              <i-col
+                v-else-if="couponTemplateDetail.couponStatus === null"
+                span="16"
+              >
+                {{ "N/A" }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">
+                优惠券图片:
+              </i-col>
+              <i-col span="18">
+                <img :src="couponTemplateDetail.couponImage" width="80%">
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">
+                使用范围:
+              </i-col>
+              <i-col
+                v-if="couponTemplateDetail.couponScope === 'STORE'"
+                span="16"
+              >
+                <tag color="magenta">
+                  {{ "门店" }}
+                </tag>
+              </i-col>
+              <i-col
+                v-else-if="couponTemplateDetail.couponScope === 'SMALL'"
+                span="16"
+              >
+                <tag color="cyan">
+                  {{ "商城" }}
+                </tag>
+              </i-col>
+              <i-col
+                v-else-if="
+                  couponTemplateDetail.couponScope === 'STORE_AND_SMALL'
+                "
+                span="16"
+              >
+                <tag color="orange">
+                  {{ "全场通用" }}
+                </tag>
+              </i-col>
+              <i-col
+                v-else-if="couponTemplateDetail.couponScope === null"
+                span="16"
+              >
+                {{ "N/A" }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">
+                使用规则:
+              </i-col>
+              <i-col span="18">
+                <Input
+                  v-model="couponTemplateDetail.couponRules"
+                  :rows="6"
+                  type="textarea"
+                ></Input>
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">
+                创建人:
+              </i-col>
+              <i-col span="18">
+                {{ couponTemplateDetail.createUser }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">
+                创建时间:
+              </i-col>
+              <i-col span="18">
+                {{ couponTemplateDetail.createTime }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
     <!-- 添加运费券模板 -->
     <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000">
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改优惠券模板':'创建优惠券模板' }}</i-col>
+        <i-col>
+          {{
+            tempModalType === modalType.edit ? "修改优惠券模板" : "创建优惠券模板"
+          }}
+        </i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="couponTemplateDetail" :rules="ruleInline" :label-width="80">
+        <Form
+          ref="modalEdit"
+          :model="couponTemplateDetail"
+          :rules="ruleInline"
+          :label-width="120"
+        >
           <Row>
             <Col span="18">
-            <FormItem :label-width="100" label="优惠券名称:" prop="couponName">
-              <Input v-model="couponTemplateDetail.couponName" placeholder="优惠券名称"></Input>
+            <FormItem
+              :label-width="120"
+              label="优惠券名称:"
+              prop="couponName"
+            >
+              <Input
+                v-model="couponTemplateDetail.couponName"
+                placeholder="优惠券名称"
+              ></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="18">
-            <FormItem :label-width="100" label="优惠券类型:" prop="couponType">
+            <FormItem
+              :label-width="120"
+              label="优惠券类型:"
+              prop="couponType"
+            >
               <Select v-model="couponTemplateDetail.couponType" clearable>
                 <Option
-                  v-for="(item,index) in couponTypeEnum"
-                  :value="item.value"
+                  v-for="(item, index) in couponTypeEnum"
                   :key="index"
+                  :value="item.value"
                   class="ptb2-5"
-                  style="padding-left: 5px;width: 100%"
-                >{{ item.label }}</Option>
+                  style="padding-left: 5px; width: 100%"
+                >
+                  {{ item.label }}
+                </Option>
               </Select>
             </FormItem>
             </Col>
           </Row>
-          <Row v-if="this.couponTemplateDetail.couponType!='FREIGHT_COUPON'">
+          <Row v-if="couponTemplateDetail.couponType != 'FREIGHT_COUPON'">
             <Col span="18">
-            <FormItem :label-width="100" label="优惠金额:" prop="couponFee">
+            <p
+              v-show="couponTemplateDetail.couponType == 'DISCOUNT_COUPON'"
+              style="color: #ff3861; margin-left: 38px"
+            >
+              折扣券请输入折扣额度,如88折请输入0.88
+            </p>
+            <FormItem
+              v-if="couponTemplateDetail.couponType == 'DISCOUNT_COUPON'"
+              :label-width="120"
+              label="折扣额度:"
+              prop="couponFee"
+            >
+              <InputNumber
+                :min="0"
+                :value="couponFeeComputed"
+                placeholder="折扣额度"
+                @on-change="couponFeeInputNumberOnchange"
+              ></InputNumber>
+            </FormItem>
+            <FormItem
+              v-else
+              :label-width="120"
+              label="优惠金额:"
+              prop="couponFee"
+            >
               <InputNumber
                 :min="0"
                 :value="couponFeeComputed"
@@ -293,7 +465,11 @@
           </Row>
           <Row>
             <Col span="18">
-            <FormItem :label-width="100" label="最小购买金额:" prop="minBuyFee">
+            <FormItem
+              :label-width="120"
+              label="最小购买金额:"
+              prop="minBuyFee"
+            >
               <InputNumber
                 :min="0"
                 :value="minBuyFeeComputed"
@@ -303,29 +479,38 @@
             </FormItem>
             </Col>
           </Row>
-          <!-- <Row v-if="this.couponTemplateDetail.couponType=='DISCOUNT_COUPON'">
+          <Row v-if="couponTemplateDetail.couponType == 'DISCOUNT_COUPON'">
             <Col span="18">
-              <FormItem label="最高优惠金额:" prop="maxDiscountFee" :label-width="100">
-                <InputNumber
-                  :min="0"
-                  :value="maxDiscountFeeComputed"
-                  placeholder="最高优惠金额"
-                  @on-change="maxDiscountFeeInputNumberOnchange"
-                ></InputNumber>
-              </FormItem>
+            <FormItem
+              label="最高优惠金额:"
+              prop="maxDiscountFee"
+              :label-width="120"
+            >
+              <InputNumber
+                :min="0"
+                :value="maxDiscountFeeComputed"
+                @on-change="maxDiscountFeeInputNumberOnchange"
+              ></InputNumber>
+            </FormItem>
             </Col>
-          </Row>-->
+          </Row>
           <Row>
             <Col span="18">
-            <FormItem :label-width="100" label="优惠券状态:" prop="couponStatus">
+            <FormItem
+              :label-width="120"
+              label="优惠券状态:"
+              prop="couponStatus"
+            >
               <Select v-model="couponTemplateDetail.couponStatus" clearable>
                 <Option
-                  v-for="(item,index) in couponStatusEnum"
-                  :value="item.value"
+                  v-for="(item, index) in couponStatusEnum"
                   :key="index"
+                  :value="item.value"
                   class="ptb2-5"
-                  style="padding-left: 5px;width: 100%"
-                >{{ item.label }}</Option>
+                  style="padding-left: 5px; width: 100%"
+                >
+                  {{ item.label }}
+                </Option>
               </Select>
             </FormItem>
             </Col>
@@ -347,7 +532,7 @@
           </Row>-->
           <Row>
             <Col span="18">
-            <FormItem :label-width="100" label="使用规则:" prop="couponRules">
+            <FormItem :label-width="120" label="使用规则:" prop="couponRules">
               <Input
                 v-model="couponTemplateDetail.couponRules"
                 :rows="6"
@@ -359,23 +544,41 @@
           </Row>
           <Row>
             <FormItem
-              :label-width="100"
+              :label-width="120"
               label="优惠券图片     (推荐尺寸为750X160(单位:px)):"
               prop="couponImage"
             >
-              <Input v-show="false" v-model="couponTemplateDetail.couponImage" style="width: auto"></Input>
-              <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+              <Input
+                v-show="false"
+                v-model="couponTemplateDetail.couponImage"
+                style="width: auto"
+              ></Input>
+              <div
+                v-for="item in uploadListMain"
+                :key="item.url"
+                class="demo-upload-list"
+              >
                 <template v-if="item.status === 'finished'">
                   <div>
-                    <img :src="item.url" >
+                    <img :src="item.url">
                     <div class="demo-upload-list-cover">
-                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                      <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                      <Icon
+                        type="ios-eye-outline"
+                        @click.native="handleUploadView(item)"
+                      ></Icon>
+                      <Icon
+                        type="ios-trash-outline"
+                        @click.native="handleRemoveMain(item)"
+                      ></Icon>
                     </div>
                   </div>
                 </template>
                 <template v-else>
-                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                  <Progress
+                    v-if="item.showProgress"
+                    :percent="item.percentage"
+                    hide-info
+                  ></Progress>
                 </template>
               </div>
               <IViewUpload
@@ -386,7 +589,10 @@
                 file-dir="activity"
                 @on-success="handleSuccessMain"
               >
-                <div slot="content" style="width:58px;height:58px;line-height:58px">
+                <div
+                  slot="content"
+                  style="width: 58px; height: 58px; line-height: 58px"
+                >
                   <Icon type="ios-camera" size="20"></Icon>
                 </div>
               </IViewUpload>
@@ -395,9 +601,20 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+        >
+          确定
+        </Button>
       </div>
+    </Modal>
+    <Modal v-model="uploadVisible" title="图片预览">
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>
@@ -454,7 +671,7 @@ const roleRowData = {
   couponStatus: null,
   page: 1,
   rows: 10,
-  sidx: 'id',
+  sidx: 'createTime',
   sort: 'desc'
 };
 
@@ -484,7 +701,7 @@ export default {
           }
         ],
         maxDiscountFee: [
-          { required: true, message: '请输入最高优惠金额' },
+          { required: false, message: '请输入最高优惠金额' },
           {
             message: '必须为大于0的数字',
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
@@ -513,16 +730,18 @@ export default {
           title: '模板ID',
           align: 'center',
           key: 'id',
-          maxWidth: 80
+          width: 90
         },
         {
           title: '优惠券名称',
           align: 'center',
-          key: 'couponName'
+          key: 'couponName',
+          minWidth: 150
         },
         {
           title: '优惠券类型',
           align: 'center',
+          width: 110,
           key: 'couponType',
           render: (h, params, vm) => {
             const { row } = params;
@@ -566,7 +785,7 @@ export default {
           title: '优惠/折扣额度',
           align: 'center',
           key: 'couponFee',
-          minWidth: 60,
+          width: 130,
           render(h, params) {
             const { row } = params;
             if (row.couponType === 'FREIGHT_COUPON') {
@@ -582,6 +801,7 @@ export default {
           title: '最小购买金额',
           align: 'center',
           key: 'minBuyFee',
+          width: 130,
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.minBuyFee)}</div>;
           }
@@ -589,14 +809,20 @@ export default {
         {
           title: '最高优惠金额',
           align: 'center',
+          width: 130,
           key: 'maxDiscountFee',
           render(h, params) {
-            return <div>{fenToYuanDot2(params.row.maxDiscountFee)}</div>;
+            if (params.row.maxDiscountFee) {
+              return <div>{fenToYuanDot2(params.row.maxDiscountFee)}</div>;
+            } else {
+              return <div>{'N/A'}</div>;
+            }
           }
         },
         {
           title: '优惠券状态',
           align: 'center',
+          width: 110,
           key: 'couponStatus',
           render: (h, params, vm) => {
             const { row } = params;
@@ -620,20 +846,22 @@ export default {
             return <div>{row.couponStatus}</div>;
           }
         },
-        {
-          title: '优惠券图片',
-          align: 'center',
-          key: 'couponImage',
-          render: (h, params, vm) => {
-            const { row } = params;
-            const str = <img src={row.couponImage} height='60' width='60' />;
-            return <div>{str}</div>;
-          }
-        },
+        // {
+        //   title: "优惠券图片",
+        //   align: "center",
+        //   minWidth: 110,
+        //   key: "couponImage",
+        //   render: (h, params, vm) => {
+        //     const { row } = params;
+        //     const str = <img src={row.couponImage} height="60" width="60" />;
+        //     return <div>{str}</div>;
+        //   },
+        // },
         {
           title: '使用范围',
           align: 'center',
           key: 'couponScope',
+          width: 100,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.couponScope === 'STORE') {
@@ -664,26 +892,16 @@ export default {
             return <div>{row.couponScope}</div>;
           }
         },
-        /* {
-          title: '使用规则',
-          key: 'couponRules',
-          tooltips: true
-        }, */
-        {
-          title: '创建人',
-          align: 'center',
-          key: 'createUser'
-        },
-        {
-          title: '创建时间',
-          align: 'center',
-          key: 'createTime',
-          minWidth: 60
-        },
+        // {
+        //   title: "创建时间",
+        //   align: "center",
+        //   key: "createTime",
+        //   minWidth: 180,
+        // },
         {
           title: '操作',
           align: 'center',
-          minWidth: 80,
+          width: 180,
           key: 'handle',
           options: ['couponStatus', 'view', 'edit', 'delete']
         }
@@ -722,13 +940,18 @@ export default {
       this.couponTemplateDetail.storeImage = null;
     },
     handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           // TODO ? 最小金额能否大于优惠金额,即用户不需要支付额外金额
-          // if (this.couponTemplateDetail.minBuyFee >= this.couponTemplateDetail.couponFee) {
-          //   this.$Message.error('最小购买金额必须大于优惠金额!');
-          //   return;
-          // }
+          if (this.couponTemplateDetail.couponType != 'DISCOUNT_COUPON') {
+            if (
+              this.couponTemplateDetail.minBuyFee <=
+              this.couponTemplateDetail.couponFee
+            ) {
+              this.$Message.error('最小购买金额必须大于优惠金额!');
+              return;
+            }
+          }
           this.couponTemplateDetail.couponScope = 'SMALL';
           this.couponTemplateDetail.couponRules = this.couponTemplateDetail.couponRules.replace(
             /\n|\r/g,
@@ -747,14 +970,27 @@ export default {
       });
     },
     handleEditClose() {
+      // if (this.newPicture.length > 0) {
+      //   const urls = {
+      //     urls: this.newPicture
+      //   };
+      //   this.deletePicture(urls);
+      // }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
     },
+    // deletePicture(urls) {
+    //   deletePicture({
+    //     urls
+    //   })
+    //     .then(res => {})
+    //     .catch(() => {});
+    // },
     createCouponTemplate() {
       this.modalViewLoading = true;
       createCouponTemplate(this.couponTemplateDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
@@ -768,7 +1004,7 @@ export default {
     editCouponTemplate() {
       this.modalViewLoading = true;
       editCouponTemplate(this.couponTemplateDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
@@ -798,7 +1034,7 @@ export default {
       deleteCouponTemplate({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -810,7 +1046,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -832,9 +1068,9 @@ export default {
     },
     getTableData() {
       getCouponTemplatePages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           if (res.rows.length !== 0) {
-            res.rows.forEach(element => {
+            res.rows.forEach((element) => {
               element.couponRules =
                 element.couponRules == null
                   ? null
@@ -847,7 +1083,7 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;

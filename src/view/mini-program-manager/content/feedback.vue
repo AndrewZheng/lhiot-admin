@@ -16,13 +16,13 @@
         @on-edit="handleEdit"
       >
         <div slot="searchCondition">
-          <Input
+          <!-- <Input
             v-model="searchRowData.title"
             placeholder="标题"
             class="search-input mr5"
             style="width: 150px"
             clearable
-          ></Input>
+          ></Input>-->
           <Input
             v-model="searchRowData.content"
             placeholder="内容"
@@ -32,17 +32,34 @@
           ></Input>
           <Select
             v-model="searchRowData.status"
-            class="search-col"
+            class="search-col mr5"
             placeholder="反馈状态"
             style="width: 150px"
             clearable
           >
             <Option
               v-for="item in feedbackStatus"
-              :value="item.value"
               :key="item.value"
+              :value="item.value"
               class="ml15 mt10"
-            >{{ item.label }}</Option>
+            >
+              {{ item.label }}
+            </Option>
+          </Select>
+          <Select
+            v-model="searchRowData.title"
+            placeholder="活动类型"
+            style="padding-right: 5px;width: 120px"
+            @on-change="handCouponType"
+          >
+            <Option
+              v-for="(item,index) in feedbackClassify"
+              :key="index"
+              :value="item.indexValue"
+              class="ptb2-5"
+            >
+              {{ item.indexValue }}
+            </Option>
           </Select>
           <Button
             v-waves
@@ -87,52 +104,92 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">ID:</i-col>
-              <i-col span="16">{{ feedbackDetail.id }}</i-col>
+              <i-col span="8">
+                ID:
+              </i-col>
+              <i-col span="16">
+                {{ feedbackDetail.id }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">应用类型:</i-col>
-              <i-col span="16">{{ feedbackDetail.applicationType | appTypeFilter }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">反馈用户:</i-col>
-              <i-col span="16">{{ feedbackDetail.nickname }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">反馈时间:</i-col>
-              <i-col span="16">{{ feedbackDetail.createAt }}</i-col>
+              <i-col span="8">
+                应用类型:
+              </i-col>
+              <i-col span="16">
+                {{ feedbackDetail.applicationType | appTypeFilter }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">标题:</i-col>
-              <i-col span="16">{{ feedbackDetail.title }}</i-col>
+              <i-col span="8">
+                反馈用户:
+              </i-col>
+              <i-col span="16">
+                {{ feedbackDetail.nickname }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                反馈时间:
+              </i-col>
+              <i-col span="16">
+                {{ feedbackDetail.createAt }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                用户电话:
+              </i-col>
+              <i-col span="16">
+                {{ feedbackDetail.phone }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                标题:
+              </i-col>
+              <i-col span="16">
+                {{ feedbackDetail.title }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="24" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">反馈内容:</i-col>
-              <i-col span="16">{{ feedbackDetail.content }}</i-col>
+              <i-col span="4">
+                反馈内容:
+              </i-col>
+              <i-col span="16">
+                {{ feedbackDetail.content }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">反馈状态:</i-col>
-              <i-col span="16">{{ feedbackDetail.status|feedbackStatusFilters }}</i-col>
+              <i-col span="8">
+                反馈状态:
+              </i-col>
+              <i-col span="16">
+                {{ feedbackDetail.status|feedbackStatusFilters }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -140,22 +197,34 @@
           <Row :gutter="8" type="flex" align="middle" class-name="mb10">
             <i-col span="12">
               <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                <i-col span="8">回复人:</i-col>
-                <i-col span="16">{{ feedbackDetail.backEditor }}</i-col>
+                <i-col span="8">
+                  回复人:
+                </i-col>
+                <i-col span="16">
+                  {{ feedbackDetail.backEditor }}
+                </i-col>
               </Row>
             </i-col>
             <i-col span="12">
               <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                <i-col span="8">回复时间:</i-col>
-                <i-col span="16">{{ feedbackDetail.feedbackAt }}</i-col>
+                <i-col span="8">
+                  回复时间:
+                </i-col>
+                <i-col span="16">
+                  {{ feedbackDetail.feedbackAt }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
           <Row :gutter="8" type="flex" align="middle" class-name="mb10">
             <i-col span="12">
               <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                <i-col span="8">回复内容:</i-col>
-                <i-col span="16">{{ feedbackDetail.backMessage }}</i-col>
+                <i-col span="8">
+                  回复内容:
+                </i-col>
+                <i-col span="16">
+                  {{ feedbackDetail.backMessage }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
@@ -165,7 +234,7 @@
           ref="modalEdit"
           :model="feedbackDetail"
           :rules="ruleInline"
-          :label-width="80"
+          :label-width="100"
         >
           <FormItem label="回复内容:" prop="backMessage">
             <Input v-model="feedbackDetail.backMessage" type="textarea"></Input>
@@ -173,7 +242,9 @@
         </Form>
       </div>
       <div v-if="tempModalType === modalType.edit" slot="footer">
-        <Button :loading="feedbackLoading" type="primary" @click="handleEditOk('modalEdit')">确认</Button>
+        <Button :loading="feedbackLoading" type="primary" @click="handleEditOk('modalEdit')">
+          确认
+        </Button>
       </div>
       <!--
       <div slot="footer">
@@ -184,35 +255,39 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
-import { getFeedbackPages, editFeedback } from "@/api/mini-program";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { appTypeConvert } from "@/libs/converStatus";
+import Tables from '_c/tables';
+import _ from 'lodash';
+import {
+  getFeedbackPages,
+  editFeedback,
+  getSystemParameter
+} from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import { appTypeConvert } from '@/libs/converStatus';
 
 const feedbackDetail = {
   id: 0,
-  title: "",
-  content: "",
-  backMessage: "",
+  title: '',
+  content: '',
+  backMessage: '',
   createTime: null,
   feedbackTime: null,
-  userId: "",
+  userId: '',
   applicationType: null,
-  backEditor: "",
+  backEditor: '',
   status: null
 };
 
 const roleRowData = {
   applicationType: null,
-  content: "",
+  content: '',
   page: 1,
   rows: 10,
   status: null,
-  title: "",
-  sidx: "create_time",
-  sort: "desc"
+  title: '',
+  sidx: 'createTime',
+  sord: 'desc'
 };
 
 export default {
@@ -223,126 +298,92 @@ export default {
   data() {
     return {
       ruleInline: {
-        backMessage: [{ required: true, message: "回复内容不能为空" }]
+        backMessage: [{ required: true, message: '回复内容不能为空' }]
       },
       columns: [
         {
-          title: "ID",
-          align: "center",
-          key: "id",
-          minWidth: 50
+          title: 'ID',
+          align: 'center',
+          key: 'id',
+          width: 70
         },
         {
-          title: "标题",
-          align: "center",
+          title: '标题',
+          align: 'center',
           width: 150,
-          key: "title",
+          key: 'title',
           tooltip: true
         },
         {
-          title: "内容",
-          align: "center",
-          width: 300,
-          key: "content",
+          title: '内容',
+          align: 'center',
+          minWidth: 170,
+          key: 'content',
           tooltip: true
         },
         {
-          title: "反馈用户",
-          align: "center",
-          width: 185,
-          key: "userId"
+          title: '用户电话',
+          align: 'center',
+          width: 130,
+          key: 'phone'
         },
         {
-          title: "创建时间",
-          align: "center",
+          title: '创建时间',
+          align: 'center',
           width: 185,
-          key: "createTime",
+          key: 'createTime',
           sortable: true
         },
         {
-          title: "反馈状态",
-          align: "center",
+          title: '反馈状态',
+          align: 'center',
           width: 120,
-          key: "status",
+          key: 'status',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.status === "UNREPLY") {
-              return <tag color="warning">{"未回复"}</tag>;
-            } else if (row.status === "REPLY") {
-              return <tag color="primary">{"已回复"}</tag>;
-            } else if (row.status === "READED") {
-              return <tag color="success">{"已读"}</tag>;
+            if (row.status === 'UNREPLY') {
+              return <tag color='warning'>{'未回复'}</tag>;
+            } else if (row.status === 'REPLY') {
+              return <tag color='primary'>{'已回复'}</tag>;
+            } else if (row.status === 'READED') {
+              return <tag color='success'>{'已读'}</tag>;
             } else {
               return row.status;
             }
           }
         },
         {
-          title: "回复人",
-          align: "center",
-          width: 100,
-          key: "backEditor",
+          title: '回复内容',
+          align: 'center',
+          minWidth: 170,
+          key: 'backMessage',
           tooltip: true
         },
         {
-          title: "回复内容",
-          align: "center",
-          width: 170,
-          key: "backMessage",
-          tooltip: true
-        },
-        {
-          title: "应用类型",
-          align: "center",
-          width: 160,
-          key: "applicationType",
-          render: (h, params, vm) => {
-            const { row } = params;
-            if (row.applicationType === "WXSMALL_SHOP") {
-              return (
-                <div>
-                  <tag color="green">
-                    {appTypeConvert(row.applicationType).label}
-                  </tag>
-                </div>
-              );
-            } else if (row.applicationType === "S_MALL") {
-              return (
-                <div>
-                  <tag color="gold">
-                    {appTypeConvert(row.applicationType).label}
-                  </tag>
-                </div>
-              );
-            } else {
-              return <div>{row.applicationType}</div>;
-            }
-          }
-        },
-        {
-          title: "操作",
-          align: "center",
-          minWidth: 150,
-          key: "handle",
-          options: ["view", "feedback"]
+          title: '操作',
+          align: 'center',
+          width: 120,
+          key: 'handle',
+          options: ['view', 'feedback']
         }
       ],
+      feedbackClassify: [],
       feedbackDetail: _.cloneDeep(feedbackDetail),
       searchRowData: _.cloneDeep(roleRowData),
       feedbackLoading: false,
       // 反馈状态（UNREPLY-未回复，REPLY-已回复且用户未读，READED-已读）
       feedbackStatus: [
         {
-          label: "未回复",
-          value: "UNREPLY"
+          label: '未回复',
+          value: 'UNREPLY'
         },
         {
-          label: "已回复",
-          value: "REPLY"
+          label: '已回复',
+          value: 'REPLY'
         },
         {
-          label: "已读",
-          value: "READED"
+          label: '已读',
+          value: 'READED'
         }
       ]
     };
@@ -351,6 +392,7 @@ export default {
   mounted() {},
   created() {
     this.getTableData();
+    this.getSystemParameters();
   },
   methods: {
     resetSearchRowData() {
@@ -369,7 +411,7 @@ export default {
         backMessage: this.feedbackDetail.backMessage
       })
         .then(res => {
-          this.$Message.success("回复成功!");
+          this.$Message.success('回复成功!');
           this.getTableData();
         })
         .finally(res => {
@@ -397,6 +439,22 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
+    },
+    getSystemParameters() {
+      const code = 'FEEDBACK_TITLE_TYPE';
+      getSystemParameter(code)
+        .then(res => {
+          this.feedbackClassify = res.systemSettings;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    handCouponType(value) {
+      this.searchRowData.page = 1;
+      this.searchLoading = true;
+      this.getTableData();
+      this.searchRowData.title = value;
     }
   }
 };

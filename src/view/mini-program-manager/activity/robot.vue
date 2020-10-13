@@ -85,72 +85,104 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">主键ID:</i-col>
-              <i-col span="18">{{ robotDetail.id }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">门店id:</i-col>
-              <i-col span="18">{{ robotDetail.storeId }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">门店名称:</i-col>
-              <i-col span="18">{{ robotDetail.storeName }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">用户id:</i-col>
-              <i-col span="18">{{ robotDetail.userId }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">收货人:</i-col>
-              <i-col span="18">{{ robotDetail.receiverName }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">联系方式:</i-col>
-              <i-col span="18">{{ robotDetail.receiverMobile }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">用户昵称:</i-col>
-              <i-col span="18">{{ robotDetail.nickName }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="6">用户头像:</i-col>
+              <i-col span="6">
+                主键ID:
+              </i-col>
               <i-col span="18">
-                <img :src="robotDetail.avater" style="width: 150px" >
+                {{ robotDetail.id }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">
+                门店id:
+              </i-col>
+              <i-col span="18">
+                {{ robotDetail.storeId }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">
+                门店名称:
+              </i-col>
+              <i-col span="18">
+                {{ robotDetail.storeName }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">
+                用户id:
+              </i-col>
+              <i-col span="18">
+                {{ robotDetail.userId }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">
+                收货人:
+              </i-col>
+              <i-col span="18">
+                {{ robotDetail.receiverName }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">
+                联系方式:
+              </i-col>
+              <i-col span="18">
+                {{ robotDetail.receiverMobile }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">
+                用户昵称:
+              </i-col>
+              <i-col span="18">
+                {{ robotDetail.nickName }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="6">
+                用户头像:
+              </i-col>
+              <i-col span="18">
+                <img :src="robotDetail.avater" style="width: 150px">
               </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -159,19 +191,21 @@
         <i-col>{{ tempModalType===modalType.edit?'修改机器人信息':'创建机器人信息' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="robotDetail" :rules="ruleInline" :label-width="80">
+        <Form ref="modalEdit" :model="robotDetail" :rules="ruleInline" :label-width="90">
           <Row>
             <Col span="18">
             <FormItem :label-width="85" label="所属门店:" prop="storeId">
               <Select v-model="robotDetail.storeId">
                 <Option
                   v-for="(item,index) in flagShipList"
-                  :value="item.storeId"
                   :key="index"
+                  :value="item.storeId"
                   class="ptb2-5"
                   style="padding-left: 5px"
                   @click.native="selectStore(item)"
-                >{{ item.storeName }}</Option>
+                >
+                  {{ item.storeName }}
+                </Option>
               </Select>
             </FormItem>
             </Col>
@@ -210,7 +244,7 @@
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>
-                    <img :src="item.url" >
+                    <img :src="item.url">
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                       <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -238,13 +272,17 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
+          确定
+        </Button>
       </div>
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" >
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>
@@ -403,6 +441,12 @@ export default {
       this.robotDetail.storeImage = null;
     },
     handleSubmit(name) {
+      // if (this.oldPicture.length > 0) {
+      //   const urls = {
+      //     urls: this.oldPicture
+      //   };
+      //   this.deletePicture(urls);
+      // }
       this.$refs[name].validate(valid => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
@@ -418,10 +462,23 @@ export default {
       });
     },
     handleEditClose() {
+      // if (this.newPicture.length > 0) {
+      //   const urls = {
+      //     urls: this.newPicture
+      //   };
+      //   this.deletePicture(urls);
+      // }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
     },
+    // deletePicture(urls) {
+    //   deletePicture({
+    //     urls
+    //   })
+    //     .then(res => {})
+    //     .catch(() => {});
+    // },
     createStore() {
       this.modalViewLoading = true;
       createRobot(this.robotDetail)

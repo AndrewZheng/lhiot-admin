@@ -8,9 +8,11 @@
         <Card>
           <h6>
             当前选中：
-            <span
-              class="brand-red font-sm"
-            >{{ parentCategory.groupName? parentCategory.groupName: '所有父级分类' }}</span>
+            <span class="brand-red font-sm">{{
+              parentCategory.groupName
+                ? parentCategory.groupName
+                : "所有父级分类"
+            }}</span>
           </h6>
           <tables
             ref="tables"
@@ -56,8 +58,13 @@
                 </Button>
               </Row>
             </div>
-            <div slot="operations">
-              <Button v-waves type="success" class="mr5" @click="createParentRow">
+            <div slot="operations" style="margin-left:-30px">
+              <Button
+                v-waves
+                type="success"
+                class="mr5"
+                @click="createParentRow"
+              >
                 <Icon type="md-add" />添加一级分类
               </Button>
               <Button v-waves type="success" class="mr5" @click="createSonRow">
@@ -76,7 +83,7 @@
               </Poptip>
             </div>
           </tables>
-          <div style="margin: 10px;overflow: hidden">
+          <div style="margin: 10px; overflow: hidden">
             <Row type="flex" justify="end">
               <Page
                 :total="total"
@@ -95,7 +102,9 @@
     <!--编辑菜单 -->
     <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改商品分类':'创建商品分类' }}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit ? "修改商品分类" : "创建商品分类"
+        }}</i-col>
       </p>
       <div class="modal-content">
         <Form :label-width="100">
@@ -106,13 +115,18 @@
             <i-col>{{ parentCategory.groupName }}</i-col>
           </FormItem>
           <FormItem label="子分类名:">
-            <Input v-model="currentCategory.groupName" placeholder="子分类名"></Input>
+            <Input
+              v-model="currentCategory.groupName"
+              placeholder="子分类名"
+            ></Input>
           </FormItem>
         </Form>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="asyncEditOK">确定</Button>
+        <Button :loading="modalEditLoading" type="primary" @click="asyncEditOK"
+          >确定</Button
+        >
       </div>
     </Modal>
   </div>
@@ -126,7 +140,7 @@ import {
   delProductCategories,
   getProductCategoriesPages,
   getProductCategoriesTree,
-  editProductCategories
+  editProductCategories,
 } from "@/api/mini-program";
 import { buildMenu, convertTree } from "@/libs/util";
 import CommonIcon from "_c/common-icon";
@@ -137,19 +151,19 @@ import deleteMixin from "@/mixins/deleteMixin.js";
 const currentCategory = {
   id: 0,
   parentId: 0,
-  groupName: ""
+  groupName: "",
 };
 
 const roleRowData = {
   parentId: 0,
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 export default {
   components: {
     Tables,
-    CommonIcon
+    CommonIcon,
   },
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
@@ -161,14 +175,14 @@ export default {
           key: "",
           width: 60,
           align: "center",
-          fixed: "left"
+          fixed: "left",
         },
         {
           title: "商品分类ID",
           key: "id",
           sortable: true,
           align: "center",
-          minWidth: 150
+          minWidth: 150,
         },
         {
           title: "分类名",
@@ -176,15 +190,15 @@ export default {
           sortable: true,
           align: "center",
 
-          minWidth: 150
+          minWidth: 150,
         },
         {
           title: "操作",
           align: "center",
           key: "handle",
           minWidth: 150,
-          options: ["edit", "delete"]
-        }
+          options: ["edit", "delete"],
+        },
       ],
       modalEdit: false,
       modalViewLoading: false,
@@ -195,7 +209,7 @@ export default {
       currentCategory: this._.cloneDeep(currentCategory),
       parentCategory: this._.cloneDeep(currentCategory),
       searchRowData: this._.cloneDeep(roleRowData),
-      addSon: false
+      addSon: false,
     };
   },
   created() {
@@ -210,7 +224,7 @@ export default {
               display: "inline-block",
               width: "100%",
               fontSize: "14px",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
           >
             <span>
@@ -228,7 +242,7 @@ export default {
               display: "inline-block",
               width: "100%",
               fontSize: "14px",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
           >
             <span>
@@ -280,8 +294,8 @@ export default {
     createProductCategories() {
       this.modalEditLoading = true;
       createProductCategories(this.currentCategory)
-        .then(res => {})
-        .finally(res => {
+        .then((res) => {})
+        .finally((res) => {
           this.initMenuList();
           this.modalEditLoading = false;
           this.modalEdit = false;
@@ -290,8 +304,8 @@ export default {
     editProductCategories() {
       this.modalEditLoading = true;
       editProductCategories(this.currentCategory)
-        .then(res => {})
-        .finally(res => {
+        .then((res) => {})
+        .finally((res) => {
           this.initMenuList();
           this.modalEditLoading = false;
           this.modalEdit = false;
@@ -304,9 +318,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       delProductCategories({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&
@@ -331,32 +345,29 @@ export default {
     },
     getTableData() {
       this.loading = true;
-      getProductCategoriesPages(this.searchRowData).then(res => {
+      getProductCategoriesPages(this.searchRowData).then((res) => {
         // if (this.menuData.length > 0) {
-          // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
+        // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
+        this.tableData = res.rows;
+        this.total = res.total;
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
         // }
       });
     },
     // 初始化商品菜单列表
     initMenuList() {
-      getProductCategoriesTree().then(res => {
-        console.log("进去树列表");
-        console.log("数据",res);
+      getProductCategoriesTree().then((res) => {
         // if (res && res.array.length > 0) {
-          console.log("树状列表数据");
-          const menuList = buildMenu(res.array);
-          const map = {
-            title: "title",
-            children: "children"
-          };
-          this.menuData = convertTree(menuList, map, true);
-          // if (this.menuData.length > 0) {
-            this.getTableData();
+        const menuList = buildMenu(res.array);
+        const map = {
+          title: "title",
+          children: "children",
+        };
+        this.menuData = convertTree(menuList, map, true);
+        // if (this.menuData.length > 0) {
+        this.getTableData();
         //   }
         // }
       });
@@ -386,7 +397,7 @@ export default {
       this.getTableData();
     },
     expandChildren(array) {
-      array.forEach(item => {
+      array.forEach((item) => {
         if (typeof item.expand === "undefined") {
           this.$set(item, "expend", false);
         } else {
@@ -401,8 +412,8 @@ export default {
       this.clearSearchLoading = true;
       this.searchRowData = this._.cloneDeep(roleRowData);
       this.getTableData();
-    }
-  }
+    },
+  },
 };
 </script>
 

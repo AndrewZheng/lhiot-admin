@@ -45,10 +45,12 @@
           >
             <Option
               v-for="item in userStatus"
-              :value="item.value"
               :key="item.value"
+              :value="item.value"
               class="ptb2-5"
-            >{{ item.label }}</Option>
+            >
+              {{ item.label }}
+            </Option>
           </Select>
           <DatePicker
             v-model="searchRowData.createAt"
@@ -76,7 +78,7 @@
             type="primary"
             @click="handleSearch"
           >
-            <Icon type="md-search"/>&nbsp;搜索
+            <Icon type="md-search" />&nbsp;搜索
           </Button>
           <Button
             v-waves
@@ -85,19 +87,19 @@
             type="info"
             @click="handleClear"
           >
-            <Icon type="md-refresh"/>&nbsp;清除条件
+            <Icon type="md-refresh" />&nbsp;清除条件
           </Button>
         </div>
         <div slot="operations">
           <!-- 多类型导出 -->
-          <BookTypeOption v-model="exportType" class="mr5"/>
+          <BookTypeOption v-model="exportType" class="mr5" />
           <Button
             :loading="downloadLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleDownload"
           >
-            <Icon type="md-download"/>导出
+            <Icon type="md-download" />导出
           </Button>
         </div>
       </tables>
@@ -123,76 +125,118 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">ID:</i-col>
-              <i-col span="20">{{ salaryDetail.id }}</i-col>
+              <i-col span="4">
+                ID:
+              </i-col>
+              <i-col span="20">
+                {{ salaryDetail.id }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">申请人:</i-col>
-              <i-col span="16">{{ salaryDetail.realName }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">手机号码:</i-col>
-              <i-col span="16">{{ salaryDetail.phone }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">提取金额:</i-col>
-              <i-col span="16">{{ salaryDetail.amount|fenToYuanDot2Filters }}</i-col>
+              <i-col span="8">
+                申请人:
+              </i-col>
+              <i-col span="16">
+                {{ salaryDetail.realName }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">申请时间:</i-col>
-              <i-col span="16">{{ salaryDetail.createAt }}</i-col>
+              <i-col span="8">
+                手机号码:
+              </i-col>
+              <i-col span="16">
+                {{ salaryDetail.phone }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">处理时间:</i-col>
-              <i-col span="16">{{ salaryDetail.dealAt }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">开户行:</i-col>
-              <i-col span="16">{{ salaryDetail.bankDeposit }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">持卡人姓名:</i-col>
-              <i-col span="16">{{ salaryDetail.cardUsername }}</i-col>
+              <i-col span="8">
+                提取金额:
+              </i-col>
+              <i-col span="16">
+                {{ salaryDetail.amount|fenToYuanDot2Filters }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">银行卡号:</i-col>
-              <i-col span="16">{{ salaryDetail.cardNo }}</i-col>
+              <i-col span="8">
+                申请时间:
+              </i-col>
+              <i-col span="16">
+                {{ salaryDetail.createAt }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">结算状态:</i-col>
-              <i-col span="16">{{ salaryDetail.settlementStatus|settlementStatusFilters }}</i-col>
+              <i-col span="8">
+                处理时间:
+              </i-col>
+              <i-col span="16">
+                {{ salaryDetail.dealAt }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                开户行:
+              </i-col>
+              <i-col span="16">
+                {{ salaryDetail.bankDeposit }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                持卡人姓名:
+              </i-col>
+              <i-col span="16">
+                {{ salaryDetail.cardUsername }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                银行卡号:
+              </i-col>
+              <i-col span="16">
+                {{ salaryDetail.cardNo }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                结算状态:
+              </i-col>
+              <i-col span="16">
+                {{ salaryDetail.settlementStatus|settlementStatusFilters }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -204,69 +248,107 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">ID:</i-col>
-              <i-col span="20">{{ salaryDetail.id }}</i-col>
+              <i-col span="4">
+                ID:
+              </i-col>
+              <i-col span="20">
+                {{ salaryDetail.id }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">申请人:</i-col>
-              <i-col span="16">{{ salaryDetail.realName }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">手机号码:</i-col>
-              <i-col span="16">{{ salaryDetail.phone }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">提取金额:</i-col>
-              <i-col span="16">{{ salaryDetail.amount|fenToYuanDot2Filters }}</i-col>
+              <i-col span="8">
+                申请人:
+              </i-col>
+              <i-col span="16">
+                {{ salaryDetail.realName }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">申请时间:</i-col>
-              <i-col span="16">{{ salaryDetail.createAt }}</i-col>
+              <i-col span="8">
+                手机号码:
+              </i-col>
+              <i-col span="16">
+                {{ salaryDetail.phone }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">处理时间:</i-col>
-              <i-col span="16">{{ salaryDetail.dealAt }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">开户行:</i-col>
-              <i-col span="16">{{ salaryDetail.bankDeposit }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">持卡人姓名:</i-col>
-              <i-col span="16">{{ salaryDetail.cardUsername }}</i-col>
+              <i-col span="8">
+                提取金额:
+              </i-col>
+              <i-col span="16">
+                {{ salaryDetail.amount|fenToYuanDot2Filters }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">银行卡号:</i-col>
-              <i-col span="16">{{ salaryDetail.cardNo }}</i-col>
+              <i-col span="8">
+                申请时间:
+              </i-col>
+              <i-col span="16">
+                {{ salaryDetail.createAt }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">结算状态:</i-col>
+              <i-col span="8">
+                处理时间:
+              </i-col>
+              <i-col span="16">
+                {{ salaryDetail.dealAt }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                开户行:
+              </i-col>
+              <i-col span="16">
+                {{ salaryDetail.bankDeposit }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                持卡人姓名:
+              </i-col>
+              <i-col span="16">
+                {{ salaryDetail.cardUsername }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                银行卡号:
+              </i-col>
+              <i-col span="16">
+                {{ salaryDetail.cardNo }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                结算状态:
+              </i-col>
               <Select
                 v-model="salaryDetail.settlementStatus"
                 span="16"
@@ -277,60 +359,64 @@
               >
                 <Option
                   v-for="item in editStatus"
-                  :value="item.value"
                   :key="item.value"
+                  :value="item.value"
                   class="ptb2-5"
-                >{{ item.label }}</Option>
+                >
+                  {{ item.label }}
+                </Option>
               </Select>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">
+          确定
+        </Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   getFruitDoctorsSettlementPagesPages,
   editFruitDoctorsSettlement,
   refundFruitDoctorsSettlement
-} from "@/api/fruitermaster";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { settlementStatusConvert } from "@/libs/converStatus";
-import { settlementStatusEnum, settlementStatus } from "@/libs/enumerate";
-import { fenToYuanDot2 } from "../../../libs/util";
-import BookTypeOption from "_c/book-type-option";
+} from '@/api/fruitermaster';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import { settlementStatusConvert } from '@/libs/converStatus';
+import { settlementStatusEnum, settlementStatus } from '@/libs/enumerate';
+import { fenToYuanDot2 } from '../../../libs/util';
+import BookTypeOption from '_c/book-type-option';
 
 const salaryDetail = {
   doctorId: 0,
-  createAt: "",
+  createAt: '',
   amount: 0,
-  cardNo: "",
+  cardNo: '',
   settlementStatus: null,
-  phone: "",
+  phone: '',
   beginCreateAt: null,
   endCreateAt: null,
-  realName: "",
-  dealAt: "",
-  bankDeposit: "",
-  cardUsername: ""
+  realName: '',
+  dealAt: '',
+  bankDeposit: '',
+  cardUsername: ''
 };
 
 const roleRowData = {
   amount: null,
-  beginCreateAt: "",
-  endCreateAt: "",
-  createAt: "",
-  dealAt: "",
+  beginCreateAt: '',
+  endCreateAt: '',
+  createAt: '',
+  dealAt: '',
   page: 1,
-  realName: "",
+  realName: '',
   rows: 10,
   settlementStatus: null
 };
@@ -345,111 +431,111 @@ export default {
     return {
       columns: [
         {
-          title: "ID",
-          key: "id",
+          title: 'ID',
+          key: 'id',
           sortable: true,
           width: 80,
-          fixed: "left"
+          fixed: 'left'
         },
         {
-          title: "申请人",
-          key: "realName",
+          title: '申请人',
+          key: 'realName',
           width: 150
         },
         {
-          title: "手机号",
+          title: '手机号',
           width: 150,
-          key: "phone"
+          key: 'phone'
         },
         {
-          title: "提取金额",
+          title: '提取金额',
           width: 150,
-          key: "amount",
+          key: 'amount',
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{fenToYuanDot2(row.amount)}</div>;
           }
         },
         {
-          title: "结算状态",
+          title: '结算状态',
           width: 150,
-          key: "settlementStatus",
+          key: 'settlementStatus',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.settlementStatus === "UNSETTLED") {
+            if (row.settlementStatus === 'UNSETTLED') {
               return (
                 <div>
-                  <tag color="warning">
-                    {settlementStatusConvert(row.settlementStatus).label}
+                  <tag color='warning'>
+                    {settlementStatusConvert(row.settlementStatus)}
                   </tag>
                 </div>
               );
-            } else if (row.settlementStatus === "SUCCESS") {
+            } else if (row.settlementStatus === 'SUCCESS') {
               return (
                 <div>
-                  <tag color="success">
-                    {settlementStatusConvert(row.settlementStatus).label}
+                  <tag color='success'>
+                    {settlementStatusConvert(row.settlementStatus)}
                   </tag>
                 </div>
               );
-            } else if (row.settlementStatus === "EXPIRED") {
+            } else if (row.settlementStatus === 'EXPIRED') {
               return (
                 <div>
-                  <tag color="error">
-                    {settlementStatusConvert(row.settlementStatus).label}
+                  <tag color='error'>
+                    {settlementStatusConvert(row.settlementStatus)}
                   </tag>
                 </div>
               );
-            } else if (row.settlementStatus === "REFUND") {
+            } else if (row.settlementStatus === 'REFUND') {
               return (
                 <div>
-                  <tag color="primary">
-                    {settlementStatusConvert(row.settlementStatus).label}
+                  <tag color='primary'>
+                    {settlementStatusConvert(row.settlementStatus)}
                   </tag>
                 </div>
               );
             } else {
               return (
-                <div>{settlementStatusConvert(row.settlementStatus).label}</div>
+                <div>{settlementStatusConvert(row.settlementStatus)}</div>
               );
             }
           }
         },
         {
-          title: "银行卡号",
+          title: '银行卡号',
           width: 180,
-          key: "cardNo",
+          key: 'cardNo',
           sortable: true
         },
         {
-          title: "申请时间",
+          title: '申请时间',
           width: 160,
-          key: "createAt",
+          key: 'createAt',
           sortable: true
         },
         {
-          title: "处理时间",
+          title: '处理时间',
           width: 160,
-          key: "dealAt",
+          key: 'dealAt',
           sortable: true
         },
         {
-          title: "操作",
+          title: '操作',
           minWidth: 150,
-          key: "handle",
-          fixed: "right",
-          options: ["view", "settlementEdit", "settlementRefund"]
+          key: 'handle',
+          fixed: 'right',
+          options: ['view', 'settlementEdit', 'settlementRefund']
         }
       ],
       userStatus: settlementStatusEnum,
       editStatus: [
-        { value: "UNSETTLED", label: "未结算" },
-        { value: "SUCCESS", label: "已结算" }
+        { value: 'UNSETTLED', label: '未结算' },
+        { value: 'SUCCESS', label: '已结算' }
       ],
       modalViewLoading: false,
       searchRowData: this._.cloneDeep(roleRowData),
       salaryDetail: this._.cloneDeep(salaryDetail),
-      exportType: "xlsx",
+      exportType: 'xlsx',
       downloadLoading: false
     };
   },
@@ -465,7 +551,7 @@ export default {
     },
     handleSubmit() {
       if (!this.salaryDetail.settlementStatus) {
-        this.$Message.warning("请选择结算状态");
+        this.$Message.warning('请选择结算状态');
         return;
       }
       this.editTableRow();
@@ -494,7 +580,7 @@ export default {
     handleEdit(params) {
       this.tempModalType = this.modalType.edit;
       if (params.row.settlementStatus === settlementStatus.EXPIRED) {
-        this.$Message.warning("已过期不能修改状态");
+        this.$Message.warning('已过期不能修改状态');
         return;
       }
       this.salaryDetail = this._.cloneDeep(params.row);
@@ -529,12 +615,12 @@ export default {
         const tableData = res.array;
         // 表格数据导出字段翻译
         tableData.forEach(item => {
-          item["id"] = item["id"] + "";
-          item["amount"] = (item["amount"] / 100.0).toFixed(2);
-          item["settlementStatus"] = settlementStatusConvert(
-            item["settlementStatus"]
-          ).label;
-          item["cardNo"] = item["cardNo"] + "";
+          item['id'] = item['id'] + '';
+          item['amount'] = (item['amount'] / 100.0).toFixed(2);
+          item['settlementStatus'] = settlementStatusConvert(
+            item['settlementStatus']
+          );
+          item['cardNo'] = item['cardNo'] + '';
         });
         this.$refs.tables.handleDownload({
           filename: `薪资信息-${new Date().valueOf()}`,

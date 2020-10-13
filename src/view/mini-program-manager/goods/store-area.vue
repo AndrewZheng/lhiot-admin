@@ -76,7 +76,7 @@
         <span>门店区域信息</span>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="storeArea" :rules="ruleInline" :label-width="80">
+        <Form ref="editForm" :model="storeArea" :rules="ruleInline" :label-width="90">
           <Row>
             <i-col span="24">
               <FormItem label="区域编码:" prop="area" style="width:300px">
@@ -102,40 +102,40 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
+import Tables from "_c/tables";
+import IViewUpload from "_c/iview-upload";
 
 import {
   deleteStoreArea,
   getStoreAreaPages,
   editStoreArea,
-  createStoreArea
-} from '@/api/mini-program';
-import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
+  createStoreArea,
+} from "@/api/mini-program";
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
 
 const storeArea = {
-  area: '',
-  areaName: '',
-  createTime: '',
-  id: 0
+  area: "",
+  areaName: "",
+  createTime: "",
+  id: 0,
 };
 
 const rowData = {
-  aera: '',
-  areaName: '',
-  sidx: 'id',
-  sort: 'asc',
+  aera: "",
+  areaName: "",
+  sidx: "id",
+  sort: "asc",
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 export default {
   components: {
     Tables,
-    IViewUpload
+    IViewUpload,
   },
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
@@ -146,58 +146,58 @@ export default {
       storeArea: _.cloneDeep(storeArea),
       columns: [
         {
-          type: 'selection',
-          key: '',
+          type: "selection",
+          key: "",
           width: 60,
-          align: 'center'
+          align: "center",
         },
         {
-          title: '编号',
-          key: 'id',
-          align: 'center',
-          minWidth: 40
+          title: "编号",
+          key: "id",
+          align: "center",
+          minWidth: 40,
         },
         {
-          title: '区域编码',
-          key: 'area',
-          align: 'center',
-          minWidth: 100
+          title: "区域编码",
+          key: "area",
+          align: "center",
+          minWidth: 100,
         },
         {
-          title: '区域名称',
-          align: 'center',
-          key: 'areaName',
-          minWidth: 150
+          title: "区域名称",
+          align: "center",
+          key: "areaName",
+          minWidth: 150,
         },
         {
-          title: '创建时间',
-          align: 'center',
+          title: "创建时间",
+          align: "center",
           minWidth: 130,
-          key: 'createTime'
+          key: "createTime",
         },
         {
-          title: '操作',
-          align: 'center',
+          title: "操作",
+          align: "center",
           minWidth: 230,
-          key: 'handle',
-          options: ['edit']
-        }
+          key: "handle",
+          options: ["edit", "delete"],
+        },
       ],
       ruleInline: {
         area: [
-          { required: true, message: '请输入区域编码' },
+          { required: true, message: "请输入区域编码" },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
+                errors.push(new Error("必须为整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
-        areaName: [{ required: true, message: '请输入区域名称' }]
-      }
+        areaName: [{ required: true, message: "请输入区域名称" }],
+      },
     };
   },
   mounted() {
@@ -218,7 +218,7 @@ export default {
       this.searchLoading = true;
       this.clearSearchLoading = true;
       getStoreAreaPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })
@@ -235,7 +235,7 @@ export default {
       this.modalEdit = true;
     },
     handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -245,15 +245,15 @@ export default {
             this.editStoreArea();
           }
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error("请完善信息!");
         }
       });
     },
     createStoreArea() {
       this.modalViewLoading = true;
       createStoreArea(this.storeArea)
-        .then(res => {
-          this.$Message.success('创建成功!');
+        .then((res) => {
+          this.$Message.success("创建成功!");
           this.getTableData();
         })
         .finally(() => {
@@ -264,8 +264,8 @@ export default {
     editStoreArea() {
       this.modalViewLoading = true;
       editStoreArea(this.storeArea)
-        .then(res => {
-          this.$Message.success('修改成功!');
+        .then((res) => {
+          this.$Message.success("修改成功!");
           this.getTableData();
         })
         .finally(() => {
@@ -281,12 +281,16 @@ export default {
       }
       this.modalEdit = true;
     },
+    // 删除
+    handleDelete(params) {
+      this.deleteTable(params.row.id);
+    },
     deleteTable(ids) {
       this.loading = true;
       deleteStoreArea({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -296,14 +300,15 @@ export default {
             this.searchRowData.page -= 1;
           }
           this.tableDataSelected = [];
+          this.$Message.success("删除成功!");
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

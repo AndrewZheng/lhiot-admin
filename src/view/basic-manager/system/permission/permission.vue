@@ -1,7 +1,5 @@
 <template>
-  <div class="m-permission">
-
-  </div>
+  <div class="m-permission"></div>
 </template>
 
 <script type='text/ecmascript-6'>

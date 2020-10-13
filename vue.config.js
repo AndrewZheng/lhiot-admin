@@ -1,19 +1,7 @@
 const path = require('path');
-
-const resolve = dir => {
-  return path.join(__dirname, dir);
-};
-
-// 项目部署基础
-// 默认情况下，我们假设你的应用将被部署在域的根目录下,
-// 例如：https://www.my-app.com/
-// 默认：'/'
-// 如果您的应用程序部署在子路径中，则需要在这指定子路径
-// 例如：https://www.foobar.com/my-app/
-// 需要将它改为'/my-app/'
-const BASE_URL = process.env.NODE_ENV === 'production' ?
-  '/lhiot-admin/' :
-  '/';
+const resolve = (dir) => path.join(__dirname, dir);
+const IS_PROD = ['production'].includes(process.env.NODE_ENV);
+const BASE_URL = IS_PROD ? '/lhiot-admin/' : '/';
 
 module.exports = {
   publicPath: BASE_URL,
@@ -21,6 +9,22 @@ module.exports = {
   assetsDir: 'static',
   lintOnSave: false,
   chainWebpack: config => {
+    config.plugins.delete('preload') // TODO: need test
+    config.plugins.delete('prefetch') // TODO: need test
+
+    // set preserveWhitespace
+    config.module
+      .rule('vue')
+      .use('vue-loader')
+      .loader('vue-loader')
+      .tap(options => {
+        options.compilerOptions.preserveWhitespace = true
+        return options
+      })
+      .end()
+
+    //修复 HMR(热更新)失效
+    config.resolve.symlinks(true);
     config.resolve.alias
       .set('@', resolve('src'))
       .set('_c', resolve('src/components'))
@@ -31,7 +35,46 @@ module.exports = {
       .set('mixins', resolve('src/mixins'))
       .set('util', resolve('src/util'))
       .set('filters', resolve('src/filters'));
-    config.resolve.symlinks(true); //修复 HMR(热更新)失效
+
+    config
+      .when(process.env.NODE_ENV !== 'development',
+        config => {
+          config
+            .plugin('ScriptExtHtmlWebpackPlugin')
+            .after('html')
+            .use('script-ext-html-webpack-plugin', [{
+              // `runtime` must same as runtimeChunk name. default is `runtime`
+              inline: /runtime\..*\.js$/
+            }])
+            .end()
+
+          config
+            .optimization.splitChunks({
+              chunks: 'all',
+              cacheGroups: {
+                libs: {
+                  name: 'chunk-libs',
+                  test: /[\\/]node_modules[\\/]/,
+                  priority: 10,
+                  chunks: 'initial' // only package third parties that are initially dependent
+                },
+                elementUI: {
+                  name: 'chunk-elementUI', // split elementUI into a single package
+                  priority: 20, // the weight needs to be larger than libs and app or it will be packaged into libs or app
+                  test: /[\\/]node_modules[\\/]_?element-ui(.*)/ // in order to adapt to cnpm
+                },
+                commons: {
+                  name: 'chunk-commons',
+                  test: resolve('src/components'), // can customize your rules
+                  minChunks: 3, //  minimum common number
+                  priority: 5,
+                  reuseExistingChunk: true
+                }
+              }
+            })
+          config.optimization.runtimeChunk('single')
+        }
+      )
   },
   // 打包时不生成.map文件
   productionSourceMap: false,
@@ -45,12 +88,12 @@ module.exports = {
     open: true, // 配置自动启动浏览器
     proxy: {
       '/api': {
-        target: 'http://172.16.10.206:1311/ims-service-v1-5-0', //194测试环境 196开发环境 203 pre环境
+        target: 'http://172.16.10.196:1311/ims-service-v1-5-0', //194测试环境 196开发环境 203 pre环境 http://172.16.10.203:1311/ims-service-v1-5-0
         ws: true,
         logLevel: 'debug',
         changeOrigin: true,
         pathRewrite: {
-          '^/api' : ''
+          '^/api': ''
         }
       }
     }
@@ -59,7 +102,7 @@ module.exports = {
     requireModuleExtension: true,
     loaderOptions: {
       css: {
-        modules:{
+        modules: {
           localIdentName: 'app.[hash]'
         }
       },

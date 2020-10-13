@@ -126,56 +126,84 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">主键ID:</i-col>
-              <i-col span="18">{{ faqDetail.id }}</i-col>
+              <i-col span="6">
+                主键ID:
+              </i-col>
+              <i-col span="18">
+                {{ faqDetail.id }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">序号:</i-col>
-              <i-col span="18">{{ faqDetail.rankNum }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="12">
-            <Row>
-              <i-col span="6">标题:</i-col>
-              <i-col span="18">{{ faqDetail.title }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row>
-              <i-col span="6">链接地址:</i-col>
-              <i-col span="18">{{ faqDetail.linkUrl }}</i-col>
+              <i-col span="6">
+                序号:
+              </i-col>
+              <i-col span="18">
+                {{ faqDetail.rankNum }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">创建人:</i-col>
-              <i-col span="18">{{ faqDetail.createPerson }}</i-col>
+              <i-col span="6">
+                标题:
+              </i-col>
+              <i-col span="18">
+                {{ faqDetail.title }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">创建时间:</i-col>
-              <i-col span="18">{{ faqDetail.createTime }}</i-col>
+              <i-col span="6">
+                链接地址:
+              </i-col>
+              <i-col span="18">
+                {{ faqDetail.linkUrl }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="6">
+                创建人:
+              </i-col>
+              <i-col span="18">
+                {{ faqDetail.createPerson }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="6">
+                创建时间:
+              </i-col>
+              <i-col span="18">
+                {{ faqDetail.createTime }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">内容:</i-col>
+              <i-col span="4">
+                内容:
+              </i-col>
               <i-col span="20" v-html="faqDetail.content"></i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -199,8 +227,8 @@
           </FormItem>
           <FormItem label="序号:" prop="rankNum">
             <InputNumber
-              :min="0"
               v-model="faqDetail.rankNum"
+              :min="0"
               placeholder="序号"
               style="padding-right: 5px;width: 95px"
             ></InputNumber>
@@ -208,8 +236,12 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="asyncEditOK('modalEdit')">确定</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="modalEditLoading" type="primary" @click="asyncEditOK('modalEdit')">
+          确定
+        </Button>
       </div>
     </Modal>
   </div>
@@ -367,13 +399,13 @@ export default {
             if (row.faqStatus === 'unpublished') {
               return (
                 <div>
-                  <tag color='success'>{faqStatusConvert(row.faqStatus).label }</tag>
+                  <tag color='success'>{faqStatusConvert(row.faqStatus) }</tag>
                 </div>
               );
             } else if (row.faqStatus === 'published') {
               return (
                 <div>
-                  <tag color='error'>{faqStatusConvert(row.faqStatus).label }</tag>
+                  <tag color='error'>{faqStatusConvert(row.faqStatus) }</tag>
                 </div>
               );
             }

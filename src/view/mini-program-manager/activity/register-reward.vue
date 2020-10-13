@@ -37,7 +37,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -59,24 +59,38 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动ID:</i-col>
-              <i-col span="18">{{ registerDetail.id }}</i-col>
+              <i-col span="6">
+                活动ID:
+              </i-col>
+              <i-col span="18">
+                {{ registerDetail.id }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动名称:</i-col>
-              <i-col span="18">{{ registerDetail.activityName }}</i-col>
+              <i-col span="6">
+                活动名称:
+              </i-col>
+              <i-col span="18">
+                {{ registerDetail.activityName }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动状态:</i-col>
-              <i-col span="18">{{ registerDetail.onOff | imageStatusFilter }}</i-col>
+              <i-col span="6">
+                活动状态:
+              </i-col>
+              <i-col span="18">
+                {{
+                  registerDetail.onOff | imageStatusFilter
+                }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -91,11 +105,15 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">开始时间:</i-col>
+              <i-col span="6">
+                开始时间:
+              </i-col>
               <i-col span="18">
-                {{ this.registerDetail.beginTime = this.$moment(
-                this.registerDetail.beginTime
-                ).format("YYYY-MM-DD HH:mm:ss") }}
+                {{
+                  (this.registerDetail.beginTime = this.$moment(
+                    this.registerDetail.beginTime
+                  ).format("YYYY-MM-DD HH:mm:ss"))
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -103,11 +121,15 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">结束时间:</i-col>
+              <i-col span="6">
+                结束时间:
+              </i-col>
               <i-col span="18">
-                {{ this.registerDetail.endTime = this.$moment(
-                this.registerDetail.endTime
-                ).format("YYYY-MM-DD HH:mm:ss") }}
+                {{
+                  (this.registerDetail.endTime = this.$moment(
+                    this.registerDetail.endTime
+                  ).format("YYYY-MM-DD HH:mm:ss"))
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -115,23 +137,33 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">创建人:</i-col>
-              <i-col span="18">{{ registerDetail.createBy }}</i-col>
+              <i-col span="6">
+                创建人:
+              </i-col>
+              <i-col span="18">
+                {{ registerDetail.createBy }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">创建时间:</i-col>
-              <i-col span="18">{{ registerDetail.createTime }}</i-col>
+              <i-col span="6">
+                创建时间:
+              </i-col>
+              <i-col span="18">
+                {{ registerDetail.createTime }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动规则:</i-col>
+              <i-col span="6">
+                活动规则:
+              </i-col>
               <i-col span="18">
                 <Input
                   :v-if="registerDetail.activityRule"
@@ -145,127 +177,170 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
-    <Modal v-model="modalEdit" :width="1200" :z-index="1000" :mask-closable="false">
+    <Modal
+      v-model="modalEdit"
+      :width="800"
+      :z-index="1000"
+      :mask-closable="false"
+    >
       <p slot="header">
-        <i-col>{{ tempModalType === modalType.edit?'修改注册送礼优惠券活动': '创建注册送礼优惠券活动'}}</i-col>
+        <i-col>
+          {{
+            tempModalType === modalType.edit
+              ? "修改注册送礼优惠券活动"
+              : "创建注册送礼优惠券活动"
+          }}
+        </i-col>
       </p>
       <div class="modal-content">
         <Row>
-          <Form ref="editForm" :model="registerDetail" :rules="ruleInline" :label-width="80">
+          <Form
+            ref="editForm"
+            :model="registerDetail"
+            :rules="ruleInline"
+            :label-width="90"
+          >
             <Row>
               <Col span="18">
-                <FormItem label="活动名称:" prop="activityName">
-                  <Input v-model="registerDetail.activityName" style="width: 170px"></Input>
-                </FormItem>
+              <FormItem label="活动名称:" prop="activityName">
+                <Input
+                  v-model="registerDetail.activityName"
+                  style="width: 170px"
+                ></Input>
+              </FormItem>
               </Col>
             </Row>
             <Row>
               <Col span="18">
-                <FormItem label="活动状态:" prop="onOff">
-                  <Select v-model="registerDetail.onOff" clearable style="width: 170px">
-                    <Option
-                      v-for="(item,index) in imageStatusEnum"
-                      :value="item.value"
-                      :key="index"
-                      class="ptb2-5"
-                      style="padding-left: 5px;width: 170px"
-                    >{{ item.label }}</Option>
-                  </Select>
-                </FormItem>
+              <FormItem label="活动状态:" prop="onOff">
+                <Select
+                  v-model="registerDetail.onOff"
+                  clearable
+                  style="width: 170px"
+                >
+                  <Option
+                    v-for="(item, index) in imageStatusEnum"
+                    :key="index"
+                    :value="item.value"
+                    class="ptb2-5"
+                    style="padding-left: 5px; width: 170px"
+                  >
+                    {{ item.label }}
+                  </Option>
+                </Select>
+              </FormItem>
               </Col>
             </Row>
             <!-- 领券方式 -->
             <Row>
               <Col span="18">
-                <FormItem label="领券方式:" prop="receiveType">
-                  <Select v-model="registerDetail.receiveType" clearable style="width: 170px">
-                    <Option
-                      v-for="(item,index) in receiveTypeEnum"
-                      :value="item.value"
-                      :key="index"
-                      class="ptb2-5"
-                      style="padding-left: 5px;width: 170px"
-                    >{{ item.label }}</Option>
-                  </Select>
-                </FormItem>
+              <FormItem label="领券方式:" prop="receiveType">
+                <Select
+                  v-model="registerDetail.receiveType"
+                  clearable
+                  style="width: 170px"
+                >
+                  <Option
+                    v-for="(item, index) in receiveTypeEnum"
+                    :key="index"
+                    :value="item.value"
+                    class="ptb2-5"
+                    style="padding-left: 5px; width: 170px"
+                  >
+                    {{ item.label }}
+                  </Option>
+                </Select>
+              </FormItem>
               </Col>
             </Row>
             <Row>
               <Col span="18">
-                <FormItem label="有效期起:" prop="beginTime">
-                  <DatePicker
-                    v-model="registerDetail.beginTime"
-                    format="yyyy-MM-dd HH:mm:ss"
-                    type="datetime"
-                    placeholder="有效期起"
-                    class="search-input"
-                    style="width: 170px"
-                    @on-change="beginTimeChange"
-                  />
-                </FormItem>
+              <FormItem label="有效期起:" prop="beginTime">
+                <DatePicker
+                  v-model="registerDetail.beginTime"
+                  format="yyyy-MM-dd HH:mm:ss"
+                  type="datetime"
+                  placeholder="有效期起"
+                  class="search-input"
+                  style="width: 170px"
+                  :readonly="editStatus"
+                  @on-change="beginTimeChange"
+                />
+              </FormItem>
               </Col>
             </Row>
             <Row>
               <Col span="18">
-                <FormItem label="有效期止:" prop="endTime">
-                  <DatePicker
-                    v-model="registerDetail.endTime"
-                    format="yyyy-MM-dd HH:mm:ss"
-                    type="datetime"
-                    placeholder="有效期止"
-                    class="search-input"
-                    style="width: 170px"
-                    @on-change="endTimeChange"
-                  />
-                </FormItem>
+              <FormItem label="有效期止:" prop="endTime">
+                <DatePicker
+                  v-model="registerDetail.endTime"
+                  format="yyyy-MM-dd HH:mm:ss"
+                  type="datetime"
+                  placeholder="有效期止"
+                  class="search-input"
+                  style="width: 170px"
+                  :readonly="editStatus"
+                  @on-change="endTimeChange"
+                />
+              </FormItem>
               </Col>
             </Row>
             <Row>
               <Col span="18">
-                <FormItem label="活动规则:" prop="activityRule">
-                  <Input
-                    v-model="registerDetail.activityRule"
-                    :rows="6"
-                    placeholder="活动规则"
-                    type="textarea"
-                  ></Input>
-                </FormItem>
+              <FormItem label="活动规则:" prop="activityRule">
+                <Input
+                  v-model="registerDetail.activityRule"
+                  :rows="6"
+                  placeholder="活动规则"
+                  type="textarea"
+                ></Input>
+              </FormItem>
               </Col>
             </Row>
           </Form>
         </Row>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit"
+        >
+          确定
+        </Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   getRegisterPages,
   deleteRegister,
   createRegister,
   editRegister
-} from "@/api/mini-program";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { imageStatusConvert, receiveTypeConvert } from "@/libs/converStatus";
-import { imageStatusEnum, receiveTypeEnum } from "@/libs/enumerate";
+} from '@/api/mini-program';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import { imageStatusConvert, receiveTypeConvert } from '@/libs/converStatus';
+import { imageStatusEnum, receiveTypeEnum } from '@/libs/enumerate';
 import {
   compareData,
   setSmallCouponActivity,
   compareCouponData
-} from "@/libs/util";
+} from '@/libs/util';
 
 const registerDetail = {
   formBeginTime: null,
@@ -275,19 +350,19 @@ const registerDetail = {
   beginTime: null,
   endTime: null,
   onOff: null,
-  activityName: "",
-  activityRule: "",
+  activityName: '',
+  activityRule: '',
   createTime: null,
   updateTime: null,
-  createBy: "",
-  receiveType: "MANUAL"
+  createBy: '',
+  receiveType: 'MANUAL'
 };
 
 const roleRowData = {
   page: 1,
   rows: 10,
-  sidx: "begin_time",
-  sort: "desc"
+  sidx: 'endTime',
+  sort: 'desc'
 };
 
 const relationRowData = {
@@ -305,44 +380,44 @@ export default {
     return {
       ruleInline: {
         activityName: [
-          { required: true, message: "请输入活动名称" },
+          { required: true, message: '请输入活动名称' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (value.length > 20) {
-                errors.push(new Error("字数限制20字"));
+                errors.push(new Error('字数限制20字'));
               }
               callback(errors);
             }
           }
         ],
         activityRule: [
-          { required: true, message: "请输入活动规则" },
+          { required: true, message: '请输入活动规则' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (value.length > 200) {
-                errors.push(new Error("字数限制200字"));
+                errors.push(new Error('字数限制200字'));
               }
               callback(errors);
             }
           }
         ],
         onOff: [
-          { required: true, message: "请选择活动状态" },
+          { required: true, message: '请选择活动状态' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (value.length > 200) {
-                errors.push(new Error("字数限制200字"));
+                errors.push(new Error('字数限制200字'));
               }
               callback(errors);
             }
           }
         ],
-        beginTime: [{ required: true, message: "请选择活动开始时间" }],
-        endTime: [{ required: true, message: "请选择活动结束时间" }],
-        receiveType: [{ required: true, message: "请选择活动结束时间" }]
+        beginTime: [{ required: true, message: '请选择活动开始时间' }],
+        endTime: [{ required: true, message: '请选择活动结束时间' }],
+        receiveType: [{ required: true, message: '请选择活动结束时间' }]
       },
       defaultListMain: [],
       uploadListMain: [],
@@ -350,63 +425,68 @@ export default {
       receiveTypeEnum,
       columns: [
         {
-          type: "selection",
+          type: 'selection',
           width: 60,
-          align: "center"
+          align: 'center'
         },
         {
-          title: "ID",
-          align: "center",
-          key: "id"
+          title: 'ID',
+          align: 'center',
+          key: 'id',
+          minWidth: 50
         },
         {
-          title: "活动名称",
-          align: "center",
-          key: "activityName"
+          title: '活动名称',
+          align: 'center',
+          key: 'activityName',
+          minWidth: 130
         },
         {
-          title: "活动规则",
-          key: "activityRule",
-          align: "center",
-          tooltips: true
+          title: '活动规则',
+          key: 'activityRule',
+          align: 'center',
+          minWidth: 130,
+          tooltip: true
         },
         {
-          title: "开始时间",
-          align: "center",
-          key: "beginTime"
+          title: '开始时间',
+          align: 'center',
+          key: 'beginTime',
+          minWidth: 160
         },
         {
-          title: "结束时间",
-          align: "center",
-          key: "endTime",
-          width: 165,
+          title: '结束时间',
+          align: 'center',
+          key: 'endTime',
+          minWidth: 200,
           render: (h, params, vm) => {
             const { row } = params;
             if (!compareCouponData(row.endTime)) {
-              return <div style="color:red">{row.endTime + "已过期"}</div>;
+              return <div style='color:red'>{row.endTime + '已过期'}</div>;
             } else {
               return <div>{row.endTime}</div>;
             }
           }
         },
         {
-          title: "活动状态",
-          align: "center",
-          key: "onOff",
+          title: '活动状态',
+          align: 'center',
+          key: 'onOff',
+          minWidth: 90,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.onOff === "ON") {
+            if (row.onOff === 'ON') {
               return (
                 <div>
-                  <tag color="success">
+                  <tag color='success'>
                     {imageStatusConvert(row.onOff).label}
                   </tag>
                 </div>
               );
-            } else if (row.onOff === "OFF") {
+            } else if (row.onOff === 'OFF') {
               return (
                 <div>
-                  <tag color="error">{imageStatusConvert(row.onOff).label}</tag>
+                  <tag color='error'>{imageStatusConvert(row.onOff).label}</tag>
                 </div>
               );
             }
@@ -414,16 +494,11 @@ export default {
           }
         },
         {
-          title: "创建人",
-          align: "center",
-          key: "createBy"
-        },
-        {
-          title: "操作",
-          align: "center",
-          minWidth: 80,
-          key: "handle",
-          options: ["onSale", "view", "edit", "delete", "settings"]
+          title: '操作',
+          align: 'center',
+          minWidth: 200,
+          key: 'handle',
+          options: ['onSale', 'view', 'edit', 'delete', 'settings']
         }
       ],
       addTempDataLoading: false,
@@ -431,6 +506,7 @@ export default {
       templateLoading: false,
       modalViewLoading: false,
       modalRelation: false,
+      editStatus: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
       registerDetail: _.cloneDeep(registerDetail)
@@ -454,7 +530,7 @@ export default {
       this.uploadListMain = [];
     },
     handleSubmit() {
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (
             compareData(
@@ -462,17 +538,17 @@ export default {
               this.registerDetail.endTime
             )
           ) {
-            this.$Message.error("结束时间必须大于开始时间!");
+            this.$Message.error('结束时间必须大于开始时间!');
             return;
           }
           // 活动规则换行用“&”拼接
           if (
             this.registerDetail.activityRule !== null ||
-            this.registerDetail.activityRule !== ""
+            this.registerDetail.activityRule !== ''
           ) {
             this.registerDetail.activityRule = this.registerDetail.activityRule.replace(
               /\n|\r/g,
-              "&"
+              '&'
             );
           }
           if (this.tempModalType === this.modalType.create) {
@@ -483,27 +559,27 @@ export default {
             this.editRegister();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
     createRegister() {
       this.modalViewLoading = true;
-      if (this.registerDetail.beginTime.indexOf("T") > -1) {
+      if (this.registerDetail.beginTime.indexOf('T') > -1) {
         this.registerDetail.beginTime = this.$moment(
           this.registerDetail.beginTime
-        ).format("YYYY-MM-DD HH:mm:ss");
+        ).format('YYYY-MM-DD HH:mm:ss');
       }
-      if (this.registerDetail.endTime.indexOf("T") > -1) {
+      if (this.registerDetail.endTime.indexOf('T') > -1) {
         this.registerDetail.endTime = this.$moment(
           this.registerDetail.endTime
-        ).format("YYYY-MM-DD HH:mm:ss");
+        ).format('YYYY-MM-DD HH:mm:ss');
       }
       createRegister(this.registerDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
@@ -517,11 +593,11 @@ export default {
 
       this.registerDetail.beginTime = this.$moment(
         this.registerDetail.beginTime
-      ).format("YYYY-MM-DD HH:mm:ss");
+      ).format('YYYY-MM-DD HH:mm:ss');
 
       this.registerDetail.endTime = this.$moment(
         this.registerDetail.endTime
-      ).format("YYYY-MM-DD HH:mm:ss");
+      ).format('YYYY-MM-DD HH:mm:ss');
 
       // if (this.registerDetail.beginTime.indexOf("T") > -1) {
       //   this.registerDetail.beginTime = this.$moment(
@@ -534,7 +610,7 @@ export default {
       //   ).format("YYYY-MM-DD HH:mm:ss");
       // }
       editRegister(this.registerDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
@@ -545,6 +621,7 @@ export default {
         });
     },
     addRegisterReward() {
+      this.editStatus = false;
       if (this.tempModalType !== this.modalType.create) {
         this.tempModalType = this.modalType.create;
         this.registerDetail = _.cloneDeep(registerDetail);
@@ -556,7 +633,7 @@ export default {
       var rows = params.row;
       setSmallCouponActivity(rows);
       this.turnToPage({
-        name: "small-vip-activities-associated"
+        name: 'small-vip-activities-associated'
       });
     },
     // 删除
@@ -570,7 +647,7 @@ export default {
       deleteRegister({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -582,7 +659,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -593,30 +670,31 @@ export default {
       this.registerDetail = _.cloneDeep(params.row);
       this.registerDetail.activityRule = this.registerDetail.activityRule.replace(
         /&/g,
-        "\n"
+        '\n'
       );
       this.modalView = true;
     },
     handleEdit(params) {
+      this.editStatus = !compareCouponData(params.row.beginTime);
       this.tempModalType = this.modalType.edit;
       this.resetFields();
       this.registerDetail = _.cloneDeep(params.row);
       this.registerDetail.activityRule = this.registerDetail.activityRule.replace(
         /&/g,
-        "\n"
+        '\n'
       );
       this.modalEdit = true;
     },
     getTableData() {
       getRegisterPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
@@ -625,28 +703,28 @@ export default {
     },
     switchStatus(params) {
       this.registerDetail = _.cloneDeep(params.row);
-      if (params.row.onOff === "ON") {
-        this.registerDetail.onOff = "OFF";
+      if (params.row.onOff === 'ON') {
+        this.registerDetail.onOff = 'OFF';
       } else {
-        this.registerDetail.onOff = "ON";
+        this.registerDetail.onOff = 'ON';
       }
       this.loading = true;
       this.editRegister();
     },
     beginTimeChange(value, date) {
       this.registerDetail.beginTime = value;
-      if (this.registerDetail.beginTime.indexOf("T") > -1) {
+      if (this.registerDetail.beginTime.indexOf('T') > -1) {
         this.registerDetail.beginTime = this.$moment(
           this.registerDetail.beginTime
-        ).format("YYYY-MM-DD HH:mm:ss");
+        ).format('YYYY-MM-DD HH:mm:ss');
       }
     },
     endTimeChange(value, date) {
       this.registerDetail.endTime = value;
-      if (this.registerDetail.endTime.indexOf("T") > -1) {
+      if (this.registerDetail.endTime.indexOf('T') > -1) {
         this.registerDetail.endTime = this.$moment(
           this.registerDetail.endTime
-        ).format("YYYY-MM-DD HH:mm:ss");
+        ).format('YYYY-MM-DD HH:mm:ss');
       }
     }
   }

@@ -217,3 +217,53 @@ export const objEqual = (obj1, obj2) => {
 export const dedupe = (array) => {
   return Array.from(new Set(array));
 };
+
+/**
+ * @param value string
+ * @description 过滤特殊字符串，针对输入的部分
+ */
+export const stripScript = (value) => {
+  var pattern = new RegExp('[`~!@#$^&*()=|{}\':;\',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“\'。，、？]');
+  var rs = '';
+  for (var i = 0; i < value.length; i++) {
+    rs = rs + value.substr(i, 1).replace(pattern, '');
+  }
+  return rs;
+}
+
+export const getDateFormat = (date) => {
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const weekday = date.getDay();
+  let weekdayStr = '';
+  switch (weekday) {
+    case 1:
+      weekdayStr = '周一';
+      break;
+    case 2:
+      weekdayStr = '周二';
+      break;
+    case 3:
+      weekdayStr = '周三';
+      break;
+    case 4:
+      weekdayStr = '周四';
+      break;
+    case 5:
+      weekdayStr = '周五';
+      break;
+    case 6:
+      weekdayStr = '周六';
+      break;
+    case 0:
+      weekdayStr = '周天';
+      break;
+  }
+  return month + '-' + day + ' ' + weekdayStr + ' ';
+}
+
+export const getUrlParam = (name) => {
+  const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+  const result = window.location.search.substr(1).match(reg);
+  return result ? decodeURIComponent(result[2]) : null;
+}

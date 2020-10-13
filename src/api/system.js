@@ -34,7 +34,7 @@ export const getMenuList = () => {
 export const deleteMenu = (id) => {
   return Vue.prototype.$http.request({
     url: '/ims-menu/' + id,
-    ethod: 'delete'
+    method: 'delete'
   });
 }
 
@@ -68,15 +68,13 @@ export const getRelationMenu = (id) => {
   });
 };
 
-export const getRoleData = ({ page, rows }) => {
-  const data = {
-    page,
-    rows
-  };
-
+/**
+ *  角色管理 CRUD
+ */
+export const getRoleData = (data) => {
   return Vue.prototype.$http.request({
     url: '/ims-role/pages',
-    data: data,
+    data,
     method: 'post'
   });
 };
@@ -94,6 +92,64 @@ export const getRelationRoles = (id) => {
     method: 'post'
   });
 };
+
+export const createRole = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/ims-role/',
+    data,
+    method: 'post'
+  })
+}
+
+export const editRole = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/ims-role/' + data.id,
+    data,
+    method: 'put'
+  })
+}
+
+export const deleteRole = (ids) => {
+  return Vue.prototype.$http.request({
+    url: '/ims-role/' + ids,
+    method: 'delete'
+  });
+}
+/**
+ * 根据菜单ids查询操作权限列表
+ * @param {*} id
+ */
+export const getOperateByMenuId = (id) => {
+  return Vue.prototype.$http.request({
+    url: '/ims-operation/user/list/' + id,
+    method: 'get'
+  });
+}
+
+/**
+ * 根据roleId查询菜单及操作列表
+ * @param {*} id
+ */
+export const getMenuOperatesByRoleId = (id) => {
+  let url = '/ims-role/relation/menu-operations';
+  if (id) { url = url + '?roleId=' + id }
+  return Vue.prototype.$http.request({
+    url,
+    method: 'get'
+  });
+}
+
+/**
+ * 根据ids更新角色与菜单、操作的关联关系
+ * @param {*} id
+ */
+export const createRoleRelation = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/ims-role/relation/' + data.id,
+    data,
+    method: 'put'
+  })
+}
 
 export const getUserData = ({ page, rows }) => {
   const data = {

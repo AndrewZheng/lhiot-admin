@@ -29,22 +29,23 @@ const mixin = {
     changePage(page) {
       this.searchRowData.page = page;
       this.getTableData();
+      this.openStatus = false;
     },
     changePageSize(pageSize) {
       this.searchRowData.page = 1;
       this.searchRowData.rows = pageSize;
       this.getTableData();
+      this.openStatus = false;
     },
     handleEditClose() {
       this.modalEdit = false;
       this.data = [];
+      this.standardIdsArray = [];
     },
     handleClose() {
       this.loading = false;
       this.modalView = false;
-
     },
-    // 获取分类树展开函数
     expandChildren(array) {
       array.forEach(item => {
         if (typeof item.expand === 'undefined') {
