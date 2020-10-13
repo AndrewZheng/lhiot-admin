@@ -36,8 +36,9 @@
                 :value="item.value"
                 class="ptb2-5"
                 style="width: 90px"
-                >{{ item.label }}</Option
               >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.serviceScore"
@@ -51,8 +52,9 @@
                 :value="item.value"
                 class="ptb2-5"
                 style="width: 90px"
-                >{{ item.label }}</Option
               >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.environmentScore"
@@ -66,8 +68,9 @@
                 :value="item.value"
                 class="ptb2-5"
                 style="width: 130px"
-                >{{ item.label }}</Option
               >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.feedbackTitle"
@@ -81,8 +84,9 @@
                 :value="item.value"
                 class="ptb2-5"
                 style="width: 130px"
-                >{{ item.label }}</Option
               >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.whetherGiveReceipt"
@@ -96,9 +100,29 @@
                 :value="item.value"
                 class="ptb2-5"
                 style="width: 110px"
-                >{{ item.label }}</Option
               >
+                {{ item.label }}
+              </Option>
             </Select>
+            <DatePicker
+              :value="searchRowData.commentTimeBegin"
+              format="yyyy-MM-dd HH:mm:ss"
+              type="date"
+              placeholder="评价时间起"
+              class="search-input"
+              style="width: 160px"
+              @on-change="searchRowData.commentTimeBegin = $event"
+            />
+            <i>-</i>
+            <DatePicker
+              :value="searchRowData.commentTimeEnd"
+              format="yyyy-MM-dd HH:mm:ss"
+              type="date"
+              placeholder="评价时间止"
+              class="search-input mr2"
+              style="width: 160px"
+              @on-change="searchRowData.commentTimeEnd = $event"
+            />
             <Button
               :loading="searchLoading"
               class="search-btn mr5"
@@ -162,6 +186,8 @@ const roleRowData = {
   whetherGiveReceipt: "",
   page: 1,
   rows: 10,
+  commentTimeBegin: "",
+  commentTimeEnd: "",
   sidx: "commentTime",
   sort: "desc",
 };
