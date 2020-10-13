@@ -10,6 +10,7 @@
           class="search-col mr5"
           placeholder="请选择需导出的数据"
           style="width: 200px"
+          :filterable="true"
           @on-change="handSelectExport"
         >
           <Option
