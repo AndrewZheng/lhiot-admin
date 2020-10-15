@@ -667,7 +667,7 @@
                       ref="uploadMultiple_"
                       :default-list="defaultListMultiple_"
                       :image-size="imageSize"
-                      :max-num="10"
+                      :max-num="5"
                       group-type="base_image"
                       file-dir="product"
                       multiple
@@ -993,7 +993,7 @@
                       ref="uploadShareMultiple"
                       :default-list="defaulSharetListMultiple"
                       :image-size="imageSize"
-                      :max-num="10"
+                      :max-num="5"
                       group-type="base_image"
                       file-dir="product"
                       multiple

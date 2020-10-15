@@ -33,11 +33,12 @@
             >
               <Option
                 v-for="(item, index) in couponStatusEnum"
-                :value="item.value"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
-                >{{ item.label }}</Option
               >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.userScope"
@@ -46,11 +47,12 @@
             >
               <Option
                 v-for="(item, index) in userScopeEnum"
-                :value="item.value"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
-                >{{ item.label }}</Option
               >
+                {{ item.label }}
+              </Option>
             </Select>
             <Button
               :loading="searchLoading"
@@ -132,42 +134,57 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">优惠券名称:</i-col>
-              <i-col span="16">{{ addRelationDetail.couponName }}</i-col>
+              <i-col span="8">
+                优惠券名称:
+              </i-col>
+              <i-col span="16">
+                {{ addRelationDetail.couponName }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">优惠券类型:</i-col>
+              <i-col span="8">
+                优惠券类型:
+              </i-col>
               <i-col
-                span="16"
                 v-if="addRelationDetail.couponType === 'FULL_CUT_COUPON'"
+                span="16"
               >
-                <tag color="magenta">{{ "满减券" }}</tag>
+                <tag color="magenta">
+                  {{ "满减券" }}
+                </tag>
               </i-col>
               <i-col
-                span="16"
                 v-else-if="addRelationDetail.couponType === 'DISCOUNT_COUPON'"
+                span="16"
               >
-                <tag color="orange">{{ "折扣券" }}</tag>
+                <tag color="orange">
+                  {{ "折扣券" }}
+                </tag>
               </i-col>
               <i-col
-                span="16"
                 v-else-if="addRelationDetail.couponType === 'CASH_COUPON'"
+                span="16"
               >
-                <tag color="cyan">{{ "现金券" }}</tag>
+                <tag color="cyan">
+                  {{ "现金券" }}
+                </tag>
               </i-col>
               <i-col
-                span="16"
                 v-else-if="addRelationDetail.couponType === 'FREIGHT_COUPON'"
+                span="16"
               >
-                <tag color="cyan">{{ "运费券" }}</tag>
+                <tag color="cyan">
+                  {{ "运费券" }}
+                </tag>
               </i-col>
               <i-col
-                span="16"
                 v-else-if="addRelationDetail.couponType === null"
-                >{{ "N/A" }}</i-col
+                span="16"
               >
+                {{ "N/A" }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -175,23 +192,32 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">优惠/折扣额度:</i-col>
+              <i-col span="8">
+                优惠/折扣额度:
+              </i-col>
               <i-col
-                span="16"
                 v-if="addRelationDetail.couponType === 'DISCOUNT_COUPON'"
-                >{{ addRelationDetail.couponFee | fenToDiscountFilters }}</i-col
+                span="16"
               >
-              <i-col span="16" v-else>{{
-                addRelationDetail.couponFee | fenToYuanDot2Filters
-              }}</i-col>
+                {{ addRelationDetail.couponFee | fenToDiscountFilters }}
+              </i-col>
+              <i-col v-else span="16">
+                {{
+                  addRelationDetail.couponFee | fenToYuanDot2Filters
+                }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">最小购买金额:</i-col>
-              <i-col span="16">{{
-                addRelationDetail.minBuyFee | fenToYuanDot2Filters
-              }}</i-col>
+              <i-col span="8">
+                最小购买金额:
+              </i-col>
+              <i-col span="16">
+                {{
+                  addRelationDetail.minBuyFee | fenToYuanDot2Filters
+                }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -199,30 +225,41 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">优惠券状态:</i-col>
+              <i-col span="8">
+                优惠券状态:
+              </i-col>
               <i-col
-                span="16"
                 v-if="addRelationDetail.couponStatus === 'VALID'"
+                span="16"
               >
-                <tag color="success">{{ "有效" }}</tag>
+                <tag color="success">
+                  {{ "有效" }}
+                </tag>
               </i-col>
               <i-col
-                span="16"
                 v-else-if="addRelationDetail.couponStatus === 'INVALID'"
+                span="16"
               >
-                <tag color="error">{{ "无效" }}</tag>
+                <tag color="error">
+                  {{ "无效" }}
+                </tag>
               </i-col>
               <i-col
-                span="16"
                 v-else-if="addRelationDetail.couponStatus === null"
-                >{{ "N/A" }}</i-col
+                span="16"
               >
+                {{ "N/A" }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">已兑换统计:</i-col>
-              <i-col span="16">{{ addRelationDetail.receiveCount }}</i-col>
+              <i-col span="8">
+                已兑换统计:
+              </i-col>
+              <i-col span="16">
+                {{ addRelationDetail.receiveCount }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -230,75 +267,84 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">券有效期类型:</i-col>
-              <i-col span="16">{{
-                addRelationDetail.validDateType | validDateTypeFilter
-              }}</i-col>
+              <i-col span="8">
+                券有效期类型:
+              </i-col>
+              <i-col span="16">
+                {{
+                  addRelationDetail.validDateType | validDateTypeFilter
+                }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">排序字段:</i-col>
-              <i-col span="16">{{ addRelationDetail.rank }}</i-col>
+              <i-col span="8">
+                排序字段:
+              </i-col>
+              <i-col span="16">
+                {{ addRelationDetail.rank }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
 
         <Row
-          class-name="mb20"
           v-show="
             addRelationDetail.validDateType == 'UN_FIXED_DATE' &&
-            addRelationDetail.source == 'SMALL'
+              addRelationDetail.source == 'SMALL'
           "
+          class-name="mb20"
         >
           <i-col span="12">
             <Row>
-              <i-col span="8">生效开始:</i-col>
-              <i-col span="16">{{ addRelationDetail.beginDay }}</i-col>
+              <i-col span="8">
+                生效开始:
+              </i-col>
+              <i-col span="16">
+                {{ addRelationDetail.beginDay }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">有效天数:</i-col>
-              <i-col span="16">{{ addRelationDetail.endDay }}</i-col>
+              <i-col span="8">
+                有效天数:
+              </i-col>
+              <i-col span="16">
+                {{ addRelationDetail.endDay }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
 
         <Row
-          class-name="mb20"
           v-show="
             addRelationDetail.validDateType == 'FIXED_DATE' &&
-            addRelationDetail.source == 'SMALL'
+              addRelationDetail.source == 'SMALL'
           "
+          class-name="mb20"
         >
           <i-col span="12">
             <Row>
-              <i-col span="8">生效时间:</i-col>
-              <i-col span="16">{{
-                addRelationDetail.effectiveStartTime
-              }}</i-col>
+              <i-col span="8">
+                生效时间:
+              </i-col>
+              <i-col span="16">
+                {{
+                  addRelationDetail.effectiveStartTime
+                }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">失效时间:</i-col>
-              <i-col span="16">{{ addRelationDetail.effectiveEndTime }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-
-        <Row class-name="mb20">
-          <i-col span="12">
-            <Row>
-              <i-col span="8">兑换积分:</i-col>
-              <i-col span="16">{{ addRelationDetail.points }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row>
-              <i-col span="8">促销积分:</i-col>
-              <i-col span="16">{{ addRelationDetail.realPoints }}</i-col>
+              <i-col span="8">
+                失效时间:
+              </i-col>
+              <i-col span="16">
+                {{ addRelationDetail.effectiveEndTime }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -306,14 +352,22 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">每人限兑:</i-col>
-              <i-col span="16">{{ addRelationDetail.receiveLimit }}</i-col>
+              <i-col span="8">
+                兑换积分:
+              </i-col>
+              <i-col span="16">
+                {{ addRelationDetail.points }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">发券总数:</i-col>
-              <i-col span="16">{{ addRelationDetail.couponLimit }}</i-col>
+              <i-col span="8">
+                促销积分:
+              </i-col>
+              <i-col span="16">
+                {{ addRelationDetail.realPoints }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -321,88 +375,147 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">券使用范围:</i-col>
-              <i-col span="16" v-if="addRelationDetail.couponScope === 'STORE'">
-                <tag color="magenta">{{ "门店" }}</tag>
+              <i-col span="8">
+                每人限兑:
+              </i-col>
+              <i-col span="16">
+                {{ addRelationDetail.receiveLimit }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">
+                发券总数:
+              </i-col>
+              <i-col span="16">
+                {{ addRelationDetail.couponLimit }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">
+                券使用范围:
+              </i-col>
+              <i-col v-if="addRelationDetail.couponScope === 'STORE'" span="16">
+                <tag color="magenta">
+                  {{ "门店" }}
+                </tag>
               </i-col>
               <i-col
-                span="16"
                 v-else-if="addRelationDetail.couponScope === 'SMALL'"
+                span="16"
               >
-                <tag color="cyan">{{ "商城" }}</tag>
+                <tag color="cyan">
+                  {{ "商城" }}
+                </tag>
               </i-col>
               <i-col
-                span="16"
                 v-else-if="addRelationDetail.couponScope === 'STORE_AND_SMALL'"
+                span="16"
               >
-                <tag color="orange">{{ "全场通用" }}</tag>
+                <tag color="orange">
+                  {{ "全场通用" }}
+                </tag>
               </i-col>
               <i-col
-                span="16"
                 v-else-if="addRelationDetail.couponScope === null"
-                >{{ "N/A" }}</i-col
-              >
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row>
-              <i-col span="8">券使用限制:</i-col>
-              <i-col span="16">{{
-                addRelationDetail.useLimitType | couponUseLimitFilter
-              }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="12">
-            <Row>
-              <i-col span="8">最高优惠金额:</i-col>
-              <i-col
                 span="16"
-                v-if="addRelationDetail.maxDiscountFee != null"
-                >{{
-                  addRelationDetail.maxDiscountFee | fenToYuanDot2Filters
-                }}</i-col
               >
-              <i-col span="16" v-else>{{ "N/A" }}</i-col>
+                {{ "N/A" }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="8">
+                券使用限制:
+              </i-col>
+              <i-col span="16">
+                {{
+                  addRelationDetail.useLimitType | couponUseLimitFilter
+                }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="8">
+                最高优惠金额:
+              </i-col>
+              <i-col
+                v-if="addRelationDetail.maxDiscountFee != null"
+                span="16"
+              >
+                {{
+                  addRelationDetail.maxDiscountFee | fenToYuanDot2Filters
+                }}
+              </i-col>
+              <i-col v-else span="16">
+                {{ "N/A" }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="20">
             <Row>
-              <i-col span="5">券详情:</i-col>
-              <i-col span="18">{{ addRelationDetail.couponDetail }}</i-col>
+              <i-col span="5">
+                券详情:
+              </i-col>
+              <i-col span="18">
+                {{ addRelationDetail.couponDetail }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="20">
             <Row>
-              <i-col span="5">温馨提示:</i-col>
-              <i-col span="18">{{ addRelationDetail.couponReminderMsg }}</i-col>
+              <i-col span="5">
+                温馨提示:
+              </i-col>
+              <i-col span="18">
+                {{ addRelationDetail.couponReminderMsg }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="20">
             <Row>
-              <i-col span="5">使用规则:</i-col>
-              <i-col span="18">{{ addRelationDetail.couponRules }}</i-col>
+              <i-col span="5">
+                使用规则:
+              </i-col>
+              <i-col span="18">
+                {{ addRelationDetail.couponRules }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">关联门店:</i-col>
-              <i-col span="16">{{ showStoreName }}</i-col>
+              <i-col span="4">
+                关联门店:
+              </i-col>
+              <i-col span="16">
+                {{ showStoreName }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
     <!-- 添加 -->
@@ -414,9 +527,11 @@
       @on-visible-change="handleModalAdd"
     >
       <p slot="header">
-        <i-col>{{
-          tempModalType == "addTemplate" ? "添加系统优惠券" : "添加海鼎优惠券"
-        }}</i-col>
+        <i-col>
+          {{
+            tempModalType == "addTemplate" ? "添加系统优惠券" : "添加海鼎优惠券"
+          }}
+        </i-col>
       </p>
       <div class="modal-content">
         <Row>
@@ -449,13 +564,14 @@
                 >
                   <Option
                     v-for="(item, index) in couponTypeEnum"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     :disabled="index == 3"
                     class="ptb2-5"
                     style="padding-left: 5px; width: 100px"
-                    >{{ item.label }}</Option
                   >
+                    {{ item.label }}
+                  </Option>
                 </Select>
                 <Button
                   :loading="searchLoading"
@@ -493,9 +609,9 @@
 
           <div style="margin: 10px; overflow: hidden">
             <Row
+              v-if="tempModalType == 'addTemplate'"
               type="flex"
               justify="end"
-              v-if="tempModalType == 'addTemplate'"
             >
               <Page
                 :total="couponTemplateTotal"
@@ -508,7 +624,7 @@
                 @on-page-size-change="changeProductPageSize"
               ></Page>
             </Row>
-            <Row type="flex" justify="end" v-else>
+            <Row v-else type="flex" justify="end">
               <Page
                 :total="couponHdTemplateTotal"
                 :current="searchHdTemplateRowData.page"
@@ -549,26 +665,27 @@
                   >
                     <Option
                       v-for="(item, index) in userScopeEnum"
-                      :value="item.value"
                       :key="index"
+                      :value="item.value"
                       class="ptb2-5"
-                      >{{ item.label }}</Option
                     >
+                      {{ item.label }}
+                    </Option>
                   </Select>
                 </FormItem>
               </i-col>
               <i-col span="4">
                 <FormItem label="排序字段:" prop="rank">
                   <InputNumber
-                    :min="0"
                     v-model="addRelationDetail.rank"
+                    :min="0"
                     label
                   ></InputNumber>
                 </FormItem>
               </i-col>
             </Row>
             <Row>
-              <i-col span="6" v-if="tempModalType == 'addTemplate'">
+              <i-col v-if="tempModalType == 'addTemplate'" span="6">
                 <FormItem label="券有效期:" prop="useLimitType">
                   <Select
                     v-model="addRelationDetail.validDateType"
@@ -578,26 +695,27 @@
                   >
                     <Option
                       v-for="(item, index) in validDateTypeEnum"
-                      :value="item.value"
                       :key="index"
+                      :value="item.value"
                       class="ptb2-5"
                       style="padding-left: 5px; width: 100px"
-                      >{{ item.label }}</Option
                     >
+                      {{ item.label }}
+                    </Option>
                   </Select>
                 </FormItem>
               </i-col>
               <template
                 v-if="
                   addRelationDetail.validDateType == 'UN_FIXED_DATE' &&
-                  tempModalType == 'addTemplate'
+                    tempModalType == 'addTemplate'
                 "
               >
                 <i-col span="6">
                   <FormItem label="生效开始:" prop="beginDay">
                     <InputNumber
-                      :min="0"
                       v-model="addRelationDetail.beginDay"
+                      :min="0"
                       label="生效开始"
                       style="width: 95px"
                     ></InputNumber>
@@ -606,8 +724,8 @@
                 <i-col span="7">
                   <FormItem label="有效天数:" prop="endDay">
                     <InputNumber
-                      :min="0"
                       v-model="addRelationDetail.endDay"
+                      :min="0"
                       label="有效天数"
                       style="width: 80px"
                     ></InputNumber>
@@ -617,7 +735,7 @@
               <template
                 v-if="
                   addRelationDetail.validDateType == 'FIXED_DATE' &&
-                  tempModalType == 'addTemplate'
+                    tempModalType == 'addTemplate'
                 "
               >
                 <i-col span="7">
@@ -650,8 +768,8 @@
               <i-col span="6">
                 <FormItem label="兑换积分:" prop="points">
                   <InputNumber
-                    :min="0"
                     v-model="addRelationDetail.points"
+                    :min="0"
                     label="兑换积分"
                     style="width: 115px"
                   ></InputNumber>
@@ -660,8 +778,8 @@
               <i-col span="6">
                 <FormItem label="促销积分:" prop="realPoints">
                   <InputNumber
-                    :min="0"
                     v-model="addRelationDetail.realPoints"
+                    :min="0"
                     label="促销积分"
                     style="width: 95px"
                   ></InputNumber>
@@ -670,8 +788,8 @@
               <i-col span="6">
                 <FormItem label="每人限兑:" prop="receiveLimit">
                   <InputNumber
-                    :min="0"
                     v-model="addRelationDetail.receiveLimit"
+                    :min="0"
                     label="限兑数量"
                   ></InputNumber>
                 </FormItem>
@@ -679,8 +797,8 @@
               <i-col span="6">
                 <FormItem label="发券总数:" prop="couponLimit">
                   <InputNumber
-                    :min="0"
                     v-model="addRelationDetail.couponLimit"
+                    :min="0"
                     label="限购数量"
                   ></InputNumber>
                 </FormItem>
@@ -689,19 +807,20 @@
             <Row>
               <i-col span="6">
                 <FormItem
-                  label="券使用范围:"
-                  prop="couponScope"
-                  :label-width="100"
                   v-if="tempModalType == 'addTemplate'"
-                  >{{
-                    addRelationDetail.couponScope | couponScopeFilter
-                  }}</FormItem
-                >
-                <FormItem
                   label="券使用范围:"
                   prop="couponScope"
                   :label-width="100"
+                >
+                  {{
+                    addRelationDetail.couponScope | couponScopeFilter
+                  }}
+                </FormItem>
+                <FormItem
                   v-else
+                  label="券使用范围:"
+                  prop="couponScope"
+                  :label-width="100"
                 >
                   <Select
                     v-model="addRelationDetail.couponScope"
@@ -710,31 +829,33 @@
                   >
                     <Option
                       v-for="(item, index) in couponScopeEnum"
-                      :value="item.value"
                       :key="index"
+                      :value="item.value"
                       :disabled="index === 2"
                       class="ptb2-5"
                       style="padding-left: 5px; width: 100px"
-                      >{{ item.label }}</Option
                     >
+                      {{ item.label }}
+                    </Option>
                   </Select>
                 </FormItem>
               </i-col>
               <i-col span="6">
                 <FormItem
-                  label="券使用限制:"
-                  prop="useLimitType"
-                  :label-width="100"
                   v-if="tempModalType == 'addTemplate'"
-                  >{{
-                    addRelationDetail.useLimitType | couponUseLimitFilter
-                  }}</FormItem
-                >
-                <FormItem
                   label="券使用限制:"
                   prop="useLimitType"
                   :label-width="100"
+                >
+                  {{
+                    addRelationDetail.useLimitType | couponUseLimitFilter
+                  }}
+                </FormItem>
+                <FormItem
                   v-else
+                  label="券使用限制:"
+                  prop="useLimitType"
+                  :label-width="100"
                 >
                   <Select
                     v-model="addRelationDetail.useLimitType"
@@ -744,39 +865,42 @@
                   >
                     <Option
                       v-for="(item, index) in couponUseLimitEnum"
-                      :value="item.value"
                       :key="index"
+                      :value="item.value"
                       class="ptb2-5"
                       style="padding-left: 5px; width: 100px"
-                      >{{ item.label }}</Option
                     >
+                      {{ item.label }}
+                    </Option>
                   </Select>
                 </FormItem>
               </i-col>
-              <i-col span="6" v-if="tempModalType == 'addTemplate'">
+              <i-col v-if="tempModalType == 'addTemplate'" span="6">
                 <FormItem
-                  :label-width="100"
-                  label="最高优惠金额:"
-                  prop="maxDiscountFee"
                   v-if="addRelationDetail.maxDiscountFee"
-                  >{{
-                    addRelationDetail.maxDiscountFee | fenToYuanDot2Filters
-                  }}</FormItem
-                >
-                <FormItem
                   :label-width="100"
                   label="最高优惠金额:"
                   prop="maxDiscountFee"
-                  v-else
-                  >{{ "N/A" }}</FormItem
                 >
-              </i-col>
-              <i-col span="6" v-else>
+                  {{
+                    addRelationDetail.maxDiscountFee | fenToYuanDot2Filters
+                  }}
+                </FormItem>
                 <FormItem
+                  v-else
+                  :label-width="100"
+                  label="最高优惠金额:"
+                  prop="maxDiscountFee"
+                >
+                  {{ "N/A" }}
+                </FormItem>
+              </i-col>
+              <i-col v-else span="6">
+                <FormItem
+                  v-if="addRelationDetail.couponType == 'DISCOUNT_COUPON'"
                   label="最高优惠金额:"
                   prop="addRelationDetail"
                   :label-width="100"
-                  v-if="addRelationDetail.couponType == 'DISCOUNT_COUPON'"
                 >
                   <InputNumber
                     :min="0"
@@ -785,12 +909,13 @@
                   ></InputNumber>
                 </FormItem>
                 <FormItem
+                  v-else
                   :label-width="100"
                   label="最高优惠金额:"
                   prop="maxDiscountFee"
-                  v-else
-                  >{{ "N/A" }}</FormItem
                 >
+                  {{ "N/A" }}
+                </FormItem>
               </i-col>
             </Row>
             <Row>
@@ -844,13 +969,14 @@
                   >
                     <Option
                       v-for="item in relationStoreTypeEnum"
-                      :value="item.value"
                       :key="item.value"
+                      :value="item.value"
                       class="ptb2-5"
                       style="padding-left: 5px"
                       @click.native="selectStore(item)"
-                      >{{ item.label }}</Option
                     >
+                      {{ item.label }}
+                    </Option>
                   </Select>
                 </FormItem>
               </i-col>
@@ -873,8 +999,9 @@
                       :indeterminate="indeterminate"
                       :value="checkAll"
                       @click.prevent.native="handleCheckAll(0)"
-                      >全选/反选</Checkbox
                     >
+                      全选/反选
+                    </Checkbox>
                   </div>
                   <CheckboxGroup
                     v-model="stores"
@@ -885,8 +1012,9 @@
                       ref="checkBox"
                       :key="item.storeId"
                       :label="item.storeId"
-                      >{{ item.storeName }}</Checkbox
                     >
+                      {{ item.storeName }}
+                    </Checkbox>
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
@@ -907,8 +1035,9 @@
                       :indeterminate="indeterminate1"
                       :value="checkAll1"
                       @click.prevent.native="handleCheckAll(1)"
-                      >全选/反选</Checkbox
                     >
+                      全选/反选
+                    </Checkbox>
                   </div>
                   <CheckboxGroup
                     v-model="stores"
@@ -919,8 +1048,9 @@
                       ref="checkBox"
                       :key="item.storeId"
                       :label="item.storeId"
-                      >{{ item.storeName }}</Checkbox
                     >
+                      {{ item.storeName }}
+                    </Checkbox>
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
@@ -941,8 +1071,9 @@
                       :indeterminate="indeterminate2"
                       :value="checkAll2"
                       @click.prevent.native="handleCheckAll(2)"
-                      >全选/反选</Checkbox
                     >
+                      全选/反选
+                    </Checkbox>
                   </div>
                   <CheckboxGroup
                     v-model="stores"
@@ -953,8 +1084,9 @@
                       ref="checkBox"
                       :key="item.storeId"
                       :label="item.storeId"
-                      >{{ item.storeName }}</Checkbox
                     >
+                      {{ item.storeName }}
+                    </Checkbox>
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
@@ -975,8 +1107,9 @@
                       :indeterminate="indeterminate3"
                       :value="checkAll3"
                       @click.prevent.native="handleCheckAll(3)"
-                      >全选/反选</Checkbox
                     >
+                      全选/反选
+                    </Checkbox>
                   </div>
                   <CheckboxGroup
                     v-model="stores"
@@ -987,8 +1120,9 @@
                       ref="checkBox"
                       :key="item.storeId"
                       :label="item.storeId"
-                      >{{ item.storeName }}</Checkbox
                     >
+                      {{ item.storeName }}
+                    </Checkbox>
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
@@ -1009,8 +1143,9 @@
                       :indeterminate="indeterminate4"
                       :value="checkAll4"
                       @click.prevent.native="handleCheckAll(4)"
-                      >全选/反选</Checkbox
                     >
+                      全选/反选
+                    </Checkbox>
                   </div>
                   <CheckboxGroup
                     v-model="stores"
@@ -1021,8 +1156,9 @@
                       ref="checkBox"
                       :key="item.storeId"
                       :label="item.storeId"
-                      >{{ item.storeName }}</Checkbox
                     >
+                      {{ item.storeName }}
+                    </Checkbox>
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
@@ -1043,8 +1179,9 @@
                       :indeterminate="indeterminate5"
                       :value="checkAll5"
                       @click.prevent.native="handleCheckAll(5)"
-                      >全选/反选</Checkbox
                     >
+                      全选/反选
+                    </Checkbox>
                   </div>
                   <CheckboxGroup
                     v-model="stores"
@@ -1055,8 +1192,9 @@
                       ref="checkBox"
                       :key="item.storeId"
                       :label="item.storeId"
-                      >{{ item.storeName }}</Checkbox
                     >
+                      {{ item.storeName }}
+                    </Checkbox>
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
@@ -1077,8 +1215,9 @@
                       :indeterminate="indeterminate6"
                       :value="checkAll6"
                       @click.prevent.native="handleCheckAll(6)"
-                      >全选/反选</Checkbox
                     >
+                      全选/反选
+                    </Checkbox>
                   </div>
                   <CheckboxGroup
                     v-model="stores"
@@ -1089,8 +1228,9 @@
                       ref="checkBox"
                       :key="item.storeId"
                       :label="item.storeId"
-                      >{{ item.storeName }}</Checkbox
                     >
+                      {{ item.storeName }}
+                    </Checkbox>
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
@@ -1116,18 +1256,21 @@
                   </CheckboxGroup>
                 </FormItem>
               </i-col>-->
-            </Row> </Form
-          >*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板
+            </Row>
+          </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板
         </Row>
       </div>
       <div slot="footer">
-        <Button @click="handleAddClose">关闭</Button>
+        <Button @click="handleAddClose">
+          关闭
+        </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
           @click="handleTemplateAdd"
-          >确定</Button
         >
+          确定
+        </Button>
       </div>
     </Modal>
 
@@ -1144,37 +1287,45 @@
         >
           <Row>
             <i-col span="6">
-              <FormItem label="优惠券类型:" prop="couponType">{{
-                addRelationDetail.couponType | couponTypeFilter
-              }}</FormItem>
+              <FormItem label="优惠券类型:" prop="couponType">
+                {{
+                  addRelationDetail.couponType | couponTypeFilter
+                }}
+              </FormItem>
             </i-col>
             <i-col span="6">
               <FormItem
+                v-if="addRelationDetail.couponType === 'DISCOUNT_COUPON'"
                 label="折扣额度:"
                 prop="couponFee"
-                v-if="addRelationDetail.couponType === 'DISCOUNT_COUPON'"
-                >{{
-                  addRelationDetail.couponFee | fenToDiscountFilters
-                }}</FormItem
               >
-              <FormItem label="优惠金额:" prop="couponFee" v-else>{{
-                addRelationDetail.couponFee | fenToYuanDot2Filters
-              }}</FormItem>
+                {{
+                  addRelationDetail.couponFee | fenToDiscountFilters
+                }}
+              </FormItem>
+              <FormItem v-else label="优惠金额:" prop="couponFee">
+                {{
+                  addRelationDetail.couponFee | fenToYuanDot2Filters
+                }}
+              </FormItem>
             </i-col>
             <i-col span="6">
-              <FormItem label="优惠券状态:" prop="couponStatus">{{
-                addRelationDetail.couponStatus | couponStatusFilter
-              }}</FormItem>
+              <FormItem label="优惠券状态:" prop="couponStatus">
+                {{
+                  addRelationDetail.couponStatus | couponStatusFilter
+                }}
+              </FormItem>
             </i-col>
             <i-col span="6">
               <FormItem
                 label="最小购买金额:"
                 prop="minBuyFee"
                 :label-width="100"
-                >{{
-                  addRelationDetail.minBuyFee | fenToYuanDot2Filters
-                }}</FormItem
               >
+                {{
+                  addRelationDetail.minBuyFee | fenToYuanDot2Filters
+                }}
+              </FormItem>
             </i-col>
           </Row>
 
@@ -1202,26 +1353,27 @@
                 >
                   <Option
                     v-for="(item, index) in userScopeEnum"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
-                    >{{ item.label }}</Option
                   >
+                    {{ item.label }}
+                  </Option>
                 </Select>
               </FormItem>
             </i-col>
             <i-col span="4">
               <FormItem label="排序字段:" prop="rank" :label-width="120">
                 <InputNumber
-                  :min="0"
                   v-model="addRelationDetail.rank"
+                  :min="0"
                   label="排序字段"
                 ></InputNumber>
               </FormItem>
             </i-col>
           </Row>
           <Row>
-            <i-col span="6" v-if="addRelationDetail.source == 'SMALL'">
+            <i-col v-if="addRelationDetail.source == 'SMALL'" span="6">
               <FormItem
                 label="券有效期:"
                 prop="useLimitType"
@@ -1235,26 +1387,27 @@
                 >
                   <Option
                     v-for="(item, index) in validDateTypeEnum"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px; width: 100px"
-                    >{{ item.label }}</Option
                   >
+                    {{ item.label }}
+                  </Option>
                 </Select>
               </FormItem>
             </i-col>
             <template
               v-if="
                 addRelationDetail.source == 'SMALL' &&
-                addRelationDetail.validDateType == 'UN_FIXED_DATE'
+                  addRelationDetail.validDateType == 'UN_FIXED_DATE'
               "
             >
               <i-col span="7">
                 <FormItem label="生效开始:" prop="beginDay">
                   <InputNumber
-                    :min="0"
                     v-model="addRelationDetail.beginDay"
+                    :min="0"
                     label="生效开始"
                     style="width: 160px"
                   ></InputNumber>
@@ -1263,8 +1416,8 @@
               <i-col span="7">
                 <FormItem label="有效天数:" prop="endDay">
                   <InputNumber
-                    :min="0"
                     v-model="addRelationDetail.endDay"
+                    :min="0"
                     label="有效天数"
                     style="width: 80px"
                   ></InputNumber>
@@ -1274,7 +1427,7 @@
             <template
               v-if="
                 addRelationDetail.source == 'SMALL' &&
-                addRelationDetail.validDateType == 'FIXED_DATE'
+                  addRelationDetail.validDateType == 'FIXED_DATE'
               "
             >
               <i-col span="7">
@@ -1329,8 +1482,8 @@
                 :label-width="120"
               >
                 <InputNumber
-                  :min="0"
                   v-model="addRelationDetail.receiveLimit"
+                  :min="0"
                   label="限兑数量"
                 ></InputNumber>
               </FormItem>
@@ -1338,8 +1491,8 @@
             <i-col span="6">
               <FormItem label="发券总数:" prop="couponLimit">
                 <InputNumber
-                  :min="0"
                   v-model="addRelationDetail.couponLimit"
+                  :min="0"
                   label="限购数量"
                 ></InputNumber>
               </FormItem>
@@ -1348,19 +1501,20 @@
           <Row>
             <i-col span="6">
               <FormItem
-                label="券使用范围:"
-                prop="couponScope"
-                :label-width="100"
                 v-if="addRelationDetail.source == 'SMALL'"
-                >{{
-                  addRelationDetail.couponScope | couponScopeFilter
-                }}</FormItem
-              >
-              <FormItem
                 label="券使用范围:"
                 prop="couponScope"
                 :label-width="100"
+              >
+                {{
+                  addRelationDetail.couponScope | couponScopeFilter
+                }}
+              </FormItem>
+              <FormItem
                 v-else
+                label="券使用范围:"
+                prop="couponScope"
+                :label-width="100"
               >
                 <Select
                   v-model="addRelationDetail.couponScope"
@@ -1369,13 +1523,14 @@
                 >
                   <Option
                     v-for="(item, index) in couponScopeEnum"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     :disabled="index == 2"
                     class="ptb2-5"
                     style="padding-left: 5px; width: 100px"
-                    >{{ item.label }}</Option
                   >
+                    {{ item.label }}
+                  </Option>
                 </Select>
               </FormItem>
             </i-col>
@@ -1441,13 +1596,14 @@
                 >
                   <Option
                     v-for="item in relationStoreTypeEnum"
-                    :value="item.value"
                     :key="item.value"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
                     @click.native="selectStore(item)"
-                    >{{ item.label }}</Option
                   >
+                    {{ item.label }}
+                  </Option>
                 </Select>
               </FormItem>
             </i-col>
@@ -1470,8 +1626,9 @@
                     :indeterminate="indeterminate"
                     :value="checkAll"
                     @click.prevent.native="handleCheckAll(0)"
-                    >全选/反选</Checkbox
                   >
+                    全选/反选
+                  </Checkbox>
                 </div>
                 <CheckboxGroup
                   v-model="stores"
@@ -1482,8 +1639,9 @@
                     ref="checkBox"
                     :key="item.storeId"
                     :label="item.storeId"
-                    >{{ item.storeName }}</Checkbox
                   >
+                    {{ item.storeName }}
+                  </Checkbox>
                 </CheckboxGroup>
               </FormItem>
             </i-col>
@@ -1504,8 +1662,9 @@
                     :indeterminate="indeterminate1"
                     :value="checkAll1"
                     @click.prevent.native="handleCheckAll(1)"
-                    >全选/反选</Checkbox
                   >
+                    全选/反选
+                  </Checkbox>
                 </div>
                 <CheckboxGroup
                   v-model="stores"
@@ -1516,8 +1675,9 @@
                     ref="checkBox"
                     :key="item.storeId"
                     :label="item.storeId"
-                    >{{ item.storeName }}</Checkbox
                   >
+                    {{ item.storeName }}
+                  </Checkbox>
                 </CheckboxGroup>
               </FormItem>
             </i-col>
@@ -1538,8 +1698,9 @@
                     :indeterminate="indeterminate2"
                     :value="checkAll2"
                     @click.prevent.native="handleCheckAll(2)"
-                    >全选/反选</Checkbox
                   >
+                    全选/反选
+                  </Checkbox>
                 </div>
                 <CheckboxGroup
                   v-model="stores"
@@ -1550,8 +1711,9 @@
                     ref="checkBox"
                     :key="item.storeId"
                     :label="item.storeId"
-                    >{{ item.storeName }}</Checkbox
                   >
+                    {{ item.storeName }}
+                  </Checkbox>
                 </CheckboxGroup>
               </FormItem>
             </i-col>
@@ -1572,8 +1734,9 @@
                     :indeterminate="indeterminate3"
                     :value="checkAll3"
                     @click.prevent.native="handleCheckAll(3)"
-                    >全选/反选</Checkbox
                   >
+                    全选/反选
+                  </Checkbox>
                 </div>
                 <CheckboxGroup
                   v-model="stores"
@@ -1584,8 +1747,9 @@
                     ref="checkBox"
                     :key="item.storeId"
                     :label="item.storeId"
-                    >{{ item.storeName }}</Checkbox
                   >
+                    {{ item.storeName }}
+                  </Checkbox>
                 </CheckboxGroup>
               </FormItem>
             </i-col>
@@ -1606,8 +1770,9 @@
                     :indeterminate="indeterminate4"
                     :value="checkAll4"
                     @click.prevent.native="handleCheckAll(4)"
-                    >全选/反选</Checkbox
                   >
+                    全选/反选
+                  </Checkbox>
                 </div>
                 <CheckboxGroup
                   v-model="stores"
@@ -1618,8 +1783,9 @@
                     ref="checkBox"
                     :key="item.storeId"
                     :label="item.storeId"
-                    >{{ item.storeName }}</Checkbox
                   >
+                    {{ item.storeName }}
+                  </Checkbox>
                 </CheckboxGroup>
               </FormItem>
             </i-col>
@@ -1640,8 +1806,9 @@
                     :indeterminate="indeterminate5"
                     :value="checkAll5"
                     @click.prevent.native="handleCheckAll(5)"
-                    >全选/反选</Checkbox
                   >
+                    全选/反选
+                  </Checkbox>
                 </div>
                 <CheckboxGroup
                   v-model="stores"
@@ -1652,8 +1819,9 @@
                     ref="checkBox"
                     :key="item.storeId"
                     :label="item.storeId"
-                    >{{ item.storeName }}</Checkbox
                   >
+                    {{ item.storeName }}
+                  </Checkbox>
                 </CheckboxGroup>
               </FormItem>
             </i-col>
@@ -1674,8 +1842,9 @@
                     :indeterminate="indeterminate6"
                     :value="checkAll6"
                     @click.prevent.native="handleCheckAll(6)"
-                    >全选/反选</Checkbox
                   >
+                    全选/反选
+                  </Checkbox>
                 </div>
                 <CheckboxGroup
                   v-model="stores"
@@ -1686,8 +1855,9 @@
                     ref="checkBox"
                     :key="item.storeId"
                     :label="item.storeId"
-                    >{{ item.storeName }}</Checkbox
                   >
+                    {{ item.storeName }}
+                  </Checkbox>
                 </CheckboxGroup>
               </FormItem>
             </i-col>
@@ -1717,26 +1887,29 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
           @click="handleTemplateEdit"
-          >确定</Button
         >
+          确定
+        </Button>
       </div>
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" />
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import IViewUpload from "_c/iview-upload";
-import _ from "lodash";
+import Tables from '_c/tables';
+import IViewUpload from '_c/iview-upload';
+import _ from 'lodash';
 import {
   getCouponExchangePages,
   deleteCouponExchange,
@@ -1744,19 +1917,19 @@ import {
   editCouponExchange,
   getCouponTemplatePages,
   getHdCouponActivitiesPages,
-  getAreaStorePages,
-} from "@/api/mini-program";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+  getAreaStorePages
+} from '@/api/mini-program';
+import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import {
   couponStatusConvert,
   couponTypeConvert,
   couponScopeConvert,
   couponUseLimitConvert,
-  userScopeConvert,
-} from "@/libs/converStatus";
+  userScopeConvert
+} from '@/libs/converStatus';
 import {
   couponStatusEnum,
   couponTypeEnum,
@@ -1764,8 +1937,8 @@ import {
   couponUseLimitEnum,
   validDateTypeEnum,
   userScopeEnum,
-  relationStoreTypeEnum,
-} from "@/libs/enumerate";
+  relationStoreTypeEnum
+} from '@/libs/enumerate';
 import {
   compareData,
   getSmallCouponActivity,
@@ -1775,65 +1948,65 @@ import {
   replaceByTag,
   replaceByTab,
   HdDiscount,
-  compareCouponData,
-} from "@/libs/util";
+  compareCouponData
+} from '@/libs/util';
 
 const relationDetail = {
   id: 0,
   activityCouponId: 0,
-  couponName: "",
+  couponName: '',
   couponType: null,
   couponFee: 0,
   minBuyFee: 0,
   couponStatus: null,
-  couponImage: "",
+  couponImage: '',
   effectiveStartTime: null,
   effectiveEndTime: null,
   couponLimit: 999,
   receiveCount: 0,
-  couponRules: "",
-  couponDetail: "",
-  couponReminderMsg: "",
-  couponScope: "STORE",
+  couponRules: '',
+  couponDetail: '',
+  couponReminderMsg: '',
+  couponScope: 'STORE',
   useLimitType: null,
   hdActivityId: 0,
-  validDateType: "UN_FIXED_DATE",
-  userScope: "ALL",
+  validDateType: 'UN_FIXED_DATE',
+  userScope: 'ALL',
   receiveLimit: 999,
   beginDay: 0,
   maxDiscountFee: null,
   stores: null,
-  relationStoreType: "ALL",
+  relationStoreType: 'ALL',
   endDay: 0,
   rank: 0, // 排序字段
   points: 0,
-  realPoints: 0,
+  realPoints: 0
 };
 
 const couponTemplateDetail = {
   id: 0,
-  couponName: "",
+  couponName: '',
   couponType: null,
   couponFee: 0,
   minBuyFee: 0,
   couponStatus: null,
-  couponImage: "",
-  createUser: "",
+  couponImage: '',
+  createUser: '',
   createTime: null,
-  couponRules: "",
-  couponScope: null,
+  couponRules: '',
+  couponScope: null
 };
 
 const hdCouponTemplateDetail = {
   activityId: 0,
   beginDate: null,
   endDate: null,
-  couponName: "",
-  couponRemark: "",
-  couponType: "",
+  couponName: '',
+  couponRemark: '',
+  couponType: '',
   faceValue: 0,
   price: 0,
-  useRule: "",
+  useRule: ''
 };
 
 const roleRowData = {
@@ -1841,18 +2014,18 @@ const roleRowData = {
   couponName: null,
   page: 1,
   rows: 10,
-  sidx: "createTime",
-  sort: "desc",
+  sidx: 'createTime',
+  sort: 'desc'
 };
 
 const templateRowData = {
   couponName: null,
   couponType: null,
-  couponStatus: "VALID",
+  couponStatus: 'VALID',
   page: 1,
   rows: 5,
-  sidx: "create_time",
-  sort: "desc",
+  sidx: 'create_time',
+  sort: 'desc'
 };
 
 // all表示查全部，manual（手工发券），behavior（行为发券），scmaction（分销领券），
@@ -1863,299 +2036,299 @@ const hdTemplateRowData = {
   sortKey: null,
   desc: null,
   platformId: null,
-  activityTypes: ["component"],
+  activityTypes: ['component'],
   activityId: null,
   page: 1,
-  rows: 5,
+  rows: 5
 };
 
 const dataColumns = [
   {
-    title: "优惠券名称",
-    key: "couponName",
-    align: "center",
+    title: '优惠券名称',
+    key: 'couponName',
+    align: 'center',
     width: 180,
-    fixed: "left",
+    fixed: 'left'
   },
   {
-    title: "券类型",
-    align: "center",
-    key: "couponType",
+    title: '券类型',
+    align: 'center',
+    key: 'couponType',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.couponType === "FULL_CUT_COUPON") {
+      if (row.couponType === 'FULL_CUT_COUPON') {
         return (
           <div>
-            <tag color="magenta">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='magenta'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
-      } else if (row.couponType === "DISCOUNT_COUPON") {
+      } else if (row.couponType === 'DISCOUNT_COUPON') {
         return (
           <div>
-            <tag color="orange">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='orange'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
-      } else if (row.couponType === "CASH_COUPON") {
+      } else if (row.couponType === 'CASH_COUPON') {
         return (
           <div>
-            <tag color="cyan">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='cyan'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
       }
       return <div>{row.couponType}</div>;
     },
-    minWidth: 100,
+    minWidth: 100
   },
   {
-    title: "优惠/折扣",
-    align: "center",
-    key: "couponFee",
+    title: '优惠/折扣',
+    align: 'center',
+    key: 'couponFee',
     width: 100,
     render(h, params) {
       const { row } = params;
-      if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{row.couponFee / 10 + "折"}</div>;
+      if (row.couponType === 'DISCOUNT_COUPON') {
+        return <div>{row.couponFee / 10 + '折'}</div>;
       } else {
         return <div>{fenToYuanDot2(params.row.couponFee)}</div>;
       }
-    },
+    }
   },
   {
-    title: "最小购买金额",
-    align: "center",
-    key: "minBuyFee",
+    title: '最小购买金额',
+    align: 'center',
+    key: 'minBuyFee',
     width: 130,
     render(h, params) {
-      return h("div", fenToYuanDot2(params.row.minBuyFee));
-    },
+      return h('div', fenToYuanDot2(params.row.minBuyFee));
+    }
   },
   {
-    title: "最高优惠金额",
-    align: "center",
-    key: "maxDiscountFee",
+    title: '最高优惠金额',
+    align: 'center',
+    key: 'maxDiscountFee',
     width: 130,
     render(h, params) {
       const { row } = params;
       if (row.maxDiscountFee != null) {
         return <div>{fenToYuanDot2(row.maxDiscountFee)}</div>;
       } else {
-        return <div>{"N/A"}</div>;
+        return <div>{'N/A'}</div>;
       }
-    },
+    }
   },
   {
-    title: "券状态",
-    align: "center",
-    key: "couponStatus",
+    title: '券状态',
+    align: 'center',
+    key: 'couponStatus',
     width: 90,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.couponStatus === "VALID") {
+      if (row.couponStatus === 'VALID') {
         return (
           <div>
-            <tag color="success">
+            <tag color='success'>
               {couponStatusConvert(row.couponStatus).label}
             </tag>
           </div>
         );
-      } else if (row.couponStatus === "INVALID") {
+      } else if (row.couponStatus === 'INVALID') {
         return (
           <div>
-            <tag color="error">
+            <tag color='error'>
               {couponStatusConvert(row.couponStatus).label}
             </tag>
           </div>
         );
       }
       return <div>{row.couponStatus}</div>;
-    },
+    }
   },
   {
-    title: "券使用范围",
-    align: "center",
-    key: "couponScope",
+    title: '券使用范围',
+    align: 'center',
+    key: 'couponScope',
     width: 110,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.couponScope === "STORE") {
+      if (row.couponScope === 'STORE') {
         return (
           <div>
-            <tag color="magenta">
+            <tag color='magenta'>
               {couponScopeConvert(row.couponScope).label}
             </tag>
           </div>
         );
-      } else if (row.couponScope === "STORE_AND_SMALL") {
+      } else if (row.couponScope === 'STORE_AND_SMALL') {
         return (
           <div>
-            <tag color="orange">
+            <tag color='orange'>
               {couponScopeConvert(row.couponScope).label}
             </tag>
           </div>
         );
-      } else if (row.couponScope === "SMALL") {
+      } else if (row.couponScope === 'SMALL') {
         return (
           <div>
-            <tag color="cyan">{couponScopeConvert(row.couponScope).label}</tag>
+            <tag color='cyan'>{couponScopeConvert(row.couponScope).label}</tag>
           </div>
         );
       }
       return <div>{row.couponScope}</div>;
-    },
+    }
   },
   {
-    title: "用户范围",
-    align: "center",
-    key: "userScope",
+    title: '用户范围',
+    align: 'center',
+    key: 'userScope',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.userScope === "ALL") {
+      if (row.userScope === 'ALL') {
         return <div>{userScopeConvert(row.userScope).label}</div>;
-      } else if (row.userScope === "SVIP") {
+      } else if (row.userScope === 'SVIP') {
         return <div>{userScopeConvert(row.userScope).label}</div>;
       }
       return <div>{row.userScope}</div>;
     },
-    width: 100,
+    width: 100
   },
   {
-    title: "券使用限制",
-    align: "center",
-    key: "useLimitType",
+    title: '券使用限制',
+    align: 'center',
+    key: 'useLimitType',
     width: 130,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.useLimitType === "SMALL_ALL") {
+      if (row.useLimitType === 'SMALL_ALL') {
         return <div>{couponUseLimitConvert(row.useLimitType).label}</div>;
-      } else if (row.useLimitType === "PART_GOODS") {
+      } else if (row.useLimitType === 'PART_GOODS') {
         return <div>{couponUseLimitConvert(row.useLimitType).label}</div>;
-      } else if (row.useLimitType === "PART_STORES") {
+      } else if (row.useLimitType === 'PART_STORES') {
         return <div>{couponUseLimitConvert(row.useLimitType).label}</div>;
-      } else if (row.useLimitType === "HD_ALL") {
+      } else if (row.useLimitType === 'HD_ALL') {
         return <div>{couponUseLimitConvert(row.useLimitType).label}</div>;
       } else {
         return <div>N/A</div>;
       }
-    },
+    }
   },
   {
-    title: "已兑换统计",
-    align: "center",
-    key: "receiveCount",
-    width: 110,
+    title: '已兑换统计',
+    align: 'center',
+    key: 'receiveCount',
+    width: 110
   },
   {
-    title: "生效时间",
-    align: "center",
-    key: "effectiveStartTime",
+    title: '生效时间',
+    align: 'center',
+    key: 'effectiveStartTime',
     width: 120,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
+      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
         return <div>{row.effectiveStartTime}</div>;
       } else if (
-        row.source == "SMALL" &&
-        row.validDateType === "UN_FIXED_DATE"
+        row.source == 'SMALL' &&
+        row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.beginDay}</div>;
-      } else if (row.source == "HD") {
+      } else if (row.source == 'HD') {
         return <div>{row.effectiveStartTime}</div>;
       } else {
         return <div>N/A</div>;
       }
-    },
+    }
   },
   {
-    title: "失效时间",
-    align: "center",
-    key: "effectiveEndTime",
+    title: '失效时间',
+    align: 'center',
+    key: 'effectiveEndTime',
     width: 220,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
+      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
         if (!compareCouponData(row.effectiveEndTime)) {
-          return <div style="color:red">{row.effectiveEndTime + "已过期"}</div>;
+          return <div style='color:red'>{row.effectiveEndTime + '已过期'}</div>;
         } else {
           return <div>{row.effectiveEndTime}</div>;
         }
       } else if (
-        row.source == "SMALL" &&
-        row.validDateType === "UN_FIXED_DATE"
+        row.source == 'SMALL' &&
+        row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.endDay}</div>;
-      } else if (row.source == "HD") {
+      } else if (row.source == 'HD') {
         if (!compareCouponData(row.effectiveEndTime)) {
-          return <div style="color:red">{row.effectiveEndTime + "已过期"}</div>;
+          return <div style='color:red'>{row.effectiveEndTime + '已过期'}</div>;
         } else {
           return <div>{row.effectiveEndTime}</div>;
         }
       } else {
         return <div>N/A</div>;
       }
-    },
+    }
   },
   {
-    title: "创建时间",
-    align: "center",
-    key: "createTime",
-    width: 120,
+    title: '创建时间',
+    align: 'center',
+    key: 'createTime',
+    width: 120
   },
   {
-    title: "操作",
-    align: "center",
-    fixed: "right",
+    title: '操作',
+    align: 'center',
+    fixed: 'right',
     width: 180,
-    key: "handle",
-    options: ["couponStatus", "view", "edit"],
-  },
+    key: 'handle',
+    options: ['couponStatus', 'view', 'edit']
+  }
 ];
 
 const templateColumns = [
   {
-    type: "index",
+    type: 'index',
     width: 60,
-    align: "center",
+    align: 'center'
   },
   {
-    title: "优惠券名称",
-    key: "couponName",
-    align: "center",
-    minWidth: 150,
+    title: '优惠券名称',
+    key: 'couponName',
+    align: 'center',
+    minWidth: 150
   },
   {
-    title: "券类型",
-    align: "center",
-    key: "couponType",
+    title: '券类型',
+    align: 'center',
+    key: 'couponType',
     width: 100,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.couponType === "FULL_CUT_COUPON") {
+      if (row.couponType === 'FULL_CUT_COUPON') {
         return (
           <div>
-            <tag color="magenta">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='magenta'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
-      } else if (row.couponType === "DISCOUNT_COUPON") {
+      } else if (row.couponType === 'DISCOUNT_COUPON') {
         return (
           <div>
-            <tag color="orange">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='orange'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
-      } else if (row.couponType === "CASH_COUPON") {
+      } else if (row.couponType === 'CASH_COUPON') {
         return (
           <div>
-            <tag color="cyan">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='cyan'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
-      } else if (row.couponType === "FREIGHT_COUPON") {
+      } else if (row.couponType === 'FREIGHT_COUPON') {
         return (
           <div>
-            <tag color="blue">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='blue'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
       }
       return <div>{row.couponType}</div>;
-    },
+    }
   },
   // {
   //   title: '使用范围',
@@ -2174,120 +2347,120 @@ const templateColumns = [
   //   }
   // },
   {
-    title: "优惠/折扣额度",
-    align: "center",
-    key: "couponFee",
+    title: '优惠/折扣额度',
+    align: 'center',
+    key: 'couponFee',
     width: 140,
     render(h, params) {
       const { row } = params;
-      if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{row.couponFee / 10 + "折"}</div>;
+      if (row.couponType === 'DISCOUNT_COUPON') {
+        return <div>{row.couponFee / 10 + '折'}</div>;
       } else {
         return <div>{fenToYuanDot2(params.row.couponFee)}</div>;
       }
-    },
+    }
   },
   {
-    title: "最小购买金额",
-    align: "center",
-    key: "minBuyFee",
+    title: '最小购买金额',
+    align: 'center',
+    key: 'minBuyFee',
     width: 130,
     render(h, params) {
       return <div>{fenToYuanDot2(params.row.minBuyFee)}</div>;
-    },
+    }
   },
   {
-    title: "最高优惠金额",
-    align: "center",
-    key: "maxDiscountFee",
+    title: '最高优惠金额',
+    align: 'center',
+    key: 'maxDiscountFee',
     width: 130,
     render(h, params) {
       if (params.row.maxDiscountFee) {
         return <div>{fenToYuanDot2(params.row.maxDiscountFee)}</div>;
       } else {
-        return <div>{"N/A"}</div>;
+        return <div>{'N/A'}</div>;
       }
-    },
+    }
   },
   {
-    title: "券状态",
-    align: "center",
-    key: "couponStatus",
+    title: '券状态',
+    align: 'center',
+    key: 'couponStatus',
     width: 90,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.couponStatus === "VALID") {
+      if (row.couponStatus === 'VALID') {
         return (
           <div>
-            <tag color="success">
+            <tag color='success'>
               {couponStatusConvert(row.couponStatus).label}
             </tag>
           </div>
         );
-      } else if (row.couponStatus === "INVALID") {
+      } else if (row.couponStatus === 'INVALID') {
         return (
           <div>
-            <tag color="error">
+            <tag color='error'>
               {couponStatusConvert(row.couponStatus).label}
             </tag>
           </div>
         );
       }
       return <div>{row.couponStatus}</div>;
-    },
-  },
+    }
+  }
 ];
 
 const hdTemplateColumns = [
   {
-    type: "index",
+    type: 'index',
     width: 60,
-    align: "center",
+    align: 'center'
   },
   {
-    title: "优惠券名称",
-    key: "couponName",
-    align: "center",
-    minWidth: 150,
+    title: '优惠券名称',
+    key: 'couponName',
+    align: 'center',
+    minWidth: 150
   },
   {
-    title: "券类型",
-    align: "center",
-    key: "couponType",
+    title: '券类型',
+    align: 'center',
+    key: 'couponType',
     width: 100,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.couponType === "FULL_CUT_COUPON") {
+      if (row.couponType === 'FULL_CUT_COUPON') {
         return (
           <div>
-            <tag color="magenta">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='magenta'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
-      } else if (row.couponType === "DISCOUNT_COUPON") {
+      } else if (row.couponType === 'DISCOUNT_COUPON') {
         return (
           <div>
-            <tag color="orange">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='orange'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
-      } else if (row.couponType === "CASH_COUPON") {
+      } else if (row.couponType === 'CASH_COUPON') {
         return (
           <div>
-            <tag color="cyan">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='cyan'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
       }
       return <div>{row.couponType}</div>;
-    },
+    }
   },
   {
-    title: "券使用限制",
-    align: "center",
-    key: "useLimitType",
+    title: '券使用限制',
+    align: 'center',
+    key: 'useLimitType',
     width: 110,
     render: (h, params, vm) => {
       const { row } = params;
       return <div>{couponUseLimitConvert(row.useLimitType).label}</div>;
-    },
+    }
   },
   // {
   //   title: "优惠/折扣额度",
@@ -2305,47 +2478,47 @@ const hdTemplateColumns = [
   //     }
   //   }
   // },
-  //HdDiscount版本
+  // HdDiscount版本
   {
-    title: "优惠/折扣额度",
-    align: "center",
-    key: "faceValue",
+    title: '优惠/折扣额度',
+    align: 'center',
+    key: 'faceValue',
     width: 140,
     render(h, params) {
       const { row } = params;
-      if (row.couponType === "DISCOUNT_COUPON") {
+      if (row.couponType === 'DISCOUNT_COUPON') {
         const couponFee = HdDiscount(params.row.discount);
         return <div>{couponFee}</div>;
       } else {
         return <div>{fenToYuanDot2(params.row.faceValue)}</div>;
       }
-    },
+    }
   },
   {
-    title: "最小购买金额",
-    align: "center",
-    key: "useRule",
+    title: '最小购买金额',
+    align: 'center',
+    key: 'useRule',
     width: 130,
     render(h, params, vm) {
-      let useRule = params.row.useRule;
-      const startIndex = useRule.indexOf("满");
-      const endIndex = useRule.indexOf("元");
+      const useRule = params.row.useRule;
+      const startIndex = useRule.indexOf('满');
+      const endIndex = useRule.indexOf('元');
       const minBuyFee = useRule.slice(startIndex + 1, endIndex);
       return <div>{fenToYuanDot2(minBuyFee * 100)}</div>;
-    },
+    }
   },
   {
-    title: "生效时间",
-    align: "center",
-    key: "beginDate",
-    minWidth: 50,
+    title: '生效时间',
+    align: 'center',
+    key: 'beginDate',
+    minWidth: 50
   },
   {
-    title: "失效时间",
-    align: "center",
-    key: "endDate",
-    minWidth: 50,
-  },
+    title: '失效时间',
+    align: 'center',
+    key: 'endDate',
+    minWidth: 50
+  }
   // {
   //   title: '用券条件',
   //   key: 'useRule',
@@ -2371,71 +2544,71 @@ const hdTemplateColumns = [
 export default {
   components: {
     Tables,
-    IViewUpload,
+    IViewUpload
   },
   mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
   data() {
     return {
       relationRuleInline: {
-        effectiveStartTime: [{ required: true, message: "请选择生效时间" }],
-        effectiveEndTime: [{ required: true, message: "请选择失效时间" }],
-        beginDay: [{ required: true, message: "请输入生效天数" }],
-        endDay: [{ required: true, message: "请输入失效天数" }],
-        couponScope: [{ required: false, message: "请选择券使用范围" }],
-        useLimitType: [{ required: true, message: "请选择券使用限制" }],
-        couponRules: [{ required: true, message: "请输入券使用规则" }],
-        couponDetail: [{ required: true, message: "请输入券详情" }],
-        couponReminderMsg: [{ required: true, message: "请输入券温馨提示" }],
-        userScope: [{ required: true, message: "请选择用户范围" }],
-        couponName: [{ required: true, message: "请输入优惠券名称" }],
+        effectiveStartTime: [{ required: true, message: '请选择生效时间' }],
+        effectiveEndTime: [{ required: true, message: '请选择失效时间' }],
+        beginDay: [{ required: true, message: '请输入生效天数' }],
+        endDay: [{ required: true, message: '请输入失效天数' }],
+        couponScope: [{ required: false, message: '请选择券使用范围' }],
+        useLimitType: [{ required: true, message: '请选择券使用限制' }],
+        couponRules: [{ required: true, message: '请输入券使用规则' }],
+        couponDetail: [{ required: true, message: '请输入券详情' }],
+        couponReminderMsg: [{ required: true, message: '请输入券温馨提示' }],
+        userScope: [{ required: true, message: '请选择用户范围' }],
+        couponName: [{ required: true, message: '请输入优惠券名称' }],
         points: [
-          { required: true, message: "请输入兑换积分" },
+          { required: true, message: '请输入兑换积分' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
+                errors.push(new Error('必须为非零整数'));
               }
               callback(errors);
-            },
-          },
+            }
+          }
         ],
         realPoints: [
-          { required: true, message: "请输入促销积分" },
+          { required: true, message: '请输入促销积分' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
+                errors.push(new Error('必须为非零整数'));
               }
               callback(errors);
-            },
-          },
+            }
+          }
         ],
         receiveLimit: [
-          { required: true, message: "请输入每人限兑数量" },
+          { required: true, message: '请输入每人限兑数量' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
+                errors.push(new Error('必须为非零整数'));
               }
               callback(errors);
-            },
-          },
+            }
+          }
         ],
         couponLimit: [
-          { required: true, message: "请输入发券限制数量" },
+          { required: true, message: '请输入发券限制数量' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
+                errors.push(new Error('必须为非零整数'));
               }
               callback(errors);
-            },
-          },
-        ],
+            }
+          }
+        ]
       },
       defaultListMain: [],
       uploadListMain: [],
@@ -2493,10 +2666,10 @@ export default {
       checkAll5: false,
       checkAll6: false,
       checkAll7: false,
-      showStoreName: "",
+      showStoreName: '',
       couponTemplateTotal: 0,
       couponHdTemplateTotal: 0,
-      modalAdd: false,
+      modalAdd: false
     };
   },
   computed: {
@@ -2505,19 +2678,19 @@ export default {
     },
     systemCouponFixDate() {
       return (
-        this.tempModalType === "addTemplate" &&
-        this.addRelationDetail.validDateType == "FIXED_DATE"
+        this.tempModalType === 'addTemplate' &&
+        this.addRelationDetail.validDateType == 'FIXED_DATE'
       );
     },
     systemCouponUnFixDate() {
       return (
-        this.tempModalType === "addTemplate" &&
-        this.addRelationDetail.validDateType == "UN_FIXED_DATE"
+        this.tempModalType === 'addTemplate' &&
+        this.addRelationDetail.validDateType == 'UN_FIXED_DATE'
       );
     },
     maxDiscountFeeComputed() {
       return fenToYuanDot2Number(this.addRelationDetail.maxDiscountFee);
-    },
+    }
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData); // 刷新清除上次搜索结果
@@ -2527,10 +2700,10 @@ export default {
   methods: {
     statusChange(params) {
       this.addRelationDetail = _.cloneDeep(params.row);
-      if (params.row.couponStatus === "VALID") {
-        this.addRelationDetail.couponStatus = "INVALID";
+      if (params.row.couponStatus === 'VALID') {
+        this.addRelationDetail.couponStatus = 'INVALID';
       } else {
-        this.addRelationDetail.couponStatus = "VALID";
+        this.addRelationDetail.couponStatus = 'VALID';
       }
       this.editCouponExchange();
     },
@@ -2538,9 +2711,9 @@ export default {
       // 先清除对象
       this.resetFields();
       // 当展示的是添加系统优惠券
-      if (isShow && this.tempModalType == "addTemplate") {
-        this.addRelationDetail.couponScope = "SMALL";
-        this.addRelationDetail.useLimitType = "SMALL_ALL";
+      if (isShow && this.tempModalType == 'addTemplate') {
+        this.addRelationDetail.couponScope = 'SMALL';
+        this.addRelationDetail.useLimitType = 'SMALL_ALL';
       }
     },
     resetSearchRowData() {
@@ -2556,24 +2729,24 @@ export default {
     handleEdit(params) {
       const _this = this;
       this.stores = [];
-      this.addRelationDetail.relationStoreType = "ALL";
+      this.addRelationDetail.relationStoreType = 'ALL';
       this.tempModalType = this.modalType.edit;
       this.addRelationDetail = _.cloneDeep(params.row);
       this.replaceTextByTab();
       if (
         this.addRelationDetail.stores !== null &&
-        this.addRelationDetail.stores !== ""
+        this.addRelationDetail.stores !== ''
       ) {
         this.showStoreList = true;
-        this.addRelationDetail.relationStoreType = "PART";
+        this.addRelationDetail.relationStoreType = 'PART';
         const stores = this.addRelationDetail.stores
           .substring(1, this.addRelationDetail.stores.length - 1)
-          .split("][");
+          .split('][');
         stores.forEach((element) => {
           this.stores.push(parseInt(element));
         });
         // 全选/反选按钮的样式
-        let sameArray = _this.storeList[0].storeList.filter(function (item) {
+        const sameArray = _this.storeList[0].storeList.filter(function(item) {
           return _this.stores.indexOf(item.storeId) != -1;
         });
 
@@ -2593,7 +2766,7 @@ export default {
           this.indeterminate = false;
           this.checkAll = false;
         }
-        let sameArray1 = _this.storeList[1].storeList.filter(function (item) {
+        const sameArray1 = _this.storeList[1].storeList.filter(function(item) {
           return _this.stores.indexOf(item.storeId) != -1;
         });
         if (
@@ -2612,7 +2785,7 @@ export default {
           this.indeterminate1 = false;
           this.checkAll1 = false;
         }
-        let sameArray2 = _this.storeList[2].storeList.filter(function (item) {
+        const sameArray2 = _this.storeList[2].storeList.filter(function(item) {
           return _this.stores.indexOf(item.storeId) != -1;
         });
         if (
@@ -2631,7 +2804,7 @@ export default {
           this.indeterminate2 = false;
           this.checkAll2 = false;
         }
-        let sameArray3 = _this.storeList[3].storeList.filter(function (item) {
+        const sameArray3 = _this.storeList[3].storeList.filter(function(item) {
           return _this.stores.indexOf(item.storeId) != -1;
         });
         if (
@@ -2650,7 +2823,7 @@ export default {
           this.indeterminate3 = false;
           this.checkAll3 = false;
         }
-        let sameArray4 = _this.storeList[4].storeList.filter(function (item) {
+        const sameArray4 = _this.storeList[4].storeList.filter(function(item) {
           return _this.stores.indexOf(item.storeId) != -1;
         });
         if (
@@ -2669,7 +2842,7 @@ export default {
           this.indeterminate4 = false;
           this.checkAll4 = false;
         }
-        let sameArray5 = _this.storeList[5].storeList.filter(function (item) {
+        const sameArray5 = _this.storeList[5].storeList.filter(function(item) {
           return _this.stores.indexOf(item.storeId) != -1;
         });
         if (
@@ -2688,7 +2861,7 @@ export default {
           this.indeterminate5 = false;
           this.checkAll5 = false;
         }
-        let sameArray6 = _this.storeList[6].storeList.filter(function (item) {
+        const sameArray6 = _this.storeList[6].storeList.filter(function(item) {
           return _this.stores.indexOf(item.storeId) != -1;
         });
         if (
@@ -2728,7 +2901,7 @@ export default {
         // }
       } else {
         this.showStoreList = false;
-        this.addRelationDetail.relationStoreType = "ALL"; // storeIds为''默认关联的门店则是全部门店
+        this.addRelationDetail.relationStoreType = 'ALL'; // storeIds为''默认关联的门店则是全部门店
       }
       this.modalEdit = true;
     },
@@ -2765,14 +2938,14 @@ export default {
         });
     },
     selectStore(options) {
-      if (options.value === "ALL") {
-        this.addRelationDetail.relationStoreType = "ALL";
-        this.tempModalType === "edit"
-          ? (this.addRelationDetail.stores = "")
+      if (options.value === 'ALL') {
+        this.addRelationDetail.relationStoreType = 'ALL';
+        this.tempModalType === 'edit'
+          ? (this.addRelationDetail.stores = '')
           : (this.addRelationDetail.stores = null);
         this.showStoreList = false;
-      } else if (options.value === "PART") {
-        this.addRelationDetail.relationStoreType = "PART";
+      } else if (options.value === 'PART') {
+        this.addRelationDetail.relationStoreType = 'PART';
         this.indeterminate = false;
         this.checkAll = false;
         this.indeterminate1 = false;
@@ -2790,7 +2963,7 @@ export default {
         this.indeterminate7 = false;
         this.checkAll7 = false;
         this.stores = [];
-        this.addRelationDetail.stores = "";
+        this.addRelationDetail.stores = '';
         this.showStoreList = true;
       }
     },
@@ -2806,12 +2979,12 @@ export default {
           this.storeData5 = res.array[5].storeList;
           this.storeData6 = res.array[6].storeList;
           // this.storeData7 = res.array[7].storeList;
-          let data = [];
-          for (let val of res.array) {
+          const data = [];
+          for (const val of res.array) {
             this.storeNameList.push(val.storeName);
             data.push(val.storeList);
           }
-          for (let value of data) {
+          for (const value of data) {
             this.storeListData = this.storeListData.concat(value);
           }
         })
@@ -2823,7 +2996,7 @@ export default {
       const _this = this;
       if (value === 0) {
         const allIds = [];
-        let beforeIds = [];
+        const beforeIds = [];
         if (this.indeterminate) {
           this.checkAll = false;
         } else {
@@ -2832,7 +3005,7 @@ export default {
         this.indeterminate = false;
         if (this.checkAll) {
           if (this.stores != null) {
-            for (let val of this.stores) {
+            for (const val of this.stores) {
               allIds.push(val);
             }
           }
@@ -2840,21 +3013,21 @@ export default {
             allIds.push(item.storeId);
           });
           this.stores = allIds;
-          this.addRelationDetail.stores = "[" + allIds.join("][") + "]";
+          this.addRelationDetail.stores = '[' + allIds.join('][') + ']';
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
           });
-          let newArray = _this.stores.filter(function (item) {
+          const newArray = _this.stores.filter(function(item) {
             return beforeIds.indexOf(item) == -1;
           });
           this.stores = newArray;
-          this.addRelationDetail.stores = "[" + newArray.join("][") + "]";
+          this.addRelationDetail.stores = '[' + newArray.join('][') + ']';
         }
       }
       if (value === 1) {
         const allIds1 = [];
-        let beforeIds = [];
+        const beforeIds = [];
         if (this.indeterminate1) {
           this.checkAll1 = false;
         } else {
@@ -2863,7 +3036,7 @@ export default {
         this.indeterminate1 = false;
         if (this.checkAll1) {
           if (this.stores != null) {
-            for (let val of this.stores) {
+            for (const val of this.stores) {
               allIds1.push(val);
             }
           }
@@ -2872,21 +3045,21 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.stores = allIds1;
-          this.addRelationDetail.stores = "[" + allIds1.join("][") + "]";
+          this.addRelationDetail.stores = '[' + allIds1.join('][') + ']';
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
           });
-          let newArray = _this.stores.filter(function (item) {
+          const newArray = _this.stores.filter(function(item) {
             return beforeIds.indexOf(item) == -1;
           });
           this.stores = newArray;
-          this.addRelationDetail.stores = "[" + newArray.join("][") + "]";
+          this.addRelationDetail.stores = '[' + newArray.join('][') + ']';
         }
       }
       if (value === 2) {
         const allIds2 = [];
-        let beforeIds = [];
+        const beforeIds = [];
         if (this.indeterminate2) {
           this.checkAll2 = false;
         } else {
@@ -2895,7 +3068,7 @@ export default {
         this.indeterminate2 = false;
         if (this.checkAll2) {
           if (this.stores != null) {
-            for (let val of this.stores) {
+            for (const val of this.stores) {
               allIds2.push(val);
             }
           }
@@ -2904,21 +3077,21 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.stores = allIds2;
-          this.addRelationDetail.stores = "[" + allIds2.join("][") + "]";
+          this.addRelationDetail.stores = '[' + allIds2.join('][') + ']';
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
           });
-          let newArray = _this.stores.filter(function (item) {
+          const newArray = _this.stores.filter(function(item) {
             return beforeIds.indexOf(item) == -1;
           });
           this.stores = newArray;
-          this.addRelationDetail.stores = "[" + newArray.join("][") + "]";
+          this.addRelationDetail.stores = '[' + newArray.join('][') + ']';
         }
       }
       if (value === 3) {
         const allIds3 = [];
-        let beforeIds = [];
+        const beforeIds = [];
         if (this.indeterminate3) {
           this.checkAll3 = false;
         } else {
@@ -2927,7 +3100,7 @@ export default {
         this.indeterminate3 = false;
         if (this.checkAll3) {
           if (this.stores != null) {
-            for (let val of this.stores) {
+            for (const val of this.stores) {
               allIds3.push(val);
             }
           }
@@ -2936,21 +3109,21 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.stores = allIds3;
-          this.addRelationDetail.stores = "[" + allIds3.join("][") + "]";
+          this.addRelationDetail.stores = '[' + allIds3.join('][') + ']';
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
           });
-          let newArray = _this.stores.filter(function (item) {
+          const newArray = _this.stores.filter(function(item) {
             return beforeIds.indexOf(item) == -1;
           });
           this.stores = newArray;
-          this.addRelationDetail.stores = "[" + newArray.join("][") + "]";
+          this.addRelationDetail.stores = '[' + newArray.join('][') + ']';
         }
       }
       if (value === 4) {
         const allIds4 = [];
-        let beforeIds = [];
+        const beforeIds = [];
         if (this.indeterminate4) {
           this.checkAll4 = false;
         } else {
@@ -2959,7 +3132,7 @@ export default {
         this.indeterminate4 = false;
         if (this.checkAll4) {
           if (this.stores != null) {
-            for (let val of this.stores) {
+            for (const val of this.stores) {
               allIds4.push(val);
             }
           }
@@ -2968,21 +3141,21 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.stores = allIds4;
-          this.addRelationDetail.stores = "[" + allIds4.join("][") + "]";
+          this.addRelationDetail.stores = '[' + allIds4.join('][') + ']';
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
           });
-          let newArray = _this.stores.filter(function (item) {
+          const newArray = _this.stores.filter(function(item) {
             return beforeIds.indexOf(item) == -1;
           });
           this.stores = newArray;
-          this.addRelationDetail.stores = "[" + newArray.join("][") + "]";
+          this.addRelationDetail.stores = '[' + newArray.join('][') + ']';
         }
       }
       if (value === 5) {
         const allIds5 = [];
-        let beforeIds = [];
+        const beforeIds = [];
         if (this.indeterminate5) {
           this.checkAll5 = false;
         } else {
@@ -2991,7 +3164,7 @@ export default {
         this.indeterminate5 = false;
         if (this.checkAll5) {
           if (this.stores != null) {
-            for (let val of this.stores) {
+            for (const val of this.stores) {
               allIds5.push(val);
             }
           }
@@ -3000,21 +3173,21 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.stores = allIds5;
-          this.addRelationDetail.stores = "[" + allIds5.join("][") + "]";
+          this.addRelationDetail.stores = '[' + allIds5.join('][') + ']';
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
           });
-          let newArray = _this.stores.filter(function (item) {
+          const newArray = _this.stores.filter(function(item) {
             return beforeIds.indexOf(item) == -1;
           });
           this.stores = newArray;
-          this.addRelationDetail.stores = "[" + newArray.join("][") + "]";
+          this.addRelationDetail.stores = '[' + newArray.join('][') + ']';
         }
       }
       if (value === 6) {
         const allIds6 = [];
-        let beforeIds = [];
+        const beforeIds = [];
         if (this.indeterminate6) {
           this.checkAll6 = false;
         } else {
@@ -3023,7 +3196,7 @@ export default {
         this.indeterminate6 = false;
         if (this.checkAll6) {
           if (this.stores != null) {
-            for (let val of this.stores) {
+            for (const val of this.stores) {
               allIds6.push(val);
             }
           }
@@ -3032,21 +3205,21 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.stores = allIds6;
-          this.addRelationDetail.stores = "[" + allIds6.join("][") + "]";
+          this.addRelationDetail.stores = '[' + allIds6.join('][') + ']';
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
           });
-          let newArray = _this.stores.filter(function (item) {
+          const newArray = _this.stores.filter(function(item) {
             return beforeIds.indexOf(item) == -1;
           });
           this.stores = newArray;
-          this.addRelationDetail.stores = "[" + newArray.join("][") + "]";
+          this.addRelationDetail.stores = '[' + newArray.join('][') + ']';
         }
       }
       if (value === 7) {
         const allIds7 = [];
-        let beforeIds = [];
+        const beforeIds = [];
         if (this.indeterminate7) {
           this.checkAll7 = false;
         } else {
@@ -3055,7 +3228,7 @@ export default {
         this.indeterminate7 = false;
         if (this.checkAll7) {
           if (this.stores != null) {
-            for (let val of this.stores) {
+            for (const val of this.stores) {
               allIds7.push(val);
             }
           }
@@ -3064,21 +3237,21 @@ export default {
             beforeIds.push(item.storeId);
           });
           this.stores = allIds7;
-          this.addRelationDetail.stores = "[" + allIds7.join("][") + "]";
+          this.addRelationDetail.stores = '[' + allIds7.join('][') + ']';
         } else {
           this.storeList[value].storeList.forEach((item) => {
             beforeIds.push(item.storeId);
           });
-          let newArray = _this.stores.filter(function (item) {
+          const newArray = _this.stores.filter(function(item) {
             return beforeIds.indexOf(item) == -1;
           });
           this.stores = newArray;
-          this.addRelationDetail.stores = "[" + newArray.join("][") + "]";
+          this.addRelationDetail.stores = '[' + newArray.join('][') + ']';
         }
       }
     },
     checkAllGroupChange(data) {
-      let sameArray = this.storeList[0].storeList.filter(function (item) {
+      const sameArray = this.storeList[0].storeList.filter(function(item) {
         return data.indexOf(item.storeId) != -1;
       });
       if (
@@ -3093,7 +3266,7 @@ export default {
       ) {
         this.indeterminate = true;
         this.checkAll = false;
-        this.addRelationDetail.stores = "[" + data.join("][") + "]";
+        this.addRelationDetail.stores = '[' + data.join('][') + ']';
       }
       if (sameArray.length === 0) {
         this.indeterminate = false;
@@ -3101,7 +3274,7 @@ export default {
       }
     },
     checkAllGroupChange1(data) {
-      let sameArray1 = this.storeList[1].storeList.filter(function (item) {
+      const sameArray1 = this.storeList[1].storeList.filter(function(item) {
         return data.indexOf(item.storeId) != -1;
       });
       if (
@@ -3116,7 +3289,7 @@ export default {
       ) {
         this.indeterminate1 = true;
         this.checkAll1 = false;
-        this.addRelationDetail.stores = "[" + data.join("][") + "]";
+        this.addRelationDetail.stores = '[' + data.join('][') + ']';
       }
       if (sameArray1.length == 0) {
         this.indeterminate1 = false;
@@ -3124,7 +3297,7 @@ export default {
       }
     },
     checkAllGroupChange2(data) {
-      let sameArray2 = this.storeList[2].storeList.filter(function (item) {
+      const sameArray2 = this.storeList[2].storeList.filter(function(item) {
         return data.indexOf(item.storeId) != -1;
       });
       if (
@@ -3139,7 +3312,7 @@ export default {
       ) {
         this.indeterminate2 = true;
         this.checkAll2 = false;
-        this.addRelationDetail.stores = "[" + data.join("][") + "]";
+        this.addRelationDetail.stores = '[' + data.join('][') + ']';
       }
       if (sameArray2.length == 0) {
         this.indeterminate2 = false;
@@ -3147,7 +3320,7 @@ export default {
       }
     },
     checkAllGroupChange3(data) {
-      let sameArray3 = this.storeList[3].storeList.filter(function (item) {
+      const sameArray3 = this.storeList[3].storeList.filter(function(item) {
         return data.indexOf(item.storeId) != -1;
       });
       if (
@@ -3162,7 +3335,7 @@ export default {
       ) {
         this.indeterminate3 = true;
         this.checkAll3 = false;
-        this.addRelationDetail.stores = "[" + data.join("][") + "]";
+        this.addRelationDetail.stores = '[' + data.join('][') + ']';
       }
       if (sameArray3.length === 0) {
         this.indeterminate3 = false;
@@ -3170,7 +3343,7 @@ export default {
       }
     },
     checkAllGroupChange4(data) {
-      let sameArray4 = this.storeList[4].storeList.filter(function (item) {
+      const sameArray4 = this.storeList[4].storeList.filter(function(item) {
         return data.indexOf(item.storeId) != -1;
       });
       if (
@@ -3185,7 +3358,7 @@ export default {
       ) {
         this.indeterminate4 = true;
         this.checkAll4 = false;
-        this.addRelationDetail.stores = "[" + data.join("][") + "]";
+        this.addRelationDetail.stores = '[' + data.join('][') + ']';
       }
       if (sameArray4.length === 0) {
         this.indeterminate4 = false;
@@ -3193,7 +3366,7 @@ export default {
       }
     },
     checkAllGroupChange5(data) {
-      let sameArray5 = this.storeList[5].storeList.filter(function (item) {
+      const sameArray5 = this.storeList[5].storeList.filter(function(item) {
         return data.indexOf(item.storeId) != -1;
       });
       if (
@@ -3208,7 +3381,7 @@ export default {
       ) {
         this.indeterminate5 = true;
         this.checkAll5 = false;
-        this.addRelationDetail.stores = "[" + data.join("][") + "]";
+        this.addRelationDetail.stores = '[' + data.join('][') + ']';
       }
       if (sameArray5.length === 0) {
         this.indeterminate5 = false;
@@ -3216,7 +3389,7 @@ export default {
       }
     },
     checkAllGroupChange6(data) {
-      let sameArray6 = this.storeList[6].storeList.filter(function (item) {
+      const sameArray6 = this.storeList[6].storeList.filter(function(item) {
         return data.indexOf(item.storeId) != -1;
       });
       if (
@@ -3231,7 +3404,7 @@ export default {
       ) {
         this.indeterminate6 = true;
         this.checkAll6 = false;
-        this.addRelationDetail.stores = "[" + data.join("][") + "]";
+        this.addRelationDetail.stores = '[' + data.join('][') + ']';
       }
       if (sameArray6.length === 0) {
         this.indeterminate6 = false;
@@ -3295,7 +3468,7 @@ export default {
       editCouponExchange(this.addRelationDetail)
         .then((res) => {
           this.modalEdit = false;
-          this.$Message.success("修改成功!");
+          this.$Message.success('修改成功!');
           this.getTableData();
         })
         .finally((res) => {
@@ -3350,14 +3523,14 @@ export default {
           this.addRelationDetail.effectiveEndTime
         )
       ) {
-        this.$Message.error("优惠券失效时间必须大于生效时间!");
+        this.$Message.error('优惠券失效时间必须大于生效时间!');
         return false;
       }
     },
     handleTemplateEdit() {
-      let _this = this;
-      if (this.addRelationDetail.couponName == "") {
-        this.$Message.error("请先关联一张优惠券模板!");
+      const _this = this;
+      if (this.addRelationDetail.couponName == '') {
+        this.$Message.error('请先关联一张优惠券模板!');
         return false;
       }
       this.$refs.editForm.validate((valid) => {
@@ -3368,27 +3541,27 @@ export default {
             _this.editCouponExchange();
           }
         } else {
-          _this.$Message.error("请完善信息!");
+          _this.$Message.error('请完善信息!');
         }
       });
     },
     handleTemplateAdd() {
-      let _this = this;
-      if (this.addRelationDetail.couponName == "") {
-        this.$Message.error("请先关联一张优惠券模板!");
+      const _this = this;
+      if (this.addRelationDetail.couponName == '') {
+        this.$Message.error('请先关联一张优惠券模板!');
         return false;
       }
       this.$refs.addForm.validate((valid) => {
         if (valid) {
           _this.extraValidator();
           _this.replaceTextByTag();
-          if (_this.tempModalType === "addTemplate") {
+          if (_this.tempModalType === 'addTemplate') {
             _this.createRelation();
-          } else if (_this.tempModalType === "addHdTemplate") {
+          } else if (_this.tempModalType === 'addHdTemplate') {
             _this.createHdRelation();
           }
         } else {
-          _this.$Message.error("请完善信息!");
+          _this.$Message.error('请完善信息!');
         }
       });
     },
@@ -3402,22 +3575,22 @@ export default {
       this.addRelationDetail.maxDiscountFee = currentRow.maxDiscountFee;
     },
     handleHdTemplateChange(currentRow, oldCurrentRow) {
-      const startIndex = currentRow.useRule.indexOf("满");
-      const endIndex = currentRow.useRule.indexOf("元");
+      const startIndex = currentRow.useRule.indexOf('满');
+      const endIndex = currentRow.useRule.indexOf('元');
       const minBuyFee = currentRow.useRule.slice(startIndex + 1, endIndex);
       this.addRelationDetail.useLimitType = currentRow.useLimitType; // 海鼎券的uselimitType从couponRemark解析出
       this.addRelationDetail.couponName = currentRow.couponName;
       this.addRelationDetail.couponType = currentRow.couponType;
       this.addRelationDetail.couponFee = currentRow.faceValue;
       this.addRelationDetail.maxDiscountFee = currentRow.maxDiscountFee;
-      if (currentRow.couponType === "DISCOUNT_COUPON") {
+      if (currentRow.couponType === 'DISCOUNT_COUPON') {
         this.addRelationDetail.couponFee =
           parseFloat(currentRow.discount) * 100;
       }
       this.addRelationDetail.hdActivityId = currentRow.activityId;
       this.addRelationDetail.minBuyFee = minBuyFee * 100;
-      this.addRelationDetail.effectiveStartTime = currentRow.beginDate; //海鼎活动开始时间
-      this.addRelationDetail.effectiveEndTime = currentRow.endDate; //海鼎活动结束时间
+      this.addRelationDetail.effectiveStartTime = currentRow.beginDate; // 海鼎活动开始时间
+      this.addRelationDetail.effectiveEndTime = currentRow.endDate; // 海鼎活动结束时间
     },
     effectiveStartTimeChange(value, date) {
       this.addRelationDetail.effectiveStartTime = value;
@@ -3428,12 +3601,12 @@ export default {
     createRelation() {
       this.modalViewLoading = true;
       // 添加的是系统券，填写来源为系统优惠券
-      this.addRelationDetail.source = "SMALL";
+      this.addRelationDetail.source = 'SMALL';
       createCouponExchange(this.addRelationDetail)
         .then((res) => {
           this.modalViewLoading = false;
           this.modalAdd = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
@@ -3443,12 +3616,12 @@ export default {
     createHdRelation() {
       this.modalViewLoading = true;
       // 添加的是海鼎券，填写来源为海鼎
-      this.addRelationDetail.source = "HD";
+      this.addRelationDetail.source = 'HD';
       createCouponExchange(this.addRelationDetail)
         .then((res) => {
           this.modalViewLoading = false;
           this.modalAdd = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
@@ -3475,14 +3648,14 @@ export default {
       this.showStoreList = false;
       this.stores = [];
       this.getTemplateTableData();
-      this.tempModalType = "addTemplate";
+      this.tempModalType = 'addTemplate';
       this.modalAdd = true;
     },
     addHdCouponTemplate() {
       this.showStoreList = false;
       this.stores = [];
       this.getHdTemplateTableData();
-      this.tempModalType = "addHdTemplate";
+      this.tempModalType = 'addHdTemplate';
       this.modalAdd = true;
     },
     handleView(params) {
@@ -3496,19 +3669,19 @@ export default {
     relationStore() {
       if (
         this.addRelationDetail.stores === null ||
-        this.addRelationDetail.stores === ""
+        this.addRelationDetail.stores === ''
       ) {
-        return "全部门店";
+        return '全部门店';
       }
       const ids = this.addRelationDetail.stores
         .substring(1, this.addRelationDetail.stores.length - 1)
-        .split("][");
-      let list = this.storeListData;
-      let str = "";
+        .split('][');
+      const list = this.storeListData;
+      let str = '';
       if (list.length > 0) {
         ids.forEach((id) => {
           const item = list.find((item) => item.storeId == id);
-          str += item.storeName + ",";
+          str += item.storeName + ',';
         });
         return str.substring(0, str.length - 1);
       }
@@ -3521,7 +3694,7 @@ export default {
     },
     maxDiscountFeeInputNumberOnchange(value) {
       this.addRelationDetail.maxDiscountFee = yuanToFenNumber(value);
-    },
+    }
     // 批量删除-单行删除内部也是调用此方法
     // deleteTable(ids) {
     //   this.tempTableLoading = true;
@@ -3542,7 +3715,7 @@ export default {
     //       this.tempTableLoading = false;
     //     });
     // }
-  },
+  }
 };
 </script>
 

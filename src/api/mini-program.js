@@ -3,50 +3,50 @@ const $http = Vue.prototype.$http;
 const $imgService = Vue.prototype.$imgService;
 const $exporService = Vue.prototype.$exporService;
 
-//获取首页头部订单数据
+// 获取首页头部订单数据
 export const getWaitOrder = () => {
   return $http.request({
     url: '/minapp/index/statistics/wait-order',
-    method: 'get',
+    method: 'get'
   });
 };
 
-//获取门店排行 
+// 获取门店排行
 export const storeRanking = (rankingType) => {
   return $http.request({
     url: `/minapp/index/statistics/store-ranking-total?rankingType=${rankingType}`,
-    method: 'get',
+    method: 'get'
   });
 };
 
-//获取订单list 
+// 获取订单list
 export const getOrderTotal = () => {
   return $http.request({
     url: '/minapp/index/statistics/select-order-total',
-    method: 'get',
+    method: 'get'
   });
 };
 
-//获取点赞排行 
+// 获取点赞排行
 export const productRanking = (data) => {
   return $http.request({
     url: `/minapp/index/statistics/product-ranking-total?rankingType=${data.rankingType}`,
     method: 'get',
     headers: {
       'page': data.page,
-      'rows': data.rows,
+      'rows': data.rows
     }
   });
 };
 
-//规格商品排行 
+// 规格商品排行
 export const productStanardRanking = (data) => {
   return $http.request({
     url: `/minapp/index/statistics/product-stanard/sale-ranking?rankingType=${data.rankingType}&beginDate=${data.beginDate}&endDate=${data.endDate}&productName=${data.productName}&productType=${data.productType ? data.productType : ''}`,
     method: 'get',
     headers: {
       'page': data.page,
-      'rows': data.rows,
+      'rows': data.rows
     }
   });
 };
@@ -208,7 +208,7 @@ export const getStorePages = (data) => {
 export const getAreaStorePages = () => {
   return $http.request({
     url: '/minapp/stores/area',
-    method: 'get',
+    method: 'get'
   });
 };
 
@@ -772,7 +772,7 @@ export const editActivities = (data) => {
     method: 'put'
   });
 };
-//===================预售活动
+// ===================预售活动
 // 根据条件分页查询拼团活动管理列表
 export const getPresellPages = (data) => {
   return $http.request({
@@ -804,7 +804,7 @@ export const editPresell = (data) => {
     method: 'put'
   });
 };
-//根据id查询商品规格
+// 根据id查询商品规格
 export const getGoodsStandard = (data) => {
   return $http.request({
     url: '/minapp/product-standards/' + data.standardId,
@@ -1021,19 +1021,19 @@ export const userSeckillStatistics = (data) => {
   });
 };
 
-// coupon/statistics/statistics  积分统计 
+// coupon/statistics/statistics  积分统计
 export const integralStatistics = (data) => {
   return Vue.prototype.$http.request({
     url: `coupon/statistics/statistics?beginDate=${data.beginDate}&endDate=${data.endDate}`,
     method: 'get',
     headers: {
       'page': data.page,
-      'rows': data.rows,
+      'rows': data.rows
     }
   });
 };
 
-//发券数据统计
+// 发券数据统计
 export const getSendCouponPages = (data) => {
   return $http.request({
     url: 'coupon/statistics/send-coupon',
@@ -1046,7 +1046,7 @@ export const getSendCouponPages = (data) => {
   });
 };
 
-//用券数据统计 /coupon/statistics/use-coupon
+// 用券数据统计 /coupon/statistics/use-coupon
 export const getUseCouponPages = (data) => {
   return $http.request({
     url: '/coupon/statistics/use-coupon',
@@ -1059,11 +1059,11 @@ export const getUseCouponPages = (data) => {
   });
 };
 
-//发券数据列表/coupon/statistics/get/comboBoxs
+// 发券数据列表/coupon/statistics/get/comboBoxs
 export const getComboBoxs = () => {
   return Vue.prototype.$http.request({
     url: `/coupon/statistics/get/comboBoxs`,
-    method: 'get',
+    method: 'get'
     // headers: {
     //   'page': data.page,
     //   'rows': data.rows,
@@ -1071,7 +1071,7 @@ export const getComboBoxs = () => {
   });
 };
 
-//分享赚商品数据统计 /minapp/share/prod/share-total
+// 分享赚商品数据统计 /minapp/share/prod/share-total
 export const shareProdStatistics = (data) => {
   return Vue.prototype.$http.request({
     url: `/minapp/share/prod/share-total?productName=${data.productName}&beginDate=${data.beginDate}&endDate=${data.endDate}`,
@@ -1085,7 +1085,7 @@ export const shareProdStatistics = (data) => {
   });
 };
 
-//分享赚用户数据统计 /minapp/share/user/share-total
+// 分享赚用户数据统计 /minapp/share/user/share-total
 export const shareUserStatistics = (data) => {
   return Vue.prototype.$http.request({
     url: `/minapp/share/user/share-total?nickName=${data.nickName}&deptName=${data.deptName}&phone=${data.phone}`,
@@ -1098,7 +1098,7 @@ export const shareUserStatistics = (data) => {
     }
   });
 };
-//分享赚佣金明细数据统计/minapp/award-amount/detail-total
+// 分享赚佣金明细数据统计/minapp/award-amount/detail-total
 export const shareawardAmountDetailTotal = (data) => {
   return Vue.prototype.$http.request({
     url: `/minapp/award-amount/detail-total`,
@@ -1112,31 +1112,31 @@ export const shareawardAmountDetailTotal = (data) => {
     }
   });
 };
-//分佣金数据统计 /minapp/share/user/share-total
+// 分佣金数据统计 /minapp/share/user/share-total
 export const commissionStatistics = (data) => {
   return Vue.prototype.$http.request({
     url: `/minapp/commission-data/total?beginDate=${data.beginDate}&endDate=${data.endDate}`,
-    method: 'get',
+    method: 'get'
   });
 };
 
-//分佣结算据统计 /minapp/settle-data/total
+// 分佣结算据统计 /minapp/settle-data/total
 export const commissionSettleData = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/settle-data/total?beginDate=${data.beginDate ? data.beginDate : ""}&endDate=${data.endDate ? data.endDate : ""}`,
-    method: 'get',
+    url: `/minapp/settle-data/total?beginDate=${data.beginDate ? data.beginDate : ''}&endDate=${data.endDate ? data.endDate : ''}`,
+    method: 'get'
   });
 };
 
-//分佣订单据统计 /minapp/order-data/total
+// 分佣订单据统计 /minapp/order-data/total
 export const commissionOrderData = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/order-data/total?beginDate=${data.beginDate ? data.beginDate : ""}&endDate=${data.endDate ? data.endDate : ""}`,
-    method: 'get',
+    url: `/minapp/order-data/total?beginDate=${data.beginDate ? data.beginDate : ''}&endDate=${data.endDate ? data.endDate : ''}`,
+    method: 'get'
   });
 };
 
-//分佣金明细统计 /minapp/award-amount/detail-total
+// 分佣金明细统计 /minapp/award-amount/detail-total
 export const awardAmountDetail = (data) => {
   return Vue.prototype.$http.request({
     url: '/minapp/award-amount/detail-total',
@@ -1151,27 +1151,27 @@ export const awardAmountDetail = (data) => {
   });
 };
 
-// 佣金数据统计趋势 
+// 佣金数据统计趋势
 export const commissionDataTotalTrend = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/commission-data/total-trend?queryMonth=${data ? data : ""}`,
-    method: 'get',
+    url: `/minapp/commission-data/total-trend?queryMonth=${data || ''}`,
+    method: 'get'
   });
 };
 
 // 订单数据统计趋势 /minapp/order-data/total-trend
 export const orderDataTotalTrend = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/order-data/total-trend?queryMonth=${data ? data : ""}`,
-    method: 'get',
+    url: `/minapp/order-data/total-trend?queryMonth=${data || ''}`,
+    method: 'get'
   });
 };
 
 // 结算数据统计趋势 /minapp/settle-data/total-trend
 export const settleDataTotalTrend = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/settle-data/total-trend?queryMonth=${data ? data : ""}`,
-    method: 'get',
+    url: `/minapp/settle-data/total-trend?queryMonth=${data || ''}`,
+    method: 'get'
   });
 };
 
@@ -1326,7 +1326,7 @@ export const systemDataStatistics = (data) => {
   });
 };
 
-//会员管理 /minapp/user/users-info
+// 会员管理 /minapp/user/users-info
 export const getUsersInfo = (data) => {
   return $http.request({
     url: '/minapp/user/users-info',
@@ -1334,7 +1334,7 @@ export const getUsersInfo = (data) => {
     method: 'post',
     headers: {
       'page': data.page,
-      'rows': data.rows,
+      'rows': data.rows
     }
   });
 };
@@ -2362,14 +2362,13 @@ export const getSystemSettingPages = (data) => {
   });
 };
 
-// 查询父级分类 
+// 查询父级分类
 export const getParentInfos = () => {
   return $http.request({
     url: 'minapp/system-setting-categories/get-parent/infos',
     method: 'get'
   });
 };
-
 
 // 查询系统参数位详情
 export const getSystemSetting = ({
@@ -2783,7 +2782,7 @@ export const editSignReward = (data) => {
   });
 };
 
-//获取关键字列表 /minapp/product-keywords/pages
+// 获取关键字列表 /minapp/product-keywords/pages
 export const getKeywordsPages = (data) => {
   return $http.request({
     url: '/minapp/product-keywords/pages',
@@ -2796,16 +2795,16 @@ export const getKeywordsPages = (data) => {
   });
 };
 
-//添加关键词 /minapp/product-keywords/create
+// 添加关键词 /minapp/product-keywords/create
 export const createKeywords = (data) => {
   return $http.request({
     url: '/minapp/product-keywords/create',
     data,
-    method: 'post',
+    method: 'post'
   });
 };
 
-//删除关键词 deleteProduct
+// 删除关键词 deleteProduct
 export const deleteKeywords = ({
   ids
 }) => {
@@ -2815,7 +2814,7 @@ export const deleteKeywords = ({
   });
 };
 
-//更新关键词 /minapp/product-keywords/update/{id}
+// 更新关键词 /minapp/product-keywords/update/{id}
 export const updateKeywords = (data) => {
   return $http.request({
     url: '/minapp/product-keywords/update/' + data.id,
@@ -2824,7 +2823,7 @@ export const updateKeywords = (data) => {
   });
 };
 
-//板块活动分享设置 /minapp/plate-activity-share-setting/pages
+// 板块活动分享设置 /minapp/plate-activity-share-setting/pages
 export const getShareSettingPages = (data) => {
   return $http.request({
     url: '/minapp/plate-activity-share-setting/pages',
@@ -2836,16 +2835,16 @@ export const getShareSettingPages = (data) => {
     }
   });
 };
-//添加板块活动分享设置 /minapp/plate-activity-share-setting/create
+// 添加板块活动分享设置 /minapp/plate-activity-share-setting/create
 export const createShareSettingPages = (data) => {
   return $http.request({
     url: '/minapp/plate-activity-share-setting/create',
     data,
-    method: 'post',
+    method: 'post'
   });
 };
 
-//更新板块活动分享设置 /minapp/plate-activity-share-setting/update/
+// 更新板块活动分享设置 /minapp/plate-activity-share-setting/update/
 export const updateShareSetting = (data) => {
   return $http.request({
     url: '/minapp/plate-activity-share-setting/update/' + data.id,
@@ -2854,7 +2853,7 @@ export const updateShareSetting = (data) => {
   });
 };
 
-//删除板块活动分享设置 /minapp/plate-activity-share-setting/
+// 删除板块活动分享设置 /minapp/plate-activity-share-setting/
 export const deleteShareSetting = ({
   ids
 }) => {
@@ -2864,7 +2863,7 @@ export const deleteShareSetting = ({
   });
 };
 
-//查询新品上市活动列表 /minapp/activity-new-products/pages
+// 查询新品上市活动列表 /minapp/activity-new-products/pages
 export const getNewProductsPages = (data) => {
   return $http.request({
     url: '/minapp/activity-new-products/pages',
@@ -2878,16 +2877,16 @@ export const getNewProductsPages = (data) => {
     }
   });
 };
-//添加新品上市活动 /minapp/activity-new-products/create
+// 添加新品上市活动 /minapp/activity-new-products/create
 export const createNewProducts = (data) => {
   return $http.request({
     url: '/minapp/activity-new-products/create',
     data,
-    method: 'post',
+    method: 'post'
   });
 };
 
-//根据ID 修改新品上市活动 /minapp/activity-new-products/update/{id}
+// 根据ID 修改新品上市活动 /minapp/activity-new-products/update/{id}
 export const updateNewProducts = (data) => {
   return $http.request({
     url: '/minapp/activity-new-products/update/' + data.id,
@@ -2895,7 +2894,7 @@ export const updateNewProducts = (data) => {
     method: 'put'
   });
 };
-//根据id 删除新品上市活动
+// 根据id 删除新品上市活动
 export const deleteNewProducts = ({
   ids
 }) => {
@@ -2905,7 +2904,7 @@ export const deleteNewProducts = ({
   });
 };
 
-//根据id查询新品上市活动关联 /minapp/activity-new-products/{id}/relation
+// 根据id查询新品上市活动关联 /minapp/activity-new-products/{id}/relation
 export const getNewProductsRelevance = (id) => {
   return $http.request({
     url: `/minapp/activity-new-products/${id}/relation`,
@@ -2913,15 +2912,15 @@ export const getNewProductsRelevance = (id) => {
   });
 };
 
-//添加新品上市活动关联 /minapp/activity-new-products/create/relation
+// 添加新品上市活动关联 /minapp/activity-new-products/create/relation
 export const createNewProductsRelevance = (data) => {
   return $http.request({
     url: '/minapp/activity-new-products/create/relation',
     data,
-    method: 'post',
+    method: 'post'
   });
 };
-//更新新品上市活动关联 /minapp/activity-new-products/update/relation/{id}
+// 更新新品上市活动关联 /minapp/activity-new-products/update/relation/{id}
 export const updateNewProductsRelevance = (data) => {
   return $http.request({
     url: '/minapp/activity-new-products/update/relation/' + data.id,
@@ -2930,7 +2929,7 @@ export const updateNewProductsRelevance = (data) => {
   });
 };
 
-//查询统一活动列表 
+// 查询统一活动列表
 export const getUnifyActivityPages = (data) => {
   return $http.request({
     url: '/minapp/activity-setting/pages',
@@ -2945,16 +2944,16 @@ export const getUnifyActivityPages = (data) => {
   });
 };
 
-//添加统一活动 
+// 添加统一活动
 export const createUnifyActivity = (data) => {
   return $http.request({
     url: '/minapp/activity-setting/create',
     data,
-    method: 'post',
+    method: 'post'
   });
 };
 
-//根据ID 修改活动 /minapp/activity-new-products/update/{id}
+// 根据ID 修改活动 /minapp/activity-new-products/update/{id}
 export const updateUnifyActivity = (data) => {
   return $http.request({
     url: '/minapp/activity-setting/update/' + data.id,
@@ -2963,7 +2962,7 @@ export const updateUnifyActivity = (data) => {
   });
 };
 
-//根据id查询统一活动关联 
+// 根据id查询统一活动关联
 export const getUnifyActivity = (id) => {
   return $http.request({
     url: `/minapp/activity-setting/${id}/relation`,
@@ -2971,7 +2970,7 @@ export const getUnifyActivity = (id) => {
   });
 };
 
-//更新统一活动关联 
+// 更新统一活动关联
 export const deleteUnifyActivityRelevance = (data) => {
   return $http.request({
     url: '/minapp/activity-setting-relation/update-status/' + data.id,
@@ -2980,25 +2979,25 @@ export const deleteUnifyActivityRelevance = (data) => {
   });
 };
 
-//添加统一活动关联券
+// 添加统一活动关联券
 export const createUnifyActivityRelevance = (data) => {
   return $http.request({
     url: '/minapp/activity-setting-relation/create',
     data,
-    method: 'post',
+    method: 'post'
   });
 };
 
-//添加集字名称 /minapp/collect-word-setting/create
+// 添加集字名称 /minapp/collect-word-setting/create
 export const createWollectWordRelevance = (data) => {
   return $http.request({
     url: '/minapp/collect-word-setting/create',
     data,
-    method: 'post',
+    method: 'post'
   });
 };
 
-//更删除统一活动字配置
+// 更删除统一活动字配置
 export const deleteWollectWordRelevance = (data) => {
   return $http.request({
     url: '/minapp/collect-word-setting/' + data.id,
@@ -3015,7 +3014,7 @@ export const updateWollectWordRelevance = (data) => {
   });
 };
 
-// 查询集字领取记录分页列表 
+// 查询集字领取记录分页列表
 export const getCollectWordPages = (data) => {
   return $http.request({
     url: '/minapp/collect-word-record/pages',
@@ -3037,15 +3036,15 @@ export const getCollectWordRecord = () => {
   });
 };
 
-// //通过phone 发送集字 
+// //通过phone 发送集字
 export const sendCollectWord = (data) => {
   return $http.request({
     url: `/minapp/collect-word-record/send?phones=${data.phones}&id=${data.id}&quantity=${data.quantity}`,
-    method: 'post',
+    method: 'post'
   });
 };
 
-//集字活动数据统计 /coupon/statistics/collect-word-activity
+// 集字活动数据统计 /coupon/statistics/collect-word-activity
 export const getCollectWordStatistics = () => {
   return $http.request({
     url: `/coupon/statistics/collect-word-activity`,
@@ -3057,20 +3056,20 @@ export const setUserClass = (data) => {
   return $http.request({
     url: `/minapp/user/user-class/${data.id}?userClass=${data.userClass}`,
     data,
-    method: 'post',
+    method: 'post'
   });
 };
 
-// 员工特权 
+// 员工特权
 export const setStaff = (data) => {
   return $http.request({
     url: `/minapp/user/user-type/${data.id}?userType=${data.userType}`,
     data,
-    method: 'post',
+    method: 'post'
   });
 };
 
-//员工管理列表 /minapp/user/users-info
+// 员工管理列表 /minapp/user/users-info
 export const getStaffManage = (data) => {
   return $http.request({
     url: '/minapp/staff/pages',
@@ -3078,21 +3077,21 @@ export const getStaffManage = (data) => {
     method: 'post',
     headers: {
       'page': data.page,
-      'rows': data.rows,
+      'rows': data.rows
     }
   });
 };
 
-//员工审核 
+// 员工审核
 export const StaffAudit = (data) => {
   return $http.request({
     url: `/minapp/staff/audit/${data.id}?auditStatus=${data.checkStatus}`,
     data,
-    method: 'post',
+    method: 'post'
   });
 };
 
-// 修改 
+// 修改
 export const staffUpdate = (data) => {
   return $http.request({
     url: '/minapp/staff/update/' + data.id,
@@ -3101,7 +3100,7 @@ export const staffUpdate = (data) => {
   });
 };
 
-//服务满意度调研 
+// 服务满意度调研
 export const serviceFeedback = (data) => {
   return $http.request({
     url: `/minapp/store-service-feedback/pages`,
@@ -3124,7 +3123,7 @@ export const userSourceRecordTotal = (data) => {
   });
 };
 
-//门店物料统计 /minapp/store-materiel/pages
+// 门店物料统计 /minapp/store-materiel/pages
 export const getStoreMateriel = (data) => {
   return $http.request({
     url: `/minapp/store-materiel/user_total`,
@@ -3139,21 +3138,21 @@ export const getStoreMateriel = (data) => {
   });
 };
 
-//添加门店物料 /minapp/store-materiel/create
+// 添加门店物料 /minapp/store-materiel/create
 export const storeMaterielCreate = (data) => {
   return $http.request({
     url: '/minapp/store-materiel/create',
     data,
-    method: 'post',
+    method: 'post'
   });
 };
 
-//修改门店物料 /minapp/store-materiel/update/{id}
+// 修改门店物料 /minapp/store-materiel/update/{id}
 export const storeMaterielUpdate = (data) => {
   return $http.request({
     url: '/minapp/store-materiel/update/' + data.id,
     data,
-    method: 'put',
+    method: 'put'
   });
 };
 

@@ -395,7 +395,6 @@
                 <Select
                   v-model="advertisementDetail.advertmentType"
                   style="width: 200px"
-                  disabled
                 >
                   <Option
                     v-for="(item, index) in advertmentList"
@@ -782,22 +781,22 @@ export default {
           key: "advertmentImage",
           render: (h, params, vm) => {
             const { row } = params;
-            // if (row.advertmentType === "IMAGE") {
+            if (row.advertmentType === "IMAGE") {
               const str = (
                 <img src={row.advertmentImage} height="60" width="100" />
               );
               return <div>{str}</div>;
-            // } else {
-            //   return (
-            //     <div>
-            //       <img
-            //         src="http://resource.shuiguoshule.com.cn/product_image/2020-09-03/KKXxT02hdey9P4buqx3d.jpg"
-            //         height="60"
-            //         width="100"
-            //       />
-            //     </div>
-            //   );
-            // }
+            } else {
+              return (
+                <div>
+                  <img
+                    src="http://resource.shuiguoshule.com.cn/product_image/2020-09-03/KKXxT02hdey9P4buqx3d.jpg"
+                    height="60"
+                    width="100"
+                  />
+                </div>
+              );
+            }
           },
         },
         {

@@ -260,8 +260,8 @@ export default {
   },
   created() {
     this.getTableData();
-    this.getAllSalesman();
-  },
+    // this.getAllSalesman();
+  }, 
   mounted() {},
   methods: {
     getTableData() {

@@ -54,8 +54,9 @@
                 :key="`orderType-col-${item.value}`"
                 :value="item.value"
                 class="ptb2-5"
-                >{{ item.label }}</Option
               >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.commentScore"
@@ -69,8 +70,9 @@
                 :key="`orderType-col-${item.value}`"
                 :value="item.value"
                 class="ptb2-5"
-                >{{ item.label }}</Option
               >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.orderType"
@@ -84,8 +86,9 @@
                 :key="`orderType-col-${item.value}`"
                 :value="item.value"
                 class="ptb2-5"
-                >{{ item.label }}</Option
               >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.istop"
@@ -99,8 +102,9 @@
                 :key="`orderType-col-${item.value}`"
                 :value="item.value"
                 class="ptb2-5"
-                >{{ item.label }}</Option
               >
+                {{ item.label }}
+              </Option>
             </Select>
             <DatePicker
               v-model="searchRowData.beginDate"
@@ -168,156 +172,190 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">门店ID:</i-col>
-              <i-col span="18">{{ evaluateDetail.storeId }}</i-col>
+              <i-col span="6"> 门店ID: </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.storeId }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">门店Code:</i-col>
-              <i-col span="18">{{ evaluateDetail.storeCode }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="12">
-            <Row>
-              <i-col span="6">门店名称:</i-col>
-              <i-col span="18">{{ evaluateDetail.storeName }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row>
-              <i-col span="6">用户ID:</i-col>
-              <i-col span="18">{{ evaluateDetail.userId }}</i-col>
+              <i-col span="6"> 门店Code: </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.storeCode }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">用户昵称:</i-col>
-              <i-col span="18">{{ evaluateDetail.nickName }}</i-col>
+              <i-col span="6"> 门店名称: </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.storeName }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">手机号码:</i-col>
-              <i-col span="18">{{ evaluateDetail.phone }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="12">
-            <Row>
-              <i-col span="6">所得积分:</i-col>
-              <i-col span="18">{{ evaluateDetail.point }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row>
-              <i-col span="6">商品名称组合:</i-col>
-              <i-col span="18">{{ evaluateDetail.productNames }}</i-col>
+              <i-col span="6"> 用户ID: </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.userId }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">订单编号:</i-col>
-              <i-col span="18">{{ evaluateDetail.orderCode }}</i-col>
+              <i-col span="6"> 用户昵称: </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.nickName }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">骑手评价:</i-col>
-              <i-col
-                v-if="evaluateDetail.deliveryComment === 'GOOD'"
-                span="18"
-                >{{ "超赞" }}</i-col
-              >
+              <i-col span="6"> 手机号码: </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.phone }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="6"> 所得积分: </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.point }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="6"> 商品名称组合: </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.productNames }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="12">
+            <Row>
+              <i-col span="6"> 订单编号: </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.orderCode }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row>
+              <i-col span="6"> 骑手评价: </i-col>
+              <i-col v-if="evaluateDetail.deliveryComment === 'GOOD'" span="18">
+                {{ "超赞" }}
+              </i-col>
               <i-col
                 v-else-if="evaluateDetail.deliveryComment === 'GENERAL'"
                 span="18"
-                >{{ "一般" }}</i-col
               >
+                {{ "一般" }}
+              </i-col>
               <i-col
                 v-else-if="evaluateDetail.deliveryComment === 'NEGATIVE'"
                 span="18"
-                >{{ "很差" }}</i-col
               >
-              <i-col v-else span="18">{{ "N/A" }}</i-col>
+                {{ "很差" }}
+              </i-col>
+              <i-col v-else span="18">
+                {{ "N/A" }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">门店评价:</i-col>
-              <i-col span="18">{{ evaluateDetail.commentScore }}</i-col>
+              <i-col span="6"> 门店评价: </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.commentScore }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">是否置顶:</i-col>
-              <i-col v-if="evaluateDetail.istop === 'YES'" span="18">{{
-                "是"
-              }}</i-col>
-              <i-col v-else span="18">{{ "否" }}</i-col>
+              <i-col span="6"> 是否置顶: </i-col>
+              <i-col v-if="evaluateDetail.istop === 'YES'" span="18">
+                {{ "是" }}
+              </i-col>
+              <i-col v-else span="18">
+                {{ "否" }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">状态:</i-col>
-              <i-col v-if="evaluateDetail.status === 'VIEW'" span="18">{{
-                "显示"
-              }}</i-col>
-              <i-col v-else span="18">{{ "隐藏" }}</i-col>
+              <i-col span="6"> 状态: </i-col>
+              <i-col v-if="evaluateDetail.status === 'VIEW'" span="18">
+                {{ "显示" }}
+              </i-col>
+              <i-col v-else span="18">
+                {{ "隐藏" }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">置顶时间:</i-col>
-              <i-col span="18">{{ evaluateDetail.topTime }}</i-col>
+              <i-col span="6"> 置顶时间: </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.topTime }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="22">
             <Row>
-              <i-col span="3">评价内容:</i-col>
-              <i-col span="18">{{ evaluateDetail.commentContent }}</i-col>
+              <i-col span="3"> 评价内容: </i-col>
+              <i-col span="18">
+                {{ evaluateDetail.commentContent }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="22">
             <Row>
-              <i-col span="3">历史评价:</i-col>
-              <i-col span="18">{{
-                evaluateDetail.historyCommentContent
-                  ? evaluateDetail.historyCommentContent
-                  : "N/A"
-              }}</i-col>
+              <i-col span="3"> 历史评价: </i-col>
+              <i-col span="18">
+                {{
+                  evaluateDetail.historyCommentContent
+                    ? evaluateDetail.historyCommentContent
+                    : "N/A"
+                }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">修改时间:</i-col>
-              <i-col span="18">{{
-                evaluateDetail.updateTime ? evaluateDetail.updateTime : "N/A"
-              }}</i-col>
+              <i-col span="6"> 修改时间: </i-col>
+              <i-col span="18">
+                {{
+                  evaluateDetail.updateTime ? evaluateDetail.updateTime : "N/A"
+                }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="20">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="6">评价图片:</i-col>
+              <i-col span="6"> 评价图片: </i-col>
               <i-col span="16">
                 <div
                   v-for="item in evaluateList"
@@ -339,7 +377,7 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
@@ -362,85 +400,106 @@
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">订单编号:</i-col>
-                <i-col span="18">{{ evaluateDetail.orderCode }}</i-col>
+                <i-col span="6"> 订单编号: </i-col>
+                <i-col span="18">
+                  {{ evaluateDetail.orderCode }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">下单门店:</i-col>
-                <i-col span="18">{{ evaluateDetail.storeName }}</i-col>
+                <i-col span="6"> 下单门店: </i-col>
+                <i-col span="18">
+                  {{ evaluateDetail.storeName }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">用户名称:</i-col>
-                <i-col span="18">{{ evaluateDetail.nickName }}</i-col>
+                <i-col span="6"> 用户名称: </i-col>
+                <i-col span="18">
+                  {{ evaluateDetail.nickName }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">骑手评价:</i-col>
+                <i-col span="6"> 骑手评价: </i-col>
                 <i-col
-                  span="18"
                   v-if="evaluateDetail.deliveryComment == 'GOOD'"
-                  >{{ "超赞" }}</i-col
-                >
-                <i-col
                   span="18"
+                >
+                  {{ "超赞" }}
+                </i-col>
+                <i-col
                   v-else-if="evaluateDetail.deliveryComment == 'GENERAL'"
-                  >{{ "一般" }}</i-col
-                >
-                <i-col
                   span="18"
-                  v-else-if="evaluateDetail.deliveryComment == 'NEGATIVE'"
-                  >{{ "很差" }}</i-col
                 >
-                <i-col span="18" v-else>{{ "N/A" }}</i-col>
+                  {{ "一般" }}
+                </i-col>
+                <i-col
+                  v-else-if="evaluateDetail.deliveryComment == 'NEGATIVE'"
+                  span="18"
+                >
+                  {{ "很差" }}
+                </i-col>
+                <i-col v-else span="18">
+                  {{ "N/A" }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">门店评价:</i-col>
-                <i-col span="18">{{ evaluateDetail.commentScore }}</i-col>
+                <i-col span="6"> 门店评价: </i-col>
+                <i-col span="18">
+                  {{ evaluateDetail.commentScore }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">评价内容:</i-col>
-                <i-col span="18">{{ evaluateDetail.commentContent }}</i-col>
+                <i-col span="6"> 评价内容: </i-col>
+                <i-col span="18">
+                  {{ evaluateDetail.commentContent }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">历史评价:</i-col>
-                <i-col span="18">{{
-                  evaluateDetail.historyCommentContent
-                    ? evaluateDetail.historyCommentContent
-                    : "N/A"
-                }}</i-col>
+                <i-col span="6"> 历史评价: </i-col>
+                <i-col span="18">
+                  {{
+                    evaluateDetail.historyCommentContent
+                      ? evaluateDetail.historyCommentContent
+                      : "N/A"
+                  }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">修改时间:</i-col>
-                <i-col span="18">{{
-                  evaluateDetail.updateTime ? evaluateDetail.updateTime : "N/A"
-                }}</i-col>
+                <i-col span="6"> 修改时间: </i-col>
+                <i-col span="18">
+                  {{
+                    evaluateDetail.updateTime
+                      ? evaluateDetail.updateTime
+                      : "N/A"
+                  }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
@@ -448,7 +507,7 @@
           <Row :gutter="8" type="flex" align="middle" class-name="mb10">
             <i-col span="20">
               <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                <i-col span="6">评价图片:</i-col>
+                <i-col span="6"> 评价图片: </i-col>
                 <i-col span="16">
                   <div
                     v-for="item in evaluateList"
@@ -499,13 +558,14 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
           @click="handleSubmit()"
-          >确定</Button
         >
+          确定
+        </Button>
       </div>
     </Modal>
     <Modal v-model="uploadVisible" title="图片预览">
@@ -770,7 +830,7 @@ export default {
     handleSubmit() {
       this.$refs.modalEdit.validate((valid) => {
         if (valid) {
-          let evaluateData = this.evaluateDetail;
+          const evaluateData = this.evaluateDetail;
           evaluateData.istop = "NO";
           this.replyEvaluate(evaluateData);
         } else {
@@ -831,7 +891,6 @@ export default {
           this.searchRowData.endDate
         ).format("YYYY-MM-DD HH:mm:ss");
       }
-
       getEvaluatePages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
@@ -854,12 +913,12 @@ export default {
       this.evaluateDetail.endDate = value;
     },
     handleSetTop(params) {
-      let evaluateData = _.cloneDeep(params.row);
+      const evaluateData = _.cloneDeep(params.row);
       evaluateData.istop = params.row.istop == "YES" ? "NO" : "YES";
       this.replyEvaluate(evaluateData);
     },
     handleSetSta(params) {
-      let evaluateData = _.cloneDeep(params.row);
+      const evaluateData = _.cloneDeep(params.row);
       evaluateData.status = params.row.status === "VIEW" ? "HIDE" : "VIEW";
       this.replyEvaluate(evaluateData);
     },
