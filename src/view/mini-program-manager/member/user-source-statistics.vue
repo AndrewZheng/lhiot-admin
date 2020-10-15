@@ -35,8 +35,8 @@
                 type="button"
                 @on-change="timeChange"
               >
-                <Radio label="今日"></Radio>
                 <Radio label="昨日"></Radio>
+                <Radio label="今日"></Radio>
                 <Radio label="最近7天"></Radio>
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
@@ -108,8 +108,8 @@
                 type="button"
                 @on-change="timeChangeMaterial"
               >
-                <Radio label="今日"></Radio>
                 <Radio label="昨日"></Radio>
+                <Radio label="今日"></Radio>
                 <Radio label="最近7天"></Radio>
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
@@ -440,8 +440,8 @@ export default {
       createLoading: false,
       topStatus: "source",
       totalPage: 0,
-      button: "今日",
-      buttonMaterial: "今日",
+      button: "昨日",
+      buttonMaterial: "昨日",
       tableData: [],
       tableDataMaterial: [],
       storeList: [],
@@ -636,7 +636,7 @@ export default {
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var today = `${year}-${month}-${day}`;
-      if (value === "昨日") {
+      if (value === "昨日" || this.button === "昨日") {
         let date = new Date();
         date.setDate(date.getDate() - 1);
         var year = date.getFullYear();
@@ -647,16 +647,6 @@ export default {
         this.searchRowData.endDate = yesterday;
       }
       if (value === "今日") {
-        let date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
-        this.searchRowData.beginDate = today;
-        this.searchRowData.endDate = today;
-      }
-      if (this.button === "今日") {
         let date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
@@ -707,7 +697,7 @@ export default {
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var today = `${year}-${month}-${day}`;
-      if (value === "昨日") {
+      if (value === "昨日" || this.buttonMaterial === "昨日") {
         let date = new Date();
         date.setDate(date.getDate() - 1);
         var year = date.getFullYear();
@@ -717,7 +707,7 @@ export default {
         this.searchRowDataMaterial.createTimeBegin = yesterday;
         this.searchRowDataMaterial.createTimeEnd = yesterday;
       }
-      if (value === "今日" || this.buttonMaterial === "今日") {
+      if (value === "今日") {
         let date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
@@ -883,7 +873,7 @@ export default {
       this.getTableData();
     },
     handleSearchMaterial() {
-      this.searchRowData.page = 1;
+      this.searchRowDataMaterial.page = 1;
       this.getTableDataMaterial();
     },
     handleClearMaterial() {
