@@ -142,14 +142,14 @@
             >
               <Icon type="md-add" />&nbsp;添加
             </Button>
-            <!-- <Button
+            <Button
             :loading="downloadLoading"
             class="search-btn"
             type="warning"
             @click="handleDownload"
           >
             <Icon type="md-download" />导出
-          </Button> -->
+          </Button>
             <!-- <Poptip
             confirm
             placement="bottom"
