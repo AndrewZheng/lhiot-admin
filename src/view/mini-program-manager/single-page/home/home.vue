@@ -44,95 +44,31 @@
         </div>
       </Card>
     </Row>
+    <!-- tab分类 -->
     <Row :gutter="20" style="margin-top: 20px">
-      <i-col span="6">
-        <Card shadow>
-          <div class="topStore">
-            <h3>门店排行</h3>
-            <div class="tabStore">
-              <span
-                data-index="COUNT_ORDER_AMOUNT"
-                :class="storeStatus == 'COUNT_ORDER_AMOUNT' ? 'checked' : ''"
-                @click="storeDataChange"
-                >今日销售额</span
-              >
-              <span
-                data-index="COUNT_ORDER"
-                :class="storeStatus == 'COUNT_ORDER' ? 'checked' : ''"
-                @click="storeDataChange"
-                >今日订单数</span
-              >
-            </div>
-          </div>
-          <div
-            v-for="(item, i) in storeRank"
-            :key="`items-${i}`"
-            class="storeRanking"
-          >
-            <div>
-              <b>{{ i + 1 }}</b>
-              <span>{{ item.storeName }}</span>
-            </div>
-            <p v-if="storeStatus == 'COUNT_ORDER_AMOUNT'">
-              {{ item.sumAmount }}
-            </p>
-            <p v-else>{{ item.totalCount }}</p>
-          </div>
-        </Card>
-      </i-col>
-      <i-col span="18">
-        <Card shadow>
-          <tables
-            ref="tables"
-            v-model="tableData"
-            :columns="columns"
-            :loading="loading"
-            :search-area-column="18"
-            :operate-area-column="6"
-            editable
-            searchable
-            border
-            search-place="top"
-          >
-            <div slot="searchCondition">
-              <div style="display: flex; align-items: center">
-                <h3 style="display: inline-block">商品点赞/点踩排行</h3>
-                <div class="seniority">
-                  <span
-                    data-index="PRAISE"
-                    :class="seniorityStatus == 'PRAISE' ? 'checked' : ''"
-                    @click="productDataChange"
-                    >按点赞排行</span
-                  >
-                  <span
-                    data-index="TREAD"
-                    :class="seniorityStatus == 'TREAD' ? 'checked' : ''"
-                    @click="productDataChange"
-                    >按点踩排行</span
-                  >
-                </div>
-              </div>
-            </div>
-          </tables>
-          <div style="margin: 10px; overflow: hidden">
-            <Row type="flex" justify="end">
-              <Page
-                :total="total"
-                :current="searchRowData.page"
-                show-sizer
-                show-total
-                @on-change="changePage"
-                @on-page-size-change="changePageSize"
-              ></Page>
-            </Row>
-          </div>
-        </Card>
-      </i-col>
-    </Row>
-    <Row :gutter="20" style="margin-top: 20px">
-      <Card shadow>
+      <div class="tabChange">
+        <b
+          data-index="productStanard"
+          @click="assistDataChange"
+          :class="topStatus == 'productStanard' ? 'hot' : ''"
+          >商品规格销售排行</b
+        >
+        <b
+          data-index="productSell"
+          @click="assistDataChange"
+          :class="topStatus == 'productSell' ? 'hot' : ''"
+          >门店商品销售统计</b
+        >
+        <b
+          data-index="productEvaluate"
+          @click="assistDataChange"
+          :class="topStatus == 'productEvaluate' ? 'hot' : ''"
+          >商品点赞/点踩排行</b
+        >
+      </div>
+      <Card shadow v-show="topStatus == 'productStanard'">
         <tables
-          ref="tables"
+          ref="goodsTableData"
           v-model="goodsTableData"
           :columns="goodsColumns"
           :loading="loading"
@@ -144,101 +80,87 @@
           search-place="top"
         >
           <div slot="searchCondition">
-            <div style="display: flex; align-items: center">
-              <h3 style="display: inline-block">商品规格销售排行</h3>
-              <div class="seniority">
-                <span
-                  data-index="SALE_COUNT"
-                  :class="saleStatus == 'SALE_COUNT' ? 'checked' : ''"
-                  @click="saleDataChange"
-                  >按销售数排</span
-                >
-                <span
-                  data-index="SALE_AMOUNT"
-                  :class="saleStatus == 'SALE_AMOUNT' ? 'checked' : ''"
-                  @click="saleDataChange"
-                  >按销售额排</span
-                >
-              </div>
-              <Input
-                v-model="goodsSearchRowData.productName"
-                placeholder="商品名称"
-                class="search-input mr5"
-                style="width: 160px; margin-left: 30px"
-                clearable
-              ></Input>
-              <Select
-                v-model="goodsSearchRowData.productType"
-                class="ml5"
-                placeholder="规格类型"
-                style="width: 130px"
-                clearable
+            <RadioGroup v-model="button" type="button" @on-change="timeChange">
+              <Radio label="今日"></Radio>
+              <Radio label="昨日"></Radio>
+              <Radio label="最近7天"></Radio>
+              <Radio label="最近30天"></Radio>
+              <Radio label="自定义时间"></Radio>
+            </RadioGroup>
+            <DatePicker
+              v-model="goodsSearchRowData.beginDate"
+              format="yyyy-MM-dd"
+              type="date"
+              v-show="mark === true"
+              placeholder="开始时间"
+              style="width: 120px"
+              @on-change="startTimeChange"
+            />
+            <i v-show="mark === true">-</i>
+            <DatePicker
+              v-model="goodsSearchRowData.endDate"
+              format="yyyy-MM-dd"
+              type="date"
+              v-show="mark === true"
+              placeholder="结束时间"
+              class="search-input"
+              style="width: 120px"
+              @on-change="endTimeChange"
+            />
+            <Input
+              v-model="goodsSearchRowData.productName"
+              placeholder="商品名称"
+              class="search-input"
+              style="width: 160px"
+              clearable
+            ></Input>
+            <Select
+              v-model="goodsSearchRowData.productType"
+              class=""
+              placeholder="规格类型"
+              style="width: 130px"
+              clearable
+            >
+              <Option
+                v-for="item in expandTypeEnum"
+                :value="item.value"
+                :key="item.value"
+                style="margin: -10px 0 0 -5px"
+                >{{ item.label }}</Option
               >
-                <Option
-                  v-for="item in expandTypeEnum"
-                  :value="item.value"
-                  :key="item.value"
-                  style="margin: -10px 0 0 -5px"
-                  >{{ item.label }}</Option
-                >
-              </Select>
-              <p class="mark" style="margin: 0 10px 0 20px">时间：</p>
-              <RadioGroup
-                v-model="button"
-                type="button"
-                @on-change="timeChange"
+            </Select>
+            <Select
+              v-model="goodsSearchRowData.rankingType"
+              class="search-col mr2"
+              placeholder="排序字段"
+              style="width: 120px"
+            >
+              <Option
+                v-for="item in goodsRankingType"
+                :key="`orderType-col-${item.value}`"
+                :value="item.value"
+                class="ptb2-5"
               >
-                <Radio label="今日"></Radio>
-                <Radio label="昨日"></Radio>
-                <Radio label="最近7天"></Radio>
-                <Radio label="最近30天"></Radio>
-                <Radio label="自定义时间"></Radio>
-              </RadioGroup>
-            </div>
-            <div style="float: right; margin-top: 5px">
-              <div class="mark" v-show="mark === true">
-                <DatePicker
-                  v-model="goodsSearchRowData.beginDate"
-                  format="yyyy-MM-dd"
-                  type="date"
-                  placeholder="自定义开始时间"
-                  class="search-input"
-                  style="width: 150px"
-                  @on-change="startTimeChange"
-                />
-                <i>-</i>
-                <DatePicker
-                  v-model="goodsSearchRowData.endDate"
-                  format="yyyy-MM-dd"
-                  type="date"
-                  placeholder="自定义结束时间"
-                  class="search-input mr5"
-                  style="width: 150px"
-                  @on-change="endTimeChange"
-                />
-              </div>
-              <Button
-                class="search-btn mr5"
-                type="primary"
-                @click="handleGoodsSearch"
-              >
-                <Icon type="md-search" />&nbsp;搜索
-              </Button>
-              <Button
-                class="search-btn mr5"
-                type="info"
-                @click="handleGoodsClear"
-              >
-                <Icon type="md-refresh" />&nbsp;清除
-              </Button>
-              <Button
-                class="search-btn mr2"
-                type="warning"
-                @click="handleDownload"
-              >
-                <Icon type="md-download" />导出数据
-              </Button>
-            </div>
+                {{ item.label }}
+              </Option>
+            </Select>
+            <Button
+              class="search-btn"
+              type="primary"
+              @click="handleGoodsSearch"
+            >
+              <Icon type="md-search" />&nbsp;搜索
+            </Button>
+            <Button class="search-btn" type="info" @click="handleGoodsClear">
+              <Icon type="md-refresh" />&nbsp;清除
+            </Button>
+            <Button
+              class="search-btn"
+              type="warning"
+              @click="handleDownload('productStanard')"
+            >
+              <Icon type="md-download" />导出
+            </Button>
           </div>
         </tables>
         <div style="margin: 10px; overflow: hidden">
@@ -250,6 +172,153 @@
               show-total
               @on-change="goodsChangePage"
               @on-page-size-change="goodsChangePageSize"
+            ></Page>
+          </Row>
+        </div>
+      </Card>
+      <Card shadow v-show="topStatus == 'productSell'">
+        <tables
+          ref="sellTableData"
+          v-model="sellTableData"
+          :columns="sellColumns"
+          :loading="loading"
+          :search-area-column="24"
+          :operate-area-column="6"
+          editable
+          searchable
+          border
+          search-place="top"
+        >
+          <div slot="searchCondition">
+            <RadioGroup
+              v-model="buttonSell"
+              type="button"
+              @on-change="sellTimeChange"
+            >
+              <Radio label="今日"></Radio>
+              <Radio label="昨日"></Radio>
+              <Radio label="最近7天"></Radio>
+              <Radio label="最近30天"></Radio>
+              <Radio label="自定义时间"></Radio>
+            </RadioGroup>
+            <DatePicker
+              v-model="sellSearchRowData.beginDate"
+              format="yyyy-MM-dd"
+              v-show="markSell === true"
+              type="date"
+              placeholder="开始时间"
+              style="width: 120px"
+              @on-change="sellStartTimeChange"
+            />
+            <i v-show="markSell === true">-</i>
+            <DatePicker
+              v-model="sellSearchRowData.endDate"
+              format="yyyy-MM-dd"
+              type="date"
+              v-show="markSell === true"
+              placeholder="结束时间"
+              class="search-input"
+              style="width: 120px"
+              @on-change="sellEndTimeChange"
+            />
+            <Input
+              v-model="sellSearchRowData.productName"
+              placeholder="门店名称"
+              class="search-input"
+              style="width: 160px"
+              clearable
+            ></Input>
+            <Select
+              v-model="sellSearchRowData.productType"
+              class=""
+              placeholder="所属区域"
+              style="width: 130px"
+              clearable
+            >
+              <Option
+                v-for="item in storeArea"
+                :value="item.value"
+                :key="item.value"
+                style="margin: -10px 0 0 -5px"
+                >{{ item.label }}</Option
+              >
+            </Select>
+            <Select
+              v-model="sellSearchRowData.rankingType"
+              class="search-col mr2"
+              placeholder="排序字段"
+              style="width: 120px"
+            >
+              <Option
+                v-for="item in sellRankingType"
+                :key="`orderType-col-${item.value}`"
+                :value="item.value"
+                class="ptb2-5"
+              >
+                {{ item.label }}
+              </Option>
+            </Select>
+            <Button class="search-btn" type="primary" @click="handleSellSearch">
+              <Icon type="md-search" />&nbsp;搜索
+            </Button>
+            <Button class="search-btn" type="info" @click="handleSellClear">
+              <Icon type="md-refresh" />&nbsp;清除
+            </Button>
+            <Button
+              class="search-btn"
+              type="warning"
+              @click="handleDownload('productSell')"
+            >
+              <Icon type="md-download" />导出
+            </Button>
+          </div>
+        </tables>
+        <div style="margin: 10px; overflow: hidden">
+          <Row type="flex" justify="end">
+            <Page
+              :total="sellTotal"
+              :current="sellSearchRowData.page"
+              show-sizer
+              show-total
+              @on-change="sellChangePage"
+              @on-page-size-change="sellChangePageSize"
+            ></Page>
+          </Row>
+        </div>
+      </Card>
+      <Card shadow v-show="topStatus == 'productEvaluate'">
+        <tables
+          ref="tables"
+          v-model="tableData"
+          :columns="columns"
+          :loading="loading"
+          :search-area-column="18"
+          :operate-area-column="6"
+          editable
+          searchable
+          border
+          search-place="top"
+        >
+          <div slot="searchCondition">
+            <RadioGroup
+              v-model="seniorityButton"
+              type="button"
+              @on-change="productDataChange"
+            >
+              <Radio label="按点赞排行排序"></Radio>
+              <Radio label="按点踩排行排序"></Radio>
+            </RadioGroup>
+          </div>
+        </tables>
+        <div style="margin: 10px; overflow: hidden">
+          <Row type="flex" justify="end">
+            <Page
+              :total="total"
+              :current="searchRowData.page"
+              show-sizer
+              show-total
+              @on-change="changePage"
+              @on-page-size-change="changePageSize"
             ></Page>
           </Row>
         </div>
@@ -267,9 +336,9 @@ import _ from "lodash";
 import {
   getWaitOrder,
   getOrderTotal,
-  storeRanking,
   productRanking,
   productStanardRanking,
+  getStoreAreaPages,
 } from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
@@ -297,6 +366,25 @@ const goodsRoleRowData = {
   rows: 10,
 };
 
+const sellRoleRowData = {
+  rankingType: "SALE_COUNT",
+  beginDate: "",
+  endDate: "",
+  productName: "",
+  productType: "",
+  page: 1,
+  rows: 10,
+};
+
+const storeRowData = {
+  aera: "",
+  areaName: "",
+  sidx: "id",
+  sort: "asc",
+  page: 1,
+  rows: 10,
+};
+
 export default {
   name: "Home",
   components: {
@@ -308,17 +396,32 @@ export default {
   data() {
     return {
       mark: false,
+      markSell: false,
+      topStatus: "productStanard",
       button: "今日",
+      buttonSell: "今日",
+      seniorityButton:"按点赞排行排序",
       brandType: config.brandType,
-      storeStatus: "COUNT_ORDER_AMOUNT",
       seniorityStatus: "PRAISE",
-      saleStatus: "SALE_COUNT",
-      storeRank: [],
       goodsTableData: [],
+      sellTableData: [],
+      storeArea: [],
       expandTypeEnum,
       goodsTotal: 0,
+      sellTotal: 0,
       searchRowData: _.cloneDeep(roleRowData),
       goodsSearchRowData: _.cloneDeep(goodsRoleRowData),
+      sellSearchRowData: _.cloneDeep(sellRoleRowData),
+      storeSearchRowData: _.cloneDeep(storeRowData),
+
+      goodsRankingType: [
+        { label: "销售数排序", value: "SALE_COUNT" },
+        { label: "销售额排序", value: "SALE_AMOUNT" },
+      ],
+      sellRankingType: [
+        { label: "订单数", value: "SALE_COUNT" },
+        { label: "销售额", value: "SALE_AMOUNT" },
+      ],
       inforCardData: [
         {
           title: "预售订单",
@@ -540,7 +643,7 @@ export default {
           title: "价格",
           key: "price",
           align: "center",
-          width: "120px",
+          width: "110px",
         },
         {
           title: "销售份数",
@@ -553,6 +656,84 @@ export default {
           key: "saleAmount",
           align: "center",
           width: "120px",
+        },
+        {
+          title: "在售率",
+          key: "price",
+          align: "center",
+          width: "90px",
+        },
+        {
+          title: "动销率",
+          align: "center",
+          key: "saleCount",
+          width: "90px",
+        },
+        {
+          title: "售罄率",
+          key: "saleAmount",
+          align: "center",
+          width: "90px",
+        },
+      ],
+      sellColumns: [
+        {
+          title: "排名",
+          key: "ranking",
+          align: "center",
+          minWidth: 100,
+          render(h, params, vm) {
+            const { row } = params;
+            return <div>{row._index + 1}</div>;
+          },
+        },
+        {
+          title: "门店名称",
+          key: "productName",
+          align: "center",
+          minWidth: 100,
+        },
+        {
+          title: "所属区域",
+          key: "specification",
+          align: "center",
+          minWidth: 160,
+        },
+        {
+          title: "在售商品数",
+          align: "center",
+          key: "unitName",
+          minWidth: 100,
+        },
+        {
+          title: "可售商品数",
+          key: "price",
+          align: "center",
+          minWidth: 100,
+        },
+        {
+          title: "动销商品数",
+          align: "center",
+          key: "saleCount",
+          minWidth: 100,
+        },
+        {
+          title: "售罄商品数",
+          key: "saleAmount",
+          align: "center",
+          minWidth: 100,
+        },
+        {
+          title: "订单数",
+          key: "price",
+          align: "center",
+          minWidth: 100,
+        },
+        {
+          title: "销售额",
+          align: "center",
+          key: "saleCount",
+          minWidth: 100,
         },
       ],
     };
@@ -577,9 +758,10 @@ export default {
     this.goodsSearchRowData = _.cloneDeep(goodsRoleRowData);
     this.getWaitOrder();
     this.getOrderTotal();
-    this.getStoreRanking();
+    this.getSellTableData();
     this.getTableData();
     this.getGoodsTableData();
+    this.getStoreAreaPages();
   },
   methods: {
     //头部数据
@@ -616,22 +798,91 @@ export default {
         })
         .catch((error) => {});
     },
-    //门店排行
-    getStoreRanking(rankingType) {
-      const _this = this;
-      rankingType = !rankingType ? "COUNT_ORDER_AMOUNT" : rankingType;
-      storeRanking(rankingType)
-        .then((res) => {
-          this.storeRank = res;
-        })
-        .catch((error) => {});
-    },
     getTableData() {
       const _this = this;
       productRanking(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    getSellTableData(value) {
+      const _this = this;
+      let date = new Date();
+      date.setDate(date.getDate());
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      var day = date.getDate();
+      var today = `${year}-${month}-${day}`;
+      if (value === "昨日") {
+        let date = new Date();
+        date.setDate(date.getDate() - 1);
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var yesterday = `${year}-${month}-${day}`;
+        this.sellSearchRowData.beginDate = yesterday;
+        this.sellSearchRowData.endDate = yesterday;
+      }
+      if (value === "今日") {
+        let date = new Date();
+        date.setDate(date.getDate());
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var today = `${year}-${month}-${day}`;
+        this.sellSearchRowData.beginDate = today;
+        this.sellSearchRowData.endDate = today;
+      }
+      if (value === "最近7天") {
+        let date = new Date();
+        date.setDate(date.getDate() - 7);
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var sevenDay = `${year}-${month}-${day}`;
+        this.sellSearchRowData.beginDate = sevenDay;
+        this.sellSearchRowData.endDate = today;
+      }
+      if (value === "最近30天") {
+        let date = new Date();
+        date.setDate(date.getDate() - 30);
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var toMonth = `${year}-${month}-${day}`;
+        this.sellSearchRowData.beginDate = toMonth;
+        this.sellSearchRowData.endDate = today;
+      }
+      let date1 = new Date();
+      date1.setDate(date.getDate() - 1);
+      var year1 = date.getFullYear();
+      var month1 = date.getMonth() + 1;
+      var day1 = date.getDate();
+      var yesterday1 = `${year1}-${month1}-${day1}`;
+      if (this.buttonSell === "今日") {
+        this.sellSearchRowData.beginDate = yesterday1;
+        this.sellSearchRowData.endDate = yesterday1;
+      }
+      this.sellSearchRowData.beginDate = this.$moment(
+        this.sellSearchRowData.beginDate
+      ).format("YYYY-MM-DD");
+      this.sellSearchRowData.endDate = this.$moment(
+        this.sellSearchRowData.endDate
+      ).format("YYYY-MM-DD");
+      productStanardRanking(this.sellSearchRowData)
+        .then((res) => {
+          this.sellTableData = res.rows;
+          this.sellTotal = res.total;
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -722,6 +973,18 @@ export default {
           this.clearSearchLoading = false;
         });
     },
+    getStoreAreaPages() {
+      getStoreAreaPages(this.storeSearchRowData)
+        .then((res) => {
+          res.rows.forEach((value) => {
+            const map = { label: "label", value: "value" };
+            map.value = value.area;
+            map.label = value.areaName;
+            this.storeArea.push(map);
+          });
+        })
+        .finally(() => {});
+    },
     goodsChangePage(page) {
       this.goodsSearchRowData.page = page;
       this.getGoodsTableData();
@@ -730,6 +993,15 @@ export default {
       this.goodsSearchRowData.page = 1;
       this.goodsSearchRowData.rows = pageSize;
       this.getGoodsTableData();
+    },
+    sellChangePage(page) {
+      this.sellSearchRowData.page = page;
+      this.getSellTableData();
+    },
+    sellChangePageSize(pageSize) {
+      this.sellSearchRowData.page = 1;
+      this.sellSearchRowData.rows = pageSize;
+      this.getSellTableData();
     },
     //跳转
     handgoIng(i) {
@@ -743,33 +1015,13 @@ export default {
         },
       });
     },
-    storeDataChange(e) {
-      let index = e.currentTarget.dataset.index;
-      if (this.storeStatus === index) {
-        return;
-      } else {
-        this.storeStatus = index;
-        this.getStoreRanking(this.storeStatus);
-      }
-    },
-    productDataChange(e) {
-      let index = e.currentTarget.dataset.index;
-      if (this.seniorityStatus === index) {
-        return;
-      } else {
-        this.seniorityStatus = index;
-        this.searchRowData.rankingType = this.seniorityStatus;
+    productDataChange(value) {
+      if (value === "按点赞排行排序") {
+        this.searchRowData.rankingType = "PRAISE";
         this.getTableData();
-      }
-    },
-    saleDataChange(e) {
-      let index = e.currentTarget.dataset.index;
-      if (this.saleStatus === index) {
-        return;
       } else {
-        this.saleStatus = index;
-        this.goodsSearchRowData.rankingType = this.saleStatus;
-        this.getGoodsTableData();
+        this.searchRowData.rankingType = "TREAD";
+        this.getTableData();
       }
     },
     timeChange(value) {
@@ -791,6 +1043,25 @@ export default {
         this.goodsSearchRowData.endDate = "";
       }
     },
+    sellTimeChange(value) {
+      if (value === "今日") {
+        this.markSell = false;
+        this.getSellTableData(value);
+      } else if (value === "昨日") {
+        this.markSell = false;
+        this.getSellTableData(value);
+      } else if (value === "最近7天") {
+        this.markSell = false;
+        this.getSellTableData(value);
+      } else if (value === "最近30天") {
+        this.markSell = false;
+        this.getSellTableData(value);
+      } else if (value === "自定义时间") {
+        this.markSell = true;
+        this.sellSearchRowData.beginDate = "";
+        this.sellSearchRowData.endDate = "";
+      }
+    },
     startTimeChange(value, date) {
       this.button = "自定义时间";
       this.goodsSearchRowData.beginDate = value;
@@ -798,6 +1069,15 @@ export default {
     endTimeChange(value, date) {
       this.button = "自定义时间";
       this.goodsSearchRowData.endDate = value;
+    },
+
+    sellStartTimeChange(value, date) {
+      this.button = "自定义时间";
+      this.sellSearchRowData.beginDate = value;
+    },
+    sellEndTimeChange(value, date) {
+      this.button = "自定义时间";
+      this.sellSearchRowData.endDate = value;
     },
     handleGoodsSearch() {
       if (
@@ -817,36 +1097,90 @@ export default {
       this.getGoodsTableData("今日");
       this.mark = false;
     },
+    handleSellSearch() {
+      if (this.sellSearchRowData.beginDate && this.sellSearchRowData.endDate) {
+        this.sellSearchRowData.page = 1;
+        this.searchLoading = true;
+        this.getSellTableData();
+      } else {
+        this.$Message.info("请先选择搜索时间!");
+      }
+    },
+    handleSellClear() {
+      this.sellSearchRowData = _.cloneDeep(sellRoleRowData);
+      this.getSellTableData("今日");
+      this.buttonSell = "今日";
+      this.markSell = false;
+    },
+    assistDataChange(e) {
+      let index = e.currentTarget.dataset.index;
+      if (this.topStatus === index) {
+        return;
+      }
+      this.topStatus = index;
+    },
     // 导出数据
-    handleDownload() {
-      // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
-      this.goodsSearchRowData.rows =
-        this.goodsTotal > 5000 ? 5000 : this.goodsTotal;
-      let pageSize = this.searchRowData.page;
-      this.goodsSearchRowData.page = 1;
-      this.goodsSearchRowData.beginDate = this.$moment(
-        this.goodsSearchRowData.beginDate
-      ).format("YYYY-MM-DD");
-      this.goodsSearchRowData.endDate = this.$moment(
-        this.goodsSearchRowData.endDate
-      ).format("YYYY-MM-DD");
-      productStanardRanking(this.goodsSearchRowData).then((res) => {
-        const tableData = res.rows;
-        // 恢复正常页数
-        this.goodsSearchRowData.rows = 10;
-        this.goodsSearchRowData.page = pageSize;
-        // 表格数据导出字段翻译
-        let _this = this;
-        tableData.forEach((item, index) => {
-          item["productType"] = expandTypeConvert(item["productType"]).label;
-          item["ranking"] = Number(index) + 1;
+    handleDownload(value) {
+      if (value === "productStanard") {
+        // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
+        this.goodsSearchRowData.rows =
+          this.goodsTotal > 5000 ? 5000 : this.goodsTotal;
+        let pageSize = this.goodsSearchRowData.page;
+        this.goodsSearchRowData.page = 1;
+        this.goodsSearchRowData.beginDate = this.$moment(
+          this.goodsSearchRowData.beginDate
+        ).format("YYYY-MM-DD");
+        this.goodsSearchRowData.endDate = this.$moment(
+          this.goodsSearchRowData.endDate
+        ).format("YYYY-MM-DD");
+        productStanardRanking(this.goodsSearchRowData).then((res) => {
+          const tableData = res.rows;
+          console.log("2321323124", tableData);
+          // 恢复正常页数
+          this.goodsSearchRowData.rows = 10;
+          this.goodsSearchRowData.page = pageSize;
+          // 表格数据导出字段翻译
+          let _this = this;
+          tableData.forEach((item, index) => {
+            item["productType"] = expandTypeConvert(item["productType"]).label;
+            item["ranking"] = Number(index) + 1;
+          });
+          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+          this.$refs.goodsTableData.handleDownload({
+            filename: `商品规格销售排行统计-${date}`,
+            data: tableData,
+          });
         });
-        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
-        this.$refs.tables.handleDownload({
-          filename: `商品规格销售排行统计-${date}`,
-          data: tableData,
+      } else {
+        // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
+        this.sellSearchRowData.rows =
+          this.sellTotal > 5000 ? 5000 : this.sellTotal;
+        let pageSize = this.sellSearchRowData.page;
+        this.sellSearchRowData.page = 1;
+        this.sellSearchRowData.beginDate = this.$moment(
+          this.sellSearchRowData.beginDate
+        ).format("YYYY-MM-DD");
+        this.sellSearchRowData.endDate = this.$moment(
+          this.sellSearchRowData.endDate
+        ).format("YYYY-MM-DD");
+        productStanardRanking(this.sellSearchRowData).then((res) => {
+          const tableData = res.rows;
+          // 恢复正常页数
+          this.sellSearchRowData.rows = 10;
+          this.sellSearchRowData.page = pageSize;
+          // 表格数据导出字段翻译
+          let _this = this;
+          tableData.forEach((item, index) => {
+            item["productType"] = expandTypeConvert(item["productType"]).label;
+            item["ranking"] = Number(index) + 1;
+          });
+          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+          this.$refs.sellTableData.handleDownload({
+            filename: `门店商品销售排行统计-${date}`,
+            data: tableData,
+          });
         });
-      });
+      }
     },
   },
 };
@@ -958,5 +1292,33 @@ export default {
 }
 .mark {
   display: inline-block;
+}
+.tabChange {
+  height: 50px;
+  width: 600px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  bottom: -5px;
+  left: 0;
+  background: rgb(245, 247, 249);
+  border: 1px solid rgb(232, 234, 236);
+  border-radius: 10px 10px 0 0;
+  b {
+    display: block;
+    width: 200px;
+    height: 48px;
+    cursor: pointer;
+    line-height: 43px;
+    text-align: center;
+    border-radius: 10px 10px 0 0;
+  }
+}
+.hot {
+  display: inline-block;
+  // color: red;
+  background-color: #fff;
 }
 </style>

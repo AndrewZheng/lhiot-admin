@@ -46,7 +46,7 @@
             <Select
               v-model="searchRowData.couponBusinessType"
               placeholder="发券类型"
-              style="padding-right: 5px; width: 140px"
+              style="padding-right: 5px; width: 180px"
               @on-change="handCouponType"
             >
               <Option
@@ -98,7 +98,7 @@
           </Button>
           <Button
             v-if="
-              hdCouponType != '新品上市活动券' && hdCouponType != '分享赚活动券'
+              hdCouponType != '新品上市活动券' && hdCouponType != '分享赚活动券' && hdCouponType != '新人注册首单立减券'
             "
             v-waves
             :loading="createLoading"

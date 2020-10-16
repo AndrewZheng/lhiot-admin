@@ -851,11 +851,42 @@
                     productStandardDetail.productType === 'ORDINARY_PRODUCT'
                   "
                   span="10"
-                  style="margin-left: 55px"
+                  style="margin-left: 82px"
+                >
+                  <FormItem
+                    :label-width="120"
+                    label="是否限制用券:"
+                    prop="productType"
+                  >
+                    <Select
+                      v-model="productStandardDetail.isCanCoupon"
+                      placeholder="请选择"
+                      style="width: 120px"
+                    >
+                      <Option
+                        v-for="(item, index) in isUseCoupon"
+                        :value="item.value"
+                        :key="index"
+                        :disabled="clickFlag == false"
+                        class="ptb2-5"
+                        style="padding-left: 5px; width: 100px"
+                        >{{ item.label }}</Option
+                      >
+                    </Select>
+                  </FormItem>
+                </i-col>
+              </Row>
+              <Row>
+                <i-col
+                  v-show="
+                    productStandardDetail.productType === 'ORDINARY_PRODUCT'
+                  "
+                  span="10"
                 >
                   <FormItem label="起购份数:" prop="startNum">
                     <InputNumber
                       :min="1"
+                      style="width: 120px"
                       v-model="productStandardDetail.startNum"
                     ></InputNumber>
                   </FormItem>
@@ -1821,6 +1852,7 @@ const productStandardDetail = {
   dbId: null,
   svipPrice: null,
   shareImage: null,
+  isCanCoupon: "YES",
 };
 
 const roleRowData = {
@@ -1939,6 +1971,10 @@ export default {
       checkAll5: false,
       checkAll6: false,
       checkAll7: false,
+      isUseCoupon: [
+        { label: "可用券", value: "YES" },
+        { label: "不可用券", value: "NO" },
+      ],
       ruleValidate: {
         limitNum: [
           { required: false, message: "请输入限购份数", trigger: "blur" },
