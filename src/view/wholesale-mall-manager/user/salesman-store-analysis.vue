@@ -73,7 +73,7 @@
           >
             <Icon type="md-repeat" />&nbsp;批量转让
           </Button>
-          <!-- <Button
+          <Button
             v-waves
             :loading="exportExcelLoading"
             type="primary"
@@ -81,7 +81,7 @@
             @click="handleDownload"
           >
             <Icon type="md-download" />导出
-          </Button>-->
+          </Button>
         </div>
       </tables>
       <div style="margin: 10px; overflow: hidden">

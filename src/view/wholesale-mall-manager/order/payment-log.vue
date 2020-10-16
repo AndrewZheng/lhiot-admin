@@ -100,7 +100,7 @@
             </Button>
           </Row>
         </div>
-        <!-- <div slot="operations">
+        <div slot="operations">
           <Button
             :loading="downloadLoading"
             class="search-btn mr2"
@@ -109,7 +109,7 @@
           >
             <Icon type="md-download" />导出
           </Button>
-        </div> -->
+        </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">

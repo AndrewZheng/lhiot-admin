@@ -895,14 +895,13 @@ const orderColumns = [
       }
     },
   },
-  //  "afterSale"
   {
     title: "操作",
     width: 160,
     align: "center",
     fixed: "right",
     key: "handle",
-    options: ["view", "sendHd",],
+    options: ["view", "sendHd", "afterSale"],
   },
 ];
 
