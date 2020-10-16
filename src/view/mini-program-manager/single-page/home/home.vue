@@ -300,20 +300,14 @@
           search-place="top"
         >
           <div slot="searchCondition">
-            <div class="seniority">
-              <span
-                data-index="PRAISE"
-                :class="seniorityStatus == 'PRAISE' ? 'checked' : ''"
-                @click="productDataChange"
-                >按点赞排行</span
-              >
-              <span
-                data-index="TREAD"
-                :class="seniorityStatus == 'TREAD' ? 'checked' : ''"
-                @click="productDataChange"
-                >按点踩排行</span
-              >
-            </div>
+            <RadioGroup
+              v-model="seniorityButton"
+              type="button"
+              @on-change="productDataChange"
+            >
+              <Radio label="按点赞排行排序"></Radio>
+              <Radio label="按点踩排行排序"></Radio>
+            </RadioGroup>
           </div>
         </tables>
         <div style="margin: 10px; overflow: hidden">
@@ -406,6 +400,7 @@ export default {
       topStatus: "productStanard",
       button: "今日",
       buttonSell: "今日",
+      seniorityButton:"按点赞排行排序",
       brandType: config.brandType,
       seniorityStatus: "PRAISE",
       goodsTableData: [],
@@ -1020,13 +1015,12 @@ export default {
         },
       });
     },
-    productDataChange(e) {
-      let index = e.currentTarget.dataset.index;
-      if (this.seniorityStatus === index) {
-        return;
+    productDataChange(value) {
+      if (value === "按点赞排行排序") {
+        this.searchRowData.rankingType = "PRAISE";
+        this.getTableData();
       } else {
-        this.seniorityStatus = index;
-        this.searchRowData.rankingType = this.seniorityStatus;
+        this.searchRowData.rankingType = "TREAD";
         this.getTableData();
       }
     },
@@ -1141,7 +1135,7 @@ export default {
         ).format("YYYY-MM-DD");
         productStanardRanking(this.goodsSearchRowData).then((res) => {
           const tableData = res.rows;
-          console.log("2321323124",tableData)
+          console.log("2321323124", tableData);
           // 恢复正常页数
           this.goodsSearchRowData.rows = 10;
           this.goodsSearchRowData.page = pageSize;
