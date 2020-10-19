@@ -2116,12 +2116,6 @@ export default {
       const _this = this;
       this.$refs[name].validate((valid) => {
         if (valid) {
-          if (
-            _this.presellDetail.costPrice > _this.presellDetail.activityPrice
-          ) {
-            this.$Message.error("成本价不能大于活动价格");
-            return;
-          }
           if (_this.presellDetail.triesLimit > 999) {
             _this.presellDetail.triesLimit = 999;
           }

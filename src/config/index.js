@@ -1,4 +1,4 @@
-const IS_PROD = ['production'].includes(process.env.NODE_ENV);
+const IS_PROD = ['production'].includes(process.env.ENV);
 export default {
   /**
    * @description token在Cookie中存储的天数，默认1天
