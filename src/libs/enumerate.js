@@ -878,6 +878,14 @@ export const expandTypeEnum = [
     value: 'ORDINARY_PRODUCT'
   },
   {
+    label: '拼团商品',
+    value: 'TEAM_BUY_PRODUCT'
+  },
+  {
+    label: '预售商品',
+    value: 'PRE_SALE_PRODUCT'
+  },
+  {
     label: '折扣商品',
     value: 'DISCOUNT_PRODUCT'
   },

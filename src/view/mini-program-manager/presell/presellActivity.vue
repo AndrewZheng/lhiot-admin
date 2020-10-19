@@ -1386,12 +1386,14 @@ import searchMixin from "@/mixins/searchMixin.js";
 import {
   teamBuyStatusConvert,
   customPlanStatusConvert,
+  expandTypeConvert
 } from "@/libs/converStatus";
 import {
   teamBuyStatusEnum,
   teamBuyTypeEnum,
   rewardActivitySettingEnum,
   relationStoreTypeEnum,
+  expandTypeEnum
 } from "@/libs/enumerate";
 import {
   fenToYuanDot2,
@@ -1491,7 +1493,7 @@ const productStandardDetail = {
 };
 
 const productRowData = {
-  productType: "ORDINARY_PRODUCT",
+  productType: "PRE_SALE_PRODUCT",
   productId: "",
   barcode: "",
   productCode: "",
@@ -1644,6 +1646,7 @@ export default {
       teamBuyTypeEnum,
       rewardActivitySettingEnum,
       relationStoreTypeEnum,
+      expandTypeEnum,
       groupStatus: "",
       showStoreName: "",
       flagShipList: [],
@@ -1913,6 +1916,26 @@ export default {
           align: "center",
           key: "productName",
           minWidth: 150,
+        },
+        {
+          title: "商品类型",
+          align: "center",
+          key: "productType",
+          minWidth: 130,
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.productType == "PRE_SALE_PRODUCT") {
+              return (
+                <div>
+                  <tag color="magenta">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else {
+              return <div>N/A</div>;
+            }
+          },
         },
         {
           title: "规格",

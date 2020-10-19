@@ -867,7 +867,6 @@
                         v-for="(item, index) in isUseCoupon"
                         :value="item.value"
                         :key="index"
-                        :disabled="clickFlag == false"
                         class="ptb2-5"
                         style="padding-left: 5px; width: 100px"
                         >{{ item.label }}</Option
@@ -2231,7 +2230,7 @@ export default {
         // },
         {
           title: "商品类型",
-          minWidth: 120,
+          minWidth: 130,
           key: "productType",
           align: "center",
           render: (h, params, vm) => {
@@ -2277,6 +2276,22 @@ export default {
                 </div>
               );
             } else if (row.productType == "SHARE_PRODUCT") {
+              return (
+                <div>
+                  <tag color="green">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.productType == "TEAM_BUY_PRODUCT") {
+              return (
+                <div>
+                  <tag color="green">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.productType == "PRE_SALE_PRODUCT") {
               return (
                 <div>
                   <tag color="green">

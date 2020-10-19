@@ -3176,3 +3176,17 @@ export const getStoreMaterielDel = ({
     method: 'get'
   });
 };
+//  外卖红包列表 /minapp/wechat-reward/pages
+export const getWechatRewardPage= (data) => {
+  return $http.request({
+    url: '/minapp/wechat-reward/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};

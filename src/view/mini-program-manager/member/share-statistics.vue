@@ -135,6 +135,25 @@
                 style="width: auto"
                 clearable
               ></Input>
+              <DatePicker
+              :value="searchRowDataUse.regBeginTime"
+              format="yyyy-MM-dd"
+              type="date"
+              placeholder="开始时间"
+              class="search-input"
+              style="width: 130px"
+              @on-change="searchRowDataUse.regBeginTime = $event"
+            />
+            <i>-</i>
+            <DatePicker
+              :value="searchRowDataUse.regEndTime"
+              format="yyyy-MM-dd"
+              type="date"
+              placeholder="结束时间"
+              class="search-input mr5"
+              style="width: 130px"
+              @on-change="searchRowDataUse.regEndTime = $event"
+            />
               <Button
                 :loading="searchLoading"
                 class="search-btn mr5"
@@ -575,8 +594,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import _ from 'lodash';
+import Tables from "_c/tables";
+import _ from "lodash";
 import {
   shareProdStatistics,
   shareUserStatistics,
@@ -586,40 +605,42 @@ import {
   shareawardAmountDetailTotal,
   commissionDataTotalTrend,
   orderDataTotalTrend,
-  settleDataTotalTrend
-} from '@/api/mini-program';
-import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import { couponTypeConvert } from '@/libs/converStatus';
-import { couponTypeEnum } from '@/libs/enumerate';
-import searchMixin from '@/mixins/searchMixin.js';
+  settleDataTotalTrend,
+} from "@/api/mini-program";
+import uploadMixin from "@/mixins/uploadMixin";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import { couponTypeConvert } from "@/libs/converStatus";
+import { couponTypeEnum } from "@/libs/enumerate";
+import searchMixin from "@/mixins/searchMixin.js";
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber
-} from '@/libs/util';
+  yuanToFenNumber,
+} from "@/libs/util";
 
 const couponTemplateDetail = {};
 
 const roleRowData = {
   page: 1,
   rows: 10,
-  productName: '',
+  productName: "",
   beginDate: null,
   endDate: null,
-  sidx: 'awardAmount',
-  sort: 'desc'
+  sidx: "awardAmount",
+  sort: "desc",
 };
 
 const roleRowDataUse = {
   page: 1,
   rows: 10,
-  nickName: '',
-  phone: '',
-  deptName: '',
-  sidx: 'countAwardAmount',
-  sort: 'desc'
+  nickName: "",
+  phone: "",
+  deptName: "",
+  regBeginTime: "",
+  regEndTime: "",
+  sidx: "countAwardAmount",
+  sort: "desc",
 };
 
 const roleRowDataBrokerage = {
@@ -627,37 +648,37 @@ const roleRowDataBrokerage = {
   rows: 10,
   createTimeBegin: null,
   createTimeEnd: null,
-  staffName: '',
-  standardName: '',
-  orderUserName: '',
-  status: '',
-  sidx: 'createTime',
-  sort: 'desc'
+  staffName: "",
+  standardName: "",
+  orderUserName: "",
+  status: "",
+  sidx: "createTime",
+  sort: "desc",
 };
 
 const roleRowDataCommission = {
   beginDate: null,
-  endDate: null
+  endDate: null,
 };
 
 const roleRowDataAccounts = {
   beginDate: null,
-  endDate: null
+  endDate: null,
 };
 
 const roleRowDataOlaceOrder = {
   beginDate: null,
-  endDate: null
+  endDate: null,
 };
 
 export default {
   components: {
-    Tables
+    Tables,
   },
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
     return {
-      topStatus: 'commission',
+      topStatus: "commission",
       mark: false,
       markBrokerage: false,
       markCommission: false,
@@ -671,368 +692,368 @@ export default {
       markOlaceOrderTrend: false,
       num: 0,
       num1: 0,
-      button: '汇总',
-      buttonBrokerage: '汇总',
-      buttonCommission: '汇总',
-      buttonAccounts: '汇总',
-      buttonOlaceOrder: '汇总',
-      buttonCommissionTrend: '本月',
-      buttonAccountsTrend: '本月',
-      buttonOlaceOrderTrend: '本月',
-      charTitleCommissionStatus: 'leijiCommission',
-      charTitleAccountsStatus: 'settleOrderNum',
-      charTitleOlaceOrderStatus: 'olaceOrderNum',
-      queryMonth: '',
+      button: "汇总",
+      buttonBrokerage: "汇总",
+      buttonCommission: "汇总",
+      buttonAccounts: "汇总",
+      buttonOlaceOrder: "汇总",
+      buttonCommissionTrend: "本月",
+      buttonAccountsTrend: "本月",
+      buttonOlaceOrderTrend: "本月",
+      charTitleCommissionStatus: "leijiCommission",
+      charTitleAccountsStatus: "settleOrderNum",
+      charTitleOlaceOrderStatus: "olaceOrderNum",
+      queryMonth: "",
       couponTypeEnum,
       totalPageUse: 0,
       totalPage: 0,
       totalBrokerage: 0,
-      hisAmount: '',
+      hisAmount: "",
       columns: [
         {
-          title: '商品名称',
-          align: 'center',
-          key: 'productName',
-          minWidth: 200
+          title: "商品名称",
+          align: "center",
+          key: "productName",
+          minWidth: 200,
         },
         {
-          title: '商品类型',
-          align: 'center',
-          key: 'shareType',
+          title: "商品类型",
+          align: "center",
+          key: "shareType",
           render(h, params) {
             const { row } = params;
-            if (row.shareType === '普通商品') {
+            if (row.shareType === "普通商品") {
               return (
                 <div>
-                  <tag color='cyan'>{'普通商品'}</tag>
+                  <tag color="cyan">{"普通商品"}</tag>
                 </div>
               );
-            } else if (row.shareType === '拼团商品') {
+            } else if (row.shareType === "拼团商品") {
               return (
                 <div>
-                  <tag color='orange'>{'拼团商品'}</tag>
+                  <tag color="orange">{"拼团商品"}</tag>
                 </div>
               );
-            } else if (row.shareType === '预售商品') {
+            } else if (row.shareType === "预售商品") {
               return (
                 <div>
-                  <tag color='magenta'>{'预售商品'}</tag>
+                  <tag color="magenta">{"预售商品"}</tag>
                 </div>
               );
             } else {
               return (
                 <div>
-                  <tag color='blue'>{'N/A'}</tag>
+                  <tag color="blue">{"N/A"}</tag>
                 </div>
               );
             }
-          }
+          },
         },
         {
-          title: '分享次数',
-          align: 'center',
-          key: 'shareCount',
-          sortable: 'custom'
+          title: "分享次数",
+          align: "center",
+          key: "shareCount",
+          sortable: "custom",
         },
         {
-          title: '购买次数',
-          align: 'center',
-          key: 'buyCount',
-          sortable: 'custom'
+          title: "购买次数",
+          align: "center",
+          key: "buyCount",
+          sortable: "custom",
         },
         {
-          title: '购买份数',
-          align: 'center',
-          key: 'buyCopies',
-          sortable: 'custom'
+          title: "购买份数",
+          align: "center",
+          key: "buyCopies",
+          sortable: "custom",
         },
         {
-          title: '产生佣金',
-          align: 'center',
-          key: 'awardAmount',
-          sortable: 'custom',
+          title: "产生佣金",
+          align: "center",
+          key: "awardAmount",
+          sortable: "custom",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.awardAmount)}</div>;
-          }
-        }
+          },
+        },
       ],
       columnsUse: [
         {
-          title: '用户昵称',
-          align: 'center',
-          key: 'nickName',
+          title: "用户昵称",
+          align: "center",
+          key: "nickName",
           tooltip: true,
-          minWidth: 160
+          minWidth: 160,
         },
         {
-          title: '手机号码',
-          align: 'center',
-          key: 'phone',
-          minWidth: 130
-        },
-        {
-          title: '所在部门',
-          align: 'center',
-          key: 'deptName',
-          minWidth: 130
-        },
-        {
-          title: '分享次数',
-          align: 'center',
-          sortable: 'custom',
-          key: 'shareCount',
-          minWidth: 120
-        },
-        {
-          title: '分享人数',
-          align: 'center',
-          key: 'shareUserCount',
-          minWidth: 100
-        },
-        {
-          title: '分享订单数',
-          align: 'center',
-          sortable: 'custom',
+          title: "手机号码",
+          align: "center",
+          key: "phone",
           minWidth: 130,
-          key: 'countOrder'
         },
         {
-          title: '分享订单额',
-          align: 'center',
-          sortable: 'custom',
+          title: "所在部门",
+          align: "center",
+          key: "deptName",
           minWidth: 130,
-          key: 'countAmount',
+        },
+        {
+          title: "分享次数",
+          align: "center",
+          sortable: "custom",
+          key: "shareCount",
+          minWidth: 120,
+        },
+        {
+          title: "分享人数",
+          align: "center",
+          key: "shareUserCount",
+          minWidth: 100,
+        },
+        {
+          title: "分享订单数",
+          align: "center",
+          sortable: "custom",
+          minWidth: 130,
+          key: "countOrder",
+        },
+        {
+          title: "分享订单额",
+          align: "center",
+          sortable: "custom",
+          minWidth: 130,
+          key: "countAmount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.countAmount)}</div>;
-          }
+          },
         },
         {
-          title: '获得总佣金',
-          align: 'center',
-          sortable: 'custom',
-          key: 'countAwardAmount',
+          title: "获得总佣金",
+          align: "center",
+          sortable: "custom",
+          key: "countAwardAmount",
           minWidth: 130,
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.countAwardAmount)}</div>;
-          }
+          },
         },
         {
-          title: '待入账佣金',
-          align: 'center',
+          title: "待入账佣金",
+          align: "center",
           minWidth: 110,
-          key: 'waitAmount',
+          key: "waitAmount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.waitAmount)}</div>;
-          }
+          },
         },
         {
-          title: '已提现佣金',
-          align: 'center',
+          title: "已提现佣金",
+          align: "center",
           minWidth: 110,
-          key: 'allOutAmount',
+          key: "allOutAmount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.allOutAmount)}</div>;
-          }
-        }
+          },
+        },
       ],
       columnsCommission: [
         {
-          title: '累计佣金',
-          align: 'center',
-          key: 'addUpAmount',
+          title: "累计佣金",
+          align: "center",
+          key: "addUpAmount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.addUpAmount)}</div>;
-          }
+          },
         },
         {
-          title: '待提现佣金',
-          align: 'center',
-          key: 'canOutAmount',
+          title: "待提现佣金",
+          align: "center",
+          key: "canOutAmount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.canOutAmount)}</div>;
-          }
+          },
         },
         {
-          title: '待入账佣金',
-          align: 'center',
-          key: 'waitAmount',
+          title: "待入账佣金",
+          align: "center",
+          key: "waitAmount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.waitAmount)}</div>;
-          }
+          },
         },
         {
-          title: '已提现佣金',
-          align: 'center',
-          key: 'allOutAmount',
+          title: "已提现佣金",
+          align: "center",
+          key: "allOutAmount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.allOutAmount)}</div>;
-          }
-        }
+          },
+        },
       ],
       columnsAccounts: [
         {
-          title: '结算订单数',
-          align: 'center',
-          key: 'countOrder'
+          title: "结算订单数",
+          align: "center",
+          key: "countOrder",
         },
         {
-          title: '结算总人数',
-          align: 'center',
-          key: 'countUser'
+          title: "结算总人数",
+          align: "center",
+          key: "countUser",
         },
         {
-          title: '结算订单额',
-          align: 'center',
-          key: 'countOrderAmount',
+          title: "结算订单额",
+          align: "center",
+          key: "countOrderAmount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.countOrderAmount)}</div>;
-          }
+          },
         },
         {
-          title: '结算总佣金',
-          align: 'center',
-          key: 'countAwardAmount',
+          title: "结算总佣金",
+          align: "center",
+          key: "countAwardAmount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.countAwardAmount)}</div>;
-          }
+          },
         },
         {
-          title: '佣金比例',
-          align: 'center',
-          key: 'awardBillie',
+          title: "佣金比例",
+          align: "center",
+          key: "awardBillie",
           render(h, params) {
             return <div>{params.row.awardBillie}</div>;
-          }
+          },
         },
         {
-          title: '人均收益',
-          align: 'center',
-          key: 'countAwardAmount',
+          title: "人均收益",
+          align: "center",
+          key: "countAwardAmount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.awardAverage)}</div>;
-          }
-        }
+          },
+        },
       ],
       columnsOlaceOrder: [
         {
-          title: '下单人数',
-          align: 'center',
-          key: 'countUser'
+          title: "下单人数",
+          align: "center",
+          key: "countUser",
         },
         {
-          title: '下单数',
-          align: 'center',
-          key: 'countOrder'
+          title: "下单数",
+          align: "center",
+          key: "countOrder",
         },
         {
-          title: '下单额',
-          align: 'center',
-          key: 'countAmount',
+          title: "下单额",
+          align: "center",
+          key: "countAmount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.countAmount)}</div>;
-          }
+          },
         },
         {
-          title: '退单人数',
-          align: 'center',
-          key: 'countReturnUser'
+          title: "退单人数",
+          align: "center",
+          key: "countReturnUser",
         },
         {
-          title: '退单数',
-          align: 'center',
-          key: 'countReturnOrder'
+          title: "退单数",
+          align: "center",
+          key: "countReturnOrder",
         },
         {
-          title: '退单额',
-          align: 'center',
-          key: 'countReturnAmount',
+          title: "退单额",
+          align: "center",
+          key: "countReturnAmount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.countReturnAmount)}</div>;
-          }
-        }
+          },
+        },
       ],
       columnsBrokerage: [
         {
-          title: '订单号',
-          align: 'center',
-          key: 'orderCode',
-          width: 190
+          title: "订单号",
+          align: "center",
+          key: "orderCode",
+          width: 190,
         },
         {
-          title: '下单时间',
-          align: 'center',
-          key: 'createTime',
-          width: 120
+          title: "下单时间",
+          align: "center",
+          key: "createTime",
+          width: 120,
         },
         {
-          title: '结算时间',
-          align: 'center',
-          key: 'settleTime',
-          width: 120
+          title: "结算时间",
+          align: "center",
+          key: "settleTime",
+          width: 120,
         },
         {
-          title: '订单金额',
-          align: 'center',
-          key: 'orderAmount',
+          title: "订单金额",
+          align: "center",
+          key: "orderAmount",
           width: 100,
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.orderAmount)}</div>;
-          }
+          },
         },
         {
-          title: '佣金金额',
-          align: 'center',
+          title: "佣金金额",
+          align: "center",
           width: 100,
-          key: 'awardAmount',
+          key: "awardAmount",
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.awardAmount)}</div>;
-          }
+          },
         },
         {
-          title: '佣金状态',
-          align: 'center',
+          title: "佣金状态",
+          align: "center",
           width: 110,
-          key: 'status',
+          key: "status",
           render(h, params) {
             const { row } = params;
-            if (row.status === 'WAIT') {
+            if (row.status === "WAIT") {
               return (
                 <div>
-                  <tag color='warning'>{'待入账'}</tag>
+                  <tag color="warning">{"待入账"}</tag>
                 </div>
               );
-            } else if (row.status === 'SUCCESS') {
+            } else if (row.status === "SUCCESS") {
               return (
                 <div>
-                  <tag color='success'>{'已入账'}</tag>
+                  <tag color="success">{"已入账"}</tag>
                 </div>
               );
             } else {
               return (
                 <div>
-                  <tag color='error'>{'入账失败'}</tag>
+                  <tag color="error">{"入账失败"}</tag>
                 </div>
               );
             }
-          }
+          },
         },
         {
-          title: '佣金商品',
-          align: 'center',
-          key: 'standardName'
+          title: "佣金商品",
+          align: "center",
+          key: "standardName",
         },
         {
-          title: '下单用户',
-          align: 'center',
-          key: 'orderUserName',
-          width: 110
+          title: "下单用户",
+          align: "center",
+          key: "orderUserName",
+          width: 110,
         },
         {
-          title: '所属员工',
-          align: 'center',
-          key: 'staffName',
-          width: 110
-        }
+          title: "所属员工",
+          align: "center",
+          key: "staffName",
+          width: 110,
+        },
       ],
       searchRowData: _.cloneDeep(roleRowData),
       searchRowDataUse: _.cloneDeep(roleRowDataUse),
@@ -1047,22 +1068,22 @@ export default {
       tableDataOlaceOrder: [],
       tableDataBrokerage: [],
       chartData: {
-        columns: ['日期', '访问用户']
+        columns: ["日期", "访问用户"],
       },
       rankType: [
         {
-          label: '待入账',
-          value: 'WAIT'
+          label: "待入账",
+          value: "WAIT",
         },
         {
-          label: '已入账',
-          value: 'SUCCESS'
+          label: "已入账",
+          value: "SUCCESS",
         },
         {
-          label: '入账失败',
-          value: 'FAIL'
-        }
-      ]
+          label: "入账失败",
+          value: "FAIL",
+        },
+      ],
     };
   },
   computed: {},
@@ -1071,9 +1092,9 @@ export default {
     this.searchRowDataUse = _.cloneDeep(roleRowDataUse);
     this.searchRowDataBrokerage = _.cloneDeep(roleRowDataBrokerage);
     (this.searchRowDataCommission = _.cloneDeep(roleRowDataCommission)),
-    (this.searchRowDataAccounts = _.cloneDeep(roleRowDataAccounts)),
-    (this.searchRowDataOlaceOrder = _.cloneDeep(roleRowDataOlaceOrder)),
-    this.getTableDataCommission();
+      (this.searchRowDataAccounts = _.cloneDeep(roleRowDataAccounts)),
+      (this.searchRowDataOlaceOrder = _.cloneDeep(roleRowDataOlaceOrder)),
+      this.getTableDataCommission();
     this.commissionDataTotalTrend();
   },
   created() {},
@@ -1097,7 +1118,7 @@ export default {
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var today = `${year}-${month}-${day}`;
-      if (value === '昨日') {
+      if (value === "昨日") {
         const date = new Date();
         date.setDate(date.getDate() - 1);
         var year = date.getFullYear();
@@ -1107,7 +1128,7 @@ export default {
         this.searchRowData.beginDate = yesterday;
         this.searchRowData.endDate = yesterday;
       }
-      if (this.button === '汇总' || value === '汇总') {
+      if (this.button === "汇总" || value === "汇总") {
         const date = new Date();
         date.setDate(date.getDate() - 365);
         var year = date.getFullYear();
@@ -1117,7 +1138,7 @@ export default {
         this.searchRowData.beginDate = allDay;
         this.searchRowData.endDate = today;
       }
-      if (value === '今日') {
+      if (value === "今日") {
         const date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
@@ -1127,7 +1148,7 @@ export default {
         this.searchRowData.beginDate = today;
         this.searchRowData.endDate = today;
       }
-      if (value === '最近7天') {
+      if (value === "最近7天") {
         const date = new Date();
         date.setDate(date.getDate() - 7);
         var year = date.getFullYear();
@@ -1137,7 +1158,7 @@ export default {
         this.searchRowData.beginDate = sevenDay;
         this.searchRowData.endDate = today;
       }
-      if (value === '最近30天') {
+      if (value === "最近30天") {
         const date = new Date();
         date.setDate(date.getDate() - 30);
         var year = date.getFullYear();
@@ -1149,10 +1170,10 @@ export default {
       }
       this.searchRowData.beginDate = this.$moment(
         this.searchRowData.beginDate
-      ).format('YYYY-MM-DD');
+      ).format("YYYY-MM-DD");
       this.searchRowData.endDate = this.$moment(
         this.searchRowData.endDate
-      ).format('YYYY-MM-DD');
+      ).format("YYYY-MM-DD");
       shareProdStatistics(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
@@ -1188,7 +1209,7 @@ export default {
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var today = `${year}-${month}-${day}`;
-      if (value === '昨日') {
+      if (value === "昨日") {
         const date = new Date();
         date.setDate(date.getDate() - 1);
         var year = date.getFullYear();
@@ -1198,11 +1219,11 @@ export default {
         this.searchRowDataCommission.beginDate = yesterday;
         this.searchRowDataCommission.endDate = yesterday;
       }
-      if (this.buttonCommission === '汇总' || value === '汇总') {
+      if (this.buttonCommission === "汇总" || value === "汇总") {
         this.searchRowDataCommission.beginDate = null;
         this.searchRowDataCommission.endDate = null;
       }
-      if (value === '今日') {
+      if (value === "今日") {
         const date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
@@ -1212,7 +1233,7 @@ export default {
         this.searchRowDataCommission.beginDate = today;
         this.searchRowDataCommission.endDate = today;
       }
-      if (value === '最近7天') {
+      if (value === "最近7天") {
         const date = new Date();
         date.setDate(date.getDate() - 7);
         var year = date.getFullYear();
@@ -1222,7 +1243,7 @@ export default {
         this.searchRowDataCommission.beginDate = sevenDay;
         this.searchRowDataCommission.endDate = today;
       }
-      if (value === '最近30天') {
+      if (value === "最近30天") {
         const date = new Date();
         date.setDate(date.getDate() - 30);
         var year = date.getFullYear();
@@ -1250,7 +1271,7 @@ export default {
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var today = `${year}-${month}-${day}`;
-      if (value === '昨日') {
+      if (value === "昨日") {
         const date = new Date();
         date.setDate(date.getDate() - 1);
         var year = date.getFullYear();
@@ -1260,11 +1281,11 @@ export default {
         this.searchRowDataAccounts.beginDate = yesterday;
         this.searchRowDataAccounts.endDate = yesterday;
       }
-      if (this.buttonAccounts === '汇总' || value === '汇总') {
+      if (this.buttonAccounts === "汇总" || value === "汇总") {
         this.searchRowDataAccounts.beginDate = null;
         this.searchRowDataAccounts.endDate = null;
       }
-      if (value === '今日') {
+      if (value === "今日") {
         const date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
@@ -1274,7 +1295,7 @@ export default {
         this.searchRowDataAccounts.beginDate = today;
         this.searchRowDataAccounts.endDate = today;
       }
-      if (value === '最近7天') {
+      if (value === "最近7天") {
         const date = new Date();
         date.setDate(date.getDate() - 7);
         var year = date.getFullYear();
@@ -1284,7 +1305,7 @@ export default {
         this.searchRowDataAccounts.beginDate = sevenDay;
         this.searchRowDataAccounts.endDate = today;
       }
-      if (value === '最近30天') {
+      if (value === "最近30天") {
         const date = new Date();
         date.setDate(date.getDate() - 30);
         var year = date.getFullYear();
@@ -1312,7 +1333,7 @@ export default {
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var today = `${year}-${month}-${day}`;
-      if (value === '昨日') {
+      if (value === "昨日") {
         const date = new Date();
         date.setDate(date.getDate() - 1);
         var year = date.getFullYear();
@@ -1322,11 +1343,11 @@ export default {
         this.searchRowDataOlaceOrder.beginDate = yesterday;
         this.searchRowDataOlaceOrder.endDate = yesterday;
       }
-      if (this.buttonOlaceOrder === '汇总' || value === '汇总') {
+      if (this.buttonOlaceOrder === "汇总" || value === "汇总") {
         this.searchRowDataOlaceOrder.beginDate = null;
         this.searchRowDataOlaceOrder.endDate = null;
       }
-      if (value === '今日') {
+      if (value === "今日") {
         const date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
@@ -1336,7 +1357,7 @@ export default {
         this.searchRowDataOlaceOrder.beginDate = today;
         this.searchRowDataOlaceOrder.endDate = today;
       }
-      if (value === '最近7天') {
+      if (value === "最近7天") {
         const date = new Date();
         date.setDate(date.getDate() - 7);
         var year = date.getFullYear();
@@ -1346,7 +1367,7 @@ export default {
         this.searchRowDataOlaceOrder.beginDate = sevenDay;
         this.searchRowDataOlaceOrder.endDate = today;
       }
-      if (value === '最近30天') {
+      if (value === "最近30天") {
         const date = new Date();
         date.setDate(date.getDate() - 30);
         var year = date.getFullYear();
@@ -1373,7 +1394,7 @@ export default {
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var today = `${year}-${month}-${day}`;
-      if (value === '昨日') {
+      if (value === "昨日") {
         const date = new Date();
         date.setDate(date.getDate() - 1);
         var year = date.getFullYear();
@@ -1383,7 +1404,7 @@ export default {
         this.searchRowDataBrokerage.createTimeBegin = yesterday;
         this.searchRowDataBrokerage.createTimeEnd = yesterday;
       }
-      if (this.buttonBrokerage === '汇总' || value === '汇总') {
+      if (this.buttonBrokerage === "汇总" || value === "汇总") {
         const date = new Date();
         date.setDate(date.getDate() - 365);
         var year = date.getFullYear();
@@ -1393,7 +1414,7 @@ export default {
         this.searchRowDataBrokerage.createTimeBegin = allDay;
         this.searchRowDataBrokerage.createTimeEnd = today;
       }
-      if (value === '今日') {
+      if (value === "今日") {
         const date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
@@ -1403,7 +1424,7 @@ export default {
         this.searchRowDataBrokerage.createTimeBegin = today;
         this.searchRowDataBrokerage.createTimeEnd = today;
       }
-      if (value === '最近7天') {
+      if (value === "最近7天") {
         const date = new Date();
         date.setDate(date.getDate() - 7);
         var year = date.getFullYear();
@@ -1413,7 +1434,7 @@ export default {
         this.searchRowDataBrokerage.createTimeBegin = sevenDay;
         this.searchRowDataBrokerage.createTimeEnd = today;
       }
-      if (value === '最近30天') {
+      if (value === "最近30天") {
         const date = new Date();
         date.setDate(date.getDate() - 30);
         var year = date.getFullYear();
@@ -1425,10 +1446,10 @@ export default {
       }
       this.searchRowDataBrokerage.createTimeBegin = this.$moment(
         this.searchRowDataBrokerage.createTimeBegin
-      ).format('YYYY-MM-DD');
+      ).format("YYYY-MM-DD");
       this.searchRowDataBrokerage.createTimeEnd = this.$moment(
         this.searchRowDataBrokerage.createTimeEnd
-      ).format('YYYY-MM-DD');
+      ).format("YYYY-MM-DD");
       shareawardAmountDetailTotal(this.searchRowDataBrokerage)
         .then((res) => {
           this.tableDataBrokerage = res.rows;
@@ -1445,24 +1466,24 @@ export default {
       const date = new Date();
       date.setDate(date.getDate() - 1);
       const year = date.getFullYear();
-      if (value === '上月') {
+      if (value === "上月") {
         const month = date.getMonth();
         this.queryMonth = `${year}-${month}`;
-      } else if (value === '本月' || this.buttonCommissionTrend === '本月') {
+      } else if (value === "本月" || this.buttonCommissionTrend === "本月") {
         const month = date.getMonth() + 1;
         this.queryMonth = `${year}-${month}`;
       }
       commissionDataTotalTrend(this.queryMonth)
         .then((res) => {
-          let chartsName = '';
-          if (this.charTitleCommissionStatus === 'leijiCommission') {
-            chartsName = '累计佣金';
-          } else if (this.charTitleCommissionStatus === 'daitixianCommission') {
-            chartsName = '待提现佣金';
-          } else if (this.charTitleCommissionStatus === 'yitixianCommission') {
-            chartsName = '已提现佣金';
+          let chartsName = "";
+          if (this.charTitleCommissionStatus === "leijiCommission") {
+            chartsName = "累计佣金";
+          } else if (this.charTitleCommissionStatus === "daitixianCommission") {
+            chartsName = "待提现佣金";
+          } else if (this.charTitleCommissionStatus === "yitixianCommission") {
+            chartsName = "已提现佣金";
           } else {
-            chartsName = '待入账佣金';
+            chartsName = "待入账佣金";
           }
           for (const value of res) {
             value.累计佣金 = value.addUpAmount / 100;
@@ -1471,8 +1492,8 @@ export default {
             value.待入账佣金 = value.waitAmount / 100;
           }
           const nowChartData = {
-            columns: ['dateValue', chartsName],
-            rows: res
+            columns: ["dateValue", chartsName],
+            rows: res,
           };
           this.chartData = nowChartData;
         })
@@ -1480,16 +1501,16 @@ export default {
     },
     changeCommissionCharts(value) {
       this.charTitleCommissionStatus = value;
-      let chartsName = '';
+      let chartsName = "";
       const nowChartData = _.cloneDeep(this.chartData);
-      if (value === 'leijiCommission') {
-        chartsName = '累计佣金';
-      } else if (value === 'daitixianCommission') {
-        chartsName = '待提现佣金';
-      } else if (value === 'yitixianCommission') {
-        chartsName = '已提现佣金';
+      if (value === "leijiCommission") {
+        chartsName = "累计佣金";
+      } else if (value === "daitixianCommission") {
+        chartsName = "待提现佣金";
+      } else if (value === "yitixianCommission") {
+        chartsName = "已提现佣金";
       } else {
-        chartsName = '待入账佣金';
+        chartsName = "待入账佣金";
       }
       nowChartData.columns[1] = chartsName;
       this.chartData = nowChartData;
@@ -1499,24 +1520,24 @@ export default {
       const date = new Date();
       date.setDate(date.getDate() - 1);
       const year = date.getFullYear();
-      if (value === '上月') {
+      if (value === "上月") {
         const month = date.getMonth();
         this.queryMonth = `${year}-${month}`;
-      } else if (value === '本月' || this.buttonAccountsTrend === '本月') {
+      } else if (value === "本月" || this.buttonAccountsTrend === "本月") {
         const month = date.getMonth() + 1;
         this.queryMonth = `${year}-${month}`;
       }
       settleDataTotalTrend(this.queryMonth)
         .then((res) => {
-          let chartsName = '';
-          if (this.charTitleAccountsStatus === 'settleOrderNum') {
-            chartsName = '结算订单数';
-          } else if (this.charTitleAccountsStatus === 'settleOrderSum') {
-            chartsName = '结算订单额';
-          } else if (this.charTitleAccountsStatus === 'settleTotalSum') {
-            chartsName = '结算总佣金';
+          let chartsName = "";
+          if (this.charTitleAccountsStatus === "settleOrderNum") {
+            chartsName = "结算订单数";
+          } else if (this.charTitleAccountsStatus === "settleOrderSum") {
+            chartsName = "结算订单额";
+          } else if (this.charTitleAccountsStatus === "settleTotalSum") {
+            chartsName = "结算总佣金";
           } else {
-            chartsName = '人均收益';
+            chartsName = "人均收益";
           }
           for (const value of res) {
             value.结算订单数 = value.countOrder;
@@ -1525,8 +1546,8 @@ export default {
             value.人均收益 = value.awardAverage / 100;
           }
           const nowChartData = {
-            columns: ['dateValue', chartsName],
-            rows: res
+            columns: ["dateValue", chartsName],
+            rows: res,
           };
           this.chartData = nowChartData;
         })
@@ -1534,16 +1555,16 @@ export default {
     },
     changeAccountsCharts(value) {
       this.charTitleAccountsStatus = value;
-      let chartsName = '';
+      let chartsName = "";
       const nowChartData = _.cloneDeep(this.chartData);
-      if (value === 'settleOrderNum') {
-        chartsName = '结算订单数';
-      } else if (value === 'settleOrderSum') {
-        chartsName = '结算订单额';
-      } else if (value === 'settleTotalSum') {
-        chartsName = '结算总佣金';
+      if (value === "settleOrderNum") {
+        chartsName = "结算订单数";
+      } else if (value === "settleOrderSum") {
+        chartsName = "结算订单额";
+      } else if (value === "settleTotalSum") {
+        chartsName = "结算总佣金";
       } else {
-        chartsName = '人均收益';
+        chartsName = "人均收益";
       }
       nowChartData.columns[1] = chartsName;
       this.chartData = nowChartData;
@@ -1553,24 +1574,24 @@ export default {
       const date = new Date();
       date.setDate(date.getDate() - 1);
       const year = date.getFullYear();
-      if (value === '上月') {
+      if (value === "上月") {
         const month = date.getMonth();
         this.queryMonth = `${year}-${month}`;
-      } else if (value === '本月' || this.buttonOlaceOrderTrend === '本月') {
+      } else if (value === "本月" || this.buttonOlaceOrderTrend === "本月") {
         const month = date.getMonth() + 1;
         this.queryMonth = `${year}-${month}`;
       }
       orderDataTotalTrend(this.queryMonth)
         .then((res) => {
-          let chartsName = '';
-          if (this.charTitleOlaceOrderStatus === 'olaceOrderNum') {
-            chartsName = '下单数';
-          } else if (this.charTitleOlaceOrderStatus === 'olaceOrderSum') {
-            chartsName = '下单额';
-          } else if (this.charTitleOlaceOrderStatus === 'chargebackNum') {
-            chartsName = '退单数';
+          let chartsName = "";
+          if (this.charTitleOlaceOrderStatus === "olaceOrderNum") {
+            chartsName = "下单数";
+          } else if (this.charTitleOlaceOrderStatus === "olaceOrderSum") {
+            chartsName = "下单额";
+          } else if (this.charTitleOlaceOrderStatus === "chargebackNum") {
+            chartsName = "退单数";
           } else {
-            chartsName = '退单额';
+            chartsName = "退单额";
           }
           for (const value of res) {
             value.下单数 = value.countOrder;
@@ -1579,8 +1600,8 @@ export default {
             value.退单额 = value.countReturnAmount / 100;
           }
           const nowChartData = {
-            columns: ['dateValue', chartsName],
-            rows: res
+            columns: ["dateValue", chartsName],
+            rows: res,
           };
           this.chartData = nowChartData;
         })
@@ -1588,16 +1609,16 @@ export default {
     },
     changeOlaceOrderCharts(value) {
       this.charTitleOlaceOrderStatus = value;
-      let chartsName = '';
+      let chartsName = "";
       const nowChartData = _.cloneDeep(this.chartData);
-      if (value === 'olaceOrderNum') {
-        chartsName = '下单数';
-      } else if (value === 'olaceOrderSum') {
-        chartsName = '下单额';
-      } else if (value === 'chargebackNum') {
-        chartsName = '退单数';
+      if (value === "olaceOrderNum") {
+        chartsName = "下单数";
+      } else if (value === "olaceOrderSum") {
+        chartsName = "下单额";
+      } else if (value === "chargebackNum") {
+        chartsName = "退单数";
       } else {
-        chartsName = '退单额';
+        chartsName = "退单额";
       }
       nowChartData.columns[1] = chartsName;
       this.chartData = nowChartData;
@@ -1637,34 +1658,34 @@ export default {
       if (this.topStatus === index) {
         return;
       }
-      if (index === 'pro') {
-        this.button = '汇总';
+      if (index === "pro") {
+        this.button = "汇总";
         this.getTableData();
       }
-      if (index === 'use') {
+      if (index === "use") {
         this.getTableDataUse();
       }
-      if (index === 'commission') {
-        this.buttonCommission = '汇总';
-        this.buttonCommissionTrend = '本月';
+      if (index === "commission") {
+        this.buttonCommission = "汇总";
+        this.buttonCommissionTrend = "本月";
         this.getTableDataCommission();
         this.commissionDataTotalTrend();
       }
-      if (index === 'accounts') {
-        this.buttonAccounts = '汇总';
-        this.buttonAccountsTrend = '本月';
+      if (index === "accounts") {
+        this.buttonAccounts = "汇总";
+        this.buttonAccountsTrend = "本月";
         this.getTableDataAccounts();
         this.settleDataTotalTrend();
       }
-      if (index === 'olaceOrder') {
-        this.buttonOlaceOrder = '汇总';
-        this.buttonOlaceOrderTrend = '本月';
+      if (index === "olaceOrder") {
+        this.buttonOlaceOrder = "汇总";
+        this.buttonOlaceOrderTrend = "本月";
 
         this.getTableDataOlaceOrder();
         this.orderDataTotalTrend();
       }
-      if (index === 'brokerage') {
-        this.buttonBrokerage = '汇总';
+      if (index === "brokerage") {
+        this.buttonBrokerage = "汇总";
         this.getTableDataBrokerage();
       }
       this.topStatus = index;
@@ -1692,185 +1713,185 @@ export default {
     },
     timeChange(value) {
       this.searchRowData.page = 1;
-      if (value === '今日') {
+      if (value === "今日") {
         this.getTableData(value);
         this.mark = false;
-      } else if (value === '昨日') {
+      } else if (value === "昨日") {
         this.mark = false;
         this.getTableData(value);
-      } else if (value === '汇总') {
+      } else if (value === "汇总") {
         this.mark = false;
         this.getTableData(value);
-      } else if (value === '最近7天') {
+      } else if (value === "最近7天") {
         this.mark = false;
         this.getTableData(value);
-      } else if (value === '最近30天') {
+      } else if (value === "最近30天") {
         this.mark = false;
         this.getTableData(value);
-      } else if (value === '自定义时间') {
+      } else if (value === "自定义时间") {
         this.mark = true;
-        this.searchRowData.beginDate = '';
-        this.searchRowData.endDate = '';
+        this.searchRowData.beginDate = "";
+        this.searchRowData.endDate = "";
       }
     },
     timeChangeCommission(value) {
-      if (value === '今日') {
+      if (value === "今日") {
         this.getTableDataCommission(value);
         this.markCommission = false;
         this.commissionStatus = false;
-      } else if (value === '昨日') {
+      } else if (value === "昨日") {
         this.markCommission = false;
         this.commissionStatus = false;
         this.getTableDataCommission(value);
-      } else if (value === '汇总') {
+      } else if (value === "汇总") {
         this.markCommission = false;
         this.commissionStatus = false;
         this.getTableDataCommission(value);
-      } else if (value === '最近7天') {
+      } else if (value === "最近7天") {
         this.markCommission = false;
         this.commissionStatus = false;
         this.getTableDataCommission(value);
-      } else if (value === '最近30天') {
+      } else if (value === "最近30天") {
         this.markCommission = false;
         this.commissionStatus = false;
         this.getTableDataCommission(value);
-      } else if (value === '自定义时间') {
+      } else if (value === "自定义时间") {
         this.markCommission = true;
-        this.searchRowDataCommission.beginDate = '';
-        this.searchRowDataCommission.endDate = '';
+        this.searchRowDataCommission.beginDate = "";
+        this.searchRowDataCommission.endDate = "";
       }
     },
     timeChangeAccounts(value) {
-      if (value === '今日') {
+      if (value === "今日") {
         this.getTableDataAccounts(value);
         this.markAccounts = false;
         this.accountsStatus = false;
-      } else if (value === '昨日') {
+      } else if (value === "昨日") {
         this.markAccounts = false;
         this.accountsStatus = false;
         this.getTableDataAccounts(value);
-      } else if (value === '汇总') {
+      } else if (value === "汇总") {
         this.markAccounts = false;
         this.accountsStatus = false;
         this.getTableDataAccounts(value);
-      } else if (value === '最近7天') {
+      } else if (value === "最近7天") {
         this.markAccounts = false;
         this.accountsStatus = false;
         this.getTableDataAccounts(value);
-      } else if (value === '最近30天') {
+      } else if (value === "最近30天") {
         this.markAccounts = false;
         this.accountsStatus = false;
         this.getTableDataAccounts(value);
-      } else if (value === '自定义时间') {
+      } else if (value === "自定义时间") {
         this.markAccounts = true;
-        this.searchRowDataAccounts.beginDate = '';
-        this.searchRowDataAccounts.endDate = '';
+        this.searchRowDataAccounts.beginDate = "";
+        this.searchRowDataAccounts.endDate = "";
       }
     },
     timeChangeOlaceOrder(value) {
-      if (value === '今日') {
+      if (value === "今日") {
         this.getTableDataOlaceOrder(value);
         this.markOlaceOrder = false;
         this.olaceOrderStatus = false;
-      } else if (value === '昨日') {
+      } else if (value === "昨日") {
         this.markOlaceOrder = false;
         this.olaceOrderStatus = false;
         this.getTableDataOlaceOrder(value);
-      } else if (value === '汇总') {
+      } else if (value === "汇总") {
         this.markOlaceOrder = false;
         this.olaceOrderStatus = false;
         this.getTableDataOlaceOrder(value);
-      } else if (value === '最近7天') {
+      } else if (value === "最近7天") {
         this.markOlaceOrder = false;
         this.olaceOrderStatus = false;
         this.getTableDataOlaceOrder(value);
-      } else if (value === '最近30天') {
+      } else if (value === "最近30天") {
         this.markOlaceOrder = false;
         this.olaceOrderStatus = false;
         this.getTableDataOlaceOrder(value);
-      } else if (value === '自定义时间') {
+      } else if (value === "自定义时间") {
         this.markOlaceOrder = true;
-        this.searchRowDataOlaceOrder.beginDate = '';
-        this.searchRowDataOlaceOrder.endDate = '';
+        this.searchRowDataOlaceOrder.beginDate = "";
+        this.searchRowDataOlaceOrder.endDate = "";
       }
     },
     timeChangeBrokerage(value) {
       this.searchRowDataBrokerage.page = 1;
-      if (value === '今日') {
+      if (value === "今日") {
         this.getTableDataBrokerage(value);
         this.markBrokerage = false;
-      } else if (value === '昨日') {
+      } else if (value === "昨日") {
         this.markBrokerage = false;
         this.getTableDataBrokerage(value);
-      } else if (value === '汇总') {
+      } else if (value === "汇总") {
         this.markBrokerage = false;
         this.getTableDataBrokerage(value);
-      } else if (value === '最近7天') {
+      } else if (value === "最近7天") {
         this.markBrokerage = false;
         this.getTableDataBrokerage(value);
-      } else if (value === '最近30天') {
+      } else if (value === "最近30天") {
         this.markBrokerage = false;
         this.getTableDataBrokerage(value);
-      } else if (value === '自定义时间') {
+      } else if (value === "自定义时间") {
         this.markBrokerage = true;
-        this.searchRowDataBrokerage.createTimeBegin = '';
-        this.searchRowDataBrokerage.createTimeEnd = '';
+        this.searchRowDataBrokerage.createTimeBegin = "";
+        this.searchRowDataBrokerage.createTimeEnd = "";
       }
     },
     timeChangeCommissionTrend(value) {
-      if (value === '上月') {
+      if (value === "上月") {
         this.commissionDataTotalTrend(value);
         this.markCommissionTrend = false;
-      } else if (value === '本月') {
+      } else if (value === "本月") {
         this.markCommissionTrend = false;
         this.commissionDataTotalTrend(value);
-      } else if (value === '自定义月份') {
-        this.queryMonth = '';
+      } else if (value === "自定义月份") {
+        this.queryMonth = "";
         this.markCommissionTrend = true;
       }
     },
     timeChangeAccountsTrend(value) {
-      if (value === '上月') {
+      if (value === "上月") {
         this.settleDataTotalTrend(value);
         this.markAccountsTrend = false;
-      } else if (value === '本月') {
+      } else if (value === "本月") {
         this.markAccountsTrend = false;
         this.settleDataTotalTrend(value);
-      } else if (value === '自定义月份') {
-        this.queryMonth = '';
+      } else if (value === "自定义月份") {
+        this.queryMonth = "";
         this.markAccountsTrend = true;
       }
     },
     timeChangeOlaceOrderTrend(value) {
-      if (value === '上月') {
+      if (value === "上月") {
         this.orderDataTotalTrend(value);
         this.markOlaceOrderTrend = false;
-      } else if (value === '本月') {
+      } else if (value === "本月") {
         this.markOlaceOrderTrend = false;
         this.orderDataTotalTrend(value);
-      } else if (value === '自定义月份') {
-        this.queryMonth = '';
+      } else if (value === "自定义月份") {
+        this.queryMonth = "";
         this.markOlaceOrderTrend = true;
       }
     },
     startTimeChange(value, date) {
-      this.button = '自定义时间';
+      this.button = "自定义时间";
       this.searchRowData.beginDate = value;
     },
     endTimeChange(value, date) {
-      this.button = '自定义时间';
+      this.button = "自定义时间";
       this.searchRowData.endDate = value;
     },
     startTimeChangeBrokerage(value, date) {
-      this.buttonBrokerage = '自定义时间';
+      this.buttonBrokerage = "自定义时间";
       this.searchRowDataBrokerage.createTimeBegin = value;
     },
     endTimeChangeBrokerage(value, date) {
-      this.buttonBrokerage = '自定义时间';
+      this.buttonBrokerage = "自定义时间";
       this.searchRowDataBrokerage.createTimeEnd = value;
     },
     startTimeChangeCommission(value, date) {
-      this.buttonCommission = '自定义时间';
+      this.buttonCommission = "自定义时间";
       this.searchRowDataCommission.beginDate = value;
       this.commissionStatus = true;
       if (this.searchRowDataCommission.endDate) {
@@ -1878,12 +1899,12 @@ export default {
       }
     },
     endTimeChangeCommission(value, date) {
-      this.buttonCommission = '自定义时间';
+      this.buttonCommission = "自定义时间";
       this.searchRowDataCommission.endDate = value;
       this.getTableDataCommission();
     },
     startTimeChangeAccounts(value, date) {
-      this.buttonAccounts = '自定义时间';
+      this.buttonAccounts = "自定义时间";
       this.searchRowDataAccounts.beginDate = value;
       this.accountsStatus = true;
       if (this.searchRowDataAccounts.endDate) {
@@ -1891,12 +1912,12 @@ export default {
       }
     },
     endTimeChangeAccounts(value, date) {
-      this.buttonAccounts = '自定义时间';
+      this.buttonAccounts = "自定义时间";
       this.searchRowDataAccounts.endDate = value;
       this.getTableDataAccounts();
     },
     startTimeChangeOlaceOrder(value, date) {
-      this.buttonOlaceOrder = '自定义时间';
+      this.buttonOlaceOrder = "自定义时间";
       this.searchRowDataOlaceOrder.beginDate = value;
       this.olaceOrderStatus = true;
       if (this.searchRowDataOlaceOrder.endDate) {
@@ -1904,7 +1925,7 @@ export default {
       }
     },
     endTimeChangeOlaceOrder(value, date) {
-      this.buttonOlaceOrder = '自定义时间';
+      this.buttonOlaceOrder = "自定义时间";
       this.searchRowDataOlaceOrder.endDate = value;
       this.getTableDataOlaceOrder();
     },
@@ -1921,7 +1942,7 @@ export default {
       this.orderDataTotalTrend();
     },
     handleClear() {
-      this.button = '汇总';
+      this.button = "汇总";
       this.mark = false;
       this.resetSearchRowData();
       this.page = 1;
@@ -1963,7 +1984,7 @@ export default {
     },
     // 导出数据
     handleDownload(name) {
-      if (name === 'prod') {
+      if (name === "prod") {
         // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
         this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
         const pageSize = this.searchRowData.page;
@@ -1975,16 +1996,17 @@ export default {
           this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
           tableData.forEach((item) => {
-            item['awardAmount'] = (item['awardAmount'] / 100.0).toFixed(2);
+            item["awardAmount"] = (item["awardAmount"] / 100.0).toFixed(2);
           });
-          const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
+          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
           this.$refs.tableDatas.handleDownload({
             filename: `分享赚商品数据统计-${date}`,
-            data: tableData
+            data: tableData,
           });
         });
-      } else if (name === 'user') {
-        this.searchRowDataUse.rows = this.totalPageUse > 5000 ? 5000 : this.totalPageUse;
+      } else if (name === "user") {
+        this.searchRowDataUse.rows =
+          this.totalPageUse > 5000 ? 5000 : this.totalPageUse;
         const pageSize = this.searchRowDataUse.page;
         this.searchRowDataUse.page = 1;
         shareUserStatistics(this.searchRowDataUse).then((res) => {
@@ -1994,17 +2016,17 @@ export default {
           this.searchRowDataUse.page = pageSize;
           // 表格数据导出字段翻译
           tableData.forEach((item) => {
-            item['allOutAmount'] = (item['allOutAmount'] / 100.0).toFixed(2);
-            item['countAmount'] = (item['countAmount'] / 100.0).toFixed(2);
-            item['countAwardAmount'] = (
-              item['countAwardAmount'] / 100.0
+            item["allOutAmount"] = (item["allOutAmount"] / 100.0).toFixed(2);
+            item["countAmount"] = (item["countAmount"] / 100.0).toFixed(2);
+            item["countAwardAmount"] = (
+              item["countAwardAmount"] / 100.0
             ).toFixed(2);
-            item['waitAmount'] = (item['waitAmount'] / 100.0).toFixed(2);
+            item["waitAmount"] = (item["waitAmount"] / 100.0).toFixed(2);
           });
-          const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
+          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
           this.$refs.tableDataUse.handleDownload({
             filename: `分享赚员工数据统计-${date}`,
-            data: tableData
+            data: tableData,
           });
         });
       } else {
@@ -2019,25 +2041,25 @@ export default {
           this.searchRowDataBrokerage.page = pageSize;
           // 表格数据导出字段翻译status
           tableData.forEach((item) => {
-            item['awardAmount'] = (item['awardAmount'] / 100.0).toFixed(2);
-            item['orderAmount'] = (item['orderAmount'] / 100.0).toFixed(2);
-            if (item['status'] === 'WAIT') {
-              item['status'] = '待入账';
-            } else if (item['status'] === 'SUCCESS') {
-              item['status'] = '已入账';
+            item["awardAmount"] = (item["awardAmount"] / 100.0).toFixed(2);
+            item["orderAmount"] = (item["orderAmount"] / 100.0).toFixed(2);
+            if (item["status"] === "WAIT") {
+              item["status"] = "待入账";
+            } else if (item["status"] === "SUCCESS") {
+              item["status"] = "已入账";
             } else {
-              item['status'] = '入账失败';
+              item["status"] = "入账失败";
             }
           });
-          const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
+          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
           this.$refs.tablesBrokerage.handleDownload({
             filename: `分享赚佣金明细数据统计-${date}`,
-            data: tableData
+            data: tableData,
           });
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
