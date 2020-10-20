@@ -1395,7 +1395,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.orderStatus === "FAILURE") {
+            } else if (row.orderStatus === "FAILURE"||row.orderStatus === "EXPIRED") {
               return (
                 <div>
                   <tag color="error">

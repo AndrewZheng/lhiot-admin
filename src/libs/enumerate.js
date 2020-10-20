@@ -2373,7 +2373,8 @@ export const miniOrderStatus = {
   RETURNING: 'RETURNING',
   ALREADY_RETURN: 'ALREADY_RETURN',
   FAILURE: 'FAILURE',
-  FINISHED: 'FINISHED'
+  FINISHED: 'FINISHED',
+  EXPIRED:'EXPIRED'
 };
 
 export const miniOrderStatusEnum = [{
@@ -2411,6 +2412,10 @@ export const miniOrderStatusEnum = [{
 {
   label: '已失效',
   value: miniOrderStatus.FAILURE
+},
+{
+  label: '已过期',
+  value: miniOrderStatus.EXPIRED
 },
 {
   label: '已完成',

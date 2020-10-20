@@ -604,6 +604,22 @@ export default {
                   </tag>
                 </div>
               );
+            } else if (row.productType == "TEAM_BUY_PRODUCT") {
+              return (
+                <div>
+                  <tag color="green">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.productType == "PRE_SALE_PRODUCT") {
+              return (
+                <div>
+                  <tag color="green">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
             }
           },
         },
@@ -627,21 +643,47 @@ export default {
         },
         {
           title: "在售率",
-          key: "price",
+          key: "sellingRate",
           align: "center",
-          width: "90px",
+          width: "100px",
+          render(h, params) {
+            const { row } = params;
+            if (!row.sellingRate) {
+              return h("div", "0.00%");
+            } else {
+              return h("div", row.sellingRate + "%");
+            }
+          },
         },
         {
           title: "动销率",
           align: "center",
-          key: "saleCount",
-          width: "90px",
+          key: "turnoverRate",
+          width: "100px",
+          render(h, params) {
+            const { row } = params;
+
+            if (!row.turnoverRate) {
+              return h("div", "0.00%");
+            } else {
+              return h("div", row.turnoverRate + "%");
+            }
+          },
         },
         {
           title: "售罄率",
-          key: "saleAmount",
+          key: "soldOutRate",
           align: "center",
-          width: "90px",
+          width: "100px",
+          render(h, params) {
+            const { row } = params;
+
+            if (!row.soldOutRate) {
+              return h("div", "0.00%");
+            } else {
+              return h("div", row.soldOutRate + "%");
+            }
+          },
         },
       ],
       sellColumns: [

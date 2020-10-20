@@ -2416,12 +2416,12 @@ export default {
             _this.$Message.error("商品份额必须被成团人数整除!");
             return;
           }
-          if (
-            _this.teambuyDetail.productNum < _this.teambuyDetail.fullUserNum
-          ) {
-            _this.$Message.error("库存数量不能小于成团人数!");
-            return;
-          }
+          // if (
+          //   _this.teambuyDetail.productNum < _this.teambuyDetail.fullUserNum
+          // ) {
+          //   _this.$Message.error("库存数量不能小于成团人数!");
+          //   return;
+          // }
           if (
             _this.teambuyDetail.tourDiscount >=
             _this.teambuyDetail.activityPrice
