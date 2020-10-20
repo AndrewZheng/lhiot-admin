@@ -51,6 +51,21 @@ export const productStanardRanking = (data) => {
   });
 };
 
+// 门店商品销售统计 
+export const getStoreSaleTotalPages = (data) => {
+  return $http.request({
+    url: '/minapp/index/statistics/store-sale-total',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
 // 删除图片
 export const deletePicture = ({
   urls
@@ -1088,7 +1103,7 @@ export const shareProdStatistics = (data) => {
 // 分享赚用户数据统计 /minapp/share/user/share-total
 export const shareUserStatistics = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/share/user/share-total?nickName=${data.nickName}&deptName=${data.deptName}&phone=${data.phone}`,
+    url: `/minapp/share/user/share-total?nickName=${data.nickName}&deptName=${data.deptName}&phone=${data.phone}&beginDate=${data.beginDate}&endDate=${data.endDate}`,
     method: 'get',
     headers: {
       'page': data.page,
@@ -3177,7 +3192,7 @@ export const getStoreMaterielDel = ({
   });
 };
 //  外卖红包列表 /minapp/wechat-reward/pages
-export const getWechatRewardPage= (data) => {
+export const getWechatRewardPage = (data) => {
   return $http.request({
     url: '/minapp/wechat-reward/pages',
     data,

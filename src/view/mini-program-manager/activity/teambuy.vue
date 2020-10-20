@@ -1581,6 +1581,7 @@
 
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
+import config from "@/config";
 import IViewUpload from "_c/iview-upload";
 import _ from "lodash";
 import {
@@ -1600,14 +1601,14 @@ import searchMixin from "@/mixins/searchMixin.js";
 import {
   teamBuyStatusConvert,
   customPlanStatusConvert,
-  expandTypeConvert
+  expandTypeConvert,
 } from "@/libs/converStatus";
 import {
   teamBuyStatusEnum,
   teamBuyTypeEnum,
   rewardActivitySettingEnum,
   relationStoreTypeEnum,
-  expandTypeEnum
+  expandTypeEnum,
 } from "@/libs/enumerate";
 import {
   fenToYuanDot2,
@@ -1902,6 +1903,7 @@ export default {
       relationStoreTypeEnum,
       groupStatus: "",
       modalGoodsStandard: false,
+      isEnvironment: null,
       flagShipList: [],
       storeNameList: [],
       storeList: [],
@@ -2341,7 +2343,9 @@ export default {
     this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
   },
-  created() {},
+  created() {
+    this.isEnvironment = config.isEnvironment;
+  },
   methods: {
     costPriceInputNumberOnchange(value) {
       this.teambuyDetail.costPrice = yuanToFenNumber(value);
@@ -2574,7 +2578,6 @@ export default {
         this.currentTableRowSelected.productProfitPrice = null;
         this.currentTableRowSelected.commissionScale = null;
         this.currentTableRowSelected.commissionPrice = null;
-        this.currentTableRowSelected.banner = null;
         this.currentTableRowSelected.status = null;
         this.currentTableRowSelected.rank = null;
         this.currentTableRowSelected.storeId = null;
@@ -2588,7 +2591,11 @@ export default {
         this.currentTableRowSelected.hour = hourTime;
         this.currentTableRowSelected.minute = minuteTime;
         this.currentTableRowSelected.second = secondTime;
+        if (this.isEnvironment) {
+          this.currentTableRowSelected.banner = null;
+        }
         this.teambuyDetail = _.cloneDeep(this.currentTableRowSelected);
+        this.setDefaultUploadList(this.teambuyDetail);
       }
 
       // this.getStore();

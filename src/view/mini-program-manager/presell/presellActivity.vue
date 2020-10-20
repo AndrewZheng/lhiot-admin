@@ -1367,6 +1367,7 @@
 
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
+import config from "@/config";
 import IViewUpload from "_c/iview-upload";
 import _ from "lodash";
 import {
@@ -1386,14 +1387,14 @@ import searchMixin from "@/mixins/searchMixin.js";
 import {
   teamBuyStatusConvert,
   customPlanStatusConvert,
-  expandTypeConvert
+  expandTypeConvert,
 } from "@/libs/converStatus";
 import {
   teamBuyStatusEnum,
   teamBuyTypeEnum,
   rewardActivitySettingEnum,
   relationStoreTypeEnum,
-  expandTypeEnum
+  expandTypeEnum,
 } from "@/libs/enumerate";
 import {
   fenToYuanDot2,
@@ -1647,6 +1648,7 @@ export default {
       rewardActivitySettingEnum,
       relationStoreTypeEnum,
       expandTypeEnum,
+      isEnvironment: null,
       groupStatus: "",
       showStoreName: "",
       flagShipList: [],
@@ -2073,7 +2075,9 @@ export default {
     this.getTableData();
     this.getStore();
   },
-  created() {},
+  created() {
+    this.isEnvironment = config.isEnvironment;
+  },
   methods: {
     costPriceInputNumberOnchange(value) {
       this.presellDetail.costPrice = yuanToFenNumber(value);
@@ -2246,7 +2250,6 @@ export default {
         this.currentTableRowSelected.createTime = null;
         this.currentTableRowSelected.standardId = null;
         this.currentTableRowSelected.originalPrice = null;
-        this.currentTableRowSelected.banner = null;
         this.currentTableRowSelected.status = null;
         this.currentTableRowSelected.costPrice = null;
         this.currentTableRowSelected.productProfitPrice = null;
@@ -2260,7 +2263,11 @@ export default {
         this.currentTableRowSelected.storeIds = null;
         this.currentTableRowSelected.relationStoreType = "ALL";
         this.currentTableRowSelected.activityPrice = null;
+        if (this.isEnvironment) {
+          this.currentTableRowSelected.banner = null;
+        }
         this.presellDetail = _.cloneDeep(this.currentTableRowSelected);
+        this.setDefaultUploadList(this.presellDetail);
       }
       this.getStore();
       this.modalEdit = true;

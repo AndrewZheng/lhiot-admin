@@ -895,6 +895,7 @@ export default {
     this.createLoading = true;
     getStoreAreas().then((res) => {
       this.areaList = res;
+      console.log("23123132",res)
       getStorePages({
         // 数据库数据不完整，暂时先注释掉门店类型条件
         // storeType: storeType.FLAGSHIP_STORE,

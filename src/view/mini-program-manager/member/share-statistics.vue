@@ -136,23 +136,23 @@
                 clearable
               ></Input>
               <DatePicker
-              :value="searchRowDataUse.regBeginTime"
+              :value="searchRowDataUse.beginDate"
               format="yyyy-MM-dd"
               type="date"
               placeholder="开始时间"
               class="search-input"
               style="width: 130px"
-              @on-change="searchRowDataUse.regBeginTime = $event"
+              @on-change="searchRowDataUse.beginDate = $event"
             />
             <i>-</i>
             <DatePicker
-              :value="searchRowDataUse.regEndTime"
+              :value="searchRowDataUse.endDate"
               format="yyyy-MM-dd"
               type="date"
               placeholder="结束时间"
               class="search-input mr5"
               style="width: 130px"
-              @on-change="searchRowDataUse.regEndTime = $event"
+              @on-change="searchRowDataUse.endDate = $event"
             />
               <Button
                 :loading="searchLoading"
@@ -637,8 +637,8 @@ const roleRowDataUse = {
   nickName: "",
   phone: "",
   deptName: "",
-  regBeginTime: "",
-  regEndTime: "",
+  beginDate: "",
+  endDate: "",
   sidx: "countAwardAmount",
   sort: "desc",
 };
