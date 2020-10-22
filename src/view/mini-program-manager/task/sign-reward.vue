@@ -287,7 +287,7 @@ export default {
     handleConfig() {
       this.turnToPage({
         name: 'small-hand-coupon',
-        params: { couponBusinessType: 'ACTIVITY_SIGN_COUPON' }
+        params: { couponBusinessType: 'ACTIVITY_SIGN_COUPON',pageStatus:"signReward" }
       })
     },
     handleCreate() {
