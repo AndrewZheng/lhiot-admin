@@ -867,7 +867,6 @@
                         v-for="(item, index) in isUseCoupon"
                         :value="item.value"
                         :key="index"
-                        :disabled="clickFlag == false"
                         class="ptb2-5"
                         style="padding-left: 5px; width: 100px"
                         >{{ item.label }}</Option
@@ -1764,6 +1763,7 @@
 
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
+import config from "@/config";
 import DragList from "_c/drag-list";
 import IViewUpload from "_c/iview-upload";
 import _ from "lodash";
@@ -2231,7 +2231,7 @@ export default {
         // },
         {
           title: "商品类型",
-          minWidth: 120,
+          minWidth: 130,
           key: "productType",
           align: "center",
           render: (h, params, vm) => {
@@ -2277,6 +2277,22 @@ export default {
                 </div>
               );
             } else if (row.productType == "SHARE_PRODUCT") {
+              return (
+                <div>
+                  <tag color="green">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.productType == "TEAM_BUY_PRODUCT") {
+              return (
+                <div>
+                  <tag color="green">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.productType == "PRE_SALE_PRODUCT") {
               return (
                 <div>
                   <tag color="green">
@@ -2437,6 +2453,7 @@ export default {
       tempModalType: "create",
       tableData: [],
       total: 0,
+      isEnvironment: null,
       productData: [],
       productTotal: 0,
       loading: true,
@@ -2505,6 +2522,7 @@ export default {
     },
   },
   created() {
+    this.isEnvironment = config.isEnvironment;
     this.showBack = this.$route.name === "small-goods-relation-standard";
     this.getTableData();
   },
@@ -2958,18 +2976,23 @@ export default {
         this.currentTableRowSelected.storeIds = null;
         this.currentTableRowSelected.relationStoreType = "ALL";
         this.currentTableRowSelected.whetherLockShelf = "NP";
-        this.currentTableRowSelected.image = null;
-        this.currentTableRowSelected.detailImage = null;
         this.currentTableRowSelected.barcode = null;
         this.currentTableRowSelected.price = null;
         this.currentTableRowSelected.salePrice = null;
         this.currentTableRowSelected.productStandardExpand = null;
-        this.currentTableRowSelected.rotationImage = "";
-        this.currentTableRowSelected.shareImage = "";
+        if (this.isEnvironment) {
+          this.currentTableRowSelected.rotationImage = "";
+          this.currentTableRowSelected.shareImage = "";
+          this.currentTableRowSelected.image = null;
+          this.currentTableRowSelected.detailImage = null;
+          this.productStandardDetail.description = null;
+        }
         this.productStandardDetail = _.cloneDeep(this.currentTableRowSelected);
       }
       this.tempModalType = this.modalType.create;
-      this.productStandardDetail.description = null;
+      if (this.isEnvironment) {
+        this.productStandardDetail.description = null;
+      }
       // this.productStandardDetail.standardQty = 0;
       // this.productStandardDetail.rank = 0;
       this.setDefaultUploadList(this.productStandardDetail);

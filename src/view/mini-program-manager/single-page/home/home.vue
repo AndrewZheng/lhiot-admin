@@ -190,46 +190,15 @@
           search-place="top"
         >
           <div slot="searchCondition">
-            <RadioGroup
-              v-model="buttonSell"
-              type="button"
-              @on-change="sellTimeChange"
-            >
-              <Radio label="今日"></Radio>
-              <Radio label="昨日"></Radio>
-              <Radio label="最近7天"></Radio>
-              <Radio label="最近30天"></Radio>
-              <Radio label="自定义时间"></Radio>
-            </RadioGroup>
-            <DatePicker
-              v-model="sellSearchRowData.beginDate"
-              format="yyyy-MM-dd"
-              v-show="markSell === true"
-              type="date"
-              placeholder="开始时间"
-              style="width: 120px"
-              @on-change="sellStartTimeChange"
-            />
-            <i v-show="markSell === true">-</i>
-            <DatePicker
-              v-model="sellSearchRowData.endDate"
-              format="yyyy-MM-dd"
-              type="date"
-              v-show="markSell === true"
-              placeholder="结束时间"
-              class="search-input"
-              style="width: 120px"
-              @on-change="sellEndTimeChange"
-            />
             <Input
-              v-model="sellSearchRowData.productName"
+              v-model="sellSearchRowData.storeName"
               placeholder="门店名称"
               class="search-input"
               style="width: 160px"
               clearable
             ></Input>
             <Select
-              v-model="sellSearchRowData.productType"
+              v-model="sellSearchRowData.storeArea"
               class=""
               placeholder="所属区域"
               style="width: 130px"
@@ -244,7 +213,7 @@
               >
             </Select>
             <Select
-              v-model="sellSearchRowData.rankingType"
+              v-model="sellSearchRowData.sidx"
               class="search-col mr2"
               placeholder="排序字段"
               style="width: 120px"
@@ -339,6 +308,7 @@ import {
   productRanking,
   productStanardRanking,
   getStoreAreaPages,
+  getStoreSaleTotalPages,
 } from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
@@ -367,13 +337,12 @@ const goodsRoleRowData = {
 };
 
 const sellRoleRowData = {
-  rankingType: "SALE_COUNT",
-  beginDate: "",
-  endDate: "",
-  productName: "",
-  productType: "",
+  storeName: "",
+  storeArea: "",
   page: 1,
   rows: 10,
+  sidx: "sumAmount",
+  sort: "desc",
 };
 
 const storeRowData = {
@@ -396,16 +365,15 @@ export default {
   data() {
     return {
       mark: false,
-      markSell: false,
       topStatus: "productStanard",
       button: "今日",
-      buttonSell: "今日",
-      seniorityButton:"按点赞排行排序",
+      seniorityButton: "按点赞排行排序",
       brandType: config.brandType,
       seniorityStatus: "PRAISE",
       goodsTableData: [],
       sellTableData: [],
       storeArea: [],
+      areaList: [],
       expandTypeEnum,
       goodsTotal: 0,
       sellTotal: 0,
@@ -419,8 +387,8 @@ export default {
         { label: "销售额排序", value: "SALE_AMOUNT" },
       ],
       sellRankingType: [
-        { label: "订单数", value: "SALE_COUNT" },
-        { label: "销售额", value: "SALE_AMOUNT" },
+        { label: "订单数", value: "totalCount" },
+        { label: "销售额", value: "sumAmount" },
       ],
       inforCardData: [
         {
@@ -636,6 +604,22 @@ export default {
                   </tag>
                 </div>
               );
+            } else if (row.productType == "TEAM_BUY_PRODUCT") {
+              return (
+                <div>
+                  <tag color="green">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.productType == "PRE_SALE_PRODUCT") {
+              return (
+                <div>
+                  <tag color="green">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
             }
           },
         },
@@ -659,21 +643,47 @@ export default {
         },
         {
           title: "在售率",
-          key: "price",
+          key: "sellingRate",
           align: "center",
-          width: "90px",
+          width: "100px",
+          render(h, params) {
+            const { row } = params;
+            if (!row.sellingRate) {
+              return h("div", "0.00%");
+            } else {
+              return h("div", row.sellingRate + "%");
+            }
+          },
         },
         {
           title: "动销率",
           align: "center",
-          key: "saleCount",
-          width: "90px",
+          key: "turnoverRate",
+          width: "100px",
+          render(h, params) {
+            const { row } = params;
+
+            if (!row.turnoverRate) {
+              return h("div", "0.00%");
+            } else {
+              return h("div", row.turnoverRate + "%");
+            }
+          },
         },
         {
           title: "售罄率",
-          key: "saleAmount",
+          key: "soldOutRate",
           align: "center",
-          width: "90px",
+          width: "100px",
+          render(h, params) {
+            const { row } = params;
+
+            if (!row.soldOutRate) {
+              return h("div", "0.00%");
+            } else {
+              return h("div", row.soldOutRate + "%");
+            }
+          },
         },
       ],
       sellColumns: [
@@ -689,50 +699,61 @@ export default {
         },
         {
           title: "门店名称",
-          key: "productName",
+          key: "storeName",
           align: "center",
           minWidth: 100,
         },
         {
           title: "所属区域",
-          key: "specification",
+          key: "storeArea",
           align: "center",
           minWidth: 160,
+          render: (h, params, vm) => {
+            const { row } = params;
+            const obj = this.areaList.find((item) => {
+              return item.area === row.storeArea;
+            });
+            if (obj) {
+              return h("span", obj.areaName + "");
+            } else {
+              return h("span", row.storeArea + "");
+            }
+          },
         },
         {
           title: "在售商品数",
           align: "center",
-          key: "unitName",
+          key: "sellingCount",
           minWidth: 100,
         },
         {
           title: "可售商品数",
-          key: "price",
+          key: "canSaleCount",
           align: "center",
           minWidth: 100,
         },
         {
           title: "动销商品数",
           align: "center",
-          key: "saleCount",
+          key: "runSaleCount",
           minWidth: 100,
         },
         {
           title: "售罄商品数",
-          key: "saleAmount",
+          key: "soldOutCount",
           align: "center",
           minWidth: 100,
         },
         {
           title: "订单数",
-          key: "price",
+          key: "totalCount",
           align: "center",
           minWidth: 100,
         },
         {
           title: "销售额",
           align: "center",
-          key: "saleCount",
+          key: "sumAmount",
           minWidth: 100,
         },
       ],
@@ -817,69 +838,7 @@ export default {
     },
     getSellTableData(value) {
       const _this = this;
-      let date = new Date();
-      date.setDate(date.getDate());
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var today = `${year}-${month}-${day}`;
-      if (value === "昨日") {
-        let date = new Date();
-        date.setDate(date.getDate() - 1);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var yesterday = `${year}-${month}-${day}`;
-        this.sellSearchRowData.beginDate = yesterday;
-        this.sellSearchRowData.endDate = yesterday;
-      }
-      if (value === "今日") {
-        let date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
-        this.sellSearchRowData.beginDate = today;
-        this.sellSearchRowData.endDate = today;
-      }
-      if (value === "最近7天") {
-        let date = new Date();
-        date.setDate(date.getDate() - 7);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var sevenDay = `${year}-${month}-${day}`;
-        this.sellSearchRowData.beginDate = sevenDay;
-        this.sellSearchRowData.endDate = today;
-      }
-      if (value === "最近30天") {
-        let date = new Date();
-        date.setDate(date.getDate() - 30);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var toMonth = `${year}-${month}-${day}`;
-        this.sellSearchRowData.beginDate = toMonth;
-        this.sellSearchRowData.endDate = today;
-      }
-      let date1 = new Date();
-      date1.setDate(date.getDate() - 1);
-      var year1 = date.getFullYear();
-      var month1 = date.getMonth() + 1;
-      var day1 = date.getDate();
-      var yesterday1 = `${year1}-${month1}-${day1}`;
-      if (this.buttonSell === "今日") {
-        this.sellSearchRowData.beginDate = yesterday1;
-        this.sellSearchRowData.endDate = yesterday1;
-      }
-      this.sellSearchRowData.beginDate = this.$moment(
-        this.sellSearchRowData.beginDate
-      ).format("YYYY-MM-DD");
-      this.sellSearchRowData.endDate = this.$moment(
-        this.sellSearchRowData.endDate
-      ).format("YYYY-MM-DD");
-      productStanardRanking(this.sellSearchRowData)
+      getStoreSaleTotalPages(this.sellSearchRowData)
         .then((res) => {
           this.sellTableData = res.rows;
           this.sellTotal = res.total;
@@ -976,6 +935,7 @@ export default {
     getStoreAreaPages() {
       getStoreAreaPages(this.storeSearchRowData)
         .then((res) => {
+          this.areaList = res.rows;
           res.rows.forEach((value) => {
             const map = { label: "label", value: "value" };
             map.value = value.area;
@@ -1043,25 +1003,6 @@ export default {
         this.goodsSearchRowData.endDate = "";
       }
     },
-    sellTimeChange(value) {
-      if (value === "今日") {
-        this.markSell = false;
-        this.getSellTableData(value);
-      } else if (value === "昨日") {
-        this.markSell = false;
-        this.getSellTableData(value);
-      } else if (value === "最近7天") {
-        this.markSell = false;
-        this.getSellTableData(value);
-      } else if (value === "最近30天") {
-        this.markSell = false;
-        this.getSellTableData(value);
-      } else if (value === "自定义时间") {
-        this.markSell = true;
-        this.sellSearchRowData.beginDate = "";
-        this.sellSearchRowData.endDate = "";
-      }
-    },
     startTimeChange(value, date) {
       this.button = "自定义时间";
       this.goodsSearchRowData.beginDate = value;
@@ -1069,15 +1010,6 @@ export default {
     endTimeChange(value, date) {
       this.button = "自定义时间";
       this.goodsSearchRowData.endDate = value;
-    },
-
-    sellStartTimeChange(value, date) {
-      this.button = "自定义时间";
-      this.sellSearchRowData.beginDate = value;
-    },
-    sellEndTimeChange(value, date) {
-      this.button = "自定义时间";
-      this.sellSearchRowData.endDate = value;
     },
     handleGoodsSearch() {
       if (
@@ -1098,19 +1030,13 @@ export default {
       this.mark = false;
     },
     handleSellSearch() {
-      if (this.sellSearchRowData.beginDate && this.sellSearchRowData.endDate) {
-        this.sellSearchRowData.page = 1;
-        this.searchLoading = true;
-        this.getSellTableData();
-      } else {
-        this.$Message.info("请先选择搜索时间!");
-      }
+      this.sellSearchRowData.page = 1;
+      this.searchLoading = true;
+      this.getSellTableData();
     },
     handleSellClear() {
       this.sellSearchRowData = _.cloneDeep(sellRoleRowData);
-      this.getSellTableData("今日");
-      this.buttonSell = "今日";
-      this.markSell = false;
+      this.getSellTableData();
     },
     assistDataChange(e) {
       let index = e.currentTarget.dataset.index;
@@ -1135,16 +1061,11 @@ export default {
         ).format("YYYY-MM-DD");
         productStanardRanking(this.goodsSearchRowData).then((res) => {
           const tableData = res.rows;
-          console.log("2321323124", tableData);
           // 恢复正常页数
           this.goodsSearchRowData.rows = 10;
           this.goodsSearchRowData.page = pageSize;
           // 表格数据导出字段翻译
           let _this = this;
-          tableData.forEach((item, index) => {
-            item["productType"] = expandTypeConvert(item["productType"]).label;
-            item["ranking"] = Number(index) + 1;
-          });
           const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
           this.$refs.goodsTableData.handleDownload({
             filename: `商品规格销售排行统计-${date}`,
@@ -1157,13 +1078,7 @@ export default {
           this.sellTotal > 5000 ? 5000 : this.sellTotal;
         let pageSize = this.sellSearchRowData.page;
         this.sellSearchRowData.page = 1;
-        this.sellSearchRowData.beginDate = this.$moment(
-          this.sellSearchRowData.beginDate
-        ).format("YYYY-MM-DD");
-        this.sellSearchRowData.endDate = this.$moment(
-          this.sellSearchRowData.endDate
-        ).format("YYYY-MM-DD");
-        productStanardRanking(this.sellSearchRowData).then((res) => {
+        getStoreSaleTotalPages(this.sellSearchRowData).then((res) => {
           const tableData = res.rows;
           // 恢复正常页数
           this.sellSearchRowData.rows = 10;

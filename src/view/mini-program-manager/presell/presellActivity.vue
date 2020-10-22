@@ -1367,6 +1367,7 @@
 
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
+import config from "@/config";
 import IViewUpload from "_c/iview-upload";
 import _ from "lodash";
 import {
@@ -1386,12 +1387,14 @@ import searchMixin from "@/mixins/searchMixin.js";
 import {
   teamBuyStatusConvert,
   customPlanStatusConvert,
+  expandTypeConvert,
 } from "@/libs/converStatus";
 import {
   teamBuyStatusEnum,
   teamBuyTypeEnum,
   rewardActivitySettingEnum,
   relationStoreTypeEnum,
+  expandTypeEnum,
 } from "@/libs/enumerate";
 import {
   fenToYuanDot2,
@@ -1491,7 +1494,7 @@ const productStandardDetail = {
 };
 
 const productRowData = {
-  productType: "ORDINARY_PRODUCT",
+  productType: "PRE_SALE_PRODUCT",
   productId: "",
   barcode: "",
   productCode: "",
@@ -1644,6 +1647,8 @@ export default {
       teamBuyTypeEnum,
       rewardActivitySettingEnum,
       relationStoreTypeEnum,
+      expandTypeEnum,
+      isEnvironment: null,
       groupStatus: "",
       showStoreName: "",
       flagShipList: [],
@@ -1915,6 +1920,26 @@ export default {
           minWidth: 150,
         },
         {
+          title: "商品类型",
+          align: "center",
+          key: "productType",
+          minWidth: 130,
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.productType == "PRE_SALE_PRODUCT") {
+              return (
+                <div>
+                  <tag color="magenta">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else {
+              return <div>N/A</div>;
+            }
+          },
+        },
+        {
           title: "规格",
           align: "center",
           key: "specification",
@@ -2050,7 +2075,9 @@ export default {
     this.getTableData();
     this.getStore();
   },
-  created() {},
+  created() {
+    this.isEnvironment = config.isEnvironment;
+  },
   methods: {
     costPriceInputNumberOnchange(value) {
       this.presellDetail.costPrice = yuanToFenNumber(value);
@@ -2093,12 +2120,6 @@ export default {
       const _this = this;
       this.$refs[name].validate((valid) => {
         if (valid) {
-          if (
-            _this.presellDetail.costPrice > _this.presellDetail.activityPrice
-          ) {
-            this.$Message.error("成本价不能大于活动价格");
-            return;
-          }
           if (_this.presellDetail.triesLimit > 999) {
             _this.presellDetail.triesLimit = 999;
           }
@@ -2229,7 +2250,6 @@ export default {
         this.currentTableRowSelected.createTime = null;
         this.currentTableRowSelected.standardId = null;
         this.currentTableRowSelected.originalPrice = null;
-        this.currentTableRowSelected.banner = null;
         this.currentTableRowSelected.status = null;
         this.currentTableRowSelected.costPrice = null;
         this.currentTableRowSelected.productProfitPrice = null;
@@ -2243,7 +2263,11 @@ export default {
         this.currentTableRowSelected.storeIds = null;
         this.currentTableRowSelected.relationStoreType = "ALL";
         this.currentTableRowSelected.activityPrice = null;
+        if (this.isEnvironment) {
+          this.currentTableRowSelected.banner = null;
+        }
         this.presellDetail = _.cloneDeep(this.currentTableRowSelected);
+        this.setDefaultUploadList(this.presellDetail);
       }
       this.getStore();
       this.modalEdit = true;
