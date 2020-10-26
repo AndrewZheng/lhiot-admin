@@ -498,13 +498,13 @@ export default {
           title: "点赞",
           align: "center",
           key: "praiseCount",
-          width: "80px",
+          width: "180px",
         },
         {
           title: "点踩",
           key: "treadCount",
           align: "center",
-          width: "80px",
+          width: "180px",
         },
       ],
       goodsColumns: [
@@ -649,7 +649,7 @@ export default {
           render(h, params) {
             const { row } = params;
             if (!row.sellingRate) {
-              return h("div", "0.00%");
+              return h("div", "N/A");
             } else {
               return h("div", row.sellingRate + "%");
             }
@@ -664,7 +664,7 @@ export default {
             const { row } = params;
 
             if (!row.turnoverRate) {
-              return h("div", "0.00%");
+              return h("div", "N/A");
             } else {
               return h("div", row.turnoverRate + "%");
             }
@@ -679,7 +679,7 @@ export default {
             const { row } = params;
 
             if (!row.soldOutRate) {
-              return h("div", "0.00%");
+              return h("div", "N/A");
             } else {
               return h("div", row.soldOutRate + "%");
             }

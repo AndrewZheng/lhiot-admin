@@ -1352,7 +1352,7 @@ export default {
         {
           title: "退款金额",
           align: "center",
-          width: 100,
+          width: 110,
           key: "refundFee",
           render(h, params, vm) {
             const refund = fenToYuanDot2(params.row.refundFee);
@@ -1362,7 +1362,7 @@ export default {
         {
           title: "订单状态",
           align: "center",
-          width: 100,
+          width: 110,
           key: "orderStatus",
           render: (h, params, vm) => {
             const { row } = params;
