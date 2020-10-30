@@ -628,6 +628,15 @@ const miniMallRouter = [
         component: () => import('@/view/mini-program-manager/member/coupon-statistics.vue')
       },
       {
+        path: '/small-sendRedPacketStatistics',
+        name: 'small-sendRedPacketStatistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '外卖红包统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/sendRedPacketStatistics.vue')
+      },
+      {
         path: '/small-share-statistics',
         name: 'small-share-statistics',
         meta: {
