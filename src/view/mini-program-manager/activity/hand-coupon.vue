@@ -76,6 +76,9 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
+          <div class="ml15 mt10" v-if="hdCouponType === '新人注册首单立减券'">
+            <i style="color: red">*</i> 新人注册首单立减券只允许配置一张,如需修改请先下架有效的券再进行配置!
+          </div>
         </div>
         <div slot="operations" style="margin-left: -80px">
           <Button

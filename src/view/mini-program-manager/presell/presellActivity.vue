@@ -703,31 +703,6 @@
                   }}</FormItem>
                 </i-col>
               </Row>
-              <Row>
-                <p style="color: #ff3861; margin-left: 48px">
-                  * 佣金比例为0~50的整数 (单位%)　　　　　　　　　　　　 *
-                  按活动价的比例计算佣金
-                </p>
-                <i-col span="12">
-                  <FormItem label="佣金比例:" prop="commissionScale">
-                    <InputNumber
-                      :min="0"
-                      :readonly="
-                        presellDetail.startedFlag === true &&
-                        tempModalType === modalType.edit
-                      "
-                      v-model="presellDetail.commissionScale"
-                      style="padding-right: 5px; width: 200px"
-                      @on-change="commissionScaleOnchange"
-                    ></InputNumber>
-                  </FormItem>
-                </i-col>
-                <i-col span="12">
-                  <FormItem label="佣金金额:" prop="commissionPrice">{{
-                    "¥" + presellDetail.commissionPrice / 100
-                  }}</FormItem>
-                </i-col>
-              </Row>
               <Row v-show="presellDetail.standardId">
                 <i-col
                   span="12"
@@ -741,6 +716,27 @@
               <Divider v-show="tempModalType === modalType.edit"
                 >可修改部分</Divider
               >
+              <Row>
+                <p style="color: #ff3861; margin-left: 48px">
+                  * 佣金比例为0~50的整数 (单位%)　　　　　　　　　　　　 *
+                  按活动价的比例计算佣金
+                </p>
+                <i-col span="12">
+                  <FormItem label="佣金比例:" prop="commissionScale">
+                    <InputNumber
+                      :min="0"
+                      v-model="presellDetail.commissionScale"
+                      style="padding-right: 5px; width: 200px"
+                      @on-change="commissionScaleOnchange"
+                    ></InputNumber>
+                  </FormItem>
+                </i-col>
+                <i-col span="12">
+                  <FormItem label="佣金金额:" prop="commissionPrice">{{
+                    "¥" + presellDetail.commissionPrice / 100
+                  }}</FormItem>
+                </i-col>
+              </Row>
               <Row>
                 <i-col span="12">
                   <FormItem label="规格描述:" prop="standardDesc">
