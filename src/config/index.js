@@ -38,6 +38,8 @@ export default {
  * @description 绿航集团旗下品牌统一导出项目 水果熟了 /?type=minapp  万翼果联 /?type=wholesale 恰果果与绿航果业(待开发)
  */
   classifyTypeC: '/?type=minapp',
-  classifyTypeB: '/?type=wholesale'
+  classifyTypeB: '/?type=wholesale',
+
+  isEnvironment: IS_PROD
 
 };

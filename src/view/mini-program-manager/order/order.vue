@@ -1297,7 +1297,7 @@ export default {
         {
           title: "提货类型",
           align: "center",
-          width: 100,
+          width: 110,
           key: "receivingWay",
           render: (h, params, vm) => {
             const { row } = params;
@@ -1325,7 +1325,7 @@ export default {
         {
           title: "是否退款",
           align: "center",
-          width: 100,
+          width: 110,
           key: "isAllRefund",
           render: (h, params, vm) => {
             const { row } = params;
@@ -1352,7 +1352,7 @@ export default {
         {
           title: "退款金额",
           align: "center",
-          width: 100,
+          width: 110,
           key: "refundFee",
           render(h, params, vm) {
             const refund = fenToYuanDot2(params.row.refundFee);
@@ -1362,7 +1362,7 @@ export default {
         {
           title: "订单状态",
           align: "center",
-          width: 100,
+          width: 110,
           key: "orderStatus",
           render: (h, params, vm) => {
             const { row } = params;
@@ -1395,7 +1395,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.orderStatus === "FAILURE") {
+            } else if (row.orderStatus === "FAILURE"||row.orderStatus === "EXPIRED") {
               return (
                 <div>
                   <tag color="error">
@@ -1548,10 +1548,10 @@ export default {
         this.$Message.error("已失效的订单不能操作退款");
         return;
       }
-      if (params.row.orderType === "POINTS_BUYING") {
-        this.$Message.error("积分兑换的订单不能操作退款");
-        return;
-      }
+      // if (params.row.orderType === "POINTS_BUYING") {
+      //   this.$Message.error("积分兑换的订单不能操作退款");
+      //   return;
+      // }
       if (params.row.apply === "S_MALL") {
         refundPt({ orderCode: params.row.code })
           .then((res) => {

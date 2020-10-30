@@ -98,6 +98,7 @@
               clearable
             ></Input>
             <RadioGroup v-model="button" type="button" @on-change="timeChange">
+              <Radio label="汇总"></Radio>
               <Radio label="今日"></Radio>
               <Radio label="昨日"></Radio>
               <Radio label="最近7天"></Radio>
@@ -200,6 +201,8 @@ const roleRowDataManage = {
   auditStatus: "PASSED",
   page: 1,
   rows: 10,
+  sidx: "applyTime",
+  sort: "desc",
 };
 
 export default {
@@ -438,7 +441,7 @@ export default {
         });
     },
     getTableDataManage(value) {
-      // 获取商品页面传过来的商品信息
+      //
       if (this.$route.name === "small-member-relation-handCheck") {
         const memberMsg = getSmallGoodsStandard();
         this.topStatus = memberMsg.topStatus;
@@ -471,6 +474,10 @@ export default {
           var today = `${year}-${month}-${day}`;
           this.searchRowDataManage.applyTimeBegin = today;
           this.searchRowDataManage.applyTimeEnd = today;
+        }
+        if (value === "汇总") {
+          this.searchRowDataManage.applyTimeBegin = "";
+          this.searchRowDataManage.applyTimeEnd = "";
         }
         if (value === "最近7天") {
           let date = new Date();
@@ -571,6 +578,9 @@ export default {
       if (value === "今日") {
         this.getTableDataManage(value);
         this.mark = false;
+      } else if (value === "汇总") {
+        this.mark = false;
+        this.getTableDataManage(value);
       } else if (value === "昨日") {
         this.mark = false;
         this.getTableDataManage(value);

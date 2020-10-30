@@ -703,31 +703,6 @@
                   }}</FormItem>
                 </i-col>
               </Row>
-              <Row>
-                <p style="color: #ff3861; margin-left: 48px">
-                  * 佣金比例为0~50的整数 (单位%)　　　　　　　　　　　　 *
-                  按活动价的比例计算佣金
-                </p>
-                <i-col span="12">
-                  <FormItem label="佣金比例:" prop="commissionScale">
-                    <InputNumber
-                      :min="0"
-                      :readonly="
-                        presellDetail.startedFlag === true &&
-                        tempModalType === modalType.edit
-                      "
-                      v-model="presellDetail.commissionScale"
-                      style="padding-right: 5px; width: 200px"
-                      @on-change="commissionScaleOnchange"
-                    ></InputNumber>
-                  </FormItem>
-                </i-col>
-                <i-col span="12">
-                  <FormItem label="佣金金额:" prop="commissionPrice">{{
-                    "¥" + presellDetail.commissionPrice / 100
-                  }}</FormItem>
-                </i-col>
-              </Row>
               <Row v-show="presellDetail.standardId">
                 <i-col
                   span="12"
@@ -741,6 +716,27 @@
               <Divider v-show="tempModalType === modalType.edit"
                 >可修改部分</Divider
               >
+              <Row>
+                <p style="color: #ff3861; margin-left: 48px">
+                  * 佣金比例为0~50的整数 (单位%)　　　　　　　　　　　　 *
+                  按活动价的比例计算佣金
+                </p>
+                <i-col span="12">
+                  <FormItem label="佣金比例:" prop="commissionScale">
+                    <InputNumber
+                      :min="0"
+                      v-model="presellDetail.commissionScale"
+                      style="padding-right: 5px; width: 200px"
+                      @on-change="commissionScaleOnchange"
+                    ></InputNumber>
+                  </FormItem>
+                </i-col>
+                <i-col span="12">
+                  <FormItem label="佣金金额:" prop="commissionPrice">{{
+                    "¥" + presellDetail.commissionPrice / 100
+                  }}</FormItem>
+                </i-col>
+              </Row>
               <Row>
                 <i-col span="12">
                   <FormItem label="规格描述:" prop="standardDesc">
@@ -1367,6 +1363,7 @@
 
 <script type="text/ecmascript-6">
 import Tables from "_c/tables";
+import config from "@/config";
 import IViewUpload from "_c/iview-upload";
 import _ from "lodash";
 import {
@@ -1386,12 +1383,14 @@ import searchMixin from "@/mixins/searchMixin.js";
 import {
   teamBuyStatusConvert,
   customPlanStatusConvert,
+  expandTypeConvert,
 } from "@/libs/converStatus";
 import {
   teamBuyStatusEnum,
   teamBuyTypeEnum,
   rewardActivitySettingEnum,
   relationStoreTypeEnum,
+  expandTypeEnum,
 } from "@/libs/enumerate";
 import {
   fenToYuanDot2,
@@ -1491,7 +1490,7 @@ const productStandardDetail = {
 };
 
 const productRowData = {
-  productType: "ORDINARY_PRODUCT",
+  productType: "PRE_SALE_PRODUCT",
   productId: "",
   barcode: "",
   productCode: "",
@@ -1644,6 +1643,8 @@ export default {
       teamBuyTypeEnum,
       rewardActivitySettingEnum,
       relationStoreTypeEnum,
+      expandTypeEnum,
+      isEnvironment: null,
       groupStatus: "",
       showStoreName: "",
       flagShipList: [],
@@ -1915,6 +1916,26 @@ export default {
           minWidth: 150,
         },
         {
+          title: "商品类型",
+          align: "center",
+          key: "productType",
+          minWidth: 130,
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.productType == "PRE_SALE_PRODUCT") {
+              return (
+                <div>
+                  <tag color="magenta">
+                    {expandTypeConvert(row.productType).label}
+                  </tag>
+                </div>
+              );
+            } else {
+              return <div>N/A</div>;
+            }
+          },
+        },
+        {
           title: "规格",
           align: "center",
           key: "specification",
@@ -2050,7 +2071,9 @@ export default {
     this.getTableData();
     this.getStore();
   },
-  created() {},
+  created() {
+    this.isEnvironment = config.isEnvironment;
+  },
   methods: {
     costPriceInputNumberOnchange(value) {
       this.presellDetail.costPrice = yuanToFenNumber(value);
@@ -2093,12 +2116,6 @@ export default {
       const _this = this;
       this.$refs[name].validate((valid) => {
         if (valid) {
-          if (
-            _this.presellDetail.costPrice > _this.presellDetail.activityPrice
-          ) {
-            this.$Message.error("成本价不能大于活动价格");
-            return;
-          }
           if (_this.presellDetail.triesLimit > 999) {
             _this.presellDetail.triesLimit = 999;
           }
@@ -2229,7 +2246,6 @@ export default {
         this.currentTableRowSelected.createTime = null;
         this.currentTableRowSelected.standardId = null;
         this.currentTableRowSelected.originalPrice = null;
-        this.currentTableRowSelected.banner = null;
         this.currentTableRowSelected.status = null;
         this.currentTableRowSelected.costPrice = null;
         this.currentTableRowSelected.productProfitPrice = null;
@@ -2243,7 +2259,11 @@ export default {
         this.currentTableRowSelected.storeIds = null;
         this.currentTableRowSelected.relationStoreType = "ALL";
         this.currentTableRowSelected.activityPrice = null;
+        if (this.isEnvironment) {
+          this.currentTableRowSelected.banner = null;
+        }
         this.presellDetail = _.cloneDeep(this.currentTableRowSelected);
+        this.setDefaultUploadList(this.presellDetail);
       }
       this.getStore();
       this.modalEdit = true;
