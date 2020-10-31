@@ -4,7 +4,11 @@
       <span>{{ system.name }}</span>
       <Icon :size="18" type="md-arrow-dropdown"></Icon>
       <DropdownMenu slot="list">
-        <DropdownItem v-for="item in systemList" :key="item.id" :name="item | obj2Json">
+        <DropdownItem
+          v-for="item in systemList"
+          :key="item.id"
+          :name="item | obj2Json"
+        >
           {{ item.name }}
         </DropdownItem>
       </DropdownMenu>
@@ -13,54 +17,56 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
-import { PcLockr, enums } from '@/util/';
+import { mapActions, mapMutations } from "vuex";
+import { PcLockr, enums } from "@/util/";
 import {
   getSystemHomeName,
   setTagNavListInLocalstorage,
-  getTagNavListFromLocalstorage
-} from '@/libs/util';
+  getTagNavListFromLocalstorage,
+} from "@/libs/util";
 
 export default {
-  name: 'System',
+  name: "System",
   filters: {
     obj2Json(value) {
       if (!value) return;
       return JSON.stringify(value);
-    }
+    },
   },
   props: {
     system: {
       type: Object,
       required: false,
-      default: function() {
-        return { name: '' };
-      }
+      default: function () {
+        return { name: "" };
+      },
     },
     systemList: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     tagNavList() {
       return this.$store.state.app.tagNavList;
-    }
+    },
   },
   methods: {
-    ...mapMutations(['setBreadCrumb', 'setCurrentSystem', 'setTagNavList']),
-    ...mapActions(['handleLogOut', 'getRouteListById']),
+    ...mapMutations(["setBreadCrumb", "setCurrentSystem", "setTagNavList"]),
+    ...mapActions(["handleLogOut", "getRouteListById"]),
     switchSystem(item) {
       const obj = JSON.parse(item);
-      console.log('current at', obj.code);
       // 更新system本地缓存的值
       if (PcLockr.get(enums.SYSTEM) != null) {
         PcLockr.delete(enums.SYSTEM);
       }
       PcLockr.set(enums.SYSTEM, item);
       const name = getSystemHomeName();
-      const tagNavList = this.tagNavList.length > 0 ? this.tagNavList : getTagNavListFromLocalstorage();
-      const tagNav = tagNavList.find(item => item.name === name);
+      const tagNavList =
+        this.tagNavList.length > 0
+          ? this.tagNavList
+          : getTagNavListFromLocalstorage();
+      const tagNav = tagNavList.find((item) => item.name === name);
       if (tagNav) {
         const newTagNavList = [];
         newTagNavList.push(tagNav);
@@ -74,7 +80,7 @@ export default {
         this.$router.push({ name: name });
         this.setBreadCrumb(this.$route);
       });
-    }
-  }
+    },
+  },
 };
 </script>

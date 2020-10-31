@@ -958,7 +958,6 @@ export default {
         });
       this.tempTableLoading = false;
       this.$set(params.row, "isEdit", false);
-      // console.log('modalHandleSave' + JSON.stringify(params.row));
     },
     modalHandleDelete(params) {
       this.tempTableLoading = true;

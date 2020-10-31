@@ -8,16 +8,18 @@
         <Card>
           <h6>
             当前选中：
-            <span
-              class="brand-red font-sm"
-            >{{ currentCategory.plateName!=''? currentCategory.plateName : '所有板块' }}</span>
+            <span class="brand-red font-sm">{{
+              currentCategory.plateName != ""
+                ? currentCategory.plateName
+                : "所有板块"
+            }}</span>
           </h6>
           <tables
             ref="tables"
             v-model="tableData"
             :columns="columns"
             :loading="loading"
-            :search-area-column="16"
+            :search-area-column="12"
             :operate-area-column="8"
             editable
             searchable
@@ -57,14 +59,19 @@
                 </Button>
               </Row>
             </div>
-            <div slot="operations">
+            <div slot="operations" style="margin-left: -130px">
               <Button v-waves type="info" class="mr5" @click="handleBack">
                 <Icon type="ios-arrow-back" />&nbsp;返回所有板块
               </Button>
               <Button v-waves type="success" class="mr5" @click="handleCreate">
                 <Icon type="md-add" />添加
               </Button>
-              <Button v-waves type="primary" class="mr5" @click="handleExchange">
+              <Button
+                v-waves
+                type="primary"
+                class="mr5"
+                @click="handleExchange"
+              >
                 <Icon type="md-repeat" />&nbsp;批量更换
               </Button>
               <Poptip
@@ -80,7 +87,7 @@
               </Poptip>
             </div>
           </tables>
-          <div style="margin: 10px;overflow: hidden">
+          <div style="margin: 10px; overflow: hidden">
             <Row type="flex" justify="end">
               <Page
                 :total="total"
@@ -99,15 +106,19 @@
     </Row>
 
     <!-- 添加 -->
-    <Modal v-model="modalEdit" :mask-closable="false" :width="isEdit?600:1200">
+    <Modal
+      v-model="modalEdit"
+      :mask-closable="false"
+      :width="isEdit ? 600 : 1200"
+    >
       <p slot="header">
-        <span>{{ isCreate? '添加板块商品':'更换板块商品' }}</span>
+        <span>{{ isCreate ? "添加板块商品" : "更换板块商品" }}</span>
       </p>
       <div class="modal-content">
         <Form ref="editForm" :model="goodsStandardRelation" :rules="ruleInline">
           <!-- 编辑 -->
-          <Row v-if="isEdit&&currentCategory.plateName.indexOf('vip')==-1">
-            <FormItem label="请选择要更换的商品板块:" style="width:400px">
+          <Row v-if="isEdit && currentCategory.plateName.indexOf('vip') == -1">
+            <FormItem label="请选择要更换的商品板块:" style="width: 400px">
               <Cascader
                 :data="goodsSectionData"
                 v-model="defaultGoodsSectionData"
@@ -169,7 +180,7 @@
                   </Row>
                 </div>
               </tables>
-              <div style="margin: 10px;overflow: hidden">
+              <div style="margin: 10px; overflow: hidden">
                 <Row type="flex" justify="end">
                   <Page
                     :total="productTotal"
@@ -192,7 +203,9 @@
       </div>
       <div slot="footer">
         <Button @click="modalEdit = false">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确认</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit"
+          >确认</Button
+        >
       </div>
     </Modal>
   </div>
@@ -207,13 +220,13 @@ import {
   deleteProductSectionRelation,
   getProductStandardsPages,
   editProductSectionRelation,
-  getProductSectionTree
+  getProductSectionTree,
 } from "@/api/wholesale";
 import {
   buildMenu,
   convertTree,
   convertTreeCategory,
-  fenToYuanDot2
+  fenToYuanDot2,
 } from "@/libs/util";
 import uploadMixin from "@/mixins/uploadMixin";
 import tableMixin from "@/mixins/tableMixin.js";
@@ -246,7 +259,7 @@ const goodsSectionRelation = {
   rank: 0, // 先保留后续扩展
   baseProductName: "", // 先保留可扩展
   goodsUnit: "",
-  standardId: 0
+  standardId: 0,
 };
 
 const currentCategory = {
@@ -258,7 +271,7 @@ const currentCategory = {
   plateImage: "",
   layout: "", // tile-平铺布局 roll-滚动布局 list-列表-用于推荐商品
   parentPlateName: "",
-  channelGoods: []
+  channelGoods: [],
 };
 
 const roleRowData = {
@@ -268,7 +281,7 @@ const roleRowData = {
   page: 1,
   rows: 20,
   sidx: null,
-  sort: "rank"
+  sort: "rank",
 };
 
 const relationData = {
@@ -276,7 +289,7 @@ const relationData = {
   rank: 0,
   plateId: 0,
   relationIds: "",
-  goodsStandardIds: ""
+  goodsStandardIds: "",
 };
 
 const productRowData = {
@@ -286,72 +299,64 @@ const productRowData = {
   barCode: null,
   goodsType: "",
   page: 1,
-  rows: 5
+  rows: 5,
 };
 
 const relationColumns = [
   {
-    type: "selection",
-    key: "",
-    minWidth: 50,
-    align: "center",
-    fixed: "left"
-  },
-  {
     title: "关联ID",
     align: "center",
-    sortable: true,
     key: "id",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "商品条码",
     align: "center",
     key: "barCode",
-    minWidth: 70
+    minWidth: 100,
   },
   {
     title: "商品名称",
     align: "center",
     key: "goodsName",
-    minWidth: 120
+    minWidth: 130,
   },
   {
     title: "商品图片",
     key: "goodsImage",
     align: "center",
-    minWidth: 80,
+    minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
       const str = <img src={row.goodsImage} height="60" width="60" />;
       return <div>{str}</div>;
-    }
+    },
   },
   {
-    title: "商品规格",
+    title: "规格",
     align: "center",
     key: "standard",
-    minWidth: 80
+    minWidth: 120,
   },
   {
-    title: "商品单位",
+    title: "单位",
     align: "center",
     minWidth: 80,
-    key: "goodsUnit"
+    key: "goodsUnit",
   },
   {
-    title: "商品价格",
+    title: "价格",
     align: "center",
-    minWidth: 60,
+    minWidth: 110,
     key: "price",
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "商品类型",
-    minWidth: 80,
+    minWidth: 110,
     key: "goodsType",
     align: "center",
     render: (h, params, vm) => {
@@ -380,10 +385,10 @@ const relationColumns = [
           <tag color="primary">N/A</tag>
         </div>
       );
-    }
+    },
   },
   {
-    title: "商品状态",
+    title: "状态",
     minWidth: 80,
     key: "vaild",
     align: "center",
@@ -407,22 +412,22 @@ const relationColumns = [
           <tag color="primary">N/A</tag>
         </div>
       );
-    }
+    },
   },
   {
-    title: "商品排序",
+    title: "排序",
     align: "center",
     sortable: true,
-    minWidth: 80,
-    key: "rank"
+    minWidth: 90,
+    key: "rank",
   },
   {
     title: "操作",
     align: "center",
     minWidth: 180,
     key: "handle",
-    options: ["exchange", "edit", "delete"]
-  }
+    options: ["exchange", "edit", "delete"],
+  },
 ];
 
 const standardColumns = [
@@ -431,25 +436,25 @@ const standardColumns = [
     key: "",
     minWidth: 50,
     align: "center",
-    fixed: "left"
+    fixed: "left",
   },
   {
     title: "规格ID",
     align: "center",
     key: "id",
-    minWidth: 50
+    minWidth: 50,
   },
   {
     title: "商品条码",
     align: "center",
     key: "barCode",
-    minWidth: 70
+    minWidth: 70,
   },
   {
     title: "商品名称",
     align: "center",
     key: "standardGoodsName",
-    minWidth: 120
+    minWidth: 120,
   },
   {
     title: "商品图片",
@@ -460,19 +465,19 @@ const standardColumns = [
       const { row } = params;
       const str = <img src={row.goodsImage} height="60" width="60" />;
       return <div>{str}</div>;
-    }
+    },
   },
   {
     title: "商品规格",
     align: "center",
     key: "standardDesc",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "商品单位",
     align: "center",
     minWidth: 80,
-    key: "goodsUnit"
+    key: "goodsUnit",
   },
   {
     title: "商品价格",
@@ -482,7 +487,7 @@ const standardColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "商品类型",
@@ -515,7 +520,7 @@ const standardColumns = [
           <tag color="primary">N/A</tag>
         </div>
       );
-    }
+    },
   },
   {
     title: "商品状态",
@@ -542,20 +547,20 @@ const standardColumns = [
           <tag color="primary">N/A</tag>
         </div>
       );
-    }
-  }
+    },
+  },
 ];
 
 export default {
   components: {
     Tables,
-    CommonIcon
+    CommonIcon,
   },
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
     return {
       ruleInline: {
-        rank: [{ required: false, message: "请输入板块商品排序" }]
+        rank: [{ required: false, message: "请输入板块商品排序" }],
       },
       menuData: [],
       discount: [],
@@ -578,7 +583,7 @@ export default {
       currentCategory: _.cloneDeep(currentCategory),
       searchRowData: _.cloneDeep(roleRowData),
       searchProductRowData: _.cloneDeep(productRowData),
-      goodsStandardRelation: _.cloneDeep(relationData)
+      goodsStandardRelation: _.cloneDeep(relationData),
     };
   },
   computed: {},
@@ -588,7 +593,8 @@ export default {
   methods: {
     handleBack() {
       this.currentCategory.plateName = "所有板块";
-      this.handleClear();
+      this.searchRowData= _.cloneDeep(roleRowData);
+      this.initMenuList();
     },
     renderContent(h, { root, node, data }) {
       if (data.type == "PARENT") {
@@ -598,7 +604,7 @@ export default {
               display: "inline-block",
               width: "100%",
               fontSize: "14px",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
           >
             <span>
@@ -616,7 +622,7 @@ export default {
               display: "inline-block",
               width: "100%",
               fontSize: "14px",
-              cursor: "pointer"
+              cursor: "pointer",
             }}
           >
             <span>
@@ -644,6 +650,7 @@ export default {
       this.searchProductRowData = _.cloneDeep(productRowData);
       // VIP专区只能关联VIP商品，添加isVip过滤条件
       if (this.currentTreeTitleCode.indexOf("VIP") > -1) {
+        console.log("选择", this.currentTreeTitleCode);
         this.searchProductRowData.goodsType = "VIP";
       } else {
         this.searchProductRowData.goodsType = "NORMAL";
@@ -668,7 +675,7 @@ export default {
       this.modalEdit = true;
     },
     handleSubmit() {
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (!this.goodsStandardRelation.plateId) {
             this.$Message.warning("商品板块id不能为空");
@@ -680,7 +687,7 @@ export default {
           }
           if (this.isCreate) {
             createProductSectionRelation(this.goodsStandardRelation).then(
-              res => {
+              (res) => {
                 this.initMenuList();
                 this.modalEditLoading = false;
                 this.modalEdit = false;
@@ -689,11 +696,13 @@ export default {
           } else if (this.isEdit) {
             // 更新传递的是 relationIds
             console.log("板块", this.goodsStandardRelation);
-            editProductSectionRelation(this.goodsStandardRelation).then(res => {
-              this.initMenuList();
-              this.modalEditLoading = false;
-              this.modalEdit = false;
-            });
+            editProductSectionRelation(this.goodsStandardRelation).then(
+              (res) => {
+                this.initMenuList();
+                this.modalEditLoading = false;
+                this.modalEdit = false;
+              }
+            );
           }
         }
       });
@@ -723,9 +732,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteProductSectionRelation({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&
@@ -743,7 +752,7 @@ export default {
     },
     getTableData() {
       this.loading = true;
-      getProductSectionRelationPages(this.searchRowData).then(res => {
+      getProductSectionRelationPages(this.searchRowData).then((res) => {
         if (this.menuData.length > 0) {
           this.tableData = res.rows;
           this.total = res.total;
@@ -754,7 +763,7 @@ export default {
       });
     },
     getProductTableData() {
-      getProductStandardsPages(this.searchProductRowData).then(res => {
+      getProductStandardsPages(this.searchProductRowData).then((res) => {
         if (this.menuData.length > 0) {
           this.goodsStandardData = res.rows;
           this.productTotal = res.total;
@@ -763,12 +772,12 @@ export default {
     },
     // 初始化商品菜单列表
     initMenuList() {
-      getProductSectionTree().then(res => {
+      getProductSectionTree().then((res) => {
         if (res && res.length > 0) {
           const menuList = buildMenu(res);
           const map = {
             title: "title",
-            children: "children"
+            children: "children",
           };
           this.menuData = convertTree(menuList, map, true);
           this.goodsSectionData = convertTreeCategory(menuList, map, true);
@@ -800,7 +809,7 @@ export default {
       this.getTableData();
     },
     expandChildren(array) {
-      array.forEach(item => {
+      array.forEach((item) => {
         if (typeof item.expand === "undefined") {
           this.$set(item, "expend", false);
         } else {
@@ -816,21 +825,21 @@ export default {
     },
     onSelectionAll(selection) {
       this.goodsStandardRelation.goodsStandardIds = selection
-        .map(item => item.id.toString())
+        .map((item) => item.id.toString())
         .join(",");
     },
     onSelectionChange(selection) {
       this.goodsStandardRelation.goodsStandardIds = selection
-        .map(item => item.id.toString())
+        .map((item) => item.id.toString())
         .join(",");
     },
     onRelationSelectionAll(selection) {
       console.log("selectDatas all:", selection);
       this.goodsStandardRelation.goodsStandardIds = selection
-        .map(item => item.standardId.toString())
+        .map((item) => item.standardId.toString())
         .join(",");
       this.goodsStandardRelation.relationIds = selection
-        .map(item => item.id.toString())
+        .map((item) => item.id.toString())
         .join(",");
       this.tableDataSelected = selection;
       console.log(
@@ -842,10 +851,10 @@ export default {
     onRelationSelectionChange(selection) {
       console.log("selectDatas:", selection);
       this.goodsStandardRelation.goodsStandardIds = selection
-        .map(item => item.standardId.toString())
+        .map((item) => item.standardId.toString())
         .join(",");
       this.goodsStandardRelation.relationIds = selection
-        .map(item => item.id.toString())
+        .map((item) => item.id.toString())
         .join(",");
       this.tableDataSelected = selection;
       console.log(
@@ -887,8 +896,8 @@ export default {
       this.searchRowData.page = 1;
       this.searchRowData.rows = pageSize;
       this.getTableData();
-    }
-  }
+    },
+  },
 };
 </script>
 

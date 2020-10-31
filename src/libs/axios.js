@@ -35,12 +35,20 @@ class HttpRequest {
       responseType: this.responseType
     });
 
+    // 导出 
+    const exportAxiosOps = _.merge({}, defaultOps, {
+      baseURL: this.baseUrl,
+      responseType: this.responseType
+    });
+
     // 后端微服务有需求再扩展
     switch (this.centerType) {
       case 'IMS_SERVICE':
         return imsServiceOps;
       case 'IMG_SERVICE':
         return imgServiceOps;
+      case 'EXPORT_SERVICE':
+        return exportAxiosOps;
       default:
         return defaultOps;
     }

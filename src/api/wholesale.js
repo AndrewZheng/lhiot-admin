@@ -586,6 +586,20 @@ export const storeAssign = (data) => {
     method: 'post'
   });
 }
+///wholesale-small/system-setting/findByName/{name} SHOP_TYPE USER_GRADE
+// 会员查询 门店类型与用户类型
+export const getShopType = () => {
+  return $http.request({
+    url: '/wholesale-small/system-setting/findByName/SHOP_TYPE',
+    method: 'get'
+  });
+}
+export const getUserGrade = () => {
+  return $http.request({
+    url: '/wholesale-small/system-setting/findByName/USER_GRADE',
+    method: 'get'
+  });
+}
 
 // 查询所有业务员
 export const getAllSalesman = () => {
@@ -711,6 +725,15 @@ export const getFinanceAudit = (data) => {
 export const getFinanceRefuse = (data) => {
   return $http.request({
     url: `/wholesale-small/post-sale/review/reject/${data.id}`,
+    data,
+    method: 'post'
+  });
+};
+
+//根据id 手动发起售后 /wholesale-small/post-sale/submit
+export const handSubmitRefuse = (data) => {
+  return $http.request({
+    url: `/wholesale-small/post-sale/submit?orderId=${data.id}`,
     data,
     method: 'post'
   });

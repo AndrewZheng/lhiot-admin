@@ -407,7 +407,6 @@ export default {
               children: "children"
             };
             this.systemCategoryData = convertTreeCategory(menuList, map, true);
-            console.log("cate after convert", this.systemCategoryData);
             this.createLoading = false;
           }
         })
@@ -455,7 +454,6 @@ export default {
     },
     handleSetting(params) {
       var rows = params.row;
-      console.log("设置数据", rows);
       setSmallGoodsStandard(rows);
       this.turnToPage({
         name: "small-relation-system",

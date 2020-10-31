@@ -43,7 +43,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -59,7 +59,7 @@
 
     <Modal
       v-model="modalEdit"
-      :width="isCreate?1300:600"
+      :width="isCreate ? 1300 : 600"
       :z-index="1000"
       :mask-closable="false"
       title="关联商品规格"
@@ -100,7 +100,7 @@
                   v-model="searchConfigRowData.vaild"
                   class="search-col"
                   placeholder="上架状态"
-                  style="width:100px"
+                  style="width: 100px"
                   clearable
                 >
                   <Option
@@ -108,7 +108,8 @@
                     :value="item.value"
                     :key="item.value"
                     class="ptb2-5"
-                  >{{ item.label }}</Option>
+                    >{{ item.label }}</Option
+                  >
                 </Select>
                 <!-- <Select
                   v-model="searchConfigRowData.isVip"
@@ -144,7 +145,7 @@
               </Row>
             </div>
           </tables>
-          <div style="margin: 10px;overflow: hidden">
+          <div style="margin: 10px; overflow: hidden">
             <Row type="flex" justify="end">
               <Page
                 :total="configTotal"
@@ -163,16 +164,22 @@
         <Divider v-show="isCreate" orientation="center">配置抢购信息</Divider>
 
         <Row class="mt10">
-          <Form ref="editForm" :model="flashsaleGoods" :rules="ruleInline" :label-width="80">
+          <Form
+            ref="editForm"
+            :model="flashsaleGoods"
+            :rules="ruleInline"
+            :label-width="90"
+          >
             <Row v-show="isEdit">
               <i-col span="12">
-                <FormItem label="商品名称:" prop="goodsName">{{ flashsaleGoods.goodsName }}</FormItem>
+                <FormItem label="商品名称:" prop="goodsName">{{
+                  flashsaleGoods.goodsName
+                }}</FormItem>
               </i-col>
               <i-col span="12">
-                <FormItem
-                  label="商品价格:"
-                  prop="price"
-                >{{ flashsaleGoods.price | fenToYuanDot2Filters }}</FormItem>
+                <FormItem label="商品价格:" prop="price">{{
+                  flashsaleGoods.price | fenToYuanDot2Filters
+                }}</FormItem>
               </i-col>
             </Row>
             <Row>
@@ -187,14 +194,18 @@
               </i-col>
               <i-col span="12">
                 <FormItem label="抢购库存:" prop="goodsStock">
-                  <InputNumber v-model="flashsaleGoods.goodsStock"></InputNumber>
+                  <InputNumber
+                    v-model="flashsaleGoods.goodsStock"
+                  ></InputNumber>
                 </FormItem>
               </i-col>
             </Row>
             <Row>
               <i-col span="12">
                 <FormItem label="限购数:" prop="limitQuantity">
-                  <InputNumber v-model="flashsaleGoods.limitQuantity"></InputNumber>
+                  <InputNumber
+                    v-model="flashsaleGoods.limitQuantity"
+                  ></InputNumber>
                 </FormItem>
               </i-col>
               <i-col span="12">
@@ -203,13 +214,17 @@
                 </FormItem>
               </i-col>
             </Row>
-            <div v-show="isCreate" class="ml15 brand-red">* 批量关联多个商品规格时，初始化配置信息都一样</div>
+            <div v-show="isCreate" class="ml15 brand-red">
+              * 批量关联多个商品规格时，初始化配置信息都一样
+            </div>
           </Form>
         </Row>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit"
+          >确定</Button
+        >
       </div>
     </Modal>
   </div>
@@ -222,7 +237,7 @@ import {
   getProductStandardsPages,
   deleteFlashsaleGoods,
   createFlashsaleGoods,
-  editFlashsaleGoods
+  editFlashsaleGoods,
 } from "@/api/wholesale";
 import deleteMixin from "@/mixins/deleteMixin.js";
 import tableMixin from "@/mixins/tableMixin.js";
@@ -234,7 +249,7 @@ import {
   couponScopeConvert,
   receiveTypeConvert,
   couponFromConvert,
-  pfExpandTypeConvert
+  pfExpandTypeConvert,
 } from "@/libs/converStatus";
 import {
   couponStatusEnum,
@@ -242,7 +257,7 @@ import {
   imageStatusEnum,
   receiveTypeEnum,
   couponFromEnum,
-  pfExpandTypeEnum
+  pfExpandTypeEnum,
 } from "@/libs/enumerate";
 import {
   compareData,
@@ -250,7 +265,7 @@ import {
   fenToYuanDot2Number,
   yuanToFenNumber,
   setSmallCouponActivity,
-  getActivity
+  getActivity,
 } from "@/libs/util";
 
 const flashsaleGoods = {
@@ -269,7 +284,7 @@ const flashsaleGoods = {
   rankNum: 0,
   remain: 0,
   specialPrice: 0,
-  standardIds: ""
+  standardIds: "",
 };
 
 const roleRowData = {
@@ -277,7 +292,7 @@ const roleRowData = {
   page: 1,
   rows: 10,
   sidx: "id",
-  sort: "desc"
+  sort: "desc",
 };
 
 const productStandardDetail = {
@@ -302,7 +317,7 @@ const productStandardDetail = {
   vaild: "",
   weight: 0,
   rank: 0, // 先保留后续扩展
-  baseProductName: "" // 先保留可扩展
+  baseProductName: "", // 先保留可扩展
 };
 
 const standardRoleRowData = {
@@ -313,7 +328,7 @@ const standardRoleRowData = {
   goodsType: "FLASHSALE",
   vaild: "",
   page: 1,
-  rows: 5
+  rows: 5,
 };
 
 const activityDetail = {
@@ -324,7 +339,7 @@ const activityDetail = {
   linkUrl: "",
   vaild: "",
   endTime: null,
-  startTime: null
+  startTime: null,
 };
 
 const standardColumns = [
@@ -333,25 +348,25 @@ const standardColumns = [
     key: "",
     minWidth: 50,
     align: "center",
-    fixed: "left"
+    fixed: "left",
   },
   {
     title: "规格ID",
     align: "center",
     key: "id",
-    minWidth: 50
+    minWidth: 50,
   },
   {
     title: "商品条码",
     align: "center",
     key: "barCode",
-    minWidth: 70
+    minWidth: 70,
   },
   {
     title: "商品名称",
     align: "center",
     key: "standardGoodsName",
-    minWidth: 100
+    minWidth: 130,
   },
   {
     title: "商品图片",
@@ -362,19 +377,19 @@ const standardColumns = [
       const { row } = params;
       const str = <img src={row.goodsImage} height="60" width="60" />;
       return <div>{str}</div>;
-    }
+    },
   },
   {
     title: "商品规格",
     align: "center",
     key: "standardDesc",
-    minWidth: 80
+    minWidth: 80,
   },
   {
     title: "商品单位",
     align: "center",
     minWidth: 80,
-    key: "goodsUnit"
+    key: "goodsUnit",
   },
   {
     title: "商品原价",
@@ -384,7 +399,7 @@ const standardColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "进货价",
@@ -394,7 +409,7 @@ const standardColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.purchasePrice);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "商品类型",
@@ -427,7 +442,7 @@ const standardColumns = [
           <tag color="primary">N/A</tag>
         </div>
       );
-    }
+    },
   },
   {
     title: "商品状态",
@@ -454,26 +469,26 @@ const standardColumns = [
           <tag color="primary">N/A</tag>
         </div>
       );
-    }
-  }
+    },
+  },
 ];
 
 const flashsaleColumns = [
   {
     type: "selection",
     width: 60,
-    align: "center"
+    align: "center",
   },
   {
     title: "ID",
     align: "center",
-    key: "id"
+    key: "id",
   },
   {
     title: "商品名称",
     align: "center",
     key: "goodsName",
-    minWidth: 100
+    minWidth: 130,
   },
   {
     title: "商品原价",
@@ -483,7 +498,7 @@ const flashsaleColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "抢购价",
@@ -493,43 +508,44 @@ const flashsaleColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.specialPrice);
       return <div>{amount}</div>;
-    }
+    },
   },
   {
     title: "抢购库存",
     align: "center",
     key: "goodsStock",
-    minWidth: 40
+    minWidth: 40,
   },
   {
     title: "剩余数量",
     align: "center",
     key: "remain",
-    minWidth: 40
+    minWidth: 40,
   },
   {
     title: "限购数",
     align: "center",
     key: "limitQuantity",
-    minWidth: 40
+    minWidth: 40,
   },
   {
     title: "排序",
     align: "center",
     key: "rankNum",
-    minWidth: 40
+    minWidth: 40,
   },
   {
     title: "操作",
     minWidth: 80,
+    align: "center",
     key: "handle",
-    options: ["edit", "delete"]
-  }
+    options: ["edit", "delete"],
+  },
 ];
 
 export default {
   components: {
-    Tables
+    Tables,
   },
   mixins: [deleteMixin, tableMixin, searchMixin],
   data() {
@@ -538,7 +554,7 @@ export default {
         specialPrice: [{ required: true, message: "请输入抢购价" }],
         goodsStock: [{ required: true, message: "请输入抢购库存" }],
         limitQuantity: [{ required: true, message: "请输入每人限购数量" }],
-        standardIds: [{ required: false, message: "请先关联商品规格" }]
+        standardIds: [{ required: false, message: "请先关联商品规格" }],
       },
       relationRuleInline: {
         issuedNum: [
@@ -550,8 +566,8 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
+            },
+          },
         ],
         effectiveDay: [
           { required: true, message: "请输入发券限制数量" },
@@ -562,29 +578,29 @@ export default {
                 errors.push(new Error("必须为非零整数"));
               }
               callback(errors);
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
       vipEnum: [
         {
           label: "是",
-          value: "yes"
+          value: "yes",
         },
         {
           label: "否",
-          value: "no"
-        }
+          value: "no",
+        },
       ],
       vaild: [
         {
           label: "上架",
-          value: "yes"
+          value: "yes",
         },
         {
           label: "下架",
-          value: "no"
-        }
+          value: "no",
+        },
       ],
       defaultListMain: [],
       uploadListMain: [],
@@ -613,13 +629,13 @@ export default {
       flashsaleGoods: _.cloneDeep(flashsaleGoods),
       couponTemplates: [],
       couponTemplateTotal: 0,
-      configTotal: 0
+      configTotal: 0,
     };
   },
   computed: {
     specialPriceComputed() {
       return fenToYuanDot2Number(this.flashsaleGoods.specialPrice);
-    }
+    },
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
@@ -642,7 +658,7 @@ export default {
         this.activityStatus = activity.vaild;
       }
       getFlashsaleGoodsPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })
@@ -654,7 +670,7 @@ export default {
     },
     getConfigTableData() {
       this.loadingConfig = true;
-      getProductStandardsPages(this.searchConfigRowData).then(res => {
+      getProductStandardsPages(this.searchConfigRowData).then((res) => {
         this.configTableData = res.rows;
         this.configTotal = res.total;
         this.loadingConfig = false;
@@ -679,11 +695,11 @@ export default {
       var rows = params.row;
       setSmallCouponActivity(rows);
       this.turnToPage({
-        name: "small-vip-activities-associated"
+        name: "small-vip-activities-associated",
       });
     },
     handleSubmit() {
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (this.isCreate) {
             if (!this.flashsaleGoods.standardIds) {
@@ -703,7 +719,7 @@ export default {
     createFlashsaleGoods() {
       this.modalViewLoading = true;
       createFlashsaleGoods(this.flashsaleGoods)
-        .then(res => {
+        .then((res) => {
           this.$Message.success("创建成功!");
           this.getTableData();
         })
@@ -715,7 +731,7 @@ export default {
     editFlashsaleGoods() {
       this.modalViewLoading = true;
       editFlashsaleGoods(this.flashsaleGoods)
-        .then(res => {
+        .then((res) => {
           this.$Message.success("修改成功!");
           this.getTableData();
         })
@@ -726,12 +742,12 @@ export default {
     },
     onConfigSelectionChange(selection) {
       this.flashsaleGoods.standardIds = selection
-        .map(item => item.id.toString())
+        .map((item) => item.id.toString())
         .join(",");
     },
     onConfigSelectionAll(selection) {
       this.flashsaleGoods.standardIds = selection
-        .map(item => item.id.toString())
+        .map((item) => item.id.toString())
         .join(",");
     },
     resetFields() {
@@ -744,9 +760,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteFlashsaleGoods({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -758,7 +774,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -774,7 +790,7 @@ export default {
       this.modalEdit = true;
     },
     addTempData(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           const activityRegisterId = this.addRelationDetail.activityRegisterId;
           const couponTemplateIds = this.addRelationDetail.couponTemplateIds.split(
@@ -841,13 +857,13 @@ export default {
         return;
       }
       const tempDeleteList = [];
-      this.tableDataSelected.filter(value => {
+      this.tableDataSelected.filter((value) => {
         tempDeleteList.push(value.id);
       });
       const strTempDelete = tempDeleteList.join(",");
       this.deleteTable(strTempDelete);
-    }
-  }
+    },
+  },
 };
 </script>
 

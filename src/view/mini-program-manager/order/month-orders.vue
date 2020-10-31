@@ -541,7 +541,6 @@ export default {
           item['createAt'] = gitTime(item['createAt']);
           item['refundAt'] = gitTime(item['refundAt']);
           item['status'] = miniOrderStatusConvert(item['status']).label;
-          // console.log("时间",item["refundAt"])
         });
         const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
         this.$refs.tables.handleDownload({

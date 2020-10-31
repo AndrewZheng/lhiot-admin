@@ -43,7 +43,7 @@
             v-model="searchRowData.kwType"
             class="search-col mr5"
             placeholder="关键词类型"
-            style="width:100px"
+            style="width:120px"
             clearable
           >
             <Option
@@ -431,7 +431,7 @@ const standardColumns = [
   {
     title: "商品名称",
     align: "center",
-    key: "goodsName",
+    key: "standardGoodsName",
     minWidth: 100
   },
   {

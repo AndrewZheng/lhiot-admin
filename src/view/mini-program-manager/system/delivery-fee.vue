@@ -313,7 +313,6 @@ export default {
                   },
                   on: {
                     "on-change": e => {
-                      console.log(vm);
                       if (e == "0-3") {
                         this.postageDetail.deliveryRules[
                           params.row.initRowIndex
@@ -466,7 +465,6 @@ export default {
         {
           type: "selection",
           key: "",
-          minWidth: 60,
           align: "center"
         },
         {
@@ -502,12 +500,6 @@ export default {
           minWidth: 150
         },
         {
-          title: "创建人",
-          align: "center",
-          key: "createBy",
-          minWidth: 150
-        },
-        {
           title: "操作",
           align: "center",
           minWidth: 200,
@@ -540,7 +532,6 @@ export default {
       if (this.modalTypeComputed) {
         return this.postageRuleTableColumns;
       } else {
-        console.log(this.postageRuleTableColumns.concat(this.options));
         return this.postageRuleTableColumns.concat(this.options);
       }
     },
@@ -574,14 +565,12 @@ export default {
       this.postageDetail.maxOrderAmount = yuanToFenNumber(value);
     },
     onCopy(params) {
-      console.log(params);
       if (params.row.deliveryRules.length !== 0) {
         params.row.deliveryRules.forEach(item => {
           item.updateWay = updateWay.INSERT;
         });
       }
       this.postageDetail = params.row;
-      console.log("postageDetail:" + JSON.stringify(this.postageDetail));
       this.createTableRow();
     },
     deleteTable(ids) {
@@ -606,7 +595,6 @@ export default {
         });
     },
     handleSubmit(name) {
-      console.log(this.postageDetail);
       // return;
       this.$refs[name].validate(valid => {
         if (valid) {
@@ -657,8 +645,6 @@ export default {
         this.postageDetail.deliveryRules.forEach(item => {
           array.push(item.minDistance + "-" + item.maxDistance);
         });
-        console.log(array);
-        console.log(this.array_diff(this.distanceList, array));
         const tempArray = this.array_diff(this.distanceList, array);
         if (tempArray.length === 0) {
           this.$Message.error("不能添加相同距离范围的运费模板！");

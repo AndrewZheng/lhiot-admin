@@ -180,6 +180,15 @@ export const constantRouterMap = [
     component: Main,
     children: [
       {
+        path: 'small-member-relation-handCheck',
+        name: 'small-member-relation-handCheck',
+        meta: {
+          icon: 'md-checkmark-circle',
+          title: '员工管理'
+        },
+        component: () => import('@/view/mini-program-manager/member/handCheck.vue')
+      },
+      {
         path: 'small-goods-relation-standard',
         name: 'small-goods-relation-standard',
         meta: {
@@ -240,8 +249,17 @@ export const constantRouterMap = [
           title: '跨月退款订单'
         },
         component: () => import('@/view/mini-program-manager/order/month-orders.vue')
+      },
+      {
+        path: '/wechat-home',
+        name: 'wechat-home',
+        meta: {
+          icon: 'md-home',
+          title: '首页',
+          notCache: true
+        },
+        component: () => import('@/view/mini-program-manager/single-page/home')
       }
-
     ],
   },
   {
@@ -279,6 +297,16 @@ export const constantRouterMap = [
           title: '业务员门店业绩分析'
         },
         component: () => import('@/view/wholesale-mall-manager/user/salesman-store-analysis.vue')
+      },
+      {
+        path: '/wholesale-home',
+        name: 'wholesale-home',
+        meta: {
+          icon: 'md-home',
+          title: '首页',
+          notCache: true
+        },
+        component: () => import('@/view/wholesale-mall-manager/single-page/home')
       }
     ]
   }

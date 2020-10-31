@@ -1128,7 +1128,6 @@ export default {
         });
       this.tempTableLoading = false;
       this.$set(params.row, "isEdit", false);
-      // console.log('modalHandleSave' + JSON.stringify(params.row));
     },
     modalHandleDelete(params) {
       this.tempTableLoading = true;
@@ -1178,10 +1177,6 @@ export default {
       this.addRelationDetail.standardIds = selection
         .map(item => item.id.toString())
         .join(",");
-      console.log(
-        "商品选择变化,当前页选择productStandardIds:" +
-          this.addRelationDetail.standardIds
-      );
     },
     onProductSelectionChange(selection) {
       this.addRelationDetail.standardIds = selection

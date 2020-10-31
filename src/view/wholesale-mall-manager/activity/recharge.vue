@@ -141,7 +141,7 @@
                 </FormItem>
               </i-col>
               <i-col span="4">
-                <FormItem :label-width="150" label="充值门槛（满xx元赠送）:" prop="rechargeAmount">
+                <FormItem :label-width="190" label="充值门槛（满xx元赠送）:" prop="rechargeAmount">
                   <InputNumber
                     :min="0"
                     :value="rechargeAmountComputed"
@@ -279,7 +279,7 @@ const configColumns = [
     title: 'ID',
     align: 'center',
     key: 'id',
-    maxWidth: 80
+    minWidth: 70
   },
   {
     title: '优惠券名称',
@@ -365,14 +365,14 @@ const configColumns = [
     title: '失效时间',
     align: 'center',
     key: 'failureTime',
-    width: 220,
+    width: 230,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.vaildDays) {
         return <div>{'N/A'}</div>;
       } else {
         if (!compareCouponData(row.failureTime)) {
-          return <div style='color:red'>{row.failureTime + '　已过期'}</div>;
+          return <div style='color:red'>{row.failureTime + '已过期'}</div>;
         } else {
           return <div>{row.failureTime}</div>;
         }
@@ -616,6 +616,7 @@ const rewardColumns = [
   {
     title: '操作',
     minWidth: 80,
+    align: 'center',
     key: 'handle',
     options: ['delete']
   }

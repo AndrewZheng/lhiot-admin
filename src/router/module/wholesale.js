@@ -1,20 +1,38 @@
 import Main from '@/components/main';
 
 const wholesaleRouter = [
+  // {
+  //   path: '/',
+  //   name: 'wholesale-home',
+  //   redirect: '/wholesale-home',
+  //   component: Main,
+  //   meta: {
+  //     hideInMenu: true,
+  //     notCache: true
+  //   },
+  //   children: [{
+  //     path: '/wholesale-home',
+  //     name: 'wholesale-home',
+  //     meta: {
+  //       hideInMenu: true,
+  //       title: '首页',
+  //       notCache: true
+  //     },
+  //     component: () => import('@/view/wholesale-mall-manager/single-page/home')
+  //   }]
+  // },
   {
-    path: '/',
+    path: '/wholesale-home',
     name: 'wholesale-home',
-    redirect: '/wholesale-home',
     component: Main,
     meta: {
-      hideInMenu: true,
-      notCache: true
+      hideInBread: true,
     },
     children: [{
       path: '/wholesale-home',
       name: 'wholesale-home',
       meta: {
-        hideInMenu: true,
+        icon: 'md-home',
         title: '首页',
         notCache: true
       },
@@ -102,15 +120,15 @@ const wholesaleRouter = [
       },
       component: () => import('@/view/wholesale-mall-manager/goods/goods-keywords.vue')
     },
-    {
-      path: '/wholesale-goods-demand',
-      name: 'wholesale-goods-demand',
-      meta: {
-        icon: 'ios-list-box',
-        title: '新品需求管理'
-      },
-      component: () => import('@/view/wholesale-mall-manager/goods/goods-demand.vue')
-    }
+    // {
+    //   path: '/wholesale-goods-demand',
+    //   name: 'wholesale-goods-demand',
+    //   meta: {
+    //     icon: 'ios-list-box',
+    //     title: '新品需求管理'
+    //   },
+    //   component: () => import('@/view/wholesale-mall-manager/goods/goods-demand.vue')
+    // }
     ]
   },
   {
@@ -308,61 +326,71 @@ const wholesaleRouter = [
       title: '内容管理'
     },
     component: Main,
-    children: [{
-      path: '/wholesale-advertisement',
-      name: 'wholesale-advertisement',
-      meta: {
-        icon: 'ios-desktop',
-        title: '广告位管理'
+    children: [
+      {
+        path: '/wholesale-unifyExport',
+        name: 'wholesale-unifyExport',
+        meta: {
+          icon: 'md-archive',
+          title: '统一导出'
+        },
+        component: () => import('@/view/wholesale-mall-manager/content/unifyExport.vue')
       },
-      component: () => import('@/view/wholesale-mall-manager/content/advertisement.vue')
-    },
-    {
-      path: '/wholesale-service',
-      name: 'wholesale-service',
-      meta: {
-        icon: 'ios-paper',
-        title: '服务协议'
+      {
+        path: '/wholesale-advertisement',
+        name: 'wholesale-advertisement',
+        meta: {
+          icon: 'ios-desktop',
+          title: '广告位管理'
+        },
+        component: () => import('@/view/wholesale-mall-manager/content/advertisement.vue')
       },
-      component: () => import('@/view/wholesale-mall-manager/content/feedback.vue')
-    },
-    {
-      path: '/wholesale-faq-category',
-      name: 'wholesale-faq-category',
-      meta: {
-        icon: 'ios-albums',
-        title: '常见问题分类'
+      // {
+      //   path: '/wholesale-service',
+      //   name: 'wholesale-service',
+      //   meta: {
+      //     icon: 'ios-paper',
+      //     title: '服务协议'
+      //   },
+      //   component: () => import('@/view/wholesale-mall-manager/content/feedback.vue')
+      // },
+      {
+        path: '/wholesale-faq-category',
+        name: 'wholesale-faq-category',
+        meta: {
+          icon: 'ios-albums',
+          title: '常见问题分类'
+        },
+        component: () => import('@/view/wholesale-mall-manager/content/faq-category.vue')
       },
-      component: () => import('@/view/wholesale-mall-manager/content/faq-category.vue')
-    },
-    {
-      path: '/wholesale-faq',
-      name: 'wholesale-faq',
-      meta: {
-        icon: 'md-help',
-        title: '常见问题'
+      {
+        path: '/wholesale-faq',
+        name: 'wholesale-faq',
+        meta: {
+          icon: 'md-help',
+          title: '常见问题'
+        },
+        component: () => import('@/view/wholesale-mall-manager/content/faq.vue')
       },
-      component: () => import('@/view/wholesale-mall-manager/content/faq.vue')
-    },
-    {
-      path: '/wholesale-article',
-      name: 'wholesale-article',
-      meta: {
-        icon: 'ios-list-box',
-        title: '文章管理'
+      {
+        path: '/wholesale-article',
+        name: 'wholesale-article',
+        meta: {
+          icon: 'ios-list-box',
+          title: '热点资讯'
+        },
+        component: () => import('@/view/wholesale-mall-manager/content/article.vue')
       },
-      component: () => import('@/view/wholesale-mall-manager/content/article.vue')
-    },
-    {
-      path: '/wholesale-article-edit',
-      name: 'wholesale-article-edit',
-      meta: {
-        hideInMenu: true,
-        icon: 'md-basket',
-        title: '文章编辑'
-      },
-      component: () => import('@/view/wholesale-mall-manager/content/article-edit.vue')
-    }]
+      {
+        path: '/wholesale-article-edit',
+        name: 'wholesale-article-edit',
+        meta: {
+          hideInMenu: true,
+          icon: 'md-basket',
+          title: '文章编辑'
+        },
+        component: () => import('@/view/wholesale-mall-manager/content/article-edit.vue')
+      }]
   },
   {
     path: '/wholesale-system-manager',

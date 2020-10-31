@@ -594,7 +594,6 @@ export default {
     },
     // 选择分类搜索
     systemCategoryChange1(value, selectedData) {
-      console.log("选择的内容", selectedData);
       if (selectedData.length > 0) {
         this.searchRowData.categoryId =
           selectedData[selectedData.length - 1].id;
