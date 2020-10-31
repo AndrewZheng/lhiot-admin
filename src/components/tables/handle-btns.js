@@ -1418,7 +1418,9 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要把该门店改为营业吗?'
+          transfer: true,
+          title: '确认要把该门店改为营业吗?',
+          placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
         },
         style: {
           marginRight: '5px'
@@ -1448,7 +1450,9 @@ const btns = {
       return h('Poptip', {
         props: {
           confirm: true,
-          title: '确认要把该门店改为未营业吗?'
+          transfer: true,
+          title: '确认要把该门店改为未营业吗?',
+          placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
         },
         style: {
           marginRight: '5px'
