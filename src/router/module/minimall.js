@@ -1,26 +1,6 @@
 import Main from '@/components/main';
 
 const miniMallRouter = [
-  // {
-  //   path: '/',
-  //   name: 'wechat-home',
-  //   redirect: '/wechat-home',
-  //   component: Main,
-  //   meta: {
-  //     hideInMenu: true,
-  //     notCache: true
-  //   },
-  //   children: [{
-  //     path: '/wechat-home',
-  //     name: 'wechat-home',
-  //     meta: {
-  //       hideInMenu: true,
-  //       title: '首页',
-  //       notCache: true
-  //     },
-  //     component: () => import('@/view/mini-program-manager/single-page/home')
-  //   }]
-  // },
   {
     path: '/wechat-home',
     name: 'wechat-home',
@@ -195,24 +175,6 @@ const miniMallRouter = [
       component: () => import('@/view/mini-program-manager/activity/images.vue')
     }]
   },
-  // {
-  //   path: '/small-goods-presell',
-  //   name: 'small-goods-presell',
-  //   meta: {
-  //     icon: 'md-menu',
-  //     title: '预售管理'
-  //   },
-  //   component: Main,
-  //   children: [{
-  //     path: '/small-goods-presellActivity',
-  //     name: 'small-goods-presellActivity',
-  //     meta: {
-  //       icon: 'ios-people',
-  //       title: '预售活动'
-  //     },
-  //     component: () => import('@/view/mini-program-manager/presell/presellActivity.vue')
-  //   }]
-  // },
   {
     path: '/small-activities',
     name: 'small-activities',
@@ -403,9 +365,7 @@ const miniMallRouter = [
         title: '邮费管理'
       },
       component: () => import('@/view/mini-program-manager/system/delivery-fee.vue')
-    }
-
-    ]
+    }]
   },
   {
     path: '/small-task',

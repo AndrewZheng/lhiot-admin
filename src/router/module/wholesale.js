@@ -26,7 +26,7 @@ const wholesaleRouter = [
     name: 'wholesale-home',
     component: Main,
     meta: {
-      hideInBread: true,
+      hideInBread: true
     },
     children: [{
       path: '/wholesale-home',
@@ -119,7 +119,7 @@ const wholesaleRouter = [
         title: '关键字管理'
       },
       component: () => import('@/view/wholesale-mall-manager/goods/goods-keywords.vue')
-    },
+    }
     // {
     //   path: '/wholesale-goods-demand',
     //   name: 'wholesale-goods-demand',
@@ -239,7 +239,7 @@ const wholesaleRouter = [
         title: '财务审核'
       },
       component: () => import('@/view/wholesale-mall-manager/order/finance-audit.vue')
-    },
+    }
     ]
   },
   {

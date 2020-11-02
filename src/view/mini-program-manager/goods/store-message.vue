@@ -43,7 +43,6 @@
                 v-for="(item, index) in areaList"
                 :key="index"
                 :value="item.area"
-                :value="item.area"
                 class="ptb2-5"
                 style="padding-left: 5px; width: 100px"
               >
@@ -59,7 +58,6 @@
               <Option
                 v-for="(item, index) in storeStatusEnum"
                 :key="index"
-                :value="item.value"
                 :value="item.value"
                 class="ptb2-5"
                 style="padding-left: 5px; width: 100px"
@@ -77,7 +75,6 @@
               <Option
                 v-for="(item, index) in applicationTypeList"
                 :key="index"
-                :value="item.storeCode"
                 :value="item.storeCode"
                 class="ptb2-5"
                 style="padding-left: 5px"
@@ -407,7 +404,6 @@
                     v-for="(item, index) in areaList"
                     :key="index"
                     :value="item.area"
-                    :value="item.area"
                     class="ptb2-5"
                     style="padding-left: 5px"
                   >
@@ -426,7 +422,6 @@
                   <Option
                     v-for="(item, index) in flagShipList"
                     :key="index"
-                    :value="item.storeFlagship"
                     :value="item.storeFlagship"
                     class="ptb2-5"
                     style="padding-left: 5px"
@@ -459,7 +454,6 @@
                   <Option
                     v-for="(item, index) in storeTypeEnum"
                     :key="index"
-                    :value="item.value"
                     :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
@@ -527,7 +521,6 @@
                   <Option
                     v-for="(item, index) in deliverTypeEnum"
                     :key="index"
-                    :value="item.value"
                     :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
