@@ -1043,6 +1043,12 @@ export default {
           key: "standardName",
         },
         {
+          title: "下单门店",
+          align: "center",
+          key: "storeName",
+          width: 200,
+        },
+        {
           title: "下单用户",
           align: "center",
           key: "orderUserName",
@@ -1630,7 +1636,7 @@ export default {
     },
     handleSearchUse() {
       this.num1++;
-      this.searchRowData.page = 1;
+      this.searchRowDataUse.page = 1;
       this.getTableDataUse();
     },
     handleClearUse() {

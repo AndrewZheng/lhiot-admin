@@ -77,7 +77,8 @@
             </Button>
           </Row>
           <div class="ml15 mt10" v-if="hdCouponType === '新人注册首单立减券'">
-            <i style="color: red">*</i> 新人注册首单立减券只允许配置一张,如需修改请先下架有效的券再进行配置!
+            <i style="color: red">*</i>
+            新人注册首单立减券只允许配置一张,如需修改请先下架有效的券再进行配置!
           </div>
         </div>
         <div slot="operations" style="margin-left: -80px">
@@ -604,30 +605,13 @@
             </Row>
 
             <Row>
-              <i-col v-if="tempModalType == 'addTemplate'" span="6">
+              <!-- v-if="tempModalType == 'addTemplate'"  -->
+              <i-col span="6">
                 <FormItem
-                  v-if="handCouponTime"
+                  v-if="tempModalType == 'addTemplate'"
                   label="券有效期:"
                   prop="useLimitType"
                 >
-                  <Select
-                    v-model="addRelationDetail.validDateType"
-                    placeholder="券有效期类型"
-                    disabled
-                    style="padding-right: 5px; width: 120px"
-                  >
-                    <Option
-                      v-for="(item, index) in validDateTypeEnum"
-                      :key="index"
-                      :value="item.value"
-                      class="ptb2-5"
-                      style="padding-left: 5px; width: 100px"
-                    >
-                      {{ item.label }}
-                    </Option>
-                  </Select>
-                </FormItem>
-                <FormItem v-else label="券有效期:" prop="useLimitType">
                   <Select
                     v-model="addRelationDetail.validDateType"
                     placeholder="券有效期类型"
@@ -644,12 +628,27 @@
                     </Option>
                   </Select>
                 </FormItem>
+                <FormItem v-else label="券有效期:" prop="useLimitType">
+                  <Select
+                    v-model="addRelationDetail.validDateType"
+                    placeholder="券有效期类型"
+                    style="padding-right: 5px; width: 130px"
+                    disabled
+                  >
+                    <Option
+                      v-for="(item, index) in validDateTypeEnum"
+                      :key="index"
+                      :value="item.value"
+                      class="ptb2-5"
+                      style="padding-left: 5px; width: 130px"
+                    >
+                      {{ item.label }}
+                    </Option>
+                  </Select>
+                </FormItem>
               </i-col>
               <template
-                v-if="
-                  addRelationDetail.validDateType == 'UN_FIXED_DATE' &&
-                  tempModalType == 'addTemplate'
-                "
+                v-if="addRelationDetail.validDateType == 'UN_FIXED_DATE'"
               >
                 <i-col span="7">
                   <FormItem label="发放券后:" prop="beginDay">
@@ -674,12 +673,7 @@
                   </FormItem>
                 </i-col>
               </template>
-              <template
-                v-if="
-                  addRelationDetail.validDateType == 'FIXED_DATE' &&
-                  tempModalType == 'addTemplate'
-                "
-              >
+              <template v-if="addRelationDetail.validDateType == 'FIXED_DATE'">
                 <i-col span="7">
                   <FormItem label="生效时间:" prop="effectiveStartTime">
                     <DatePicker
@@ -1256,9 +1250,10 @@
             </i-col>
           </Row>
           <Row>
-            <i-col v-if="addRelationDetail.source == 'SMALL'" span="6">
+            <!-- v-if="addRelationDetail.source == 'SMALL'" -->
+            <i-col span="6">
               <FormItem
-                v-if="handCouponTime"
+                v-if="addRelationDetail.source == 'SMALL'"
                 :label-width="100"
                 label="券有效期:"
                 prop="useLimitType"
@@ -1266,7 +1261,6 @@
                 <Select
                   v-model="addRelationDetail.validDateType"
                   placeholder="券有效期类型"
-                  disabled
                   style="padding-right: 5px; width: 130px"
                 >
                   <Option
@@ -1290,6 +1284,7 @@
                   v-model="addRelationDetail.validDateType"
                   placeholder="券有效期类型"
                   style="padding-right: 5px; width: 130px"
+                  disabled
                 >
                   <Option
                     v-for="(item, index) in validDateTypeEnum"
@@ -1303,12 +1298,7 @@
                 </Select>
               </FormItem>
             </i-col>
-            <template
-              v-if="
-                addRelationDetail.source == 'SMALL' &&
-                addRelationDetail.validDateType == 'UN_FIXED_DATE'
-              "
-            >
+            <template v-if="addRelationDetail.validDateType == 'UN_FIXED_DATE'">
               <i-col span="7">
                 <FormItem label="生效开始:" prop="beginDay">
                   <InputNumber
@@ -1330,12 +1320,7 @@
                 </FormItem>
               </i-col>
             </template>
-            <template
-              v-if="
-                addRelationDetail.source == 'SMALL' &&
-                addRelationDetail.validDateType == 'FIXED_DATE'
-              "
-            >
+            <template v-if="addRelationDetail.validDateType == 'FIXED_DATE'">
               <i-col span="7">
                 <FormItem label="生效时间:" prop="effectiveStartTime">
                   <DatePicker
@@ -2711,7 +2696,7 @@ const dataColumns = [
       ) {
         return <div>{row.beginDay}</div>;
       } else if (row.source == "HD") {
-        return <div>{row.effectiveStartTime}</div>;
+        return <div>{row.beginDay}</div>;
       } else {
         return <div>N/A</div>;
       }
@@ -2740,11 +2725,12 @@ const dataColumns = [
       ) {
         return <div>{row.endDay}</div>;
       } else if (row.source == "HD") {
-        if (!compareCouponData(row.effectiveEndTime)) {
-          return <div style="color:red">{row.effectiveEndTime + "已过期"}</div>;
-        } else {
-          return <div>{row.effectiveEndTime}</div>;
-        }
+        return <div>{row.endDay}</div>;
+        // if (!compareCouponData(row.effectiveEndTime)) {
+        //   return <div style="color:red">{row.effectiveEndTime + "已过期"}</div>;
+        // } else {
+        //   return <div>{row.effectiveEndTime}</div>;
+        // }
       } else {
         return <div>N/A</div>;
       }
