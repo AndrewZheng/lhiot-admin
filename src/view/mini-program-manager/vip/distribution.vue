@@ -604,7 +604,7 @@
           </Row>
           <Row>
             <i-col span="6">
-              <FormItem label="　会员身份:" prop="svipLevel" :label-width="100">
+              <FormItem label="会员身份:" prop="svipLevel" :label-width="100">
                 <Select
                   v-model="addRelationDetail.svipLevel"
                   placeholder="会员身份"
@@ -644,7 +644,7 @@
           </Row>
           <Row>
             <i-col span="6">
-              <FormItem label="　券有效期:" prop="useLimitType" :label-width="100">
+              <FormItem label="券有效期:" prop="useLimitType" :label-width="100">
                 <Select
                   v-model="addRelationDetail.validDateType"
                   placeholder="券有效期类型"
