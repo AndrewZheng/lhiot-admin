@@ -479,7 +479,7 @@
                 </Select>
               </FormItem>
             </i-col>
-            <i-col span="12">
+            <i-col v-show="showStoreList" span="12">
               <FormItem
                 :label-width="85"
                 label="所属城市:"
@@ -504,7 +504,7 @@
             </i-col>
           </Row>
           <Row v-show="showStoreList">
-            <i-col span="24">
+            <i-col v-if="storeData.length>0" span="24">
               <FormItem>
                 <div
                   class="bottom-line"
@@ -535,7 +535,7 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData1.length>0" span="24">
               <FormItem>
                 <div
                   class="bottom-line"
@@ -566,7 +566,7 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData2.length>0" span="24">
               <FormItem>
                 <div
                   class="bottom-line"
@@ -597,7 +597,7 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData3.length>0" span="24">
               <FormItem>
                 <div
                   class="bottom-line"
@@ -628,7 +628,7 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData4.length>0" span="24">
               <FormItem>
                 <div
                   class="bottom-line"
@@ -659,7 +659,7 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData5.length>0" span="24">
               <FormItem>
                 <div
                   class="bottom-line"
@@ -690,7 +690,7 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData6.length>0" span="24">
               <FormItem>
                 <div
                   class="bottom-line"
@@ -3085,7 +3085,10 @@ export default {
       this.searchRowData = _.cloneDeep(searchRowData);
     },
     handleCitySwitch() {
+      // 清空上次选择的值
+      this.storeCheckRest();
       // 切换城市，重新获取区域列表
+      this.getStore();
     },
     handleCreate() {
       this.showStoreList = false;
@@ -3308,46 +3311,49 @@ export default {
         this.showStoreList = false;
       } else if (options.value === 'PART') {
         this.activityNewProducts.relationStoreType = 'PART';
-        this.indeterminate = false;
-        this.checkAll = false;
-        this.indeterminate1 = false;
-        this.checkAll1 = false;
-        this.indeterminate2 = false;
-        this.checkAll2 = false;
-        this.indeterminate3 = false;
-        this.checkAll3 = false;
-        this.indeterminate4 = false;
-        this.checkAll4 = false;
-        this.indeterminate5 = false;
-        this.checkAll5 = false;
-        this.indeterminate6 = false;
-        this.checkAll6 = false;
-        this.indeterminate7 = false;
-        this.checkAll7 = false;
-        this.storeIds = [];
-        this.activityNewProducts.storeIds = '';
+        this.storeCheckRest();
+        this.getStore();
         this.showStoreList = true;
       }
     },
+    storeCheckRest() {
+      this.indeterminate = false;
+      this.checkAll = false;
+      this.indeterminate1 = false;
+      this.checkAll1 = false;
+      this.indeterminate2 = false;
+      this.checkAll2 = false;
+      this.indeterminate3 = false;
+      this.checkAll3 = false;
+      this.indeterminate4 = false;
+      this.checkAll4 = false;
+      this.indeterminate5 = false;
+      this.checkAll5 = false;
+      this.indeterminate6 = false;
+      this.checkAll6 = false;
+      this.indeterminate7 = false;
+      this.checkAll7 = false;
+      this.storeIds = [];
+      this.activityNewProducts.storeIds = '';
+    },
     getStore() {
-      getAreaStorePages()
+      getAreaStorePages(this.activityNewProducts.cityCode)
         .then((res) => {
           this.storeList = res.array;
-          this.storeData = res.array[0].storeList;
-          this.storeData1 = res.array[1].storeList;
-          this.storeData2 = res.array[2].storeList;
-          this.storeData3 = res.array[3].storeList;
-          this.storeData4 = res.array[4].storeList;
-          this.storeData5 = res.array[5].storeList;
-          this.storeData6 = res.array[6].storeList;
+          this.storeData = res.array[0] && res.array[0].storeList || [];
+          this.storeData1 = res.array[1] && res.array[1].storeList || [];
+          this.storeData2 = res.array[2] && res.array[2].storeList || [];
+          this.storeData3 = res.array[3] && res.array[3].storeList || [];
+          this.storeData4 = res.array[4] && res.array[4].storeList || [];
+          this.storeData5 = res.array[5] && res.array[5].storeList || [];
+          this.storeData6 = res.array[6] && res.array[6].storeList || [];
           const data = [];
-          for (const val of res.array) {
-            this.storeNameList.push(val.storeName);
-            data.push(val.storeList);
-          }
-          for (const value of data) {
-            this.storeListData = this.storeListData.concat(value);
-          }
+          this.storeNameList = [];
+          res.array.forEach(item => {
+            this.storeNameList.push(item.storeName);
+            data.push(item.storeList);
+          })
+          this.storeListData = data;
         })
     },
     handleCheckAll(value) {
@@ -4278,13 +4284,6 @@ export default {
 .img {
   margin-top: 0.25rem !important;
   vertical-align: middle;
-}
-
-.bottom-line{
-  border-bottom: 1px solid #e9e9e9;
-  padding-bottom: 6px;
-  margin-bottom: 6px;
-  display: flex;
 }
 </style>
 

@@ -764,17 +764,35 @@
                   </Select>
                 </FormItem>
               </i-col>
+              <i-col v-show="showStoreList" span="12">
+                <FormItem
+                  :label-width="85"
+                  label="所属城市:"
+                  prop="cityCode"
+                >
+                  <Select
+                    v-model="addRelationDetail.cityCode"
+                    style="width: 220px"
+                    @on-change="handleCitySwitch"
+                  >
+                    <Option
+                      v-for="(item, index) in cityList"
+                      :key="index"
+                      :value="item.cityCode"
+                      class="ptb2-5"
+                      style="padding-left: 5px"
+                    >
+                      {{ item.cityName }}
+                    </Option>
+                  </Select>
+                </FormItem>
+              </i-col>
             </Row>
             <Row v-show="showStoreList">
-              <i-col span="24">
+              <i-col v-if="storeData.length>0" span="24">
                 <FormItem>
                   <div
-                    style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
-                    "
+                    class="bottom-line"
                   >
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[0] }}
@@ -802,15 +820,10 @@
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <i-col span="24">
+              <i-col v-if="storeData1.length>0" span="24">
                 <FormItem>
                   <div
-                    style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
-                    "
+                    class="bottom-line"
                   >
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[1] }}
@@ -838,15 +851,10 @@
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <i-col span="24">
+              <i-col v-if="storeData2.length>0" span="24">
                 <FormItem>
                   <div
-                    style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
-                    "
+                    class="bottom-line"
                   >
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[2] }}
@@ -874,15 +882,10 @@
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <i-col span="24">
+              <i-col v-if="storeData3.length>0" span="24">
                 <FormItem>
                   <div
-                    style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
-                    "
+                    class="bottom-line"
                   >
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[3] }}
@@ -910,15 +913,10 @@
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <i-col span="24">
+              <i-col v-if="storeData4.length>0" span="24">
                 <FormItem>
                   <div
-                    style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
-                    "
+                    class="bottom-line"
                   >
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[4] }}
@@ -946,15 +944,10 @@
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <i-col span="24">
+              <i-col v-if="storeData5.length>0" span="24">
                 <FormItem>
                   <div
-                    style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
-                    "
+                    class="bottom-line"
                   >
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[5] }}
@@ -982,15 +975,10 @@
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <i-col span="24">
+              <i-col v-if="storeData6.length>0" span="24">
                 <FormItem>
                   <div
-                    style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
-                    "
+                    class="bottom-line"
                   >
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[6] }}
@@ -1018,28 +1006,6 @@
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <!-- <i-col span="24">
-                <FormItem>
-                  <div
-                    style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
-                  >
-                    <div style="margin-left:-54px;margin-right:18px">{{storeNameList[7]}}</div>
-                    <Checkbox
-                      :indeterminate="indeterminate7"
-                      :value="checkAll7"
-                      @click.prevent.native="handleCheckAll(7)"
-                    >全选/反选</Checkbox>
-                  </div>
-                  <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange7">
-                    <Checkbox
-                      v-for="item in storeData7"
-                      ref="checkBox"
-                      :key="item.storeId"
-                      :label="item.storeId"
-                    >{{ item.storeName }}</Checkbox>
-                  </CheckboxGroup>
-                </FormItem>
-              </i-col>-->
             </Row>
           </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板
         </Row>
@@ -1359,17 +1325,35 @@
                 </Select>
               </FormItem>
             </i-col>
+            <i-col v-show="showStoreList" span="12">
+              <FormItem
+                :label-width="85"
+                label="所属城市:"
+                prop="cityCode"
+              >
+                <Select
+                  v-model="addRelationDetail.cityCode"
+                  style="width: 220px"
+                  @on-change="handleCitySwitch"
+                >
+                  <Option
+                    v-for="(item, index) in cityList"
+                    :key="index"
+                    :value="item.cityCode"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                  >
+                    {{ item.cityName }}
+                  </Option>
+                </Select>
+              </FormItem>
+            </i-col>
           </Row>
           <Row v-show="showStoreList">
-            <i-col span="24">
+            <i-col v-if="storeData.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[0] }}
@@ -1397,15 +1381,10 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData1.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[1] }}
@@ -1433,15 +1412,10 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData2.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[2] }}
@@ -1469,15 +1443,10 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData3.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[3] }}
@@ -1505,15 +1474,10 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData4.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[4] }}
@@ -1541,15 +1505,10 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData5.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[5] }}
@@ -1577,15 +1536,10 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData6.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[6] }}
@@ -1613,28 +1567,6 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <!-- <i-col span="24">
-              <FormItem>
-                <div
-                  style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
-                >
-                  <div style="margin-left:-54px;margin-right:18px">{{storeNameList[7]}}</div>
-                  <Checkbox
-                    :indeterminate="indeterminate7"
-                    :value="checkAll7"
-                    @click.prevent.native="handleCheckAll(7)"
-                  >全选/反选</Checkbox>
-                </div>
-                <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange7">
-                  <Checkbox
-                    v-for="item in storeData7"
-                    ref="checkBox"
-                    :key="item.storeId"
-                    :label="item.storeId"
-                  >{{ item.storeName }}</Checkbox>
-                </CheckboxGroup>
-              </FormItem>
-            </i-col>-->
           </Row>
         </Form>
       </div>
@@ -1669,6 +1601,7 @@ import {
   editRegisterGift,
   getCouponTemplatePages,
   getHdCouponActivitiesPages,
+  getStoreCityPages,
   getAreaStorePages
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
@@ -1748,7 +1681,7 @@ const relationDetail = {
   endDay: 0,
   stores: null,
   relationStoreType: 'ALL',
-  hdActivityId: ''
+  cityCode: '0731'
 };
 
 // 系统优惠券模板对象
@@ -2419,6 +2352,7 @@ export default {
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
+      cityList: [],
       templatePageOpts: [5, 10],
       couponStatusEnum,
       couponTypeEnum,
@@ -2501,10 +2435,48 @@ export default {
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
+    this.getStoreCityPages();
     this.getStore();
     this.getTableData();
   },
   methods: {
+    getStoreCityPages() {
+      getStoreCityPages({
+        sidx: 'id',
+        sort: 'asc',
+        page: 1,
+        rows: -1
+      })
+        .then((res) => {
+          this.cityList = res.rows;
+        })
+    },
+    getStore() {
+      getAreaStorePages(this.addRelationDetail.cityCode)
+        .then((res) => {
+          this.storeList = res.array;
+          this.storeData = res.array[0] && res.array[0].storeList || [];
+          this.storeData1 = res.array[1] && res.array[1].storeList || [];
+          this.storeData2 = res.array[2] && res.array[2].storeList || [];
+          this.storeData3 = res.array[3] && res.array[3].storeList || [];
+          this.storeData4 = res.array[4] && res.array[4].storeList || [];
+          this.storeData5 = res.array[5] && res.array[5].storeList || [];
+          this.storeData6 = res.array[6] && res.array[6].storeList || [];
+          const data = [];
+          this.storeNameList = [];
+          res.array.forEach(item => {
+            this.storeNameList.push(item.storeName);
+            data.push(item.storeList);
+          })
+          this.storeListData = data;
+        })
+    },
+    handleCitySwitch() {
+      // 清空上次选择的值
+      this.storeCheckRest();
+      // 切换城市，重新获取区域列表
+      this.getStore();
+    },
     statusChange(params) {
       this.addRelationDetail = _.cloneDeep(params.row);
       if (params.row.couponStatus === 'VALID') {
@@ -2717,51 +2689,30 @@ export default {
         this.showStoreList = false;
       } else if (options.value === 'PART') {
         this.addRelationDetail.relationStoreType = 'PART';
-        this.indeterminate = false;
-        this.checkAll = false;
-        this.indeterminate1 = false;
-        this.checkAll1 = false;
-        this.indeterminate2 = false;
-        this.checkAll2 = false;
-        this.indeterminate3 = false;
-        this.checkAll3 = false;
-        this.indeterminate4 = false;
-        this.checkAll4 = false;
-        this.indeterminate5 = false;
-        this.checkAll5 = false;
-        this.indeterminate6 = false;
-        this.checkAll6 = false;
-        this.indeterminate7 = false;
-        this.checkAll7 = false;
-        this.stores = [];
-        this.addRelationDetail.stores = '';
+        this.storeCheckRest();
+        this.getStore();
         this.showStoreList = true;
       }
     },
-    getStore() {
-      getAreaStorePages()
-        .then((res) => {
-          this.storeList = res.array;
-          this.storeData = res.array[0].storeList;
-          this.storeData1 = res.array[1].storeList;
-          this.storeData2 = res.array[2].storeList;
-          this.storeData3 = res.array[3].storeList;
-          this.storeData4 = res.array[4].storeList;
-          this.storeData5 = res.array[5].storeList;
-          this.storeData6 = res.array[6].storeList;
-          // this.storeData7 = res.array[7].storeList;
-          const data = [];
-          for (const val of res.array) {
-            this.storeNameList.push(val.storeName);
-            data.push(val.storeList);
-          }
-          for (const value of data) {
-            this.storeListData = this.storeListData.concat(value);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    storeCheckRest() {
+      this.indeterminate = false;
+      this.checkAll = false;
+      this.indeterminate1 = false;
+      this.checkAll1 = false;
+      this.indeterminate2 = false;
+      this.checkAll2 = false;
+      this.indeterminate3 = false;
+      this.checkAll3 = false;
+      this.indeterminate4 = false;
+      this.checkAll4 = false;
+      this.indeterminate5 = false;
+      this.checkAll5 = false;
+      this.indeterminate6 = false;
+      this.checkAll6 = false;
+      this.indeterminate7 = false;
+      this.checkAll7 = false;
+      this.stores = [];
+      this.addRelationDetail.stores = '';
     },
     handleCheckAll(value) {
       const _this = this;
