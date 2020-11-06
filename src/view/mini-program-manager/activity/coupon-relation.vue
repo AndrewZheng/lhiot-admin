@@ -294,7 +294,7 @@
               </i-col>
             </Row>
             <Row>
-              <i-col v-if="tempModalType == 'addTemplate'" span="6">
+              <i-col span="6">
                 <FormItem
                   v-if="activityCouponType != 'BUY_COUPON_ACTIVITY'"
                   label="券有效期:"
@@ -324,13 +324,7 @@
                   }}
                 </FormItem>
               </i-col>
-              <!-- v-show="activityCouponType!='BUY_COUPON_ACTIVITY'" -->
-              <template
-                v-if="
-                  addRelationDetail.validDateType == 'UN_FIXED_DATE' &&
-                    tempModalType == 'addTemplate'
-                "
-              >
+              <template v-if="addRelationDetail.validDateType == 'UN_FIXED_DATE'">
                 <i-col span="7">
                   <FormItem label="发放券后:" prop="beginDay">
                     <InputNumber
@@ -352,12 +346,7 @@
                   </FormItem>
                 </i-col>
               </template>
-              <template
-                v-if="
-                  addRelationDetail.validDateType == 'FIXED_DATE' &&
-                    tempModalType == 'addTemplate'
-                "
-              >
+              <template v-if="addRelationDetail.validDateType == 'FIXED_DATE'">
                 <i-col span="7">
                   <FormItem label="生效时间:" prop="effectiveStartTime">
                     <DatePicker
@@ -2088,8 +2077,8 @@ export default {
   data() {
     return {
       ruleInline: {
-        effectiveStartTime: [{ required: true, message: '请选择生效时间' }],
-        effectiveEndTime: [{ required: true, message: '请选择失效时间' }],
+        effectiveStartTime: [{ required: false, message: '请选择生效时间' }],
+        effectiveEndTime: [{ required: false, message: '请选择失效时间' }],
         couponName: [{ required: true, message: '请输入券名称' }],
         couponLimit: [
           { required: true, message: '请输入发券限制数量' },
