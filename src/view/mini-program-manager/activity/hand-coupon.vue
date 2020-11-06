@@ -76,6 +76,10 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
+          <div v-if="hdCouponType === '新人注册首单立减券'" class="ml15 mt10">
+            <i style="color: red">*</i>
+            新人注册首单立减券只允许配置一张,如需修改请先下架有效的券再进行配置!
+          </div>
         </div>
         <div slot="operations" style="margin-left: -80px">
           <Button
@@ -88,6 +92,7 @@
             <Icon type="ios-arrow-back" />&nbsp;返回
           </Button>
           <Button
+            v-if="validCoupon < 1"
             v-waves
             :loading="createLoading"
             type="success"
@@ -98,7 +103,9 @@
           </Button>
           <Button
             v-if="
-              hdCouponType != '新品上市活动券' && hdCouponType != '分享赚活动券'
+              hdCouponType != '新品上市活动券' &&
+                hdCouponType != '分享赚活动券' &&
+                hdCouponType != '新人注册首单立减券'
             "
             v-waves
             :loading="createLoading"
@@ -251,10 +258,7 @@
               <i-col span="8">
                 最高优惠金额:
               </i-col>
-              <i-col
-                v-if="addRelationDetail.maxDiscountFee != null"
-                span="16"
-              >
+              <i-col v-if="addRelationDetail.maxDiscountFee != null" span="16">
                 {{ "¥" + addRelationDetail.maxDiscountFee }}
               </i-col>
               <i-col v-else span="16">
@@ -267,10 +271,7 @@
               <i-col span="8">
                 佣金比例:
               </i-col>
-              <i-col
-                v-if="addRelationDetail.commissionScale != null"
-                span="16"
-              >
+              <i-col v-if="addRelationDetail.commissionScale != null" span="16">
                 {{ addRelationDetail.commissionScale + "%" }}
               </i-col>
               <i-col v-else span="16">
@@ -597,7 +598,7 @@
                   ></Input>
                 </FormItem>
               </i-col>
-              <i-col v-if="this.hdCouponType == '分享赚活动券'" span="6">
+              <i-col v-if="hdCouponType == '分享赚活动券'" span="6">
                 <FormItem label="佣金比例(单位%):" prop="commissionScale">
                   <InputNumber
                     v-model="addRelationDetail.commissionScale"
@@ -650,7 +651,7 @@
             </Row>
 
             <Row>
-              <i-col v-if="tempModalType == 'addTemplate'" span="6">
+              <i-col span="6">
                 <FormItem
                   v-if="handCouponTime"
                   label="券有效期:"
@@ -855,7 +856,7 @@
             </Button>
             <!-- ymsb -->
             <Row
-              v-if="this.hdCouponType === '新品上市活动券'"
+              v-if="hdCouponType === '新品上市活动券'"
               style="margin-top: 15px"
             >
               <i-col span="28">
@@ -876,9 +877,7 @@
                 </FormItem>
               </i-col>
             </Row>
-            <Divider
-              v-if="this.hdCouponType === '新品上市活动券'"
-            >
+            <Divider v-if="hdCouponType === '新品上市活动券'">
               关联门店
             </Divider>
             <Row>
@@ -2883,7 +2882,7 @@ const dataColumns = [
       ) {
         return <div>{row.beginDay}</div>;
       } else if (row.source == 'HD') {
-        return <div>{row.effectiveStartTime}</div>;
+        return <div>{row.beginDay}</div>;
       } else {
         return <div>N/A</div>;
       }
@@ -2912,11 +2911,12 @@ const dataColumns = [
       ) {
         return <div>{row.endDay}</div>;
       } else if (row.source == 'HD') {
-        if (!compareCouponData(row.effectiveEndTime)) {
-          return <div style='color:red'>{row.effectiveEndTime + '已过期'}</div>;
-        } else {
-          return <div>{row.effectiveEndTime}</div>;
-        }
+        return <div>{row.endDay}</div>;
+        // if (!compareCouponData(row.effectiveEndTime)) {
+        //   return <div style="color:red">{row.effectiveEndTime + "已过期"}</div>;
+        // } else {
+        //   return <div>{row.effectiveEndTime}</div>;
+        // }
       } else {
         return <div>N/A</div>;
       }
@@ -3356,10 +3356,10 @@ export default {
   data() {
     return {
       relationRuleInline: {
-        effectiveStartTime: [{ required: true, message: '请选择生效时间' }],
-        effectiveEndTime: [{ required: true, message: '请选择失效时间' }],
-        beginDay: [{ required: true, message: '请输入生效天数' }],
-        endDay: [{ required: true, message: '请输入失效天数' }],
+        effectiveStartTime: [{ required: false, message: '请选择生效时间' }],
+        effectiveEndTime: [{ required: false, message: '请选择失效时间' }],
+        beginDay: [{ required: false, message: '请输入生效天数' }],
+        endDay: [{ required: false, message: '请输入失效天数' }],
         couponScope: [{ required: false, message: '请选择券使用范围' }],
         useLimitType: [{ required: true, message: '请选择券使用限制' }],
         couponRules: [{ required: true, message: '请输入券使用规则' }],
@@ -3449,6 +3449,7 @@ export default {
       checkAll6: false,
       checkAll7: false,
       showStoreName: '',
+      validCoupon: 0,
       couponTemplateTotal: 0,
       couponHdTemplateTotal: 0,
       modalAdd: false,
@@ -3463,10 +3464,7 @@ export default {
   },
   computed: {
     showBack() {
-      return (
-        this.$route.params.couponBusinessType !== '' ||
-        this.$route.params.couponBusinessType != null
-      );
+      return this.$route.params.pageStatus === 'signReward';
     },
     minBuyFeeComputed() {
       return fenToYuanDot2Number(this.relationDetail.minBuyFee);
@@ -3502,11 +3500,26 @@ export default {
       this.turnToPage('small-sign-reward');
     },
     statusChange(params) {
-      this.addRelationDetail = _.cloneDeep(params.row);
-      if (params.row.couponStatus === 'VALID') {
-        this.addRelationDetail.couponStatus = 'INVALID';
+      let couponIdx = 0;
+      for (const value of params.tableData) {
+        if (value.couponStatus === 'VALID') {
+          couponIdx++;
+        }
+      }
+      if (
+        this.hdCouponType === '新人注册首单立减券' &&
+        params.row.couponStatus === 'INVALID' &&
+        couponIdx > 0
+      ) {
+        this.$Message.info('新人注册首单立减券只允许配置一张!');
       } else {
-        this.addRelationDetail.couponStatus = 'VALID';
+        this.addRelationDetail = _.cloneDeep(params.row);
+        if (params.row.couponStatus === 'VALID') {
+          this.addRelationDetail.couponStatus = 'INVALID';
+        } else {
+          this.addRelationDetail.couponStatus = 'VALID';
+        }
+        this.editCouponPage();
       }
       this.editCouponPage();
     },
@@ -4308,6 +4321,14 @@ export default {
     getTableData() {
       getCouponPagess(this.searchRowData)
         .then((res) => {
+          if (this.hdCouponType === '新人注册首单立减券') {
+            this.validCoupon = 0;
+            for (const value of res.rows) {
+              if (value.couponStatus === 'VALID') {
+                this.validCoupon++;
+              }
+            }
+          }
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;

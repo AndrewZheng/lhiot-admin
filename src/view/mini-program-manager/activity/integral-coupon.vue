@@ -685,13 +685,12 @@
               </i-col>
             </Row>
             <Row>
-              <i-col v-if="tempModalType == 'addTemplate'" span="6">
+              <i-col span="6">
                 <FormItem label="券有效期:" prop="useLimitType">
                   <Select
                     v-model="addRelationDetail.validDateType"
                     placeholder="券有效期类型"
                     style=" width: 120px"
-                    disabled
                   >
                     <Option
                       v-for="(item, index) in validDateTypeEnum"
@@ -705,12 +704,7 @@
                   </Select>
                 </FormItem>
               </i-col>
-              <template
-                v-if="
-                  addRelationDetail.validDateType == 'UN_FIXED_DATE' &&
-                    tempModalType == 'addTemplate'
-                "
-              >
+              <template v-if="addRelationDetail.validDateType == 'UN_FIXED_DATE'">
                 <i-col span="6">
                   <FormItem label="生效开始:" prop="beginDay">
                     <InputNumber
@@ -732,12 +726,7 @@
                   </FormItem>
                 </i-col>
               </template>
-              <template
-                v-if="
-                  addRelationDetail.validDateType == 'FIXED_DATE' &&
-                    tempModalType == 'addTemplate'
-                "
-              >
+              <template v-if="addRelationDetail.validDateType == 'FIXED_DATE'">
                 <i-col span="7">
                   <FormItem label="生效时间:" prop="effectiveStartTime">
                     <DatePicker
@@ -2550,10 +2539,10 @@ export default {
   data() {
     return {
       relationRuleInline: {
-        effectiveStartTime: [{ required: true, message: '请选择生效时间' }],
-        effectiveEndTime: [{ required: true, message: '请选择失效时间' }],
-        beginDay: [{ required: true, message: '请输入生效天数' }],
-        endDay: [{ required: true, message: '请输入失效天数' }],
+        effectiveStartTime: [{ required: false, message: '请选择生效时间' }],
+        effectiveEndTime: [{ required: false, message: '请选择失效时间' }],
+        beginDay: [{ required: false, message: '请输入生效天数' }],
+        endDay: [{ required: false, message: '请输入失效天数' }],
         couponScope: [{ required: false, message: '请选择券使用范围' }],
         useLimitType: [{ required: true, message: '请选择券使用限制' }],
         couponRules: [{ required: true, message: '请输入券使用规则' }],

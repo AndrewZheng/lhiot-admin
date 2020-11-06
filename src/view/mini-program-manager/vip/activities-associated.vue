@@ -529,7 +529,6 @@
                   <Select
                     v-model="addRelationDetail.validDateType"
                     placeholder="券有效期类型"
-                    disabled
                     style="padding-right: 5px; width: 130px"
                   >
                     <Option
@@ -544,9 +543,7 @@
                   </Select>
                 </FormItem>
               </i-col>
-              <template
-                v-if="addRelationDetail.validDateType == 'UN_FIXED_DATE'"
-              >
+              <template v-if="addRelationDetail.validDateType == 'UN_FIXED_DATE'">
                 <i-col span="7">
                   <FormItem label="发放券后:" prop="beginDay">
                     <InputNumber
@@ -1750,8 +1747,7 @@ const relationDetail = {
   beginDay: 0,
   endDay: 0,
   stores: null,
-  relationStoreType: 'ALL',
-  hdActivityId: ''
+  relationStoreType: 'ALL'
 };
 
 // 系统优惠券模板对象
@@ -2376,8 +2372,8 @@ export default {
         ]
       },
       relationRuleInline: {
-        effectiveStartTime: [{ required: true, message: '请选择生效时间' }],
-        effectiveEndTime: [{ required: true, message: '请选择失效时间' }],
+        effectiveStartTime: [{ required: false, message: '请选择生效时间' }],
+        effectiveEndTime: [{ required: false, message: '请选择失效时间' }],
         couponName: [
           { required: true, message: '请输入优惠券名称' },
           {
@@ -2520,12 +2516,6 @@ export default {
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
       this.getTableData();
-    },
-    resetFields() {
-      this.$refs.modalCreate.resetFields();
-      this.$refs.uploadMain.clearFileList();
-      this.uploadListMain = [];
-      this.couponDetail.storeImage = null;
     },
     handleEdit(params) {
       const _this = this;
