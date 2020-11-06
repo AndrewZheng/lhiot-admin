@@ -944,7 +944,7 @@
             </i-col>
           </Row>
           <Row>
-            <i-col v-if="addRelationDetail.source === 'SMALL'" span="6">
+            <i-col span="6">
               <FormItem label="券有效期:" prop="useLimitType">
                 <Select
                   v-model="addRelationDetail.validDateType"
@@ -965,12 +965,7 @@
             </i-col>
           </Row>
           <Row>
-            <template
-              v-if="
-                addRelationDetail.validDateType == 'UN_FIXED_DATE' &&
-                  addRelationDetail.source === 'SMALL'
-              "
-            >
+            <template v-if="addRelationDetail.validDateType == 'UN_FIXED_DATE'">
               <i-col span="12">
                 <FormItem label="发放券后:" prop="beginDay">
                   <InputNumber
@@ -992,12 +987,7 @@
                 </FormItem>
               </i-col>
             </template>
-            <template
-              v-if="
-                addRelationDetail.validDateType == 'FIXED_DATE' &&
-                  addRelationDetail.source === 'SMALL'
-              "
-            >
+            <template v-if="addRelationDetail.validDateType == 'FIXED_DATE'">
               <i-col span="12">
                 <FormItem label="生效时间:" prop="effectiveStartTime">
                   <DatePicker
