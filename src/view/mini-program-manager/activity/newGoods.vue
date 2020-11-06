@@ -112,6 +112,7 @@
         </Row>
       </div>
     </Card>
+
     <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
         <span>新品上市活动详情</span>
@@ -254,6 +255,7 @@
         </Button>
       </div>
     </Modal>
+
     <Modal v-model="modalEdit" :mask-closable="false" :width="800">
       <p slot="header">
         <span>{{ isCreate ? "创建新品上市活动" : "编辑新品上市活动" }}</span>
@@ -477,17 +479,35 @@
                 </Select>
               </FormItem>
             </i-col>
+            <i-col span="12">
+              <FormItem
+                :label-width="85"
+                label="所属城市:"
+                prop="cityCode"
+              >
+                <Select
+                  v-model="activityNewProducts.cityCode"
+                  style="width: 220px"
+                  @on-change="handleCitySwitch"
+                >
+                  <Option
+                    v-for="(item, index) in cityList"
+                    :key="index"
+                    :value="item.cityCode"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                  >
+                    {{ item.cityName }}
+                  </Option>
+                </Select>
+              </FormItem>
+            </i-col>
           </Row>
           <Row v-show="showStoreList">
             <i-col span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[0] }}
@@ -518,12 +538,7 @@
             <i-col span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[1] }}
@@ -554,12 +569,7 @@
             <i-col span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[2] }}
@@ -590,12 +600,7 @@
             <i-col span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[3] }}
@@ -626,12 +631,7 @@
             <i-col span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[4] }}
@@ -662,12 +662,7 @@
             <i-col span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[5] }}
@@ -698,12 +693,7 @@
             <i-col span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[6] }}
@@ -734,7 +724,7 @@
             <!-- <i-col span="24">
               <FormItem>
                 <div
-                  style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                  class="bottom-line"
                 >
                   <div style="margin-left:-54px;margin-right:18px">{{storeNameList[7]}}</div>
                   <Checkbox
@@ -769,6 +759,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 活动关联 -->
     <Modal v-model="modalRelevance" :mask-closable="false" :width="1200">
       <p slot="header">
@@ -932,6 +923,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 券列表 -->
     <Modal
       v-model="modalAddCoupun"
@@ -995,6 +987,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 新品尝鲜 -->
     <Modal v-model="modalAddNewProduct" :mask-closable="false" :width="1200">
       <p slot="header">
@@ -1099,6 +1092,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 普通商品 -->
     <Modal v-model="modalAddproduct" :mask-closable="false" :width="1200">
       <p slot="header">
@@ -1214,6 +1208,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 拼团商品 -->
     <Modal v-model="modalAddTeambuy" :mask-closable="false" :width="1200">
       <p slot="header">
@@ -1342,6 +1337,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 预售商品 -->
     <Modal v-model="modalAddPresell" :mask-closable="false" :width="1200">
       <p slot="header">
@@ -1501,6 +1497,7 @@
         </Button>
       </div>
     </Modal>
+
     <Modal v-model="modalEditRank" :mask-closable="false">
       <p slot="header">
         <span>{{ "修改新品上市活动关联排序" }}</span>
@@ -1527,6 +1524,7 @@
         </Button>
       </div>
     </Modal>
+
     <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
@@ -1542,6 +1540,7 @@ import {
   deleteNewProducts,
   createNewProducts,
   deletePicture,
+  getStoreCityPages,
   getNewProductsRelevance,
   createNewProductsRelevance,
   updateNewProductsRelevance,
@@ -1608,6 +1607,7 @@ const activityNewProducts = {
   shareText: '',
   status: '',
   title: '',
+  cityCode: '0731',
   storeIds: null,
   relationStoreType: 'ALL'
 };
@@ -1616,10 +1616,10 @@ const ActivityNewProductsRelevance = {
   activityId: null,
   rank: 0,
   relationIds: null,
-  relationIds: null,
   relationType: '',
   status: 'ON'
 };
+
 const searchRowData = {
   beginTime: '',
   endTime: '',
@@ -1638,6 +1638,7 @@ const templateRowData = {
   sidx: 'createTime',
   sort: 'desc'
 };
+
 const productRowData = {
   productStandardId: '',
   productId: '',
@@ -1664,7 +1665,6 @@ const teambuyRowData = {
   content: ''
 };
 
-//
 const PresellRowData = {
   startTime: null,
   endTime: null,
@@ -1678,6 +1678,7 @@ const PresellRowData = {
   validDateType: null,
   startedFlag: 'true'
 };
+
 const newproductRowData = {
   beginTime: null,
   endTime: null,
@@ -1688,6 +1689,7 @@ const newproductRowData = {
   sidx: 'createTime',
   sort: 'desc'
 };
+
 const templateColumns = [
   {
     type: 'index',
@@ -1815,6 +1817,7 @@ const templateColumns = [
     }
   }
 ];
+
 const productColumns = [
   {
     type: 'selection',
@@ -1870,6 +1873,7 @@ const productColumns = [
     align: 'center'
   }
 ];
+
 // 拼团
 const teambuyColumns = [
   {
@@ -2077,6 +2081,7 @@ const teambuyColumns = [
     }
   }
 ];
+
 // 预售
 const PresellColumns = [
   {
@@ -2344,6 +2349,7 @@ const newProductColumns = [
     key: 'userActivityLimit'
   }
 ];
+
 export default {
   components: {
     Tables,
@@ -2382,10 +2388,10 @@ export default {
       productTotal: 0,
       newProductTableData: [],
       newProductTotal: 0,
-      teambuyTableData: [],
       teambuyTotal: 0,
       PresellTableData: [],
       storeNameList: [],
+      cityList: [],
       storeList: [],
       storeData: [],
       storeData1: [],
@@ -2438,9 +2444,7 @@ export default {
       newProductColumns: newProductColumns,
       searchRowData: this._.cloneDeep(searchRowData),
       activityNewProducts: this._.cloneDeep(activityNewProducts),
-      ActivityNewProductsRelation: this._.cloneDeep(
-        ActivityNewProductsRelevance
-      ),
+      ActivityNewProductsRelation: this._.cloneDeep(ActivityNewProductsRelevance),
       searchTemplateRowData: _.cloneDeep(templateRowData),
       searchProductRowData: _.cloneDeep(productRowData),
       searchNewProductRowData: _.cloneDeep(newproductRowData),
@@ -2457,16 +2461,6 @@ export default {
       startedFlagStatus: [
         { label: '是', value: 'true' },
         { label: '否', value: 'false' }
-      ],
-      validDateTypeEnum: [
-        {
-          label: '绝对时间',
-          value: 'FIXED_DATE'
-        },
-        {
-          label: '相对时间',
-          value: 'UN_FIXED_DATE'
-        }
       ],
       columns: [
         {
@@ -3035,8 +3029,20 @@ export default {
   },
   mounted() {
     this.getStore();
+    this.getStoreCityPages();
   },
   methods: {
+    getStoreCityPages() {
+      getStoreCityPages({
+        sidx: 'id',
+        sort: 'asc',
+        page: 1,
+        rows: -1
+      })
+        .then((res) => {
+          this.cityList = res.rows;
+        })
+    },
     getTableData() {
       this.loading = true;
       getNewProductsPages(this.searchRowData)
@@ -3077,6 +3083,9 @@ export default {
     },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(searchRowData);
+    },
+    handleCitySwitch() {
+      // 切换城市，重新获取区域列表
     },
     handleCreate() {
       this.showStoreList = false;
@@ -3331,7 +3340,6 @@ export default {
           this.storeData4 = res.array[4].storeList;
           this.storeData5 = res.array[5].storeList;
           this.storeData6 = res.array[6].storeList;
-          // this.storeData7 = res.array[7].storeList;
           const data = [];
           for (const val of res.array) {
             this.storeNameList.push(val.storeName);
@@ -3341,9 +3349,6 @@ export default {
             this.storeListData = this.storeListData.concat(value);
           }
         })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     handleCheckAll(value) {
       const _this = this;
@@ -4273,6 +4278,13 @@ export default {
 .img {
   margin-top: 0.25rem !important;
   vertical-align: middle;
+}
+
+.bottom-line{
+  border-bottom: 1px solid #e9e9e9;
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+  display: flex;
 }
 </style>
 

@@ -26,7 +26,7 @@ const miniMallRouter = [
     name: 'wechat-home',
     component: Main,
     meta: {
-      hideInBread: true,
+      hideInBread: true
     },
     children: [{
       path: '/wechat-home',
@@ -138,6 +138,15 @@ const miniMallRouter = [
         title: '门店区域管理'
       },
       component: () => import('@/view/mini-program-manager/goods/store-area.vue')
+    },
+    {
+      path: '/small-store-city',
+      name: 'small-store-city',
+      meta: {
+        icon: 'ios-globe',
+        title: '门店城市管理'
+      },
+      component: () => import('@/view/mini-program-manager/goods/store-city.vue')
     }
     ]
   },
@@ -358,7 +367,6 @@ const miniMallRouter = [
     //   component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
     // },
 
-
     // {
     //   path: 'small-vip-activities-associated',
     //   name: 'small-vip-activities-associated',
@@ -404,7 +412,7 @@ const miniMallRouter = [
         title: '邮费管理'
       },
       component: () => import('@/view/mini-program-manager/system/delivery-fee.vue')
-    },
+    }
 
     ]
   },
@@ -552,7 +560,7 @@ const miniMallRouter = [
           title: 'FAQ管理'
         },
         component: () => import('@/view/mini-program-manager/content/faq.vue')
-      },
+      }
     ]
   },
   {

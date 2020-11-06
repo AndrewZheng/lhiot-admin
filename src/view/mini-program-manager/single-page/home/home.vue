@@ -23,9 +23,9 @@
       <Card shadow style="height: 180px; padding: 0 30px">
         <div class="orderBox">
           <div
-            class="orderDel"
             v-for="(item, i) in orderTotalData"
             :key="`item-${i}`"
+            class="orderDel"
             :class="i >= 2 ? 'bg_169bd5' : 'bg_ff3861'"
           >
             <p style="margin-bottom: 30px">
@@ -49,24 +49,21 @@
       <div class="tabChange">
         <b
           data-index="productStanard"
-          @click="assistDataChange"
           :class="topStatus == 'productStanard' ? 'hot' : ''"
-          >商品规格销售排行</b
-        >
+          @click="assistDataChange"
+        >商品规格销售排行</b>
         <b
           data-index="productSell"
-          @click="assistDataChange"
           :class="topStatus == 'productSell' ? 'hot' : ''"
-          >门店商品销售统计</b
-        >
+          @click="assistDataChange"
+        >门店商品销售统计</b>
         <b
           data-index="productEvaluate"
-          @click="assistDataChange"
           :class="topStatus == 'productEvaluate' ? 'hot' : ''"
-          >商品点赞/点踩排行</b
-        >
+          @click="assistDataChange"
+        >商品点赞/点踩排行</b>
       </div>
-      <Card shadow v-show="topStatus == 'productStanard'">
+      <Card v-show="topStatus == 'productStanard'" shadow>
         <tables
           ref="goodsTableData"
           v-model="goodsTableData"
@@ -88,20 +85,20 @@
               <Radio label="自定义时间"></Radio>
             </RadioGroup>
             <DatePicker
+              v-show="mark === true"
               v-model="goodsSearchRowData.beginDate"
               format="yyyy-MM-dd"
               type="date"
-              v-show="mark === true"
               placeholder="开始时间"
               style="width: 120px"
               @on-change="startTimeChange"
             />
             <i v-show="mark === true">-</i>
             <DatePicker
+              v-show="mark === true"
               v-model="goodsSearchRowData.endDate"
               format="yyyy-MM-dd"
               type="date"
-              v-show="mark === true"
               placeholder="结束时间"
               class="search-input"
               style="width: 120px"
@@ -123,11 +120,12 @@
             >
               <Option
                 v-for="item in expandTypeEnum"
-                :value="item.value"
                 :key="item.value"
+                :value="item.value"
                 style="margin: -10px 0 0 -5px"
-                >{{ item.label }}</Option
               >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="goodsSearchRowData.rankingType"
@@ -176,7 +174,7 @@
           </Row>
         </div>
       </Card>
-      <Card shadow v-show="topStatus == 'productSell'">
+      <Card v-show="topStatus == 'productSell'" shadow>
         <tables
           ref="sellTableData"
           v-model="sellTableData"
@@ -206,11 +204,12 @@
             >
               <Option
                 v-for="item in storeArea"
-                :value="item.value"
                 :key="item.value"
+                :value="item.value"
                 style="margin: -10px 0 0 -5px"
-                >{{ item.label }}</Option
               >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="sellSearchRowData.sidx"
@@ -255,7 +254,7 @@
           </Row>
         </div>
       </Card>
-      <Card shadow v-show="topStatus == 'productEvaluate'">
+      <Card v-show="topStatus == 'productEvaluate'" shadow>
         <tables
           ref="tables"
           v-model="tableData"
@@ -297,79 +296,79 @@
 </template>
 
 <script>
-import InforCard from "_c/info-card";
-import CountTo from "_c/count-to";
-import config from "@/config";
-import Tables from "_c/tables";
-import _ from "lodash";
+import InforCard from '_c/info-card';
+import CountTo from '_c/count-to';
+import config from '@/config';
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   getWaitOrder,
   getOrderTotal,
   productRanking,
   productStanardRanking,
   getStoreAreaPages,
-  getStoreSaleTotalPages,
-} from "@/api/mini-program";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+  getStoreSaleTotalPages
+} from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
-  setSmallGoodsStandard,
-} from "@/libs/util";
+  setSmallGoodsStandard
+} from '@/libs/util';
 
-import { expandTypeEnum } from "@/libs/enumerate";
-import { expandTypeConvert } from "@/libs/converStatus";
+import { expandTypeEnum } from '@/libs/enumerate';
+import { expandTypeConvert } from '@/libs/converStatus';
 const roleRowData = {
-  rankingType: "PRAISE",
+  rankingType: 'PRAISE',
   page: 1,
-  rows: 10,
+  rows: 10
 };
 
 const goodsRoleRowData = {
-  rankingType: "SALE_COUNT",
-  beginDate: "",
-  endDate: "",
-  productName: "",
-  productType: "",
+  rankingType: 'SALE_COUNT',
+  beginDate: '',
+  endDate: '',
+  productName: '',
+  productType: '',
   page: 1,
-  rows: 10,
+  rows: 10
 };
 
 const sellRoleRowData = {
-  storeName: "",
-  storeArea: "",
+  storeName: '',
+  storeArea: '',
   page: 1,
   rows: 10,
-  sidx: "sumAmount",
-  sort: "desc",
+  sidx: 'sumAmount',
+  sort: 'desc'
 };
 
 const storeRowData = {
-  aera: "",
-  areaName: "",
-  sidx: "id",
-  sort: "asc",
+  aera: '',
+  areaName: '',
+  sidx: 'id',
+  sort: 'asc',
   page: 1,
-  rows: 10,
+  rows: 10
 };
 
 export default {
-  name: "Home",
+  name: 'Home',
   components: {
     InforCard,
     CountTo,
-    Tables,
+    Tables
   },
   mixins: [tableMixin, searchMixin],
   data() {
     return {
       mark: false,
-      topStatus: "productStanard",
-      button: "今日",
-      seniorityButton: "按点赞排行排序",
+      topStatus: 'productStanard',
+      button: '今日',
+      seniorityButton: '按点赞排行排序',
       brandType: config.brandType,
-      seniorityStatus: "PRAISE",
+      seniorityStatus: 'PRAISE',
       goodsTableData: [],
       sellTableData: [],
       storeArea: [],
@@ -383,330 +382,330 @@ export default {
       storeSearchRowData: _.cloneDeep(storeRowData),
 
       goodsRankingType: [
-        { label: "销售数排序", value: "SALE_COUNT" },
-        { label: "销售额排序", value: "SALE_AMOUNT" },
+        { label: '销售数排序', value: 'SALE_COUNT' },
+        { label: '销售额排序', value: 'SALE_AMOUNT' }
       ],
       sellRankingType: [
-        { label: "订单数", value: "totalCount" },
-        { label: "销售额", value: "sumAmount" },
+        { label: '订单数', value: 'totalCount' },
+        { label: '销售额', value: 'sumAmount' }
       ],
       inforCardData: [
         {
-          title: "预售订单",
-          typeCode: "PRESAL_ORDER",
+          title: '预售订单',
+          typeCode: 'PRESAL_ORDER',
           queryDay: 0,
-          icon: "ios-copy",
+          icon: 'ios-copy',
           count: 0,
-          color: "#ff3861",
+          color: '#ff3861'
         },
         {
-          title: "提货过期",
-          typeCode: "DELIVERY_EXPIRES",
+          title: '提货过期',
+          typeCode: 'DELIVERY_EXPIRES',
           queryDay: 0,
-          icon: "md-clock",
+          icon: 'md-clock',
           count: 0,
-          color: "#19be6b",
+          color: '#19be6b'
         },
         {
-          title: "配送异常",
-          typeCode: "DELIVERY_FAILURE",
+          title: '配送异常',
+          typeCode: 'DELIVERY_FAILURE',
           queryDay: 0,
-          icon: "md-bus",
+          icon: 'md-bus',
           count: 0,
-          color: "#ff9900",
+          color: '#ff9900'
         },
         {
-          title: "海鼎异常",
-          typeCode: "HD_FAILURE",
+          title: '海鼎异常',
+          typeCode: 'HD_FAILURE',
           queryDay: 0,
-          icon: "md-close-circle",
+          icon: 'md-close-circle',
           count: 0,
-          color: "#9A66E4",
+          color: '#9A66E4'
         },
         {
-          title: "退款订单",
-          typeCode: "REFUND_ORDER",
+          title: '退款订单',
+          typeCode: 'REFUND_ORDER',
           queryDay: 0,
-          icon: "ios-cloud-download",
+          icon: 'ios-cloud-download',
           count: 0,
-          color: "#ed3f14",
-        },
+          color: '#ed3f14'
+        }
       ],
       orderTotalData: [
         {
-          title: "销售额",
-          todayTitle: "今日销售额",
-          yesterdayTitle: "昨日销售额",
-          icon: "logo-yen",
+          title: '销售额',
+          todayTitle: '今日销售额',
+          yesterdayTitle: '昨日销售额',
+          icon: 'logo-yen',
           todayNum: 0,
-          yesterdayNum: 0,
+          yesterdayNum: 0
         },
         {
-          title: "订单量",
-          todayTitle: "今日订单数",
-          yesterdayTitle: "昨日订单数",
-          icon: "ios-stats",
+          title: '订单量',
+          todayTitle: '今日订单数',
+          yesterdayTitle: '昨日订单数',
+          icon: 'ios-stats',
           todayNum: 0,
-          yesterdayNum: 0,
+          yesterdayNum: 0
         },
         {
-          title: "退单额",
-          todayTitle: "今日退单额",
-          yesterdayTitle: "昨日退单额",
-          icon: "logo-yen",
+          title: '退单额',
+          todayTitle: '今日退单额',
+          yesterdayTitle: '昨日退单额',
+          icon: 'logo-yen',
           todayNum: 0,
-          yesterdayNum: 0,
+          yesterdayNum: 0
         },
         {
-          title: "退单数",
-          todayTitle: "今日退单数",
-          yesterdayTitle: "昨日退单数",
-          icon: "ios-stats",
+          title: '退单数',
+          todayTitle: '今日退单数',
+          yesterdayTitle: '昨日退单数',
+          icon: 'ios-stats',
           todayNum: 0,
-          yesterdayNum: 0,
-        },
+          yesterdayNum: 0
+        }
       ],
       columns: [
         {
-          title: "排名",
-          key: "standardId",
-          width: "70px",
-          align: "center",
+          title: '排名',
+          key: 'standardId',
+          width: '70px',
+          align: 'center',
           render(h, params, vm) {
             const { row } = params;
             return <div>{row._index + 1}</div>;
-          },
+          }
         },
         {
-          title: "规格ID",
-          key: "standardId",
-          align: "center",
-          width: "200px",
+          title: '规格ID',
+          key: 'standardId',
+          align: 'center',
+          width: '200px'
         },
         {
-          title: "商品名称",
-          key: "productName",
-          align: "center",
+          title: '商品名称',
+          key: 'productName',
+          align: 'center'
         },
         {
-          title: "规格",
-          key: "specification",
-          align: "center",
-          width: "180px",
+          title: '规格',
+          key: 'specification',
+          align: 'center',
+          width: '180px'
         },
         {
-          title: "点赞",
-          align: "center",
-          key: "praiseCount",
-          width: "180px",
+          title: '点赞',
+          align: 'center',
+          key: 'praiseCount',
+          width: '180px'
         },
         {
-          title: "点踩",
-          key: "treadCount",
-          align: "center",
-          width: "180px",
-        },
+          title: '点踩',
+          key: 'treadCount',
+          align: 'center',
+          width: '180px'
+        }
       ],
       goodsColumns: [
         {
-          title: "排名",
-          key: "ranking",
-          align: "center",
-          width: "70px",
+          title: '排名',
+          key: 'ranking',
+          align: 'center',
+          width: '70px',
           render(h, params, vm) {
             const { row } = params;
             return <div>{row._index + 1}</div>;
-          },
+          }
         },
         {
-          title: "规格ID",
-          key: "standardId",
-          align: "center",
-          width: "180px",
+          title: '规格ID',
+          key: 'standardId',
+          align: 'center',
+          width: '180px'
         },
         {
-          title: "商品名称",
-          key: "productName",
-          align: "center",
+          title: '商品名称',
+          key: 'productName',
+          align: 'center'
         },
         {
-          title: "规格",
-          key: "specification",
-          align: "center",
-          width: "160px",
+          title: '规格',
+          key: 'specification',
+          align: 'center',
+          width: '160px'
         },
         {
-          title: "单位",
-          align: "center",
-          key: "unitName",
-          width: "120px",
+          title: '单位',
+          align: 'center',
+          key: 'unitName',
+          width: '120px'
         },
         {
-          title: "规格类型",
-          key: "productType",
-          align: "center",
-          width: "120px",
+          title: '规格类型',
+          key: 'productType',
+          align: 'center',
+          width: '120px',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.productType == "DISCOUNT_PRODUCT") {
+            if (row.productType == 'DISCOUNT_PRODUCT') {
               return (
                 <div>
-                  <tag color="magenta">
+                  <tag color='magenta'>
                     {expandTypeConvert(row.productType).label}
                   </tag>
                 </div>
               );
-            } else if (row.productType == "PULL_NEW_PRODUCT") {
+            } else if (row.productType == 'PULL_NEW_PRODUCT') {
               return (
                 <div>
-                  <tag color="orange">
+                  <tag color='orange'>
                     {expandTypeConvert(row.productType).label}
                   </tag>
                 </div>
               );
-            } else if (row.productType == "SECKILL_PRODUCT") {
+            } else if (row.productType == 'SECKILL_PRODUCT') {
               return (
                 <div>
-                  <tag color="blue">
+                  <tag color='blue'>
                     {expandTypeConvert(row.productType).label}
                   </tag>
                 </div>
               );
-            } else if (row.productType == "NEW_TRY_PRODUCT") {
+            } else if (row.productType == 'NEW_TRY_PRODUCT') {
               return (
                 <div>
-                  <tag color="blue">
+                  <tag color='blue'>
                     {expandTypeConvert(row.productType).label}
                   </tag>
                 </div>
               );
-            } else if (row.productType == "ASSIST_PRODUCT") {
+            } else if (row.productType == 'ASSIST_PRODUCT') {
               return (
                 <div>
-                  <tag color="green">
+                  <tag color='green'>
                     {expandTypeConvert(row.productType).label}
                   </tag>
                 </div>
               );
-            } else if (row.productType == "SHARE_PRODUCT") {
+            } else if (row.productType == 'SHARE_PRODUCT') {
               return (
                 <div>
-                  <tag color="green">
+                  <tag color='green'>
                     {expandTypeConvert(row.productType).label}
                   </tag>
                 </div>
               );
-            } else if (row.productType == "ORDINARY_PRODUCT") {
+            } else if (row.productType == 'ORDINARY_PRODUCT') {
               return (
                 <div>
-                  <tag color="cyan">
+                  <tag color='cyan'>
                     {expandTypeConvert(row.productType).label}
                   </tag>
                 </div>
               );
-            } else if (row.productType == "TEAM_BUY_PRODUCT") {
+            } else if (row.productType == 'TEAM_BUY_PRODUCT') {
               return (
                 <div>
-                  <tag color="green">
+                  <tag color='green'>
                     {expandTypeConvert(row.productType).label}
                   </tag>
                 </div>
               );
-            } else if (row.productType == "PRE_SALE_PRODUCT") {
+            } else if (row.productType == 'PRE_SALE_PRODUCT') {
               return (
                 <div>
-                  <tag color="green">
+                  <tag color='green'>
                     {expandTypeConvert(row.productType).label}
                   </tag>
                 </div>
               );
             }
-          },
+          }
         },
         {
-          title: "价格",
-          key: "price",
-          align: "center",
-          width: "110px",
+          title: '价格',
+          key: 'price',
+          align: 'center',
+          width: '110px'
         },
         {
-          title: "销售份数",
-          align: "center",
-          key: "saleCount",
-          width: "120px",
+          title: '销售份数',
+          align: 'center',
+          key: 'saleCount',
+          width: '120px'
         },
         {
-          title: "销售金额",
-          key: "saleAmount",
-          align: "center",
-          width: "120px",
+          title: '销售金额',
+          key: 'saleAmount',
+          align: 'center',
+          width: '120px'
         },
         {
-          title: "在售率",
-          key: "sellingRate",
-          align: "center",
-          width: "100px",
+          title: '在售率',
+          key: 'sellingRate',
+          align: 'center',
+          width: '100px',
           render(h, params) {
             const { row } = params;
             if (!row.sellingRate) {
-              return h("div", "N/A");
+              return h('div', 'N/A');
             } else {
-              return h("div", row.sellingRate + "%");
+              return h('div', row.sellingRate + '%');
             }
-          },
+          }
         },
         {
-          title: "动销率",
-          align: "center",
-          key: "turnoverRate",
-          width: "100px",
+          title: '动销率',
+          align: 'center',
+          key: 'turnoverRate',
+          width: '100px',
           render(h, params) {
             const { row } = params;
 
             if (!row.turnoverRate) {
-              return h("div", "N/A");
+              return h('div', 'N/A');
             } else {
-              return h("div", row.turnoverRate + "%");
+              return h('div', row.turnoverRate + '%');
             }
-          },
+          }
         },
         {
-          title: "售罄率",
-          key: "soldOutRate",
-          align: "center",
-          width: "100px",
+          title: '售罄率',
+          key: 'soldOutRate',
+          align: 'center',
+          width: '100px',
           render(h, params) {
             const { row } = params;
 
             if (!row.soldOutRate) {
-              return h("div", "N/A");
+              return h('div', 'N/A');
             } else {
-              return h("div", row.soldOutRate + "%");
+              return h('div', row.soldOutRate + '%');
             }
-          },
-        },
+          }
+        }
       ],
       sellColumns: [
         {
-          title: "排名",
-          key: "ranking",
-          align: "center",
+          title: '排名',
+          key: 'ranking',
+          align: 'center',
           minWidth: 100,
           render(h, params, vm) {
             const { row } = params;
             return <div>{row._index + 1}</div>;
-          },
+          }
         },
         {
-          title: "门店名称",
-          key: "storeName",
-          align: "center",
-          minWidth: 100,
+          title: '门店名称',
+          key: 'storeName',
+          align: 'center',
+          minWidth: 100
         },
         {
-          title: "所属区域",
-          key: "storeArea",
-          align: "center",
+          title: '所属区域',
+          key: 'storeArea',
+          align: 'center',
           minWidth: 160,
           render: (h, params, vm) => {
             const { row } = params;
@@ -714,65 +713,65 @@ export default {
               return item.area === row.storeArea;
             });
             if (obj) {
-              return h("span", obj.areaName + "");
+              return h('span', obj.areaName + '');
             } else {
-              return h("span", row.storeArea + "");
+              return h('span', row.storeArea + '');
             }
-          },
+          }
         },
         {
-          title: "在售商品数",
-          align: "center",
-          key: "sellingCount",
-          minWidth: 100,
+          title: '在售商品数',
+          align: 'center',
+          key: 'sellingCount',
+          minWidth: 100
         },
         {
-          title: "可售商品数",
-          key: "canSaleCount",
-          align: "center",
-          minWidth: 100,
+          title: '可售商品数',
+          key: 'canSaleCount',
+          align: 'center',
+          minWidth: 100
         },
         {
-          title: "动销商品数",
-          align: "center",
-          key: "runSaleCount",
-          minWidth: 100,
+          title: '动销商品数',
+          align: 'center',
+          key: 'runSaleCount',
+          minWidth: 100
         },
         {
-          title: "售罄商品数",
-          key: "soldOutCount",
-          align: "center",
-          minWidth: 100,
+          title: '售罄商品数',
+          key: 'soldOutCount',
+          align: 'center',
+          minWidth: 100
         },
         {
-          title: "订单数",
-          key: "totalCount",
-          align: "center",
-          minWidth: 100,
+          title: '订单数',
+          key: 'totalCount',
+          align: 'center',
+          minWidth: 100
         },
         {
-          title: "销售额",
-          align: "center",
-          key: "sumAmount",
-          minWidth: 100,
-        },
-      ],
+          title: '销售额',
+          align: 'center',
+          key: 'sumAmount',
+          minWidth: 100
+        }
+      ]
     };
   },
   computed: {
     banner() {
       // 默认万翼果联品牌
       let str =
-        "http://resource.shuiguoshule.com.cn/product_image/2019-07-31/sgv7qBdSKI7ZrH5JU2kB.jpg";
-      if (this.brandType === "qgg") {
+        'http://resource.shuiguoshule.com.cn/product_image/2019-07-31/sgv7qBdSKI7ZrH5JU2kB.jpg';
+      if (this.brandType === 'qgg') {
         str =
-          "http://resource.shuiguoshule.com.cn/v2/qgg/activity_image/activity/2020-04-24/e7qhDWpvwOrSGRCJqDHT.jpg";
-      } else if (this.brandType === "lv_hang") {
+          'http://resource.shuiguoshule.com.cn/v2/qgg/activity_image/activity/2020-04-24/e7qhDWpvwOrSGRCJqDHT.jpg';
+      } else if (this.brandType === 'lv_hang') {
         str =
-          "http://resource.shuiguoshule.com.cn/v2/lv_hang/activity_image/activity/2020-04-24/EenfAkUuSzvbxu0Jmz1G.jpg";
+          'http://resource.shuiguoshule.com.cn/v2/lv_hang/activity_image/activity/2020-04-24/EenfAkUuSzvbxu0Jmz1G.jpg';
       }
       return str;
-    },
+    }
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
@@ -785,14 +784,13 @@ export default {
     this.getStoreAreaPages();
   },
   methods: {
-    //头部数据
+    // 头部数据
     getWaitOrder() {
-      const _this = this;
       getWaitOrder()
         .then((res) => {
           const newData = _.cloneDeep(this.inforCardData);
-          for (let value of res) {
-            for (let val of newData) {
+          for (const value of res) {
+            for (const val of newData) {
               if (value.typeCode === val.typeCode) {
                 val.count = Number(value.typeCount);
                 val.queryDay = Number(value.queryDay);
@@ -801,11 +799,9 @@ export default {
           }
           this.inforCardData = newData;
         })
-        .catch((error) => {});
     },
     // 销售数据
     getOrderTotal() {
-      const _this = this;
       getOrderTotal()
         .then((res) => {
           this.orderTotalData[0].todayNum = res.nowSumAmount;
@@ -817,10 +813,8 @@ export default {
           this.orderTotalData[3].todayNum = res.nowReturnTotal;
           this.orderTotalData[3].yesterdayNum = res.yesReturnTotal;
         })
-        .catch((error) => {});
     },
     getTableData() {
-      const _this = this;
       productRanking(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
@@ -837,7 +831,6 @@ export default {
         });
     },
     getSellTableData(value) {
-      const _this = this;
       getStoreSaleTotalPages(this.sellSearchRowData)
         .then((res) => {
           this.sellTableData = res.rows;
@@ -854,15 +847,14 @@ export default {
         });
     },
     getGoodsTableData(value) {
-      const _this = this;
-      let date = new Date();
+      const date = new Date();
       date.setDate(date.getDate());
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var today = `${year}-${month}-${day}`;
-      if (value === "昨日") {
-        let date = new Date();
+      if (value === '昨日') {
+        const date = new Date();
         date.setDate(date.getDate() - 1);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -871,8 +863,8 @@ export default {
         this.goodsSearchRowData.beginDate = yesterday;
         this.goodsSearchRowData.endDate = yesterday;
       }
-      if (value === "今日") {
-        let date = new Date();
+      if (value === '今日') {
+        const date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -881,8 +873,8 @@ export default {
         this.goodsSearchRowData.beginDate = today;
         this.goodsSearchRowData.endDate = today;
       }
-      if (value === "最近7天") {
-        let date = new Date();
+      if (value === '最近7天') {
+        const date = new Date();
         date.setDate(date.getDate() - 7);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -891,8 +883,8 @@ export default {
         this.goodsSearchRowData.beginDate = sevenDay;
         this.goodsSearchRowData.endDate = today;
       }
-      if (value === "最近30天") {
-        let date = new Date();
+      if (value === '最近30天') {
+        const date = new Date();
         date.setDate(date.getDate() - 30);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -901,32 +893,28 @@ export default {
         this.goodsSearchRowData.beginDate = toMonth;
         this.goodsSearchRowData.endDate = today;
       }
-      let date1 = new Date();
+      const date1 = new Date();
       date1.setDate(date.getDate() - 1);
       var year1 = date.getFullYear();
       var month1 = date.getMonth() + 1;
       var day1 = date.getDate();
       var yesterday1 = `${year1}-${month1}-${day1}`;
-      if (this.button === "今日") {
+      if (this.button === '今日') {
         this.goodsSearchRowData.beginDate = yesterday1;
         this.goodsSearchRowData.endDate = yesterday1;
       }
       this.goodsSearchRowData.beginDate = this.$moment(
         this.goodsSearchRowData.beginDate
-      ).format("YYYY-MM-DD");
+      ).format('YYYY-MM-DD');
       this.goodsSearchRowData.endDate = this.$moment(
         this.goodsSearchRowData.endDate
-      ).format("YYYY-MM-DD");
+      ).format('YYYY-MM-DD');
       productStanardRanking(this.goodsSearchRowData)
         .then((res) => {
           this.goodsTableData = res.rows;
           this.goodsTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -937,13 +925,12 @@ export default {
         .then((res) => {
           this.areaList = res.rows;
           res.rows.forEach((value) => {
-            const map = { label: "label", value: "value" };
+            const map = { label: 'label', value: 'value' };
             map.value = value.area;
             map.label = value.areaName;
             this.storeArea.push(map);
           });
         })
-        .finally(() => {});
     },
     goodsChangePage(page) {
       this.goodsSearchRowData.page = page;
@@ -963,52 +950,52 @@ export default {
       this.sellSearchRowData.rows = pageSize;
       this.getSellTableData();
     },
-    //跳转
+    // 跳转
     handgoIng(i) {
       const orderDel = this.inforCardData;
       setSmallGoodsStandard(orderDel[i]);
       this.turnToPage({
-        name: "small-skip-order",
+        name: 'small-skip-order',
         params: {
           typeCode: orderDel[i].typeCode,
-          queryDay: orderDel[i].queryDay,
-        },
+          queryDay: orderDel[i].queryDay
+        }
       });
     },
     productDataChange(value) {
-      if (value === "按点赞排行排序") {
-        this.searchRowData.rankingType = "PRAISE";
+      if (value === '按点赞排行排序') {
+        this.searchRowData.rankingType = 'PRAISE';
         this.getTableData();
       } else {
-        this.searchRowData.rankingType = "TREAD";
+        this.searchRowData.rankingType = 'TREAD';
         this.getTableData();
       }
     },
     timeChange(value) {
-      if (value === "今日") {
+      if (value === '今日') {
         this.getGoodsTableData(value);
         this.mark = false;
-      } else if (value === "昨日") {
+      } else if (value === '昨日') {
         this.mark = false;
         this.getGoodsTableData(value);
-      } else if (value === "最近7天") {
+      } else if (value === '最近7天') {
         this.mark = false;
         this.getGoodsTableData(value);
-      } else if (value === "最近30天") {
+      } else if (value === '最近30天') {
         this.mark = false;
         this.getGoodsTableData(value);
-      } else if (value === "自定义时间") {
+      } else if (value === '自定义时间') {
         this.mark = true;
-        this.goodsSearchRowData.beginDate = "";
-        this.goodsSearchRowData.endDate = "";
+        this.goodsSearchRowData.beginDate = '';
+        this.goodsSearchRowData.endDate = '';
       }
     },
     startTimeChange(value, date) {
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.goodsSearchRowData.beginDate = value;
     },
     endTimeChange(value, date) {
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.goodsSearchRowData.endDate = value;
     },
     handleGoodsSearch() {
@@ -1020,13 +1007,13 @@ export default {
         this.searchLoading = true;
         this.getGoodsTableData();
       } else {
-        this.$Message.info("请先选择搜索时间!");
+        this.$Message.info('请先选择搜索时间!');
       }
     },
     handleGoodsClear() {
       this.goodsSearchRowData = _.cloneDeep(goodsRoleRowData);
-      this.button = "今日";
-      this.getGoodsTableData("今日");
+      this.button = '今日';
+      this.getGoodsTableData('今日');
       this.mark = false;
     },
     handleSellSearch() {
@@ -1039,7 +1026,7 @@ export default {
       this.getSellTableData();
     },
     assistDataChange(e) {
-      let index = e.currentTarget.dataset.index;
+      const index = e.currentTarget.dataset.index;
       if (this.topStatus === index) {
         return;
       }
@@ -1047,36 +1034,36 @@ export default {
     },
     // 导出数据
     handleDownload(value) {
-      if (value === "productStanard") {
+      if (value === 'productStanard') {
         // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
         this.goodsSearchRowData.rows =
           this.goodsTotal > 5000 ? 5000 : this.goodsTotal;
-        let pageSize = this.goodsSearchRowData.page;
+        const pageSize = this.goodsSearchRowData.page;
         this.goodsSearchRowData.page = 1;
         this.goodsSearchRowData.beginDate = this.$moment(
           this.goodsSearchRowData.beginDate
-        ).format("YYYY-MM-DD");
+        ).format('YYYY-MM-DD');
         this.goodsSearchRowData.endDate = this.$moment(
           this.goodsSearchRowData.endDate
-        ).format("YYYY-MM-DD");
+        ).format('YYYY-MM-DD');
         productStanardRanking(this.goodsSearchRowData).then((res) => {
           const tableData = res.rows;
           // 恢复正常页数
           this.goodsSearchRowData.rows = 10;
           this.goodsSearchRowData.page = pageSize;
           // 表格数据导出字段翻译
-          let _this = this;
-          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+          const _this = this;
+          const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
           this.$refs.goodsTableData.handleDownload({
             filename: `商品规格销售排行统计-${date}`,
-            data: tableData,
+            data: tableData
           });
         });
       } else {
         // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
         this.sellSearchRowData.rows =
           this.sellTotal > 5000 ? 5000 : this.sellTotal;
-        let pageSize = this.sellSearchRowData.page;
+        const pageSize = this.sellSearchRowData.page;
         this.sellSearchRowData.page = 1;
         getStoreSaleTotalPages(this.sellSearchRowData).then((res) => {
           const tableData = res.rows;
@@ -1084,20 +1071,20 @@ export default {
           this.sellSearchRowData.rows = 10;
           this.sellSearchRowData.page = pageSize;
           // 表格数据导出字段翻译
-          let _this = this;
+          const _this = this;
           tableData.forEach((item, index) => {
-            item["productType"] = expandTypeConvert(item["productType"]).label;
-            item["ranking"] = Number(index) + 1;
+            item['productType'] = expandTypeConvert(item['productType']).label;
+            item['ranking'] = Number(index) + 1;
           });
-          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+          const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
           this.$refs.sellTableData.handleDownload({
             filename: `门店商品销售排行统计-${date}`,
-            data: tableData,
+            data: tableData
           });
         });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
