@@ -1268,7 +1268,7 @@
               </FormItem>
             </i-col> -->
             <i-col
-              v-if="this.hdCouponType == '分享赚活动券'"
+              v-if="hdCouponType == '分享赚活动券'"
               span="6"
               style="margin-left: 38px"
             >
@@ -1281,32 +1281,8 @@
             </i-col>
           </Row>
           <Row>
-            <!-- v-if="addRelationDetail.source == 'SMALL'" -->
             <i-col span="6">
               <FormItem
-                v-if="addRelationDetail.source == 'SMALL'"
-                :label-width="100"
-                label="券有效期:"
-                prop="useLimitType"
-              >
-                <Select
-                  v-model="addRelationDetail.validDateType"
-                  placeholder="券有效期类型"
-                  style="padding-right: 5px; width: 130px"
-                >
-                  <Option
-                    v-for="(item, index) in validDateTypeEnum"
-                    :key="index"
-                    :value="item.value"
-                    class="ptb2-5"
-                    style="padding-left: 5px; width: 130px"
-                  >
-                    {{ item.label }}
-                  </Option>
-                </Select>
-              </FormItem>
-              <FormItem
-                v-else
                 :label-width="100"
                 label="券有效期:"
                 prop="useLimitType"
