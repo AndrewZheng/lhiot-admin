@@ -1335,10 +1335,6 @@
       </div>
     </Modal>
 
-    <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%">
-    </Modal>
-
     <Modal v-model="modalProduct" :width="1200" title="关联商品" footer-hide>
       <Card>
         <tables
@@ -1402,6 +1398,7 @@
         </div>
       </Card>
     </Modal>
+
     <!-- 商品规格展示 -->
     <Modal v-model="modalGoodsStandard" :mask-closable="false" :width="700">
       <p slot="header">
@@ -1649,6 +1646,10 @@
         </Button>
       </div>
     </Modal>
+
+    <Modal v-model="uploadVisible" title="图片预览">
+      <img :src="imgUploadViewItem" style="width: 100%">
+    </Modal>
   </div>
 </template>
 
@@ -1656,7 +1657,7 @@
 import Tables from '_c/tables';
 import config from '@/config';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
+
 import {
   deleteTeamBuy,
   getTeamBuyPages,
@@ -1664,6 +1665,7 @@ import {
   createTeamBuy,
   getAreaStorePages,
   getProductStandardsPages,
+  getStorePages,
   getStoreCityPages,
   deletePicture,
   getGoodsStandard
@@ -1822,133 +1824,7 @@ export default {
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
     return {
-      ruleInline: {
-        rank: [
-          { required: true, message: '请输入排序序号' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        activityName: [{ required: true, message: '请输入活动名称' }],
-        teamBuyType: [{ required: true, message: '请选择活动类型' }],
-        content: [{ required: true, message: '请输入活动内容' }],
-        status: [{ required: true, message: '请选择活动状态' }],
-        banner: [{ required: true, message: '请上传活动banner ' }],
-        startTime: [{ required: true, message: '请输入有效期起' }],
-        endTime: [{ required: true, message: '请输入有效期止' }],
-        deliveryEndTime: [{ required: true, message: '请输入提货截止时间' }],
-        validSeconds: [{ required: true, message: '请输入成团有效时长' }],
-        productProfitPrice: [{ required: true, message: '商品毛利' }],
-        commissionPrice: [{ required: true, message: '佣金金额' }],
-        originalPrice: [{ required: true, message: '商品原价' }],
-        commissionScale: [
-          { required: true, message: '请输入佣金比例' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^([1-4]?\d(\.[05])?|50(\.0)?)$/.test(value)) {
-                errors.push(new Error('必须为0~50的整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        fullUserNum: [
-          { required: true, message: '请输入成团人数' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        costPrice: [
-          { required: true, message: '请输入商品成本价' },
-          {
-            message: '必须为大于0的数字',
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
-        ],
-        joinInfoStatus: [{ required: true, message: '请选择参团信息列表状态' }],
-        robot: [{ required: true, message: '请选择是否模拟成团' }],
-        robotStartSecond: [
-          { required: true, message: '请填写状态多少秒:' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        standardId: [{ required: true, message: '请选择商品规格' }],
-        standardDesc: [{ required: true, message: '请输入规格描述' }],
-        activityPrice: [
-          { required: true, message: '请输入商品活动价' },
-          {
-            message: '必须为大于0的数字',
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
-        ],
-        tourDiscount: [{ required: true, message: '请选择团长优惠' }],
-        triesLimit: [
-          { required: true, message: '请输入限购次数' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        productNum: [
-          { required: true, message: '请选择库存数量' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        saleQuantity: [
-          { required: true, message: '请输入已售份数' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        // singleTeambuyPrice: [
-        //   { required: true, message: "请输入单人团购价格" },
-        //   {
-        //     message: "必须为大于0的数字",
-        //     pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-        //   }
-        // ],
-        rewardActivitySetting: [
-          { required: true, message: '请选择红包活动设置' }
-        ]
-      },
+
       defaultListMain: [],
       uploadListMain: [],
       activityStatus: [
@@ -1980,6 +1856,7 @@ export default {
       isEnvironment: null,
       flagShipList: [],
       storeNameList: [],
+      allStoreList: [],
       cityList: [],
       storeList: [],
       storeData: [],
@@ -1996,6 +1873,36 @@ export default {
       newPicture: [],
       save: [],
       productStandardDetail: [],
+      productData: [],
+      productTotal: 0,
+      loading: true,
+      showStoreName: '',
+      modalProduct: false,
+      createLoading: false,
+      modalViewLoading: false,
+      exportExcelLoading: false,
+      showStoreList: false,
+      showValidDate: true,
+      indeterminate: false,
+      indeterminate1: false,
+      indeterminate2: false,
+      indeterminate3: false,
+      indeterminate4: false,
+      indeterminate5: false,
+      indeterminate6: false,
+      indeterminate7: false,
+      checkAll: false,
+      checkAll1: false,
+      checkAll2: false,
+      checkAll3: false,
+      checkAll4: false,
+      checkAll5: false,
+      checkAll6: false,
+      checkAll7: false,
+      step: 'firstStep',
+      firstSuccess: true,
+      currentTableRowSelected: null,
+      tableDataSelected: [],
       columns: [
         // {
         //   type: "selection",
@@ -2352,40 +2259,137 @@ export default {
           key: 'rank'
         }
       ],
-      productData: [],
-      productTotal: 0,
-      loading: true,
-      showStoreName: '',
-      modalProduct: false,
-      createLoading: false,
-      modalViewLoading: false,
-      exportExcelLoading: false,
-      showStoreList: false,
-      showValidDate: true,
-      indeterminate: false,
-      indeterminate1: false,
-      indeterminate2: false,
-      indeterminate3: false,
-      indeterminate4: false,
-      indeterminate5: false,
-      indeterminate6: false,
-      indeterminate7: false,
-      checkAll: false,
-      checkAll1: false,
-      checkAll2: false,
-      checkAll3: false,
-      checkAll4: false,
-      checkAll5: false,
-      checkAll6: false,
-      checkAll7: false,
-      step: 'firstStep',
-      firstSuccess: true,
-      currentTableRowSelected: null,
-      tableDataSelected: [],
       searchRowData: _.cloneDeep(roleRowData),
       searchProductRowData: _.cloneDeep(productRowData),
       productDetail: _.cloneDeep(productStandardDetail),
-      teambuyDetail: _.cloneDeep(teambuyDetail)
+      teambuyDetail: _.cloneDeep(teambuyDetail),
+      ruleInline: {
+        rank: [
+          { required: true, message: '请输入排序序号' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[0-9]+$/.test(value)) {
+                errors.push(new Error('必须为整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        activityName: [{ required: true, message: '请输入活动名称' }],
+        teamBuyType: [{ required: true, message: '请选择活动类型' }],
+        content: [{ required: true, message: '请输入活动内容' }],
+        status: [{ required: true, message: '请选择活动状态' }],
+        banner: [{ required: true, message: '请上传活动banner ' }],
+        startTime: [{ required: true, message: '请输入有效期起' }],
+        endTime: [{ required: true, message: '请输入有效期止' }],
+        deliveryEndTime: [{ required: true, message: '请输入提货截止时间' }],
+        validSeconds: [{ required: true, message: '请输入成团有效时长' }],
+        productProfitPrice: [{ required: true, message: '商品毛利' }],
+        commissionPrice: [{ required: true, message: '佣金金额' }],
+        originalPrice: [{ required: true, message: '商品原价' }],
+        commissionScale: [
+          { required: true, message: '请输入佣金比例' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^([1-4]?\d(\.[05])?|50(\.0)?)$/.test(value)) {
+                errors.push(new Error('必须为0~50的整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        fullUserNum: [
+          { required: true, message: '请输入成团人数' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[0-9]+$/.test(value)) {
+                errors.push(new Error('必须为整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        costPrice: [
+          { required: true, message: '请输入商品成本价' },
+          {
+            message: '必须为大于0的数字',
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+          }
+        ],
+        joinInfoStatus: [{ required: true, message: '请选择参团信息列表状态' }],
+        robot: [{ required: true, message: '请选择是否模拟成团' }],
+        robotStartSecond: [
+          { required: true, message: '请填写状态多少秒:' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[0-9]+$/.test(value)) {
+                errors.push(new Error('必须为整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        standardId: [{ required: true, message: '请选择商品规格' }],
+        standardDesc: [{ required: true, message: '请输入规格描述' }],
+        activityPrice: [
+          { required: true, message: '请输入商品活动价' },
+          {
+            message: '必须为大于0的数字',
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+          }
+        ],
+        tourDiscount: [{ required: true, message: '请选择团长优惠' }],
+        triesLimit: [
+          { required: true, message: '请输入限购次数' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-0-9]+$/.test(value)) {
+                errors.push(new Error('必须为整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        productNum: [
+          { required: true, message: '请选择库存数量' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-0-9]+$/.test(value)) {
+                errors.push(new Error('必须为整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        saleQuantity: [
+          { required: true, message: '请输入已售份数' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-0-9]+$/.test(value)) {
+                errors.push(new Error('必须为整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        // singleTeambuyPrice: [
+        //   { required: true, message: "请输入单人团购价格" },
+        //   {
+        //     message: "必须为大于0的数字",
+        //     pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+        //   }
+        // ],
+        rewardActivitySetting: [
+          { required: true, message: '请选择红包活动设置' }
+        ]
+      }
     };
   },
   computed: {
@@ -2415,6 +2419,7 @@ export default {
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
+    this.getStorePages();
     this.getStoreCityPages();
     this.getStore();
     this.getTableData();
@@ -2423,6 +2428,12 @@ export default {
     this.isEnvironment = config.isEnvironment;
   },
   methods: {
+    getStorePages() {
+      getStorePages({ rows: -1 })
+        .then((res) => {
+          this.allStoreList = res.rows;
+        });
+    },
     getStoreCityPages() {
       getStoreCityPages({
         sidx: 'id',
@@ -2450,9 +2461,9 @@ export default {
           res.array.forEach(item => {
             this.storeNameList.push(item.storeName);
             data.push(item.storeList);
-          })
+          });
           this.storeListData = data;
-        })
+        });
     },
     handleCitySwitch() {
       // 清空上次选择的值
@@ -2781,7 +2792,6 @@ export default {
       }
     },
     handleEdit(params) {
-      const _this = this;
       this.step = 'firstStep';
       this.firstSuccess = true;
       this.save = [];
@@ -2821,17 +2831,30 @@ export default {
       ) {
         this.showStoreList = true;
         this.teambuyDetail.relationStoreType = 'PART';
-        const storeIds = this.teambuyDetail.storeIds
-          .substring(1, this.teambuyDetail.storeIds.length - 1)
-          .split('][');
-        storeIds.forEach((element) => {
-          this.storeIds.push(parseInt(element));
-        });
-        // 全选/反选按钮的样式
-        const sameArray = _this.storeList[0].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-
+        const storeIds = this.teambuyDetail.storeIds.substring(1, this.teambuyDetail.storeIds.length - 1).split('][');
+        storeIds.forEach((element) => { this.storeIds.push(parseInt(element)); });
+        console.log('selected storeIds:', this.storeIds);
+        const firstStoreId = this.storeIds[0];
+        // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
+        const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
+        this.teambuyDetail.cityCode = storeObj.cityCode;
+        this.getStore();
+        this.handleCheckSelected();
+      } else {
+        this.showStoreList = false;
+        this.teambuyDetail.relationStoreType = 'ALL'; // storeIds为''默认关联的门店则是全部门店
+      }
+      this.modalEdit = true;
+    },
+    handleCheckSelected() {
+      const _this = this;
+      // 全选/反选按钮的样式
+      if (!_this.storeList[0]) {
+        this.indeterminate = false;
+        this.checkAll = false;
+      } else {
+        const sameArray = _this.storeList[0].storeList.filter((item) => _this.storeIds.includes(item.storeId));
+        console.log('sameArray:', sameArray);
         if (
           sameArray.length > 0 &&
           sameArray.length === this.storeList[0].storeList.length
@@ -2848,9 +2871,14 @@ export default {
           this.indeterminate = false;
           this.checkAll = false;
         }
-        const sameArray1 = _this.storeList[1].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
+      }
+
+      if (!_this.storeList[1]) {
+        this.indeterminate1 = false;
+        this.checkAll1 = false;
+      } else {
+        const sameArray1 = _this.storeList[1].storeList.filter((item) => _this.storeIds.includes(item.storeId));
+        console.log('sameArray1:', sameArray1);
         if (
           sameArray1.length > 0 &&
           sameArray1.length === this.storeList[1].storeList.length
@@ -2867,18 +2895,23 @@ export default {
           this.indeterminate1 = false;
           this.checkAll1 = false;
         }
-        const sameArray2 = _this.storeList[2].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
+      }
+
+      if (!_this.storeList[2]) {
+        this.indeterminate2 = false;
+        this.checkAll2 = false;
+      } else {
+        const sameArray2 = _this.storeList[2].storeList.filter((item) => _this.storeIds.includes(item.storeId));
+        console.log('sameArray2:', sameArray2);
         if (
           sameArray2.length > 0 &&
-          sameArray2.length === this.storeList[2].storeList.length
+            sameArray2.length === this.storeList[2].storeList.length
         ) {
           this.indeterminate2 = false;
           this.checkAll2 = true;
         } else if (
           sameArray2.length > 0 &&
-          sameArray2.length < this.storeList[2].storeList.length
+            sameArray2.length < this.storeList[2].storeList.length
         ) {
           this.indeterminate2 = true;
           this.checkAll2 = false;
@@ -2886,9 +2919,14 @@ export default {
           this.indeterminate2 = false;
           this.checkAll2 = false;
         }
-        const sameArray3 = _this.storeList[3].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
+      }
+
+      if (!_this.storeList[3]) {
+        this.indeterminate3 = false;
+        this.checkAll3 = false;
+      } else {
+        const sameArray3 = _this.storeList[3].storeList.filter((item) => _this.storeIds.includes(item.storeId));
+        console.log('sameArray3:', sameArray3);
         if (
           sameArray3.length > 0 &&
           sameArray3.length === this.storeList[3].storeList.length
@@ -2905,9 +2943,14 @@ export default {
           this.indeterminate3 = false;
           this.checkAll3 = false;
         }
-        const sameArray4 = _this.storeList[4].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
+      }
+
+      if (!_this.storeList[4]) {
+        this.indeterminate4 = false;
+        this.checkAll4 = false;
+      } else {
+        const sameArray4 = _this.storeList[4].storeList.filter((item) => _this.storeIds.includes(item.storeId));
+        console.log('sameArray4:', sameArray4);
         if (
           sameArray4.length > 0 &&
           sameArray4.length === this.storeList[4].storeList.length
@@ -2924,9 +2967,14 @@ export default {
           this.indeterminate4 = false;
           this.checkAll4 = false;
         }
-        const sameArray5 = _this.storeList[5].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
+      }
+
+      if (!_this.storeList[5]) {
+        this.indeterminate5 = false;
+        this.checkAll5 = false;
+      } else {
+        const sameArray5 = _this.storeList[5].storeList.filter((item) => _this.storeIds.includes(item.storeId));
+        console.log('sameArray5:', sameArray5);
         if (
           sameArray5.length > 0 &&
           sameArray5.length === this.storeList[5].storeList.length
@@ -2943,9 +2991,14 @@ export default {
           this.indeterminate5 = false;
           this.checkAll5 = false;
         }
-        const sameArray6 = _this.storeList[6].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
+      }
+
+      if (!_this.storeList[6]) {
+        this.indeterminate6 = false;
+        this.checkAll6 = false;
+      } else {
+        const sameArray6 = _this.storeList[6].storeList.filter((item) => _this.storeIds.includes(item.storeId));
+        console.log('sameArray6:', sameArray6);
         if (
           sameArray6.length > 0 &&
           sameArray6.length === this.storeList[6].storeList.length
@@ -2962,30 +3015,7 @@ export default {
           this.indeterminate6 = false;
           this.checkAll6 = false;
         }
-        // let sameArray7 = _this.storeList[7].storeList.filter(function (item) {
-        //   return _this.storeIds.indexOf(item.storeId) != -1;
-        // });
-        // if (
-        //   sameArray7.length > 0 &&
-        //   sameArray7.length === this.storeList[7].storeList.length
-        // ) {
-        //   this.indeterminate7 = false;
-        //   this.checkAll7 = true;
-        // } else if (
-        //   sameArray7.length > 0 &&
-        //   sameArray7.length < this.storeList[7].storeList.length
-        // ) {
-        //   this.indeterminate7 = true;
-        //   this.checkAll7 = false;
-        // } else {
-        //   this.indeterminate7 = false;
-        //   this.checkAll7 = false;
-        // }
-      } else {
-        this.showStoreList = false;
-        this.teambuyDetail.relationStoreType = 'ALL'; // storeIds为''默认关联的门店则是全部门店
       }
-      this.modalEdit = true;
     },
     handleDownload() {
       this.exportExcelLoading = true;
@@ -3573,29 +3603,6 @@ export default {
         this.checkAll6 = false;
       }
     },
-    // checkAllGroupChange7(data) {
-    //   let sameArray7 = this.storeList[7].storeList.filter(function (item) {
-    //     return data.indexOf(item.storeId) != -1;
-    //   });
-    //   if (
-    //     data.length > 0 &&
-    //     sameArray7.length === this.storeList[7].storeList.length
-    //   ) {
-    //     this.indeterminate7 = false;
-    //     this.checkAll7 = true;
-    //   } else if (
-    //     data.length > 0 &&
-    //     sameArray7.length < this.storeList[7].storeList.length
-    //   ) {
-    //     this.indeterminate7 = true;
-    //     this.checkAll7 = false;
-    //     this.teambuyDetail.storeIds = "[" + data.join("][") + "]";
-    //   }
-    //   if (sameArray7.length === 0) {
-    //     this.indeterminate7 = false;
-    //     this.checkAll7 = false;
-    //   }
-    // },
     onRowClick(row, index) {
       // 给团购活动赋值
       this.teambuyDetail.standardId = row.id;

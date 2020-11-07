@@ -681,6 +681,7 @@ import {
   createEntityExchange,
   editEntityExchange,
   getEntityTemplatePages,
+  getStorePages,
   getStoreCityPages,
   getProductStandardsPages,
   getHdCouponActivitiesPages,
@@ -1080,6 +1081,7 @@ export default {
       couponTemplateData: [],
       hdCouponTemplateData: [],
       storeNameList: [],
+      allStoreList: [],
       storeList: [],
       storeData: [],
       storeData1: [],
@@ -1135,6 +1137,7 @@ export default {
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData); // 刷新清除上次搜索结果
+    this.getStorePages();
     this.getStoreCityPages();
     this.getStore();
     this.getTableData();
@@ -1147,6 +1150,12 @@ export default {
     //     this.addRelationDetail.memberLimitType = "ALL";
     //   }
     // },
+    getStorePages() {
+      getStorePages({ rows: -1 })
+        .then((res) => {
+          this.allStoreList = res.rows;
+        });
+    },
     getStoreCityPages() {
       getStoreCityPages({
         sidx: 'id',
@@ -1202,7 +1211,6 @@ export default {
       this.addRelationDetail.unitName = unit;
     },
     handleEdit(params) {
-      const _this = this;
       this.stores = [];
       this.addRelationDetail.relationStoreType = 'ALL';
       this.tempModalType = this.modalType.edit;
@@ -1216,14 +1224,31 @@ export default {
         const stores = this.addRelationDetail.stores
           .substring(1, this.addRelationDetail.stores.length - 1)
           .split('][');
-        stores.forEach((element) => {
-          this.stores.push(parseInt(element));
-        });
-        // 全选/反选按钮的样式
-        const sameArray = _this.storeList[0].storeList.filter(function(item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
-
+        stores.forEach((element) => { this.stores.push(parseInt(element)); });
+        console.log('selected stores:', this.stores);
+        const firstStoreId = this.stores[0];
+        // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
+        const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
+        this.addRelationDetail.cityCode = storeObj.cityCode;
+        this.getStore();
+        this.handleCheckSelected();
+      } else {
+        this.showStoreList = false;
+        this.addRelationDetail.relationStoreType = 'ALL'; // storeIds为''默认关联的门店则是全部门店
+      }
+      this.replaceTextByTab();
+      this.modalAdd = true;
+      this.getProStandardData();
+    },
+    handleCheckSelected() {
+      const _this = this;
+      // 全选/反选按钮的样式
+      if (!_this.storeList[0]) {
+        this.indeterminate = false;
+        this.checkAll = false;
+      } else {
+        const sameArray = _this.storeList[0].storeList.filter((item) => _this.stores.includes(item.storeId));
+        console.log('sameArray:', sameArray);
         if (
           sameArray.length > 0 &&
           sameArray.length === this.storeList[0].storeList.length
@@ -1240,9 +1265,14 @@ export default {
           this.indeterminate = false;
           this.checkAll = false;
         }
-        const sameArray1 = _this.storeList[1].storeList.filter(function(item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
+      }
+
+      if (!_this.storeList[1]) {
+        this.indeterminate1 = false;
+        this.checkAll1 = false;
+      } else {
+        const sameArray1 = _this.storeList[1].storeList.filter((item) => _this.stores.includes(item.storeId));
+        console.log('sameArray1:', sameArray1);
         if (
           sameArray1.length > 0 &&
           sameArray1.length === this.storeList[1].storeList.length
@@ -1259,18 +1289,23 @@ export default {
           this.indeterminate1 = false;
           this.checkAll1 = false;
         }
-        const sameArray2 = _this.storeList[2].storeList.filter(function(item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
+      }
+
+      if (!_this.storeList[2]) {
+        this.indeterminate2 = false;
+        this.checkAll2 = false;
+      } else {
+        const sameArray2 = _this.storeList[2].storeList.filter((item) => _this.stores.includes(item.storeId));
+        console.log('sameArray2:', sameArray2);
         if (
           sameArray2.length > 0 &&
-          sameArray2.length === this.storeList[2].storeList.length
+            sameArray2.length === this.storeList[2].storeList.length
         ) {
           this.indeterminate2 = false;
           this.checkAll2 = true;
         } else if (
           sameArray2.length > 0 &&
-          sameArray2.length < this.storeList[2].storeList.length
+            sameArray2.length < this.storeList[2].storeList.length
         ) {
           this.indeterminate2 = true;
           this.checkAll2 = false;
@@ -1278,9 +1313,14 @@ export default {
           this.indeterminate2 = false;
           this.checkAll2 = false;
         }
-        const sameArray3 = _this.storeList[3].storeList.filter(function(item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
+      }
+
+      if (!_this.storeList[3]) {
+        this.indeterminate3 = false;
+        this.checkAll3 = false;
+      } else {
+        const sameArray3 = _this.storeList[3].storeList.filter((item) => _this.stores.includes(item.storeId));
+        console.log('sameArray3:', sameArray3);
         if (
           sameArray3.length > 0 &&
           sameArray3.length === this.storeList[3].storeList.length
@@ -1297,9 +1337,14 @@ export default {
           this.indeterminate3 = false;
           this.checkAll3 = false;
         }
-        const sameArray4 = _this.storeList[4].storeList.filter(function(item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
+      }
+
+      if (!_this.storeList[4]) {
+        this.indeterminate4 = false;
+        this.checkAll4 = false;
+      } else {
+        const sameArray4 = _this.storeList[4].storeList.filter((item) => _this.stores.includes(item.storeId));
+        console.log('sameArray4:', sameArray4);
         if (
           sameArray4.length > 0 &&
           sameArray4.length === this.storeList[4].storeList.length
@@ -1316,9 +1361,14 @@ export default {
           this.indeterminate4 = false;
           this.checkAll4 = false;
         }
-        const sameArray5 = _this.storeList[5].storeList.filter(function(item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
+      }
+
+      if (!_this.storeList[5]) {
+        this.indeterminate5 = false;
+        this.checkAll5 = false;
+      } else {
+        const sameArray5 = _this.storeList[5].storeList.filter((item) => _this.stores.includes(item.storeId));
+        console.log('sameArray5:', sameArray5);
         if (
           sameArray5.length > 0 &&
           sameArray5.length === this.storeList[5].storeList.length
@@ -1335,9 +1385,14 @@ export default {
           this.indeterminate5 = false;
           this.checkAll5 = false;
         }
-        const sameArray6 = _this.storeList[6].storeList.filter(function(item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
+      }
+
+      if (!_this.storeList[6]) {
+        this.indeterminate6 = false;
+        this.checkAll6 = false;
+      } else {
+        const sameArray6 = _this.storeList[6].storeList.filter((item) => _this.stores.includes(item.storeId));
+        console.log('sameArray6:', sameArray6);
         if (
           sameArray6.length > 0 &&
           sameArray6.length === this.storeList[6].storeList.length
@@ -1354,32 +1409,7 @@ export default {
           this.indeterminate6 = false;
           this.checkAll6 = false;
         }
-        // let sameArray7 = _this.storeList[7].storeList.filter(function (item) {
-        //   return _this.stores.indexOf(item.storeId) != -1;
-        // });
-        // if (
-        //   sameArray7.length > 0 &&
-        //   sameArray7.length === this.storeList[7].storeList.length
-        // ) {
-        //   this.indeterminate7 = false;
-        //   this.checkAll7 = true;
-        // } else if (
-        //   sameArray7.length > 0 &&
-        //   sameArray7.length < this.storeList[7].storeList.length
-        // ) {
-        //   this.indeterminate7 = true;
-        //   this.checkAll7 = false;
-        // } else {
-        //   this.indeterminate7 = false;
-        //   this.checkAll7 = false;
-        // }
-      } else {
-        this.showStoreList = false;
-        this.addRelationDetail.relationStoreType = 'ALL'; // storeIds为''默认关联的门店则是全部门店
       }
-      this.replaceTextByTab();
-      this.modalAdd = true;
-      this.getProStandardData();
     },
     handleModalAdd(isShow) {
       // 如果是创建则先清除对象

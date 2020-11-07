@@ -21,10 +21,9 @@ import 'assets/styles/style.scss';
 import moment from 'moment';
 import lodashLib from 'lodash';
 
-Vue.mixin(Mixin);
 Vue.use(axiosPlugin);
 Vue.use(VCharts);
-
+Vue.mixin(Mixin);
 Vue.use(iView, {
   i18n: (key, value) => i18n.t(key, value)
 });

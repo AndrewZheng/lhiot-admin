@@ -1369,7 +1369,7 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
+
 import {
   getCouponTemplateRelationPages,
   deleteCouponTemplateRelation,
@@ -1377,6 +1377,7 @@ import {
   editCouponTemplateRelation,
   getCouponTemplatePages,
   getHdCouponActivitiesPages,
+  getStorePages,
   getStoreCityPages,
   getAreaStorePages
 } from '@/api/mini-program';
@@ -1388,8 +1389,7 @@ import {
   couponStatusConvert,
   couponTypeConvert,
   couponScopeConvert,
-  couponUseLimitConvert,
-  userScopeConvert
+  couponUseLimitConvert
 } from '@/libs/converStatus';
 import {
   couponStatusEnum,
@@ -1468,34 +1468,6 @@ const relationDetail = {
   beginDay: 0,
   endDay: 0,
   cityCode: '0731' // 仅用于城市展示
-};
-
-// 系统优惠券模板对象
-const couponTemplateDetail = {
-  id: 0,
-  couponName: '',
-  couponType: null,
-  couponFee: 0,
-  minBuyFee: 0,
-  couponStatus: null,
-  couponImage: '',
-  createUser: '',
-  createTime: null,
-  couponRules: '',
-  couponScope: null
-};
-
-// 海鼎优惠券模板对象
-const hdCouponTemplateDetail = {
-  activityId: 0,
-  beginDate: null,
-  endDate: null,
-  couponName: '',
-  couponRemark: '',
-  couponType: '',
-  faceValue: 0,
-  price: 0,
-  useRule: ''
 };
 
 const roleRowData = {
@@ -2036,28 +2008,12 @@ export default {
   mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
   data() {
     return {
-      ruleInline: {
-        effectiveStartTime: [{ required: false, message: '请选择生效时间' }],
-        effectiveEndTime: [{ required: false, message: '请选择失效时间' }],
-        couponName: [{ required: true, message: '请输入券名称' }],
-        couponLimit: [
-          { required: true, message: '请输入发券限制数量' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
-              }
-              callback(errors);
-            }
-          }
-        ]
-      },
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
       cityList: [],
       storeNameList: [],
+      allStoreList: [],
       storeList: [],
       storeData: [],
       storeData1: [],
@@ -2069,6 +2025,10 @@ export default {
       storeData7: [],
       stores: [],
       storeListData: [],
+      addRelationList: [],
+      couponTemplateData: [],
+      hdCouponTemplateData: [],
+      templatePageOpts: [5, 10],
       showStoreList: false,
       showValidDate: true,
       indeterminate: false,
@@ -2087,9 +2047,15 @@ export default {
       checkAll5: false,
       checkAll6: false,
       checkAll7: false,
-      PresellTotal: 0,
+      addTempDataLoading: false,
+      tempTableLoading: false,
+      createLoading: false,
+      modalViewLoading: false,
       showStoreName: '',
-      templatePageOpts: [5, 10],
+      activityCouponType: '',
+      PresellTotal: 0,
+      couponTemplateTotal: 0,
+      couponHdTemplateTotal: 0,
       couponStatusEnum,
       couponTypeEnum,
       couponScopeEnum,
@@ -2100,21 +2066,28 @@ export default {
       dataColumns: dataColumns,
       templateColumns: _.cloneDeep(templateColumns),
       hdTemplateColumns: _.cloneDeep(hdTemplateColumns),
-      addTempDataLoading: false,
-      tempTableLoading: false,
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchTemplateRowData: _.cloneDeep(templateRowData),
       searchHdTemplateRowData: _.cloneDeep(hdTemplateRowData),
       couponDetail: _.cloneDeep(couponDetail),
       addRelationDetail: _.cloneDeep(relationDetail),
-      addRelationList: [],
-      couponTemplateData: [],
-      hdCouponTemplateData: [],
-      couponTemplateTotal: 0,
-      couponHdTemplateTotal: 0,
-      activityCouponType: ''
+      ruleInline: {
+        effectiveStartTime: [{ required: false, message: '请选择生效时间' }],
+        effectiveEndTime: [{ required: false, message: '请选择失效时间' }],
+        couponName: [{ required: true, message: '请输入券名称' }],
+        couponLimit: [
+          { required: true, message: '请输入发券限制数量' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-1-9]\d*$/.test(value)) {
+                errors.push(new Error('必须为非零整数'));
+              }
+              callback(errors);
+            }
+          }
+        ]
+      }
     };
   },
   computed: {
@@ -2130,11 +2103,18 @@ export default {
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
+    this.getStorePages();
     this.getStore();
     this.getStoreCityPages();
     this.getTableData();
   },
   methods: {
+    getStorePages() {
+      getStorePages({ rows: -1 })
+        .then((res) => {
+          this.allStoreList = res.rows;
+        });
+    },
     getStoreCityPages() {
       getStoreCityPages({
         sidx: 'id',
@@ -2163,7 +2143,6 @@ export default {
       this.getStore();
     },
     handleEdit(params) {
-      const _this = this;
       this.stores = [];
       this.addRelationDetail.relationStoreType = 'ALL';
       this.tempModalType = this.modalType.edit;
@@ -2183,14 +2162,29 @@ export default {
         const stores = this.addRelationDetail.stores
           .substring(1, this.addRelationDetail.stores.length - 1)
           .split('][');
-        stores.forEach((element) => {
-          this.stores.push(parseInt(element));
-        });
-        // 全选/反选按钮的样式
-        const sameArray = _this.storeList[0].storeList.filter(function(item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
-
+        stores.forEach((element) => { this.stores.push(parseInt(element)); });
+        console.log('selected stores:', this.stores);
+        const firstStoreId = this.stores[0];
+        // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
+        const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
+        this.addRelationDetail.cityCode = storeObj.cityCode;
+        this.getStore();
+        this.handleCheckSelected();
+      } else {
+        this.showStoreList = false;
+        this.addRelationDetail.relationStoreType = 'ALL'; // storeIds为''默认关联的门店则是全部门店
+      }
+      this.modalEdit = true;
+    },
+    handleCheckSelected() {
+      const _this = this;
+      // 全选/反选按钮的样式
+      if (!_this.storeList[0]) {
+        this.indeterminate = false;
+        this.checkAll = false;
+      } else {
+        const sameArray = _this.storeList[0].storeList.filter((item) => _this.stores.includes(item.storeId));
+        console.log('sameArray:', sameArray);
         if (
           sameArray.length > 0 &&
           sameArray.length === this.storeList[0].storeList.length
@@ -2207,9 +2201,14 @@ export default {
           this.indeterminate = false;
           this.checkAll = false;
         }
-        const sameArray1 = _this.storeList[1].storeList.filter(function(item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
+      }
+
+      if (!_this.storeList[1]) {
+        this.indeterminate1 = false;
+        this.checkAll1 = false;
+      } else {
+        const sameArray1 = _this.storeList[1].storeList.filter((item) => _this.stores.includes(item.storeId));
+        console.log('sameArray1:', sameArray1);
         if (
           sameArray1.length > 0 &&
           sameArray1.length === this.storeList[1].storeList.length
@@ -2226,18 +2225,23 @@ export default {
           this.indeterminate1 = false;
           this.checkAll1 = false;
         }
-        const sameArray2 = _this.storeList[2].storeList.filter(function(item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
+      }
+
+      if (!_this.storeList[2]) {
+        this.indeterminate2 = false;
+        this.checkAll2 = false;
+      } else {
+        const sameArray2 = _this.storeList[2].storeList.filter((item) => _this.stores.includes(item.storeId));
+        console.log('sameArray2:', sameArray2);
         if (
           sameArray2.length > 0 &&
-          sameArray2.length === this.storeList[2].storeList.length
+            sameArray2.length === this.storeList[2].storeList.length
         ) {
           this.indeterminate2 = false;
           this.checkAll2 = true;
         } else if (
           sameArray2.length > 0 &&
-          sameArray2.length < this.storeList[2].storeList.length
+            sameArray2.length < this.storeList[2].storeList.length
         ) {
           this.indeterminate2 = true;
           this.checkAll2 = false;
@@ -2245,9 +2249,14 @@ export default {
           this.indeterminate2 = false;
           this.checkAll2 = false;
         }
-        const sameArray3 = _this.storeList[3].storeList.filter(function(item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
+      }
+
+      if (!_this.storeList[3]) {
+        this.indeterminate3 = false;
+        this.checkAll3 = false;
+      } else {
+        const sameArray3 = _this.storeList[3].storeList.filter((item) => _this.stores.includes(item.storeId));
+        console.log('sameArray3:', sameArray3);
         if (
           sameArray3.length > 0 &&
           sameArray3.length === this.storeList[3].storeList.length
@@ -2264,9 +2273,14 @@ export default {
           this.indeterminate3 = false;
           this.checkAll3 = false;
         }
-        const sameArray4 = _this.storeList[4].storeList.filter(function(item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
+      }
+
+      if (!_this.storeList[4]) {
+        this.indeterminate4 = false;
+        this.checkAll4 = false;
+      } else {
+        const sameArray4 = _this.storeList[4].storeList.filter((item) => _this.stores.includes(item.storeId));
+        console.log('sameArray4:', sameArray4);
         if (
           sameArray4.length > 0 &&
           sameArray4.length === this.storeList[4].storeList.length
@@ -2283,9 +2297,14 @@ export default {
           this.indeterminate4 = false;
           this.checkAll4 = false;
         }
-        const sameArray5 = _this.storeList[5].storeList.filter(function(item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
+      }
+
+      if (!_this.storeList[5]) {
+        this.indeterminate5 = false;
+        this.checkAll5 = false;
+      } else {
+        const sameArray5 = _this.storeList[5].storeList.filter((item) => _this.stores.includes(item.storeId));
+        console.log('sameArray5:', sameArray5);
         if (
           sameArray5.length > 0 &&
           sameArray5.length === this.storeList[5].storeList.length
@@ -2302,9 +2321,14 @@ export default {
           this.indeterminate5 = false;
           this.checkAll5 = false;
         }
-        const sameArray6 = _this.storeList[6].storeList.filter(function(item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
+      }
+
+      if (!_this.storeList[6]) {
+        this.indeterminate6 = false;
+        this.checkAll6 = false;
+      } else {
+        const sameArray6 = _this.storeList[6].storeList.filter((item) => _this.stores.includes(item.storeId));
+        console.log('sameArray6:', sameArray6);
         if (
           sameArray6.length > 0 &&
           sameArray6.length === this.storeList[6].storeList.length
@@ -2321,30 +2345,7 @@ export default {
           this.indeterminate6 = false;
           this.checkAll6 = false;
         }
-        // let sameArray7 = _this.storeList[7].storeList.filter(function (item) {
-        //   return _this.stores.indexOf(item.storeId) != -1;
-        // });
-        // if (
-        //   sameArray7.length > 0 &&
-        //   sameArray7.length === this.storeList[7].storeList.length
-        // ) {
-        //   this.indeterminate7 = false;
-        //   this.checkAll7 = true;
-        // } else if (
-        //   sameArray7.length > 0 &&
-        //   sameArray7.length < this.storeList[7].storeList.length
-        // ) {
-        //   this.indeterminate7 = true;
-        //   this.checkAll7 = false;
-        // } else {
-        //   this.indeterminate7 = false;
-        //   this.checkAll7 = false;
-        // }
-      } else {
-        this.showStoreList = false;
-        this.addRelationDetail.relationStoreType = 'ALL'; // storeIds为''默认关联的门店则是全部门店
       }
-      this.modalEdit = true;
     },
     switchStatus(params) {
       this.addRelationDetail = _.cloneDeep(params.row);
@@ -2395,7 +2396,7 @@ export default {
       this.checkAll6 = false;
       this.indeterminate7 = false;
       this.checkAll7 = false;
-      this.storeIds = [];
+      this.stores = [];
       this.addRelationDetail.stores = '';
     },
     getStore() {
