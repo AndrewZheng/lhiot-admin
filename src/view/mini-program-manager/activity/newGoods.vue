@@ -3088,11 +3088,16 @@ export default {
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(searchRowData);
     },
-    handleCitySwitch() {
-      // 清空上次选择的值
-      this.storeCheckRest();
-      // 切换城市，重新获取区域列表
-      this.getStore();
+    handleCitySwitch(value) {
+      // 如果是修改 切换城市时继续保留反选数据
+      if (this.isEdit) {
+        this.getStore(true);
+      } else {
+        // 清空上次选择的值
+        this.storeCheckRest();
+        // 切换城市，重新获取区域列表
+        this.getStore();
+      }
     },
     handleCreate() {
       this.showStoreList = false;
@@ -3135,8 +3140,7 @@ export default {
         // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
         const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
         this.activityNewProducts.cityCode = storeObj.cityCode;
-        this.getStore();
-        this.handleCheckSelected();
+        this.getStore(true);
       } else {
         this.showStoreList = false;
         this.activityNewProducts.relationStoreType = 'ALL'; // storeIds为''默认关联的门店则是全部门店
@@ -3361,7 +3365,7 @@ export default {
       this.storeIds = [];
       this.activityNewProducts.storeIds = '';
     },
-    getStore() {
+    getStore(isCheck) {
       getAreaStorePages(this.activityNewProducts.cityCode)
         .then((res) => {
           this.storeList = res.array;
@@ -3377,9 +3381,12 @@ export default {
           res.array.forEach(item => {
             this.storeNameList.push(item.storeName);
             data.push(item.storeList);
-          })
+          });
           this.storeListData = data;
-        })
+          if (isCheck) {
+            this.handleCheckSelected();
+          }
+        });
     },
     handleCheckAll(value) {
       const _this = this;
