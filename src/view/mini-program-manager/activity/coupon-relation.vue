@@ -2142,9 +2142,9 @@ export default {
         this.getStore(true);
       } else {
         // 清空上次选择的值
-        this.storeCheckRest();
+        // this.storeCheckRest();
         // 切换城市，重新获取区域列表
-        this.getStore();
+        this.getStore(true);
       }
     },
     handleEdit(params) {
@@ -2378,6 +2378,8 @@ export default {
         this.showStoreList = false;
       } else if (options.value === 'PART') {
         this.addRelationDetail.relationStoreType = 'PART';
+        // 新增时默认反选长沙市
+        if (this.isCreate) { this.addRelationDetail.cityCode = '0731'; }
         this.storeCheckRest();
         this.getStore();
         this.showStoreList = true;

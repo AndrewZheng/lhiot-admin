@@ -2474,9 +2474,9 @@ export default {
         this.getStore(true);
       } else {
         // 清空上次选择的值
-        this.storeCheckRest();
+        // this.storeCheckRest();
         // 切换城市，重新获取区域列表
-        this.getStore();
+        this.getStore(true);
       }
     },
     costPriceInputNumberOnchange(value) {
@@ -2780,24 +2780,16 @@ export default {
       this.modalView = true;
     },
     relationStore() {
-      if (
-        this.teambuyDetail.storeIds === null ||
-        this.teambuyDetail.storeIds === ''
-      ) {
+      if (!this.teambuyDetail.storeIds) {
         return '全部门店';
       }
-      const ids = this.teambuyDetail.storeIds
-        .substring(1, this.teambuyDetail.storeIds.length - 1)
-        .split('][');
-      const list = this.storeListData;
+      const ids = this.teambuyDetail.storeIds.substring(1, this.teambuyDetail.storeIds.length - 1).split('][');
       let str = '';
-      if (list.length > 0) {
-        ids.forEach((id) => {
-          const item = list.find((item) => item.storeId == id);
-          str += item.storeName + ',';
-        });
-        return str.substring(0, str.length - 1);
-      }
+      ids.forEach((id) => {
+        const item = this.allStoreList.find(item => item.storeId == id);
+        str += item.storeName + ',';
+      });
+      return str.substring(0, str.length - 1);
     },
     handleEdit(params) {
       this.step = 'firstStep';
@@ -3151,12 +3143,12 @@ export default {
     selectStore(options) {
       if (options.value === 'ALL') {
         this.teambuyDetail.relationStoreType = 'ALL';
-        this.tempModalType === 'edit'
-          ? (this.teambuyDetail.storeIds = '')
-          : (this.teambuyDetail.storeIds = null);
+        this.tempModalType === 'edit' ? (this.teambuyDetail.storeIds = '') : (this.teambuyDetail.storeIds = null);
         this.showStoreList = false;
       } else if (options.value === 'PART') {
         this.teambuyDetail.relationStoreType = 'PART';
+        // 新增时默认反选长沙市
+        if (this.isCreate) { this.teambuyDetail.cityCode = '0731'; }
         this.storeCheckRest();
         this.getStore();
         this.showStoreList = true;

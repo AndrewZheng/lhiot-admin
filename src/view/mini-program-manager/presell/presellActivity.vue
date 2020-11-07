@@ -2255,6 +2255,7 @@ export default {
     this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
     this.getStore();
+    this.getStorePages();
     this.getStoreCityPages();
   },
   created() {
@@ -2541,24 +2542,16 @@ export default {
       this.modalView = true;
     },
     relationStore() {
-      if (
-        this.presellDetail.storeIds === null ||
-        this.presellDetail.storeIds === ''
-      ) {
+      if (!this.presellDetail.storeIds) {
         return '全部门店';
       }
-      const ids = this.presellDetail.storeIds
-        .substring(1, this.presellDetail.storeIds.length - 1)
-        .split('][');
-      const list = this.storeListData;
+      const ids = this.presellDetail.storeIds.substring(1, this.presellDetail.storeIds.length - 1).split('][');
       let str = '';
-      if (list.length > 0) {
-        ids.forEach((id) => {
-          const item = list.find((item) => item.storeId == id);
-          str += item.storeName + ',';
-        });
-        return str.substring(0, str.length - 1);
-      }
+      ids.forEach((id) => {
+        const item = this.allStoreList.find(item => item.storeId == id);
+        str += item.storeName + ',';
+      });
+      return str.substring(0, str.length - 1);
     },
     handleEdit(params) {
       this.step = 'firstStep';
@@ -2805,9 +2798,9 @@ export default {
         this.getStore(true);
       } else {
         // 清空上次选择的值
-        this.storeCheckRest();
+        // this.storeCheckRest();
         // 切换城市，重新获取区域列表
-        this.getStore();
+        this.getStore(true);
       }
     },
     handleRemoveMain(file) {
@@ -2885,6 +2878,7 @@ export default {
         this.showStoreList = false;
       } else if (options.value === 'PART') {
         this.presellDetail.relationStoreType = 'PART';
+        if (this.isCreate) { this.presellDetail.cityCode = '0731'; }
         this.storeCheckRest();
         this.getStore();
         this.showStoreList = true;

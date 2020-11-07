@@ -3094,9 +3094,9 @@ export default {
         this.getStore(true);
       } else {
         // 清空上次选择的值
-        this.storeCheckRest();
+        // this.storeCheckRest();
         // 切换城市，重新获取区域列表
-        this.getStore();
+        this.getStore(true);
       }
     },
     handleCreate() {
@@ -3340,6 +3340,8 @@ export default {
         this.showStoreList = false;
       } else if (options.value === 'PART') {
         this.activityNewProducts.relationStoreType = 'PART';
+        // 新增时默认反选长沙市
+        if (this.isCreate) { this.activityNewProducts.cityCode = '0731'; }
         this.storeCheckRest();
         this.getStore();
         this.showStoreList = true;
@@ -4044,24 +4046,16 @@ export default {
       this.modalView = true;
     },
     relationStore() {
-      if (
-        this.activityNewProducts.storeIds === null ||
-        this.activityNewProducts.storeIds === ''
-      ) {
+      if (!this.activityNewProducts.storeIds) {
         return '全部门店';
       }
-      const ids = this.activityNewProducts.storeIds
-        .substring(1, this.activityNewProducts.storeIds.length - 1)
-        .split('][');
-      const list = this.storeListData;
+      const ids = this.activityNewProducts.storeIds.substring(1, this.activityNewProducts.storeIds.length - 1).split('][');
       let str = '';
-      if (list.length > 0) {
-        ids.forEach((id) => {
-          const item = list.find((item) => item.storeId == id);
-          str += item.storeName + ',';
-        });
-        return str.substring(0, str.length - 1);
-      }
+      ids.forEach((id) => {
+        const item = this.allStoreList.find(item => item.storeId == id);
+        str += item.storeName + ',';
+      });
+      return str.substring(0, str.length - 1);
     },
     handleSetting(params) {
       this.activityId = params.row.id;
