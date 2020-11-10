@@ -119,6 +119,7 @@
         </Row>
       </div>
     </Card>
+
     <!-- 查看 -->
     <Modal
       v-model="modalView"
@@ -518,6 +519,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 添加 -->
     <Modal
       v-model="modalAdd"
@@ -1011,7 +1013,7 @@
                     </Checkbox>
                   </div>
                   <CheckboxGroup
-                    v-model="stores"
+                    v-model="storeIds"
                     @on-change="checkAllGroupChange"
                   >
                     <Checkbox
@@ -1042,7 +1044,7 @@
                     </Checkbox>
                   </div>
                   <CheckboxGroup
-                    v-model="stores"
+                    v-model="storeIds"
                     @on-change="checkAllGroupChange1"
                   >
                     <Checkbox
@@ -1073,7 +1075,7 @@
                     </Checkbox>
                   </div>
                   <CheckboxGroup
-                    v-model="stores"
+                    v-model="storeIds"
                     @on-change="checkAllGroupChange2"
                   >
                     <Checkbox
@@ -1104,7 +1106,7 @@
                     </Checkbox>
                   </div>
                   <CheckboxGroup
-                    v-model="stores"
+                    v-model="storeIds"
                     @on-change="checkAllGroupChange3"
                   >
                     <Checkbox
@@ -1135,7 +1137,7 @@
                     </Checkbox>
                   </div>
                   <CheckboxGroup
-                    v-model="stores"
+                    v-model="storeIds"
                     @on-change="checkAllGroupChange4"
                   >
                     <Checkbox
@@ -1166,7 +1168,7 @@
                     </Checkbox>
                   </div>
                   <CheckboxGroup
-                    v-model="stores"
+                    v-model="storeIds"
                     @on-change="checkAllGroupChange5"
                   >
                     <Checkbox
@@ -1197,7 +1199,7 @@
                     </Checkbox>
                   </div>
                   <CheckboxGroup
-                    v-model="stores"
+                    v-model="storeIds"
                     @on-change="checkAllGroupChange6"
                   >
                     <Checkbox
@@ -1223,7 +1225,7 @@
                       @click.prevent.native="handleCheckAll(7)"
                     >全选/反选</Checkbox>
                   </div>
-                  <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange7">
+                  <CheckboxGroup v-model="storeIds" @on-change="checkAllGroupChange7">
                     <Checkbox
                       v-for="item in storeData7"
                       ref="checkBox"
@@ -1616,7 +1618,7 @@
                   </Checkbox>
                 </div>
                 <CheckboxGroup
-                  v-model="stores"
+                  v-model="storeIds"
                   @on-change="checkAllGroupChange"
                 >
                   <Checkbox
@@ -1647,7 +1649,7 @@
                   </Checkbox>
                 </div>
                 <CheckboxGroup
-                  v-model="stores"
+                  v-model="storeIds"
                   @on-change="checkAllGroupChange1"
                 >
                   <Checkbox
@@ -1678,7 +1680,7 @@
                   </Checkbox>
                 </div>
                 <CheckboxGroup
-                  v-model="stores"
+                  v-model="storeIds"
                   @on-change="checkAllGroupChange2"
                 >
                   <Checkbox
@@ -1709,7 +1711,7 @@
                   </Checkbox>
                 </div>
                 <CheckboxGroup
-                  v-model="stores"
+                  v-model="storeIds"
                   @on-change="checkAllGroupChange3"
                 >
                   <Checkbox
@@ -1740,7 +1742,7 @@
                   </Checkbox>
                 </div>
                 <CheckboxGroup
-                  v-model="stores"
+                  v-model="storeIds"
                   @on-change="checkAllGroupChange4"
                 >
                   <Checkbox
@@ -1771,7 +1773,7 @@
                   </Checkbox>
                 </div>
                 <CheckboxGroup
-                  v-model="stores"
+                  v-model="storeIds"
                   @on-change="checkAllGroupChange5"
                 >
                   <Checkbox
@@ -1802,7 +1804,7 @@
                   </Checkbox>
                 </div>
                 <CheckboxGroup
-                  v-model="stores"
+                  v-model="storeIds"
                   @on-change="checkAllGroupChange6"
                 >
                   <Checkbox
@@ -1842,22 +1844,20 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
+
 import {
   getCouponExchangePages,
   deleteCouponExchange,
   createCouponExchange,
   editCouponExchange,
   getCouponTemplatePages,
-  getHdCouponActivitiesPages,
-  getStorePages,
-  getStoreCityPages,
-  getAreaStorePages
+  getHdCouponActivitiesPages
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
+import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import {
   couponStatusConvert,
   couponTypeConvert,
@@ -1876,7 +1876,6 @@ import {
 } from '@/libs/enumerate';
 import {
   compareData,
-  getSmallCouponActivity,
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber,
@@ -1917,32 +1916,6 @@ const relationDetail = {
   points: 0,
   realPoints: 0,
   cityCode: '0731'
-};
-
-const couponTemplateDetail = {
-  id: 0,
-  couponName: '',
-  couponType: null,
-  couponFee: 0,
-  minBuyFee: 0,
-  couponStatus: null,
-  couponImage: '',
-  createUser: '',
-  createTime: null,
-  couponRules: '',
-  couponScope: null
-};
-
-const hdCouponTemplateDetail = {
-  activityId: 0,
-  beginDate: null,
-  endDate: null,
-  couponName: '',
-  couponRemark: '',
-  couponType: '',
-  faceValue: 0,
-  price: 0,
-  useRule: ''
 };
 
 const roleRowData = {
@@ -2482,9 +2455,40 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin, relationStoreMixin],
   data() {
     return {
+      addRelationList: [],
+      couponTemplateData: [],
+      hdCouponTemplateData: [],
+      defaultListMain: [],
+      uploadListMain: [],
+      areaList: [],
+      cityList: [],
+      templatePageOpts: [5, 10],
+      addTempDataLoading: false,
+      tempTableLoading: false,
+      createLoading: false,
+      modalViewLoading: false,
+      modalAdd: false,
+      showValidDate: true,
+      couponTemplateTotal: 0,
+      couponHdTemplateTotal: 0,
+      couponStatusEnum,
+      relationStoreTypeEnum,
+      couponTypeEnum,
+      couponScopeEnum,
+      userScopeEnum,
+      couponUseLimitEnum,
+      validDateTypeEnum,
+      dataColumns: dataColumns,
+      templateColumns: templateColumns,
+      hdTemplateColumns: hdTemplateColumns,
+      searchRowData: _.cloneDeep(roleRowData),
+      searchTemplateRowData: _.cloneDeep(templateRowData),
+      searchHdTemplateRowData: _.cloneDeep(hdTemplateRowData),
+      relationDetail: _.cloneDeep(relationDetail),
+      addRelationDetail: _.cloneDeep(relationDetail),
       relationRuleInline: {
         effectiveStartTime: [{ required: false, message: '请选择生效时间' }],
         effectiveEndTime: [{ required: false, message: '请选择失效时间' }],
@@ -2545,69 +2549,7 @@ export default {
             }
           }
         ]
-      },
-      defaultListMain: [],
-      uploadListMain: [],
-      areaList: [],
-      cityList: [],
-      couponStatusEnum,
-      relationStoreTypeEnum,
-      couponTypeEnum,
-      couponScopeEnum,
-      userScopeEnum,
-      couponUseLimitEnum,
-      validDateTypeEnum,
-      dataColumns: dataColumns,
-      templatePageOpts: [5, 10],
-      templateColumns: templateColumns,
-      hdTemplateColumns: hdTemplateColumns,
-      addTempDataLoading: false,
-      tempTableLoading: false,
-      createLoading: false,
-      modalViewLoading: false,
-      searchRowData: _.cloneDeep(roleRowData),
-      searchTemplateRowData: _.cloneDeep(templateRowData),
-      searchHdTemplateRowData: _.cloneDeep(hdTemplateRowData),
-      relationDetail: _.cloneDeep(relationDetail),
-      addRelationDetail: _.cloneDeep(relationDetail),
-      addRelationList: [],
-      couponTemplateData: [],
-      hdCouponTemplateData: [],
-      storeNameList: [],
-      allStoreList: [],
-      storeList: [],
-      storeData: [],
-      storeData1: [],
-      storeData2: [],
-      storeData3: [],
-      storeData4: [],
-      storeData5: [],
-      storeData6: [],
-      storeData7: [],
-      stores: [],
-      storeListData: [],
-      showStoreList: false,
-      showValidDate: true,
-      indeterminate: false,
-      indeterminate1: false,
-      indeterminate2: false,
-      indeterminate3: false,
-      indeterminate4: false,
-      indeterminate5: false,
-      indeterminate6: false,
-      indeterminate7: false,
-      checkAll: false,
-      checkAll1: false,
-      checkAll2: false,
-      checkAll3: false,
-      checkAll4: false,
-      checkAll5: false,
-      checkAll6: false,
-      checkAll7: false,
-      showStoreName: '',
-      couponTemplateTotal: 0,
-      couponHdTemplateTotal: 0,
-      modalAdd: false
+      }
     };
   },
   computed: {
@@ -2617,13 +2559,13 @@ export default {
     systemCouponFixDate() {
       return (
         this.tempModalType === 'addTemplate' &&
-        this.addRelationDetail.validDateType == 'FIXED_DATE'
+        this.addRelationDetail.validDateType === 'FIXED_DATE'
       );
     },
     systemCouponUnFixDate() {
       return (
         this.tempModalType === 'addTemplate' &&
-        this.addRelationDetail.validDateType == 'UN_FIXED_DATE'
+        this.addRelationDetail.validDateType === 'UN_FIXED_DATE'
       );
     },
     maxDiscountFeeComputed() {
@@ -2632,40 +2574,9 @@ export default {
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData); // 刷新清除上次搜索结果
-    this.getStorePages();
-    this.getStoreCityPages();
-    this.getStore();
     this.getTableData();
   },
   methods: {
-    getStorePages() {
-      getStorePages({ rows: -1 })
-        .then((res) => {
-          this.allStoreList = res.rows;
-        });
-    },
-    getStoreCityPages() {
-      getStoreCityPages({
-        sidx: 'id',
-        sort: 'asc',
-        page: 1,
-        rows: -1
-      })
-        .then((res) => {
-          this.cityList = res.rows;
-        })
-    },
-    handleCitySwitch(value) {
-      // 如果是修改 切换城市时继续保留反选数据
-      if (this.isEdit) {
-        this.getStore(true);
-      } else {
-        // 清空上次选择的值
-        // this.storeCheckRest();
-        // 切换城市，重新获取区域列表
-        this.getStore(true);
-      }
-    },
     statusChange(params) {
       this.addRelationDetail = _.cloneDeep(params.row);
       if (params.row.couponStatus === 'VALID') {
@@ -2695,7 +2606,7 @@ export default {
       // this.uploadListMain = [];
     },
     handleEdit(params) {
-      this.stores = [];
+      this.storeIds = [];
       this.addRelationDetail.relationStoreType = 'ALL';
       this.tempModalType = this.modalType.edit;
       this.addRelationDetail = _.cloneDeep(params.row);
@@ -2706,12 +2617,12 @@ export default {
       ) {
         this.showStoreList = true;
         this.addRelationDetail.relationStoreType = 'PART';
-        const stores = this.addRelationDetail.stores
+        const storeIds = this.addRelationDetail.stores
           .substring(1, this.addRelationDetail.stores.length - 1)
           .split('][');
-        stores.forEach((element) => { this.stores.push(parseInt(element)); });
-        console.log('selected stores:', this.stores);
-        const firstStoreId = this.stores[0];
+        storeIds.forEach((element) => { this.storeIds.push(parseInt(element)); });
+        console.log('selected storeIds:', this.storeIds);
+        const firstStoreId = this.storeIds[0];
         // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
         const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
         this.addRelationDetail.cityCode = storeObj.cityCode;
@@ -2722,188 +2633,13 @@ export default {
       }
       this.modalEdit = true;
     },
-    handleCheckSelected() {
-      const _this = this;
-      // 全选/反选按钮的样式
-      if (!_this.storeList[0]) {
-        this.indeterminate = false;
-        this.checkAll = false;
-      } else {
-        const sameArray = _this.storeList[0].storeList.filter((item) => _this.stores.includes(item.storeId));
-        console.log('sameArray:', sameArray);
-        if (
-          sameArray.length > 0 &&
-          sameArray.length === this.storeList[0].storeList.length
-        ) {
-          this.indeterminate = false;
-          this.checkAll = true;
-        } else if (
-          sameArray.length > 0 &&
-          sameArray.length < this.storeList[0].storeList.length
-        ) {
-          this.indeterminate = true;
-          this.checkAll = false;
-        } else {
-          this.indeterminate = false;
-          this.checkAll = false;
-        }
-      }
-
-      if (!_this.storeList[1]) {
-        this.indeterminate1 = false;
-        this.checkAll1 = false;
-      } else {
-        const sameArray1 = _this.storeList[1].storeList.filter((item) => _this.stores.includes(item.storeId));
-        console.log('sameArray1:', sameArray1);
-        if (
-          sameArray1.length > 0 &&
-          sameArray1.length === this.storeList[1].storeList.length
-        ) {
-          this.indeterminate1 = false;
-          this.checkAll1 = true;
-        } else if (
-          sameArray1.length > 0 &&
-          sameArray1.length < this.storeList[1].storeList.length
-        ) {
-          this.indeterminate1 = true;
-          this.checkAll1 = false;
-        } else {
-          this.indeterminate1 = false;
-          this.checkAll1 = false;
-        }
-      }
-
-      if (!_this.storeList[2]) {
-        this.indeterminate2 = false;
-        this.checkAll2 = false;
-      } else {
-        const sameArray2 = _this.storeList[2].storeList.filter((item) => _this.stores.includes(item.storeId));
-        console.log('sameArray2:', sameArray2);
-        if (
-          sameArray2.length > 0 &&
-            sameArray2.length === this.storeList[2].storeList.length
-        ) {
-          this.indeterminate2 = false;
-          this.checkAll2 = true;
-        } else if (
-          sameArray2.length > 0 &&
-            sameArray2.length < this.storeList[2].storeList.length
-        ) {
-          this.indeterminate2 = true;
-          this.checkAll2 = false;
-        } else {
-          this.indeterminate2 = false;
-          this.checkAll2 = false;
-        }
-      }
-
-      if (!_this.storeList[3]) {
-        this.indeterminate3 = false;
-        this.checkAll3 = false;
-      } else {
-        const sameArray3 = _this.storeList[3].storeList.filter((item) => _this.stores.includes(item.storeId));
-        console.log('sameArray3:', sameArray3);
-        if (
-          sameArray3.length > 0 &&
-          sameArray3.length === this.storeList[3].storeList.length
-        ) {
-          this.indeterminate3 = false;
-          this.checkAll3 = true;
-        } else if (
-          sameArray3.length > 0 &&
-          sameArray3.length < this.storeList[3].storeList.length
-        ) {
-          this.indeterminate3 = true;
-          this.checkAll3 = false;
-        } else {
-          this.indeterminate3 = false;
-          this.checkAll3 = false;
-        }
-      }
-
-      if (!_this.storeList[4]) {
-        this.indeterminate4 = false;
-        this.checkAll4 = false;
-      } else {
-        const sameArray4 = _this.storeList[4].storeList.filter((item) => _this.stores.includes(item.storeId));
-        console.log('sameArray4:', sameArray4);
-        if (
-          sameArray4.length > 0 &&
-          sameArray4.length === this.storeList[4].storeList.length
-        ) {
-          this.indeterminate4 = false;
-          this.checkAll4 = true;
-        } else if (
-          sameArray4.length > 0 &&
-          sameArray4.length < this.storeList[4].storeList.length
-        ) {
-          this.indeterminate4 = true;
-          this.checkAll4 = false;
-        } else {
-          this.indeterminate4 = false;
-          this.checkAll4 = false;
-        }
-      }
-
-      if (!_this.storeList[5]) {
-        this.indeterminate5 = false;
-        this.checkAll5 = false;
-      } else {
-        const sameArray5 = _this.storeList[5].storeList.filter((item) => _this.stores.includes(item.storeId));
-        console.log('sameArray5:', sameArray5);
-        if (
-          sameArray5.length > 0 &&
-          sameArray5.length === this.storeList[5].storeList.length
-        ) {
-          this.indeterminate5 = false;
-          this.checkAll5 = true;
-        } else if (
-          sameArray5.length > 0 &&
-          sameArray5.length < this.storeList[5].storeList.length
-        ) {
-          this.indeterminate5 = true;
-          this.checkAll5 = false;
-        } else {
-          this.indeterminate5 = false;
-          this.checkAll5 = false;
-        }
-      }
-
-      if (!_this.storeList[6]) {
-        this.indeterminate6 = false;
-        this.checkAll6 = false;
-      } else {
-        const sameArray6 = _this.storeList[6].storeList.filter((item) => _this.stores.includes(item.storeId));
-        console.log('sameArray6:', sameArray6);
-        if (
-          sameArray6.length > 0 &&
-          sameArray6.length === this.storeList[6].storeList.length
-        ) {
-          this.indeterminate6 = false;
-          this.checkAll6 = true;
-        } else if (
-          sameArray6.length > 0 &&
-          sameArray6.length < this.storeList[6].storeList.length
-        ) {
-          this.indeterminate6 = true;
-          this.checkAll6 = false;
-        } else {
-          this.indeterminate6 = false;
-          this.checkAll6 = false;
-        }
-      }
-    },
     getTableData() {
       getCouponExchangePages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -2914,518 +2650,13 @@ export default {
         .then((res) => {
           this.couponTemplateData = res.rows;
           this.couponTemplateTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
-    selectStore(options) {
-      if (options.value === 'ALL') {
-        this.addRelationDetail.relationStoreType = 'ALL';
-        this.tempModalType === 'edit'
-          ? (this.addRelationDetail.stores = '')
-          : (this.addRelationDetail.stores = null);
-        this.showStoreList = false;
-      } else if (options.value === 'PART') {
-        this.addRelationDetail.relationStoreType = 'PART';
-        // 新增时默认反选长沙市
-        if (this.isCreate) { this.addRelationDetail.cityCode = '0731'; }
-        this.storeCheckRest();
-        this.getStore();
-        this.showStoreList = true;
-      }
-    },
-    storeCheckRest() {
-      this.indeterminate = false;
-      this.checkAll = false;
-      this.indeterminate1 = false;
-      this.checkAll1 = false;
-      this.indeterminate2 = false;
-      this.checkAll2 = false;
-      this.indeterminate3 = false;
-      this.checkAll3 = false;
-      this.indeterminate4 = false;
-      this.checkAll4 = false;
-      this.indeterminate5 = false;
-      this.checkAll5 = false;
-      this.indeterminate6 = false;
-      this.checkAll6 = false;
-      this.indeterminate7 = false;
-      this.checkAll7 = false;
-      this.stores = [];
-      this.addRelationDetail.stores = '';
-    },
-    getStore(isCheck) {
-      getAreaStorePages(this.addRelationDetail.cityCode)
-        .then((res) => {
-          this.storeList = res.array;
-          this.storeData = res.array[0] && res.array[0].storeList || [];
-          this.storeData1 = res.array[1] && res.array[1].storeList || [];
-          this.storeData2 = res.array[2] && res.array[2].storeList || [];
-          this.storeData3 = res.array[3] && res.array[3].storeList || [];
-          this.storeData4 = res.array[4] && res.array[4].storeList || [];
-          this.storeData5 = res.array[5] && res.array[5].storeList || [];
-          this.storeData6 = res.array[6] && res.array[6].storeList || [];
-          const data = [];
-          this.storeNameList = [];
-          res.array.forEach(item => {
-            this.storeNameList.push(item.storeName);
-            data.push(item.storeList);
-          });
-          this.storeListData = data;
-          if (isCheck) {
-            this.handleCheckSelected();
-          }
-        });
-    },
-    handleCheckAll(value) {
-      const _this = this;
-      if (value === 0) {
-        const allIds = [];
-        const beforeIds = [];
-        if (this.indeterminate) {
-          this.checkAll = false;
-        } else {
-          this.checkAll = !this.checkAll;
-        }
-        this.indeterminate = false;
-        if (this.checkAll) {
-          if (this.stores != null) {
-            for (const val of this.stores) {
-              allIds.push(val);
-            }
-          }
-          this.storeList[value].storeList.forEach((item) => {
-            allIds.push(item.storeId);
-          });
-          this.stores = allIds;
-          this.addRelationDetail.stores = '[' + allIds.join('][') + ']';
-        } else {
-          this.storeList[value].storeList.forEach((item) => {
-            beforeIds.push(item.storeId);
-          });
-          const newArray = _this.stores.filter(function(item) {
-            return beforeIds.indexOf(item) == -1;
-          });
-          this.stores = newArray;
-          this.addRelationDetail.stores = '[' + newArray.join('][') + ']';
-        }
-      }
-      if (value === 1) {
-        const allIds1 = [];
-        const beforeIds = [];
-        if (this.indeterminate1) {
-          this.checkAll1 = false;
-        } else {
-          this.checkAll1 = !this.checkAll1;
-        }
-        this.indeterminate1 = false;
-        if (this.checkAll1) {
-          if (this.stores != null) {
-            for (const val of this.stores) {
-              allIds1.push(val);
-            }
-          }
-          this.storeList[value].storeList.forEach((item) => {
-            allIds1.push(item.storeId);
-            beforeIds.push(item.storeId);
-          });
-          this.stores = allIds1;
-          this.addRelationDetail.stores = '[' + allIds1.join('][') + ']';
-        } else {
-          this.storeList[value].storeList.forEach((item) => {
-            beforeIds.push(item.storeId);
-          });
-          const newArray = _this.stores.filter(function(item) {
-            return beforeIds.indexOf(item) == -1;
-          });
-          this.stores = newArray;
-          this.addRelationDetail.stores = '[' + newArray.join('][') + ']';
-        }
-      }
-      if (value === 2) {
-        const allIds2 = [];
-        const beforeIds = [];
-        if (this.indeterminate2) {
-          this.checkAll2 = false;
-        } else {
-          this.checkAll2 = !this.checkAll2;
-        }
-        this.indeterminate2 = false;
-        if (this.checkAll2) {
-          if (this.stores != null) {
-            for (const val of this.stores) {
-              allIds2.push(val);
-            }
-          }
-          this.storeList[value].storeList.forEach((item) => {
-            allIds2.push(item.storeId);
-            beforeIds.push(item.storeId);
-          });
-          this.stores = allIds2;
-          this.addRelationDetail.stores = '[' + allIds2.join('][') + ']';
-        } else {
-          this.storeList[value].storeList.forEach((item) => {
-            beforeIds.push(item.storeId);
-          });
-          const newArray = _this.stores.filter(function(item) {
-            return beforeIds.indexOf(item) == -1;
-          });
-          this.stores = newArray;
-          this.addRelationDetail.stores = '[' + newArray.join('][') + ']';
-        }
-      }
-      if (value === 3) {
-        const allIds3 = [];
-        const beforeIds = [];
-        if (this.indeterminate3) {
-          this.checkAll3 = false;
-        } else {
-          this.checkAll3 = !this.checkAll3;
-        }
-        this.indeterminate3 = false;
-        if (this.checkAll3) {
-          if (this.stores != null) {
-            for (const val of this.stores) {
-              allIds3.push(val);
-            }
-          }
-          this.storeList[value].storeList.forEach((item) => {
-            allIds3.push(item.storeId);
-            beforeIds.push(item.storeId);
-          });
-          this.stores = allIds3;
-          this.addRelationDetail.stores = '[' + allIds3.join('][') + ']';
-        } else {
-          this.storeList[value].storeList.forEach((item) => {
-            beforeIds.push(item.storeId);
-          });
-          const newArray = _this.stores.filter(function(item) {
-            return beforeIds.indexOf(item) == -1;
-          });
-          this.stores = newArray;
-          this.addRelationDetail.stores = '[' + newArray.join('][') + ']';
-        }
-      }
-      if (value === 4) {
-        const allIds4 = [];
-        const beforeIds = [];
-        if (this.indeterminate4) {
-          this.checkAll4 = false;
-        } else {
-          this.checkAll4 = !this.checkAll4;
-        }
-        this.indeterminate4 = false;
-        if (this.checkAll4) {
-          if (this.stores != null) {
-            for (const val of this.stores) {
-              allIds4.push(val);
-            }
-          }
-          this.storeList[value].storeList.forEach((item) => {
-            allIds4.push(item.storeId);
-            beforeIds.push(item.storeId);
-          });
-          this.stores = allIds4;
-          this.addRelationDetail.stores = '[' + allIds4.join('][') + ']';
-        } else {
-          this.storeList[value].storeList.forEach((item) => {
-            beforeIds.push(item.storeId);
-          });
-          const newArray = _this.stores.filter(function(item) {
-            return beforeIds.indexOf(item) == -1;
-          });
-          this.stores = newArray;
-          this.addRelationDetail.stores = '[' + newArray.join('][') + ']';
-        }
-      }
-      if (value === 5) {
-        const allIds5 = [];
-        const beforeIds = [];
-        if (this.indeterminate5) {
-          this.checkAll5 = false;
-        } else {
-          this.checkAll5 = !this.checkAll5;
-        }
-        this.indeterminate5 = false;
-        if (this.checkAll5) {
-          if (this.stores != null) {
-            for (const val of this.stores) {
-              allIds5.push(val);
-            }
-          }
-          this.storeList[value].storeList.forEach((item) => {
-            allIds5.push(item.storeId);
-            beforeIds.push(item.storeId);
-          });
-          this.stores = allIds5;
-          this.addRelationDetail.stores = '[' + allIds5.join('][') + ']';
-        } else {
-          this.storeList[value].storeList.forEach((item) => {
-            beforeIds.push(item.storeId);
-          });
-          const newArray = _this.stores.filter(function(item) {
-            return beforeIds.indexOf(item) == -1;
-          });
-          this.stores = newArray;
-          this.addRelationDetail.stores = '[' + newArray.join('][') + ']';
-        }
-      }
-      if (value === 6) {
-        const allIds6 = [];
-        const beforeIds = [];
-        if (this.indeterminate6) {
-          this.checkAll6 = false;
-        } else {
-          this.checkAll6 = !this.checkAll6;
-        }
-        this.indeterminate6 = false;
-        if (this.checkAll6) {
-          if (this.stores != null) {
-            for (const val of this.stores) {
-              allIds6.push(val);
-            }
-          }
-          this.storeList[value].storeList.forEach((item) => {
-            allIds6.push(item.storeId);
-            beforeIds.push(item.storeId);
-          });
-          this.stores = allIds6;
-          this.addRelationDetail.stores = '[' + allIds6.join('][') + ']';
-        } else {
-          this.storeList[value].storeList.forEach((item) => {
-            beforeIds.push(item.storeId);
-          });
-          const newArray = _this.stores.filter(function(item) {
-            return beforeIds.indexOf(item) == -1;
-          });
-          this.stores = newArray;
-          this.addRelationDetail.stores = '[' + newArray.join('][') + ']';
-        }
-      }
-      if (value === 7) {
-        const allIds7 = [];
-        const beforeIds = [];
-        if (this.indeterminate7) {
-          this.checkAll7 = false;
-        } else {
-          this.checkAll7 = !this.checkAll7;
-        }
-        this.indeterminate7 = false;
-        if (this.checkAll7) {
-          if (this.stores != null) {
-            for (const val of this.stores) {
-              allIds7.push(val);
-            }
-          }
-          this.storeList[value].storeList.forEach((item) => {
-            allIds7.push(item.storeId);
-            beforeIds.push(item.storeId);
-          });
-          this.stores = allIds7;
-          this.addRelationDetail.stores = '[' + allIds7.join('][') + ']';
-        } else {
-          this.storeList[value].storeList.forEach((item) => {
-            beforeIds.push(item.storeId);
-          });
-          const newArray = _this.stores.filter(function(item) {
-            return beforeIds.indexOf(item) == -1;
-          });
-          this.stores = newArray;
-          this.addRelationDetail.stores = '[' + newArray.join('][') + ']';
-        }
-      }
-    },
-    checkAllGroupChange(data) {
-      const sameArray = this.storeList[0].storeList.filter(function(item) {
-        return data.indexOf(item.storeId) != -1;
-      });
-      if (
-        data.length > 0 &&
-        sameArray.length === this.storeList[0].storeList.length
-      ) {
-        this.indeterminate = false;
-        this.checkAll = true;
-      } else if (
-        data.length > 0 &&
-        sameArray.length < this.storeList[0].storeList.length
-      ) {
-        this.indeterminate = true;
-        this.checkAll = false;
-        this.addRelationDetail.stores = '[' + data.join('][') + ']';
-      }
-      if (sameArray.length === 0) {
-        this.indeterminate = false;
-        this.checkAll = false;
-      }
-    },
-    checkAllGroupChange1(data) {
-      const sameArray1 = this.storeList[1].storeList.filter(function(item) {
-        return data.indexOf(item.storeId) != -1;
-      });
-      if (
-        data.length > 0 &&
-        sameArray1.length === this.storeList[1].storeList.length
-      ) {
-        this.indeterminate1 = false;
-        this.checkAll1 = true;
-      } else if (
-        data.length > 0 &&
-        sameArray1.length < this.storeList[1].storeList.length
-      ) {
-        this.indeterminate1 = true;
-        this.checkAll1 = false;
-        this.addRelationDetail.stores = '[' + data.join('][') + ']';
-      }
-      if (sameArray1.length == 0) {
-        this.indeterminate1 = false;
-        this.checkAll1 = false;
-      }
-    },
-    checkAllGroupChange2(data) {
-      const sameArray2 = this.storeList[2].storeList.filter(function(item) {
-        return data.indexOf(item.storeId) != -1;
-      });
-      if (
-        data.length > 0 &&
-        sameArray2.length === this.storeList[2].storeList.length
-      ) {
-        this.indeterminate2 = false;
-        this.checkAll2 = true;
-      } else if (
-        data.length > 0 &&
-        sameArray2.length < this.storeList[2].storeList.length
-      ) {
-        this.indeterminate2 = true;
-        this.checkAll2 = false;
-        this.addRelationDetail.stores = '[' + data.join('][') + ']';
-      }
-      if (sameArray2.length == 0) {
-        this.indeterminate2 = false;
-        this.checkAll2 = false;
-      }
-    },
-    checkAllGroupChange3(data) {
-      const sameArray3 = this.storeList[3].storeList.filter(function(item) {
-        return data.indexOf(item.storeId) != -1;
-      });
-      if (
-        data.length > 0 &&
-        sameArray3.length === this.storeList[3].storeList.length
-      ) {
-        this.indeterminate3 = false;
-        this.checkAll3 = true;
-      } else if (
-        data.length > 0 &&
-        sameArray3.length < this.storeList[3].storeList.length
-      ) {
-        this.indeterminate3 = true;
-        this.checkAll3 = false;
-        this.addRelationDetail.stores = '[' + data.join('][') + ']';
-      }
-      if (sameArray3.length === 0) {
-        this.indeterminate3 = false;
-        this.checkAll3 = false;
-      }
-    },
-    checkAllGroupChange4(data) {
-      const sameArray4 = this.storeList[4].storeList.filter(function(item) {
-        return data.indexOf(item.storeId) != -1;
-      });
-      if (
-        data.length > 0 &&
-        sameArray4.length === this.storeList[4].storeList.length
-      ) {
-        this.indeterminate4 = false;
-        this.checkAll4 = true;
-      } else if (
-        data.length > 0 &&
-        sameArray4.length < this.storeList[4].storeList.length
-      ) {
-        this.indeterminate4 = true;
-        this.checkAll4 = false;
-        this.addRelationDetail.stores = '[' + data.join('][') + ']';
-      }
-      if (sameArray4.length === 0) {
-        this.indeterminate4 = false;
-        this.checkAll4 = false;
-      }
-    },
-    checkAllGroupChange5(data) {
-      const sameArray5 = this.storeList[5].storeList.filter(function(item) {
-        return data.indexOf(item.storeId) != -1;
-      });
-      if (
-        data.length > 0 &&
-        sameArray5.length === this.storeList[5].storeList.length
-      ) {
-        this.indeterminate5 = false;
-        this.checkAll5 = true;
-      } else if (
-        data.length > 0 &&
-        sameArray5.length < this.storeList[5].storeList.length
-      ) {
-        this.indeterminate5 = true;
-        this.checkAll5 = false;
-        this.addRelationDetail.stores = '[' + data.join('][') + ']';
-      }
-      if (sameArray5.length === 0) {
-        this.indeterminate5 = false;
-        this.checkAll5 = false;
-      }
-    },
-    checkAllGroupChange6(data) {
-      const sameArray6 = this.storeList[6].storeList.filter(function(item) {
-        return data.indexOf(item.storeId) != -1;
-      });
-      if (
-        data.length > 0 &&
-        sameArray6.length === this.storeList[6].storeList.length
-      ) {
-        this.indeterminate6 = false;
-        this.checkAll6 = true;
-      } else if (
-        data.length > 0 &&
-        sameArray6.length < this.storeList[6].storeList.length
-      ) {
-        this.indeterminate6 = true;
-        this.checkAll6 = false;
-        this.addRelationDetail.stores = '[' + data.join('][') + ']';
-      }
-      if (sameArray6.length === 0) {
-        this.indeterminate6 = false;
-        this.checkAll6 = false;
-      }
-    },
-    // checkAllGroupChange7(data) {
-    //   let sameArray7 = this.storeList[7].storeList.filter(function (item) {
-    //     return data.indexOf(item.storeId) != -1;
-    //   });
-    //   if (
-    //     data.length > 0 &&
-    //     sameArray7.length === this.storeList[7].storeList.length
-    //   ) {
-    //     this.indeterminate7 = false;
-    //     this.checkAll7 = true;
-    //   } else if (
-    //     data.length > 0 &&
-    //     sameArray7.length < this.storeList[7].storeList.length
-    //   ) {
-    //     this.indeterminate7 = true;
-    //     this.checkAll7 = false;
-    //     this.addRelationDetail.stores = "[" + data.join("][") + "]";
-    //   }
-    //   if (sameArray7.length === 0) {
-    //     this.indeterminate7 = false;
-    //     this.checkAll7 = false;
-    //   }
-    // },
     changeHdPage(page) {
       this.searchHdTemplateRowData.page = page;
       this.getHdTemplateTableData();
@@ -3638,14 +2869,14 @@ export default {
     },
     addCouponTemplate() {
       this.showStoreList = false;
-      this.stores = [];
+      this.storeIds = [];
       this.getTemplateTableData();
       this.tempModalType = 'addTemplate';
       this.modalAdd = true;
     },
     addHdCouponTemplate() {
       this.showStoreList = false;
-      this.stores = [];
+      this.storeIds = [];
       this.getHdTemplateTableData();
       this.tempModalType = 'addHdTemplate';
       this.modalAdd = true;

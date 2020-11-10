@@ -1554,8 +1554,6 @@ import {
   getGoodsStandard,
   getAreaStorePages,
   getProductStandardsPages,
-  getStoreCityPages,
-  getStorePages,
   getTeamBuyPages,
   deletePicture
 } from '@/api/mini-program';
@@ -1563,6 +1561,7 @@ import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
+import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import {
   teamBuyStatusConvert,
   customPlanStatusConvert,
@@ -1691,116 +1690,29 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin, relationStoreMixin],
   data() {
     return {
-      step: 'firstStep',
-      firstSuccess: true,
-      ruleInline: {
-        rank: [
-          { required: true, message: '请输入排序序号' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        activityName: [{ required: true, message: '请输入活动名称' }],
-        content: [{ required: true, message: '请输入活动内容' }],
-        status: [{ required: true, message: '请选择活动状态' }],
-        banner: [{ required: true, message: '请上传活动banner ' }],
-        startTime: [{ required: true, message: '请输入活动开始时间' }],
-        endTime: [{ required: true, message: '请输入活动结束时间' }],
-        deliveryStartTime: [{ required: true, message: '请选择提货开始时间' }],
-        beginDay: [
-          { required: true, message: '请输入下单后第几天开始提货' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[1-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        standardId: [{ required: true, message: '请选择商品规格' }],
-        standardDesc: [{ required: true, message: '请输入规格描述' }],
-        productProfitPrice: [{ required: true, message: '商品毛利' }],
-        commissionPrice: [{ required: true, message: '佣金金额' }],
-        originalPrice: [{ required: true, message: '商品原价' }],
-        commissionScale: [
-          { required: true, message: '请输入佣金比例' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^([1-4]?\d(\.[05])?|50(\.0)?)$/.test(value)) {
-                errors.push(new Error('必须为0~50的整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        costPrice: [
-          { required: true, message: '请输入商品成本价' },
-          {
-            message: '必须为大于0的数字',
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
-        ],
-        activityPrice: [
-          { required: true, message: '请输入预售活动价' },
-          {
-            message: '必须为大于0的数字',
-            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
-          }
-        ],
-        invNum: [
-          { required: true, message: '请输入库存数量' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        triesLimit: [
-          { required: true, message: '请输入限购次数' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              if (value > 999) {
-                errors.push(new Error('限购次数最大值999'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        saleQuantity: [
-          { required: true, message: '请输入已售份数' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-0-9]+$/.test(value)) {
-                errors.push(new Error('必须为整数'));
-              }
-              callback(errors);
-            }
-          }
-        ]
-      },
+      flagShipList: [],
+      oldPicture: [],
+      newPicture: [],
       defaultListMain: [],
       uploadListMain: [],
+      save: [],
+      productData: [],
+      productStandardDetail: [],
+      productTotal: 0,
+      firstSuccess: true,
+      loading: true,
+      modalProduct: false,
+      modalGoodsStandard: false,
+      createLoading: false,
+      modalViewLoading: false,
+      exportExcelLoading: false,
+      currentTableRowSelected: null,
+      isEnvironment: null,
+      step: 'firstStep',
+      groupStatus: '',
       startedFlagStatus: [
         { label: '活动开始', value: 'true' },
         { label: '活动未开始', value: 'false' }
@@ -1828,34 +1740,7 @@ export default {
       rewardActivitySettingEnum,
       relationStoreTypeEnum,
       expandTypeEnum,
-      isEnvironment: null,
-      groupStatus: '',
-      showStoreName: '',
-      flagShipList: [],
-      storeList: [],
-      storeNameList: [],
-      cityList: [],
-      allStoreList: [],
-      storeData: [],
-      storeData1: [],
-      storeData2: [],
-      storeData3: [],
-      storeData4: [],
-      storeData5: [],
-      storeData6: [],
-      storeData7: [],
-      storeIds: [],
-      storeListData: [],
-      oldPicture: [],
-      newPicture: [],
-      save: [],
       columns: [
-        // {
-        //   type: "selection",
-        //   width: 60,
-        //   align: "center",
-        //   fixed: "left"
-        // },
         {
           title: '活动名称',
           key: 'activityName',
@@ -2192,38 +2077,113 @@ export default {
           key: 'rank'
         }
       ],
-      productData: [],
-      productStandardDetail: [],
-      productTotal: 0,
-      loading: true,
-      modalProduct: false,
-      modalGoodsStandard: false,
-      createLoading: false,
-      modalViewLoading: false,
-      exportExcelLoading: false,
-      showStoreList: false,
-      indeterminate: false,
-      indeterminate1: false,
-      indeterminate2: false,
-      indeterminate3: false,
-      indeterminate4: false,
-      indeterminate5: false,
-      indeterminate6: false,
-      indeterminate7: false,
-      checkAll: false,
-      checkAll1: false,
-      checkAll2: false,
-      checkAll3: false,
-      checkAll4: false,
-      checkAll5: false,
-      checkAll6: false,
-      checkAll7: false,
-      currentTableRowSelected: null,
-      tableDataSelected: [],
       searchRowData: _.cloneDeep(roleRowData),
       searchProductRowData: _.cloneDeep(productRowData),
       productDetail: _.cloneDeep(productStandardDetail),
-      presellDetail: _.cloneDeep(preselldata)
+      presellDetail: _.cloneDeep(preselldata),
+      ruleInline: {
+        rank: [
+          { required: true, message: '请输入排序序号' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[0-9]+$/.test(value)) {
+                errors.push(new Error('必须为整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        activityName: [{ required: true, message: '请输入活动名称' }],
+        content: [{ required: true, message: '请输入活动内容' }],
+        status: [{ required: true, message: '请选择活动状态' }],
+        banner: [{ required: true, message: '请上传活动banner ' }],
+        startTime: [{ required: true, message: '请输入活动开始时间' }],
+        endTime: [{ required: true, message: '请输入活动结束时间' }],
+        deliveryStartTime: [{ required: true, message: '请选择提货开始时间' }],
+        beginDay: [
+          { required: true, message: '请输入下单后第几天开始提货' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[1-9]+$/.test(value)) {
+                errors.push(new Error('必须为整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        standardId: [{ required: true, message: '请选择商品规格' }],
+        standardDesc: [{ required: true, message: '请输入规格描述' }],
+        productProfitPrice: [{ required: true, message: '商品毛利' }],
+        commissionPrice: [{ required: true, message: '佣金金额' }],
+        originalPrice: [{ required: true, message: '商品原价' }],
+        commissionScale: [
+          { required: true, message: '请输入佣金比例' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^([1-4]?\d(\.[05])?|50(\.0)?)$/.test(value)) {
+                errors.push(new Error('必须为0~50的整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        costPrice: [
+          { required: true, message: '请输入商品成本价' },
+          {
+            message: '必须为大于0的数字',
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+          }
+        ],
+        activityPrice: [
+          { required: true, message: '请输入预售活动价' },
+          {
+            message: '必须为大于0的数字',
+            pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+          }
+        ],
+        invNum: [
+          { required: true, message: '请输入库存数量' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-0-9]+$/.test(value)) {
+                errors.push(new Error('必须为整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        triesLimit: [
+          { required: true, message: '请输入限购次数' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-0-9]+$/.test(value)) {
+                errors.push(new Error('必须为整数'));
+              }
+              if (value > 999) {
+                errors.push(new Error('限购次数最大值999'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        saleQuantity: [
+          { required: true, message: '请输入已售份数' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-0-9]+$/.test(value)) {
+                errors.push(new Error('必须为整数'));
+              }
+              callback(errors);
+            }
+          }
+        ]
+      }
     };
   },
   computed: {
@@ -2262,46 +2222,6 @@ export default {
     this.isEnvironment = config.isEnvironment;
   },
   methods: {
-    getStorePages() {
-      getStorePages({ rows: -1 })
-        .then((res) => {
-          this.allStoreList = res.rows;
-        });
-    },
-    getStoreCityPages() {
-      getStoreCityPages({
-        sidx: 'id',
-        sort: 'asc',
-        page: 1,
-        rows: -1
-      })
-        .then((res) => {
-          this.cityList = res.rows;
-        })
-    },
-    getStore(isCheck) {
-      getAreaStorePages(this.presellDetail.cityCode)
-        .then((res) => {
-          this.storeList = res.array;
-          this.storeData = res.array[0] && res.array[0].storeList || [];
-          this.storeData1 = res.array[1] && res.array[1].storeList || [];
-          this.storeData2 = res.array[2] && res.array[2].storeList || [];
-          this.storeData3 = res.array[3] && res.array[3].storeList || [];
-          this.storeData4 = res.array[4] && res.array[4].storeList || [];
-          this.storeData5 = res.array[5] && res.array[5].storeList || [];
-          this.storeData6 = res.array[6] && res.array[6].storeList || [];
-          const data = [];
-          this.storeNameList = [];
-          res.array.forEach(item => {
-            this.storeNameList.push(item.storeName);
-            data.push(item.storeList);
-          });
-          this.storeListData = data;
-          if (isCheck) {
-            this.handleCheckSelected();
-          }
-        });
-    },
     costPriceInputNumberOnchange(value) {
       this.presellDetail.costPrice = yuanToFenNumber(value);
       this.presellDetail.productProfitPrice =
@@ -2585,177 +2505,6 @@ export default {
       }
       this.modalEdit = true;
     },
-    handleCheckSelected() {
-      const _this = this;
-      // 全选/反选按钮的样式
-      if (!_this.storeList[0]) {
-        this.indeterminate = false;
-        this.checkAll = false;
-      } else {
-        const sameArray = _this.storeList[0].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray:', sameArray);
-        if (
-          sameArray.length > 0 &&
-          sameArray.length === this.storeList[0].storeList.length
-        ) {
-          this.indeterminate = false;
-          this.checkAll = true;
-        } else if (
-          sameArray.length > 0 &&
-          sameArray.length < this.storeList[0].storeList.length
-        ) {
-          this.indeterminate = true;
-          this.checkAll = false;
-        } else {
-          this.indeterminate = false;
-          this.checkAll = false;
-        }
-      }
-
-      if (!_this.storeList[1]) {
-        this.indeterminate1 = false;
-        this.checkAll1 = false;
-      } else {
-        const sameArray1 = _this.storeList[1].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray1:', sameArray1);
-        if (
-          sameArray1.length > 0 &&
-          sameArray1.length === this.storeList[1].storeList.length
-        ) {
-          this.indeterminate1 = false;
-          this.checkAll1 = true;
-        } else if (
-          sameArray1.length > 0 &&
-          sameArray1.length < this.storeList[1].storeList.length
-        ) {
-          this.indeterminate1 = true;
-          this.checkAll1 = false;
-        } else {
-          this.indeterminate1 = false;
-          this.checkAll1 = false;
-        }
-      }
-
-      if (!_this.storeList[2]) {
-        this.indeterminate2 = false;
-        this.checkAll2 = false;
-      } else {
-        const sameArray2 = _this.storeList[2].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray2:', sameArray2);
-        if (
-          sameArray2.length > 0 &&
-            sameArray2.length === this.storeList[2].storeList.length
-        ) {
-          this.indeterminate2 = false;
-          this.checkAll2 = true;
-        } else if (
-          sameArray2.length > 0 &&
-            sameArray2.length < this.storeList[2].storeList.length
-        ) {
-          this.indeterminate2 = true;
-          this.checkAll2 = false;
-        } else {
-          this.indeterminate2 = false;
-          this.checkAll2 = false;
-        }
-      }
-
-      if (!_this.storeList[3]) {
-        this.indeterminate3 = false;
-        this.checkAll3 = false;
-      } else {
-        const sameArray3 = _this.storeList[3].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray3:', sameArray3);
-        if (
-          sameArray3.length > 0 &&
-          sameArray3.length === this.storeList[3].storeList.length
-        ) {
-          this.indeterminate3 = false;
-          this.checkAll3 = true;
-        } else if (
-          sameArray3.length > 0 &&
-          sameArray3.length < this.storeList[3].storeList.length
-        ) {
-          this.indeterminate3 = true;
-          this.checkAll3 = false;
-        } else {
-          this.indeterminate3 = false;
-          this.checkAll3 = false;
-        }
-      }
-
-      if (!_this.storeList[4]) {
-        this.indeterminate4 = false;
-        this.checkAll4 = false;
-      } else {
-        const sameArray4 = _this.storeList[4].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray4:', sameArray4);
-        if (
-          sameArray4.length > 0 &&
-          sameArray4.length === this.storeList[4].storeList.length
-        ) {
-          this.indeterminate4 = false;
-          this.checkAll4 = true;
-        } else if (
-          sameArray4.length > 0 &&
-          sameArray4.length < this.storeList[4].storeList.length
-        ) {
-          this.indeterminate4 = true;
-          this.checkAll4 = false;
-        } else {
-          this.indeterminate4 = false;
-          this.checkAll4 = false;
-        }
-      }
-
-      if (!_this.storeList[5]) {
-        this.indeterminate5 = false;
-        this.checkAll5 = false;
-      } else {
-        const sameArray5 = _this.storeList[5].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray5:', sameArray5);
-        if (
-          sameArray5.length > 0 &&
-          sameArray5.length === this.storeList[5].storeList.length
-        ) {
-          this.indeterminate5 = false;
-          this.checkAll5 = true;
-        } else if (
-          sameArray5.length > 0 &&
-          sameArray5.length < this.storeList[5].storeList.length
-        ) {
-          this.indeterminate5 = true;
-          this.checkAll5 = false;
-        } else {
-          this.indeterminate5 = false;
-          this.checkAll5 = false;
-        }
-      }
-
-      if (!_this.storeList[6]) {
-        this.indeterminate6 = false;
-        this.checkAll6 = false;
-      } else {
-        const sameArray6 = _this.storeList[6].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray6:', sameArray6);
-        if (
-          sameArray6.length > 0 &&
-          sameArray6.length === this.storeList[6].storeList.length
-        ) {
-          this.indeterminate6 = false;
-          this.checkAll6 = true;
-        } else if (
-          sameArray6.length > 0 &&
-          sameArray6.length < this.storeList[6].storeList.length
-        ) {
-          this.indeterminate6 = true;
-          this.checkAll6 = false;
-        } else {
-          this.indeterminate6 = false;
-          this.checkAll6 = false;
-        }
-      }
-    },
     handleDownload() {
       this.exportExcelLoading = true;
       getTeamBuyPages(this.searchRowData).then((res) => {
@@ -2791,17 +2540,6 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
-    },
-    handleCitySwitch(value) {
-      // 如果是修改 切换城市时继续保留反选数据
-      if (this.isEdit) {
-        this.getStore(true);
-      } else {
-        // 清空上次选择的值
-        // this.storeCheckRest();
-        // 切换城市，重新获取区域列表
-        this.getStore(true);
-      }
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);
@@ -2868,6 +2606,29 @@ export default {
     },
     tourDiscountInputNumberOnchange(value) {
       this.presellDetail.tourDiscount = yuanToFenNumber(value);
+    },
+    getStore(isCheck) {
+      getAreaStorePages(this.presellDetail.cityCode)
+        .then((res) => {
+          this.storeList = res.array;
+          this.storeData = res.array[0] && res.array[0].storeList || [];
+          this.storeData1 = res.array[1] && res.array[1].storeList || [];
+          this.storeData2 = res.array[2] && res.array[2].storeList || [];
+          this.storeData3 = res.array[3] && res.array[3].storeList || [];
+          this.storeData4 = res.array[4] && res.array[4].storeList || [];
+          this.storeData5 = res.array[5] && res.array[5].storeList || [];
+          this.storeData6 = res.array[6] && res.array[6].storeList || [];
+          const data = [];
+          this.storeNameList = [];
+          res.array.forEach(item => {
+            this.storeNameList.push(item.storeName);
+            data.push(item.storeList);
+          });
+          this.storeListData = data;
+          if (isCheck) {
+            this.handleCheckSelected();
+          }
+        });
     },
     selectStore(options) {
       if (options.value === 'ALL') {
@@ -3323,29 +3084,6 @@ export default {
         this.checkAll6 = false;
       }
     },
-    // checkAllGroupChange7(data) {
-    //   let sameArray7 = this.storeList[7].storeList.filter(function (item) {
-    //     return data.indexOf(item.storeId) != -1;
-    //   });
-    //   if (
-    //     data.length > 0 &&
-    //     sameArray7.length === this.storeList[7].storeList.length
-    //   ) {
-    //     this.indeterminate7 = false;
-    //     this.checkAll7 = true;
-    //   } else if (
-    //     data.length > 0 &&
-    //     sameArray7.length < this.storeList[7].storeList.length
-    //   ) {
-    //     this.indeterminate7 = true;
-    //     this.checkAll7 = false;
-    //     this.presellDetail.storeIds = "[" + data.join("][") + "]";
-    //   }
-    //   if (sameArray7.length === 0) {
-    //     this.indeterminate7 = false;
-    //     this.checkAll7 = false;
-    //   }
-    // },
     onRowClick(row, index) {
       // 给预售活动赋值
       this.presellDetail.standardId = row.id;

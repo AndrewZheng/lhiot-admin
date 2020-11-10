@@ -1539,8 +1539,6 @@ import {
   updateNewProducts,
   deleteNewProducts,
   createNewProducts,
-  deletePicture,
-  getStoreCityPages,
   getNewProductsRelevance,
   createNewProductsRelevance,
   updateNewProductsRelevance,
@@ -1549,21 +1547,18 @@ import {
   getSeckillPages,
   getTeamBuyPages,
   getPresellPages,
-  getStorePages,
   getAreaStorePages
 } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import uploadMixin from '@/mixins/uploadMixin.js';
+import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import { taskTypeEnum } from '@/libs/enumerate';
 import {
   couponStatusConvert,
   couponTypeConvert,
   couponScopeConvert,
-  couponUseLimitConvert,
-  userScopeConvert,
-  customPlanStatusConvert,
   imageStatusConvert,
   teamBuyStatusConvert
 } from '@/libs/converStatus';
@@ -1580,14 +1575,7 @@ import {
   relationStoreTypeEnum
 } from '@/libs/enumerate';
 import {
-  compareData,
-  getSmallCouponActivity,
   fenToYuanDot2,
-  fenToYuanDot2Number,
-  yuanToFenNumber,
-  replaceByTag,
-  replaceByTab,
-  HdDiscount,
   compareCouponData,
   secondsToDate
 } from '@/libs/util';
@@ -1904,12 +1892,13 @@ const teambuyColumns = [
             <tag color='warning'>{teamBuyStatusConvert(row.status).label}</tag>
           </div>
         );
+      } else {
+        return (
+          <div>
+            <tag color='primary'>{row.status}</tag>
+          </div>
+        );
       }
-      return (
-        <div>
-          <tag color='primary'>{row.status}</tag>
-        </div>
-      );
     }
   },
   {
@@ -2351,10 +2340,9 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin],
+  mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin, relationStoreMixin],
   data() {
     return {
-      taskTypeEnum,
       ids: [],
       defaultListMain: [],
       uploadListMain: [],
@@ -2363,65 +2351,24 @@ export default {
       oldPicture: [],
       newPicture: [],
       save: [],
-      couponStatusEnum,
-      couponTypeEnum,
-      couponScopeEnum,
-      couponUseLimitEnum,
-      validDateTypeEnum,
-      userScopeEnum,
-      teamBuyStatusEnum,
-      teamBuyTypeEnum,
-      rewardActivitySettingEnum,
-      relationStoreTypeEnum,
       activityPreSaleRelations: [],
       activitySeckillRelations: [],
       activityTeambuyRelations: [],
       productStandardRelations: [],
       couponConfigManageRelations: [],
+      templatePageOpts: [5, 10],
       couponTemplateData: [],
       productData: [],
+      PresellTableData: [],
       teambuyTableData: [],
       productTotal: 0,
       newProductTableData: [],
-      newProductTotal: 0,
-      teambuyTotal: 0,
-      PresellTableData: [],
-      storeNameList: [],
-      cityList: [],
-      allStoreList: [],
-      storeList: [],
-      storeData: [],
-      storeData1: [],
-      storeData2: [],
-      storeData3: [],
-      storeData4: [],
-      storeData5: [],
-      storeData6: [],
-      storeData7: [],
-      storeIds: [],
-      storeListData: [],
-      showStoreList: false,
-      showValidDate: true,
-      indeterminate: false,
-      indeterminate1: false,
-      indeterminate2: false,
-      indeterminate3: false,
-      indeterminate4: false,
-      indeterminate5: false,
-      indeterminate6: false,
-      indeterminate7: false,
-      checkAll: false,
-      checkAll1: false,
-      checkAll2: false,
-      checkAll3: false,
-      checkAll4: false,
-      checkAll5: false,
-      checkAll6: false,
-      checkAll7: false,
       PresellTotal: 0,
-      showStoreName: '',
-      activityId: null,
+      newProductTotal: 0,
       couponTemplateTotal: 0,
+      teambuyTotal: 0,
+      showValidDate: true,
+      activityId: null,
       sameGoodsStatus: true,
       modalEditLoading: false,
       modalRelevance: false,
@@ -2433,20 +2380,7 @@ export default {
       modalEditRank: false,
       editStatus: false,
       modalRelevanceLoading: false,
-      templatePageOpts: [5, 10],
-      templateColumns: templateColumns,
-      productColumns: productColumns,
-      teambuyColumns: teambuyColumns,
-      PresellColumns: PresellColumns,
-      newProductColumns: newProductColumns,
-      searchRowData: this._.cloneDeep(searchRowData),
-      activityNewProducts: this._.cloneDeep(activityNewProducts),
-      ActivityNewProductsRelation: this._.cloneDeep(ActivityNewProductsRelevance),
-      searchTemplateRowData: _.cloneDeep(templateRowData),
-      searchProductRowData: _.cloneDeep(productRowData),
-      searchNewProductRowData: _.cloneDeep(newproductRowData),
-      searchteambuyRowData: _.cloneDeep(teambuyRowData),
-      searchPresellRowData: _.cloneDeep(PresellRowData),
+      showStoreName: '',
       statusTypeEnum: [
         { label: '上架', value: 'ON' },
         { label: '下架', value: 'OFF' }
@@ -2459,6 +2393,30 @@ export default {
         { label: '是', value: 'true' },
         { label: '否', value: 'false' }
       ],
+      taskTypeEnum,
+      couponStatusEnum,
+      couponTypeEnum,
+      couponScopeEnum,
+      couponUseLimitEnum,
+      validDateTypeEnum,
+      userScopeEnum,
+      teamBuyStatusEnum,
+      teamBuyTypeEnum,
+      relationStoreTypeEnum,
+      rewardActivitySettingEnum,
+      templateColumns: templateColumns,
+      productColumns: productColumns,
+      teambuyColumns: teambuyColumns,
+      PresellColumns: PresellColumns,
+      newProductColumns: newProductColumns,
+      searchRowData: _.cloneDeep(searchRowData),
+      activityNewProducts: _.cloneDeep(activityNewProducts),
+      ActivityNewProductsRelation: _.cloneDeep(ActivityNewProductsRelevance),
+      searchTemplateRowData: _.cloneDeep(templateRowData),
+      searchProductRowData: _.cloneDeep(productRowData),
+      searchNewProductRowData: _.cloneDeep(newproductRowData),
+      searchteambuyRowData: _.cloneDeep(teambuyRowData),
+      searchPresellRowData: _.cloneDeep(PresellRowData),
       columns: [
         {
           title: 'ID',
@@ -3026,27 +2984,8 @@ export default {
   },
   mounted() {
     this.getStore();
-    this.getStoreCityPages();
-    this.getStorePages();
   },
   methods: {
-    getStorePages() {
-      getStorePages({ rows: -1 })
-        .then((res) => {
-          this.allStoreList = res.rows;
-        });
-    },
-    getStoreCityPages() {
-      getStoreCityPages({
-        sidx: 'id',
-        sort: 'asc',
-        page: 1,
-        rows: -1
-      })
-        .then((res) => {
-          this.cityList = res.rows;
-        })
-    },
     getTableData() {
       this.loading = true;
       getNewProductsPages(this.searchRowData)
@@ -3087,17 +3026,6 @@ export default {
     },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(searchRowData);
-    },
-    handleCitySwitch(value) {
-      // 如果是修改 切换城市时继续保留反选数据
-      if (this.isEdit) {
-        this.getStore(true);
-      } else {
-        // 清空上次选择的值
-        // this.storeCheckRest();
-        // 切换城市，重新获取区域列表
-        this.getStore(true);
-      }
     },
     handleCreate() {
       this.showStoreList = false;
@@ -3146,177 +3074,6 @@ export default {
         this.activityNewProducts.relationStoreType = 'ALL'; // storeIds为''默认关联的门店则是全部门店
       }
       this.modalEdit = true;
-    },
-    handleCheckSelected() {
-      const _this = this;
-      // 全选/反选按钮的样式
-      if (!_this.storeList[0]) {
-        this.indeterminate = false;
-        this.checkAll = false;
-      } else {
-        const sameArray = _this.storeList[0].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray:', sameArray);
-        if (
-          sameArray.length > 0 &&
-          sameArray.length === this.storeList[0].storeList.length
-        ) {
-          this.indeterminate = false;
-          this.checkAll = true;
-        } else if (
-          sameArray.length > 0 &&
-          sameArray.length < this.storeList[0].storeList.length
-        ) {
-          this.indeterminate = true;
-          this.checkAll = false;
-        } else {
-          this.indeterminate = false;
-          this.checkAll = false;
-        }
-      }
-
-      if (!_this.storeList[1]) {
-        this.indeterminate1 = false;
-        this.checkAll1 = false;
-      } else {
-        const sameArray1 = _this.storeList[1].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray1:', sameArray1);
-        if (
-          sameArray1.length > 0 &&
-          sameArray1.length === this.storeList[1].storeList.length
-        ) {
-          this.indeterminate1 = false;
-          this.checkAll1 = true;
-        } else if (
-          sameArray1.length > 0 &&
-          sameArray1.length < this.storeList[1].storeList.length
-        ) {
-          this.indeterminate1 = true;
-          this.checkAll1 = false;
-        } else {
-          this.indeterminate1 = false;
-          this.checkAll1 = false;
-        }
-      }
-
-      if (!_this.storeList[2]) {
-        this.indeterminate2 = false;
-        this.checkAll2 = false;
-      } else {
-        const sameArray2 = _this.storeList[2].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray2:', sameArray2);
-        if (
-          sameArray2.length > 0 &&
-            sameArray2.length === this.storeList[2].storeList.length
-        ) {
-          this.indeterminate2 = false;
-          this.checkAll2 = true;
-        } else if (
-          sameArray2.length > 0 &&
-            sameArray2.length < this.storeList[2].storeList.length
-        ) {
-          this.indeterminate2 = true;
-          this.checkAll2 = false;
-        } else {
-          this.indeterminate2 = false;
-          this.checkAll2 = false;
-        }
-      }
-
-      if (!_this.storeList[3]) {
-        this.indeterminate3 = false;
-        this.checkAll3 = false;
-      } else {
-        const sameArray3 = _this.storeList[3].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray3:', sameArray3);
-        if (
-          sameArray3.length > 0 &&
-          sameArray3.length === this.storeList[3].storeList.length
-        ) {
-          this.indeterminate3 = false;
-          this.checkAll3 = true;
-        } else if (
-          sameArray3.length > 0 &&
-          sameArray3.length < this.storeList[3].storeList.length
-        ) {
-          this.indeterminate3 = true;
-          this.checkAll3 = false;
-        } else {
-          this.indeterminate3 = false;
-          this.checkAll3 = false;
-        }
-      }
-
-      if (!_this.storeList[4]) {
-        this.indeterminate4 = false;
-        this.checkAll4 = false;
-      } else {
-        const sameArray4 = _this.storeList[4].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray4:', sameArray4);
-        if (
-          sameArray4.length > 0 &&
-          sameArray4.length === this.storeList[4].storeList.length
-        ) {
-          this.indeterminate4 = false;
-          this.checkAll4 = true;
-        } else if (
-          sameArray4.length > 0 &&
-          sameArray4.length < this.storeList[4].storeList.length
-        ) {
-          this.indeterminate4 = true;
-          this.checkAll4 = false;
-        } else {
-          this.indeterminate4 = false;
-          this.checkAll4 = false;
-        }
-      }
-
-      if (!_this.storeList[5]) {
-        this.indeterminate5 = false;
-        this.checkAll5 = false;
-      } else {
-        const sameArray5 = _this.storeList[5].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray5:', sameArray5);
-        if (
-          sameArray5.length > 0 &&
-          sameArray5.length === this.storeList[5].storeList.length
-        ) {
-          this.indeterminate5 = false;
-          this.checkAll5 = true;
-        } else if (
-          sameArray5.length > 0 &&
-          sameArray5.length < this.storeList[5].storeList.length
-        ) {
-          this.indeterminate5 = true;
-          this.checkAll5 = false;
-        } else {
-          this.indeterminate5 = false;
-          this.checkAll5 = false;
-        }
-      }
-
-      if (!_this.storeList[6]) {
-        this.indeterminate6 = false;
-        this.checkAll6 = false;
-      } else {
-        const sameArray6 = _this.storeList[6].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray6:', sameArray6);
-        if (
-          sameArray6.length > 0 &&
-          sameArray6.length === this.storeList[6].storeList.length
-        ) {
-          this.indeterminate6 = false;
-          this.checkAll6 = true;
-        } else if (
-          sameArray6.length > 0 &&
-          sameArray6.length < this.storeList[6].storeList.length
-        ) {
-          this.indeterminate6 = true;
-          this.checkAll6 = false;
-        } else {
-          this.indeterminate6 = false;
-          this.checkAll6 = false;
-        }
-      }
     },
     handleSubmit() {
       this.$refs.editForm.validate((valid) => {
@@ -3615,38 +3372,6 @@ export default {
           this.activityNewProducts.storeIds = '[' + newArray.join('][') + ']';
         }
       }
-      // if (value === 7) {
-      //   const allIds7 = [];
-      //   let beforeIds = [];
-      //   if (this.indeterminate7) {
-      //     this.checkAll7 = false;
-      //   } else {
-      //     this.checkAll7 = !this.checkAll7;
-      //   }
-      //   this.indeterminate7 = false;
-      //   if (this.checkAll7) {
-      //     if (this.storeIds != null) {
-      //       for (let val of this.storeIds) {
-      //         allIds7.push(val);
-      //       }
-      //     }
-      //     this.storeList[value].storeList.forEach((item) => {
-      //       allIds7.push(item.storeId);
-      //       beforeIds.push(item.storeId);
-      //     });
-      //     this.storeIds = allIds7;
-      //     this.activityNewProducts.storeIds = "[" + allIds7.join("][") + "]";
-      //   } else {
-      //     this.storeList[value].storeList.forEach((item) => {
-      //       beforeIds.push(item.storeId);
-      //     });
-      //     let newArray = _this.storeIds.filter(function (item) {
-      //       return beforeIds.indexOf(item) == -1;
-      //     });
-      //     this.storeIds = newArray;
-      //     this.activityNewProducts.storeIds = "[" + newArray.join("][") + "]";
-      //   }
-      // }
     },
     checkAllGroupChange(data) {
       const sameArray = this.storeList[0].storeList.filter(function(item) {
@@ -3809,29 +3534,6 @@ export default {
         this.checkAll6 = false;
       }
     },
-    // checkAllGroupChange7(data) {
-    //   let sameArray7 = this.storeList[7].storeList.filter(function (item) {
-    //     return data.indexOf(item.storeId) != -1;
-    //   });
-    //   if (
-    //     data.length > 0 &&
-    //     sameArray7.length === this.storeList[7].storeList.length
-    //   ) {
-    //     this.indeterminate7 = false;
-    //     this.checkAll7 = true;
-    //   } else if (
-    //     data.length > 0 &&
-    //     sameArray7.length < this.storeList[7].storeList.length
-    //   ) {
-    //     this.indeterminate7 = true;
-    //     this.checkAll7 = false;
-    //     this.activityNewProducts.storeIds = "[" + data.join("][") + "]";
-    //   }
-    //   if (sameArray7.length === 0) {
-    //     this.indeterminate7 = false;
-    //     this.checkAll7 = false;
-    //   }
-    // },
     editTableRow() {
       this.modalEditLoading = true;
       updateNewProducts(this.activityNewProducts)

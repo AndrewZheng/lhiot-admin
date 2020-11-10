@@ -1665,8 +1665,6 @@ import {
   createTeamBuy,
   getAreaStorePages,
   getProductStandardsPages,
-  getStorePages,
-  getStoreCityPages,
   deletePicture,
   getGoodsStandard
 } from '@/api/mini-program';
@@ -1674,6 +1672,7 @@ import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
+import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import {
   teamBuyStatusConvert,
   customPlanStatusConvert,
@@ -1821,12 +1820,32 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin, relationStoreMixin],
   data() {
     return {
-
+      flagShipList: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
+      productStandardDetail: [],
+      productData: [],
+      tableDataSelected: [],
       defaultListMain: [],
       uploadListMain: [],
+      productTotal: 0,
+      loading: true,
+      modalProduct: false,
+      createLoading: false,
+      modalViewLoading: false,
+      exportExcelLoading: false,
+      modalGoodsStandard: false,
+      showStoreList: false,
+      showValidDate: true,
+      firstSuccess: true,
+      isEnvironment: null,
+      currentTableRowSelected: null,
+      groupStatus: '',
+      step: 'firstStep',
       activityStatus: [
         { label: '未开始', value: 'off' },
         { label: '进行中', value: 'on' },
@@ -1851,58 +1870,6 @@ export default {
       expandTypeEnum,
       rewardActivitySettingEnum,
       relationStoreTypeEnum,
-      groupStatus: '',
-      modalGoodsStandard: false,
-      isEnvironment: null,
-      flagShipList: [],
-      storeNameList: [],
-      allStoreList: [],
-      cityList: [],
-      storeList: [],
-      storeData: [],
-      storeData1: [],
-      storeData2: [],
-      storeData3: [],
-      storeData4: [],
-      storeData5: [],
-      storeData6: [],
-      storeData7: [],
-      storeIds: [],
-      storeListData: [],
-      oldPicture: [],
-      newPicture: [],
-      save: [],
-      productStandardDetail: [],
-      productData: [],
-      productTotal: 0,
-      loading: true,
-      showStoreName: '',
-      modalProduct: false,
-      createLoading: false,
-      modalViewLoading: false,
-      exportExcelLoading: false,
-      showStoreList: false,
-      showValidDate: true,
-      indeterminate: false,
-      indeterminate1: false,
-      indeterminate2: false,
-      indeterminate3: false,
-      indeterminate4: false,
-      indeterminate5: false,
-      indeterminate6: false,
-      indeterminate7: false,
-      checkAll: false,
-      checkAll1: false,
-      checkAll2: false,
-      checkAll3: false,
-      checkAll4: false,
-      checkAll5: false,
-      checkAll6: false,
-      checkAll7: false,
-      step: 'firstStep',
-      firstSuccess: true,
-      currentTableRowSelected: null,
-      tableDataSelected: [],
       columns: [
         // {
         //   type: "selection",
@@ -2419,8 +2386,6 @@ export default {
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
-    this.getStorePages();
-    this.getStoreCityPages();
     this.getStore();
     this.getTableData();
   },
@@ -2428,23 +2393,6 @@ export default {
     this.isEnvironment = config.isEnvironment;
   },
   methods: {
-    getStorePages() {
-      getStorePages({ rows: -1 })
-        .then((res) => {
-          this.allStoreList = res.rows;
-        });
-    },
-    getStoreCityPages() {
-      getStoreCityPages({
-        sidx: 'id',
-        sort: 'asc',
-        page: 1,
-        rows: -1
-      })
-        .then((res) => {
-          this.cityList = res.rows;
-        })
-    },
     getStore(isCheck) {
       getAreaStorePages(this.teambuyDetail.cityCode)
         .then((res) => {
@@ -2467,17 +2415,6 @@ export default {
             this.handleCheckSelected();
           }
         });
-    },
-    handleCitySwitch(value) {
-      // 如果是修改 切换城市时继续保留反选数据
-      if (this.isEdit) {
-        this.getStore(true);
-      } else {
-        // 清空上次选择的值
-        // this.storeCheckRest();
-        // 切换城市，重新获取区域列表
-        this.getStore(true);
-      }
     },
     costPriceInputNumberOnchange(value) {
       this.teambuyDetail.costPrice = yuanToFenNumber(value);
@@ -2612,37 +2549,21 @@ export default {
       }
     },
     handleEditClose() {
-      // if (this.newPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.newPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
     },
-    // deletePicture(urls) {
-    //   deletePicture({
-    //     urls
-    //   })
-    //     .then(res => {})
-    //     .catch(() => {});
-    // },
     createStore() {
       this.modalViewLoading = true;
       this.teambuyDetail.id = null; // 新建时不需要传递id
       createTeamBuy(this.teambuyDetail)
         .then((res) => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
-          // this.modalEdit = false;
-          // this.getTableData();
         });
     },
     editStore() {
@@ -2668,11 +2589,8 @@ export default {
         .then((res) => {
           this.getTableData();
           this.modalEdit = false;
-          this.modalViewLoading = false;
         })
-        .catch(() => {
-          // this.modalEdit = false;
-          // this.getTableData();
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -2729,8 +2647,6 @@ export default {
         this.teambuyDetail = _.cloneDeep(this.currentTableRowSelected);
         this.setDefaultUploadList(this.teambuyDetail);
       }
-
-      // this.getStore();
       this.modalEdit = true;
     },
     // 删除
@@ -2845,177 +2761,6 @@ export default {
       }
       this.modalEdit = true;
     },
-    handleCheckSelected() {
-      const _this = this;
-      // 全选/反选按钮的样式
-      if (!_this.storeList[0]) {
-        this.indeterminate = false;
-        this.checkAll = false;
-      } else {
-        const sameArray = _this.storeList[0].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray:', sameArray);
-        if (
-          sameArray.length > 0 &&
-          sameArray.length === this.storeList[0].storeList.length
-        ) {
-          this.indeterminate = false;
-          this.checkAll = true;
-        } else if (
-          sameArray.length > 0 &&
-          sameArray.length < this.storeList[0].storeList.length
-        ) {
-          this.indeterminate = true;
-          this.checkAll = false;
-        } else {
-          this.indeterminate = false;
-          this.checkAll = false;
-        }
-      }
-
-      if (!_this.storeList[1]) {
-        this.indeterminate1 = false;
-        this.checkAll1 = false;
-      } else {
-        const sameArray1 = _this.storeList[1].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray1:', sameArray1);
-        if (
-          sameArray1.length > 0 &&
-          sameArray1.length === this.storeList[1].storeList.length
-        ) {
-          this.indeterminate1 = false;
-          this.checkAll1 = true;
-        } else if (
-          sameArray1.length > 0 &&
-          sameArray1.length < this.storeList[1].storeList.length
-        ) {
-          this.indeterminate1 = true;
-          this.checkAll1 = false;
-        } else {
-          this.indeterminate1 = false;
-          this.checkAll1 = false;
-        }
-      }
-
-      if (!_this.storeList[2]) {
-        this.indeterminate2 = false;
-        this.checkAll2 = false;
-      } else {
-        const sameArray2 = _this.storeList[2].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray2:', sameArray2);
-        if (
-          sameArray2.length > 0 &&
-            sameArray2.length === this.storeList[2].storeList.length
-        ) {
-          this.indeterminate2 = false;
-          this.checkAll2 = true;
-        } else if (
-          sameArray2.length > 0 &&
-            sameArray2.length < this.storeList[2].storeList.length
-        ) {
-          this.indeterminate2 = true;
-          this.checkAll2 = false;
-        } else {
-          this.indeterminate2 = false;
-          this.checkAll2 = false;
-        }
-      }
-
-      if (!_this.storeList[3]) {
-        this.indeterminate3 = false;
-        this.checkAll3 = false;
-      } else {
-        const sameArray3 = _this.storeList[3].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray3:', sameArray3);
-        if (
-          sameArray3.length > 0 &&
-          sameArray3.length === this.storeList[3].storeList.length
-        ) {
-          this.indeterminate3 = false;
-          this.checkAll3 = true;
-        } else if (
-          sameArray3.length > 0 &&
-          sameArray3.length < this.storeList[3].storeList.length
-        ) {
-          this.indeterminate3 = true;
-          this.checkAll3 = false;
-        } else {
-          this.indeterminate3 = false;
-          this.checkAll3 = false;
-        }
-      }
-
-      if (!_this.storeList[4]) {
-        this.indeterminate4 = false;
-        this.checkAll4 = false;
-      } else {
-        const sameArray4 = _this.storeList[4].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray4:', sameArray4);
-        if (
-          sameArray4.length > 0 &&
-          sameArray4.length === this.storeList[4].storeList.length
-        ) {
-          this.indeterminate4 = false;
-          this.checkAll4 = true;
-        } else if (
-          sameArray4.length > 0 &&
-          sameArray4.length < this.storeList[4].storeList.length
-        ) {
-          this.indeterminate4 = true;
-          this.checkAll4 = false;
-        } else {
-          this.indeterminate4 = false;
-          this.checkAll4 = false;
-        }
-      }
-
-      if (!_this.storeList[5]) {
-        this.indeterminate5 = false;
-        this.checkAll5 = false;
-      } else {
-        const sameArray5 = _this.storeList[5].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray5:', sameArray5);
-        if (
-          sameArray5.length > 0 &&
-          sameArray5.length === this.storeList[5].storeList.length
-        ) {
-          this.indeterminate5 = false;
-          this.checkAll5 = true;
-        } else if (
-          sameArray5.length > 0 &&
-          sameArray5.length < this.storeList[5].storeList.length
-        ) {
-          this.indeterminate5 = true;
-          this.checkAll5 = false;
-        } else {
-          this.indeterminate5 = false;
-          this.checkAll5 = false;
-        }
-      }
-
-      if (!_this.storeList[6]) {
-        this.indeterminate6 = false;
-        this.checkAll6 = false;
-      } else {
-        const sameArray6 = _this.storeList[6].storeList.filter((item) => _this.storeIds.includes(item.storeId));
-        console.log('sameArray6:', sameArray6);
-        if (
-          sameArray6.length > 0 &&
-          sameArray6.length === this.storeList[6].storeList.length
-        ) {
-          this.indeterminate6 = false;
-          this.checkAll6 = true;
-        } else if (
-          sameArray6.length > 0 &&
-          sameArray6.length < this.storeList[6].storeList.length
-        ) {
-          this.indeterminate6 = true;
-          this.checkAll6 = false;
-        } else {
-          this.indeterminate6 = false;
-          this.checkAll6 = false;
-        }
-      }
-    },
     handleDownload() {
       this.exportExcelLoading = true;
       getTeamBuyPages(this.searchRowData).then((res) => {
@@ -3044,6 +2789,18 @@ export default {
         this.exportExcelLoading = false;
       });
     },
+    handleRemoveMain(file) {
+      this.$refs.uploadMain.deleteFile(file);
+      this.teambuyDetail.storeImage = null;
+    },
+    // 商品主图
+    handleSuccessMain(response, file, fileList) {
+      this.uploadListMain = fileList;
+      this.teambuyDetail.banner = null;
+      this.teambuyDetail.banner = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
+    },
     getTableData() {
       if (!this.searchRowData.status) {
         this.searchRowData.sidx = 'createTime';
@@ -3063,18 +2820,6 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
-    },
-    handleRemoveMain(file) {
-      this.$refs.uploadMain.deleteFile(file);
-      this.teambuyDetail.storeImage = null;
-    },
-    // 商品主图
-    handleSuccessMain(response, file, fileList) {
-      this.uploadListMain = fileList;
-      this.teambuyDetail.banner = null;
-      this.teambuyDetail.banner = fileList[0].url;
-      this.newPicture.push(fileList[0].url);
-      this.oldPicture = this.save;
     },
     startTimeChange(value, date) {
       this.teambuyDetail.startTime = value;
