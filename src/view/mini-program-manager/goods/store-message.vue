@@ -564,7 +564,7 @@
           </Row>
           <!-- 门店店照 -->
           <Row>
-            <FormItem label="推荐使用尺寸为400X225(单位:px):" prop="storeImage">
+            <FormItem label="推荐使用尺寸为650*480(单位:px):" prop="storeImage">
               <Input
                 v-show="false"
                 v-model="storeDetail.storeImage"
