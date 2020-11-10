@@ -221,9 +221,11 @@ export const filterLocalRoute = (routeList, routersLocal) => {
  * @returns {Array}
  */
 export const getBreadCrumbList = (route, homeRoute) => {
+  const homeItem = { ...homeRoute, icon: homeRoute.meta.icon }
   const routeMetched = route.matched;
+  if (routeMetched.some(item => item.name === homeRoute.name)) return [homeItem];
   let res = routeMetched.filter(item => {
-    return item.meta === undefined || !item.meta.hide;
+    return item.meta === undefined || !item.meta.hide || !item.meta.hideInBread;
   }).map(item => {
     const meta = {
       ...item.meta

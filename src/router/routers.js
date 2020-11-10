@@ -175,7 +175,8 @@ export const constantRouterMap = [
     name: 'small-manager-detail',
     meta: {
       icon: 'md-menu',
-      title: '小程序跳转页面集合'
+      title: '小程序跳转页面集合',
+      hideInBread: true,
     },
     component: Main,
     children: [
@@ -187,15 +188,6 @@ export const constantRouterMap = [
           title: '员工管理'
         },
         component: () => import('@/view/mini-program-manager/member/handCheck.vue')
-      },
-      {
-        path: 'small-goods-relation-standard',
-        name: 'small-goods-relation-standard',
-        meta: {
-          icon: 'md-menu',
-          title: '商品关联规格'
-        },
-        component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
       },
       {
         path: '/small-skip-order',
@@ -215,40 +207,6 @@ export const constantRouterMap = [
           title: '系统参数管理'
         },
         component: () => import('@/view/mini-program-manager/system/system.vue')
-      },
-      {
-        path: 'small-activity-relation-coupon',
-        name: 'small-activity-relation-coupon',
-        meta: {
-          icon: 'md-menu',
-          title: '活动关联优惠券模板'
-        },
-        component: () => import('@/view/mini-program-manager/activity/coupon-relation.vue')
-      },
-      {
-        path: 'small-vip-activities-associated',
-        name: 'small-vip-activities-associated',
-        meta: {
-          icon: 'md-menu',
-          title: '活动关联优惠券模板'
-        },
-        component: () => import('@/view/mini-program-manager/vip/activities-associated.vue')
-      }, {
-        path: 'small-order-coupon-details',
-        name: 'small-order-coupon-details',
-        meta: {
-          icon: 'md-menu',
-          title: '用券数据'
-        },
-        component: () => import('@/view/mini-program-manager/order/coupon-details.vue')
-      }, {
-        path: 'small-order-month-orders',
-        name: 'small-order-month-orders',
-        meta: {
-          icon: 'md-menu',
-          title: '跨月退款订单'
-        },
-        component: () => import('@/view/mini-program-manager/order/month-orders.vue')
       },
       {
         path: '/wechat-home',
