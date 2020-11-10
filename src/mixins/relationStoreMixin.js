@@ -571,6 +571,7 @@ const mixin = {
       ) {
         this.indeterminate = false;
         this.checkAll = true;
+        this.addRelationDetail.stores = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
           sameArray.length < this.storeList[0].storeList.length
@@ -594,6 +595,7 @@ const mixin = {
       ) {
         this.indeterminate1 = false;
         this.checkAll1 = true;
+        this.addRelationDetail.stores = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
           sameArray1.length < this.storeList[1].storeList.length
@@ -617,6 +619,7 @@ const mixin = {
       ) {
         this.indeterminate2 = false;
         this.checkAll2 = true;
+        this.addRelationDetail.stores = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
           sameArray2.length < this.storeList[2].storeList.length
@@ -640,6 +643,7 @@ const mixin = {
       ) {
         this.indeterminate3 = false;
         this.checkAll3 = true;
+        this.addRelationDetail.stores = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
           sameArray3.length < this.storeList[3].storeList.length
@@ -663,6 +667,7 @@ const mixin = {
       ) {
         this.indeterminate4 = false;
         this.checkAll4 = true;
+        this.addRelationDetail.stores = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
           sameArray4.length < this.storeList[4].storeList.length
@@ -686,6 +691,7 @@ const mixin = {
       ) {
         this.indeterminate5 = false;
         this.checkAll5 = true;
+        this.addRelationDetail.stores = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
           sameArray5.length < this.storeList[5].storeList.length
@@ -709,6 +715,7 @@ const mixin = {
       ) {
         this.indeterminate6 = false;
         this.checkAll6 = true;
+        this.addRelationDetail.stores = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
           sameArray6.length < this.storeList[6].storeList.length

@@ -3204,20 +3204,17 @@ export default {
         });
     },
     editProductStandard() {
+      console.log('before sumbit obj:', this.productStandardDetail);
       this.modalViewLoading = true;
       editProductStandard({
         ...this.productStandardDetail
       })
         .then((res) => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
-          // this.productStandardDetail = productStandardDetail;
-          // this.productStandardDetail.productId = this.$route.params.id;
           this.$Message.success('操作成功!');
           this.getTableData();
         })
-        .catch(() => {
-          this.modalEdit = false;
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -3814,38 +3811,6 @@ export default {
           this.productStandardDetail.storeIds = '[' + newArray.join('][') + ']';
         }
       }
-      // if (value === 7) {
-      //   const allIds7 = [];
-      //   let beforeIds = [];
-      //   if (this.indeterminate7) {
-      //     this.checkAll7 = false;
-      //   } else {
-      //     this.checkAll7 = !this.checkAll7;
-      //   }
-      //   this.indeterminate7 = false;
-      //   if (this.checkAll7) {
-      //     if (this.storeIds != null) {
-      //       for (let val of this.storeIds) {
-      //         allIds7.push(val);
-      //       }
-      //     }
-      //     this.storeList[value].storeList.forEach((item) => {
-      //       allIds7.push(item.storeId);
-      //       beforeIds.push(item.storeId);
-      //     });
-      //     this.storeIds = allIds7;
-      //     this.productStandardDetail.storeIds = "[" + allIds7.join("][") + "]";
-      //   } else {
-      //     this.storeList[value].storeList.forEach((item) => {
-      //       beforeIds.push(item.storeId);
-      //     });
-      //     let newArray = _this.storeIds.filter(function (item) {
-      //       return beforeIds.indexOf(item) == -1;
-      //     });
-      //     this.storeIds = newArray;
-      //     this.productStandardDetail.storeIds = "[" + newArray.join("][") + "]";
-      //   }
-      // }
     },
     checkAllGroupChange(data) {
       const sameArray = this.storeList[0].storeList.filter(function(item) {
@@ -3857,6 +3822,7 @@ export default {
       ) {
         this.indeterminate = false;
         this.checkAll = true;
+        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray.length < this.storeList[0].storeList.length
@@ -3880,6 +3846,7 @@ export default {
       ) {
         this.indeterminate1 = false;
         this.checkAll1 = true;
+        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray1.length < this.storeList[1].storeList.length
@@ -3903,6 +3870,7 @@ export default {
       ) {
         this.indeterminate2 = false;
         this.checkAll2 = true;
+        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray2.length < this.storeList[2].storeList.length
@@ -3917,6 +3885,7 @@ export default {
       }
     },
     checkAllGroupChange3(data) {
+      console.log(`selected storeids:`, data);
       const sameArray3 = this.storeList[3].storeList.filter(function(item) {
         return data.indexOf(item.storeId) != -1;
       });
@@ -3926,6 +3895,7 @@ export default {
       ) {
         this.indeterminate3 = false;
         this.checkAll3 = true;
+        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray3.length < this.storeList[3].storeList.length
@@ -3933,6 +3903,7 @@ export default {
         this.indeterminate3 = true;
         this.checkAll3 = false;
         this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
+        console.log(`selected storeids in obj:`, this.productStandardDetail.storeIds);
       }
       if (sameArray3.length === 0) {
         this.indeterminate3 = false;
@@ -3949,6 +3920,7 @@ export default {
       ) {
         this.indeterminate4 = false;
         this.checkAll4 = true;
+        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray4.length < this.storeList[4].storeList.length
@@ -3972,6 +3944,7 @@ export default {
       ) {
         this.indeterminate5 = false;
         this.checkAll5 = true;
+        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray5.length < this.storeList[5].storeList.length
@@ -3995,6 +3968,7 @@ export default {
       ) {
         this.indeterminate6 = false;
         this.checkAll6 = true;
+        this.productStandardDetail.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray6.length < this.storeList[6].storeList.length
