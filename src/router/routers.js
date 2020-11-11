@@ -9,6 +9,7 @@ import fruitMasterRouters from './module/fruitmaster';
  * iview-admin中meta除了原生参数外可配置的参数:
  * meta: {
  *  hideInMenu: (false) 设为true后在左侧菜单不会显示该页面选项
+ *  hideInBreadCrumb: (false) 设为true后在左侧菜单不会显示该页面选项
  *  notCache: (false) 设为true后页面不会缓存
  *  access: (null) 可访问该页面的权限数组，当前路由设置的权限会影响子路由
  *  icon: (-) 该页面在左侧菜单、面包屑和标签导航处显示的图标，如果是自定义图标，需要在图标名称前加下划线'_'
@@ -42,7 +43,7 @@ export const constantRouterMap = [
       name: 'home',
       meta: {
         hideInMenu: true,
-        title: '首页',
+        title: '综合首页',
         notCache: true
       },
       component: () => import('@/view/basic-manager/single-page/home')
@@ -207,16 +208,6 @@ export const constantRouterMap = [
           title: '系统参数管理'
         },
         component: () => import('@/view/mini-program-manager/system/system.vue')
-      },
-      {
-        path: '/wechat-home',
-        name: 'wechat-home',
-        meta: {
-          icon: 'md-home',
-          title: '首页',
-          notCache: true
-        },
-        component: () => import('@/view/mini-program-manager/single-page/home')
       }
     ],
   },
@@ -255,16 +246,6 @@ export const constantRouterMap = [
           title: '业务员门店业绩分析'
         },
         component: () => import('@/view/wholesale-mall-manager/user/salesman-store-analysis.vue')
-      },
-      {
-        path: '/wholesale-home',
-        name: 'wholesale-home',
-        meta: {
-          icon: 'md-home',
-          title: '首页',
-          notCache: true
-        },
-        component: () => import('@/view/wholesale-mall-manager/single-page/home')
       }
     ]
   }

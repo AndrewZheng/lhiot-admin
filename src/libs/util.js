@@ -192,7 +192,7 @@ export const filterLocalRoute = (routeList, routersLocal) => {
     const replyResult = [];
     array.forEach(route => {
       // let pathKey = (base ? base + '/' : '') + route.path;
-      // if (route.path == '/' || route.path == '/home') {
+      // if (route.path === '/' || route.path === '/home') {
       //   pathKey = route.path;
       // }
       routeList.forEach(accessRoute => {
@@ -230,7 +230,10 @@ export const getBreadCrumbList = (route, homeRoute) => {
     const meta = {
       ...item.meta
     };
-    if (meta.title && typeof meta.title === 'function') meta.title = meta.title(route);
+    if (meta.title && typeof meta.title === 'function') {
+      meta.__titleIsFunction__ = true
+      meta.title = meta.title(route)
+    }
     const obj = {
       icon: (item.meta && item.meta.icon) || '',
       name: item.name,
@@ -241,9 +244,7 @@ export const getBreadCrumbList = (route, homeRoute) => {
   res = res.filter(item => {
     return !item.meta.hideInMenu;
   });
-  return [Object.assign(homeRoute, {
-    to: homeRoute.path
-  }), ...res];
+  return [{ ...homeItem, to: homeRoute.path }, ...res];
 };
 
 export const getRouteTitleHandled = route => {
