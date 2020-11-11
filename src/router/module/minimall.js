@@ -6,7 +6,8 @@ const miniMallRouter = [
     name: 'wechat-home',
     component: Main,
     meta: {
-      hideInBread: true
+      hideInBread: true,
+      title: '商城小程序'
     },
     children: [{
       path: '/wechat-home',
