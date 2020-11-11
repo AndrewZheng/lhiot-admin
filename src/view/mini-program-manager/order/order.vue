@@ -1398,7 +1398,12 @@ export default {
           width: 130,
           key: 'contactPhone'
         },
-        { align: 'center', title: '商品名称', width: 150, key: 'productNames' },
+        {
+          title: '商品名称',
+          align: 'center',
+          minWidth: 300,
+          key: 'productNames'
+        },
         {
           title: '下单门店',
           align: 'center',
@@ -1477,7 +1482,6 @@ export default {
             return <div>{amount}</div>;
           }
         },
-        { align: 'center', title: '商品名称', width: 150, key: 'productNames' },
         {
           title: '活动名称',
           width: 120,
@@ -1486,7 +1490,7 @@ export default {
         {
           title: '券名称',
           align: 'center',
-          width: 120,
+          width: 150,
           key: 'couponName'
         },
         {
