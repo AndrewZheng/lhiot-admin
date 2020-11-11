@@ -7,8 +7,8 @@ const wholesaleRouter = [
     redirect: '/farm-home',
     component: Main,
     meta: {
-      hideInMenu: true,
-      notCache: true
+      hideInBread: true,
+      title: '批发小程序'
     },
     children: [{
       path: '/farm-home',
@@ -101,8 +101,7 @@ const wholesaleRouter = [
         title: '关键字管理'
       },
       component: () => import('@/view/wholesale-mall-manager/goods/goods-keywords.vue')
-    }
-    ]
+    }]
   },
   {
     path: '/wholesale-user-manage',
@@ -129,7 +128,7 @@ const wholesaleRouter = [
         title: '会员分析'
       },
       component: () => import('@/view/wholesale-mall-manager/user/user-analysis.vue')
-    },
+    }
     ]
   },
   {
@@ -166,7 +165,7 @@ const wholesaleRouter = [
         title: '支付流水查询'
       },
       component: () => import('@/view/wholesale-mall-manager/order/payment-log.vue')
-    },
+    }
     // {
     //   path: '/wholesale-refund-log',
     //   name: 'wholesale-refund-log',

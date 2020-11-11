@@ -1,6 +1,6 @@
 import { login, logout, getUserInfo } from '@/api/user';
 import { getRouterById, getOperateByMenuId } from '@/api/system';
-import { setToken, getToken, filterLocalRoute, getMenuByRouter } from '@/libs/util';
+import { setToken, getToken, filterLocalRoute, getMenuByRouter, setTagNavListInLocalstorage } from '@/libs/util';
 import routersLocal, { constantRouterMap } from '@/router/routers';
 import { resetRouter } from '@/router';
 import { PcLockr, enums } from 'util/';
@@ -120,6 +120,14 @@ const actions = {
         commit('setToken', '');
         commit('setAccess', []);
         commit('setHasGetInfo', false);
+        // 登出后清除所有本地缓存
+        const storage = window.localStorage;
+        storage.clear();
+        sessionStorage.setItem('loginName', '');
+        commit('setSystemList', [], { root: true });
+        setTagNavListInLocalstorage([]);
+        commit('setTagNavList', [], { root: true });
+        // 重置路由
         resetRouter();
         resolve();
       }).catch(err => {

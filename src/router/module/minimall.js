@@ -7,8 +7,8 @@ const miniMallRouter = [
     redirect: '/wechat-home',
     component: Main,
     meta: {
-      hideInMenu: true,
-      notCache: true
+      hideInBread: true,
+      title: '商城小程序'
     },
     children: [{
       path: '/wechat-home',
@@ -590,26 +590,26 @@ const miniMallRouter = [
       component: () => import('@/view/mini-program-manager/order/paylog.vue')
     },
     {
-        path: 'small-order-coupon-details',
-        name: 'small-order-coupon-details',
-        meta: {
-          hideInMenu: true,
-          icon: 'md-menu',
-          title: '用券数据'
-        },
-        component: () => import('@/view/mini-program-manager/order/coupon-details.vue')
+      path: 'small-order-coupon-details',
+      name: 'small-order-coupon-details',
+      meta: {
+        hideInMenu: true,
+        icon: 'md-menu',
+        title: '用券数据'
+      },
+      component: () => import('@/view/mini-program-manager/order/coupon-details.vue')
     },
     {
-        path: 'small-order-month-orders',
-        name: 'small-order-month-orders',
-        meta: {
-          hideInMenu: true,
-          icon: 'md-menu',
-          title: '跨月退款订单'
-        },
-        component: () => import('@/view/mini-program-manager/order/month-orders.vue')
-      }]
-    },
+      path: 'small-order-month-orders',
+      name: 'small-order-month-orders',
+      meta: {
+        hideInMenu: true,
+        icon: 'md-menu',
+        title: '跨月退款订单'
+      },
+      component: () => import('@/view/mini-program-manager/order/month-orders.vue')
+    }]
+  },
   {
     path: '/small-vip',
     name: 'small-vip',
