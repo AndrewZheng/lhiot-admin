@@ -156,6 +156,9 @@
           </Row>
           <div class="ml15 mt10">
             <i style="color: red">*</i> 选中单条数据再点击添加,可复制当前数据
+            <span class="brand-red">
+              Tips: 除普通商品外的所有活动商品规格添加完后请点击列表蓝色按钮完成折扣配置，否则视为普通商品规格
+            </span>
           </div>
         </div>
       </tables>
