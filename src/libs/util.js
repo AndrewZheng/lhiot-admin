@@ -221,9 +221,11 @@ export const filterLocalRoute = (routeList, routersLocal) => {
  * @returns {Array}
  */
 export const getBreadCrumbList = (route, homeRoute) => {
+  const homeItem = { ...homeRoute, icon: homeRoute.meta.icon }
   const routeMetched = route.matched;
+  if (routeMetched.some(item => item.name === homeRoute.name)) return [homeItem];
   let res = routeMetched.filter(item => {
-    return item.meta === undefined || !item.meta.hide;
+    return item.meta === undefined || !item.meta.hide || !item.meta.hideInBread;
   }).map(item => {
     const meta = {
       ...item.meta
@@ -409,7 +411,7 @@ export const getArrayFromFile = (file) => {
     const reader = new FileReader();
     reader.readAsText(file); // 以文本格式读取
     let arr = [];
-    reader.onload = function (evt) {
+    reader.onload = function(evt) {
       const data = evt.target.result; // 读到的数据
       const pasteData = data.trim();
       arr = pasteData.split((/[\n\u0085\u2028\u2029]|\r\n?/g)).map(row => {
@@ -518,7 +520,7 @@ export const routeHasExist = (tagNavList, routeItem) => {
 };
 
 // sessionStorage
-export const session = function (key, value) {
+export const session = function(key, value) {
   if (value === void (0)) {
     var lsVal = sessionStorage.getItem(key);
     if (lsVal && lsVal.indexOf('autostringify-') === 0) {
@@ -535,7 +537,7 @@ export const session = function (key, value) {
 };
 
 // 生成随机数
-export const getUUID = function (len) {
+export const getUUID = function(len) {
   len = len || 6;
   len = parseInt(len, 10);
   len = isNaN(len) ? 6 : len;
@@ -549,7 +551,7 @@ export const getUUID = function (len) {
 };
 
 // 深拷贝
-export const deepcopy = function (source) {
+export const deepcopy = function(source) {
   if (!source) return source;
   const sourceCopy = source instanceof Array ? [] : {};
   for (const item in source) {
@@ -608,7 +610,7 @@ export const buildMenu = (array, ckey, isFind = true) => {
 
 export const getRoutes = (routeList) => {
   const routeHash = {};
-  const setMenu2Hash = function (array, base) {
+  const setMenu2Hash = function(array, base) {
     array.map(key => {
       if (key.path) {
         const hashKey = ((base ? base + '/' : '') + key.path).replace(/^\//, '');
