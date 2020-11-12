@@ -8,6 +8,7 @@
         :loading="loading"
         :search-area-column="24"
         :operate-area-column="5"
+        :need-permission="true"
         editable
         searchable
         border
@@ -28,7 +29,7 @@
             v-model="searchRowData.phone"
             placeholder="用户电话"
             class="search-input"
-            style="width: 100px"
+            style="width: 130px"
             clearable
           ></Input>
           <Input
@@ -183,7 +184,7 @@
             v-has="'export_user_info'"
             :loading="exportExcelLoading"
             type="primary"
-            class="mr5 mt5"
+            class="mr5"
             @click="handleDownload"
           >
             <Icon type="md-download" />导出
@@ -556,7 +557,7 @@ const columns = [
     align: 'center',
     key: 'id',
     fixed: 'left',
-    width: 70
+    width: 90
   },
   {
     title: '所属地区',
@@ -636,6 +637,7 @@ const columns = [
     title: '用户类型',
     align: 'center',
     key: 'userType',
+    fixed: 'right',
     width: 110,
     render: (h, params, vm) => {
       const { row } = params;
@@ -664,6 +666,7 @@ const columns = [
     title: '用户状态',
     align: 'center',
     key: 'userStatus',
+    fixed: 'right',
     width: 100,
     render: (h, params, vm) => {
       const { row } = params;
