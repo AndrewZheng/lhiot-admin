@@ -1,25 +1,6 @@
 import Main from '@/components/main';
 
 const commonRouter = [
-  // {
-  //   path: '/manager-home',
-  //   name: 'manager-home',
-  //   component: Main,
-  //   meta: {
-  //     hideInMenu: true,
-  //     notCache: true
-  //   },
-  //   children: [{
-  //     path: '/manager-home',
-  //     name: 'manager-home',
-  //     meta: {
-  //       hideInMenu: true,
-  //       title: '首页',
-  //       notCache: true
-  //     },
-  //     component: () => import('@/view/single-page/home')
-  //   }]
-  // },
   {
     path: '/components',
     name: 'components',

@@ -49,11 +49,8 @@ router.beforeEach((to, from, next) => {
   if (token) {
     if (to.name === LOGIN_PAGE_NAME) {
       // 已登录且要跳转的页面是登录页 每个子系统需要单独跳转到自身的首页
-      const name = getSystemHomeName();
-      next({
-        name,
-        replace: true
-      });
+      const sname = getSystemHomeName();
+      next({ name: sname });
     } else {
       console.log('hasGetInfo: ', store.getters.hasGetInfo);
       if (!store.getters.hasGetInfo) {

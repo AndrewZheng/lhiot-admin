@@ -101,8 +101,6 @@ export default {
     }
   },
   mounted() {
-        console.log("menuList")
-    console.log(this.menuList)
     this.openedNames = getUnion(this.openedNames, this.getOpenedNamesByActiveName(name));
   },
   methods: {
