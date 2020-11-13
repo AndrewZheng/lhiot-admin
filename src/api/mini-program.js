@@ -51,7 +51,7 @@ export const productStanardRanking = (data) => {
   });
 };
 
-// 门店商品销售统计 
+// 门店商品销售统计
 export const getStoreSaleTotalPages = (data) => {
   return $http.request({
     url: '/minapp/index/statistics/store-sale-total',
@@ -220,9 +220,10 @@ export const getStorePages = (data) => {
 };
 
 // 根据位置查询门店所有列表分区域
-export const getAreaStorePages = () => {
+export const getAreaStorePages = (cityCode) => {
+  const code = cityCode || '0731';// 默认长沙市
   return $http.request({
-    url: '/minapp/stores/area',
+    url: `/minapp/stores/area?cityCode=${code}`,
     method: 'get'
   });
 };
@@ -248,9 +249,10 @@ export const getStoreDetail = ({
 };
 
 // 查询所有门店区域
-export const getStoreAreas = () => {
+export const getStoreAreas = (cityCode) => {
+  const code = cityCode || '0731';// 默认长沙市
   return $http.request({
-    url: '/minapp/stores/store-areas',
+    url: `/minapp/stores/store-areas?cityCode=${code}`,
     method: 'get'
   });
 };
@@ -270,6 +272,63 @@ export const createStore = (data) => {
     url: '/minapp/stores/',
     data,
     method: 'post'
+  });
+};
+
+/* -------------------------
+ * 门店城市管理
+ * -------------------------
+ */
+// 分页查询所有门店城市
+export const getStoreCityPages = (data) => {
+  return $http.request({
+    url: '/minapp/city-store/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// 根据id更新门店城市
+export const editStoreCity = (data) => {
+  return $http.request({
+    url: '/minapp/city-store/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+
+// 添加门店城市
+export const createStoreCity = (data) => {
+  return $http.request({
+    url: '/minapp/city-store/create',
+    data,
+    method: 'post'
+  });
+};
+
+// 根据id查询门店城市
+export const getStoreCity = ({
+  id
+}) => {
+  return $http.request({
+    url: '/minapp/city-store/' + id,
+    method: 'get'
+  });
+};
+
+// 根据id删除门店城市
+export const deleteStoreCity = ({
+  ids
+}) => {
+  return $http.request({
+    url: '/minapp/city-store/' + ids,
+    method: 'delete'
   });
 };
 

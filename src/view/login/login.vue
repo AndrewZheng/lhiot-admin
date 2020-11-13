@@ -47,8 +47,6 @@ export default {
   methods: {
     ...mapActions(['handleLogin', 'getUserInfo']),
     handleSubmit({ account, password }) {
-      const storage = window.localStorage;
-      storage.clear();
       this.handleLogin({ account, password }).then((res) => {
         sessionStorage.setItem('loginName', account);
         const name = getSystemHomeName();
