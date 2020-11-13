@@ -2469,6 +2469,7 @@ export default {
       let str = '';
       ids.forEach((id) => {
         const item = this.allStoreList.find(item => item.storeId == id);
+        if (!item) { return; }
         str += item.storeName + ',';
       });
       return str.substring(0, str.length - 1);

@@ -1950,7 +1950,7 @@ const dataColumns = [
     minWidth: 150,
     key: 'handle',
     fixed: 'right',
-    options: ['onSale', 'view', 'edit']
+    options: ['couponStatus', 'view', 'edit']
   }
 ];
 
@@ -2362,9 +2362,6 @@ export default {
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
-    this.getStorePages();
-    this.getStoreCityPages();
-    this.getStore();
     this.getTableData();
   },
   methods: {
@@ -2684,6 +2681,7 @@ export default {
       let str = '';
       ids.forEach((id) => {
         const item = this.allStoreList.find(item => item.storeId == id);
+        if (!item) { return; }
         str += item.storeName + ',';
       });
       return str.substring(0, str.length - 1);
@@ -2711,9 +2709,9 @@ export default {
     resetFields() {
       this.$refs.addForm.resetFields();
       this.addRelationDetail = _.cloneDeep(relationDetail);
-      this.$refs.uploadMain.clearFileList();
-      this.uploadListMain = [];
-      this.couponDetail.storeImage = null;
+      // this.$refs.uploadMain.clearFileList();
+      // this.uploadListMain = [];
+      // this.couponDetail.storeImage = null;
     },
     handleAddClose() {
       this.modalAdd = false;
