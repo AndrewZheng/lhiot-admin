@@ -320,17 +320,16 @@ const miniMallRouter = [
     //   },
     //   component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
     // },
-
-    // {
-    //   path: 'small-vip-activities-associated',
-    //   name: 'small-vip-activities-associated',
-    //   meta: {
-    //     hideInMenu: true,
-    //     icon: 'md-menu',
-    //     title: 'VIP活动关联优惠券模板'
-    //   },
-    //   component: () => import('@/view/mini-program-manager/vip/activities-associated.vue')
-    // },
+    {
+      path: 'small-vip-activities-associated',
+      name: 'small-vip-activities-associated',
+      meta: {
+        hideInMenu: true,
+        icon: 'md-menu',
+        title: 'VIP活动关联优惠券模板'
+      },
+      component: () => import('@/view/mini-program-manager/vip/activities-associated.vue')
+    },
     {
       path: '/integral-coupon',
       name: 'integral-coupon',
