@@ -2729,6 +2729,11 @@ export default {
       this.productStandardDetail.productProfitPrice =
         this.productStandardDetail.salePrice -
         this.productStandardDetail.costPrice;
+      // 售卖价格变化后，佣金金额也得变化
+      if (!this.productStandardDetail.commissionScale) { return; }
+      this.productStandardDetail.commissionPrice = Math.floor(
+        this.productStandardDetail.salePrice * (this.productStandardDetail.commissionScale / 100)
+      );
     },
     svipPriceInputNumberOnchange(value) {
       this.productStandardDetail.svipPrice = yuanToFenNumber(value);

@@ -816,7 +816,7 @@
               </Row>
               <Row>
                 <p style="color: #ff3861; margin-left: 48px">
-                  * 佣金比例为0~50的整数 (单位%)　　　　　　　　　　　　 *
+                  * 佣金比例为0~50的整数 (单位%)*
                   按活动价的比例计算佣金
                 </p>
                 <i-col span="12">
@@ -2806,6 +2806,11 @@ export default {
       this.presellDetail.activityPrice = yuanToFenNumber(value);
       this.presellDetail.productProfitPrice =
         this.presellDetail.activityPrice - this.presellDetail.costPrice;
+      // 活动价修改后，佣金金额也需要跟着变
+      if (!this.presellDetail.commissionScale) { return; }
+      this.presellDetail.commissionPrice = Math.floor(
+        this.presellDetail.activityPrice * (this.presellDetail.commissionScale / 100)
+      );
     },
     singleTeambuyPriceInputNumberOnchange(value) {
       this.presellDetail.singleTeambuyPrice = yuanToFenNumber(value);

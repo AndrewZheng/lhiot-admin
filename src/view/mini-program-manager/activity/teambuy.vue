@@ -481,27 +481,37 @@
           </i-col>
         </Row>
         <Row class-name="mb20">
-          <!-- <i-col span="12">
+          <i-col span="12">
             <Row>
-              <i-col span="6">红包活动设置:</i-col>
-              <i-col span="18">{{
-                teambuyDetail.rewardActivitySetting
-                  | rewardActivitySettingFilter
-              }}</i-col>
+              <i-col span="6">
+                红包活动设置:
+              </i-col>
+              <i-col span="18">
+                {{
+                  teambuyDetail.rewardActivitySetting
+                    | rewardActivitySettingFilter
+                }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="3">关联门店:</i-col>
-              <i-col span="16">{{ showStoreName }}</i-col>
+              <i-col span="3">
+                关联门店:
+              </i-col>
+              <i-col span="16">
+                {{ showStoreName }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -512,9 +522,11 @@
       :mask-closable="false"
     >
       <p slot="header">
-        <i-col>{{
-          tempModalType === modalType.edit ? "修改团购活动" : "创建团购活动"
-        }}</i-col>
+        <i-col>
+          {{
+            tempModalType === modalType.edit ? "修改团购活动" : "创建团购活动"
+          }}
+        </i-col>
       </p>
       <div class="modal-content">
         <Tabs v-model="step" size="small">
@@ -527,14 +539,18 @@
             >
               <Row v-show="tempModalType === modalType.edit">
                 <i-col span="12">
-                  <FormItem label="团购ID:" prop="id">{{
-                    teambuyDetail.id
-                  }}</FormItem>
+                  <FormItem label="团购ID:" prop="id">
+                    {{
+                      teambuyDetail.id
+                    }}
+                  </FormItem>
                 </i-col>
                 <i-col span="12">
-                  <FormItem label="创建时间:" prop="createTime">{{
-                    teambuyDetail.createTime
-                  }}</FormItem>
+                  <FormItem label="创建时间:" prop="createTime">
+                    {{
+                      teambuyDetail.createTime
+                    }}
+                  </FormItem>
                 </i-col>
               </Row>
               <Row>
@@ -544,7 +560,7 @@
                       v-model="teambuyDetail.activityName"
                       :readonly="
                         tempModalType === modalType.edit &&
-                        teambuyDetail.status === 'on'
+                          teambuyDetail.status === 'on'
                       "
                       style="width: 200px"
                     ></Input>
@@ -557,17 +573,18 @@
                       style="width: 200px"
                       :disabled="
                         tempModalType === modalType.edit &&
-                        teambuyDetail.status === 'on'
+                          teambuyDetail.status === 'on'
                       "
                     >
                       <Option
                         v-for="item in teamBuyTypeEnum"
-                        :value="item.value"
                         :key="item.value"
+                        :value="item.value"
                         class="ptb2-5"
                         style="padding-left: 5px"
-                        >{{ item.label }}</Option
                       >
+                        {{ item.label }}
+                      </Option>
                     </Select>
                   </FormItem>
                 </i-col>
@@ -580,7 +597,7 @@
                       style="width: 200px"
                       :readonly="
                         tempModalType === modalType.edit &&
-                        teambuyDetail.status === 'on'
+                          teambuyDetail.status === 'on'
                       "
                     ></Input>
                   </FormItem>
@@ -590,16 +607,17 @@
                     <Select v-model="teambuyDetail.status" style="width: 200px">
                       <Option
                         v-for="item in activityStatus"
-                        :value="item.value"
                         :key="item.value"
+                        :value="item.value"
                         :disabled="
                           tempModalType === modalType.create &&
-                          item.value == 'expire'
+                            item.value == 'expire'
                         "
                         class="ptb2-5"
                         style="padding-left: 5px"
-                        >{{ item.label }}</Option
                       >
+                        {{ item.label }}
+                      </Option>
                     </Select>
                   </FormItem>
                 </i-col>
@@ -623,7 +641,7 @@
                     >
                       <template v-if="item.status === 'finished'">
                         <div>
-                          <img :src="item.url" />
+                          <img :src="item.url">
                           <div class="demo-upload-list-cover">
                             <Icon
                               type="ios-eye-outline"
@@ -674,7 +692,7 @@
                       style="width: 200px"
                       :readonly="
                         tempModalType === modalType.edit &&
-                        teambuyDetail.status === 'on'
+                          teambuyDetail.status === 'on'
                       "
                       @on-change="startTimeChange"
                     />
@@ -691,7 +709,7 @@
                       style="width: 200px"
                       :readonly="
                         tempModalType === modalType.edit &&
-                        teambuyDetail.status === 'on'
+                          teambuyDetail.status === 'on'
                       "
                       @on-change="endTimeChange"
                     />
@@ -707,27 +725,28 @@
                       style="width: 205px"
                       :disabled="
                         tempModalType === modalType.edit &&
-                        teambuyDetail.status === 'on'
+                          teambuyDetail.status === 'on'
                       "
                     >
                       <Option
                         v-for="(item, index) in validDateTypeEnum"
-                        :value="item.value"
                         :key="index"
+                        :value="item.value"
                         class="ptb2-5"
                         style="width: 205px"
                         @click.native="selectValidDateType(item.value)"
-                        >{{ item.label }}</Option
                       >
+                        {{ item.label }}
+                      </Option>
                     </Select>
                   </FormItem>
                 </i-col>
                 <i-col
-                  span="12"
                   v-if="
                     this.showValidDate ||
-                    teambuyDetail.validDateType == 'FIXED_DATE'
+                      teambuyDetail.validDateType == 'FIXED_DATE'
                   "
+                  span="12"
                 >
                   <FormItem label="提货截止时间:" prop="deliveryEndTime">
                     <DatePicker
@@ -739,22 +758,22 @@
                       style="width: 200px"
                       :readonly="
                         tempModalType === modalType.edit &&
-                        teambuyDetail.status === 'on'
+                          teambuyDetail.status === 'on'
                       "
                       @on-change="deliveryEndTimeChange"
                     />
                   </FormItem>
                 </i-col>
-                <i-col span="12" v-else>
+                <i-col v-else span="12">
                   <FormItem label="提货截止天数:" prop="deliveryEndTimeDay">
                     <InputNumber
-                      :min="0"
                       v-model="teambuyDetail.deliveryEndTimeDay"
+                      :min="0"
                       label="提货截止天数"
                       style="width: 160px"
                       :readonly="
                         tempModalType === modalType.edit &&
-                        teambuyDetail.status === 'on'
+                          teambuyDetail.status === 'on'
                       "
                     ></InputNumber>
                   </FormItem>
@@ -764,615 +783,589 @@
                 <i-col span="12">
                   <FormItem label="成团人数:" prop="fullUserNum">
                     <InputNumber
-                      :min="0"
                       v-model="teambuyDetail.fullUserNum"
+                      :min="0"
                       style="width: 200px"
                       :readonly="
                         tempModalType === modalType.edit &&
-                        teambuyDetail.status === 'on'
+                          teambuyDetail.status === 'on'
                       "
                     ></InputNumber>
                   </FormItem>
                 </i-col>
                 <i-col span="12">
                   <FormItem label="成团有效时长:" prop="validSeconds">
-                    <!-- TODO 后期插件修改 -->
-          <!-- <TimePicker type="time" placeholder="成团有效时长" style="width: 200px" @on-change=""></TimePicker> -->
-          <InputNumber
-            v-model="teambuyDetail.hour"
-            :min="0"
-            :readonly="
-              tempModalType === modalType.edit &&
-                teambuyDetail.status === 'on'
-            "
-            style="width: 60px"
-            @on-change="validSecondsChange"
-          ></InputNumber>&nbsp;时
-          <InputNumber
-            v-model="teambuyDetail.minute"
-            :min="0"
-            :readonly="
-              tempModalType === modalType.edit &&
-                teambuyDetail.status === 'on'
-            "
-            style="width: 60px"
-            @on-change="validSecondsChange"
-          ></InputNumber>&nbsp;分
-          <InputNumber
-            v-model="teambuyDetail.second"
-            :min="0"
-            :readonly="
-              tempModalType === modalType.edit &&
-                teambuyDetail.status === 'on'
-            "
-            style="width: 60px"
-            @on-change="validSecondsChange"
-          ></InputNumber>&nbsp;秒
-          </FormItem>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <FormItem label="是否模拟成团:" prop="robot">
-              <Select
-                v-model="teambuyDetail.robot"
-                style="width: 200px"
-                :disabled="
-                  tempModalType === modalType.edit &&
-                    teambuyDetail.status === 'on'
-                "
-              >
-                <Option
-                  v-for="item in teamBuyStatus"
-                  :key="item.value"
-                  :value="item.value"
-                  class="ptb2-5"
-                  style="padding-left: 5px"
-                >
-                  {{ item.label }}
-                </Option>
-              </Select>
-            </FormItem>
-          </i-col>
-          <i-col span="12">
-            <FormItem label="参团信息列表:" prop="joinInfoStatus">
-              <Select
-                v-model="teambuyDetail.joinInfoStatus"
-                style="width: 200px"
-                :disabled="
-                  tempModalType === modalType.edit &&
-                    teambuyDetail.status === 'on'
-                "
-              >
-                <Option
-                  v-for="item in teamBuyStatus"
-                  :key="item.value"
-                  :value="item.value"
-                  :disabled="item.value == 'expire'"
-                  class="ptb2-5"
-                  style="padding-left: 5px"
-                >
-                  {{ item.label }}
-                </Option>
-              </Select>
-            </FormItem>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <FormItem label="商品规格:" prop="standardId">
-              <Input
-                v-model="teambuyDetail.standardId"
-                readonly="readonly"
-                style="width: 200px"
-              >
-              <Button
-                v-show="tempModalType !== modalType.edit"
-                slot="append"
-                icon="ios-search"
-                @click="handleRelation"
-              ></Button>
-              </Input>
-            </FormItem>
-          </i-col>
-          <i-col span="12">
-            <FormItem label="多少秒后虚位补齐:" prop="robotStartSecond">
-              <Input
-                v-model="teambuyDetail.robotStartSecond"
-                style="width: 200px"
-                :readonly="
-                  tempModalType === modalType.edit &&
-                    teambuyDetail.status === 'on'
-                "
-              ></Input>
-            </FormItem>
-          </i-col>
-        </Row>
-        <Row v-show="teambuyDetail.standardId">
-          <i-col span="6" style="margin-left: 140px">
-            <Button
-              v-waves
-              type="warning"
-              @click="aboutGoods"
-            >
-              关联商品详情
-            </Button>
-          </i-col>
-          <i-col span="8" style="margin-left: 53px">
-            <FormItem label="原价:" prop="originalPrice">
-              {{
-                teambuyDetail.originalPrice | fenToYuanDot2Filters
-              }}
-            </FormItem>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <FormItem label="活动价:" prop="activityPrice">
-              <InputNumber
-                :min="0"
-                :value="activityPriceComputed"
-                placeholder="活动价"
-                style="width: 200px"
-                :readonly="
-                  tempModalType === modalType.edit &&
-                    teambuyDetail.status === 'on'
-                "
-                @on-change="activityPriceInputNumberOnchange"
-              ></InputNumber>
-            </FormItem>
-          </i-col>
-          <i-col span="12">
-            <FormItem label="团长优惠:" prop="tourDiscount">
-              <InputNumber
-                :min="0"
-                :readonly="
-                  tempModalType === modalType.edit &&
-                    teambuyDetail.status === 'on'
-                "
-                :value="tourDiscountComputed"
-                placeholder="团长优惠"
-                style="width: 200px"
-                @on-change="tourDiscountInputNumberOnchange"
-              ></InputNumber>
-            </FormItem>
-          </i-col>
-        </Row>
-        <Row>
-          <!-- <i-col span="12">
-                  <FormItem label="成本价:" prop="costPrice">
+                    <InputNumber
+                      v-model="teambuyDetail.hour"
+                      :min="0"
+                      :readonly="
+                        tempModalType === modalType.edit &&
+                          teambuyDetail.status === 'on'
+                      "
+                      style="width: 60px"
+                      @on-change="validSecondsChange"
+                    ></InputNumber>&nbsp;时
+                    <InputNumber
+                      v-model="teambuyDetail.minute"
+                      :min="0"
+                      :readonly="
+                        tempModalType === modalType.edit &&
+                          teambuyDetail.status === 'on'
+                      "
+                      style="width: 60px"
+                      @on-change="validSecondsChange"
+                    ></InputNumber>&nbsp;分
+                    <InputNumber
+                      v-model="teambuyDetail.second"
+                      :min="0"
+                      :readonly="
+                        tempModalType === modalType.edit &&
+                          teambuyDetail.status === 'on'
+                      "
+                      style="width: 60px"
+                      @on-change="validSecondsChange"
+                    ></InputNumber>&nbsp;秒
+                  </FormItem>
+                </i-col>
+              </Row>
+              <Row>
+                <i-col span="12">
+                  <FormItem label="是否模拟成团:" prop="robot">
+                    <Select
+                      v-model="teambuyDetail.robot"
+                      style="width: 200px"
+                      :disabled="
+                        tempModalType === modalType.edit &&
+                          teambuyDetail.status === 'on'
+                      "
+                    >
+                      <Option
+                        v-for="item in teamBuyStatus"
+                        :key="item.value"
+                        :value="item.value"
+                        class="ptb2-5"
+                        style="padding-left: 5px"
+                      >
+                        {{ item.label }}
+                      </Option>
+                    </Select>
+                  </FormItem>
+                </i-col>
+                <i-col span="12">
+                  <FormItem label="参团信息列表:" prop="joinInfoStatus">
+                    <Select
+                      v-model="teambuyDetail.joinInfoStatus"
+                      style="width: 200px"
+                      :disabled="
+                        tempModalType === modalType.edit &&
+                          teambuyDetail.status === 'on'
+                      "
+                    >
+                      <Option
+                        v-for="item in teamBuyStatus"
+                        :key="item.value"
+                        :value="item.value"
+                        :disabled="item.value == 'expire'"
+                        class="ptb2-5"
+                        style="padding-left: 5px"
+                      >
+                        {{ item.label }}
+                      </Option>
+                    </Select>
+                  </FormItem>
+                </i-col>
+              </Row>
+              <Row>
+                <i-col span="12">
+                  <FormItem label="商品规格:" prop="standardId">
+                    <Input
+                      v-model="teambuyDetail.standardId"
+                      readonly="readonly"
+                      style="width: 200px"
+                    >
+                    <Button
+                      v-show="tempModalType !== modalType.edit"
+                      slot="append"
+                      icon="ios-search"
+                      @click="handleRelation"
+                    ></Button>
+                    </Input>
+                  </FormItem>
+                </i-col>
+                <i-col span="12">
+                  <FormItem label="多少秒后虚位补齐:" prop="robotStartSecond">
+                    <Input
+                      v-model="teambuyDetail.robotStartSecond"
+                      style="width: 200px"
+                      :readonly="
+                        tempModalType === modalType.edit &&
+                          teambuyDetail.status === 'on'
+                      "
+                    ></Input>
+                  </FormItem>
+                </i-col>
+              </Row>
+              <Row v-show="teambuyDetail.standardId">
+                <i-col span="6" style="margin-left: 140px">
+                  <Button
+                    v-waves
+                    type="warning"
+                    @click="aboutGoods"
+                  >
+                    关联商品详情
+                  </Button>
+                </i-col>
+                <i-col span="8" style="margin-left: 53px">
+                  <FormItem label="原价:" prop="originalPrice">
+                    {{
+                      teambuyDetail.originalPrice | fenToYuanDot2Filters
+                    }}
+                  </FormItem>
+                </i-col>
+              </Row>
+              <Row>
+                <i-col span="12">
+                  <FormItem label="活动价:" prop="activityPrice">
                     <InputNumber
                       :min="0"
-                      readonly
-                      :value="costPriceComputed"
-                      @on-change="costPriceInputNumberOnchange"
+                      :value="activityPriceComputed"
+                      placeholder="活动价"
+                      style="width: 200px"
+                      :readonly="
+                        tempModalType === modalType.edit &&
+                          teambuyDetail.status === 'on'
+                      "
+                      @on-change="activityPriceInputNumberOnchange"
+                    ></InputNumber>
+                  </FormItem>
+                </i-col>
+                <i-col span="12">
+                  <FormItem label="团长优惠:" prop="tourDiscount">
+                    <InputNumber
+                      :min="0"
+                      :readonly="
+                        tempModalType === modalType.edit &&
+                          teambuyDetail.status === 'on'
+                      "
+                      :value="tourDiscountComputed"
+                      placeholder="团长优惠"
+                      style="width: 200px"
+                      @on-change="tourDiscountInputNumberOnchange"
+                    ></InputNumber>
+                  </FormItem>
+                </i-col>
+              </Row>
+              <Row>
+                <!-- <i-col span="12">
+                <FormItem label="成本价:" prop="costPrice">
+                  <InputNumber
+                    :min="0"
+                    readonly
+                    :value="costPriceComputed"
+                    @on-change="costPriceInputNumberOnchange"
+                    style="width: 200px"
+                  ></InputNumber>
+                </FormItem>
+              </i-col> -->
+                <i-col span="12">
+                  <FormItem label="成本价:" prop="costPrice">
+                    {{ teambuyDetail.costPrice | fenToYuanDot2Filters }}
+                  </FormItem>
+                </i-col>
+                <i-col span="12">
+                  <FormItem label="商品毛利:" prop="productProfitPrice">
+                    {{
+                      teambuyDetail.productProfitPrice | fenToYuanDot2Filters
+                    }}
+                  </FormItem>
+                </i-col>
+              </Row>
+              <Row>
+                <p style="color: #ff3861; margin-left: 58px">
+                  * 佣金比例为0~50的整数 (单位%)*
+                  按活动价的比例计算佣金
+                </p>
+                <i-col span="12">
+                  <FormItem label="佣金比例:" prop="commissionScale">
+                    <InputNumber
+                      v-model="teambuyDetail.commissionScale"
+                      :min="0"
+                      :readonly="
+                        tempModalType === modalType.edit &&
+                          teambuyDetail.status === 'on'
+                      "
+                      style="padding-right: 5px; width: 200px"
+                      @on-change="commissionScaleOnchange"
+                    ></InputNumber>
+                  </FormItem>
+                </i-col>
+                <i-col span="12">
+                  <FormItem label="佣金金额:" prop="commissionPrice">
+                    {{
+                      "¥" + teambuyDetail.commissionPrice / 100
+                    }}
+                  </FormItem>
+                </i-col>
+              </Row>
+              <Divider
+                v-show="tempModalType === modalType.edit"
+              >
+                可修改部分
+              </Divider>
+              <Row>
+                <i-col span="12">
+                  <FormItem label="规格描述:" prop="standardDesc">
+                    <Input
+                      v-model="teambuyDetail.standardDesc"
+                      style="width: 585px"
+                    ></Input>
+                  </FormItem>
+                </i-col>
+              </Row>
+              <Row>
+                <i-col span="12">
+                  <FormItem label="排序序号:" prop="rank">
+                    <InputNumber
+                      v-model="teambuyDetail.rank"
                       style="width: 200px"
                     ></InputNumber>
                   </FormItem>
-                </i-col> -->
-          <i-col span="12">
-            <FormItem label="成本价:" prop="costPrice">
-              {{
-                teambuyDetail.costPrice | fenToYuanDot2Filters
-              }}
-            </FormItem>
-          </i-col>
-          <i-col span="12">
-            <FormItem label="商品毛利:" prop="productProfitPrice">
-              {{
-                teambuyDetail.productProfitPrice | fenToYuanDot2Filters
-              }}
-            </FormItem>
-          </i-col>
-        </Row>
-        <Row>
-          <p style="color: #ff3861; margin-left: 58px">
-            * 佣金比例为0~50的整数 (单位%)　　　　　　　　　　　　 *
-            按活动价的比例计算佣金
-          </p>
-          <i-col span="12">
-            <FormItem label="佣金比例:" prop="commissionScale">
-              <InputNumber
-                v-model="teambuyDetail.commissionScale"
-                :min="0"
-                :readonly="
-                  tempModalType === modalType.edit &&
-                    teambuyDetail.status === 'on'
-                "
-                style="padding-right: 5px; width: 200px"
-                @on-change="commissionScaleOnchange"
-              ></InputNumber>
-            </FormItem>
-          </i-col>
-          <i-col span="12">
-            <FormItem label="佣金金额:" prop="commissionPrice">
-              {{
-                "¥" + teambuyDetail.commissionPrice / 100
-              }}
-            </FormItem>
-          </i-col>
-        </Row>
-        <Divider
-          v-show="tempModalType === modalType.edit"
-        >
-          可修改部分
-        </Divider>
-        <Row>
-          <i-col span="12">
-            <FormItem label="规格描述:" prop="standardDesc">
-              <Input
-                v-model="teambuyDetail.standardDesc"
-                style="width: 585px"
-              ></Input>
-            </FormItem>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <FormItem label="排序序号:" prop="rank">
-              <InputNumber
-                v-model="teambuyDetail.rank"
-                style="width: 200px"
-              ></InputNumber>
-            </FormItem>
-          </i-col>
-          <i-col span="12">
-            <FormItem label="限购次数:" prop="triesLimit">
-              <InputNumber
-                v-model="teambuyDetail.triesLimit"
-                :min="0"
-                style="width: 200px"
-                placeholder="默认999"
-              ></InputNumber>
-            </FormItem>
-          </i-col>
-        </Row>
-        <Row>
-          <i-col span="12">
-            <FormItem label="库存数量:" prop="productNum">
-              <InputNumber
-                v-model="teambuyDetail.productNum"
-                placeholder="库存数量"
-                style="width: 200px"
-              ></InputNumber>
-            </FormItem>
-          </i-col>
-          <i-col span="12">
-            <FormItem label="已售份数:" prop="saleQuantity">
-              <InputNumber
-                v-model="teambuyDetail.saleQuantity"
-                :min="0"
-                style="width: 200px"
-              ></InputNumber>
-            </FormItem>
-          </i-col>
-        </Row>
-        </Form>
-        </TabPane>
-        <TabPane label="关联门店" :disabled="firstSuccess" name="secondStep">
-          <Form
-            ref="editFormSecond"
-            :model="teambuyDetail"
-            :rules="ruleInline"
-            :label-width="130"
-          >
-            <Row>
-              <i-col span="12">
-                <FormItem label="关联门店:">
-                  <Select
-                    v-model="teambuyDetail.relationStoreType"
-                    style="width: 200px"
-                  >
-                    <Option
-                      v-for="item in relationStoreTypeEnum"
-                      :key="item.value"
-                      :value="item.value"
-                      class="ptb2-5"
-                      style="padding-left: 5px"
-                      @click.native="selectStore(item)"
+                </i-col>
+                <i-col span="12">
+                  <FormItem label="限购次数:" prop="triesLimit">
+                    <InputNumber
+                      v-model="teambuyDetail.triesLimit"
+                      :min="0"
+                      style="width: 200px"
+                      placeholder="默认999"
+                    ></InputNumber>
+                  </FormItem>
+                </i-col>
+              </Row>
+              <Row>
+                <i-col span="12">
+                  <FormItem label="库存数量:" prop="productNum">
+                    <InputNumber
+                      v-model="teambuyDetail.productNum"
+                      placeholder="库存数量"
+                      style="width: 200px"
+                    ></InputNumber>
+                  </FormItem>
+                </i-col>
+                <i-col span="12">
+                  <FormItem label="已售份数:" prop="saleQuantity">
+                    <InputNumber
+                      v-model="teambuyDetail.saleQuantity"
+                      :min="0"
+                      style="width: 200px"
+                    ></InputNumber>
+                  </FormItem>
+                </i-col>
+              </Row>
+            </Form>
+          </TabPane>
+          <TabPane label="关联门店" :disabled="firstSuccess" name="secondStep">
+            <Form
+              ref="editFormSecond"
+              :model="teambuyDetail"
+              :rules="ruleInline"
+              :label-width="130"
+            >
+              <Row>
+                <i-col span="12">
+                  <FormItem label="关联门店:">
+                    <Select
+                      v-model="teambuyDetail.relationStoreType"
+                      style="width: 200px"
                     >
-                      {{ item.label }}
-                    </Option>
-                  </Select>
-                </FormItem>
-              </i-col>
-              <i-col span="12">
-                <FormItem label="红包活动设置:" prop="rewardActivitySetting">
-                  <Select
-                    v-model="teambuyDetail.rewardActivitySetting"
-                    style="width: 200px"
-                  >
-                    <Option
-                      v-for="item in rewardActivitySettingEnum"
-                      :key="item.value"
-                      :value="item.value"
-                      class="ptb2-5"
-                      style="padding-left: 5px"
+                      <Option
+                        v-for="item in relationStoreTypeEnum"
+                        :key="item.value"
+                        :value="item.value"
+                        class="ptb2-5"
+                        style="padding-left: 5px"
+                        @click.native="selectStore(item)"
+                      >
+                        {{ item.label }}
+                      </Option>
+                    </Select>
+                  </FormItem>
+                </i-col>
+                <i-col span="12">
+                  <FormItem label="红包活动设置:" prop="rewardActivitySetting">
+                    <Select
+                      v-model="teambuyDetail.rewardActivitySetting"
+                      style="width: 200px"
                     >
-                      {{ item.label }}
-                    </Option>
-                  </Select>
-                </FormItem>
-              </i-col>
-            </Row>
-            <Row v-show="showStoreList">
-              <i-col span="24">
-                <FormItem>
-                  <div
-                    style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
-                  >
-                    <div style="margin-left: -54px; margin-right: 18px">
-                      {{ storeNameList[0] }}
-                    </div>
-                    <Checkbox
-                      :indeterminate="indeterminate"
-                      :value="checkAll"
-                      @click.prevent.native="handleCheckAll(0)"
-                    >
-                      全选/反选
-                    </Checkbox>
-                  </div>
-                  <CheckboxGroup
-                    v-model="storeIds"
-                    @on-change="checkAllGroupChange"
-                  >
-                    <Checkbox
-                      v-for="item in storeData"
-                      ref="checkBox"
-                      :key="item.storeId"
-                      :label="item.storeId"
-                    >
-                      {{ item.storeName }}
-                    </Checkbox>
-                  </CheckboxGroup>
-                </FormItem>
-              </i-col>
-              <i-col span="24">
-                <FormItem>
-                  <div
-                    style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
-                  >
-                    <div style="margin-left: -54px; margin-right: 18px">
-                      {{ storeNameList[1] }}
-                    </div>
-                    <Checkbox
-                      :indeterminate="indeterminate1"
-                      :value="checkAll1"
-                      @click.prevent.native="handleCheckAll(1)"
-                    >
-                      全选/反选
-                    </Checkbox>
-                  </div>
-                  <CheckboxGroup
-                    v-model="storeIds"
-                    @on-change="checkAllGroupChange1"
-                  >
-                    <Checkbox
-                      v-for="item in storeData1"
-                      ref="checkBox"
-                      :key="item.storeId"
-                      :label="item.storeId"
-                    >
-                      {{ item.storeName }}
-                    </Checkbox>
-                  </CheckboxGroup>
-                </FormItem>
-              </i-col>
-              <i-col span="24">
-                <FormItem>
-                  <div
-                    style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
-                  >
-                    <div style="margin-left: -54px; margin-right: 18px">
-                      {{ storeNameList[2] }}
-                    </div>
-                    <Checkbox
-                      :indeterminate="indeterminate2"
-                      :value="checkAll2"
-                      @click.prevent.native="handleCheckAll(2)"
-                    >
-                      全选/反选
-                    </Checkbox>
-                  </div>
-                  <CheckboxGroup
-                    v-model="storeIds"
-                    @on-change="checkAllGroupChange2"
-                  >
-                    <Checkbox
-                      v-for="item in storeData2"
-                      ref="checkBox"
-                      :key="item.storeId"
-                      :label="item.storeId"
-                    >
-                      {{ item.storeName }}
-                    </Checkbox>
-                  </CheckboxGroup>
-                </FormItem>
-              </i-col>
-              <i-col span="24">
-                <FormItem>
-                  <div
-                    style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
-                  >
-                    <div style="margin-left: -54px; margin-right: 18px">
-                      {{ storeNameList[3] }}
-                    </div>
-                    <Checkbox
-                      :indeterminate="indeterminate3"
-                      :value="checkAll3"
-                      @click.prevent.native="handleCheckAll(3)"
-                    >
-                      全选/反选
-                    </Checkbox>
-                  </div>
-                  <CheckboxGroup
-                    v-model="storeIds"
-                    @on-change="checkAllGroupChange3"
-                  >
-                    <Checkbox
-                      v-for="item in storeData3"
-                      ref="checkBox"
-                      :key="item.storeId"
-                      :label="item.storeId"
-                    >
-                      {{ item.storeName }}
-                    </Checkbox>
-                  </CheckboxGroup>
-                </FormItem>
-              </i-col>
-              <i-col span="24">
-                <FormItem>
-                  <div
-                    style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
-                  >
-                    <div style="margin-left: -54px; margin-right: 18px">
-                      {{ storeNameList[4] }}
-                    </div>
-                    <Checkbox
-                      :indeterminate="indeterminate4"
-                      :value="checkAll4"
-                      @click.prevent.native="handleCheckAll(4)"
-                    >
-                      全选/反选
-                    </Checkbox>
-                  </div>
-                  <CheckboxGroup
-                    v-model="storeIds"
-                    @on-change="checkAllGroupChange4"
-                  >
-                    <Checkbox
-                      v-for="item in storeData4"
-                      ref="checkBox"
-                      :key="item.storeId"
-                      :label="item.storeId"
-                    >
-                      {{ item.storeName }}
-                    </Checkbox>
-                  </CheckboxGroup>
-                </FormItem>
-              </i-col>
-              <i-col span="24">
-                <FormItem>
-                  <div
-                    style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
-                  >
-                    <div style="margin-left: -54px; margin-right: 18px">
-                      {{ storeNameList[5] }}
-                    </div>
-                    <Checkbox
-                      :indeterminate="indeterminate5"
-                      :value="checkAll5"
-                      @click.prevent.native="handleCheckAll(5)"
-                    >
-                      全选/反选
-                    </Checkbox>
-                  </div>
-                  <CheckboxGroup
-                    v-model="storeIds"
-                    @on-change="checkAllGroupChange5"
-                  >
-                    <Checkbox
-                      v-for="item in storeData5"
-                      ref="checkBox"
-                      :key="item.storeId"
-                      :label="item.storeId"
-                    >
-                      {{ item.storeName }}
-                    </Checkbox>
-                  </CheckboxGroup>
-                </FormItem>
-              </i-col>
-              <i-col span="24">
-                <FormItem>
-                  <div
-                    style="
-                        border-bottom: 1px solid #e9e9e9;
-                        padding-bottom: 6px;
-                        margin-bottom: 6px;
-                        display: flex;
-                      "
-                  >
-                    <div style="margin-left: -54px; margin-right: 18px">
-                      {{ storeNameList[6] }}
-                    </div>
-                    <Checkbox
-                      :indeterminate="indeterminate6"
-                      :value="checkAll6"
-                      @click.prevent.native="handleCheckAll(6)"
-                    >
-                      全选/反选
-                    </Checkbox>
-                  </div>
-                  <CheckboxGroup
-                    v-model="storeIds"
-                    @on-change="checkAllGroupChange6"
-                  >
-                    <Checkbox
-                      v-for="item in storeData6"
-                      ref="checkBox"
-                      :key="item.storeId"
-                      :label="item.storeId"
-                    >
-                      {{ item.storeName }}
-                    </Checkbox>
-                  </CheckboxGroup>
-                </FormItem>
-              </i-col>
-              <!-- <i-col span="24">
+                      <Option
+                        v-for="item in rewardActivitySettingEnum"
+                        :key="item.value"
+                        :value="item.value"
+                        class="ptb2-5"
+                        style="padding-left: 5px"
+                      >
+                        {{ item.label }}
+                      </Option>
+                    </Select>
+                  </FormItem>
+                </i-col>
+              </Row>
+              <Row v-show="showStoreList">
+                <i-col span="24">
                   <FormItem>
                     <div
-                      style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                      style="
+                        border-bottom: 1px solid #e9e9e9;
+                        padding-bottom: 6px;
+                        margin-bottom: 6px;
+                        display: flex;
+                      "
                     >
-                      <div style="margin-left:-54px;margin-right:18px">{{storeNameList[7]}}</div>
+                      <div style="margin-left: -54px; margin-right: 18px">
+                        {{ storeNameList[0] }}
+                      </div>
                       <Checkbox
-                        :indeterminate="indeterminate7"
-                        :value="checkAll7"
-                        @click.prevent.native="handleCheckAll(7)"
-                      >全选/反选</Checkbox>
+                        :indeterminate="indeterminate"
+                        :value="checkAll"
+                        @click.prevent.native="handleCheckAll(0)"
+                      >
+                        全选/反选
+                      </Checkbox>
                     </div>
-                    <CheckboxGroup v-model="storeIds" @on-change="checkAllGroupChange7">
+                    <CheckboxGroup
+                      v-model="storeIds"
+                      @on-change="checkAllGroupChange"
+                    >
                       <Checkbox
-                        v-for="item in storeData7"
+                        v-for="item in storeData"
                         ref="checkBox"
                         :key="item.storeId"
                         :label="item.storeId"
-                      >{{ item.storeName }}</Checkbox>
+                      >
+                        {{ item.storeName }}
+                      </Checkbox>
                     </CheckboxGroup>
                   </FormItem>
-                </i-col>-->
-            </Row>
-          </Form>
-        </TabPane>
+                </i-col>
+                <i-col span="24">
+                  <FormItem>
+                    <div
+                      style="
+                      border-bottom: 1px solid #e9e9e9;
+                      padding-bottom: 6px;
+                      margin-bottom: 6px;
+                      display: flex;
+                      "
+                    >
+                      <div style="margin-left: -54px; margin-right: 18px">
+                        {{ storeNameList[1] }}
+                      </div>
+                      <Checkbox
+                        :indeterminate="indeterminate1"
+                        :value="checkAll1"
+                        @click.prevent.native="handleCheckAll(1)"
+                      >
+                        全选/反选
+                      </Checkbox>
+                    </div>
+                    <CheckboxGroup
+                      v-model="storeIds"
+                      @on-change="checkAllGroupChange1"
+                    >
+                      <Checkbox
+                        v-for="item in storeData1"
+                        ref="checkBox"
+                        :key="item.storeId"
+                        :label="item.storeId"
+                      >
+                        {{ item.storeName }}
+                      </Checkbox>
+                    </CheckboxGroup>
+                  </FormItem>
+                </i-col>
+                <i-col span="24">
+                  <FormItem>
+                    <div
+                      style="
+                      border-bottom: 1px solid #e9e9e9;
+                      padding-bottom: 6px;
+                      margin-bottom: 6px;
+                      display: flex;
+                      "
+                    >
+                      <div style="margin-left: -54px; margin-right: 18px">
+                        {{ storeNameList[2] }}
+                      </div>
+                      <Checkbox
+                        :indeterminate="indeterminate2"
+                        :value="checkAll2"
+                        @click.prevent.native="handleCheckAll(2)"
+                      >
+                        全选/反选
+                      </Checkbox>
+                    </div>
+                    <CheckboxGroup
+                      v-model="storeIds"
+                      @on-change="checkAllGroupChange2"
+                    >
+                      <Checkbox
+                        v-for="item in storeData2"
+                        ref="checkBox"
+                        :key="item.storeId"
+                        :label="item.storeId"
+                      >
+                        {{ item.storeName }}
+                      </Checkbox>
+                    </CheckboxGroup>
+                  </FormItem>
+                </i-col>
+                <i-col span="24">
+                  <FormItem>
+                    <div
+                      style="
+                      border-bottom: 1px solid #e9e9e9;
+                      padding-bottom: 6px;
+                      margin-bottom: 6px;
+                      display: flex;
+                      "
+                    >
+                      <div style="margin-left: -54px; margin-right: 18px">
+                        {{ storeNameList[3] }}
+                      </div>
+                      <Checkbox
+                        :indeterminate="indeterminate3"
+                        :value="checkAll3"
+                        @click.prevent.native="handleCheckAll(3)"
+                      >
+                        全选/反选
+                      </Checkbox>
+                    </div>
+                    <CheckboxGroup
+                      v-model="storeIds"
+                      @on-change="checkAllGroupChange3"
+                    >
+                      <Checkbox
+                        v-for="item in storeData3"
+                        ref="checkBox"
+                        :key="item.storeId"
+                        :label="item.storeId"
+                      >
+                        {{ item.storeName }}
+                      </Checkbox>
+                    </CheckboxGroup>
+                  </FormItem>
+                </i-col>
+                <i-col span="24">
+                  <FormItem>
+                    <div
+                      style="
+                      border-bottom: 1px solid #e9e9e9;
+                      padding-bottom: 6px;
+                      margin-bottom: 6px;
+                      display: flex;
+                      "
+                    >
+                      <div style="margin-left: -54px; margin-right: 18px">
+                        {{ storeNameList[4] }}
+                      </div>
+                      <Checkbox
+                        :indeterminate="indeterminate4"
+                        :value="checkAll4"
+                        @click.prevent.native="handleCheckAll(4)"
+                      >
+                        全选/反选
+                      </Checkbox>
+                    </div>
+                    <CheckboxGroup
+                      v-model="storeIds"
+                      @on-change="checkAllGroupChange4"
+                    >
+                      <Checkbox
+                        v-for="item in storeData4"
+                        ref="checkBox"
+                        :key="item.storeId"
+                        :label="item.storeId"
+                      >
+                        {{ item.storeName }}
+                      </Checkbox>
+                    </CheckboxGroup>
+                  </FormItem>
+                </i-col>
+                <i-col span="24">
+                  <FormItem>
+                    <div
+                      style="
+                      border-bottom: 1px solid #e9e9e9;
+                      padding-bottom: 6px;
+                      margin-bottom: 6px;
+                      display: flex;
+                      "
+                    >
+                      <div style="margin-left: -54px; margin-right: 18px">
+                        {{ storeNameList[5] }}
+                      </div>
+                      <Checkbox
+                        :indeterminate="indeterminate5"
+                        :value="checkAll5"
+                        @click.prevent.native="handleCheckAll(5)"
+                      >
+                        全选/反选
+                      </Checkbox>
+                    </div>
+                    <CheckboxGroup
+                      v-model="storeIds"
+                      @on-change="checkAllGroupChange5"
+                    >
+                      <Checkbox
+                        v-for="item in storeData5"
+                        ref="checkBox"
+                        :key="item.storeId"
+                        :label="item.storeId"
+                      >
+                        {{ item.storeName }}
+                      </Checkbox>
+                    </CheckboxGroup>
+                  </FormItem>
+                </i-col>
+                <i-col span="24">
+                  <FormItem>
+                    <div
+                      style="
+                    border-bottom: 1px solid #e9e9e9;
+                    padding-bottom: 6px;
+                    margin-bottom: 6px;
+                    display: flex;
+                    "
+                    >
+                      <div style="margin-left: -54px; margin-right: 18px">
+                        {{ storeNameList[6] }}
+                      </div>
+                      <Checkbox
+                        :indeterminate="indeterminate6"
+                        :value="checkAll6"
+                        @click.prevent.native="handleCheckAll(6)"
+                      >
+                        全选/反选
+                      </Checkbox>
+                    </div>
+                    <CheckboxGroup
+                      v-model="storeIds"
+                      @on-change="checkAllGroupChange6"
+                    >
+                      <Checkbox
+                        v-for="item in storeData6"
+                        ref="checkBox"
+                        :key="item.storeId"
+                        :label="item.storeId"
+                      >
+                        {{ item.storeName }}
+                      </Checkbox>
+                    </CheckboxGroup>
+                  </FormItem>
+                </i-col>
+              </Row>
+            </Form>
+          </TabPane>
         </Tabs>
       </div>
       <div slot="footer">
@@ -1466,6 +1459,7 @@
         </div>
       </Card>
     </Modal>
+
     <!-- 商品规格展示 -->
     <Modal v-model="modalGoodsStandard" :mask-closable="false" :width="700">
       <p slot="header">
@@ -1686,13 +1680,13 @@
           </i-col>
         </Row>
         <!-- <Row>
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">SVIP价格:</i-col>
-              <i-col span="16">{{ productStandardDetail.svipPrice | fenToYuanDot2Filters }}</i-col>
-            </Row>
-          </i-col>
-        </Row>-->
+        <i-col span="12">
+          <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+            <i-col span="8">SVIP价格:</i-col>
+            <i-col span="16">{{ productStandardDetail.svipPrice | fenToYuanDot2Filters }}</i-col>
+          </Row>
+        </i-col>
+      </Row>-->
 
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
@@ -3115,6 +3109,14 @@ export default {
       this.teambuyDetail.activityPrice = yuanToFenNumber(value);
       this.teambuyDetail.productProfitPrice =
         this.teambuyDetail.activityPrice - this.teambuyDetail.costPrice;
+      // 活动价修改后，佣金金额也需要跟着变
+      if (!this.teambuyDetail.commissionScale) {
+        return;
+      }
+      this.teambuyDetail.commissionPrice = Math.floor(
+        this.teambuyDetail.activityPrice *
+          (this.teambuyDetail.commissionScale / 100)
+      );
     },
     // singleTeambuyPriceInputNumberOnchange(value) {
     //   this.teambuyDetail.singleTeambuyPrice = yuanToFenNumber(value);
