@@ -690,6 +690,7 @@
                   <Select
                     v-model="addRelationDetail.validDateType"
                     placeholder="券有效期类型"
+                    disabled
                     style=" width: 120px"
                   >
                     <Option
