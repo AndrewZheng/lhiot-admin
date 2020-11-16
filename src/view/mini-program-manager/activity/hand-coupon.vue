@@ -653,7 +653,7 @@
             <Row>
               <i-col span="6">
                 <FormItem
-                  v-if="handCouponTime"
+                  v-if="tempModalType == 'addTemplate'"
                   label="券有效期:"
                   prop="useLimitType"
                 >
@@ -661,14 +661,14 @@
                     v-model="addRelationDetail.validDateType"
                     placeholder="券有效期类型"
                     disabled
-                    style="padding-right: 5px; width: 120px"
+                    style="padding-right: 5px; width: 130px"
                   >
                     <Option
                       v-for="(item, index) in validDateTypeEnum"
                       :key="index"
                       :value="item.value"
                       class="ptb2-5"
-                      style="padding-left: 5px; width: 100px"
+                      style="padding-left: 5px; width: 130px"
                     >
                       {{ item.label }}
                     </Option>
@@ -693,10 +693,7 @@
                 </FormItem>
               </i-col>
               <template
-                v-if="
-                  addRelationDetail.validDateType == 'UN_FIXED_DATE' &&
-                    tempModalType == 'addTemplate'
-                "
+                v-if="addRelationDetail.validDateType == 'UN_FIXED_DATE'"
               >
                 <i-col span="7">
                   <FormItem label="发放券后:" prop="beginDay">
@@ -720,10 +717,7 @@
                 </i-col>
               </template>
               <template
-                v-if="
-                  addRelationDetail.validDateType == 'FIXED_DATE' &&
-                    tempModalType == 'addTemplate'
-                "
+                v-if="addRelationDetail.validDateType == 'FIXED_DATE'"
               >
                 <i-col span="7">
                   <FormItem label="生效时间:" prop="effectiveStartTime">
@@ -2532,6 +2526,7 @@ import {
   couponScopeConvert,
   couponUseLimitConvert,
   userScopeConvert,
+  expandTypeConvert,
   customPlanStatusConvert
 } from '@/libs/converStatus';
 import {
@@ -4682,7 +4677,6 @@ export default {
           this.productStandardDetail = res;
           this.modalGoodsStandard = true;
         })
-        .catch((error) => {});
     },
     handleGoodClose() {
       this.loading = false;
