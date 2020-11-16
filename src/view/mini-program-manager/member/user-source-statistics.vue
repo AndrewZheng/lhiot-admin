@@ -211,6 +211,7 @@
         </div>
       </Card>
     </div>
+
     <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
         <span>查看门店物料详情</span>
@@ -300,6 +301,7 @@
         </Button>
       </div>
     </Modal>
+
     <Modal
       v-model="modalEdit"
       :mask-closable="false"
@@ -834,7 +836,7 @@ export default {
     },
     handleStoreId(value) {
       if (value) {
-        const data = value.label.split('-');
+        const data = value.label.trim().split('-');
         this.storeMaterielDetail.storeCode = data[1];
         this.storeMaterielDetail.storeName = data[0];
       }
