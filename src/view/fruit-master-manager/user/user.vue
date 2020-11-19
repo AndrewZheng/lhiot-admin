@@ -61,16 +61,18 @@
             @on-change="endTimeChange"
           />
           <Button v-waves :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
-            <Icon type="md-search"/>&nbsp;搜索
+            <Icon type="md-search" />&nbsp;搜索
           </Button>
           <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-            <Icon type="md-refresh"/>&nbsp;清除条件
+            <Icon type="md-refresh" />&nbsp;清除条件
           </Button>
         </div>
         <div slot="operations">
           <!-- 多类型导出 -->
-          <BookTypeOption v-model="exportType" class="mr5"/>
-          <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
+          <BookTypeOption v-model="exportType" class="mr5" />
+          <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload">
+            <Icon type="md-download" />导出
+          </Button>
           <!-- <Button v-wavestype="success" @click="handleExport('用户信息')"><Icon type="md-cloud-upload"/> 导出（用上面的导出）</Button> -->
         </div>
       </tables>
@@ -96,70 +98,108 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">ID:</i-col>
-              <i-col span="16">{{ userDetail.id }}</i-col>
+              <i-col span="8">
+                ID:
+              </i-col>
+              <i-col span="16">
+                {{ userDetail.id }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">昵称:</i-col>
-              <i-col span="20">{{ userDetail.nickname }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">openid:</i-col>
-              <i-col span="16">{{ userDetail.openId }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">unionid:</i-col>
-              <i-col span="16">{{ userDetail.unionId }}</i-col>
+              <i-col span="4">
+                昵称:
+              </i-col>
+              <i-col span="20">
+                {{ userDetail.nickname }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">性别:</i-col>
-              <i-col span="16">{{ sexComputed }}</i-col>
+              <i-col span="8">
+                openid:
+              </i-col>
+              <i-col span="16">
+                {{ userDetail.openId }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                unionid:
+              </i-col>
+              <i-col span="16">
+                {{ userDetail.unionId }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">余额:</i-col>
-              <i-col span="16">{{ userDetail.balance|fenToYuanDot2Filters }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">积分:</i-col>
-              <i-col span="16">{{ userDetail.point }}</i-col>
+              <i-col span="8">
+                性别:
+              </i-col>
+              <i-col span="16">
+                {{ sexComputed }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">账号状态:</i-col>
-              <i-col span="16">{{ accountStatusComputed }}</i-col>
+              <i-col span="8">
+                余额:
+              </i-col>
+              <i-col span="16">
+                {{ userDetail.balance|fenToYuanDot2Filters }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">注册时间:</i-col>
-              <i-col span="16">{{ userDetail.registerAt }}</i-col>
+              <i-col span="8">
+                积分:
+              </i-col>
+              <i-col span="16">
+                {{ userDetail.point }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                账号状态:
+              </i-col>
+              <i-col span="16">
+                {{ accountStatusComputed }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                注册时间:
+              </i-col>
+              <i-col span="16">
+                {{ userDetail.registerAt }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
   </div>
@@ -337,11 +377,7 @@ export default {
       getUserPages(this.searchRowData).then(res => {
         this.tableData = res.array;
         this.total = res.total;
-        this.loading = false;
-        this.searchLoading = false;
-        this.clearSearchLoading = false;
-      }).catch(error => {
-        console.log(error);
+      }).finally(() => {
         this.loading = false;
         this.searchLoading = false;
         this.clearSearchLoading = false;

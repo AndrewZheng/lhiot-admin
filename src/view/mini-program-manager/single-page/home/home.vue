@@ -617,37 +617,29 @@ export default {
           this.orderTotalData[3].todayNum = res.nowReturnTotal;
           this.orderTotalData[3].yesterdayNum = res.yesReturnTotal;
         })
-        .catch((error) => {});
     },
     // 门店排行
     getStoreRanking(rankingType) {
-      const _this = this;
       rankingType = !rankingType ? 'COUNT_ORDER_AMOUNT' : rankingType;
       storeRanking(rankingType)
         .then((res) => {
           this.storeRank = res;
         })
-        .catch((error) => {});
     },
     getTableData() {
-      const _this = this;
+      this.loading = true;
       productRanking(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
     getGoodsTableData(value) {
-      const _this = this;
       const date = new Date();
       date.setDate(date.getDate());
       var year = date.getFullYear();
@@ -714,12 +706,8 @@ export default {
         .then((res) => {
           this.goodsTableData = res.rows;
           this.goodsTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

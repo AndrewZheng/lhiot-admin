@@ -46,11 +46,13 @@
             >
               <Option
                 v-for="(item,index) in receiveSourceEnum"
-                :value="item.value"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
                 style="padding-left: 5px;width: 100px"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.isConvertCoupon"
@@ -60,11 +62,13 @@
             >
               <Option
                 v-for="(item,index) in isConvertCouponEnum"
-                :value="item.value"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
                 style="padding-left: 5px;width: 110px"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <Button
               :loading="searchLoading"
@@ -123,7 +127,9 @@
           ></tables>
         </Row>
       </div>
-      <Divider orientation="center">填写发送对象手机号</Divider>
+      <Divider orientation="center">
+        填写发送对象手机号
+      </Divider>
       <Form ref="modalSendWord" :model="sendWordToPhone" :label-width="170" :rules="ruleInline">
         <Row>
           <i-col span="15">
@@ -152,151 +158,159 @@
       <b style="color:red">英文逗号</b>
       分隔
       <Row v-show="failPhone.length > 0" class="mt10">
-        <i-col span="6">发送失败手机号：</i-col>
-        <i-col span="22" class="brand-red">{{ failPhone.join(',') }}</i-col>
+        <i-col span="6">
+          发送失败手机号：
+        </i-col>
+        <i-col span="22" class="brand-red">
+          {{ failPhone.join(',') }}
+        </i-col>
       </Row>
       <div slot="footer">
-        <Button @click="handleAddClose">关闭</Button>
-        <Button type="primary" @click="handleSendWordAdd('modalSendWord')">确定</Button>
+        <Button @click="handleAddClose">
+          关闭
+        </Button>
+        <Button type="primary" @click="handleSendWordAdd('modalSendWord')">
+          确定
+        </Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   getCollectWordPages,
   editActivities,
   createActivities,
   getCollectWordRecord,
-  sendCollectWord,
-} from "@/api/mini-program";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+  sendCollectWord
+} from '@/api/mini-program';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 
 const collectWordDetail = {
-  collectWordSettingId: "",
-  giveCollectWordId: "",
-  giveReceiveTime: "",
-  giveStatus: "",
-  giveUserId: "",
-  giveUserName: "",
-  isConvertCoupon: "",
-  receiveSource: "",
-  receiveTime: "",
-  userId: "",
-  userName: "",
-  wordKeyName: "",
+  collectWordSettingId: '',
+  giveCollectWordId: '',
+  giveReceiveTime: '',
+  giveStatus: '',
+  giveUserId: '',
+  giveUserName: '',
+  isConvertCoupon: '',
+  receiveSource: '',
+  receiveTime: '',
+  userId: '',
+  userName: '',
+  wordKeyName: ''
 };
 
 const sendWordToPhone = {
   quantity: 0,
-  phone: "",
-  wordKeyName: "",
+  phone: '',
+  wordKeyName: '',
   id: null,
-  phones: null,
+  phones: null
 };
 
 const roleRowData = {
-  wordKeyName: "",
-  userNamel: "",
-  giveUserName: "",
-  receiveSource: "",
-  isConvertCoupon: "",
+  wordKeyName: '',
+  userNamel: '',
+  giveUserName: '',
+  receiveSource: '',
+  isConvertCoupon: '',
   page: 1,
   rows: 10,
-  sidx: "receiveTime",
-  sort: "desc",
+  sidx: 'receiveTime',
+  sort: 'desc'
 };
 
 export default {
   components: {
-    Tables,
+    Tables
   },
   mixins: [deleteMixin, tableMixin, searchMixin],
   data() {
     return {
       ruleInline: {
         quantity: [
-          { required: true, message: "请输入发送数量" },
+          { required: true, message: '请输入发送数量' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
+                errors.push(new Error('必须为非零整数'));
               }
               callback(errors);
-            },
-          },
+            }
+          }
         ],
         phones: [
           {
             required: true,
-            message: "请输入需发券手机号码，多个号码用英文逗号分隔",
-          },
-        ],
+            message: '请输入需发券手机号码，多个号码用英文逗号分隔'
+          }
+        ]
       },
       columns: [
         {
-          title: "字ID",
-          align: "center",
-          key: "id",
-          width: 80,
+          title: '字ID',
+          align: 'center',
+          key: 'id',
+          width: 80
         },
         {
-          title: "集字名称",
-          align: "center",
-          key: "wordKeyName",
-          minWidth: 30,
+          title: '集字名称',
+          align: 'center',
+          key: 'wordKeyName',
+          minWidth: 30
         },
         {
-          title: "来源",
-          align: "center",
+          title: '来源',
+          align: 'center',
           minWidth: 20,
-          key: "receiveSource",
+          key: 'receiveSource',
           render(h, params, vm) {
             const { row } = params;
-            if (row.receiveSource === "GIVE") {
+            if (row.receiveSource === 'GIVE') {
               return (
                 <div>
-                  <tag color="green">{"赠送"}</tag>
+                  <tag color='green'>{'赠送'}</tag>
                 </div>
               );
             } else {
               return (
                 <div>
-                  <tag color="gold">{"获取"}</tag>
+                  <tag color='gold'>{'获取'}</tag>
                 </div>
               );
             }
-          },
+          }
         },
         {
-          title: "领取时间",
-          align: "center",
-          key: "receiveTime",
-          minWidth: 90,
+          title: '领取时间',
+          align: 'center',
+          key: 'receiveTime',
+          minWidth: 90
         },
         {
-          title: "领取用户名称",
-          align: "center",
-          key: "userName",
-          minWidth: 200,
+          title: '领取用户名称',
+          align: 'center',
+          key: 'userName',
+          minWidth: 200
         },
         {
-          title: "用户手机",
-          align: "center",
-          key: "phone",
-          minWidth: 70,
+          title: '用户手机',
+          align: 'center',
+          key: 'phone',
+          minWidth: 70
         },
         {
-          title: "用户ID",
-          align: "center",
-          key: "userId",
-          minWidth: 60,
+          title: '用户ID',
+          align: 'center',
+          key: 'userId',
+          minWidth: 60
         },
         // {
         //   title: "状态",
@@ -327,76 +341,76 @@ export default {
         //   },
         // },
         {
-          title: "是否兑换券",
-          align: "center",
+          title: '是否兑换券',
+          align: 'center',
           minWidth: 30,
-          key: "isConvertCoupon",
+          key: 'isConvertCoupon',
           render(h, params, vm) {
             const { row } = params;
-            if (row.isConvertCoupon === "YES") {
+            if (row.isConvertCoupon === 'YES') {
               return (
                 <div>
-                  <tag color="cyan">{"是"}</tag>
+                  <tag color='cyan'>{'是'}</tag>
                 </div>
               );
             } else {
               return (
                 <div>
-                  <tag color="blue">{"否"}</tag>
+                  <tag color='blue'>{'否'}</tag>
                 </div>
               );
             }
-          },
-        },
+          }
+        }
       ],
       collectWordColumns: [
         {
-          type: "index",
+          type: 'index',
           width: 60,
-          align: "center",
+          align: 'center'
         },
         {
-          title: "活动ID",
-          align: "center",
-          key: "activitySettingId",
-          minWidth: 5,
+          title: '活动ID',
+          align: 'center',
+          key: 'activitySettingId',
+          minWidth: 5
         },
         {
-          title: "字ID",
-          align: "center",
-          key: "id",
-          minWidth: 5,
+          title: '字ID',
+          align: 'center',
+          key: 'id',
+          minWidth: 5
         },
         {
-          title: "集字名称",
-          align: "center",
-          key: "wordKeyName",
-          minWidth: 5,
+          title: '集字名称',
+          align: 'center',
+          key: 'wordKeyName',
+          minWidth: 5
         },
         {
-          title: "集字发放比例",
-          align: "center",
-          key: "wordKeyScale",
-          minWidth: 5,
+          title: '集字发放比例',
+          align: 'center',
+          key: 'wordKeyScale',
+          minWidth: 5
         },
         {
-          title: "排序",
-          align: "center",
-          key: "rank",
-          minWidth: 5,
-        },
+          title: '排序',
+          align: 'center',
+          key: 'rank',
+          minWidth: 5
+        }
       ],
       receiveSourceEnum: [
-        { label: "赠送", value: "GIVE" },
-        { label: "获取", value: "GET" },
+        { label: '赠送', value: 'GIVE' },
+        { label: '获取', value: 'GET' }
       ],
       giveStatusEnum: [
-        { label: "赠送已领取", value: "YES" },
-        { label: "赠送未领取", value: "NO" },
+        { label: '赠送已领取', value: 'YES' },
+        { label: '赠送未领取', value: 'NO' }
       ],
       isConvertCouponEnum: [
-        { label: "是", value: "YES" },
-        { label: "否", value: "NO" },
+        { label: '是', value: 'YES' },
+        { label: '否', value: 'NO' }
       ],
       collectWordData: [],
       createLoading: false,
@@ -405,7 +419,7 @@ export default {
       failPhone: [],
       searchRowData: _.cloneDeep(roleRowData),
       collectWordDetail: _.cloneDeep(collectWordDetail),
-      sendWordToPhone: _.cloneDeep(sendWordToPhone),
+      sendWordToPhone: _.cloneDeep(sendWordToPhone)
     };
   },
   mounted() {
@@ -422,16 +436,13 @@ export default {
       this.$refs.modalEdit.resetFields();
     },
     getTableData() {
+      this.loading = true;
       getCollectWordPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -442,7 +453,6 @@ export default {
         .then((res) => {
           this.collectWordData = res;
         })
-        .catch((error) => {});
     },
     handleAddClose() {
       this.modalCollectWord = false;
@@ -453,20 +463,20 @@ export default {
     },
     addSendWord() {
       (this.sendWordToPhone = _.cloneDeep(sendWordToPhone)),
-        (this.failPhone = []),
-        this.getCollectWordRecord();
+      (this.failPhone = []),
+      this.getCollectWordRecord();
       this.modalCollectWord = true;
     },
     handleSendWordAdd(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
           if (!this.sendWordToPhone.id) {
-            this.$Message.info("请先选中一条集字数据!");
+            this.$Message.info('请先选中一条集字数据!');
           } else {
             this.sendCollectWord();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -474,24 +484,24 @@ export default {
     sendCollectWord() {
       sendCollectWord(this.sendWordToPhone)
         .then((res) => {
-          console.log("res", res);
-          if (res === "用户不存在") {
+          console.log('res', res);
+          if (res === '用户不存在') {
             return;
           }
           if (res.body.fail.length > 0) {
-            this.$Message.error("部分用户发送失败！");
-            this.sendWordToPhone.phones = "";
+            this.$Message.error('部分用户发送失败！');
+            this.sendWordToPhone.phones = '';
             this.failPhone = res.body.fail;
             this.getTableData();
           } else {
-            this.$Message.success("发送成功!");
+            this.$Message.success('发送成功!');
             this.modalCollectWord = false;
             this.getTableData();
           }
         })
         .catch((error) => {});
-    },
-  },
+    }
+  }
 };
 </script>
 

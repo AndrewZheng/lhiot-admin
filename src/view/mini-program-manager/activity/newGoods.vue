@@ -1664,7 +1664,6 @@ const teambuyRowData = {
   content: ''
 };
 
-//
 const PresellRowData = {
   startTime: null,
   endTime: null,
@@ -1678,16 +1677,19 @@ const PresellRowData = {
   validDateType: null,
   startedFlag: 'true'
 };
+
 const newproductRowData = {
   beginTime: null,
   endTime: null,
   title: '',
+  status: 'ON',
   activityType: 'NEW_TRY_ACTIVITY',
   page: 1,
   rows: 10,
   sidx: 'createTime',
   sort: 'desc'
 };
+
 const templateColumns = [
   {
     type: 'index',
@@ -2457,16 +2459,6 @@ export default {
       startedFlagStatus: [
         { label: '是', value: 'true' },
         { label: '否', value: 'false' }
-      ],
-      validDateTypeEnum: [
-        {
-          label: '绝对时间',
-          value: 'FIXED_DATE'
-        },
-        {
-          label: '相对时间',
-          value: 'UN_FIXED_DATE'
-        }
       ],
       columns: [
         {
@@ -3341,9 +3333,6 @@ export default {
             this.storeListData = this.storeListData.concat(value);
           }
         })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     handleCheckAll(value) {
       const _this = this;
@@ -4121,9 +4110,6 @@ export default {
           this.couponTemplateData = res.rows;
           this.couponTemplateTotal = res.total;
         })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     // 商品列表
     getProductTableData() {
@@ -4154,9 +4140,6 @@ export default {
           this.PresellTableData = res.rows;
           this.PresellTotal = res.total;
         })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     changeCouponPage(page) {
       this.searchTemplateRowData.page = page;

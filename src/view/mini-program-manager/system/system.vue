@@ -35,14 +35,14 @@
               clearable
             ></Input>
             <Cascader
+              v-model="defaultSystemCategoryData"
               change-on-select
               :data="systemCategoryData"
-              v-model="defaultSystemCategoryData"
               class="search-col"
               @on-change="systemCategoryChange1"
             ></Cascader>
             <Button
-              :searchLoading="searchLoading"
+              :search-loading="searchLoading"
               class="search-btn mr5"
               type="primary"
               @click="handleSearch"
@@ -62,11 +62,11 @@
         </div>
         <div slot="operations">
           <Button
+            v-if="this.$route.name === 'small-relation-system'"
             v-waves
             class="search-btn ml5 mr5"
             type="primary"
             @click="goBack"
-            v-if="this.$route.name === 'small-relation-system'"
           >
             <Icon type="ios-arrow-back" />&nbsp;返回
           </Button>
@@ -108,38 +108,11 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">主键ID:</i-col>
-              <i-col span="20">{{ systemDetail.id }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="4">键:</i-col>
-              <i-col span="20">{{ systemDetail.indexName }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="4">值:</i-col>
-              <i-col span="20">{{ systemDetail.indexValue }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row class-name="mb20">
-          <i-col span="24">
-            <Row>
-              <i-col span="4">描述:</i-col>
+              <i-col span="4">
+                主键ID:
+              </i-col>
               <i-col span="20">
-                {{ systemDetail.description }}
-                <img
-                  v-if="showImage"
-                  :src="systemDetail.description"
-                  width="70%"
-                />
+                {{ systemDetail.id }}
               </i-col>
             </Row>
           </i-col>
@@ -147,14 +120,61 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">分类ID:</i-col>
-              <i-col span="20">{{ systemDetail.categoryId }}</i-col>
+              <i-col span="4">
+                键:
+              </i-col>
+              <i-col span="20">
+                {{ systemDetail.indexName }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="4">
+                值:
+              </i-col>
+              <i-col span="20">
+                {{ systemDetail.indexValue }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="4">
+                描述:
+              </i-col>
+              <i-col span="20">
+                {{ systemDetail.description }}
+                <img
+                  v-if="showImage"
+                  :src="systemDetail.description"
+                  width="70%"
+                >
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="4">
+                分类ID:
+              </i-col>
+              <i-col span="20">
+                {{ systemDetail.categoryId }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -166,123 +186,127 @@
         <Form ref="modalEdit" :model="systemDetail" :rules="ruleInline" :label-width="80">
           <Row v-if="tempModalType===modalType.edit">
             <Col span="20">
-              <FormItem label="键:" prop="indexName">
-                <Input v-model="systemDetail.indexName" placeholder="键" disabled></Input>
-              </FormItem>
+            <FormItem label="键:" prop="indexName">
+              <Input v-model="systemDetail.indexName" placeholder="键" disabled></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row v-else-if="tempModalType===modalType.create">
             <Col span="20">
-              <FormItem label="键:" prop="indexName">
-                <Input v-model="systemDetail.indexName" placeholder="键"></Input>
-              </FormItem>
+            <FormItem label="键:" prop="indexName">
+              <Input v-model="systemDetail.indexName" placeholder="键"></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="20">
-              <FormItem label="值:" prop="indexValue">
-                <Input v-model="systemDetail.indexValue" :rows="6" type="textarea" placeholder="值"></Input>
-              </FormItem>
+            <FormItem label="值:" prop="indexValue">
+              <Input v-model="systemDetail.indexValue" :rows="6" type="textarea" placeholder="值"></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="20">
-              <FormItem label="描述:" prop="description">
-                <Input v-model="systemDetail.description" type="textarea" placeholder="描述"></Input>
-                <template v-if="showImage">
-                  <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
-                    <template v-if="item.status === 'finished'">
-                      <div>
-                        <img :src="item.url" />
-                        <div class="demo-upload-list-cover">
-                          <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                          <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
-                        </div>
+            <FormItem label="描述:" prop="description">
+              <Input v-model="systemDetail.description" type="textarea" placeholder="描述"></Input>
+              <template v-if="showImage">
+                <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+                  <template v-if="item.status === 'finished'">
+                    <div>
+                      <img :src="item.url">
+                      <div class="demo-upload-list-cover">
+                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
                       </div>
-                    </template>
-                    <template v-else>
-                      <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                    </template>
-                  </div>
-                </template>
-                <IViewUpload
-                  ref="uploadMain"
-                  :default-list="defaultListMain"
-                  :image-size="imageSize"
-                  @on-success="handleSuccessMain"
-                >
-                  <div slot="content" style="width:58px;height:58px;line-height:58px">
-                    <Icon type="ios-camera" size="20"></Icon>
-                  </div>
-                </IViewUpload>
-              </FormItem>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                  </template>
+                </div>
+              </template>
+              <IViewUpload
+                ref="uploadMain"
+                :default-list="defaultListMain"
+                :image-size="imageSize"
+                @on-success="handleSuccessMain"
+              >
+                <div slot="content" style="width:58px;height:58px;line-height:58px">
+                  <Icon type="ios-camera" size="20"></Icon>
+                </div>
+              </IViewUpload>
+            </FormItem>
             </Col>
           </Row>
           <Row>
-            <Col span="20" v-show="this.$route.name === 'small-relation-system'">
-              <FormItem label="分类ID:" prop="categoryId">
-                <Cascader
-                  disabled
-                  :data="skipData"
-                  v-model="defaultData"
-                  span="21"
-                  @on-change="systemCategoryChange"
-                ></Cascader>
-              </FormItem>
+            <Col v-show="this.$route.name === 'small-relation-system'" span="20">
+            <FormItem label="分类ID:" prop="categoryId">
+              <Cascader
+                v-model="defaultData"
+                disabled
+                :data="skipData"
+                span="21"
+                @on-change="systemCategoryChange"
+              ></Cascader>
+            </FormItem>
             </Col>
-            <Col span="20" v-show="this.$route.name != 'small-relation-system'">
-              <FormItem label="分类ID:" prop="categoryId">
-                <Cascader
-                  change-on-select
-                  :data="systemCategoryData"
-                  v-model="defaultSystemCategoryData"
-                  span="21"
-                  @on-change="systemCategoryChange"
-                ></Cascader>
-              </FormItem>
+            <Col v-show="this.$route.name != 'small-relation-system'" span="20">
+            <FormItem label="分类ID:" prop="categoryId">
+              <Cascader
+                v-model="defaultSystemCategoryData"
+                change-on-select
+                :data="systemCategoryData"
+                span="21"
+                @on-change="systemCategoryChange"
+              ></Cascader>
+            </FormItem>
             </Col>
           </Row>
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
+          确定
+        </Button>
       </div>
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" />
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import IViewUpload from "_c/iview-upload";
-import _ from "lodash";
+import Tables from '_c/tables';
+import IViewUpload from '_c/iview-upload';
+import _ from 'lodash';
 import {
   deleteSystemSetting,
   getSystemSettingPages,
   editSystemSetting,
   createSystemSetting,
   getSystemSettingCategoryTree
-} from "@/api/mini-program";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+} from '@/api/mini-program';
+import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import {
   buildMenu,
   convertTreeCategory,
   convertTree,
   getSmallGoodsStandard
-} from "@/libs/util";
+} from '@/libs/util';
 
 const systemDetail = {
   id: 0,
-  indexName: "",
-  indexValue: "",
-  description: "",
+  indexName: '',
+  indexValue: '',
+  description: '',
   categoryId: 0
 };
 
@@ -309,55 +333,55 @@ export default {
   data() {
     return {
       ruleInline: {
-        indexName: [{ required: true, message: "请输入键" }],
-        indexValue: [{ required: true, message: "请输入值" }],
+        indexName: [{ required: true, message: '请输入键' }],
+        indexValue: [{ required: true, message: '请输入值' }],
         categoryId: [
-          { required: true, message: "请选择分类" },
-          { message: "必须为非零整数", pattern: /^[1-9]\d*$/ }
+          { required: true, message: '请选择分类' },
+          { message: '必须为非零整数', pattern: /^[1-9]\d*$/ }
         ],
-        description: [{ required: true, message: "请输入描述" }]
+        description: [{ required: true, message: '请输入描述' }]
       },
       columns: [
         {
-          type: "selection",
+          type: 'selection',
           width: 60,
-          align: "center",
-          fixed: "left"
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: "ID",
-          key: "id",
-          align: "center",
+          title: 'ID',
+          key: 'id',
+          align: 'center',
           width: 80
         },
         {
-          title: "分类名称",
-          key: "categoriesName",
-          align: "center",
+          title: '分类名称',
+          key: 'categoriesName',
+          align: 'center',
           width: 130
         },
         {
-          title: "键",
-          align: "center",
-          key: "indexName"
+          title: '键',
+          align: 'center',
+          key: 'indexName'
         },
         {
-          title: "值",
-          align: "center",
-          key: "indexValue",
-          type: "html"
+          title: '值',
+          align: 'center',
+          key: 'indexValue',
+          type: 'html'
         },
         {
-          title: "描述",
-          align: "center",
-          key: "description"
+          title: '描述',
+          align: 'center',
+          key: 'description'
         },
         {
-          title: "操作",
-          align: "center",
+          title: '操作',
+          align: 'center',
           width: 180,
-          key: "handle",
-          options: ["view", "edit", "delete"]
+          key: 'handle',
+          options: ['view', 'edit', 'delete']
         }
       ],
       skipData: [],
@@ -393,7 +417,7 @@ export default {
       this.systemDetail.description = null;
     },
     handleSubmit(name) {
-      if (this.$route.name === "small-relation-system") {
+      if (this.$route.name === 'small-relation-system') {
         const systemInfos = getSmallGoodsStandard();
         this.systemDetail.categoryId = systemInfos.id;
       }
@@ -401,7 +425,7 @@ export default {
         if (valid) {
           this.systemDetail.indexValue = this.systemDetail.indexValue.replace(
             /\n|\r/g,
-            "&"
+            '&'
           );
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -411,7 +435,7 @@ export default {
             this.editStore();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -421,7 +445,7 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
@@ -483,7 +507,7 @@ export default {
       this.tempModalType = this.modalType.view;
       this.systemDetail = _.cloneDeep(params.row);
       if (this.systemDetail.description != null) {
-        this.showImage = this.systemDetail.description.indexOf("http") != -1;
+        this.showImage = this.systemDetail.description.indexOf('http') != -1;
       }
       this.modalView = true;
     },
@@ -492,7 +516,7 @@ export default {
       this.tempModalType = this.modalType.edit;
       this.systemDetail = _.cloneDeep(params.row);
       if (this.systemDetail.description != null) {
-        this.showImage = this.systemDetail.description.indexOf("http") != -1;
+        this.showImage = this.systemDetail.description.indexOf('http') != -1;
       }
       this.setDefaultUploadList(this.systemDetail);
       this.defaultGoodsCategoryData = [];
@@ -501,7 +525,7 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
-      if (this.$route.name === "small-relation-system") {
+      if (this.$route.name === 'small-relation-system') {
         const systemInfos = getSmallGoodsStandard();
         this.skipArr = systemInfos;
         this.searchRowData.categoryId = systemInfos.id;
@@ -527,17 +551,13 @@ export default {
               element.indexValue =
                 element.indexValue == null
                   ? null
-                  : element.indexValue.replace(/&/g, "\n");
+                  : element.indexValue.replace(/&/g, '\n');
             });
           }
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -560,9 +580,9 @@ export default {
             this.systemCategoriesTreeList = res.array;
             const menuList = buildMenu(res.array);
             const map = {
-              id: "id",
-              title: "title",
-              children: "children"
+              id: 'id',
+              title: 'title',
+              children: 'children'
             };
             this.systemCategoryData = convertTreeCategory(menuList, map, true);
             this.createLoading = false;
@@ -575,7 +595,7 @@ export default {
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
       if (res.description != null) {
-        const map = { status: "finished", url: "url" };
+        const map = { status: 'finished', url: 'url' };
         const mainImgArr = [];
         map.url = res.description;
         mainImgArr.push(map);

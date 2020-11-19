@@ -57,30 +57,44 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">主键ID:</i-col>
-              <i-col span="20">{{ systemCategoryDetail.id }}</i-col>
+              <i-col span="4">
+                主键ID:
+              </i-col>
+              <i-col span="20">
+                {{ systemCategoryDetail.id }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">分类code:</i-col>
-              <i-col span="20">{{ systemCategoryDetail.categoriesCode }}</i-col>
+              <i-col span="4">
+                分类code:
+              </i-col>
+              <i-col span="20">
+                {{ systemCategoryDetail.categoriesCode }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">分类名称:</i-col>
-              <i-col span="20">{{ systemCategoryDetail.categoriesName }}</i-col>
+              <i-col span="4">
+                分类名称:
+              </i-col>
+              <i-col span="20">
+                {{ systemCategoryDetail.categoriesName }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -121,8 +135,12 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
+          确定
+        </Button>
       </div>
     </Modal>
   </div>
@@ -277,7 +295,6 @@ export default {
       this.deleteTable(params.row.id);
     },
     deleteTable(ids) {
-      this.loading = true;
       deleteSystemSettingCategory({
         ids
       })
@@ -293,10 +310,6 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
-          console.log(err);
-          this.loading = false;
-        });
     },
     handleView(params) {
       this.resetFields();
@@ -311,16 +324,13 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
+      this.loading = true;
       getSystemSettingCategoryPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

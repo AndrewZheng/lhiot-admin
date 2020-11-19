@@ -955,17 +955,13 @@ export default {
           this.searchRowData.endDate
         ).format('YYYY-MM-DD HH:mm:ss');
       }
-
+      this.loading = true;
       getEvaluatePages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

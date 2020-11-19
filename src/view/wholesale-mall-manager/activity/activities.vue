@@ -30,11 +30,12 @@
             >
               <Option
                 v-for="item in activityTypeEnum"
-                :value="item.value"
                 :key="item.value"
+                :value="item.value"
                 class="ptb2-5"
-                >{{ item.label }}</Option
               >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.vaild"
@@ -45,11 +46,12 @@
             >
               <Option
                 v-for="item in activityStatusEnum"
-                :value="item.value"
                 :key="item.value"
+                :value="item.value"
                 class="ptb2-5"
-                >{{ item.label }}</Option
               >
+                {{ item.label }}
+              </Option>
             </Select>
             <DatePicker
               v-model="searchRowData.startTimeBegin"
@@ -137,9 +139,11 @@
       :width="750"
     >
       <p slot="header">
-        <i-col>{{
-          tempModalType === modalType.edit ? "修改活动" : "创建活动"
-        }}</i-col>
+        <i-col>
+          {{
+            tempModalType === modalType.edit ? "修改活动" : "创建活动"
+          }}
+        </i-col>
       </p>
       <div class="modal-content">
         <Form
@@ -159,34 +163,37 @@
                 <Select v-model="activityDetail.activityType">
                   <Option
                     v-for="(item, index) in activityTypeEnum"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px; width: 100%"
-                    >{{ item.label }}</Option
                   >
+                    {{ item.label }}
+                  </Option>
                 </Select>
               </FormItem>
               <FormItem
                 v-show="tempModalType === modalType.edit"
                 label="活动类型:"
                 prop="activityType"
-                >{{
-                  activityDetail.activityType | pfActivityTypeFilter
-                }}</FormItem
               >
+                {{
+                  activityDetail.activityType | pfActivityTypeFilter
+                }}
+              </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="活动状态:" prop="vaild" style="width: 260px">
                 <Select v-model="activityDetail.vaild">
                   <Option
                     v-for="(item, index) in activityStatusEnum"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px; width: 100%"
-                    >{{ item.label }}</Option
                   >
+                    {{ item.label }}
+                  </Option>
                 </Select>
               </FormItem>
             </i-col>
@@ -278,64 +285,70 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit"
-          >确定</Button
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit"
         >
+          确定
+        </Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   deletActivity,
   getActivityPages,
   editActivity,
-  createActivity,
-} from "@/api/wholesale";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+  createActivity
+} from '@/api/wholesale';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import {
   activityStatusConvert,
-  activityTypeConvert,
-} from "@/libs/converStatus";
-import { activityTypeEnum, activityStatusEnum } from "@/libs/enumerate";
-import { setActivity, compareCouponData, compareData } from "@/libs/util";
+  activityTypeConvert
+} from '@/libs/converStatus';
+import { activityTypeEnum, activityStatusEnum } from '@/libs/enumerate';
+import { setActivity, compareCouponData, compareData } from '@/libs/util';
 
 const activityDetail = {
-  activityCode: "",
-  activityDesc: "",
-  activityType: "",
-  linkUrl: "",
-  vaild: "",
+  activityCode: '',
+  activityDesc: '',
+  activityType: '',
+  linkUrl: '',
+  vaild: '',
   endTime: null,
   startTime: null,
-  startTimeBegin: "",
-  startTimeEnd: "",
-  id: "",
+  startTimeBegin: '',
+  startTimeEnd: '',
+  id: ''
 };
 
 const roleRowData = {
   activityCode: null,
   activityDesc: null,
-  vaild: "",
-  startTimeBegin: "",
-  startTimeEnd: "",
+  vaild: '',
+  startTimeBegin: '',
+  startTimeEnd: '',
   endTime: null,
   startTime: null,
   page: 1,
   rows: 20,
-  sidx: "endTime",
-  sort: "desc",
+  sidx: 'endTime',
+  sort: 'desc'
 };
 
 export default {
   components: {
-    Tables,
+    Tables
   },
   mixins: [deleteMixin, tableMixin, searchMixin],
   data() {
@@ -351,76 +364,76 @@ export default {
       searchRowData: _.cloneDeep(roleRowData),
       activityDetail: _.cloneDeep(activityDetail),
       ruleInline: {
-        activityType: [{ required: true, message: "请选择活动类型" }],
-        startTime: [{ required: true, message: "请选择开始时间" }],
-        endTime: [{ required: true, message: "请选择结束时间" }],
-        vaild: [{ required: true, message: "请选择活动状态" }],
+        activityType: [{ required: true, message: '请选择活动类型' }],
+        startTime: [{ required: true, message: '请选择开始时间' }],
+        endTime: [{ required: true, message: '请选择结束时间' }],
+        vaild: [{ required: true, message: '请选择活动状态' }]
       },
       columns: [
         {
-          type: "selection",
+          type: 'selection',
           width: 60,
-          align: "center",
+          align: 'center'
         },
         {
-          title: "活动ID",
-          align: "center",
-          key: "id",
-          minWidth: 90,
+          title: '活动ID',
+          align: 'center',
+          key: 'id',
+          minWidth: 90
         },
         {
-          title: "活动类型",
-          align: "center",
-          key: "activityType",
+          title: '活动类型',
+          align: 'center',
+          key: 'activityType',
           minWidth: 100,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.activityType === "flashsale") {
+            if (row.activityType === 'flashsale') {
               return (
                 <div>
-                  <tag color="primary">限时抢购</tag>
+                  <tag color='primary'>限时抢购</tag>
                 </div>
               );
-            } else if (row.activityType === "registration") {
+            } else if (row.activityType === 'registration') {
               return (
                 <div>
-                  <tag color="pink">注册送礼</tag>
+                  <tag color='pink'>注册送礼</tag>
                 </div>
               );
-            } else if (row.activityType === "recharge") {
+            } else if (row.activityType === 'recharge') {
               return (
                 <div>
-                  <tag color="green">充值活动</tag>
+                  <tag color='green'>充值活动</tag>
                 </div>
               );
             } else {
               return (
                 <div>
-                  <tag color="primary">N/A</tag>
+                  <tag color='primary'>N/A</tag>
                 </div>
               );
             }
-          },
+          }
         },
         {
-          title: "开始时间",
-          align: "center",
-          key: "startTime",
-          minWidth: 160,
+          title: '开始时间',
+          align: 'center',
+          key: 'startTime',
+          minWidth: 160
         },
         {
-          title: "结束时间",
-          align: "center",
-          key: "endTime",
+          title: '结束时间',
+          align: 'center',
+          key: 'endTime',
           minWidth: 220,
           render: (h, params, vm) => {
             const { row } = params;
             if (!compareCouponData(row.endTime)) {
-              return <div style="color:red">{row.endTime + "　已过期"}</div>;
+              return <div style='color:red'>{row.endTime + '　已过期'}</div>;
             } else {
               return <div>{row.endTime}</div>;
             }
-          },
+          }
         },
         // {
         //   title: "活动链接",
@@ -429,46 +442,46 @@ export default {
         //   minWidth: 150
         // },
         {
-          title: "活动描述",
-          align: "center",
+          title: '活动描述',
+          align: 'center',
           minWidth: 220,
-          key: "activityDesc",
+          key: 'activityDesc'
         },
         {
-          title: "活动状态",
-          align: "center",
-          key: "vaild",
+          title: '活动状态',
+          align: 'center',
+          key: 'vaild',
           minWidth: 100,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.vaild === "yes") {
+            if (row.vaild === 'yes') {
               return (
                 <div>
-                  <tag color="success">有效</tag>
+                  <tag color='success'>有效</tag>
                 </div>
               );
-            } else if (row.vaild === "no") {
+            } else if (row.vaild === 'no') {
               return (
                 <div>
-                  <tag color="error">无效</tag>
+                  <tag color='error'>无效</tag>
                 </div>
               );
             }
             return (
               <div>
-                <tag color="primary">N/A</tag>
+                <tag color='primary'>N/A</tag>
               </div>
             );
-          },
+          }
         },
         {
-          title: "操作",
-          align: "center",
+          title: '操作',
+          align: 'center',
           minWidth: 120,
-          key: "handle",
-          options: ["onSale", "edit", "settings"],
-        },
-      ],
+          key: 'handle',
+          options: ['onSale', 'edit', 'settings']
+        }
+      ]
     };
   },
   mounted() {
@@ -478,16 +491,13 @@ export default {
   created() {},
   methods: {
     getTableData() {
+      this.loading = true;
       getActivityPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -499,21 +509,21 @@ export default {
       //   return;
       // }
       setActivity(params.row);
-      let pageName = "wholesale-activity";
+      let pageName = 'wholesale-activity';
       switch (params.row.activityType) {
-        case "flashsale":
-          pageName = "wholesale-flashsale";
+        case 'flashsale':
+          pageName = 'wholesale-flashsale';
           break;
-        case "registration":
-          pageName = "wholesale-register-reward";
+        case 'registration':
+          pageName = 'wholesale-register-reward';
           break;
-        case "recharge":
-          pageName = "wholesale-recharge";
+        case 'recharge':
+          pageName = 'wholesale-recharge';
           break;
       }
       this.turnToPage({
         name: pageName,
-        params: { activityId: params.row.id },
+        params: { activityId: params.row.id }
       });
     },
     handleCreate() {
@@ -535,62 +545,62 @@ export default {
       this.modalEdit = true;
     },
     handleStatus(params) {
-      console.log("选中数据", params.row.activityType, params.row.vaild);
-      let flashsaleIndex = 0;
+      console.log('选中数据', params.row.activityType, params.row.vaild);
+      const flashsaleIndex = 0;
       let registrationIndex = 0;
       let rechargeIndex = 0;
       for (let i = 0; i < this.tableData.length; i++) {
         if (
-          params.row.activityType === "registration" &&
-          params.row.vaild === "no"
+          params.row.activityType === 'registration' &&
+          params.row.vaild === 'no'
         ) {
           if (
-            this.tableData[i].activityType === "registration" &&
-            this.tableData[i].vaild === "yes" &&
+            this.tableData[i].activityType === 'registration' &&
+            this.tableData[i].vaild === 'yes' &&
             compareCouponData(this.tableData[i].endTime) === true
           ) {
             registrationIndex++;
           }
           if (registrationIndex === 1) {
-            this.$Message.info("已有1个有效且开启中的注册送礼活动!");
+            this.$Message.info('已有1个有效且开启中的注册送礼活动!');
             return;
           }
         }
         if (
-          params.row.activityType === "recharge" &&
-          params.row.vaild === "no"
+          params.row.activityType === 'recharge' &&
+          params.row.vaild === 'no'
         ) {
           if (
-            this.tableData[i].activityType === "recharge" &&
-            this.tableData[i].vaild === "yes" &&
+            this.tableData[i].activityType === 'recharge' &&
+            this.tableData[i].vaild === 'yes' &&
             compareCouponData(this.tableData[i].endTime) === true
           ) {
             rechargeIndex++;
           }
           if (rechargeIndex === 1) {
-            this.$Message.info("已有1个有效且开启中的充值送礼活动!");
+            this.$Message.info('已有1个有效且开启中的充值送礼活动!');
             return;
           }
         }
       }
       this.activityDetail = _.cloneDeep(params.row);
-      this.activityDetail.vaild = params.row.vaild === "yes" ? "no" : "yes";
+      this.activityDetail.vaild = params.row.vaild === 'yes' ? 'no' : 'yes';
       this.editActivity();
     },
     handleSubmit() {
       this.$refs.editForm.validate((valid) => {
-        let flashsaleIndex = 0;
+        const flashsaleIndex = 0;
         let registrationIndex = 0;
         let rechargeIndex = 0;
         if (valid) {
           for (let i = 0; i < this.tableData.length; i++) {
             if (
-              this.activityDetail.activityType === "flashsale" &&
-              this.activityDetail.vaild === "yes"
+              this.activityDetail.activityType === 'flashsale' &&
+              this.activityDetail.vaild === 'yes'
             ) {
               if (
-                this.tableData[i].activityType === "flashsale" &&
-                this.tableData[i].vaild === "yes" &&
+                this.tableData[i].activityType === 'flashsale' &&
+                this.tableData[i].vaild === 'yes' &&
                 compareCouponData(this.tableData[i].endTime) === true
               ) {
                 if (
@@ -600,41 +610,41 @@ export default {
                   )
                 ) {
                   this.$Message.error(
-                    "下期限时抢购开始时间必须大于以后活动结束时间!"
+                    '下期限时抢购开始时间必须大于以后活动结束时间!'
                   );
                   return;
                 }
               }
             }
             if (
-              this.activityDetail.activityType === "registration" &&
-              this.activityDetail.vaild === "yes"
+              this.activityDetail.activityType === 'registration' &&
+              this.activityDetail.vaild === 'yes'
             ) {
               if (
-                this.tableData[i].activityType === "registration" &&
-                this.tableData[i].vaild === "yes" &&
+                this.tableData[i].activityType === 'registration' &&
+                this.tableData[i].vaild === 'yes' &&
                 compareCouponData(this.tableData[i].endTime) === true
               ) {
                 registrationIndex++;
               }
               if (registrationIndex === 1) {
-                this.$Message.info("已有1个有效且开启中的注册送礼活动!");
+                this.$Message.info('已有1个有效且开启中的注册送礼活动!');
                 return;
               }
             }
             if (
-              this.activityDetail.activityType === "recharge" &&
-              this.activityDetail.vaild === "yes"
+              this.activityDetail.activityType === 'recharge' &&
+              this.activityDetail.vaild === 'yes'
             ) {
               if (
-                this.tableData[i].activityType === "recharge" &&
-                this.tableData[i].vaild === "yes" &&
+                this.tableData[i].activityType === 'recharge' &&
+                this.tableData[i].vaild === 'yes' &&
                 compareCouponData(this.tableData[i].endTime) === true
               ) {
                 rechargeIndex++;
               }
               if (rechargeIndex === 1) {
-                this.$Message.info("已有1个有效且开启中的充值送礼活动!");
+                this.$Message.info('已有1个有效且开启中的充值送礼活动!');
                 return;
               }
             }
@@ -645,16 +655,16 @@ export default {
             this.editActivity();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
     createActivity() {
       this.modalViewLoading = true;
-      this.activityDetail.id = "";
+      this.activityDetail.id = '';
       createActivity(this.activityDetail)
         .then((res) => {
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .finally(() => {
@@ -697,7 +707,7 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deletActivity({
-        ids,
+        ids
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
@@ -715,8 +725,8 @@ export default {
           console.log(err);
           this.loading = false;
         });
-    },
-  },
+    }
+  }
 };
 </script>
 

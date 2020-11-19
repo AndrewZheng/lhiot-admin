@@ -3025,16 +3025,13 @@ export default {
         this.searchRowData.sidx = 'createTime';
         this.searchRowData.sort = 'desc';
       }
+      this.loading = true;
       getTeamBuyPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -3186,9 +3183,6 @@ export default {
             this.storeListData = this.storeListData.concat(value);
           }
         })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     handleCheckAll(value) {
       const _this = this;
@@ -3648,12 +3642,8 @@ export default {
         .then((res) => {
           this.productData = res.rows;
           this.productTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

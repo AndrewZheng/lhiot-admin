@@ -21,7 +21,9 @@
       >
         <div slot="searchCondition">
           <Row>
-            <i-col style="display: inline-block">¥</i-col>
+            <i-col style="display: inline-block">
+              ¥
+            </i-col>
             <InputNumber
               :min="0"
               :value="minOrderAmountComputed"
@@ -30,7 +32,9 @@
               style="width: 100px"
               @on-change="minOrderAmountChange"
             ></InputNumber>
-            <i-col style="display: inline-block" class>-­­­­­­¥</i-col>
+            <i-col style="display: inline-block" class>
+              -­­­­­­¥
+            </i-col>
             <InputNumber
               :min="0"
               :value="maxOrderAmountComputed"
@@ -48,10 +52,12 @@
             >
               <Option
                 v-for="item in deliveryAtTypeList"
-                :value="item.value"
                 :key="`search-col-${item.value}`"
+                :value="item.value"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <Button
               v-waves
@@ -143,9 +149,9 @@
               <RadioGroup v-model="postageDetail.deliveryTime" :disabled="modalTypeComputed">
                 <Radio
                   v-for="item in minDeliveryAtTypeEnum"
+                  :key="item.value"
                   :label="item.value"
                   :disabled="modalTypeComputed"
-                  :key="item.value"
                 >
                   <span>{{ item.label }}</span>
                 </Radio>
@@ -155,8 +161,8 @@
           <Row>
             <FormItem prop="deliveryRules">
               <tables
-                :columns="tableColumnComputed"
                 v-model="postageDetail.deliveryRules"
+                :columns="tableColumnComputed"
                 border
                 @on-delete="postageRuleTableHandleDelete"
               ></tables>
@@ -176,8 +182,12 @@
         v-if="tempModalType === modalType.create || tempModalType === modalType.edit"
         slot="footer"
       >
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
+          确定
+        </Button>
       </div>
     </Modal>
   </div>
@@ -779,12 +789,8 @@ export default {
             this.postageDetail.deliveryRules = [];
           }
           // this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

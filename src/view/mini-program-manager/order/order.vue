@@ -2098,9 +2098,6 @@ export default {
         .then((res) => {
           this.storeList = res.rows;
         })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     modifyStoreInOrder() {
       // TODO 未测试
@@ -2109,9 +2106,6 @@ export default {
           this.$Message.info('调货成功！');
           this.transferModalView = false;
         })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     resendToHd() {
       // TODO 未测试

@@ -85,26 +85,38 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动ID:</i-col>
-              <i-col span="18">{{ shareDetail.id }}</i-col>
+              <i-col span="6">
+                活动ID:
+              </i-col>
+              <i-col span="18">
+                {{ shareDetail.id }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动名称:</i-col>
-              <i-col span="18">{{ shareDetail.activityName }}</i-col>
+              <i-col span="6">
+                活动名称:
+              </i-col>
+              <i-col span="18">
+                {{ shareDetail.activityName }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动状态:</i-col>
-              <i-col span="18">{{
-                shareDetail.onOff | imageStatusFilter
-              }}</i-col>
+              <i-col span="6">
+                活动状态:
+              </i-col>
+              <i-col span="18">
+                {{
+                  shareDetail.onOff | imageStatusFilter
+                }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -119,7 +131,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">开始时间:</i-col>
+              <i-col span="6">
+                开始时间:
+              </i-col>
               <i-col span="18">
                 {{
                   (this.shareDetail.beginTime = this.$moment(
@@ -133,7 +147,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">结束时间:</i-col>
+              <i-col span="6">
+                结束时间:
+              </i-col>
               <i-col span="18">
                 {{
                   (this.shareDetail.endTime = this.$moment(
@@ -147,23 +163,33 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">创建人:</i-col>
-              <i-col span="18">{{ shareDetail.createBy }}</i-col>
+              <i-col span="6">
+                创建人:
+              </i-col>
+              <i-col span="18">
+                {{ shareDetail.createBy }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">创建时间:</i-col>
-              <i-col span="18">{{ shareDetail.createTime }}</i-col>
+              <i-col span="6">
+                创建时间:
+              </i-col>
+              <i-col span="18">
+                {{ shareDetail.createTime }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">活动规则:</i-col>
+              <i-col span="6">
+                活动规则:
+              </i-col>
               <i-col span="18">
                 <Input
                   :v-if="shareDetail.activityRule"
@@ -177,7 +203,9 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -188,11 +216,13 @@
       :mask-closable="false"
     >
       <p slot="header">
-        <i-col>{{
-          tempModalType === modalType.edit
-            ? "修改板块活动分享配置"
-            : "创建板块活动分享配置"
-        }}</i-col>
+        <i-col>
+          {{
+            tempModalType === modalType.edit
+              ? "修改板块活动分享配置"
+              : "创建板块活动分享配置"
+          }}
+        </i-col>
       </p>
       <div class="modal-content">
         <Row>
@@ -204,157 +234,163 @@
           >
             <Row>
               <Col span="22">
-                <FormItem label="分享页面名称:" prop="sharePageName">
-                  <Input v-model="shareDetail.sharePageName"></Input>
-                </FormItem>
+              <FormItem label="分享页面名称:" prop="sharePageName">
+                <Input v-model="shareDetail.sharePageName"></Input>
+              </FormItem>
               </Col>
             </Row>
             <Row>
               <Col span="22">
-                <FormItem label="分享页面路径:" prop="sharePagePath">
-                  <Input v-model="shareDetail.sharePagePath"></Input>
-                </FormItem>
+              <FormItem label="分享页面路径:" prop="sharePagePath">
+                <Input v-model="shareDetail.sharePagePath"></Input>
+              </FormItem>
               </Col>
             </Row>
             <Row>
               <Col span="22">
-                <FormItem label="分享内容:" prop="shareContext">
-                  <Input v-model="shareDetail.shareContext"></Input>
-                </FormItem>
+              <FormItem label="分享内容:" prop="shareContext">
+                <Input v-model="shareDetail.shareContext"></Input>
+              </FormItem>
               </Col>
             </Row>
             <Row>
               <Col span="22">
-                <!-- <FormItem label="分享图片路径:" prop="shareUrl">
+              <!-- <FormItem label="分享图片路径:" prop="shareUrl">
                   <Input v-model="shareDetail.shareUrl"></Input>
                 </FormItem>-->
-                <p style="color: #ff3861; margin-left: 59px">
-                  请上传JPG&PNG格式的图片!
-                </p>
-                <FormItem label="分享图片:">
-                  <Input
-                    v-show="false"
-                    v-model="shareDetail.shareUrl"
-                    style="width: auto"
-                  ></Input>
-                  <div
-                    v-for="item in uploadListMain"
-                    :key="item.url"
-                    class="demo-upload-list"
-                  >
-                    <template v-if="item.status === 'finished'">
-                      <div>
-                        <img :src="item.url" />
-                        <div class="demo-upload-list-cover">
-                          <Icon
-                            type="ios-eye-outline"
-                            @click.native="handleUploadView(item)"
-                          ></Icon>
-                          <Icon
-                            type="ios-trash-outline"
-                            @click.native="handleRemoveMain(item)"
-                          ></Icon>
-                        </div>
+              <p style="color: #ff3861; margin-left: 59px">
+                请上传JPG&PNG格式的图片!
+              </p>
+              <FormItem label="分享图片:">
+                <Input
+                  v-show="false"
+                  v-model="shareDetail.shareUrl"
+                  style="width: auto"
+                ></Input>
+                <div
+                  v-for="item in uploadListMain"
+                  :key="item.url"
+                  class="demo-upload-list"
+                >
+                  <template v-if="item.status === 'finished'">
+                    <div>
+                      <img :src="item.url">
+                      <div class="demo-upload-list-cover">
+                        <Icon
+                          type="ios-eye-outline"
+                          @click.native="handleUploadView(item)"
+                        ></Icon>
+                        <Icon
+                          type="ios-trash-outline"
+                          @click.native="handleRemoveMain(item)"
+                        ></Icon>
                       </div>
-                    </template>
-                    <template v-else>
-                      <Progress
-                        v-if="item.showProgress"
-                        :percent="item.percentage"
-                        hide-info
-                      ></Progress>
-                    </template>
-                  </div>
-                  <IViewUpload
-                    ref="uploadMain"
-                    :default-list="defaultListMain"
-                    :image-size="imageSize"
-                    group-type="activity_image"
-                    file-dir="activity"
-                    @on-success="handleSuccessMain"
-                  >
-                    <div
-                      slot="content"
-                      style="width: 58px; height: 58px; line-height: 58px"
-                    >
-                      <Icon type="ios-camera" size="20"></Icon>
                     </div>
-                  </IViewUpload>
-                </FormItem>
+                  </template>
+                  <template v-else>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      hide-info
+                    ></Progress>
+                  </template>
+                </div>
+                <IViewUpload
+                  ref="uploadMain"
+                  :default-list="defaultListMain"
+                  :image-size="imageSize"
+                  group-type="activity_image"
+                  file-dir="activity"
+                  @on-success="handleSuccessMain"
+                >
+                  <div
+                    slot="content"
+                    style="width: 58px; height: 58px; line-height: 58px"
+                  >
+                    <Icon type="ios-camera" size="20"></Icon>
+                  </div>
+                </IViewUpload>
+              </FormItem>
               </Col>
             </Row>
             <Row>
               <Col span="22">
-                <FormItem label="分享图片路径:" prop="shareUrl">
-                  <!-- <Input v-model="shareDetail.shareUrl"></Input> -->
-                  <Input
-                    v-model="shareDetail.shareUrl"
-                    :autosize="{ minRows: 3, maxRows: 8 }"
-                    type="textarea"
-                    placeholder="分享图片路径..."
-                    readonly
-                  ></Input>
-                </FormItem>
+              <FormItem label="分享图片路径:" prop="shareUrl">
+                <!-- <Input v-model="shareDetail.shareUrl"></Input> -->
+                <Input
+                  v-model="shareDetail.shareUrl"
+                  :autosize="{ minRows: 3, maxRows: 8 }"
+                  type="textarea"
+                  placeholder="分享图片路径..."
+                  readonly
+                ></Input>
+              </FormItem>
               </Col>
             </Row>
           </Form>
         </Row>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit"
-          >确定</Button
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit"
         >
+          确定
+        </Button>
       </div>
     </Modal>
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" />
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import IViewUpload from "_c/iview-upload";
-import _ from "lodash";
+import Tables from '_c/tables';
+import IViewUpload from '_c/iview-upload';
+import _ from 'lodash';
 import {
   getShareSettingPages,
   deleteShareSetting,
   createShareSettingPages,
-  updateShareSetting,
-} from "@/api/mini-program";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { imageStatusConvert, receiveTypeConvert } from "@/libs/converStatus";
-import { imageStatusEnum, receiveTypeEnum } from "@/libs/enumerate";
+  updateShareSetting
+} from '@/api/mini-program';
+import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import { imageStatusConvert, receiveTypeConvert } from '@/libs/converStatus';
+import { imageStatusEnum, receiveTypeEnum } from '@/libs/enumerate';
 import {
   compareData,
   setSmallCouponActivity,
-  compareCouponData,
-} from "@/libs/util";
+  compareCouponData
+} from '@/libs/util';
 
 const shareDetail = {
-  shareContext: "",
-  sharePageName: "",
-  sharePagePath: "",
-  shareUrl: "",
+  shareContext: '',
+  sharePageName: '',
+  sharePagePath: '',
+  shareUrl: ''
 };
 
 const roleRowData = {
-  shareContext: "",
-  sharePageName: "",
-  sharePagePath: "",
-  shareUrl: "",
+  shareContext: '',
+  sharePageName: '',
+  sharePagePath: '',
+  shareUrl: '',
   page: 1,
-  rows: 10,
+  rows: 10
 };
 
 export default {
   components: {
     Tables,
-    IViewUpload,
+    IViewUpload
   },
   mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
   data() {
@@ -384,10 +420,10 @@ export default {
         //     },
         //   },
         // ],
-        shareContext: [{ required: true, message: "请输入分享内容" }],
-        sharePageName: [{ required: true, message: "请输入分享页面名称" }],
-        sharePagePath: [{ required: true, message: "请输入分享页面路径" }],
-        shareUrl: [{ required: true, message: "请输入分享图片路径" }],
+        shareContext: [{ required: true, message: '请输入分享内容' }],
+        sharePageName: [{ required: true, message: '请输入分享页面名称' }],
+        sharePagePath: [{ required: true, message: '请输入分享页面路径' }],
+        shareUrl: [{ required: true, message: '请输入分享图片路径' }]
       },
       defaultListMain: [],
       uploadListMain: [],
@@ -395,53 +431,53 @@ export default {
       receiveTypeEnum,
       columns: [
         {
-          title: "ID",
-          align: "center",
-          key: "id",
-          width: 60,
+          title: 'ID',
+          align: 'center',
+          key: 'id',
+          width: 60
         },
         {
-          title: "分享页面名称",
-          align: "center",
-          key: "sharePageName",
-          minWidth: 80,
+          title: '分享页面名称',
+          align: 'center',
+          key: 'sharePageName',
+          minWidth: 80
         },
         {
-          title: "分享页面路径",
-          align: "center",
-          key: "sharePagePath",
-          minWidth: 160,
+          title: '分享页面路径',
+          align: 'center',
+          key: 'sharePagePath',
+          minWidth: 160
         },
         {
-          title: "分享内容",
-          align: "center",
-          key: "shareContext",
-          minWidth: 130,
+          title: '分享内容',
+          align: 'center',
+          key: 'shareContext',
+          minWidth: 130
         },
         {
-          title: "分享图片",
-          align: "center",
-          key: "shareUrl",
+          title: '分享图片',
+          align: 'center',
+          key: 'shareUrl',
           minWidth: 80,
           render: (h, params, vm) => {
             const { row } = params;
-            const str = <img src={row.shareUrl} height="60" width="60" />;
+            const str = <img src={row.shareUrl} height='60' width='60' />;
             return <div>{str}</div>;
-          },
+          }
         },
         {
-          title: "分享图片路径",
-          align: "center",
-          key: "shareUrl",
-          minWidth: 180,
+          title: '分享图片路径',
+          align: 'center',
+          key: 'shareUrl',
+          minWidth: 180
         },
         {
-          title: "操作",
-          align: "center",
-          key: "handle",
+          title: '操作',
+          align: 'center',
+          key: 'handle',
           minWidth: 80,
-          options: ["edit", "delete"],
-        },
+          options: ['edit', 'delete']
+        }
       ],
       addTempDataLoading: false,
       tempTableLoading: false,
@@ -449,7 +485,7 @@ export default {
       modalViewLoading: false,
       modalRelation: false,
       searchRowData: _.cloneDeep(roleRowData),
-      shareDetail: _.cloneDeep(shareDetail),
+      shareDetail: _.cloneDeep(shareDetail)
     };
   },
   mounted() {
@@ -479,7 +515,7 @@ export default {
             this.updateShareSetting();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -489,7 +525,7 @@ export default {
         .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
@@ -503,7 +539,7 @@ export default {
         .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
-          this.$Message.success("修改成功!");
+          this.$Message.success('修改成功!');
           this.getTableData();
         })
         .catch(() => {
@@ -523,7 +559,7 @@ export default {
       var rows = params.row;
       setSmallCouponActivity(rows);
       this.turnToPage({
-        name: "small-vip-activities-associated",
+        name: 'small-vip-activities-associated'
       });
     },
     // 删除
@@ -535,7 +571,7 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteShareSetting({
-        ids,
+        ids
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
@@ -547,7 +583,7 @@ export default {
             this.searchRowData.page -= 1;
           }
           this.tableDataSelected = [];
-          this.$Message.success("删除成功!");
+          this.$Message.success('删除成功!');
           this.getTableData();
         })
         .catch((err) => {
@@ -561,7 +597,7 @@ export default {
       this.shareDetail = _.cloneDeep(params.row);
       this.shareDetail.activityRule = this.shareDetail.activityRule.replace(
         /&/g,
-        "\n"
+        '\n'
       );
       this.modalView = true;
     },
@@ -573,16 +609,13 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
+      this.loading = true;
       getShareSettingPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -590,34 +623,34 @@ export default {
     },
     switchStatus(params) {
       this.shareDetail = _.cloneDeep(params.row);
-      if (params.row.onOff === "ON") {
-        this.shareDetail.onOff = "OFF";
+      if (params.row.onOff === 'ON') {
+        this.shareDetail.onOff = 'OFF';
       } else {
-        this.shareDetail.onOff = "ON";
+        this.shareDetail.onOff = 'ON';
       }
       this.loading = true;
       this.editRegister();
     },
     beginTimeChange(value, date) {
       this.shareDetail.beginTime = value;
-      if (this.shareDetail.beginTime.indexOf("T") > -1) {
+      if (this.shareDetail.beginTime.indexOf('T') > -1) {
         this.shareDetail.beginTime = this.$moment(
           this.shareDetail.beginTime
-        ).format("YYYY-MM-DD HH:mm:ss");
+        ).format('YYYY-MM-DD HH:mm:ss');
       }
     },
     endTimeChange(value, date) {
       this.shareDetail.endTime = value;
-      if (this.shareDetail.endTime.indexOf("T") > -1) {
+      if (this.shareDetail.endTime.indexOf('T') > -1) {
         this.shareDetail.endTime = this.$moment(
           this.shareDetail.endTime
-        ).format("YYYY-MM-DD HH:mm:ss");
+        ).format('YYYY-MM-DD HH:mm:ss');
       }
     },
     // 设置编辑商品的图片列表 shareDetail.shareUrl
     setDefaultUploadList(res) {
       if (res.shareUrl != null) {
-        const map = { status: "finished", url: "url" };
+        const map = { status: 'finished', url: 'url' };
         const mainImgArr = [];
         map.url = res.shareUrl;
         mainImgArr.push(map);
@@ -633,8 +666,8 @@ export default {
       this.uploadListMain = fileList;
       this.shareDetail.shareUrl = null;
       this.shareDetail.shareUrl = fileList[0].url;
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -787,12 +787,8 @@ export default {
         .then((res) => {
           this.tableDataMaterial = res.rows;
           this.totalPage = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

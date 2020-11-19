@@ -3802,9 +3802,6 @@ export default {
             this.storeListData = this.storeListData.concat(value);
           }
         })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     handleCheckAll(value) {
       const _this = this;
@@ -4283,11 +4280,9 @@ export default {
             this.modalPhones = false;
           }
         })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     getTableData() {
+      this.loading = true;
       getCouponPagess(this.searchRowData)
         .then((res) => {
           if (this.hdCouponType === '新人注册首单立减券') {
@@ -4300,12 +4295,8 @@ export default {
           }
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -4322,12 +4313,8 @@ export default {
         .then((res) => {
           this.couponTemplateData = res.rows;
           this.couponTemplateTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -4525,12 +4512,8 @@ export default {
         .then((res) => {
           this.hdCouponTemplateData = res.rows;
           this.couponHdTemplateTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

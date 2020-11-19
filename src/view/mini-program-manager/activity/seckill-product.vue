@@ -1293,16 +1293,13 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
+      this.loading = true;
       getSeckillPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1312,17 +1309,12 @@ export default {
       getSeckillProductRelationPages(this.searchRelationRowData)
         .then((res) => {
           // 设置行是否可编辑
-          // if (res && res.rows.length > 0) {
           res.rows.forEach((element) => {
             element.isEdit = false;
           });
           this.relationProducts = res.rows;
-          // }
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

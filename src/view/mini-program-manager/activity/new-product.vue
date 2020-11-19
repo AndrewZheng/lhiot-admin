@@ -1296,16 +1296,13 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
+      this.loading = true;
       getSeckillPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1352,7 +1349,6 @@ export default {
     onRelevance(params) {
       this.tempModalType = null;
       // FIXME 查询商品规格分页信息（后期按钮触发，或者先存储，需要时再调用接口）
-      debugger;
       this.getProductTableData();
       // 查询限时抢购关联商品
       this.searchRelationRowData.activityId = params.row.id;

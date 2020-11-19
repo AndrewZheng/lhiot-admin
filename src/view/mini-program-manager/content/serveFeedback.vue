@@ -167,153 +167,153 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
-import { serviceFeedback, getSystemParameter } from "@/api/mini-program";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { commentScoreConvert } from "@/libs/converStatus";
-import { commentScoreTypeEnum } from "@/libs/enumerate";
+import Tables from '_c/tables';
+import _ from 'lodash';
+import { serviceFeedback, getSystemParameter } from '@/api/mini-program';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import { commentScoreConvert } from '@/libs/converStatus';
+import { commentScoreTypeEnum } from '@/libs/enumerate';
 const activitiesDetail = {};
 
 const roleRowData = {
-  storeName: "",
-  fruitScore: "",
-  serviceScore: "",
-  environmentScore: "",
-  feedbackTitle: "",
-  whetherGiveReceipt: "",
+  storeName: '',
+  fruitScore: '',
+  serviceScore: '',
+  environmentScore: '',
+  feedbackTitle: '',
+  whetherGiveReceipt: '',
   page: 1,
   rows: 10,
-  commentTimeBegin: "",
-  commentTimeEnd: "",
-  sidx: "commentTime",
-  sort: "desc",
+  commentTimeBegin: '',
+  commentTimeEnd: '',
+  sidx: 'commentTime',
+  sort: 'desc'
 };
 
 export default {
   components: {
-    Tables,
+    Tables
   },
   mixins: [deleteMixin, tableMixin, searchMixin],
   data() {
     return {
       columns: [
         {
-          title: "门店",
-          align: "center",
-          key: "storeName",
-          width: "160px",
+          title: '门店',
+          align: 'center',
+          key: 'storeName',
+          width: '160px'
         },
         {
-          title: "用户",
-          align: "center",
-          key: "nickName",
-          width: "150px",
+          title: '用户',
+          align: 'center',
+          key: 'nickName',
+          width: '150px'
         },
         {
-          title: "手机号码",
-          align: "center",
-          key: "phone",
-          width: "130px",
+          title: '手机号码',
+          align: 'center',
+          key: 'phone',
+          width: '130px'
         },
         {
-          title: "评价时间",
-          align: "center",
-          key: "commentTime",
-          width: "120px",
+          title: '评价时间',
+          align: 'center',
+          key: 'commentTime',
+          width: '120px'
         },
         {
-          title: "是否给小票",
-          align: "center",
-          key: "whetherGiveReceipt",
-          width: "110px",
+          title: '是否给小票',
+          align: 'center',
+          key: 'whetherGiveReceipt',
+          width: '110px',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.whetherGiveReceipt === "YES") {
-              return <div>{"是"}</div>;
+            if (row.whetherGiveReceipt === 'YES') {
+              return <div>{'是'}</div>;
             } else {
-              return <div>{"否"}</div>;
+              return <div>{'否'}</div>;
             }
-          },
+          }
         },
         {
-          title: "是否介绍活动",
-          align: "center",
-          key: "whetherIntrActivity",
-          width: "130px",
+          title: '是否介绍活动',
+          align: 'center',
+          key: 'whetherIntrActivity',
+          width: '130px',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.whetherIntrActivity === "YES") {
-              return <div>{"是"}</div>;
+            if (row.whetherIntrActivity === 'YES') {
+              return <div>{'是'}</div>;
             } else {
-              return <div>{"否"}</div>;
+              return <div>{'否'}</div>;
             }
-          },
+          }
         },
         {
-          title: "果品评价",
-          align: "center",
-          key: "fruitScore",
-          width: "100px",
+          title: '果品评价',
+          align: 'center',
+          key: 'fruitScore',
+          width: '100px',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{row.fruitScore + "星"}</div>;
-          },
+            return <div>{row.fruitScore + '星'}</div>;
+          }
         },
         {
-          title: "服务评价",
-          align: "center",
-          width: "100px",
-          key: "serviceScore",
+          title: '服务评价',
+          align: 'center',
+          width: '100px',
+          key: 'serviceScore',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{row.serviceScore + "星"}</div>;
-          },
+            return <div>{row.serviceScore + '星'}</div>;
+          }
         },
         {
-          title: "环境卫生评价",
-          align: "center",
-          width: "130px",
-          key: "environmentScore",
+          title: '环境卫生评价',
+          align: 'center',
+          width: '130px',
+          key: 'environmentScore',
           render: (h, params, vm) => {
             const { row } = params;
-            return <div>{row.environmentScore + "星"}</div>;
-          },
+            return <div>{row.environmentScore + '星'}</div>;
+          }
         },
         {
-          title: "反馈主题",
-          align: "center",
-          key: "feedbackTitle",
-          width: "130px",
+          title: '反馈主题',
+          align: 'center',
+          key: 'feedbackTitle',
+          width: '130px',
           render: (h, params, vm) => {
             const { row } = params;
             if (row.environmentScore) {
               return <div>{row.feedbackTitle}</div>;
             } else {
-              return <div>{"N/A"}</div>;
+              return <div>{'N/A'}</div>;
             }
-          },
+          }
         },
         {
-          title: "反馈内容",
-          align: "center",
-          key: "feedbackContent",
+          title: '反馈内容',
+          align: 'center',
+          key: 'feedbackContent',
           minWidth: 200,
-          tooltip: true,
-        },
+          tooltip: true
+        }
       ],
       istopTypeEnum: [
-        { label: "是", value: "YES" },
-        { label: "否", value: "NO" },
+        { label: '是', value: 'YES' },
+        { label: '否', value: 'NO' }
       ],
       commentScoreTypeEnum,
       feedbackTitleList: [],
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
-      activitiesDetail: _.cloneDeep(activitiesDetail),
+      activitiesDetail: _.cloneDeep(activitiesDetail)
     };
   },
   mounted() {
@@ -331,35 +331,29 @@ export default {
       this.$refs.modalEdit.resetFields();
     },
     getTableData() {
+      this.loading = true;
       serviceFeedback(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
     getSystemParameters() {
-      const code = "FEEDBACK_TITLE_TYPE";
+      const code = 'FEEDBACK_TITLE_TYPE';
       getSystemParameter(code)
         .then((res) => {
           res.systemSettings.forEach((value) => {
-            const map = { label: "label", value: "value" };
+            const map = { label: 'label', value: 'value' };
             map.value = value.indexValue;
             map.label = value.indexValue;
             this.feedbackTitleList.push(map);
           });
         })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     // 导出数据
     handleDownload() {
@@ -375,23 +369,23 @@ export default {
         // 表格数据导出字段翻译
         const _this = this;
         tableData.forEach((item) => {
-          item["environmentScore"] = item["environmentScore"] + "星";
-          item["fruitScore"] = item["fruitScore"] + "星";
-          item["serviceScore"] = item["serviceScore"] + "星";
-          item["whetherGiveReceipt"] =
-            item["whetherGiveReceipt"] === "YES" ? "是" : "否";
-          item["whetherIntrActivity"] =
-            item["whetherIntrActivity"] === "YES" ? "是" : "否";
+          item['environmentScore'] = item['environmentScore'] + '星';
+          item['fruitScore'] = item['fruitScore'] + '星';
+          item['serviceScore'] = item['serviceScore'] + '星';
+          item['whetherGiveReceipt'] =
+            item['whetherGiveReceipt'] === 'YES' ? '是' : '否';
+          item['whetherIntrActivity'] =
+            item['whetherIntrActivity'] === 'YES' ? '是' : '否';
         });
 
-        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+        const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
         this.$refs.tables.handleDownload({
           filename: `服务反馈数据统计-${date}`,
-          data: tableData,
+          data: tableData
         });
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
