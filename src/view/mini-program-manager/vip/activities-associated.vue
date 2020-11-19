@@ -3219,11 +3219,8 @@ export default {
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
