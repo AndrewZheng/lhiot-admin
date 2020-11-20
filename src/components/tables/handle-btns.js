@@ -1658,6 +1658,7 @@ const btns = {
       ]);
     }
   },
+  // 用于区别员工分享和普通用户分享内容设立白名单功能
   upgrade: (h, params, vm) => {
     const {
       row
@@ -1741,80 +1742,79 @@ const btns = {
     const {
       row
     } = params;
-    if (row.phone) {
-      if (row.userType === 'CONSUMER') {
-        return h('Poptip', {
-          props: {
-            confirm: true,
-            transfer: true,
-            title: '将此用户设为员工?',
-            placement: params.index === 0 ? 'right' : 'top'
-          },
-          style: {
-            marginRight: '5px'
-          },
-          on: {
-            'on-ok': () => {
-              vm.$emit('on-staff', params);
-            }
+    if (!row.phone) { return; }
+    if (row.userType === 'CONSUMER') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '将此用户设为员工?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-staff', params);
           }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '设为员工' }
         }, [
-          h('Tooltip', {
-            props: { placement: 'top', transfer: true, content: '设为员工' }
-          }, [
-            h('Button', {
-              props: {
-                type: 'success',
-                size: 'small'
-              }
-            }, [
-              h('Icon', {
-                props: {
-                  type: 'ios-checkmark-circle-outline',
-                  size: 16,
-                  color: '#fff'
-                }
-              })
-            ])
-          ])
-        ]);
-      } else {
-        return h('Poptip', {
-          props: {
-            confirm: true,
-            transfer: true,
-            title: '取消此用户员工特权?',
-            placement: params.index === 0 ? 'right' : 'top'
-          },
-          style: {
-            marginRight: '5px'
-          },
-          on: {
-            'on-ok': () => {
-              vm.$emit('on-staff', params);
+          h('Button', {
+            props: {
+              type: 'success',
+              size: 'small'
             }
-          }
-        }, [
-          h('Tooltip', {
-            props: { placement: 'top', transfer: true, content: '取消员工' }
           }, [
-            h('Button', {
+            h('Icon', {
               props: {
-                type: 'error',
-                size: 'small'
+                type: 'ios-checkmark-circle-outline',
+                size: 16,
+                color: '#fff'
               }
-            }, [
-              h('Icon', {
-                props: {
-                  type: 'ios-close-circle-outline',
-                  size: 16,
-                  color: '#fff'
-                }
-              })
-            ])
+            })
           ])
-        ]);
-      }
+        ])
+      ]);
+    } else {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '取消此用户员工特权?',
+          placement: params.index === 0 ? 'right' : 'top'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-staff', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '取消员工' }
+        }, [
+          h('Button', {
+            props: {
+              type: 'error',
+              size: 'small'
+            }
+          }, [
+            h('Icon', {
+              props: {
+                type: 'ios-close-circle-outline',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
+        ])
+      ]);
     }
   },
   // 评论 置顶
@@ -2134,9 +2134,9 @@ const btns = {
         ])
       ]);
     } else {
-      return "N/A"
+      return 'N/A'
     }
-  },
+  }
 };
 
 export default btns;

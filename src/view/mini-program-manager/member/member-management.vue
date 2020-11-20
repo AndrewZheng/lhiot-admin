@@ -246,19 +246,19 @@ export default {
             if (row.userType === 'CONSUMER') {
               return (
                 <div>
-                  <tag color='blue'>{'普通用户'}</tag>
+                  <tag color='blue'>普通用户</tag>
                 </div>
               );
             } else if (row.userType === 'STAFF') {
               return (
                 <div>
-                  <tag color='gold'>{'员工特权'}</tag>
+                  <tag color='gold'>员工特权</tag>
                 </div>
               );
             } else {
               return (
                 <div>
-                  <tag color='blue'>{'N/A'}</tag>
+                  <tag color='blue'>N/A</tag>
                 </div>
               );
             }
@@ -335,7 +335,6 @@ export default {
           this.$Message.info('操作成功');
           this.getTableData();
         })
-        .catch((error) => {});
     },
     onStaff(params) {
       const rows = params.row;
@@ -357,7 +356,6 @@ export default {
             }, 2000);
           }
         })
-        .catch((error) => {});
     }
   }
 };
