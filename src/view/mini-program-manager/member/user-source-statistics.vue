@@ -220,9 +220,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                ID:
-              </i-col>
+              <i-col span="6"> ID: </i-col>
               <i-col span="18">
                 {{ storeMaterielDetail.id }}
               </i-col>
@@ -232,9 +230,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                物料名称:
-              </i-col>
+              <i-col span="6"> 物料名称: </i-col>
               <i-col span="18">
                 {{ storeMaterielDetail.materielName }}
               </i-col>
@@ -244,9 +240,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                门店名称:
-              </i-col>
+              <i-col span="6"> 门店名称: </i-col>
               <i-col span="18">
                 {{ storeMaterielDetail.storeName }}
               </i-col>
@@ -256,9 +250,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                页面路径:
-              </i-col>
+              <i-col span="6"> 页面路径: </i-col>
               <i-col span="18">
                 {{ storeMaterielDetail.pagePath }}
               </i-col>
@@ -268,9 +260,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                创建时间:
-              </i-col>
+              <i-col span="6"> 创建时间: </i-col>
               <i-col span="18">
                 {{ storeMaterielDetail.createTime }}
               </i-col>
@@ -280,9 +270,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                二维码:
-              </i-col>
+              <i-col span="6"> 二维码: </i-col>
               <i-col v-show="storeMaterielDetail.qrCodePath" span="18">
                 <div
                   class="demo-upload-list"
@@ -296,9 +284,7 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
@@ -339,9 +325,7 @@
           <Row v-if="tempModalType === modalType.edit">
             <Col span="22">
             <FormItem label="已关联门店:" prop="storeName">
-              {{
-                storeMaterielDetail.storeName
-              }}
+              {{ storeMaterielDetail.storeName }}
             </FormItem>
             </Col>
           </Row>
@@ -380,9 +364,7 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"

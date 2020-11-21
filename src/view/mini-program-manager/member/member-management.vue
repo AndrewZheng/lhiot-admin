@@ -27,11 +27,11 @@
             <Select
               v-model="searchRowData.gender"
               placeholder="性别"
-              style="padding-right: 5px;width: 100px"
+              style="padding-right: 5px; width: 100px"
               clearable
             >
               <Option
-                v-for="(item,index) in genderEnum"
+                v-for="(item, index) in genderEnum"
                 :key="index"
                 :value="item.value"
                 class="ptb2-5"
@@ -43,11 +43,11 @@
             <Select
               v-model="searchRowData.isCommunity"
               placeholder="是否社群用户"
-              style="padding-right: 5px;width: 130px"
+              style="padding-right: 5px; width: 130px"
               clearable
             >
               <Option
-                v-for="(item,index) in communityEnum"
+                v-for="(item, index) in communityEnum"
                 :key="index"
                 :value="item.value"
                 class="ptb2-5"
@@ -59,11 +59,11 @@
             <Select
               v-model="searchRowData.userType"
               placeholder="用户类型"
-              style="padding-right: 5px;width: 100px"
+              style="padding-right: 5px; width: 100px"
               clearable
             >
               <Option
-                v-for="(item,index) in userEnum"
+                v-for="(item, index) in userEnum"
                 :key="index"
                 :value="item.value"
                 class="ptb2-5"
@@ -112,7 +112,7 @@
           </Row>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -330,11 +330,10 @@ export default {
         params.row.userClass == 'EXTERIOR' || params.row.userClass == null
           ? 'INTERIOR'
           : 'EXTERIOR';
-      setUserClass(this.userDetail)
-        .then((res) => {
-          this.$Message.info('操作成功');
-          this.getTableData();
-        })
+      setUserClass(this.userDetail).then((res) => {
+        this.$Message.info('操作成功');
+        this.getTableData();
+      });
     },
     onStaff(params) {
       const rows = params.row;
@@ -343,19 +342,18 @@ export default {
       this.userDetail = _.cloneDeep(params.row);
       this.userDetail.userType =
         params.row.userType == 'CONSUMER' ? 'STAFF' : 'CONSUMER';
-      setStaff(this.userDetail)
-        .then((res) => {
-          this.$Message.info('操作成功');
-          this.getTableData();
-          if (this.userDetail.userType === 'STAFF') {
-            setTimeout(function() {
-              setSmallGoodsStandard(rows);
-              _this.turnToPage({
-                name: 'small-member-relation-handCheck'
-              });
-            }, 2000);
-          }
-        })
+      setStaff(this.userDetail).then((res) => {
+        this.$Message.info('操作成功');
+        this.getTableData();
+        if (this.userDetail.userType === 'STAFF') {
+          setTimeout(function() {
+            setSmallGoodsStandard(rows);
+            _this.turnToPage({
+              name: 'small-member-relation-handCheck'
+            });
+          }, 2000);
+        }
+      });
     }
   }
 };

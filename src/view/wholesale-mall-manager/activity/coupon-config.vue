@@ -141,7 +141,9 @@
       <p slot="header">
         <i-col>
           {{
-            tempModalType === modalType.edit ? "修改优惠券配置" : "创建优惠券配置"
+            tempModalType === modalType.edit
+              ? "修改优惠券配置"
+              : "创建优惠券配置"
           }}
         </i-col>
       </p>
@@ -186,9 +188,7 @@
               </FormItem>
             </i-col>
           </Row>
-          <Divider orientation="center">
-            配置信息
-          </Divider>
+          <Divider orientation="center"> 配置信息 </Divider>
           <Row v-show="couponConfig.vaildDays === 0">
             <i-col span="12">
               <FormItem label="生效时间:" prop="effectiveTime">
@@ -262,9 +262,7 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"

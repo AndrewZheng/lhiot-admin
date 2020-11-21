@@ -97,10 +97,7 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
             <Button
-              v-show="
-                this.selectActivityType != 'BUY_COUPON_ACTIVITY' ||
-                  this.total < 1
-              "
+              v-show="selectActivityType != 'BUY_COUPON_ACTIVITY' || total < 1"
               v-waves
               :loading="createLoading"
               type="success"
@@ -145,9 +142,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动ID:
-              </i-col>
+              <i-col span="6"> 活动ID: </i-col>
               <i-col span="18">
                 {{ couponDetail.id }}
               </i-col>
@@ -157,9 +152,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动名称:
-              </i-col>
+              <i-col span="6"> 活动名称: </i-col>
               <i-col span="18">
                 {{ couponDetail.activityName }}
               </i-col>
@@ -169,9 +162,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动规则:
-              </i-col>
+              <i-col span="6"> 活动规则: </i-col>
               <i-col span="18">
                 <Input
                   :v-if="couponDetail.activityRuel"
@@ -186,9 +177,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动内容:
-              </i-col>
+              <i-col span="6"> 活动内容: </i-col>
               <i-col span="18">
                 {{ couponDetail.activityContent }}
               </i-col>
@@ -198,9 +187,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动开关:
-              </i-col>
+              <i-col span="6"> 活动开关: </i-col>
               <i-col v-if="couponDetail.ifEffective === 'VALID'" span="16">
                 <tag color="success">
                   {{ "有效" }}
@@ -215,9 +202,7 @@
                 </tag>
               </i-col>
               <i-col v-else-if="couponDetail.ifEffective === null" span="16">
-                {{
-                  "N/A"
-                }}
+                {{ "N/A" }}
               </i-col>
             </Row>
           </i-col>
@@ -228,13 +213,9 @@
         >
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                首次购买价:
-              </i-col>
+              <i-col span="6"> 首次购买价: </i-col>
               <i-col span="18">
-                {{
-                  couponDetail.buyFirstAmount | fenToYuanDot2Filterss
-                }}
+                {{ couponDetail.buyFirstAmount | fenToYuanDot2Filterss }}
               </i-col>
             </Row>
           </i-col>
@@ -245,13 +226,9 @@
         >
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                购买价:
-              </i-col>
+              <i-col span="6"> 购买价: </i-col>
               <i-col span="18">
-                {{
-                  couponDetail.buyAmount | fenToYuanDot2Filterss
-                }}
+                {{ couponDetail.buyAmount | fenToYuanDot2Filterss }}
               </i-col>
             </Row>
           </i-col>
@@ -259,9 +236,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                开始时间:
-              </i-col>
+              <i-col span="6"> 开始时间: </i-col>
               <i-col span="18">
                 {{ couponDetail.beginTime }}
               </i-col>
@@ -271,9 +246,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                结束时间:
-              </i-col>
+              <i-col span="6"> 结束时间: </i-col>
               <i-col span="18">
                 {{ couponDetail.endTime }}
               </i-col>
@@ -283,9 +256,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                创建人:
-              </i-col>
+              <i-col span="6"> 创建人: </i-col>
               <i-col span="18">
                 {{ couponDetail.createUser }}
               </i-col>
@@ -295,9 +266,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                创建时间:
-              </i-col>
+              <i-col span="6"> 创建时间: </i-col>
               <i-col span="18">
                 {{ couponDetail.createTime }}
               </i-col>
@@ -307,13 +276,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                应用类型:
-              </i-col>
+              <i-col span="6"> 应用类型: </i-col>
               <i-col span="18">
-                {{
-                  couponDetail.applicationType | appTypeFilter
-                }}
+                {{ couponDetail.applicationType | appTypeFilter }}
               </i-col>
             </Row>
           </i-col>
@@ -321,9 +286,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                宣传图片:
-              </i-col>
+              <i-col span="6"> 宣传图片: </i-col>
               <i-col span="18">
                 <img :src="couponDetail.activityImage" style="width: 150px">
               </i-col>
@@ -333,9 +296,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                宣传链接:
-              </i-col>
+              <i-col span="6"> 宣传链接: </i-col>
               <i-col span="18">
                 {{ couponDetail.activityUrl }}
               </i-col>
@@ -344,9 +305,7 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
@@ -358,13 +317,7 @@
     >
       <p slot="header">
         <i-col>
-          {{
-            tempModalType == modalType.edit
-              ? "修改优惠券活动"
-              : tempModalType == modalType.create
-                ? "创建优惠券活动"
-                : "优惠券活动和模板关联"
-          }}
+          {{ isEdit ? "修改优惠券活动": isCreate? "创建优惠券活动": "优惠券活动和模板关联" }}
         </i-col>
       </p>
       <div class="modal-content">
@@ -375,10 +328,7 @@
           :label-width="100"
         >
           <Row
-            v-if="
-              tempModalType == modalType.edit ||
-                tempModalType == modalType.create
-            "
+            v-if="isEdit || isCreate"
           >
             <Row>
               <i-col span="18">
@@ -450,7 +400,10 @@
             </Row>
             <Row v-show="selectActivityType === 'BUY_COUPON_ACTIVITY'">
               <i-col span="6">
-                <p v-if="!couponDetail.buyFirstAmount" style="color:#ff3861;margin-left:18px">
+                <p
+                  v-if="!couponDetail.buyFirstAmount"
+                  style="color: #ff3861; margin-left: 18px"
+                >
                   * 请输入首次购买价(体验价)
                 </p>
                 <FormItem label="首次购买价(体验价):" prop="buyFirstAmount">
@@ -465,7 +418,10 @@
             </Row>
             <Row v-show="selectActivityType === 'BUY_COUPON_ACTIVITY'">
               <i-col span="6">
-                <p v-if="!couponDetail.buyAmount" style="color:#ff3861;margin-left:43px">
+                <p
+                  v-if="!couponDetail.buyAmount"
+                  style="color: #ff3861; margin-left: 43px"
+                >
                   * 请输入购买价
                 </p>
                 <FormItem label="购买价:" prop="buyAmount">
@@ -719,14 +675,11 @@
                         <Icon type="md-add" />&nbsp;关联优惠券模板
                       </Button>
                     </i-col>
-                  </Row>
-                </Form>*Tips：请先选择要关联的优惠券模板，然后输入关联配置信息，若关联多个优惠券模板，则所有的商品配置信息相同，添加完成后可在下方表格修改
+                  </Row> </Form>*Tips：请先选择要关联的优惠券模板，然后输入关联配置信息，若关联多个优惠券模板，则所有的商品配置信息相同，添加完成后可在下方表格修改
               </Card>
             </Row>
 
-            <Divider orientation="center">
-              已关联优惠券模板
-            </Divider>
+            <Divider orientation="center"> 已关联优惠券模板 </Divider>
             <tables
               v-model="relationDetail"
               :columns="relationColumns"
@@ -740,9 +693,7 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
@@ -1541,10 +1492,9 @@ export default {
     },
     getSystemParameters() {
       const code = 'ACTIVITY_COUPON_TYPE';
-      getSystemParameter(code)
-        .then((res) => {
-          this.activityClassify = res.systemSettings;
-        })
+      getSystemParameter(code).then((res) => {
+        this.activityClassify = res.systemSettings;
+      });
     },
     onOff(params) {
       this.couponDetail = this._.cloneDeep(params.row);

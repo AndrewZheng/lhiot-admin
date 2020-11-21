@@ -1,9 +1,7 @@
 <template>
   <div class="m-role">
     <Card style="padding: 20px 0 20px 30px; width: 600px">
-      <h3 class="title">
-        后台统一导出
-      </h3>
+      <h3 class="title">后台统一导出</h3>
       <div class="explort">
         <p style="margin-left: 30px">
           <i style="color: #ff3861">*</i> 数据分类：
@@ -104,9 +102,7 @@
           </p>
         </div>
       </div>
-      <div class="handDownload" @click="handleDownload">
-        导出
-      </div>
+      <div class="handDownload" @click="handleDownload">导出</div>
     </Card>
   </div>
 </template>
@@ -150,16 +146,15 @@ export default {
   methods: {
     getTableData() {
       const projectName = config.classifyTypeB;
-      getUnifyExportList(projectName)
-        .then((res) => {
-          this.exportData = res;
-          res.forEach((value) => {
-            const map = { label: 'label', value: 'value' };
-            map.value = value.id;
-            map.label = value.export_name;
-            this.exportList.push(map);
-          });
-        })
+      getUnifyExportList(projectName).then((res) => {
+        this.exportData = res;
+        res.forEach((value) => {
+          const map = { label: 'label', value: 'value' };
+          map.value = value.id;
+          map.label = value.export_name;
+          this.exportList.push(map);
+        });
+      });
     },
     handSelectExport(val) {
       this.searchRowData = _.cloneDeep(roleRowData);
@@ -201,7 +196,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.title{
+.title {
   margin: -18px 0 30px -18px;
 }
 .explort {

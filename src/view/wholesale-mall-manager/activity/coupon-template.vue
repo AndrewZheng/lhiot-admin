@@ -79,7 +79,13 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="handleCreate">
+          <Button
+            v-waves
+            :loading="createLoading"
+            type="success"
+            class="mr5"
+            @click="handleCreate"
+          >
             <Icon type="md-add" />添加
           </Button>
           <!-- <Poptip
@@ -95,7 +101,7 @@
           </Poptip>-->
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -113,27 +119,41 @@
 
     <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000">
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改优惠券':'创建优惠券' }}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit ? "修改优惠券" : "创建优惠券"
+        }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="couponTemplate" :rules="ruleInline" :label-width="100">
+        <Form
+          ref="editForm"
+          :model="couponTemplate"
+          :rules="ruleInline"
+          :label-width="100"
+        >
           <Row>
             <i-col span="22">
               <FormItem label="优惠券名称:" prop="couponName">
-                <Input v-model="couponTemplate.couponName" placeholder="请输入优惠券名称..."></Input>
+                <Input
+                  v-model="couponTemplate.couponName"
+                  placeholder="请输入优惠券名称..."
+                ></Input>
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="模板类型:" prop="couponType" style="width:200px;">
+              <FormItem
+                label="模板类型:"
+                prop="couponType"
+                style="width: 200px"
+              >
                 <Select v-model="couponTemplate.couponType">
                   <Option
-                    v-for="(item,index) in couponTemplateTypeEnum"
+                    v-for="(item, index) in couponTemplateTypeEnum"
                     :key="index"
                     :value="item.value"
                     class="ptb2-5"
-                    style="padding-left: 5px;width: 100%"
+                    style="padding-left: 5px; width: 100%"
                   >
                     {{ item.label }}
                   </Option>
@@ -141,14 +161,14 @@
               </FormItem>
             </i-col>
             <i-col span="12">
-              <FormItem label="优惠券状态:" prop="vaild" style="width:200px;">
+              <FormItem label="优惠券状态:" prop="vaild" style="width: 200px">
                 <Select v-model="couponTemplate.vaild">
                   <Option
-                    v-for="(item,index) in activityStatusEnum"
+                    v-for="(item, index) in activityStatusEnum"
                     :key="index"
                     :value="item.value"
                     class="ptb2-5"
-                    style="padding-left: 5px;width: 100%"
+                    style="padding-left: 5px; width: 100%"
                   >
                     {{ item.label }}
                   </Option>
@@ -159,22 +179,32 @@
           <Row>
             <i-col span="12">
               <FormItem label="满减金额:" prop="fullFee">
-                <InputNumber :min="0" :value="fullFeeComputed" @on-change="fullFeeOnchange"></InputNumber>
+                <InputNumber
+                  :min="0"
+                  :value="fullFeeComputed"
+                  @on-change="fullFeeOnchange"
+                ></InputNumber>
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="优惠金额:" prop="couponFee">
-                <InputNumber :min="0" :value="couponFeeComputed" @on-change="couponFeeOnchange"></InputNumber>
+                <InputNumber
+                  :min="0"
+                  :value="couponFeeComputed"
+                  @on-change="couponFeeOnchange"
+                ></InputNumber>
               </FormItem>
             </i-col>
           </Row>
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit"
+        >
           确定
         </Button>
       </div>
@@ -395,7 +425,7 @@ export default {
     getTableData() {
       this.loading = true;
       getCouponTemplatePages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })
@@ -425,7 +455,7 @@ export default {
       this.editCouponTemplate();
     },
     handleSubmit() {
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (this.isCreate) {
             this.createCouponTemplate();
@@ -440,7 +470,7 @@ export default {
     createCouponTemplate() {
       this.modalViewLoading = true;
       createCouponTemplate(this.couponTemplate)
-        .then(res => {
+        .then((res) => {
           this.$Message.success('创建成功!');
           this.getTableData();
         })
@@ -452,7 +482,7 @@ export default {
     editCouponTemplate() {
       this.modalViewLoading = true;
       editCouponTemplate(this.couponTemplate)
-        .then(res => {
+        .then((res) => {
           this.getTableData();
         })
         .finally(() => {
@@ -488,7 +518,7 @@ export default {
       deletCouponTemplate({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -500,7 +530,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });

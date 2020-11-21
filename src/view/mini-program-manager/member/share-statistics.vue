@@ -2,12 +2,12 @@
   <div class="m-role">
     <div style="margin-bottom:30px;position: relative;">
       <div class="tabChange">
-        <b data-index="commission" :class=" topStatus=='commission' ? 'hot' : '' " @click="assistDataChange">佣金数据</b>
-        <b data-index="accounts" :class=" topStatus=='accounts' ? 'hot' : '' " @click="assistDataChange">结算数据</b>
-        <b data-index="olaceOrder" :class=" topStatus=='olaceOrder' ? 'hot' : '' " @click="assistDataChange">下单数据</b>
-        <b data-index="pro" :class=" topStatus=='pro' ? 'hot' : '' " @click="assistDataChange">商品数据</b>
-        <b data-index="use" :class=" topStatus=='use' ? 'hot' : '' " @click="assistDataChange">员工数据</b>
-        <b data-index="brokerage" :class=" topStatus=='brokerage' ? 'hot' : '' " @click="assistDataChange">佣金明细</b>
+        <b data-index="commission" :class="topStatus=='commission' ? 'hot' : ''" @click="assistDataChange">佣金数据</b>
+        <b data-index="accounts" :class="topStatus=='accounts' ? 'hot' : ''" @click="assistDataChange">结算数据</b>
+        <b data-index="olaceOrder" :class="topStatus=='olaceOrder' ? 'hot' : ''" @click="assistDataChange">下单数据</b>
+        <b data-index="pro" :class="topStatus=='pro' ? 'hot' : ''" @click="assistDataChange">商品数据</b>
+        <b data-index="use" :class="topStatus=='use' ? 'hot' : ''" @click="assistDataChange">员工数据</b>
+        <b data-index="brokerage" :class="topStatus=='brokerage' ? 'hot' : ''" @click="assistDataChange">佣金明细</b>
       </div>
       <Card v-show="topStatus==='pro'">
         <tables

@@ -96,9 +96,7 @@
           >
             <div slot="searchCondition">
               <div style="display: flex; align-items: center">
-                <h3 style="display: inline-block">
-                  商品点赞/点踩排行
-                </h3>
+                <h3 style="display: inline-block">商品点赞/点踩排行</h3>
                 <div class="seniority">
                   <span
                     data-index="PRAISE"
@@ -145,9 +143,7 @@
         >
           <div slot="searchCondition">
             <div style="display: flex; align-items: center">
-              <h3 style="display: inline-block">
-                商品规格销售排行
-              </h3>
+              <h3 style="display: inline-block">商品规格销售排行</h3>
               <div class="seniority">
                 <span
                   data-index="SALE_COUNT"
@@ -183,9 +179,7 @@
                   {{ item.label }}
                 </Option>
               </Select>
-              <p class="mark" style="margin: 0 10px 0 20px">
-                时间：
-              </p>
+              <p class="mark" style="margin: 0 10px 0 20px">时间：</p>
               <RadioGroup
                 v-model="button"
                 type="button"
@@ -606,25 +600,23 @@ export default {
     // 销售数据
     getOrderTotal() {
       const _this = this;
-      getOrderTotal()
-        .then((res) => {
-          this.orderTotalData[0].todayNum = res.nowSumAmount;
-          this.orderTotalData[0].yesterdayNum = res.yesSumAmount;
-          this.orderTotalData[1].todayNum = res.nowSumTotal;
-          this.orderTotalData[1].yesterdayNum = res.yesSumTotal;
-          this.orderTotalData[2].todayNum = res.nowReturnAmount;
-          this.orderTotalData[2].yesterdayNum = res.yesReturnAmount;
-          this.orderTotalData[3].todayNum = res.nowReturnTotal;
-          this.orderTotalData[3].yesterdayNum = res.yesReturnTotal;
-        })
+      getOrderTotal().then((res) => {
+        this.orderTotalData[0].todayNum = res.nowSumAmount;
+        this.orderTotalData[0].yesterdayNum = res.yesSumAmount;
+        this.orderTotalData[1].todayNum = res.nowSumTotal;
+        this.orderTotalData[1].yesterdayNum = res.yesSumTotal;
+        this.orderTotalData[2].todayNum = res.nowReturnAmount;
+        this.orderTotalData[2].yesterdayNum = res.yesReturnAmount;
+        this.orderTotalData[3].todayNum = res.nowReturnTotal;
+        this.orderTotalData[3].yesterdayNum = res.yesReturnTotal;
+      });
     },
     // 门店排行
     getStoreRanking(rankingType) {
       rankingType = !rankingType ? 'COUNT_ORDER_AMOUNT' : rankingType;
-      storeRanking(rankingType)
-        .then((res) => {
-          this.storeRank = res;
-        })
+      storeRanking(rankingType).then((res) => {
+        this.storeRank = res;
+      });
     },
     getTableData() {
       this.loading = true;

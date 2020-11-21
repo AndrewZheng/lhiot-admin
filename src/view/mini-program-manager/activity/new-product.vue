@@ -111,9 +111,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动ID:
-              </i-col>
+              <i-col span="6"> 活动ID: </i-col>
               <i-col span="18">
                 {{ activitySeckillDetail.id }}
               </i-col>
@@ -123,9 +121,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动名称:
-              </i-col>
+              <i-col span="6"> 活动名称: </i-col>
               <i-col span="18">
                 {{ activitySeckillDetail.title }}
               </i-col>
@@ -135,9 +131,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                开始时间:
-              </i-col>
+              <i-col span="6"> 开始时间: </i-col>
               <i-col span="18">
                 {{ activitySeckillDetail.beginTime }}
               </i-col>
@@ -147,9 +141,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                结束时间:
-              </i-col>
+              <i-col span="6"> 结束时间: </i-col>
               <i-col span="18">
                 {{ activitySeckillDetail.endTime }}
               </i-col>
@@ -159,9 +151,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动状态:
-              </i-col>
+              <i-col span="6"> 活动状态: </i-col>
               <i-col v-if="activitySeckillDetail.status === 'ON'" span="18">
                 <tag color="success">
                   {{ "开启" | imageStatusFilter }}
@@ -181,13 +171,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动每人限购份数:
-              </i-col>
+              <i-col span="6"> 活动每人限购份数: </i-col>
               <i-col span="18">
-                {{
-                  activitySeckillDetail.userActivityLimit
-                }}
+                {{ activitySeckillDetail.userActivityLimit }}
               </i-col>
             </Row>
           </i-col>
@@ -203,9 +189,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                描述:
-              </i-col>
+              <i-col span="6"> 描述: </i-col>
               <i-col span="18">
                 {{ activitySeckillDetail.remark }}
               </i-col>
@@ -214,9 +198,7 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
@@ -229,20 +211,16 @@
       <p slot="header">
         <i-col>
           {{
-            tempModalType == modalType.edit
+            isEdit
               ? "修改新品尝鲜活动"
-              : tempModalType == modalType.create
+              : isCreate
                 ? "创建新品尝鲜活动"
                 : "添加新品尝鲜活动和商品关联"
           }}
         </i-col>
       </p>
       <div class="modal-content">
-        <Row
-          v-if="
-            tempModalType == modalType.edit || tempModalType == modalType.create
-          "
-        >
+        <Row v-if="isEdit || isCreate">
           <Form
             ref="editForm"
             :model="activitySeckillDetail"
@@ -480,14 +458,11 @@
                       <Icon type="md-add" />&nbsp;关联尝鲜商品
                     </Button>
                   </i-col>
-                </Row>
-              </Form>*Tips：请先选择要关联的商品，然后输入关联配置信息，添加完成后可在下方表格修改.
+                </Row> </Form>*Tips：请先选择要关联的商品，然后输入关联配置信息，添加完成后可在下方表格修改.
             </Card>
           </Row>
 
-          <Divider orientation="center">
-            已关联新品尝鲜活动商品
-          </Divider>
+          <Divider orientation="center"> 已关联新品尝鲜活动商品 </Divider>
           <tables
             v-model="relationProducts"
             :columns="relationColumns"
@@ -502,13 +477,9 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
         <Button
-          v-if="
-            tempModalType == modalType.edit || tempModalType == modalType.create
-          "
+          v-if="isEdit || isCreate"
           :loading="modalViewLoading"
           type="primary"
           @click="handleSubmit('editForm')"

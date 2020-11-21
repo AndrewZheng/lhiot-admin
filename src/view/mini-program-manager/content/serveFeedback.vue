@@ -345,15 +345,14 @@ export default {
     },
     getSystemParameters() {
       const code = 'FEEDBACK_TITLE_TYPE';
-      getSystemParameter(code)
-        .then((res) => {
-          res.systemSettings.forEach((value) => {
-            const map = { label: 'label', value: 'value' };
-            map.value = value.indexValue;
-            map.label = value.indexValue;
-            this.feedbackTitleList.push(map);
-          });
-        })
+      getSystemParameter(code).then((res) => {
+        res.systemSettings.forEach((value) => {
+          const map = { label: 'label', value: 'value' };
+          map.value = value.indexValue;
+          map.label = value.indexValue;
+          this.feedbackTitleList.push(map);
+        });
+      });
     },
     // 导出数据
     handleDownload() {

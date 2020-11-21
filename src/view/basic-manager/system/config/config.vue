@@ -77,7 +77,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -99,9 +99,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动ID:
-              </i-col>
+              <i-col span="6"> 活动ID: </i-col>
               <i-col span="18">
                 {{ activitiesDetail.id }}
               </i-col>
@@ -111,9 +109,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动编码:
-              </i-col>
+              <i-col span="6"> 活动编码: </i-col>
               <i-col span="18">
                 {{ activitiesDetail.activityCode }}
               </i-col>
@@ -123,9 +119,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动名称:
-              </i-col>
+              <i-col span="6"> 活动名称: </i-col>
               <i-col span="18">
                 {{ activitiesDetail.activityName }}
               </i-col>
@@ -135,9 +129,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动状态:
-              </i-col>
+              <i-col span="6"> 活动状态: </i-col>
               <i-col span="18">
                 {{ activitiesDetail.onOff | imageStatusFilter }}
               </i-col>
@@ -147,9 +139,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动链接:
-              </i-col>
+              <i-col span="6"> 活动链接: </i-col>
               <i-col span="18">
                 {{ activitiesDetail.activityUrl }}
               </i-col>
@@ -158,18 +148,23 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
     <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000">
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改活动':'创建活动' }}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit ? "修改活动" : "创建活动"
+        }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="activitiesDetail" :rules="ruleInline" :label-width="80">
+        <Form
+          ref="modalEdit"
+          :model="activitiesDetail"
+          :rules="ruleInline"
+          :label-width="80"
+        >
           <Row>
             <Col span="18">
             <FormItem label="活动编码:" prop="activityCode">
@@ -189,11 +184,11 @@
             <FormItem label="活动状态:" prop="onOff">
               <Select v-model="activitiesDetail.onOff" clearable>
                 <Option
-                  v-for="(item,index) in imageStatusEnum"
+                  v-for="(item, index) in imageStatusEnum"
                   :key="index"
                   :value="item.value"
                   class="ptb2-5"
-                  style="padding-left: 5px;width: 100%"
+                  style="padding-left: 5px; width: 100%"
                 >
                   {{ item.label }}
                 </Option>
@@ -211,10 +206,12 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+        >
           确定
         </Button>
       </div>
@@ -347,7 +344,7 @@ export default {
       this.activitiesDetail.storeImage = null;
     },
     handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -364,7 +361,7 @@ export default {
     createActivities() {
       this.modalViewLoading = true;
       createActivities(this.activitiesDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
@@ -377,7 +374,7 @@ export default {
     editActivities() {
       this.modalViewLoading = true;
       editActivities(this.activitiesDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
@@ -407,10 +404,10 @@ export default {
       deleteActivities({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -419,7 +416,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -438,7 +435,7 @@ export default {
     },
     getTableData() {
       getActivitiesPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })

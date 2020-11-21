@@ -168,9 +168,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                预售活动编号:
-              </i-col>
+              <i-col span="6"> 预售活动编号: </i-col>
               <i-col span="18">
                 {{ presellDetail.id }}
               </i-col>
@@ -178,9 +176,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                活动名称:
-              </i-col>
+              <i-col span="6"> 活动名称: </i-col>
               <i-col span="18">
                 {{ presellDetail.activityName }}
               </i-col>
@@ -190,9 +186,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                活动内容:
-              </i-col>
+              <i-col span="6"> 活动内容: </i-col>
               <i-col span="18">
                 {{ presellDetail.content }}
               </i-col>
@@ -200,13 +194,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                活动状态:
-              </i-col>
+              <i-col span="6"> 活动状态: </i-col>
               <i-col v-if="presellDetail.status === 'VALID'" span="18">
-                {{
-                  "上架"
-                }}
+                {{ "上架" }}
               </i-col>
               <i-col v-else span="18">
                 {{ "下架" }}
@@ -217,9 +207,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                排序序号:
-              </i-col>
+              <i-col span="6"> 排序序号: </i-col>
               <i-col span="18">
                 {{ presellDetail.rank }}
               </i-col>
@@ -227,9 +215,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                活动banner:
-              </i-col>
+              <i-col span="6"> 活动banner: </i-col>
               <i-col span="18">
                 <img :src="presellDetail.banner" style="width: 100%">
               </i-col>
@@ -239,9 +225,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                活动开始时间:
-              </i-col>
+              <i-col span="6"> 活动开始时间: </i-col>
               <i-col span="18">
                 {{
                   this.$moment(presellDetail.startTime).format(
@@ -253,9 +237,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                活动结束时间:
-              </i-col>
+              <i-col span="6"> 活动结束时间: </i-col>
               <i-col span="18">
                 {{
                   this.$moment(presellDetail.endTime).format(
@@ -269,9 +251,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                提货时间类型:
-              </i-col>
+              <i-col span="6"> 提货时间类型: </i-col>
               <i-col
                 v-if="presellDetail.validDateType === 'FIXED_DATE'"
                 span="18"
@@ -288,9 +268,7 @@
             span="12"
           >
             <Row>
-              <i-col span="6">
-                几天后提货:
-              </i-col>
+              <i-col span="6"> 几天后提货: </i-col>
               <i-col span="18">
                 {{ presellDetail.beginDay + "天" }}
               </i-col>
@@ -303,9 +281,7 @@
         >
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                提货开始时间:
-              </i-col>
+              <i-col span="6"> 提货开始时间: </i-col>
               <i-col span="18">
                 {{
                   this.$moment(presellDetail.deliveryStartTime).format(
@@ -317,9 +293,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                提货结束时间:
-              </i-col>
+              <i-col span="6"> 提货结束时间: </i-col>
               <i-col v-if="presellDetail.deliveryEndTime" span="18">
                 {{
                   this.$moment(presellDetail.deliveryEndTime).format(
@@ -336,20 +310,14 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                商品规格:
-              </i-col>
+              <i-col span="6"> 商品规格: </i-col>
               <i-col span="18">
                 {{ presellDetail.standardId }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12" style>
-            <Button
-              v-waves
-              type="warning"
-              @click="aboutGoods"
-            >
+            <Button v-waves type="warning" @click="aboutGoods">
               关联商品详情
             </Button>
           </i-col>
@@ -357,9 +325,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                规格描述:
-              </i-col>
+              <i-col span="6"> 规格描述: </i-col>
               <i-col span="18">
                 {{ presellDetail.standardDesc }}
               </i-col>
@@ -369,25 +335,17 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                原价:
-              </i-col>
+              <i-col span="6"> 原价: </i-col>
               <i-col span="18">
-                {{
-                  presellDetail.originalPrice | fenToYuanDot2Filters
-                }}
+                {{ presellDetail.originalPrice | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                活动价:
-              </i-col>
+              <i-col span="6"> 活动价: </i-col>
               <i-col span="18">
-                {{
-                  presellDetail.activityPrice | fenToYuanDot2Filters
-                }}
+                {{ presellDetail.activityPrice | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
@@ -395,25 +353,17 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                成本价:
-              </i-col>
+              <i-col span="6"> 成本价: </i-col>
               <i-col span="18">
-                {{
-                  presellDetail.costPrice | fenToYuanDot2Filters
-                }}
+                {{ presellDetail.costPrice | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                商品毛利:
-              </i-col>
+              <i-col span="6"> 商品毛利: </i-col>
               <i-col span="18">
-                {{
-                  presellDetail.productProfitPrice | fenToYuanDot2Filters
-                }}
+                {{ presellDetail.productProfitPrice | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
@@ -421,9 +371,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                佣金比例:
-              </i-col>
+              <i-col span="6"> 佣金比例: </i-col>
               <i-col span="18">
                 {{ presellDetail.commissionScale + "%" }}
               </i-col>
@@ -431,13 +379,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                佣金金额:
-              </i-col>
+              <i-col span="6"> 佣金金额: </i-col>
               <i-col span="18">
-                {{
-                  presellDetail.commissionPrice | fenToYuanDot2Filters
-                }}
+                {{ presellDetail.commissionPrice | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
@@ -445,9 +389,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                限购次数:
-              </i-col>
+              <i-col span="6"> 限购次数: </i-col>
               <i-col span="18">
                 {{ presellDetail.triesLimit }}
               </i-col>
@@ -463,9 +405,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                库存数量:
-              </i-col>
+              <i-col span="6"> 库存数量: </i-col>
               <i-col span="18">
                 {{ presellDetail.invNum }}
               </i-col>
@@ -473,9 +413,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                已售份数:
-              </i-col>
+              <i-col span="6"> 已售份数: </i-col>
               <i-col span="18">
                 {{ presellDetail.saleQuantity }}
               </i-col>
@@ -485,9 +423,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="3">
-                关联门店:
-              </i-col>
+              <i-col span="3"> 关联门店: </i-col>
               <i-col span="21">
                 {{ showStoreName }}
               </i-col>
@@ -496,9 +432,7 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
@@ -527,9 +461,7 @@
               <Row v-show="tempModalType === modalType.edit">
                 <i-col span="12">
                   <FormItem label="预售ID:" prop="id">
-                    {{
-                      presellDetail.id
-                    }}
+                    {{ presellDetail.id }}
                   </FormItem>
                 </i-col>
               </Row>
@@ -748,9 +680,7 @@
                 </template>
                 <i-col span="12">
                   <FormItem label="原价:">
-                    {{
-                      presellDetail.originalPrice | fenToYuanDot2Filters
-                    }}
+                    {{ presellDetail.originalPrice | fenToYuanDot2Filters }}
                   </FormItem>
                 </i-col>
               </Row>
@@ -801,9 +731,7 @@
                 </i-col> -->
                 <i-col span="12">
                   <FormItem label="成本价:" prop="costPrice">
-                    {{
-                      presellDetail.costPrice | fenToYuanDot2Filters
-                    }}
+                    {{ presellDetail.costPrice | fenToYuanDot2Filters }}
                   </FormItem>
                 </i-col>
                 <i-col span="12">
@@ -816,8 +744,7 @@
               </Row>
               <Row>
                 <p style="color: #ff3861; margin-left: 48px">
-                  * 佣金比例为0~50的整数 (单位%)*
-                  按活动价的比例计算佣金
+                  * 佣金比例为0~50的整数 (单位%)* 按活动价的比例计算佣金
                 </p>
                 <i-col span="12">
                   <FormItem label="佣金比例:" prop="commissionScale">
@@ -835,9 +762,7 @@
                 </i-col>
                 <i-col span="12">
                   <FormItem label="佣金金额:" prop="commissionPrice">
-                    {{
-                      "¥" + presellDetail.commissionPrice / 100
-                    }}
+                    {{ "¥" + presellDetail.commissionPrice / 100 }}
                   </FormItem>
                 </i-col>
               </Row>
@@ -846,18 +771,12 @@
                   span="12"
                   style="margin-left: 130px; margin-bottom: 20px"
                 >
-                  <Button
-                    v-waves
-                    type="warning"
-                    @click="aboutGoods"
-                  >
+                  <Button v-waves type="warning" @click="aboutGoods">
                     关联商品详情
                   </Button>
                 </i-col>
               </Row>
-              <Divider
-                v-show="tempModalType === modalType.edit"
-              >
+              <Divider v-show="tempModalType === modalType.edit">
                 可修改部分
               </Divider>
               <Row>
@@ -1221,9 +1140,7 @@
         </Tabs>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
         <Button
           v-if="step == 'firstStep'"
           :loading="modalViewLoading"
@@ -1320,9 +1237,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品ID:
-              </i-col>
+              <i-col span="8"> 商品ID: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productId }}
               </i-col>
@@ -1330,13 +1245,9 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品名称:
-              </i-col>
+              <i-col span="8"> 商品名称: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.baseProductName
-                }}
+                {{ productStandardDetail.baseProductName }}
               </i-col>
             </Row>
           </i-col>
@@ -1344,9 +1255,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品分类:
-              </i-col>
+              <i-col span="8"> 商品分类: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.groupName }}
               </i-col>
@@ -1354,9 +1263,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                基础单位:
-              </i-col>
+              <i-col span="8"> 基础单位: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.baseUnit }}
               </i-col>
@@ -1366,9 +1273,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品编号:
-              </i-col>
+              <i-col span="8"> 商品编号: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productCode }}
               </i-col>
@@ -1376,9 +1281,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品条码:
-              </i-col>
+              <i-col span="8"> 商品条码: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.baseBarcode }}
               </i-col>
@@ -1388,9 +1291,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品主图:
-              </i-col>
+              <i-col span="8"> 商品主图: </i-col>
               <i-col span="16">
                 <img
                   :src="productStandardDetail.baseImage"
@@ -1404,26 +1305,18 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品描述:
-              </i-col>
+              <i-col span="8"> 商品描述: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.baseProductDescription
-                }}
+                {{ productStandardDetail.baseProductDescription }}
               </i-col>
             </Row>
           </i-col>
         </Row>
-        <Divider orientation="center">
-          商品规格
-        </Divider>
+        <Divider orientation="center"> 商品规格 </Divider>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                上架商品名称:
-              </i-col>
+              <i-col span="8"> 上架商品名称: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productName }}
               </i-col>
@@ -1431,13 +1324,9 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                上架商品描述:
-              </i-col>
+              <i-col span="8"> 上架商品描述: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.productDescription
-                }}
+                {{ productStandardDetail.productDescription }}
               </i-col>
             </Row>
           </i-col>
@@ -1445,9 +1334,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                上架商品主图:
-              </i-col>
+              <i-col span="8"> 上架商品主图: </i-col>
               <i-col v-if="productStandardDetail.image" span="16">
                 <img
                   :src="productStandardDetail.image"
@@ -1469,9 +1356,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品条码:
-              </i-col>
+              <i-col span="8"> 商品条码: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.barcode }}
               </i-col>
@@ -1479,9 +1364,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品状态:
-              </i-col>
+              <i-col span="8"> 商品状态: </i-col>
               <i-col span="16">
                 {{
                   productStandardDetail.shelvesStatus | customPlanStatusFilters
@@ -1493,9 +1376,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品规格:
-              </i-col>
+              <i-col span="8"> 商品规格: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.specification }}
               </i-col>
@@ -1503,9 +1384,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                数量/重量:
-              </i-col>
+              <i-col span="8"> 数量/重量: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.standardQty }}
               </i-col>
@@ -1515,25 +1394,17 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品原价:
-              </i-col>
+              <i-col span="8"> 商品原价: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.price | fenToYuanDot2Filters
-                }}
+                {{ productStandardDetail.price | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                售卖价格:
-              </i-col>
+              <i-col span="8"> 售卖价格: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.salePrice | fenToYuanDot2Filters
-                }}
+                {{ productStandardDetail.salePrice | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
@@ -1550,9 +1421,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品单位:
-              </i-col>
+              <i-col span="8"> 商品单位: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productUnit }}
               </i-col>
@@ -1560,9 +1429,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品排序:
-              </i-col>
+              <i-col span="8"> 商品排序: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.rank }}
               </i-col>
@@ -1571,9 +1438,7 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleGoodsClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleGoodsClose"> 关闭 </Button>
       </div>
     </Modal>
   </div>
@@ -2804,9 +2669,12 @@ export default {
       this.presellDetail.productProfitPrice =
         this.presellDetail.activityPrice - this.presellDetail.costPrice;
       // 活动价修改后，佣金金额也需要跟着变
-      if (!this.presellDetail.commissionScale) { return; }
+      if (!this.presellDetail.commissionScale) {
+        return;
+      }
       this.presellDetail.commissionPrice = Math.floor(
-        this.presellDetail.activityPrice * (this.presellDetail.commissionScale / 100)
+        this.presellDetail.activityPrice *
+          (this.presellDetail.commissionScale / 100)
       );
     },
     singleTeambuyPriceInputNumberOnchange(value) {
@@ -2847,26 +2715,25 @@ export default {
     },
     // TODO 选择门店id方法
     getStore() {
-      getAreaStorePages()
-        .then((res) => {
-          this.storeList = res.array;
-          this.storeData = res.array[0].storeList;
-          this.storeData1 = res.array[1].storeList;
-          this.storeData2 = res.array[2].storeList;
-          this.storeData3 = res.array[3].storeList;
-          this.storeData4 = res.array[4].storeList;
-          this.storeData5 = res.array[5].storeList;
-          this.storeData6 = res.array[6].storeList;
-          // this.storeData7 = res.array[7].storeList;
-          const data = [];
-          for (const val of res.array) {
-            this.storeNameList.push(val.storeName);
-            data.push(val.storeList);
-          }
-          for (const value of data) {
-            this.storeListData = this.storeListData.concat(value);
-          }
-        })
+      getAreaStorePages().then((res) => {
+        this.storeList = res.array;
+        this.storeData = res.array[0].storeList;
+        this.storeData1 = res.array[1].storeList;
+        this.storeData2 = res.array[2].storeList;
+        this.storeData3 = res.array[3].storeList;
+        this.storeData4 = res.array[4].storeList;
+        this.storeData5 = res.array[5].storeList;
+        this.storeData6 = res.array[6].storeList;
+        // this.storeData7 = res.array[7].storeList;
+        const data = [];
+        for (const val of res.array) {
+          this.storeNameList.push(val.storeName);
+          data.push(val.storeList);
+        }
+        for (const value of data) {
+          this.storeListData = this.storeListData.concat(value);
+        }
+      });
     },
     handleCheckAll(value) {
       const _this = this;

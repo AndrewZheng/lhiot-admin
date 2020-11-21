@@ -58,8 +58,7 @@
               :key="item.value"
               :value="item.value"
               class="ptb2-5"
-              >{{ item.label }}</Option
-            >
+            >{{ item.label }}</Option>
           </Select>
           <!-- <Select
             v-model="searchRowData.salesUserId"
@@ -143,103 +142,103 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
+import Tables from '_c/tables';
 import {
   getUserAnalysisPages,
   getAllSalesman,
   editUser,
   deleteUser,
-  createUser,
-} from "@/api/wholesale";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
+  createUser
+} from '@/api/wholesale';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber,
-} from "@/libs/util";
-import { userStatusEnum, sexEnum, userTypeEnum } from "@/libs/enumerate";
+  yuanToFenNumber
+} from '@/libs/util';
+import { userStatusEnum, sexEnum, userTypeEnum } from '@/libs/enumerate';
 import {
   userTypeConvert,
   userStatusConvert,
-  sexConvert,
-} from "@/libs/converStatus";
+  sexConvert
+} from '@/libs/converStatus';
 
 const userAnalysis = {
-  accumulative: "",
-  addressDetail: "",
-  balance: "",
-  city: "",
+  accumulative: '',
+  addressDetail: '',
+  balance: '',
+  city: '',
   id: 0,
-  lastCreateTime: "",
-  lastMonth: "",
-  nickName: "",
-  phone: "",
-  profilePhoto: "",
-  registerTime: "",
-  saleUserName: "",
-  sex: "",
-  shopName: "",
-  thisMonth: "",
-  userName: "",
-  userStatus: "",
+  lastCreateTime: '',
+  lastMonth: '',
+  nickName: '',
+  phone: '',
+  profilePhoto: '',
+  registerTime: '',
+  saleUserName: '',
+  sex: '',
+  shopName: '',
+  thisMonth: '',
+  userName: '',
+  userStatus: ''
 };
 
 const roleRowData = {
-  userName: "",
-  phone: "",
-  userType: "",
+  userName: '',
+  phone: '',
+  userType: '',
   regBeginTime: null,
   regEndTime: null,
-  salesUserId: "7",
-  userStatus: "",
-  salesUserStatus: "",
+  salesUserId: '7',
+  userStatus: '',
+  salesUserStatus: '',
   page: 1,
-  rows: 20,
+  rows: 20
 };
 
 const userColumns = [
   {
-    title: "编号",
-    align: "center",
-    key: "id",
-    minWidth: 40,
+    title: '编号',
+    align: 'center',
+    key: 'id',
+    minWidth: 40
   },
   {
-    title: "门店名称",
-    align: "center",
-    key: "shopName",
-    minWidth: 100,
+    title: '门店名称',
+    align: 'center',
+    key: 'shopName',
+    minWidth: 100
   },
   {
-    title: "门店地址",
-    align: "center",
-    key: "addressDetail",
+    title: '门店地址',
+    align: 'center',
+    key: 'addressDetail',
     minWidth: 100,
     tooltip: true,
     render: (h, params, vm) => {
       const { row } = params;
       return <div>{row.city + row.addressDetail}</div>;
-    },
+    }
   },
   {
-    title: "店长姓名",
-    align: "center",
-    key: "userName",
-    minWidth: 70,
+    title: '店长姓名',
+    align: 'center',
+    key: 'userName',
+    minWidth: 70
   },
   {
-    title: "手机号码",
-    align: "center",
-    key: "phone",
-    minWidth: 80,
+    title: '手机号码',
+    align: 'center',
+    key: 'phone',
+    minWidth: 80
   },
   {
-    title: "注册时间",
-    align: "center",
-    key: "registerTime",
-    minWidth: 70,
+    title: '注册时间',
+    align: 'center',
+    key: 'registerTime',
+    minWidth: 70
   },
   // {
   //   title: "用户类型",
@@ -268,89 +267,89 @@ const userColumns = [
   //   }
   // },
   {
-    title: "上月消费/频次",
-    align: "center",
-    key: "lastMonth",
+    title: '上月消费/频次',
+    align: 'center',
+    key: 'lastMonth',
     minWidth: 80,
     render: (h, params, vm) => {
       const { row } = params;
-      return <div>{row.lastMonth ? row.lastMonth : "N/A"}</div>;
-    },
+      return <div>{row.lastMonth ? row.lastMonth : 'N/A'}</div>;
+    }
   },
   {
-    title: "本月消费/频次",
-    align: "center",
-    key: "thisMonth",
+    title: '本月消费/频次',
+    align: 'center',
+    key: 'thisMonth',
     minWidth: 80,
     render: (h, params, vm) => {
       const { row } = params;
-      return <div>{row.thisMonth ? row.thisMonth : "N/A"}</div>;
-    },
+      return <div>{row.thisMonth ? row.thisMonth : 'N/A'}</div>;
+    }
   },
   {
-    title: "累计消费/频次",
-    align: "center",
-    key: "accumulative",
+    title: '累计消费/频次',
+    align: 'center',
+    key: 'accumulative',
     minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
-      return <div>{row.accumulative ? row.accumulative : "N/A"}</div>;
-    },
+      return <div>{row.accumulative ? row.accumulative : 'N/A'}</div>;
+    }
   },
   {
-    title: "最近消费时间",
-    align: "center",
-    key: "lastCreateTime",
+    title: '最近消费时间',
+    align: 'center',
+    key: 'lastCreateTime',
     minWidth: 130,
     render: (h, params, vm) => {
       const { row } = params;
-      return <div>{row.lastCreateTime ? row.lastCreateTime : "N/A"}</div>;
-    },
+      return <div>{row.lastCreateTime ? row.lastCreateTime : 'N/A'}</div>;
+    }
   },
   {
-    title: "用户状态",
-    align: "center",
-    key: "userStatus",
+    title: '用户状态',
+    align: 'center',
+    key: 'userStatus',
     minWidth: 60,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.userStatus === "certified") {
+      if (row.userStatus === 'certified') {
         return (
           <div>
-            <tag color="success">{userStatusConvert(row.userStatus)}</tag>
+            <tag color='success'>{userStatusConvert(row.userStatus)}</tag>
           </div>
         );
-      } else if (row.userStatus === "locking") {
+      } else if (row.userStatus === 'locking') {
         return (
           <div>
-            <tag color="error">{userStatusConvert(row.userStatus)}</tag>
+            <tag color='error'>{userStatusConvert(row.userStatus)}</tag>
           </div>
         );
-      } else if (row.userStatus === "unaudited") {
+      } else if (row.userStatus === 'unaudited') {
         return (
           <div>
-            <tag color="warning">{userStatusConvert(row.userStatus)}</tag>
+            <tag color='warning'>{userStatusConvert(row.userStatus)}</tag>
           </div>
         );
       }
       return (
         <div>
-          <tag color="primary">{userStatusConvert(row.userStatus)}</tag>
+          <tag color='primary'>{userStatusConvert(row.userStatus)}</tag>
         </div>
       );
-    },
+    }
   },
   {
-    title: "所属业务员",
-    align: "center",
-    key: "saleUserName",
-    minWidth: 60,
-  },
+    title: '所属业务员',
+    align: 'center',
+    key: 'saleUserName',
+    minWidth: 60
+  }
 ];
 
 export default {
   components: {
-    Tables,
+    Tables
   },
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
@@ -366,7 +365,7 @@ export default {
       exportExcelLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       userAnalysis: _.cloneDeep(userAnalysis),
-      columns: userColumns,
+      columns: userColumns
     };
   },
   computed: {
@@ -375,7 +374,7 @@ export default {
     },
     userBalance() {
       return fenToYuanDot2(this.userAnalysis.balance);
-    },
+    }
   },
   created() {
     this.getTableData();
@@ -415,7 +414,7 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error("请完善商品单位信息!");
+          this.$Message.error('请完善商品单位信息!');
         }
       });
     },
@@ -456,7 +455,7 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteUser({
-        ids,
+        ids
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
@@ -488,26 +487,26 @@ export default {
           this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
           tableData.forEach((item) => {
-            item["userType"] =
-              item["userType"] === "sale" ? "业务员" : "普通用户";
-            item["userStatus"] = userStatusConvert(item["userStatus"]);
-            item["salesUserStatus"] = userStatusConvert(
-              item["salesUserStatus"]
+            item['userType'] =
+              item['userType'] === 'sale' ? '业务员' : '普通用户';
+            item['userStatus'] = userStatusConvert(item['userStatus']);
+            item['salesUserStatus'] = userStatusConvert(
+              item['salesUserStatus']
             );
-            item["addressDetail"] = item["city"] + item["addressDetail"];
+            item['addressDetail'] = item['city'] + item['addressDetail'];
             //  row.city + row.addressDetail
           });
-          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+          const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
           this.$refs.tables.handleDownload({
             filename: `会员分析信息-${date}`,
-            data: tableData,
+            data: tableData
           });
         })
         .finally(() => {
           this.exportExcelLoading = false;
         });
-    },
-  },
+    }
+  }
 };
 </script>
 

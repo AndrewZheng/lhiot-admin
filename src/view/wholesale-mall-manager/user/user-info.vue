@@ -215,9 +215,7 @@
           <Row>
             <i-col span="12">
               <FormItem label="门店名称:" prop="shopName">
-                {{
-                  userDetail.shopName
-                }}
+                {{ userDetail.shopName }}
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -230,16 +228,12 @@
           <Row>
             <i-col span="12">
               <FormItem label="手机号码:" prop="phone">
-                {{
-                  userDetail.phone
-                }}
+                {{ userDetail.phone }}
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="微信昵称:" prop="nickname">
-                {{
-                  userDetail.nickname
-                }}
+                {{ userDetail.nickname }}
               </FormItem>
             </i-col>
           </Row>
@@ -254,9 +248,7 @@
                 {{ sexConvertName }}
               </FormItem>
               <FormItem label="余额:" prop="balance">
-                {{
-                  userBalance
-                }}
+                {{ userBalance }}
               </FormItem>
             </i-col>
           </Row>
@@ -282,9 +274,7 @@
             </i-col>
             <i-col span="12">
               <FormItem label="所属业务员:" prop="saleUserName">
-                {{
-                  userDetail.saleUserName
-                }}
+                {{ userDetail.saleUserName }}
               </FormItem>
             </i-col>
           </Row>
@@ -369,9 +359,7 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
@@ -461,9 +449,7 @@
         </div>
       </Card>
       <div slot="footer">
-        <Button @click="modalUser = false">
-          关闭
-        </Button>
+        <Button @click="modalUser = false"> 关闭 </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"

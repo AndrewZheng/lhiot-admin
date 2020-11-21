@@ -50,15 +50,15 @@
             <Select
               v-model="searchRowData.status"
               placeholder="活动状态"
-              style="padding-right: 5px;width: 100px"
+              style="padding-right: 5px; width: 100px"
               clearable
             >
               <Option
-                v-for="(item,index) in couponStatusEnum"
+                v-for="(item, index) in couponStatusEnum"
                 :key="index"
                 :value="item.value"
                 class="ptb2-5"
-                style="padding-left: 5px;width: 100px"
+                style="padding-left: 5px; width: 100px"
               >
                 {{ item.label }}
               </Option>
@@ -105,7 +105,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -127,9 +127,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动标题:
-              </i-col>
+              <i-col span="6"> 活动标题: </i-col>
               <i-col span="18">
                 {{ shareRewardDetail.name }}
               </i-col>
@@ -139,9 +137,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                开始时间:
-              </i-col>
+              <i-col span="6"> 开始时间: </i-col>
               <i-col span="18">
                 {{ shareRewardDetail.startTime }}
               </i-col>
@@ -151,9 +147,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                结束时间:
-              </i-col>
+              <i-col span="6"> 结束时间: </i-col>
               <i-col span="18">
                 {{ shareRewardDetail.endTime }}
               </i-col>
@@ -163,20 +157,24 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动状态:
-              </i-col>
+              <i-col span="6"> 活动状态: </i-col>
               <i-col v-if="shareRewardDetail.status === 'VALID'" span="16">
                 <tag color="success">
                   {{ "有效" }}
                 </tag>
               </i-col>
-              <i-col v-else-if="shareRewardDetail.status === 'INVALID'" span="16">
+              <i-col
+                v-else-if="shareRewardDetail.status === 'INVALID'"
+                span="16"
+              >
                 <tag color="error">
                   {{ "无效" }}
                 </tag>
               </i-col>
-              <i-col v-else-if="shareRewardDetail.status === 'EXPIRE'" span="16">
+              <i-col
+                v-else-if="shareRewardDetail.status === 'EXPIRE'"
+                span="16"
+              >
                 <tag color="primary">
                   {{ "过期" }}
                 </tag>
@@ -190,9 +188,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                分享标题:
-              </i-col>
+              <i-col span="6"> 分享标题: </i-col>
               <i-col span="18">
                 {{ shareRewardDetail.shareName }}
               </i-col>
@@ -202,9 +198,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                分享图片:
-              </i-col>
+              <i-col span="6"> 分享图片: </i-col>
               <i-col span="18">
                 <img :src="shareRewardDetail.shareImageUrl" width="80%">
               </i-col>
@@ -214,9 +208,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                红包个数:
-              </i-col>
+              <i-col span="6"> 红包个数: </i-col>
               <i-col span="18">
                 {{ shareRewardDetail.rewardCount }}
               </i-col>
@@ -226,13 +218,11 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                最大红包位置:
-              </i-col>
-              <i-col
-                span="18"
-              >
-                {{ shareRewardDetail.rewardPositionStart }} -{{ shareRewardDetail.rewardPositionEnd }}
+              <i-col span="6"> 最大红包位置: </i-col>
+              <i-col span="18">
+                {{ shareRewardDetail.rewardPositionStart }} -{{
+                  shareRewardDetail.rewardPositionEnd
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -240,9 +230,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                红包有效时间:
-              </i-col>
+              <i-col span="6"> 红包有效时间: </i-col>
               <i-col span="18">
                 {{ shareRewardDetail.rewardEffectiveTime }}
               </i-col>
@@ -252,9 +240,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动规则描述:
-              </i-col>
+              <i-col span="6"> 活动规则描述: </i-col>
               <i-col span="18">
                 {{ shareRewardDetail.activityRuleDesc }}
               </i-col>
@@ -263,23 +249,35 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
     <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
-        <i-col>{{ tempModalType==modalType.edit?'修改分享红包活动':(tempModalType==modalType.create?'创建分享红包活动': '分享红包配置') }}</i-col>
+        <i-col>{{
+          tempModalType == modalType.edit
+            ? "修改分享红包活动"
+            : tempModalType == modalType.create
+              ? "创建分享红包活动"
+              : "分享红包配置"
+        }}</i-col>
       </p>
       <div class="modal-content">
-        <Row v-if="tempModalType == modalType.edit || tempModalType == modalType.create">
-          <Form ref="modalEdit" :model="shareRewardDetail" :rules="ruleInline" :label-width="100">
+        <Row v-if="isEdit || isCreate">
+          <Form
+            ref="modalEdit"
+            :model="shareRewardDetail"
+            :rules="ruleInline"
+            :label-width="100"
+          >
             <Row>
               <Col span="18">
               <FormItem label="活动标题:" prop="name">
-                <Input v-model="shareRewardDetail.name" placeholder="活动标题"></Input>
+                <Input
+                  v-model="shareRewardDetail.name"
+                  placeholder="活动标题"
+                ></Input>
               </FormItem>
               </Col>
             </Row>
@@ -318,11 +316,11 @@
               <FormItem label="活动状态:" prop="status">
                 <Select v-model="shareRewardDetail.status" clearable>
                   <Option
-                    v-for="(item,index) in couponStatusEnum"
+                    v-for="(item, index) in couponStatusEnum"
                     :key="index"
                     :value="item.value"
                     class="ptb2-5"
-                    style="padding-left: 5px;width: 100%"
+                    style="padding-left: 5px; width: 100%"
                   >
                     {{ item.label }}
                   </Option>
@@ -333,25 +331,49 @@
             <Row>
               <Col span="18">
               <FormItem label="分享标题:" prop="shareName">
-                <Input v-model="shareRewardDetail.shareName" placeholder="分享标题"></Input>
+                <Input
+                  v-model="shareRewardDetail.shareName"
+                  placeholder="分享标题"
+                ></Input>
               </FormItem>
               </Col>
             </Row>
             <Row>
-              <FormItem label="分享图片     (推荐尺寸为750X160(单位:px)):" prop="shareImageUrl">
-                <Input v-show="false" v-model="shareRewardDetail.shareImageUrl" style="width: auto"></Input>
-                <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+              <FormItem
+                label="分享图片     (推荐尺寸为750X160(单位:px)):"
+                prop="shareImageUrl"
+              >
+                <Input
+                  v-show="false"
+                  v-model="shareRewardDetail.shareImageUrl"
+                  style="width: auto"
+                ></Input>
+                <div
+                  v-for="item in uploadListMain"
+                  :key="item.url"
+                  class="demo-upload-list"
+                >
                   <template v-if="item.status === 'finished'">
                     <div>
                       <img :src="item.url">
                       <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                        <Icon
+                          type="ios-eye-outline"
+                          @click.native="handleUploadView(item)"
+                        ></Icon>
+                        <Icon
+                          type="ios-trash-outline"
+                          @click.native="handleRemoveMain(item)"
+                        ></Icon>
                       </div>
                     </div>
                   </template>
                   <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      hide-info
+                    ></Progress>
                   </template>
                 </div>
                 <IViewUpload
@@ -360,7 +382,10 @@
                   :image-size="imageSize"
                   @on-success="handleSuccessMain"
                 >
-                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                  <div
+                    slot="content"
+                    style="width: 58px; height: 58px; line-height: 58px"
+                  >
                     <Icon type="ios-camera" size="20"></Icon>
                   </div>
                 </IViewUpload>
@@ -369,21 +394,30 @@
             <Row>
               <Col span="18">
               <FormItem label="红包个数:" prop="rewardCount">
-                <Input v-model="shareRewardDetail.rewardCount" placeholder="红包个数"></Input>
+                <Input
+                  v-model="shareRewardDetail.rewardCount"
+                  placeholder="红包个数"
+                ></Input>
               </FormItem>
               </Col>
             </Row>
             <Row>
               <Col span="18">
               <FormItem label="最大红包位置:" prop="rewardPositionStart">
-                <Input v-model="shareRewardDetail.rewardPositionStart" placeholder="最大红包位置"></Input>
+                <Input
+                  v-model="shareRewardDetail.rewardPositionStart"
+                  placeholder="最大红包位置"
+                ></Input>
               </FormItem>
               </Col>
             </Row>
             <Row>
               <Col span="18">
               <FormItem label="红包有效时间:" prop="rewardEffectiveTime">
-                <Input v-model="shareRewardDetail.rewardEffectiveTime" placeholder="红包有效时间"></Input>
+                <Input
+                  v-model="shareRewardDetail.rewardEffectiveTime"
+                  placeholder="红包有效时间"
+                ></Input>
               </FormItem>
               </Col>
             </Row>
@@ -402,7 +436,7 @@
           </Form>
         </Row>
 
-        <Row v-if="tempModalType == null ">
+        <Row v-if="tempModalType == null">
           <Form
             ref="modalCreate"
             :model="addRelationDetail"
@@ -441,13 +475,10 @@
               >
                 <Icon type="md-add" />&nbsp;添加配置
               </Button>
-              </Col>
-            </Row>*Tips：红包最少配置两个，取红包金额最大的作为最大红包，其他红包随机产生
+              </Col> </Row>*Tips：红包最少配置两个，取红包金额最大的作为最大红包，其他红包随机产生
           </Form>
 
-          <Divider orientation="center">
-            已配置参数
-          </Divider>
+          <Divider orientation="center"> 已配置参数 </Divider>
           <tables
             v-model="relationDetail"
             :columns="relationColumns"
@@ -460,10 +491,12 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+        >
           确定
         </Button>
       </div>
@@ -796,7 +829,7 @@ export default {
       this.shareRewardDetail.shareImageUrl = null;
     },
     handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -813,7 +846,7 @@ export default {
     createShareReward() {
       this.modalViewLoading = true;
       createShareReward(this.shareRewardDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
@@ -827,7 +860,7 @@ export default {
     editShareReward() {
       this.modalViewLoading = true;
       editShareReward(this.shareRewardDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
@@ -856,7 +889,7 @@ export default {
       deleteShareReward({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -868,7 +901,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -889,7 +922,7 @@ export default {
     getTableData() {
       this.loading = true;
       getShareRewardPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })
@@ -945,10 +978,10 @@ export default {
     },
     getRelationTableData() {
       getShareRewardSettingPages(this.searchRelationRowData)
-        .then(res => {
+        .then((res) => {
           // 设置行是否可编辑
           if (res.rows.length !== 0) {
-            res.rows.forEach(element => {
+            res.rows.forEach((element) => {
               element.isEdit = false;
             });
             this.relationDetail = res.rows;
@@ -964,7 +997,7 @@ export default {
         });
     },
     addTempData(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           // 只能添加1个商品
           if (this.addRelationDetail.price > this.addRelationDetail.minPrice) {
@@ -999,10 +1032,10 @@ export default {
       // 如果前端没有剩余数量字段,则初始化剩余数量=商品数量
       // row.remainCount = row.goodsLimit;
       editShareRewardSetting(row)
-        .then(res => {
+        .then((res) => {
           this.getRelationTableData();
         })
-        .finally(res => {
+        .finally((res) => {
           this.tempTableLoading = false;
         });
       this.tempTableLoading = false;
@@ -1011,13 +1044,13 @@ export default {
     modalHandleDelete(params) {
       this.tempTableLoading = true;
       deleteShareRewardSetting({ ids: params.row.id })
-        .then(res => {
+        .then((res) => {
           this.relationDetail = this.relationDetail.filter(
             (item, index) => index !== params.row.initRowIndex
           );
           this.getRelationTableData();
         })
-        .finally(res => {
+        .finally((res) => {
           this.tempTableLoading = false;
         });
     },
@@ -1030,7 +1063,7 @@ export default {
     createRelation() {
       this.modalViewLoading = true;
       createShareRewardSetting(this.addRelationDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');

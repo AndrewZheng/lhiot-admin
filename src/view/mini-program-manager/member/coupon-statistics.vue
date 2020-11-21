@@ -749,22 +749,20 @@ export default {
         });
     },
     getComboBoxs() {
-      getComboBoxs()
-        .then((res) => {
-          this.couponTypeList = res.couponTypeList;
-          this.couponWayList = res.couponWayList;
-        })
+      getComboBoxs().then((res) => {
+        this.couponTypeList = res.couponTypeList;
+        this.couponWayList = res.couponWayList;
+      });
     },
     getStore() {
-      getStorePages({ page: 1, rows: -1 })
-        .then((res) => {
-          res.rows.forEach((value) => {
-            const map = { label: 'label', value: 'value' };
-            map.value = value.storeId;
-            map.label = value.storeName;
-            this.storeList.push(map);
-          });
-        })
+      getStorePages({ page: 1, rows: -1 }).then((res) => {
+        res.rows.forEach((value) => {
+          const map = { label: 'label', value: 'value' };
+          map.value = value.storeId;
+          map.label = value.storeName;
+          this.storeList.push(map);
+        });
+      });
     },
     handleSearch() {
       this.num++;

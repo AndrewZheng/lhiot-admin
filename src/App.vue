@@ -6,32 +6,32 @@
 
 <script>
 export default {
-  name: "App",
+  name: 'App',
   provide() {
     return {
-      reload: this.reload,
+      reload: this.reload
     };
   },
   data() {
     return {
-      isRouterAlive: true,
+      isRouterAlive: true
     };
   },
   created() {},
   mounted() {
-    window.onbeforeunload = function (e) {
-      let storage = window.localStorage;
+    window.onbeforeunload = function(e) {
+      const storage = window.localStorage;
       storage.clear();
     };
   },
   methods: {
     reload() {
       this.isRouterAlive = false;
-      this.$nextTick(function () {
+      this.$nextTick(function() {
         this.isRouterAlive = true;
       });
-    },
-  },
+    }
+  }
 };
 </script>
 

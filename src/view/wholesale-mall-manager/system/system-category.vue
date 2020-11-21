@@ -19,7 +19,13 @@
         @on-selection-change="onSelectionChange"
       >
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
+          <Button
+            v-waves
+            :loading="createLoading"
+            type="success"
+            class="mr5"
+            @click="addStore"
+          >
             <Icon type="md-add" />添加
           </Button>
           <Poptip
@@ -35,7 +41,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -57,9 +63,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                主键ID:
-              </i-col>
+              <i-col span="4"> 主键ID: </i-col>
               <i-col span="20">
                 {{ systemCategoryDetail.id }}
               </i-col>
@@ -69,9 +73,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                分类code:
-              </i-col>
+              <i-col span="4"> 分类code: </i-col>
               <i-col span="20">
                 {{ systemCategoryDetail.categoriesCode }}
               </i-col>
@@ -81,9 +83,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                分类名称:
-              </i-col>
+              <i-col span="4"> 分类名称: </i-col>
               <i-col span="20">
                 {{ systemCategoryDetail.categoriesName }}
               </i-col>
@@ -92,18 +92,25 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
     <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000">
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改系统参数分类':'创建系统参数分类' }}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit
+            ? "修改系统参数分类"
+            : "创建系统参数分类"
+        }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="systemCategoryDetail" :rules="ruleInline" :label-width="80">
+        <Form
+          ref="modalEdit"
+          :model="systemCategoryDetail"
+          :rules="ruleInline"
+          :label-width="80"
+        >
           <!-- <InputNumber :min="0" v-model="systemCategoryDetail.parentId" placeholder="父级分类id"></InputNumber> -->
           <!-- <Row>
             <Col span="12">
@@ -121,24 +128,32 @@
           <Row>
             <Col span="12">
             <FormItem label="分类名称:" prop="categoriesName">
-              <Input v-model="systemCategoryDetail.categoriesName" placeholder="分类名称"></Input>
+              <Input
+                v-model="systemCategoryDetail.categoriesName"
+                placeholder="分类名称"
+              ></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
             <FormItem label="分类code:" prop="categoriesCode">
-              <Input v-model="systemCategoryDetail.categoriesCode" placeholder="分类code"></Input>
+              <Input
+                v-model="systemCategoryDetail.categoriesCode"
+                placeholder="分类code"
+              ></Input>
             </FormItem>
             </Col>
           </Row>
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+        >
           确定
         </Button>
       </div>
@@ -239,7 +254,7 @@ export default {
       this.$refs.modalEdit.resetFields();
     },
     handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.isCreate) {
             // 添加状态
@@ -256,7 +271,7 @@ export default {
     createStore() {
       this.modalViewLoading = true;
       createSystemSettingCategory(this.systemCategoryDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
@@ -270,7 +285,7 @@ export default {
     editStore() {
       this.modalViewLoading = true;
       editSystemSettingCategory(this.systemCategoryDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
@@ -297,19 +312,18 @@ export default {
     deleteTable(ids) {
       deleteSystemSettingCategory({
         ids
-      })
-        .then(res => {
-          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-          if (
-            this.tableData.length == this.tableDataSelected.length &&
-            this.searchRowData.page === totalPage &&
-            this.searchRowData.page !== 1
-          ) {
-            this.searchRowData.page -= 1;
-          }
-          this.tableDataSelected = [];
-          this.getTableData();
-        })
+      }).then((res) => {
+        const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+        if (
+          this.tableData.length == this.tableDataSelected.length &&
+          this.searchRowData.page === totalPage &&
+          this.searchRowData.page !== 1
+        ) {
+          this.searchRowData.page -= 1;
+        }
+        this.tableDataSelected = [];
+        this.getTableData();
+      });
     },
     handleView(params) {
       this.resetFields();
@@ -326,7 +340,7 @@ export default {
     getTableData() {
       this.loading = true;
       getSystemSettingCategoryPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })
@@ -338,7 +352,7 @@ export default {
     },
     getSystemSettingCategoryTree() {
       getSystemSettingCategoryTree()
-        .then(res => {
+        .then((res) => {
           if (res && res.array.length > 0) {
             this.systemCategoriesTreeList = res.array;
             const menuList = buildMenu(res.array);
@@ -378,7 +392,7 @@ export default {
       this.defaultSystemCategoryData = selectedData;
     },
     findGroupId(id) {
-      const obj = this.systemCategoriesTreeList.find(item => {
+      const obj = this.systemCategoriesTreeList.find((item) => {
         return item.id === id;
       });
       this.defaultSystemCategoryData.push(id);

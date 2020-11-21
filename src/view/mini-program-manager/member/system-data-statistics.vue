@@ -1,6 +1,6 @@
 <template>
   <div class="m-role">
-    <div style="margin-bottom:30px">
+    <div style="margin-bottom: 30px">
       <Card>
         <h4>系统数据统计</h4>
         <tables
@@ -16,14 +16,18 @@
         >
           <div slot="searchCondition">
             <Row>
-              <RadioGroup v-model="button" type="button" @on-change="timeChange">
+              <RadioGroup
+                v-model="button"
+                type="button"
+                @on-change="timeChange"
+              >
                 <Radio label="今日"></Radio>
                 <Radio label="昨日"></Radio>
                 <Radio label="最近7天"></Radio>
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
               </RadioGroup>
-              <div v-show="mark===true" class="mark">
+              <div v-show="mark === true" class="mark">
                 <DatePicker
                   v-model="searchRowData1.beginDate"
                   format="yyyy-MM-dd"
@@ -45,7 +49,7 @@
                 />
               </div>
               <Button
-                v-show="mark===true"
+                v-show="mark === true"
                 class="search-btn mr5"
                 type="primary"
                 @click="handleSearch1"
@@ -54,7 +58,7 @@
               </Button>
             </Row>
             <div class="ml15 mt10">
-              <i style="color:red">*</i> 默认展示当天的数据
+              <i style="color: red">*</i> 默认展示当天的数据
             </div>
           </div>
         </tables>
@@ -234,7 +238,7 @@ export default {
         this.searchRowData1.endDate = yesterday1;
       }
       systemDataStatistics(this.searchRowData1)
-        .then(res => {
+        .then((res) => {
           this.inviteData.push(res);
         })
         .finally(() => {

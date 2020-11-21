@@ -41,7 +41,7 @@
               type="primary"
               @click="handleSearch"
             >
-              <Icon type="md-search" />&nbsp;搜索
+              <Icon type="md-search" /> 搜索
             </Button>
             <Button
               v-waves
@@ -50,7 +50,7 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh" />&nbsp;清除
+              <Icon type="md-refresh" /> 清除
             </Button>
           </Row>
         </div>
@@ -62,7 +62,7 @@
             class="mr5"
             @click="addActivities"
           >
-            <Icon type="md-add" />添加
+            <Icon type="md-add" /> 添加
           </Button>
           <Poptip
             confirm
@@ -72,12 +72,12 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash" />批量删除
+              <Icon type="md-trash" /> 批量删除
             </Button>
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -99,9 +99,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动ID:
-              </i-col>
+              <i-col span="6"> 活动ID: </i-col>
               <i-col span="18">
                 {{ activitiesDetail.id }}
               </i-col>
@@ -111,9 +109,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动编码:
-              </i-col>
+              <i-col span="6"> 活动编码: </i-col>
               <i-col span="18">
                 {{ activitiesDetail.activityCode }}
               </i-col>
@@ -123,9 +119,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动名称:
-              </i-col>
+              <i-col span="6"> 活动名称: </i-col>
               <i-col span="18">
                 {{ activitiesDetail.activityName }}
               </i-col>
@@ -135,9 +129,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动状态:
-              </i-col>
+              <i-col span="6"> 活动状态: </i-col>
               <i-col v-if="activitiesDetail.onOff === 'ON'" span="18">
                 <tag color="success">
                   {{ "开启" | imageStatusFilter }}
@@ -154,9 +146,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动链接:
-              </i-col>
+              <i-col span="6"> 活动链接: </i-col>
               <i-col span="18">
                 {{ activitiesDetail.activityUrl }}
               </i-col>
@@ -165,63 +155,70 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
     <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000">
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改活动':'创建活动' }}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit ? "修改活动" : "创建活动"
+        }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="activitiesDetail" :rules="ruleInline" :label-width="100">
+        <Form
+          ref="modalEdit"
+          :model="activitiesDetail"
+          :rules="ruleInline"
+          :label-width="100"
+        >
           <Row>
-            <Col span="18">
-            <FormItem label="活动编码:" prop="activityCode">
-              <Input v-model="activitiesDetail.activityCode"></Input>
-            </FormItem>
-            </Col>
+            <i-col span="18">
+              <FormItem label="活动编码:" prop="activityCode">
+                <Input v-model="activitiesDetail.activityCode"></Input>
+              </FormItem>
+            </i-col>
           </Row>
           <Row>
-            <Col span="18">
-            <FormItem label="活动名称:" prop="activityName">
-              <Input v-model="activitiesDetail.activityName"></Input>
-            </FormItem>
-            </Col>
+            <i-col span="18">
+              <FormItem label="活动名称:" prop="activityName">
+                <Input v-model="activitiesDetail.activityName"></Input>
+              </FormItem>
+            </i-col>
           </Row>
           <Row>
-            <Col span="18">
-            <FormItem label="活动状态:" prop="onOff">
-              <Select v-model="activitiesDetail.onOff" clearable>
-                <Option
-                  v-for="(item,index) in imageStatusEnum"
-                  :key="index"
-                  :value="item.value"
-                  class="ptb2-5"
-                  style="padding-left: 5px;width: 100%"
-                >
-                  {{ item.label }}
-                </Option>
-              </Select>
-            </FormItem>
-            </Col>
+            <i-col span="18">
+              <FormItem label="活动状态:" prop="onOff">
+                <Select v-model="activitiesDetail.onOff" clearable>
+                  <Option
+                    v-for="(item, index) in imageStatusEnum"
+                    :key="index"
+                    :value="item.value"
+                    class="ptb2-5"
+                    style="padding-left: 5px; width: 100%"
+                  >
+                    {{ item.label }}
+                  </Option>
+                </Select>
+              </FormItem>
+            </i-col>
           </Row>
           <Row>
-            <Col span="18">
-            <FormItem label="活动详情链接:" prop="activityUrl">
-              <Input v-model="activitiesDetail.activityUrl"></Input>
-            </FormItem>
-            </Col>
+            <i-col span="18">
+              <FormItem label="活动详情链接:" prop="activityUrl">
+                <Input v-model="activitiesDetail.activityUrl"></Input>
+              </FormItem>
+            </i-col>
           </Row>
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button
+          :loading="modalEditLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+        >
           确定
         </Button>
       </div>
@@ -231,7 +228,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   deleteActivities,
   getActivitiesPages,
@@ -266,11 +262,8 @@ export default {
   mixins: [deleteMixin, tableMixin, searchMixin],
   data() {
     return {
-      ruleInline: {
-        activityCode: [{ required: true, message: '请输入活动编码' }],
-        activityName: [{ required: true, message: '请输入活动名称' }],
-        onOff: [{ required: true, message: '请选择活动状态' }]
-      },
+      createLoading: false,
+      modalEditLoading: false,
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
@@ -340,10 +333,13 @@ export default {
           options: ['onSale', 'view', 'edit', 'delete']
         }
       ],
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
-      activitiesDetail: _.cloneDeep(activitiesDetail)
+      activitiesDetail: _.cloneDeep(activitiesDetail),
+      ruleInline: {
+        activityCode: [{ required: true, message: '请输入活动编码' }],
+        activityName: [{ required: true, message: '请输入活动名称' }],
+        onOff: [{ required: true, message: '请选择活动状态' }]
+      }
     };
   },
   mounted() {
@@ -363,7 +359,7 @@ export default {
       this.activitiesDetail.storeImage = null;
     },
     handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -378,27 +374,27 @@ export default {
       });
     },
     createActivities() {
-      this.modalViewLoading = true;
+      this.modalEditLoading = true;
       createActivities(this.activitiesDetail)
-        .then(res => {
-          this.modalViewLoading = false;
+        .then((res) => {
+          this.modalEditLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
-          this.modalViewLoading = false;
+          this.modalEditLoading = false;
         });
     },
     editActivities() {
-      this.modalViewLoading = true;
+      this.modalEditLoading = true;
       editActivities(this.activitiesDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.getTableData();
         })
         .finally(() => {
-          this.modalViewLoading = false;
+          this.modalEditLoading = false;
         });
     },
     addActivities() {
@@ -421,10 +417,10 @@ export default {
       deleteActivities({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -433,7 +429,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -453,7 +449,7 @@ export default {
     getTableData() {
       this.loading = true;
       getActivitiesPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })
@@ -464,7 +460,7 @@ export default {
         });
     },
     onOff(params) {
-      this.activitiesDetail = this._.cloneDeep(params.row);
+      this.activitiesDetail = _.cloneDeep(params.row);
       if (params.row.onOff === 'ON') {
         this.activitiesDetail.onOff = 'OFF';
       } else {

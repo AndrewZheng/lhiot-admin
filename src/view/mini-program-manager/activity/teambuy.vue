@@ -134,9 +134,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                团购活动编号:
-              </i-col>
+              <i-col span="6"> 团购活动编号: </i-col>
               <i-col span="18">
                 {{ teambuyDetail.id }}
               </i-col>
@@ -144,13 +142,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                活动类型:
-              </i-col>
+              <i-col span="6"> 活动类型: </i-col>
               <i-col span="18">
-                {{
-                  teambuyDetail.teamBuyType | teamBuyTypeFilter
-                }}
+                {{ teambuyDetail.teamBuyType | teamBuyTypeFilter }}
               </i-col>
             </Row>
           </i-col>
@@ -158,9 +152,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                活动名称:
-              </i-col>
+              <i-col span="6"> 活动名称: </i-col>
               <i-col span="18">
                 {{ teambuyDetail.activityName }}
               </i-col>
@@ -168,9 +160,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                创建时间:
-              </i-col>
+              <i-col span="6"> 创建时间: </i-col>
               <i-col span="18">
                 {{ teambuyDetail.createTime }}
               </i-col>
@@ -180,9 +170,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                活动内容:
-              </i-col>
+              <i-col span="6"> 活动内容: </i-col>
               <i-col span="18">
                 {{ teambuyDetail.content }}
               </i-col>
@@ -190,13 +178,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                活动状态:
-              </i-col>
+              <i-col span="6"> 活动状态: </i-col>
               <i-col span="18">
-                {{
-                  teambuyDetail.status | teamBuyStatusFilter
-                }}
+                {{ teambuyDetail.status | teamBuyStatusFilter }}
               </i-col>
             </Row>
           </i-col>
@@ -204,9 +188,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                排序序号:
-              </i-col>
+              <i-col span="6"> 排序序号: </i-col>
               <i-col span="18">
                 {{ teambuyDetail.rank }}
               </i-col>
@@ -214,9 +196,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                活动banner:
-              </i-col>
+              <i-col span="6"> 活动banner: </i-col>
               <i-col span="18">
                 <img :src="teambuyDetail.banner" style="width: 100%">
               </i-col>
@@ -226,9 +206,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                有效期起:
-              </i-col>
+              <i-col span="6"> 有效期起: </i-col>
               <i-col span="18">
                 {{
                   (this.teambuyDetail.startTime = this.$moment(
@@ -241,9 +219,7 @@
           <i-col span="12">
             <Row>
               <!-- {{ teambuyDetail.endTime }} -->
-              <i-col span="6">
-                有效期止:
-              </i-col>
+              <i-col span="6"> 有效期止: </i-col>
               <i-col span="18">
                 {{
                   (this.teambuyDetail.endTime = this.$moment(
@@ -257,17 +233,13 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row v-if="teambuyDetail.deliveryEndTimeDay > 0">
-              <i-col span="6">
-                提货截止天数:
-              </i-col>
+              <i-col span="6"> 提货截止天数: </i-col>
               <i-col span="18">
                 {{ teambuyDetail.deliveryEndTimeDay }}
               </i-col>
             </Row>
             <Row v-else>
-              <i-col span="6">
-                提货截止时间:
-              </i-col>
+              <i-col span="6"> 提货截止时间: </i-col>
               <i-col span="18">
                 {{
                   (teambuyDetail.deliveryEndTime = this.$moment(
@@ -279,9 +251,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                成团有效时长:
-              </i-col>
+              <i-col span="6"> 成团有效时长: </i-col>
               <i-col span="18">
                 {{ teambuyDetail.validSeconds }}
               </i-col>
@@ -291,9 +261,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                成团人数:
-              </i-col>
+              <i-col span="6"> 成团人数: </i-col>
               <i-col span="18">
                 {{ teambuyDetail.fullUserNum }}
               </i-col>
@@ -301,13 +269,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                参团信息列表:
-              </i-col>
+              <i-col span="6"> 参团信息列表: </i-col>
               <i-col span="18">
-                {{
-                  teambuyDetail.joinInfoStatus | teamBuyStatusFilter
-                }}
+                {{ teambuyDetail.joinInfoStatus | teamBuyStatusFilter }}
               </i-col>
             </Row>
           </i-col>
@@ -315,21 +279,15 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                是否模拟成团:
-              </i-col>
+              <i-col span="6"> 是否模拟成团: </i-col>
               <i-col span="18">
-                {{
-                  teambuyDetail.robot | teamBuyStatusFilter
-                }}
+                {{ teambuyDetail.robot | teamBuyStatusFilter }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                状态多少秒:
-              </i-col>
+              <i-col span="6"> 状态多少秒: </i-col>
               <i-col span="18">
                 {{ teambuyDetail.robotStartSecond }}
               </i-col>
@@ -339,9 +297,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                商品规格:
-              </i-col>
+              <i-col span="6"> 商品规格: </i-col>
               <i-col span="18">
                 {{ teambuyDetail.standardId }}
               </i-col>
@@ -349,9 +305,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                规格描述:
-              </i-col>
+              <i-col span="6"> 规格描述: </i-col>
               <i-col span="18">
                 {{ teambuyDetail.standardDesc }}
               </i-col>
@@ -361,25 +315,17 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                原价:
-              </i-col>
+              <i-col span="6"> 原价: </i-col>
               <i-col span="18">
-                {{
-                  teambuyDetail.originalPrice | fenToYuanDot2Filters
-                }}
+                {{ teambuyDetail.originalPrice | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                活动价:
-              </i-col>
+              <i-col span="6"> 活动价: </i-col>
               <i-col span="18">
-                {{
-                  teambuyDetail.activityPrice | fenToYuanDot2Filters
-                }}
+                {{ teambuyDetail.activityPrice | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
@@ -387,25 +333,17 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                成本价:
-              </i-col>
+              <i-col span="6"> 成本价: </i-col>
               <i-col span="18">
-                {{
-                  teambuyDetail.costPrice | fenToYuanDot2Filters
-                }}
+                {{ teambuyDetail.costPrice | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                商品毛利:
-              </i-col>
+              <i-col span="6"> 商品毛利: </i-col>
               <i-col span="18">
-                {{
-                  teambuyDetail.productProfitPrice | fenToYuanDot2Filters
-                }}
+                {{ teambuyDetail.productProfitPrice | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
@@ -413,9 +351,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                佣金比例:
-              </i-col>
+              <i-col span="6"> 佣金比例: </i-col>
               <i-col span="18">
                 {{ teambuyDetail.commissionScale + "%" }}
               </i-col>
@@ -423,13 +359,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                佣金金额:
-              </i-col>
+              <i-col span="6"> 佣金金额: </i-col>
               <i-col span="18">
-                {{
-                  teambuyDetail.commissionPrice | fenToYuanDot2Filters
-                }}
+                {{ teambuyDetail.commissionPrice | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
@@ -437,21 +369,15 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                团长优惠:
-              </i-col>
+              <i-col span="6"> 团长优惠: </i-col>
               <i-col span="18">
-                {{
-                  teambuyDetail.tourDiscount | fenToYuanDot2Filters
-                }}
+                {{ teambuyDetail.tourDiscount | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                限购次数:
-              </i-col>
+              <i-col span="6"> 限购次数: </i-col>
               <i-col span="18">
                 {{ teambuyDetail.triesLimit }}
               </i-col>
@@ -461,9 +387,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                库存数量:
-              </i-col>
+              <i-col span="6"> 库存数量: </i-col>
               <i-col span="18">
                 {{ teambuyDetail.productNum }}
               </i-col>
@@ -471,9 +395,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                已售份数:
-              </i-col>
+              <i-col span="6"> 已售份数: </i-col>
               <i-col span="18">
                 {{ teambuyDetail.saleQuantity }}
               </i-col>
@@ -483,9 +405,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                红包活动设置:
-              </i-col>
+              <i-col span="6"> 红包活动设置: </i-col>
               <i-col span="18">
                 {{
                   teambuyDetail.rewardActivitySetting
@@ -498,9 +418,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="3">
-                关联门店:
-              </i-col>
+              <i-col span="3"> 关联门店: </i-col>
               <i-col span="16">
                 {{ showStoreName }}
               </i-col>
@@ -509,9 +427,7 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
@@ -540,16 +456,12 @@
               <Row v-show="tempModalType === modalType.edit">
                 <i-col span="12">
                   <FormItem label="团购ID:" prop="id">
-                    {{
-                      teambuyDetail.id
-                    }}
+                    {{ teambuyDetail.id }}
                   </FormItem>
                 </i-col>
                 <i-col span="12">
                   <FormItem label="创建时间:" prop="createTime">
-                    {{
-                      teambuyDetail.createTime
-                    }}
+                    {{ teambuyDetail.createTime }}
                   </FormItem>
                 </i-col>
               </Row>
@@ -907,19 +819,13 @@
               </Row>
               <Row v-show="teambuyDetail.standardId">
                 <i-col span="6" style="margin-left: 140px">
-                  <Button
-                    v-waves
-                    type="warning"
-                    @click="aboutGoods"
-                  >
+                  <Button v-waves type="warning" @click="aboutGoods">
                     关联商品详情
                   </Button>
                 </i-col>
                 <i-col span="8" style="margin-left: 53px">
                   <FormItem label="原价:" prop="originalPrice">
-                    {{
-                      teambuyDetail.originalPrice | fenToYuanDot2Filters
-                    }}
+                    {{ teambuyDetail.originalPrice | fenToYuanDot2Filters }}
                   </FormItem>
                 </i-col>
               </Row>
@@ -982,8 +888,7 @@
               </Row>
               <Row>
                 <p style="color: #ff3861; margin-left: 58px">
-                  * 佣金比例为0~50的整数 (单位%)*
-                  按活动价的比例计算佣金
+                  * 佣金比例为0~50的整数 (单位%)* 按活动价的比例计算佣金
                 </p>
                 <i-col span="12">
                   <FormItem label="佣金比例:" prop="commissionScale">
@@ -1001,15 +906,11 @@
                 </i-col>
                 <i-col span="12">
                   <FormItem label="佣金金额:" prop="commissionPrice">
-                    {{
-                      "¥" + teambuyDetail.commissionPrice / 100
-                    }}
+                    {{ "¥" + teambuyDetail.commissionPrice / 100 }}
                   </FormItem>
                 </i-col>
               </Row>
-              <Divider
-                v-show="tempModalType === modalType.edit"
-              >
+              <Divider v-show="tempModalType === modalType.edit">
                 可修改部分
               </Divider>
               <Row>
@@ -1151,10 +1052,10 @@
                   <FormItem>
                     <div
                       style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
+                        border-bottom: 1px solid #e9e9e9;
+                        padding-bottom: 6px;
+                        margin-bottom: 6px;
+                        display: flex;
                       "
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
@@ -1187,10 +1088,10 @@
                   <FormItem>
                     <div
                       style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
+                        border-bottom: 1px solid #e9e9e9;
+                        padding-bottom: 6px;
+                        margin-bottom: 6px;
+                        display: flex;
                       "
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
@@ -1223,10 +1124,10 @@
                   <FormItem>
                     <div
                       style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
+                        border-bottom: 1px solid #e9e9e9;
+                        padding-bottom: 6px;
+                        margin-bottom: 6px;
+                        display: flex;
                       "
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
@@ -1259,10 +1160,10 @@
                   <FormItem>
                     <div
                       style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
+                        border-bottom: 1px solid #e9e9e9;
+                        padding-bottom: 6px;
+                        margin-bottom: 6px;
+                        display: flex;
                       "
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
@@ -1295,10 +1196,10 @@
                   <FormItem>
                     <div
                       style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
+                        border-bottom: 1px solid #e9e9e9;
+                        padding-bottom: 6px;
+                        margin-bottom: 6px;
+                        display: flex;
                       "
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
@@ -1331,11 +1232,11 @@
                   <FormItem>
                     <div
                       style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                    "
+                        border-bottom: 1px solid #e9e9e9;
+                        padding-bottom: 6px;
+                        margin-bottom: 6px;
+                        display: flex;
+                      "
                     >
                       <div style="margin-left: -54px; margin-right: 18px">
                         {{ storeNameList[6] }}
@@ -1369,9 +1270,7 @@
         </Tabs>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
         <!-- <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>-->
         <Button
           v-if="step == 'firstStep'"
@@ -1469,9 +1368,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品ID:
-              </i-col>
+              <i-col span="8"> 商品ID: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productId }}
               </i-col>
@@ -1479,13 +1376,9 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品名称:
-              </i-col>
+              <i-col span="8"> 商品名称: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.baseProductName
-                }}
+                {{ productStandardDetail.baseProductName }}
               </i-col>
             </Row>
           </i-col>
@@ -1493,9 +1386,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品分类:
-              </i-col>
+              <i-col span="8"> 商品分类: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.groupName }}
               </i-col>
@@ -1503,9 +1394,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                基础单位:
-              </i-col>
+              <i-col span="8"> 基础单位: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.baseUnit }}
               </i-col>
@@ -1515,9 +1404,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品编号:
-              </i-col>
+              <i-col span="8"> 商品编号: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productCode }}
               </i-col>
@@ -1525,9 +1412,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品条码:
-              </i-col>
+              <i-col span="8"> 商品条码: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.baseBarcode }}
               </i-col>
@@ -1537,9 +1422,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品主图:
-              </i-col>
+              <i-col span="8"> 商品主图: </i-col>
               <i-col span="16">
                 <img
                   :src="productStandardDetail.baseImage"
@@ -1553,26 +1436,18 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品描述:
-              </i-col>
+              <i-col span="8"> 商品描述: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.baseProductDescription
-                }}
+                {{ productStandardDetail.baseProductDescription }}
               </i-col>
             </Row>
           </i-col>
         </Row>
-        <Divider orientation="center">
-          商品规格
-        </Divider>
+        <Divider orientation="center"> 商品规格 </Divider>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                上架商品名称:
-              </i-col>
+              <i-col span="8"> 上架商品名称: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productName }}
               </i-col>
@@ -1580,13 +1455,9 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                上架商品描述:
-              </i-col>
+              <i-col span="8"> 上架商品描述: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.productDescription
-                }}
+                {{ productStandardDetail.productDescription }}
               </i-col>
             </Row>
           </i-col>
@@ -1594,9 +1465,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                上架商品主图:
-              </i-col>
+              <i-col span="8"> 上架商品主图: </i-col>
               <i-col v-if="productStandardDetail.image" span="16">
                 <img
                   :src="productStandardDetail.image"
@@ -1610,9 +1479,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品条码:
-              </i-col>
+              <i-col span="8"> 商品条码: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.barcode }}
               </i-col>
@@ -1620,9 +1487,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品状态:
-              </i-col>
+              <i-col span="8"> 商品状态: </i-col>
               <i-col span="16">
                 {{
                   productStandardDetail.shelvesStatus | customPlanStatusFilters
@@ -1634,9 +1499,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品规格:
-              </i-col>
+              <i-col span="8"> 商品规格: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.specification }}
               </i-col>
@@ -1644,9 +1507,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                数量/重量:
-              </i-col>
+              <i-col span="8"> 数量/重量: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.standardQty }}
               </i-col>
@@ -1656,25 +1517,17 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品原价:
-              </i-col>
+              <i-col span="8"> 商品原价: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.price | fenToYuanDot2Filters
-                }}
+                {{ productStandardDetail.price | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                售卖价格:
-              </i-col>
+              <i-col span="8"> 售卖价格: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.salePrice | fenToYuanDot2Filters
-                }}
+                {{ productStandardDetail.salePrice | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
@@ -1691,9 +1544,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品单位:
-              </i-col>
+              <i-col span="8"> 商品单位: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productUnit }}
               </i-col>
@@ -1701,9 +1552,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品排序:
-              </i-col>
+              <i-col span="8"> 商品排序: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.rank }}
               </i-col>
@@ -1712,9 +1561,7 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleGoodsClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleGoodsClose"> 关闭 </Button>
       </div>
     </Modal>
   </div>
@@ -3163,26 +3010,25 @@ export default {
     },
     // TODO 选择门店id方法 1.9.0
     getStore() {
-      getAreaStorePages()
-        .then((res) => {
-          this.storeList = res.array;
-          this.storeData = res.array[0].storeList;
-          this.storeData1 = res.array[1].storeList;
-          this.storeData2 = res.array[2].storeList;
-          this.storeData3 = res.array[3].storeList;
-          this.storeData4 = res.array[4].storeList;
-          this.storeData5 = res.array[5].storeList;
-          this.storeData6 = res.array[6].storeList;
-          // this.storeData7 = res.array[7].storeList;
-          const data = [];
-          for (const val of res.array) {
-            this.storeNameList.push(val.storeName);
-            data.push(val.storeList);
-          }
-          for (const value of data) {
-            this.storeListData = this.storeListData.concat(value);
-          }
-        })
+      getAreaStorePages().then((res) => {
+        this.storeList = res.array;
+        this.storeData = res.array[0].storeList;
+        this.storeData1 = res.array[1].storeList;
+        this.storeData2 = res.array[2].storeList;
+        this.storeData3 = res.array[3].storeList;
+        this.storeData4 = res.array[4].storeList;
+        this.storeData5 = res.array[5].storeList;
+        this.storeData6 = res.array[6].storeList;
+        // this.storeData7 = res.array[7].storeList;
+        const data = [];
+        for (const val of res.array) {
+          this.storeNameList.push(val.storeName);
+          data.push(val.storeList);
+        }
+        for (const value of data) {
+          this.storeListData = this.storeListData.concat(value);
+        }
+      });
     },
     handleCheckAll(value) {
       const _this = this;

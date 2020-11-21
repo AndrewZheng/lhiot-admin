@@ -324,7 +324,9 @@
                   }}
                 </FormItem>
               </i-col>
-              <template v-if="addRelationDetail.validDateType == 'UN_FIXED_DATE'">
+              <template
+                v-if="addRelationDetail.validDateType == 'UN_FIXED_DATE'"
+              >
                 <i-col span="7">
                   <FormItem label="发放券后:" prop="beginDay">
                     <InputNumber
@@ -419,9 +421,7 @@
                   label="券使用范围:"
                   prop="couponScope"
                 >
-                  {{
-                    addRelationDetail.couponScope | couponScopeFilter
-                  }}
+                  {{ addRelationDetail.couponScope | couponScopeFilter }}
                 </FormItem>
               </i-col>
               <i-col span="8">
@@ -455,9 +455,7 @@
                   prop="useLimitType"
                   :label-width="140"
                 >
-                  {{
-                    addRelationDetail.useLimitType | couponUseLimitFilter
-                  }}
+                  {{ addRelationDetail.useLimitType | couponUseLimitFilter }}
                 </FormItem>
               </i-col>
             </Row>
@@ -469,9 +467,7 @@
                   label="最高优惠金额:"
                   prop="maxDiscountFee"
                 >
-                  {{
-                    addRelationDetail.maxDiscountFee | fenToYuanDot2Filters
-                  }}
+                  {{ addRelationDetail.maxDiscountFee | fenToYuanDot2Filters }}
                 </FormItem>
                 <FormItem
                   v-else
@@ -813,14 +809,11 @@
                   </CheckboxGroup>
                 </FormItem>
               </i-col>-->
-            </Row>
-          </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板
+            </Row> </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板
         </Row>
       </div>
       <div slot="footer">
-        <Button @click="handleAddClose">
-          关闭
-        </Button>
+        <Button @click="handleAddClose"> 关闭 </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
@@ -873,14 +866,10 @@
                 label="最高优惠金额:"
                 prop="maxDiscountFee"
               >
-                {{
-                  addRelationDetail.maxDiscountFee | fenToYuanDot2Filters
-                }}
+                {{ addRelationDetail.maxDiscountFee | fenToYuanDot2Filters }}
               </FormItem>
               <FormItem v-else label="最高优惠金额:" prop="maxDiscountFee">
-                {{
-                  "N/A"
-                }}
+                {{ "N/A" }}
               </FormItem>
             </i-col>
           </Row>
@@ -896,9 +885,7 @@
             </i-col>
             <i-col span="12">
               <FormItem label="优惠券类型:">
-                {{
-                  addRelationDetail.couponType | couponTypeFilter
-                }}
+                {{ addRelationDetail.couponType | couponTypeFilter }}
               </FormItem>
             </i-col>
           </Row>
@@ -909,37 +896,27 @@
                 label="折扣额度:"
                 prop="couponFee"
               >
-                {{
-                  addRelationDetail.couponFee | fenToDiscountFilters
-                }}
+                {{ addRelationDetail.couponFee | fenToDiscountFilters }}
               </FormItem>
               <FormItem v-else label="优惠金额:" prop="couponFee">
-                {{
-                  addRelationDetail.couponFee | fenToYuanDot2Filters
-                }}
+                {{ addRelationDetail.couponFee | fenToYuanDot2Filters }}
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="最小购买金额:" prop="minBuyFee">
-                {{
-                  addRelationDetail.minBuyFee | fenToYuanDot2Filters
-                }}
+                {{ addRelationDetail.minBuyFee | fenToYuanDot2Filters }}
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
               <FormItem label="优惠券状态:" prop="couponStatus">
-                {{
-                  addRelationDetail.couponStatus | couponStatusFilter
-                }}
+                {{ addRelationDetail.couponStatus | couponStatusFilter }}
               </FormItem>
             </i-col>
             <i-col span="12">
               <FormItem label="使用范围:" prop="couponScope">
-                {{
-                  addRelationDetail.couponScope | couponScopeFilter
-                }}
+                {{ addRelationDetail.couponScope | couponScopeFilter }}
               </FormItem>
             </i-col>
           </Row>
@@ -1382,9 +1359,7 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
@@ -1755,7 +1730,9 @@ const dataColumns = [
       const { row } = params;
       if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
         if (!compareCouponData(row.effectiveEndTime)) {
-          return <div style='color:red'>{row.effectiveEndTime + ' 已过期'}</div>;
+          return (
+            <div style='color:red'>{row.effectiveEndTime + ' 已过期'}</div>
+          );
         } else {
           return <div>{row.effectiveEndTime}</div>;
         }
@@ -2409,26 +2386,25 @@ export default {
       }
     },
     getStore() {
-      getAreaStorePages()
-        .then((res) => {
-          this.storeList = res.array;
-          this.storeData = res.array[0].storeList;
-          this.storeData1 = res.array[1].storeList;
-          this.storeData2 = res.array[2].storeList;
-          this.storeData3 = res.array[3].storeList;
-          this.storeData4 = res.array[4].storeList;
-          this.storeData5 = res.array[5].storeList;
-          this.storeData6 = res.array[6].storeList;
-          // this.storeData7 = res.array[7].storeList;
-          const data = [];
-          for (const val of res.array) {
-            this.storeNameList.push(val.storeName);
-            data.push(val.storeList);
-          }
-          for (const value of data) {
-            this.storeListData = this.storeListData.concat(value);
-          }
-        })
+      getAreaStorePages().then((res) => {
+        this.storeList = res.array;
+        this.storeData = res.array[0].storeList;
+        this.storeData1 = res.array[1].storeList;
+        this.storeData2 = res.array[2].storeList;
+        this.storeData3 = res.array[3].storeList;
+        this.storeData4 = res.array[4].storeList;
+        this.storeData5 = res.array[5].storeList;
+        this.storeData6 = res.array[6].storeList;
+        // this.storeData7 = res.array[7].storeList;
+        const data = [];
+        for (const val of res.array) {
+          this.storeNameList.push(val.storeName);
+          data.push(val.storeList);
+        }
+        for (const value of data) {
+          this.storeListData = this.storeListData.concat(value);
+        }
+      });
     },
     handleCheckAll(value) {
       const _this = this;

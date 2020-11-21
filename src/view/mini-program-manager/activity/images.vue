@@ -19,7 +19,13 @@
         @on-selection-change="onSelectionChange"
       >
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
+          <Button
+            v-waves
+            :loading="createLoading"
+            type="success"
+            class="mr5"
+            @click="addStore"
+          >
             <Icon type="md-add" />添加
           </Button>
           <Poptip
@@ -35,7 +41,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -57,9 +63,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                主键ID:
-              </i-col>
+              <i-col span="4"> 主键ID: </i-col>
               <i-col span="20">
                 {{ imageDetail.id }}
               </i-col>
@@ -69,11 +73,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                图片类型:
-              </i-col>
+              <i-col span="4"> 图片类型: </i-col>
               <i-col span="20">
-                {{ imageDetail.imageType|imageTypeFilter }}
+                {{ imageDetail.imageType | imageTypeFilter }}
               </i-col>
             </Row>
           </i-col>
@@ -81,9 +83,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                图片详情:
-              </i-col>
+              <i-col span="4"> 图片详情: </i-col>
               <i-col span="20">
                 <img :src="imageDetail.imageUrl" width="100%">
               </i-col>
@@ -93,9 +93,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                图片名称:
-              </i-col>
+              <i-col span="4"> 图片名称: </i-col>
               <i-col span="20">
                 {{ imageDetail.imageName }}
               </i-col>
@@ -105,9 +103,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                排序序号:
-              </i-col>
+              <i-col span="4"> 排序序号: </i-col>
               <i-col span="20">
                 {{ imageDetail.rank }}
               </i-col>
@@ -117,9 +113,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                图片状态:
-              </i-col>
+              <i-col span="4"> 图片状态: </i-col>
               <i-col span="20">
                 {{ imageDetail.imageStatus | imageStatusFilter }}
               </i-col>
@@ -129,9 +123,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                创建用户:
-              </i-col>
+              <i-col span="4"> 创建用户: </i-col>
               <i-col span="20">
                 {{ imageDetail.createUser }}
               </i-col>
@@ -141,9 +133,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                创建时间:
-              </i-col>
+              <i-col span="4"> 创建时间: </i-col>
               <i-col span="20">
                 {{ imageDetail.createTime }}
               </i-col>
@@ -154,9 +144,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                图片地址:
-              </i-col>
+              <i-col span="4"> 图片地址: </i-col>
               <i-col span="20">
                 {{ imageDetail.imageUrl }}
               </i-col>
@@ -165,18 +153,23 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
     <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改图片信息':'创建图片信息' }}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit ? "修改图片信息" : "创建图片信息"
+        }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="imageDetail" :rules="ruleInline" :label-width="80">
+        <Form
+          ref="modalEdit"
+          :model="imageDetail"
+          :rules="ruleInline"
+          :label-width="80"
+        >
           <Row>
             <Col span="18">
             <FormItem :label-width="85" label="图片类型:" prop="imageType">
@@ -195,20 +188,41 @@
             </Col>
           </Row>
           <Row>
-            <FormItem label="图片详情     (推荐尺寸为750X160(单位:px)):" prop="imageUrl">
-              <Input v-show="false" v-model="imageDetail.imageUr" style="width: auto"></Input>
-              <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+            <FormItem
+              label="图片详情     (推荐尺寸为750X160(单位:px)):"
+              prop="imageUrl"
+            >
+              <Input
+                v-show="false"
+                v-model="imageDetail.imageUr"
+                style="width: auto"
+              ></Input>
+              <div
+                v-for="item in uploadListMain"
+                :key="item.url"
+                class="demo-upload-list"
+              >
                 <template v-if="item.status === 'finished'">
                   <div>
                     <img :src="item.url">
                     <div class="demo-upload-list-cover">
-                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                      <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                      <Icon
+                        type="ios-eye-outline"
+                        @click.native="handleUploadView(item)"
+                      ></Icon>
+                      <Icon
+                        type="ios-trash-outline"
+                        @click.native="handleRemoveMain(item)"
+                      ></Icon>
                     </div>
                   </div>
                 </template>
                 <template v-else>
-                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                  <Progress
+                    v-if="item.showProgress"
+                    :percent="item.percentage"
+                    hide-info
+                  ></Progress>
                 </template>
               </div>
               <IViewUpload
@@ -219,7 +233,10 @@
                 file-dir="activity"
                 @on-success="handleSuccessMain"
               >
-                <div slot="content" style="width:58px;height:58px;line-height:58px">
+                <div
+                  slot="content"
+                  style="width: 58px; height: 58px; line-height: 58px"
+                >
                   <Icon type="ios-camera" size="20"></Icon>
                 </div>
               </IViewUpload>
@@ -228,14 +245,21 @@
           <Row>
             <Col span="12">
             <FormItem label="图片名称:" prop="imageName">
-              <Input v-model="imageDetail.imageName" placeholder="图片名称"></Input>
+              <Input
+                v-model="imageDetail.imageName"
+                placeholder="图片名称"
+              ></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
             <FormItem label="排序序号:" prop="rank">
-              <InputNumber v-model="imageDetail.rank" :min="0" placeholder="排序序号"></InputNumber>
+              <InputNumber
+                v-model="imageDetail.rank"
+                :min="0"
+                placeholder="排序序号"
+              ></InputNumber>
             </FormItem>
             </Col>
           </Row>
@@ -259,10 +283,12 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+        >
           确定
         </Button>
       </div>
@@ -475,7 +501,7 @@ export default {
       //   };
       //   this.deletePicture(urls);
       // }
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -510,7 +536,7 @@ export default {
     createStore() {
       this.modalViewLoading = true;
       createImage(this.imageDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
@@ -524,7 +550,7 @@ export default {
     editStore() {
       this.modalViewLoading = true;
       editImage(this.imageDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
@@ -553,7 +579,7 @@ export default {
       deleteImage({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -565,7 +591,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -599,7 +625,7 @@ export default {
     getTableData() {
       this.loading = true;
       getImagePages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;

@@ -19,8 +19,8 @@
       >
         <div slot="operations">
           <Button
-            v-waves
             v-show="showBack"
+            v-waves
             class="search-btn ml5 mr5"
             type="primary"
             @click="goBack"
@@ -105,11 +105,10 @@
                 >
                   <Option
                     v-for="item in vaild"
-                    :value="item.value"
                     :key="item.value"
+                    :value="item.value"
                     class="ptb2-5"
-                    >{{ item.label }}</Option
-                  >
+                  >{{ item.label }}</Option>
                 </Select>
                 <!-- <Select
                   v-model="searchConfigRowData.isVip"
@@ -222,26 +221,28 @@
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit"
-          >确定</Button
-        >
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit"
+        >确定</Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
+import Tables from '_c/tables';
 import {
   getFlashsaleGoodsPages,
   getProductStandardsPages,
   deleteFlashsaleGoods,
   createFlashsaleGoods,
-  editFlashsaleGoods,
-} from "@/api/wholesale";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+  editFlashsaleGoods
+} from '@/api/wholesale';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import {
   couponStatusConvert,
   couponTypeConvert,
@@ -249,358 +250,358 @@ import {
   couponScopeConvert,
   receiveTypeConvert,
   couponFromConvert,
-  pfExpandTypeConvert,
-} from "@/libs/converStatus";
+  pfExpandTypeConvert
+} from '@/libs/converStatus';
 import {
   couponStatusEnum,
   couponTypeEnum,
   imageStatusEnum,
   receiveTypeEnum,
   couponFromEnum,
-  pfExpandTypeEnum,
-} from "@/libs/enumerate";
+  pfExpandTypeEnum
+} from '@/libs/enumerate';
 import {
   compareData,
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber,
   setSmallCouponActivity,
-  getActivity,
-} from "@/libs/util";
+  getActivity
+} from '@/libs/util';
 
 const flashsaleGoods = {
   activityId: 0,
-  baseUnit: "",
+  baseUnit: '',
   goodsId: 0,
-  goodsImage: "",
-  goodsName: "",
+  goodsImage: '',
+  goodsName: '',
   goodsStandardId: 0,
   goodsStock: 0,
-  goodsUnit: "",
+  goodsUnit: '',
   id: 0,
   limitQuantity: 0,
   price: 0,
-  progress: "",
+  progress: '',
   rankNum: 0,
   remain: 0,
   specialPrice: 0,
-  standardIds: "",
+  standardIds: ''
 };
 
 const roleRowData = {
   activityId: null,
   page: 1,
   rows: 10,
-  sidx: "id",
-  sort: "desc",
+  sidx: 'id',
+  sort: 'desc'
 };
 
 const productStandardDetail = {
-  barCode: "",
-  unitName: "",
-  categoryName: "",
-  goodsCode: "",
+  barCode: '',
+  unitName: '',
+  categoryName: '',
+  goodsCode: '',
   goodsId: 0,
   goodsImage: null,
-  goodsName: "",
+  goodsName: '',
   goodsPriceRegionList: [], // 商品价格区间
-  goodsUnit: "",
-  hdSkuId: "",
+  goodsUnit: '',
+  hdSkuId: '',
   id: 0,
-  isVip: "",
+  isVip: '',
   netWeight: 0, // 商品净重
   price: 0,
   purchasePrice: 0,
-  standard: "",
-  standardDesc: "",
-  unitCode: "",
-  vaild: "",
+  standard: '',
+  standardDesc: '',
+  unitCode: '',
+  vaild: '',
   weight: 0,
   rank: 0, // 先保留后续扩展
-  baseProductName: "", // 先保留可扩展
+  baseProductName: '' // 先保留可扩展
 };
 
 const standardRoleRowData = {
-  goodsId: "",
-  barCode: "",
-  goodsCode: "",
-  goodsName: "",
-  goodsType: "FLASHSALE",
-  vaild: "",
+  goodsId: '',
+  barCode: '',
+  goodsCode: '',
+  goodsName: '',
+  goodsType: 'FLASHSALE',
+  vaild: '',
   page: 1,
-  rows: 5,
+  rows: 5
 };
 
 const activityDetail = {
   id: 0,
-  activityCode: "",
-  activityDesc: "",
-  activityType: "",
-  linkUrl: "",
-  vaild: "",
+  activityCode: '',
+  activityDesc: '',
+  activityType: '',
+  linkUrl: '',
+  vaild: '',
   endTime: null,
-  startTime: null,
+  startTime: null
 };
 
 const standardColumns = [
   {
-    type: "selection",
-    key: "",
+    type: 'selection',
+    key: '',
     minWidth: 50,
-    align: "center",
-    fixed: "left",
+    align: 'center',
+    fixed: 'left'
   },
   {
-    title: "规格ID",
-    align: "center",
-    key: "id",
-    minWidth: 50,
+    title: '规格ID',
+    align: 'center',
+    key: 'id',
+    minWidth: 50
   },
   {
-    title: "商品条码",
-    align: "center",
-    key: "barCode",
-    minWidth: 70,
+    title: '商品条码',
+    align: 'center',
+    key: 'barCode',
+    minWidth: 70
   },
   {
-    title: "商品名称",
-    align: "center",
-    key: "standardGoodsName",
-    minWidth: 130,
+    title: '商品名称',
+    align: 'center',
+    key: 'standardGoodsName',
+    minWidth: 130
   },
   {
-    title: "商品图片",
-    key: "goodsImage",
-    align: "center",
+    title: '商品图片',
+    key: 'goodsImage',
+    align: 'center',
     minWidth: 120,
     render: (h, params, vm) => {
       const { row } = params;
-      const str = <img src={row.goodsImage} height="60" width="60" />;
+      const str = <img src={row.goodsImage} height='60' width='60' />;
       return <div>{str}</div>;
-    },
+    }
   },
   {
-    title: "商品规格",
-    align: "center",
-    key: "standardDesc",
+    title: '商品规格',
+    align: 'center',
+    key: 'standardDesc',
+    minWidth: 80
+  },
+  {
+    title: '商品单位',
+    align: 'center',
     minWidth: 80,
+    key: 'goodsUnit'
   },
   {
-    title: "商品单位",
-    align: "center",
-    minWidth: 80,
-    key: "goodsUnit",
-  },
-  {
-    title: "商品原价",
-    align: "center",
+    title: '商品原价',
+    align: 'center',
     minWidth: 60,
-    key: "price",
+    key: 'price',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
-    },
+    }
   },
   {
-    title: "进货价",
-    align: "center",
+    title: '进货价',
+    align: 'center',
     minWidth: 60,
-    key: "purchasePrice",
+    key: 'purchasePrice',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.purchasePrice);
       return <div>{amount}</div>;
-    },
+    }
   },
   {
-    title: "商品类型",
+    title: '商品类型',
     minWidth: 80,
-    key: "goodsType",
-    align: "center",
+    key: 'goodsType',
+    align: 'center',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.goodsType == "NORMAL") {
+      if (row.goodsType == 'NORMAL') {
         return (
           <div>
-            <tag color="cyan">{pfExpandTypeConvert(row.goodsType).label}</tag>
+            <tag color='cyan'>{pfExpandTypeConvert(row.goodsType).label}</tag>
           </div>
         );
-      } else if (row.goodsType == "VIP") {
+      } else if (row.goodsType == 'VIP') {
         return (
           <div>
-            <tag color="orange">{pfExpandTypeConvert(row.goodsType).label}</tag>
+            <tag color='orange'>{pfExpandTypeConvert(row.goodsType).label}</tag>
           </div>
         );
-      } else if (row.goodsType == "FLASHSALE") {
+      } else if (row.goodsType == 'FLASHSALE') {
       }
       return (
         <div>
-          <tag color="blue">{pfExpandTypeConvert(row.goodsType).label}</tag>
+          <tag color='blue'>{pfExpandTypeConvert(row.goodsType).label}</tag>
         </div>
       );
       return (
         <div>
-          <tag color="primary">N/A</tag>
+          <tag color='primary'>N/A</tag>
         </div>
       );
-    },
+    }
   },
   {
-    title: "商品状态",
+    title: '商品状态',
     minWidth: 80,
-    key: "vaild",
-    align: "center",
+    key: 'vaild',
+    align: 'center',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.vaild === "yes") {
+      if (row.vaild === 'yes') {
         return (
           <div>
-            <tag color="success">上架</tag>
+            <tag color='success'>上架</tag>
           </div>
         );
-      } else if (row.vaild === "no") {
+      } else if (row.vaild === 'no') {
         return (
           <div>
-            <tag color="error">下架</tag>
+            <tag color='error'>下架</tag>
           </div>
         );
       }
       return (
         <div>
-          <tag color="primary">N/A</tag>
+          <tag color='primary'>N/A</tag>
         </div>
       );
-    },
-  },
+    }
+  }
 ];
 
 const flashsaleColumns = [
   {
-    type: "selection",
+    type: 'selection',
     width: 60,
-    align: "center",
+    align: 'center'
   },
   {
-    title: "ID",
-    align: "center",
-    key: "id",
+    title: 'ID',
+    align: 'center',
+    key: 'id'
   },
   {
-    title: "商品名称",
-    align: "center",
-    key: "goodsName",
-    minWidth: 130,
+    title: '商品名称',
+    align: 'center',
+    key: 'goodsName',
+    minWidth: 130
   },
   {
-    title: "商品原价",
-    align: "center",
+    title: '商品原价',
+    align: 'center',
     minWidth: 60,
-    key: "price",
+    key: 'price',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
-    },
+    }
   },
   {
-    title: "抢购价",
-    align: "center",
+    title: '抢购价',
+    align: 'center',
     minWidth: 60,
-    key: "specialPrice",
+    key: 'specialPrice',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.specialPrice);
       return <div>{amount}</div>;
-    },
+    }
   },
   {
-    title: "抢购库存",
-    align: "center",
-    key: "goodsStock",
-    minWidth: 40,
+    title: '抢购库存',
+    align: 'center',
+    key: 'goodsStock',
+    minWidth: 40
   },
   {
-    title: "剩余数量",
-    align: "center",
-    key: "remain",
-    minWidth: 40,
+    title: '剩余数量',
+    align: 'center',
+    key: 'remain',
+    minWidth: 40
   },
   {
-    title: "限购数",
-    align: "center",
-    key: "limitQuantity",
-    minWidth: 40,
+    title: '限购数',
+    align: 'center',
+    key: 'limitQuantity',
+    minWidth: 40
   },
   {
-    title: "排序",
-    align: "center",
-    key: "rankNum",
-    minWidth: 40,
+    title: '排序',
+    align: 'center',
+    key: 'rankNum',
+    minWidth: 40
   },
   {
-    title: "操作",
+    title: '操作',
     minWidth: 80,
-    align: "center",
-    key: "handle",
-    options: ["edit", "delete"],
-  },
+    align: 'center',
+    key: 'handle',
+    options: ['edit', 'delete']
+  }
 ];
 
 export default {
   components: {
-    Tables,
+    Tables
   },
   mixins: [deleteMixin, tableMixin, searchMixin],
   data() {
     return {
       ruleInline: {
-        specialPrice: [{ required: true, message: "请输入抢购价" }],
-        goodsStock: [{ required: true, message: "请输入抢购库存" }],
-        limitQuantity: [{ required: true, message: "请输入每人限购数量" }],
-        standardIds: [{ required: false, message: "请先关联商品规格" }],
+        specialPrice: [{ required: true, message: '请输入抢购价' }],
+        goodsStock: [{ required: true, message: '请输入抢购库存' }],
+        limitQuantity: [{ required: true, message: '请输入每人限购数量' }],
+        standardIds: [{ required: false, message: '请先关联商品规格' }]
       },
       relationRuleInline: {
         issuedNum: [
-          { required: true, message: "请输入发券限制数量" },
+          { required: true, message: '请输入发券限制数量' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
+                errors.push(new Error('必须为非零整数'));
               }
               callback(errors);
-            },
-          },
+            }
+          }
         ],
         effectiveDay: [
-          { required: true, message: "请输入发券限制数量" },
+          { required: true, message: '请输入发券限制数量' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
+                errors.push(new Error('必须为非零整数'));
               }
               callback(errors);
-            },
-          },
-        ],
+            }
+          }
+        ]
       },
       vipEnum: [
         {
-          label: "是",
-          value: "yes",
+          label: '是',
+          value: 'yes'
         },
         {
-          label: "否",
-          value: "no",
-        },
+          label: '否',
+          value: 'no'
+        }
       ],
       vaild: [
         {
-          label: "上架",
-          value: "yes",
+          label: '上架',
+          value: 'yes'
         },
         {
-          label: "下架",
-          value: "no",
-        },
+          label: '下架',
+          value: 'no'
+        }
       ],
       defaultListMain: [],
       uploadListMain: [],
@@ -613,7 +614,7 @@ export default {
       couponTypeEnum,
       imageStatusEnum,
       receiveTypeEnum,
-      activityStatus: "",
+      activityStatus: '',
       columns: flashsaleColumns,
       standardColumns: _.cloneDeep(standardColumns),
       loadingConfig: false,
@@ -629,20 +630,20 @@ export default {
       flashsaleGoods: _.cloneDeep(flashsaleGoods),
       couponTemplates: [],
       couponTemplateTotal: 0,
-      configTotal: 0,
+      configTotal: 0
     };
   },
   computed: {
     specialPriceComputed() {
       return fenToYuanDot2Number(this.flashsaleGoods.specialPrice);
-    },
+    }
   },
   mounted() {
     this.searchRowData = _.cloneDeep(roleRowData);
     this.getTableData();
   },
   created() {
-    this.showBack = this.$route.name === "wholesale-flashsale";
+    this.showBack = this.$route.name === 'wholesale-flashsale';
   },
   methods: {
     specialPriceChange(value) {
@@ -679,8 +680,8 @@ export default {
       });
     },
     handleCreate() {
-      if (this.activityStatus === "yes") {
-        this.$Message.error("活动有效期内不允许添加新活动!");
+      if (this.activityStatus === 'yes') {
+        this.$Message.error('活动有效期内不允许添加新活动!');
         return;
       }
       if (this.tempModalType !== this.modalType.create) {
@@ -695,7 +696,7 @@ export default {
       var rows = params.row;
       setSmallCouponActivity(rows);
       this.turnToPage({
-        name: "small-vip-activities-associated",
+        name: 'small-vip-activities-associated'
       });
     },
     handleSubmit() {
@@ -703,7 +704,7 @@ export default {
         if (valid) {
           if (this.isCreate) {
             if (!this.flashsaleGoods.standardIds) {
-              this.$Message.error("请至少关联一个商品规格");
+              this.$Message.error('请至少关联一个商品规格');
               return;
             }
 
@@ -712,7 +713,7 @@ export default {
             this.editFlashsaleGoods();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -720,7 +721,7 @@ export default {
       this.modalViewLoading = true;
       createFlashsaleGoods(this.flashsaleGoods)
         .then((res) => {
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .finally(() => {
@@ -732,7 +733,7 @@ export default {
       this.modalViewLoading = true;
       editFlashsaleGoods(this.flashsaleGoods)
         .then((res) => {
-          this.$Message.success("修改成功!");
+          this.$Message.success('修改成功!');
           this.getTableData();
         })
         .finally(() => {
@@ -743,12 +744,12 @@ export default {
     onConfigSelectionChange(selection) {
       this.flashsaleGoods.standardIds = selection
         .map((item) => item.id.toString())
-        .join(",");
+        .join(',');
     },
     onConfigSelectionAll(selection) {
       this.flashsaleGoods.standardIds = selection
         .map((item) => item.id.toString())
-        .join(",");
+        .join(',');
     },
     resetFields() {
       if (this.tempModalType == null) {
@@ -760,7 +761,7 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteFlashsaleGoods({
-        ids,
+        ids
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
@@ -780,8 +781,8 @@ export default {
         });
     },
     handleEdit(params) {
-      if (this.activityStatus === "yes") {
-        this.$Message.error("活动有效期内不允许删除!");
+      if (this.activityStatus === 'yes') {
+        this.$Message.error('活动有效期内不允许删除!');
         return;
       }
       this.tempModalType = this.modalType.edit;
@@ -794,25 +795,25 @@ export default {
         if (valid) {
           const activityRegisterId = this.addRelationDetail.activityRegisterId;
           const couponTemplateIds = this.addRelationDetail.couponTemplateIds.split(
-            ","
+            ','
           );
-          if (activityRegisterId === 0 || activityRegisterId === "") {
-            this.$Message.error("注册送礼优惠券活动不能为空!");
+          if (activityRegisterId === 0 || activityRegisterId === '') {
+            this.$Message.error('注册送礼优惠券活动不能为空!');
             return;
           } else if (
             couponTemplateIds.length === 0 ||
-            this.addRelationDetail.couponTemplateIds === ""
+            this.addRelationDetail.couponTemplateIds === ''
           ) {
-            this.$Message.error("请选择要关联的优惠券模板!");
+            this.$Message.error('请选择要关联的优惠券模板!');
             return;
           }
           console.log(
-            "realtion couponTemplate",
+            'realtion couponTemplate',
             JSON.stringify(this.addRelationDetail)
           );
           this.createRelation();
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -836,11 +837,11 @@ export default {
       this.handleConfigSearch();
     },
     goBack() {
-      this.turnToPage("wholesale-activity");
+      this.turnToPage('wholesale-activity');
     },
     handleDelete(params) {
-      if (this.activityStatus === "yes") {
-        this.$Message.error("活动有效期内不允删除!");
+      if (this.activityStatus === 'yes') {
+        this.$Message.error('活动有效期内不允删除!');
         return;
       }
       this.tableDataSelected = [];
@@ -849,21 +850,21 @@ export default {
     },
     poptipOk() {
       if (this.tableDataSelected.length < 1) {
-        this.$Message.warning("请选中要删除的行");
+        this.$Message.warning('请选中要删除的行');
         return;
       }
-      if (this.activityStatus === "yes") {
-        this.$Message.error("活动有效期内不允删除!");
+      if (this.activityStatus === 'yes') {
+        this.$Message.error('活动有效期内不允删除!');
         return;
       }
       const tempDeleteList = [];
       this.tableDataSelected.filter((value) => {
         tempDeleteList.push(value.id);
       });
-      const strTempDelete = tempDeleteList.join(",");
+      const strTempDelete = tempDeleteList.join(',');
       this.deleteTable(strTempDelete);
-    },
-  },
+    }
+  }
 };
 </script>
 

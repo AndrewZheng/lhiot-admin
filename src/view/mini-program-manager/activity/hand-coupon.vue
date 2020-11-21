@@ -165,9 +165,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                优惠券名称:
-              </i-col>
+              <i-col span="8"> 优惠券名称: </i-col>
               <i-col span="16">
                 {{ addRelationDetail.couponName }}
               </i-col>
@@ -175,9 +173,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                优惠券类型:
-              </i-col>
+              <i-col span="8"> 优惠券类型: </i-col>
               <i-col
                 v-if="addRelationDetail.couponType === 'FULL_CUT_COUPON'"
                 span="16"
@@ -223,9 +219,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                优惠/折扣额度:
-              </i-col>
+              <i-col span="8"> 优惠/折扣额度: </i-col>
               <i-col
                 v-if="addRelationDetail.couponType === 'DISCOUNT_COUPON'"
                 span="16"
@@ -233,21 +227,15 @@
                 {{ addRelationDetail.couponFee | fenToDiscountFilters }}
               </i-col>
               <i-col v-else span="16">
-                {{
-                  addRelationDetail.couponFee | fenToYuanDot2Filters
-                }}
+                {{ addRelationDetail.couponFee | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                最小购买金额:
-              </i-col>
+              <i-col span="8"> 最小购买金额: </i-col>
               <i-col span="16">
-                {{
-                  addRelationDetail.minBuyFee | fenToYuanDot2Filters
-                }}
+                {{ addRelationDetail.minBuyFee | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
@@ -255,9 +243,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                最高优惠金额:
-              </i-col>
+              <i-col span="8"> 最高优惠金额: </i-col>
               <i-col v-if="addRelationDetail.maxDiscountFee != null" span="16">
                 {{ "¥" + addRelationDetail.maxDiscountFee }}
               </i-col>
@@ -268,9 +254,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                佣金比例:
-              </i-col>
+              <i-col span="8"> 佣金比例: </i-col>
               <i-col v-if="addRelationDetail.commissionScale != null" span="16">
                 {{ addRelationDetail.commissionScale + "%" }}
               </i-col>
@@ -283,9 +267,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                优惠券状态:
-              </i-col>
+              <i-col span="8"> 优惠券状态: </i-col>
               <i-col
                 v-if="addRelationDetail.couponStatus === 'VALID'"
                 span="16"
@@ -312,13 +294,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                券有效期类型:
-              </i-col>
+              <i-col span="8"> 券有效期类型: </i-col>
               <i-col span="16">
-                {{
-                  addRelationDetail.validDateType | validDateTypeFilter
-                }}
+                {{ addRelationDetail.validDateType | validDateTypeFilter }}
               </i-col>
             </Row>
           </i-col>
@@ -332,9 +310,7 @@
         >
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                生效开始:
-              </i-col>
+              <i-col span="8"> 生效开始: </i-col>
               <i-col span="16">
                 {{ addRelationDetail.beginDay }}
               </i-col>
@@ -342,9 +318,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                有效天数:
-              </i-col>
+              <i-col span="8"> 有效天数: </i-col>
               <i-col span="16">
                 {{ addRelationDetail.endDay }}
               </i-col>
@@ -361,21 +335,15 @@
         >
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                生效时间:
-              </i-col>
+              <i-col span="8"> 生效时间: </i-col>
               <i-col span="16">
-                {{
-                  addRelationDetail.effectiveStartTime
-                }}
+                {{ addRelationDetail.effectiveStartTime }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                失效时间:
-              </i-col>
+              <i-col span="8"> 失效时间: </i-col>
               <i-col span="16">
                 {{ addRelationDetail.effectiveEndTime }}
               </i-col>
@@ -386,9 +354,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                券使用范围:
-              </i-col>
+              <i-col span="8"> 券使用范围: </i-col>
               <i-col v-if="addRelationDetail.couponScope === 'STORE'" span="16">
                 <tag color="magenta">
                   {{ "门店" }}
@@ -420,13 +386,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                券使用限制:
-              </i-col>
+              <i-col span="8"> 券使用限制: </i-col>
               <i-col span="16">
-                {{
-                  addRelationDetail.useLimitType | couponUseLimitFilter
-                }}
+                {{ addRelationDetail.useLimitType | couponUseLimitFilter }}
               </i-col>
             </Row>
           </i-col>
@@ -434,9 +396,7 @@
         <Row class-name="mb20">
           <i-col span="20">
             <Row>
-              <i-col span="5">
-                使用规则:
-              </i-col>
+              <i-col span="5"> 使用规则: </i-col>
               <i-col span="18">
                 {{ addRelationDetail.couponRules }}
               </i-col>
@@ -446,9 +406,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                关联门店:
-              </i-col>
+              <i-col span="4"> 关联门店: </i-col>
               <i-col span="16">
                 {{ showStoreName }}
               </i-col>
@@ -457,9 +415,7 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
@@ -613,9 +569,7 @@
                   label="最高优惠金额:"
                   prop="maxDiscountFee"
                 >
-                  {{
-                    addRelationDetail.maxDiscountFee | fenToYuanDot2Filters
-                  }}
+                  {{ addRelationDetail.maxDiscountFee | fenToYuanDot2Filters }}
                 </FormItem>
                 <FormItem
                   v-else
@@ -715,9 +669,7 @@
                   </FormItem>
                 </i-col>
               </template>
-              <template
-                v-if="addRelationDetail.validDateType == 'FIXED_DATE'"
-              >
+              <template v-if="addRelationDetail.validDateType == 'FIXED_DATE'">
                 <i-col span="7">
                   <FormItem label="生效时间:" prop="effectiveStartTime">
                     <DatePicker
@@ -752,9 +704,7 @@
                   label="券使用范围:"
                   prop="couponScope"
                 >
-                  {{
-                    addRelationDetail.couponScope | couponScopeFilter
-                  }}
+                  {{ addRelationDetail.couponScope | couponScopeFilter }}
                 </FormItem>
                 <FormItem
                   v-else
@@ -787,9 +737,7 @@
                   label="券使用限制:"
                   prop="useLimitType"
                 >
-                  {{
-                    addRelationDetail.useLimitType | couponUseLimitFilter
-                  }}
+                  {{ addRelationDetail.useLimitType | couponUseLimitFilter }}
                 </FormItem>
                 <FormItem
                   v-else
@@ -832,9 +780,7 @@
                 </FormItem>
               </i-col>
             </Row>
-            <Divider
-              v-if="hdCouponType === '新品上市活动券'"
-            >
+            <Divider v-if="hdCouponType === '新品上市活动券'">
               关联活动单品
             </Divider>
             <Button
@@ -1169,8 +1115,7 @@
                   </CheckboxGroup>
                 </FormItem>
               </i-col>-->
-            </Row>
-          </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板！
+            </Row> </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板！
           <span
             v-if="hdCouponType === '新品上市活动券'"
             style="color: #ff3861"
@@ -1178,9 +1123,7 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button @click="handleAddClose">
-          关闭
-        </Button>
+        <Button @click="handleAddClose"> 关闭 </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
@@ -1210,9 +1153,7 @@
           <Row>
             <i-col span="6">
               <FormItem label="优惠券类型:" prop="couponType">
-                {{
-                  addRelationDetail.couponType | couponTypeFilter
-                }}
+                {{ addRelationDetail.couponType | couponTypeFilter }}
               </FormItem>
             </i-col>
             <i-col span="6">
@@ -1221,14 +1162,10 @@
                 label="折扣额度:"
                 prop="couponFee"
               >
-                {{
-                  addRelationDetail.couponFee | fenToDiscountFilters
-                }}
+                {{ addRelationDetail.couponFee | fenToDiscountFilters }}
               </FormItem>
               <FormItem v-else label="优惠金额:" prop="couponFee">
-                {{
-                  addRelationDetail.couponFee | fenToYuanDot2Filters
-                }}
+                {{ addRelationDetail.couponFee | fenToYuanDot2Filters }}
               </FormItem>
             </i-col>
             <i-col span="6">
@@ -1237,9 +1174,7 @@
                 label="最小购买金额:"
                 prop="minBuyFee"
               >
-                {{
-                  addRelationDetail.minBuyFee | fenToYuanDot2Filters
-                }}
+                {{ addRelationDetail.minBuyFee | fenToYuanDot2Filters }}
               </FormItem>
             </i-col>
             <i-col span="6">
@@ -1249,9 +1184,7 @@
                 label="最高优惠金额:"
                 prop="minBuyFee"
               >
-                {{
-                  addRelationDetail.maxDiscountFee | fenToYuanDot2Filters
-                }}
+                {{ addRelationDetail.maxDiscountFee | fenToYuanDot2Filters }}
               </FormItem>
               <FormItem
                 v-else
@@ -1280,10 +1213,7 @@
               </FormItem>
             </i-col>
             <i-col span="6">
-              <FormItem
-                label="优惠券状态:"
-                prop="couponStatus"
-              >
+              <FormItem label="优惠券状态:" prop="couponStatus">
                 <Select
                   v-model="addRelationDetail.couponStatus"
                   placeholder="请选择"
@@ -1404,9 +1334,7 @@
                 label="券使用范围:"
                 prop="couponScope"
               >
-                {{
-                  addRelationDetail.couponScope | couponScopeFilter
-                }}
+                {{ addRelationDetail.couponScope | couponScopeFilter }}
               </FormItem>
               <FormItem
                 v-else
@@ -1433,13 +1361,8 @@
               </FormItem>
             </i-col>
             <i-col span="6">
-              <FormItem
-                label="使用限制:"
-                prop="useLimitType"
-              >
-                {{
-                  addRelationDetail.useLimitType | couponUseLimitFilter
-                }}
+              <FormItem label="使用限制:" prop="useLimitType">
+                {{ addRelationDetail.useLimitType | couponUseLimitFilter }}
               </FormItem>
             </i-col>
           </Row>
@@ -1455,9 +1378,7 @@
               </FormItem>
             </i-col>
           </Row>
-          <Divider
-            v-if="hdCouponType === '新品上市活动券'"
-          >
+          <Divider v-if="hdCouponType === '新品上市活动券'">
             关联活动单品
           </Divider>
           <Button
@@ -1492,11 +1413,7 @@
               </FormItem>
             </i-col>
           </Row>
-          <Divider
-            v-if="hdCouponType === '新品上市活动券'"
-          >
-            关联门店
-          </Divider>
+          <Divider v-if="hdCouponType === '新品上市活动券'"> 关联门店 </Divider>
           <Row>
             <i-col span="12">
               <FormItem label="关联门店:">
@@ -1793,17 +1710,14 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>-->
-          </Row>
-        </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板！
+          </Row> </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板！
         <span
           v-if="hdCouponType === '新品上市活动券'"
           style="color: #ff3861"
         >关联活动商品可点击查看商品信息！</span>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
@@ -1829,21 +1743,15 @@
           <Row class-name="mb20">
             <i-col span="12">
               <Row>
-                <i-col span="8">
-                  优惠券名称:
-                </i-col>
+                <i-col span="8"> 优惠券名称: </i-col>
                 <i-col span="16">
-                  {{
-                    currentTableRowSelected.couponName
-                  }}
+                  {{ currentTableRowSelected.couponName }}
                 </i-col>
               </Row>
             </i-col>
             <i-col span="12">
               <Row>
-                <i-col span="8">
-                  优惠券类型:
-                </i-col>
+                <i-col span="8"> 优惠券类型: </i-col>
                 <i-col
                   v-if="
                     currentTableRowSelected.couponType === 'FULL_CUT_COUPON'
@@ -1897,35 +1805,25 @@
           <Row class-name="mb20">
             <i-col span="12">
               <Row>
-                <i-col span="8">
-                  优惠/折扣额度:
-                </i-col>
+                <i-col span="8"> 优惠/折扣额度: </i-col>
                 <i-col
                   v-if="
                     currentTableRowSelected.couponType === 'DISCOUNT_COUPON'
                   "
                   span="16"
                 >
-                  {{
-                    currentTableRowSelected.couponFee | fenToDiscountFilters
-                  }}
+                  {{ currentTableRowSelected.couponFee | fenToDiscountFilters }}
                 </i-col>
                 <i-col v-else span="16">
-                  {{
-                    currentTableRowSelected.couponFee | fenToYuanDot2Filters
-                  }}
+                  {{ currentTableRowSelected.couponFee | fenToYuanDot2Filters }}
                 </i-col>
               </Row>
             </i-col>
             <i-col span="12">
               <Row>
-                <i-col span="8">
-                  最小购买金额:
-                </i-col>
+                <i-col span="8"> 最小购买金额: </i-col>
                 <i-col span="16">
-                  {{
-                    currentTableRowSelected.minBuyFee | fenToYuanDot2Filters
-                  }}
+                  {{ currentTableRowSelected.minBuyFee | fenToYuanDot2Filters }}
                 </i-col>
               </Row>
             </i-col>
@@ -1934,9 +1832,7 @@
           <Row class-name="mb20">
             <i-col span="12">
               <Row>
-                <i-col span="8">
-                  优惠券状态:
-                </i-col>
+                <i-col span="8"> 优惠券状态: </i-col>
                 <i-col
                   v-if="currentTableRowSelected.couponStatus === 'VALID'"
                   span="16"
@@ -1963,9 +1859,7 @@
             </i-col>
             <i-col span="12">
               <Row>
-                <i-col span="8">
-                  券有效期类型:
-                </i-col>
+                <i-col span="8"> 券有效期类型: </i-col>
                 <i-col span="16">
                   {{
                     currentTableRowSelected.validDateType | validDateTypeFilter
@@ -1983,9 +1877,7 @@
           >
             <i-col span="12">
               <Row>
-                <i-col span="8">
-                  生效开始:
-                </i-col>
+                <i-col span="8"> 生效开始: </i-col>
                 <i-col span="16">
                   {{ currentTableRowSelected.beginDay }}
                 </i-col>
@@ -1993,9 +1885,7 @@
             </i-col>
             <i-col span="12">
               <Row>
-                <i-col span="8">
-                  有效天数:
-                </i-col>
+                <i-col span="8"> 有效天数: </i-col>
                 <i-col span="16">
                   {{ currentTableRowSelected.endDay }}
                 </i-col>
@@ -2012,25 +1902,17 @@
           >
             <i-col span="12">
               <Row>
-                <i-col span="8">
-                  生效时间:
-                </i-col>
+                <i-col span="8"> 生效时间: </i-col>
                 <i-col span="16">
-                  {{
-                    currentTableRowSelected.effectiveStartTime
-                  }}
+                  {{ currentTableRowSelected.effectiveStartTime }}
                 </i-col>
               </Row>
             </i-col>
             <i-col span="12">
               <Row>
-                <i-col span="8">
-                  失效时间:
-                </i-col>
+                <i-col span="8"> 失效时间: </i-col>
                 <i-col span="16">
-                  {{
-                    currentTableRowSelected.effectiveEndTime
-                  }}
+                  {{ currentTableRowSelected.effectiveEndTime }}
                 </i-col>
               </Row>
             </i-col>
@@ -2039,9 +1921,7 @@
           <Row class-name="mb20">
             <i-col span="12">
               <Row>
-                <i-col span="8">
-                  券使用范围:
-                </i-col>
+                <i-col span="8"> 券使用范围: </i-col>
                 <i-col
                   v-if="currentTableRowSelected.couponScope === 'STORE'"
                   span="16"
@@ -2078,9 +1958,7 @@
             </i-col>
             <i-col span="12">
               <Row>
-                <i-col span="8">
-                  券使用限制:
-                </i-col>
+                <i-col span="8"> 券使用限制: </i-col>
                 <i-col span="16">
                   {{
                     currentTableRowSelected.useLimitType | couponUseLimitFilter
@@ -2106,22 +1984,17 @@
               </FormItem>
             </Row>
           </i-col>
-        </Row>
-      </Form>*Tips：请输入需发券手机号码，多个号码用
+        </Row> </Form>*Tips：请输入需发券手机号码，多个号码用
       <b style="color: red">英文逗号</b>
       分隔
       <Row v-show="failPhone.length > 0" class="mt10">
-        <i-col span="6">
-          发送失败手机号：
-        </i-col>
+        <i-col span="6"> 发送失败手机号： </i-col>
         <i-col span="22" class="brand-red">
           {{ failPhone.join(",") }}
         </i-col>
       </Row>
       <div slot="footer">
-        <Button @click="handlePhonesClose">
-          关闭
-        </Button>
+        <Button @click="handlePhonesClose"> 关闭 </Button>
         <Button
           v-once
           :loading="modalViewLoading"
@@ -2211,9 +2084,7 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleGoodsClose">
-          关闭
-        </Button>
+        <Button @click="handleGoodsClose"> 关闭 </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
@@ -2235,9 +2106,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品ID:
-              </i-col>
+              <i-col span="8"> 商品ID: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productId }}
               </i-col>
@@ -2245,13 +2114,9 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品名称:
-              </i-col>
+              <i-col span="8"> 商品名称: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.baseProductName
-                }}
+                {{ productStandardDetail.baseProductName }}
               </i-col>
             </Row>
           </i-col>
@@ -2259,9 +2124,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品分类:
-              </i-col>
+              <i-col span="8"> 商品分类: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.groupName }}
               </i-col>
@@ -2269,9 +2132,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                基础单位:
-              </i-col>
+              <i-col span="8"> 基础单位: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.baseUnit }}
               </i-col>
@@ -2281,9 +2142,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品编号:
-              </i-col>
+              <i-col span="8"> 商品编号: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productCode }}
               </i-col>
@@ -2291,9 +2150,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品条码:
-              </i-col>
+              <i-col span="8"> 商品条码: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.baseBarcode }}
               </i-col>
@@ -2303,9 +2160,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品主图:
-              </i-col>
+              <i-col span="8"> 商品主图: </i-col>
               <i-col span="16">
                 <img
                   :src="productStandardDetail.baseImage"
@@ -2319,26 +2174,18 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品描述:
-              </i-col>
+              <i-col span="8"> 商品描述: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.baseProductDescription
-                }}
+                {{ productStandardDetail.baseProductDescription }}
               </i-col>
             </Row>
           </i-col>
         </Row>
-        <Divider orientation="center">
-          商品规格
-        </Divider>
+        <Divider orientation="center"> 商品规格 </Divider>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                上架商品名称:
-              </i-col>
+              <i-col span="8"> 上架商品名称: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productName }}
               </i-col>
@@ -2346,13 +2193,9 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                上架商品描述:
-              </i-col>
+              <i-col span="8"> 上架商品描述: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.productDescription
-                }}
+                {{ productStandardDetail.productDescription }}
               </i-col>
             </Row>
           </i-col>
@@ -2360,9 +2203,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                上架商品主图:
-              </i-col>
+              <i-col span="8"> 上架商品主图: </i-col>
               <i-col v-if="productStandardDetail.image" span="16">
                 <img
                   :src="productStandardDetail.image"
@@ -2376,9 +2217,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品条码:
-              </i-col>
+              <i-col span="8"> 商品条码: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.barcode }}
               </i-col>
@@ -2386,9 +2225,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品状态:
-              </i-col>
+              <i-col span="8"> 商品状态: </i-col>
               <i-col span="16">
                 {{
                   productStandardDetail.shelvesStatus | customPlanStatusFilters
@@ -2400,9 +2237,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品规格:
-              </i-col>
+              <i-col span="8"> 商品规格: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.specification }}
               </i-col>
@@ -2410,9 +2245,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                数量/重量:
-              </i-col>
+              <i-col span="8"> 数量/重量: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.standardQty }}
               </i-col>
@@ -2422,25 +2255,17 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品原价:
-              </i-col>
+              <i-col span="8"> 商品原价: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.price | fenToYuanDot2Filters
-                }}
+                {{ productStandardDetail.price | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                售卖价格:
-              </i-col>
+              <i-col span="8"> 售卖价格: </i-col>
               <i-col span="16">
-                {{
-                  productStandardDetail.salePrice | fenToYuanDot2Filters
-                }}
+                {{ productStandardDetail.salePrice | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
@@ -2457,9 +2282,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品单位:
-              </i-col>
+              <i-col span="8"> 商品单位: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.productUnit }}
               </i-col>
@@ -2467,9 +2290,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品排序:
-              </i-col>
+              <i-col span="8"> 商品排序: </i-col>
               <i-col span="16">
                 {{ productStandardDetail.rank }}
               </i-col>
@@ -2478,9 +2299,7 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleGoodClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleGoodClose"> 关闭 </Button>
       </div>
     </Modal>
     <Modal
@@ -3782,26 +3601,25 @@ export default {
       }
     },
     getStore() {
-      getAreaStorePages()
-        .then((res) => {
-          this.storeList = res.array;
-          this.storeData = res.array[0].storeList;
-          this.storeData1 = res.array[1].storeList;
-          this.storeData2 = res.array[2].storeList;
-          this.storeData3 = res.array[3].storeList;
-          this.storeData4 = res.array[4].storeList;
-          this.storeData5 = res.array[5].storeList;
-          this.storeData6 = res.array[6].storeList;
-          // this.storeData7 = res.array[7].storeList;
-          const data = [];
-          for (const val of res.array) {
-            this.storeNameList.push(val.storeName);
-            data.push(val.storeList);
-          }
-          for (const value of data) {
-            this.storeListData = this.storeListData.concat(value);
-          }
-        })
+      getAreaStorePages().then((res) => {
+        this.storeList = res.array;
+        this.storeData = res.array[0].storeList;
+        this.storeData1 = res.array[1].storeList;
+        this.storeData2 = res.array[2].storeList;
+        this.storeData3 = res.array[3].storeList;
+        this.storeData4 = res.array[4].storeList;
+        this.storeData5 = res.array[5].storeList;
+        this.storeData6 = res.array[6].storeList;
+        // this.storeData7 = res.array[7].storeList;
+        const data = [];
+        for (const val of res.array) {
+          this.storeNameList.push(val.storeName);
+          data.push(val.storeList);
+        }
+        for (const value of data) {
+          this.storeListData = this.storeListData.concat(value);
+        }
+      });
     },
     handleCheckAll(value) {
       const _this = this;
@@ -4266,20 +4084,19 @@ export default {
       this.handGrandCoupon();
     },
     handGrandCoupon() {
-      handGrandCoupon(this.currentTableRowSelected)
-        .then((res) => {
-          if (res === '没有需要发券的数据') {
-            this.$Message.error('没有需要发券的数据！');
-            return;
-          }
-          if (res.fail.length > 0) {
-            this.$Message.error('部分用户发送失败！');
-            this.failPhone = res.fail;
-          } else {
-            this.$Message.success('发送成功！');
-            this.modalPhones = false;
-          }
-        })
+      handGrandCoupon(this.currentTableRowSelected).then((res) => {
+        if (res === '没有需要发券的数据') {
+          this.$Message.error('没有需要发券的数据！');
+          return;
+        }
+        if (res.fail.length > 0) {
+          this.$Message.error('部分用户发送失败！');
+          this.failPhone = res.fail;
+        } else {
+          this.$Message.success('发送成功！');
+          this.modalPhones = false;
+        }
+      });
     },
     getTableData() {
       this.loading = true;
@@ -4654,11 +4471,10 @@ export default {
     checkGoodsInfo(standardId) {
       const standardArray = {};
       standardArray.standardId = standardId;
-      getGoodsStandard(standardArray)
-        .then((res) => {
-          this.productStandardDetail = res;
-          this.modalGoodsStandard = true;
-        })
+      getGoodsStandard(standardArray).then((res) => {
+        this.productStandardDetail = res;
+        this.modalGoodsStandard = true;
+      });
     },
     handleGoodClose() {
       this.loading = false;

@@ -1,10 +1,8 @@
 <template>
   <div class="m-role">
-    <Card style="padding-left:20px">
+    <Card style="padding-left: 20px">
       <div>
-        <h3 class="mb20">
-          换绑会员手机号码
-        </h3>
+        <h3 class="mb20">换绑会员手机号码</h3>
         <Form ref="changePhones" :model="handPhonesDetail" :rules="ruleInline">
           <Row>
             <Col span="18">
@@ -12,7 +10,7 @@
               <Input
                 v-model="handPhonesDetail.oldPhone"
                 placeholder="请输入需换绑旧手机号码"
-                style="padding-right: 5px;width: 300px"
+                style="padding-right: 5px; width: 300px"
               ></Input>
             </FormItem>
             </Col>
@@ -23,12 +21,16 @@
               <Input
                 v-model="handPhonesDetail.newPhone"
                 placeholder="请输入需换绑新手机号码"
-                style="padding-right: 5px;width: 300px"
+                style="padding-right: 5px; width: 300px"
               ></Input>
             </FormItem>
             </Col>
           </Row>
-          <Button type="primary" class="ml300" @click="handleSubmit('changePhones')">
+          <Button
+            type="primary"
+            class="ml300"
+            @click="handleSubmit('changePhones')"
+          >
             确定
           </Button>
         </Form>
@@ -82,11 +84,10 @@ export default {
         return;
       }
 
-      handPhones(this.handPhonesDetail)
-        .then(res => {
-          this.$Message.success(res);
-          this.$refs.changePhones.resetFields();
-        })
+      handPhones(this.handPhonesDetail).then((res) => {
+        this.$Message.success(res);
+        this.$refs.changePhones.resetFields();
+      });
     }
   }
 };

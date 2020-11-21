@@ -18,6 +18,9 @@ const mixin = {
     };
   },
   computed: {
+    isView() {
+      this.tempModalType === this.modalType.view;
+    },
     isCreate() {
       return this.tempModalType === this.modalType.create;
     },

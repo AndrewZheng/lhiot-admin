@@ -120,9 +120,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动标题:
-              </i-col>
+              <i-col span="6"> 活动标题: </i-col>
               <i-col span="18">
                 {{ activityNewProducts.title }}
               </i-col>
@@ -132,9 +130,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                开始时间:
-              </i-col>
+              <i-col span="6"> 开始时间: </i-col>
               <i-col span="18">
                 {{
                   (activityNewProducts.beginTime = this.$moment(
@@ -148,9 +144,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                结束时间:
-              </i-col>
+              <i-col span="6"> 结束时间: </i-col>
               <i-col span="18">
                 {{
                   (activityNewProducts.endTime = this.$moment(
@@ -164,13 +158,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动状态:
-              </i-col>
+              <i-col span="6"> 活动状态: </i-col>
               <i-col v-if="activityNewProducts.status == 'ON'" span="18">
-                {{
-                  "上架"
-                }}
+                {{ "上架" }}
               </i-col>
               <i-col v-else span="18">
                 {{ "下架" }}
@@ -181,9 +171,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                主题色号:
-              </i-col>
+              <i-col span="6"> 主题色号: </i-col>
               <i-col span="18">
                 {{ activityNewProducts.mainColour }}
               </i-col>
@@ -193,9 +181,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                主题图片:
-              </i-col>
+              <i-col span="6"> 主题图片: </i-col>
               <i-col v-show="activityNewProducts.mainImage" span="6">
                 <div class="demo-upload-list">
                   <img :src="activityNewProducts.mainImage">
@@ -207,9 +193,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                分享图片:
-              </i-col>
+              <i-col span="6"> 分享图片: </i-col>
               <i-col v-show="activityNewProducts.shareImage" span="6">
                 <div class="demo-upload-list">
                   <img :src="activityNewProducts.shareImage">
@@ -221,9 +205,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                分享文案:
-              </i-col>
+              <i-col span="6"> 分享文案: </i-col>
               <i-col span="18">
                 <Input
                   :v-if="activityNewProducts.shareText"
@@ -238,9 +220,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                关联门店:
-              </i-col>
+              <i-col span="6"> 关联门店: </i-col>
               <i-col span="16">
                 {{ showStoreName }}
               </i-col>
@@ -249,9 +229,7 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
     <Modal v-model="modalEdit" :mask-closable="false" :width="800">
@@ -757,9 +735,7 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
         <Button
           :loading="modalEditLoading"
           type="primary"
@@ -927,9 +903,7 @@
         </Card>
       </div>
       <div slot="footer">
-        <Button @click="handleRelevanceClose">
-          关闭
-        </Button>
+        <Button @click="handleRelevanceClose"> 关闭 </Button>
       </div>
     </Modal>
     <!-- 券列表 -->
@@ -983,9 +957,7 @@
         </Row>
       </Form>
       <div slot="footer">
-        <Button @click="handleAddClose">
-          关闭
-        </Button>
+        <Button @click="handleAddClose"> 关闭 </Button>
         <Button
           :loading="modalRelevanceLoading"
           type="primary"
@@ -1087,9 +1059,7 @@
         </Row>
       </Form>
       <div slot="footer">
-        <Button @click="handleAddClose">
-          关闭
-        </Button>
+        <Button @click="handleAddClose"> 关闭 </Button>
         <Button
           :loading="modalRelevanceLoading"
           type="primary"
@@ -1194,9 +1164,7 @@
         </Row>
       </Form>
       <div slot="footer">
-        <Button @click="handleAddClose">
-          关闭
-        </Button>
+        <Button @click="handleAddClose"> 关闭 </Button>
         <Button
           v-if="sameGoodsStatus"
           :loading="modalRelevanceLoading"
@@ -1205,11 +1173,7 @@
         >
           确定
         </Button>
-        <Button
-          v-else
-          :loading="modalRelevanceLoading"
-          type="warning"
-        >
+        <Button v-else :loading="modalRelevanceLoading" type="warning">
           确定
         </Button>
       </div>
@@ -1330,9 +1294,7 @@
         </Row>
       </Form>
       <div slot="footer">
-        <Button @click="handleAddClose">
-          关闭
-        </Button>
+        <Button @click="handleAddClose"> 关闭 </Button>
         <Button
           :loading="modalRelevanceLoading"
           type="primary"
@@ -1489,9 +1451,7 @@
         </Row>
       </Form>
       <div slot="footer">
-        <Button @click="handleAddClose">
-          关闭
-        </Button>
+        <Button @click="handleAddClose"> 关闭 </Button>
         <Button
           :loading="modalRelevanceLoading"
           type="primary"
@@ -1519,12 +1479,8 @@
         </Row>
       </Form>
       <div slot="footer">
-        <Button @click="handleEditRankClose">
-          关闭
-        </Button>
-        <Button type="primary" @click="submitEditRank()">
-          确定
-        </Button>
+        <Button @click="handleEditRankClose"> 关闭 </Button>
+        <Button type="primary" @click="submitEditRank()"> 确定 </Button>
       </div>
     </Modal>
     <Modal v-model="uploadVisible" title="图片预览">
@@ -3313,26 +3269,25 @@ export default {
       }
     },
     getStore() {
-      getAreaStorePages()
-        .then((res) => {
-          this.storeList = res.array;
-          this.storeData = res.array[0].storeList;
-          this.storeData1 = res.array[1].storeList;
-          this.storeData2 = res.array[2].storeList;
-          this.storeData3 = res.array[3].storeList;
-          this.storeData4 = res.array[4].storeList;
-          this.storeData5 = res.array[5].storeList;
-          this.storeData6 = res.array[6].storeList;
-          // this.storeData7 = res.array[7].storeList;
-          const data = [];
-          for (const val of res.array) {
-            this.storeNameList.push(val.storeName);
-            data.push(val.storeList);
-          }
-          for (const value of data) {
-            this.storeListData = this.storeListData.concat(value);
-          }
-        })
+      getAreaStorePages().then((res) => {
+        this.storeList = res.array;
+        this.storeData = res.array[0].storeList;
+        this.storeData1 = res.array[1].storeList;
+        this.storeData2 = res.array[2].storeList;
+        this.storeData3 = res.array[3].storeList;
+        this.storeData4 = res.array[4].storeList;
+        this.storeData5 = res.array[5].storeList;
+        this.storeData6 = res.array[6].storeList;
+        // this.storeData7 = res.array[7].storeList;
+        const data = [];
+        for (const val of res.array) {
+          this.storeNameList.push(val.storeName);
+          data.push(val.storeList);
+        }
+        for (const value of data) {
+          this.storeListData = this.storeListData.concat(value);
+        }
+      });
     },
     handleCheckAll(value) {
       const _this = this;
@@ -4024,7 +3979,9 @@ export default {
       this.searchNewProductRowData = _.cloneDeep(newproductRowData);
       this.searchteambuyRowData = _.cloneDeep(teambuyRowData);
       this.searchPresellRowData = _.cloneDeep(PresellRowData);
-      this.ActivityNewProductsRelation = this._.cloneDeep(ActivityNewProductsRelevance);
+      this.ActivityNewProductsRelation = this._.cloneDeep(
+        ActivityNewProductsRelevance
+      );
       if (value === 'NEW_COUPON') {
         let couponNum = 0;
         // 列表只允许有一张券
@@ -4105,11 +4062,10 @@ export default {
     },
     // 券列表
     getTemplateTableData() {
-      getCouponPagess(this.searchTemplateRowData)
-        .then((res) => {
-          this.couponTemplateData = res.rows;
-          this.couponTemplateTotal = res.total;
-        })
+      getCouponPagess(this.searchTemplateRowData).then((res) => {
+        this.couponTemplateData = res.rows;
+        this.couponTemplateTotal = res.total;
+      });
     },
     // 商品列表
     getProductTableData() {
@@ -4127,19 +4083,17 @@ export default {
     },
     // 新品尝鲜活动
     getSeckillPages() {
-      getSeckillPages(this.searchNewProductRowData)
-        .then((res) => {
-          this.newProductTableData = res.rows;
-          this.newProductTotal = res.total;
-        })
+      getSeckillPages(this.searchNewProductRowData).then((res) => {
+        this.newProductTableData = res.rows;
+        this.newProductTotal = res.total;
+      });
     },
     // 预售活动
     getPresellPages() {
-      getPresellPages(this.searchPresellRowData)
-        .then((res) => {
-          this.PresellTableData = res.rows;
-          this.PresellTotal = res.total;
-        })
+      getPresellPages(this.searchPresellRowData).then((res) => {
+        this.PresellTableData = res.rows;
+        this.PresellTotal = res.total;
+      });
     },
     changeCouponPage(page) {
       this.searchTemplateRowData.page = page;

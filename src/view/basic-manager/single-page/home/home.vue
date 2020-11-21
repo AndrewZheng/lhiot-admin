@@ -31,12 +31,11 @@
         <span class="welcome">欢迎，管理者! 祝你今日工作愉快!</span>
       </Card>
     </Row>
-    <Row style="margin-top: 20px;">
+    <Row style="margin-top: 20px">
       <Card shadow>
-        <!-- <example style="height: 310px;" /> -->
         <img
           src="http://resource.shuiguoshule.com.cn/product_image/2019-07-31/sgv7qBdSKI7ZrH5JU2kB.jpg"
-          style="height: 300px;width:100%;"
+          style="height: 300px; width: 100%"
         >
       </Card>
     </Row>
@@ -44,20 +43,13 @@
 </template>
 
 <script>
-import { getTotalOrders } from '@/api/mini-program';
 import InforCard from '_c/info-card';
 import CountTo from '_c/count-to';
 import { ChartPie, ChartBar } from '_c/charts';
 import Example from './example.vue';
 export default {
   name: 'Home',
-  components: {
-    InforCard,
-    CountTo,
-    ChartPie,
-    ChartBar,
-    Example
-  },
+  components: {},
   data() {
     return {
       inforCardData: [
@@ -126,7 +118,7 @@ export default {
   font-size: 40px;
 }
 
-.welcome{
+.welcome {
   font-size: 40px;
 }
 </style>

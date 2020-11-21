@@ -305,9 +305,7 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                订单编号:
-              </i-col>
+              <i-col span="8"> 订单编号: </i-col>
               <i-col span="16">
                 {{ orderDetail.code }}
               </i-col>
@@ -315,13 +313,9 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                订单状态:
-              </i-col>
+              <i-col span="8"> 订单状态: </i-col>
               <i-col span="16">
-                {{
-                  orderDetail.orderStatus | miniOrderStatusFilter
-                }}
+                {{ orderDetail.orderStatus | miniOrderStatusFilter }}
               </i-col>
             </Row>
           </i-col>
@@ -329,9 +323,7 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                海鼎编码:
-              </i-col>
+              <i-col span="8"> 海鼎编码: </i-col>
               <i-col span="16">
                 {{ orderDetail.hdOrderCode }}
               </i-col>
@@ -339,9 +331,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                海鼎状态:
-              </i-col>
+              <i-col span="8"> 海鼎状态: </i-col>
               <i-col v-if="orderDetail.hdStatus === 'NOT_SEND'" span="16">
                 <tag color="warning">
                   {{ "未发送" }}
@@ -361,9 +351,7 @@
                 </tag>
               </i-col>
               <i-col v-else-if="orderDetail.hdStatus === null" span="16">
-                {{
-                  "N/A"
-                }}
+                {{ "N/A" }}
               </i-col>
             </Row>
           </i-col>
@@ -371,25 +359,17 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                收货方式:
-              </i-col>
+              <i-col span="8"> 收货方式: </i-col>
               <i-col span="16">
-                {{
-                  orderDetail.receivingWay | receivingWayFilters
-                }}
+                {{ orderDetail.receivingWay | receivingWayFilters }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                海鼎备货时间:
-              </i-col>
+              <i-col span="8"> 海鼎备货时间: </i-col>
               <i-col span="16">
-                {{
-                  orderDetail.hdStockAt ? orderDetail.hdStockAt : "N/A"
-                }}
+                {{ orderDetail.hdStockAt ? orderDetail.hdStockAt : "N/A" }}
               </i-col>
             </Row>
           </i-col>
@@ -397,36 +377,26 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                订单类型:
-              </i-col>
+              <i-col span="8"> 订单类型: </i-col>
               <i-col span="16">
-                {{
-                  orderDetail.orderType | miniOrderTypeFilter
-                }}
+                {{ orderDetail.orderType | miniOrderTypeFilter }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                应用类型:
-              </i-col>
+              <i-col span="8"> 应用类型: </i-col>
               <i-col span="16">
                 {{ orderDetail.apply | appTypeFilter }}
               </i-col>
             </Row>
           </i-col>
         </Row>
-        <Divider orientation="center">
-          用户信息
-        </Divider>
+        <Divider orientation="center"> 用户信息 </Divider>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                下单用户:
-              </i-col>
+              <i-col span="8"> 下单用户: </i-col>
               <i-col span="16">
                 {{ orderDetail.receiveUser }}
               </i-col>
@@ -434,9 +404,7 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                下单时间:
-              </i-col>
+              <i-col span="8"> 下单时间: </i-col>
               <i-col span="16">
                 {{ orderDetail.createAt }}
               </i-col>
@@ -446,9 +414,7 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                下单门店:
-              </i-col>
+              <i-col span="8"> 下单门店: </i-col>
               <i-col span="16">
                 {{ orderDetail.storeName }}
               </i-col>
@@ -456,9 +422,7 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                提货截止时间:
-              </i-col>
+              <i-col span="8"> 提货截止时间: </i-col>
               <i-col span="16">
                 {{
                   orderDetail.deliveryEndTime
@@ -472,9 +436,7 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                门店编码:
-              </i-col>
+              <i-col span="8"> 门店编码: </i-col>
               <i-col span="16">
                 {{ orderDetail.storeCode }}
               </i-col>
@@ -482,43 +444,29 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                优惠券编号:
-              </i-col>
+              <i-col span="8"> 优惠券编号: </i-col>
               <i-col span="16">
-                {{
-                  orderDetail.couponId ? orderDetail.couponId : "未使用"
-                }}
+                {{ orderDetail.couponId ? orderDetail.couponId : "未使用" }}
               </i-col>
             </Row>
           </i-col>
         </Row>
 
-        <Divider orientation="center">
-          支付信息
-        </Divider>
+        <Divider orientation="center"> 支付信息 </Divider>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                订单总额:
-              </i-col>
+              <i-col span="8"> 订单总额: </i-col>
               <i-col span="16">
-                {{
-                  orderDetail.totalAmount | fenToYuanDot2Filters
-                }}
+                {{ orderDetail.totalAmount | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                优惠金额:
-              </i-col>
+              <i-col span="8"> 优惠金额: </i-col>
               <i-col span="16">
-                {{
-                  orderDetail.couponAmount | fenToYuanDot2Filters
-                }}
+                {{ orderDetail.couponAmount | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
@@ -526,25 +474,17 @@
         <Row>
           <i-col v-if="orderDetail.receivingWay === 'TO_THE_HOME'" span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                运费:
-              </i-col>
+              <i-col span="8"> 运费: </i-col>
               <i-col span="16">
-                {{
-                  orderDetail.deliveryAmount | fenToYuanDot2Filters
-                }}
+                {{ orderDetail.deliveryAmount | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                应付金额:
-              </i-col>
+              <i-col span="8"> 应付金额: </i-col>
               <i-col span="16">
-                {{
-                  orderDetail.amountPayable | fenToYuanDot2Filters
-                }}
+                {{ orderDetail.amountPayable | fenToYuanDot2Filters }}
               </i-col>
             </Row>
           </i-col>
@@ -552,21 +492,15 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                是否允许退货:
-              </i-col>
+              <i-col span="8"> 是否允许退货: </i-col>
               <i-col span="16">
-                {{
-                  orderDetail.allowRefund | yesNoFilter
-                }}
+                {{ orderDetail.allowRefund | yesNoFilter }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                退货原因:
-              </i-col>
+              <i-col span="8"> 退货原因: </i-col>
               <i-col span="16">
                 {{ orderDetail.reason }}
               </i-col>
@@ -574,16 +508,12 @@
           </i-col>
         </Row>
 
-        <Divider orientation="center">
-          配送信息
-        </Divider>
+        <Divider orientation="center"> 配送信息 </Divider>
 
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                收货人:
-              </i-col>
+              <i-col span="8"> 收货人: </i-col>
               <i-col span="16">
                 {{ orderDetail.receiveUser }}
               </i-col>
@@ -591,9 +521,7 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="8">
-                联系方式:
-              </i-col>
+              <i-col span="8"> 联系方式: </i-col>
               <i-col span="16">
                 {{ orderDetail.contactPhone }}
               </i-col>
@@ -607,9 +535,7 @@
           <Row>
             <i-col span="16">
               <Row class="mb10 pt5">
-                <i-col span="6">
-                  收货地址:
-                </i-col>
+                <i-col span="6"> 收货地址: </i-col>
                 <i-col span="18">
                   {{ shippingAddress }}
                 </i-col>
@@ -619,9 +545,7 @@
           <Row>
             <i-col span="16">
               <Row class-name="mb10">
-                <i-col span="6">
-                  配送时间段:
-                </i-col>
+                <i-col span="6"> 配送时间段: </i-col>
                 <i-col span="18">
                   {{
                     orderDetail.deliverTime.startTime +
@@ -635,9 +559,7 @@
           <Row>
             <i-col span="16">
               <Row class-name="mb10">
-                <i-col span="6">
-                  配送状态:
-                </i-col>
+                <i-col span="6"> 配送状态: </i-col>
                 <i-col
                   v-if="
                     orderDetail.deliverNote != null &&
@@ -689,9 +611,7 @@
             </i-col>
           </Row>
           <Row span="16" class-name="mb10">
-            <i-col span="4">
-              配送距离(km):
-            </i-col>
+            <i-col span="4"> 配送距离(km): </i-col>
             <i-col
               v-if="orderDetail.deliverNote != null && distance != null"
               span="8"
@@ -701,9 +621,7 @@
             <i-col v-else span="8">
               {{ "N/A" }}
             </i-col>
-            <i-col span="4">
-              配送重量(kg):
-            </i-col>
+            <i-col span="4"> 配送重量(kg): </i-col>
             <i-col
               v-if="orderDetail.deliverNote != null && weight != null"
               span="8"
@@ -715,9 +633,7 @@
             </i-col>
           </Row>
           <Row span="16" class-name="mb10">
-            <i-col span="4">
-              配送员姓名:
-            </i-col>
+            <i-col span="4"> 配送员姓名: </i-col>
             <i-col
               v-if="orderDetail.deliverNote != null && deliverName != null"
               span="8"
@@ -727,9 +643,7 @@
             <i-col v-else span="8">
               {{ "N/A" }}
             </i-col>
-            <i-col span="4">
-              配送员电话:
-            </i-col>
+            <i-col span="4"> 配送员电话: </i-col>
             <i-col
               v-if="orderDetail.deliverNote != null && deliverPhone != null"
               span="8"
@@ -742,31 +656,21 @@
           </Row>
         </Row>
         <div v-if="orderDetail.orderType === 'TEAM_BUYING'">
-          <Divider orientation="center">
-            拼团信息
-          </Divider>
+          <Divider orientation="center"> 拼团信息 </Divider>
           <Row>
             <i-col span="12">
               <Row class-name="mb10">
-                <i-col span="8">
-                  需满员人数:
-                </i-col>
+                <i-col span="8"> 需满员人数: </i-col>
                 <i-col span="16">
-                  {{
-                    orderDetail.teamBuyOrderInfo.fullNum
-                  }}
+                  {{ orderDetail.teamBuyOrderInfo.fullNum }}
                 </i-col>
               </Row>
             </i-col>
             <i-col span="12">
               <Row class-name="mb10">
-                <i-col span="8">
-                  已支付人数:
-                </i-col>
+                <i-col span="8"> 已支付人数: </i-col>
                 <i-col span="16">
-                  {{
-                    orderDetail.teamBuyOrderInfo.paidNum
-                  }}
+                  {{ orderDetail.teamBuyOrderInfo.paidNum }}
                 </i-col>
               </Row>
             </i-col>
@@ -774,9 +678,7 @@
           <Row>
             <i-col span="12">
               <Row class-name="mb10">
-                <i-col span="8">
-                  团购状态:
-                </i-col>
+                <i-col span="8"> 团购状态: </i-col>
                 <i-col
                   v-if="orderDetail.teamBuyOrderInfo.status === 'tourUnpaid'"
                   span="16"
@@ -815,9 +717,7 @@
             ></tables>
           </Row>
         </div>
-        <Divider orientation="center">
-          商品信息
-        </Divider>
+        <Divider orientation="center"> 商品信息 </Divider>
         <Row>
           <tables
             v-model="orderDetail.orderProducts"
@@ -827,9 +727,7 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
     <!-- 订单调货 -->
@@ -840,9 +738,7 @@
       <Row v-if="currentTableRowSelected">
         <i-col span="12">
           <Row class-name="mb20">
-            <i-col span="8">
-              订单编号:
-            </i-col>
+            <i-col span="8"> 订单编号: </i-col>
             <i-col span="16">
               {{ currentTableRowSelected.code }}
             </i-col>
@@ -850,13 +746,9 @@
         </i-col>
         <i-col span="12">
           <Row class-name="mb20">
-            <i-col span="8">
-              送货方式:
-            </i-col>
+            <i-col span="8"> 送货方式: </i-col>
             <i-col span="16">
-              {{
-                currentTableRowSelected.receivingWay | receivingWayFilters
-              }}
+              {{ currentTableRowSelected.receivingWay | receivingWayFilters }}
             </i-col>
           </Row>
         </i-col>
@@ -864,9 +756,7 @@
       <Row v-if="currentTableRowSelected">
         <i-col span="12">
           <Row class-name="mb20">
-            <i-col span="8">
-              当前门店:
-            </i-col>
+            <i-col span="8"> 当前门店: </i-col>
             <i-col span="16">
               {{
                 storeList.find(
@@ -878,13 +768,9 @@
         </i-col>
         <i-col span="12">
           <Row class-name="mb20">
-            <i-col span="8">
-              订单状态:
-            </i-col>
+            <i-col span="8"> 订单状态: </i-col>
             <i-col span="16">
-              {{
-                currentTableRowSelected.orderStatus | miniOrderStatusFilter
-              }}
+              {{ currentTableRowSelected.orderStatus | miniOrderStatusFilter }}
             </i-col>
           </Row>
         </i-col>
@@ -892,13 +778,9 @@
       <Row v-if="currentTableRowSelected">
         <i-col span="12">
           <Row class-name="mb20">
-            <i-col span="8">
-              海鼎状态:
-            </i-col>
+            <i-col span="8"> 海鼎状态: </i-col>
             <i-col span="16">
-              {{
-                currentTableRowSelected.hdStatus | miniHdStatusFilter
-              }}
+              {{ currentTableRowSelected.hdStatus | miniHdStatusFilter }}
             </i-col>
           </Row>
         </i-col>
@@ -906,9 +788,7 @@
       <Row v-if="currentTableRowSelected">
         <i-col span="15">
           <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-            <i-col span="8">
-              调货门店:
-            </i-col>
+            <i-col span="8"> 调货门店: </i-col>
             <Select
               v-model="currentTableRowSelected.newStoreId"
               class="search-col mr5"
@@ -937,9 +817,7 @@
         </i-col>
       </Row>
       <div slot="footer">
-        <Button @click="handleEditCloseTransferModalView">
-          关闭
-        </Button>
+        <Button @click="handleEditCloseTransferModalView"> 关闭 </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
@@ -2094,18 +1972,16 @@ export default {
       return sums;
     },
     getStore() {
-      getStorePages({ page: 1, rows: -1 })
-        .then((res) => {
-          this.storeList = res.rows;
-        })
+      getStorePages({ page: 1, rows: -1 }).then((res) => {
+        this.storeList = res.rows;
+      });
     },
     modifyStoreInOrder() {
       // TODO 未测试
-      modifyStoreInOrder(this.currentTableRowSelected)
-        .then((res) => {
-          this.$Message.info('调货成功！');
-          this.transferModalView = false;
-        })
+      modifyStoreInOrder(this.currentTableRowSelected).then((res) => {
+        this.$Message.info('调货成功！');
+        this.transferModalView = false;
+      });
     },
     resendToHd() {
       // TODO 未测试

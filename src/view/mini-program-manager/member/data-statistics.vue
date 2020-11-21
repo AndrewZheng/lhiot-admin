@@ -19,13 +19,13 @@
             <RadioGroup
               v-model="button"
               type="button"
-              style="float:left;margin-right:5px"
+              style="float: left; margin-right: 5px"
               @on-change="timeChange"
             >
               <Radio label="昨日"></Radio>
               <Radio label="自定义时间"></Radio>
             </RadioGroup>
-            <div v-show="mark===true" style="float:left">
+            <div v-show="mark === true" style="float: left">
               <DatePicker
                 v-model="searchRowData.beginDate"
                 format="yyyy-MM-dd"
@@ -46,7 +46,7 @@
                 @on-change="endTimeChange"
               />
             </div>
-            <div class="dateGroup" style="float:left">
+            <div class="dateGroup" style="float: left">
               是否按天展示数据
               <input ref="status" type="checkbox" @click="dateGroupChange">
             </div>
@@ -69,7 +69,7 @@
             </Button>-->
           </Row>
           <div class="ml15 mt10">
-            <i style="color:red">*</i> 默认展示昨天的数据
+            <i style="color: red">*</i> 默认展示昨天的数据
           </div>
         </div>
       </tables>
@@ -211,7 +211,7 @@ export default {
       }
       this.loading = true;
       dataStatistics(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res;
         })
         .finally(() => {

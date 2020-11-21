@@ -1,6 +1,6 @@
 <template>
   <div class="m-role">
-    <div style="margin-bottom:30px">
+    <div style="margin-bottom: 30px">
       <Card>
         <h4>助力抢爆品活动基础数据分析</h4>
         <tables
@@ -16,14 +16,18 @@
         >
           <div slot="searchCondition">
             <Row>
-              <RadioGroup v-model="button" type="button" @on-change="timeChange">
+              <RadioGroup
+                v-model="button"
+                type="button"
+                @on-change="timeChange"
+              >
                 <Radio label="今日"></Radio>
                 <Radio label="昨日"></Radio>
                 <Radio label="最近7天"></Radio>
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
               </RadioGroup>
-              <div v-show="mark===true" class="mark">
+              <div v-show="mark === true" class="mark">
                 <DatePicker
                   v-model="searchRowData1.beginDate"
                   format="yyyy-MM-dd"
@@ -45,7 +49,7 @@
                 />
               </div>
               <Button
-                v-show="mark===true"
+                v-show="mark === true"
                 class="search-btn mr5"
                 type="primary"
                 @click="handleSearch1"
@@ -54,26 +58,26 @@
               </Button>
             </Row>
             <div class="ml15 mt10">
-              <i style="color:red">*</i> 默认展示当天的数据
+              <i style="color: red">*</i> 默认展示当天的数据
             </div>
           </div>
         </tables>
       </Card>
     </div>
-    <div style="position: relative;">
+    <div style="position: relative">
       <div class="tabChange">
         <b
           data-index="user"
-          :class=" topStatus=='user' ? 'hot' : '' "
+          :class="topStatus == 'user' ? 'hot' : ''"
           @click="assistDataChange"
         >用户数据分析</b>
         <b
           data-index="product"
-          :class=" topStatus=='product' ? 'hot' : '' "
+          :class="topStatus == 'product' ? 'hot' : ''"
           @click="assistDataChange"
         >单品数据分析</b>
       </div>
-      <Card v-show="topStatus==='user'">
+      <Card v-show="topStatus === 'user'">
         <tables
           ref="tables"
           v-model="tableData"
@@ -105,15 +109,15 @@
               <Select
                 v-model="searchRowData.sidx"
                 placeholder="排序"
-                style="padding-right: 5px;width: 140px"
+                style="padding-right: 5px; width: 140px"
                 clearable
               >
                 <Option
-                  v-for="(item,index) in rankType"
+                  v-for="(item, index) in rankType"
                   :key="index"
                   :value="item.value"
                   class="ptb2-5"
-                  style="padding-left: 5px;width: 100px"
+                  style="padding-left: 5px; width: 100px"
                 >
                   {{ item.label }}
                 </Option>
@@ -138,7 +142,7 @@
             </Row>
           </div>
         </tables>
-        <div style="margin: 10px;overflow: hidden">
+        <div style="margin: 10px; overflow: hidden">
           <Row type="flex" justify="end">
             <Page
               :total="total"
@@ -151,7 +155,7 @@
           </Row>
         </div>
       </Card>
-      <Card v-show="topStatus==='product'">
+      <Card v-show="topStatus === 'product'">
         <tables
           ref="tables1"
           v-model="tableData2"
@@ -169,27 +173,31 @@
               <Select
                 v-model="searchRowData2.sidx"
                 placeholder="排序"
-                style="padding-right: 5px;width: 150px"
+                style="padding-right: 5px; width: 150px"
                 @on-change="handRankType"
               >
                 <Option
-                  v-for="(item,index) in rankType2"
+                  v-for="(item, index) in rankType2"
                   :key="index"
                   :value="item.value"
                   class="ptb2-5"
-                  style="padding-left: 5px;width: 100px"
+                  style="padding-left: 5px; width: 100px"
                 >
                   {{ item.label }}
                 </Option>
               </Select>
-              <Button class="search-btn mr2" type="warning" @click="handleDownload">
+              <Button
+                class="search-btn mr2"
+                type="warning"
+                @click="handleDownload"
+              >
                 <Icon type="md-download" />导出数据
               </Button>
             </Row>
           </div>
         </tables>
         <!-- 彭旭 -->
-        <div style="margin: 10px;overflow: hidden">
+        <div style="margin: 10px; overflow: hidden">
           <Row type="flex" justify="end">
             <Page
               :total="totalPage"
@@ -536,7 +544,7 @@ export default {
     getTableData() {
       this.loading = true;
       userAssistStatistics(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })
@@ -605,7 +613,7 @@ export default {
       }
       this.loading = true;
       assistDataStatistics(this.searchRowData1)
-        .then(res => {
+        .then((res) => {
           this.inviteData.push(res);
         })
         .finally(() => {
@@ -617,7 +625,7 @@ export default {
     getTableData2() {
       this.loading = true;
       singleAssistStatistics(this.searchRowData2)
-        .then(res => {
+        .then((res) => {
           this.tableData2 = res.rows;
           this.totalPage = res.total;
         })
@@ -679,14 +687,14 @@ export default {
       this.searchRowData2.rows = this.total > 5000 ? 5000 : this.total;
       const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
-      singleAssistStatistics(this.searchRowData2).then(res => {
+      singleAssistStatistics(this.searchRowData2).then((res) => {
         const tableData2 = res.rows;
         // 恢复正常页数
         this.searchRowData2.rows = 10;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
         const _this = this;
-        tableData2.forEach(item => {
+        tableData2.forEach((item) => {
           if (item['type'] == 'COUPON') {
             item['type'] = '优惠券';
           } else if (item['type'] == 'PROD') {

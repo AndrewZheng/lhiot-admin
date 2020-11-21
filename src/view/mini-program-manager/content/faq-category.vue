@@ -51,7 +51,12 @@
               </Row>
             </div>
             <div slot="operations">
-              <Button v-waves type="success" class="mr5" @click="createTableRow">
+              <Button
+                v-waves
+                type="success"
+                class="mr5"
+                @click="createTableRow"
+              >
                 <Icon type="md-add" />添加
               </Button>
               <Poptip
@@ -67,7 +72,7 @@
               </Poptip>
             </div>
           </tables>
-          <div style="margin: 10px;overflow: hidden">
+          <div style="margin: 10px; overflow: hidden">
             <Row type="flex" justify="end">
               <Page
                 :total="total"
@@ -89,7 +94,12 @@
         <span>编辑商品分类</span>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :label-width="100" :model="faqCategory" :rules="ruleInline">
+        <Form
+          ref="modalEdit"
+          :label-width="100"
+          :model="faqCategory"
+          :rules="ruleInline"
+        >
           <FormItem label="父级ID:">
             <i-col>{{ parentCategory.id }}</i-col>
           </FormItem>
@@ -97,42 +107,52 @@
             <i-col>{{ parentCategory.categoryName }}</i-col>
           </FormItem>
           <FormItem label="子分类名:" prop="categoryName">
-            <Input v-model="faqCategory.categoryName" placeholder="子分类名"></Input>
+            <Input
+              v-model="faqCategory.categoryName"
+              placeholder="子分类名"
+            ></Input>
           </FormItem>
           <FormItem label="子分类英文名:" prop="categoryEnName">
-            <Input v-model="faqCategory.categoryEnName" placeholder="子分类英文名"></Input>
+            <Input
+              v-model="faqCategory.categoryEnName"
+              placeholder="子分类英文名"
+            ></Input>
           </FormItem>
         </Form>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="asyncEditOK('modalEdit')">确定</Button>
+        <Button
+          :loading="modalEditLoading"
+          type="primary"
+          @click="asyncEditOK('modalEdit')"
+        >确定</Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   createFaqCategories,
   deleteFaqCategories,
   getFaqCategoriesPages,
   getFaqCategoriesTree,
   editFaqCategories
-} from "@/api/mini-program";
-import { buildMenu, convertTree } from "@/libs/util";
-import CommonIcon from "_c/common-icon";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
+} from '@/api/mini-program';
+import { buildMenu, convertTree } from '@/libs/util';
+import CommonIcon from '_c/common-icon';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
 
 const faqCategory = {
   id: 0,
   parentId: 0,
-  categoryName: "",
-  categoryEnName: "",
+  categoryName: '',
+  categoryEnName: '',
   faqs: null
 };
 
@@ -151,62 +171,62 @@ export default {
   data() {
     return {
       ruleInline: {
-        categoryName: { required: true, message: "请填写FAQ分类中文名称" },
-        categoryEnName: { required: true, message: "请填写FAQ分类英文名称" }
+        categoryName: { required: true, message: '请填写FAQ分类中文名称' },
+        categoryEnName: { required: true, message: '请填写FAQ分类英文名称' }
       },
       menuData: [],
       columns: [
         {
-          type: "selection",
-          key: "",
+          type: 'selection',
+          key: '',
           width: 60,
-          align: "center",
-          fixed: "left"
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: "分类ID",
-          key: "id",
+          title: '分类ID',
+          key: 'id',
           sortable: true,
-          align: "center",
+          align: 'center',
           minWidth: 150
         },
         {
-          title: "父级ID",
-          key: "parentId",
+          title: '父级ID',
+          key: 'parentId',
           sortable: true,
-          align: "center",
+          align: 'center',
           minWidth: 150
         },
         {
-          title: "分类名称",
-          key: "categoryName",
+          title: '分类名称',
+          key: 'categoryName',
           sortable: true,
-          align: "center",
+          align: 'center',
           minWidth: 150
         },
         {
-          title: "分类英文名称",
-          key: "categoryEnName",
+          title: '分类英文名称',
+          key: 'categoryEnName',
           sortable: true,
-          align: "center",
+          align: 'center',
           minWidth: 150
         },
         {
-          title: "操作",
-          align: "center",
-          key: "handle",
+          title: '操作',
+          align: 'center',
+          key: 'handle',
           minWidth: 150,
-          options: ["edit", "delete"]
+          options: ['edit', 'delete']
         }
       ],
       modalEdit: false,
       modalViewLoading: false,
       modalEditLoading: false,
-      currentParentName: "",
+      currentParentName: '',
       currentParentId: 0,
       faqCategory: this._.cloneDeep(faqCategory),
       parentCategory: this._.cloneDeep(faqCategory),
-      searchRowData: this._.cloneDeep(roleRowData),
+      searchRowData: this._.cloneDeep(roleRowData)
     };
   },
   created() {
@@ -214,18 +234,18 @@ export default {
   },
   methods: {
     renderContent(h, { root, node, data }) {
-      if (data.type == "PARENT") {
+      if (data.type == 'PARENT') {
         return (
           <div
             style={{
-              display: "inline-block",
-              width: "100%",
-              fontSize: "14px",
-              cursor: "pointer"
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
             }}
           >
             <span>
-              <CommonIcon type="ios-folder" class="mr10" />
+              <CommonIcon type='ios-folder' class='mr10' />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -236,14 +256,14 @@ export default {
         return (
           <div
             style={{
-              display: "inline-block",
-              width: "100%",
-              fontSize: "14px",
-              cursor: "pointer"
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
             }}
           >
             <span>
-              <CommonIcon type="ios-paper" class="mr10" />
+              <CommonIcon type='ios-paper' class='mr10' />
             </span>
             <span>{data.title}</span>
           </div>
@@ -260,7 +280,7 @@ export default {
     },
 
     asyncEditOK(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           this.modalEditLoading = true;
           this.modalViewLoading = true;
@@ -271,23 +291,23 @@ export default {
           }
           if (this.tempModalType === this.modalType.create) {
             createFaqCategories(this.faqCategory)
-              .then(res => {})
-              .finally(res => {
+              .then((res) => {})
+              .finally((res) => {
                 this.initMenuList();
                 this.modalEditLoading = false;
                 this.modalEdit = false;
               });
           } else if (this.tempModalType === this.modalType.edit) {
             editFaqCategories(this.faqCategory)
-              .then(res => {})
-              .finally(res => {
+              .then((res) => {})
+              .finally((res) => {
                 this.initMenuList();
                 this.modalEditLoading = false;
                 this.modalEdit = false;
               });
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -300,7 +320,7 @@ export default {
       deleteFaqCategories({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&
@@ -325,29 +345,29 @@ export default {
     },
     getTableData() {
       this.loading = true;
-      getFaqCategoriesPages(this.searchRowData).then(res => {
+      getFaqCategoriesPages(this.searchRowData).then((res) => {
         // if (this.menuData.length > 0) {
-          // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.clearSearchLoading = false;
+        // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
+        this.tableData = res.rows;
+        this.total = res.total;
+        this.loading = false;
+        this.clearSearchLoading = false;
         // }
       });
     },
     // 初始化商品菜单列表
     initMenuList() {
-      getFaqCategoriesTree().then(res => {
+      getFaqCategoriesTree().then((res) => {
         // if (res && res.array.length > 0) {
-          const menuList = buildMenu(res.array);
-          const map = {
-            title: "title",
-            children: "children"
-          };
-          this.menuData = convertTree(menuList, map, true);
-          // if (this.menuData.length > 0) {
-            this.getTableData();
-          // }
+        const menuList = buildMenu(res.array);
+        const map = {
+          title: 'title',
+          children: 'children'
+        };
+        this.menuData = convertTree(menuList, map, true);
+        // if (this.menuData.length > 0) {
+        this.getTableData();
+        // }
         // }
       });
     },
@@ -355,9 +375,9 @@ export default {
     handleClick({ root, node, data }) {
       this.loading = true;
       // 展开当前节点
-      if (typeof data.expand === "undefined") {
+      if (typeof data.expand === 'undefined') {
         // this.$set(data, 'expend', true);
-        this.$set(data, "expend", false);
+        this.$set(data, 'expend', false);
         // if (data.children) {
         if (data.children) {
           this.expandChildren(data.children);
@@ -373,10 +393,10 @@ export default {
       this.getTableData();
     },
     expandChildren(array) {
-      array.forEach(item => {
-        if (typeof item.expand === "undefined") {
+      array.forEach((item) => {
+        if (typeof item.expand === 'undefined') {
           // this.$set(item, 'expend', true);
-          this.$set(item, "expend", false);
+          this.$set(item, 'expend', false);
           // } else {
         } else {
           item.expand = !item.expand;

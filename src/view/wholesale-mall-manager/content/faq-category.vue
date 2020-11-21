@@ -6,7 +6,13 @@
       </i-col>
       <i-col span="18" order="3">
         <Card>
-          <h6>当前选中：<span class="brand-red font-sm">{{ parentCategory.faqCategoryName?parentCategory.faqCategoryName:'全部分类' }}</span></h6>
+          <h6>
+            当前选中：<span class="brand-red font-sm">{{
+              parentCategory.faqCategoryName
+                ? parentCategory.faqCategoryName
+                : "全部分类"
+            }}</span>
+          </h6>
           <tables
             ref="tables"
             v-model="tableData"
@@ -51,7 +57,12 @@
               </Row>
             </div>
             <div slot="operations">
-              <Button v-waves type="success" class="mr5" @click="createTableRow">
+              <Button
+                v-waves
+                type="success"
+                class="mr5"
+                @click="createTableRow"
+              >
                 <Icon type="md-add" />添加
               </Button>
               <Poptip
@@ -67,7 +78,7 @@
               </Poptip>
             </div>
           </tables>
-          <div style="margin: 10px;overflow: hidden">
+          <div style="margin: 10px; overflow: hidden">
             <Row type="flex" justify="end">
               <Page
                 :total="total"
@@ -89,21 +100,37 @@
         <span>编辑商品分类</span>
       </p>
       <div class="modal-content">
-        <Form ref="editFrom" :label-width="100" :model="faqCategory" :rules="ruleInline">
+        <Form
+          ref="editFrom"
+          :label-width="100"
+          :model="faqCategory"
+          :rules="ruleInline"
+        >
           <FormItem label="父级ID:">
             <i-col>{{ parentCategory.id }}</i-col>
           </FormItem>
           <FormItem label="父级分类:">
-            <i-col>{{ parentCategory.faqCategoryName?parentCategory.faqCategoryName:'全部分类' }}</i-col>
+            <i-col>{{
+              parentCategory.faqCategoryName
+                ? parentCategory.faqCategoryName
+                : "全部分类"
+            }}</i-col>
           </FormItem>
           <FormItem label="子分类名:" prop="faqCategoryName">
-            <Input v-model="faqCategory.faqCategoryName" placeholder="子分类名"></Input>
+            <Input
+              v-model="faqCategory.faqCategoryName"
+              placeholder="子分类名"
+            ></Input>
           </FormItem>
         </Form>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalEditLoading" type="primary" @click="handleSumbit('editFrom')">确定</Button>
+        <Button
+          :loading="modalEditLoading"
+          type="primary"
+          @click="handleSumbit('editFrom')"
+        >确定</Button>
       </div>
     </Modal>
   </div>
@@ -204,7 +231,7 @@ export default {
   methods: {
     getTableData() {
       this.loading = true;
-      getFaqCategoriesPages(this.searchRowData).then(res => {
+      getFaqCategoriesPages(this.searchRowData).then((res) => {
         if (this.menuData.length > 0) {
           this.tableData = res.rows;
           this.total = res.total;
@@ -215,7 +242,7 @@ export default {
     },
     // 初始化商品菜单列表
     initMenuList() {
-      getFaqCategoriesTree().then(res => {
+      getFaqCategoriesTree().then((res) => {
         if (res && res.length > 0) {
           const menuList = buildMenu(res);
           const map = {
@@ -284,7 +311,7 @@ export default {
       }
     },
     expandChildren(array) {
-      array.forEach(item => {
+      array.forEach((item) => {
         if (typeof item.expand === 'undefined') {
           // this.$set(item, 'expend', true);
           this.$set(item, 'expend', false);
@@ -318,7 +345,7 @@ export default {
       this.modalEdit = true;
     },
     handleSumbit(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           this.modalEditLoading = true;
           this.modalViewLoading = true;
@@ -329,16 +356,16 @@ export default {
           }
           if (this.isCreate) {
             createFaqCategories(this.faqCategory)
-              .then(res => {})
-              .finally(res => {
+              .then((res) => {})
+              .finally((res) => {
                 this.initMenuList();
                 this.modalEditLoading = false;
                 this.modalEdit = false;
               });
           } else if (this.isEdit) {
             editFaqCategories(this.faqCategory)
-              .then(res => {})
-              .finally(res => {
+              .then((res) => {})
+              .finally((res) => {
                 this.initMenuList();
                 this.modalEditLoading = false;
                 this.modalEdit = false;
@@ -355,7 +382,7 @@ export default {
       deleteFaqCategories({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&

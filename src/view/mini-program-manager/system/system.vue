@@ -70,7 +70,13 @@
           >
             <Icon type="ios-arrow-back" />&nbsp;返回
           </Button>
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
+          <Button
+            v-waves
+            :loading="createLoading"
+            type="success"
+            class="mr5"
+            @click="addStore"
+          >
             <Icon type="md-add" />添加
           </Button>
           <Poptip
@@ -86,7 +92,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -108,9 +114,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                主键ID:
-              </i-col>
+              <i-col span="4"> 主键ID: </i-col>
               <i-col span="20">
                 {{ systemDetail.id }}
               </i-col>
@@ -120,9 +124,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                键:
-              </i-col>
+              <i-col span="4"> 键: </i-col>
               <i-col span="20">
                 {{ systemDetail.indexName }}
               </i-col>
@@ -132,9 +134,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                值:
-              </i-col>
+              <i-col span="4"> 值: </i-col>
               <i-col span="20">
                 {{ systemDetail.indexValue }}
               </i-col>
@@ -144,9 +144,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                描述:
-              </i-col>
+              <i-col span="4"> 描述: </i-col>
               <i-col span="20">
                 {{ systemDetail.description }}
                 <img
@@ -161,9 +159,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                分类ID:
-              </i-col>
+              <i-col span="4"> 分类ID: </i-col>
               <i-col span="20">
                 {{ systemDetail.categoryId }}
               </i-col>
@@ -172,56 +168,91 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
     <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000">
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改系统参数':'创建系统参数' }}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit ? "修改系统参数" : "创建系统参数"
+        }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="systemDetail" :rules="ruleInline" :label-width="80">
-          <Row v-if="tempModalType===modalType.edit">
+        <Form
+          ref="modalEdit"
+          :model="systemDetail"
+          :rules="ruleInline"
+          :label-width="80"
+        >
+          <Row v-if="tempModalType === modalType.edit">
             <Col span="20">
             <FormItem label="键:" prop="indexName">
-              <Input v-model="systemDetail.indexName" placeholder="键" disabled></Input>
+              <Input
+                v-model="systemDetail.indexName"
+                placeholder="键"
+                disabled
+              ></Input>
             </FormItem>
             </Col>
           </Row>
-          <Row v-else-if="tempModalType===modalType.create">
+          <Row v-else-if="tempModalType === modalType.create">
             <Col span="20">
             <FormItem label="键:" prop="indexName">
-              <Input v-model="systemDetail.indexName" placeholder="键"></Input>
+              <Input
+                v-model="systemDetail.indexName"
+                placeholder="键"
+              ></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="20">
             <FormItem label="值:" prop="indexValue">
-              <Input v-model="systemDetail.indexValue" :rows="6" type="textarea" placeholder="值"></Input>
+              <Input
+                v-model="systemDetail.indexValue"
+                :rows="6"
+                type="textarea"
+                placeholder="值"
+              ></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="20">
             <FormItem label="描述:" prop="description">
-              <Input v-model="systemDetail.description" type="textarea" placeholder="描述"></Input>
+              <Input
+                v-model="systemDetail.description"
+                type="textarea"
+                placeholder="描述"
+              ></Input>
               <template v-if="showImage">
-                <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+                <div
+                  v-for="item in uploadListMain"
+                  :key="item.url"
+                  class="demo-upload-list"
+                >
                   <template v-if="item.status === 'finished'">
                     <div>
                       <img :src="item.url">
                       <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                        <Icon
+                          type="ios-eye-outline"
+                          @click.native="handleUploadView(item)"
+                        ></Icon>
+                        <Icon
+                          type="ios-trash-outline"
+                          @click.native="handleRemoveMain(item)"
+                        ></Icon>
                       </div>
                     </div>
                   </template>
                   <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      hide-info
+                    ></Progress>
                   </template>
                 </div>
               </template>
@@ -231,7 +262,10 @@
                 :image-size="imageSize"
                 @on-success="handleSuccessMain"
               >
-                <div slot="content" style="width:58px;height:58px;line-height:58px">
+                <div
+                  slot="content"
+                  style="width: 58px; height: 58px; line-height: 58px"
+                >
                   <Icon type="ios-camera" size="20"></Icon>
                 </div>
               </IViewUpload>
@@ -239,7 +273,10 @@
             </Col>
           </Row>
           <Row>
-            <Col v-show="this.$route.name === 'small-relation-system'" span="20">
+            <Col
+              v-show="this.$route.name === 'small-relation-system'"
+              span="20"
+            >
             <FormItem label="分类ID:" prop="categoryId">
               <Cascader
                 v-model="defaultData"
@@ -265,10 +302,12 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+        >
           确定
         </Button>
       </div>
@@ -421,7 +460,7 @@ export default {
         const systemInfos = getSmallGoodsStandard();
         this.systemDetail.categoryId = systemInfos.id;
       }
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           this.systemDetail.indexValue = this.systemDetail.indexValue.replace(
             /\n|\r/g,
@@ -442,7 +481,7 @@ export default {
     createStore() {
       this.modalViewLoading = true;
       createSystemSetting(this.systemDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
@@ -456,7 +495,7 @@ export default {
     editStore() {
       this.modalViewLoading = true;
       editSystemSetting(this.systemDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
@@ -485,7 +524,7 @@ export default {
       deleteSystemSetting({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -497,7 +536,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -545,9 +584,9 @@ export default {
         this.defaultData = [this.skipArr.parentid, this.skipArr.id];
       }
       getSystemSettingPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           if (res.rows.length !== 0) {
-            res.rows.forEach(element => {
+            res.rows.forEach((element) => {
               element.indexValue =
                 element.indexValue == null
                   ? null
@@ -575,7 +614,7 @@ export default {
     },
     getSystemSettingCategoryTree() {
       getSystemSettingCategoryTree()
-        .then(res => {
+        .then((res) => {
           if (res && res.array.length > 0) {
             this.systemCategoriesTreeList = res.array;
             const menuList = buildMenu(res.array);
@@ -623,7 +662,7 @@ export default {
       this.defaultSystemCategoryData = selectedData;
     },
     findGroupId(id) {
-      const obj = this.systemCategoriesTreeList.find(item => {
+      const obj = this.systemCategoriesTreeList.find((item) => {
         return item.id === id;
       });
       this.defaultSystemCategoryData.push(id);

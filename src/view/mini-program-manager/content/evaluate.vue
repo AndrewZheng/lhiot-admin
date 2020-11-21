@@ -172,9 +172,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                门店ID:
-              </i-col>
+              <i-col span="6"> 门店ID: </i-col>
               <i-col span="18">
                 {{ evaluateDetail.storeId }}
               </i-col>
@@ -182,9 +180,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                门店Code:
-              </i-col>
+              <i-col span="6"> 门店Code: </i-col>
               <i-col span="18">
                 {{ evaluateDetail.storeCode }}
               </i-col>
@@ -194,9 +190,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                门店名称:
-              </i-col>
+              <i-col span="6"> 门店名称: </i-col>
               <i-col span="18">
                 {{ evaluateDetail.storeName }}
               </i-col>
@@ -204,9 +198,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                用户ID:
-              </i-col>
+              <i-col span="6"> 用户ID: </i-col>
               <i-col span="18">
                 {{ evaluateDetail.userId }}
               </i-col>
@@ -216,9 +208,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                用户昵称:
-              </i-col>
+              <i-col span="6"> 用户昵称: </i-col>
               <i-col span="18">
                 {{ evaluateDetail.nickName }}
               </i-col>
@@ -226,9 +216,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                手机号码:
-              </i-col>
+              <i-col span="6"> 手机号码: </i-col>
               <i-col span="18">
                 {{ evaluateDetail.phone }}
               </i-col>
@@ -238,9 +226,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                所得积分:
-              </i-col>
+              <i-col span="6"> 所得积分: </i-col>
               <i-col span="18">
                 {{ evaluateDetail.point }}
               </i-col>
@@ -248,9 +234,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                商品名称组合:
-              </i-col>
+              <i-col span="6"> 商品名称组合: </i-col>
               <i-col span="18">
                 {{ evaluateDetail.productNames }}
               </i-col>
@@ -260,9 +244,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                订单编号:
-              </i-col>
+              <i-col span="6"> 订单编号: </i-col>
               <i-col span="18">
                 {{ evaluateDetail.orderCode }}
               </i-col>
@@ -270,13 +252,8 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                骑手评价:
-              </i-col>
-              <i-col
-                v-if="evaluateDetail.deliveryComment === 'GOOD'"
-                span="18"
-              >
+              <i-col span="6"> 骑手评价: </i-col>
+              <i-col v-if="evaluateDetail.deliveryComment === 'GOOD'" span="18">
                 {{ "超赞" }}
               </i-col>
               <i-col
@@ -300,9 +277,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                门店评价:
-              </i-col>
+              <i-col span="6"> 门店评价: </i-col>
               <i-col span="18">
                 {{ evaluateDetail.commentScore }}
               </i-col>
@@ -310,13 +285,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                是否置顶:
-              </i-col>
+              <i-col span="6"> 是否置顶: </i-col>
               <i-col v-if="evaluateDetail.istop === 'YES'" span="18">
-                {{
-                  "是"
-                }}
+                {{ "是" }}
               </i-col>
               <i-col v-else span="18">
                 {{ "否" }}
@@ -327,13 +298,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                状态:
-              </i-col>
+              <i-col span="6"> 状态: </i-col>
               <i-col v-if="evaluateDetail.status === 'VIEW'" span="18">
-                {{
-                  "显示"
-                }}
+                {{ "显示" }}
               </i-col>
               <i-col v-else span="18">
                 {{ "隐藏" }}
@@ -342,9 +309,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                置顶时间:
-              </i-col>
+              <i-col span="6"> 置顶时间: </i-col>
               <i-col span="18">
                 {{ evaluateDetail.topTime }}
               </i-col>
@@ -354,9 +319,7 @@
         <Row class-name="mb20">
           <i-col span="22">
             <Row>
-              <i-col span="3">
-                评价内容:
-              </i-col>
+              <i-col span="3"> 评价内容: </i-col>
               <i-col span="18">
                 {{ evaluateDetail.commentContent }}
               </i-col>
@@ -366,9 +329,7 @@
         <Row class-name="mb20">
           <i-col span="22">
             <Row>
-              <i-col span="3">
-                历史评价:
-              </i-col>
+              <i-col span="3"> 历史评价: </i-col>
               <i-col span="18">
                 {{
                   evaluateDetail.historyCommentContent
@@ -382,9 +343,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                修改时间:
-              </i-col>
+              <i-col span="6"> 修改时间: </i-col>
               <i-col span="18">
                 {{
                   evaluateDetail.updateTime ? evaluateDetail.updateTime : "N/A"
@@ -396,9 +355,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="20">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="6">
-                评价图片:
-              </i-col>
+              <i-col span="6"> 评价图片: </i-col>
               <i-col span="16">
                 <div
                   v-for="item in evaluateList"
@@ -420,9 +377,7 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
@@ -445,9 +400,7 @@
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">
-                  订单编号:
-                </i-col>
+                <i-col span="6"> 订单编号: </i-col>
                 <i-col span="18">
                   {{ evaluateDetail.orderCode }}
                 </i-col>
@@ -457,9 +410,7 @@
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">
-                  下单门店:
-                </i-col>
+                <i-col span="6"> 下单门店: </i-col>
                 <i-col span="18">
                   {{ evaluateDetail.storeName }}
                 </i-col>
@@ -469,9 +420,7 @@
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">
-                  用户名称:
-                </i-col>
+                <i-col span="6"> 用户名称: </i-col>
                 <i-col span="18">
                   {{ evaluateDetail.nickName }}
                 </i-col>
@@ -481,9 +430,7 @@
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">
-                  骑手评价:
-                </i-col>
+                <i-col span="6"> 骑手评价: </i-col>
                 <i-col
                   v-if="evaluateDetail.deliveryComment == 'GOOD'"
                   span="18"
@@ -511,9 +458,7 @@
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">
-                  门店评价:
-                </i-col>
+                <i-col span="6"> 门店评价: </i-col>
                 <i-col span="18">
                   {{ evaluateDetail.commentScore }}
                 </i-col>
@@ -523,9 +468,7 @@
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">
-                  评价内容:
-                </i-col>
+                <i-col span="6"> 评价内容: </i-col>
                 <i-col span="18">
                   {{ evaluateDetail.commentContent }}
                 </i-col>
@@ -535,9 +478,7 @@
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">
-                  历史评价:
-                </i-col>
+                <i-col span="6"> 历史评价: </i-col>
                 <i-col span="18">
                   {{
                     evaluateDetail.historyCommentContent
@@ -551,12 +492,12 @@
           <Row class-name="mb20">
             <i-col span="20">
               <Row>
-                <i-col span="6">
-                  修改时间:
-                </i-col>
+                <i-col span="6"> 修改时间: </i-col>
                 <i-col span="18">
                   {{
-                    evaluateDetail.updateTime ? evaluateDetail.updateTime : "N/A"
+                    evaluateDetail.updateTime
+                      ? evaluateDetail.updateTime
+                      : "N/A"
                   }}
                 </i-col>
               </Row>
@@ -566,9 +507,7 @@
           <Row :gutter="8" type="flex" align="middle" class-name="mb10">
             <i-col span="20">
               <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                <i-col span="6">
-                  评价图片:
-                </i-col>
+                <i-col span="6"> 评价图片: </i-col>
                 <i-col span="16">
                   <div
                     v-for="item in evaluateList"
@@ -619,9 +558,7 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"

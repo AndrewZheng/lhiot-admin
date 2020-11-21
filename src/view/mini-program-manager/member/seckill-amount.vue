@@ -1,19 +1,19 @@
 <template>
   <div class="m-role">
-    <div style="margin-bottom:30px;position: relative;">
+    <div style="margin-bottom: 30px; position: relative">
       <div class="tabChange">
         <b
           data-index="user"
-          :class=" topStatus=='user' ? 'hot' : '' "
+          :class="topStatus == 'user' ? 'hot' : ''"
           @click="assistDataChange"
         >用户数据分析</b>
         <b
           data-index="product"
-          :class=" topStatus=='product' ? 'hot' : '' "
+          :class="topStatus == 'product' ? 'hot' : ''"
           @click="assistDataChange"
         >单品数据分析</b>
       </div>
-      <Card v-show="topStatus==='user'">
+      <Card v-show="topStatus === 'user'">
         <tables
           ref="tables"
           v-model="tableData"
@@ -45,15 +45,15 @@
               <Select
                 v-model="searchRowData.sidx"
                 placeholder="排序"
-                style="padding-right: 5px;width: 120px"
+                style="padding-right: 5px; width: 120px"
                 clearable
               >
                 <Option
-                  v-for="(item,index) in rankType"
+                  v-for="(item, index) in rankType"
                   :key="index"
                   :value="item.value"
                   class="ptb2-5"
-                  style="padding-left: 5px;width: 100px"
+                  style="padding-left: 5px; width: 100px"
                 >
                   {{ item.label }}
                 </Option>
@@ -81,7 +81,7 @@
             </Row>
           </div>
         </tables>
-        <div style="margin: 10px;overflow: hidden">
+        <div style="margin: 10px; overflow: hidden">
           <Row type="flex" justify="end">
             <Page
               :total="total"
@@ -94,7 +94,7 @@
           </Row>
         </div>
       </Card>
-      <Card v-show="topStatus==='product'">
+      <Card v-show="topStatus === 'product'">
         <tables
           ref="tables1"
           v-model="tableData1"
@@ -119,15 +119,15 @@
               <Select
                 v-model="searchRowData1.sidx"
                 placeholder="排序"
-                style="padding-right: 5px;width: 120px"
+                style="padding-right: 5px; width: 120px"
                 @on-change="handRankType"
               >
                 <Option
-                  v-for="(item,index) in rankType1"
+                  v-for="(item, index) in rankType1"
                   :key="index"
                   :value="item.value"
                   class="ptb2-5"
-                  style="padding-left: 5px;width: 100px"
+                  style="padding-left: 5px; width: 100px"
                 >
                   {{ item.label }}
                 </Option>
@@ -155,7 +155,7 @@
             </Row>
           </div>
         </tables>
-        <div style="margin: 10px;overflow: hidden">
+        <div style="margin: 10px; overflow: hidden">
           <Row type="flex" justify="end">
             <Page
               :total="totalPage"
@@ -276,7 +276,6 @@ export default {
           title: '秒杀总数',
           align: 'center',
           key: 'seckillCount'
-
         }
       ],
       columns1: [
@@ -330,7 +329,7 @@ export default {
     getTableData() {
       this.loading = true;
       userSeckillStatistics(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })
@@ -342,7 +341,7 @@ export default {
     },
     getTableData1() {
       singleSeckillStatistics(this.searchRowData1)
-        .then(res => {
+        .then((res) => {
           this.tableData1 = res.rows;
           this.totalPage = res.total;
         })

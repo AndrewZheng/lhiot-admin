@@ -43,7 +43,7 @@
           </Poptip>-->
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -65,9 +65,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                主键ID:
-              </i-col>
+              <i-col span="4"> 主键ID: </i-col>
               <i-col span="20">
                 {{ systemDetail.id }}
               </i-col>
@@ -77,9 +75,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                键:
-              </i-col>
+              <i-col span="4"> 键: </i-col>
               <i-col span="20">
                 {{ systemDetail.indexName }}
               </i-col>
@@ -89,9 +85,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                左侧主标题:
-              </i-col>
+              <i-col span="4"> 左侧主标题: </i-col>
               <i-col span="20">
                 {{ systemDetail.indexValueTemp.titleParams[0].mainTitle }}
               </i-col>
@@ -101,9 +95,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                左侧副标题:
-              </i-col>
+              <i-col span="4"> 左侧副标题: </i-col>
               <i-col span="20">
                 {{ systemDetail.indexValueTemp.titleParams[0].subTitle }}
               </i-col>
@@ -113,9 +105,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                左侧标题顺序:
-              </i-col>
+              <i-col span="4"> 左侧标题顺序: </i-col>
               <i-col span="20">
                 {{ systemDetail.indexValueTemp.titleParams[0].order }}
               </i-col>
@@ -125,13 +115,12 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                左侧标题类型:
-              </i-col>
-              <i-col
-                span="20"
-              >
-                {{ systemDetail.indexValueTemp.titleParams[0].type | teamBuyTypeFilter }}
+              <i-col span="4"> 左侧标题类型: </i-col>
+              <i-col span="20">
+                {{
+                  systemDetail.indexValueTemp.titleParams[0].type
+                    | teamBuyTypeFilter
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -139,9 +128,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                右侧主标题:
-              </i-col>
+              <i-col span="4"> 右侧主标题: </i-col>
               <i-col span="20">
                 {{ systemDetail.indexValueTemp.titleParams[1].mainTitle }}
               </i-col>
@@ -151,9 +138,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                右侧副标题:
-              </i-col>
+              <i-col span="4"> 右侧副标题: </i-col>
               <i-col span="20">
                 {{ systemDetail.indexValueTemp.titleParams[1].subTitle }}
               </i-col>
@@ -163,9 +148,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                右侧标题顺序:
-              </i-col>
+              <i-col span="4"> 右侧标题顺序: </i-col>
               <i-col span="20">
                 {{ systemDetail.indexValueTemp.titleParams[1].order }}
               </i-col>
@@ -175,13 +158,12 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                右侧标题类型:
-              </i-col>
-              <i-col
-                span="20"
-              >
-                {{ systemDetail.indexValueTemp.titleParams[1].type | teamBuyTypeFilter }}
+              <i-col span="4"> 右侧标题类型: </i-col>
+              <i-col span="20">
+                {{
+                  systemDetail.indexValueTemp.titleParams[1].type
+                    | teamBuyTypeFilter
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -189,9 +171,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                描述:
-              </i-col>
+              <i-col span="4"> 描述: </i-col>
               <i-col span="20">
                 {{ systemDetail.description }}
               </i-col>
@@ -201,9 +181,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="4">
-                分类ID:
-              </i-col>
+              <i-col span="4"> 分类ID: </i-col>
               <i-col span="20">
                 {{ systemDetail.categoryId }}
               </i-col>
@@ -212,18 +190,23 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
     <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改系统参数':'创建系统参数' }}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit ? "修改系统参数" : "创建系统参数"
+        }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="systemDetail" :rules="ruleInline" :label-width="120">
+        <Form
+          ref="modalEdit"
+          :model="systemDetail"
+          :rules="ruleInline"
+          :label-width="120"
+        >
           <Row>
             <Col span="12">
             <FormItem label="键:" prop="indexName">
@@ -238,7 +221,10 @@
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="左侧主标题:" prop="indexValueTemp.titleParams[0].mainTitle">
+            <FormItem
+              label="左侧主标题:"
+              prop="indexValueTemp.titleParams[0].mainTitle"
+            >
               <Input
                 v-model="systemDetail.indexValueTemp.titleParams[0].mainTitle"
                 placeholder="左侧主标题"
@@ -249,7 +235,10 @@
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="左侧副标题:" prop="indexValueTemp.titleParams[0].subTitle">
+            <FormItem
+              label="左侧副标题:"
+              prop="indexValueTemp.titleParams[0].subTitle"
+            >
               <Input
                 v-model="systemDetail.indexValueTemp.titleParams[0].subTitle"
                 placeholder="左侧副标题"
@@ -260,7 +249,10 @@
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="左侧标题顺序:" prop="indexValueTemp.titleParams[0].order">
+            <FormItem
+              label="左侧标题顺序:"
+              prop="indexValueTemp.titleParams[0].order"
+            >
               <Input
                 v-model="systemDetail.indexValueTemp.titleParams[0].order"
                 :readonly="modalTypeComputed"
@@ -272,7 +264,10 @@
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="左侧标题类型:" prop="indexValueTemp.titleParams[0].type">
+            <FormItem
+              label="左侧标题类型:"
+              prop="indexValueTemp.titleParams[0].type"
+            >
               <!-- 类型不能修改，如果是新增则可以修改 -->
               <Select
                 v-model="systemDetail.indexValueTemp.titleParams[0].type"
@@ -293,7 +288,10 @@
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="右侧主标题:" prop="indexValueTemp.titleParams[1].mainTitle">
+            <FormItem
+              label="右侧主标题:"
+              prop="indexValueTemp.titleParams[1].mainTitle"
+            >
               <Input
                 v-model="systemDetail.indexValueTemp.titleParams[1].mainTitle"
                 placeholder="右侧主标题"
@@ -304,7 +302,10 @@
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="右侧副标题:" prop="indexValueTemp.titleParams[1].subTitle">
+            <FormItem
+              label="右侧副标题:"
+              prop="indexValueTemp.titleParams[1].subTitle"
+            >
               <Input
                 v-model="systemDetail.indexValueTemp.titleParams[1].subTitle"
                 placeholder="右侧副标题"
@@ -315,7 +316,10 @@
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="右侧标题顺序:" prop="indexValueTemp.titleParams[1].order">
+            <FormItem
+              label="右侧标题顺序:"
+              prop="indexValueTemp.titleParams[1].order"
+            >
               <Input
                 v-model="systemDetail.indexValueTemp.titleParams[1].order"
                 :readonly="modalTypeComputed"
@@ -327,7 +331,10 @@
           </Row>
           <Row>
             <Col span="12">
-            <FormItem label="右侧标题类型:" prop="indexValueTemp.titleParams[1].type">
+            <FormItem
+              label="右侧标题类型:"
+              prop="indexValueTemp.titleParams[1].type"
+            >
               <Select
                 v-model="systemDetail.indexValueTemp.titleParams[1].type"
                 :disabled="modalTypeComputed"
@@ -348,7 +355,11 @@
           <Row>
             <Col span="12">
             <FormItem label="描述:" prop="description">
-              <Input v-model="systemDetail.description" placeholder="描述" style="width: 230px"></Input>
+              <Input
+                v-model="systemDetail.description"
+                placeholder="描述"
+                style="width: 230px"
+              ></Input>
             </FormItem>
             </Col>
           </Row>
@@ -369,10 +380,12 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+        >
           确定
         </Button>
       </div>
@@ -558,7 +571,7 @@ export default {
       this.$refs.modalEdit.resetFields();
     },
     handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (
             this.systemDetail.indexValueTemp.titleParams[0].type ===
@@ -593,7 +606,7 @@ export default {
         this.systemDetail.indexValueTemp
       );
       createSystemSetting(this.systemDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
@@ -610,7 +623,7 @@ export default {
         this.systemDetail.indexValueTemp
       );
       editSystemSetting(this.systemDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
@@ -639,7 +652,7 @@ export default {
       deleteSystemSetting({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -651,7 +664,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -674,10 +687,10 @@ export default {
     getTableData() {
       this.loading = true;
       getSystemSettingPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           if (this.tableData !== null) {
-            this.tableData.forEach(element => {
+            this.tableData.forEach((element) => {
               element.indexValueTemp = JSON.parse(element.indexValue);
             });
           }
@@ -691,7 +704,7 @@ export default {
     },
     getSystemSettingCategoryTree() {
       getSystemSettingCategoryTree()
-        .then(res => {
+        .then((res) => {
           if (res && res.array.length > 0) {
             this.systemCategoriesTreeList = res.array;
             const menuList = buildMenu(res.array);
@@ -718,7 +731,7 @@ export default {
       this.defaultSystemCategoryData = selectedData;
     },
     findGroupId(id) {
-      const obj = this.systemCategoriesTreeList.find(item => {
+      const obj = this.systemCategoriesTreeList.find((item) => {
         return item.id === id;
       });
       this.defaultSystemCategoryData.push(id);

@@ -54,7 +54,13 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addChildren">
+          <Button
+            v-waves
+            :loading="createLoading"
+            type="success"
+            class="mr5"
+            @click="addChildren"
+          >
             <Icon type="md-add" />添加
           </Button>
           <Poptip
@@ -80,7 +86,7 @@
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -104,9 +110,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="16">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="3">
-                商品规格:
-              </i-col>
+              <i-col span="3"> 商品规格: </i-col>
               <i-col span="21">
                 {{ productDetail.specificationInfo }}
               </i-col>
@@ -114,9 +118,7 @@
           </i-col>
           <i-col span="8">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                上架名称:
-              </i-col>
+              <i-col span="8"> 上架名称: </i-col>
               <i-col span="16">
                 {{ productDetail.name }}
               </i-col>
@@ -126,9 +128,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="16">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="3">
-                上架份数:
-              </i-col>
+              <i-col span="3"> 上架份数: </i-col>
               <i-col span="21">
                 {{ productDetail.shelfQty }}
               </i-col>
@@ -136,9 +136,7 @@
           </i-col>
           <i-col span="8">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品排序:
-              </i-col>
+              <i-col span="8"> 商品排序: </i-col>
               <i-col span="16">
                 {{ productDetail.sorting }}
               </i-col>
@@ -148,9 +146,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="2">
-                上架描述:
-              </i-col>
+              <i-col span="2"> 上架描述: </i-col>
               <i-col span="22">
                 {{ productDetail.description }}
               </i-col>
@@ -160,9 +156,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="16">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="3">
-                商品原价:
-              </i-col>
+              <i-col span="3"> 商品原价: </i-col>
               <i-col span="21">
                 {{ productDetail.originalPrice | fenToYuanDot2Filters }}
               </i-col>
@@ -170,9 +164,7 @@
           </i-col>
           <i-col span="8">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                商品特价:
-              </i-col>
+              <i-col span="8"> 商品特价: </i-col>
               <i-col span="16">
                 {{ productDetail.price | fenToYuanDot2Filters }}
               </i-col>
@@ -182,11 +174,9 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">
-                是否上架:
-              </i-col>
+              <i-col span="4"> 是否上架: </i-col>
               <i-col span="18">
-                {{ productDetail.shelfStatus|onSaleStatusFilters }}
+                {{ productDetail.shelfStatus | onSaleStatusFilters }}
               </i-col>
             </Row>
           </i-col>
@@ -194,37 +184,42 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8">
-              <i-col span="4">
-                上架主图:
-              </i-col>
+              <i-col span="4"> 上架主图: </i-col>
               <img :src="productDetail.image" span="18" style="width: 350px">
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
     <Modal v-model="modalEdit" :mask-closable="false" :width="750">
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.edit?'修改商品上架信息':'创建商品上架信息' }}</i-col>
+        <i-col>{{
+          tempModalType === modalType.edit
+            ? "修改商品上架信息"
+            : "创建商品上架信息"
+        }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="productDetail" :rules="ruleInline" :label-width="80">
+        <Form
+          ref="modalEdit"
+          :model="productDetail"
+          :rules="ruleInline"
+          :label-width="80"
+        >
           <Row>
             <Col span="12">
             <FormItem label="商品规格:" prop="specificationId">
               <Select
-                v-if="tempModalType===modalType.create"
+                v-if="tempModalType === modalType.create"
                 ref="shelfSpecificationSelect"
                 :remote="true"
                 :filterable="true"
                 :remote-method="remoteMethod"
-                :disabled="tempModalType===modalType.edit?true:false"
+                :disabled="tempModalType === modalType.edit ? true : false"
                 :loading="shelfSpecificationLoading"
               >
                 <Option
@@ -237,12 +232,19 @@
                   {{ option.specificationInfo }}
                 </Option>
               </Select>
-              <Input v-else :value="shelfSpecificationEditDefault" disabled></Input>
+              <Input
+                v-else
+                :value="shelfSpecificationEditDefault"
+                disabled
+              ></Input>
             </FormItem>
             </Col>
             <Col span="12">
             <FormItem label="上架名称:" prop="name">
-              <Input v-model="productDetail.name" placeholder="上架名称"></Input>
+              <Input
+                v-model="productDetail.name"
+                placeholder="上架名称"
+              ></Input>
             </FormItem>
             </Col>
           </Row>
@@ -271,7 +273,10 @@
           <Row>
             <Col span="24">
             <FormItem label="上架描述:">
-              <Input v-model="productDetail.description" placeholder="上架描述"></Input>
+              <Input
+                v-model="productDetail.description"
+                placeholder="上架描述"
+              ></Input>
             </FormItem>
             </Col>
           </Row>
@@ -306,14 +311,13 @@
                 @on-change="useAbleUniteChange"
               >
                 <Option
-                  v-for="(item,index) in useAble"
+                  v-for="(item, index) in useAble"
                   :key="index"
                   :value="item.value"
                   class="ptb2-5"
                   style="padding-left: 5px"
                 >
-                  {{ item.label
-                  }}
+                  {{ item.label }}
                 </Option>
               </Select>
             </FormItem>
@@ -322,13 +326,13 @@
             <FormItem label="应用类型:" prop="applicationType">
               <Select
                 :value="productDetail.applicationType"
-                :disabled="applicationType===null?false:true"
+                :disabled="applicationType === null ? false : true"
                 clearable
                 style="width: 100px"
                 @on-change="applicationTypeChange"
               >
                 <Option
-                  v-for="(item,index) in applicationTypeList"
+                  v-for="(item, index) in applicationTypeList"
                   :key="index"
                   :value="item.code"
                   class="ptb2-5"
@@ -341,20 +345,42 @@
             </Col>
           </Row>
           <Row>
-            <FormItem :label-width="80" label="商品主图:建议尺寸;400x400(单位:px)" prop="image">
-              <Input v-show="false" v-model="productDetail.image" style="width: auto"></Input>
-              <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+            <FormItem
+              :label-width="80"
+              label="商品主图:建议尺寸;400x400(单位:px)"
+              prop="image"
+            >
+              <Input
+                v-show="false"
+                v-model="productDetail.image"
+                style="width: auto"
+              ></Input>
+              <div
+                v-for="item in uploadListMain"
+                :key="item.url"
+                class="demo-upload-list"
+              >
                 <template v-if="item.status === 'finished'">
                   <div>
                     <img :src="item.url">
                     <div class="demo-upload-list-cover">
-                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                      <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                      <Icon
+                        type="ios-eye-outline"
+                        @click.native="handleUploadView(item)"
+                      ></Icon>
+                      <Icon
+                        type="ios-trash-outline"
+                        @click.native="handleRemoveMain(item)"
+                      ></Icon>
                     </div>
                   </div>
                 </template>
                 <template v-else>
-                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                  <Progress
+                    v-if="item.showProgress"
+                    :percent="item.percentage"
+                    hide-info
+                  ></Progress>
                 </template>
               </div>
               <IViewUpload
@@ -363,7 +389,10 @@
                 :image-size="imageSize"
                 @on-success="handleSuccessMain"
               >
-                <div slot="content" style="width:58px;height:58px;line-height:58px">
+                <div
+                  slot="content"
+                  style="width: 58px; height: 58px; line-height: 58px"
+                >
                   <Icon type="ios-camera" size="20"></Icon>
                 </div>
               </IViewUpload>
@@ -374,7 +403,10 @@
             <FormItem label="上架板块:">
               <div v-for="item in uiPositionData" :key="item.id">
                 <div>{{ item.description }}:</div>
-                <CheckboxGroup v-model="model" @on-change="checkAllGroupChange">
+                <CheckboxGroup
+                  v-model="model"
+                  @on-change="checkAllGroupChange"
+                >
                   <Checkbox
                     v-for="innerItem in item.productSections"
                     ref="checkBox"
@@ -391,10 +423,12 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+        >
           确定
         </Button>
       </div>
@@ -681,7 +715,7 @@ export default {
           sortable: true,
           render: (h, params, vm) => {
             const { row } = params;
-            const filterObj = this.applicationTypeList.find(item => {
+            const filterObj = this.applicationTypeList.find((item) => {
               return item.code === row.applicationType;
             });
             // if (JSON.stringify(filterObj) !== '{}') {
@@ -730,7 +764,7 @@ export default {
       page: 0,
       rows: 0
     })
-      .then(res => {
+      .then((res) => {
         this.uiPositionData = res.array;
         this.originalUiPositionData = _.cloneDeep(this.uiPositionData);
         this.createLoading = false;
@@ -775,7 +809,7 @@ export default {
         page: '1',
         rows: '5'
       })
-        .then(res => {
+        .then((res) => {
           console.log(res.array.length);
           console.log(this.optionsShelfSpecification);
           if (res.array.length > 0) {
@@ -798,7 +832,7 @@ export default {
       deleteProductShelve({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -815,7 +849,7 @@ export default {
         });
     },
     handleSubmit(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           // this.productDetail.applicationType = this.applicationType;
           if (this.isCreate) {
@@ -835,12 +869,12 @@ export default {
       editProductShelve({
         ...this.productDetail
       })
-        .then(res => {
+        .then((res) => {
           this.resetFields();
           this.modalEdit = false;
           this.getTableData();
         })
-        .catch(error => {
+        .catch((error) => {
           this.$Modal.error({
             title: '修改失败',
             content: error.response.data
@@ -853,7 +887,7 @@ export default {
       this.modalViewLoading = true;
       createProductShelve({
         ...this.productDetail
-      }).then(res => {
+      }).then((res) => {
         this.resetFields();
         this.modalEdit = false;
         this.$Message.success('创建成功!');
@@ -931,7 +965,7 @@ export default {
     },
     getTableData() {
       this.searchRowData.applicationType = this.applicationType;
-      getProductShelvesPages(this.searchRowData).then(res => {
+      getProductShelvesPages(this.searchRowData).then((res) => {
         this.tableData = res.array;
         this.total = res.total;
         this.loading = false;
@@ -943,10 +977,10 @@ export default {
       // 导出不分页
       this.searchRowData.rows = null;
       this.searchRowData.applicationType = this.applicationType;
-      getProductShelvesPages(this.searchRowData).then(res => {
+      getProductShelvesPages(this.searchRowData).then((res) => {
         const tableData = res.array;
         // 表格数据导出字段翻译
-        tableData.forEach(item => {
+        tableData.forEach((item) => {
           item['id'] = item['id'] + '';
           item['originalPrice'] = (item['originalPrice'] / 100.0).toFixed(2);
           item['price'] = (item['price'] / 100.0).toFixed(2);
@@ -959,7 +993,7 @@ export default {
       });
     },
     getApplications() {
-      getDictionary({ code: 'applications' }).then(res => {
+      getDictionary({ code: 'applications' }).then((res) => {
         if (res.entries) {
           this.applicationTypeList = res.entries;
         }
@@ -969,7 +1003,7 @@ export default {
       this.productDetail.applicationType = value;
       this.uiPositionData = this.originalUiPositionData;
       this.uiPositionData = this.uiPositionData.filter(
-        item => item.applicationType == value
+        (item) => item.applicationType == value
       );
     }
   }

@@ -66,7 +66,7 @@
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -89,9 +89,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                ID:
-              </i-col>
+              <i-col span="8"> ID: </i-col>
               <i-col span="16">
                 {{ feedbackDetail.id }}
               </i-col>
@@ -99,9 +97,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                应用类型:
-              </i-col>
+              <i-col span="8"> 应用类型: </i-col>
               <i-col span="16">
                 {{ feedbackDetail.applicationType | appTypeFilter }}
               </i-col>
@@ -111,9 +107,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                反馈用户:
-              </i-col>
+              <i-col span="8"> 反馈用户: </i-col>
               <i-col span="16">
                 {{ feedbackDetail.nickname }}
               </i-col>
@@ -121,9 +115,7 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                反馈时间:
-              </i-col>
+              <i-col span="8"> 反馈时间: </i-col>
               <i-col span="16">
                 {{ feedbackDetail.createAt }}
               </i-col>
@@ -133,9 +125,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                标题:
-              </i-col>
+              <i-col span="8"> 标题: </i-col>
               <i-col span="16">
                 {{ feedbackDetail.title }}
               </i-col>
@@ -145,9 +135,7 @@
         <Row :gutter="24" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">
-                反馈内容:
-              </i-col>
+              <i-col span="4"> 反馈内容: </i-col>
               <i-col span="16">
                 {{ feedbackDetail.content }}
               </i-col>
@@ -157,11 +145,9 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">
-                反馈状态:
-              </i-col>
+              <i-col span="8"> 反馈状态: </i-col>
               <i-col span="16">
-                {{ feedbackDetail.status|feedbackStatusFilters }}
+                {{ feedbackDetail.status | feedbackStatusFilters }}
               </i-col>
             </Row>
           </i-col>
@@ -170,9 +156,7 @@
           <Row :gutter="8" type="flex" align="middle" class-name="mb10">
             <i-col span="12">
               <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                <i-col span="8">
-                  回复人:
-                </i-col>
+                <i-col span="8"> 回复人: </i-col>
                 <i-col span="16">
                   {{ feedbackDetail.backEditor }}
                 </i-col>
@@ -180,9 +164,7 @@
             </i-col>
             <i-col span="12">
               <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                <i-col span="8">
-                  回复时间:
-                </i-col>
+                <i-col span="8"> 回复时间: </i-col>
                 <i-col span="16">
                   {{ feedbackDetail.feedbackAt }}
                 </i-col>
@@ -192,9 +174,7 @@
           <Row :gutter="8" type="flex" align="middle" class-name="mb10">
             <i-col span="12">
               <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                <i-col span="8">
-                  回复内容:
-                </i-col>
+                <i-col span="8"> 回复内容: </i-col>
                 <i-col span="16">
                   {{ feedbackDetail.backMessage }}
                 </i-col>
@@ -215,7 +195,11 @@
         </Form>
       </div>
       <div v-if="tempModalType === modalType.edit" slot="footer">
-        <Button :loading="feedbackLoading" type="primary" @click="handleEditOk('modalEdit')">
+        <Button
+          :loading="feedbackLoading"
+          type="primary"
+          @click="handleEditOk('modalEdit')"
+        >
           确认
         </Button>
       </div>
@@ -412,11 +396,11 @@ export default {
         id: this.feedbackDetail.id,
         backMessage: this.feedbackDetail.backMessage
       })
-        .then(res => {
+        .then((res) => {
           this.$Message.success('回复成功!');
           this.getTableData();
         })
-        .finally(res => {
+        .finally((res) => {
           this.modalView = false;
           this.feedbackLoading = false;
         });
@@ -429,7 +413,7 @@ export default {
     getTableData() {
       this.loading = true;
       getFeedbackPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })

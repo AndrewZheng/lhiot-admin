@@ -37,10 +37,10 @@
             <Select
               v-model="searchRowData.status"
               placeholder="商品状态"
-              style="padding-right: 5px;width: 100px"
+              style="padding-right: 5px; width: 100px"
             >
               <Option
-                v-for="(item,index) in couponStatusEnum"
+                v-for="(item, index) in couponStatusEnum"
                 :key="index"
                 :value="item.value"
                 class="ptb2-5"
@@ -51,10 +51,10 @@
             <Select
               v-model="searchRowData.memberLimitType"
               placeholder="用户范围"
-              style="padding-right: 5px;width: 100px"
+              style="padding-right: 5px; width: 100px"
             >
               <Option
-                v-for="(item,index) in memberLimitEnum"
+                v-for="(item, index) in memberLimitEnum"
                 :key="index"
                 :value="item.value"
                 class="ptb2-5"
@@ -104,7 +104,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -140,20 +140,27 @@
               <i-col span="6">
                 <FormItem label="商品名称:" prop="productName">
                   <Input v-model="addRelationDetail.productName">
-                  <Button slot="append" icon="ios-search" @click="handleRelation"></Button>
+                  <Button
+                    slot="append"
+                    icon="ios-search"
+                    @click="handleRelation"
+                  ></Button>
                   </Input>
                 </FormItem>
               </i-col>
               <i-col span="6">
                 <FormItem label="商品单位:" prop="unitId">
-                  <Input v-show="false" v-model="addRelationDetail.unitName"></Input>
+                  <Input
+                    v-show="false"
+                    v-model="addRelationDetail.unitName"
+                  ></Input>
                   <Select
                     v-model="addRelationDetail.unitId"
                     style="width: 80px"
                     @on-change="unitChange"
                   >
                     <Option
-                      v-for="(item,index) in unitsList"
+                      v-for="(item, index) in unitsList"
                       :key="index"
                       :value="item.value"
                       class="ptb2-5"
@@ -166,7 +173,10 @@
               </i-col>
               <i-col span="6">
                 <FormItem label="数量/重量:" prop="standardQty">
-                  <Input v-model="addRelationDetail.standardQty" style="width: 80px"></Input>
+                  <Input
+                    v-model="addRelationDetail.standardQty"
+                    style="width: 80px"
+                  ></Input>
                 </FormItem>
               </i-col>
               <i-col span="6">
@@ -200,12 +210,20 @@
             <Row>
               <i-col span="6">
                 <FormItem label="商品主图:" prop="image">
-                  <img :src="addRelationDetail.image" width="100" height="100">
+                  <img
+                    :src="addRelationDetail.image"
+                    width="100"
+                    height="100"
+                  >
                 </FormItem>
               </i-col>
               <i-col span="6">
                 <FormItem label="商品详情图:" prop="detailImage">
-                  <img :src="addRelationDetail.detailImage" width="100" height="100">
+                  <img
+                    :src="addRelationDetail.detailImage"
+                    width="100"
+                    height="100"
+                  >
                 </FormItem>
               </i-col>
             </Row>
@@ -218,14 +236,14 @@
                   <Select
                     v-model="addRelationDetail.entityType"
                     placeholder="实物类型"
-                    style="padding-right: 5px;width: 100px"
+                    style="padding-right: 5px; width: 100px"
                   >
                     <Option
-                      v-for="(item,index) in entityTypeEnum"
+                      v-for="(item, index) in entityTypeEnum"
                       :key="index"
                       :value="item.value"
                       class="ptb2-5"
-                      style="padding-left: 5px;width: 100px"
+                      style="padding-left: 5px; width: 100px"
                     >
                       {{ item.label }}
                     </Option>
@@ -270,10 +288,10 @@
                   <Select
                     v-model="addRelationDetail.memberLimitType"
                     placeholder="用户范围"
-                    style="padding-right: 5px;width: 100px"
+                    style="padding-right: 5px; width: 100px"
                   >
                     <Option
-                      v-for="(item,index) in memberLimitEnum"
+                      v-for="(item, index) in memberLimitEnum"
                       :key="index"
                       :value="item.value"
                       class="ptb2-5"
@@ -286,17 +304,29 @@
 
               <i-col span="6">
                 <FormItem label="每人限兑:" prop="receiveLimit">
-                  <InputNumber v-model="addRelationDetail.receiveLimit" :min="0" label="限兑数量"></InputNumber>
+                  <InputNumber
+                    v-model="addRelationDetail.receiveLimit"
+                    :min="0"
+                    label="限兑数量"
+                  ></InputNumber>
                 </FormItem>
               </i-col>
               <i-col span="6">
                 <FormItem label="兑换总数:" prop="entityLimit">
-                  <InputNumber v-model="addRelationDetail.entityLimit" :min="0" label="限购数量"></InputNumber>
+                  <InputNumber
+                    v-model="addRelationDetail.entityLimit"
+                    :min="0"
+                    label="限购数量"
+                  ></InputNumber>
                 </FormItem>
               </i-col>
               <i-col span="6">
                 <FormItem label="排序字段:" prop="rank">
-                  <InputNumber v-model="addRelationDetail.rank" :min="0" label="排序字段"></InputNumber>
+                  <InputNumber
+                    v-model="addRelationDetail.rank"
+                    :min="0"
+                    label="排序字段"
+                  ></InputNumber>
                 </FormItem>
               </i-col>
             </Row>
@@ -306,7 +336,7 @@
                   <Input
                     v-model="addRelationDetail.exchangeRemark"
                     type="textarea"
-                    :autosize="{minRows: 3,maxRows: 8}"
+                    :autosize="{ minRows: 3, maxRows: 8 }"
                     placeholder="请输入兑换说明"
                   ></Input>
                 </FormItem>
@@ -315,7 +345,10 @@
             <Row>
               <i-col span="12">
                 <FormItem label="关联门店:">
-                  <Select v-model="addRelationDetail.relationStoreType" style="width: 220px">
+                  <Select
+                    v-model="addRelationDetail.relationStoreType"
+                    style="width: 220px"
+                  >
                     <Option
                       v-for="item in relationStoreTypeEnum"
                       :key="item.value"
@@ -334,9 +367,14 @@
               <i-col span="24">
                 <FormItem>
                   <div
-                    style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                    style="
+                      border-bottom: 1px solid #e9e9e9;
+                      padding-bottom: 6px;
+                      margin-bottom: 6px;
+                      display: flex;
+                    "
                   >
-                    <div style="margin-left:-54px;margin-right:18px">
+                    <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[0] }}
                     </div>
                     <Checkbox
@@ -347,7 +385,10 @@
                       全选/反选
                     </Checkbox>
                   </div>
-                  <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange">
+                  <CheckboxGroup
+                    v-model="stores"
+                    @on-change="checkAllGroupChange"
+                  >
                     <Checkbox
                       v-for="item in storeData"
                       ref="checkBox"
@@ -362,9 +403,14 @@
               <i-col span="24">
                 <FormItem>
                   <div
-                    style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                    style="
+                      border-bottom: 1px solid #e9e9e9;
+                      padding-bottom: 6px;
+                      margin-bottom: 6px;
+                      display: flex;
+                    "
                   >
-                    <div style="margin-left:-54px;margin-right:18px">
+                    <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[1] }}
                     </div>
                     <Checkbox
@@ -375,7 +421,10 @@
                       全选/反选
                     </Checkbox>
                   </div>
-                  <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange1">
+                  <CheckboxGroup
+                    v-model="stores"
+                    @on-change="checkAllGroupChange1"
+                  >
                     <Checkbox
                       v-for="item in storeData1"
                       ref="checkBox"
@@ -390,9 +439,14 @@
               <i-col span="24">
                 <FormItem>
                   <div
-                    style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                    style="
+                      border-bottom: 1px solid #e9e9e9;
+                      padding-bottom: 6px;
+                      margin-bottom: 6px;
+                      display: flex;
+                    "
                   >
-                    <div style="margin-left:-54px;margin-right:18px">
+                    <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[2] }}
                     </div>
                     <Checkbox
@@ -403,7 +457,10 @@
                       全选/反选
                     </Checkbox>
                   </div>
-                  <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange2">
+                  <CheckboxGroup
+                    v-model="stores"
+                    @on-change="checkAllGroupChange2"
+                  >
                     <Checkbox
                       v-for="item in storeData2"
                       ref="checkBox"
@@ -418,9 +475,14 @@
               <i-col span="24">
                 <FormItem>
                   <div
-                    style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                    style="
+                      border-bottom: 1px solid #e9e9e9;
+                      padding-bottom: 6px;
+                      margin-bottom: 6px;
+                      display: flex;
+                    "
                   >
-                    <div style="margin-left:-54px;margin-right:18px">
+                    <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[3] }}
                     </div>
                     <Checkbox
@@ -431,7 +493,10 @@
                       全选/反选
                     </Checkbox>
                   </div>
-                  <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange3">
+                  <CheckboxGroup
+                    v-model="stores"
+                    @on-change="checkAllGroupChange3"
+                  >
                     <Checkbox
                       v-for="item in storeData3"
                       ref="checkBox"
@@ -446,9 +511,14 @@
               <i-col span="24">
                 <FormItem>
                   <div
-                    style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                    style="
+                      border-bottom: 1px solid #e9e9e9;
+                      padding-bottom: 6px;
+                      margin-bottom: 6px;
+                      display: flex;
+                    "
                   >
-                    <div style="margin-left:-54px;margin-right:18px">
+                    <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[4] }}
                     </div>
                     <Checkbox
@@ -459,7 +529,10 @@
                       全选/反选
                     </Checkbox>
                   </div>
-                  <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange4">
+                  <CheckboxGroup
+                    v-model="stores"
+                    @on-change="checkAllGroupChange4"
+                  >
                     <Checkbox
                       v-for="item in storeData4"
                       ref="checkBox"
@@ -474,9 +547,14 @@
               <i-col span="24">
                 <FormItem>
                   <div
-                    style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                    style="
+                      border-bottom: 1px solid #e9e9e9;
+                      padding-bottom: 6px;
+                      margin-bottom: 6px;
+                      display: flex;
+                    "
                   >
-                    <div style="margin-left:-54px;margin-right:18px">
+                    <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[5] }}
                     </div>
                     <Checkbox
@@ -487,7 +565,10 @@
                       全选/反选
                     </Checkbox>
                   </div>
-                  <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange5">
+                  <CheckboxGroup
+                    v-model="stores"
+                    @on-change="checkAllGroupChange5"
+                  >
                     <Checkbox
                       v-for="item in storeData5"
                       ref="checkBox"
@@ -502,9 +583,14 @@
               <i-col span="24">
                 <FormItem>
                   <div
-                    style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                    style="
+                      border-bottom: 1px solid #e9e9e9;
+                      padding-bottom: 6px;
+                      margin-bottom: 6px;
+                      display: flex;
+                    "
                   >
-                    <div style="margin-left:-54px;margin-right:18px">
+                    <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[6] }}
                     </div>
                     <Checkbox
@@ -515,7 +601,10 @@
                       全选/反选
                     </Checkbox>
                   </div>
-                  <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange6">
+                  <CheckboxGroup
+                    v-model="stores"
+                    @on-change="checkAllGroupChange6"
+                  >
                     <Checkbox
                       v-for="item in storeData6"
                       ref="checkBox"
@@ -554,13 +643,15 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button @click="handleAddClose">
-          关闭
-        </Button>
+        <Button @click="handleAddClose"> 关闭 </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
-          @click="tempModalType=='create'? handleTemplateAdd('add'):handleTemplateAdd('edit')"
+          @click="
+            tempModalType == 'create'
+              ? handleTemplateAdd('add')
+              : handleTemplateAdd('edit')
+          "
         >
           确定
         </Button>
@@ -624,7 +715,7 @@
         </div>
       </tables>
 
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="couponTemplateTotal"
@@ -1363,26 +1454,25 @@ export default {
       }
     },
     getStore() {
-      getAreaStorePages()
-        .then((res) => {
-          this.storeList = res.array;
-          this.storeData = res.array[0].storeList;
-          this.storeData1 = res.array[1].storeList;
-          this.storeData2 = res.array[2].storeList;
-          this.storeData3 = res.array[3].storeList;
-          this.storeData4 = res.array[4].storeList;
-          this.storeData5 = res.array[5].storeList;
-          this.storeData6 = res.array[6].storeList;
-          // this.storeData7 = res.array[7].storeList;
-          const data = [];
-          for (const val of res.array) {
-            this.storeNameList.push(val.storeName);
-            data.push(val.storeList);
-          }
-          for (const value of data) {
-            this.storeListData = this.storeListData.concat(value);
-          }
-        })
+      getAreaStorePages().then((res) => {
+        this.storeList = res.array;
+        this.storeData = res.array[0].storeList;
+        this.storeData1 = res.array[1].storeList;
+        this.storeData2 = res.array[2].storeList;
+        this.storeData3 = res.array[3].storeList;
+        this.storeData4 = res.array[4].storeList;
+        this.storeData5 = res.array[5].storeList;
+        this.storeData6 = res.array[6].storeList;
+        // this.storeData7 = res.array[7].storeList;
+        const data = [];
+        for (const val of res.array) {
+          this.storeNameList.push(val.storeName);
+          data.push(val.storeList);
+        }
+        for (const value of data) {
+          this.storeListData = this.storeListData.concat(value);
+        }
+      });
     },
     handleCheckAll(value) {
       const _this = this;

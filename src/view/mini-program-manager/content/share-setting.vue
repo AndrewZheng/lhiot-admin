@@ -85,9 +85,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动ID:
-              </i-col>
+              <i-col span="6"> 活动ID: </i-col>
               <i-col span="18">
                 {{ shareDetail.id }}
               </i-col>
@@ -97,9 +95,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动名称:
-              </i-col>
+              <i-col span="6"> 活动名称: </i-col>
               <i-col span="18">
                 {{ shareDetail.activityName }}
               </i-col>
@@ -109,13 +105,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动状态:
-              </i-col>
+              <i-col span="6"> 活动状态: </i-col>
               <i-col span="18">
-                {{
-                  shareDetail.onOff | imageStatusFilter
-                }}
+                {{ shareDetail.onOff | imageStatusFilter }}
               </i-col>
             </Row>
           </i-col>
@@ -131,9 +123,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                开始时间:
-              </i-col>
+              <i-col span="6"> 开始时间: </i-col>
               <i-col span="18">
                 {{
                   (this.shareDetail.beginTime = this.$moment(
@@ -147,9 +137,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                结束时间:
-              </i-col>
+              <i-col span="6"> 结束时间: </i-col>
               <i-col span="18">
                 {{
                   (this.shareDetail.endTime = this.$moment(
@@ -163,9 +151,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                创建人:
-              </i-col>
+              <i-col span="6"> 创建人: </i-col>
               <i-col span="18">
                 {{ shareDetail.createBy }}
               </i-col>
@@ -175,9 +161,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                创建时间:
-              </i-col>
+              <i-col span="6"> 创建时间: </i-col>
               <i-col span="18">
                 {{ shareDetail.createTime }}
               </i-col>
@@ -187,9 +171,7 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">
-                活动规则:
-              </i-col>
+              <i-col span="6"> 活动规则: </i-col>
               <i-col span="18">
                 <Input
                   :v-if="shareDetail.activityRule"
@@ -203,9 +185,7 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
@@ -331,9 +311,7 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"

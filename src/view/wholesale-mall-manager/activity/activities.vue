@@ -140,9 +140,7 @@
     >
       <p slot="header">
         <i-col>
-          {{
-            tempModalType === modalType.edit ? "修改活动" : "创建活动"
-          }}
+          {{ tempModalType === modalType.edit ? "修改活动" : "创建活动" }}
         </i-col>
       </p>
       <div class="modal-content">
@@ -177,9 +175,7 @@
                 label="活动类型:"
                 prop="activityType"
               >
-                {{
-                  activityDetail.activityType | pfActivityTypeFilter
-                }}
+                {{ activityDetail.activityType | pfActivityTypeFilter }}
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -285,9 +281,7 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
+        <Button @click="handleEditClose"> 关闭 </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"

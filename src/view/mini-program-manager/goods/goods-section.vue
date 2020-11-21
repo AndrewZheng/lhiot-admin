@@ -119,7 +119,7 @@
     <Modal v-model="modalEdit" :mask-closable="false" :width="1200">
       <p slot="header">
         <span>{{
-          tempModalType == modalType.create ? "添加板块商品" : "编辑板块"
+          isCreate ? "添加板块商品" : "编辑板块"
         }}</span>
       </p>
       <div class="modal-content">
@@ -129,7 +129,7 @@
           :rules="ruleInline"
         >
           <!-- 编辑 -->
-          <Row v-if="tempModalType == modalType.edit">
+          <Row v-if="isEdit">
             <FormItem label="请选择要更换的商品板块:">
               <Cascader
                 v-model="defaultGoodsSectionData"
@@ -143,7 +143,7 @@
             </FormItem>
           </Row>
           <!-- 添加 -->
-          <Row v-if="tempModalType == modalType.create">
+          <Row v-if="isCreate">
             <FormItem>
               <tables
                 ref="tables"
@@ -207,7 +207,7 @@
             </FormItem>
           </Row>
           <FormItem
-            v-if="tempModalType == modalType.create"
+            v-if="isCreate"
             label="排序:"
             prop="rank"
           >

@@ -93,7 +93,7 @@
               </Button> -->
             </div>
           </tables>
-          <div style="margin: 10px;overflow: hidden">
+          <div style="margin: 10px; overflow: hidden">
             <Row type="flex" justify="end">
               <Page
                 :total="total"
@@ -125,9 +125,7 @@
           </i-col>-->
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                商品名称:
-              </i-col>
+              <i-col span="8"> 商品名称: </i-col>
               <i-col span="16">
                 {{ productDetail.goodsName }}
               </i-col>
@@ -135,9 +133,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                商品分类:
-              </i-col>
+              <i-col span="6"> 商品分类: </i-col>
               <i-col span="18">
                 {{ findGroupName(productDetail.categoryId) }}
               </i-col>
@@ -155,9 +151,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                基础单位:
-              </i-col>
+              <i-col span="6"> 基础单位: </i-col>
               <i-col span="18">
                 {{ productDetail.unitName }}
               </i-col>
@@ -165,9 +159,7 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                基础条码:
-              </i-col>
+              <i-col span="8"> 基础条码: </i-col>
               <i-col span="16">
                 {{ productDetail.baseBar }}
               </i-col>
@@ -177,9 +169,7 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                商品主图:
-              </i-col>
+              <i-col span="8"> 商品主图: </i-col>
               <i-col v-show="productDetail.goodsImage" span="16">
                 <div class="demo-upload-list">
                   <img :src="productDetail.goodsImage">
@@ -246,18 +236,21 @@
         </Row>-->
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
 
     <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
-        <span>{{ isCreate?'创建基础商品信息':'编辑基础商品信息' }}</span>
+        <span>{{ isCreate ? "创建基础商品信息" : "编辑基础商品信息" }}</span>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="productDetail" :rules="ruleInline" :label-width="90">
+        <Form
+          ref="editForm"
+          :model="productDetail"
+          :rules="ruleInline"
+          :label-width="90"
+        >
           <Row>
             <!-- <i-col span="12">
               <FormItem label="商品编码:" prop="goodsCode">
@@ -266,7 +259,10 @@
             </i-col>-->
             <i-col span="12">
               <FormItem label="商品名称:" prop="goodsName">
-                <Input v-model="productDetail.goodsName" placeholder="商品名称"></Input>
+                <Input
+                  v-model="productDetail.goodsName"
+                  placeholder="商品名称"
+                ></Input>
               </FormItem>
             </i-col>
             <i-col span="12">
@@ -291,9 +287,12 @@
           <Row>
             <i-col span="12">
               <FormItem label="基础单位:" prop="baseUnit">
-                <Select :value="productDetail.baseUnit" @on-change="uniteChange">
+                <Select
+                  :value="productDetail.baseUnit"
+                  @on-change="uniteChange"
+                >
                   <Option
-                    v-for="(item,index) in unitsList"
+                    v-for="(item, index) in unitsList"
                     :key="index"
                     :value="item.value"
                     class="ptb2-5"
@@ -306,26 +305,50 @@
             </i-col>
             <i-col span="12">
               <FormItem label="基础条码:" prop="baseBar">
-                <Input v-model.trim="productDetail.baseBar" placeholder="基础条码"></Input>
+                <Input
+                  v-model.trim="productDetail.baseBar"
+                  placeholder="基础条码"
+                ></Input>
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="12">
-              <FormItem label="商品主图:建议尺寸;690x690(单位:px):" prop="goodsImage">
-                <Input v-show="false" v-model="productDetail.goodsImage" style="width: auto"></Input>
-                <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
+              <FormItem
+                label="商品主图:建议尺寸;690x690(单位:px):"
+                prop="goodsImage"
+              >
+                <Input
+                  v-show="false"
+                  v-model="productDetail.goodsImage"
+                  style="width: auto"
+                ></Input>
+                <div
+                  v-for="item in uploadListMain"
+                  :key="item.url"
+                  class="demo-upload-list"
+                >
                   <template v-if="item.status === 'finished'">
                     <div>
                       <img :src="item.url">
                       <div class="demo-upload-list-cover">
-                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                        <Icon
+                          type="ios-eye-outline"
+                          @click.native="handleUploadView(item)"
+                        ></Icon>
+                        <Icon
+                          type="ios-trash-outline"
+                          @click.native="handleRemoveMain(item)"
+                        ></Icon>
                       </div>
                     </div>
                   </template>
                   <template v-else>
-                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      hide-info
+                    ></Progress>
                   </template>
                 </div>
                 <IViewUpload
@@ -336,7 +359,10 @@
                   file-dir="product"
                   @on-success="handleSuccessMain"
                 >
-                  <div slot="content" style="width:58px;height:58px;line-height:58px">
+                  <div
+                    slot="content"
+                    style="width: 58px; height: 58px; line-height: 58px"
+                  >
                     <Icon type="ios-camera" size="20"></Icon>
                   </div>
                 </IViewUpload>
@@ -473,10 +499,12 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">
+        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit"
+        >
           确定
         </Button>
       </div>
@@ -491,7 +519,11 @@
         <span>图片排序</span>
       </p>
       <div class="modal-content">
-        <drag-list :list1.sync="uploadListMultiple" :drop-con-class="dropConClass" class="clearfix">
+        <drag-list
+          :list1.sync="uploadListMultiple"
+          :drop-con-class="dropConClass"
+          class="clearfix"
+        >
           <img
             slot="left"
             slot-scope="left"
@@ -503,12 +535,8 @@
         </drag-list>
       </div>
       <div slot="footer">
-        <Button @click="modalSort=false">
-          关闭
-        </Button>
-        <Button type="primary" @click="handleImgSort">
-          确定
-        </Button>
+        <Button @click="modalSort = false"> 关闭 </Button>
+        <Button type="primary" @click="handleImgSort"> 确定 </Button>
       </div>
     </Modal>
   </div>
@@ -622,8 +650,8 @@ export default {
         // goodsArea: [{ required: true, message: "请选择商品区域" }],
         // goodsBrand: [{ required: true, message: "请输入商品品牌" }],
         // placeOfOrigin: [{ required: true, message: "请输入商品产地" }],
-        categoryId: [{ required: true, message: "请选择商品分类" }],
-        goodsImage: [{ required: true, message: "请上传商品主图" }]
+        categoryId: [{ required: true, message: '请选择商品分类' }],
+        goodsImage: [{ required: true, message: '请上传商品主图' }]
         // goodsImages: [{ required: true, message: "请上传商品详情图" }],
         // otherImage: [{ required: true, message: '请上传服务保障图' }],
         // stockLimit: [{ required: true, message: "请输入安全库存" }]
@@ -670,7 +698,7 @@ export default {
           render: (h, params) => {
             const { row } = params;
             const obj = this.proCategoryTreeList.find(
-              item => row.categoryId === item.id
+              (item) => row.categoryId === item.id
             );
             if (obj) {
               return h('span', obj.title);
@@ -746,7 +774,7 @@ export default {
   methods: {
     getTableData() {
       getProductPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })
@@ -757,8 +785,8 @@ export default {
         });
     },
     getProductUnits() {
-      getProductUnits().then(res => {
-        res.forEach(value => {
+      getProductUnits().then((res) => {
+        res.forEach((value) => {
           const map = { label: 'label', value: 'value' };
           map.value = value.unitCode;
           map.label = value.unitName;
@@ -770,7 +798,7 @@ export default {
     getProductCategoriesTree() {
       this.loading = true;
       getProductCategoriesTree()
-        .then(res => {
+        .then((res) => {
           this.proCategoryTreeList = [];
           if (res && res.length > 0) {
             this.proCategoryTreeList = res;
@@ -827,7 +855,7 @@ export default {
     },
     handleImgSort() {
       this.descriptionList = [];
-      this.uploadListMultiple.forEach(item => {
+      this.uploadListMultiple.forEach((item) => {
         if (item.url) {
           this.descriptionList.push(item.url);
         }
@@ -852,7 +880,7 @@ export default {
       this.tempModalType = this.modalType.edit;
       getProduct({
         id: params.row.id
-      }).then(res => {
+      }).then((res) => {
         this.productDetail = res;
         this.setDefaultUploadList(res);
         this.defaultGoodsCategoryData = [];
@@ -867,7 +895,7 @@ export default {
       createProduct({
         ...this.productDetail
       })
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
@@ -882,7 +910,7 @@ export default {
       editProduct({
         ...this.productDetail
       })
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.$Message.success('修改成功!');
           this.getTableData();
@@ -898,7 +926,7 @@ export default {
       //   };
       //   this.deletePicture(urls);
       // }
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (this.isCreate) {
             this.createProduct();
@@ -932,15 +960,15 @@ export default {
       this.exportExcelLoading = true;
       // TODO：测试导出不带分页搜索条件 目前默认导出10条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      let pageSize = this.searchRowData.page;
+      const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
-      getProductPages(this.searchRowData).then(res => {
+      getProductPages(this.searchRowData).then((res) => {
         const tableData = res.rows;
         // 恢复正常页数
         this.searchRowData.rows = 20;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
-        tableData.forEach(item => {
+        tableData.forEach((item) => {
           item.categoryId = this.findGroupName(item.categoryId);
           item.goodsImage = '';
           if (item.goodsArea === 'imported') {
@@ -951,7 +979,7 @@ export default {
             item.goodsArea = '';
           }
         });
-        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+        const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
         this.$refs.tables.handleDownload({
           filename: `商品基础信息-${date}`,
           data: tableData
@@ -974,7 +1002,7 @@ export default {
       deleteProduct({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -986,7 +1014,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });
@@ -1024,7 +1052,7 @@ export default {
       // }
     },
     findGroupId(id) {
-      const obj = this.proCategoryTreeList.find(item => {
+      const obj = this.proCategoryTreeList.find((item) => {
         return item.id === id;
       });
       this.defaultGoodsCategoryData.push(id);
@@ -1034,7 +1062,7 @@ export default {
     },
     findGroupName(id) {
       if (this.proCategoryTreeList.length > 0) {
-        const obj = this.proCategoryTreeList.find(item => item.id === id);
+        const obj = this.proCategoryTreeList.find((item) => item.id === id);
         if (obj) {
           return obj.title;
         }
@@ -1095,7 +1123,7 @@ export default {
     handleSuccessMultiple(response, file, fileList) {
       this.uploadListMultiple = fileList;
       this.descriptionList = [];
-      fileList.forEach(value => {
+      fileList.forEach((value) => {
         if (value.url) {
           this.descriptionList.push(value.url);
         }
@@ -1107,7 +1135,7 @@ export default {
     },
     // 初始化商品菜单列表
     initMenuList() {
-      getProductCategoriesTree().then(res => {
+      getProductCategoriesTree().then((res) => {
         if (res && res.length > 0) {
           const menuList = buildMenu(res);
           const map = {

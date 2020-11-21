@@ -122,11 +122,7 @@
             >
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
-            <Button
-              class="search-btn"
-              type="warning"
-              @click="handleDownload"
-            >
+            <Button class="search-btn" type="warning" @click="handleDownload">
               <Icon type="md-download" />导出
             </Button>
           </Row>
