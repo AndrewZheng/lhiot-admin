@@ -70,7 +70,7 @@
               {{ item.label }}
             </Option>
           </Select>
-          <Select
+          <!-- <Select
             v-model="searchRowData.userGrade"
             class="search-col"
             placeholder="用户等级"
@@ -85,7 +85,7 @@
             >
               {{ item.label }}
             </Option>
-          </Select>
+          </Select> -->
           <Select
             v-model="searchRowData.isVip"
             class="search-col"
@@ -118,7 +118,7 @@
               {{ item.label }}
             </Option>
           </Select>
-          <Select
+          <!-- <Select
             v-model="searchRowData.shopType"
             class="search-col"
             placeholder="门店类型"
@@ -133,7 +133,7 @@
             >
               {{ item.label }}
             </Option>
-          </Select>
+          </Select> -->
           <Cascader
             change-on-select
             :data="data"
@@ -183,7 +183,7 @@
             v-has="'export_user_info'"
             :loading="exportExcelLoading"
             type="primary"
-            class="mr5 mt5"
+            class="mr5"
             @click="handleDownload"
           >
             <Icon type="md-download" />导出
@@ -893,8 +893,8 @@ export default {
   created() {
     this.data = city;
     this.getTableData();
-    this.getShopType();
-    this.getUserGrade();
+    // this.getShopType();
+    // this.getUserGrade();
     this.loginName = sessionStorage.getItem('loginName');
   },
   methods: {

@@ -24,7 +24,7 @@
         </Select>
         <p
           v-if="!searchRowData.id"
-          style="margin: 18px 0 0 20px; font-size: 12px; color: #ff3861"
+          style="margin-left:20px; font-size: 12px; color: #ff3861"
         >
           {{ `*请先选择数据分类` }}
         </p>
