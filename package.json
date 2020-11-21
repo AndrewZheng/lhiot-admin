@@ -79,16 +79,32 @@
     "last 2 versions",
     "not ie <= 8"
   ],
+  "engines": {
+    "node": ">=8.9",
+    "npm": ">= 3.0.0"
+  },
+  "keywords": [
+    "vue",
+    "admin",
+    "dashboard",
+    "iview-ui",
+    "boilerplate",
+    "admin-template",
+    "management-system"
+  ],
   "gitHooks": {
     "pre-commit": "lint-staged"
   },
   "license": "MIT",
   "lint-staged": {
-    "*.js": [
-      "git add"
-    ],
-    "*.vue": [
+    "src/**/*.{js,vue}": [
+      "eslint --fix",
       "git add"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
