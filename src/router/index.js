@@ -42,7 +42,7 @@ function getCurrentMenuId(userPermission, currentRoute) {
   return menuid;
 }
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   iView.LoadingBar.start();
   const token = getToken();
   console.log('token:', token);
@@ -84,10 +84,9 @@ router.beforeEach((to, from, next) => {
             next();
           }
         } else {
-          next({ path: '/401', replace: true });
-          // next({
-          //   name: LOGIN_PAGE_NAME
-          // });
+          // 没有权限，清除登录token- relogin
+          await store.dispatch('user/handleLogOut');
+          next(`/login?redirect=${to.path}`)
         }
       }
     }
@@ -97,9 +96,7 @@ router.beforeEach((to, from, next) => {
       // 在免登录白名单，直接进入
       next();
     } else {
-      next({
-        name: LOGIN_PAGE_NAME
-      });
+      next(`/login?redirect=${to.path}`);
     }
   }
 });

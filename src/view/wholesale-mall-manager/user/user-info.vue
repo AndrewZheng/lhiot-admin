@@ -95,7 +95,7 @@
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -403,7 +403,7 @@ export default {
       this.searchUserRowData = _.cloneDeep(userRowData);
     },
     getTableData() {
-      getUserPages(this.searchRowData).then(res => {
+      getUserPages(this.searchRowData).then((res) => {
         for (let i = 0; i < res.rows.length; i++) {
           res.rows[i].loginName = this.loginName;
         }
@@ -436,8 +436,8 @@ export default {
 
     createTableRow() {
       createUser(this.userDetail)
-        .then(res => {})
-        .finally(res => {
+        .then((res) => {})
+        .finally((res) => {
           this.modalEditLoading = false;
           this.modalEdit = false;
           this.getTableData();
@@ -459,7 +459,7 @@ export default {
       deleteUser({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&
@@ -483,13 +483,13 @@ export default {
       const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       getUserPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           const tableData = res.rows;
           // 恢复正常页数
           this.searchRowData.rows = 20;
           this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
-          tableData.forEach(item => {
+          tableData.forEach((item) => {
             item['userType'] =
               item['userType'] === 'sale' ? '业务员' : '普通用户';
             item['userStatus'] = userStatusConvert(item['userStatus']);
@@ -512,7 +512,7 @@ export default {
     // v1.2.0
     getUserTableData() {
       getUserPages(this.searchUserRowData)
-        .then(res => {
+        .then((res) => {
           this.userData = res.rows;
           this.usersTotal = res.total;
         })
@@ -545,7 +545,7 @@ export default {
       this.handleSearch1();
     },
     onSelectionChange(selection) {
-      this.selectedUserIds = selection.map(item => item.id.toString());
+      this.selectedUserIds = selection.map((item) => item.id.toString());
     }
   }
 };

@@ -82,7 +82,7 @@
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -100,130 +100,130 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
+import Tables from '_c/tables';
 import {
   getUserAnalysisPages,
   getAllSalesman,
   editUser,
   deleteUser,
   createUser
-} from "@/api/lhfarm-small";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
+} from '@/api/lhfarm-small';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber
-} from "@/libs/util";
-import { userStatusEnum, sexEnum, userTypeEnum } from "@/libs/enumerate";
+} from '@/libs/util';
+import { userStatusEnum, sexEnum, userTypeEnum } from '@/libs/enumerate';
 import {
   userTypeConvert,
   userStatusConvert,
   sexConvert
-} from "@/libs/converStatus";
+} from '@/libs/converStatus';
 
 const userAnalysis = {
-  accumulative: "",
-  addressDetail: "",
-  balance: "",
-  city: "",
+  accumulative: '',
+  addressDetail: '',
+  balance: '',
+  city: '',
   id: 0,
-  lastCreateTime: "",
-  lastMonth: "",
-  nickName: "",
-  phone: "",
-  profilePhoto: "",
-  registerTime: "",
-  saleUserName: "",
-  sex: "",
-  shopName: "",
-  thisMonth: "",
-  userName: "",
-  userStatus: ""
+  lastCreateTime: '',
+  lastMonth: '',
+  nickName: '',
+  phone: '',
+  profilePhoto: '',
+  registerTime: '',
+  saleUserName: '',
+  sex: '',
+  shopName: '',
+  thisMonth: '',
+  userName: '',
+  userStatus: ''
 };
 
 const roleRowData = {
-  userName: "",
-  phone: "",
-  userType: "",
+  userName: '',
+  phone: '',
+  userType: '',
   regBeginTime: null,
   regEndTime: null,
-  salesUserId: "7",
-  salesUserStatus: "",
+  salesUserId: '7',
+  salesUserStatus: '',
   page: 1,
   rows: 20
 };
 
 const userColumns = [
   {
-    type: "selection",
-    key: "",
+    type: 'selection',
+    key: '',
     width: 60,
-    align: "center"
+    align: 'center'
   },
   {
-    title: "编号",
-    align: "center",
-    key: "id",
+    title: '编号',
+    align: 'center',
+    key: 'id',
     width: 80
   },
   {
-    title: "用户姓名",
-    align: "center",
-    key: "userName",
+    title: '用户姓名',
+    align: 'center',
+    key: 'userName',
     minWidth: 60
   },
   {
-    title: "手机号码",
-    align: "center",
-    key: "phone",
+    title: '手机号码',
+    align: 'center',
+    key: 'phone',
     minWidth: 80
   },
   {
-    title: "注册时间",
-    align: "center",
-    key: "registerTime",
+    title: '注册时间',
+    align: 'center',
+    key: 'registerTime',
     minWidth: 100
   },
   {
-    title: "上月消费/频次",
-    align: "center",
-    key: "lastMonth",
+    title: '上月消费/频次',
+    align: 'center',
+    key: 'lastMonth',
     minWidth: 80,
     render: (h, params, vm) => {
       const { row } = params;
-      return <div>{row.lastMonth ? row.lastMonth : "N/A"}</div>;
+      return <div>{row.lastMonth ? row.lastMonth : 'N/A'}</div>;
     }
   },
   {
-    title: "本月消费/频次",
-    align: "center",
-    key: "thisMonth",
+    title: '本月消费/频次',
+    align: 'center',
+    key: 'thisMonth',
     minWidth: 80,
     render: (h, params, vm) => {
       const { row } = params;
-      return <div>{row.thisMonth ? row.thisMonth : "N/A"}</div>;
+      return <div>{row.thisMonth ? row.thisMonth : 'N/A'}</div>;
     }
   },
   {
-    title: "累计消费/频次",
-    align: "center",
-    key: "accumulative",
+    title: '累计消费/频次',
+    align: 'center',
+    key: 'accumulative',
     minWidth: 80,
     render: (h, params, vm) => {
       const { row } = params;
-      return <div>{row.accumulative ? row.accumulative : "N/A"}</div>;
+      return <div>{row.accumulative ? row.accumulative : 'N/A'}</div>;
     }
   },
   {
-    title: "最近消费时间",
-    align: "center",
-    key: "lastCreateTime",
+    title: '最近消费时间',
+    align: 'center',
+    key: 'lastCreateTime',
     minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
-      return <div>{row.lastCreateTime ? row.lastCreateTime : "N/A"}</div>;
+      return <div>{row.lastCreateTime ? row.lastCreateTime : 'N/A'}</div>;
     }
   }
 ];
@@ -264,7 +264,7 @@ export default {
   mounted() {},
   methods: {
     getTableData() {
-      getUserAnalysisPages(this.searchRowData).then(res => {
+      getUserAnalysisPages(this.searchRowData).then((res) => {
         this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;
@@ -273,7 +273,7 @@ export default {
       });
     },
     getAllSalesman() {
-      getAllSalesman().then(res => {
+      getAllSalesman().then((res) => {
         this.salesManList = res;
       });
     },
@@ -287,7 +287,7 @@ export default {
       this.$refs.editForm.resetFields();
     },
     handleSubmit() {
-      this.$refs.editForm.validate(valid => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (this.isCreate) {
             this.createTableRow();
@@ -295,13 +295,13 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error("请完善商品单位信息!");
+          this.$Message.error('请完善商品单位信息!');
         }
       });
     },
     editTableRow() {
       this.modalViewLoading = true;
-      editUser(this.userAnalysis).then(res => {
+      editUser(this.userAnalysis).then((res) => {
         this.modalViewLoading = false;
         this.modalEdit = false;
         this.getTableData();
@@ -310,8 +310,8 @@ export default {
     },
     createTableRow() {
       createUser(this.userAnalysis)
-        .then(res => {})
-        .finally(res => {
+        .then((res) => {})
+        .finally((res) => {
           this.modalEditLoading = false;
           this.modalEdit = false;
           this.getTableData();
@@ -338,7 +338,7 @@ export default {
       deleteUser({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&
@@ -361,21 +361,21 @@ export default {
       const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       getUserAnalysisPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           const tableData = res.rows;
           // 恢复正常页数
           this.searchRowData.rows = 20;
           this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
-          tableData.forEach(item => {
-            item["userType"] =
-              item["userType"] === "sale" ? "业务员" : "普通用户";
-            item["userStatus"] = userStatusConvert(item["userStatus"]);
-            item["salesUserStatus"] = userStatusConvert(
-              item["salesUserStatus"]
+          tableData.forEach((item) => {
+            item['userType'] =
+              item['userType'] === 'sale' ? '业务员' : '普通用户';
+            item['userStatus'] = userStatusConvert(item['userStatus']);
+            item['salesUserStatus'] = userStatusConvert(
+              item['salesUserStatus']
             );
           });
-          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+          const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
           this.$refs.tables.handleDownload({
             filename: `会员分析信息-${date}`,
             data: tableData

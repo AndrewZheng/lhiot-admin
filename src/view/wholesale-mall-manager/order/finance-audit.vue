@@ -124,7 +124,7 @@
         </div>
         <div slot="operations"></div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -140,17 +140,22 @@
       </div>
     </Card>
     <!--查看/审核售后订单详情-->
-    <Modal v-model="modalView" :width="1500" :mask-closable="false" :styles="{bottom: '20px'}">
+    <Modal
+      v-model="modalView"
+      :width="1500"
+      :mask-closable="false"
+      :styles="{ bottom: '20px' }"
+    >
       <p slot="header">
-        <i-col>{{ tempModalType===modalType.view?'查看售后订单':'审核售后订单' }}</i-col>
+        <i-col>{{
+          tempModalType === modalType.view ? "查看售后订单" : "审核售后订单"
+        }}</i-col>
       </p>
       <div class="modal-content">
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                订单编号:
-              </i-col>
+              <i-col span="6"> 订单编号: </i-col>
               <i-col span="18">
                 {{ orderDetail.orderCode }}
               </i-col>
@@ -158,11 +163,9 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                订单状态:
-              </i-col>
+              <i-col span="6"> 订单状态: </i-col>
               <i-col span="18">
-                {{ orderDetail.orderStatus| wholesaleOrderStatusFilter }}
+                {{ orderDetail.orderStatus | wholesaleOrderStatusFilter }}
               </i-col>
             </Row>
           </i-col>
@@ -170,9 +173,7 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                海鼎编号:
-              </i-col>
+              <i-col span="6"> 海鼎编号: </i-col>
               <i-col span="18">
                 {{ orderDetail.hdCode }}
               </i-col>
@@ -180,9 +181,7 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                海鼎状态:
-              </i-col>
+              <i-col span="6"> 海鼎状态: </i-col>
               <i-col span="18">
                 {{ orderDetail.hdStatus | wholesaleHdStatusFilter }}
               </i-col>
@@ -192,9 +191,7 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                下单时间:
-              </i-col>
+              <i-col span="6"> 下单时间: </i-col>
               <i-col span="18">
                 {{ orderDetail.createTime }}
               </i-col>
@@ -202,15 +199,11 @@
           </i-col>
         </Row>
 
-        <Divider orientation="center">
-          支付信息
-        </Divider>
+        <Divider orientation="center"> 支付信息 </Divider>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                支付类型:
-              </i-col>
+              <i-col span="6"> 支付类型: </i-col>
               <i-col span="18">
                 {{ orderDetail.settlementType | wholeslaePayTypeFilter }}
               </i-col>
@@ -218,9 +211,7 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                支付状态:
-              </i-col>
+              <i-col span="6"> 支付状态: </i-col>
               <i-col span="18">
                 {{ orderDetail.payStatus | payStatusFilter }}
               </i-col>
@@ -230,9 +221,7 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                订单金额:
-              </i-col>
+              <i-col span="6"> 订单金额: </i-col>
               <i-col span="18">
                 {{ orderDetail.totalFee | fenToYuanDot2Filters }}
               </i-col>
@@ -240,9 +229,7 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                优惠金额:
-              </i-col>
+              <i-col span="6"> 优惠金额: </i-col>
               <i-col span="18">
                 {{ orderDetail.discountFee | fenToYuanDot2Filters }}
               </i-col>
@@ -252,9 +239,7 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                配送费:
-              </i-col>
+              <i-col span="6"> 配送费: </i-col>
               <i-col span="18">
                 {{ orderDetail.deliveryFee | fenToYuanDot2Filters }}
               </i-col>
@@ -262,9 +247,7 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                应付金额:
-              </i-col>
+              <i-col span="6"> 应付金额: </i-col>
               <i-col span="18">
                 {{ orderDetail.payableFee | fenToYuanDot2Filters }}
               </i-col>
@@ -274,24 +257,18 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                支付时间:
-              </i-col>
+              <i-col span="6"> 支付时间: </i-col>
               <i-col span="18">
-                {{ orderDetail.paymentTime? orderDetail.paymentTime: 'N/A' }}
+                {{ orderDetail.paymentTime ? orderDetail.paymentTime : "N/A" }}
               </i-col>
             </Row>
           </i-col>
         </Row>
-        <Divider orientation="center">
-          用户信息
-        </Divider>
+        <Divider orientation="center"> 用户信息 </Divider>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                门店名称:
-              </i-col>
+              <i-col span="6"> 门店名称: </i-col>
               <i-col span="18">
                 {{ orderDetail.shopName }}
               </i-col>
@@ -299,9 +276,7 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                店长名称:
-              </i-col>
+              <i-col span="6"> 店长名称: </i-col>
               <i-col span="18">
                 {{ orderDetail.userName }}
               </i-col>
@@ -311,9 +286,7 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                店长手机:
-              </i-col>
+              <i-col span="6"> 店长手机: </i-col>
               <i-col span="18">
                 {{ orderDetail.phone }}
               </i-col>
@@ -321,9 +294,7 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                所属业务员:
-              </i-col>
+              <i-col span="6"> 所属业务员: </i-col>
               <i-col span="18">
                 {{ orderDetail.saleUserName }}
               </i-col>
@@ -331,15 +302,11 @@
           </i-col>
         </Row>
 
-        <Divider orientation="center">
-          配送信息
-        </Divider>
+        <Divider orientation="center"> 配送信息 </Divider>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                收货人:
-              </i-col>
+              <i-col span="6"> 收货人: </i-col>
               <i-col span="18">
                 {{ deliveryInfo.contactsName }}
               </i-col>
@@ -347,9 +314,7 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                联系方式:
-              </i-col>
+              <i-col span="6"> 联系方式: </i-col>
               <i-col span="18">
                 {{ deliveryInfo.phone }}
               </i-col>
@@ -359,9 +324,7 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                收货地址:
-              </i-col>
+              <i-col span="6"> 收货地址: </i-col>
               <i-col span="18">
                 {{ address }}
               </i-col>
@@ -369,30 +332,26 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                收货时间:
-              </i-col>
+              <i-col span="6"> 收货时间: </i-col>
               <i-col span="18">
                 {{ orderDetail.receiveTime }}
               </i-col>
             </Row>
           </i-col>
         </Row>
-        <Divider orientation="center">
-          商品信息
-        </Divider>
+        <Divider orientation="center"> 商品信息 </Divider>
         <Row>
-          <tables v-model="orderDetail.orderGoodsList" :columns="goodsColumns" border></tables>
+          <tables
+            v-model="orderDetail.orderGoodsList"
+            :columns="goodsColumns"
+            border
+          ></tables>
         </Row>
-        <Divider orientation="center">
-          售后信息
-        </Divider>
+        <Divider orientation="center"> 售后信息 </Divider>
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                审核状态:
-              </i-col>
+              <i-col span="6"> 审核状态: </i-col>
               <i-col v-if="afterMsg.status === 'WAIT'" span="16">
                 <tag color="magenta">
                   {{ "待审核" }}
@@ -432,9 +391,7 @@
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                联系方式:
-              </i-col>
+              <i-col span="6"> 联系方式: </i-col>
               <i-col span="18">
                 {{ afterMsg.phone }}
               </i-col>
@@ -444,19 +401,15 @@
         <Row>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                其他原因:
-              </i-col>
-              <i-col span="18" style="color:red">
+              <i-col span="6"> 其他原因: </i-col>
+              <i-col span="18" style="color: red">
                 {{ afterMsg.remark }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row class-name="mb10">
-              <i-col span="6">
-                售后图片:
-              </i-col>
+              <i-col span="6"> 售后图片: </i-col>
               <i-col span="18">
                 <div
                   v-for="item in afterImageList"
@@ -467,7 +420,10 @@
                   <div>
                     <img :src="item">
                     <div class="demo-upload-list-cover">
-                      <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                      <Icon
+                        type="ios-eye-outline"
+                        @click.native="handleUploadView(item)"
+                      ></Icon>
                     </div>
                   </div>
                 </div>
@@ -475,9 +431,7 @@
             </Row>
           </i-col>
         </Row>
-        <Divider orientation="center">
-          补损信息
-        </Divider>
+        <Divider orientation="center"> 补损信息 </Divider>
         <Row>
           <tables
             v-model="compensateDetail"
@@ -486,7 +440,7 @@
             border
           ></tables>
         </Row>
-        <Row style="margin-top:10px">
+        <Row style="margin-top: 10px">
           <i-col span="10">
             <Row>
               <i-col span="6">
@@ -499,13 +453,15 @@
           <i-col span="10">
             <Row class="check">
               <i-col span="6">
-                退运费金额：{{ afterMsg.refundFreightAmount | fenToYuanDot2Filters }}
+                退运费金额：{{
+                  afterMsg.refundFreightAmount | fenToYuanDot2Filters
+                }}
               </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
-      <div v-show="afterMsg.status==='WAIT_REVIEW'" slot="footer">
+      <div v-show="afterMsg.status === 'WAIT_REVIEW'" slot="footer">
         <Button type="error" @click="hanldeFinanceRefuse('pass')">
           审核拒绝
         </Button>
@@ -858,7 +814,7 @@ const compensateColumns = [
               value: params.row.postSaleGoods.serviceReason // 使用key的键值
             },
             on: {
-              input: event => {
+              input: (event) => {
                 params.row.postSaleGoods.serviceReason = event;
               }
             }
@@ -887,7 +843,7 @@ const compensateColumns = [
               padding: '0 0 170px 0'
             },
             on: {
-              'on-change': event => {
+              'on-change': (event) => {
                 params.row.postSaleGoods.serviceMode = event;
               }
             }
@@ -972,7 +928,7 @@ const compensateColumns = [
               value: params.row.postSaleGoods.quantity // 使用key的键值
             },
             on: {
-              input: event => {
+              input: (event) => {
                 params.row.postSaleGoods.quantity = event;
               }
             }
@@ -1001,7 +957,7 @@ const compensateColumns = [
               padding: '0 0 170px 0'
             },
             on: {
-              'on-change': event => {
+              'on-change': (event) => {
                 params.row.postSaleGoods.unitCode = event;
               }
             }
@@ -1076,7 +1032,7 @@ const compensateColumns = [
               value: params.row.postSaleGoods.refundAmount // 使用key的键值
             },
             on: {
-              input: event => {
+              input: (event) => {
                 params.row.postSaleGoods.refundAmount = event;
               }
             }
@@ -1185,57 +1141,43 @@ export default {
             if (row.status === 'WAIT') {
               return (
                 <div>
-                  <tag color='magenta'>
-                    {serviceStatusConvert(row.status)}
-                  </tag>
+                  <tag color='magenta'>{serviceStatusConvert(row.status)}</tag>
                 </div>
               );
             } else if (row.status === 'AUDIT_REJECT') {
               return (
                 <div>
-                  <tag color='orange'>
-                    {serviceStatusConvert(row.status)}
-                  </tag>
+                  <tag color='orange'>{serviceStatusConvert(row.status)}</tag>
                 </div>
               );
             } else if (row.status === 'CANCEL') {
               return (
                 <div>
-                  <tag color='cyan'>
-                    {serviceStatusConvert(row.status)}
-                  </tag>
+                  <tag color='cyan'>{serviceStatusConvert(row.status)}</tag>
                 </div>
               );
             } else if (row.status === 'WAIT_REVIEW') {
               return (
                 <div>
-                  <tag color='pink'>
-                    {serviceStatusConvert(row.status)}
-                  </tag>
+                  <tag color='pink'>{serviceStatusConvert(row.status)}</tag>
                 </div>
               );
             } else if (row.status === 'REVIEW_REJECT') {
               return (
                 <div>
-                  <tag color='error'>
-                    {serviceStatusConvert(row.status)}
-                  </tag>
+                  <tag color='error'>{serviceStatusConvert(row.status)}</tag>
                 </div>
               );
             } else if (row.status === 'SERVICEING') {
               return (
                 <div>
-                  <tag color='gold'>
-                    {serviceStatusConvert(row.status)}
-                  </tag>
+                  <tag color='gold'>{serviceStatusConvert(row.status)}</tag>
                 </div>
               );
             } else if (row.status === 'FINISH') {
               return (
                 <div>
-                  <tag color='success'>
-                    {serviceStatusConvert(row.status)}
-                  </tag>
+                  <tag color='success'>{serviceStatusConvert(row.status)}</tag>
                 </div>
               );
             }
@@ -1320,7 +1262,7 @@ export default {
         this.searchRowData.rows = 20;
       }
       getFinanceAuditPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })
@@ -1333,10 +1275,10 @@ export default {
     getOrderDetail(id) {
       this.afterImageList = [];
       getOrderDetail({ id: id })
-        .then(res => {
+        .then((res) => {
           this.orderDetail = res.order;
           this.afterMsg = res;
-          res.postSaleGoodsDtoList.forEach(element => {
+          res.postSaleGoodsDtoList.forEach((element) => {
             element.isEdit = false;
             element.status = res.status;
             element.postSaleGoods.refundAmount =
@@ -1388,7 +1330,7 @@ export default {
     // 财务审核通过
     hanldeFinanceAudit() {
       getFinanceAudit(this.afterMsg)
-        .then(res => {
+        .then((res) => {
           this.$Message.info('通过审核');
           this.getTableData();
           this.modalView = false;
@@ -1398,7 +1340,7 @@ export default {
     // 财务审核拒绝
     hanldeFinanceRefuse() {
       getFinanceRefuse(this.afterMsg)
-        .then(res => {
+        .then((res) => {
           this.$Message.info('拒绝审核');
           this.getTableData();
           this.modalView = false;
@@ -1409,7 +1351,7 @@ export default {
       const dataParams = this.searchRowData;
       dataParams.name = name;
       dataParams.rows = -1;
-      getOrderGoods(dataParams).then(res => {
+      getOrderGoods(dataParams).then((res) => {
         if (!res) {
           this.$Message.info('暂无任何数据返回');
           return;

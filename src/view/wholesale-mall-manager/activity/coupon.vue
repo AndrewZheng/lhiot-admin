@@ -96,7 +96,7 @@
           </Poptip>-->
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -113,7 +113,13 @@
     </Card>
 
     <!-- 关联优惠券配置 -->
-    <Modal v-model="modalEdit" :width="1300" :z-index="1000" :mask-closable="false" title="关联优惠券配置">
+    <Modal
+      v-model="modalEdit"
+      :width="1300"
+      :z-index="1000"
+      :mask-closable="false"
+      title="关联优惠券配置"
+    >
       <div class="modal-content">
         <Card>
           <tables
@@ -173,7 +179,7 @@
               </Row>
             </div>
           </tables>
-          <div style="margin: 10px;overflow: hidden">
+          <div style="margin: 10px; overflow: hidden">
             <Row type="flex" justify="end">
               <Page
                 :total="configTotal"
@@ -194,149 +200,157 @@
           <i-col span="22">
             <Input
               v-model="sendPhones"
-              :autosize="{minRows: 3,maxRows: 8}"
+              :autosize="{ minRows: 3, maxRows: 8 }"
               type="textarea"
               placeholder="多个用户请使用','分割要发送的手机号"
             ></Input>
-            <div class="ml15 brand-red">* 使用英文输入法逗号分割要发送的手机号，发放数量为1张</div>
+            <div class="ml15 brand-red">
+              * 使用英文输入法逗号分割要发送的手机号，发放数量为1张
+            </div>
           </i-col>
         </Row>
         <Row v-show="sendFailPhones.length > 0" class="mt10">
           <i-col span="2">发送失败手机号：</i-col>
-          <i-col span="22" class="brand-red">{{ sendFailPhones.join(',') }}</i-col>
+          <i-col span="22" class="brand-red">{{
+            sendFailPhones.join(",")
+          }}</i-col>
         </Row>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">确定</Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit"
+        >确定</Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   getCouponPages,
   getCouponConfigPages,
   sendCouponByPhones,
   deletCoupon
-} from "@/api/lhfarm-small";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+} from '@/api/lhfarm-small';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import {
   couponTemplateTypeEnum,
   activityStatusEnum,
   couponUseStatusEnum,
   couponFromEnum
-} from "@/libs/enumerate";
+} from '@/libs/enumerate';
 import {
   userStatusConvert,
   couponUseStatusConvert,
   couponFromConvert
-} from "@/libs/converStatus";
+} from '@/libs/converStatus';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber,
   compareCouponData
-} from "@/libs/util";
+} from '@/libs/util';
 
 const couponDetail = {
   id: 0,
   fullFee: 0,
   couponFee: 0,
-  couponName: "",
-  couponType: "", // allgoods-全品类 singlegoods-单品
-  addressDetail: "",
+  couponName: '',
+  couponType: '', // allgoods-全品类 singlegoods-单品
+  addressDetail: '',
   couponConfigId: 0,
-  couponFrom: "",
-  couponStatus: "",
-  effectiveTime: "",
-  failureTime: "",
-  getTime: "",
+  couponFrom: '',
+  couponStatus: '',
+  effectiveTime: '',
+  failureTime: '',
+  getTime: '',
   isValidate: false,
-  phone: "",
-  shopName: "",
-  useTime: "",
+  phone: '',
+  shopName: '',
+  useTime: '',
   userId: 0,
-  userName: "",
-  userStatus: ""
+  userName: '',
+  userStatus: ''
 };
 
 const roleRowData = {
-  couponStatus: "",
-  couponName: "",
-  couponFrom: "",
-  phone: "",
+  couponStatus: '',
+  couponName: '',
+  couponFrom: '',
+  phone: '',
   page: 1,
   rows: 20,
-  sidx: "getTime",
-  sort: "desc"
+  sidx: 'getTime',
+  sort: 'desc'
 };
 
 const couponConfig = {
   id: 0,
-  vaild: "",
+  vaild: '',
   endTime: null,
   startTime: null,
   couponFee: 0,
-  couponName: "",
-  couponType: "",
+  couponName: '',
+  couponType: '',
   fullFee: 0,
-  couponDes: "",
+  couponDes: '',
   couponId: 0, // 优惠券模板id
-  effectiveTime: "",
-  failureTime: "",
-  plateType: "", // allgoods-全品类 singlegoods-单品类
+  effectiveTime: '',
+  failureTime: '',
+  plateType: '', // allgoods-全品类 singlegoods-单品类
   vaildDays: 0
 };
 
 const configRoleRowData = {
-  couponName: "",
-  couponType: "",
-  couponConfigvaild: "yes",
+  couponName: '',
+  couponType: '',
+  couponConfigvaild: 'yes',
   page: 1,
   rows: 10
 };
 
 const configColumns = [
   {
-    type: "selection",
+    type: 'selection',
     width: 60,
-    align: "center"
+    align: 'center'
   },
   {
-    title: "ID",
-    align: "center",
-    key: "id",
+    title: 'ID',
+    align: 'center',
+    key: 'id',
     minWidth: 30
   },
   {
-    title: "优惠券名称",
-    align: "center",
-    key: "couponName",
+    title: '优惠券名称',
+    align: 'center',
+    key: 'couponName',
     minWidth: 120
   },
   {
-    title: "最小起购门槛",
-    align: "center",
+    title: '最小起购门槛',
+    align: 'center',
     minWidth: 60,
-    key: "fullFee",
+    key: 'fullFee',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.fullFee);
       return <div>{amount}</div>;
     }
   },
   {
-    title: "最高折扣金额",
-    align: "center",
+    title: '最高折扣金额',
+    align: 'center',
     minWidth: 60,
-    key: "discountMaxFee",
+    key: 'discountMaxFee',
     render(h, params, vm) {
-      if (params.row.couponType === "DISCOUNT_COUPON") {
+      if (params.row.couponType === 'DISCOUNT_COUPON') {
         const amount = fenToYuanDot2(params.row.discountMaxFee);
         return <div>{amount}</div>;
       } else {
@@ -345,13 +359,13 @@ const configColumns = [
     }
   },
   {
-    title: "优惠金额/折扣额度",
-    align: "center",
+    title: '优惠金额/折扣额度',
+    align: 'center',
     minWidth: 60,
-    key: "couponFee",
+    key: 'couponFee',
     render(h, params, vm) {
-      if (params.row.couponType === "DISCOUNT_COUPON") {
-        return <div>{params.row.couponFee / 10 + "折"}</div>;
+      if (params.row.couponType === 'DISCOUNT_COUPON') {
+        return <div>{params.row.couponFee / 10 + '折'}</div>;
       } else {
         const amount = fenToYuanDot2(params.row.couponFee);
         return <div>{amount}</div>;
@@ -359,59 +373,59 @@ const configColumns = [
     }
   },
   {
-    title: "模板类型",
-    align: "center",
-    key: "couponType",
+    title: '模板类型',
+    align: 'center',
+    key: 'couponType',
     minWidth: 90,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.couponType === "FULL_CUT_COUPON") {
+      if (row.couponType === 'FULL_CUT_COUPON') {
         return (
           <div>
-            <tag color="primary">满减券</tag>
+            <tag color='primary'>满减券</tag>
           </div>
         );
-      } else if (row.couponType === "DISCOUNT_COUPON") {
+      } else if (row.couponType === 'DISCOUNT_COUPON') {
         return (
           <div>
-            <tag color="pink">折扣券</tag>
+            <tag color='pink'>折扣券</tag>
           </div>
         );
       } else {
         return (
           <div>
-            <tag color="primary">N/A</tag>
+            <tag color='primary'>N/A</tag>
           </div>
         );
       }
     }
   },
   {
-    title: "生效时间",
-    align: "center",
-    key: "effectiveTime",
+    title: '生效时间',
+    align: 'center',
+    key: 'effectiveTime',
     width: 180,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.vaildDays) {
-        return <div>{"N/A"}</div>;
+        return <div>{'N/A'}</div>;
       } else {
         return <div>{row.effectiveTime}</div>;
       }
     }
   },
   {
-    title: "失效时间",
-    align: "center",
-    key: "failureTime",
+    title: '失效时间',
+    align: 'center',
+    key: 'failureTime',
     width: 220,
     render: (h, params, vm) => {
       const { row } = params;
       if (row.vaildDays) {
-        return <div>{"N/A"}</div>;
+        return <div>{'N/A'}</div>;
       } else {
         if (!compareCouponData(row.failureTime)) {
-          return <div style="color:red">{row.failureTime + "　已过期"}</div>;
+          return <div style='color:red'>{row.failureTime + '　已过期'}</div>;
         } else {
           return <div>{row.failureTime}</div>;
         }
@@ -419,9 +433,9 @@ const configColumns = [
     }
   },
   {
-    title: "有效天数",
-    align: "center",
-    key: "vaildDays",
+    title: '有效天数',
+    align: 'center',
+    key: 'vaildDays',
     minWidth: 60,
     render(h, params, vm) {
       const { row } = params;
@@ -433,28 +447,28 @@ const configColumns = [
     }
   },
   {
-    title: "优惠券状态",
+    title: '优惠券状态',
     minWidth: 80,
-    align: "center",
-    key: "vaild",
+    align: 'center',
+    key: 'vaild',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.couponConfigvaild === "yes") {
+      if (row.couponConfigvaild === 'yes') {
         return (
           <div>
-            <tag color="success">有效</tag>
+            <tag color='success'>有效</tag>
           </div>
         );
-      } else if (row.couponConfigvaild === "no") {
+      } else if (row.couponConfigvaild === 'no') {
         return (
           <div>
-            <tag color="error">无效</tag>
+            <tag color='error'>无效</tag>
           </div>
         );
       }
       return (
         <div>
-          <tag color="primary">N/A</tag>
+          <tag color='primary'>N/A</tag>
         </div>
       );
     }
@@ -463,51 +477,51 @@ const configColumns = [
 
 const couponColumns = [
   {
-    type: "selection",
+    type: 'selection',
     width: 60,
-    align: "center"
+    align: 'center'
   },
   {
-    title: "ID",
-    align: "center",
-    key: "id",
+    title: 'ID',
+    align: 'center',
+    key: 'id',
     minWidth: 10
   },
   {
-    title: "用户名称",
-    align: "center",
-    key: "userName",
+    title: '用户名称',
+    align: 'center',
+    key: 'userName',
     minWidth: 30
   },
   {
-    title: "用户电话",
-    align: "center",
-    key: "phone",
+    title: '用户电话',
+    align: 'center',
+    key: 'phone',
     minWidth: 40
   },
   {
-    title: "优惠券名称",
-    align: "center",
-    key: "couponName",
+    title: '优惠券名称',
+    align: 'center',
+    key: 'couponName',
     minWidth: 80
   },
   {
-    title: "最小起购门槛",
-    align: "center",
+    title: '最小起购门槛',
+    align: 'center',
     minWidth: 60,
-    key: "fullFee",
+    key: 'fullFee',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.fullFee);
       return <div>{amount}</div>;
     }
   },
   {
-    title: "最高折扣金额",
-    align: "center",
+    title: '最高折扣金额',
+    align: 'center',
     minWidth: 60,
-    key: "discountMaxFee",
+    key: 'discountMaxFee',
     render(h, params, vm) {
-      if (params.row.couponType === "DISCOUNT_COUPON") {
+      if (params.row.couponType === 'DISCOUNT_COUPON') {
         const amount = fenToYuanDot2(params.row.discountMaxFee);
         return <div>{amount}</div>;
       } else {
@@ -516,13 +530,13 @@ const couponColumns = [
     }
   },
   {
-    title: "优惠金额/折扣额度",
-    align: "center",
+    title: '优惠金额/折扣额度',
+    align: 'center',
     minWidth: 25,
-    key: "couponFee",
+    key: 'couponFee',
     render(h, params, vm) {
-      if (params.row.couponType === "DISCOUNT_COUPON") {
-        return <div>{params.row.couponFee / 10 + "折"}</div>;
+      if (params.row.couponType === 'DISCOUNT_COUPON') {
+        return <div>{params.row.couponFee / 10 + '折'}</div>;
       } else {
         const amount = fenToYuanDot2(params.row.couponFee);
         return <div>{amount}</div>;
@@ -530,87 +544,87 @@ const couponColumns = [
     }
   },
   {
-    title: "模板类型",
-    align: "center",
-    key: "couponType",
+    title: '模板类型',
+    align: 'center',
+    key: 'couponType',
     minWidth: 40,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.couponType === "FULL_CUT_COUPON") {
+      if (row.couponType === 'FULL_CUT_COUPON') {
         return (
           <div>
-            <tag color="primary">满减券</tag>
+            <tag color='primary'>满减券</tag>
           </div>
         );
-      } else if (row.couponType === "DISCOUNT_COUPON") {
+      } else if (row.couponType === 'DISCOUNT_COUPON') {
         return (
           <div>
-            <tag color="pink">折扣券</tag>
+            <tag color='pink'>折扣券</tag>
           </div>
         );
       } else {
         return (
           <div>
-            <tag color="primary">N/A</tag>
+            <tag color='primary'>N/A</tag>
           </div>
         );
       }
     }
   },
   {
-    title: "优惠券来源",
-    align: "center",
-    key: "couponFrom",
+    title: '优惠券来源',
+    align: 'center',
+    key: 'couponFrom',
     minWidth: 60,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.couponFrom === "artificial") {
+      if (row.couponFrom === 'artificial') {
         return (
           <div>
-            <tag color="primary">{couponFromConvert(row.couponFrom)}</tag>
+            <tag color='primary'>{couponFromConvert(row.couponFrom)}</tag>
           </div>
         );
       } else {
         return (
           <div>
-            <tag color="pink">{couponFromConvert(row.couponFrom)}</tag>
+            <tag color='pink'>{couponFromConvert(row.couponFrom)}</tag>
           </div>
         );
       }
     }
   },
   {
-    title: "获取时间",
-    align: "center",
-    key: "getTime",
+    title: '获取时间',
+    align: 'center',
+    key: 'getTime',
     minWidth: 80
   },
   {
-    title: "使用状态",
-    align: "center",
-    key: "couponStatus",
+    title: '使用状态',
+    align: 'center',
+    key: 'couponStatus',
     minWidth: 30,
 
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.couponStatus === "used") {
+      if (row.couponStatus === 'used') {
         return (
           <div>
-            <tag color="error">{couponUseStatusConvert(row.couponStatus)}</tag>
+            <tag color='error'>{couponUseStatusConvert(row.couponStatus)}</tag>
           </div>
         );
-      } else if (row.couponStatus === "expired") {
+      } else if (row.couponStatus === 'expired') {
         return (
           <div>
-            <tag color="default">
+            <tag color='default'>
               {couponUseStatusConvert(row.couponStatus)}
             </tag>
           </div>
         );
-      } else if (row.couponStatus === "unused") {
+      } else if (row.couponStatus === 'unused') {
         return (
           <div>
-            <tag color="primary">
+            <tag color='primary'>
               {couponUseStatusConvert(row.couponStatus)}
             </tag>
           </div>
@@ -619,9 +633,9 @@ const couponColumns = [
     }
   },
   {
-    title: "使用时间",
-    align: "center",
-    key: "useTime",
+    title: '使用时间',
+    align: 'center',
+    key: 'useTime',
     minWidth: 80,
     render(h, params, vm) {
       const { row } = params;
@@ -642,8 +656,8 @@ export default {
   data() {
     return {
       configTotal: 0,
-      couponConfigIds: "",
-      sendPhones: "",
+      couponConfigIds: '',
+      sendPhones: '',
       couponFromEnum,
       activityStatusEnum,
       couponUseStatusEnum,
@@ -687,25 +701,25 @@ export default {
     },
     onConfigSelectionChange(selection) {
       if (selection.length > 1) {
-        this.$Message.warning("最多选择一张优惠券");
+        this.$Message.warning('最多选择一张优惠券');
         return;
       }
       this.couponConfigIds = selection
-        .map(item => item.id.toString())
-        .join(",");
+        .map((item) => item.id.toString())
+        .join(',');
     },
     onConfigSelectionAll(selection) {
       if (selection.length > 1) {
-        this.$Message.warning("最多选择一张优惠券");
+        this.$Message.warning('最多选择一张优惠券');
         return;
       }
       this.couponConfigIds = selection
-        .map(item => item.id.toString())
-        .join(",");
+        .map((item) => item.id.toString())
+        .join(',');
     },
     getTableData() {
       getCouponPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })
@@ -718,7 +732,7 @@ export default {
     getConfigTableData() {
       this.loadingConfig = true;
       getCouponConfigPages(this.searchConfigRowData)
-        .then(res => {
+        .then((res) => {
           this.configTableData = res.rows;
           this.configTotal = res.total;
         })
@@ -730,27 +744,27 @@ export default {
     },
     handleSendCoupon() {
       // 清空上次发送的记录
-      this.couponConfigIds = "";
-      this.sendPhones = "";
+      this.couponConfigIds = '';
+      this.sendPhones = '';
       this.sendFailPhones = [];
       this.getConfigTableData();
       this.modalEdit = true;
     },
     handleSubmit() {
-      console.log("couponConfigIds:", this.couponConfigIds);
-      console.log("sendPhones:", this.sendPhones);
+      console.log('couponConfigIds:', this.couponConfigIds);
+      console.log('sendPhones:', this.sendPhones);
       // 手动发券确认
       sendCouponByPhones({
         id: this.couponConfigIds,
         phones: this.sendPhones
-      }).then(res => {
-        console.log("result", res);
+      }).then((res) => {
+        console.log('result', res);
         if (res && res.fail.length > 0) {
-          this.$Message.info("部分用户未发放成功");
+          this.$Message.info('部分用户未发放成功');
           this.sendFailPhones = res.fail;
         } else {
           this.modalEdit = false;
-          this.$Message.info("发放成功");
+          this.$Message.info('发放成功');
         }
         this.getTableData();
       });
@@ -769,7 +783,7 @@ export default {
       deletCoupon({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -781,7 +795,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.loading = false;
         });

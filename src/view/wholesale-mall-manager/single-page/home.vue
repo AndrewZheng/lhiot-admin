@@ -5,9 +5,14 @@
         v-for="(infor, i) in inforCardData"
         :key="`infor-${i}`"
         span="4"
-        style="height: 120px;"
+        style="height: 120px"
       >
-        <infor-card :color="infor.color" :icon="infor.icon" :icon-size="36" shadow>
+        <infor-card
+          :color="infor.color"
+          :icon="infor.icon"
+          :icon-size="36"
+          shadow
+        >
           <count-to :end="infor.count" count-class="count-style" />
           <p>{{ infor.title }}</p>
         </infor-card>
@@ -55,7 +60,7 @@
           </RadioGroup>
           <DatePicker
             v-model="searchRowData.startTime"
-            :disabled="searchRowData.queryDays!='-1'"
+            :disabled="searchRowData.queryDays != '-1'"
             format="yyyy-MM-dd HH:mm:ss"
             type="datetime"
             placeholder="大于等于"
@@ -66,7 +71,7 @@
           <i>-</i>
           <DatePicker
             v-model="searchRowData.endTime"
-            :disabled="searchRowData.queryDays!='-1'"
+            :disabled="searchRowData.queryDays != '-1'"
             format="yyyy-MM-dd HH:mm:ss"
             type="datetime"
             placeholder="小于等于"
@@ -83,7 +88,7 @@
           ></Input>
           <Button
             v-waves
-            :searchLoading="searchLoading"
+            :search-loading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
@@ -112,7 +117,7 @@
           </Button>-->
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -125,88 +130,88 @@
         </Row>
       </div>
     </Card>
-    <Row style="margin-top: 20px;">
+    <Row style="margin-top: 20px">
       <Card shadow>
-        <img :src="banner" style="height: 300px;width:100%;" />
+        <img :src="banner" style="height: 300px; width: 100%">
       </Card>
     </Row>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import InforCard from "_c/info-card";
-import CountTo from "_c/count-to";
-import config from "@/config";
-import { getAnalysisDatas } from "@/api/lhfarm-small";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
+import Tables from '_c/tables';
+import InforCard from '_c/info-card';
+import CountTo from '_c/count-to';
+import config from '@/config';
+import { getAnalysisDatas } from '@/api/lhfarm-small';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber,
-} from "@/libs/util";
+  yuanToFenNumber
+} from '@/libs/util';
 
 const orderGoodData = {
-  goodsName: "",
-  goodsStandardId: "",
-  sumFee: "",
-  sumQuanity: "",
-  unitName: "",
+  goodsName: '',
+  goodsStandardId: '',
+  sumFee: '',
+  sumQuanity: '',
+  unitName: ''
 };
 
 const roleRowData = {
-  goodsName: "",
-  queryDays: "0", // 1(昨日) 7(最近7天) 30(最近30天) -1(自定义)
+  goodsName: '',
+  queryDays: '0', // 1(昨日) 7(最近7天) 30(最近30天) -1(自定义)
   startTime: null,
   endTime: null,
   page: 1,
   rows: 10,
-  sidx: "sumFee",
-  sort: "desc",
+  sidx: 'sumFee',
+  sort: 'desc'
 };
 
 const orderData = {
-  avgOrderPrice: "", // 订单均价
-  sumDeliveryFee: "", // 订单配送费总金额
-  sumOrderFee: "", // 订单总金额
-  sumPayableFee: "", // 订单应付总金额
-  totalCount: "", // 订单总数
+  avgOrderPrice: '', // 订单均价
+  sumDeliveryFee: '', // 订单配送费总金额
+  sumOrderFee: '', // 订单总金额
+  sumPayableFee: '', // 订单应付总金额
+  totalCount: '' // 订单总数
 };
 
 const orderColumns = [
   {
-    title: "订单总数",
-    align: "center",
-    key: "totalCount",
-    minWidth: 100,
+    title: '订单总数',
+    align: 'center',
+    key: 'totalCount',
+    minWidth: 100
   },
   {
-    title: "配送费总额",
-    align: "center",
-    key: "sumDeliveryFee",
-    minWidth: 80,
+    title: '配送费总额',
+    align: 'center',
+    key: 'sumDeliveryFee',
+    minWidth: 80
   },
   {
-    title: "订单总额",
-    align: "center",
-    key: "sumOrderFee",
-    minWidth: 80,
+    title: '订单总额',
+    align: 'center',
+    key: 'sumOrderFee',
+    minWidth: 80
   },
   {
-    title: "订单均价",
-    align: "center",
-    key: "avgOrderPrice",
-    minWidth: 80,
-  },
+    title: '订单均价',
+    align: 'center',
+    key: 'avgOrderPrice',
+    minWidth: 80
+  }
 ];
 
 export default {
   components: {
     Tables,
     InforCard,
-    CountTo,
+    CountTo
   },
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
@@ -214,29 +219,29 @@ export default {
       brandType: config.brandType,
       inforCardData: [
         {
-          title: "订单总数",
-          icon: "md-stats",
+          title: '订单总数',
+          icon: 'md-stats',
           count: 0,
-          color: "#f95157",
+          color: '#f95157'
         },
         {
-          title: "配送费总额",
-          icon: "logo-yen",
+          title: '配送费总额',
+          icon: 'logo-yen',
           count: 0,
-          color: "#19be6b",
+          color: '#19be6b'
         },
         {
-          title: "订单总额",
-          icon: "logo-yen",
+          title: '订单总额',
+          icon: 'logo-yen',
           count: 0,
-          color: "#ff9900",
+          color: '#ff9900'
         },
         {
-          title: "订单均价",
-          icon: "logo-yen",
+          title: '订单均价',
+          icon: 'logo-yen',
           count: 0,
-          color: "#9A66E4",
-        },
+          color: '#9A66E4'
+        }
       ],
       modalViewLoading: false,
       clearSearchLoading: false,
@@ -247,41 +252,41 @@ export default {
       orderColumns,
       columns: [
         {
-          title: "商品名称",
-          align: "center",
-          key: "goodsName",
-          minWidth: 100,
+          title: '商品名称',
+          align: 'center',
+          key: 'goodsName',
+          minWidth: 100
         },
         {
-          title: "销售数量",
-          align: "center",
-          key: "sumQuanity",
-          sortable: "custom",
+          title: '销售数量',
+          align: 'center',
+          key: 'sumQuanity',
+          sortable: 'custom',
           minWidth: 80,
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{row.sumQuanity + row.unitName}</div>;
             // return <div>{row.sumQuanity}</div>;
-          },
+          }
         },
         {
-          title: "销售金额",
-          align: "center",
-          key: "sumFee",
-          sortable: "custom",
-          minWidth: 80,
-        },
-      ],
+          title: '销售金额',
+          align: 'center',
+          key: 'sumFee',
+          sortable: 'custom',
+          minWidth: 80
+        }
+      ]
     };
   },
   computed: {
     banner() {
       // 默认万翼果联品牌
-      let str =
-        "http://resource.shuiguoshule.com.cn/v2/lv_hang/activity_image/activity/2020-04-24/EenfAkUuSzvbxu0Jmz1G.jpg";
+      const str =
+        'http://resource.shuiguoshule.com.cn/v2/lv_hang/activity_image/activity/2020-04-24/EenfAkUuSzvbxu0Jmz1G.jpg';
 
       return str;
-    },
+    }
   },
   created() {
     this.getTableData();
@@ -298,7 +303,7 @@ export default {
             sumOrderFee,
             sumPayableFee,
             totalCount,
-            orderGoodDataPage,
+            orderGoodDataPage
           } = res;
           this.tableData = orderGoodDataPage.rows;
           this.total = orderGoodDataPage.total;
@@ -345,7 +350,7 @@ export default {
           //  tableData.forEach(item => {});
           this.$refs.tables.handleDownload({
             filename: `数据统计信息-${new Date().valueOf()}`,
-            data: tableData,
+            data: tableData
           });
         })
         .finally(() => {
@@ -366,8 +371,8 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
-    },
-  },
+    }
+  }
 };
 </script>
 

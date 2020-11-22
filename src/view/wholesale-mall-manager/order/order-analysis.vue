@@ -61,7 +61,8 @@
             <Icon type="md-refresh" />&nbsp;清除
           </Button>
           <div class="ml15 mt10">
-            <i style="color:red">*</i> 当天中午12点前默认为昨日订单,12点后为今日订单
+            <i style="color: red">*</i>
+            当天中午12点前默认为昨日订单,12点后为今日订单
           </div>
         </div>
         <div slot="operations">
@@ -76,7 +77,7 @@
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -213,9 +214,9 @@ export default {
           minWidth: 80
         },
         {
-          title: "下单日期",
-          align: "center",
-          key: "createDate",
+          title: '下单日期',
+          align: 'center',
+          key: 'createDate',
           minWidth: 80
         }
       ]
@@ -229,11 +230,11 @@ export default {
   methods: {
     getTableData() {
       getOrderGoodsToday(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
         })
-        .finally(res => {
+        .finally((res) => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -274,7 +275,7 @@ export default {
       const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       getOrderGoodsToday(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           const tableData = res.rows;
           // 恢复正常页数
           this.searchRowData.rows = 10;

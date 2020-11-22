@@ -98,7 +98,12 @@
               class="mr5"
               @on-change="endPublishChange"
             />
-            <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch">
+            <Button
+              v-waves
+              class="search-btn mr5"
+              type="primary"
+              @click="handleSearch"
+            >
               <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
@@ -138,7 +143,7 @@
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -160,9 +165,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">
-                文章标题:
-              </i-col>
+              <i-col span="4"> 文章标题: </i-col>
               <i-col span="20">
                 {{ articleDetail.articleTitle }}
               </i-col>
@@ -170,9 +173,7 @@
           </i-col>
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">
-                文章副标题:
-              </i-col>
+              <i-col span="4"> 文章副标题: </i-col>
               <i-col span="20">
                 {{ articleDetail.articleSubhead }}
               </i-col>
@@ -182,9 +183,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">
-                作者:
-              </i-col>
+              <i-col span="4"> 作者: </i-col>
               <i-col span="16">
                 {{ articleDetail.articleAuthor }}
               </i-col>
@@ -194,9 +193,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">
-                创建时间:
-              </i-col>
+              <i-col span="4"> 创建时间: </i-col>
               <i-col span="16">
                 {{ articleDetail.createTime }}
               </i-col>
@@ -206,9 +203,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">
-                发布时间:
-              </i-col>
+              <i-col span="4"> 发布时间: </i-col>
               <i-col span="16">
                 {{ articleDetail.publishTime }}
               </i-col>
@@ -218,9 +213,7 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">
-                文章内容:
-              </i-col>
+              <i-col span="4"> 文章内容: </i-col>
               <i-col span="16" v-html="articleDetail.articleContent"></i-col>
             </Row>
           </i-col>
@@ -228,18 +221,14 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="24">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4">
-                资源链接:
-              </i-col>
+              <i-col span="4"> 资源链接: </i-col>
               <i-col span="16" v-html="articleDetail.resouceUrl"></i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
   </div>
@@ -249,7 +238,11 @@
 import Tables from '_c/tables';
 import BookTypeOption from '_c/book-type-option';
 
-import { getArticlesPages, deleteArticle, editArticle } from '@/api/lhfarm-small';
+import {
+  getArticlesPages,
+  deleteArticle,
+  editArticle
+} from '@/api/lhfarm-small';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
@@ -340,13 +333,17 @@ export default {
             if (row.articleType === 'perday') {
               return (
                 <div>
-                  <tag color='primary'>{ articleTypeConvert(row.articleType)}</tag>
+                  <tag color='primary'>
+                    {articleTypeConvert(row.articleType)}
+                  </tag>
                 </div>
               );
             } else if (row.articleType === 'industry') {
               return (
                 <div>
-                  <tag color='warning'>{ articleTypeConvert(row.articleType) }</tag>
+                  <tag color='warning'>
+                    {articleTypeConvert(row.articleType)}
+                  </tag>
                 </div>
               );
             } else {
@@ -363,13 +360,13 @@ export default {
             if (row.createType === 'original') {
               return (
                 <div>
-                  <tag color='pink'>{ createTypeConvert(row.createType)}</tag>
+                  <tag color='pink'>{createTypeConvert(row.createType)}</tag>
                 </div>
               );
             } else if (row.createType === 'reprint') {
               return (
                 <div>
-                  <tag color='yellow'>{ createTypeConvert(row.createType) }</tag>
+                  <tag color='yellow'>{createTypeConvert(row.createType)}</tag>
                 </div>
               );
             } else {
@@ -471,7 +468,7 @@ export default {
       deleteArticle({
         ids
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -504,7 +501,7 @@ export default {
     editTableRow() {
       this.modalViewLoading = true;
       this.loading = true;
-      editArticle(this.articleDetail).then(res => {
+      editArticle(this.articleDetail).then((res) => {
         this.$Message.success('修改成功!');
         this.modalViewLoading = false;
         this.loading = false;
@@ -524,22 +521,24 @@ export default {
     },
     getTableData() {
       this.loading = true;
-      getArticlesPages(this.searchRowData).then(res => {
-        this.tableData = res.rows;
-        this.total = res.total;
-      }).finally(() => {
-        this.loading = false;
-        this.clearSearchLoading = false;
-        this.searchLoading = false;
-      });
+      getArticlesPages(this.searchRowData)
+        .then((res) => {
+          this.tableData = res.rows;
+          this.total = res.total;
+        })
+        .finally(() => {
+          this.loading = false;
+          this.clearSearchLoading = false;
+          this.searchLoading = false;
+        });
     },
     handleDownload() {
       // 导出不分页
       this.searchRowData.rows = null;
-      getArticlesPages(this.searchRowData).then(res => {
+      getArticlesPages(this.searchRowData).then((res) => {
         const tableData = res.rows;
         // 表格数据导出字段翻译
-        tableData.forEach(item => {
+        tableData.forEach((item) => {
           item['publishStatus'] === 'published'
             ? (item['publishStatus'] = '发布')
             : (item['publishStatus'] = '未发布');
