@@ -14,6 +14,7 @@ const miniMallRouter = [
       path: '/wechat-home',
       name: 'wechat-home',
       meta: {
+        icon: 'md-home',
         hideInMenu: true,
         title: '首页',
         notCache: true

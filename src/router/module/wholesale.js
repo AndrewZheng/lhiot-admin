@@ -2,9 +2,8 @@ import Main from '@/components/main';
 
 const wholesaleRouter = [
   {
-    path: '/',
+    path: '/farm-home',
     name: 'farm-home',
-    redirect: '/farm-home',
     component: Main,
     meta: {
       hideInBread: true,
@@ -14,7 +13,7 @@ const wholesaleRouter = [
       path: '/farm-home',
       name: 'farm-home',
       meta: {
-        hideInMenu: true,
+        icon: 'md-home',
         title: '首页',
         notCache: true
       },

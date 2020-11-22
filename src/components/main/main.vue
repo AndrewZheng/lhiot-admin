@@ -1,9 +1,9 @@
 <template>
   <Layout style="height: 100%" class="main">
     <Sider
+      v-model="collapsed"
       :width="256"
       :collapsed-width="64"
-      v-model="collapsed"
       :style="{overflow: 'hidden'}"
       hide-trigger
       collapsible
@@ -27,10 +27,10 @@
     <Layout>
       <Header class="header-con">
         <header-bar :collapsed="collapsed" @on-coll-change="handleCollapsedChange">
-          <user :user-avator="userAvator"/>
-          <System :system="systemCurrent" :system-list="systemList" style="margin-right: 10px;"/>
+          <user :user-avator="userAvator" />
+          <System :system="systemCurrent" :system-list="systemList" style="margin-right: 10px;" />
           <!-- <language :lang="local" style="margin-right: 10px;" @on-lang-change="setLocal"/> -->
-          <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
+          <fullscreen v-model="isFullscreen" style="margin-right: 10px;" />
         </header-bar>
       </Header>
       <Content class="main-content-con">
@@ -45,7 +45,7 @@
           </div>
           <Content class="content-wrapper">
             <keep-alive :include="cacheList">
-              <router-view/>
+              <router-view />
             </keep-alive>
             <div class="copyright-area">
               <p class="copyright">Copyright©2020 All Rights Reserved 湖南绿航恰果果农产品有限公司 版权所有

@@ -79,8 +79,7 @@ const commonRouter = [
         icon: '_bear',
         title: '自定义图标'
       },
-      component: () =>
-          import('@/view/basic-manager/components/icons/icons.vue')
+      component: () => import('@/view/basic-manager/components/icons/icons.vue')
     }
     ]
   },
