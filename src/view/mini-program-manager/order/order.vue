@@ -801,9 +801,7 @@
                 :key="`storeList-col-${item.storeId}`"
                 :value="item.storeId"
                 class="ptb2-5"
-              >
-                {{ item.storeName }}
-              </Option>
+              >{{ item.storeName }}</Option>
             </Select>
           </Row>
         </i-col>

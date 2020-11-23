@@ -216,9 +216,7 @@
                   :key="index"
                   :value="item.value"
                   class="ptb2-5"
-                >
-                  {{ item.label }}
-                </Option>
+                >{{ item.label }}</Option>
               </Select>
               </Select>
               <Select

@@ -177,7 +177,7 @@
                 type="info"
                 @click="handleClearMaterial"
               >
-                <Icon type="md-refresh" />&nbsp;搜索
+                <Icon type="md-refresh" />&nbsp;清除
               </Button>
               <Button
                 v-waves
@@ -354,9 +354,7 @@
                   :key="`search-col-${item.value}`"
                   style="padding: 0 8px"
                   :value="item.value"
-                >
-                  {{ item.label }}
-                </Option>
+                >{{ item.label }}</Option>
               </Select>
             </FormItem>
             </Col>
