@@ -2,6 +2,7 @@ const path = require('path');
 const resolve = (dir) => path.join(__dirname, dir);
 const IS_PROD = ['production'].includes(process.env.NODE_ENV);
 const BASE_URL = IS_PROD ? '/lvhang-farm/' : '/';
+const port = process.env.port || process.env.npm_config_port || 80 // dev port
 
 module.exports = {
   publicPath: BASE_URL,
@@ -80,7 +81,7 @@ module.exports = {
   productionSourceMap: false,
   // 这里写你调用接口的基础路径，来解决跨域，如果设置了代理，那你本地开发环境的axios的baseUrl要写为 '' ，即空字符串
   devServer: {
-    port: 80, // 端口号
+    port: port, // 端口号
     // host: 'localhost', // 本地，打包选这个
     disableHostCheck: true,
     host: '192.168.1.229', // 本地ip，方便其他人通过ip访问 
