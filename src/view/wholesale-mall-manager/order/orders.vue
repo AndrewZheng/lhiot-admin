@@ -1025,7 +1025,6 @@ const orderColumns = [
       }
     }
   },
-  //  "afterSale"
   {
     title: '操作',
     width: 160,
