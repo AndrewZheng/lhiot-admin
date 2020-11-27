@@ -4,16 +4,14 @@
       <div class="tabChange">
         <b
           data-index="source"
-          @click="assistDataChange"
           :class="topStatus == 'source' ? 'hot' : ''"
-          >用户来源汇总</b
-        >
+          @click="assistDataChange"
+        >用户来源汇总</b>
         <b
           data-index="material"
-          @click="assistDataChange"
           :class="topStatus == 'material' ? 'hot' : ''"
-          >门店物料用户统计</b
-        >
+          @click="assistDataChange"
+        >门店物料用户统计</b>
       </div>
       <Card v-show="topStatus === 'source'">
         <tables
@@ -35,13 +33,13 @@
                 type="button"
                 @on-change="timeChange"
               >
-                <Radio label="今日"></Radio>
                 <Radio label="昨日"></Radio>
+                <Radio label="今日"></Radio>
                 <Radio label="最近7天"></Radio>
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
               </RadioGroup>
-              <div class="mark" v-show="mark === true">
+              <div v-show="mark === true" class="mark">
                 <DatePicker
                   v-model="searchRowData.beginDate"
                   format="yyyy-MM-dd"
@@ -63,10 +61,10 @@
                 />
               </div>
               <Button
+                v-show="mark === true"
                 class="search-btn mr5"
                 type="primary"
                 @click="handleSearch"
-                v-show="mark === true"
               >
                 <Icon type="md-search" />&nbsp;搜索
               </Button>
@@ -108,13 +106,13 @@
                 type="button"
                 @on-change="timeChangeMaterial"
               >
-                <Radio label="今日"></Radio>
                 <Radio label="昨日"></Radio>
+                <Radio label="今日"></Radio>
                 <Radio label="最近7天"></Radio>
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
               </RadioGroup>
-              <div class="mark" v-show="markMaterial === true">
+              <div v-show="markMaterial === true" class="mark">
                 <DatePicker
                   :value="searchRowDataMaterial.createTimeBegin"
                   format="yyyy-MM-dd"
@@ -143,12 +141,13 @@
               >
                 <Option
                   v-for="(item, index) in rankType"
-                  :value="item.value"
                   :key="index"
+                  :value="item.value"
                   class="ptb2-5"
                   style="width: 100px"
-                  >{{ item.label }}</Option
                 >
+                  {{ item.label }}
+                </Option>
               </Select>
               <Input
                 v-model="searchRowDataMaterial.materielName"
@@ -220,53 +219,75 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">ID:</i-col>
-              <i-col span="18">{{ storeMaterielDetail.id }}</i-col>
+              <i-col span="6">
+                ID:
+              </i-col>
+              <i-col span="18">
+                {{ storeMaterielDetail.id }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">物料名称:</i-col>
-              <i-col span="18">{{ storeMaterielDetail.materielName }}</i-col>
+              <i-col span="6">
+                物料名称:
+              </i-col>
+              <i-col span="18">
+                {{ storeMaterielDetail.materielName }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">门店名称:</i-col>
-              <i-col span="18">{{ storeMaterielDetail.storeName }}</i-col>
+              <i-col span="6">
+                门店名称:
+              </i-col>
+              <i-col span="18">
+                {{ storeMaterielDetail.storeName }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">页面路径:</i-col>
-              <i-col span="18">{{ storeMaterielDetail.pagePath }}</i-col>
+              <i-col span="6">
+                页面路径:
+              </i-col>
+              <i-col span="18">
+                {{ storeMaterielDetail.pagePath }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">创建时间:</i-col>
-              <i-col span="18">{{ storeMaterielDetail.createTime }}</i-col>
+              <i-col span="6">
+                创建时间:
+              </i-col>
+              <i-col span="18">
+                {{ storeMaterielDetail.createTime }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">二维码:</i-col>
+              <i-col span="6">
+                二维码:
+              </i-col>
               <i-col v-show="storeMaterielDetail.qrCodePath" span="18">
                 <div
                   class="demo-upload-list"
                   style="width: 300px; height: 300px"
                 >
-                  <img :src="storeMaterielDetail.qrCodePath" />
+                  <img :src="storeMaterielDetail.qrCodePath">
                 </div>
               </i-col>
             </Row>
@@ -274,9 +295,12 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
+
     <Modal
       v-model="modalEdit"
       :mask-closable="false"
@@ -284,9 +308,11 @@
       :width="800"
     >
       <p slot="header">
-        <i-col>{{
-          tempModalType === modalType.edit ? "修改门店物料" : "创建门店物料"
-        }}</i-col>
+        <i-col>
+          {{
+            tempModalType === modalType.edit ? "修改门店物料" : "创建门店物料"
+          }}
+        </i-col>
       </p>
       <div class="modal-content">
         <Form
@@ -297,74 +323,80 @@
         >
           <Row>
             <Col span="22">
-              <FormItem label="物料名称:" prop="materielName">
-                <Input v-model="storeMaterielDetail.materielName"></Input>
-              </FormItem>
+            <FormItem label="物料名称:" prop="materielName">
+              <Input v-model="storeMaterielDetail.materielName"></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="22">
-              <FormItem label="页面路径:" prop="pagePath">
-                <Input v-model="storeMaterielDetail.pagePath"></Input>
-              </FormItem>
+            <FormItem label="页面路径:" prop="pagePath">
+              <Input v-model="storeMaterielDetail.pagePath"></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row v-if="tempModalType === modalType.edit">
             <Col span="22">
-              <FormItem label="已关联门店:" prop="storeName">{{
+            <FormItem label="已关联门店:" prop="storeName">
+              {{
                 storeMaterielDetail.storeName
-              }}</FormItem>
+              }}
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="22">
-              <FormItem
-                :label="
-                  tempModalType === modalType.edit ? '更换门店:' : '关联门店:'
+            <FormItem
+              :label="
+                tempModalType === modalType.edit ? '更换门店:' : '关联门店:'
+              "
+              prop="storeId"
+            >
+              <Select
+                v-model="storeMaterielDetail.storeId"
+                class="search-col"
+                :placeholder="
+                  tempModalType === modalType.edit
+                    ? '请选择需更换的门店'
+                    : '请选择需关联的门店'
                 "
-                prop="storeId"
+                :label-in-value="true"
+                :filterable="true"
+                @on-change="handleStoreId"
               >
-                <Select
-                  v-model="storeMaterielDetail.storeId"
-                  class="search-col"
-                  :placeholder="
-                    tempModalType === modalType.edit
-                      ? '请选择需更换的门店'
-                      : '请选择需关联的门店'
-                  "
-                  :label-in-value="true"
-                  :filterable="true"
-                  @on-change="handleStoreId"
+                <Option
+                  v-for="item in storeList"
+                  :key="`search-col-${item.value}`"
+                  style="padding: 0 8px"
+                  :value="item.value"
                 >
-                  <Option
-                    style="padding: 0 8px"
-                    v-for="item in storeList"
-                    :key="`search-col-${item.value}`"
-                    :value="item.value"
-                    >{{ item.label }}</Option
-                  >
-                </Select>
-              </FormItem>
+                  {{ item.label }}
+                </Option>
+              </Select>
+            </FormItem>
             </Col>
           </Row>
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
           @click="handleSubmit('modalEdit')"
-          >确定</Button
         >
+          确定
+        </Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   userSourceRecordTotal,
   getStoreMateriel,
@@ -372,248 +404,248 @@ import {
   storeMaterielCreate,
   storeMaterielUpdate,
   deleteMateriel,
-  getStoreMaterielDel,
-} from "@/api/mini-program";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+  getStoreMaterielDel
+} from '@/api/mini-program';
+import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber,
-} from "@/libs/util";
+  yuanToFenNumber
+} from '@/libs/util';
 
 const storeMaterielDetail = {
   amountPayableCount: 0,
-  conversionRate: "",
-  createTimeBegin: "",
-  createTimeEnd: "",
-  loseRate: "",
+  conversionRate: '',
+  createTimeBegin: '',
+  createTimeEnd: '',
+  loseRate: '',
   loseUserCount: 0,
-  materielName: "",
+  materielName: '',
   orderUserCount: 0,
-  qrCodePath: "",
-  storeCode: "",
+  qrCodePath: '',
+  storeCode: '',
   storeId: 0,
-  storeName: "",
-  userSource: "",
-  visitUserCount: 0,
+  storeName: '',
+  userSource: '',
+  visitUserCount: 0
 };
 
 // 第一个tables
 const roleRowData = {
   beginDate: null,
-  endDate: null,
+  endDate: null
 };
 
 const roleRowDataMaterial = {
-  createTimeBegin: "",
-  createTimeEnd: "",
-  sidx: "amountPayableCount",
-  sort: "desc",
-  materielName: "",
-  storeName: "",
+  createTimeBegin: '',
+  createTimeEnd: '',
+  sidx: 'amountPayableCount',
+  sort: 'desc',
+  materielName: '',
+  storeName: '',
   page: 1,
-  rows: 10,
+  rows: 10
 };
 const roleRowDataStore = {
   page: 1,
-  rows: -1,
+  rows: -1
 };
 
 export default {
   components: {
-    Tables,
+    Tables
   },
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
     return {
       ruleInline: {
-        materielName: [{ required: true, message: "请输入物料名称" }],
-        pagePath: [{ required: false, message: "请输入页面路径" }],
-        storeId: [{ required: true, message: "请选择关联门店" }],
+        materielName: [{ required: true, message: '请输入物料名称' }],
+        pagePath: [{ required: false, message: '请输入页面路径' }],
+        storeId: [{ required: true, message: '请选择关联门店' }]
       },
       mark: false,
       markMaterial: false,
       modalViewLoading: false,
       createLoading: false,
-      topStatus: "source",
+      topStatus: 'source',
       totalPage: 0,
-      button: "今日",
-      buttonMaterial: "今日",
+      button: '昨日',
+      buttonMaterial: '昨日',
       tableData: [],
       tableDataMaterial: [],
       storeList: [],
       rankType: [
         {
-          label: "访问人数",
-          value: "visitUserCount",
+          label: '访问人数',
+          value: 'visitUserCount'
         },
         {
-          label: "下单人数",
-          value: "orderUserCount",
+          label: '下单人数',
+          value: 'orderUserCount'
         },
         {
-          label: "转化率",
-          value: "conversionRate",
+          label: '转化率',
+          value: 'conversionRate'
         },
         {
-          label: "跳失人数",
-          value: "loseUserCount",
+          label: '跳失人数',
+          value: 'loseUserCount'
         },
         {
-          label: "跳失率",
-          value: "loseRate",
+          label: '跳失率',
+          value: 'loseRate'
         },
         {
-          label: "交易总额",
-          value: "amountPayableCount",
-        },
+          label: '交易总额',
+          value: 'amountPayableCount'
+        }
       ],
       dataColumns: [
         {
-          title: "用户来源",
-          key: "userSource",
-          align: "center",
+          title: '用户来源',
+          key: 'userSource',
+          align: 'center',
           render(h, params, vm) {
             const { row } = params;
-            if (row.userSource === "FRIEND_CIRCLE") {
+            if (row.userSource === 'FRIEND_CIRCLE') {
               return (
                 <div>
-                  <tag color="magenta">{"朋友圈"}</tag>
+                  <tag color='magenta'>{'朋友圈'}</tag>
                 </div>
               );
-            } else if (row.userSource === "COMMUNITY") {
+            } else if (row.userSource === 'COMMUNITY') {
               return (
                 <div>
-                  <tag color="orange">{"社群"}</tag>
+                  <tag color='orange'>{'社群'}</tag>
                 </div>
               );
-            } else if (row.userSource === "OFFICIAL_ACCOUNT") {
+            } else if (row.userSource === 'OFFICIAL_ACCOUNT') {
               return (
                 <div>
-                  <tag color="cyan">{"公众号"}</tag>
+                  <tag color='cyan'>{'公众号'}</tag>
                 </div>
               );
-            } else if (row.userSource === "STORE_MATERIEL") {
+            } else if (row.userSource === 'STORE_MATERIEL') {
               return (
                 <div>
-                  <tag color="blue">{"门店物料"}</tag>
+                  <tag color='blue'>{'门店物料'}</tag>
                 </div>
               );
             } else {
-              return <div>{"N/A"}</div>;
+              return <div>{'N/A'}</div>;
             }
-          },
+          }
         },
         {
-          title: "访问人数",
-          key: "visitUserCount",
-          align: "center",
-          width: "150",
+          title: '访问人数',
+          key: 'visitUserCount',
+          align: 'center',
+          width: '150'
         },
         {
-          title: "下单人数",
-          key: "orderUserCount",
-          align: "center",
+          title: '下单人数',
+          key: 'orderUserCount',
+          align: 'center'
         },
         {
-          title: "转化率",
-          align: "center",
-          key: "conversionRate",
+          title: '转化率',
+          align: 'center',
+          key: 'conversionRate'
         },
         {
-          title: "跳失人数",
-          align: "center",
-          key: "loseUserCount",
+          title: '跳失人数',
+          align: 'center',
+          key: 'loseUserCount'
         },
         {
-          title: "跳失率",
-          align: "center",
-          key: "loseRate",
+          title: '跳失率',
+          align: 'center',
+          key: 'loseRate'
         },
         {
-          title: "交易总额",
-          align: "center",
-          key: "amountPayableCount",
+          title: '交易总额',
+          align: 'center',
+          key: 'amountPayableCount',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.amountPayableCount);
             return <div>{amount}</div>;
-          },
-        },
+          }
+        }
       ],
       columnsMaterial: [
         {
-          title: "物料名称",
-          align: "center",
-          key: "materielName",
-          minWidth: 120,
+          title: '物料名称',
+          align: 'center',
+          key: 'materielName',
+          minWidth: 120
         },
         {
-          title: "门店",
-          align: "center",
-          key: "storeName",
-          minWidth: 120,
+          title: '门店',
+          align: 'center',
+          key: 'storeName',
+          minWidth: 120
         },
         {
-          title: "访问人数",
-          align: "center",
-          key: "visitUserCount",
+          title: '访问人数',
+          align: 'center',
+          key: 'visitUserCount',
           minWidth: 60,
-          sortable: "custom",
+          sortable: 'custom'
         },
         {
-          title: "下单人数",
-          align: "center",
-          key: "orderUserCount",
+          title: '下单人数',
+          align: 'center',
+          key: 'orderUserCount',
           minWidth: 60,
-          sortable: "custom",
+          sortable: 'custom'
         },
         {
-          title: "转化率",
-          align: "center",
-          key: "conversionRate",
+          title: '转化率',
+          align: 'center',
+          key: 'conversionRate',
           minWidth: 60,
-          sortable: "custom",
+          sortable: 'custom'
         },
         {
-          title: "跳失人数",
-          align: "center",
-          key: "loseUserCount",
+          title: '跳失人数',
+          align: 'center',
+          key: 'loseUserCount',
           minWidth: 60,
-          sortable: "custom",
+          sortable: 'custom'
         },
         {
-          title: "跳失率",
-          align: "center",
-          key: "loseRate",
+          title: '跳失率',
+          align: 'center',
+          key: 'loseRate',
           minWidth: 60,
-          sortable: "custom",
+          sortable: 'custom'
         },
         {
-          title: "交易总额",
-          align: "center",
-          sortable: "custom",
-          key: "amountPayableCount",
+          title: '交易总额',
+          align: 'center',
+          sortable: 'custom',
+          key: 'amountPayableCount',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.amountPayableCount);
             return <div>{amount}</div>;
           },
-          minWidth: 60,
+          minWidth: 60
         },
         {
-          title: "操作",
-          align: "center",
+          title: '操作',
+          align: 'center',
           minWidth: 110,
-          key: "handle",
-          options: ["view", "edit", "delete"],
-        },
+          key: 'handle',
+          options: ['view', 'edit', 'delete']
+        }
       ],
       searchRowData: _.cloneDeep(roleRowData),
       searchRowDataStore: _.cloneDeep(roleRowDataStore),
       searchRowDataMaterial: _.cloneDeep(roleRowDataMaterial),
-      storeMaterielDetail: _.cloneDeep(storeMaterielDetail),
+      storeMaterielDetail: _.cloneDeep(storeMaterielDetail)
     };
   },
   computed: {},
@@ -630,14 +662,14 @@ export default {
       this.$refs.modalEdit.resetFields();
     },
     getTableData(value) {
-      let date = new Date();
+      const date = new Date();
       date.setDate(date.getDate());
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var today = `${year}-${month}-${day}`;
-      if (value === "昨日") {
-        let date = new Date();
+      if (value === '昨日' || this.button === '昨日') {
+        const date = new Date();
         date.setDate(date.getDate() - 1);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -646,8 +678,8 @@ export default {
         this.searchRowData.beginDate = yesterday;
         this.searchRowData.endDate = yesterday;
       }
-      if (value === "今日") {
-        let date = new Date();
+      if (value === '今日') {
+        const date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -656,18 +688,8 @@ export default {
         this.searchRowData.beginDate = today;
         this.searchRowData.endDate = today;
       }
-      if (this.button === "今日") {
-        let date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
-        this.searchRowData.beginDate = today;
-        this.searchRowData.endDate = today;
-      }
-      if (value === "最近7天") {
-        let date = new Date();
+      if (value === '最近7天') {
+        const date = new Date();
         date.setDate(date.getDate() - 7);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -676,8 +698,8 @@ export default {
         this.searchRowData.beginDate = sevenDay;
         this.searchRowData.endDate = today;
       }
-      if (value === "最近30天") {
-        let date = new Date();
+      if (value === '最近30天') {
+        const date = new Date();
         date.setDate(date.getDate() - 30);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -701,14 +723,14 @@ export default {
         });
     },
     getTableDataMaterial(value) {
-      let date = new Date();
+      const date = new Date();
       date.setDate(date.getDate());
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var today = `${year}-${month}-${day}`;
-      if (value === "昨日") {
-        let date = new Date();
+      if (value === '昨日' || this.buttonMaterial === '昨日') {
+        const date = new Date();
         date.setDate(date.getDate() - 1);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -717,8 +739,8 @@ export default {
         this.searchRowDataMaterial.createTimeBegin = yesterday;
         this.searchRowDataMaterial.createTimeEnd = yesterday;
       }
-      if (value === "今日" || this.buttonMaterial === "今日") {
-        let date = new Date();
+      if (value === '今日') {
+        const date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -727,8 +749,8 @@ export default {
         this.searchRowDataMaterial.createTimeBegin = today;
         this.searchRowDataMaterial.createTimeEnd = today;
       }
-      if (value === "最近7天") {
-        let date = new Date();
+      if (value === '最近7天') {
+        const date = new Date();
         date.setDate(date.getDate() - 7);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -737,8 +759,8 @@ export default {
         this.searchRowDataMaterial.createTimeBegin = sevenDay;
         this.searchRowDataMaterial.createTimeEnd = today;
       }
-      if (value === "最近30天") {
-        let date = new Date();
+      if (value === '最近30天') {
+        const date = new Date();
         date.setDate(date.getDate() - 30);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -749,10 +771,10 @@ export default {
       }
       this.searchRowDataMaterial.createTimeBegin = this.$moment(
         this.searchRowDataMaterial.createTimeBegin
-      ).format("YYYY-MM-DD");
+      ).format('YYYY-MM-DD');
       this.searchRowDataMaterial.createTimeEnd = this.$moment(
         this.searchRowDataMaterial.createTimeEnd
-      ).format("YYYY-MM-DD");
+      ).format('YYYY-MM-DD');
       getStoreMateriel(this.searchRowDataMaterial)
         .then((res) => {
           this.tableDataMaterial = res.rows;
@@ -768,19 +790,19 @@ export default {
           this.clearSearchLoading = false;
         });
     },
-    //获取门店列表
+    // 获取门店列表
     getStoreAreaPages() {
       getStorePages(this.searchRowDataStore).then((res) => {
-        let storeData = [];
-        for (let value of res.rows) {
-          if (value.storeStatus === "ENABLED") {
+        const storeData = [];
+        for (const value of res.rows) {
+          if (value.storeStatus === 'ENABLED') {
             storeData.push(value);
           }
         }
         storeData.forEach((value) => {
-          const map = { label: "label", value: "value" };
+          const map = { label: 'label', value: 'value' };
           map.value = value.storeId;
-          map.label = value.storeName + "-" + value.storeCode;
+          map.label = value.storeName + '-' + value.storeCode;
           this.storeList.push(map);
         });
       });
@@ -791,7 +813,7 @@ export default {
         .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableDataMaterial();
         })
         .catch(() => {
@@ -804,7 +826,7 @@ export default {
         .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success("修改成功!");
+          this.$Message.success('修改成功!');
           this.getTableDataMaterial();
         })
         .catch(() => {
@@ -813,67 +835,67 @@ export default {
     },
     handleStoreId(value) {
       if (value) {
-        let data = value.label.split("-");
+        const data = value.label.trim().split('-');
         this.storeMaterielDetail.storeCode = data[1];
         this.storeMaterielDetail.storeName = data[0];
       }
     },
     timeChange(value) {
-      if (value === "今日") {
+      if (value === '今日') {
         this.getTableData(value);
         this.tableData = [];
         this.mark = false;
-      } else if (value === "昨日") {
+      } else if (value === '昨日') {
         this.mark = false;
         this.tableData = [];
         this.getTableData(value);
-      } else if (value === "最近7天") {
+      } else if (value === '最近7天') {
         this.mark = false;
         this.tableData = [];
         this.getTableData(value);
-      } else if (value === "最近30天") {
+      } else if (value === '最近30天') {
         this.mark = false;
         this.tableData = [];
         this.getTableData(value);
-      } else if (value === "自定义时间") {
+      } else if (value === '自定义时间') {
         this.mark = true;
-        this.searchRowData.beginDate = "";
-        this.searchRowData.endDate = "";
+        this.searchRowData.beginDate = '';
+        this.searchRowData.endDate = '';
       }
     },
     timeChangeMaterial(value) {
-      if (value === "今日") {
+      if (value === '今日') {
         this.getTableDataMaterial(value);
         this.markMaterial = false;
-      } else if (value === "昨日") {
+      } else if (value === '昨日') {
         this.markMaterial = false;
         this.getTableDataMaterial(value);
-      } else if (value === "最近7天") {
+      } else if (value === '最近7天') {
         this.markMaterial = false;
         this.getTableDataMaterial(value);
-      } else if (value === "最近30天") {
+      } else if (value === '最近30天') {
         this.markMaterial = false;
         this.getTableDataMaterial(value);
-      } else if (value === "自定义时间") {
+      } else if (value === '自定义时间') {
         this.markMaterial = true;
-        this.searchRowDataMaterial.createTimeBegin = "";
-        this.searchRowDataMaterial.createTimeEnd = "";
+        this.searchRowDataMaterial.createTimeBegin = '';
+        this.searchRowDataMaterial.createTimeEnd = '';
       }
     },
     startTimeChange(value, date) {
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.searchRowData.beginDate = value;
     },
     endTimeChange(value, date) {
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.searchRowData.endDate = value;
     },
     startTimeChangeMaterial(value, date) {
-      this.buttonMaterial = "自定义时间";
+      this.buttonMaterial = '自定义时间';
       this.searchRowDataMaterial.createTimeBegin = value;
     },
     endTimeChangeMaterial(value, date) {
-      this.buttonMaterial = "自定义时间";
+      this.buttonMaterial = '自定义时间';
       this.searchRowDataMaterial.createTimeEnd = value;
     },
     handleSearch() {
@@ -883,7 +905,7 @@ export default {
       this.getTableData();
     },
     handleSearchMaterial() {
-      this.searchRowData.page = 1;
+      this.searchRowDataMaterial.page = 1;
       this.getTableDataMaterial();
     },
     handleClearMaterial() {
@@ -901,7 +923,7 @@ export default {
       this.getTableDataMaterial();
     },
     assistDataChange(e) {
-      let index = e.currentTarget.dataset.index;
+      const index = e.currentTarget.dataset.index;
       if (this.topStatus === index) {
         return;
       }
@@ -928,7 +950,7 @@ export default {
     },
     getStoreMaterielDel(ids) {
       getStoreMaterielDel({
-        ids,
+        ids
       })
         .then((res) => {
           this.storeMaterielDetail = _.cloneDeep(res);
@@ -953,10 +975,10 @@ export default {
     },
     deleteTable(ids) {
       deleteMateriel({
-        ids,
+        ids
       })
         .then((res) => {
-          this.$Message.success("删除成功!");
+          this.$Message.success('删除成功!');
           this.getTableDataMaterial();
         })
         .catch((err) => {
@@ -981,10 +1003,10 @@ export default {
               this.storeMaterielUpdate();
             }
           } else {
-            this.$Message.error("请完善信息!");
+            this.$Message.error('请完善信息!');
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -992,39 +1014,39 @@ export default {
       const _this = this;
       this.searchRowData.beginDate = this.$moment(
         this.searchRowData.beginDate
-      ).format("YYYY-MM-DD");
+      ).format('YYYY-MM-DD');
       this.searchRowData.endDate = this.$moment(
         this.searchRowData.endDate
-      ).format("YYYY-MM-DD");
-      if (name === "userSource") {
+      ).format('YYYY-MM-DD');
+      if (name === 'userSource') {
         // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
         userSourceRecordTotal(this.searchRowData).then((res) => {
           const tableData = res;
           // 表格数据导出字段翻译
           tableData.forEach((item) => {
-            item["amountPayableCount"] = (
-              item["amountPayableCount"] / 100.0
+            item['amountPayableCount'] = (
+              item['amountPayableCount'] / 100.0
             ).toFixed(2);
-            if (item["userSource"] === "FRIEND_CIRCLE") {
-              item["userSource"] = "朋友圈";
-            } else if (item["userSource"] === "COMMUNITY") {
-              item["userSource"] = "社群";
-            } else if (item["userSource"] === "OFFICIAL_ACCOUNT") {
-              item["userSource"] = "公众号";
+            if (item['userSource'] === 'FRIEND_CIRCLE') {
+              item['userSource'] = '朋友圈';
+            } else if (item['userSource'] === 'COMMUNITY') {
+              item['userSource'] = '社群';
+            } else if (item['userSource'] === 'OFFICIAL_ACCOUNT') {
+              item['userSource'] = '公众号';
             } else {
-              item["userSource"] = "门店物料";
+              item['userSource'] = '门店物料';
             }
           });
-          const date = _this.$moment(new Date()).format("YYYYMMDDHHmmss");
+          const date = _this.$moment(new Date()).format('YYYYMMDDHHmmss');
           _this.$refs.tableDatas.handleDownload({
             filename: `用户来源汇总数据统计-${date}`,
-            data: tableData,
+            data: tableData
           });
         });
       } else {
         this.searchRowDataMaterial.rows =
           this.totalPage > 5000 ? 5000 : this.totalPage;
-        let pageSize = this.searchRowDataMaterial.page;
+        const pageSize = this.searchRowDataMaterial.page;
         this.searchRowDataMaterial.page = 1;
         getStoreMateriel(this.searchRowDataMaterial).then((res) => {
           const tableData = res.rows;
@@ -1032,21 +1054,21 @@ export default {
           this.searchRowDataMaterial.rows = 10;
           this.searchRowDataMaterial.page = pageSize;
           // 表格数据导出字段翻译
-          let _this = this;
+          const _this = this;
           tableData.forEach((item) => {
-            item["amountPayableCount"] = (
-              item["amountPayableCount"] / 100.0
+            item['amountPayableCount'] = (
+              item['amountPayableCount'] / 100.0
             ).toFixed(2);
           });
-          const date = _this.$moment(new Date()).format("YYYYMMDDHHmmss");
+          const date = _this.$moment(new Date()).format('YYYYMMDDHHmmss');
           _this.$refs.tables1.handleDownload({
             filename: `门店物料用户数据统计-${date}`,
-            data: tableData,
+            data: tableData
           });
         });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

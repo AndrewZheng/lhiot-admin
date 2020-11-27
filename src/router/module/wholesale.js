@@ -27,6 +27,7 @@ const wholesaleRouter = [
     component: Main,
     meta: {
       hideInBread: true,
+      title: '批发小程序'
     },
     children: [{
       path: '/wholesale-home',
@@ -119,7 +120,7 @@ const wholesaleRouter = [
         title: '关键字管理'
       },
       component: () => import('@/view/wholesale-mall-manager/goods/goods-keywords.vue')
-    },
+    }
     // {
     //   path: '/wholesale-goods-demand',
     //   name: 'wholesale-goods-demand',
@@ -239,7 +240,7 @@ const wholesaleRouter = [
         title: '财务审核'
       },
       component: () => import('@/view/wholesale-mall-manager/order/finance-audit.vue')
-    },
+    }
     ]
   },
   {

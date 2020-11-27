@@ -52,7 +52,7 @@ const mutations = {
     } else state.tagNavList = getTagNavListFromLocalstorage();
   },
   setSystemList(state, list) {
-    if (list) {
+    if (list.length > 0) {
       state.systemList = [...list];
     }
   },

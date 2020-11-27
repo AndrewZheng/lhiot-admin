@@ -36,25 +36,27 @@
             >
               <Option
                 v-for="(item, index) in couponStatusEnum"
-                :value="item.value"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
-                >{{ item.label }}</Option
               >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.couponBusinessType"
               placeholder="发券类型"
-              style="padding-right: 5px; width: 140px"
+              style="padding-right: 5px; width: 180px"
               @on-change="handCouponType"
             >
               <Option
                 v-for="(item, index) in activityClassify"
-                :value="item.indexName"
                 :key="index"
+                :value="item.indexName"
                 class="ptb2-5"
-                >{{ item.indexValue }}</Option
               >
+                {{ item.indexValue }}
+              </Option>
             </Select>
             <Button
               :loading="searchLoading"
@@ -74,11 +76,15 @@
               <Icon type="md-refresh" />&nbsp;清除
             </Button>
           </Row>
+          <div v-if="hdCouponType === '新人注册首单立减券'" class="ml15 mt10">
+            <i style="color: red">*</i>
+            新人注册首单立减券只允许配置一张,如需修改请先下架有效的券再进行配置!
+          </div>
         </div>
         <div slot="operations" style="margin-left: -80px">
           <Button
-            v-waves
             v-show="showBack"
+            v-waves
             class="search-btn ml5 mr5"
             type="warning"
             @click="handleBack"
@@ -86,6 +92,7 @@
             <Icon type="ios-arrow-back" />&nbsp;返回
           </Button>
           <Button
+            v-if="validCoupon < 1"
             v-waves
             :loading="createLoading"
             type="success"
@@ -95,6 +102,11 @@
             <Icon type="md-add" />系统优惠券
           </Button>
           <Button
+            v-if="
+              hdCouponType != '新品上市活动券' &&
+                hdCouponType != '分享赚活动券' &&
+                hdCouponType != '新人注册首单立减券'
+            "
             v-waves
             :loading="createLoading"
             type="success"
@@ -156,42 +168,57 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">优惠券名称:</i-col>
-              <i-col span="16">{{ addRelationDetail.couponName }}</i-col>
+              <i-col span="8">
+                优惠券名称:
+              </i-col>
+              <i-col span="16">
+                {{ addRelationDetail.couponName }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">优惠券类型:</i-col>
+              <i-col span="8">
+                优惠券类型:
+              </i-col>
               <i-col
                 v-if="addRelationDetail.couponType === 'FULL_CUT_COUPON'"
                 span="16"
               >
-                <tag color="magenta">{{ "满减券" }}</tag>
+                <tag color="magenta">
+                  {{ "满减券" }}
+                </tag>
               </i-col>
               <i-col
                 v-else-if="addRelationDetail.couponType === 'DISCOUNT_COUPON'"
                 span="16"
               >
-                <tag color="orange">{{ "折扣券" }}</tag>
+                <tag color="orange">
+                  {{ "折扣券" }}
+                </tag>
               </i-col>
               <i-col
                 v-else-if="addRelationDetail.couponType === 'CASH_COUPON'"
                 span="16"
               >
-                <tag color="cyan">{{ "现金券" }}</tag>
+                <tag color="cyan">
+                  {{ "现金券" }}
+                </tag>
               </i-col>
               <i-col
                 v-else-if="addRelationDetail.couponType === 'FREIGHT_COUPON'"
                 span="16"
               >
-                <tag color="cyan">{{ "运费券" }}</tag>
+                <tag color="cyan">
+                  {{ "运费券" }}
+                </tag>
               </i-col>
               <i-col
                 v-else-if="addRelationDetail.couponType === null"
                 span="16"
-                >{{ "N/A" }}</i-col
               >
+                {{ "N/A" }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -199,99 +226,125 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">优惠/折扣额度:</i-col>
+              <i-col span="8">
+                优惠/折扣额度:
+              </i-col>
               <i-col
                 v-if="addRelationDetail.couponType === 'DISCOUNT_COUPON'"
                 span="16"
-                >{{ addRelationDetail.couponFee | fenToDiscountFilters }}</i-col
               >
-              <i-col v-else span="16">{{
-                addRelationDetail.couponFee | fenToYuanDot2Filters
-              }}</i-col>
+                {{ addRelationDetail.couponFee | fenToDiscountFilters }}
+              </i-col>
+              <i-col v-else span="16">
+                {{ addRelationDetail.couponFee | fenToYuanDot2Filters }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">最小购买金额:</i-col>
-              <i-col span="16">{{
-                addRelationDetail.minBuyFee | fenToYuanDot2Filters
-              }}</i-col>
+              <i-col span="8">
+                最小购买金额:
+              </i-col>
+              <i-col span="16">
+                {{ addRelationDetail.minBuyFee | fenToYuanDot2Filters }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">最高优惠金额:</i-col>
-              <i-col
-                v-if="addRelationDetail.maxDiscountFee != null"
-                span="16"
-                >{{ "¥" + addRelationDetail.maxDiscountFee }}</i-col
-              >
-              <i-col v-else span="16">{{ "N/A" }}</i-col>
+              <i-col span="8">
+                最高优惠金额:
+              </i-col>
+              <i-col v-if="addRelationDetail.maxDiscountFee != null" span="16">
+                {{ "¥" + addRelationDetail.maxDiscountFee }}
+              </i-col>
+              <i-col v-else span="16">
+                {{ "N/A" }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">佣金比例:</i-col>
-              <i-col
-                v-if="addRelationDetail.commissionScale != null"
-                span="16"
-                >{{ addRelationDetail.commissionScale + "%" }}</i-col
-              >
-              <i-col v-else span="16">{{ "N/A" }}</i-col>
+              <i-col span="8">
+                佣金比例:
+              </i-col>
+              <i-col v-if="addRelationDetail.commissionScale != null" span="16">
+                {{ addRelationDetail.commissionScale + "%" }}
+              </i-col>
+              <i-col v-else span="16">
+                {{ "N/A" }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">优惠券状态:</i-col>
+              <i-col span="8">
+                优惠券状态:
+              </i-col>
               <i-col
                 v-if="addRelationDetail.couponStatus === 'VALID'"
                 span="16"
               >
-                <tag color="success">{{ "有效" }}</tag>
+                <tag color="success">
+                  {{ "有效" }}
+                </tag>
               </i-col>
               <i-col
                 v-else-if="addRelationDetail.couponStatus === 'INVALID'"
                 span="16"
               >
-                <tag color="error">{{ "无效" }}</tag>
+                <tag color="error">
+                  {{ "无效" }}
+                </tag>
               </i-col>
               <i-col
                 v-else-if="addRelationDetail.couponStatus === null"
                 span="16"
-                >{{ "N/A" }}</i-col
               >
+                {{ "N/A" }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">券有效期类型:</i-col>
-              <i-col span="16">{{
-                addRelationDetail.validDateType | validDateTypeFilter
-              }}</i-col>
+              <i-col span="8">
+                券有效期类型:
+              </i-col>
+              <i-col span="16">
+                {{ addRelationDetail.validDateType | validDateTypeFilter }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row
           v-show="
             addRelationDetail.validDateType == 'UN_FIXED_DATE' &&
-            addRelationDetail.source == 'SMALL'
+              addRelationDetail.source == 'SMALL'
           "
           class-name="mb20"
         >
           <i-col span="12">
             <Row>
-              <i-col span="8">生效开始:</i-col>
-              <i-col span="16">{{ addRelationDetail.beginDay }}</i-col>
+              <i-col span="8">
+                生效开始:
+              </i-col>
+              <i-col span="16">
+                {{ addRelationDetail.beginDay }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">有效天数:</i-col>
-              <i-col span="16">{{ addRelationDetail.endDay }}</i-col>
+              <i-col span="8">
+                有效天数:
+              </i-col>
+              <i-col span="16">
+                {{ addRelationDetail.endDay }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -299,22 +352,28 @@
         <Row
           v-show="
             addRelationDetail.validDateType == 'FIXED_DATE' &&
-            addRelationDetail.source == 'SMALL'
+              addRelationDetail.source == 'SMALL'
           "
           class-name="mb20"
         >
           <i-col span="12">
             <Row>
-              <i-col span="8">生效时间:</i-col>
-              <i-col span="16">{{
-                addRelationDetail.effectiveStartTime
-              }}</i-col>
+              <i-col span="8">
+                生效时间:
+              </i-col>
+              <i-col span="16">
+                {{ addRelationDetail.effectiveStartTime }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">失效时间:</i-col>
-              <i-col span="16">{{ addRelationDetail.effectiveEndTime }}</i-col>
+              <i-col span="8">
+                失效时间:
+              </i-col>
+              <i-col span="16">
+                {{ addRelationDetail.effectiveEndTime }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -322,43 +381,70 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">券使用范围:</i-col>
+              <i-col span="8">
+                券使用范围:
+              </i-col>
               <i-col v-if="addRelationDetail.couponScope === 'STORE'" span="16">
-                <tag color="magenta">{{ "门店" }}</tag>
+                <tag color="magenta">
+                  {{ "门店" }}
+                </tag>
               </i-col>
               <i-col
                 v-else-if="addRelationDetail.couponScope === 'SMALL'"
                 span="16"
               >
-                <tag color="cyan">{{ "商城" }}</tag>
+                <tag color="cyan">
+                  {{ "商城" }}
+                </tag>
               </i-col>
               <i-col
                 v-else-if="addRelationDetail.couponScope === 'STORE_AND_SMALL'"
                 span="16"
               >
-                <tag color="orange">{{ "全场通用" }}</tag>
+                <tag color="orange">
+                  {{ "全场通用" }}
+                </tag>
               </i-col>
               <i-col
                 v-else-if="addRelationDetail.couponScope === null"
                 span="16"
-                >{{ "N/A" }}</i-col
               >
+                {{ "N/A" }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">券使用限制:</i-col>
-              <i-col span="16">{{
-                addRelationDetail.useLimitType | couponUseLimitFilter
-              }}</i-col>
+              <i-col span="8">
+                券使用限制:
+              </i-col>
+              <i-col span="16">
+                {{ addRelationDetail.useLimitType | couponUseLimitFilter }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="20">
             <Row>
-              <i-col span="5">使用规则:</i-col>
-              <i-col span="18">{{ addRelationDetail.couponRules }}</i-col>
+              <i-col span="5">
+                使用规则:
+              </i-col>
+              <i-col span="18">
+                {{ addRelationDetail.couponRules }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row class-name="mb20">
+          <i-col span="24">
+            <Row>
+              <i-col span="4">
+                关联门店:
+              </i-col>
+              <i-col span="16">
+                {{ showStoreName }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
@@ -372,7 +458,9 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -384,9 +472,11 @@
       @on-visible-change="handleModalAdd"
     >
       <p slot="header">
-        <i-col>{{
-          tempModalType == "addTemplate" ? "添加系统优惠券" : "添加海鼎优惠券"
-        }}</i-col>
+        <i-col>
+          {{
+            tempModalType == "addTemplate" ? "添加系统优惠券" : "添加海鼎优惠券"
+          }}
+        </i-col>
       </p>
       <div class="modal-content">
         <Row>
@@ -419,13 +509,14 @@
                 >
                   <Option
                     v-for="(item, index) in couponTypeEnum"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     :disabled="index == 3"
                     class="ptb2-5"
                     style="padding-left: 5px; width: 120px"
-                    >{{ item.label }}</Option
                   >
+                    {{ item.label }}
+                  </Option>
                 </Select>
                 <Button
                   :loading="searchLoading"
@@ -508,7 +599,7 @@
                   ></Input>
                 </FormItem>
               </i-col>
-              <i-col v-if="this.hdCouponType == '分享赚活动券'" span="6">
+              <i-col v-if="hdCouponType == '分享赚活动券'" span="6">
                 <FormItem label="佣金比例(单位%):" prop="commissionScale">
                   <InputNumber
                     v-model="addRelationDetail.commissionScale"
@@ -516,30 +607,30 @@
                   ></InputNumber>
                 </FormItem>
               </i-col>
-              <i-col span="6" v-if="tempModalType == 'addTemplate'">
+              <i-col v-if="tempModalType == 'addTemplate'" span="6">
                 <FormItem
-                  :label-width="100"
-                  label="最高优惠金额:"
-                  prop="maxDiscountFee"
                   v-if="addRelationDetail.maxDiscountFee"
-                  >{{
-                    addRelationDetail.maxDiscountFee | fenToYuanDot2Filters
-                  }}</FormItem
-                >
-                <FormItem
                   :label-width="100"
                   label="最高优惠金额:"
                   prop="maxDiscountFee"
-                  v-else
-                  >{{ "N/A" }}</FormItem
                 >
-              </i-col>
-              <i-col span="6" v-else>
+                  {{ addRelationDetail.maxDiscountFee | fenToYuanDot2Filters }}
+                </FormItem>
                 <FormItem
+                  v-else
+                  :label-width="100"
+                  label="最高优惠金额:"
+                  prop="maxDiscountFee"
+                >
+                  {{ "N/A" }}
+                </FormItem>
+              </i-col>
+              <i-col v-else span="6">
+                <FormItem
+                  v-if="addRelationDetail.couponType == 'DISCOUNT_COUPON'"
                   label="最高优惠金额:"
                   prop="addRelationDetail"
                   :label-width="100"
-                  v-if="addRelationDetail.couponType == 'DISCOUNT_COUPON'"
                 >
                   <InputNumber
                     :min="0"
@@ -548,39 +639,23 @@
                   ></InputNumber>
                 </FormItem>
                 <FormItem
+                  v-else
                   :label-width="100"
                   label="最高优惠金额:"
                   prop="maxDiscountFee"
-                  v-else
-                  >{{ "N/A" }}</FormItem
                 >
+                  {{ "N/A" }}
+                </FormItem>
               </i-col>
             </Row>
 
             <Row>
-              <i-col v-if="tempModalType == 'addTemplate'" span="6">
+              <i-col span="6">
                 <FormItem
+                  v-if="tempModalType == 'addTemplate'"
                   label="券有效期:"
                   prop="useLimitType"
-                  v-if="handCouponTime"
                 >
-                  <Select
-                    v-model="addRelationDetail.validDateType"
-                    placeholder="券有效期类型"
-                    disabled
-                    style="padding-right: 5px; width: 120px"
-                  >
-                    <Option
-                      v-for="(item, index) in validDateTypeEnum"
-                      :value="item.value"
-                      :key="index"
-                      class="ptb2-5"
-                      style="padding-left: 5px; width: 100px"
-                      >{{ item.label }}</Option
-                    >
-                  </Select>
-                </FormItem>
-                <FormItem label="券有效期:" prop="useLimitType" v-else>
                   <Select
                     v-model="addRelationDetail.validDateType"
                     placeholder="券有效期类型"
@@ -588,26 +663,41 @@
                   >
                     <Option
                       v-for="(item, index) in validDateTypeEnum"
-                      :value="item.value"
                       :key="index"
+                      :value="item.value"
                       class="ptb2-5"
                       style="padding-left: 5px; width: 130px"
-                      >{{ item.label }}</Option
                     >
+                      {{ item.label }}
+                    </Option>
+                  </Select>
+                </FormItem>
+                <FormItem v-else label="券有效期:" prop="useLimitType">
+                  <Select
+                    v-model="addRelationDetail.validDateType"
+                    placeholder="券有效期类型"
+                    style="padding-right: 5px; width: 130px"
+                  >
+                    <Option
+                      v-for="(item, index) in validDateTypeEnum"
+                      :key="index"
+                      :value="item.value"
+                      class="ptb2-5"
+                      style="padding-left: 5px; width: 130px"
+                    >
+                      {{ item.label }}
+                    </Option>
                   </Select>
                 </FormItem>
               </i-col>
               <template
-                v-if="
-                  addRelationDetail.validDateType == 'UN_FIXED_DATE' &&
-                  tempModalType == 'addTemplate'
-                "
+                v-if="addRelationDetail.validDateType == 'UN_FIXED_DATE'"
               >
                 <i-col span="7">
                   <FormItem label="发放券后:" prop="beginDay">
                     <InputNumber
-                      :min="0"
                       v-model="addRelationDetail.beginDay"
+                      :min="0"
                       label="生效开始"
                       style="width: 95px"
                     ></InputNumber
@@ -617,8 +707,8 @@
                 <i-col span="7">
                   <FormItem label="有效天数:" prop="endDay">
                     <InputNumber
-                      :min="0"
                       v-model="addRelationDetail.endDay"
+                      :min="0"
                       label="有效天数"
                       style="width: 95px"
                     ></InputNumber
@@ -626,12 +716,7 @@
                   </FormItem>
                 </i-col>
               </template>
-              <template
-                v-if="
-                  addRelationDetail.validDateType == 'FIXED_DATE' &&
-                  tempModalType == 'addTemplate'
-                "
-              >
+              <template v-if="addRelationDetail.validDateType == 'FIXED_DATE'">
                 <i-col span="7">
                   <FormItem label="生效时间:" prop="effectiveStartTime">
                     <DatePicker
@@ -665,10 +750,9 @@
                   :label-width="100"
                   label="券使用范围:"
                   prop="couponScope"
-                  >{{
-                    addRelationDetail.couponScope | couponScopeFilter
-                  }}</FormItem
                 >
+                  {{ addRelationDetail.couponScope | couponScopeFilter }}
+                </FormItem>
                 <FormItem
                   v-else
                   :label-width="100"
@@ -682,13 +766,14 @@
                   >
                     <Option
                       v-for="(item, index) in couponScopeEnum"
-                      :value="item.value"
                       :key="index"
+                      :value="item.value"
                       :disabled="index === 2"
                       class="ptb2-5"
                       style="padding-left: 5px; width: 100px"
-                      >{{ item.label }}</Option
                     >
+                      {{ item.label }}
+                    </Option>
                   </Select>
                 </FormItem>
               </i-col>
@@ -698,10 +783,9 @@
                   :label-width="100"
                   label="券使用限制:"
                   prop="useLimitType"
-                  >{{
-                    addRelationDetail.useLimitType | couponUseLimitFilter
-                  }}</FormItem
                 >
+                  {{ addRelationDetail.useLimitType | couponUseLimitFilter }}
+                </FormItem>
                 <FormItem
                   v-else
                   :label-width="100"
@@ -716,12 +800,13 @@
                   >
                     <Option
                       v-for="(item, index) in couponUseLimitEnum"
-                      :value="item.value"
                       :key="index"
+                      :value="item.value"
                       class="ptb2-5"
                       style="padding-left: 5px; width: 100px"
-                      >{{ item.label }}</Option
                     >
+                      {{ item.label }}
+                    </Option>
                   </Select>
                 </FormItem>
               </i-col>
@@ -742,30 +827,30 @@
                 </FormItem>
               </i-col>
             </Row>
-            <Divider v-if="this.hdCouponType === '新品上市活动券'"
-              >关联活动单品</Divider
-            >
+            <Divider v-if="hdCouponType === '新品上市活动券'">
+              关联活动单品
+            </Divider>
             <Button
+              v-if="hdCouponType === '新品上市活动券'"
               v-waves
               :loading="createLoading"
               type="success"
               class="mr5"
               @click="addActivityGoods"
-              v-if="this.hdCouponType === '新品上市活动券'"
             >
               <Icon type="md-add" />关联活动单品
             </Button>
             <!-- ymsb -->
             <Row
+              v-if="hdCouponType === '新品上市活动券'"
               style="margin-top: 15px"
-              v-if="this.hdCouponType === '新品上市活动券'"
             >
               <i-col span="28">
                 <FormItem label="商品规格Ids列表:" :label-width="120">
                   <div
                     v-for="(item, index) in standardIdsArray"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     class="standardidList"
                     @click="checkGoodsInfo(item.value)"
                   >
@@ -778,9 +863,9 @@
                 </FormItem>
               </i-col>
             </Row>
-            <Divider v-if="this.hdCouponType === '新品上市活动券'"
-              >关联门店</Divider
-            >
+            <Divider v-if="hdCouponType === '新品上市活动券'">
+              关联门店
+            </Divider>
             <Row>
               <i-col span="12">
                 <FormItem label="关联门店:">
@@ -790,27 +875,46 @@
                   >
                     <Option
                       v-for="item in relationStoreTypeEnum"
-                      :value="item.value"
                       :key="item.value"
+                      :value="item.value"
                       class="ptb2-5"
                       style="padding-left: 5px"
                       @click.native="selectStore(item)"
-                      >{{ item.label }}</Option
                     >
+                      {{ item.label }}
+                    </Option>
+                  </Select>
+                </FormItem>
+              </i-col>
+              <i-col v-show="showStoreList" span="12">
+                <FormItem
+                  :label-width="85"
+                  label="所属城市:"
+                  prop="cityCode"
+                >
+                  <Select
+                    v-model="addRelationDetail.cityCode"
+                    style="width: 220px"
+                    @on-change="handleCitySwitch"
+                  >
+                    <Option
+                      v-for="(item, index) in cityList"
+                      :key="index"
+                      :value="item.cityCode"
+                      class="ptb2-5"
+                      style="padding-left: 5px"
+                    >
+                      {{ item.cityName }}
+                    </Option>
                   </Select>
                 </FormItem>
               </i-col>
             </Row>
             <Row v-show="showStoreList">
-              <i-col span="24">
+              <i-col v-if="storeData.length>0" span="24">
                 <FormItem>
                   <div
-                    style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
-                    "
+                    class="bottom-line"
                   >
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[0] }}
@@ -819,11 +923,12 @@
                       :indeterminate="indeterminate"
                       :value="checkAll"
                       @click.prevent.native="handleCheckAll(0)"
-                      >全选/反选</Checkbox
                     >
+                      全选/反选
+                    </Checkbox>
                   </div>
                   <CheckboxGroup
-                    v-model="stores"
+                    v-model="storeIds"
                     @on-change="checkAllGroupChange"
                   >
                     <Checkbox
@@ -831,20 +936,16 @@
                       ref="checkBox"
                       :key="item.storeId"
                       :label="item.storeId"
-                      >{{ item.storeName }}</Checkbox
                     >
+                      {{ item.storeName }}
+                    </Checkbox>
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <i-col span="24">
+              <i-col v-if="storeData1.length>0" span="24">
                 <FormItem>
                   <div
-                    style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
-                    "
+                    class="bottom-line"
                   >
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[1] }}
@@ -853,11 +954,12 @@
                       :indeterminate="indeterminate1"
                       :value="checkAll1"
                       @click.prevent.native="handleCheckAll(1)"
-                      >全选/反选</Checkbox
                     >
+                      全选/反选
+                    </Checkbox>
                   </div>
                   <CheckboxGroup
-                    v-model="stores"
+                    v-model="storeIds"
                     @on-change="checkAllGroupChange1"
                   >
                     <Checkbox
@@ -865,20 +967,16 @@
                       ref="checkBox"
                       :key="item.storeId"
                       :label="item.storeId"
-                      >{{ item.storeName }}</Checkbox
                     >
+                      {{ item.storeName }}
+                    </Checkbox>
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <i-col span="24">
+              <i-col v-if="storeData2.length>0" span="24">
                 <FormItem>
                   <div
-                    style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
-                    "
+                    class="bottom-line"
                   >
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[2] }}
@@ -887,11 +985,12 @@
                       :indeterminate="indeterminate2"
                       :value="checkAll2"
                       @click.prevent.native="handleCheckAll(2)"
-                      >全选/反选</Checkbox
                     >
+                      全选/反选
+                    </Checkbox>
                   </div>
                   <CheckboxGroup
-                    v-model="stores"
+                    v-model="storeIds"
                     @on-change="checkAllGroupChange2"
                   >
                     <Checkbox
@@ -899,20 +998,16 @@
                       ref="checkBox"
                       :key="item.storeId"
                       :label="item.storeId"
-                      >{{ item.storeName }}</Checkbox
                     >
+                      {{ item.storeName }}
+                    </Checkbox>
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <i-col span="24">
+              <i-col v-if="storeData3.length>0" span="24">
                 <FormItem>
                   <div
-                    style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
-                    "
+                    class="bottom-line"
                   >
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[3] }}
@@ -921,11 +1016,12 @@
                       :indeterminate="indeterminate3"
                       :value="checkAll3"
                       @click.prevent.native="handleCheckAll(3)"
-                      >全选/反选</Checkbox
                     >
+                      全选/反选
+                    </Checkbox>
                   </div>
                   <CheckboxGroup
-                    v-model="stores"
+                    v-model="storeIds"
                     @on-change="checkAllGroupChange3"
                   >
                     <Checkbox
@@ -933,20 +1029,16 @@
                       ref="checkBox"
                       :key="item.storeId"
                       :label="item.storeId"
-                      >{{ item.storeName }}</Checkbox
                     >
+                      {{ item.storeName }}
+                    </Checkbox>
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <i-col span="24">
+              <i-col v-if="storeData4.length>0" span="24">
                 <FormItem>
                   <div
-                    style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
-                    "
+                    class="bottom-line"
                   >
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[4] }}
@@ -955,11 +1047,12 @@
                       :indeterminate="indeterminate4"
                       :value="checkAll4"
                       @click.prevent.native="handleCheckAll(4)"
-                      >全选/反选</Checkbox
                     >
+                      全选/反选
+                    </Checkbox>
                   </div>
                   <CheckboxGroup
-                    v-model="stores"
+                    v-model="storeIds"
                     @on-change="checkAllGroupChange4"
                   >
                     <Checkbox
@@ -967,20 +1060,16 @@
                       ref="checkBox"
                       :key="item.storeId"
                       :label="item.storeId"
-                      >{{ item.storeName }}</Checkbox
                     >
+                      {{ item.storeName }}
+                    </Checkbox>
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <i-col span="24">
+              <i-col v-if="storeData5.length>0" span="24">
                 <FormItem>
                   <div
-                    style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
-                    "
+                    class="bottom-line"
                   >
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[5] }}
@@ -989,11 +1078,12 @@
                       :indeterminate="indeterminate5"
                       :value="checkAll5"
                       @click.prevent.native="handleCheckAll(5)"
-                      >全选/反选</Checkbox
                     >
+                      全选/反选
+                    </Checkbox>
                   </div>
                   <CheckboxGroup
-                    v-model="stores"
+                    v-model="storeIds"
                     @on-change="checkAllGroupChange5"
                   >
                     <Checkbox
@@ -1001,20 +1091,16 @@
                       ref="checkBox"
                       :key="item.storeId"
                       :label="item.storeId"
-                      >{{ item.storeName }}</Checkbox
                     >
+                      {{ item.storeName }}
+                    </Checkbox>
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <i-col span="24">
+              <i-col v-if="storeData6.length>0" span="24">
                 <FormItem>
                   <div
-                    style="
-                      border-bottom: 1px solid #e9e9e9;
-                      padding-bottom: 6px;
-                      margin-bottom: 6px;
-                      display: flex;
-                    "
+                    class="bottom-line"
                   >
                     <div style="margin-left: -54px; margin-right: 18px">
                       {{ storeNameList[6] }}
@@ -1023,11 +1109,12 @@
                       :indeterminate="indeterminate6"
                       :value="checkAll6"
                       @click.prevent.native="handleCheckAll(6)"
-                      >全选/反选</Checkbox
                     >
+                      全选/反选
+                    </Checkbox>
                   </div>
                   <CheckboxGroup
-                    v-model="stores"
+                    v-model="storeIds"
                     @on-change="checkAllGroupChange6"
                   >
                     <Checkbox
@@ -1035,12 +1122,13 @@
                       ref="checkBox"
                       :key="item.storeId"
                       :label="item.storeId"
-                      >{{ item.storeName }}</Checkbox
                     >
+                      {{ item.storeName }}
+                    </Checkbox>
                   </CheckboxGroup>
                 </FormItem>
               </i-col>
-              <!-- <i-col span="24">
+              <!-- <i-col v-if="storeData7.length>0" span="24">
                 <FormItem>
                   <div
                     style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
@@ -1052,7 +1140,7 @@
                       @click.prevent.native="handleCheckAll(7)"
                     >全选/反选</Checkbox>
                   </div>
-                  <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange7">
+                  <CheckboxGroup v-model="storeIds" @on-change="checkAllGroupChange7">
                     <Checkbox
                       v-for="item in storeData7"
                       ref="checkBox"
@@ -1062,23 +1150,25 @@
                   </CheckboxGroup>
                 </FormItem>
               </i-col>-->
-            </Row> </Form
-          >*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板！
+            </Row>
+          </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板！
           <span
-            v-if="this.hdCouponType === '新品上市活动券'"
+            v-if="hdCouponType === '新品上市活动券'"
             style="color: #ff3861"
-            >关联活动商品可点击查看商品信息！</span
-          >
+          >关联活动商品可点击查看商品信息！</span>
         </Row>
       </div>
       <div slot="footer">
-        <Button @click="handleAddClose">关闭</Button>
+        <Button @click="handleAddClose">
+          关闭
+        </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
           @click="handleTemplateAdd"
-          >确定</Button
         >
+          确定
+        </Button>
       </div>
     </Modal>
 
@@ -1100,50 +1190,48 @@
         >
           <Row>
             <i-col span="6">
-              <FormItem label="优惠券类型:" prop="couponType">{{
-                addRelationDetail.couponType | couponTypeFilter
-              }}</FormItem>
+              <FormItem label="优惠券类型:" prop="couponType">
+                {{ addRelationDetail.couponType | couponTypeFilter }}
+              </FormItem>
             </i-col>
             <i-col span="6">
               <FormItem
                 v-if="addRelationDetail.couponType === 'DISCOUNT_COUPON'"
                 label="折扣额度:"
                 prop="couponFee"
-                >{{
-                  addRelationDetail.couponFee | fenToDiscountFilters
-                }}</FormItem
               >
-              <FormItem v-else label="优惠金额:" prop="couponFee">{{
-                addRelationDetail.couponFee | fenToYuanDot2Filters
-              }}</FormItem>
+                {{ addRelationDetail.couponFee | fenToDiscountFilters }}
+              </FormItem>
+              <FormItem v-else label="优惠金额:" prop="couponFee">
+                {{ addRelationDetail.couponFee | fenToYuanDot2Filters }}
+              </FormItem>
             </i-col>
             <i-col span="6">
               <FormItem
                 :label-width="100"
                 label="最小购买金额:"
                 prop="minBuyFee"
-                >{{
-                  addRelationDetail.minBuyFee | fenToYuanDot2Filters
-                }}</FormItem
               >
+                {{ addRelationDetail.minBuyFee | fenToYuanDot2Filters }}
+              </FormItem>
             </i-col>
             <i-col span="6">
               <FormItem
-                :label-width="100"
-                label="最高优惠金额:"
-                prop="minBuyFee"
                 v-if="addRelationDetail.maxDiscountFee"
-                >{{
-                  addRelationDetail.maxDiscountFee | fenToYuanDot2Filters
-                }}</FormItem
-              >
-              <FormItem
                 :label-width="100"
                 label="最高优惠金额:"
                 prop="minBuyFee"
-                v-else
-                >{{ "N/A" }}</FormItem
               >
+                {{ addRelationDetail.maxDiscountFee | fenToYuanDot2Filters }}
+              </FormItem>
+              <FormItem
+                v-else
+                :label-width="100"
+                label="最高优惠金额:"
+                prop="minBuyFee"
+              >
+                {{ "N/A" }}
+              </FormItem>
             </i-col>
           </Row>
 
@@ -1162,11 +1250,8 @@
                 ></Input>
               </FormItem>
             </i-col>
-            <i-col span="6">
-              <FormItem
-                label="优惠券状态:"
-                prop="couponStatus"
-              >
+            <!-- <i-col span="6">
+              <FormItem label="优惠券状态:" prop="couponStatus">
                 <Select
                   v-model="addRelationDetail.couponStatus"
                   placeholder="请选择"
@@ -1174,12 +1259,25 @@
                 >
                   <Option
                     v-for="(item, index) in couponStatusEnum"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
-                    >{{ item.label }}</Option
                   >
+                    {{ item.label }}
+                  </Option>
                 </Select>
+              </FormItem>
+            </i-col> -->
+            <i-col
+              v-if="hdCouponType == '分享赚活动券'"
+              span="6"
+              style="margin-left: 38px"
+            >
+              <FormItem label="佣金比例(单位%):" prop="commissionScale">
+                <InputNumber
+                  v-model="addRelationDetail.commissionScale"
+                  style="padding-right: 5px; width: 162px"
+                ></InputNumber>
               </FormItem>
             </i-col>
             <i-col
@@ -1196,62 +1294,36 @@
             </i-col>
           </Row>
           <Row>
-            <i-col v-if="addRelationDetail.source == 'SMALL'" span="6">
+            <i-col span="6">
               <FormItem
                 :label-width="100"
                 label="券有效期:"
                 prop="useLimitType"
-                v-if="handCouponTime"
               >
                 <Select
                   v-model="addRelationDetail.validDateType"
                   placeholder="券有效期类型"
+                  style="padding-right: 5px; width: 130px"
                   disabled
-                  style="padding-right: 5px; width: 130px"
                 >
                   <Option
                     v-for="(item, index) in validDateTypeEnum"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px; width: 130px"
-                    >{{ item.label }}</Option
                   >
-                </Select>
-              </FormItem>
-              <FormItem
-                :label-width="100"
-                label="券有效期:"
-                prop="useLimitType"
-                v-else
-              >
-                <Select
-                  v-model="addRelationDetail.validDateType"
-                  placeholder="券有效期类型"
-                  style="padding-right: 5px; width: 130px"
-                >
-                  <Option
-                    v-for="(item, index) in validDateTypeEnum"
-                    :value="item.value"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px; width: 130px"
-                    >{{ item.label }}</Option
-                  >
+                    {{ item.label }}
+                  </Option>
                 </Select>
               </FormItem>
             </i-col>
-            <template
-              v-if="
-                addRelationDetail.source == 'SMALL' &&
-                addRelationDetail.validDateType == 'UN_FIXED_DATE'
-              "
-            >
+            <template v-if="addRelationDetail.validDateType == 'UN_FIXED_DATE'">
               <i-col span="7">
                 <FormItem label="生效开始:" prop="beginDay">
                   <InputNumber
-                    :min="0"
                     v-model="addRelationDetail.beginDay"
+                    :min="0"
                     label="生效开始"
                     style="width: 160px"
                   ></InputNumber>
@@ -1260,20 +1332,15 @@
               <i-col span="7">
                 <FormItem label="有效天数:" prop="endDay">
                   <InputNumber
-                    :min="0"
                     v-model="addRelationDetail.endDay"
+                    :min="0"
                     label="有效天数"
                     style="width: 160px"
                   ></InputNumber>
                 </FormItem>
               </i-col>
             </template>
-            <template
-              v-if="
-                addRelationDetail.source == 'SMALL' &&
-                addRelationDetail.validDateType == 'FIXED_DATE'
-              "
-            >
+            <template v-if="addRelationDetail.validDateType == 'FIXED_DATE'">
               <i-col span="7">
                 <FormItem label="生效时间:" prop="effectiveStartTime">
                   <DatePicker
@@ -1307,10 +1374,9 @@
                 :label-width="100"
                 label="券使用范围:"
                 prop="couponScope"
-                >{{
-                  addRelationDetail.couponScope | couponScopeFilter
-                }}</FormItem
               >
+                {{ addRelationDetail.couponScope | couponScopeFilter }}
+              </FormItem>
               <FormItem
                 v-else
                 :label-width="100"
@@ -1324,24 +1390,21 @@
                 >
                   <Option
                     v-for="(item, index) in couponScopeEnum"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     :disabled="index == 2"
                     class="ptb2-5"
                     style="padding-left: 5px; width: 100px"
-                    >{{ item.label }}</Option
                   >
+                    {{ item.label }}
+                  </Option>
                 </Select>
               </FormItem>
             </i-col>
             <i-col span="6">
-              <FormItem
-                label="使用限制:"
-                prop="useLimitType"
-                >{{
-                  addRelationDetail.useLimitType | couponUseLimitFilter
-                }}</FormItem
-              >
+              <FormItem label="使用限制:" prop="useLimitType">
+                {{ addRelationDetail.useLimitType | couponUseLimitFilter }}
+              </FormItem>
             </i-col>
           </Row>
           <Row>
@@ -1356,30 +1419,30 @@
               </FormItem>
             </i-col>
           </Row>
-          <Divider v-if="this.hdCouponType === '新品上市活动券'"
-            >关联活动单品</Divider
-          >
+          <Divider v-if="hdCouponType === '新品上市活动券'">
+            关联活动单品
+          </Divider>
           <Button
+            v-if="hdCouponType === '新品上市活动券'"
             v-waves
             :loading="createLoading"
             type="success"
             class="mr5"
             @click="addActivityGoods"
-            v-if="this.hdCouponType === '新品上市活动券'"
           >
             <Icon type="md-add" />关联活动单品
           </Button>
           <!-- ymsb -->
           <Row
+            v-if="hdCouponType === '新品上市活动券'"
             style="margin-top: 15px"
-            v-if="this.hdCouponType === '新品上市活动券'"
           >
             <i-col span="28">
               <FormItem label="商品规格Ids列表:" :label-width="120">
                 <div
                   v-for="(item, index) in standardIdsArray"
-                  :value="item.value"
                   :key="index"
+                  :value="item.value"
                   class="standardidList"
                   @click="checkGoodsInfo(item.value)"
                 >
@@ -1392,9 +1455,9 @@
               </FormItem>
             </i-col>
           </Row>
-          <Divider v-if="this.hdCouponType === '新品上市活动券'"
-            >关联门店</Divider
-          >
+          <Divider v-if="hdCouponType === '新品上市活动券'">
+            关联门店
+          </Divider>
           <Row>
             <i-col span="12">
               <FormItem label="关联门店:">
@@ -1404,27 +1467,46 @@
                 >
                   <Option
                     v-for="item in relationStoreTypeEnum"
-                    :value="item.value"
                     :key="item.value"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
                     @click.native="selectStore(item)"
-                    >{{ item.label }}</Option
                   >
+                    {{ item.label }}
+                  </Option>
+                </Select>
+              </FormItem>
+            </i-col>
+            <i-col v-show="showStoreList" span="12">
+              <FormItem
+                :label-width="85"
+                label="所属城市:"
+                prop="cityCode"
+              >
+                <Select
+                  v-model="addRelationDetail.cityCode"
+                  style="width: 220px"
+                  @on-change="handleCitySwitch"
+                >
+                  <Option
+                    v-for="(item, index) in cityList"
+                    :key="index"
+                    :value="item.cityCode"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                  >
+                    {{ item.cityName }}
+                  </Option>
                 </Select>
               </FormItem>
             </i-col>
           </Row>
           <Row v-show="showStoreList">
-            <i-col span="24">
+            <i-col v-if="storeData.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[0] }}
@@ -1433,11 +1515,12 @@
                     :indeterminate="indeterminate"
                     :value="checkAll"
                     @click.prevent.native="handleCheckAll(0)"
-                    >全选/反选</Checkbox
                   >
+                    全选/反选
+                  </Checkbox>
                 </div>
                 <CheckboxGroup
-                  v-model="stores"
+                  v-model="storeIds"
                   @on-change="checkAllGroupChange"
                 >
                   <Checkbox
@@ -1445,20 +1528,16 @@
                     ref="checkBox"
                     :key="item.storeId"
                     :label="item.storeId"
-                    >{{ item.storeName }}</Checkbox
                   >
+                    {{ item.storeName }}
+                  </Checkbox>
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData1.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[1] }}
@@ -1467,11 +1546,12 @@
                     :indeterminate="indeterminate1"
                     :value="checkAll1"
                     @click.prevent.native="handleCheckAll(1)"
-                    >全选/反选</Checkbox
                   >
+                    全选/反选
+                  </Checkbox>
                 </div>
                 <CheckboxGroup
-                  v-model="stores"
+                  v-model="storeIds"
                   @on-change="checkAllGroupChange1"
                 >
                   <Checkbox
@@ -1479,20 +1559,16 @@
                     ref="checkBox"
                     :key="item.storeId"
                     :label="item.storeId"
-                    >{{ item.storeName }}</Checkbox
                   >
+                    {{ item.storeName }}
+                  </Checkbox>
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData2.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[2] }}
@@ -1501,11 +1577,12 @@
                     :indeterminate="indeterminate2"
                     :value="checkAll2"
                     @click.prevent.native="handleCheckAll(2)"
-                    >全选/反选</Checkbox
                   >
+                    全选/反选
+                  </Checkbox>
                 </div>
                 <CheckboxGroup
-                  v-model="stores"
+                  v-model="storeIds"
                   @on-change="checkAllGroupChange2"
                 >
                   <Checkbox
@@ -1513,20 +1590,16 @@
                     ref="checkBox"
                     :key="item.storeId"
                     :label="item.storeId"
-                    >{{ item.storeName }}</Checkbox
                   >
+                    {{ item.storeName }}
+                  </Checkbox>
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData3.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[3] }}
@@ -1535,11 +1608,12 @@
                     :indeterminate="indeterminate3"
                     :value="checkAll3"
                     @click.prevent.native="handleCheckAll(3)"
-                    >全选/反选</Checkbox
                   >
+                    全选/反选
+                  </Checkbox>
                 </div>
                 <CheckboxGroup
-                  v-model="stores"
+                  v-model="storeIds"
                   @on-change="checkAllGroupChange3"
                 >
                   <Checkbox
@@ -1547,20 +1621,16 @@
                     ref="checkBox"
                     :key="item.storeId"
                     :label="item.storeId"
-                    >{{ item.storeName }}</Checkbox
                   >
+                    {{ item.storeName }}
+                  </Checkbox>
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData4.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[4] }}
@@ -1569,11 +1639,12 @@
                     :indeterminate="indeterminate4"
                     :value="checkAll4"
                     @click.prevent.native="handleCheckAll(4)"
-                    >全选/反选</Checkbox
                   >
+                    全选/反选
+                  </Checkbox>
                 </div>
                 <CheckboxGroup
-                  v-model="stores"
+                  v-model="storeIds"
                   @on-change="checkAllGroupChange4"
                 >
                   <Checkbox
@@ -1581,20 +1652,16 @@
                     ref="checkBox"
                     :key="item.storeId"
                     :label="item.storeId"
-                    >{{ item.storeName }}</Checkbox
                   >
+                    {{ item.storeName }}
+                  </Checkbox>
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData5.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[5] }}
@@ -1603,11 +1670,12 @@
                     :indeterminate="indeterminate5"
                     :value="checkAll5"
                     @click.prevent.native="handleCheckAll(5)"
-                    >全选/反选</Checkbox
                   >
+                    全选/反选
+                  </Checkbox>
                 </div>
                 <CheckboxGroup
-                  v-model="stores"
+                  v-model="storeIds"
                   @on-change="checkAllGroupChange5"
                 >
                   <Checkbox
@@ -1615,20 +1683,16 @@
                     ref="checkBox"
                     :key="item.storeId"
                     :label="item.storeId"
-                    >{{ item.storeName }}</Checkbox
                   >
+                    {{ item.storeName }}
+                  </Checkbox>
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData6.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[6] }}
@@ -1637,11 +1701,12 @@
                     :indeterminate="indeterminate6"
                     :value="checkAll6"
                     @click.prevent.native="handleCheckAll(6)"
-                    >全选/反选</Checkbox
                   >
+                    全选/反选
+                  </Checkbox>
                 </div>
                 <CheckboxGroup
-                  v-model="stores"
+                  v-model="storeIds"
                   @on-change="checkAllGroupChange6"
                 >
                   <Checkbox
@@ -1649,49 +1714,52 @@
                     ref="checkBox"
                     :key="item.storeId"
                     :label="item.storeId"
-                    >{{ item.storeName }}</Checkbox
                   >
+                    {{ item.storeName }}
+                  </Checkbox>
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <!-- <i-col span="24">
-              <FormItem>
-                <div
-                  style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
-                >
-                  <div style="margin-left:-54px;margin-right:18px">{{storeNameList[7]}}</div>
-                  <Checkbox
-                    :indeterminate="indeterminate7"
-                    :value="checkAll7"
-                    @click.prevent.native="handleCheckAll(7)"
-                  >全选/反选</Checkbox>
-                </div>
-                <CheckboxGroup v-model="stores" @on-change="checkAllGroupChange7">
-                  <Checkbox
-                    v-for="item in storeData7"
-                    ref="checkBox"
-                    :key="item.storeId"
-                    :label="item.storeId"
-                  >{{ item.storeName }}</Checkbox>
-                </CheckboxGroup>
-              </FormItem>
-            </i-col>-->
-          </Row> </Form
-        >*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板！
+            <!-- <i-col v-if="storeData7.length>0" span="24">
+                <FormItem>
+                  <div
+                    style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                  >
+                    <div style="margin-left:-54px;margin-right:18px">{{storeNameList[7]}}</div>
+                    <Checkbox
+                      :indeterminate="indeterminate7"
+                      :value="checkAll7"
+                      @click.prevent.native="handleCheckAll(7)"
+                    >全选/反选</Checkbox>
+                  </div>
+                  <CheckboxGroup v-model="storeIds" @on-change="checkAllGroupChange7">
+                    <Checkbox
+                      v-for="item in storeData7"
+                      ref="checkBox"
+                      :key="item.storeId"
+                      :label="item.storeId"
+                    >{{ item.storeName }}</Checkbox>
+                  </CheckboxGroup>
+                </FormItem>
+              </i-col>-->
+          </Row>
+        </Form>*Tips：请先选择要关联的优惠券，然后输入关联配置信息，不可关联多个优惠券模板！
         <span
-          v-if="this.hdCouponType === '新品上市活动券'"
+          v-if="hdCouponType === '新品上市活动券'"
           style="color: #ff3861"
-          >关联活动商品可点击查看商品信息！</span
-        >
+        >关联活动商品可点击查看商品信息！</span>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
           @click="handleTemplateEdit"
-          >确定</Button
         >
+          确定
+        </Button>
       </div>
     </Modal>
 
@@ -1710,22 +1778,28 @@
           <Row class-name="mb20">
             <i-col span="12">
               <Row>
-                <i-col span="8">优惠券名称:</i-col>
-                <i-col span="16">{{
-                  currentTableRowSelected.couponName
-                }}</i-col>
+                <i-col span="8">
+                  优惠券名称:
+                </i-col>
+                <i-col span="16">
+                  {{ currentTableRowSelected.couponName }}
+                </i-col>
               </Row>
             </i-col>
             <i-col span="12">
               <Row>
-                <i-col span="8">优惠券类型:</i-col>
+                <i-col span="8">
+                  优惠券类型:
+                </i-col>
                 <i-col
                   v-if="
                     currentTableRowSelected.couponType === 'FULL_CUT_COUPON'
                   "
                   span="16"
                 >
-                  <tag color="magenta">{{ "满减券" }}</tag>
+                  <tag color="magenta">
+                    {{ "满减券" }}
+                  </tag>
                 </i-col>
                 <i-col
                   v-else-if="
@@ -1733,7 +1807,9 @@
                   "
                   span="16"
                 >
-                  <tag color="orange">{{ "折扣券" }}</tag>
+                  <tag color="orange">
+                    {{ "折扣券" }}
+                  </tag>
                 </i-col>
                 <i-col
                   v-else-if="
@@ -1741,7 +1817,9 @@
                   "
                   span="16"
                 >
-                  <tag color="cyan">{{ "现金券" }}</tag>
+                  <tag color="cyan">
+                    {{ "现金券" }}
+                  </tag>
                 </i-col>
                 <i-col
                   v-else-if="
@@ -1749,13 +1827,16 @@
                   "
                   span="16"
                 >
-                  <tag color="cyan">{{ "运费券" }}</tag>
+                  <tag color="cyan">
+                    {{ "运费券" }}
+                  </tag>
                 </i-col>
                 <i-col
                   v-else-if="currentTableRowSelected.couponType === null"
                   span="16"
-                  >{{ "N/A" }}</i-col
                 >
+                  {{ "N/A" }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
@@ -1763,27 +1844,30 @@
           <Row class-name="mb20">
             <i-col span="12">
               <Row>
-                <i-col span="8">优惠/折扣额度:</i-col>
+                <i-col span="8">
+                  优惠/折扣额度:
+                </i-col>
                 <i-col
                   v-if="
                     currentTableRowSelected.couponType === 'DISCOUNT_COUPON'
                   "
                   span="16"
-                  >{{
-                    currentTableRowSelected.couponFee | fenToDiscountFilters
-                  }}</i-col
                 >
-                <i-col v-else span="16">{{
-                  currentTableRowSelected.couponFee | fenToYuanDot2Filters
-                }}</i-col>
+                  {{ currentTableRowSelected.couponFee | fenToDiscountFilters }}
+                </i-col>
+                <i-col v-else span="16">
+                  {{ currentTableRowSelected.couponFee | fenToYuanDot2Filters }}
+                </i-col>
               </Row>
             </i-col>
             <i-col span="12">
               <Row>
-                <i-col span="8">最小购买金额:</i-col>
-                <i-col span="16">{{
-                  currentTableRowSelected.minBuyFee | fenToYuanDot2Filters
-                }}</i-col>
+                <i-col span="8">
+                  最小购买金额:
+                </i-col>
+                <i-col span="16">
+                  {{ currentTableRowSelected.minBuyFee | fenToYuanDot2Filters }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
@@ -1791,52 +1875,71 @@
           <Row class-name="mb20">
             <i-col span="12">
               <Row>
-                <i-col span="8">优惠券状态:</i-col>
+                <i-col span="8">
+                  优惠券状态:
+                </i-col>
                 <i-col
                   v-if="currentTableRowSelected.couponStatus === 'VALID'"
                   span="16"
                 >
-                  <tag color="success">{{ "有效" }}</tag>
+                  <tag color="success">
+                    {{ "有效" }}
+                  </tag>
                 </i-col>
                 <i-col
                   v-else-if="currentTableRowSelected.couponStatus === 'INVALID'"
                   span="16"
                 >
-                  <tag color="error">{{ "无效" }}</tag>
+                  <tag color="error">
+                    {{ "无效" }}
+                  </tag>
                 </i-col>
                 <i-col
                   v-else-if="currentTableRowSelected.couponStatus === null"
                   span="16"
-                  >{{ "N/A" }}</i-col
                 >
+                  {{ "N/A" }}
+                </i-col>
               </Row>
             </i-col>
             <i-col span="12">
               <Row>
-                <i-col span="8">券有效期类型:</i-col>
-                <i-col span="16">{{
-                  currentTableRowSelected.validDateType | validDateTypeFilter
-                }}</i-col>
+                <i-col span="8">
+                  券有效期类型:
+                </i-col>
+                <i-col span="16">
+                  {{
+                    currentTableRowSelected.validDateType | validDateTypeFilter
+                  }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
           <Row
             v-show="
               currentTableRowSelected.validDateType == 'UN_FIXED_DATE' &&
-              currentTableRowSelected.source == 'SMALL'
+                currentTableRowSelected.source == 'SMALL'
             "
             class-name="mb20"
           >
             <i-col span="12">
               <Row>
-                <i-col span="8">生效开始:</i-col>
-                <i-col span="16">{{ currentTableRowSelected.beginDay }}</i-col>
+                <i-col span="8">
+                  生效开始:
+                </i-col>
+                <i-col span="16">
+                  {{ currentTableRowSelected.beginDay }}
+                </i-col>
               </Row>
             </i-col>
             <i-col span="12">
               <Row>
-                <i-col span="8">有效天数:</i-col>
-                <i-col span="16">{{ currentTableRowSelected.endDay }}</i-col>
+                <i-col span="8">
+                  有效天数:
+                </i-col>
+                <i-col span="16">
+                  {{ currentTableRowSelected.endDay }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
@@ -1844,24 +1947,28 @@
           <Row
             v-show="
               currentTableRowSelected.validDateType == 'FIXED_DATE' &&
-              currentTableRowSelected.source == 'SMALL'
+                currentTableRowSelected.source == 'SMALL'
             "
             class-name="mb20"
           >
             <i-col span="12">
               <Row>
-                <i-col span="8">生效时间:</i-col>
-                <i-col span="16">{{
-                  currentTableRowSelected.effectiveStartTime
-                }}</i-col>
+                <i-col span="8">
+                  生效时间:
+                </i-col>
+                <i-col span="16">
+                  {{ currentTableRowSelected.effectiveStartTime }}
+                </i-col>
               </Row>
             </i-col>
             <i-col span="12">
               <Row>
-                <i-col span="8">失效时间:</i-col>
-                <i-col span="16">{{
-                  currentTableRowSelected.effectiveEndTime
-                }}</i-col>
+                <i-col span="8">
+                  失效时间:
+                </i-col>
+                <i-col span="16">
+                  {{ currentTableRowSelected.effectiveEndTime }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
@@ -1869,18 +1976,24 @@
           <Row class-name="mb20">
             <i-col span="12">
               <Row>
-                <i-col span="8">券使用范围:</i-col>
+                <i-col span="8">
+                  券使用范围:
+                </i-col>
                 <i-col
                   v-if="currentTableRowSelected.couponScope === 'STORE'"
                   span="16"
                 >
-                  <tag color="magenta">{{ "门店" }}</tag>
+                  <tag color="magenta">
+                    {{ "门店" }}
+                  </tag>
                 </i-col>
                 <i-col
                   v-else-if="currentTableRowSelected.couponScope === 'SMALL'"
                   span="16"
                 >
-                  <tag color="cyan">{{ "商城" }}</tag>
+                  <tag color="cyan">
+                    {{ "商城" }}
+                  </tag>
                 </i-col>
                 <i-col
                   v-else-if="
@@ -1888,21 +2001,28 @@
                   "
                   span="16"
                 >
-                  <tag color="orange">{{ "全场通用" }}</tag>
+                  <tag color="orange">
+                    {{ "全场通用" }}
+                  </tag>
                 </i-col>
                 <i-col
                   v-else-if="currentTableRowSelected.couponScope === null"
                   span="16"
-                  >{{ "N/A" }}</i-col
                 >
+                  {{ "N/A" }}
+                </i-col>
               </Row>
             </i-col>
             <i-col span="12">
               <Row>
-                <i-col span="8">券使用限制:</i-col>
-                <i-col span="16">{{
-                  currentTableRowSelected.useLimitType | couponUseLimitFilter
-                }}</i-col>
+                <i-col span="8">
+                  券使用限制:
+                </i-col>
+                <i-col span="16">
+                  {{
+                    currentTableRowSelected.useLimitType | couponUseLimitFilter
+                  }}
+                </i-col>
               </Row>
             </i-col>
           </Row>
@@ -1923,23 +2043,30 @@
               </FormItem>
             </Row>
           </i-col>
-        </Row> </Form
-      >*Tips：请输入需发券手机号码，多个号码用
+        </Row>
+      </Form>*Tips：请输入需发券手机号码，多个号码用
       <b style="color: red">英文逗号</b>
       分隔
       <Row v-show="failPhone.length > 0" class="mt10">
-        <i-col span="6">发送失败手机号：</i-col>
-        <i-col span="22" class="brand-red">{{ failPhone.join(",") }}</i-col>
+        <i-col span="6">
+          发送失败手机号：
+        </i-col>
+        <i-col span="22" class="brand-red">
+          {{ failPhone.join(",") }}
+        </i-col>
       </Row>
       <div slot="footer">
-        <Button @click="handlePhonesClose">关闭</Button>
+        <Button @click="handlePhonesClose">
+          关闭
+        </Button>
         <Button
           v-once
           :loading="modalViewLoading"
           type="primary"
           @click="handleSubmitPhones"
-          >确定</Button
         >
+          确定
+        </Button>
       </div>
     </Modal>
 
@@ -1959,8 +2086,8 @@
             <FormItem>
               <tables
                 ref="tables"
-                :columns="productColumns"
                 v-model="productData"
+                :columns="productColumns"
                 search-place="top"
                 searchable
                 highlight-row
@@ -2021,17 +2148,282 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleGoodsClose">关闭</Button>
+        <Button @click="handleGoodsClose">
+          关闭
+        </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
           @click="handleGoodsSubmit"
-          >确认</Button
         >
+          确认
+        </Button>
       </div>
     </Modal>
+
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" />
+      <img :src="imgUploadViewItem" style="width: 100%">
+    </Modal>
+
+    <!-- 商品规格展示 -->
+    <Modal v-model="modalGoodsStandard" :mask-closable="false" :width="700">
+      <p slot="header">
+        <span>商品规格详情</span>
+      </p>
+      <div class="modal-content">
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                商品ID:
+              </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.productId }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                商品名称:
+              </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.baseProductName }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                商品分类:
+              </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.groupName }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                基础单位:
+              </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.baseUnit }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                商品编号:
+              </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.productCode }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                商品条码:
+              </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.baseBarcode }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                商品主图:
+              </i-col>
+              <i-col span="16">
+                <img
+                  :src="productStandardDetail.baseImage"
+                  width="100"
+                  height="100"
+                >
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                商品描述:
+              </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.baseProductDescription }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Divider orientation="center">
+          商品规格
+        </Divider>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                上架商品名称:
+              </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.productName }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                上架商品描述:
+              </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.productDescription }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                上架商品主图:
+              </i-col>
+              <i-col v-if="productStandardDetail.image" span="16">
+                <img
+                  :src="productStandardDetail.image"
+                  width="100"
+                  height="100"
+                >
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                商品条码:
+              </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.barcode }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                商品状态:
+              </i-col>
+              <i-col span="16">
+                {{
+                  productStandardDetail.shelvesStatus | customPlanStatusFilters
+                }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                商品规格:
+              </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.specification }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                数量/重量:
+              </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.standardQty }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                商品原价:
+              </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.price | fenToYuanDot2Filters }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                售卖价格:
+              </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.salePrice | fenToYuanDot2Filters }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <!-- <Row>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">SVIP价格:</i-col>
+              <i-col span="16">{{ productStandardDetail.svipPrice | fenToYuanDot2Filters }}</i-col>
+            </Row>
+          </i-col>
+        </Row>-->
+
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                商品单位:
+              </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.productUnit }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                商品排序:
+              </i-col>
+              <i-col span="16">
+                {{ productStandardDetail.rank }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+      </div>
+      <div slot="footer">
+        <Button type="primary" @click="handleGoodClose">
+          关闭
+        </Button>
+      </div>
+    </Modal>
+
+    <Modal
+      v-model="deleteAffirm"
+      title="正在进行删除操作"
+      @on-ok="affirmOk"
+      @on-cancel="affirmCancel"
+    >
+      <p>
+        是否确认删除规格ID为
+        <b style="color: #ff3861">{{ deleteStandardId }}</b>
+        的商品?
+      </p>
     </Modal>
     <!-- 商品规格展示 -->
     <Modal v-model="modalGoodsStandard" :mask-closable="false" :width="700">
@@ -2230,9 +2622,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import IViewUpload from "_c/iview-upload";
-import _ from "lodash";
+import Tables from '_c/tables';
+import IViewUpload from '_c/iview-upload';
 import {
   getCouponPagess,
   deleteCouponPage,
@@ -2243,21 +2634,21 @@ import {
   getHdCouponActivitiesPages,
   getSystemParameter,
   getProductStandardsPages,
-  getGoodsStandard,
-  getAreaStorePages,
-} from "@/api/mini-program";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+  getGoodsStandard
+} from '@/api/mini-program';
+import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import {
   couponStatusConvert,
   couponTypeConvert,
   couponScopeConvert,
   couponUseLimitConvert,
-  userScopeConvert,
-  customPlanStatusConvert,
-} from "@/libs/converStatus";
+  expandTypeConvert,
+  customPlanStatusConvert
+} from '@/libs/converStatus';
 import {
   couponStatusEnum,
   couponTypeEnum,
@@ -2265,24 +2656,23 @@ import {
   couponUseLimitEnum,
   validDateTypeEnum,
   userScopeEnum,
-  relationStoreTypeEnum,
-} from "@/libs/enumerate";
+  relationStoreTypeEnum
+} from '@/libs/enumerate';
 import {
   compareData,
-  getSmallCouponActivity,
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber,
   replaceByTag,
   replaceByTab,
   HdDiscount,
-  compareCouponData,
-} from "@/libs/util";
+  compareCouponData
+} from '@/libs/util';
 
 const relationDetail = {
   id: 0,
   activityCouponId: 0,
-  couponName: "",
+  couponName: '',
   couponType: null,
   couponFee: 0,
   minBuyFee: 0,
@@ -2291,79 +2681,55 @@ const relationDetail = {
   effectiveEndTime: null,
   couponLimit: 0,
   receiveCount: 0,
-  couponRules: "",
-  couponScope: "STORE",
+  couponRules: '',
+  couponScope: 'STORE',
   useLimitType: null,
   hdActivityId: 0,
-  validDateType: "UN_FIXED_DATE",
-  userScope: "ALL",
+  validDateType: 'UN_FIXED_DATE',
+  userScope: 'ALL',
   receiveLimit: 0,
   beginDay: 0,
   endDay: 0,
   maxDiscountFee: null,
   rank: 0,
-  phones: "",
+  phones: '',
   stores: null,
-  relationStoreType: "ALL",
-  couponStatus: "VALID",
-  couponBusinessType: "",
-};
-const productRowData = {
-  productStandardId: "",
-  productId: "",
-  barcode: "",
-  productCode: "",
-  productName: "",
-  shelvesStatus: "VALID",
-  minPrice: "",
-  maxPrice: "",
-  page: 1,
-  rows: 10,
-  expandType: "IGNORE_TYPE",
-};
-const couponTemplateDetail = {
-  id: 0,
-  couponName: "",
-  couponType: null,
-  couponFee: 0,
-  minBuyFee: 0,
-  couponStatus: null,
-  couponImage: "",
-  createUser: "",
-  createTime: null,
-  couponRules: "",
-  couponScope: null,
+  relationStoreType: 'ALL',
+  couponStatus: 'VALID',
+  couponBusinessType: '',
+  cityCode: '0731'
 };
 
-const hdCouponTemplateDetail = {
-  activityId: 0,
-  beginDate: null,
-  endDate: null,
-  couponName: "",
-  couponRemark: "",
-  couponType: "",
-  faceValue: 0,
-  price: 0,
-  useRule: "",
-  couponStatus: "VALID",
+const productRowData = {
+  productStandardId: '',
+  productId: '',
+  barcode: '',
+  productCode: '',
+  productName: '',
+  shelvesStatus: 'VALID',
+  minPrice: '',
+  maxPrice: '',
+  page: 1,
+  rows: 10,
+  expandType: 'IGNORE_TYPE'
 };
 
 const searchRowData = {
-  couponBusinessType: "MANUAL_SEND",
+  couponBusinessType: 'MANUAL_SEND',
   page: 1,
   rows: 10,
-  sidx: "createTime",
-  sort: "desc",
+  sidx: 'createTime',
+  sort: 'desc'
 };
 
 const templateRowData = {
   couponName: null,
   couponType: null,
-  couponStatus: "VALID",
+  couponStatus: 'VALID',
   page: 1,
   rows: 5,
-  sidx: "create_time",
-  sort: "desc",
+  sidx: 'create_time',
+  sort: 'desc'
 };
 
 const hdTemplateRowData = {
@@ -2371,7 +2737,7 @@ const hdTemplateRowData = {
   sortKey: null,
   desc: null,
   platformId: null,
-  activityTypes: ["component"],
+  activityTypes: ['component'],
   activityId: null,
   page: 1,
   rows: 5,
@@ -2379,116 +2745,116 @@ const hdTemplateRowData = {
 
 const dataColumns = [
   {
-    title: "优惠券名称",
-    align: "center",
-    key: "couponName",
-    minWidth: 150,
+    title: '优惠券名称',
+    align: 'center',
+    key: 'couponName',
+    minWidth: 150
   },
   {
-    title: "券类型",
-    align: "center",
-    key: "couponType",
+    title: '券类型',
+    align: 'center',
+    key: 'couponType',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.couponType === "FULL_CUT_COUPON") {
+      if (row.couponType === 'FULL_CUT_COUPON') {
         return (
           <div>
-            <tag color="magenta">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='magenta'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
-      } else if (row.couponType === "DISCOUNT_COUPON") {
+      } else if (row.couponType === 'DISCOUNT_COUPON') {
         return (
           <div>
-            <tag color="orange">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='orange'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
-      } else if (row.couponType === "CASH_COUPON") {
+      } else if (row.couponType === 'CASH_COUPON') {
         return (
           <div>
-            <tag color="cyan">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='cyan'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
-      } else if (row.couponType === "FREIGHT_COUPON") {
+      } else if (row.couponType === 'FREIGHT_COUPON') {
         return (
           <div>
-            <tag color="blue">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='blue'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
       }
       return <div>{row.couponType}</div>;
     },
-    minWidth: 100,
+    minWidth: 100
   },
   {
-    title: "优惠/折扣额度",
-    align: "center",
-    key: "couponFee",
+    title: '优惠/折扣额度',
+    align: 'center',
+    key: 'couponFee',
     minWidth: 140,
     render(h, params) {
       const { row } = params;
-      if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{row.couponFee / 10 + "折"}</div>;
+      if (row.couponType === 'DISCOUNT_COUPON') {
+        return <div>{row.couponFee / 10 + '折'}</div>;
       } else {
         return <div>{fenToYuanDot2(params.row.couponFee)}</div>;
       }
     },
   },
   {
-    title: "最小购买金额",
-    align: "center",
-    key: "minBuyFee",
+    title: '最小购买金额',
+    align: 'center',
+    key: 'minBuyFee',
     minWidth: 130,
     render(h, params) {
-      return h("div", fenToYuanDot2(params.row.minBuyFee));
-    },
+      return h('div', fenToYuanDot2(params.row.minBuyFee));
+    }
   },
   {
-    title: "最高优惠金额",
-    align: "center",
-    key: "maxDiscountFee",
+    title: '最高优惠金额',
+    align: 'center',
+    key: 'maxDiscountFee',
     minWidth: 130,
     render(h, params) {
       const { row } = params;
       if (row.maxDiscountFee != null) {
         return <div>{fenToYuanDot2(row.maxDiscountFee)}</div>;
       } else {
-        return <div>{"N/A"}</div>;
+        return <div>{'N/A'}</div>;
       }
-    },
+    }
   },
   {
-    title: "佣金比例",
-    align: "center",
-    key: "commissionScale",
+    title: '佣金比例',
+    align: 'center',
+    key: 'commissionScale',
     minWidth: 100,
     render(h, params) {
       const { row } = params;
       if (row.commissionScale != null) {
-        return <div>{row.commissionScale + "%"}</div>;
+        return <div>{row.commissionScale + '%'}</div>;
       } else {
-        return <div>{"N/A"}</div>;
+        return <div>{'N/A'}</div>;
       }
-    },
+    }
   },
   {
-    title: "券状态",
-    align: "center",
-    key: "couponStatus",
+    title: '券状态',
+    align: 'center',
+    key: 'couponStatus',
     minWidth: 90,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.couponStatus === "VALID") {
+      if (row.couponStatus === 'VALID') {
         return (
           <div>
-            <tag color="success">
+            <tag color='success'>
               {couponStatusConvert(row.couponStatus).label}
             </tag>
           </div>
         );
-      } else if (row.couponStatus === "INVALID") {
+      } else if (row.couponStatus === 'INVALID') {
         return (
           <div>
-            <tag color="error">
+            <tag color='error'>
               {couponStatusConvert(row.couponStatus).label}
             </tag>
           </div>
@@ -2498,32 +2864,32 @@ const dataColumns = [
     },
   },
   {
-    title: "使用范围",
-    align: "center",
-    key: "couponScope",
+    title: '使用范围',
+    align: 'center',
+    key: 'couponScope',
     minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.couponScope === "STORE") {
+      if (row.couponScope === 'STORE') {
         return (
           <div>
-            <tag color="magenta">
+            <tag color='magenta'>
               {couponScopeConvert(row.couponScope).label}
             </tag>
           </div>
         );
-      } else if (row.couponScope === "STORE_AND_SMALL") {
+      } else if (row.couponScope === 'STORE_AND_SMALL') {
         return (
           <div>
-            <tag color="orange">
+            <tag color='orange'>
               {couponScopeConvert(row.couponScope).label}
             </tag>
           </div>
         );
-      } else if (row.couponScope === "SMALL") {
+      } else if (row.couponScope === 'SMALL') {
         return (
           <div>
-            <tag color="cyan">{couponScopeConvert(row.couponScope).label}</tag>
+            <tag color='cyan'>{couponScopeConvert(row.couponScope).label}</tag>
           </div>
         );
       }
@@ -2531,19 +2897,19 @@ const dataColumns = [
     },
   },
   {
-    title: "使用限制",
-    align: "center",
-    key: "useLimitType",
+    title: '使用限制',
+    align: 'center',
+    key: 'useLimitType',
     minWidth: 100,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.useLimitType === "SMALL_ALL") {
+      if (row.useLimitType === 'SMALL_ALL') {
         return <div>{couponUseLimitConvert(row.useLimitType).label}</div>;
-      } else if (row.useLimitType === "PART_GOODS") {
+      } else if (row.useLimitType === 'PART_GOODS') {
         return <div>{couponUseLimitConvert(row.useLimitType).label}</div>;
-      } else if (row.useLimitType === "PART_STORES") {
+      } else if (row.useLimitType === 'PART_STORES') {
         return <div>{couponUseLimitConvert(row.useLimitType).label}</div>;
-      } else if (row.useLimitType === "HD_ALL") {
+      } else if (row.useLimitType === 'HD_ALL') {
         return <div>{couponUseLimitConvert(row.useLimitType).label}</div>;
       } else {
         return <div>N/A</div>;
@@ -2551,15 +2917,15 @@ const dataColumns = [
     },
   },
   {
-    title: "来源",
-    key: "source",
-    align: "center",
+    title: '来源',
+    key: 'source',
+    align: 'center',
     minWidth: 90,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source === "SMALL") {
+      if (row.source === 'SMALL') {
         return <div>小程序</div>;
-      } else if (row.source === "HD") {
+      } else if (row.source === 'HD') {
         return <div>海鼎</div>;
       } else {
         return <div>N/A</div>;
@@ -2567,109 +2933,110 @@ const dataColumns = [
     },
   },
   {
-    title: "生效时间",
-    key: "effectiveStartTime",
-    align: "center",
+    title: '生效时间',
+    key: 'effectiveStartTime',
+    align: 'center',
     minWidth: 120,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
+      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
         return <div>{row.effectiveStartTime}</div>;
       } else if (
-        row.source == "SMALL" &&
-        row.validDateType === "UN_FIXED_DATE"
+        row.source == 'SMALL' &&
+        row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.beginDay}</div>;
-      } else if (row.source == "HD") {
-        return <div>{row.effectiveStartTime}</div>;
+      } else if (row.source == 'HD') {
+        return <div>{row.beginDay}</div>;
       } else {
         return <div>N/A</div>;
       }
     },
   },
   {
-    title: "失效时间",
-    key: "effectiveEndTime",
-    align: "center",
+    title: '失效时间',
+    key: 'effectiveEndTime',
+    align: 'center',
     minWidth: 180,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == "SMALL" && row.validDateType === "FIXED_DATE") {
+      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
         if (!compareCouponData(row.effectiveEndTime)) {
           return (
-            <div style="color:red">
-              <p>{row.effectiveEndTime + "　已过期"}</p>
+            <div style='color:red'>
+              <p>{row.effectiveEndTime + '　已过期'}</p>
             </div>
           );
         } else {
           return <div>{row.effectiveEndTime}</div>;
         }
       } else if (
-        row.source == "SMALL" &&
-        row.validDateType === "UN_FIXED_DATE"
+        row.source == 'SMALL' &&
+        row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.endDay}</div>;
-      } else if (row.source == "HD") {
-        if (!compareCouponData(row.effectiveEndTime)) {
-          return <div style="color:red">{row.effectiveEndTime + "已过期"}</div>;
-        } else {
-          return <div>{row.effectiveEndTime}</div>;
-        }
+      } else if (row.source == 'HD') {
+        return <div>{row.endDay}</div>;
+        // if (!compareCouponData(row.effectiveEndTime)) {
+        //   return <div style="color:red">{row.effectiveEndTime + "已过期"}</div>;
+        // } else {
+        //   return <div>{row.effectiveEndTime}</div>;
+        // }
       } else {
         return <div>N/A</div>;
       }
-    },
+    }
   },
   {
-    title: "操作",
-    align: "center",
+    title: '操作',
+    align: 'center',
     minWidth: 140,
-    key: "handle",
-    options: ["couponStatus", "view", "edit"],
-  },
+    key: 'handle',
+    options: ['couponStatus', 'view', 'edit']
+  }
 ];
 
 const templateColumns = [
   {
-    type: "index",
+    type: 'index',
     width: 60,
-    align: "center",
+    align: 'center'
   },
   {
-    title: "优惠券名称",
-    key: "couponName",
-    align: "center",
-    minWidth: 150,
+    title: '优惠券名称',
+    key: 'couponName',
+    align: 'center',
+    minWidth: 150
   },
   {
-    title: "券类型",
-    align: "center",
-    key: "couponType",
+    title: '券类型',
+    align: 'center',
+    key: 'couponType',
     width: 100,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.couponType === "FULL_CUT_COUPON") {
+      if (row.couponType === 'FULL_CUT_COUPON') {
         return (
           <div>
-            <tag color="magenta">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='magenta'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
-      } else if (row.couponType === "DISCOUNT_COUPON") {
+      } else if (row.couponType === 'DISCOUNT_COUPON') {
         return (
           <div>
-            <tag color="orange">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='orange'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
-      } else if (row.couponType === "CASH_COUPON") {
+      } else if (row.couponType === 'CASH_COUPON') {
         return (
           <div>
-            <tag color="cyan">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='cyan'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
-      } else if (row.couponType === "FREIGHT_COUPON") {
+      } else if (row.couponType === 'FREIGHT_COUPON') {
         return (
           <div>
-            <tag color="blue">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='blue'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
       }
@@ -2693,105 +3060,105 @@ const templateColumns = [
   //   }
   // },
   {
-    title: "优惠/折扣额度",
-    align: "center",
-    key: "couponFee",
+    title: '优惠/折扣额度',
+    align: 'center',
+    key: 'couponFee',
     width: 140,
     render(h, params) {
       const { row } = params;
-      if (row.couponType === "DISCOUNT_COUPON") {
-        return <div>{row.couponFee / 10 + "折"}</div>;
+      if (row.couponType === 'DISCOUNT_COUPON') {
+        return <div>{row.couponFee / 10 + '折'}</div>;
       } else {
         return <div>{fenToYuanDot2(params.row.couponFee)}</div>;
       }
     },
   },
   {
-    title: "最小购买金额",
-    align: "center",
-    key: "minBuyFee",
+    title: '最小购买金额',
+    align: 'center',
+    key: 'minBuyFee',
     width: 130,
     render(h, params) {
       return <div>{fenToYuanDot2(params.row.minBuyFee)}</div>;
     },
   },
   {
-    title: "最高优惠金额",
-    align: "center",
-    key: "maxDiscountFee",
+    title: '最高优惠金额',
+    align: 'center',
+    key: 'maxDiscountFee',
     width: 130,
     render(h, params) {
       if (params.row.maxDiscountFee) {
         return <div>{fenToYuanDot2(params.row.maxDiscountFee)}</div>;
       } else {
-        return <div>{"N/A"}</div>;
+        return <div>{'N/A'}</div>;
       }
-    },
+    }
   },
   {
-    title: "券状态",
-    align: "center",
-    key: "couponStatus",
+    title: '券状态',
+    align: 'center',
+    key: 'couponStatus',
     width: 90,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.couponStatus === "VALID") {
+      if (row.couponStatus === 'VALID') {
         return (
           <div>
-            <tag color="success">
+            <tag color='success'>
               {couponStatusConvert(row.couponStatus).label}
             </tag>
           </div>
         );
-      } else if (row.couponStatus === "INVALID") {
+      } else if (row.couponStatus === 'INVALID') {
         return (
           <div>
-            <tag color="error">
+            <tag color='error'>
               {couponStatusConvert(row.couponStatus).label}
             </tag>
           </div>
         );
       }
       return <div>{row.couponStatus}</div>;
-    },
-  },
+    }
+  }
 ];
 
 const hdTemplateColumns = [
   {
-    type: "index",
+    type: 'index',
     width: 60,
-    align: "center",
+    align: 'center'
   },
   {
-    title: "优惠券名称",
-    key: "couponName",
-    align: "center",
-    minWidth: 150,
+    title: '优惠券名称',
+    key: 'couponName',
+    align: 'center',
+    minWidth: 150
   },
   {
-    title: "券类型",
-    align: "center",
-    key: "couponType",
+    title: '券类型',
+    align: 'center',
+    key: 'couponType',
     width: 100,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.couponType === "FULL_CUT_COUPON") {
+      if (row.couponType === 'FULL_CUT_COUPON') {
         return (
           <div>
-            <tag color="magenta">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='magenta'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
-      } else if (row.couponType === "DISCOUNT_COUPON") {
+      } else if (row.couponType === 'DISCOUNT_COUPON') {
         return (
           <div>
-            <tag color="orange">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='orange'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
-      } else if (row.couponType === "CASH_COUPON") {
+      } else if (row.couponType === 'CASH_COUPON') {
         return (
           <div>
-            <tag color="cyan">{couponTypeConvert(row.couponType).label}</tag>
+            <tag color='cyan'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
       }
@@ -2799,9 +3166,9 @@ const hdTemplateColumns = [
     },
   },
   {
-    title: "券使用限制",
-    align: "center",
-    key: "useLimitType",
+    title: '券使用限制',
+    align: 'center',
+    key: 'useLimitType',
     width: 110,
     render: (h, params, vm) => {
       const { row } = params;
@@ -2824,15 +3191,15 @@ const hdTemplateColumns = [
   //     }
   //   }
   // },
-  //HdDiscount版本
+  // HdDiscount版本
   {
-    title: "优惠/折扣额度",
-    align: "center",
-    key: "faceValue",
+    title: '优惠/折扣额度',
+    align: 'center',
+    key: 'faceValue',
     width: 140,
     render(h, params) {
       const { row } = params;
-      if (row.couponType === "DISCOUNT_COUPON") {
+      if (row.couponType === 'DISCOUNT_COUPON') {
         const couponFee = HdDiscount(params.row.discount);
         return <div>{couponFee}</div>;
       } else {
@@ -2925,72 +3292,157 @@ const productColumns = [
     align: "center",
   },
   {
-    title: "商品单位",
-    key: "productUnit",
-    minWidth: 80,
-    align: "center",
+    title: '最小购买金额',
+    align: 'center',
+    key: 'useRule',
+    width: 130,
+    render(h, params, vm) {
+      const useRule = params.row.useRule;
+      const startIndex = useRule.indexOf('满');
+      const endIndex = useRule.indexOf('元');
+      const minBuyFee = useRule.slice(startIndex + 1, endIndex);
+      return <div>{fenToYuanDot2(minBuyFee * 100)}</div>;
+    }
   },
   {
-    title: "商品价格",
-    key: "price",
+    title: '生效时间',
+    align: 'center',
+    key: 'beginDate',
+    minWidth: 50
+  },
+  {
+    title: '失效时间',
+    align: 'center',
+    key: 'endDate',
+    minWidth: 50
+  }
+  // {
+  //   title: '用券条件',
+  //   key: 'useRule',
+  //   minWidth: 80
+  // },
+  // {
+  //   title: '券说明',
+  //   key: 'couponRemark',
+  //   minWidth: 80
+  // },
+  // {
+  //   title: '活动起始时间',
+  //   key: 'beginDate',
+  //   minWidth: 120
+  // },
+  // {
+  //   title: '活动结束时间',
+  //   key: 'endDate',
+  //   minWidth: 120
+  // }
+];
+
+const productColumns = [
+  {
+    type: 'selection',
+    key: '',
+    width: 60,
+    align: 'center',
+    fixed: 'left'
+  },
+  {
+    title: '规格ID',
+    key: 'id',
+    align: 'center',
+    minWidth: 70
+  },
+  {
+    title: '商品条码',
+    key: 'barcode',
+    minWidth: 70,
+    align: 'center'
+  },
+  {
+    title: '商品编号',
+    key: 'productCode',
+    align: 'center',
+    minWidth: 120
+  },
+  {
+    title: '商品名称',
+    key: 'productName',
+    minWidth: 100,
+    align: 'center'
+  },
+  {
+    title: '商品规格',
+    key: 'specification',
     minWidth: 80,
-    align: "center",
+    align: 'center'
+  },
+  {
+    title: '商品单位',
+    key: 'productUnit',
+    minWidth: 80,
+    align: 'center'
+  },
+  {
+    title: '商品价格',
+    key: 'price',
+    minWidth: 80,
+    align: 'center',
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.price);
       return <div>{amount}</div>;
-    },
+    }
   },
   {
-    title: "起购份数",
-    key: "startNum",
+    title: '起购份数',
+    key: 'startNum',
     minWidth: 80,
-    align: "center",
+    align: 'center'
   },
   {
-    title: "商品类型",
+    title: '商品类型',
     minWidth: 120,
-    key: "expandType",
-    align: "center",
+    key: 'expandType',
+    align: 'center',
     render: (h, params, vm) => {
       const { row } = params;
 
       if (row.productStandardExpand != null) {
-        if (row.productStandardExpand.expandType == "DISCOUNT_PRODUCT") {
+        if (row.productStandardExpand.expandType == 'DISCOUNT_PRODUCT') {
           return (
             <div>
-              <tag color="magenta">
+              <tag color='magenta'>
                 {expandTypeConvert(row.productStandardExpand.expandType).label}
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == "PULL_NEW_PRODUCT") {
+        } else if (row.productStandardExpand.expandType == 'PULL_NEW_PRODUCT') {
           return (
             <div>
-              <tag color="orange">
+              <tag color='orange'>
                 {expandTypeConvert(row.productStandardExpand.expandType).label}
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == "SECKILL_PRODUCT") {
+        } else if (row.productStandardExpand.expandType == 'SECKILL_PRODUCT') {
           return (
             <div>
-              <tag color="blue">
+              <tag color='blue'>
                 {expandTypeConvert(row.productStandardExpand.expandType).label}
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == "SHARE_PRODUCT") {
+        } else if (row.productStandardExpand.expandType == 'SHARE_PRODUCT') {
           return (
             <div>
-              <tag color="blue">
+              <tag color='blue'>
                 {expandTypeConvert(row.productStandardExpand.expandType).label}
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == "ASSIST_PRODUCT") {
+        } else if (row.productStandardExpand.expandType == 'ASSIST_PRODUCT') {
           return (
             <div>
-              <tag color="green">
+              <tag color='green'>
                 {expandTypeConvert(row.productStandardExpand.expandType).label}
               </tag>
             </div>
@@ -2999,31 +3451,31 @@ const productColumns = [
       } else {
         return (
           <div>
-            <tag color="cyan">{"普通商品"}</tag>
+            <tag color='cyan'>{'普通商品'}</tag>
           </div>
         );
       }
-    },
+    }
   },
   {
-    title: "商品状态",
+    title: '商品状态',
     minWidth: 100,
-    key: "shelvesStatus",
-    align: "center",
+    key: 'shelvesStatus',
+    align: 'center',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.shelvesStatus === "VALID") {
+      if (row.shelvesStatus === 'VALID') {
         return (
           <div>
-            <tag color="success">
+            <tag color='success'>
               {customPlanStatusConvert(row.shelvesStatus).label}
             </tag>
           </div>
         );
-      } else if (row.shelvesStatus === "INVALID") {
+      } else if (row.shelvesStatus === 'INVALID') {
         return (
           <div>
-            <tag color="error">
+            <tag color='error'>
               {customPlanStatusConvert(row.shelvesStatus).label}
             </tag>
           </div>
@@ -3031,63 +3483,64 @@ const productColumns = [
       }
       return (
         <div>
-          <tag color="primary">
+          <tag color='primary'>
             {customPlanStatusConvert(row.shelvesStatus).label}
           </tag>
         </div>
       );
-    },
-  },
+    }
+  }
 ];
+
 const relationData = {
   id: 0,
   productStandardIds: 0,
   productSectionId: 0,
-  productSectionRank: 0,
+  productSectionRank: 0
 };
+
 export default {
   components: {
     Tables,
     IViewUpload,
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin, relationStoreMixin],
   data() {
     return {
-      relationRuleInline: {
-        effectiveStartTime: [{ required: true, message: "请选择生效时间" }],
-        effectiveEndTime: [{ required: true, message: "请选择失效时间" }],
-        beginDay: [{ required: true, message: "请输入生效天数" }],
-        endDay: [{ required: true, message: "请输入失效天数" }],
-        couponScope: [{ required: false, message: "请选择券使用范围" }],
-        useLimitType: [{ required: true, message: "请选择券使用限制" }],
-        couponRules: [{ required: true, message: "请输入券使用规则" }],
-        couponStatus: [{ required: true, message: "请选择优惠券状态" }],
-        couponName: [{ required: true, message: "请输入优惠券名称" }],
-        // maxDiscountFee: [{ required: true, message: "最高优惠金额" }]
-        commissionScale: [
-          { required: true, message: "请输入佣金比例" },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^([1-4]?\d(\.[05])?|50(\.0)?)$/.test(value)) {
-                errors.push(new Error("必须为0~50的整数"));
-              }
-              callback(errors);
-            },
-          },
-        ],
-      },
       standardIdList: [],
       defaultListMain: [],
       uploadListMain: [],
+      cityList: [],
       areaList: [],
-      phones: "",
       failPhone: [],
-      goodsIndex: "",
-      deleteStandardId: "",
+      activityClassify: [],
+      standardIdsArray: [],
+      productData: [],
+      addRelationList: [],
+      couponTemplateData: [],
+      templatePageOpts: [5, 10],
+      hdCouponTemplateData: [],
       productStandardDetail: [],
+      phones: '',
+      goodsIndex: '',
+      deleteStandardId: '',
+      productTotal: 0,
+      validCoupon: 0,
+      couponTemplateTotal: 0,
+      couponHdTemplateTotal: 0,
+      hdCouponType: '手动发券',
       modalGoodsStandard: false,
       handCouponTime: false,
+      addTempDataLoading: false,
+      tempTableLoading: false,
+      createLoading: false,
+      modalPhones: false,
+      modalViewLoading: false,
+      showValidDate: true,
+      modalAdd: false,
+      modalProduct: false,
+      deleteAffirm: false,
+      currentTableRowSelected: null,
       couponStatusEnum,
       couponTypeEnum,
       couponScopeEnum,
@@ -3095,129 +3548,112 @@ export default {
       couponUseLimitEnum,
       validDateTypeEnum,
       relationStoreTypeEnum,
-      productColumns: productColumns,
       dataColumns: dataColumns,
-      templatePageOpts: [5, 10],
+      productColumns: productColumns,
       templateColumns: templateColumns,
       hdTemplateColumns: hdTemplateColumns,
-      addTempDataLoading: false,
-      tempTableLoading: false,
-      createLoading: false,
-      modalPhones: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(searchRowData),
-      currentTableRowSelected: null,
       searchTemplateRowData: _.cloneDeep(templateRowData),
       searchHdTemplateRowData: _.cloneDeep(hdTemplateRowData),
       relationDetail: _.cloneDeep(relationDetail),
       productStandardRelation: _.cloneDeep(relationData),
       addRelationDetail: _.cloneDeep(relationDetail),
       searchProductRowData: _.cloneDeep(productRowData),
-      addRelationList: [],
-      couponTemplateData: [],
-      hdCouponTemplateData: [],
-      storeNameList: [],
-      storeList: [],
-      storeData: [],
-      storeData1: [],
-      storeData2: [],
-      storeData3: [],
-      storeData4: [],
-      storeData5: [],
-      storeData6: [],
-      storeData7: [],
-      stores: [],
-      storeListData: [],
-      showStoreList: false,
-      showValidDate: true,
-      indeterminate: false,
-      indeterminate1: false,
-      indeterminate2: false,
-      indeterminate3: false,
-      indeterminate4: false,
-      indeterminate5: false,
-      indeterminate6: false,
-      indeterminate7: false,
-      checkAll: false,
-      checkAll1: false,
-      checkAll2: false,
-      checkAll3: false,
-      checkAll4: false,
-      checkAll5: false,
-      checkAll6: false,
-      checkAll7: false,
-      showStoreName: "",
-      couponTemplateTotal: 0,
-      couponHdTemplateTotal: 0,
-      modalAdd: false,
-      activityClassify: [],
-      standardIdsArray: [],
-      productData: [],
-      modalProduct: false,
-      deleteAffirm: false,
-      productTotal: 0,
-      hdCouponType: "手动发券",
+      relationRuleInline: {
+        effectiveStartTime: [{ required: false, message: '请选择生效时间' }],
+        effectiveEndTime: [{ required: false, message: '请选择失效时间' }],
+        beginDay: [{ required: false, message: '请输入生效天数' }],
+        endDay: [{ required: false, message: '请输入失效天数' }],
+        couponScope: [{ required: false, message: '请选择券使用范围' }],
+        useLimitType: [{ required: true, message: '请选择券使用限制' }],
+        couponRules: [{ required: true, message: '请输入券使用规则' }],
+        couponStatus: [{ required: true, message: '请选择优惠券状态' }],
+        couponName: [{ required: true, message: '请输入优惠券名称' }],
+        // maxDiscountFee: [{ required: true, message: "最高优惠金额" }]
+        commissionScale: [
+          { required: true, message: '请输入佣金比例' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^([1-4]?\d(\.[05])?|50(\.0)?)$/.test(value)) {
+                errors.push(new Error('必须为0~50的整数'));
+              }
+              callback(errors);
+            }
+          }
+        ]
+      }
     };
   },
   computed: {
     showBack() {
-      return (
-        this.$route.params.couponBusinessType !== "" ||
-        this.$route.params.couponBusinessType != null
-      );
+      return this.$route.params.pageStatus === 'signReward';
     },
     minBuyFeeComputed() {
       return fenToYuanDot2Number(this.relationDetail.minBuyFee);
     },
     systemCouponFixDate() {
       return (
-        this.tempModalType === "addTemplate" &&
-        this.addRelationDetail.validDateType === "FIXED_DATE"
+        this.tempModalType === 'addTemplate' &&
+        this.addRelationDetail.validDateType === 'FIXED_DATE'
       );
     },
     systemCouponUnFixDate() {
       return (
-        this.tempModalType === "addTemplate" &&
-        this.addRelationDetail.validDateType === "UN_FIXED_DATE"
+        this.tempModalType === 'addTemplate' &&
+        this.addRelationDetail.validDateType === 'UN_FIXED_DATE'
       );
     },
     maxDiscountFeeComputed() {
       return fenToYuanDot2Number(this.addRelationDetail.maxDiscountFee);
-    },
+    }
   },
   mounted() {
     this.searchRowData = _.cloneDeep(searchRowData);
     this.searchRowData.couponBusinessType = this.$route.params
       .couponBusinessType
       ? this.$route.params.couponBusinessType
-      : "MANUAL_SEND";
-    this.getStore();
+      : 'MANUAL_SEND';
     this.getTableData();
     this.getSystemParameters();
   },
   methods: {
     handleBack() {
-      this.turnToPage("small-sign-reward");
+      this.turnToPage('small-sign-reward');
     },
     statusChange(params) {
-      this.addRelationDetail = _.cloneDeep(params.row);
-      if (params.row.couponStatus === "VALID") {
-        this.addRelationDetail.couponStatus = "INVALID";
-      } else {
-        this.addRelationDetail.couponStatus = "VALID";
+      let couponIdx = 0;
+      for (const value of params.tableData) {
+        if (value.couponStatus === 'VALID') {
+          couponIdx++;
+        }
       }
-      this.editCouponPage();
+      if (
+        this.hdCouponType === '新人注册首单立减券' &&
+        params.row.couponStatus === 'INVALID' &&
+        couponIdx > 0
+      ) {
+        this.$Message.info('新人注册首单立减券只允许配置一张!');
+      } else {
+        this.addRelationDetail = _.cloneDeep(params.row);
+        if (params.row.couponStatus === 'VALID') {
+          this.addRelationDetail.couponStatus = 'INVALID';
+        } else {
+          this.addRelationDetail.couponStatus = 'VALID';
+        }
+        this.editCouponPage();
+      }
     },
     handCouponType(value) {
       const item = this.activityClassify.find((x) => value === x.indexName);
       this.hdCouponType =
-        item && item.indexValue ? item.indexValue : "手动发券";
+        item && item.indexValue ? item.indexValue : '手动发券';
       this.searchRowData.page = 1;
       this.searchLoading = true;
       this.getTableData();
       if (
-        this.hdCouponType === "老用户新人券" ||
-        this.hdCouponType === "签到礼包券"
+        this.hdCouponType === '老用户新人券' ||
+        this.hdCouponType === '签到礼包券'
       ) {
         this.handCouponTime = true;
       }
@@ -3225,21 +3661,21 @@ export default {
     handleTemplateAdd() {
       this.addRelationDetail.couponBusinessType = this.searchRowData.couponBusinessType;
       const _this = this;
-      if (this.addRelationDetail.couponName == "") {
-        this.$Message.error("请先关联一张优惠券模板!");
+      if (this.addRelationDetail.couponName == '') {
+        this.$Message.error('请先关联一张优惠券模板!');
         return false;
       }
       this.$refs.addForm.validate((valid) => {
         if (valid) {
           _this.extraValidator();
           _this.replaceTextByTag();
-          if (_this.tempModalType === "addTemplate") {
+          if (_this.tempModalType === 'addTemplate') {
             _this.createRelation();
-          } else if (_this.tempModalType === "addHdTemplate") {
+          } else if (_this.tempModalType === 'addHdTemplate') {
             _this.createHdRelation();
           }
         } else {
-          _this.$Message.error("请完善信息!");
+          _this.$Message.error('请完善信息!');
         }
       });
     },
@@ -3247,9 +3683,9 @@ export default {
       // 先清除对象
       this.resetFields();
       // 当展示的是添加系统优惠券
-      if (isShow && this.tempModalType == "addTemplate") {
-        this.addRelationDetail.couponScope = "SMALL";
-        this.addRelationDetail.useLimitType = "SMALL_ALL";
+      if (isShow && this.tempModalType == 'addTemplate') {
+        this.addRelationDetail.couponScope = 'SMALL';
+        this.addRelationDetail.useLimitType = 'SMALL_ALL';
       }
     },
     resetSearchRowData() {
@@ -3261,17 +3697,16 @@ export default {
       this.addRelationDetail = _.cloneDeep(relationDetail);
     },
     handleEdit(params) {
-      const _this = this;
-      this.stores = [];
-      this.addRelationDetail.relationStoreType = "ALL";
+      this.storeIds = [];
+      this.addRelationDetail.relationStoreType = 'ALL';
       this.standardIdsArray = [];
       this.tempModalType = this.modalType.edit;
       this.addRelationDetail = _.cloneDeep(params.row);
-      let standardIdsData = [];
+      const standardIdsData = [];
       if (this.addRelationDetail.standardIds) {
-        standardIdsData.push(this.addRelationDetail.standardIds.split(","));
+        standardIdsData.push(this.addRelationDetail.standardIds.split(','));
         standardIdsData[0].forEach((value) => {
-          const map = { label: "label", value: "value" };
+          const map = { label: 'label', value: 'value' };
           map.value = value;
           map.label = value;
           this.standardIdsArray.push(map);
@@ -3280,173 +3715,21 @@ export default {
       this.replaceTextByTab();
       if (
         this.addRelationDetail.stores !== null &&
-        this.addRelationDetail.stores !== ""
+        this.addRelationDetail.stores !== ''
       ) {
         this.showStoreList = true;
-        this.addRelationDetail.relationStoreType = "PART";
-        const stores = this.addRelationDetail.stores
-          .substring(1, this.addRelationDetail.stores.length - 1)
-          .split("][");
-        stores.forEach((element) => {
-          this.stores.push(parseInt(element));
-        });
-        // 全选/反选按钮的样式
-        let sameArray = _this.storeList[0].storeList.filter(function (item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
-
-        if (
-          sameArray.length > 0 &&
-          sameArray.length === this.storeList[0].storeList.length
-        ) {
-          this.indeterminate = false;
-          this.checkAll = true;
-        } else if (
-          sameArray.length > 0 &&
-          sameArray.length < this.storeList[0].storeList.length
-        ) {
-          this.indeterminate = true;
-          this.checkAll = false;
-        } else {
-          this.indeterminate = false;
-          this.checkAll = false;
-        }
-        let sameArray1 = _this.storeList[1].storeList.filter(function (item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray1.length > 0 &&
-          sameArray1.length === this.storeList[1].storeList.length
-        ) {
-          this.indeterminate1 = false;
-          this.checkAll1 = true;
-        } else if (
-          sameArray1.length > 0 &&
-          sameArray1.length < this.storeList[1].storeList.length
-        ) {
-          this.indeterminate1 = true;
-          this.checkAll1 = false;
-        } else {
-          this.indeterminate1 = false;
-          this.checkAll1 = false;
-        }
-        let sameArray2 = _this.storeList[2].storeList.filter(function (item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray2.length > 0 &&
-          sameArray2.length === this.storeList[2].storeList.length
-        ) {
-          this.indeterminate2 = false;
-          this.checkAll2 = true;
-        } else if (
-          sameArray2.length > 0 &&
-          sameArray2.length < this.storeList[2].storeList.length
-        ) {
-          this.indeterminate2 = true;
-          this.checkAll2 = false;
-        } else {
-          this.indeterminate2 = false;
-          this.checkAll2 = false;
-        }
-        let sameArray3 = _this.storeList[3].storeList.filter(function (item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray3.length > 0 &&
-          sameArray3.length === this.storeList[3].storeList.length
-        ) {
-          this.indeterminate3 = false;
-          this.checkAll3 = true;
-        } else if (
-          sameArray3.length > 0 &&
-          sameArray3.length < this.storeList[3].storeList.length
-        ) {
-          this.indeterminate3 = true;
-          this.checkAll3 = false;
-        } else {
-          this.indeterminate3 = false;
-          this.checkAll3 = false;
-        }
-        let sameArray4 = _this.storeList[4].storeList.filter(function (item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray4.length > 0 &&
-          sameArray4.length === this.storeList[4].storeList.length
-        ) {
-          this.indeterminate4 = false;
-          this.checkAll4 = true;
-        } else if (
-          sameArray4.length > 0 &&
-          sameArray4.length < this.storeList[4].storeList.length
-        ) {
-          this.indeterminate4 = true;
-          this.checkAll4 = false;
-        } else {
-          this.indeterminate4 = false;
-          this.checkAll4 = false;
-        }
-        let sameArray5 = _this.storeList[5].storeList.filter(function (item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray5.length > 0 &&
-          sameArray5.length === this.storeList[5].storeList.length
-        ) {
-          this.indeterminate5 = false;
-          this.checkAll5 = true;
-        } else if (
-          sameArray5.length > 0 &&
-          sameArray5.length < this.storeList[5].storeList.length
-        ) {
-          this.indeterminate5 = true;
-          this.checkAll5 = false;
-        } else {
-          this.indeterminate5 = false;
-          this.checkAll5 = false;
-        }
-        let sameArray6 = _this.storeList[6].storeList.filter(function (item) {
-          return _this.stores.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray6.length > 0 &&
-          sameArray6.length === this.storeList[6].storeList.length
-        ) {
-          this.indeterminate6 = false;
-          this.checkAll6 = true;
-        } else if (
-          sameArray6.length > 0 &&
-          sameArray6.length < this.storeList[6].storeList.length
-        ) {
-          this.indeterminate6 = true;
-          this.checkAll6 = false;
-        } else {
-          this.indeterminate6 = false;
-          this.checkAll6 = false;
-        }
-        // let sameArray7 = _this.storeList[7].storeList.filter(function (item) {
-        //   return _this.stores.indexOf(item.storeId) != -1;
-        // });
-        // if (
-        //   sameArray7.length > 0 &&
-        //   sameArray7.length === this.storeList[7].storeList.length
-        // ) {
-        //   this.indeterminate7 = false;
-        //   this.checkAll7 = true;
-        // } else if (
-        //   sameArray7.length > 0 &&
-        //   sameArray7.length < this.storeList[7].storeList.length
-        // ) {
-        //   this.indeterminate7 = true;
-        //   this.checkAll7 = false;
-        // } else {
-        //   this.indeterminate7 = false;
-        //   this.checkAll7 = false;
-        // }
+        this.addRelationDetail.relationStoreType = 'PART';
+        const storeIds = this.addRelationDetail.stores.substring(1, this.addRelationDetail.stores.length - 1).split('][');
+        storeIds.forEach((element) => { this.storeIds.push(parseInt(element)); });
+        console.log('selected storeIds:', this.storeIds);
+        const firstStoreId = this.storeIds[0];
+        // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
+        const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
+        this.addRelationDetail.cityCode = storeObj.cityCode;
+        this.getStore(true);
       } else {
         this.showStoreList = false;
-        this.addRelationDetail.relationStoreType = "ALL"; // storeIds为''默认关联的门店则是全部门店
+        this.addRelationDetail.relationStoreType = 'ALL'; // storeIds为''默认关联的门店则是全部门店
       }
       this.modalEdit = true;
     },
@@ -3457,13 +3740,13 @@ export default {
     onRelevance(params) {
       if (!this.currentTableRowSelected) {
         this.$Message.error(
-          "请用鼠标左键点击选择下方表格一行优惠券数据,才能进行手动发券"
+          '请用鼠标左键点击选择下方表格一行优惠券数据,才能进行手动发券'
         );
         return;
       }
       this.failPhone = [];
-      this.currentTableRowSelected.phones = "";
-      if (this.hdCouponType === "手动发券") {
+      this.currentTableRowSelected.phones = '';
+      if (this.hdCouponType === '手动发券') {
         this.modalPhones = true;
       }
     },
@@ -3970,7 +4253,7 @@ export default {
     handleSubmitPhones() {
       if (!this.currentTableRowSelected) {
         this.$Message.error(
-          "请用鼠标左键点击选择下方表格一行优惠券数据,才能进行手动发券"
+          '请用鼠标左键点击选择下方表格一行优惠券数据,才能进行手动发券'
         );
         return;
       }
@@ -3987,15 +4270,15 @@ export default {
     handGrandCoupon() {
       handGrandCoupon(this.currentTableRowSelected)
         .then((res) => {
-          if (res === "没有需要发券的数据") {
-            this.$Message.error("没有需要发券的数据！");
+          if (res === '没有需要发券的数据') {
+            this.$Message.error('没有需要发券的数据！');
             return;
           }
           if (res.fail.length > 0) {
-            this.$Message.error("部分用户发送失败！");
+            this.$Message.error('部分用户发送失败！');
             this.failPhone = res.fail;
           } else {
-            this.$Message.success("发送成功！");
+            this.$Message.success('发送成功！');
             this.modalPhones = false;
           }
         })
@@ -4004,8 +4287,17 @@ export default {
         });
     },
     getTableData() {
+      this.validCoupon = 0;
       getCouponPagess(this.searchRowData)
         .then((res) => {
+          if (this.hdCouponType === '新人注册首单立减券') {
+            this.validCoupon = 0;
+            for (const value of res.rows) {
+              if (value.couponStatus === 'VALID') {
+                this.validCoupon++;
+              }
+            }
+          }
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
@@ -4020,7 +4312,7 @@ export default {
         });
     },
     getSystemParameters() {
-      const code = "SEND_COUPON_TYPE";
+      const code = 'SEND_COUPON_TYPE';
       getSystemParameter(code).then((res) => {
         this.activityClassify = res.systemSettings;
       });
@@ -4084,7 +4376,7 @@ export default {
       editCouponPage(this.addRelationDetail)
         .then((res) => {
           this.modalEdit = false;
-          this.$Message.success("修改成功!");
+          this.$Message.success('修改成功!');
           this.getTableData();
         })
         .finally((res) => {
@@ -4139,14 +4431,14 @@ export default {
           this.addRelationDetail.effectiveEndTime
         )
       ) {
-        this.$Message.error("优惠券失效时间必须大于生效时间!");
+        this.$Message.error('优惠券失效时间必须大于生效时间!');
         return false;
       }
     },
     handleTemplateEdit() {
       const _this = this;
-      if (this.addRelationDetail.couponName == "") {
-        this.$Message.error("请先关联一张优惠券模板!");
+      if (this.addRelationDetail.couponName == '') {
+        this.$Message.error('请先关联一张优惠券模板!');
         return false;
       }
       this.$refs.editForm.validate((valid) => {
@@ -4160,11 +4452,10 @@ export default {
             _this.editCouponPage();
           }
         } else {
-          _this.$Message.error("请完善信息!");
+          _this.$Message.error('请完善信息!');
         }
       });
     },
-
     handleTemplateChange(currentRow, oldCurrentRow) {
       const couponTemplate = currentRow;
       this.addRelationDetail.couponName = couponTemplate.couponName;
@@ -4175,16 +4466,16 @@ export default {
       this.addRelationDetail.maxDiscountFee = currentRow.maxDiscountFee;
     },
     handleHdTemplateChange(currentRow, oldCurrentRow) {
-      const startIndex = currentRow.useRule.indexOf("满");
-      const endIndex = currentRow.useRule.indexOf("元");
+      const startIndex = currentRow.useRule.indexOf('满');
+      const endIndex = currentRow.useRule.indexOf('元');
       const minBuyFee = currentRow.useRule.slice(startIndex + 1, endIndex);
       this.addRelationDetail.useLimitType = currentRow.useLimitType;
       this.addRelationDetail.couponName = currentRow.couponName;
       this.addRelationDetail.couponType = currentRow.couponType;
       this.addRelationDetail.couponFee = currentRow.faceValue;
-      this.addRelationDetail.couponStatus = "VALID";
-      const disIndex = currentRow.couponName.indexOf("折");
-      if (currentRow.couponType === "DISCOUNT_COUPON") {
+      this.addRelationDetail.couponStatus = 'VALID';
+      const disIndex = currentRow.couponName.indexOf('折');
+      if (currentRow.couponType === 'DISCOUNT_COUPON') {
         this.addRelationDetail.couponFee =
           parseFloat(currentRow.discount) * 100;
       }
@@ -4202,12 +4493,12 @@ export default {
     },
     createRelation() {
       this.modalViewLoading = true;
-      this.addRelationDetail.source = "SMALL";
+      this.addRelationDetail.source = 'SMALL';
       createCouponPage(this.addRelationDetail)
         .then((res) => {
           this.modalViewLoading = false;
           this.modalAdd = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
@@ -4216,12 +4507,12 @@ export default {
     },
     createHdRelation() {
       this.modalViewLoading = true;
-      this.addRelationDetail.source = "HD";
+      this.addRelationDetail.source = 'HD';
       createCouponPage(this.addRelationDetail)
         .then((res) => {
           this.modalViewLoading = false;
           this.modalAdd = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
@@ -4252,18 +4543,18 @@ export default {
     },
     addCouponTemplate() {
       this.showStoreList = false;
-      this.stores = [];
+      this.storeIds = [];
       this.standardIdsArray = [];
       this.getTemplateTableData();
-      this.tempModalType = "addTemplate";
+      this.tempModalType = 'addTemplate';
       this.modalAdd = true;
     },
     addHdCouponTemplate() {
       this.showStoreList = false;
-      this.stores = [];
+      this.storeIds = [];
       this.standardIdsArray = [];
       this.getHdTemplateTableData();
-      this.tempModalType = "addHdTemplate";
+      this.tempModalType = 'addHdTemplate';
       this.modalAdd = true;
     },
     handleView(params) {
@@ -4275,24 +4566,17 @@ export default {
       this.modalView = true;
     },
     relationStore() {
-      if (
-        this.addRelationDetail.stores === null ||
-        this.addRelationDetail.stores === ""
-      ) {
-        return "全部门店";
+      if (!this.addRelationDetail.stores) {
+        return '全部门店';
       }
-      const ids = this.addRelationDetail.stores
-        .substring(1, this.addRelationDetail.stores.length - 1)
-        .split("][");
-      let list = this.storeListData;
-      let str = "";
-      if (list.length > 0) {
-        ids.forEach((id) => {
-          const item = list.find((item) => item.storeId == id);
-          str += item.storeName + ",";
-        });
-        return str.substring(0, str.length - 1);
-      }
+      const ids = this.addRelationDetail.stores.substring(1, this.addRelationDetail.stores.length - 1).split('][');
+      let str = '';
+      ids.forEach((id) => {
+        const item = this.allStoreList.find(item => item.storeId == id);
+        if (!item) { return; }
+        str += item.storeName + ',';
+      });
+      return str.substring(0, str.length - 1);
     },
     handleAddClose() {
       this.modalAdd = false;
@@ -4365,34 +4649,33 @@ export default {
     handleGoodsSubmit() {
       if (this.standardIdList.length > 0) {
         this.standardIdList[this.standardIdList.length - 1].forEach((value) => {
-          const map = { label: "label", value: "value" };
+          const map = { label: 'label', value: 'value' };
           map.value = value;
           map.label = value;
           this.standardIdsArray.push(map);
         });
         this.addRelationDetail.standardIds = this.standardIdsArray
           .map((item) => item.value)
-          .join(",");
+          .join(',');
       }
       this.modalProduct = false;
     },
     checkGoodsInfo(standardId) {
-      let standardArray = {};
+      const standardArray = {};
       standardArray.standardId = standardId;
       getGoodsStandard(standardArray)
         .then((res) => {
           this.productStandardDetail = res;
           this.modalGoodsStandard = true;
         })
-        .catch((error) => {});
     },
     handleGoodClose() {
       this.loading = false;
       this.modalGoodsStandard = false;
     },
     deleteGoods(index, standardId) {
-      this.goodsIndex = "";
-      this.deleteStandardId = "";
+      this.goodsIndex = '';
+      this.deleteStandardId = '';
       this.deleteAffirm = true;
       this.goodsIndex = index;
       this.deleteStandardId = standardId;
@@ -4401,13 +4684,13 @@ export default {
       this.standardIdsArray.splice(this.goodsIndex, 1);
       this.addRelationDetail.standardIds = this.standardIdsArray
         .map((item) => item.value)
-        .join(",");
+        .join(',');
       this.deleteAffirm = false;
     },
     affirmCancel() {
       this.deleteAffirm = false;
-    },
-  },
+    }
+  }
 };
 </script>
 

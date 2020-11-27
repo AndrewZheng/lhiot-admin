@@ -10,8 +10,12 @@
           <div class="login-con-header-left-image" />
           <div>绿航物联</div>
         </div>
-        <div style="color: black">|</div>
-        <div class="login-con-header-right">云平台管理</div>
+        <div style="color: black">
+          |
+        </div>
+        <div class="login-con-header-right">
+          云平台管理
+        </div>
       </div>
       <div class="form-con">
         <login-form @on-success-valid="handleSubmit"></login-form>
@@ -22,38 +26,36 @@
 </template>
 
 <script>
-import LoginForm from "_c/login-form";
-import { mapActions } from "vuex";
-import { getSystemHomeName } from "@/libs/util";
-import maxLogo from "@/assets/images/lhiot_logo.jpg";
+import LoginForm from '_c/login-form';
+import { mapActions } from 'vuex';
+import { getSystemHomeName } from '@/libs/util';
+import maxLogo from '@/assets/images/lhiot_logo.jpg';
 
 export default {
   components: {
-    LoginForm,
+    LoginForm
   },
   data() {
     return {
       maxLogo,
       logo:
         'this.src="' +
-        require("../../../src/assets/images/lhiot_logo.jpg") +
-        '"',
+        require('../../../src/assets/images/lhiot_logo.jpg') +
+        '"'
     };
   },
   methods: {
-    ...mapActions(["handleLogin", "getUserInfo"]),
+    ...mapActions(['handleLogin', 'getUserInfo']),
     handleSubmit({ account, password }) {
-      let storage = window.localStorage;
-      storage.clear();
       this.handleLogin({ account, password }).then((res) => {
-        sessionStorage.setItem("loginName", account);
+        sessionStorage.setItem('loginName', account);
         const name = getSystemHomeName();
         this.$router.push({
-          name,
+          name
         });
       });
-    },
-  },
+    }
+  }
 };
 </script>
 

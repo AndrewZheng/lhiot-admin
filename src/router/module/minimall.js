@@ -27,6 +27,7 @@ const miniMallRouter = [
     component: Main,
     meta: {
       hideInBread: true,
+      title: '商城小程序'
     },
     children: [{
       path: '/wechat-home',
@@ -138,6 +139,15 @@ const miniMallRouter = [
         title: '门店区域管理'
       },
       component: () => import('@/view/mini-program-manager/goods/store-area.vue')
+    },
+    {
+      path: '/small-store-city',
+      name: 'small-store-city',
+      meta: {
+        icon: 'ios-globe',
+        title: '门店城市管理'
+      },
+      component: () => import('@/view/mini-program-manager/goods/store-city.vue')
     }
     ]
   },
@@ -357,18 +367,16 @@ const miniMallRouter = [
     //   },
     //   component: () => import('@/view/mini-program-manager/activity/flashsale.vue')
     // },
-
-
-    // {
-    //   path: 'small-vip-activities-associated',
-    //   name: 'small-vip-activities-associated',
-    //   meta: {
-    //     hideInMenu: true,
-    //     icon: 'md-menu',
-    //     title: 'VIP活动关联优惠券模板'
-    //   },
-    //   component: () => import('@/view/mini-program-manager/vip/activities-associated.vue')
-    // },
+    {
+      path: 'small-vip-activities-associated',
+      name: 'small-vip-activities-associated',
+      meta: {
+        hideInMenu: true,
+        icon: 'md-menu',
+        title: 'VIP活动关联优惠券模板'
+      },
+      component: () => import('@/view/mini-program-manager/vip/activities-associated.vue')
+    },
     {
       path: '/integral-coupon',
       name: 'integral-coupon',
@@ -404,7 +412,7 @@ const miniMallRouter = [
         title: '邮费管理'
       },
       component: () => import('@/view/mini-program-manager/system/delivery-fee.vue')
-    },
+    }
 
     ]
   },
@@ -552,7 +560,7 @@ const miniMallRouter = [
           title: 'FAQ管理'
         },
         component: () => import('@/view/mini-program-manager/content/faq.vue')
-      },
+      }
     ]
   },
   {
@@ -626,6 +634,15 @@ const miniMallRouter = [
           title: '用券数据统计'
         },
         component: () => import('@/view/mini-program-manager/member/coupon-statistics.vue')
+      },
+      {
+        path: '/small-sendRedPacketStatistics',
+        name: 'small-sendRedPacketStatistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '外卖红包统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/sendRedPacketStatistics.vue')
       },
       {
         path: '/small-share-statistics',

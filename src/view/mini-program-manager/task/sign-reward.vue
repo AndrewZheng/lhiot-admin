@@ -34,14 +34,14 @@
           >
             <Option
               v-for="(item,index) in rewardTypeEnum"
-              :value="item.value"
               :key="index"
+              :value="item.value"
               class="ptb2-5"
             >{{ item.label }}</Option>
           </Select>
           <Button
             v-waves
-            :searchLoading="searchLoading"
+            :search-loading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
@@ -138,8 +138,8 @@
               >
                 <Option
                   v-for="item in rewardTypeEnum"
-                  :value="item.value"
                   :key="item.value"
+                  :value="item.value"
                   class="ptb2-5"
                 >{{ item.label }}</Option>
               </Select>
@@ -287,7 +287,7 @@ export default {
     handleConfig() {
       this.turnToPage({
         name: 'small-hand-coupon',
-        params: { couponBusinessType: 'ACTIVITY_SIGN_COUPON' }
+        params: { couponBusinessType: 'ACTIVITY_SIGN_COUPON', pageStatus: 'signReward' }
       })
     },
     handleCreate() {
