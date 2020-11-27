@@ -54,22 +54,21 @@ router.beforeEach(async(to, from, next) => {
     } else {
       console.log('hasGetInfo: ', store.getters.hasGetInfo);
       if (!store.getters.hasGetInfo) {
-        store.dispatch('generateAllMenus').then(() => {
-          console.log('getActualRouter: ', store.getters.getActualRouter);
-          router.addRoutes(store.getters.getActualRouter);
-          const sname = getSystemHomeNameNew(to.path);
-          if (sname.indexOf('-home') > 0) {
-            next({
-              name: sname,
-              replace: true
-            })
-          } else {
-            next({
-              ...to,
-              replace: true
-            });
-          }
-        });
+        await store.dispatch('generateAllMenus');
+        console.log('getActualRouter: ', store.getters.getActualRouter);
+        router.addRoutes(store.getters.getActualRouter);
+        const sname = getSystemHomeNameNew(to.path);
+        if (sname.indexOf('-home') > 0) {
+          next({
+            name: sname,
+            replace: true
+          })
+        } else {
+          next({
+            ...to,
+            replace: true
+          });
+        }
       } else {
         console.log('userPermission: ', store.getters.getUserPermission);
         if (hasPermission(store.getters.getUserPermission, to)) {
@@ -77,9 +76,8 @@ router.beforeEach(async(to, from, next) => {
           // 如果跳转的菜单有权限，那么再去获取该菜单下的所有操作权限
           const menuid = getCurrentMenuId(store.getters.getUserPermission, to);
           if (menuid > 0) {
-            store.dispatch('getBtnPermissionById', menuid).then(() => {
-              next();
-            })
+            await store.dispatch('getBtnPermissionById', menuid);
+            next();
           } else {
             next();
           }
