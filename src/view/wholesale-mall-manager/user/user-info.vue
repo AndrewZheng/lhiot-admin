@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <tables
         ref="tables"
@@ -214,7 +214,7 @@ const columns = [
     title: '注册时间',
     align: 'center',
     key: 'registerTime'
-  }
+  },
   // {
   //   title: "是否VIP",
   //   align: "center",
@@ -236,13 +236,13 @@ const columns = [
   //     }
   //   }
   // },
-  // {
-  //   title: "操作",
-  //   align: "center",
-  //   key: "handle",
-  //   width: 240,
-  //   options: ["setVip"]
-  // }
+  {
+    title: '操作',
+    align: 'center',
+    key: 'handle',
+    width: 240,
+    options: ['setVip']
+  }
 ];
 
 // v1.2.0

@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <tables
         ref="tables"
@@ -40,7 +40,7 @@
               type="primary"
               @click="handleSearch"
             >
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button
               v-waves
@@ -49,13 +49,13 @@
               type="info"
               @click="handleClear"
             >
-              <Icon type="md-refresh"/>&nbsp;清除条件
+              <Icon type="md-refresh" />&nbsp;清除条件
             </Button>
           </Row>
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addChildren">
-            <Icon type="md-add"/>创建
+            <Icon type="md-add" />创建
           </Button>
           <Poptip
             confirm
@@ -65,18 +65,18 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>删除
+              <Icon type="md-trash" />删除
             </Button>
           </Poptip>
           <!-- 多类型导出 -->
-          <BookTypeOption v-model="exportType" class="mr5"/>
+          <BookTypeOption v-model="exportType" class="mr5" />
           <Button
             :loading="downloadLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleDownload"
           >
-            <Icon type="md-download"/>导出
+            <Icon type="md-download" />导出
           </Button>
         </div>
       </tables>
@@ -179,123 +179,123 @@
         <Form ref="modalEdit" :model="productDetail" :rules="ruleInline" :label-width="80">
           <Row>
             <Col span="12">
-              <FormItem label="商品规格:" prop="specificationId">
-                <Select
-                  v-if="tempModalType===modalType.create"
-                  ref="shelfSpecificationSelect"
-                  :remote="true"
-                  :filterable="true"
-                  :remote-method="remoteMethod"
-                  :disabled="tempModalType===modalType.edit?true:false"
-                  :loading="shelfSpecificationLoading"
-                >
-                  <Option
-                    v-for="(option, index) in optionsShelfSpecification"
-                    :value="option.id"
-                    :key="index"
-                    class="pb5 pt5 pl15"
-                    @click.native="selectIndex(option)"
-                  >{{ option.specificationInfo }}</Option>
-                </Select>
-                <Input v-else :value="shelfSpecificationEditDefault" disabled></Input>
-              </FormItem>
+            <FormItem label="商品规格:" prop="specificationId">
+              <Select
+                v-if="tempModalType===modalType.create"
+                ref="shelfSpecificationSelect"
+                :remote="true"
+                :filterable="true"
+                :remote-method="remoteMethod"
+                :disabled="tempModalType===modalType.edit?true:false"
+                :loading="shelfSpecificationLoading"
+              >
+                <Option
+                  v-for="(option, index) in optionsShelfSpecification"
+                  :key="index"
+                  :value="option.id"
+                  class="pb5 pt5 pl15"
+                  @click.native="selectIndex(option)"
+                >{{ option.specificationInfo }}</Option>
+              </Select>
+              <Input v-else :value="shelfSpecificationEditDefault" disabled></Input>
+            </FormItem>
             </Col>
             <Col span="12">
-              <FormItem label="上架名称:" prop="name">
-                <Input v-model="productDetail.name" placeholder="上架名称"></Input>
-              </FormItem>
+            <FormItem label="上架名称:" prop="name">
+              <Input v-model="productDetail.name" placeholder="上架名称"></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-              <FormItem label="上架份数:" prop="shelfQty">
-                <InputNumber
-                  :min="0"
-                  v-model="productDetail.shelfQty"
-                  size="large"
-                  style="width: 160px"
-                ></InputNumber>
-              </FormItem>
+            <FormItem label="上架份数:" prop="shelfQty">
+              <InputNumber
+                v-model="productDetail.shelfQty"
+                :min="0"
+                size="large"
+                style="width: 160px"
+              ></InputNumber>
+            </FormItem>
             </Col>
             <Col span="12">
-              <FormItem label="商品排序:" prop="sorting">
-                <InputNumber
-                  :min="0"
-                  v-model="productDetail.sorting"
-                  size="large"
-                  style="width: 160px"
-                ></InputNumber>
-              </FormItem>
+            <FormItem label="商品排序:" prop="sorting">
+              <InputNumber
+                v-model="productDetail.sorting"
+                :min="0"
+                size="large"
+                style="width: 160px"
+              ></InputNumber>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="24">
-              <FormItem label="上架描述:">
-                <Input v-model="productDetail.description" placeholder="上架描述"></Input>
-              </FormItem>
+            <FormItem label="上架描述:">
+              <Input v-model="productDetail.description" placeholder="上架描述"></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-              <FormItem label="商品原价:¥" prop="originalPrice">
-                <InputNumber
-                  :min="0"
-                  :value="originalPriceComputed"
-                  placeholder="商品原价"
-                  @on-change="originalPriceInputNumberOnchange"
-                ></InputNumber>
-              </FormItem>
+            <FormItem label="商品原价:¥" prop="originalPrice">
+              <InputNumber
+                :min="0"
+                :value="originalPriceComputed"
+                placeholder="商品原价"
+                @on-change="originalPriceInputNumberOnchange"
+              ></InputNumber>
+            </FormItem>
             </Col>
             <Col span="12">
-              <FormItem label="商品特价:¥" prop="price">
-                <InputNumber
-                  :min="0"
-                  :value="priceComputed"
-                  placeholder="商品特价"
-                  @on-change="priceInputNumberOnchange"
-                ></InputNumber>
-              </FormItem>
+            <FormItem label="商品特价:¥" prop="price">
+              <InputNumber
+                :min="0"
+                :value="priceComputed"
+                placeholder="商品特价"
+                @on-change="priceInputNumberOnchange"
+              ></InputNumber>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-              <FormItem label="是否上架:" prop="shelfStatus">
-                <Select
-                  :value="productDetail.shelfStatus"
-                  style="width: 100px"
-                  @on-change="useAbleUniteChange"
+            <FormItem label="是否上架:" prop="shelfStatus">
+              <Select
+                :value="productDetail.shelfStatus"
+                style="width: 100px"
+                @on-change="useAbleUniteChange"
+              >
+                <Option
+                  v-for="(item,index) in useAble"
+                  :key="index"
+                  :value="item.value"
+                  class="ptb2-5"
+                  style="padding-left: 5px"
                 >
-                  <Option
-                    v-for="(item,index) in useAble"
-                    :value="item.value"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px"
-                  >
-                    {{ item.label
-                    }}
-                  </Option>
-                </Select>
-              </FormItem>
+                  {{ item.label
+                  }}
+                </Option>
+              </Select>
+            </FormItem>
             </Col>
             <Col span="12">
-              <FormItem label="应用类型:" prop="applicationType">
-                <Select
-                  :value="productDetail.applicationType"
-                  :disabled="applicationType===null?false:true"
-                  clearable
-                  style="width: 100px"
-                  @on-change="applicationTypeChange"
-                >
-                  <Option
-                    v-for="(item,index) in applicationTypeList"
-                    :value="item.code"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px"
-                  >{{ item.name }}</Option>
-                </Select>
-              </FormItem>
+            <FormItem label="应用类型:" prop="applicationType">
+              <Select
+                :value="productDetail.applicationType"
+                :disabled="applicationType===null?false:true"
+                clearable
+                style="width: 100px"
+                @on-change="applicationTypeChange"
+              >
+                <Option
+                  v-for="(item,index) in applicationTypeList"
+                  :key="index"
+                  :value="item.code"
+                  class="ptb2-5"
+                  style="padding-left: 5px"
+                >{{ item.name }}</Option>
+              </Select>
+            </FormItem>
             </Col>
           </Row>
           <Row>
@@ -329,19 +329,19 @@
           </Row>
           <Row v-show="false">
             <Col span="24">
-              <FormItem label="上架板块:">
-                <div v-for="item in uiPositionData" :key="item.id">
-                  <div>{{ item.description }}:</div>
-                  <CheckboxGroup v-model="model" @on-change="checkAllGroupChange">
-                    <Checkbox
-                      v-for="innerItem in item.productSections"
-                      ref="checkBox"
-                      :key="innerItem.id"
-                      :label="innerItem.id"
-                    >{{ innerItem.sectionName }}</Checkbox>
-                  </CheckboxGroup>
-                </div>
-              </FormItem>
+            <FormItem label="上架板块:">
+              <div v-for="item in uiPositionData" :key="item.id">
+                <div>{{ item.description }}:</div>
+                <CheckboxGroup v-model="model" @on-change="checkAllGroupChange">
+                  <Checkbox
+                    v-for="innerItem in item.productSections"
+                    ref="checkBox"
+                    :key="innerItem.id"
+                    :label="innerItem.id"
+                  >{{ innerItem.sectionName }}</Checkbox>
+                </CheckboxGroup>
+              </div>
+            </FormItem>
             </Col>
           </Row>
         </Form>
@@ -358,9 +358,9 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
-import IViewUpload from "_c/iview-upload";
+import Tables from '_c/tables';
+import _ from 'lodash';
+import IViewUpload from '_c/iview-upload';
 import {
   getuiPositionsPages,
   createProductShelve,
@@ -368,43 +368,43 @@ import {
   editProductShelve,
   getProductShelvesPages,
   getProductSpecificationsPages
-} from "@/api/fruitermaster";
-import { getDictionary } from "@/api/basic";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { positionType, YNEnum } from "@/libs/enumerate";
+} from '@/api/fruitermaster';
+import { getDictionary } from '@/api/basic';
+import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import { positionType, YNEnum } from '@/libs/enumerate';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber
-} from "@/libs/util";
-import BookTypeOption from "_c/book-type-option";
-import { onSaleStatusConvert } from "@/libs/converStatus";
+} from '@/libs/util';
+import BookTypeOption from '_c/book-type-option';
+import { onSaleStatusConvert } from '@/libs/converStatus';
 
 const productDetail = {
   id: 0,
-  image: "",
-  name: "",
+  image: '',
+  name: '',
   originalPrice: null,
   price: null,
-  productName: "",
-  productImage: "",
+  productName: '',
+  productImage: '',
   productSpecification: null,
-  sectionIds: "",
+  sectionIds: '',
   shelfQty: 0,
-  shelfStatus: "",
-  shelfType: "NORMAL",
+  shelfStatus: '',
+  shelfType: 'NORMAL',
   sorting: 0,
   specificationId: 0,
-  specificationInfo: "",
+  specificationInfo: '',
   applicationType: null
 };
 const roleRowData = {
   applicationType: null,
-  productName: "",
-  name: "",
+  productName: '',
+  name: '',
   page: 1,
   rows: 10
 };
@@ -418,71 +418,71 @@ export default {
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
     const validatePrice = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("特价不能为空"));
+      if (value === '') {
+        callback(new Error('特价不能为空'));
       } else if (value <= 0) {
-        callback(new Error("特价不能小于0"));
+        callback(new Error('特价不能小于0'));
       } else if (value > this.productDetail.originalPrice) {
-        callback(new Error("特价不能大于原价"));
+        callback(new Error('特价不能大于原价'));
       } else {
         callback();
       }
     };
     return {
-      shelfSpecificationEditDefault: "",
+      shelfSpecificationEditDefault: '',
       shelfSpecificationLoading: false,
       optionsShelfSpecification: [],
       list: [
-        "Alabama",
-        "Alaska",
-        "Arizona",
-        "Arkansas",
-        "California",
-        "Colorado",
-        "Connecticut",
-        "Delaware",
-        "Florida",
-        "Georgia",
-        "Hawaii",
-        "Idaho",
-        "Illinois",
-        "Indiana",
-        "Iowa",
-        "Kansas",
-        "Kentucky",
-        "Louisiana",
-        "Maine",
-        "Maryland",
-        "Massachusetts",
-        "Michigan",
-        "Minnesota",
-        "Mississippi",
-        "Missouri",
-        "Montana",
-        "Nebraska",
-        "Nevada",
-        "New hampshire",
-        "New jersey",
-        "New mexico",
-        "New york",
-        "North carolina",
-        "North dakota",
-        "Ohio",
-        "Oklahoma",
-        "Oregon",
-        "Pennsylvania",
-        "Rhode island",
-        "South carolina",
-        "South dakota",
-        "Tennessee",
-        "Texas",
-        "Utah",
-        "Vermont",
-        "Virginia",
-        "Washington",
-        "West virginia",
-        "Wisconsin",
-        "Wyoming"
+        'Alabama',
+        'Alaska',
+        'Arizona',
+        'Arkansas',
+        'California',
+        'Colorado',
+        'Connecticut',
+        'Delaware',
+        'Florida',
+        'Georgia',
+        'Hawaii',
+        'Idaho',
+        'Illinois',
+        'Indiana',
+        'Iowa',
+        'Kansas',
+        'Kentucky',
+        'Louisiana',
+        'Maine',
+        'Maryland',
+        'Massachusetts',
+        'Michigan',
+        'Minnesota',
+        'Mississippi',
+        'Missouri',
+        'Montana',
+        'Nebraska',
+        'Nevada',
+        'New hampshire',
+        'New jersey',
+        'New mexico',
+        'New york',
+        'North carolina',
+        'North dakota',
+        'Ohio',
+        'Oklahoma',
+        'Oregon',
+        'Pennsylvania',
+        'Rhode island',
+        'South carolina',
+        'South dakota',
+        'Tennessee',
+        'Texas',
+        'Utah',
+        'Vermont',
+        'Virginia',
+        'Washington',
+        'West virginia',
+        'Wisconsin',
+        'Wyoming'
       ],
       createLoading: false,
       model: [],
@@ -490,9 +490,9 @@ export default {
       originalUiPositionData: [],
       ruleInline: {
         originalPrice: [
-          { required: true, message: "请输入商品原价" },
+          { required: true, message: '请输入商品原价' },
           {
-            message: "必须为大于0的数字",
+            message: '必须为大于0的数字',
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
@@ -501,112 +501,112 @@ export default {
           // { message: '必须为大于0的数字', pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/ }
         ],
         specificationId: [
-          { required: true, message: "请输入商品规格", pattern: /^[1-9]\d*$/ }
+          { required: true, message: '请输入商品规格', pattern: /^[1-9]\d*$/ }
         ],
-        image: [{ required: true, message: "请上传图片" }],
-        name: [{ required: true, message: "请输入上架名称" }],
+        image: [{ required: true, message: '请上传图片' }],
+        name: [{ required: true, message: '请输入上架名称' }],
         shelfQty: [
-          { required: true, message: "请输入上架份数" },
-          { message: "必须为非零整数", pattern: /^[1-9]\d*$/ }
+          { required: true, message: '请输入上架份数' },
+          { message: '必须为非零整数', pattern: /^[1-9]\d*$/ }
         ],
         sorting: [
-          { required: true, message: "请输入商品排序" },
-          { message: "必须为非零整数", pattern: /^[1-9]\d*$/ }
+          { required: true, message: '请输入商品排序' },
+          { message: '必须为非零整数', pattern: /^[1-9]\d*$/ }
         ],
         shelfStatus: [
-          { required: true, message: "请选择是否上架", trigger: "blur" }
+          { required: true, message: '请选择是否上架', trigger: 'blur' }
         ],
-        applicationType: [{ required: true, message: "请输入应用类型" }]
+        applicationType: [{ required: true, message: '请输入应用类型' }]
       },
-      useAble: [{ label: "是", value: "ON" }, { label: "否", value: "OFF" }],
+      useAble: [{ label: '是', value: 'ON' }, { label: '否', value: 'OFF' }],
       defaultListMain: [],
       uploadListMain: [],
       modalViewLoading: false,
       columns: [
         {
-          type: "selection",
+          type: 'selection',
           width: 60,
-          align: "center",
-          fixed: "left"
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: "上架图片",
-          key: "image",
+          title: '上架图片',
+          key: 'image',
           width: 120,
           render: (h, params, vm) => {
             const { row } = params;
             const str = (
               <img
                 src={row.image}
-                style="margin-top:5px"
-                height="60"
-                width="60"
-                margin-top="10px"
+                style='margin-top:5px'
+                height='60'
+                width='60'
+                margin-top='10px'
               />
             );
             return <div>{str}</div>;
           }
         },
         {
-          title: "商品名称",
-          key: "productName",
+          title: '商品名称',
+          key: 'productName',
           width: 150
         },
         {
-          title: "上架名称",
+          title: '上架名称',
           width: 150,
-          key: "name"
+          key: 'name'
         },
         {
-          title: "上架规格",
+          title: '上架规格',
           width: 150,
-          key: "shelfSpecification"
+          key: 'shelfSpecification'
         },
         {
-          title: "规格条码",
+          title: '规格条码',
           width: 150,
-          key: "barcode"
+          key: 'barcode'
         },
         {
-          title: "商品原价",
+          title: '商品原价',
           minWidth: 120,
-          key: "originalPrice",
+          key: 'originalPrice',
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.originalPrice)}</div>;
           }
         },
         {
-          title: "商品特价",
+          title: '商品特价',
           minWidth: 120,
-          key: "price",
+          key: 'price',
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.price)}</div>;
           }
         },
         {
-          title: "排序",
+          title: '排序',
           minWidth: 80,
-          key: "sorting",
+          key: 'sorting',
           sortable: true
         },
         {
-          title: "是否上架",
+          title: '是否上架',
           minWidth: 80,
-          key: "shelfStatus",
+          key: 'shelfStatus',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.shelfStatus === "ON") {
+            if (row.shelfStatus === 'ON') {
               return (
                 <div>
-                  <tag color="success">
+                  <tag color='success'>
                     {onSaleStatusConvert(row.shelfStatus).label}
                   </tag>
                 </div>
               );
-            } else if (row.shelfStatus === "OFF") {
+            } else if (row.shelfStatus === 'OFF') {
               return (
                 <div>
-                  <tag color="error">
+                  <tag color='error'>
                     {onSaleStatusConvert(row.shelfStatus).label}
                   </tag>
                 </div>
@@ -614,7 +614,7 @@ export default {
             }
             return (
               <div>
-                <tag color="primary">
+                <tag color='primary'>
                   {onSaleStatusConvert(row.shelfStatus).label}
                 </tag>
               </div>
@@ -622,9 +622,9 @@ export default {
           }
         },
         {
-          title: "应用类型",
+          title: '应用类型',
           minWidth: 120,
-          key: "applicationType",
+          key: 'applicationType',
           sortable: true,
           render: (h, params, vm) => {
             const { row } = params;
@@ -640,16 +640,16 @@ export default {
           }
         },
         {
-          title: "操作",
+          title: '操作',
           minWidth: 170,
-          key: "handle",
-          options: ["view", "edit", "delete", "onSale"]
+          key: 'handle',
+          options: ['view', 'edit', 'delete', 'onSale']
         }
       ],
       searchRowData: _.cloneDeep(roleRowData),
       productDetail: productDetail,
       exportExcelLoading: false,
-      exportType: "xlsx",
+      exportType: 'xlsx',
       downloadLoading: false,
       applicationTypeList: []
     };
@@ -709,7 +709,7 @@ export default {
       this.setDefaultUploadList(tempImgObj);
     },
     remoteMethod(query) {
-      if (query !== "") {
+      if (query !== '') {
         this.handleSearchAutoComplete(query);
       } else {
         this.optionsShelfSpecification = [];
@@ -718,9 +718,9 @@ export default {
     handleSearchAutoComplete(value) {
       this.shelfSpecificationLoading = true;
       getProductSpecificationsPages({
-        keyword: value + "",
-        page: "1",
-        rows: "5"
+        keyword: value + '',
+        page: '1',
+        rows: '5'
       })
         .then(res => {
           console.log(res.array.length);
@@ -738,7 +738,7 @@ export default {
         });
     },
     checkAllGroupChange(data) {
-      this.productDetail.sectionIds = data.join(",");
+      this.productDetail.sectionIds = data.join(',');
     },
     deleteTable(ids) {
       this.loading = true;
@@ -773,7 +773,7 @@ export default {
             this.editProductShelve();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -789,7 +789,7 @@ export default {
         })
         .catch(error => {
           this.$Modal.error({
-            title: "修改失败",
+            title: '修改失败',
             content: error.response.data
           });
         });
@@ -803,7 +803,7 @@ export default {
       }).then(res => {
         this.resetFields();
         this.modalEdit = false;
-        this.$Message.success("创建成功!");
+        this.$Message.success('创建成功!');
         this.getTableData();
       });
       this.modalViewLoading = false;
@@ -833,10 +833,10 @@ export default {
       console.log(params.row.shelfStatus);
       // this.tableData[params.index].onSale = !this.tableData[params.index].onSale;
       this.productDetail = this._.cloneDeep(params.row);
-      if (params.row.shelfStatus === "ON") {
-        this.productDetail.shelfStatus = "OFF";
+      if (params.row.shelfStatus === 'ON') {
+        this.productDetail.shelfStatus = 'OFF';
       } else {
-        this.productDetail.shelfStatus = "ON";
+        this.productDetail.shelfStatus = 'ON';
       }
       this.loading = true;
       this.editProductShelve();
@@ -864,11 +864,11 @@ export default {
       this.optionsShelfSpecification = [];
       this.productDetail = {};
       this.productDetail = this._.cloneDeep(productDetail);
-      console.log("this.productDetail" + JSON.stringify(this.productDetail));
+      console.log('this.productDetail' + JSON.stringify(this.productDetail));
     },
     setDefaultUploadList(res) {
       if (res.image != null) {
-        const map = { status: "finished", url: "url" };
+        const map = { status: 'finished', url: 'url' };
         const mainImgArr = [];
         map.url = res.image;
         mainImgArr.push(map);
@@ -894,10 +894,10 @@ export default {
         const tableData = res.array;
         // 表格数据导出字段翻译
         tableData.forEach(item => {
-          item["id"] = item["id"] + "";
-          item["originalPrice"] = (item["originalPrice"] / 100.0).toFixed(2);
-          item["price"] = (item["price"] / 100.0).toFixed(2);
-          item["shelfStatus"] = onSaleStatusConvert(item["shelfStatus"]).label;
+          item['id'] = item['id'] + '';
+          item['originalPrice'] = (item['originalPrice'] / 100.0).toFixed(2);
+          item['price'] = (item['price'] / 100.0).toFixed(2);
+          item['shelfStatus'] = onSaleStatusConvert(item['shelfStatus']).label;
         });
         this.$refs.tables.handleDownload({
           filename: `商品上架信息-${new Date().valueOf()}`,
@@ -906,7 +906,7 @@ export default {
       });
     },
     getApplications() {
-      getDictionary({ code: "applications" }).then(res => {
+      getDictionary({ code: 'applications' }).then(res => {
         if (res.entries) {
           this.applicationTypeList = res.entries;
         }

@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <tables
         ref="tables"
@@ -227,8 +227,8 @@
                   <Select v-model="flashsaleDetail.status" clearable style="width: 170px">
                     <Option
                       v-for="(item,index) in imageStatusEnum"
-                      :value="item.value"
                       :key="index"
+                      :value="item.value"
                       class="ptb2-5"
                       style="padding-left: 5px;width: 170px"
                     >{{ item.label }}</Option>
@@ -394,8 +394,8 @@
                   <i-col span="5">
                     <FormItem label="商品库存总数:" prop="activityLimit">
                       <Input
-                        :min="0"
                         v-model="addRelationDetail.activityLimit"
+                        :min="0"
                         class="ml10"
                         label="商品库存总数"
                         style="padding-right: 5px;width: 100px"
@@ -405,8 +405,8 @@
                   <i-col span="5">
                     <FormItem label="需助力人数:" prop="peopleNumber">
                       <Input
-                        :min="0"
                         v-model="addRelationDetail.peopleNumber"
+                        :min="0"
                         class="ml10"
                         label="需助力人数"
                         style="padding-right: 5px;width: 100px"
@@ -416,8 +416,8 @@
                   <i-col span="5">
                     <FormItem label="有效时长(小时):" prop="validHour">
                       <Input
-                        :min="0"
                         v-model="addRelationDetail.validHour"
+                        :min="0"
                         class="ml10"
                         label="有效时长(小时)"
                         style="padding-right: 5px;width: 100px"
@@ -427,8 +427,8 @@
                   <i-col span="5">
                     <FormItem label="排序:" prop="rank">
                       <Input
-                        :min="0"
                         v-model="addRelationDetail.rank"
+                        :min="0"
                         class="ml10"
                         label="排序"
                         style="padding-right: 5px;width: 100px"
@@ -447,7 +447,7 @@
                       <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                         <template v-if="item.status === 'finished'">
                           <div>
-                            <img :src="item.url" >
+                            <img :src="item.url">
                             <div class="demo-upload-list-cover">
                               <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                               <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -472,8 +472,8 @@
                   </i-col>
                   <i-col span="4">
                     <Button
-                      v-waves
                       v-show="this.proFlag===true"
+                      v-waves
                       :loading="addTempDataLoading"
                       span="4"
                       class="search-btn"
@@ -491,8 +491,8 @@
 
           <Divider orientation="center">已关联助力抢爆品活动商品/券</Divider>
           <tables
-            :columns="relationColumns"
             v-model="relationProducts"
+            :columns="relationColumns"
             :loading="tempTableLoading"
             border
             @on-sale="switchStatus"
@@ -656,7 +656,7 @@
             <Row>
               <i-col span="3">优惠券分享图:</i-col>
               <i-col span="21">
-                <img :src="activitiesRelevanceDetail.shareImage" style="width: 200px;height:100px" >
+                <img :src="activitiesRelevanceDetail.shareImage" style="width: 200px;height:100px">
               </i-col>
             </Row>
           </i-col>
@@ -696,7 +696,7 @@
             <Row>
               <i-col span="3">商品分享图:</i-col>
               <i-col span="21">
-                <img :src="activitiesRelevanceDetail.shareImage" style="width: 200px;height:100px" >
+                <img :src="activitiesRelevanceDetail.shareImage" style="width: 200px;height:100px">
               </i-col>
             </Row>
           </i-col>
@@ -722,8 +722,8 @@
             <i-col span="5">
               <FormItem label="商品库存总数:" prop="activityLimit">
                 <Input
-                  :min="0"
                   v-model="addRelationDetail.activityLimit"
+                  :min="0"
                   class="ml10"
                   label="商品库存总数"
                   style="padding-right: 5px;width: 100px"
@@ -735,8 +735,8 @@
             <i-col span="5">
               <FormItem label="需助力人数:" prop="peopleNumber">
                 <Input
-                  :min="0"
                   v-model="addRelationDetail.peopleNumber"
+                  :min="0"
                   class="ml10"
                   label="需助力人数"
                   style="padding-right: 5px;width: 100px"
@@ -748,8 +748,8 @@
             <i-col span="5">
               <FormItem label="有效时长(小时):" prop="validHour">
                 <Input
-                  :min="0"
                   v-model="addRelationDetail.validHour"
+                  :min="0"
                   class="ml10"
                   label="有效时长(小时)"
                   style="padding-right: 5px;width: 100px"
@@ -761,8 +761,8 @@
             <i-col span="5">
               <FormItem label="排序:" prop="rank">
                 <Input
-                  :min="0"
                   v-model="addRelationDetail.rank"
+                  :min="0"
                   class="ml10"
                   label="排序"
                   style="padding-right: 5px;width: 100px"
@@ -777,7 +777,7 @@
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" >
+                      <img :src="item.url">
                       <!-- <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>

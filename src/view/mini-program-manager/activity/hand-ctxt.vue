@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <tables
         ref="tables"
@@ -34,8 +34,8 @@
             >
               <Option
                 v-for="(item,index) in couponStatusEnum"
-                :value="item.value"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
               >{{ item.label }}</Option>
             </Select>
@@ -300,8 +300,8 @@
                 >
                   <Option
                     v-for="(item,index) in couponTypeEnum"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     :disabled="index==3"
                     class="ptb2-5"
                     style="padding-left: 5px;width: 100px"
@@ -398,8 +398,8 @@
                   >
                     <Option
                       v-for="(item,index) in validDateTypeEnum"
-                      :value="item.value"
                       :key="index"
+                      :value="item.value"
                       class="ptb2-5"
                       style="padding-left: 5px;width: 100px"
                     >{{ item.label }}</Option>
@@ -412,8 +412,8 @@
                 <i-col span="7">
                   <FormItem label="发放券后:" prop="beginDay">
                     <InputNumber
-                      :min="0"
                       v-model="addRelationDetail.beginDay"
+                      :min="0"
                       label="生效开始"
                       style="width: 95px"
                     ></InputNumber>&nbsp;天生效
@@ -422,8 +422,8 @@
                 <i-col span="7">
                   <FormItem label="有效天数:" prop="endDay">
                     <InputNumber
-                      :min="0"
                       v-model="addRelationDetail.endDay"
+                      :min="0"
                       label="有效天数"
                       style="width: 95px"
                     ></InputNumber>&nbsp;天
@@ -475,8 +475,8 @@
                   >
                     <Option
                       v-for="(item,index) in couponScopeEnum"
-                      :value="item.value"
                       :key="index"
+                      :value="item.value"
                       :disabled="index===2"
                       class="ptb2-5"
                       style="padding-left: 5px;width: 100px"
@@ -500,8 +500,8 @@
                   >
                     <Option
                       v-for="(item,index) in couponUseLimitEnum"
-                      :value="item.value"
                       :key="index"
+                      :value="item.value"
                       class="ptb2-5"
                       style="padding-left: 5px;width: 100px"
                     >{{ item.label }}</Option>
@@ -617,8 +617,8 @@
                 >
                   <Option
                     v-for="(item,index) in couponStatusEnum"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                   >{{ item.label }}</Option>
                 </Select>
@@ -635,8 +635,8 @@
                 >
                   <Option
                     v-for="(item,index) in validDateTypeEnum"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px;width: 100px"
                   >{{ item.label }}</Option>
@@ -649,8 +649,8 @@
               <i-col span="7">
                 <FormItem label="生效开始:" prop="beginDay">
                   <InputNumber
-                    :min="0"
                     v-model="addRelationDetail.beginDay"
+                    :min="0"
                     label="生效开始"
                     style="width: 160px"
                   ></InputNumber>
@@ -659,8 +659,8 @@
               <i-col span="7">
                 <FormItem label="有效天数:" prop="endDay">
                   <InputNumber
-                    :min="0"
                     v-model="addRelationDetail.endDay"
+                    :min="0"
                     label="有效天数"
                     style="width: 160px"
                   ></InputNumber>
@@ -712,8 +712,8 @@
                 >
                   <Option
                     v-for="(item,index) in couponScopeEnum"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     :disabled="index==2"
                     class="ptb2-5"
                     style="padding-left: 5px;width: 100px"
@@ -795,7 +795,7 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" >
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <tables
         ref="tables"
@@ -30,16 +30,16 @@
             </Input>
             <Input v-model="searchRowData.name" placeholder="商品名称" class="search-input mr5" style="width: auto"></Input>
             <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-              <Icon type="md-refresh"/>&nbsp;清除条件
+              <Icon type="md-refresh" />&nbsp;清除条件
             </Button>
           </Row>
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addProduct">
-            <Icon type="md-add"/>
+            <Icon type="md-add" />
             创建
           </Button>
           <Poptip
@@ -49,12 +49,12 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>
+              <Icon type="md-trash" />
               删除
             </Button>
           </Poptip>
           <Button v-waves :loading="exportExcelLoading" type="primary" class="mr5" @click="exportExcel">
-            <Icon type="md-download"/>
+            <Icon type="md-download" />
             导出
           </Button>
         </div>
@@ -67,7 +67,8 @@
             show-sizer
             show-total
             @on-change="changePage"
-            @on-page-size-change="changePageSize"></Page>
+            @on-page-size-change="changePageSize"
+          ></Page>
         </Row>
       </div>
     </Card>
@@ -216,8 +217,8 @@
             <Col span="24">
             <FormItem label="商品分类:" prop="categoryId">
               <Cascader
-                :data="goodsCategoryData"
                 v-model="defaultGoodsCategoryData"
+                :data="goodsCategoryData"
                 span="21"
                 style="width: 70%"
                 @on-change="goodsCategoryChange"
@@ -241,7 +242,7 @@
             </i-col>
           </Row>
           <Row>
-            <FormItem label="商品主图:建议尺寸;400x400(单位:px):" prop="mainImg" >
+            <FormItem label="商品主图:建议尺寸;400x400(单位:px):" prop="mainImg">
               <Input v-show="false" v-model="productDetail.mainImg" style="width: auto"></Input>
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
@@ -345,10 +346,11 @@
                 <Select :value="productDetail.productSpecification.packagingUnit" @on-change="uniteChange">
                   <Option
                     v-for="(item,index) in unitsList"
-                    :value="item.value"
                     :key="index"
+                    :value="item.value"
                     class="ptb2-5"
-                    style="padding-left: 5px">{{ item.label }}
+                    style="padding-left: 5px"
+                  >{{ item.label }}
                   </Option>
                 </Select>
               </FormItem>
@@ -364,14 +366,16 @@
               <FormItem :label-width="80" label="安全库存:" prop="limitInventory">
                 <Input
                   v-if="productDetail.productSpecification"
-                  v-model="productDetail.productSpecification.limitInventory"></Input>
+                  v-model="productDetail.productSpecification.limitInventory"
+                ></Input>
               </FormItem>
               </Col>
               <Col span="12">
               <FormItem :label-width="80" label="重量(kg):" prop="weight">
                 <Input
                   v-if="productDetail.productSpecification"
-                  v-model="productDetail.productSpecification.weight"></Input>
+                  v-model="productDetail.productSpecification.weight"
+                ></Input>
               </FormItem>
               </Col>
             </Row>

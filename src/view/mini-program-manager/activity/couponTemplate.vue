@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <tables
         ref="tables"
@@ -36,8 +36,8 @@
             >
               <Option
                 v-for="(item,index) in couponTypeEnum"
-                :value="item.value"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
                 style="padding-left: 5px;width: 100px"
               >{{ item.label }}</Option>
@@ -50,8 +50,8 @@
             >
               <Option
                 v-for="(item,index) in couponStatusEnum"
-                :value="item.value"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
                 style="padding-left: 5px;width: 100px"
               >{{ item.label }}</Option>
@@ -197,7 +197,7 @@
             <Row>
               <i-col span="6">优惠券图片:</i-col>
               <i-col span="18">
-                <img :src="couponTemplateDetail.couponImage" width="80%" >
+                <img :src="couponTemplateDetail.couponImage" width="80%">
               </i-col>
             </Row>
           </i-col>
@@ -270,8 +270,8 @@
               <Select v-model="couponTemplateDetail.couponType" clearable>
                 <Option
                   v-for="(item,index) in couponTypeEnum"
-                  :value="item.value"
                   :key="index"
+                  :value="item.value"
                   class="ptb2-5"
                   style="padding-left: 5px;width: 100%"
                 >{{ item.label }}</Option>
@@ -321,8 +321,8 @@
               <Select v-model="couponTemplateDetail.couponStatus" clearable>
                 <Option
                   v-for="(item,index) in couponStatusEnum"
-                  :value="item.value"
                   :key="index"
+                  :value="item.value"
                   class="ptb2-5"
                   style="padding-left: 5px;width: 100%"
                 >{{ item.label }}</Option>
@@ -367,7 +367,7 @@
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>
-                    <img :src="item.url" >
+                    <img :src="item.url">
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                       <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>

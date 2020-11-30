@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <div style="margin-bottom:30px">
       <Card>
         <h4>积分数据统计</h4>
@@ -23,7 +23,7 @@
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
               </RadioGroup>
-              <div class="mark" v-show="mark===true">
+              <div v-show="mark===true" class="mark">
                 <DatePicker
                   v-model="searchRowData.beginDate"
                   format="yyyy-MM-dd"
@@ -45,10 +45,10 @@
                 />
               </div>
               <Button
+                v-show="mark===true"
                 class="search-btn mr5"
                 type="primary"
                 @click="handleSearch"
-                v-show="mark===true"
               >
                 <Icon type="md-search" />&nbsp;搜索
               </Button>
@@ -80,22 +80,22 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   userDataStatistics,
   dataStatistics,
   integralStatistics
-} from "@/api/mini-program";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+} from '@/api/mini-program';
+import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber
-} from "@/libs/util";
+} from '@/libs/util';
 
 const couponTemplateDetail = {
   //   id: 0,
@@ -126,88 +126,88 @@ export default {
   data() {
     return {
       mark: false,
-      button: "今日",
+      button: '今日',
       tableData: [],
       tableData1: [],
       dataColumns: [
         {
-          title: "积分途径",
-          key: "value",
-          align: "center"
+          title: '积分途径',
+          key: 'value',
+          align: 'center'
         },
         {
-          title: "日常消费",
-          key: "value1",
-          align: "center",
-          width: "150"
+          title: '日常消费',
+          key: 'value1',
+          align: 'center',
+          width: '150'
         },
         {
-          title: "评价奖励",
-          key: "value2",
-          align: "center"
+          title: '评价奖励',
+          key: 'value2',
+          align: 'center'
         },
         {
-          title: "每日签到",
-          align: "center",
-          key: "value3"
+          title: '每日签到',
+          align: 'center',
+          key: 'value3'
         },
         {
-          title: "月度消费",
-          align: "center",
-          key: "value4"
+          title: '月度消费',
+          align: 'center',
+          key: 'value4'
         },
         {
-          title: "首次消费",
-          align: "center",
-          key: "value5"
+          title: '首次消费',
+          align: 'center',
+          key: 'value5'
         },
         {
-          title: "月度充值",
-          align: "center",
-          key: "value6"
+          title: '月度充值',
+          align: 'center',
+          key: 'value6'
         },
         {
-          title: "首充",
-          align: "center",
-          key: "value7"
+          title: '首充',
+          align: 'center',
+          key: 'value7'
         },
         {
-          title: "完善资料",
-          align: "center",
-          key: "value8"
+          title: '完善资料',
+          align: 'center',
+          key: 'value8'
         },
         {
-          title: "任务中心",
-          align: "center",
-          key: "value9"
+          title: '任务中心',
+          align: 'center',
+          key: 'value9'
         },
         {
-          title: "汇总",
-          align: "center",
-          key: "value10"
+          title: '汇总',
+          align: 'center',
+          key: 'value10'
         }
       ],
       dataColumns1: [
         {
-          title: "消费途径",
-          key: "value",
-          align: "center"
+          title: '消费途径',
+          key: 'value',
+          align: 'center'
         },
         {
-          title: "实物兑换",
-          key: "value1",
-          align: "center",
-          width: "150"
+          title: '实物兑换',
+          key: 'value1',
+          align: 'center',
+          width: '150'
         },
         {
-          title: "券兑换",
-          key: "value2",
-          align: "center"
+          title: '券兑换',
+          key: 'value2',
+          align: 'center'
         },
         {
-          title: "汇总",
-          align: "center",
-          key: "value3"
+          title: '汇总',
+          align: 'center',
+          key: 'value3'
         }
       ],
       searchRowData: _.cloneDeep(roleRowData),
@@ -222,14 +222,14 @@ export default {
   created() {},
   methods: {
     getTableData(value) {
-      let date = new Date();
+      const date = new Date();
       date.setDate(date.getDate());
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var today = `${year}-${month}-${day}`;
-      if (value === "昨日") {
-        let date = new Date();
+      if (value === '昨日') {
+        const date = new Date();
         date.setDate(date.getDate() - 1);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -238,8 +238,8 @@ export default {
         this.searchRowData.beginDate = yesterday;
         this.searchRowData.endDate = yesterday;
       }
-      if (value === "今日") {
-        let date = new Date();
+      if (value === '今日') {
+        const date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -248,8 +248,8 @@ export default {
         this.searchRowData.beginDate = today;
         this.searchRowData.endDate = today;
       }
-      if (value === "最近7天") {
-        let date = new Date();
+      if (value === '最近7天') {
+        const date = new Date();
         date.setDate(date.getDate() - 7);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -258,8 +258,8 @@ export default {
         this.searchRowData.beginDate = sevenDay;
         this.searchRowData.endDate = today;
       }
-      if (value === "最近30天") {
-        let date = new Date();
+      if (value === '最近30天') {
+        const date = new Date();
         date.setDate(date.getDate() - 30);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -270,34 +270,34 @@ export default {
       }
       integralStatistics(this.searchRowData)
         .then(res => {
-          let data = res.getPointsList;
-          let map = {
-            value: "value",
-            value1: "value",
-            value2: "value",
-            value3: "value",
-            value4: "value",
-            value5: "value",
-            value6: "value",
-            value7: "value",
-            value8: "value",
-            value9: "value",
-            value10: "value"
+          const data = res.getPointsList;
+          const map = {
+            value: 'value',
+            value1: 'value',
+            value2: 'value',
+            value3: 'value',
+            value4: 'value',
+            value5: 'value',
+            value6: 'value',
+            value7: 'value',
+            value8: 'value',
+            value9: 'value',
+            value10: 'value'
           };
-          let map1 = {
-            value: "value",
-            value1: "value",
-            value2: "value",
-            value3: "value",
-            value4: "value",
-            value5: "value",
-            value6: "value",
-            value7: "value",
-            value8: "value",
-            value9: "value",
-            value10: "value"
+          const map1 = {
+            value: 'value',
+            value1: 'value',
+            value2: 'value',
+            value3: 'value',
+            value4: 'value',
+            value5: 'value',
+            value6: 'value',
+            value7: 'value',
+            value8: 'value',
+            value9: 'value',
+            value10: 'value'
           };
-          map.value = "积分数量";
+          map.value = '积分数量';
           map.value1 = data.countPoints[0];
           map.value2 = data.countPoints[1];
           map.value3 = data.countPoints[2];
@@ -308,7 +308,7 @@ export default {
           map.value8 = data.countPoints[7];
           map.value9 = data.countPoints[8];
           map.value10 = data.countPoints[9];
-          map1.value = "参与人数";
+          map1.value = '参与人数';
           map1.value1 = data.countUser[0];
           map1.value2 = data.countUser[1];
           map1.value3 = data.countUser[2];
@@ -323,24 +323,24 @@ export default {
           data.countUser = map1;
           this.tableData.push(data.countPoints);
           this.tableData.push(data.countUser);
-          let data1 = res.consumePointsList;
-          let map2 = {
-            value: "value",
-            value1: "value",
-            value2: "value",
-            value3: "value",
+          const data1 = res.consumePointsList;
+          const map2 = {
+            value: 'value',
+            value1: 'value',
+            value2: 'value',
+            value3: 'value'
           };
-          let map3= {
-            value: "value",
-            value1: "value",
-            value2: "value",
-            value3: "value",
+          const map3 = {
+            value: 'value',
+            value1: 'value',
+            value2: 'value',
+            value3: 'value'
           };
-          map2.value = "消费数量";
+          map2.value = '消费数量';
           map2.value1 = data1.countPoints[0];
           map2.value2 = data1.countPoints[1];
           map2.value3 = data1.countPoints[2];
-          map3.value = "消费人数";
+          map3.value = '消费人数';
           map3.value1 = data1.countUser[0];
           map3.value2 = data1.countUser[1];
           map3.value3 = data1.countUser[2];
@@ -360,38 +360,38 @@ export default {
         });
     },
     timeChange(value) {
-      if (value === "今日") {
+      if (value === '今日') {
         this.getTableData(value);
         this.tableData = [];
         this.tableData1 = [];
         this.mark = false;
-      } else if (value === "昨日") {
+      } else if (value === '昨日') {
         this.mark = false;
         this.tableData = [];
         this.tableData1 = [];
         this.getTableData(value);
-      } else if (value === "最近7天") {
+      } else if (value === '最近7天') {
         this.mark = false;
         this.tableData = [];
         this.tableData1 = [];
         this.getTableData(value);
-      } else if (value === "最近30天") {
+      } else if (value === '最近30天') {
         this.mark = false;
         this.tableData = [];
         this.tableData1 = [];
         this.getTableData(value);
-      } else if (value === "自定义时间") {
+      } else if (value === '自定义时间') {
         this.mark = true;
-        this.searchRowData.beginDate = "";
-        this.searchRowData.endDate = "";
+        this.searchRowData.beginDate = '';
+        this.searchRowData.endDate = '';
       }
     },
     startTimeChange(value, date) {
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.searchRowData.beginDate = value;
     },
     endTimeChange(value, date) {
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.searchRowData.endDate = value;
     },
     handleSearch() {
@@ -400,7 +400,7 @@ export default {
       this.tableData = [];
       this.tableData1 = [];
       this.getTableData();
-    },
+    }
     // 导出数据
     // handleDownload() {
     //   const tableData = this.tableData;

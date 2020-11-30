@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <tables
         ref="tables"
@@ -39,8 +39,8 @@
           >
             <Option
               v-for="item in feedbackStatus"
-              :value="item.value"
               :key="item.value"
+              :value="item.value"
               class="ml15 mt10"
             >{{ item.label }}</Option>
           </Select>
@@ -52,8 +52,8 @@
           >
             <Option
               v-for="(item,index) in feedbackClassify"
-              :value="item.indexValue"
               :key="index"
+              :value="item.indexValue"
               class="ptb2-5"
             >{{ item.indexValue }}</Option>
           </Select>
@@ -205,39 +205,39 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   getFeedbackPages,
   editFeedback,
   getSystemParameter
-} from "@/api/mini-program";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { appTypeConvert } from "@/libs/converStatus";
+} from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import { appTypeConvert } from '@/libs/converStatus';
 
 const feedbackDetail = {
   id: 0,
-  title: "",
-  content: "",
-  backMessage: "",
+  title: '',
+  content: '',
+  backMessage: '',
   createTime: null,
   feedbackTime: null,
-  userId: "",
+  userId: '',
   applicationType: null,
-  backEditor: "",
+  backEditor: '',
   status: null
 };
 
 const roleRowData = {
   applicationType: null,
-  content: "",
+  content: '',
   page: 1,
   rows: 10,
   status: null,
-  title: "",
-  sidx: "createTime",
-  sord: "desc"
+  title: '',
+  sidx: 'createTime',
+  sord: 'desc'
 };
 
 export default {
@@ -248,73 +248,73 @@ export default {
   data() {
     return {
       ruleInline: {
-        backMessage: [{ required: true, message: "回复内容不能为空" }]
+        backMessage: [{ required: true, message: '回复内容不能为空' }]
       },
       columns: [
         {
-          title: "ID",
-          align: "center",
-          key: "id",
+          title: 'ID',
+          align: 'center',
+          key: 'id',
           minWidth: 60
         },
         {
-          title: "标题",
-          align: "center",
+          title: '标题',
+          align: 'center',
           width: 150,
-          key: "title",
+          key: 'title',
           tooltip: true
         },
         {
-          title: "内容",
-          align: "center",
+          title: '内容',
+          align: 'center',
           width: 300,
-          key: "content",
+          key: 'content',
           tooltip: true
         },
         {
-          title: "用户电话",
-          align: "center",
+          title: '用户电话',
+          align: 'center',
           width: 120,
-          key: "phone"
+          key: 'phone'
         },
         {
-          title: "创建时间",
-          align: "center",
+          title: '创建时间',
+          align: 'center',
           width: 185,
-          key: "createTime",
+          key: 'createTime',
           sortable: true
         },
         {
-          title: "反馈状态",
-          align: "center",
+          title: '反馈状态',
+          align: 'center',
           width: 120,
-          key: "status",
+          key: 'status',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.status === "UNREPLY") {
-              return <tag color="warning">{"未回复"}</tag>;
-            } else if (row.status === "REPLY") {
-              return <tag color="primary">{"已回复"}</tag>;
-            } else if (row.status === "READED") {
-              return <tag color="success">{"已读"}</tag>;
+            if (row.status === 'UNREPLY') {
+              return <tag color='warning'>{'未回复'}</tag>;
+            } else if (row.status === 'REPLY') {
+              return <tag color='primary'>{'已回复'}</tag>;
+            } else if (row.status === 'READED') {
+              return <tag color='success'>{'已读'}</tag>;
             } else {
               return row.status;
             }
           }
         },
         {
-          title: "回复内容",
-          align: "center",
+          title: '回复内容',
+          align: 'center',
           width: 170,
-          key: "backMessage",
+          key: 'backMessage',
           tooltip: true
         },
         {
-          title: "操作",
-          align: "center",
+          title: '操作',
+          align: 'center',
           minWidth: 150,
-          key: "handle",
-          options: ["view", "feedback"]
+          key: 'handle',
+          options: ['view', 'feedback']
         }
       ],
       feedbackClassify: [],
@@ -324,16 +324,16 @@ export default {
       // 反馈状态（UNREPLY-未回复，REPLY-已回复且用户未读，READED-已读）
       feedbackStatus: [
         {
-          label: "未回复",
-          value: "UNREPLY"
+          label: '未回复',
+          value: 'UNREPLY'
         },
         {
-          label: "已回复",
-          value: "REPLY"
+          label: '已回复',
+          value: 'REPLY'
         },
         {
-          label: "已读",
-          value: "READED"
+          label: '已读',
+          value: 'READED'
         }
       ]
     };
@@ -361,7 +361,7 @@ export default {
         backMessage: this.feedbackDetail.backMessage
       })
         .then(res => {
-          this.$Message.success("回复成功!");
+          this.$Message.success('回复成功!');
           this.getTableData();
         })
         .finally(res => {
@@ -391,12 +391,12 @@ export default {
         });
     },
     getSystemParameters() {
-      console.log("123");
-      let code = "FEEDBACK_TITLE_TYPE";
+      console.log('123');
+      const code = 'FEEDBACK_TITLE_TYPE';
       getSystemParameter(code)
         .then(res => {
           this.feedbackClassify = res.systemSettings;
-          console.log("系统参数", this.feedbackClassify);
+          console.log('系统参数', this.feedbackClassify);
         })
         .catch(error => {
           console.log(error);

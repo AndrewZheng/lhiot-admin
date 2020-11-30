@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <tables
         ref="tables"
@@ -23,31 +23,34 @@
             placeholder="板块名称"
             class="search-input mr5"
             style="width: 150px"
-            clearable></Input>
+            clearable
+          ></Input>
           <Select
-            :disable="selectDisable"
             v-model="searchRowData.positionIds"
+            :disable="selectDisable"
             class="search-col mr5"
             placeholder="板块位置"
             style="width: 150px"
-            clearable>
+            clearable
+          >
             <Option
               v-for="item in goodsModuleList"
-              :value="item.id"
               :key="`search-col-${item.id}`"
-              class="pt5 pb5 pl15">{{ item.description }}
+              :value="item.id"
+              class="pt5 pb5 pl15"
+            >{{ item.description }}
             </Option>
           </Select>
           <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch">
-            <Icon type="md-search"/>&nbsp;搜索
+            <Icon type="md-search" />&nbsp;搜索
           </Button>
           <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-            <Icon type="md-refresh"/>&nbsp;清除条件
+            <Icon type="md-refresh" />&nbsp;清除条件
           </Button>
         </div>
         <div slot="operations">
           <Button v-waves type="success" class="mr5" @click="addChildren">
-            <Icon type="md-add"/>创建
+            <Icon type="md-add" />创建
           </Button>
           <Poptip
             confirm
@@ -57,7 +60,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>删除
+              <Icon type="md-trash" />删除
             </Button>
           </Poptip>
         </div>
@@ -70,7 +73,8 @@
             show-sizer
             show-total
             @on-change="changePage"
-            @on-page-size-change="changePageSize"></Page>
+            @on-page-size-change="changePageSize"
+          ></Page>
         </Row>
       </div>
     </Card>
@@ -113,8 +117,8 @@
         </Row>
         <Row v-if="articlesModuleDetail.articleList" class-name="mb10">
           <tables
-            :columns="tempColumnsView"
             v-model="articlesModuleDetail.articleList"
+            :columns="tempColumnsView"
             border
           ></tables>
         </Row>
@@ -138,12 +142,14 @@
                 <Select
                   v-model="articlesModuleDetail.positionId"
                   style="width: 200px"
-                  @on-change="goodsModuleTypeChange">
+                  @on-change="goodsModuleTypeChange"
+                >
                   <Option
                     v-for="item in goodsModuleList"
-                    :value="item.id"
                     :key="`search-col-${item.id}`"
-                    class="pt5 pb5 pl15">{{ item.description }}
+                    :value="item.id"
+                    class="pt5 pb5 pl15"
+                  >{{ item.description }}
                   </Option>
                 </Select>
               </FormItem>
@@ -152,7 +158,7 @@
               <FormItem label="父级id:" prop="parentId">
                 <InputNumber v-model="articlesModuleDetail.parentId" placeholder="父级id" style="width: 200px"></InputNumber>
               </FormItem>
-               </Col>
+              </Col>
             </Row>
             <Row>
               <Col span="12">
@@ -185,32 +191,34 @@
                   :remote-method="remoteMethod"
                   :loading="shelfArticleLoading"
                   clearable
-                  placeholder="请输入文章标题">
+                  placeholder="请输入文章标题"
+                >
                   <Option
                     v-for="(option, index) in optionsShelfArticle"
-                    :value="option.id"
                     :key="index"
+                    :value="option.id"
                     class="pb5 pt5 pl15"
-                    @click.native="selectIndex(option)">
+                    @click.native="selectIndex(option)"
+                  >
                     {{ option.title }}
                   </Option>
                 </Select>
               </FormItem>
-                </Col>
+              </Col>
               <Col span="6">
               <!-- <FormItem label="关联序号:" >
                 <InputNumber v-model="articlesModuleDetail.relationSorting" class="ml20" label="关联序号"></InputNumber>
               </FormItem> -->
-                </Col>
+              </Col>
               <Col span="4">
               <Button v-waves :loading="addTempDataLoading" span="4" class="search-btn ml20" type="primary" @click="addTempData">
-                <Icon type="md-add"/>&nbsp;添加
+                <Icon type="md-add" />&nbsp;添加
               </Button>
-                </Col>
+              </Col>
             </Row>
             <tables
-              :columns="tempColumns"
               v-model="articlesModuleDetail.articleList"
+              :columns="tempColumns"
               :loading="tempTableLoading"
               border
               @on-delete="modalHandleDelete"
@@ -224,7 +232,7 @@
         </Button>
       </div>
     </Modal>
-    
+
     <Modal v-model="uploadVisible" title="View Image">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>

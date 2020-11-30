@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Row :gutter="20" class="mb10 dataBox">
       <i-col
         v-for="(infor, i) in inforCardData"

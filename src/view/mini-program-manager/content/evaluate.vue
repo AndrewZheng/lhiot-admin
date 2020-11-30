@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <tables
         ref="tables"
@@ -586,14 +586,14 @@ export default {
           title: '订单编号',
           align: 'center',
           width: 170,
-          key: 'orderCode',
+          key: 'orderCode'
           // render: (h, params, vm) => {
-            // const { row } = params;
-            // if (row.orderType === 'WX_SMALL') {
-            //   return <div>{row.orderCode}</div>;
-            // } else {
-            //   return <div>{row.xid}</div>;
-            // }
+          // const { row } = params;
+          // if (row.orderType === 'WX_SMALL') {
+          //   return <div>{row.orderCode}</div>;
+          // } else {
+          //   return <div>{row.xid}</div>;
+          // }
           //   return <div>{row.orderCode}</div>;
           // }
         },

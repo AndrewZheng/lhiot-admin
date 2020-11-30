@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Row :gutter="24" type="flex" align="top" justify="space-between">
       <i-col span="6" order="1">
         <Tree :data="menuData" :render="renderContent"></Tree>
@@ -24,7 +24,7 @@
             <div slot="searchCondition">
               <div slot="operations">
                 <Button v-waves type="success" class="mr5" @click="createTableRow">
-                  <Icon type="md-add"/>
+                  <Icon type="md-add" />
                   子分类
                 </Button>
                 <Poptip
@@ -35,7 +35,7 @@
                   @on-ok="poptipOk"
                 >
                   <Button type="error" class="mr5">
-                    <Icon type="md-trash"/>
+                    <Icon type="md-trash" />
                     删除
                   </Button>
                 </Poptip>
@@ -50,7 +50,8 @@
                 show-sizer
                 show-total
                 @on-change="changePage"
-                @on-page-size-change="changePageSize"></Page>
+                @on-page-size-change="changePageSize"
+              ></Page>
             </Row>
           </div>
         </Card>
@@ -74,7 +75,7 @@
             <Input v-model="currentCategory.groupName" placeholder="子分类名"></Input>
           </FormItem>
           <FormItem label="序号:">
-            <InputNumber :min="0" v-model="currentCategory.rank" placeholder="序号"></InputNumber>
+            <InputNumber v-model="currentCategory.rank" :min="0" placeholder="序号"></InputNumber>
           </FormItem>
         </Form>
       </div>

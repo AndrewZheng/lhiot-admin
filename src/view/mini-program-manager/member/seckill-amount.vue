@@ -1,16 +1,16 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <div style="margin-bottom:30px;position: relative;">
       <div class="tabChange">
         <b
           data-index="user"
-          @click="assistDataChange"
           :class=" topStatus=='user' ? 'hot' : '' "
+          @click="assistDataChange"
         >用户数据分析</b>
         <b
           data-index="product"
-          @click="assistDataChange"
           :class=" topStatus=='product' ? 'hot' : '' "
+          @click="assistDataChange"
         >单品数据分析</b>
       </div>
       <Card v-show="topStatus==='user'">
@@ -49,8 +49,8 @@
               >
                 <Option
                   v-for="(item,index) in rankType"
-                  :value="item.value"
                   :key="index"
+                  :value="item.value"
                   class="ptb2-5"
                   style="padding-left: 5px;width: 100px"
                 >{{ item.label }}</Option>
@@ -121,8 +121,8 @@
               >
                 <Option
                   v-for="(item,index) in rankType1"
-                  :value="item.value"
                   :key="index"
+                  :value="item.value"
                   class="ptb2-5"
                   style="padding-left: 5px;width: 100px"
                 >{{ item.label }}</Option>
@@ -168,21 +168,21 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   userSeckillStatistics,
   singleSeckillStatistics
-} from "@/api/mini-program";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+} from '@/api/mini-program';
+import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber
-} from "@/libs/util";
+} from '@/libs/util';
 
 const couponTemplateDetail = {
   //   id: 0,
@@ -199,20 +199,20 @@ const couponTemplateDetail = {
 };
 
 const roleRowData = {
-  nickName: "",
-  phone: "",
+  nickName: '',
+  phone: '',
   page: 1,
   rows: 10,
-  sidx: "buy_count",
-  sort: "desc"
+  sidx: 'buy_count',
+  sort: 'desc'
 };
 
 const roleRowData1 = {
-  standardId: "",
+  standardId: '',
   page: 1,
   rows: 10,
-  sidx: "buy_count",
-  sort: "desc"
+  sidx: 'buy_count',
+  sort: 'desc'
 };
 
 export default {
@@ -222,82 +222,82 @@ export default {
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
     return {
-      topStatus: "user",
+      topStatus: 'user',
       totalPage: 0,
       rankType: [
         {
-          label: "购买总数量",
-          value: "buy_count"
+          label: '购买总数量',
+          value: 'buy_count'
         },
         {
-          label: "秒杀总数",
-          value: "seckill_count"
+          label: '秒杀总数',
+          value: 'seckill_count'
         }
       ],
       rankType1: [
         {
-          label: "购买总数量",
-          value: "buy_count"
+          label: '购买总数量',
+          value: 'buy_count'
         },
         {
-          label: "秒杀总数",
-          value: "seckill_count"
+          label: '秒杀总数',
+          value: 'seckill_count'
         }
       ],
 
       columns: [
         {
-          title: "用户ID",
-          align: "center",
-          key: "userId"
+          title: '用户ID',
+          align: 'center',
+          key: 'userId'
         },
         {
-          title: "用户昵称",
-          align: "center",
-          key: "nickName"
+          title: '用户昵称',
+          align: 'center',
+          key: 'nickName'
         },
         {
-          title: "手机号",
-          align: "center",
-          key: "phone"
+          title: '手机号',
+          align: 'center',
+          key: 'phone'
         },
         {
-          title: "购买总数量",
-          align: "center",
-          key: "buyCount"
+          title: '购买总数量',
+          align: 'center',
+          key: 'buyCount'
         },
         {
-          title: "秒杀总数",
-          align: "center",
-          key: "seckillCount",
+          title: '秒杀总数',
+          align: 'center',
+          key: 'seckillCount',
           minWidth: 60
         }
       ],
       columns1: [
         {
-          title: "商品规格ID",
-          align: "center",
-          key: "standardId"
+          title: '商品规格ID',
+          align: 'center',
+          key: 'standardId'
         },
         {
-          title: "商品条码",
-          align: "center",
-          key: "barcode"
+          title: '商品条码',
+          align: 'center',
+          key: 'barcode'
         },
         {
-          title: "商品名称(上架商品名称)",
-          align: "center",
-          key: "productName"
+          title: '商品名称(上架商品名称)',
+          align: 'center',
+          key: 'productName'
         },
         {
-          title: "购买总数量",
-          align: "center",
-          key: "buyCount"
+          title: '购买总数量',
+          align: 'center',
+          key: 'buyCount'
         },
         {
-          title: "秒杀总数",
-          align: "center",
-          key: "seckillCount",
+          title: '秒杀总数',
+          align: 'center',
+          key: 'seckillCount',
           minWidth: 60
         }
       ],
@@ -373,7 +373,7 @@ export default {
       this.handleSearch1();
     },
     assistDataChange(e) {
-      let index = e.currentTarget.dataset.index;
+      const index = e.currentTarget.dataset.index;
       if (this.topStatus === index) {
         return;
       }

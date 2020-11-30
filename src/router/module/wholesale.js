@@ -7,7 +7,7 @@ const wholesaleRouter = [
     component: Main,
     meta: {
       hideInBread: true,
-      title: '批发小程序'
+      title: '农业小程序'
     },
     children: [{
       path: '/farm-home',
@@ -107,7 +107,7 @@ const wholesaleRouter = [
     name: 'wholesale-user-manage',
     meta: {
       icon: 'md-menu',
-      title: '会员管理'
+      title: '会员数据中心'
     },
     component: Main,
     children: [{
@@ -127,6 +127,15 @@ const wholesaleRouter = [
         title: '会员分析'
       },
       component: () => import('@/view/wholesale-mall-manager/user/user-analysis.vue')
+    },
+    {
+      path: '/wholesale-share-statistics',
+      name: 'wholesale-share-statistics',
+      meta: {
+        icon: 'ios-stats',
+        title: '分享赚数据统计'
+      },
+      component: () => import('@/view/wholesale-mall-manager/user/share-statistics.vue')
     }
     ]
   },

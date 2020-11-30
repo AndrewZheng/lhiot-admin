@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <tables
         ref="tables"
@@ -25,7 +25,7 @@
             style="width: 150px"
           ></Input>
           <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch">
-            <Icon type="md-search"/>&nbsp;搜索
+            <Icon type="md-search" />&nbsp;搜索
           </Button>
           <Button
             v-waves
@@ -34,12 +34,12 @@
             type="info"
             @click="handleClear"
           >
-            <Icon type="md-refresh"/>&nbsp;清除条件
+            <Icon type="md-refresh" />&nbsp;清除条件
           </Button>
         </div>
         <div slot="operations">
           <Button v-waves type="success" class="mr5" @click="addChildren">
-            <Icon type="md-add"/>创建
+            <Icon type="md-add" />创建
           </Button>
           <Poptip
             confirm
@@ -49,7 +49,7 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>删除
+              <Icon type="md-trash" />删除
             </Button>
           </Poptip>
         </div>
@@ -92,7 +92,7 @@
           <i-col span="16">{{ goodsModuleDetail.sort }}</i-col>
         </Row>
         <Row v-if="goodsModuleDetail.customPlanList" class-name="mb10">
-          <tables :columns="tempColumnsView" v-model="goodsModuleDetail.customPlanList" border></tables>
+          <tables v-model="goodsModuleDetail.customPlanList" :columns="tempColumnsView" border></tables>
         </Row>
       </div>
       <div slot="footer">
@@ -161,42 +161,42 @@
             <FormItem label="关联定制:">
               <Row>
                 <Col span="10">
-                  <Select
-                    ref="shelfSpecificationSelect"
-                    :remote="true"
-                    :filterable="true"
-                    :remote-method="remoteMethod"
-                    :loading="shelfSpecificationLoading"
-                  >
-                    <Option
-                      v-for="(option, index) in optionsShelfSpecification"
-                      :value="option.id"
-                      :key="index"
-                      class="pb5 pt5 pl15"
-                      @click.native="selectIndex(option)"
-                    >{{ option.name }}</Option>
-                  </Select>
+                <Select
+                  ref="shelfSpecificationSelect"
+                  :remote="true"
+                  :filterable="true"
+                  :remote-method="remoteMethod"
+                  :loading="shelfSpecificationLoading"
+                >
+                  <Option
+                    v-for="(option, index) in optionsShelfSpecification"
+                    :key="index"
+                    :value="option.id"
+                    class="pb5 pt5 pl15"
+                    @click.native="selectIndex(option)"
+                  >{{ option.name }}</Option>
+                </Select>
                 </Col>
                 <Col span="4">
-                  <InputNumber :min="1" v-model="sort" class="ml20"></InputNumber>
+                <InputNumber v-model="sort" :min="1" class="ml20"></InputNumber>
                 </Col>
                 <Col span="4">
-                  <Button
-                    v-waves
-                    :loading="addTempDataLoading"
-                    span="4"
-                    class="search-btn ml20"
-                    type="primary"
-                    @click="addTempData"
-                  >
-                    <Icon type="md-add"/>&nbsp;添加
-                  </Button>
+                <Button
+                  v-waves
+                  :loading="addTempDataLoading"
+                  span="4"
+                  class="search-btn ml20"
+                  type="primary"
+                  @click="addTempData"
+                >
+                  <Icon type="md-add" />&nbsp;添加
+                </Button>
                 </Col>
               </Row>
             </FormItem>
             <tables
-              :columns="tempColumns"
               v-model="goodsModuleDetail.customPlanList"
+              :columns="tempColumns"
               :loading="tempTableLoading"
               border
               @on-delete="modalHandleDelete"
@@ -214,7 +214,7 @@
         <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
       </div>
     </Modal>
-    
+
     <Modal v-model="uploadVisible" title="View Image">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
@@ -222,8 +222,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   createCustomPlanSection,
   deletetCustomPlanSection,
@@ -233,49 +233,49 @@ import {
   addCustomPlanSectionRelationBatch,
   deletetCustomPlanSectionRelationBatch,
   editCustomPlanSectionRelation
-} from "@/api/fruitermaster";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import uploadMixin from "@/mixins/uploadMixin";
-import IViewUpload from "_c/iview-upload";
+} from '@/api/fruitermaster';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import uploadMixin from '@/mixins/uploadMixin';
+import IViewUpload from '_c/iview-upload';
 
 const goodsModuleDetail = {
   id: 0,
-  sectionName: "",
-  sectionImage: "",
+  sectionName: '',
+  sectionImage: '',
   sort: 0,
-  createAt: "",
+  createAt: '',
   parentId: 0,
-  sectionCode: "",
+  sectionCode: '',
   customPlanList: []
 };
 
 const roleRowData = {
-  sectionName: "",
+  sectionName: '',
   page: 1,
   rows: 10
 };
 
 const commonTempColumns = [
   {
-    title: "定制名称",
-    key: "name",
+    title: '定制名称',
+    key: 'name',
     minWidth: 100
   },
   {
-    title: "定制描述",
-    key: "description",
+    title: '定制描述',
+    key: 'description',
     minWidth: 100
   },
   {
-    title: "排序",
-    key: "relationSort",
+    title: '排序',
+    key: 'relationSort',
     minWidth: 100,
     render: (h, params) => {
       if (params.row.isEdit) {
-        return h("div", [
-          h("InputNumber", {
+        return h('div', [
+          h('InputNumber', {
             domProps: {
               value: params.row.relationSort
             },
@@ -289,7 +289,7 @@ const commonTempColumns = [
           })
         ]);
       } else {
-        return h("div", params.row.relationSort);
+        return h('div', params.row.relationSort);
       }
     }
   }
@@ -307,29 +307,29 @@ export default {
       selectDisable: true,
       goodsModuleList: [],
       ruleInline: {
-        sectionCode: [{ required: true, message: "请填写编码" }],
-        sectionName: [{ required: true, message: "请填写板块名称" }],
-        sectionImage: [{ required: true, message: "请上传板块主图" }],
+        sectionCode: [{ required: true, message: '请填写编码' }],
+        sectionName: [{ required: true, message: '请填写板块名称' }],
+        sectionImage: [{ required: true, message: '请上传板块主图' }],
         sorting: [
-          { required: true, message: "请输入序号" },
+          { required: true, message: '请输入序号' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
               if (!/^[0-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为整数"));
+                errors.push(new Error('必须为整数'));
               }
               callback(errors);
             }
           }
         ],
         customPlanList: [
-          { required: true, message: "请关联定制" },
+          { required: true, message: '请关联定制' },
           {
             validator(rule, value, callback, source, options) {
               console.log(value);
               const errors = [];
               if (!value || value.length < 1) {
-                errors.push(new Error("请关联定制"));
+                errors.push(new Error('请关联定制'));
               }
               callback(errors);
             }
@@ -339,53 +339,53 @@ export default {
       tempColumns: [
         ...commonTempColumns,
         {
-          title: "操作",
+          title: '操作',
           minWidth: 100,
-          key: "handle",
-          options: ["inlineEdit", "delete"]
+          key: 'handle',
+          options: ['inlineEdit', 'delete']
         }
       ],
       tempColumnsView: [...commonTempColumns],
       columns: [
         {
-          type: "selection",
-          key: "",
+          type: 'selection',
+          key: '',
           width: 60,
-          align: "center",
-          fixed: "left"
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: "ID",
-          key: "id",
+          title: 'ID',
+          key: 'id',
           sortable: true,
           width: 80,
-          fixed: "left"
+          fixed: 'left'
         },
         {
-          title: "板块名称",
+          title: '板块名称',
           minWidth: 150,
-          key: "sectionName"
+          key: 'sectionName'
         },
         {
-          title: "链接url",
+          title: '链接url',
           minWidth: 150,
-          key: "url"
+          key: 'url'
         },
         {
-          title: "创建时间",
+          title: '创建时间',
           width: 160,
-          key: "createAt"
+          key: 'createAt'
         },
         {
-          title: "板块排序",
+          title: '板块排序',
           width: 150,
-          key: "sort"
+          key: 'sort'
         },
         {
-          title: "操作",
+          title: '操作',
           minWidth: 200,
-          key: "handle",
-          options: ["view", "edit", "delete", "relevance"]
+          key: 'handle',
+          options: ['view', 'edit', 'delete', 'relevance']
         }
       ],
       shelfSpecificationLoading: false,
@@ -406,7 +406,7 @@ export default {
   methods: {
     setDefaultUploadList(res) {
       if (res.sectionImage != null) {
-        const map = { status: "finished", url: "url" };
+        const map = { status: 'finished', url: 'url' };
         const mainImgArr = [];
         map.url = res.sectionImage;
         mainImgArr.push(map);
@@ -422,7 +422,7 @@ export default {
         .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.resetFields();
           this.getTableData();
         })
@@ -457,12 +457,12 @@ export default {
     addTempData() {
       console.log(this.optionsShelfSpecification);
       if (!this.tempOptionsShelfSpecification) {
-        this.$Message.warning("请选择定制计划");
+        this.$Message.warning('请选择定制计划');
         return;
       }
       const reg = /^-?\d+$/;
       if (!reg.test(this.sort)) {
-        this.$Message.error("排序必须是整数");
+        this.$Message.error('排序必须是整数');
         return;
       }
       if (!this.goodsModuleDetail.customPlanList) {
@@ -505,7 +505,7 @@ export default {
             });
         }
       } else {
-        this.$Message.warning("已经添加该商品！");
+        this.$Message.warning('已经添加该商品！');
       }
     },
     handleSubmit(name) {
@@ -519,7 +519,7 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
@@ -527,7 +527,7 @@ export default {
       this.tempOptionsShelfSpecification = options;
     },
     remoteMethod(query) {
-      if (query !== "") {
+      if (query !== '') {
         this.handleSearchAutoComplete(query);
       } else {
         this.optionsShelfSpecification = [];
@@ -536,9 +536,9 @@ export default {
     handleSearchAutoComplete(value) {
       this.shelfSpecificationLoading = true;
       getCustomPlanPages({
-        name: value + "",
-        page: "1",
-        rows: "5"
+        name: value + '',
+        page: '1',
+        rows: '5'
       })
         .then(res => {
           if (res.array.length > 0) {
@@ -669,7 +669,7 @@ export default {
       });
     },
     modalHandleEdit(params) {
-      this.$set(params.row, "isEdit", true);
+      this.$set(params.row, 'isEdit', true);
       // console.log('modalHandleEidt' + JSON.stringify(params.row));
     },
     modalHandleSave(params) {
@@ -692,7 +692,7 @@ export default {
           });
       }
       this.tempTableLoading = false;
-      this.$set(params.row, "isEdit", false);
+      this.$set(params.row, 'isEdit', false);
       // console.log('modalHandleSave' + JSON.stringify(params.row));
     }
   }

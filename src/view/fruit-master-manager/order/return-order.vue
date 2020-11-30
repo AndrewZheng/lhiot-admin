@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <tables
         ref="tables"
@@ -19,7 +19,7 @@
           <Input v-model="searchRowData.timeStart" placeholder="注册时间起" class="search-input ml20" style="width: 100px"></Input>
           <Input v-model="searchRowData.timeEnd" placeholder="注册时间止" class="search-input mr20" style="width: 100px"></Input>
           <Button v-waves class="search-btn ml5" type="primary" @click="handleSearch">
-            <Icon type="md-search"/>&nbsp;搜索
+            <Icon type="md-search" />&nbsp;搜索
           </Button>
           <Button v-waves type="primary" style="margin-left: 200px" @click="exportExcel">导出</Button>
         </div>
@@ -32,7 +32,8 @@
             show-sizer
             show-total
             @on-change="changePage"
-            @on-page-size-change="changePageSize"></Page>
+            @on-page-size-change="changePageSize"
+          ></Page>
         </Row>
       </div>
     </Card>

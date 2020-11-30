@@ -679,7 +679,7 @@ export const getFinanceAuditPages = (data) => {
     }
   });
 };
-//确认收货
+// 确认收货
 export const confirmReceipt = (data) => {
   return $http.request({
     url: '/lhfarm-small/order/received/' + data.orderCode,
@@ -687,7 +687,7 @@ export const confirmReceipt = (data) => {
     method: 'put'
   });
 };
-//添加快递单号
+// 添加快递单号
 export const putCourierCode = (data) => {
   return $http.request({
     url: '/lhfarm-small/order/update/' + data.id,
@@ -739,7 +739,7 @@ export const getOrderGoods = (data) => {
     method: 'post',
     data: data,
     headers: {
-      'rows': -1,
+      'rows': -1
     }
   });
 };
@@ -1552,6 +1552,116 @@ export const unlockSalesman = (data) => {
     url: `/lhfarm-small/user/unlock-user/${data.id}?userStatus=${data.userStatus}`,
     data,
     method: 'put'
+  });
+};
+
+/* -------------------------
+ * 分享赚相关API
+ * -------------------------
+ */
+// 分享赚商品数据统计 /minapp/share/prod/share-total
+export const shareProdStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/share/prod/share-total?productName=${data.productName}&beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// 分享赚用户数据统计 /minapp/share/user/share-total
+export const shareUserStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/share/user/share-total?nickName=${data.nickName}&deptName=${data.deptName}&phone=${data.phone}&beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    method: 'get',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// 分享赚佣金明细数据统计/minapp/award-amount/detail-total
+export const shareawardAmountDetailTotal = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/award-amount/detail-total`,
+    method: 'post',
+    data,
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// 分佣金数据统计 /minapp/share/user/share-total
+export const commissionStatistics = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/commission-data/total?beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    method: 'get'
+  });
+};
+
+// 分佣结算据统计 /minapp/settle-data/total
+export const commissionSettleData = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/settle-data/total?beginDate=${data.beginDate ? data.beginDate : ''}&endDate=${data.endDate ? data.endDate : ''}`,
+    method: 'get'
+  });
+};
+
+// 分佣订单据统计 /minapp/order-data/total
+export const commissionOrderData = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/order-data/total?beginDate=${data.beginDate ? data.beginDate : ''}&endDate=${data.endDate ? data.endDate : ''}`,
+    method: 'get'
+  });
+};
+
+// 分佣金明细统计 /minapp/award-amount/detail-total
+export const awardAmountDetail = (data) => {
+  return Vue.prototype.$http.request({
+    url: '/minapp/award-amount/detail-total',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// 佣金数据统计趋势
+export const commissionDataTotalTrend = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/commission-data/total-trend?queryMonth=${data || ''}`,
+    method: 'get'
+  });
+};
+
+// 订单数据统计趋势 /minapp/order-data/total-trend
+export const orderDataTotalTrend = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/order-data/total-trend?queryMonth=${data || ''}`,
+    method: 'get'
+  });
+};
+
+// 结算数据统计趋势 /minapp/settle-data/total-trend
+export const settleDataTotalTrend = (data) => {
+  return Vue.prototype.$http.request({
+    url: `/minapp/settle-data/total-trend?queryMonth=${data || ''}`,
+    method: 'get'
   });
 };
 

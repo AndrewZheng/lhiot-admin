@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <Row>
         <i-col :offset="20" :span="4" order="1">

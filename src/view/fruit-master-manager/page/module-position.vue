@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <tables
         ref="tables"
@@ -15,29 +15,32 @@
       >
         <div slot="searchCondition">
           <Input
-            :clearable="true"
             v-model="searchRowData.description"
+            :clearable="true"
             placeholder="板块位置描述"
             class="search-input mr5"
-            style="width: auto"></Input>
+            style="width: auto"
+          ></Input>
           <Select
             ref="selectRef"
             v-model="searchRowData.positionType"
             :clearable="true"
             class="search-col mr5"
-            placeholder="位置类型">
+            placeholder="位置类型"
+          >
             <Option
               v-for="item in positionSelectList"
-              :value="item.value"
               :key="`search-col-${item.value}`"
-              class="pl15 pt5 pb5">{{ item.label }}
+              :value="item.value"
+              class="pl15 pt5 pb5"
+            >{{ item.label }}
             </Option>
           </Select>
           <Button v-waves :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
-            <Icon type="md-search"/>&nbsp;搜索
+            <Icon type="md-search" />&nbsp;搜索
           </Button>
           <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-            <Icon type="md-refresh"/>&nbsp;清除条件
+            <Icon type="md-refresh" />&nbsp;清除条件
           </Button>
         </div>
       </tables>
@@ -49,7 +52,8 @@
             show-sizer
             show-total
             @on-change="changePage"
-            @on-page-size-change="changePageSize"></Page>
+            @on-page-size-change="changePageSize"
+          ></Page>
         </Row>
       </div>
     </Card>
@@ -292,7 +296,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.m-role /deep/ .ivu-select-dropdown{
+.m-content /deep/ .ivu-select-dropdown{
   background: lightgray;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <tables
         ref="tables"
@@ -37,8 +37,8 @@
             >
               <Option
                 v-for="(item,index) in couponStatusEnum"
-                :value="item.value"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
                 style="padding-left: 5px;width: 100px"
               >{{ item.label }}</Option>
@@ -70,8 +70,8 @@
             >
               <Option
                 v-for="(item,index) in activityClassify"
-                :value="item.indexName"
                 :key="index"
+                :value="item.indexName"
                 class="ptb2-5"
               >{{ item.indexValue }}</Option>
             </Select>
@@ -96,8 +96,8 @@
         </div>
         <div slot="operations">
           <Button
-            v-waves
             v-show="this.selectActivityType!='BUY_COUPON_ACTIVITY'||this.total<1"
+            v-waves
             :loading="createLoading"
             type="success"
             class="mr5"
@@ -251,7 +251,7 @@
             <Row>
               <i-col span="6">宣传图片:</i-col>
               <i-col span="18">
-                <img :src="couponDetail.activityImage" style="width: 150px" >
+                <img :src="couponDetail.activityImage" style="width: 150px">
               </i-col>
             </Row>
           </i-col>
@@ -324,8 +324,8 @@
                   <Select v-model="couponDetail.ifEffective" clearable>
                     <Option
                       v-for="(item,index) in couponStatusEnum"
-                      :value="item.value"
                       :key="index"
+                      :value="item.value"
                       class="ptb2-5"
                       style="padding-left: 5px;width: 100%"
                     >{{ item.label }}</Option>
@@ -408,7 +408,7 @@
                 <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                   <template v-if="item.status === 'finished'">
                     <div>
-                      <img :src="item.url" >
+                      <img :src="item.url">
                       <div class="demo-upload-list-cover">
                         <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                         <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -477,8 +477,8 @@
                       >
                         <Option
                           v-for="(item,index) in couponTypeEnum"
-                          :value="item.value"
                           :key="index"
+                          :value="item.value"
                           class="ptb2-5"
                           style="padding-left: 5px;width: 100px"
                         >{{ item.label }}</Option>
@@ -551,8 +551,8 @@
                     <i-col span="5">
                       <FormItem label="发券总数:" prop="couponLimit">
                         <InputNumber
-                          :min="0"
                           v-model="addRelationDetail.couponLimit"
+                          :min="0"
                           class="ml20"
                           label="限购数量"
                         ></InputNumber>
@@ -577,8 +577,8 @@
 
             <Divider orientation="center">已关联优惠券模板</Divider>
             <tables
-              :columns="relationColumns"
               v-model="relationDetail"
+              :columns="relationColumns"
               :loading="tempTableLoading"
               border
               @on-delete="modalHandleDelete"
@@ -595,7 +595,7 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" >
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>

@@ -1539,6 +1539,87 @@ const btns = {
       ]);
     }
   },
+  // VIP内部特权-分享赚
+  staff: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.phone) {
+      if (row.userType === 'CONSUMER') {
+        return h('Poptip', {
+          props: {
+            confirm: true,
+            transfer: true,
+            title: '确认要将此用户升级为VIP吗?',
+            placement: params.index === 0 ? 'right' : 'top'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            'on-ok': () => {
+              vm.$emit('on-staff', params);
+            }
+          }
+        }, [
+          h('Tooltip', {
+            props: { placement: 'top', transfer: true, content: '设为VIP' }
+          }, [
+            h('Button', {
+              props: {
+                type: 'success',
+                size: 'small'
+              }
+            }, [
+              h('Icon', {
+                props: {
+                  type: 'ios-checkmark-circle-outline',
+                  size: 16,
+                  color: '#fff'
+                }
+              })
+            ])
+          ])
+        ]);
+      } else {
+        return h('Poptip', {
+          props: {
+            confirm: true,
+            transfer: true,
+            title: '取消此用户VIP特权?',
+            placement: params.index === 0 ? 'right' : 'top'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            'on-ok': () => {
+              vm.$emit('on-staff', params);
+            }
+          }
+        }, [
+          h('Tooltip', {
+            props: { placement: 'top', transfer: true, content: '取消VIP' }
+          }, [
+            h('Button', {
+              props: {
+                type: 'error',
+                size: 'small'
+              }
+            }, [
+              h('Icon', {
+                props: {
+                  type: 'ios-close-circle-outline',
+                  size: 16,
+                  color: '#fff'
+                }
+              })
+            ])
+          ])
+        ]);
+      }
+    }
+  },
   // 评论 置顶
   setTop: (h, params, vm) => {
     const {

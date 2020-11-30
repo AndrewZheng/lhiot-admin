@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Row :gutter="24" type="flex" align="top" justify="space-between">
       <i-col span="6" order="1">
         <Tree :data="menuData" :render="renderContent"></Tree>

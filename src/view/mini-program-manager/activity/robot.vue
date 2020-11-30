@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <tables
         ref="tables"
@@ -143,7 +143,7 @@
             <Row>
               <i-col span="6">用户头像:</i-col>
               <i-col span="18">
-                <img :src="robotDetail.avater" style="width: 150px" >
+                <img :src="robotDetail.avater" style="width: 150px">
               </i-col>
             </Row>
           </i-col>
@@ -166,8 +166,8 @@
               <Select v-model="robotDetail.storeId">
                 <Option
                   v-for="(item,index) in flagShipList"
-                  :value="item.storeId"
                   :key="index"
+                  :value="item.storeId"
                   class="ptb2-5"
                   style="padding-left: 5px"
                   @click.native="selectStore(item)"
@@ -210,7 +210,7 @@
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>
-                    <img :src="item.url" >
+                    <img :src="item.url">
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                       <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -244,7 +244,7 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" >
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>

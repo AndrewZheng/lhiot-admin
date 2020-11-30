@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <h4>限时秒杀活动数据埋点统计</h4>
       <tables
@@ -19,13 +19,13 @@
             <RadioGroup
               v-model="button"
               type="button"
-              @on-change="timeChange"
               style="float:left;margin-right:5px"
+              @on-change="timeChange"
             >
               <Radio label="昨日"></Radio>
               <Radio label="自定义时间"></Radio>
             </RadioGroup>
-            <div style="float:left" v-show="mark===true">
+            <div v-show="mark===true" style="float:left">
               <DatePicker
                 v-model="searchRowData.beginDate"
                 format="yyyy-MM-dd"
@@ -48,7 +48,7 @@
             </div>
             <div class="dateGroup" style="float:left">
               是否按天展示数据
-              <input type="checkbox" @click="dateGroupChange" ref="status" />
+              <input ref="status" type="checkbox" @click="dateGroupChange">
             </div>
             <Button
               :loading="searchLoading"
@@ -78,21 +78,21 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import CountTo from "_c/count-to";
-import _ from "lodash";
-import { seckillStatistics } from "@/api/mini-program";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+import Tables from '_c/tables';
+import CountTo from '_c/count-to';
+import _ from 'lodash';
+import { seckillStatistics } from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
 
 const dataStatisticsDetail = {
-  beginDate: "",
-  buyNum: "",
-  endDate: "",
-  id: "",
-  pvNum: "",
-  totalDate: "",
-  uvNum: ""
+  beginDate: '',
+  buyNum: '',
+  endDate: '',
+  id: '',
+  pvNum: '',
+  totalDate: '',
+  uvNum: ''
 };
 
 const roleRowData = {
@@ -112,33 +112,33 @@ export default {
     return {
       columns: [
         {
-          title: "日期",
-          key: "totalDate",
-          align: "center",
+          title: '日期',
+          key: 'totalDate',
+          align: 'center',
           render: (h, params, vm) => {
             const { row } = params;
             if (row.totalDate != null) {
               return <div>{row.totalDate}</div>;
             } else {
-              return <div>{"N/A"}</div>;
+              return <div>{'N/A'}</div>;
             }
             return <div>{row.totalDate}</div>;
           }
         },
         {
-          title: "用户购买限时秒杀的商品数量",
-          key: "buyNum",
-          align: "center"
+          title: '用户购买限时秒杀的商品数量',
+          key: 'buyNum',
+          align: 'center'
         },
         {
-          title: "限时秒杀活动页面访问量",
-          key: "pvNum",
-          align: "center"
+          title: '限时秒杀活动页面访问量',
+          key: 'pvNum',
+          align: 'center'
         },
         {
-          title: "限时秒杀活动用户访问量",
-          align: "center",
-          key: "uvNum"
+          title: '限时秒杀活动用户访问量',
+          align: 'center',
+          key: 'uvNum'
         }
         // {
         //   title: "开始日期",
@@ -152,7 +152,7 @@ export default {
         // }
       ],
       mark: false,
-      button: "昨日",
+      button: '昨日',
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
@@ -170,13 +170,13 @@ export default {
       this.getTableData();
     },
     getTableData(value) {
-      let date = new Date();
+      const date = new Date();
       date.setDate(date.getDate() - 1);
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var yesterday = `${year}-${month}-${day}`;
-      if (this.button === "昨日") {
+      if (this.button === '昨日') {
         this.searchRowData.beginDate = yesterday;
         this.searchRowData.endDate = yesterday;
       }
@@ -195,23 +195,23 @@ export default {
         });
     },
     timeChange(value) {
-      if (value === "昨日") {
+      if (value === '昨日') {
         this.mark = false;
         this.inviteData = [];
         this.getTableData(value);
-      } else if (value === "自定义时间") {
+      } else if (value === '自定义时间') {
         this.mark = true;
-        this.searchRowData.beginDate = "";
-        this.searchRowData.endDate = "";
+        this.searchRowData.beginDate = '';
+        this.searchRowData.endDate = '';
       }
     },
     startTimeChange(value, date) {
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.dataStatisticsDetail.beginDate = value;
       this.searchRowData.beginDate = value;
     },
     endTimeChange(value, date) {
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.dataStatisticsDetail.endDate = value;
       this.searchRowData.endDate = value;
     },

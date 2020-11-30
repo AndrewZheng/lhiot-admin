@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <tables
         ref="tables"
@@ -75,7 +75,7 @@
             <Row>
               <i-col span="4">图片详情:</i-col>
               <i-col span="20">
-                <img :src="imageDetail.imageUrl" width="100%" >
+                <img :src="imageDetail.imageUrl" width="100%">
               </i-col>
             </Row>
           </i-col>
@@ -147,8 +147,8 @@
               <Select v-model="imageDetail.imageType">
                 <Option
                   v-for="item in imageType"
-                  :value="item.value"
                   :key="item.value"
+                  :value="item.value"
                   class="ptb2-5"
                   style="padding-left: 5px"
                 >{{ item.label }}</Option>
@@ -162,7 +162,7 @@
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
                   <div>
-                    <img :src="item.url" >
+                    <img :src="item.url">
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
                       <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
@@ -197,7 +197,7 @@
           <Row>
             <Col span="12">
             <FormItem label="排序序号:" prop="rank">
-              <InputNumber :min="0" v-model="imageDetail.rank" placeholder="排序序号"></InputNumber>
+              <InputNumber v-model="imageDetail.rank" :min="0" placeholder="排序序号"></InputNumber>
             </FormItem>
             </Col>
           </Row>
@@ -207,8 +207,8 @@
               <Select v-model="imageDetail.imageStatus">
                 <Option
                   v-for="item in imageStatus"
-                  :value="item.value"
                   :key="item.value"
+                  :value="item.value"
                   class="ptb2-5"
                   style="padding-left: 5px"
                 >{{ item.label }}</Option>
@@ -225,7 +225,7 @@
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" >
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>

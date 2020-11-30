@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <div class="modal-content">
       <Form ref="modalEdit" :model="articleDetail" :rules="ruleInline" :label-width="80">
         <Row>
@@ -17,13 +17,15 @@
             <Select
               :value="articleDetail.articleStatus"
               style="width: 100px"
-              @on-change="useAbleUniteChange">
+              @on-change="useAbleUniteChange"
+            >
               <Option
                 v-for="(item,index) in useAble"
-                :value="item.value"
                 :key="index"
+                :value="item.value"
                 class="ptb2-5"
-                style="padding-left: 5px">{{ item.label }}
+                style="padding-left: 5px"
+              >{{ item.label }}
               </Option>
             </Select>
           </FormItem>
@@ -69,7 +71,7 @@
         </Row>
         <Row>
           <FormItem label="文章内容:" prop="content">
-            <tinymce-editor id="tinymce" ref="editor" v-model="articleDetail.content" :height="500" span="24"/>
+            <tinymce-editor id="tinymce" ref="editor" v-model="articleDetail.content" :height="500" span="24" />
           </FormItem>
         </Row>
       </Form>

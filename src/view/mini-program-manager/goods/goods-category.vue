@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Row :gutter="24" type="flex" align="top" justify="space-between">
       <i-col span="6" order="1">
         <Tree :data="menuData" :render="renderContent"></Tree>
@@ -38,7 +38,7 @@
                   clearable
                 ></Input>
                 <Button
-                  :searchLoading="searchLoading"
+                  :search-loading="searchLoading"
                   class="search-btn mr5"
                   type="primary"
                   @click="handleSearch"
@@ -119,25 +119,25 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   createProductCategories,
   delProductCategories,
   getProductCategoriesPages,
   getProductCategoriesTree,
   editProductCategories
-} from "@/api/mini-program";
-import { buildMenu, convertTree } from "@/libs/util";
-import CommonIcon from "_c/common-icon";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import deleteMixin from "@/mixins/deleteMixin.js";
+} from '@/api/mini-program';
+import { buildMenu, convertTree } from '@/libs/util';
+import CommonIcon from '_c/common-icon';
+import tableMixin from '@/mixins/tableMixin.js';
+import searchMixin from '@/mixins/searchMixin.js';
+import deleteMixin from '@/mixins/deleteMixin.js';
 
 const currentCategory = {
   id: 0,
   parentId: 0,
-  groupName: ""
+  groupName: ''
 };
 
 const roleRowData = {
@@ -157,40 +157,40 @@ export default {
       menuData: [],
       columns: [
         {
-          type: "selection",
-          key: "",
+          type: 'selection',
+          key: '',
           width: 60,
-          align: "center",
-          fixed: "left"
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: "商品分类ID",
-          key: "id",
+          title: '商品分类ID',
+          key: 'id',
           sortable: true,
-          align: "center",
+          align: 'center',
           minWidth: 150
         },
         {
-          title: "分类名",
-          key: "groupName",
+          title: '分类名',
+          key: 'groupName',
           sortable: true,
-          align: "center",
+          align: 'center',
 
           minWidth: 150
         },
         {
-          title: "操作",
-          align: "center",
-          key: "handle",
+          title: '操作',
+          align: 'center',
+          key: 'handle',
           minWidth: 150,
-          options: ["edit", "delete"]
+          options: ['edit', 'delete']
         }
       ],
       modalEdit: false,
       modalViewLoading: false,
       modalEditLoading: false,
       clearSearchLoading: false,
-      currentParentName: "",
+      currentParentName: '',
       currentParentId: 0,
       currentCategory: this._.cloneDeep(currentCategory),
       parentCategory: this._.cloneDeep(currentCategory),
@@ -203,18 +203,18 @@ export default {
   },
   methods: {
     renderContent(h, { root, node, data }) {
-      if (data.type == "PARENT") {
+      if (data.type == 'PARENT') {
         return (
           <div
             style={{
-              display: "inline-block",
-              width: "100%",
-              fontSize: "14px",
-              cursor: "pointer"
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
             }}
           >
             <span>
-              <CommonIcon type="ios-folder" class="mr10" />
+              <CommonIcon type='ios-folder' class='mr10' />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -225,14 +225,14 @@ export default {
         return (
           <div
             style={{
-              display: "inline-block",
-              width: "100%",
-              fontSize: "14px",
-              cursor: "pointer"
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
             }}
           >
             <span>
-              <CommonIcon type="ios-paper" class="mr10" />
+              <CommonIcon type='ios-paper' class='mr10' />
             </span>
             <span>{data.title}</span>
           </div>
@@ -241,7 +241,7 @@ export default {
     },
     createSonRow() {
       if (!this.parentCategory.id) {
-        this.$Message.warning("请从左侧选择一个父分类");
+        this.$Message.warning('请从左侧选择一个父分类');
         return;
       }
       this.resetRowData();
@@ -268,7 +268,7 @@ export default {
     },
     asyncEditOK() {
       if (!this.currentCategory.groupName) {
-        this.$Message.warning("请输入子分类");
+        this.$Message.warning('请输入子分类');
         return;
       }
       if (this.tempModalType === this.modalType.create) {
@@ -333,30 +333,30 @@ export default {
       this.loading = true;
       getProductCategoriesPages(this.searchRowData).then(res => {
         // if (this.menuData.length > 0) {
-          // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
+        // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
+        this.tableData = res.rows;
+        this.total = res.total;
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
         // }
       });
     },
     // 初始化商品菜单列表
     initMenuList() {
       getProductCategoriesTree().then(res => {
-        console.log("进去树列表");
-        console.log("数据",res);
+        console.log('进去树列表');
+        console.log('数据', res);
         // if (res && res.array.length > 0) {
-          console.log("树状列表数据");
-          const menuList = buildMenu(res.array);
-          const map = {
-            title: "title",
-            children: "children"
-          };
-          this.menuData = convertTree(menuList, map, true);
-          // if (this.menuData.length > 0) {
-            this.getTableData();
+        console.log('树状列表数据');
+        const menuList = buildMenu(res.array);
+        const map = {
+          title: 'title',
+          children: 'children'
+        };
+        this.menuData = convertTree(menuList, map, true);
+        // if (this.menuData.length > 0) {
+        this.getTableData();
         //   }
         // }
       });
@@ -365,17 +365,17 @@ export default {
     handleClick({ root, node, data }) {
       this.loading = true;
       // 递归展开当前节点
-      if (typeof data.expand === "undefined") {
-        this.$set(data, "expend", false);
+      if (typeof data.expand === 'undefined') {
+        this.$set(data, 'expend', false);
         if (data.children) {
           this.expandChildren(data.children);
         }
       }
 
-      if (typeof data.selected === "undefined") {
-        this.$set(data, "selected", true);
+      if (typeof data.selected === 'undefined') {
+        this.$set(data, 'selected', true);
       } else {
-        this.$set(data, "selected", !data.selected);
+        this.$set(data, 'selected', !data.selected);
       }
 
       this.parentCategory.id = data.id;
@@ -387,8 +387,8 @@ export default {
     },
     expandChildren(array) {
       array.forEach(item => {
-        if (typeof item.expand === "undefined") {
-          this.$set(item, "expend", false);
+        if (typeof item.expand === 'undefined') {
+          this.$set(item, 'expend', false);
         } else {
           item.expand = !item.expand;
         }

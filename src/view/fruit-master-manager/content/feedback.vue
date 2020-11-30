@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <tables
         ref="tables"
@@ -41,16 +41,16 @@
           >
             <Option
               v-for="item in feedbackStatus"
-              :value="item.value"
               :key="item.value"
+              :value="item.value"
               class="ml15 mt10"
             >{{ item.label }}</Option>
           </Select>
           <Button v-waves :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
-            <Icon type="md-search"/>&nbsp;搜索
+            <Icon type="md-search" />&nbsp;搜索
           </Button>
           <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-            <Icon type="md-refresh"/>&nbsp;清除条件
+            <Icon type="md-refresh" />&nbsp;清除条件
           </Button>
         </div>
       </tables>

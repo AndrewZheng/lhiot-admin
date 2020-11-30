@@ -1,5 +1,5 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <Card>
       <tables
         ref="tables"
@@ -61,16 +61,16 @@
             @on-change="endTimeChange"
           />
           <Button v-waves :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
-            <Icon type="md-search"/>&nbsp;搜索
+            <Icon type="md-search" />&nbsp;搜索
           </Button>
           <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-            <Icon type="md-refresh"/>&nbsp;清除条件
+            <Icon type="md-refresh" />&nbsp;清除条件
           </Button>
         </div>
         <div slot="operations">
           <!-- 多类型导出 -->
-          <BookTypeOption v-model="exportType" class="mr5"/>
-          <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
+          <BookTypeOption v-model="exportType" class="mr5" />
+          <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download" />导出</Button>
           <!-- <Button v-wavestype="success" @click="handleExport('用户信息')"><Icon type="md-cloud-upload"/> 导出（用上面的导出）</Button> -->
         </div>
       </tables>

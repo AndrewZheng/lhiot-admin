@@ -1,13 +1,13 @@
 <template>
-  <div class="m-role">
+  <div class="m-content">
     <div style="margin-bottom:30px;position: relative;">
       <div class="tabChange">
         <b
           data-index="pro"
-          @click="assistDataChange"
           :class=" topStatus=='pro' ? 'hot' : '' "
+          @click="assistDataChange"
         >商品数据统计</b>
-        <b data-index="use" @click="assistDataChange" :class=" topStatus=='use' ? 'hot' : '' ">用户数据统计</b>
+        <b data-index="use" :class=" topStatus=='use' ? 'hot' : '' " @click="assistDataChange">用户数据统计</b>
       </div>
       <Card v-show="topStatus==='pro'">
         <tables
@@ -33,7 +33,7 @@
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
               </RadioGroup>
-              <div class="mark" v-show="mark===true">
+              <div v-show="mark===true" class="mark">
                 <DatePicker
                   v-model="searchRowData.beginDate"
                   format="yyyy-MM-dd"
@@ -121,7 +121,7 @@
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
               </RadioGroup>
-              <div class="mark" v-show="mark1===true">
+              <div v-show="mark1===true" class="mark">
                 <DatePicker
                   v-model="searchRowData1.beginDate"
                   format="yyyy-MM-dd"
@@ -141,7 +141,7 @@
                   style="width: 150px"
                   @on-change="endTimeChange1"
                 />
-              </div>               
+              </div>
               </Select>
               <Input
                 v-model="searchRowData1.nickName"
@@ -150,7 +150,7 @@
                 style="width: auto"
                 clearable
               ></Input>
-                <Input
+              <Input
                 v-model="searchRowData1.phone"
                 placeholder="手机号码"
                 class="search-input mr5"
@@ -198,32 +198,32 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   shareProdStatistics,
-  shareUserStatistics,
-} from "@/api/mini-program";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import { couponTypeConvert } from "@/libs/converStatus";
-import { couponTypeEnum } from "@/libs/enumerate";
-import searchMixin from "@/mixins/searchMixin.js";
+  shareUserStatistics
+} from '@/api/mini-program';
+import uploadMixin from '@/mixins/uploadMixin';
+import deleteMixin from '@/mixins/deleteMixin.js';
+import tableMixin from '@/mixins/tableMixin.js';
+import { couponTypeConvert } from '@/libs/converStatus';
+import { couponTypeEnum } from '@/libs/enumerate';
+import searchMixin from '@/mixins/searchMixin.js';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber
-} from "@/libs/util";
+} from '@/libs/util';
 
 const couponTemplateDetail = {};
 
 const roleRowData = {
   page: 1,
   rows: 10,
-  productName:"",
-  beginDate:null,
-  endDate:null,
+  productName: '',
+  beginDate: null,
+  endDate: null,
   sidx: 'awardAmount',
   sort: 'desc'
 };
@@ -231,10 +231,10 @@ const roleRowData = {
 const roleRowData1 = {
   page: 1,
   rows: 10,
-  beginDate:null,
-  endDate:null,
-  nickName:"",
-  phone:"",
+  beginDate: null,
+  endDate: null,
+  nickName: '',
+  phone: '',
   sidx: 'awardAmount',
   sort: 'desc'
 };
@@ -246,86 +246,86 @@ export default {
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
     return {
-      topStatus: "pro",
+      topStatus: 'pro',
       mark: false,
       mark1: false,
       num: 0,
-      num1:0,
-      button: "汇总",
-      button1: "汇总",
+      num1: 0,
+      button: '汇总',
+      button1: '汇总',
       couponTypeEnum,
-      totalPage1:0,
+      totalPage1: 0,
       totalPage: 0,
       columns: [
         {
-          title: "商品名称",
-          align: "center",
-          key: "productName"
+          title: '商品名称',
+          align: 'center',
+          key: 'productName'
         },
         {
-          title: "分享人数",
-          align: "center",
-          key: "shareCount",
-          sortable: 'custom',
+          title: '分享人数',
+          align: 'center',
+          key: 'shareCount',
+          sortable: 'custom'
         },
         {
-          title: "购买次数",
-          align: "center",
-          key: "buyCount",
-          sortable: 'custom',
+          title: '购买次数',
+          align: 'center',
+          key: 'buyCount',
+          sortable: 'custom'
         },
         {
-          title: "购买份数",
-          align: "center",
-          key: "buyCopies",
+          title: '购买份数',
+          align: 'center',
+          key: 'buyCopies',
           sortable: 'custom',
           minWidth: 60
         },
         {
-          title: "产生佣金",
-          align: "center",
-          key: "awardAmount",
+          title: '产生佣金',
+          align: 'center',
+          key: 'awardAmount',
           sortable: 'custom',
           minWidth: 60,
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.awardAmount)}</div>;
           }
-        },
+        }
       ],
       columns1: [
         {
-          title: "用户昵称",
-          align: "center",
-          key: "nickName"
+          title: '用户昵称',
+          align: 'center',
+          key: 'nickName'
         },
         {
-          title: "手机号码",
-          align: "center",
-          key: "phone",
+          title: '手机号码',
+          align: 'center',
+          key: 'phone'
         },
         {
-          title: "分享人数",
-          align: "center",
+          title: '分享人数',
+          align: 'center',
           sortable: 'custom',
-          key: "shareCount"
+          key: 'shareCount'
         },
         {
-          title: "分享购买次数",
-          align: "center",
+          title: '分享购买次数',
+          align: 'center',
           sortable: 'custom',
-          key: "buyCount",
+          key: 'buyCount',
           minWidth: 60
         },
         {
-          title: "获得佣金",
-          align: "center",
+          title: '获得佣金',
+          align: 'center',
           sortable: 'custom',
-          key: "awardAmount",
+          key: 'awardAmount',
           render(h, params) {
             return <div>{fenToYuanDot2(params.row.awardAmount)}</div>;
           },
           minWidth: 60
-        },
+        }
       ],
       searchRowData: _.cloneDeep(roleRowData),
       searchRowData1: _.cloneDeep(roleRowData1),
@@ -351,14 +351,14 @@ export default {
       this.getTableData1();
     },
     getTableData(value) {
-      let date = new Date();
+      const date = new Date();
       date.setDate(date.getDate());
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var today = `${year}-${month}-${day}`;
-      if (value === "昨日") {
-        let date = new Date();
+      if (value === '昨日') {
+        const date = new Date();
         date.setDate(date.getDate() - 1);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -367,12 +367,12 @@ export default {
         this.searchRowData.beginDate = yesterday;
         this.searchRowData.endDate = yesterday;
       }
-      if (this.button === "汇总" || value === "汇总") {
+      if (this.button === '汇总' || value === '汇总') {
         this.searchRowData.beginDate = null;
         this.searchRowData.endDate = null;
       }
-      if (value === "今日") {
-        let date = new Date();
+      if (value === '今日') {
+        const date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -381,8 +381,8 @@ export default {
         this.searchRowData.beginDate = today;
         this.searchRowData.endDate = today;
       }
-      if (value === "最近7天") {
-        let date = new Date();
+      if (value === '最近7天') {
+        const date = new Date();
         date.setDate(date.getDate() - 7);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -391,8 +391,8 @@ export default {
         this.searchRowData.beginDate = sevenDay;
         this.searchRowData.endDate = today;
       }
-      if (value === "最近30天") {
-        let date = new Date();
+      if (value === '最近30天') {
+        const date = new Date();
         date.setDate(date.getDate() - 30);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -417,14 +417,14 @@ export default {
         });
     },
     getTableData1(value) {
-      let date = new Date();
+      const date = new Date();
       date.setDate(date.getDate());
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var today = `${year}-${month}-${day}`;
-      if (value === "昨日") {
-        let date = new Date();
+      if (value === '昨日') {
+        const date = new Date();
         date.setDate(date.getDate() - 1);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -433,12 +433,12 @@ export default {
         this.searchRowData1.beginDate = yesterday;
         this.searchRowData1.endDate = yesterday;
       }
-      if (this.button1 === "汇总" || value === "汇总") {
+      if (this.button1 === '汇总' || value === '汇总') {
         this.searchRowData.beginDate = null;
         this.searchRowData.endDate = null;
       }
-      if (value === "今日") {
-        let date = new Date();
+      if (value === '今日') {
+        const date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -447,8 +447,8 @@ export default {
         this.searchRowData1.beginDate = today;
         this.searchRowData1.endDate = today;
       }
-      if (value === "最近7天") {
-        let date = new Date();
+      if (value === '最近7天') {
+        const date = new Date();
         date.setDate(date.getDate() - 7);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -457,8 +457,8 @@ export default {
         this.searchRowData1.beginDate = sevenDay;
         this.searchRowData1.endDate = today;
       }
-      if (value === "最近30天") {
-        let date = new Date();
+      if (value === '最近30天') {
+        const date = new Date();
         date.setDate(date.getDate() - 30);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -505,15 +505,14 @@ export default {
       this.pageSize = 10;
       this.clearSearchLoading = true;
       this.handleSearch1();
-      
     },
     assistDataChange(e) {
-      let index = e.currentTarget.dataset.index;
+      const index = e.currentTarget.dataset.index;
       if (this.topStatus === index) {
         return;
       }
-      this.button="汇总",
-      this.button1="汇总",
+      this.button = '汇总',
+      this.button1 = '汇总',
       this.topStatus = index;
     },
     changePage2(page) {
@@ -526,67 +525,67 @@ export default {
       this.getTableData1();
     },
     timeChange(value) {
-      if (value === "今日") {
+      if (value === '今日') {
         this.getTableData(value);
         this.mark = false;
-      } else if (value === "昨日") {
+      } else if (value === '昨日') {
         this.mark = false;
         this.getTableData(value);
-      } else if (value === "汇总") {
+      } else if (value === '汇总') {
         this.mark = false;
         this.getTableData(value);
-      } else if (value === "最近7天") {
+      } else if (value === '最近7天') {
         this.mark = false;
         this.getTableData(value);
-      } else if (value === "最近30天") {
+      } else if (value === '最近30天') {
         this.mark = false;
         this.getTableData(value);
-      } else if (value === "自定义时间") {
+      } else if (value === '自定义时间') {
         this.mark = true;
-        this.searchRowData.beginDate = "";
-        this.searchRowData.endDate = "";
+        this.searchRowData.beginDate = '';
+        this.searchRowData.endDate = '';
       }
     },
     timeChange1(value) {
-      if (value === "今日") {
+      if (value === '今日') {
         this.getTableData1(value);
         this.mark1 = false;
-      } else if (value === "昨日") {
+      } else if (value === '昨日') {
         this.mark1 = false;
         this.getTableData1(value);
-      } else if (value === "汇总") {
+      } else if (value === '汇总') {
         this.mark1 = false;
         this.getTableData1(value);
-      } else if (value === "最近7天") {
+      } else if (value === '最近7天') {
         this.mark1 = false;
         this.getTableData1(value);
-      } else if (value === "最近30天") {
+      } else if (value === '最近30天') {
         this.mark1 = false;
         this.getTableData1(value);
-      } else if (value === "自定义时间") {
+      } else if (value === '自定义时间') {
         this.mark1 = true;
-        this.searchRowData1.beginDate = "";
-        this.searchRowData1.endDate = "";
+        this.searchRowData1.beginDate = '';
+        this.searchRowData1.endDate = '';
       }
     },
     startTimeChange(value, date) {
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.searchRowData.beginDate = value;
     },
     endTimeChange(value, date) {
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.searchRowData.endDate = value;
     },
     startTimeChange1(value, date) {
-      this.button1 = "自定义时间";
+      this.button1 = '自定义时间';
       this.searchRowData1.beginDate = value;
     },
     endTimeChange1(value, date) {
-      this.button1 = "自定义时间";
+      this.button1 = '自定义时间';
       this.searchRowData1.endDate = value;
     },
     handleClear() {
-      this.button = "汇总";
+      this.button = '汇总';
       this.mark = false;
       this.resetSearchRowData();
       this.page = 1;
@@ -632,48 +631,48 @@ export default {
     },
     // 导出数据
     handleDownload(name) {
-        if (name==="prod") {
+      if (name === 'prod') {
         // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
         this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-        let pageSize = this.searchRowData.page;
+        const pageSize = this.searchRowData.page;
         this.searchRowData.page = 1;
         shareProdStatistics(this.searchRowData).then(res => {
-            const tableData = res.rows;
-            // 恢复正常页数
-            this.searchRowData.rows = 10;
-            this.searchRowData.page = pageSize;
-            // 表格数据导出字段翻译
-            let _this = this;
+          const tableData = res.rows;
+          // 恢复正常页数
+          this.searchRowData.rows = 10;
+          this.searchRowData.page = pageSize;
+          // 表格数据导出字段翻译
+          const _this = this;
           tableData.forEach(item => {
-          item["awardAmount"] = (item["awardAmount"] / 100.0).toFixed(2);
-           });
-            const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
-            this.$refs.tables.handleDownload({
+            item['awardAmount'] = (item['awardAmount'] / 100.0).toFixed(2);
+          });
+          const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
+          this.$refs.tables.handleDownload({
             filename: `分享赚商品数据统计-${date}`,
             data: tableData
-            });
+          });
         });
-        }else{
+      } else {
         this.searchRowData1.rows = this.total > 5000 ? 5000 : this.total;
-        let pageSize = this.searchRowData1.page;
+        const pageSize = this.searchRowData1.page;
         this.searchRowData1.page = 1;
         shareUserStatistics(this.searchRowData1).then(res => {
-            const tableData = res.rows;
-            // 恢复正常页数
-            this.searchRowData1.rows = 10;
-            this.searchRowData1.page = pageSize;
-            // 表格数据导出字段翻译
-            let _this = this;
+          const tableData = res.rows;
+          // 恢复正常页数
+          this.searchRowData1.rows = 10;
+          this.searchRowData1.page = pageSize;
+          // 表格数据导出字段翻译
+          const _this = this;
           tableData.forEach(item => {
-          item["awardAmount"] = (item["awardAmount"] / 100.0).toFixed(2);
-           });
-            const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
-            this.$refs.tables1.handleDownload({
+            item['awardAmount'] = (item['awardAmount'] / 100.0).toFixed(2);
+          });
+          const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
+          this.$refs.tables1.handleDownload({
             filename: `分享赚用户数据统计-${date}`,
             data: tableData
-            });
+          });
         });
-        }
+      }
     }
   }
 };
