@@ -173,6 +173,15 @@ const wholesaleRouter = [
         title: '支付流水查询'
       },
       component: () => import('@/view/wholesale-mall-manager/order/payment-log.vue')
+    },
+    {
+      path: '',
+      name: 'ickd',
+      meta: {
+        title: '爱查快递',
+        href: 'https://www.ickd.cn/auto.html',
+        icon: 'ios-link'
+      }
     }
     // {
     //   path: '/wholesale-refund-log',

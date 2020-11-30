@@ -118,6 +118,13 @@
             >
               <Icon type="md-download" />导出订单
             </Button>
+            <!-- <Button
+              v-clipboard:copy="copyData"
+              v-clipboard:success="clipboardSuccess"
+              type="info"
+            >
+              复制
+            </Button> -->
           </Row>
         </div>
       </tables>
@@ -346,7 +353,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-
 import {
   getOrderPages,
   exporGoodsStandard,
@@ -440,224 +446,7 @@ const deliveryInfo = {
   contactsName: ''
 };
 
-const orderColumns = [
-  {
-    type: 'selection',
-    key: '',
-    width: 60,
-    align: 'center',
-    fixed: 'left'
-  },
-  {
-    title: '订单编号',
-    key: 'orderCode',
-    sortable: true,
-    resizable: true,
-    width: 200,
-    fixed: 'left',
-    align: 'center'
-  },
-  {
-    title: '创建时间',
-    align: 'center',
-    width: 200,
-    fixed: 'left',
-    key: 'createTime'
-  },
-  {
-    title: '快递单号',
-    align: 'center',
-    width: 150,
-    key: 'deliveryCode',
-    render(h, params, vm) {
-      const { row } = params;
-      return <div>{row.deliveryCode ? row.deliveryCode : 'N/A'}</div>;
-    }
-  },
-  {
-    title: '订单总价',
-    align: 'center',
-    width: 120,
-    key: 'totalFee',
-    render(h, params, vm) {
-      const amount = fenToYuanDot2(params.row.totalFee);
-      return <div>{amount}</div>;
-    }
-  },
-  {
-    title: '优惠金额',
-    align: 'center',
-    width: 120,
-    key: 'discountFee',
-    render(h, params, vm) {
-      const amount = fenToYuanDot2(params.row.discountFee);
-      return <div>{amount}</div>;
-    }
-  },
-  {
-    title: '应付金额',
-    align: 'center',
-    width: 120,
-    key: 'payableFee',
-    render(h, params, vm) {
-      const amount = fenToYuanDot2(params.row.payableFee);
-      return <div>{amount}</div>;
-    }
-  },
-  {
-    title: '配送费',
-    align: 'center',
-    width: 120,
-    key: 'deliveryFee',
-    render(h, params, vm) {
-      const amount = fenToYuanDot2(params.row.deliveryFee);
-      return <div>{amount || 'N/A'}</div>;
-    }
-  },
-  {
-    title: '实付金额',
-    align: 'center',
-    width: 120,
-    key: 'payableFee1',
-    render(h, params, vm) {
-      const amount = fenToYuanDot2(
-        params.row.payableFee + params.row.deliveryFee
-      );
-      return <div>{amount}</div>;
-    }
-  },
-  {
-    title: '支付类型',
-    align: 'center',
-    width: 120,
-    key: 'settlementType',
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (row.settlementType === 'wechat') {
-        return (
-          <div>
-            <tag color='success'>
-              {wholesalePayTypeConvert(row.settlementType)}
-            </tag>
-          </div>
-        );
-      } else if (row.settlementType === 'balance') {
-        return (
-          <div>
-            <tag color='primary'>
-              {wholesalePayTypeConvert(row.settlementType)}
-            </tag>
-          </div>
-        );
-      } else if (row.settlementType === 'offline') {
-        return (
-          <div>
-            <tag color='warning'>
-              {wholesalePayTypeConvert(row.settlementType)}
-            </tag>
-          </div>
-        );
-      } else if (row.settlementType === 'haiding') {
-        return (
-          <div>
-            <tag color='warning'>
-              {wholesalePayTypeConvert(row.settlementType)}
-            </tag>
-          </div>
-        );
-      } else {
-        return <div>{'N/A'}</div>;
-      }
-    }
-  },
-  {
-    title: '用户名称',
-    align: 'center',
-    width: 120,
-    key: 'userName'
-  },
-  {
-    title: '配送区域',
-    align: 'center',
-    width: 160,
-    key: 'deliveryAddress',
-    render(h, params, vm) {
-      const { row } = params;
-      const address = JSON.parse(row.deliveryAddress);
-      return <div>{address.addressArea}</div>;
-    }
-  },
-  {
-    title: '用户手机',
-    align: 'center',
-    width: 120,
-    key: 'phone'
-  },
-  {
-    title: '订单状态',
-    align: 'center',
-    fixed: 'right',
-    width: 120,
-    key: 'orderStatus',
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (
-        row.orderStatus === 'unpaid' ||
-              row.orderStatus === 'paying' ||
-              row.orderStatus === 'undelivery'
-      ) {
-        return (
-          <div>
-            <tag color='default'>
-              {wholesaleOrderStatusConvert(row.orderStatus)}
-            </tag>
-          </div>
-        );
-      } else if (
-        row.orderStatus === 'delivery' ||
-              row.orderStatus === 'unrefunded'
-      ) {
-        return (
-          <div>
-            <tag color='primary'>
-              {wholesaleOrderStatusConvert(row.orderStatus)}
-            </tag>
-          </div>
-        );
-      } else if (row.orderStatus === 'failed') {
-        return (
-          <div>
-            <tag color='error'>
-              {wholesaleOrderStatusConvert(row.orderStatus)}
-            </tag>
-          </div>
-        );
-      } else if (
-        row.orderStatus === 'received' ||
-              row.orderStatus === 'refunded'
-      ) {
-        return (
-          <div>
-            <tag color='success'>
-              {wholesaleOrderStatusConvert(row.orderStatus)}
-            </tag>
-          </div>
-        );
-      } else {
-        return <div>N/A</div>;
-      }
-    }
-  },
-  {
-    title: '操作',
-    minWidth: 150,
-    resizable: true,
-    align: 'center',
-    fixed: 'right',
-    key: 'handle',
-    options: ['view', 'edit', 'onReceive']
-  }
-];
+const orderColumns = [];
 
 const goodsColumns = [
   {
@@ -779,13 +568,256 @@ export default {
       currentTableRowSelected: null,
       exportType: '', // ORDER_GOODS,DELIVERY_NOTE
       selectedOrderCodes: '',
+      copyData: '你是个大帅哥',
       payTypeEnum,
       payStatusEnum,
       orderStatusEnum,
       wholesaleOrderStatusEnum,
       wholesaleHdStatusEnum,
       goodsColumns,
-      columns: orderColumns,
+      columns: [
+        {
+          type: 'selection',
+          key: '',
+          width: 60,
+          align: 'center',
+          fixed: 'left'
+        },
+        {
+          title: '订单编号',
+          key: 'orderCode',
+          sortable: true,
+          resizable: true,
+          width: 200,
+          fixed: 'left',
+          align: 'center'
+        },
+        {
+          title: '创建时间',
+          align: 'center',
+          width: 200,
+          fixed: 'left',
+          key: 'createTime'
+        },
+        {
+          title: '快递单号',
+          align: 'center',
+          width: 200,
+          key: 'deliveryCode',
+          render(h, params, vm) {
+            const { row } = params;
+            if (!row.deliveryCode) {
+              return <div>N/A</div>;
+            } else {
+              return h('Tooltip', {
+                props: {
+                  placement: 'top',
+                  transfer: true,
+                  content: '点击快速复制快递单号'
+                }
+              }, [h('Button', {
+                props: {
+                  type: 'info',
+                  size: 'small'
+                },
+                directives: [
+                  {
+                    name: 'clipboard',
+                    value: row.deliveryCode,
+                    arg: 'copy'
+                  }
+                ],
+                on: {
+                  click: () => this.clipboardSuccess
+                }
+              }, row.deliveryCode)]);
+            }
+          }
+        },
+        {
+          title: '订单总价',
+          align: 'center',
+          width: 120,
+          key: 'totalFee',
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(params.row.totalFee);
+            return <div>{amount}</div>;
+          }
+        },
+        {
+          title: '优惠金额',
+          align: 'center',
+          width: 120,
+          key: 'discountFee',
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(params.row.discountFee);
+            return <div>{amount}</div>;
+          }
+        },
+        {
+          title: '应付金额',
+          align: 'center',
+          width: 120,
+          key: 'payableFee',
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(params.row.payableFee);
+            return <div>{amount}</div>;
+          }
+        },
+        {
+          title: '配送费',
+          align: 'center',
+          width: 120,
+          key: 'deliveryFee',
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(params.row.deliveryFee);
+            return <div>{amount || 'N/A'}</div>;
+          }
+        },
+        {
+          title: '实付金额',
+          align: 'center',
+          width: 120,
+          key: 'payableFee1',
+          render(h, params, vm) {
+            const amount = fenToYuanDot2(
+              params.row.payableFee + params.row.deliveryFee
+            );
+            return <div>{amount}</div>;
+          }
+        },
+        {
+          title: '支付类型',
+          align: 'center',
+          width: 120,
+          key: 'settlementType',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.settlementType === 'wechat') {
+              return (
+                <div>
+                  <tag color='success'>
+                    {wholesalePayTypeConvert(row.settlementType)}
+                  </tag>
+                </div>
+              );
+            } else if (row.settlementType === 'balance') {
+              return (
+                <div>
+                  <tag color='primary'>
+                    {wholesalePayTypeConvert(row.settlementType)}
+                  </tag>
+                </div>
+              );
+            } else if (row.settlementType === 'offline') {
+              return (
+                <div>
+                  <tag color='warning'>
+                    {wholesalePayTypeConvert(row.settlementType)}
+                  </tag>
+                </div>
+              );
+            } else if (row.settlementType === 'haiding') {
+              return (
+                <div>
+                  <tag color='warning'>
+                    {wholesalePayTypeConvert(row.settlementType)}
+                  </tag>
+                </div>
+              );
+            } else {
+              return <div>{'N/A'}</div>;
+            }
+          }
+        },
+        {
+          title: '用户名称',
+          align: 'center',
+          width: 120,
+          key: 'userName'
+        },
+        {
+          title: '配送区域',
+          align: 'center',
+          width: 160,
+          key: 'deliveryAddress',
+          render(h, params, vm) {
+            const { row } = params;
+            const address = JSON.parse(row.deliveryAddress);
+            return <div>{address.addressArea}</div>;
+          }
+        },
+        {
+          title: '用户手机',
+          align: 'center',
+          width: 120,
+          key: 'phone'
+        },
+        {
+          title: '订单状态',
+          align: 'center',
+          fixed: 'right',
+          width: 120,
+          key: 'orderStatus',
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (
+              row.orderStatus === 'unpaid' ||
+              row.orderStatus === 'paying' ||
+              row.orderStatus === 'undelivery'
+            ) {
+              return (
+                <div>
+                  <tag color='default'>
+                    {wholesaleOrderStatusConvert(row.orderStatus)}
+                  </tag>
+                </div>
+              );
+            } else if (
+              row.orderStatus === 'delivery' ||
+              row.orderStatus === 'unrefunded'
+            ) {
+              return (
+                <div>
+                  <tag color='primary'>
+                    {wholesaleOrderStatusConvert(row.orderStatus)}
+                  </tag>
+                </div>
+              );
+            } else if (row.orderStatus === 'failed') {
+              return (
+                <div>
+                  <tag color='error'>
+                    {wholesaleOrderStatusConvert(row.orderStatus)}
+                  </tag>
+                </div>
+              );
+            } else if (
+              row.orderStatus === 'received' ||
+              row.orderStatus === 'refunded'
+            ) {
+              return (
+                <div>
+                  <tag color='success'>
+                    {wholesaleOrderStatusConvert(row.orderStatus)}
+                  </tag>
+                </div>
+              );
+            } else {
+              return <div>N/A</div>;
+            }
+          }
+        },
+        {
+          title: '操作',
+          minWidth: 150,
+          resizable: true,
+          align: 'center',
+          fixed: 'right',
+          key: 'handle',
+          options: ['view', 'edit', 'onReceive']
+        }
+      ],
       deliveryInfo: _.cloneDeep(deliveryInfo),
       searchRowData: _.cloneDeep(roleRowData),
       orderDetail: _.cloneDeep(orderDetail),
@@ -811,6 +843,9 @@ export default {
     this.getTableData();
   },
   methods: {
+    clipboardSuccess() {
+      this.$Message.info('快递单号已复制到剪切板中，请点击爱查快递去查询！');
+    },
     orderStatusesOnChange(value) {
       if (value.length === 0) {
         this.searchRowData.orderStatuses = null;
