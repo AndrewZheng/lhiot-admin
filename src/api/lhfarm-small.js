@@ -420,16 +420,6 @@ export const getProStandardExpand = ({
   });
 };
 
-// 根据code条码查询海鼎商品信息
-export const getHdProductInfo = ({
-  code
-}) => {
-  return $http.request({
-    url: '/minapp/product-standards/hd-product/' + code,
-    method: 'get'
-  });
-};
-
 // 修改商品规格扩展信息
 export const modifyProStandardExpand = (data) => {
   return $http.request({
@@ -1559,10 +1549,10 @@ export const unlockSalesman = (data) => {
  * 分享赚相关API
  * -------------------------
  */
-// 分享赚商品数据统计 /minapp/share/prod/share-total
+// 分享赚商品数据统计 /lhfarm-small/share/prod/share-total
 export const shareProdStatistics = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/share/prod/share-total?productName=${data.productName}&beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    url: `/lhfarm-small/share/prod/share-total?productName=${data.productName}&beginDate=${data.beginDate}&endDate=${data.endDate}`,
     method: 'get',
     headers: {
       'page': data.page,
@@ -1573,10 +1563,10 @@ export const shareProdStatistics = (data) => {
   });
 };
 
-// 分享赚用户数据统计 /minapp/share/user/share-total
+// 分享赚用户数据统计 /lhfarm-small/share/user/share-total
 export const shareUserStatistics = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/share/user/share-total?nickName=${data.nickName}&deptName=${data.deptName}&phone=${data.phone}&beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    url: `/lhfarm-small/share/user/share-total?nickName=${data.nickName}&deptName=${data.deptName}&phone=${data.phone}&beginDate=${data.beginDate}&endDate=${data.endDate}`,
     method: 'get',
     headers: {
       'page': data.page,
@@ -1587,10 +1577,10 @@ export const shareUserStatistics = (data) => {
   });
 };
 
-// 分享赚佣金明细数据统计/minapp/award-amount/detail-total
+// 分享赚佣金明细数据统计/lhfarm-small/award-amount/detail-total
 export const shareawardAmountDetailTotal = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/award-amount/detail-total`,
+    url: `/lhfarm-small/award-amount/detail-total`,
     method: 'post',
     data,
     headers: {
@@ -1602,34 +1592,34 @@ export const shareawardAmountDetailTotal = (data) => {
   });
 };
 
-// 分佣金数据统计 /minapp/share/user/share-total
+// 分佣金数据统计 /lhfarm-small/share/user/share-total
 export const commissionStatistics = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/commission-data/total?beginDate=${data.beginDate}&endDate=${data.endDate}`,
+    url: `/lhfarm-small/commission-data/total?beginDate=${data.beginDate}&endDate=${data.endDate}`,
     method: 'get'
   });
 };
 
-// 分佣结算据统计 /minapp/settle-data/total
+// 分佣结算据统计 /lhfarm-small/settle-data/total
 export const commissionSettleData = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/settle-data/total?beginDate=${data.beginDate ? data.beginDate : ''}&endDate=${data.endDate ? data.endDate : ''}`,
+    url: `/lhfarm-small/settle-data/total?beginDate=${data.beginDate ? data.beginDate : ''}&endDate=${data.endDate ? data.endDate : ''}`,
     method: 'get'
   });
 };
 
-// 分佣订单据统计 /minapp/order-data/total
+// 分佣订单据统计 /lhfarm-small/order-data/total
 export const commissionOrderData = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/order-data/total?beginDate=${data.beginDate ? data.beginDate : ''}&endDate=${data.endDate ? data.endDate : ''}`,
+    url: `/lhfarm-small/order-data/total?beginDate=${data.beginDate ? data.beginDate : ''}&endDate=${data.endDate ? data.endDate : ''}`,
     method: 'get'
   });
 };
 
-// 分佣金明细统计 /minapp/award-amount/detail-total
+// 分佣金明细统计 /lhfarm-small/award-amount/detail-total
 export const awardAmountDetail = (data) => {
   return Vue.prototype.$http.request({
-    url: '/minapp/award-amount/detail-total',
+    url: '/lhfarm-small/award-amount/detail-total',
     data,
     method: 'post',
     headers: {
@@ -1644,23 +1634,23 @@ export const awardAmountDetail = (data) => {
 // 佣金数据统计趋势
 export const commissionDataTotalTrend = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/commission-data/total-trend?queryMonth=${data || ''}`,
+    url: `/lhfarm-small/commission-data/total-trend?queryMonth=${data || ''}`,
     method: 'get'
   });
 };
 
-// 订单数据统计趋势 /minapp/order-data/total-trend
+// 订单数据统计趋势 /lhfarm-small/order-data/total-trend
 export const orderDataTotalTrend = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/order-data/total-trend?queryMonth=${data || ''}`,
+    url: `/lhfarm-small/order-data/total-trend?queryMonth=${data || ''}`,
     method: 'get'
   });
 };
 
-// 结算数据统计趋势 /minapp/settle-data/total-trend
+// 结算数据统计趋势 /lhfarm-small/settle-data/total-trend
 export const settleDataTotalTrend = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/settle-data/total-trend?queryMonth=${data || ''}`,
+    url: `/lhfarm-small/settle-data/total-trend?queryMonth=${data || ''}`,
     method: 'get'
   });
 };

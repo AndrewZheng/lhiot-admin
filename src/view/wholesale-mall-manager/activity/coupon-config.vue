@@ -224,7 +224,7 @@
               "
               span="12"
             >
-              <p class="ml20">*有效天数为相对时间，领券后几天内有效</p>
+              <p class="ml20 brand-red">*有效天数为相对时间，领券后几天内有效</p>
               <FormItem label="有效天数:" prop="vaildDays">
                 <InputNumber
                   v-model="couponConfig.vaildDays"
@@ -248,6 +248,20 @@
                     style="padding-left: 5px; width: 100%"
                   >{{ item.label }}</Option>
                 </Select>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <i-col
+              v-if="couponConfig.couponSendType=='share'"
+              span="12"
+            >
+              <p class="ml20 brand-red">* 佣金比例为0~50的整数(单位%)*</p>
+              <FormItem label="佣金比例:" prop="commissionScale">
+                <InputNumber
+                  v-model="couponConfig.commissionScale"
+                  style="padding-right: 5px; width: 162px"
+                ></InputNumber>
               </FormItem>
             </i-col>
           </Row>
@@ -407,6 +421,7 @@ const couponConfig = {
   couponName: '',
   couponType: '',
   fullFee: 0,
+  commissionScale: 0,
   couponDes: '',
   couponId: 0, // 优惠券模板id
   effectiveTime: '',
@@ -606,19 +621,31 @@ export default {
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
           }
         ],
-        vaild: [{ required: true, message: '请选择活动状态' }]
+        vaild: [{ required: true, message: '请选择活动状态' }],
+        commissionScale: [
+          { required: true, message: '请输入佣金比例' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^([1-4]?\d(\.[05])?|50(\.0)?)$/.test(value)) {
+                errors.push(new Error('必须为0~50的整数'));
+              }
+              callback(errors);
+            }
+          }
+        ]
       },
       columns: [
-        {
-          type: 'selection',
-          width: 50,
-          align: 'center'
-        },
+        // {
+        //   type: 'selection',
+        //   width: 50,
+        //   align: 'center'
+        // },
         {
           title: 'ID',
           align: 'center',
           key: 'id',
-          maxWidth: 55
+          minWidth: 20
         },
         {
           title: '优惠券名称',
@@ -629,7 +656,7 @@ export default {
         {
           title: '最小起购门槛',
           align: 'center',
-          minWidth: 60,
+          minWidth: 80,
           key: 'fullFee',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.fullFee);
@@ -639,7 +666,7 @@ export default {
         {
           title: '最高折扣金额',
           align: 'center',
-          minWidth: 60,
+          minWidth: 80,
           key: 'discountMaxFee',
           render(h, params, vm) {
             if (params.row.couponType === 'DISCOUNT_COUPON') {
@@ -653,7 +680,7 @@ export default {
         {
           title: '优惠金额/折扣额度',
           align: 'center',
-          minWidth: 25,
+          minWidth: 80,
           key: 'couponFee',
           render(h, params, vm) {
             if (params.row.couponType === 'DISCOUNT_COUPON') {
@@ -665,7 +692,21 @@ export default {
           }
         },
         {
-          title: '模板类型',
+          title: '佣金比例',
+          align: 'center',
+          key: 'commissionScale',
+          minWidth: 100,
+          render(h, params) {
+            const { row } = params;
+            if (row.commissionScale != null) {
+              return <div>{row.commissionScale + '%'}</div>;
+            } else {
+              return <div>{'N/A'}</div>;
+            }
+          }
+        },
+        {
+          title: '优惠券类型',
           align: 'center',
           key: 'couponType',
           minWidth: 60,
@@ -731,6 +772,14 @@ export default {
                   </tag>
                 </div>
               );
+            } else if (row.couponSendType === 'share') {
+              return (
+                <div>
+                  <tag color='blue'>
+                    {couponFromConvert(row.couponSendType)}
+                  </tag>
+                </div>
+              );
             } else {
               return (
                 <div>
@@ -740,12 +789,11 @@ export default {
             }
           }
         },
-
         {
           title: '生效时间',
           align: 'center',
           key: 'effectiveTime',
-          minWidth: 90,
+          minWidth: 130,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.vaildDays) {
@@ -759,7 +807,7 @@ export default {
           title: '失效时间',
           align: 'center',
           key: 'failureTime',
-          minWidth: 90,
+          minWidth: 130,
           render: (h, params, vm) => {
             const { row } = params;
             if (row.vaildDays) {
@@ -779,7 +827,7 @@ export default {
           title: '有效天数',
           align: 'center',
           key: 'vaildDays',
-          minWidth: 15,
+          minWidth: 25,
           render(h, params, vm) {
             const { row } = params;
             if (row.vaildDays) {
@@ -792,7 +840,8 @@ export default {
         {
           title: '券状态',
           align: 'center',
-          minWidth: 20,
+          minWidth: 40,
+          fixed: 'right',
           key: 'couponConfigvaild',
           render: (h, params, vm) => {
             const { row } = params;
@@ -819,6 +868,7 @@ export default {
         {
           title: '操作',
           align: 'center',
+          fixed: 'right',
           minWidth: 80,
           key: 'handle',
           options: ['onSale', 'edit']
@@ -861,12 +911,8 @@ export default {
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -878,7 +924,7 @@ export default {
           this.couponTemplateData = res.rows;
           this.templateTotal = res.total;
         })
-        .finally((error) => {
+        .finally(() => {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
@@ -1005,8 +1051,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.ml20 {
-  margin-left: 37px;
-  color: #ff3861;
-}
 </style>

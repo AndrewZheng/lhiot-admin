@@ -28,28 +28,28 @@
               v-model="searchRowData.orderCode"
               placeholder="订单编码"
               class="search-input mr5"
-              style="width: 150px"
+              style="width: 180px"
               clearable
             ></Input>
             <Input
               v-model="searchRowData.userName"
               placeholder="用户名"
               class="search-input mr5"
-              style="width: 70px"
+              style="width: 90px"
               clearable
             ></Input>
             <Input
               v-model="searchRowData.phone"
               placeholder="用户手机号"
               class="search-input mr5"
-              style="width: 90px"
+              style="width: 120px"
               clearable
             ></Input>
             <Select
               v-model="searchRowData.payStatus"
               class="search-col mr5"
               placeholder="支付状态"
-              style="width: 85px"
+              style="width: 100px"
               clearable
             >
               <Option
@@ -63,7 +63,7 @@
               v-model="searchRowData.orderStatus"
               class="search-col mr5"
               placeholder="订单状态"
-              style="width: 85px"
+              style="width: 100px"
               clearable
             >
               <Option
@@ -358,7 +358,6 @@ import {
   exporGoodsStandard,
   getOrder,
   getPrintOrder,
-  sendHdManual,
   exportOrder,
   putCourierCode,
   confirmReceipt

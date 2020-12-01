@@ -30,7 +30,7 @@
             <Select
               v-model="searchRowData.couponType"
               class="search-col mr5"
-              placeholder="模板类型"
+              placeholder="优惠券类型"
               style="width: 150px"
               clearable
             >
@@ -139,7 +139,7 @@
           <Row>
             <i-col span="12">
               <FormItem
-                label="模板类型:"
+                label="优惠券类型:"
                 prop="couponType"
                 style="width: 200px"
               >
@@ -191,14 +191,14 @@
               </FormItem>
             </i-col>
             <i-col v-else span="12">
-              <p class="ml20">* 如8.8折，填写88</p>
-              <FormItem label="折扣额度:" prop="couponFee">
+              <FormItem label="折扣额度:" prop="couponFee" class="mb5">
                 <InputNumber
                   :min="0"
                   :value="couponFeeComputed1"
                   @on-change="couponFeeOnchange1"
                 ></InputNumber>
               </FormItem>
+              <p class="ml20 brand-red">* 如8.8折，填写88</p>
             </i-col>
           </Row>
           <Row v-show="couponTemplate.couponType === 'DISCOUNT_COUPON'">
@@ -380,7 +380,7 @@ export default {
           }
         },
         {
-          title: '模板类型',
+          title: '优惠券类型',
           align: 'center',
           key: 'couponType',
           minWidth: 60,
@@ -605,8 +605,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.ml20 {
-  margin-left: 27px;
-  color: #ff3861;
-}
 </style>

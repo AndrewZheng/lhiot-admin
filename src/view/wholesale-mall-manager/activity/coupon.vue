@@ -49,8 +49,8 @@
             <Select
               v-model="searchRowData.couponFrom"
               class="search-col mr5"
-              placeholder="优惠券来源"
-              style="width: 100px"
+              placeholder="发放类型"
+              style="width: 120px"
               clearable
             >
               <Option
@@ -373,7 +373,7 @@ const configColumns = [
     }
   },
   {
-    title: '模板类型',
+    title: '优惠券类型',
     align: 'center',
     key: 'couponType',
     minWidth: 90,
@@ -476,11 +476,11 @@ const configColumns = [
 ];
 
 const couponColumns = [
-  {
-    type: 'selection',
-    width: 60,
-    align: 'center'
-  },
+  // {
+  //   type: 'selection',
+  //   width: 60,
+  //   align: 'center'
+  // },
   {
     title: 'ID',
     align: 'center',
@@ -491,13 +491,13 @@ const couponColumns = [
     title: '用户名称',
     align: 'center',
     key: 'userName',
-    minWidth: 30
+    minWidth: 40
   },
   {
     title: '用户电话',
     align: 'center',
     key: 'phone',
-    minWidth: 40
+    minWidth: 60
   },
   {
     title: '优惠券名称',
@@ -532,7 +532,7 @@ const couponColumns = [
   {
     title: '优惠金额/折扣额度',
     align: 'center',
-    minWidth: 25,
+    minWidth: 50,
     key: 'couponFee',
     render(h, params, vm) {
       if (params.row.couponType === 'DISCOUNT_COUPON') {
@@ -544,7 +544,7 @@ const couponColumns = [
     }
   },
   {
-    title: '模板类型',
+    title: '优惠券类型',
     align: 'center',
     key: 'couponType',
     minWidth: 40,
@@ -572,7 +572,7 @@ const couponColumns = [
     }
   },
   {
-    title: '优惠券来源',
+    title: '发放类型',
     align: 'center',
     key: 'couponFrom',
     minWidth: 60,
@@ -581,30 +581,58 @@ const couponColumns = [
       if (row.couponFrom === 'artificial') {
         return (
           <div>
-            <tag color='primary'>{couponFromConvert(row.couponFrom)}</tag>
+            <tag color='primary'>
+              {couponFromConvert(row.couponFrom)}
+            </tag>
+          </div>
+        );
+      } else if (row.couponFrom === 'recharge') {
+        return (
+          <div>
+            <tag color='pink'>
+              {couponFromConvert(row.couponFrom)}
+            </tag>
+          </div>
+        );
+      } else if (row.couponFrom === 'registration') {
+        return (
+          <div>
+            <tag color='orange'>
+              {couponFromConvert(row.couponFrom)}
+            </tag>
+          </div>
+        );
+      } else if (row.couponFrom === 'flashsale') {
+        return (
+          <div>
+            <tag color='cyan'>
+              {couponFromConvert(row.couponFrom)}
+            </tag>
+          </div>
+        );
+      } else if (row.couponFrom === 'share') {
+        return (
+          <div>
+            <tag color='blue'>
+              {couponFromConvert(row.couponFrom)}
+            </tag>
           </div>
         );
       } else {
         return (
           <div>
-            <tag color='pink'>{couponFromConvert(row.couponFrom)}</tag>
+            <tag color='primary'>N/A</tag>
           </div>
         );
       }
     }
   },
   {
-    title: '获取时间',
-    align: 'center',
-    key: 'getTime',
-    minWidth: 80
-  },
-  {
     title: '使用状态',
     align: 'center',
     key: 'couponStatus',
     minWidth: 30,
-
+    fixed: 'right',
     render: (h, params, vm) => {
       const { row } = params;
       if (row.couponStatus === 'used') {
@@ -633,10 +661,16 @@ const couponColumns = [
     }
   },
   {
+    title: '获取时间',
+    align: 'center',
+    key: 'getTime',
+    minWidth: 120
+  },
+  {
     title: '使用时间',
     align: 'center',
     key: 'useTime',
-    minWidth: 80,
+    minWidth: 120,
     render(h, params, vm) {
       const { row } = params;
       if (row.useTime) {

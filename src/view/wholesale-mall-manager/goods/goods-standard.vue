@@ -297,6 +297,32 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                佣金比例:
+              </i-col>
+              <i-col span="16">
+                {{
+                  productStandardDetail.commissionScale + "%"
+                }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                佣金金额:
+              </i-col>
+              <i-col span="16">
+                {{
+                  productStandardDetail.commissionPrice | fenToYuanDot2Filters
+                }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="8">商品单位:</i-col>
               <i-col span="16">{{ productStandardDetail.goodsUnit }}</i-col>
             </Row>
@@ -629,6 +655,33 @@
                   style="width: 100px"
                   @on-change="purchasePriceOnchange"
                 ></InputNumber>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row>
+            <p style="color: #ff3861; margin-left: 38px">
+              * 佣金比例为0~50的整数
+              (单位%)　　　　　　　　　　　　　　　　*
+              按售卖价格的比例计算佣金
+            </p>
+            <i-col span="12">
+              <FormItem label="佣金比例:" prop="commissionScale">
+                <InputNumber
+                  v-model="productStandardDetail.commissionScale"
+                  style="padding-right: 5px; width: 120px"
+                  @on-change="commissionScaleOnchange"
+                ></InputNumber>
+              </FormItem>
+            </i-col>
+            <i-col span="10" style="margin-left: 22px">
+              <FormItem
+                :label-width="100"
+                label="佣金金额:"
+                prop="commissionPrice"
+              >
+                {{
+                  "¥" + productStandardDetail.commissionPrice / 100
+                }}
               </FormItem>
             </i-col>
           </Row>
@@ -1014,6 +1067,8 @@ const productStandardDetail = {
   netWeight: '', // 商品净重
   price: 0,
   purchasePrice: 0,
+  commissionScale: 0, // 佣金比例
+  commissionPrice: 0, // 佣金金额
   standard: '',
   standardDesc: '',
   standardGoodsName: '',
@@ -1155,6 +1210,28 @@ const standardColumns = [
     render(h, params, vm) {
       const amount = fenToYuanDot2(params.row.purchasePrice);
       return <div>{amount}</div>;
+    }
+  },
+  {
+    title: '佣金比例',
+    minWidth: 100,
+    key: 'commissionScale',
+    align: 'center',
+    render(h, params) {
+      if (params.row.commissionScale) {
+        return <div>{params.row.commissionScale + '%'}</div>;
+      } else {
+        return <div>{'N/A'}</div>;
+      }
+    }
+  },
+  {
+    title: '佣金金额',
+    minWidth: 100,
+    key: 'commissionPrice',
+    align: 'center',
+    render(h, params) {
+      return <div>{fenToYuanDot2(params.row.commissionPrice)}</div>;
     }
   },
   {
@@ -1379,7 +1456,6 @@ export default {
       oldPicture: [],
       newPicture: [],
       save: [],
-      // ====
       uploadListMain: [],
       defaultListMain: [],
       uploadListMultiple: [],
@@ -1507,17 +1583,8 @@ export default {
         // standardDesc: [{ required: true, message: "请输入规格描述" }],
         standardDesc: [
           { required: true, message: '请输入规格描述' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (value.length > 8) {
-                errors.push(new Error('字数不得超过8个字'));
-              }
-              callback(errors);
-            }
-          }
+          { maxLength: 16, message: '字数不得超过16个字' }
         ],
-
         goodsDes: [{ required: true, message: '请输入商品特征' }],
         // afterDes: [{ required: true, message: "请输入售后标准" }],
         stockLimit: [{ required: true, message: '请输入库存' }],
@@ -1533,6 +1600,19 @@ export default {
           {
             message: '必须为大于0的数字',
             pattern: /^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/
+          }
+        ],
+        commissionPrice: [{ required: true, message: '佣金金额' }],
+        commissionScale: [
+          { required: true, message: '请输入佣金比例' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^([1-4]?\d(\.[05])?|50(\.0)?)$/.test(value)) {
+                errors.push(new Error('必须为0~50的整数'));
+              }
+              callback(errors);
+            }
           }
         ],
         // barCode: [{ required: true, message: "请输入商品条码" }],
@@ -1594,9 +1674,13 @@ export default {
     this.getProductUnits();
   },
   methods: {
-    // 变化函数
     priceOnchange(value) {
       this.productStandardDetail.price = yuanToFenNumber(value);
+      // 商品价格变化后，佣金金额也得变化
+      if (!this.productStandardDetail.commissionScale) { return; }
+      this.productStandardDetail.commissionPrice = Math.floor(
+        this.productStandardDetail.price * (this.productStandardDetail.commissionScale / 100)
+      );
     },
     reginPriceOnchange(value) {
       this.goodsPriceRegion.price = yuanToFenNumber(value);
@@ -1612,6 +1696,11 @@ export default {
     },
     unitChange(value) {
       this.productStandardDetail.goodsUnit = value;
+    },
+    commissionScaleOnchange(value) {
+      this.productStandardDetail.commissionPrice = Math.floor(
+        this.productStandardDetail.price * (value / 100)
+      );
     },
     // 数据查询
     getTableData() {
@@ -1824,6 +1913,8 @@ export default {
       }
       // 复制选中的数据
       if (this.currentTableRowSelected) {
+        this.currentTableRowSelected.commissionScale = null;
+        this.currentTableRowSelected.commissionPrice = null;
         this.productStandardDetail = _.cloneDeep(this.currentTableRowSelected);
       }
       this.tempModalType = this.modalType.create;
@@ -2054,6 +2145,12 @@ export default {
           item['price'] = (item['price'] / 100.0).toFixed(2);
           item['salePrice'] = (item['salePrice'] / 100.0).toFixed(2);
           item['svipPrice'] = (item['svipPrice'] / 100.0).toFixed(2);
+          item['commissionPrice'] = (item['commissionPrice'] / 100.0).toFixed(
+            2
+          );
+          item['commissionScale'] = item['commissionScale']
+            ? item['commissionScale'] + '%'
+            : 'N/A';
           if (item['vaild'] === 'yes') {
             item['vaild'] = '上架';
           } else {

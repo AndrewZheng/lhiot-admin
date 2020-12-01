@@ -2646,7 +2646,7 @@ export const couponUseStatusEnum = [{
 }
 ];
 
-// artificial-手动发券，registration-注册送礼,recharge-充值活动 flashsale-限时抢购
+// artificial-手动发券，registration-注册送礼,recharge-充值活动 flashsale-限时抢购 share-分享赚活动券
 export const couponFromEnum = [{
   label: '手动发券',
   value: 'artificial'
@@ -2658,6 +2658,10 @@ export const couponFromEnum = [{
 {
   label: '活动送券',
   value: 'activity'
+},
+{
+  label: '分享赚活动券',
+  value: 'share'
 }
 ];
 
@@ -2752,7 +2756,7 @@ export const paymentFromEnum = [{
 {
   label: '订单',
   value: 'order'
-},
+}
 ];
 
 // MRQD-每日签到、WSGRZL-完善个人资料、XRXSSDXF-新人线上首单消费、XSSCCZ-线上首次充值、XSYDCZ-线上月度充值、XSYDXF-线上月度消费

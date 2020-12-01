@@ -19,10 +19,11 @@ import 'assets/iconfont/iconfont.css';
 import 'assets/styles/style.scss';
 import moment from 'moment';
 import lodashLib from 'lodash';
+import VCharts from 'v-charts';
 
 Vue.mixin(Mixin);
 Vue.use(axiosPlugin);
-
+Vue.use(VCharts);
 Vue.use(iView, {
   i18n: (key, value) => i18n.t(key, value)
 });
