@@ -1175,7 +1175,7 @@ export const shareUserStatistics = (data) => {
 // 分享赚佣金明细数据统计/minapp/award-amount/detail-total
 export const shareawardAmountDetailTotal = (data) => {
   return Vue.prototype.$http.request({
-    url: `/minapp/award-amount/detail-total`,
+    url: `/minapp/award-amount/detail-total?queryDateType=${data.queryDateType}`,
     method: 'post',
     data,
     headers: {
