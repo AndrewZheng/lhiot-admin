@@ -129,6 +129,15 @@ const wholesaleRouter = [
       component: () => import('@/view/wholesale-mall-manager/user/user-analysis.vue')
     },
     {
+      path: '/wholesale-member-handCheck',
+      name: 'wholesale-member-handCheck',
+      meta: {
+        icon: 'md-checkmark-circle',
+        title: 'VIP特权审核'
+      },
+      component: () => import('@/view/wholesale-mall-manager/user/handle-check.vue')
+    },
+    {
       path: '/wholesale-share-statistics',
       name: 'wholesale-share-statistics',
       meta: {

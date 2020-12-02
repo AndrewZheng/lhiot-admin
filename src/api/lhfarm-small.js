@@ -1655,3 +1655,49 @@ export const settleDataTotalTrend = (data) => {
   });
 };
 
+/* -------------------------
+ * VIP内部特权相关API
+ * -------------------------
+ */
+// VIP内部特权
+export const setStaff = (data) => {
+  return $http.request({
+    url: `/lhfarm-small/user/user-type/${data.id}?userType=${data.userType}`,
+    data,
+    method: 'post'
+  });
+};
+
+// VIP内部管理列表 /lhfarm-small/user/users-info
+export const getStaffManage = (data) => {
+  return $http.request({
+    url: '/lhfarm-small/staff/pages',
+    data,
+    method: 'post',
+    headers: {
+      'page': data.page,
+      'rows': data.rows,
+      'sidx': data.sidx,
+      'sort': data.sort
+    }
+  });
+};
+
+// VIP内部审核
+export const StaffAudit = (data) => {
+  return $http.request({
+    url: `/lhfarm-small/staff/audit/${data.id}?auditStatus=${data.checkStatus}`,
+    data,
+    method: 'post'
+  });
+};
+
+// VIP特权修改
+export const staffUpdate = (data) => {
+  return $http.request({
+    url: '/lhfarm-small/staff/update/' + data.id,
+    data,
+    method: 'put'
+  });
+};
+

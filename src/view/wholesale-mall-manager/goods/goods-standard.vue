@@ -232,6 +232,18 @@
               </i-col>
             </Row>
           </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">商品分享图:</i-col>
+              <i-col span="16">
+                <img
+                  :src="productStandardDetail.shareImage"
+                  width="100"
+                  height="100"
+                >
+              </i-col>
+            </Row>
+          </i-col>
         </Row>
         <Divider orientation="center">商品规格</Divider>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
@@ -526,6 +538,67 @@
                   file-dir="product"
                   multiple
                   @on-success="handleSuccessMultiple"
+                >
+                  <div
+                    slot="content"
+                    style="width: 58px; height: 58px; line-height: 58px"
+                  >
+                    <Icon type="ios-camera" size="20"></Icon>
+                  </div>
+                </IViewUpload>
+              </FormItem>
+            </i-col>
+          </Row>
+          <!-- 分享图片 -->
+          <Row>
+            <i-col span="12">
+              <FormItem
+                label="上架商品分享图:建议尺寸;500x400(单位:px)"
+                prop="shareImage"
+              >
+                <Input
+                  v-show="false"
+                  v-model="productStandardDetail.shareImage"
+                  style="width: auto"
+                ></Input>
+                <div
+                  v-for="item in shareUploadListMultiple"
+                  :key="item.url"
+                  :v-show="productStandardDetail.shareImage"
+                  class="demo-upload-list"
+                >
+                  <template v-if="item.status === 'finished'">
+                    <div>
+                      <img :src="item.url">
+                      <div class="demo-upload-list-cover">
+                        <Icon
+                          type="ios-eye-outline"
+                          @click.native="handleUploadView(item)"
+                        ></Icon>
+                        <Icon
+                          type="ios-trash-outline"
+                          @click.native="handleRemoveShareMultiple(item)"
+                        ></Icon>
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <Progress
+                      v-if="item.showProgress"
+                      :percent="item.percentage"
+                      hide-info
+                    ></Progress>
+                  </template>
+                </div>
+                <IViewUpload
+                  ref="uploadShareMultiple"
+                  :default-list="defaulSharetListMultiple"
+                  :image-size="imageSize"
+                  :max-num="5"
+                  group-type="base_image"
+                  file-dir="product"
+                  multiple
+                  @on-success="handleSuccessShareMultiple"
                 >
                   <div
                     slot="content"
@@ -1463,6 +1536,9 @@ export default {
       priceRegionData: [],
       tableDataSelected: [],
       regionTableDataSelected: [],
+      defaulSharetListMultiple: [],
+      shareUploadListMultiple: [],
+      goodsImageList: [],
       modalEditLoading: false,
       modalDiscount: false,
       modalProduct: false,
@@ -1577,6 +1653,7 @@ export default {
         standardGoodsName: [{ required: true, message: '请输入上架商品名称' }],
         goodsImage: [{ required: true, message: '请上传上架商品主图' }],
         goodsImages: [{ required: true, message: '请上传上架商品详情图' }],
+        shareImage: [{ required: true, message: '请上传商品分享图' }],
         unitCode: [{ required: true, message: '请选择商品单位' }],
         vaild: [{ required: true, message: '请选择商品状态' }],
         standard: [{ required: true, message: '请输入商品规格' }],
@@ -1674,6 +1751,32 @@ export default {
     this.getProductUnits();
   },
   methods: {
+    handleSuccessShareMultiple(response, file, fileList) {
+      this.shareUploadListMultiple = fileList;
+      this.goodsImageList = [];
+      fileList.forEach((value) => {
+        if (value.url) {
+          this.goodsImageList.push(value.url);
+        }
+      });
+      this.productStandardDetail.shareImage = null;
+      this.productStandardDetail.shareImage = this.goodsImageList.join(',');
+      this.masterImage = this.goodsImageList[0];
+    },
+    handleRemoveShareMultiple(file) {
+      this.$refs.uploadShareMultiple.deleteFile(file);
+      const index = this.goodsImageList.indexOf(file.url);
+      if (index > -1) {
+        this.goodsImageList.splice(index, 1);
+        this.productStandardDetail.shareImage = this.goodsImageList.join(',');
+        this.masterImage = this.goodsImageList[0];
+      }
+      if (this.goodsImageList.length === 0) {
+        this.$refs.uploadShareMultiple.clearFileList();
+        this.goodsImageList = [];
+        this.productStandardDetail.shareImage = '';
+      }
+    },
     priceOnchange(value) {
       this.productStandardDetail.price = yuanToFenNumber(value);
       // 商品价格变化后，佣金金额也得变化
@@ -1882,17 +1985,16 @@ export default {
     },
     handleEdit(params) {
       this.save = [];
-      this.save.push(params.row.image);
-      this.tempModalType = this.modalType.edit;
       this.uploadListMain = [];
       this.uploadListMultiple = [];
+      this.productStandardDetail.shareImage = '';
+      this.$refs.editForm.resetFields();
+      this.save.push(params.row.image);
       this.setDefaultUploadList(params.row);
       this.productStandardDetail = _.cloneDeep(params.row);
-      this.$refs.editForm.resetFields();
+      this.productDetailsList = this.productStandardDetail.goodsImages ? this.productStandardDetail.goodsImages.split(',') : [];
+      this.tempModalType = this.modalType.edit;
       this.modalEdit = true;
-      this.productDetailsList = this.productStandardDetail.goodsImages.split(
-        ','
-      );
     },
     handleEditRegion(params) {
       this.goodsPriceRegion = _.cloneDeep(params.row);
@@ -2247,6 +2349,17 @@ export default {
         });
         this.$refs.uploadMultiple.setDefaultFileList(descriptionImgArr);
         this.uploadListMultiple = descriptionImgArr;
+      }
+      if (res.shareImage) {
+        const goodsImageArr = [];
+        const rotationArr = res.shareImage.split(',');
+        rotationArr.forEach((value) => {
+          const innerMapDetailImg_ = { status: 'finished', url: 'url' };
+          innerMapDetailImg_.url = value;
+          goodsImageArr.push(innerMapDetailImg_);
+        });
+        this.$refs.uploadShareMultiple.setDefaultFileList(goodsImageArr);
+        this.shareUploadListMultiple = goodsImageArr;
       }
     },
     handleRemoveMain(file) {
