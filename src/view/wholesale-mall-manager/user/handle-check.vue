@@ -18,7 +18,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="loading"
-        :search-area-column="22"
+        :search-area-column="18"
         :operate-area-column="6"
         editable
         searchable
@@ -217,22 +217,23 @@ export default {
         {
           title: 'VIP姓名',
           align: 'center',
+          maxWidth: 150,
           key: 'staffName'
         },
-        {
-          title: '所在部门',
-          align: 'center',
-          key: 'deptName'
-        },
-        {
-          title: '岗位名称',
-          align: 'center',
-          key: 'positionName'
-        },
+        // {
+        //   title: '所在部门',
+        //   align: 'center',
+        //   key: 'deptName'
+        // },
+        // {
+        //   title: '岗位名称',
+        //   align: 'center',
+        //   key: 'positionName'
+        // },
         {
           title: '联系方式',
           align: 'center',
-          width: 140,
+          width: 150,
           key: 'staffPhone'
         },
         {
@@ -243,7 +244,7 @@ export default {
         {
           title: '操作',
           align: 'center',
-          width: 140,
+          width: 150,
           key: 'handle',
           options: ['staffAudit']
         }

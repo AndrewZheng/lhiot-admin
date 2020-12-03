@@ -2010,6 +2010,7 @@ export default {
       if (this.tempModalType !== this.modalType.create) {
         this.uploadListMain = [];
         this.uploadListMultiple = [];
+        this.shareUploadListMultiple = [];
         this.$refs.editForm.resetFields();
         this.productStandardDetail = _.cloneDeep(productStandardDetail);
       }
