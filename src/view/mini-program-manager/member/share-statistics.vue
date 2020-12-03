@@ -9,6 +9,285 @@
         <b data-index="use" :class=" topStatus=='use' ? 'hot' : '' " @click="assistDataChange">员工数据</b>
         <b data-index="brokerage" :class=" topStatus=='brokerage' ? 'hot' : '' " @click="assistDataChange">佣金明细</b>
       </div>
+      <Card v-show="topStatus==='commission'">
+        <tables
+          ref="tablesCommission"
+          v-model="tableDataCommission"
+          :columns="columnsCommission"
+          :loading="loading"
+          :search-area-column="22"
+          :operate-area-column="6"
+          editable
+          searchable
+          border
+          search-place="top"
+        >
+          <div slot="searchCondition">
+            <Row>
+              <RadioGroup v-model="buttonCommission" type="button" @on-change="timeChangeCommission">
+                <Radio label="汇总"></Radio>
+                <Radio label="今日"></Radio>
+                <Radio label="昨日"></Radio>
+                <Radio label="最近7天"></Radio>
+                <Radio label="最近30天"></Radio>
+                <Radio label="自定义时间"></Radio>
+              </RadioGroup>
+              <div v-show="markCommission" class="mark">
+                <DatePicker
+                  v-model="searchRowDataCommission.beginDate"
+                  format="yyyy-MM-dd"
+                  type="date"
+                  :clearable="false"
+                  placeholder="请先选择开始时间"
+                  class="search-input"
+                  style="width: 150px"
+                  @on-change="startTimeChangeCommission"
+                />
+                <i>-</i>
+                <DatePicker
+                  v-model="searchRowDataCommission.endDate"
+                  format="yyyy-MM-dd"
+                  type="date"
+                  :clearable="false"
+                  :readonly="!commissionStatus"
+                  placeholder="自定义结束时间"
+                  class="search-input mr5"
+                  style="width: 150px"
+                  @on-change="endTimeChangeCommission"
+                />
+              </div>
+            </Row>
+          </div>
+        </tables>
+        <div style="height:60px"></div>
+        <h3 class="mb10">
+          佣金数据趋势图
+        </h3>
+        <div>
+          <RadioGroup v-model="buttonCommissionTrend" type="button" @on-change="timeChangeCommissionTrend">
+            <Radio label="上月"></Radio>
+            <Radio label="本月"></Radio>
+            <Radio label="自定义月份"></Radio>
+          </RadioGroup>
+          <div v-show="markCommissionTrend" class="mark">
+            <DatePicker
+              type="month"
+              :value="queryMonth"
+              placeholder="请先选择月份"
+              class="search-input ml5"
+              style="width: 150px"
+              :clearable="false"
+              @on-change="queryMonthChangeCommission"
+            />
+          </div>
+          <RadioGroup
+            v-model="charTitleCommissionStatus"
+            type="button"
+            class="ml30"
+            @on-change="changeCommissionCharts"
+          >
+            <Radio label="leijiCommission">
+              累计佣金
+            </Radio>
+            <Radio label="daitixianCommission">
+              待提现佣金
+            </Radio>
+            <Radio label="yitixianCommission">
+              已提现佣金
+            </Radio>
+            <Radio label="dairuzhangCommission">
+              待入账佣金
+            </Radio>
+          </RadioGroup>
+          <ve-line class="charts mt10" :data="chartData"></ve-line>
+        </div>
+      </Card>
+      <Card v-if="topStatus==='accounts'">
+        <tables
+          ref="tablesAccounts"
+          v-model="tableDataAccounts"
+          :columns="columnsAccounts"
+          :loading="loading"
+          :search-area-column="22"
+          :operate-area-column="6"
+          editable
+          searchable
+          border
+          search-place="top"
+        >
+          <div slot="searchCondition">
+            <Row>
+              <RadioGroup v-model="buttonAccounts" type="button" @on-change="timeChangeAccounts">
+                <Radio label="汇总"></Radio>
+                <Radio label="今日"></Radio>
+                <Radio label="昨日"></Radio>
+                <Radio label="最近7天"></Radio>
+                <Radio label="最近30天"></Radio>
+                <Radio label="自定义时间"></Radio>
+              </RadioGroup>
+              <div v-show="markAccounts" class="mark">
+                <DatePicker
+                  v-model="searchRowDataAccounts.beginDate"
+                  format="yyyy-MM-dd"
+                  type="date"
+                  :clearable="false"
+                  placeholder="请先选择开始时间"
+                  class="search-input"
+                  style="width: 150px"
+                  @on-change="startTimeChangeAccounts"
+                />
+                <i>-</i>
+                <DatePicker
+                  v-model="searchRowDataAccounts.endDate"
+                  format="yyyy-MM-dd"
+                  type="date"
+                  :clearable="false"
+                  :readonly="!accountsStatus"
+                  placeholder="自定义结束时间"
+                  class="search-input mr5"
+                  style="width: 150px"
+                  @on-change="endTimeChangeAccounts"
+                />
+              </div>
+            </Row>
+          </div>
+        </tables>
+        <div style="height:60px"></div>
+        <h3 class="mb10">
+          结算数据趋势图
+        </h3>
+        <div>
+          <RadioGroup v-model="buttonAccountsTrend" type="button" @on-change="timeChangeAccountsTrend">
+            <Radio label="上月"></Radio>
+            <Radio label="本月"></Radio>
+            <Radio label="自定义月份"></Radio>
+          </RadioGroup>
+          <div v-show="markAccountsTrend===true" class="mark">
+            <DatePicker
+              type="month"
+              :value="queryMonth"
+              placeholder="请先选择开始时间"
+              class="search-input ml5"
+              style="width: 150px"
+              :clearable="false"
+              @on-change="queryMonthChangeAccounts"
+            />
+          </div>
+          <RadioGroup
+            v-model="charTitleAccountsStatus"
+            type="button"
+            class="ml30"
+            @on-change="changeAccountsCharts"
+          >
+            <Radio label="settleOrderNum">
+              结算订单数
+            </Radio>
+            <Radio label="settleOrderSum">
+              结算订单额
+            </Radio>
+            <Radio label="settleTotalSum">
+              结算总佣金
+            </Radio>
+            <Radio label="perCapitaIncome">
+              人均收益
+            </Radio>
+          </RadioGroup>
+          <ve-line class="charts mt10" :data="chartData"></ve-line>
+        </div>
+      </Card>
+      <Card v-if="topStatus==='olaceOrder'">
+        <tables
+          ref="tablesOlaceOrder"
+          v-model="tableDataOlaceOrder"
+          :columns="columnsOlaceOrder"
+          :loading="loading"
+          :search-area-column="22"
+          :operate-area-column="6"
+          editable
+          searchable
+          border
+          search-place="top"
+        >
+          <div slot="searchCondition">
+            <Row>
+              <RadioGroup v-model="buttonOlaceOrder" type="button" @on-change="timeChangeOlaceOrder">
+                <Radio label="汇总"></Radio>
+                <Radio label="今日"></Radio>
+                <Radio label="昨日"></Radio>
+                <Radio label="最近7天"></Radio>
+                <Radio label="最近30天"></Radio>
+                <Radio label="自定义时间"></Radio>
+              </RadioGroup>
+              <div v-show="markOlaceOrder" class="mark">
+                <DatePicker
+                  v-model="searchRowDataOlaceOrder.beginDate"
+                  format="yyyy-MM-dd"
+                  type="date"
+                  :clearable="false"
+                  placeholder="请先选择开始时间"
+                  class="search-input"
+                  style="width: 150px"
+                  @on-change="startTimeChangeOlaceOrder"
+                />
+                <i>-</i>
+                <DatePicker
+                  v-model="searchRowDataOlaceOrder.endDate"
+                  format="yyyy-MM-dd"
+                  type="date"
+                  :clearable="false"
+                  :readonly="!olaceOrderStatus"
+                  placeholder="自定义结束时间"
+                  class="search-input mr5"
+                  style="width: 150px"
+                  @on-change="endTimeChangeOlaceOrder"
+                />
+              </div>
+            </Row>
+          </div>
+        </tables>
+        <div style="height:60px"></div>
+        <h3 class="mb10">
+          下单数据趋势图
+        </h3>
+        <div>
+          <RadioGroup v-model="buttonOlaceOrderTrend" type="button" @on-change="timeChangeOlaceOrderTrend">
+            <Radio label="上月"></Radio>
+            <Radio label="本月"></Radio>
+            <Radio label="自定义月份"></Radio>
+          </RadioGroup>
+          <div v-show="markOlaceOrderTrend===true" class="mark">
+            <DatePicker
+              type="month"
+              :value="queryMonth"
+              placeholder="请先选择开始时间"
+              class="search-input ml5"
+              style="width: 150px"
+              :clearable="false"
+              @on-change="queryMonthChangeOlaceOrder"
+            />
+          </div>
+          <RadioGroup
+            v-model="charTitleOlaceOrderStatus"
+            type="button"
+            class="ml30"
+            @on-change="changeOlaceOrderCharts"
+          >
+            <Radio label="olaceOrderNum">
+              下单数
+            </Radio>
+            <Radio label="olaceOrderSum">
+              下单额
+            </Radio>
+            <Radio label="chargebackNum">
+              退单数
+            </Radio>
+            <Radio label="chargebackSum">
+              退单额
+            </Radio>
+          </RadioGroup>
+          <ve-line class="charts mt10" :data="chartData"></ve-line>
+        </div>
+      </Card>
       <Card v-show="topStatus==='pro'">
         <tables
           ref="tableDatas"
@@ -33,7 +312,7 @@
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
               </RadioGroup>
-              <div v-show="mark===true" class="mark">
+              <div v-show="mark" class="mark">
                 <DatePicker
                   v-model="searchRowData.beginDate"
                   format="yyyy-MM-dd"
@@ -190,285 +469,6 @@
           </Row>
         </div>
       </Card>
-      <Card v-show="topStatus==='commission'">
-        <tables
-          ref="tablesCommission"
-          v-model="tableDataCommission"
-          :columns="columnsCommission"
-          :loading="loading"
-          :search-area-column="22"
-          :operate-area-column="6"
-          editable
-          searchable
-          border
-          search-place="top"
-        >
-          <div slot="searchCondition">
-            <Row>
-              <RadioGroup v-model="buttonCommission" type="button" @on-change="timeChangeCommission">
-                <Radio label="汇总"></Radio>
-                <Radio label="今日"></Radio>
-                <Radio label="昨日"></Radio>
-                <Radio label="最近7天"></Radio>
-                <Radio label="最近30天"></Radio>
-                <Radio label="自定义时间"></Radio>
-              </RadioGroup>
-              <div v-show="markCommission===true" class="mark">
-                <DatePicker
-                  v-model="searchRowDataCommission.beginDate"
-                  format="yyyy-MM-dd"
-                  type="date"
-                  :clearable="false"
-                  placeholder="请先选择开始时间"
-                  class="search-input"
-                  style="width: 150px"
-                  @on-change="startTimeChangeCommission"
-                />
-                <i>-</i>
-                <DatePicker
-                  v-model="searchRowDataCommission.endDate"
-                  format="yyyy-MM-dd"
-                  type="date"
-                  :clearable="false"
-                  :readonly="!commissionStatus"
-                  placeholder="自定义结束时间"
-                  class="search-input mr5"
-                  style="width: 150px"
-                  @on-change="endTimeChangeCommission"
-                />
-              </div>
-            </Row>
-          </div>
-        </tables>
-        <div style="height:60px"></div>
-        <h3 class="mb10">
-          佣金数据趋势图
-        </h3>
-        <div>
-          <RadioGroup v-model="buttonCommissionTrend" type="button" @on-change="timeChangeCommissionTrend">
-            <Radio label="上月"></Radio>
-            <Radio label="本月"></Radio>
-            <Radio label="自定义月份"></Radio>
-          </RadioGroup>
-          <div v-show="markCommissionTrend===true" class="mark">
-            <DatePicker
-              type="month"
-              :value="queryMonth"
-              placeholder="请先选择月份"
-              class="search-input ml5"
-              style="width: 150px"
-              :clearable="false"
-              @on-change="queryMonthChangeCommission"
-            />
-          </div>
-          <RadioGroup
-            v-model="charTitleCommissionStatus"
-            type="button"
-            class="ml30"
-            @on-change="changeCommissionCharts"
-          >
-            <Radio label="leijiCommission">
-              累计佣金
-            </Radio>
-            <Radio label="daitixianCommission">
-              待提现佣金
-            </Radio>
-            <Radio label="yitixianCommission">
-              已提现佣金
-            </Radio>
-            <Radio label="dairuzhangCommission">
-              待入账佣金
-            </Radio>
-          </RadioGroup>
-          <ve-line class="charts mt10" :data="chartData"></ve-line>
-        </div>
-      </Card>
-      <Card v-if="topStatus==='accounts'">
-        <tables
-          ref="tablesAccounts"
-          v-model="tableDataAccounts"
-          :columns="columnsAccounts"
-          :loading="loading"
-          :search-area-column="22"
-          :operate-area-column="6"
-          editable
-          searchable
-          border
-          search-place="top"
-        >
-          <div slot="searchCondition">
-            <Row>
-              <RadioGroup v-model="buttonCommission" type="button" @on-change="timeChangeAccounts">
-                <Radio label="汇总"></Radio>
-                <Radio label="今日"></Radio>
-                <Radio label="昨日"></Radio>
-                <Radio label="最近7天"></Radio>
-                <Radio label="最近30天"></Radio>
-                <Radio label="自定义时间"></Radio>
-              </RadioGroup>
-              <div v-show="markAccounts===true" class="mark">
-                <DatePicker
-                  v-model="searchRowDataAccounts.beginDate"
-                  format="yyyy-MM-dd"
-                  type="date"
-                  :clearable="false"
-                  placeholder="请先选择开始时间"
-                  class="search-input"
-                  style="width: 150px"
-                  @on-change="startTimeChangeAccounts"
-                />
-                <i>-</i>
-                <DatePicker
-                  v-model="searchRowDataAccounts.endDate"
-                  format="yyyy-MM-dd"
-                  type="date"
-                  :clearable="false"
-                  :readonly="!accountsStatus"
-                  placeholder="自定义结束时间"
-                  class="search-input mr5"
-                  style="width: 150px"
-                  @on-change="endTimeChangeAccounts"
-                />
-              </div>
-            </Row>
-          </div>
-        </tables>
-        <div style="height:60px"></div>
-        <h3 class="mb10">
-          结算数据趋势图
-        </h3>
-        <div>
-          <RadioGroup v-model="buttonAccountsTrend" type="button" @on-change="timeChangeAccountsTrend">
-            <Radio label="上月"></Radio>
-            <Radio label="本月"></Radio>
-            <Radio label="自定义月份"></Radio>
-          </RadioGroup>
-          <div v-show="markAccountsTrend===true" class="mark">
-            <DatePicker
-              type="month"
-              :value="this.queryMonth"
-              placeholder="请先选择开始时间"
-              class="search-input ml5"
-              style="width: 150px"
-              :clearable="false"
-              @on-change="queryMonthChangeAccounts"
-            />
-          </div>
-          <RadioGroup
-            v-model="charTitleAccountsStatus"
-            type="button"
-            class="ml30"
-            @on-change="changeAccountsCharts"
-          >
-            <Radio label="settleOrderNum">
-              结算订单数
-            </Radio>
-            <Radio label="settleOrderSum">
-              结算订单额
-            </Radio>
-            <Radio label="settleTotalSum">
-              结算总佣金
-            </Radio>
-            <Radio label="perCapitaIncome">
-              人均收益
-            </Radio>
-          </RadioGroup>
-          <ve-line class="charts mt10" :data="chartData"></ve-line>
-        </div>
-      </Card>
-      <Card v-if="topStatus==='olaceOrder'">
-        <tables
-          ref="tablesOlaceOrder"
-          v-model="tableDataOlaceOrder"
-          :columns="columnsOlaceOrder"
-          :loading="loading"
-          :search-area-column="22"
-          :operate-area-column="6"
-          editable
-          searchable
-          border
-          search-place="top"
-        >
-          <div slot="searchCondition">
-            <Row>
-              <RadioGroup v-model="buttonOlaceOrder" type="button" @on-change="timeChangeOlaceOrder">
-                <Radio label="汇总"></Radio>
-                <Radio label="今日"></Radio>
-                <Radio label="昨日"></Radio>
-                <Radio label="最近7天"></Radio>
-                <Radio label="最近30天"></Radio>
-                <Radio label="自定义时间"></Radio>
-              </RadioGroup>
-              <div v-show="markOlaceOrder===true" class="mark">
-                <DatePicker
-                  v-model="searchRowDataOlaceOrder.beginDate"
-                  format="yyyy-MM-dd"
-                  type="date"
-                  :clearable="false"
-                  placeholder="请先选择开始时间"
-                  class="search-input"
-                  style="width: 150px"
-                  @on-change="startTimeChangeOlaceOrder"
-                />
-                <i>-</i>
-                <DatePicker
-                  v-model="searchRowDataOlaceOrder.endDate"
-                  format="yyyy-MM-dd"
-                  type="date"
-                  :clearable="false"
-                  :readonly="!olaceOrderStatus"
-                  placeholder="自定义结束时间"
-                  class="search-input mr5"
-                  style="width: 150px"
-                  @on-change="endTimeChangeOlaceOrder"
-                />
-              </div>
-            </Row>
-          </div>
-        </tables>
-        <div style="height:60px"></div>
-        <h3 class="mb10">
-          下单数据趋势图
-        </h3>
-        <div>
-          <RadioGroup v-model="buttonOlaceOrderTrend" type="button" @on-change="timeChangeOlaceOrderTrend">
-            <Radio label="上月"></Radio>
-            <Radio label="本月"></Radio>
-            <Radio label="自定义月份"></Radio>
-          </RadioGroup>
-          <div v-show="markOlaceOrderTrend===true" class="mark">
-            <DatePicker
-              type="month"
-              :value="queryMonth"
-              placeholder="请先选择开始时间"
-              class="search-input ml5"
-              style="width: 150px"
-              :clearable="false"
-              @on-change="queryMonthChangeOlaceOrder"
-            />
-          </div>
-          <RadioGroup
-            v-model="charTitleOlaceOrderStatus"
-            type="button"
-            class="ml30"
-            @on-change="changeOlaceOrderCharts"
-          >
-            <Radio label="olaceOrderNum">
-              下单数
-            </Radio>
-            <Radio label="olaceOrderSum">
-              下单额
-            </Radio>
-            <Radio label="chargebackNum">
-              退单数
-            </Radio>
-            <Radio label="chargebackSum">
-              退单额
-            </Radio>
-          </RadioGroup>
-          <ve-line class="charts mt10" :data="chartData"></ve-line>
-        </div>
-      </Card>
       <Card v-show="topStatus==='brokerage'">
         <tables
           ref="tablesBrokerage"
@@ -492,7 +492,7 @@
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
               </RadioGroup>
-              <div v-show="markBrokerage===true" class="mark">
+              <div v-show="markBrokerage" class="mark">
                 <DatePicker
                   v-model="searchRowDataBrokerage.createTimeBegin"
                   format="yyyy-MM-dd"
@@ -691,7 +691,11 @@ export default {
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
     return {
-      topStatus: 'commission',
+      tableDataUse: [],
+      tableDataCommission: [],
+      tableDataAccounts: [],
+      tableDataOlaceOrder: [],
+      tableDataBrokerage: [],
       mark: false,
       markBrokerage: false,
       markCommission: false,
@@ -705,6 +709,9 @@ export default {
       markOlaceOrderTrend: false,
       num: 0,
       num1: 0,
+      totalPageUse: 0,
+      totalPage: 0,
+      totalBrokerage: 0,
       button: '汇总',
       buttonBrokerage: '汇总',
       buttonCommission: '汇总',
@@ -713,15 +720,40 @@ export default {
       buttonCommissionTrend: '本月',
       buttonAccountsTrend: '本月',
       buttonOlaceOrderTrend: '本月',
+      topStatus: 'commission',
       charTitleCommissionStatus: 'leijiCommission',
       charTitleAccountsStatus: 'settleOrderNum',
       charTitleOlaceOrderStatus: 'olaceOrderNum',
       queryMonth: '',
-      couponTypeEnum,
-      totalPageUse: 0,
-      totalPage: 0,
-      totalBrokerage: 0,
       hisAmount: '',
+      couponTypeEnum,
+      chartData: {
+        columns: ['日期', '访问用户']
+      },
+      queryDateType: [
+        {
+          label: '下单时间',
+          value: 'CREATE_DATE'
+        },
+        {
+          label: '结算时间',
+          value: 'SETTLEMENT_DATE'
+        }
+      ],
+      rankType: [
+        {
+          label: '待入账',
+          value: 'WAIT'
+        },
+        {
+          label: '已入账',
+          value: 'SUCCESS'
+        },
+        {
+          label: '入账失败',
+          value: 'FAIL'
+        }
+      ],
       columns: [
         {
           title: '商品名称',
@@ -1080,39 +1112,7 @@ export default {
       searchRowDataCommission: _.cloneDeep(roleRowDataCommission),
       searchRowDataAccounts: _.cloneDeep(roleRowDataAccounts),
       couponTemplateDetail: _.cloneDeep(couponTemplateDetail),
-      searchRowDataOlaceOrder: _.cloneDeep(roleRowDataOlaceOrder),
-      tableDataUse: [],
-      tableDataCommission: [],
-      tableDataAccounts: [],
-      tableDataOlaceOrder: [],
-      tableDataBrokerage: [],
-      chartData: {
-        columns: ['日期', '访问用户']
-      },
-      queryDateType: [
-        {
-          label: '下单时间',
-          value: 'CREATE_DATE'
-        },
-        {
-          label: '结算时间',
-          value: 'SETTLEMENT_DATE'
-        }
-      ],
-      rankType: [
-        {
-          label: '待入账',
-          value: 'WAIT'
-        },
-        {
-          label: '已入账',
-          value: 'SUCCESS'
-        },
-        {
-          label: '入账失败',
-          value: 'FAIL'
-        }
-      ]
+      searchRowDataOlaceOrder: _.cloneDeep(roleRowDataOlaceOrder)
     };
   },
   computed: {},
@@ -1120,9 +1120,9 @@ export default {
     this.searchRowData = _.cloneDeep(roleRowData);
     this.searchRowDataUse = _.cloneDeep(roleRowDataUse);
     this.searchRowDataBrokerage = _.cloneDeep(roleRowDataBrokerage);
-    (this.searchRowDataCommission = _.cloneDeep(roleRowDataCommission)),
-    (this.searchRowDataAccounts = _.cloneDeep(roleRowDataAccounts)),
-    (this.searchRowDataOlaceOrder = _.cloneDeep(roleRowDataOlaceOrder)),
+    this.searchRowDataCommission = _.cloneDeep(roleRowDataCommission);
+    this.searchRowDataAccounts = _.cloneDeep(roleRowDataAccounts);
+    this.searchRowDataOlaceOrder = _.cloneDeep(roleRowDataOlaceOrder);
     this.getTableDataCommission();
     this.commissionDataTotalTrend();
   },
@@ -1141,78 +1141,35 @@ export default {
       this.getTableDataBrokerage();
     },
     getTableData(value) {
-      const date = new Date();
-      date.setDate(date.getDate());
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var today = `${year}-${month}-${day}`;
+      const today = this.getDateByParam(0);
       if (value === '昨日') {
-        const date = new Date();
-        date.setDate(date.getDate() - 1);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var yesterday = `${year}-${month}-${day}`;
+        const yesterday = this.getDateByParam(-1);
         this.searchRowData.beginDate = yesterday;
         this.searchRowData.endDate = yesterday;
-      }
-      if (this.button === '汇总' || value === '汇总') {
-        const date = new Date();
-        date.setDate(date.getDate() - 365);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var allDay = `${year}-${month}-${day}`;
+      } else if (value === '今日') {
+        this.searchRowData.beginDate = today;
+        this.searchRowData.endDate = today;
+      } else if (value === '最近7天') {
+        const sevenDay = this.getDateByParam(-7);
+        this.searchRowData.beginDate = sevenDay;
+        this.searchRowData.endDate = today;
+      } else if (value === '最近30天') {
+        const toMonth = this.getDateByParam(-30);
+        this.searchRowData.beginDate = toMonth;
+        this.searchRowData.endDate = today;
+      } else if (value === '汇总' || this.button === '汇总') {
+        const allDay = this.getDateByParam(-365);
         this.searchRowData.beginDate = allDay;
         this.searchRowData.endDate = today;
       }
-      if (value === '今日') {
-        const date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
-        this.searchRowData.beginDate = today;
-        this.searchRowData.endDate = today;
-      }
-      if (value === '最近7天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 7);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var sevenDay = `${year}-${month}-${day}`;
-        this.searchRowData.beginDate = sevenDay;
-        this.searchRowData.endDate = today;
-      }
-      if (value === '最近30天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 30);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var toMonth = `${year}-${month}-${day}`;
-        this.searchRowData.beginDate = toMonth;
-        this.searchRowData.endDate = today;
-      }
-      this.searchRowData.beginDate = this.$moment(
-        this.searchRowData.beginDate
-      ).format('YYYY-MM-DD');
-      this.searchRowData.endDate = this.$moment(
-        this.searchRowData.endDate
-      ).format('YYYY-MM-DD');
+      this.searchRowData.beginDate = this.$moment(this.searchRowData.beginDate).format('YYYY-MM-DD');
+      this.searchRowData.endDate = this.$moment(this.searchRowData.endDate).format('YYYY-MM-DD');
       shareProdStatistics(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1232,55 +1189,25 @@ export default {
     },
     getTableDataCommission(value) {
       this.tableDataCommission = [];
-      const date = new Date();
-      date.setDate(date.getDate());
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var today = `${year}-${month}-${day}`;
+      const today = this.getDateByParam(0);
       if (value === '昨日') {
-        const date = new Date();
-        date.setDate(date.getDate() - 1);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var yesterday = `${year}-${month}-${day}`;
+        const yesterday = this.getDateByParam(-1);
         this.searchRowDataCommission.beginDate = yesterday;
         this.searchRowDataCommission.endDate = yesterday;
-      }
-      if (this.buttonCommission === '汇总' || value === '汇总') {
-        this.searchRowDataCommission.beginDate = null;
-        this.searchRowDataCommission.endDate = null;
-      }
-      if (value === '今日') {
-        const date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
+      } else if (value === '今日') {
         this.searchRowDataCommission.beginDate = today;
         this.searchRowDataCommission.endDate = today;
-      }
-      if (value === '最近7天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 7);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var sevenDay = `${year}-${month}-${day}`;
+      } else if (value === '最近7天') {
+        const sevenDay = this.getDateByParam(-7);
         this.searchRowDataCommission.beginDate = sevenDay;
         this.searchRowDataCommission.endDate = today;
-      }
-      if (value === '最近30天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 30);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var toMonth = `${year}-${month}-${day}`;
+      } else if (value === '最近30天') {
+        const toMonth = this.getDateByParam(-30);
         this.searchRowDataCommission.beginDate = toMonth;
         this.searchRowDataCommission.endDate = today;
+      } else if (value === '汇总' || this.buttonCommission === '汇总') {
+        this.searchRowDataCommission.beginDate = null;
+        this.searchRowDataCommission.endDate = null;
       }
       commissionStatistics(this.searchRowDataCommission)
         .then((res) => {
@@ -1294,55 +1221,25 @@ export default {
     },
     getTableDataAccounts(value) {
       this.tableDataAccounts = [];
-      const date = new Date();
-      date.setDate(date.getDate());
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var today = `${year}-${month}-${day}`;
+      const today = this.getDateByParam(0);
       if (value === '昨日') {
-        const date = new Date();
-        date.setDate(date.getDate() - 1);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var yesterday = `${year}-${month}-${day}`;
+        const yesterday = this.getDateByParam(-1);
         this.searchRowDataAccounts.beginDate = yesterday;
         this.searchRowDataAccounts.endDate = yesterday;
-      }
-      if (this.buttonAccounts === '汇总' || value === '汇总') {
-        this.searchRowDataAccounts.beginDate = null;
-        this.searchRowDataAccounts.endDate = null;
-      }
-      if (value === '今日') {
-        const date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
+      } else if (value === '今日') {
         this.searchRowDataAccounts.beginDate = today;
         this.searchRowDataAccounts.endDate = today;
-      }
-      if (value === '最近7天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 7);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var sevenDay = `${year}-${month}-${day}`;
+      } else if (value === '最近7天') {
+        const sevenDay = this.getDateByParam(-7);
         this.searchRowDataAccounts.beginDate = sevenDay;
         this.searchRowDataAccounts.endDate = today;
-      }
-      if (value === '最近30天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 30);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var toMonth = `${year}-${month}-${day}`;
+      } else if (value === '最近30天') {
+        const toMonth = this.getDateByParam(-30);
         this.searchRowDataAccounts.beginDate = toMonth;
         this.searchRowDataAccounts.endDate = today;
+      } else if (value === '汇总' || this.buttonAccounts === '汇总') {
+        this.searchRowDataAccounts.beginDate = null;
+        this.searchRowDataAccounts.endDate = null;
       }
       commissionSettleData(this.searchRowDataAccounts)
         .then((res) => {
@@ -1356,55 +1253,25 @@ export default {
     },
     getTableDataOlaceOrder(value) {
       this.tableDataOlaceOrder = [];
-      const date = new Date();
-      date.setDate(date.getDate());
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var today = `${year}-${month}-${day}`;
+      const today = this.getDateByParam(0);
       if (value === '昨日') {
-        const date = new Date();
-        date.setDate(date.getDate() - 1);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var yesterday = `${year}-${month}-${day}`;
+        const yesterday = this.getDateByParam(-1);
         this.searchRowDataOlaceOrder.beginDate = yesterday;
         this.searchRowDataOlaceOrder.endDate = yesterday;
-      }
-      if (this.buttonOlaceOrder === '汇总' || value === '汇总') {
-        this.searchRowDataOlaceOrder.beginDate = null;
-        this.searchRowDataOlaceOrder.endDate = null;
-      }
-      if (value === '今日') {
-        const date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
+      } else if (value === '今日') {
         this.searchRowDataOlaceOrder.beginDate = today;
         this.searchRowDataOlaceOrder.endDate = today;
-      }
-      if (value === '最近7天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 7);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var sevenDay = `${year}-${month}-${day}`;
+      } else if (value === '最近7天') {
+        const sevenDay = this.getDateByParam(-7);
         this.searchRowDataOlaceOrder.beginDate = sevenDay;
         this.searchRowDataOlaceOrder.endDate = today;
-      }
-      if (value === '最近30天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 30);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var toMonth = `${year}-${month}-${day}`;
+      } else if (value === '最近30天') {
+        const toMonth = this.getDateByParam(-30);
         this.searchRowDataOlaceOrder.beginDate = toMonth;
         this.searchRowDataOlaceOrder.endDate = today;
+      } else if (value === '汇总' || this.buttonOlaceOrder === '汇总') {
+        this.searchRowDataOlaceOrder.beginDate = null;
+        this.searchRowDataOlaceOrder.endDate = null;
       }
       commissionOrderData(this.searchRowDataOlaceOrder)
         .then((res) => {
@@ -1417,60 +1284,25 @@ export default {
         });
     },
     getTableDataBrokerage(value) {
-      const date = new Date();
-      date.setDate(date.getDate());
-      var year = date.getFullYear();
-      var month = date.getMonth() + 1;
-      var day = date.getDate();
-      var today = `${year}-${month}-${day}`;
+      const today = this.getDateByParam(0);
       if (value === '昨日') {
-        const date = new Date();
-        date.setDate(date.getDate() - 1);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var yesterday = `${year}-${month}-${day}`;
+        const yesterday = this.getDateByParam(-1);
         this.searchRowDataBrokerage.createTimeBegin = yesterday;
         this.searchRowDataBrokerage.createTimeEnd = yesterday;
-      }
-      if (this.buttonBrokerage === '汇总' || value === '汇总') {
-        const date = new Date();
-        date.setDate(date.getDate() - 365);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var allDay = `${year}-${month}-${day}`;
-        this.searchRowDataBrokerage.createTimeBegin = allDay;
-        this.searchRowDataBrokerage.createTimeEnd = today;
-      }
-      if (value === '今日') {
-        const date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
-        this.searchRowDataBrokerage.createTimeBegin = today;
-        this.searchRowDataBrokerage.createTimeEnd = today;
-      }
-      if (value === '最近7天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 7);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var sevenDay = `${year}-${month}-${day}`;
+      } else if (value === '最近7天') {
+        const sevenDay = this.getDateByParam(-7);
         this.searchRowDataBrokerage.createTimeBegin = sevenDay;
         this.searchRowDataBrokerage.createTimeEnd = today;
-      }
-      if (value === '最近30天') {
-        const date = new Date();
-        date.setDate(date.getDate() - 30);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var toMonth = `${year}-${month}-${day}`;
+      } else if (value === '最近30天') {
+        const toMonth = this.getDateByParam(-30);
         this.searchRowDataBrokerage.createTimeBegin = toMonth;
+        this.searchRowDataBrokerage.createTimeEnd = today;
+      } else if (value === '今日') {
+        this.searchRowDataBrokerage.createTimeBegin = today;
+        this.searchRowDataBrokerage.createTimeEnd = today;
+      } else if (value === '汇总' || this.buttonBrokerage === '汇总') {
+        const allDay = this.getDateByParam(-365);
+        this.searchRowDataBrokerage.createTimeBegin = allDay;
         this.searchRowDataBrokerage.createTimeEnd = today;
       }
       this.searchRowDataBrokerage.createTimeBegin = this.$moment(
@@ -1489,6 +1321,34 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
+    },
+    getDateByParam(param) {
+      // param -1-昨天 0-今天 -7-最近7天 -30-最近30天 -365-汇总
+      const date = new Date();
+      switch (param) {
+        case 0:
+          date.setDate(date.getDate());
+          break;
+        case -1:
+          date.setDate(date.getDate() - 1);
+          break;
+        case -7:
+          date.setDate(date.getDate() - 7);
+          break;
+        case -30:
+          date.setDate(date.getDate() - 30);
+          break;
+        case -365:
+          date.setDate(date.getDate() - 365);
+          break;
+        default:
+          date.setDate(date.getDate());
+      }
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      const dateStr = `${year}-${month}-${day}`;
+      return dateStr;
     },
     // 佣金趋势数据
     commissionDataTotalTrend(value) {
@@ -1672,6 +1532,19 @@ export default {
     },
     handleSearchBrokerage() {
       this.searchRowDataBrokerage.page = 1;
+      if (this.markBrokerage) {
+        // 选择自定义时间时填写的日期空校验
+        if (this.searchRowDataBrokerage.createTimeBegin === 'Invalid date' ||
+        !this.searchRowDataBrokerage.createTimeBegin) {
+          this.$Message.error('请先输入自定义开始时间');
+          return;
+        }
+        if (this.searchRowDataBrokerage.createTimeEnd === 'Invalid date' ||
+        !this.searchRowDataBrokerage.createTimeEnd) {
+          this.$Message.error('请先输入自定义结束时间');
+          return;
+        }
+      }
       this.getTableDataBrokerage();
     },
     handleClearBrokerage() {
@@ -1689,6 +1562,7 @@ export default {
       }
       if (index === 'pro') {
         this.button = '汇总';
+        this.mark = false;
         this.getTableData();
       }
       if (index === 'use') {
@@ -1697,24 +1571,27 @@ export default {
       if (index === 'commission') {
         this.buttonCommission = '汇总';
         this.buttonCommissionTrend = '本月';
+        this.markCommission = false;
         this.getTableDataCommission();
         this.commissionDataTotalTrend();
       }
       if (index === 'accounts') {
         this.buttonAccounts = '汇总';
         this.buttonAccountsTrend = '本月';
+        this.markAccounts = false;
         this.getTableDataAccounts();
         this.settleDataTotalTrend();
       }
       if (index === 'olaceOrder') {
         this.buttonOlaceOrder = '汇总';
         this.buttonOlaceOrderTrend = '本月';
-
+        this.markOlaceOrder = false;
         this.getTableDataOlaceOrder();
         this.orderDataTotalTrend();
       }
       if (index === 'brokerage') {
         this.buttonBrokerage = '汇总';
+        this.markBrokerage = false;
         this.getTableDataBrokerage();
       }
       this.topStatus = index;
@@ -1759,8 +1636,8 @@ export default {
         this.getTableData(value);
       } else if (value === '自定义时间') {
         this.mark = true;
-        this.searchRowData.beginDate = '';
-        this.searchRowData.endDate = '';
+        this.searchRowData.beginDate = null;
+        this.searchRowData.endDate = null;
       }
     },
     timeChangeCommission(value) {
@@ -1786,8 +1663,8 @@ export default {
         this.getTableDataCommission(value);
       } else if (value === '自定义时间') {
         this.markCommission = true;
-        this.searchRowDataCommission.beginDate = '';
-        this.searchRowDataCommission.endDate = '';
+        this.searchRowDataCommission.beginDate = null;
+        this.searchRowDataCommission.endDate = null;
       }
     },
     timeChangeAccounts(value) {
@@ -1813,8 +1690,8 @@ export default {
         this.getTableDataAccounts(value);
       } else if (value === '自定义时间') {
         this.markAccounts = true;
-        this.searchRowDataAccounts.beginDate = '';
-        this.searchRowDataAccounts.endDate = '';
+        this.searchRowDataAccounts.beginDate = null;
+        this.searchRowDataAccounts.endDate = null;
       }
     },
     timeChangeOlaceOrder(value) {
@@ -1840,8 +1717,8 @@ export default {
         this.getTableDataOlaceOrder(value);
       } else if (value === '自定义时间') {
         this.markOlaceOrder = true;
-        this.searchRowDataOlaceOrder.beginDate = '';
-        this.searchRowDataOlaceOrder.endDate = '';
+        this.searchRowDataOlaceOrder.beginDate = null;
+        this.searchRowDataOlaceOrder.endDate = null;
       }
     },
     timeChangeBrokerage(value) {
@@ -1863,8 +1740,8 @@ export default {
         this.getTableDataBrokerage(value);
       } else if (value === '自定义时间') {
         this.markBrokerage = true;
-        this.searchRowDataBrokerage.createTimeBegin = '';
-        this.searchRowDataBrokerage.createTimeEnd = '';
+        this.searchRowDataBrokerage.createTimeBegin = null;
+        this.searchRowDataBrokerage.createTimeEnd = null;
       }
     },
     timeChangeCommissionTrend(value) {
