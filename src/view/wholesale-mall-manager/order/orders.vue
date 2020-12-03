@@ -359,6 +359,7 @@ import {
   getOrder,
   getPrintOrder,
   exportOrder,
+  orderRefund,
   putCourierCode,
   confirmReceipt
 } from '@/api/lhfarm-small';
@@ -444,8 +445,6 @@ const deliveryInfo = {
   userId: 0,
   contactsName: ''
 };
-
-const orderColumns = [];
 
 const goodsColumns = [
   {
@@ -809,12 +808,12 @@ export default {
         },
         {
           title: '操作',
-          minWidth: 150,
+          minWidth: 200,
           resizable: true,
           align: 'center',
           fixed: 'right',
           key: 'handle',
-          options: ['view', 'edit', 'onReceive']
+          options: ['view', 'edit', 'onReceive', 'onHand']
         }
       ],
       deliveryInfo: _.cloneDeep(deliveryInfo),
@@ -859,18 +858,28 @@ export default {
       this.orderDetail.createTimeEnd = value;
     },
     handleReimburse(params) {
-      if (params.row.orderStatus === 'RETURNING') {
+      const { row } = params;
+      if (row.orderStatus === 'unrefunded') {
         this.$Message.error('退货中订单不能操作退款');
         return;
       }
-      if (params.row.orderStatus === 'ALREADY_RETURN') {
+      if (row.orderStatus === 'refunded') {
         this.$Message.error('退货完成订单不能操作退款');
         return;
       }
-      if (params.row.orderStatus === 'FAILURE') {
+      if (row.orderStatus === 'failed') {
         this.$Message.error('已失效的订单不能操作退款');
         return;
       }
+      this.loading = true;
+      orderRefund({ orderCode: row.orderCode })
+        .then((res) => {
+          this.$Message.success('手动退款成功');
+          this.getTableData();
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     // 确认收货
     handSureReceive(params) {

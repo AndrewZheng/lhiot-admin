@@ -669,6 +669,17 @@ export const getFinanceAuditPages = (data) => {
     }
   });
 };
+
+// 退款按钮-后台手动退款
+export const orderRefund = ({
+  orderCode
+}) => {
+  return $http.request({
+    url: '/lhfarm-small/order/refund/' + orderCode,
+    method: 'put'
+  })
+};
+
 // 确认收货
 export const confirmReceipt = (data) => {
   return $http.request({

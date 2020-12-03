@@ -9,6 +9,285 @@
         <b data-index="use" :class=" topStatus=='use' ? 'hot' : '' " @click="assistDataChange">员工数据</b>
         <b data-index="brokerage" :class=" topStatus=='brokerage' ? 'hot' : '' " @click="assistDataChange">佣金明细</b>
       </div>
+      <Card v-show="topStatus==='commission'">
+        <tables
+          ref="tablesCommission"
+          v-model="tableDataCommission"
+          :columns="columnsCommission"
+          :loading="loading"
+          :search-area-column="22"
+          :operate-area-column="6"
+          editable
+          searchable
+          border
+          search-place="top"
+        >
+          <div slot="searchCondition">
+            <Row>
+              <RadioGroup v-model="buttonCommission" type="button" @on-change="timeChangeCommission">
+                <Radio label="汇总"></Radio>
+                <Radio label="今日"></Radio>
+                <Radio label="昨日"></Radio>
+                <Radio label="最近7天"></Radio>
+                <Radio label="最近30天"></Radio>
+                <Radio label="自定义时间"></Radio>
+              </RadioGroup>
+              <div v-show="markCommission===true" class="mark">
+                <DatePicker
+                  v-model="searchRowDataCommission.beginDate"
+                  format="yyyy-MM-dd"
+                  type="date"
+                  :clearable="false"
+                  placeholder="请先选择开始时间"
+                  class="search-input"
+                  style="width: 150px"
+                  @on-change="startTimeChangeCommission"
+                />
+                <i>-</i>
+                <DatePicker
+                  v-model="searchRowDataCommission.endDate"
+                  format="yyyy-MM-dd"
+                  type="date"
+                  :clearable="false"
+                  :readonly="!commissionStatus"
+                  placeholder="自定义结束时间"
+                  class="search-input mr5"
+                  style="width: 150px"
+                  @on-change="endTimeChangeCommission"
+                />
+              </div>
+            </Row>
+          </div>
+        </tables>
+        <div style="height:60px"></div>
+        <h3 class="mb10">
+          佣金数据趋势图
+        </h3>
+        <div>
+          <RadioGroup v-model="buttonCommissionTrend" type="button" @on-change="timeChangeCommissionTrend">
+            <Radio label="上月"></Radio>
+            <Radio label="本月"></Radio>
+            <Radio label="自定义月份"></Radio>
+          </RadioGroup>
+          <div v-show="markCommissionTrend===true" class="mark">
+            <DatePicker
+              type="month"
+              :value="queryMonth"
+              placeholder="请先选择月份"
+              class="search-input ml5"
+              style="width: 150px"
+              :clearable="false"
+              @on-change="queryMonthChangeCommission"
+            />
+          </div>
+          <RadioGroup
+            v-model="charTitleCommissionStatus"
+            type="button"
+            class="ml30"
+            @on-change="changeCommissionCharts"
+          >
+            <Radio label="leijiCommission">
+              累计佣金
+            </Radio>
+            <Radio label="daitixianCommission">
+              待提现佣金
+            </Radio>
+            <Radio label="yitixianCommission">
+              已提现佣金
+            </Radio>
+            <Radio label="dairuzhangCommission">
+              待入账佣金
+            </Radio>
+          </RadioGroup>
+          <ve-line class="charts mt10" :data="chartData"></ve-line>
+        </div>
+      </Card>
+      <Card v-if="topStatus==='accounts'">
+        <tables
+          ref="tablesAccounts"
+          v-model="tableDataAccounts"
+          :columns="columnsAccounts"
+          :loading="loading"
+          :search-area-column="22"
+          :operate-area-column="6"
+          editable
+          searchable
+          border
+          search-place="top"
+        >
+          <div slot="searchCondition">
+            <Row>
+              <RadioGroup v-model="buttonAccounts" type="button" @on-change="timeChangeAccounts">
+                <Radio label="汇总"></Radio>
+                <Radio label="今日"></Radio>
+                <Radio label="昨日"></Radio>
+                <Radio label="最近7天"></Radio>
+                <Radio label="最近30天"></Radio>
+                <Radio label="自定义时间"></Radio>
+              </RadioGroup>
+              <div v-show="markAccounts===true" class="mark">
+                <DatePicker
+                  v-model="searchRowDataAccounts.beginDate"
+                  format="yyyy-MM-dd"
+                  type="date"
+                  :clearable="false"
+                  placeholder="请先选择开始时间"
+                  class="search-input"
+                  style="width: 150px"
+                  @on-change="startTimeChangeAccounts"
+                />
+                <i>-</i>
+                <DatePicker
+                  v-model="searchRowDataAccounts.endDate"
+                  format="yyyy-MM-dd"
+                  type="date"
+                  :clearable="false"
+                  :readonly="!accountsStatus"
+                  placeholder="自定义结束时间"
+                  class="search-input mr5"
+                  style="width: 150px"
+                  @on-change="endTimeChangeAccounts"
+                />
+              </div>
+            </Row>
+          </div>
+        </tables>
+        <div style="height:60px"></div>
+        <h3 class="mb10">
+          结算数据趋势图
+        </h3>
+        <div>
+          <RadioGroup v-model="buttonAccountsTrend" type="button" @on-change="timeChangeAccountsTrend">
+            <Radio label="上月"></Radio>
+            <Radio label="本月"></Radio>
+            <Radio label="自定义月份"></Radio>
+          </RadioGroup>
+          <div v-show="markAccountsTrend===true" class="mark">
+            <DatePicker
+              type="month"
+              :value="queryMonth"
+              placeholder="请先选择开始时间"
+              class="search-input ml5"
+              style="width: 150px"
+              :clearable="false"
+              @on-change="queryMonthChangeAccounts"
+            />
+          </div>
+          <RadioGroup
+            v-model="charTitleAccountsStatus"
+            type="button"
+            class="ml30"
+            @on-change="changeAccountsCharts"
+          >
+            <Radio label="settleOrderNum">
+              结算订单数
+            </Radio>
+            <Radio label="settleOrderSum">
+              结算订单额
+            </Radio>
+            <Radio label="settleTotalSum">
+              结算总佣金
+            </Radio>
+            <Radio label="perCapitaIncome">
+              人均收益
+            </Radio>
+          </RadioGroup>
+          <ve-line class="charts mt10" :data="chartData"></ve-line>
+        </div>
+      </Card>
+      <Card v-if="topStatus==='olaceOrder'">
+        <tables
+          ref="tablesOlaceOrder"
+          v-model="tableDataOlaceOrder"
+          :columns="columnsOlaceOrder"
+          :loading="loading"
+          :search-area-column="22"
+          :operate-area-column="6"
+          editable
+          searchable
+          border
+          search-place="top"
+        >
+          <div slot="searchCondition">
+            <Row>
+              <RadioGroup v-model="buttonOlaceOrder" type="button" @on-change="timeChangeOlaceOrder">
+                <Radio label="汇总"></Radio>
+                <Radio label="今日"></Radio>
+                <Radio label="昨日"></Radio>
+                <Radio label="最近7天"></Radio>
+                <Radio label="最近30天"></Radio>
+                <Radio label="自定义时间"></Radio>
+              </RadioGroup>
+              <div v-show="markOlaceOrder===true" class="mark">
+                <DatePicker
+                  v-model="searchRowDataOlaceOrder.beginDate"
+                  format="yyyy-MM-dd"
+                  type="date"
+                  :clearable="false"
+                  placeholder="请先选择开始时间"
+                  class="search-input"
+                  style="width: 150px"
+                  @on-change="startTimeChangeOlaceOrder"
+                />
+                <i>-</i>
+                <DatePicker
+                  v-model="searchRowDataOlaceOrder.endDate"
+                  format="yyyy-MM-dd"
+                  type="date"
+                  :clearable="false"
+                  :readonly="!olaceOrderStatus"
+                  placeholder="自定义结束时间"
+                  class="search-input mr5"
+                  style="width: 150px"
+                  @on-change="endTimeChangeOlaceOrder"
+                />
+              </div>
+            </Row>
+          </div>
+        </tables>
+        <div style="height:60px"></div>
+        <h3 class="mb10">
+          下单数据趋势图
+        </h3>
+        <div>
+          <RadioGroup v-model="buttonOlaceOrderTrend" type="button" @on-change="timeChangeOlaceOrderTrend">
+            <Radio label="上月"></Radio>
+            <Radio label="本月"></Radio>
+            <Radio label="自定义月份"></Radio>
+          </RadioGroup>
+          <div v-show="markOlaceOrderTrend===true" class="mark">
+            <DatePicker
+              type="month"
+              :value="queryMonth"
+              placeholder="请先选择开始时间"
+              class="search-input ml5"
+              style="width: 150px"
+              :clearable="false"
+              @on-change="queryMonthChangeOlaceOrder"
+            />
+          </div>
+          <RadioGroup
+            v-model="charTitleOlaceOrderStatus"
+            type="button"
+            class="ml30"
+            @on-change="changeOlaceOrderCharts"
+          >
+            <Radio label="olaceOrderNum">
+              下单数
+            </Radio>
+            <Radio label="olaceOrderSum">
+              下单额
+            </Radio>
+            <Radio label="chargebackNum">
+              退单数
+            </Radio>
+            <Radio label="chargebackSum">
+              退单额
+            </Radio>
+          </RadioGroup>
+          <ve-line class="charts mt10" :data="chartData"></ve-line>
+        </div>
+      </Card>
       <Card v-show="topStatus==='pro'">
         <tables
           ref="tableDatas"
@@ -188,285 +467,6 @@
               @on-page-size-change="changePageSizeUse"
             ></Page>
           </Row>
-        </div>
-      </Card>
-      <Card v-show="topStatus==='commission'">
-        <tables
-          ref="tablesCommission"
-          v-model="tableDataCommission"
-          :columns="columnsCommission"
-          :loading="loading"
-          :search-area-column="22"
-          :operate-area-column="6"
-          editable
-          searchable
-          border
-          search-place="top"
-        >
-          <div slot="searchCondition">
-            <Row>
-              <RadioGroup v-model="buttonCommission" type="button" @on-change="timeChangeCommission">
-                <Radio label="汇总"></Radio>
-                <Radio label="今日"></Radio>
-                <Radio label="昨日"></Radio>
-                <Radio label="最近7天"></Radio>
-                <Radio label="最近30天"></Radio>
-                <Radio label="自定义时间"></Radio>
-              </RadioGroup>
-              <div v-show="markCommission===true" class="mark">
-                <DatePicker
-                  v-model="searchRowDataCommission.beginDate"
-                  format="yyyy-MM-dd"
-                  type="date"
-                  :clearable="false"
-                  placeholder="请先选择开始时间"
-                  class="search-input"
-                  style="width: 150px"
-                  @on-change="startTimeChangeCommission"
-                />
-                <i>-</i>
-                <DatePicker
-                  v-model="searchRowDataCommission.endDate"
-                  format="yyyy-MM-dd"
-                  type="date"
-                  :clearable="false"
-                  :readonly="!commissionStatus"
-                  placeholder="自定义结束时间"
-                  class="search-input mr5"
-                  style="width: 150px"
-                  @on-change="endTimeChangeCommission"
-                />
-              </div>
-            </Row>
-          </div>
-        </tables>
-        <div style="height:60px"></div>
-        <h3 class="mb10">
-          佣金数据趋势图
-        </h3>
-        <div>
-          <RadioGroup v-model="buttonCommissionTrend" type="button" @on-change="timeChangeCommissionTrend">
-            <Radio label="上月"></Radio>
-            <Radio label="本月"></Radio>
-            <Radio label="自定义月份"></Radio>
-          </RadioGroup>
-          <div v-show="markCommissionTrend===true" class="mark">
-            <DatePicker
-              type="month"
-              :value="queryMonth"
-              placeholder="请先选择月份"
-              class="search-input ml5"
-              style="width: 150px"
-              :clearable="false"
-              @on-change="queryMonthChangeCommission"
-            />
-          </div>
-          <RadioGroup
-            v-model="charTitleCommissionStatus"
-            type="button"
-            class="ml30"
-            @on-change="changeCommissionCharts"
-          >
-            <Radio label="leijiCommission">
-              累计佣金
-            </Radio>
-            <Radio label="daitixianCommission">
-              待提现佣金
-            </Radio>
-            <Radio label="yitixianCommission">
-              已提现佣金
-            </Radio>
-            <Radio label="dairuzhangCommission">
-              待入账佣金
-            </Radio>
-          </RadioGroup>
-          <ve-line class="charts mt10" :data="chartData"></ve-line>
-        </div>
-      </Card>
-      <Card v-if="topStatus==='accounts'">
-        <tables
-          ref="tablesAccounts"
-          v-model="tableDataAccounts"
-          :columns="columnsAccounts"
-          :loading="loading"
-          :search-area-column="22"
-          :operate-area-column="6"
-          editable
-          searchable
-          border
-          search-place="top"
-        >
-          <div slot="searchCondition">
-            <Row>
-              <RadioGroup v-model="buttonCommission" type="button" @on-change="timeChangeAccounts">
-                <Radio label="汇总"></Radio>
-                <Radio label="今日"></Radio>
-                <Radio label="昨日"></Radio>
-                <Radio label="最近7天"></Radio>
-                <Radio label="最近30天"></Radio>
-                <Radio label="自定义时间"></Radio>
-              </RadioGroup>
-              <div v-show="markAccounts===true" class="mark">
-                <DatePicker
-                  v-model="searchRowDataAccounts.beginDate"
-                  format="yyyy-MM-dd"
-                  type="date"
-                  :clearable="false"
-                  placeholder="请先选择开始时间"
-                  class="search-input"
-                  style="width: 150px"
-                  @on-change="startTimeChangeAccounts"
-                />
-                <i>-</i>
-                <DatePicker
-                  v-model="searchRowDataAccounts.endDate"
-                  format="yyyy-MM-dd"
-                  type="date"
-                  :clearable="false"
-                  :readonly="!accountsStatus"
-                  placeholder="自定义结束时间"
-                  class="search-input mr5"
-                  style="width: 150px"
-                  @on-change="endTimeChangeAccounts"
-                />
-              </div>
-            </Row>
-          </div>
-        </tables>
-        <div style="height:60px"></div>
-        <h3 class="mb10">
-          结算数据趋势图
-        </h3>
-        <div>
-          <RadioGroup v-model="buttonAccountsTrend" type="button" @on-change="timeChangeAccountsTrend">
-            <Radio label="上月"></Radio>
-            <Radio label="本月"></Radio>
-            <Radio label="自定义月份"></Radio>
-          </RadioGroup>
-          <div v-show="markAccountsTrend===true" class="mark">
-            <DatePicker
-              type="month"
-              :value="queryMonth"
-              placeholder="请先选择开始时间"
-              class="search-input ml5"
-              style="width: 150px"
-              :clearable="false"
-              @on-change="queryMonthChangeAccounts"
-            />
-          </div>
-          <RadioGroup
-            v-model="charTitleAccountsStatus"
-            type="button"
-            class="ml30"
-            @on-change="changeAccountsCharts"
-          >
-            <Radio label="settleOrderNum">
-              结算订单数
-            </Radio>
-            <Radio label="settleOrderSum">
-              结算订单额
-            </Radio>
-            <Radio label="settleTotalSum">
-              结算总佣金
-            </Radio>
-            <Radio label="perCapitaIncome">
-              人均收益
-            </Radio>
-          </RadioGroup>
-          <ve-line class="charts mt10" :data="chartData"></ve-line>
-        </div>
-      </Card>
-      <Card v-if="topStatus==='olaceOrder'">
-        <tables
-          ref="tablesOlaceOrder"
-          v-model="tableDataOlaceOrder"
-          :columns="columnsOlaceOrder"
-          :loading="loading"
-          :search-area-column="22"
-          :operate-area-column="6"
-          editable
-          searchable
-          border
-          search-place="top"
-        >
-          <div slot="searchCondition">
-            <Row>
-              <RadioGroup v-model="buttonOlaceOrder" type="button" @on-change="timeChangeOlaceOrder">
-                <Radio label="汇总"></Radio>
-                <Radio label="今日"></Radio>
-                <Radio label="昨日"></Radio>
-                <Radio label="最近7天"></Radio>
-                <Radio label="最近30天"></Radio>
-                <Radio label="自定义时间"></Radio>
-              </RadioGroup>
-              <div v-show="markOlaceOrder===true" class="mark">
-                <DatePicker
-                  v-model="searchRowDataOlaceOrder.beginDate"
-                  format="yyyy-MM-dd"
-                  type="date"
-                  :clearable="false"
-                  placeholder="请先选择开始时间"
-                  class="search-input"
-                  style="width: 150px"
-                  @on-change="startTimeChangeOlaceOrder"
-                />
-                <i>-</i>
-                <DatePicker
-                  v-model="searchRowDataOlaceOrder.endDate"
-                  format="yyyy-MM-dd"
-                  type="date"
-                  :clearable="false"
-                  :readonly="!olaceOrderStatus"
-                  placeholder="自定义结束时间"
-                  class="search-input mr5"
-                  style="width: 150px"
-                  @on-change="endTimeChangeOlaceOrder"
-                />
-              </div>
-            </Row>
-          </div>
-        </tables>
-        <div style="height:60px"></div>
-        <h3 class="mb10">
-          下单数据趋势图
-        </h3>
-        <div>
-          <RadioGroup v-model="buttonOlaceOrderTrend" type="button" @on-change="timeChangeOlaceOrderTrend">
-            <Radio label="上月"></Radio>
-            <Radio label="本月"></Radio>
-            <Radio label="自定义月份"></Radio>
-          </RadioGroup>
-          <div v-show="markOlaceOrderTrend===true" class="mark">
-            <DatePicker
-              type="month"
-              :value="queryMonth"
-              placeholder="请先选择开始时间"
-              class="search-input ml5"
-              style="width: 150px"
-              :clearable="false"
-              @on-change="queryMonthChangeOlaceOrder"
-            />
-          </div>
-          <RadioGroup
-            v-model="charTitleOlaceOrderStatus"
-            type="button"
-            class="ml30"
-            @on-change="changeOlaceOrderCharts"
-          >
-            <Radio label="olaceOrderNum">
-              下单数
-            </Radio>
-            <Radio label="olaceOrderSum">
-              下单额
-            </Radio>
-            <Radio label="chargebackNum">
-              退单数
-            </Radio>
-            <Radio label="chargebackSum">
-              退单额
-            </Radio>
-          </RadioGroup>
-          <ve-line class="charts mt10" :data="chartData"></ve-line>
         </div>
       </Card>
       <Card v-show="topStatus==='brokerage'">
@@ -1530,6 +1530,7 @@ export default {
       }
       if (index === 'pro') {
         this.button = '汇总';
+        this.mark = false;
         this.getTableData();
       }
       if (index === 'use') {
@@ -1538,24 +1539,27 @@ export default {
       if (index === 'commission') {
         this.buttonCommission = '汇总';
         this.buttonCommissionTrend = '本月';
+        this.markCommission = false;
         this.getTableDataCommission();
         this.commissionDataTotalTrend();
       }
       if (index === 'accounts') {
         this.buttonAccounts = '汇总';
         this.buttonAccountsTrend = '本月';
+        this.markAccounts = false;
         this.getTableDataAccounts();
         this.settleDataTotalTrend();
       }
       if (index === 'olaceOrder') {
         this.buttonOlaceOrder = '汇总';
         this.buttonOlaceOrderTrend = '本月';
-
+        this.markOlaceOrder = false;
         this.getTableDataOlaceOrder();
         this.orderDataTotalTrend();
       }
       if (index === 'brokerage') {
         this.buttonBrokerage = '汇总';
+        this.markBrokerage = false;
         this.getTableDataBrokerage();
       }
       this.topStatus = index;

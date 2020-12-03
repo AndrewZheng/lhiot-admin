@@ -2567,10 +2567,10 @@ export const wholesaleOrderStatusEnum = [{
 //   label: '退款失败',
 //   value: 'refundfailed'
 // },
-// {
-//   label: '退货完成',
-//   value: 'refunded'
-// },
+{
+  label: '退货完成',
+  value: 'refunded'
+},
 {
   label: '已失效',
   value: 'failed'
