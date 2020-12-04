@@ -1545,12 +1545,12 @@ const btns = {
       row
     } = params;
     if (row.phone) {
-      if (row.userType === 'CONSUMER') {
+      if (row.userType === 'CONSUMER' || row.userType === 'consumer') {
         return h('Poptip', {
           props: {
             confirm: true,
             transfer: true,
-            title: '确认要将此用户升级为VIP吗?',
+            title: '确认要为此用户设置员工特权吗?',
             placement: params.index === 0 ? 'right' : 'top'
           },
           style: {
@@ -1563,7 +1563,7 @@ const btns = {
           }
         }, [
           h('Tooltip', {
-            props: { placement: 'top', transfer: true, content: '设为VIP' }
+            props: { placement: 'top', transfer: true, content: '设为员工' }
           }, [
             h('Button', {
               props: {
@@ -1586,7 +1586,7 @@ const btns = {
           props: {
             confirm: true,
             transfer: true,
-            title: '取消此用户VIP特权?',
+            title: '取消此用户员工特权?',
             placement: params.index === 0 ? 'right' : 'top'
           },
           style: {
@@ -1599,7 +1599,7 @@ const btns = {
           }
         }, [
           h('Tooltip', {
-            props: { placement: 'top', transfer: true, content: '取消VIP' }
+            props: { placement: 'top', transfer: true, content: '取消员工' }
           }, [
             h('Button', {
               props: {

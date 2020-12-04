@@ -1055,6 +1055,7 @@ export default {
     },
     handleEdit(params) {
       if (params.row.orderStatus === 'undelivery') {
+        this.$refs.editForm.resetFields();
         this.orderDetail = _.cloneDeep(params.row);
         this.modalEdit = true;
       } else {

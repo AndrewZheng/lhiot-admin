@@ -219,6 +219,15 @@ export const constantRouterMap = [
         component: () => import('@/view/wholesale-mall-manager/goods/goods-standard.vue')
       },
       {
+        path: 'wholesale-relation-handCheck',
+        name: 'wholesale-relation-handCheck',
+        meta: {
+          icon: 'md-checkmark-circle',
+          title: '员工管理'
+        },
+        component: () => import('@/view/wholesale-mall-manager/user/handle-check.vue')
+      },
+      {
         path: '/wholesale-article-edit',
         name: 'wholesale-article-edit',
         meta: {

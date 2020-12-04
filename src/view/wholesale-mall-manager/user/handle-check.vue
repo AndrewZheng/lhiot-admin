@@ -180,7 +180,7 @@ import { getStaffManage, StaffAudit, staffUpdate } from '@/api/lhfarm-small';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
-import { getSmallGoodsStandard } from '@/libs/util';
+import { PcLockr } from '@/util';
 
 const activitiesDetail = {};
 
@@ -412,7 +412,7 @@ export default {
     this.getTableDataManage();
   },
   created() {
-    this.showBack = this.$route.name === 'small-member-relation-handCheck';
+    this.showBack = this.$route.name === 'wholesale-relation-handCheck';
   },
   methods: {
     resetSearchRowData() {
@@ -425,89 +425,53 @@ export default {
       this.$refs.modalEdit.resetFields();
     },
     getTableData() {
+      this.loading = true;
       getStaffManage(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
     getTableDataManage(value) {
-      //
-      if (this.$route.name === 'small-member-relation-handCheck') {
-        const memberMsg = getSmallGoodsStandard();
-        this.topStatus = memberMsg.topStatus;
+      if (this.$route.name === 'wholesale-relation-handCheck') {
+        if (!PcLockr.get('STAFF_INFO')) { return; }
+        const staffInfo = JSON.parse(PcLockr.get('STAFF_INFO'));
+        this.topStatus = 'manage';
         this.searchRowDataManage.applyTimeBegin = '';
         this.searchRowDataManage.applyTimeEnd = '';
-        this.searchRowDataManage.staffPhone = memberMsg.phone;
+        this.searchRowDataManage.staffPhone = staffInfo.phone;
       } else {
-        const date = new Date();
-        date.setDate(date.getDate());
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var today = `${year}-${month}-${day}`;
+        const today = this.getDateByParam(0);
         if (value === '昨日') {
-          const date = new Date();
-          date.setDate(date.getDate() - 1);
-          var year = date.getFullYear();
-          var month = date.getMonth() + 1;
-          var day = date.getDate();
-          var yesterday = `${year}-${month}-${day}`;
+          const yesterday = this.getDateByParam(-1);
           this.searchRowDataManage.applyTimeBegin = yesterday;
           this.searchRowDataManage.applyTimeEnd = yesterday;
-        }
-        if (value === '今日') {
-          const date = new Date();
-          date.setDate(date.getDate());
-          var year = date.getFullYear();
-          var month = date.getMonth() + 1;
-          var day = date.getDate();
-          var today = `${year}-${month}-${day}`;
+        } else if (value === '今日') {
           this.searchRowDataManage.applyTimeBegin = today;
           this.searchRowDataManage.applyTimeEnd = today;
-        }
-        if (value === '汇总') {
+        } else if (value === '汇总') {
           this.searchRowDataManage.applyTimeBegin = '';
           this.searchRowDataManage.applyTimeEnd = '';
-        }
-        if (value === '最近7天') {
-          const date = new Date();
-          date.setDate(date.getDate() - 7);
-          var year = date.getFullYear();
-          var month = date.getMonth() + 1;
-          var day = date.getDate();
-          var sevenDay = `${year}-${month}-${day}`;
+        } else if (value === '最近7天') {
+          const sevenDay = this.getDateByParam(-7);
           this.searchRowDataManage.applyTimeBegin = sevenDay;
           this.searchRowDataManage.applyTimeEnd = today;
-        }
-        if (value === '最近30天') {
-          const date = new Date();
-          date.setDate(date.getDate() - 30);
-          var year = date.getFullYear();
-          var month = date.getMonth() + 1;
-          var day = date.getDate();
-          var toMonth = `${year}-${month}-${day}`;
+        } else if (value === '最近30天') {
+          const toMonth = this.getDateByParam(-30);
           this.searchRowDataManage.applyTimeBegin = toMonth;
           this.searchRowDataManage.applyTimeEnd = today;
-        }
-        const date1 = new Date();
-        date1.setDate(date.getDate() - 1);
-        var year1 = date.getFullYear();
-        var month1 = date.getMonth() + 1;
-        var day1 = date.getDate();
-        var yesterday1 = `${year1}-${month1}-${day1}`;
-        if (this.button === '今日') {
-          this.searchRowDataManage.applyTimeBegin = yesterday1;
-          this.searchRowDataManage.applyTimeEnd = yesterday1;
+        } else {
+          // 第一次初始化进来时
+          if (this.button === '今日') {
+            const yesterday = this.getDateByParam(-1);
+            this.searchRowDataManage.applyTimeBegin = yesterday;
+            this.searchRowDataManage.applyTimeEnd = yesterday;
+          }
         }
       }
       getStaffManage(this.searchRowDataManage)
@@ -517,12 +481,8 @@ export default {
           });
           this.tableDataManage = res.rows;
           this.totalManage = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

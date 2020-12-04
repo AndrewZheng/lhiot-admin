@@ -15,6 +15,7 @@
         search-place="top"
         @on-delete="handleDelete"
         @on-set-vip="handleSetVip"
+        @on-staff="onStaff"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
@@ -118,14 +119,11 @@ import Tables from '_c/tables';
 import _ from 'lodash';
 import {
   getUserPages,
-  editUser,
+  createUser,
   deleteUser,
   auditUser,
   changeUser,
-  createUser,
-  getAllSalesman,
-  storeAssign,
-  unlockSalesman
+  setStaff
 } from '@/api/lhfarm-small';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
@@ -136,6 +134,7 @@ import {
   fenToYuanDot2Number,
   yuanToFenNumber
 } from '@/libs/util';
+import { PcLockr } from '@/util';
 import { userStatusEnum, sexEnum, userTypeEnum } from '@/libs/enumerate';
 import {
   userTypeConvert,
@@ -215,33 +214,33 @@ const columns = [
     align: 'center',
     key: 'registerTime'
   },
-  // {
-  //   title: "是否VIP",
-  //   align: "center",
-  //   key: "isVip",
-  //   render: (h, params, vm) => {
-  //     const { row } = params;
-  //     if (row.isVip === "yes") {
-  //       return (
-  //         <div>
-  //           <tag color="gold">VIP</tag>
-  //         </div>
-  //       );
-  //     } else if (row.isVip === "no") {
-  //       return (
-  //         <div>
-  //           <tag color="primary">普通用户</tag>
-  //         </div>
-  //       );
-  //     }
-  //   }
-  // },
+  {
+    title: '是否VIP',
+    align: 'center',
+    key: 'isVip',
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.isVip === 'yes') {
+        return (
+          <div>
+            <tag color='gold'>VIP</tag>
+          </div>
+        );
+      } else if (row.isVip === 'no') {
+        return (
+          <div>
+            <tag color='primary'>普通用户</tag>
+          </div>
+        );
+      }
+    }
+  },
   {
     title: '操作',
     align: 'center',
     key: 'handle',
     width: 240,
-    options: ['setVip']
+    options: ['setVip', 'staff']
   }
 ];
 
@@ -433,7 +432,6 @@ export default {
       this.$Message.info('操作成功');
       this.editTableRow();
     },
-
     createTableRow() {
       createUser(this.userDetail)
         .then((res) => {})
@@ -546,6 +544,25 @@ export default {
     },
     onSelectionChange(selection) {
       this.selectedUserIds = selection.map((item) => item.id.toString());
+    },
+    onStaff(params) {
+      const row = params.row;
+      const _this = this;
+      this.userDetail = _.cloneDeep(row);
+      this.userDetail.userType = row.userType === 'consumer' ? 'staff' : 'consumer';
+      setStaff(this.userDetail)
+        .then((res) => {
+          this.$Message.info('操作成功');
+          this.getTableData();
+          if (this.userDetail.userType === 'staff') {
+            setTimeout(function() {
+              PcLockr.set('STAFF_INFO', _this.userDetail);
+              _this.turnToPage({
+                name: 'wholese-relation-handCheck'
+              });
+            }, 2000);
+          }
+        });
     }
   }
 };
