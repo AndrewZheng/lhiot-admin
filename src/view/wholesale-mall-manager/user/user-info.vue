@@ -121,8 +121,7 @@ import {
   getUserPages,
   createUser,
   deleteUser,
-  auditUser,
-  changeUser,
+  editUser,
   setStaff
 } from '@/api/lhfarm-small';
 import tableMixin from '@/mixins/tableMixin.js';
@@ -210,9 +209,27 @@ const columns = [
     }
   },
   {
-    title: '注册时间',
+    title: '用户类型',
     align: 'center',
-    key: 'registerTime'
+    key: 'userType',
+    render: (h, params, vm) => {
+      const { row } = params;
+      if (row.userType === 'staff') {
+        return (
+          <div>
+            <tag color='gold'>{ userTypeConvert(row.userType) }</tag>
+          </div>
+        );
+      } else if (row.userType === 'consumer') {
+        return (
+          <div>
+            <tag color='primary'>{ userTypeConvert(row.userType) }</tag>
+          </div>
+        );
+      } else {
+        <div><tag color='default'>{'N/A'}</tag></div>
+      }
+    }
   },
   {
     title: '是否VIP',
@@ -229,11 +246,16 @@ const columns = [
       } else if (row.isVip === 'no') {
         return (
           <div>
-            <tag color='primary'>普通用户</tag>
+            <tag color='primary'>否</tag>
           </div>
         );
       }
     }
+  },
+  {
+    title: '注册时间',
+    align: 'center',
+    key: 'registerTime'
   },
   {
     title: '操作',
@@ -424,22 +446,31 @@ export default {
     },
     handleSetVip(params) {
       this.userDetail = _.cloneDeep(params.row);
-      if (params.row.userStatus !== 'certified') {
-        this.$Message.info('该用户还未完成认证');
-        return;
-      }
       this.userDetail.isVip = params.row.isVip === 'yes' ? 'no' : 'yes';
-      this.$Message.info('操作成功');
       this.editTableRow();
     },
     createTableRow() {
       createUser(this.userDetail)
-        .then((res) => {})
-        .finally((res) => {
-          this.modalEditLoading = false;
-          this.modalEdit = false;
+        .then((res) => {
+          this.$Message.info('创建成功');
           this.getTableData();
           this.resetFields();
+        })
+        .finally(() => {
+          this.modalEditLoading = false;
+          this.modalEdit = false;
+        });
+    },
+    editTableRow() {
+      editUser(this.userDetail)
+        .then((res) => {
+          this.$Message.info('操作成功');
+          this.getTableData();
+          this.resetFields();
+        })
+        .finally(() => {
+          this.modalEditLoading = false;
+          this.modalEdit = false;
         });
     },
     resetSearchRowData() {
@@ -488,8 +519,7 @@ export default {
           this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
           tableData.forEach((item) => {
-            item['userType'] =
-              item['userType'] === 'sale' ? '业务员' : '普通用户';
+            item['userType'] = item['userType'] === 'staff' ? '员工特权' : '普通用户';
             item['userStatus'] = userStatusConvert(item['userStatus']);
             item['salesUserStatus'] = userStatusConvert(
               item['salesUserStatus']
@@ -556,9 +586,9 @@ export default {
           this.getTableData();
           if (this.userDetail.userType === 'staff') {
             setTimeout(function() {
-              PcLockr.set('STAFF_INFO', _this.userDetail);
+              PcLockr.set('STAFF_INFO', JSON.stringify(_this.userDetail));
               _this.turnToPage({
-                name: 'wholese-relation-handCheck'
+                name: 'wholesale-relation-handCheck'
               });
             }, 2000);
           }

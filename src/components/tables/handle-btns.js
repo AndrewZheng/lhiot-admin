@@ -1539,7 +1539,7 @@ const btns = {
       ]);
     }
   },
-  // VIP内部特权-分享赚
+  // 员工内部特权-分享赚
   staff: (h, params, vm) => {
     const {
       row
@@ -1563,7 +1563,7 @@ const btns = {
           }
         }, [
           h('Tooltip', {
-            props: { placement: 'top', transfer: true, content: '设为员工' }
+            props: { placement: 'top', transfer: true, content: '设置员工特权' }
           }, [
             h('Button', {
               props: {
@@ -1599,7 +1599,7 @@ const btns = {
           }
         }, [
           h('Tooltip', {
-            props: { placement: 'top', transfer: true, content: '取消员工' }
+            props: { placement: 'top', transfer: true, content: '取消员工特权' }
           }, [
             h('Button', {
               props: {
@@ -1618,6 +1618,137 @@ const btns = {
           ])
         ]);
       }
+    }
+  },
+  staffAudit: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.auditStatus === 'UNAUDITED') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '是否通过员工特权申请?',
+          placement: params.index === 0 ? 'right' : 'top',
+          'ok-text': '通过',
+          'cancel-text': '拒绝'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-staffAudit', { params, checkStatus: 'PASSED' });
+          },
+          'on-cancel': () => {
+            vm.$emit('on-staffAudit', { params, checkStatus: 'REJECTED' });
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '审核员工' }
+        }, [
+          h('Button', {
+            props: {
+              type: 'primary',
+              size: 'small'
+            }
+          }, [
+            h('Icon', {
+              props: {
+                type: 'md-person-add',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
+        ])
+      ]);
+    } else {
+      return 'N/A'
+    }
+  },
+  amendEdit: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.isEdit === false) {
+      return h('Button', {
+        props: {
+          type: 'warning',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-inline-edit', params);
+          }
+        }
+      }, [h('Icon', {
+        props: {
+          type: 'ios-create',
+          size: 16,
+          color: '#fff'
+        }
+      })]);
+    } else {
+      return h('Button', {
+        props: {
+          type: 'success',
+          size: 'small'
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          click: () => {
+            vm.$emit('on-inline-save', params);
+          }
+        }
+      }, [h('Icon', {
+        props: {
+          type: 'md-checkmark',
+          size: 16,
+          color: '#green'
+        }
+      })]);
+    }
+  },
+  abolish: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.isEdit) {
+      return h('Tooltip', {
+        props: { placement: 'top', transfer: true, content: '取消' }
+      }, [
+        h('Button', {
+          props: {
+            type: 'info',
+            size: 'small'
+          },
+          style: {
+            marginRight: '5px'
+          },
+          on: {
+            click: () => {
+              vm.$emit('on-abolish', params);
+            }
+          }
+        }, [
+          h('Icon', {
+            props: {
+              type: 'md-close',
+              size: 16,
+              color: '#fff'
+            }
+          })
+        ])]);
+    } else {
+      return ''
     }
   },
   // 评论 置顶

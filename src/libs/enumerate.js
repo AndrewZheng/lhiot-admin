@@ -2509,9 +2509,13 @@ export const userTypeEnum = [{
   label: '普通用户',
   value: 'consumer'
 },
+// {
+//   label: '业务员',
+//   value: 'sale'
+// },
 {
-  label: '业务员',
-  value: 'sale'
+  label: '员工特权',
+  value: 'staff'
 }
 ]
 

@@ -5,12 +5,12 @@
         data-index="check"
         :class="topStatus == 'check' ? 'hot' : ''"
         @click="assistDataChange"
-      >VIP用户审核</b>
+      >员工特权审核</b>
       <b
         data-index="manage"
         :class="topStatus == 'manage' ? 'hot' : ''"
         @click="assistDataChange"
-      >VIP用户管理</b>
+      >员工特权管理</b>
     </div>
     <Card v-show="topStatus === 'check'">
       <tables
@@ -82,7 +82,7 @@
           <Row>
             <Input
               v-model="searchRowDataManage.staffName"
-              placeholder="VIP姓名"
+              placeholder="用户姓名"
               class="search-input mr5"
               style="width: 110px"
               clearable
@@ -153,7 +153,7 @@
             type="primary"
             @click="goBack"
           >
-            <Icon type="ios-arrow-back" />&nbsp;返回会员管理
+            <Icon type="ios-arrow-back" />&nbsp;返回会员查询
           </Button>
         </div>
       </tables>
@@ -215,21 +215,11 @@ export default {
       button: '今日',
       columns: [
         {
-          title: 'VIP姓名',
+          title: '用户姓名',
           align: 'center',
           maxWidth: 150,
           key: 'staffName'
         },
-        // {
-        //   title: '所在部门',
-        //   align: 'center',
-        //   key: 'deptName'
-        // },
-        // {
-        //   title: '岗位名称',
-        //   align: 'center',
-        //   key: 'positionName'
-        // },
         {
           title: '联系方式',
           align: 'center',
@@ -268,7 +258,7 @@ export default {
           key: 'applyTime'
         },
         {
-          title: 'VIP姓名',
+          title: '用户姓名',
           align: 'center',
           key: 'staffName',
           render(h, params, vm) {
@@ -305,82 +295,6 @@ export default {
             }
           }
         },
-        // {
-        //   title: '所在部门',
-        //   align: 'center',
-        //   key: 'deptName',
-        //   render(h, params, vm) {
-        //     const { row } = params;
-        //     if (row.isEdit) {
-        //       return h(
-        //         'Div',
-        //         {
-        //           style: {
-        //             display: 'flex',
-        //             flexDirection: 'column'
-        //           }
-        //         },
-        //         [
-        //           h('Input', {
-        //             style: {
-        //               marginLeft: '4px',
-        //               width: '100%'
-        //             },
-        //             props: {
-        //               type: 'text',
-        //               value: row.deptName // 使用key的键值
-        //             },
-        //             on: {
-        //               input: (event) => {
-        //                 row.deptName = event;
-        //               }
-        //             }
-        //           })
-        //         ]
-        //       );
-        //     } else {
-        //       return h('div', row.deptName);
-        //     }
-        //   }
-        // },
-        // {
-        //   title: '岗位名称',
-        //   align: 'center',
-        //   key: 'positionName',
-        //   render(h, params, vm) {
-        //     const { row } = params;
-        //     if (row.isEdit) {
-        //       return h(
-        //         'Div',
-        //         {
-        //           style: {
-        //             display: 'flex',
-        //             flexDirection: 'column'
-        //           }
-        //         },
-        //         [
-        //           h('Input', {
-        //             style: {
-        //               marginLeft: '4px',
-        //               width: '100%'
-        //             },
-        //             props: {
-        //               type: 'text',
-        //               value: row.positionName // 使用key的键值
-        //             },
-        //             on: {
-        //               input: (event) => {
-        //                 row.positionName = event;
-        //               }
-        //             }
-        //           })
-        //         ]
-        //       );
-        //     } else {
-        //       return h('div', row.positionName);
-        //     }
-        //   }
-        // },
         {
           title: '操作',
           align: 'center',
@@ -595,7 +509,6 @@ export default {
         this.searchRowDataManage.rows = 10;
         this.searchRowDataManage.page = pageSize;
         // 表格数据导出字段翻译
-        const _this = this;
         tableData.forEach((item) => {
           // item["deliveryComment"] = deliveryTypeConvert(
           //   item["deliveryComment"]

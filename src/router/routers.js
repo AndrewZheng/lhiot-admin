@@ -210,7 +210,7 @@ export const constantRouterMap = [
     component: Main,
     children: [
       {
-        path: 'wholesale-goods-relation-standard',
+        path: '/wholesale-goods-relation-standard',
         name: 'wholesale-goods-relation-standard',
         meta: {
           icon: 'md-menu',
@@ -219,7 +219,7 @@ export const constantRouterMap = [
         component: () => import('@/view/wholesale-mall-manager/goods/goods-standard.vue')
       },
       {
-        path: 'wholesale-relation-handCheck',
+        path: '/wholesale-relation-handCheck',
         name: 'wholesale-relation-handCheck',
         meta: {
           icon: 'md-checkmark-circle',
