@@ -241,8 +241,6 @@
             >
               海鼎重发
             </Button>
-            <!-- 多类型导出 -->
-            <!-- <BookTypeOption v-model="exportType" class="mr5"/> -->
             <Button
               :loading="downloadLoading"
               class="search-btn mr2"
@@ -556,77 +554,45 @@
               </Row>
             </i-col>
           </Row>
-          <Row>
-            <i-col span="16">
-              <Row class-name="mb10">
-                <i-col span="6"> 配送状态: </i-col>
-                <i-col
-                  v-if="
-                    orderDetail.deliverNote != null &&
-                      deliveryStatus === 'TRANSFERING'
-                  "
-                  span="18"
-                >
-                  {{ "配送中" }}
-                </i-col>
-                <i-col
-                  v-else-if="
-                    orderDetail.deliverNote != null && deliveryStatus === 'DONE'
-                  "
-                  span="18"
-                >
-                  {{ "配送完成" }}
-                </i-col>
-                <i-col
-                  v-else-if="
-                    orderDetail.deliverNote != null &&
-                      deliveryStatus === 'FAILURE'
-                  "
-                  span="18"
-                >
-                  {{ "配送失败" }}
-                </i-col>
-                <i-col
-                  v-else-if="
-                    orderDetail.deliverNote != null &&
-                      deliveryStatus === 'UNRECEIVE'
-                  "
-                  span="18"
-                >
-                  {{ "未接单" }}
-                </i-col>
-                <i-col
-                  v-else-if="
-                    orderDetail.deliverNote != null &&
-                      deliveryStatus === 'WAIT_GET'
-                  "
-                  span="18"
-                >
-                  {{ "待取货" }}
-                </i-col>
-                <i-col v-else span="8">
-                  {{ "N/A" }}
-                </i-col>
-              </Row>
+          <Row class-name="mb10">
+            <i-col span="4"> 配送状态: </i-col>
+            <i-col
+              v-if="orderDetail.deliverNote && deliverNote.deliveryStatus"
+              span="8"
+            >
+              {{ deliverStatusConvert(deliverNote.deliveryStatus) }}
+            </i-col>
+            <i-col v-else span="8">
+              {{ "N/A" }}
+            </i-col>
+            <i-col span="4"> 失败原因: </i-col>
+            <i-col
+              v-if="deliverNote && deliverNote.deliverStatus === 'FAILURE'"
+              span="8"
+            >
+              {{ deliverNote.failureCause }}
+            </i-col>
+            <i-col v-else span="8">
+              {{ "N/A" }}
             </i-col>
           </Row>
           <Row span="16" class-name="mb10">
             <i-col span="4"> 配送距离(km): </i-col>
             <i-col
-              v-if="orderDetail.deliverNote != null && distance != null"
+              v-if="orderDetail.deliverNote && deliverNote.distance > 0"
               span="8"
             >
-              {{ distance }}
+              {{ deliveryNote.distance }}
             </i-col>
             <i-col v-else span="8">
               {{ "N/A" }}
             </i-col>
             <i-col span="4"> 配送重量(kg): </i-col>
             <i-col
-              v-if="orderDetail.deliverNote != null && weight != null"
+              v-if="orderDetail.deliverNote && deliverNote.weight"
               span="8"
             >
-              {{ weight }}
+              {{ deliveryNote.weight }}
             </i-col>
             <i-col v-else span="8">
               {{ "N/A" }}
@@ -635,20 +601,20 @@
           <Row span="16" class-name="mb10">
             <i-col span="4"> 配送员姓名: </i-col>
             <i-col
-              v-if="orderDetail.deliverNote != null && deliverName != null"
+              v-if="orderDetail.deliverNote && deliverNote.deliverName"
               span="8"
             >
-              {{ deliverName }}
+              {{ deliverNote.deliverName }}
             </i-col>
             <i-col v-else span="8">
               {{ "N/A" }}
             </i-col>
             <i-col span="4"> 配送员电话: </i-col>
             <i-col
-              v-if="orderDetail.deliverNote != null && deliverPhone != null"
+              v-if="orderDetail.deliverNote && deliverNote.deliverPhone"
               span="8"
             >
-              {{ deliverPhone }}
+              {{ deliverNote.deliverPhone }}
             </i-col>
             <i-col v-else span="8">
               {{ "N/A" }}
@@ -861,7 +827,8 @@ import {
   miniOrderStatus,
   miniHdStatusEnum,
   miniHdStatus,
-  isAllRefundEnum
+  isAllRefundEnum,
+  deliverStatusEnum
 } from '@/libs/enumerate';
 import {
   orderTypeConvert,
@@ -871,9 +838,9 @@ import {
   receivingWayConvert,
   appTypeConvert,
   payTypeConvert,
-  isAllRefundConvert
+  isAllRefundConvert,
+  deliverStatusConvert
 } from '@/libs/converStatus';
-import BookTypeOption from '_c/book-type-option';
 
 const orderDetail = {
   id: 0,
@@ -915,6 +882,33 @@ const orderDetail = {
   }
 };
 
+const deliverNote = {
+  StoreCode: '',
+  cancelTime: '',
+  createTime: '',
+  deliverCode: '',
+  deliverName: null,
+  deliverPhone: null,
+  deliverStatus: '',
+  deliverType: '',
+  distance: 0,
+  failureCause: '',
+  fee: 0,
+  horsemanDistance: null,
+  id: 0,
+  mtPeisongId: '',
+  orderCode: '',
+  orderId: '',
+  preAerviceTime: null,
+  receiveTime: null,
+  remark: '',
+  sort: null,
+  sortList: null,
+  storeCode: '',
+  toShopStatus: '',
+  weight: ''
+};
+
 const roleRowData = {
   phone: '',
   orderType: '',
@@ -933,8 +927,7 @@ const roleRowData = {
 
 export default {
   components: {
-    Tables,
-    BookTypeOption
+    Tables
   },
   mixins: [tableMixin, searchMixin],
   data() {
@@ -951,6 +944,7 @@ export default {
       deliverOrderLoading: false,
       orderType: miniOrderTypeEnum,
       orderStatus: orderStatusEnum,
+      deliverStatusEnum,
       receivingWayEnum,
       receivingWay,
       isAllRefundEnum,
@@ -961,11 +955,6 @@ export default {
       miniHdStatusEnum,
       miniHdStatus,
       shippingAddress: '',
-      deliveryStatus: '',
-      weight: '',
-      distance: '',
-      deliverName: '',
-      deliverPhone: '',
       orderState: '',
       tempColumnsView: [
         {
@@ -1466,7 +1455,10 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.orderStatus === 'FAILURE') {
+            } else if (
+              row.orderStatus === 'FAILURE' ||
+              row.orderStatus === 'EXPIRED'
+            ) {
               return (
                 <div>
                   <tag color='error'>
@@ -1562,6 +1554,7 @@ export default {
       currentTableRowSelected: null,
       searchRowData: _.cloneDeep(roleRowData),
       orderDetail: _.cloneDeep(orderDetail),
+      deliverNote: _.cloneDeep(deliverNote),
       exportType: 'xlsx',
       downloadLoading: false,
       tableDataSelected: []
@@ -1769,11 +1762,7 @@ export default {
             this.orderDetail.receivingWay === 'TO_THE_HOME' &&
             this.orderDetail.deliverNote != null
           ) {
-            this.deliveryStatus = this.orderDetail.deliverNote.deliverStatus;
-            this.distance = this.orderDetail.deliverNote.distance;
-            this.weight = this.orderDetail.deliverNote.weight;
-            this.deliverName = this.orderDetail.deliverNote.deliverName;
-            this.deliverPhone = this.orderDetail.deliverNote.deliverPhone;
+            this.deliveryNote = _.cloneDeep(this.orderDetail.deliverNote);
           }
           if (
             this.orderDetail != null &&
