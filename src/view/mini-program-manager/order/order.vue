@@ -557,10 +557,10 @@
           <Row class-name="mb10">
             <i-col span="4"> 配送状态: </i-col>
             <i-col
-              v-if="orderDetail.deliverNote && deliverNote.deliveryStatus"
+              v-if="orderDetail.deliverNote && deliverNote.deliverStatus"
               span="8"
             >
-              {{ deliverStatusConvert(deliverNote.deliveryStatus) }}
+              {{ deliverNote.deliverStatus | deliverStatusFilter }}
             </i-col>
             <i-col v-else span="8">
               {{ "N/A" }}
@@ -582,7 +582,7 @@
               v-if="orderDetail.deliverNote && deliverNote.distance > 0"
               span="8"
             >
-              {{ deliveryNote.distance }}
+              {{ deliverNote.distance }}
             </i-col>
             <i-col v-else span="8">
               {{ "N/A" }}
@@ -592,7 +592,7 @@
               v-if="orderDetail.deliverNote && deliverNote.weight"
               span="8"
             >
-              {{ deliveryNote.weight }}
+              {{ deliverNote.weight }}
             </i-col>
             <i-col v-else span="8">
               {{ "N/A" }}
@@ -840,8 +840,7 @@ import {
   receivingWayConvert,
   appTypeConvert,
   payTypeConvert,
-  isAllRefundConvert,
-  deliverStatusConvert
+  isAllRefundConvert
 } from '@/libs/converStatus';
 
 const orderDetail = {
@@ -1770,7 +1769,7 @@ export default {
             this.orderDetail.receivingWay === 'TO_THE_HOME' &&
             this.orderDetail.deliverNote != null
           ) {
-            this.deliveryNote = _.cloneDeep(this.orderDetail.deliverNote);
+            this.deliverNote = _.cloneDeep(this.orderDetail.deliverNote);
           }
           if (
             this.orderDetail != null &&
