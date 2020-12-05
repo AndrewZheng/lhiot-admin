@@ -436,5 +436,5 @@ export const yesNoConvert = (value) => {
 }
 
 export const deliverStatusConvert = (value) => {
-  return convertFunction(value, deliverStatusEnum);
+  return convertFunction(value, deliverStatusEnum).label;
 }
