@@ -470,7 +470,7 @@ filters.yesNoFilter = (type) => {
 
 // 小程序订单配送状态
 filters.deliverStatusFilter = (status) => {
-  return deliverStatusConvert(status).label;
+  return deliverStatusConvert(status);
 }
 
 // 批发小程序订单状态
