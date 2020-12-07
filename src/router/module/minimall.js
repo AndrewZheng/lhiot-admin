@@ -362,7 +362,7 @@ const miniMallRouter = [
       name: 'small-postage-rule-setting',
       meta: {
         icon: 'md-bus',
-        title: '邮费管理'
+        title: '运费管理'
       },
       component: () => import('@/view/mini-program-manager/system/delivery-fee.vue')
     }]
@@ -692,7 +692,7 @@ const miniMallRouter = [
       name: 'small-paymentlogs',
       meta: {
         icon: 'logo-usd',
-        title: '鲜果币流水管理'
+        title: '支付流水管理'
       },
       component: () => import('@/view/mini-program-manager/order/paylog.vue')
     },
