@@ -4,7 +4,7 @@ import iView from 'view-design';
 import store from '@/store';
 import { constantRouterMap } from './routers';
 import { getToken, getNamesByRouters, getSystemHomeName, getSystemHomeNameNew } from '@/libs/util';
-const IS_PROD = ['production'].includes(process.env.NODE_ENV);
+const IS_PROD = ['production', 'staging'].includes(process.env.ENV);
 const BASE_URL = IS_PROD ? '/lvhang-farm/' : '/';
 Vue.use(Router);
 

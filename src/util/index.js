@@ -4,7 +4,6 @@ import PcCookie from './cookie';
 
 import {
   gbs,
-  cbs,
   enums
 } from '../util/settings';
 
@@ -13,6 +12,5 @@ export {
   PcEncrypt,
   PcCookie,
   gbs,
-  cbs,
   enums
 };
