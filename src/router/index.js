@@ -84,7 +84,7 @@ router.beforeEach(async(to, from, next) => {
         } else {
           // 没有权限，清除登录token- relogin
           await store.dispatch('user/handleLogOut');
-          next(`/login?redirect=${to.path}`)
+          next();
         }
       }
     }
@@ -94,7 +94,7 @@ router.beforeEach(async(to, from, next) => {
       // 在免登录白名单，直接进入
       next();
     } else {
-      next(`/login?redirect=${to.path}`);
+      next({ name: LOGIN_PAGE_NAME });
     }
   }
 });
