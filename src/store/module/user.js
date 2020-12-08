@@ -56,9 +56,6 @@ const mutations = {
   },
   setUserId(state, id) {
     state.userId = id;
-    if (PcLockr.get(enums.USER.ID) != null) {
-      PcLockr.delete(enums.USER.ID);
-    }
     PcLockr.set(enums.USER.ID, id);
   },
   setHasGetInfo(state, status) {
@@ -66,9 +63,6 @@ const mutations = {
   },
   setUserName(state, name) {
     state.userName = name;
-    if (PcLockr.get(enums.USER.LOGIN_NAME) != null) {
-      PcLockr.delete(enums.USER.LOGIN_NAME);
-    }
     PcLockr.set(enums.USER.LOGIN_NAME, name);
   },
   setAccess(state, access) {
