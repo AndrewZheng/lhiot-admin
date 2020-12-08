@@ -546,8 +546,7 @@
                     class="ptb2-5"
                     style="padding-left: 5px"
                   >
-                    {{ item.label
-                    }}
+                    {{ item.label }}
                   </Option>
                 </Select>
               </FormItem>
@@ -695,7 +694,7 @@
           <!-- 分享图片 -->
           <Row>
             <i-col span="12">
-              <FormItem label="商品分享图片:建议尺寸;400x400(单位:px):" prop="shareImage">
+              <FormItem label="商品分享图片:建议尺寸;500x400(单位:px):" prop="shareImage">
                 <Input
                   v-show="false"
                   v-model="productStandardDetail.shareImage"

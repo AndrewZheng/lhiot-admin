@@ -1157,7 +1157,8 @@ const productStandardDetail = {
   goodsBrand: '',
   placeOfOrigin: '',
   goodsDes: '',
-  afterDes: ''
+  afterDes: '',
+  shareImage: ''
 };
 
 const roleRowData = {
@@ -1761,7 +1762,6 @@ export default {
       });
       this.productStandardDetail.shareImage = null;
       this.productStandardDetail.shareImage = this.goodsImageList.join(',');
-      this.masterImage = this.goodsImageList[0];
     },
     handleRemoveShareMultiple(file) {
       this.$refs.uploadShareMultiple.deleteFile(file);
@@ -1769,7 +1769,6 @@ export default {
       if (index > -1) {
         this.goodsImageList.splice(index, 1);
         this.productStandardDetail.shareImage = this.goodsImageList.join(',');
-        this.masterImage = this.goodsImageList[0];
       }
       if (this.goodsImageList.length === 0) {
         this.$refs.uploadShareMultiple.clearFileList();
