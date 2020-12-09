@@ -183,8 +183,9 @@ export default {
     },
     handleDownload() {
       console.log('数据', this.searchRowData);
+      const exportUploadUrl = config.exportUploadUrl;
       window.open(
-        `http://172.16.10.196:5000/export?id=${this.searchRowData.id}&p1=${
+        `${exportUploadUrl}/export?id=${this.searchRowData.id}&p1=${
           this.searchRowData.p1
         }&p2=${this.searchRowData.p2}${
           this.searchRowData.p3 ? '&p3=' + this.searchRowData.p3 : ''
