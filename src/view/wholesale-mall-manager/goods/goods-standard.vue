@@ -731,16 +731,13 @@
               </FormItem>
             </i-col>
           </Row>
-          <Row>
-            <p style="color: #ff3861; margin-left: 38px">
-              * 佣金比例为0~50的整数
-              (单位%)　　　　　　　　　　　　　　　　*
-              按售卖价格的比例计算佣金
-            </p>
+          <Row v-show="productStandardDetail.goodsType === 'NORMAL'">
+            <p style="color: #ff3861; margin-left: 15px">* 佣金比例为0~50的整数(单位%)*按售卖价格的比例计算佣金</p>
             <i-col span="12">
               <FormItem label="佣金比例:" prop="commissionScale">
                 <InputNumber
                   v-model="productStandardDetail.commissionScale"
+                  :disabled="productStandardDetail.goodsType != 'NORMAL'"
                   style="padding-right: 5px; width: 120px"
                   @on-change="commissionScaleOnchange"
                 ></InputNumber>
@@ -1104,8 +1101,7 @@ import {
   deleteGoodsPriceRegion,
   editProductStandard,
   editGoodsPriceRegion,
-  exporGoodsStandard,
-  deletePicture
+  exporGoodsStandard
 } from '@/api/lhfarm-small';
 import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
@@ -1118,7 +1114,6 @@ import {
   yuanToFenNumber
 } from '@/libs/util';
 import {
-  customPlanStatusConvert,
   pfExpandTypeConvert
 } from '@/libs/converStatus';
 import { pfExpandTypeEnum } from '@/libs/enumerate';
@@ -1315,19 +1310,19 @@ const standardColumns = [
     align: 'center',
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.goodsType == 'NORMAL') {
+      if (row.goodsType === 'NORMAL') {
         return (
           <div>
             <tag color='cyan'>{pfExpandTypeConvert(row.goodsType).label}</tag>
           </div>
         );
-      } else if (row.goodsType == 'VIP') {
+      } else if (row.goodsType === 'VIP') {
         return (
           <div>
             <tag color='orange'>{pfExpandTypeConvert(row.goodsType).label}</tag>
           </div>
         );
-      } else if (row.goodsType == 'FLASHSALE') {
+      } else if (row.goodsType === 'FLASHSALE') {
         return (
           <div>
             <tag color='blue'>{pfExpandTypeConvert(row.goodsType).label}</tag>
@@ -2034,12 +2029,6 @@ export default {
       this.modalSort = false;
     },
     handleSubmit() {
-      // if (this.oldPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.oldPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
       this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (this.isCreate) {
@@ -2053,26 +2042,10 @@ export default {
       });
     },
     handleEditClose() {
-      // if (this.newPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.newPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
       this.modalEdit = false;
       this.oldPicture = [];
       this.newPicture = [];
     },
-    // deletePicture(urls) {
-    //   deletePicture({
-    //     urls
-    //   })
-    //     .then(res => {
-    //       this.newPicture = [];
-    //       this.oldPicture = [];
-    //     })
-    //     .catch(() => {});
-    // },
     handleSubmitRegin() {
       // 把规格ID赋值给goodsPriceRegion  goodsPriceRegion.maxQuantity minQuantity
       this.goodsPriceRegion.goodsStandardId = this.productStandardDetail.id;
