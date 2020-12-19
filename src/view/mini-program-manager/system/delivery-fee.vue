@@ -51,7 +51,8 @@
                 :value="item.value"
                 :key="`search-col-${item.value}`"
                 class="ptb2-5"
-              >{{ item.label }}</Option>
+                >{{ item.label }}</Option
+              >
             </Select>
             <Button
               v-waves
@@ -90,7 +91,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px;overflow: hidden">
+      <div style="margin: 10px; overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -112,7 +113,11 @@
         <Form ref="modalEdit" :model="postageDetail" :rules="ruleInline">
           <Row span="24">
             <Col span="6">
-              <FormItem :label-width="100" label="金额范围:¥" prop="minOrderAmount">
+              <FormItem
+                :label-width="100"
+                label="金额范围:¥"
+                prop="minOrderAmount"
+              >
                 <InputNumber
                   :readonly="modalTypeComputed"
                   :min="0"
@@ -139,8 +144,15 @@
             </Col>
           </Row>
           <Row>
-            <FormItem :label-width="100" label="配送时间段:" prop="deliveryTime">
-              <RadioGroup v-model="postageDetail.deliveryTime" :disabled="modalTypeComputed">
+            <FormItem
+              :label-width="100"
+              label="配送时间段:"
+              prop="deliveryTime"
+            >
+              <RadioGroup
+                v-model="postageDetail.deliveryTime"
+                :disabled="modalTypeComputed"
+              >
                 <Radio
                   v-for="item in minDeliveryAtTypeEnum"
                   :label="item.value"
@@ -163,21 +175,36 @@
             </FormItem>
           </Row>
           <Row
-            v-if="tempModalType === modalType.create || tempModalType === modalType.edit"
+            v-if="
+              tempModalType === modalType.create ||
+              tempModalType === modalType.edit
+            "
             class="mt15"
           >
-            <Button v-waves type="success" class="mr5" @click="addPostageRuleTableColumns">
+            <Button
+              v-waves
+              type="success"
+              class="mr5"
+              @click="addPostageRuleTableColumns"
+            >
               <Icon type="md-add" />添加
             </Button>
           </Row>
         </Form>
       </div>
       <div
-        v-if="tempModalType === modalType.create || tempModalType === modalType.edit"
+        v-if="
+          tempModalType === modalType.create || tempModalType === modalType.edit
+        "
         slot="footer"
       >
         <Button @click="handleEditClose">关闭</Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定</Button>
+        <Button
+          :loading="modalViewLoading"
+          type="primary"
+          @click="handleSubmit('modalEdit')"
+          >确定</Button
+        >
       </div>
     </Modal>
   </div>
@@ -193,7 +220,7 @@ import {
   getDeliveryFeeConfigRulePages,
   createDeliveryFeeConfigRule,
   deleteDeliveryFeeConfigRule,
-  editDeliveryFeeConfigRule
+  editDeliveryFeeConfigRule,
 } from "@/api/mini-program";
 import tableMixin from "@/mixins/tableMixin.js";
 import searchMixin from "@/mixins/searchMixin.js";
@@ -202,12 +229,12 @@ import { deliveryAtTypeConvert } from "@/libs/converStatus";
 import {
   deliveryAtTypeEnum,
   updateWay,
-  deliveryAtType
+  deliveryAtType,
 } from "@/libs/enumerate";
 import {
   fenToYuanDot2Number,
   fenToYuanDot2,
-  yuanToFenNumber
+  yuanToFenNumber,
 } from "@/libs/util";
 
 const fruitMasterDetail = {
@@ -219,7 +246,7 @@ const fruitMasterDetail = {
   creditCardNumbers: "",
   headStatus: "",
   applicationTime: "",
-  handlingTime: "2018-10-28"
+  handlingTime: "2018-10-28",
 };
 
 const postageDetail = {
@@ -235,11 +262,11 @@ const postageDetail = {
   id: 0,
   minOrderAmount: 0,
   maxOrderAmount: 0,
-  deliveryTime: null,
+  deliveryTime: "8:00-18:00",
   createTime: null,
   updateTime: null,
   createBy: "",
-  deleteIds: []
+  deleteIds: [],
 };
 const deliveryRules = {
   minDistance: 0,
@@ -248,53 +275,53 @@ const deliveryRules = {
   firstFee: 0,
   additionalWeight: 1,
   additionalFee: 0,
-  updateWay: updateWay.INSERT
+  updateWay: updateWay.INSERT,
 };
 const roleRowData = {
   minOrderAmount: null,
   maxOrderAmount: null,
   deliveryAtType: null,
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 const relationRowData = {
   deliveryFeeTemplateId: 0,
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 export default {
   components: {
-    Tables
+    Tables,
   },
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
     return {
       ruleInline: {
         minOrderAmount: [
-          { required: true, message: "请填写最小金额", type: "number" }
+          { required: true, message: "请填写最小金额", type: "number" },
         ],
         maxOrderAmount: [
-          { required: true, message: "请填写最大金额", type: "number" }
+          { required: true, message: "请填写最大金额", type: "number" },
         ],
         deliveryAtType: [{ required: true, message: "请选择时间段" }],
-        deliveryRules: [{ required: true, message: "请添加运费信息" }]
+        deliveryRules: [{ required: true, message: "请添加运费信息" }],
       },
       deliveryAtTypeList: deliveryAtTypeEnum,
       minDeliveryAtTypeEnum: [
         {
           label: "白天8:00-18:00",
-          value: "8:00-18:00"
+          value: "8:00-18:00",
         },
         {
           label: "晚上18:00-22:00",
-          value: "18:00-22:00"
+          value: "18:00-22:00",
         },
         {
           label: "全天8:00-22:00",
-          value: "8:00-18:00,18:00-22:00"
-        }
+          value: "8:00-18:00,18:00-22:00",
+        },
       ],
       distanceList: ["0-3", "3-5"],
       postageRuleTableColumns: [
@@ -309,10 +336,11 @@ export default {
                 {
                   props: {
                     value: params.row.minDistance == 0 ? "0-3" : "3-5",
-                    disabled: this.modalTypeComputed
+                    disabled: this.modalTypeComputed,
+                    transfer:true
                   },
                   on: {
-                    "on-change": e => {
+                    "on-change": (e) => {
                       if (e == "0-3") {
                         this.postageDetail.deliveryRules[
                           params.row.initRowIndex
@@ -328,16 +356,16 @@ export default {
                           params.row.initRowIndex
                         ].maxDistance = 5;
                       }
-                    }
-                  }
+                    },
+                  },
                 },
                 [
                   h(
                     "Option",
                     {
                       props: {
-                        value: "0-3"
-                      }
+                        value: "0-3",
+                      },
                     },
                     "0-3Km"
                   ),
@@ -345,15 +373,15 @@ export default {
                     "Option",
                     {
                       props: {
-                        value: "3-5"
-                      }
+                        value: "3-5",
+                      },
                     },
                     "3-5Km"
-                  )
+                  ),
                 ]
-              )
+              ),
             ]);
-          }
+          },
         },
         {
           title: "首重（Kg）",
@@ -366,21 +394,21 @@ export default {
                 props: {
                   value: params.row.firstWeight,
                   readonly: this.modalTypeComputed,
-                  min: 0
+                  min: 0,
                 },
                 on: {
-                  "on-change": e => {
+                  "on-change": (e) => {
                     if (!e) {
                       e = 0;
                     }
                     this.postageDetail.deliveryRules[
                       params.row.initRowIndex
                     ].firstWeight = e;
-                  }
-                }
-              })
+                  },
+                },
+              }),
             ]);
-          }
+          },
         },
         {
           title: "费用（元）",
@@ -392,21 +420,21 @@ export default {
                 props: {
                   value: fenToYuanDot2Number(params.row.firstFee),
                   readonly: this.modalTypeComputed,
-                  min: 0
+                  min: 0,
                 },
                 on: {
-                  "on-change": e => {
+                  "on-change": (e) => {
                     if (!e) {
                       e = 0;
                     }
                     this.postageDetail.deliveryRules[
                       params.row.initRowIndex
                     ].firstFee = yuanToFenNumber(e);
-                  }
-                }
-              })
+                  },
+                },
+              }),
             ]);
-          }
+          },
         },
         {
           title: "续重（Kg）",
@@ -418,21 +446,21 @@ export default {
                 props: {
                   value: params.row.additionalWeight,
                   readonly: this.modalTypeComputed,
-                  min: 0
+                  min: 0,
                 },
                 on: {
-                  "on-change": e => {
+                  "on-change": (e) => {
                     if (!e) {
                       e = 0;
                     }
                     this.postageDetail.deliveryRules[
                       params.row.initRowIndex
                     ].additionalWeight = e;
-                  }
-                }
-              })
+                  },
+                },
+              }),
             ]);
-          }
+          },
         },
         {
           title: "续费（元）",
@@ -444,33 +472,33 @@ export default {
                 props: {
                   value: fenToYuanDot2Number(params.row.additionalFee),
                   readonly: this.modalTypeComputed,
-                  min: 0
+                  min: 0,
                 },
                 on: {
-                  "on-change": e => {
+                  "on-change": (e) => {
                     if (!e) {
                       e = 0;
                     }
                     this.postageDetail.deliveryRules[
                       params.row.initRowIndex
                     ].additionalFee = yuanToFenNumber(e);
-                  }
-                }
-              })
+                  },
+                },
+              }),
             ]);
-          }
-        }
+          },
+        },
       ],
       columns: [
         {
           type: "selection",
           key: "",
-          align: "center"
+          align: "center",
         },
         {
           title: "ID",
           align: "center",
-          key: "id"
+          key: "id",
         },
         {
           title: "金额范围",
@@ -485,27 +513,27 @@ export default {
                   fenToYuanDot2(params.row.maxOrderAmount)}
               </div>
             );
-          }
+          },
         },
         {
           title: "配送时间",
           align: "center",
           key: "deliveryTime",
-          minWidth: 150
+          minWidth: 150,
         },
         {
           title: "更新时间",
           key: "updateTime",
           align: "center",
-          minWidth: 150
+          minWidth: 150,
         },
         {
           title: "操作",
           align: "center",
           minWidth: 200,
           key: "handle",
-          options: ["view", "edit", "delete", "copy"]
-        }
+          options: ["view", "edit", "delete", "copy"],
+        },
       ],
       options: [
         {
@@ -513,15 +541,15 @@ export default {
           minWidth: 80,
           align: "center",
           key: "handle",
-          options: ["delete"]
-        }
+          options: ["delete"],
+        },
       ],
       modalViewLoading: false,
       tempDetailList: [],
       searchRowData: this._.cloneDeep(roleRowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
       fruitMasterDetail: fruitMasterDetail,
-      postageDetail: this._.cloneDeep(postageDetail)
+      postageDetail: this._.cloneDeep(postageDetail),
     };
   },
   computed: {
@@ -546,7 +574,7 @@ export default {
     },
     maxOrderAmountComputed() {
       return fenToYuanDot2Number(this.searchRowData.maxOrderAmount);
-    }
+    },
   },
   created() {
     this.getTableData();
@@ -566,7 +594,7 @@ export default {
     },
     onCopy(params) {
       if (params.row.deliveryRules.length !== 0) {
-        params.row.deliveryRules.forEach(item => {
+        params.row.deliveryRules.forEach((item) => {
           item.updateWay = updateWay.INSERT;
         });
       }
@@ -576,9 +604,9 @@ export default {
     deleteTable(ids) {
       this.loading = true;
       deleteDeliveryFeeConfig({
-        ids
+        ids,
       })
-        .then(res => {
+        .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -596,7 +624,7 @@ export default {
     },
     handleSubmit(name) {
       // return;
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
@@ -614,7 +642,7 @@ export default {
       this.modalViewLoading = true;
       this.loading = true;
       createDeliveryFeeConfig(this.postageDetail)
-        .then(res => {
+        .then((res) => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success("创建成功!");
@@ -629,12 +657,12 @@ export default {
       this.modalViewLoading = true;
       this.loading = true;
       editDeliveryFeeConfig(this.postageDetail)
-        .then(res => {
+        .then((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
         })
-        .catch(res => {
+        .catch((res) => {
           this.modalEdit = false;
           this.modalViewLoading = false;
         });
@@ -642,7 +670,7 @@ export default {
     addPostageRuleTableColumns() {
       if (this.postageDetail.deliveryRules.length > 0) {
         const array = [];
-        this.postageDetail.deliveryRules.forEach(item => {
+        this.postageDetail.deliveryRules.forEach((item) => {
           array.push(item.minDistance + "-" + item.maxDistance);
         });
         const tempArray = this.array_diff(this.distanceList, array);
@@ -683,7 +711,7 @@ export default {
           (item, index) => index !== params.row.initRowIndex
         );
       } else {
-        const index = this.tempDetailList.findIndex(item => {
+        const index = this.tempDetailList.findIndex((item) => {
           return item.id === params.row.id;
         });
         if (index > -1) {
@@ -700,6 +728,7 @@ export default {
     addChildren() {
       // this.$refs.modalEdit.resetFields();
       this.tempModalType = this.modalType.create;
+      this.postageDetail = this._.cloneDeep(postageDetail);
       // this.postageDetail.deliveryRules.length = 0;
       // this.postageDetail.deliveryRules.push(this._.cloneDeep(deliveryRules));
       // this.postageDetail.deliveryAtType = deliveryAtType.ALL_DAY;
@@ -722,7 +751,7 @@ export default {
       this.tempModalType = this.modalType.edit;
       this.postageDetail = this._.cloneDeep(params.row);
       if (this.postageDetail.deliveryRules.length !== 0) {
-        this.postageDetail.deliveryRules.forEach(item => {
+        this.postageDetail.deliveryRules.forEach((item) => {
           item.updateWay = "UPDATE";
         });
       }
@@ -733,7 +762,7 @@ export default {
     },
     getTableData() {
       getDeliveryFeeConfigPages(this.searchRowData)
-        .then(res => {
+        .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
           this.loading = false;
@@ -748,15 +777,15 @@ export default {
     },
     exportExcel() {
       this.$refs.tables.exportCsv({
-        filename: `table-${new Date().valueOf()}.csv`
+        filename: `table-${new Date().valueOf()}.csv`,
       });
     },
     getRelationTableData() {
       getDeliveryFeeConfigRulePages(this.searchRelationRowData)
-        .then(res => {
+        .then((res) => {
           // 设置行是否可编辑
           if (res.rows.length !== 0) {
-            res.rows.forEach(element => {
+            res.rows.forEach((element) => {
               element.isEdit = false;
             });
             // this.relationDetail = res.rows;
@@ -769,14 +798,14 @@ export default {
           this.searchLoading = false;
           this.clearSearchLoading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
