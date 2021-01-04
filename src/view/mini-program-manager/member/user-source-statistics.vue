@@ -712,13 +712,9 @@ export default {
       userSourceRecordTotal(this.searchRowData)
         .then((res) => {
           this.tableData = res;
+        }).finally(() => {
+          this.loading = false;
           this.createLoading = false;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch((error) => {
-          this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
@@ -837,6 +833,7 @@ export default {
     handleStoreId(value) {
       if (value) {
         const data = value.label.trim().split('-');
+        console.log(`trim data:`, data);
         this.storeMaterielDetail.storeCode = data[1];
         this.storeMaterielDetail.storeName = data[0];
       }
