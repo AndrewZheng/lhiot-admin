@@ -2374,7 +2374,7 @@ export const miniOrderStatus = {
   ALREADY_RETURN: 'ALREADY_RETURN',
   FAILURE: 'FAILURE',
   FINISHED: 'FINISHED',
-  EXPIRED:'EXPIRED'
+  EXPIRED: 'EXPIRED'
 };
 
 export const miniOrderStatusEnum = [{
@@ -2451,7 +2451,8 @@ export const miniOrderType = {
   SELF_BUYING: 'SELF_BUYING',
   TEAM_BUYING: 'TEAM_BUYING',
   PRESAL_ORDER: 'PRESAL_ORDER',
-  POINTS_BUYING: 'POINTS_BUYING'
+  POINTS_BUYING: 'POINTS_BUYING',
+  BUY_COUPON_ALL_ORDER: 'BUY_COUPON_ALL_ORDER'
 };
 
 export const miniOrderTypeEnum = [{
@@ -2469,6 +2470,10 @@ export const miniOrderTypeEnum = [{
 {
   label: '积分兑换订单',
   value: miniOrderType.POINTS_BUYING
+},
+{
+  label: '购券订单',
+  value: miniOrderType.BUY_COUPON_ALL_ORDER
 }
 ];
 
