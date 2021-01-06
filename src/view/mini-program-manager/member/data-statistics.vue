@@ -19,13 +19,13 @@
             <RadioGroup
               v-model="button"
               type="button"
-              style="float: left; margin-right: 5px"
               @on-change="timeChange"
+              style="float:left;margin-right:5px"
             >
               <Radio label="昨日"></Radio>
               <Radio label="自定义时间"></Radio>
             </RadioGroup>
-            <div v-show="mark === true" style="float: left">
+            <div style="float:left" v-show="mark===true">
               <DatePicker
                 v-model="searchRowData.beginDate"
                 format="yyyy-MM-dd"
@@ -46,9 +46,9 @@
                 @on-change="endTimeChange"
               />
             </div>
-            <div class="dateGroup" style="float: left">
+            <div class="dateGroup" style="float:left">
               是否按天展示数据
-              <input ref="status" type="checkbox" @click="dateGroupChange">
+              <input type="checkbox" @click="dateGroupChange" ref="status" />
             </div>
             <Button
               :loading="searchLoading"
@@ -69,7 +69,7 @@
             </Button>-->
           </Row>
           <div class="ml15 mt10">
-            <i style="color: red">*</i> 默认展示昨天的数据
+            <i style="color:red">*</i> 默认展示昨天的数据
           </div>
         </div>
       </tables>
@@ -78,22 +78,22 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import CountTo from '_c/count-to';
-import _ from 'lodash';
-import { dataStatistics } from '@/api/mini-program';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
+import Tables from "_c/tables";
+import CountTo from "_c/count-to";
+import _ from "lodash";
+import { dataStatistics } from "@/api/mini-program";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
 
 const dataStatisticsDetail = {
   id: 0,
-  buyRate: '', // 购买转化率
-  inviteUserNum: 0, // 通过邀请用户量
-  notButtonNum: 0, // 未触发邀请量
-  orderUserNum: 0, // 发生购买用户量
-  pvNum: 0, // 页面访问量
-  quitRate: null, // 邀请按钮跳出率
-  uvNum: null, // 用户访问量
+  buyRate: "", //购买转化率
+  inviteUserNum: 0, //通过邀请用户量
+  notButtonNum: 0, //未触发邀请量
+  orderUserNum: 0, //发生购买用户量
+  pvNum: 0, //页面访问量
+  quitRate: null, //邀请按钮跳出率
+  uvNum: null, //用户访问量
   beginDate: null,
   endDate: null
 };
@@ -115,73 +115,73 @@ export default {
     return {
       columns: [
         {
-          title: '日期',
-          key: 'totalDate',
-          align: 'center',
+          title: "日期",
+          key: "totalDate",
+          align: "center",
           render: (h, params, vm) => {
             const { row } = params;
             if (row.totalDate != null) {
               return <div>{row.totalDate}</div>;
             } else {
-              return <div>{'N/A'}</div>;
+              return <div>{"N/A"}</div>;
             }
             return <div>{row.totalDate}</div>;
           }
         },
         {
-          title: '用户访问量',
-          key: 'uvNum',
-          align: 'center'
+          title: "用户访问量",
+          key: "uvNum",
+          align: "center"
         },
         {
-          title: '页面访问量',
-          key: 'pvNum',
-          align: 'center'
+          title: "页面访问量",
+          key: "pvNum",
+          align: "center"
         },
         {
-          title: '通过邀请用户量',
-          align: 'center',
-          key: 'inviteUserNum'
+          title: "通过邀请用户量",
+          align: "center",
+          key: "inviteUserNum"
         },
         {
-          title: '未触发邀请量',
-          align: 'center',
-          key: 'notButtonNum'
+          title: "未触发邀请量",
+          align: "center",
+          key: "notButtonNum"
         },
         {
-          title: '邀请按钮跳出率',
-          align: 'center',
-          key: 'quitRate',
+          title: "邀请按钮跳出率",
+          align: "center",
+          key: "quitRate",
           render(h, params) {
-            return h('div', params.row.quitRate + '%');
+            return h("div", params.row.quitRate + "%");
           }
         },
         {
-          title: '发生购买用户量',
-          align: 'center',
-          key: 'orderUserNum'
+          title: "发生购买用户量",
+          align: "center",
+          key: "orderUserNum"
         },
         {
-          title: '购买转化率',
-          key: 'buyRate',
-          align: 'center',
+          title: "购买转化率",
+          key: "buyRate",
+          align: "center",
           render(h, params) {
-            return h('div', params.row.buyRate + '%');
+            return h("div", params.row.buyRate + "%");
           }
         },
         {
-          title: '开始日期',
-          key: 'beginDate',
-          align: 'center'
+          title: "开始日期",
+          key: "beginDate",
+          align: "center"
         },
         {
-          title: '结束日期',
-          key: 'endDate',
-          align: 'center'
+          title: "结束日期",
+          key: "endDate",
+          align: "center"
         }
       ],
       mark: false,
-      button: '昨日',
+      button: "昨日",
       createLoading: false,
       modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
@@ -199,45 +199,48 @@ export default {
       this.getTableData();
     },
     getTableData(value) {
-      const date = new Date();
+      let date = new Date();
       date.setDate(date.getDate() - 1);
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var yesterday = `${year}-${month}-${day}`;
-      if (this.button === '昨日') {
+      if (this.button === "昨日") {
         this.searchRowData.beginDate = yesterday;
         this.searchRowData.endDate = yesterday;
       }
-      this.loading = true;
       dataStatistics(this.searchRowData)
-        .then((res) => {
+        .then(res => {
           this.tableData = res;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         })
-        .finally(() => {
+        .catch(error => {
+          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
     timeChange(value) {
-      if (value === '昨日') {
+      if (value === "昨日") {
         this.mark = false;
         this.inviteData = [];
         this.getTableData(value);
-      } else if (value === '自定义时间') {
+      } else if (value === "自定义时间") {
         this.mark = true;
-        this.searchRowData.beginDate = '';
-        this.searchRowData.endDate = '';
+        this.searchRowData.beginDate = "";
+        this.searchRowData.endDate = "";
       }
     },
     startTimeChange(value, date) {
-      this.button = '自定义时间';
+      this.button = "自定义时间";
       this.dataStatisticsDetail.beginDate = value;
       this.searchRowData.beginDate = value;
     },
     endTimeChange(value, date) {
-      this.button = '自定义时间';
+      this.button = "自定义时间";
       this.dataStatisticsDetail.endDate = value;
       this.searchRowData.endDate = value;
     },

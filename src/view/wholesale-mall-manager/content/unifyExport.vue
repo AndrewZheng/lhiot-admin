@@ -10,6 +10,7 @@
           class="search-col mr5"
           placeholder="请选择需导出的数据"
           style="width: 200px"
+          :filterable="true"
           @on-change="handSelectExport"
         >
           <Option
@@ -18,9 +19,8 @@
             :value="index"
             class="ptb2-5"
             style="padding: 5px 0 0 8px"
+            >{{ item.label }}</Option
           >
-            {{ item.label }}
-          </Option>
         </Select>
         <p
           v-if="!searchRowData.id"
@@ -33,15 +33,14 @@
         <div v-show="exportCondition[0]" class="explort ptb2-5">
           <p><i style="color: #ff3861">*</i> {{ exportCondition[0] + "：" }}</p>
           <Input
-            v-if="exportCondition[0] != '开始时间'"
             v-model="searchRowData.p1"
             :placeholder="exportCondition[0]"
             class="search-input mr5"
             style="width: 200px"
             clearable
+            v-if="exportCondition[0] != '开始时间'"
           ></Input>
           <DatePicker
-            v-else
             :value="searchRowData.p1"
             format="yyyy-MM-dd"
             type="date"
@@ -49,6 +48,7 @@
             class="search-input"
             style="width: 200px"
             :clearable="false"
+            v-else
             @on-change="searchRowData.p1 = $event"
           />
           <p
@@ -61,15 +61,14 @@
         <div v-show="exportCondition[1]" class="explort ptb2-5">
           <p><i style="color: #ff3861">*</i> {{ exportCondition[1] + "：" }}</p>
           <Input
-            v-if="exportCondition[1] != '结束时间'"
             v-model="searchRowData.p2"
             :placeholder="exportCondition[1]"
             class="search-input mr5"
             style="width: 200px"
             clearable
+            v-if="exportCondition[1] != '结束时间'"
           ></Input>
           <DatePicker
-            v-else
             :value="searchRowData.p2"
             format="yyyy-MM-dd"
             type="date"
@@ -77,6 +76,7 @@
             class="search-input"
             style="width: 200px"
             :clearable="false"
+            v-else
             @on-change="searchRowData.p2 = $event"
           />
           <p
@@ -108,24 +108,24 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import _ from 'lodash';
-import config from '@/config';
-import { getUnifyExportList } from '@/api/mini-program';
-import deleteMixin from '@/mixins/deleteMixin.js';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
+import Tables from "_c/tables";
+import _ from "lodash";
+import config from "@/config";
+import { getUnifyExportList } from "@/api/mini-program";
+import deleteMixin from "@/mixins/deleteMixin.js";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
 
 const roleRowData = {
-  id: '',
-  p1: '',
-  p2: '',
-  p3: ''
+  id: "",
+  p1: "",
+  p2: "",
+  p3: "",
 };
 
 export default {
   components: {
-    Tables
+    Tables,
   },
   mixins: [deleteMixin, tableMixin, searchMixin],
   data() {
@@ -133,10 +133,10 @@ export default {
       exportList: [],
       exportData: [],
       exportCondition: [],
-      exportUrl: '',
+      exportUrl: "",
       createLoading: false,
       modalViewLoading: false,
-      searchRowData: _.cloneDeep(roleRowData)
+      searchRowData: _.cloneDeep(roleRowData),
     };
   },
   mounted() {
@@ -145,35 +145,37 @@ export default {
   created() {},
   methods: {
     getTableData() {
-      const projectName = config.classifyTypeB;
-      getUnifyExportList(projectName).then((res) => {
-        this.exportData = res;
-        res.forEach((value) => {
-          const map = { label: 'label', value: 'value' };
-          map.value = value.id;
-          map.label = value.export_name;
-          this.exportList.push(map);
-        });
-      });
+      let projectName = config.classifyTypeB;
+      getUnifyExportList(projectName)
+        .then((res) => {
+          this.exportData = res;
+          res.forEach((value) => {
+            const map = { label: "label", value: "value" };
+            map.value = value.id;
+            map.label = value.export_name;
+            this.exportList.push(map);
+          });
+        })
+        .catch((error) => {});
     },
     handSelectExport(val) {
       this.searchRowData = _.cloneDeep(roleRowData);
       this.searchRowData.id = this.exportData[val].id;
       if (this.exportData[val].condit_desc) {
-        this.exportCondition = this.exportData[val].condit_desc.split(',');
-        if (this.exportCondition[0] === '开始时间') {
-          const date = new Date();
-          const date1 = new Date();
+        this.exportCondition = this.exportData[val].condit_desc.split(",");
+        if (this.exportCondition[0] === "开始时间") {
+          let date = new Date();
+          let date1 = new Date();
           date.setDate(date.getDate() - 30);
           date1.setDate(date1.getDate());
-          const year = date.getFullYear();
-          const month = date.getMonth() + 1;
-          const day = date.getDate();
-          const year1 = date1.getFullYear();
-          const month1 = date1.getMonth() + 1;
-          const day1 = date1.getDate();
-          const p1 = `${year1}-${month1}-${day1}`;
-          const p2 = `${year}-${month}-${day}`;
+          let year = date.getFullYear();
+          let month = date.getMonth() + 1;
+          let day = date.getDate();
+          let year1 = date1.getFullYear();
+          let month1 = date1.getMonth() + 1;
+          let day1 = date1.getDate();
+          let p1 = `${year1}-${month1}-${day1}`;
+          let p2 = `${year}-${month}-${day}`;
           this.searchRowData.p1 = p2;
           this.searchRowData.p2 = p1;
         }
@@ -182,22 +184,21 @@ export default {
       }
     },
     handleDownload() {
-      console.log('数据', this.searchRowData);
-      const exportUploadUrl = config.exportUploadUrl;
+      console.log("数据", this.searchRowData);
       window.open(
-        `${exportUploadUrl}/export?id=${this.searchRowData.id}&p1=${
+        `http://172.16.10.196:5000/export?id=${this.searchRowData.id}&p1=${
           this.searchRowData.p1
         }&p2=${this.searchRowData.p2}${
-          this.searchRowData.p3 ? '&p3=' + this.searchRowData.p3 : ''
+          this.searchRowData.p3 ? "&p3=" + this.searchRowData.p3 : ""
         }`
       );
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-.title {
+.title{
   margin: -18px 0 30px -18px;
 }
 .explort {

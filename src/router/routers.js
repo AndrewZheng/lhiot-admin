@@ -176,7 +176,8 @@ export const constantRouterMap = [
     name: 'small-manager-detail',
     meta: {
       icon: 'md-menu',
-      title: '小程序跳转页面集合'
+      title: '小程序跳转页面集合',
+      hideInBread: true,
     },
     component: Main,
     children: [
@@ -188,15 +189,6 @@ export const constantRouterMap = [
           title: '员工管理'
         },
         component: () => import('@/view/mini-program-manager/member/handCheck.vue')
-      },
-      {
-        path: 'small-goods-relation-standard',
-        name: 'small-goods-relation-standard',
-        meta: {
-          icon: 'md-menu',
-          title: '商品关联规格'
-        },
-        component: () => import('@/view/mini-program-manager/goods/goods-standard.vue')
       },
       {
         path: '/small-skip-order',

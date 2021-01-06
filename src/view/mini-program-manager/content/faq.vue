@@ -52,7 +52,9 @@
                     :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                  >
+                    {{ item.label }}
+                  </Option>
                 </Select>
                 <Button
                   :loading="loading"
@@ -119,62 +121,92 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">主键ID:</i-col>
-              <i-col span="18">{{ faq.id }}</i-col>
+              <i-col span="6">
+                主键ID:
+              </i-col>
+              <i-col span="18">
+                {{ faq.id }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">标题:</i-col>
-              <i-col span="18">{{ faq.title }}</i-col>
+              <i-col span="6">
+                标题:
+              </i-col>
+              <i-col span="18">
+                {{ faq.title }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">内容:</i-col>
-              <i-col span="18">{{ faq.content }}</i-col>
+              <i-col span="6">
+                内容:
+              </i-col>
+              <i-col span="18">
+                {{ faq.content }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">序号:</i-col>
-              <i-col span="18">{{ faq.rankNo }}</i-col>
+              <i-col span="6">
+                序号:
+              </i-col>
+              <i-col span="18">
+                {{ faq.rankNo }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">应用类型:</i-col>
-              <i-col span="18">{{ faq.applicationType | appTypeFilter }}</i-col>
+              <i-col span="6">
+                应用类型:
+              </i-col>
+              <i-col span="18">
+                {{ faq.applicationType | appTypeFilter }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">创建时间:</i-col>
-              <i-col span="18">{{ faq.createTime }}</i-col>
+              <i-col span="6">
+                创建时间:
+              </i-col>
+              <i-col span="18">
+                {{ faq.createTime }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">创建人:</i-col>
-              <i-col span="18">{{ faq.createUser }}</i-col>
+              <i-col span="6">
+                创建人:
+              </i-col>
+              <i-col span="18">
+                {{ faq.createUser }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -225,18 +257,24 @@
                 :value="item.value"
                 class="ptb2-5"
                 style="padding-left: 5px"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
           </FormItem>
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
         <Button
           :loading="modalEditLoading"
           type="primary"
           @click="asyncEditOK('modalEdit')"
-        >确定</Button>
+        >
+          确定
+        </Button>
       </div>
     </Modal>
   </div>

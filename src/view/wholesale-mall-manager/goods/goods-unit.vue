@@ -27,7 +27,7 @@
           ></Input>
           <Button
             v-waves
-            :search-loading="searchLoading"
+            :searchLoading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
@@ -61,7 +61,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px; overflow: hidden">
+      <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -79,65 +79,48 @@
 
     <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
-        <span>{{ unitDetail.id == "" ? "创建商品单位" : "编辑商品单位" }}</span>
+        <span>{{ unitDetail.id == ''?'创建商品单位':'编辑商品单位' }}</span>
       </p>
       <div class="modal-content" style="margin-top: 20px">
-        <Form
-          ref="editForm"
-          :label-width="100"
-          :model="unitDetail"
-          :rules="ruleInline"
-        >
+        <Form ref="editForm" :label-width="100" :model="unitDetail" :rules="ruleInline">
           <Row>
             <FormItem label="单位编码:" prop="unitCode">
-              <Input
-                v-model="unitDetail.unitCode"
-                placeholder="请输入单位编码"
-                style="width: 200px"
-              ></Input>
+              <Input v-model="unitDetail.unitCode" placeholder="请输入单位编码" style="width: 200px"></Input>
             </FormItem>
             <FormItem label="单位名称:" prop="unitName">
-              <Input
-                v-model="unitDetail.unitName"
-                placeholder="请输入单位名称"
-                style="width: 200px"
-              ></Input>
+              <Input v-model="unitDetail.unitName" placeholder="请输入单位名称" style="width: 200px"></Input>
             </FormItem>
           </Row>
         </Form>
       </div>
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
-        <Button
-          :loading="loadingSubmit"
-          type="primary"
-          @click="handleSubmit"
-        >确定</Button>
+        <Button :loading="loadingSubmit" type="primary" @click="handleSubmit">确定</Button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
+import Tables from "_c/tables";
 import {
   getProductUnitsPages,
   editProductUnits,
   delProductUnits,
   createProductUnits
-} from '@/api/wholesale';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
+} from "@/api/wholesale";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import deleteMixin from "@/mixins/deleteMixin.js";
 
 const unitDetail = {
   id: 0,
-  unitCode: '',
-  unitName: ''
+  unitCode: "",
+  unitName: ""
 };
 
 const roleRowData = {
-  unitName: '',
+  unitName: "",
   page: 1,
   rows: 20
 };
@@ -156,36 +139,36 @@ export default {
       searchRowData: this._.cloneDeep(roleRowData),
       unitDetail: this._.cloneDeep(unitDetail),
       ruleInline: {
-        unitCode: { required: true, message: '请填写单位编码' },
-        unitName: { required: true, message: '请填写单位名称' }
+        unitCode: { required: true, message: "请填写单位编码" },
+        unitName: { required: true, message: "请填写单位名称" }
       },
       columns: [
         {
-          type: 'selection',
-          key: '',
+          type: "selection",
+          key: "",
           width: 60,
-          align: 'center'
+          align: "center"
         },
         {
-          title: '编号',
-          align: 'center',
-          key: 'id'
+          title: "编号",
+          align: "center",
+          key: "id"
         },
         {
-          title: '单位编码',
-          align: 'center',
-          key: 'unitCode'
+          title: "单位编码",
+          align: "center",
+          key: "unitCode"
         },
         {
-          title: '单位名称',
-          align: 'center',
-          key: 'unitName'
+          title: "单位名称",
+          align: "center",
+          key: "unitName"
         },
         {
-          title: '操作',
-          align: 'center',
-          key: 'handle',
-          options: ['edit', 'delete']
+          title: "操作",
+          align: "center",
+          key: "handle",
+          options: ["edit", "delete"]
         }
       ]
     };
@@ -195,7 +178,7 @@ export default {
   },
   methods: {
     getTableData() {
-      getProductUnitsPages(this.searchRowData).then((res) => {
+      getProductUnitsPages(this.searchRowData).then(res => {
         this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;
@@ -216,7 +199,7 @@ export default {
       this.modalEdit = true;
     },
     handleSubmit() {
-      this.$refs.editForm.validate((valid) => {
+      this.$refs.editForm.validate(valid => {
         if (valid) {
           if (this.isCreate) {
             this.createTableRow();
@@ -224,16 +207,16 @@ export default {
             this.editTableRow();
           }
         } else {
-          this.$Message.error('请完善商品单位信息!');
+          this.$Message.error("请完善商品单位信息!");
         }
       });
     },
     editTableRow() {
       this.loadingSubmit = true;
       editProductUnits(this.unitDetail)
-        .then((res) => {
+        .then(res => {
           this.modalEdit = false;
-          this.$Message.info('修改成功！');
+          this.$Message.info("修改成功！");
           this.getTableData();
         })
         .finally(() => {
@@ -243,9 +226,9 @@ export default {
     createTableRow() {
       this.loadingSubmit = true;
       createProductUnits(this.unitDetail)
-        .then((res) => {
+        .then(res => {
           this.modalEdit = false;
-          this.$Message.info('创建成功！');
+          this.$Message.info("创建成功！");
           this.getTableData();
         })
         .finally(() => {
@@ -260,7 +243,7 @@ export default {
       delProductUnits({
         ids
       })
-        .then((res) => {
+        .then(res => {
           const totalPage = Math.ceil(this.total / this.pageSize);
           if (
             this.tableData.length === this.tableDataSelected.length &&

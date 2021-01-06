@@ -119,6 +119,15 @@ const miniMallRouter = [
         title: '门店区域管理'
       },
       component: () => import('@/view/mini-program-manager/goods/store-area.vue')
+    },
+    {
+      path: '/small-store-city',
+      name: 'small-store-city',
+      meta: {
+        icon: 'ios-globe',
+        title: '门店城市管理'
+      },
+      component: () => import('@/view/mini-program-manager/goods/store-city.vue')
     }
     ]
   },
@@ -176,6 +185,24 @@ const miniMallRouter = [
       component: () => import('@/view/mini-program-manager/activity/images.vue')
     }]
   },
+  // {
+  //   path: '/small-goods-presell',
+  //   name: 'small-goods-presell',
+  //   meta: {
+  //     icon: 'md-menu',
+  //     title: '预售管理'
+  //   },
+  //   component: Main,
+  //   children: [{
+  //     path: '/small-goods-presellActivity',
+  //     name: 'small-goods-presellActivity',
+  //     meta: {
+  //       icon: 'ios-people',
+  //       title: '预售活动'
+  //     },
+  //     component: () => import('@/view/mini-program-manager/presell/presellActivity.vue')
+  //   }]
+  // },
   {
     path: '/small-activities',
     name: 'small-activities',
@@ -362,10 +389,12 @@ const miniMallRouter = [
       name: 'small-postage-rule-setting',
       meta: {
         icon: 'md-bus',
-        title: '运费管理'
+        title: '邮费管理'
       },
       component: () => import('@/view/mini-program-manager/system/delivery-fee.vue')
-    }]
+    }
+
+    ]
   },
   {
     path: '/small-task',
@@ -587,6 +616,15 @@ const miniMallRouter = [
         component: () => import('@/view/mini-program-manager/member/coupon-statistics.vue')
       },
       {
+        path: '/small-sendRedPacketStatistics',
+        name: 'small-sendRedPacketStatistics',
+        meta: {
+          icon: 'ios-stats',
+          title: '外卖红包统计'
+        },
+        component: () => import('@/view/mini-program-manager/member/sendRedPacketStatistics.vue')
+      },
+      {
         path: '/small-share-statistics',
         name: 'small-share-statistics',
         meta: {
@@ -692,7 +730,7 @@ const miniMallRouter = [
       name: 'small-paymentlogs',
       meta: {
         icon: 'logo-usd',
-        title: '支付流水管理'
+        title: '鲜果币流水管理'
       },
       component: () => import('@/view/mini-program-manager/order/paylog.vue')
     },

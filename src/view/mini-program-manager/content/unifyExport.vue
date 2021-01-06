@@ -1,7 +1,9 @@
 <template>
   <div class="m-role">
     <Card style="padding: 20px 0 20px 30px; width: 600px">
-      <h3 class="title">后台统一导出</h3>
+      <h3 class="title">
+        后台统一导出
+      </h3>
       <div class="explort">
         <p style="margin-left: 30px">
           <i style="color: #ff3861">*</i> 数据分类：
@@ -10,6 +12,7 @@
           class="search-col mr5"
           placeholder="请选择需导出的数据"
           style="width: 200px"
+          :filterable="true"
           @on-change="handSelectExport"
         >
           <Option
@@ -24,7 +27,7 @@
         </Select>
         <p
           v-if="!searchRowData.id"
-          style="margin-left:20px; font-size: 12px; color: #ff3861"
+          style="margin: 18px 0 0 20px; font-size: 12px; color: #ff3861"
         >
           {{ `*请先选择数据分类` }}
         </p>
@@ -102,7 +105,9 @@
           </p>
         </div>
       </div>
-      <div class="handDownload" @click="handleDownload">导出</div>
+      <div class="handDownload" @click="handleDownload">
+        导出
+      </div>
     </Card>
   </div>
 </template>
@@ -146,15 +151,17 @@ export default {
   methods: {
     getTableData() {
       const projectName = config.classifyTypeC;
-      getUnifyExportList(projectName).then((res) => {
-        this.exportData = res;
-        res.forEach((value) => {
-          const map = { label: 'label', value: 'value' };
-          map.value = value.id;
-          map.label = value.export_name;
-          this.exportList.push(map);
-        });
-      });
+      getUnifyExportList(projectName)
+        .then((res) => {
+          this.exportData = res;
+          res.forEach((value) => {
+            const map = { label: 'label', value: 'value' };
+            map.value = value.id;
+            map.label = value.export_name;
+            this.exportList.push(map);
+          });
+        })
+        .catch((error) => {});
     },
     handSelectExport(val) {
       this.searchRowData = _.cloneDeep(roleRowData);
@@ -183,9 +190,8 @@ export default {
     },
     handleDownload() {
       console.log('数据', this.searchRowData);
-      const exportUploadUrl = config.exportUploadUrl;
       window.open(
-        `${exportUploadUrl}/export?id=${this.searchRowData.id}&p1=${
+        `http://172.16.10.196:5000/export?id=${this.searchRowData.id}&p1=${
           this.searchRowData.p1
         }&p2=${this.searchRowData.p2}${
           this.searchRowData.p3 ? '&p3=' + this.searchRowData.p3 : ''
@@ -197,7 +203,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.title {
+.title{
   margin: -18px 0 30px -18px;
 }
 .explort {

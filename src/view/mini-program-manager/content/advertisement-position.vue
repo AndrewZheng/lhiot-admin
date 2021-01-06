@@ -43,7 +43,9 @@
               :value="item.value"
               class="ml15 mt10"
               style="padding-left: 5px"
-            >{{ item.label }}</Option>
+            >
+              {{ item.label }}
+            </Option>
           </Select>
           <Select
             v-model="searchRowData.applicationType"
@@ -55,7 +57,9 @@
               v-for="item in appTypesEnum"
               :key="`search-col-${item.value}`"
               :value="item.value"
-            >{{ item.label }}</Option>
+            >
+              {{ item.label }}
+            </Option>
           </Select>
           <Select
             v-model="searchRowData.positionType"
@@ -67,7 +71,9 @@
               v-for="item in advertisementPositionTypeEnum"
               :key="`search-col-${item.value}`"
               :value="item.value"
-            >{{ item.label }}</Option>
+            >
+              {{ item.label }}
+            </Option>
           </Select>
           <Button
             v-waves
@@ -127,65 +133,91 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">ID:</i-col>
-              <i-col span="18">{{ advertisementPositionDetail.id }}</i-col>
+              <i-col span="6">
+                ID:
+              </i-col>
+              <i-col span="18">
+                {{ advertisementPositionDetail.id }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">广告位描述:</i-col>
-              <i-col span="18">{{
-                advertisementPositionDetail.description
-              }}</i-col>
+              <i-col span="6">
+                广告位描述:
+              </i-col>
+              <i-col span="18">
+                {{
+                  advertisementPositionDetail.description
+                }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">广告位英文名:</i-col>
-              <i-col span="18">{{
-                advertisementPositionDetail.postionName
-              }}</i-col>
+              <i-col span="6">
+                广告位英文名:
+              </i-col>
+              <i-col span="18">
+                {{
+                  advertisementPositionDetail.postionName
+                }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">时间限制:</i-col>
-              <i-col span="18">{{
-                advertisementPositionDetail.timeLimited | timeLimitedFilter
-              }}</i-col>
+              <i-col span="6">
+                时间限制:
+              </i-col>
+              <i-col span="18">
+                {{
+                  advertisementPositionDetail.timeLimited | timeLimitedFilter
+                }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">应用类型:</i-col>
-              <i-col span="18">{{
-                advertisementPositionDetail.applicationType | appTypeFilter
-              }}</i-col>
+              <i-col span="6">
+                应用类型:
+              </i-col>
+              <i-col span="18">
+                {{
+                  advertisementPositionDetail.applicationType | appTypeFilter
+                }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6">广告位类型:</i-col>
-              <i-col span="18">{{
-                advertisementPositionDetail.positionType
-                  | advertisementPositionTypeFilter
-              }}</i-col>
+              <i-col span="6">
+                广告位类型:
+              </i-col>
+              <i-col span="18">
+                {{
+                  advertisementPositionDetail.positionType
+                    | advertisementPositionTypeFilter
+                }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -228,7 +260,9 @@
                 :value="item.value"
                 class="ptb2-5"
                 style="padding-left: 5px"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
           </FormItem>
           <FormItem label="应用类型:" prop="applicationType">
@@ -244,7 +278,9 @@
                 :value="item.value"
                 class="ptb2-5"
                 style="padding-left: 5px"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
           </FormItem>
           <FormItem label="广告位类型:" prop="positionType">
@@ -260,18 +296,24 @@
                 :value="item.value"
                 class="ptb2-5"
                 style="padding-left: 5px"
-              >{{ item.label }}</Option>
+              >
+                {{ item.label }}
+              </Option>
             </Select>
           </FormItem>
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
         <Button
           :loading="modalEditLoading"
           type="primary"
           @click="handleSubmit('modalEdit')"
-        >确定</Button>
+        >
+          确定
+        </Button>
       </div>
     </Modal>
 

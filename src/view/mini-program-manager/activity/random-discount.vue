@@ -50,15 +50,15 @@
             <Select
               v-model="searchRowData.onOff"
               placeholder="活动状态"
-              style="padding-right: 5px; width: 100px"
+              style="padding-right: 5px;width: 100px"
               clearable
             >
               <Option
-                v-for="(item, index) in imageStatusEnum"
+                v-for="(item,index) in imageStatusEnum"
                 :key="index"
                 :value="item.value"
                 class="ptb2-5"
-                style="padding-left: 5px; width: 100px"
+                style="padding-left: 5px;width: 100px"
               >
                 {{ item.label }}
               </Option>
@@ -105,7 +105,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px; overflow: hidden">
+      <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -127,7 +127,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 活动名称: </i-col>
+              <i-col span="6">
+                活动名称:
+              </i-col>
               <i-col span="18">
                 {{ randomDiscountDetail.activityName }}
               </i-col>
@@ -137,7 +139,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 活动状态: </i-col>
+              <i-col span="6">
+                活动状态:
+              </i-col>
               <i-col v-if="randomDiscountDetail.onOff === 'ON'" span="16">
                 <tag color="success">
                   {{ "有效" }}
@@ -157,7 +161,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 开始时间: </i-col>
+              <i-col span="6">
+                开始时间:
+              </i-col>
               <i-col span="18">
                 {{ randomDiscountDetail.startTime }}
               </i-col>
@@ -167,7 +173,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 结束时间: </i-col>
+              <i-col span="6">
+                结束时间:
+              </i-col>
               <i-col span="18">
                 {{ randomDiscountDetail.endTime }}
               </i-col>
@@ -177,7 +185,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 最低立减金额: </i-col>
+              <i-col span="6">
+                最低立减金额:
+              </i-col>
               <i-col span="18">
                 {{ randomDiscountDetail.minFee | fenToYuanDot2Filters }}
               </i-col>
@@ -187,7 +197,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 最高立减金额: </i-col>
+              <i-col span="6">
+                最高立减金额:
+              </i-col>
               <i-col span="18">
                 {{ randomDiscountDetail.maxFee | fenToYuanDot2Filters }}
               </i-col>
@@ -197,7 +209,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 创建人: </i-col>
+              <i-col span="6">
+                创建人:
+              </i-col>
               <i-col span="18">
                 {{ randomDiscountDetail.createUser }}
               </i-col>
@@ -207,7 +221,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 创建时间: </i-col>
+              <i-col span="6">
+                创建时间:
+              </i-col>
               <i-col span="18">
                 {{ randomDiscountDetail.createTime }}
               </i-col>
@@ -217,7 +233,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 更新时间: </i-col>
+              <i-col span="6">
+                更新时间:
+              </i-col>
               <i-col span="18">
                 {{ randomDiscountDetail.updateTime }}
               </i-col>
@@ -226,32 +244,22 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose"> 关闭 </Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
     <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
-        <i-col>{{
-          tempModalType === modalType.edit
-            ? "修改随机立减活动"
-            : "创建随机立减活动"
-        }}</i-col>
+        <i-col>{{ tempModalType===modalType.edit?'修改随机立减活动':'创建随机立减活动' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form
-          ref="modalEdit"
-          :model="randomDiscountDetail"
-          :rules="ruleInline"
-          :label-width="100"
-        >
+        <Form ref="modalEdit" :model="randomDiscountDetail" :rules="ruleInline" :label-width="100">
           <Row>
             <Col span="18">
             <FormItem label="活动名称:" prop="activityName">
-              <Input
-                v-model="randomDiscountDetail.activityName"
-                placeholder="活动名称"
-              ></Input>
+              <Input v-model="randomDiscountDetail.activityName" placeholder="活动名称"></Input>
             </FormItem>
             </Col>
           </Row>
@@ -260,11 +268,11 @@
             <FormItem label="活动状态:" prop="onOff">
               <Select v-model="randomDiscountDetail.onOff" clearable>
                 <Option
-                  v-for="(item, index) in imageStatusEnum"
+                  v-for="(item,index) in imageStatusEnum"
                   :key="index"
                   :value="item.value"
                   class="ptb2-5"
-                  style="padding-left: 5px; width: 100%"
+                  style="padding-left: 5px;width: 100%"
                 >
                   {{ item.label }}
                 </Option>
@@ -331,12 +339,10 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose"> 关闭 </Button>
-        <Button
-          :loading="modalViewLoading"
-          type="primary"
-          @click="handleSubmit('modalEdit')"
-        >
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
           确定
         </Button>
       </div>
@@ -541,7 +547,7 @@ export default {
       this.randomDiscountDetail.shareImageUrl = null;
     },
     handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
+      this.$refs[name].validate(valid => {
         if (valid) {
           if (
             compareData(
@@ -572,7 +578,7 @@ export default {
     createRandomDiscount() {
       this.modalViewLoading = true;
       createRandomDiscount(this.randomDiscountDetail)
-        .then((res) => {
+        .then(res => {
           this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
@@ -586,7 +592,7 @@ export default {
     editRandomDiscount() {
       this.modalViewLoading = true;
       editRandomDiscount(this.randomDiscountDetail)
-        .then((res) => {
+        .then(res => {
           this.modalEdit = false;
           this.modalViewLoading = false;
           this.getTableData();
@@ -615,7 +621,7 @@ export default {
       deleteRandomDiscount({
         ids
       })
-        .then((res) => {
+        .then(res => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -627,7 +633,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           this.loading = false;
         });
@@ -646,13 +652,16 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
-      this.loading = true;
       getRandomDiscountPages(this.searchRowData)
-        .then((res) => {
+        .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         })
-        .finally(() => {
+        .catch(error => {
+          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

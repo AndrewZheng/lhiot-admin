@@ -59,7 +59,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 活动ID: </i-col>
+              <i-col span="6">
+                活动ID:
+              </i-col>
               <i-col span="18">
                 {{ registerDetail.id }}
               </i-col>
@@ -69,7 +71,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 活动名称: </i-col>
+              <i-col span="6">
+                活动名称:
+              </i-col>
               <i-col span="18">
                 {{ registerDetail.activityName }}
               </i-col>
@@ -79,9 +83,13 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 活动状态: </i-col>
+              <i-col span="6">
+                活动状态:
+              </i-col>
               <i-col span="18">
-                {{ registerDetail.onOff | imageStatusFilter }}
+                {{
+                  registerDetail.onOff | imageStatusFilter
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -97,7 +105,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 开始时间: </i-col>
+              <i-col span="6">
+                开始时间:
+              </i-col>
               <i-col span="18">
                 {{
                   (this.registerDetail.beginTime = this.$moment(
@@ -111,7 +121,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 结束时间: </i-col>
+              <i-col span="6">
+                结束时间:
+              </i-col>
               <i-col span="18">
                 {{
                   (this.registerDetail.endTime = this.$moment(
@@ -125,7 +137,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 创建人: </i-col>
+              <i-col span="6">
+                创建人:
+              </i-col>
               <i-col span="18">
                 {{ registerDetail.createBy }}
               </i-col>
@@ -135,7 +149,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 创建时间: </i-col>
+              <i-col span="6">
+                创建时间:
+              </i-col>
               <i-col span="18">
                 {{ registerDetail.createTime }}
               </i-col>
@@ -145,7 +161,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 活动规则: </i-col>
+              <i-col span="6">
+                活动规则:
+              </i-col>
               <i-col span="18">
                 <Input
                   :v-if="registerDetail.activityRule"
@@ -159,7 +177,9 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose"> 关闭 </Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -287,7 +307,9 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
@@ -621,20 +643,26 @@ export default {
       this.deleteTable(params.row.id);
     },
     deleteTable(ids) {
+      this.loading = true;
       deleteRegister({
         ids
-      }).then((res) => {
-        const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-        if (
-          this.tableData.length == this.tableDataSelected.length &&
-          this.searchRowData.page === totalPage &&
-          this.searchRowData.page !== 1
-        ) {
-          this.searchRowData.page -= 1;
-        }
-        this.tableDataSelected = [];
-        this.getTableData();
-      });
+      })
+        .then((res) => {
+          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+          if (
+            this.tableData.length == this.tableDataSelected.length &&
+            this.searchRowData.page === totalPage &&
+            this.searchRowData.page !== 1
+          ) {
+            this.searchRowData.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.getTableData();
+        })
+        .catch((err) => {
+          console.log(err);
+          this.loading = false;
+        });
     },
     handleView(params) {
       this.resetFields();
@@ -658,13 +686,16 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
-      this.loading = true;
       getRegisterPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         })
-        .finally(() => {
+        .catch((error) => {
+          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

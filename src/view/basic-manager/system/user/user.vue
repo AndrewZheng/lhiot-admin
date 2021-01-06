@@ -326,10 +326,14 @@
         </Button>
       </div>
       <div v-else-if="step == 'roleAdd'" slot="footer">
-        <Button type="primary" @click="handleRoleOk"> 保存 </Button>
+        <Button type="primary" @click="handleRoleOk">
+          保存
+        </Button>
       </div>
       <div v-else slot="footer">
-        <Button type="primary" @click="handleCloseAdd"> 关闭 </Button>
+        <Button type="primary" @click="handleCloseAdd">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -523,8 +527,10 @@ export default {
       titles: ['未关联角色', '已关联角色'],
       // 表单验证
       ruleValidate: {
-        name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
-        account: [{ required: true, message: '账号不能为空', trigger: 'blur' }],
+        name: [{ required: true, message: '姓名不能为空', trigger: 'blur' },
+          { len: 15, message: '姓名长度不能超过15个字符', trigger: 'blur' }],
+        account: [{ required: true, message: '账号不能为空', trigger: 'blur' },
+          { len: 16, message: '账号长度不能超过16个字符', trigger: 'blur' }],
         password: [
           { required: true, message: '密码不能为空', trigger: 'blur' }
         ],
@@ -619,7 +625,9 @@ export default {
           ) +
           `<br>
           创建时间: ${this.tableData[params.row.initRowIndex].createAt}<br>
-          最后登录时间: ${this.tableData[params.row.initRowIndex].lastLoginAt}<br>
+          最后登录时间: ${
+  this.tableData[params.row.initRowIndex].lastLoginAt
+}<br>
           备注: ${this.tableData[params.row.initRowIndex].remark}<br>`
         // 关联角色：<tag type="border">角色1</tag><tag type="border">角色2</tag><tag type="border">角色3</tag>
       });

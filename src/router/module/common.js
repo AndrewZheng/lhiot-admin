@@ -80,7 +80,7 @@ const commonRouter = [
         title: '自定义图标'
       },
       component: () =>
-          import('@/view/basic-manager/components/icons/icons.vue')
+        import('@/view/basic-manager/components/icons/icons.vue')
     }
     ]
   },

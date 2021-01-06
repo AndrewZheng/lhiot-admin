@@ -8,9 +8,9 @@
         <Card>
           <h6>
             当前选中：
-            <span class="brand-red font-sm">{{
-              parentRowData.name ? parentRowData.name : "全部菜单"
-            }}</span>
+            <span
+              class="brand-red font-sm"
+            >{{ parentRowData.name? parentRowData.name: '全部菜单' }}</span>
           </h6>
           <tables
             ref="tables"
@@ -45,23 +45,17 @@
                 style="width: auto"
                 clearable
               >
-                <Option value="PARENT"> 父级菜单 </Option>
-                <Option value="SON"> 子级菜单 </Option>
+                <Option value="PARENT">
+                  父级菜单
+                </Option>
+                <Option value="SON">
+                  子级菜单
+                </Option>
               </Select>
-              <Button
-                v-waves
-                class="search-btn mr5 ml5"
-                type="primary"
-                @click="handleSearch"
-              >
+              <Button v-waves class="search-btn mr5 ml5" type="primary" @click="handleSearch">
                 <Icon type="md-search" />搜索
               </Button>
-              <Button
-                v-waves
-                class="search-btn mr5"
-                type="info"
-                @click="handleClear"
-              >
+              <Button v-waves class="search-btn mr5" type="info" @click="handleClear">
                 <Icon type="md-refresh" />清除条件
               </Button>
               <!-- <Button v-waves class="search-btn mr5" type="warning" @click="handleExpandAll">
@@ -81,12 +75,7 @@
               <Button v-waves type="success" class="mr5" @click="handleAddSon">
                 <Icon type="md-add" />子菜单
               </Button>
-              <Button
-                v-waves
-                type="success"
-                class="mr5"
-                @click="handleAddParent"
-              >
+              <Button v-waves type="success" class="mr5" @click="handleAddParent">
                 <Icon type="md-add" />父菜单
               </Button>
               <!-- <Button v-waves type="success" class="mr5" @click="handleUploadExcel">
@@ -103,7 +92,7 @@
               </Button>
             </div>
           </tables>
-          <div style="margin: 10px; overflow: hidden">
+          <div style="margin: 10px;overflow: hidden">
             <Row type="flex" justify="end">
               <Page
                 :total="total"
@@ -122,11 +111,7 @@
     </Row>
 
     <!--查看菜单 -->
-    <Modal
-      v-model="modalView"
-      :mask-closable="false"
-      :width="rowData.type == 'SON' ? '750' : '540'"
-    >
+    <Modal v-model="modalView" :mask-closable="false" :width="rowData.type=='SON'?'750':'540'">
       <p slot="header">
         <span>查看菜单</span>
       </p>
@@ -134,7 +119,9 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4"> 类型 </i-col>
+              <i-col span="4">
+                类型
+              </i-col>
               <i-col span="20">
                 {{ rowData.type | switchType }}
               </i-col>
@@ -142,7 +129,9 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4"> 名称 </i-col>
+              <i-col span="4">
+                名称
+              </i-col>
               <i-col span="20">
                 {{ rowData.name }}
               </i-col>
@@ -152,7 +141,9 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4"> 编码 </i-col>
+              <i-col span="4">
+                编码
+              </i-col>
               <i-col span="20">
                 {{ rowData.code }}
               </i-col>
@@ -160,20 +151,16 @@
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4"> 排序 </i-col>
+              <i-col span="4">
+                排序
+              </i-col>
               <i-col span="20">
                 {{ rowData.sort }}
               </i-col>
             </Row>
           </i-col>
         </Row>
-        <Row
-          v-if="rowData.type == 'SON'"
-          :gutter="8"
-          type="flex"
-          align="middle"
-          class-name="mb10"
-        >
+        <Row v-if="rowData.type=='SON'" :gutter="8" type="flex" align="middle" class-name="mb10">
           <tables
             ref="operate_tables"
             v-model="operateData"
@@ -185,22 +172,19 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose"> 关闭 </Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
     <!--创建/编辑菜单 -->
     <Modal v-model="modalEdit" :mask-closable="false" :width="750">
       <p slot="header">
-        <span>{{ rowData.id == "" ? "创建菜单" : "编辑菜单" }}</span>
+        <span>{{ rowData.id==''?'创建菜单':'编辑菜单' }}</span>
       </p>
       <div class="modal-content">
-        <Form
-          ref="editForm"
-          :label-width="100"
-          :model="rowData"
-          :rules="ruleInline"
-        >
+        <Form ref="editForm" :label-width="100" :model="rowData" :rules="ruleInline">
           <Row :gutter="8" type="flex" align="middle" class-name="mb10">
             <i-col span="12">
               <FormItem label="类型:" prop="type">
@@ -249,26 +233,22 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4"> 名称 </i-col>
+              <i-col span="4">
+                名称
+              </i-col>
               <i-col span="12">
-                <Input
-                  v-model="operateRowData.name"
-                  placeholder
-                  clearable
-                ></Input>
+                <Input v-model="operateRowData.name" placeholder clearable></Input>
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4"> 类型 </i-col>
+              <i-col span="4">
+                类型
+              </i-col>
               <i-col span="20">
                 <CheckboxGroup v-model="requestTypeList">
-                  <Checkbox
-                    v-for="item in optionList"
-                    :key="item"
-                    :label="item"
-                  >
+                  <Checkbox v-for="item in optionList" :key="item" :label="item">
                     {{ item }}
                   </Checkbox>
                 </CheckboxGroup>
@@ -279,13 +259,11 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="4"> 路径 </i-col>
+              <i-col span="4">
+                路径
+              </i-col>
               <i-col span="16">
-                <Input
-                  v-model="operateRowData.antUrl"
-                  placeholder
-                  clearable
-                ></Input>
+                <Input v-model="operateRowData.antUrl" placeholder clearable></Input>
               </i-col>
             </Row>
           </i-col>
@@ -293,13 +271,11 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle">
-                  <i-col span="4"> 标识 </i-col>
+                  <i-col span="4">
+                    标识
+                  </i-col>
                   <i-col span="16">
-                    <Input
-                      v-model="operateRowData.code"
-                      placeholder
-                      clearable
-                    ></Input>
+                    <Input v-model="operateRowData.code" placeholder clearable></Input>
                   </i-col>
                 </Row>
               </i-col>
@@ -324,7 +300,9 @@
         />
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleCloseEdit"> 关闭 </Button>
+        <Button type="primary" @click="handleCloseEdit">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -342,7 +320,9 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                  <i-col span="4"> 类型 </i-col>
+                  <i-col span="4">
+                    类型
+                  </i-col>
                   <i-col span="12">
                     <Input v-model="menuType" placeholder readonly></Input>
                   </i-col>
@@ -350,7 +330,9 @@
               </i-col>
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                  <i-col span="4"> 名称 </i-col>
+                  <i-col span="4">
+                    名称
+                  </i-col>
                   <i-col span="12">
                     <Input v-model="rowData.name" placeholder clearable></Input>
                   </i-col>
@@ -360,7 +342,9 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                  <i-col span="4"> 编码 </i-col>
+                  <i-col span="4">
+                    编码
+                  </i-col>
                   <i-col span="12">
                     <Input v-model="rowData.code" placeholder clearable></Input>
                   </i-col>
@@ -368,7 +352,9 @@
               </i-col>
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                  <i-col span="4"> 排序 </i-col>
+                  <i-col span="4">
+                    排序
+                  </i-col>
                   <i-col span="12">
                     <Input v-model="rowData.sort" placeholder clearable></Input>
                   </i-col>
@@ -376,34 +362,26 @@
               </i-col>
             </Row>
           </TabPane>
-          <TabPane
-            :disabled="isDisable"
-            label="添加操作权限"
-            name="addPermission"
-          >
+          <TabPane :disabled="isDisable" label="添加操作权限" name="addPermission">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                  <i-col span="4"> 名称 </i-col>
+                  <i-col span="4">
+                    名称
+                  </i-col>
                   <i-col span="12">
-                    <Input
-                      v-model="operateRowData.name"
-                      placeholder
-                      clearable
-                    ></Input>
+                    <Input v-model="operateRowData.name" placeholder clearable></Input>
                   </i-col>
                 </Row>
               </i-col>
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                  <i-col span="4"> 类型 </i-col>
+                  <i-col span="4">
+                    类型
+                  </i-col>
                   <i-col span="20">
                     <CheckboxGroup v-model="requestTypeList">
-                      <Checkbox
-                        v-for="item in optionList"
-                        :key="item"
-                        :label="item"
-                      >
+                      <Checkbox v-for="item in optionList" :key="item" :label="item">
                         {{ item }}
                       </Checkbox>
                     </CheckboxGroup>
@@ -414,24 +392,18 @@
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-                  <i-col span="4"> 路径 </i-col>
+                  <i-col span="4">
+                    路径
+                  </i-col>
                   <i-col span="16">
-                    <Input
-                      v-model="operateRowData.antUrl"
-                      placeholder
-                      clearable
-                    ></Input>
+                    <Input v-model="operateRowData.antUrl" placeholder clearable></Input>
                   </i-col>
                 </Row>
               </i-col>
               <i-col span="12">
                 <Row :gutter="8" type="flex" align="middle" class-name="mb10">
                   <i-col span="24">
-                    <Button
-                      :loading="loadingAdd"
-                      type="success"
-                      @click="handleAdd"
-                    >
+                    <Button :loading="loadingAdd" type="success" @click="handleAdd">
                       <span v-if="!loadingAdd">添加</span>
                       <span v-else>保存中...</span>
                     </Button>
@@ -452,11 +424,15 @@
           </TabPane>
         </Tabs>
       </div>
-      <div v-if="step == 'addMenu' && !isCreated" slot="footer">
-        <Button type="primary" @click="goNext"> 下一步 </Button>
+      <div v-if="step=='addMenu' && !isCreated" slot="footer">
+        <Button type="primary" @click="goNext">
+          下一步
+        </Button>
       </div>
       <div v-else slot="footer">
-        <Button type="primary" @click="handleCloseAdd"> 关闭 </Button>
+        <Button type="primary" @click="handleCloseAdd">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -481,13 +457,7 @@ import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import { getMenuData, getOperateData } from '@/api/data';
-import {
-  getMenuList,
-  deleteMenu,
-  deleteOperate,
-  createMenu,
-  editMenu
-} from '@/api/system';
+import { getMenuList, deleteMenu, deleteOperate, createMenu, editMenu } from '@/api/system';
 import {
   buildMenu,
   getNewTagList,
@@ -508,11 +478,7 @@ const menuColumns = [
       return h('span', row.id + '');
     }
   },
-  {
-    title: '父菜单编号',
-    width: 80,
-    key: 'parentid',
-    sortable: false,
+  { title: '父菜单编号', width: 80, key: 'parentid', sortable: false,
     render: (h, params, vm) => {
       const { row } = params;
       return h('span', row.parentid + '');
@@ -527,7 +493,7 @@ const menuColumns = [
     width: 100,
     render: (h, params, vm) => {
       const { row } = params;
-      const str = row.type === 'PARENT' ? '父级菜单' : '子级菜单';
+      const str = row.type == 'PARENT' ? '父级菜单' : '子级菜单';
       return <span>{str}</span>;
     }
   },
@@ -723,7 +689,7 @@ export default {
     getTableData() {
       this.loading = true;
       getMenuData(this.searchRowData)
-        .then((res) => {
+        .then(res => {
           this.tableData = res.array;
           this.total = res.total;
         })
@@ -737,7 +703,7 @@ export default {
         page: this.operatePage,
         rows: this.operatePageSize,
         menuId: this.currentMenuId
-      }).then((res) => {
+      }).then(res => {
         this.operateData = res.array;
         this.operateTotal = res.total;
         this.loading = false;
@@ -799,7 +765,7 @@ export default {
       this.getOperateData();
     },
     handleSubmit() {
-      this.$refs.editForm.validate((valid) => {
+      this.$refs.editForm.validate(valid => {
         if (valid) {
           if (this.isCreate) {
             this.rowData.parentid = this.currentPid;
@@ -815,7 +781,7 @@ export default {
     createTableRow() {
       this.loadingBtn = true;
       createMenu(this.rowData)
-        .then((res) => {
+        .then(res => {
           this.modalEdit = false;
           this.$Message.info('创建成功');
           this.refreshMenuList();
@@ -828,34 +794,38 @@ export default {
     },
     editTableRow() {
       this.loadingBtn = true;
-      editMenu(this.rowData)
-        .then((res) => {
-          this.modalEdit = false;
-          this.$Message.info('更新成功');
-          this.refreshMenuList();
-          this.resetRowData();
-          this.getTableData();
-        })
-        .finally(() => {
-          this.loadingBtn = false;
-        });
+      editMenu(this.rowData).then(res => {
+        this.modalEdit = false;
+        this.$Message.info('更新成功');
+        this.refreshMenuList();
+        this.resetRowData();
+        this.getTableData();
+      }).finally(() => {
+        this.loadingBtn = false;
+      });
     },
     handleDelete(params) {
       if (!params.row.parentid) {
         this.$Message.warning('系统顶级菜单不可删除');
         return false;
       }
-      deleteMenu(params.row.id).then((res) => {
-        this.$Message.info('删除成功');
-        this.refreshMenuList();
-        this.getTableData();
-      });
+      deleteMenu(params.row.id)
+        .then(res => {
+          if (!res) {
+            this.$Message.error('已关联角色 删除失败');
+          } else {
+            this.$Message.info('删除成功');
+            this.refreshMenuList();
+            this.getTableData();
+          }
+        });
     },
     handleDeleteOperate(params) {
-      deleteOperate(params.row.id).then((res) => {
-        this.$Message.info('删除成功');
-        this.getOperateData();
-      });
+      deleteOperate(params.row.id)
+        .then(res => {
+          this.$Message.info('删除成功');
+          this.getOperateData();
+        });
     },
     handleAdd() {
       // 校验字段
@@ -883,7 +853,7 @@ export default {
           method: 'post',
           data: this.operateRowData
         })
-        .then((res) => {
+        .then(res => {
           this.loadingAdd = false;
           this.$Message.info('保存成功');
           this.requestTypeList = ['GET'];
@@ -945,7 +915,7 @@ export default {
           method: 'post',
           data: this.rowData
         })
-        .then((res) => {
+        .then(res => {
           this.$Message.info('创建成功');
           this.step = 'addPermission';
           this.isDisable = false;
@@ -960,7 +930,7 @@ export default {
     },
     handleDownload() {
       // 表格数据导出字段翻译
-      this.tableData.forEach((item) => {
+      this.tableData.forEach(item => {
         item['type'] === 'PARENT'
           ? (item['type'] = '父级菜单')
           : (item['type'] = '子级菜单');
@@ -991,13 +961,13 @@ export default {
       console.log('更换key值后的javaScript对象' + a);
       console.log('更换key值后的json' + JSON.stringify(a));
       console.log(
-        '更换key值后的json' + a.map((v) => tableTitlesEn.map((j) => v[j]))
+        '更换key值后的json' + a.map(v => tableTitlesEn.map(j => v[j]))
       );
       this.$refs.uploadExcel.initUpload();
       this.modalUploadExcel = false;
     },
     initMenuList() {
-      getMenuList().then((res) => {
+      getMenuList().then(res => {
         if (res && res.array.length > 0) {
           console.log('menuList from server: ', res.array);
           const menuList = buildMenu(res.array);
@@ -1020,7 +990,7 @@ export default {
       });
     },
     refreshMenuList() {
-      getMenuList().then((res) => {
+      getMenuList().then(res => {
         if (res && res.array.length > 0) {
           const menuList = buildMenu(res.array);
           const map = {
@@ -1032,7 +1002,7 @@ export default {
       });
     },
     renderContent(h, { root, node, data }) {
-      if (data.type === 'PARENT') {
+      if (data.type == 'PARENT') {
         return (
           <div
             style={{

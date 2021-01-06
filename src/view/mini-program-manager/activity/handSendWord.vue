@@ -41,30 +41,34 @@
             <Select
               v-model="searchRowData.receiveSource"
               placeholder="领取来源"
-              style="padding-right: 5px; width: 100px"
+              style="padding-right: 5px;width: 100px"
               clearable
             >
               <Option
-                v-for="(item, index) in receiveSourceEnum"
+                v-for="(item,index) in receiveSourceEnum"
                 :key="index"
                 :value="item.value"
                 class="ptb2-5"
-                style="padding-left: 5px; width: 100px"
-              >{{ item.label }}</Option>
+                style="padding-left: 5px;width: 100px"
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <Select
               v-model="searchRowData.isConvertCoupon"
               placeholder="是否兑换券"
-              style="padding-right: 5px; width: 110px"
+              style="padding-right: 5px;width: 110px"
               clearable
             >
               <Option
-                v-for="(item, index) in isConvertCouponEnum"
+                v-for="(item,index) in isConvertCouponEnum"
                 :key="index"
                 :value="item.value"
                 class="ptb2-5"
-                style="padding-left: 5px; width: 110px"
-              >{{ item.label }}</Option>
+                style="padding-left: 5px;width: 110px"
+              >
+                {{ item.label }}
+              </Option>
             </Select>
             <Button
               :loading="searchLoading"
@@ -86,18 +90,12 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button
-            v-waves
-            :loading="createLoading"
-            type="success"
-            class="mr5"
-            @click="addSendWord"
-          >
+          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addSendWord">
             <Icon type="md-add" />手动发字
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px; overflow: hidden">
+      <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -111,12 +109,7 @@
       </div>
     </Card>
     <!-- 集字配置列表 -->
-    <Modal
-      v-model="modalCollectWord"
-      :width="800"
-      :z-index="1000"
-      :mask-closable="false"
-    >
+    <Modal v-model="modalCollectWord" :width="800" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <i-col>{{ "手动发字配置" }}</i-col>
       </p>
@@ -134,23 +127,20 @@
           ></tables>
         </Row>
       </div>
-      <Divider orientation="center"> 填写发送对象手机号 </Divider>
-      <Form
-        ref="modalSendWord"
-        :model="sendWordToPhone"
-        :label-width="170"
-        :rules="ruleInline"
-      >
+      <Divider orientation="center">
+        填写发送对象手机号
+      </Divider>
+      <Form ref="modalSendWord" :model="sendWordToPhone" :label-width="170" :rules="ruleInline">
         <Row>
           <i-col span="15">
             <Row class-name="mb10">
               <FormItem label="请输入用户手机号码:" prop="phones">
                 <Input
                   v-model="sendWordToPhone.phones"
-                  :autosize="{ minRows: 3, maxRows: 8 }"
+                  :autosize="{minRows: 3,maxRows: 8}"
                   clearable
                   type="textarea"
-                  style="width: 450px"
+                  style="width: 450px;"
                   placeholder="请输入需发字手机号码，多个号码用英文逗号分隔"
                 ></Input>
               </FormItem>
@@ -160,24 +150,25 @@
         <Row>
           <i-col span="10">
             <FormItem label="发送数量:" prop="quantity">
-              <InputNumber
-                v-model="sendWordToPhone.quantity"
-                clearable
-                style="width: 80px"
-              ></InputNumber>
+              <InputNumber v-model="sendWordToPhone.quantity" clearable style="width: 80px"></InputNumber>
             </FormItem>
           </i-col>
-        </Row> </Form>*Tips：请输入需发券手机号码，多个号码用
-      <b style="color: red">英文逗号</b>
+        </Row>
+      </Form>*Tips：请输入需发券手机号码，多个号码用
+      <b style="color:red">英文逗号</b>
       分隔
       <Row v-show="failPhone.length > 0" class="mt10">
-        <i-col span="6"> 发送失败手机号： </i-col>
+        <i-col span="6">
+          发送失败手机号：
+        </i-col>
         <i-col span="22" class="brand-red">
-          {{ failPhone.join(",") }}
+          {{ failPhone.join(',') }}
         </i-col>
       </Row>
       <div slot="footer">
-        <Button @click="handleAddClose"> 关闭 </Button>
+        <Button @click="handleAddClose">
+          关闭
+        </Button>
         <Button type="primary" @click="handleSendWordAdd('modalSendWord')">
           确定
         </Button>
@@ -445,22 +436,27 @@ export default {
       this.$refs.modalEdit.resetFields();
     },
     getTableData() {
-      this.loading = true;
       getCollectWordPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         })
-        .finally(() => {
+        .catch((error) => {
+          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
     getCollectWordRecord() {
-      getCollectWordRecord().then((res) => {
-        this.collectWordData = res;
-      });
+      getCollectWordRecord()
+        .then((res) => {
+          this.collectWordData = res;
+        })
+        .catch((error) => {});
     },
     handleAddClose() {
       this.modalCollectWord = false;

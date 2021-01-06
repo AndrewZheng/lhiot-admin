@@ -73,7 +73,7 @@
           >
             <Icon type="md-repeat" />&nbsp;批量转让
           </Button>
-          <!-- <Button
+          <Button
             v-waves
             :loading="exportExcelLoading"
             type="primary"
@@ -81,7 +81,7 @@
             @click="handleDownload"
           >
             <Icon type="md-download" />导出
-          </Button>-->
+          </Button>
         </div>
       </tables>
       <div style="margin: 10px; overflow: hidden">
@@ -193,154 +193,154 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from '_c/tables';
-import _ from 'lodash';
+import Tables from "_c/tables";
+import _ from "lodash";
 import {
   getPerformanceShopPages,
   getUserPages,
   getAllSalesman,
-  storeAssign
-} from '@/api/wholesale';
-import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
+  storeAssign,
+} from "@/api/wholesale";
+import tableMixin from "@/mixins/tableMixin.js";
+import searchMixin from "@/mixins/searchMixin.js";
+import deleteMixin from "@/mixins/deleteMixin.js";
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber
-} from '@/libs/util';
-import { userStatusEnum, sexEnum, userTypeEnum } from '@/libs/enumerate';
-import { userStatusConvert, sexConvert } from '@/libs/converStatus';
+  yuanToFenNumber,
+} from "@/libs/util";
+import { userStatusEnum, sexEnum, userTypeEnum } from "@/libs/enumerate";
+import { userStatusConvert, sexConvert } from "@/libs/converStatus";
 
 const userAnalysis = {
-  address: '',
-  balance: '',
+  address: "",
+  balance: "",
   id: 0,
-  lastOneOrdertime: '',
-  nickname: '',
-  openId: '',
-  performanceTotal: '',
-  performanceTotalFrequency: '',
-  performanceTotalStr: '',
-  phone: '',
-  registerTime: '',
-  shopName: '',
-  unionId: '',
-  userName: '',
-  userStatus: ''
+  lastOneOrdertime: "",
+  nickname: "",
+  openId: "",
+  performanceTotal: "",
+  performanceTotalFrequency: "",
+  performanceTotalStr: "",
+  phone: "",
+  registerTime: "",
+  shopName: "",
+  unionId: "",
+  userName: "",
+  userStatus: "",
 };
 
 const roleRowData = {
   salesUserId: 0,
-  userName: '',
-  phone: '',
+  userName: "",
+  phone: "",
   page: 1,
-  rows: 20
+  rows: 20,
 };
 
 const userDetail = {
-  addressDetail: '',
+  addressDetail: "",
   balance: 0,
-  city: '',
+  city: "",
   id: 0,
-  inviteCode: '',
-  isVip: '',
-  nickname: '',
-  openId: '',
-  phone: '',
-  profilePhoto: '',
-  registerTime: '',
-  salesUserId: '',
-  saleUserName: '',
-  salesUserStatus: '',
-  sex: '',
-  shopName: '',
-  unionId: '',
-  userName: '',
-  userStatus: '',
-  userType: ''
+  inviteCode: "",
+  isVip: "",
+  nickname: "",
+  openId: "",
+  phone: "",
+  profilePhoto: "",
+  registerTime: "",
+  salesUserId: "",
+  saleUserName: "",
+  salesUserStatus: "",
+  sex: "",
+  shopName: "",
+  unionId: "",
+  userName: "",
+  userStatus: "",
+  userType: "",
 };
 
 const userRowData = {
-  userName: '',
-  phone: '',
-  userType: 'sale',
+  userName: "",
+  phone: "",
+  userType: "sale",
   page: 1,
-  rows: 10
+  rows: 10,
 };
 
 const userColumns = [
   {
-    type: 'selection',
-    key: '',
+    type: "selection",
+    key: "",
     width: 60,
-    fixed: 'left',
-    align: 'center'
+    fixed: "left",
+    align: "center",
   },
   {
-    title: '编号',
-    align: 'center',
-    key: 'id',
-    fixed: 'left',
-    maxWidth: 80
+    title: "编号",
+    align: "center",
+    key: "id",
+    fixed: "left",
+    maxWidth: 80,
   },
 
   {
-    title: '店长姓名',
-    align: 'center',
-    key: 'userName'
+    title: "店长姓名",
+    align: "center",
+    key: "userName",
   },
   {
-    title: '手机号码',
-    align: 'center',
-    key: 'phone',
-    minWidth: 60
+    title: "手机号码",
+    align: "center",
+    key: "phone",
+    minWidth: 60,
   },
   {
-    title: '注册时间',
-    align: 'center',
-    key: 'registerTime',
-    minWidth: 80
+    title: "注册时间",
+    align: "center",
+    key: "registerTime",
+    minWidth: 80,
   },
   {
-    title: '业务员状态',
-    align: 'center',
-    key: 'salesUserStatus',
+    title: "业务员状态",
+    align: "center",
+    key: "salesUserStatus",
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.salesUserStatus === 'certified') {
+      if (row.salesUserStatus === "certified") {
         return (
           <div>
-            <tag color='success'>{userStatusConvert(row.salesUserStatus)}</tag>
+            <tag color="success">{userStatusConvert(row.salesUserStatus)}</tag>
           </div>
         );
-      } else if (row.salesUserStatus === 'locking') {
+      } else if (row.salesUserStatus === "locking") {
         return (
           <div>
-            <tag color='error'>{userStatusConvert(row.salesUserStatus)}</tag>
+            <tag color="error">{userStatusConvert(row.salesUserStatus)}</tag>
           </div>
         );
-      } else if (row.salesUserStatus === 'unaudited') {
+      } else if (row.salesUserStatus === "unaudited") {
         return (
           <div>
-            <tag color='warning'>{userStatusConvert(row.salesUserStatus)}</tag>
+            <tag color="warning">{userStatusConvert(row.salesUserStatus)}</tag>
           </div>
         );
       }
       return <div>{userStatusConvert(row.salesUserStatus)}</div>;
-    }
+    },
   },
   {
-    title: '邀请码',
-    align: 'center',
-    key: 'inviteCode',
-    maxWidth: 100
-  }
+    title: "邀请码",
+    align: "center",
+    key: "inviteCode",
+    maxWidth: 100,
+  },
 ];
 
 export default {
   components: {
-    Tables
+    Tables,
   },
   mixins: [tableMixin, searchMixin, deleteMixin],
   data() {
@@ -355,7 +355,7 @@ export default {
       userTypeEnum,
       sexEnum,
       userColumns,
-      salesmanName: '',
+      salesmanName: "",
       modalViewLoading: false,
       clearSearchLoading: false,
       exportExcelLoading: false,
@@ -368,45 +368,45 @@ export default {
       userDetail: _.cloneDeep(userDetail),
       columns: [
         {
-          type: 'selection',
+          type: "selection",
           width: 60,
-          align: 'center'
+          align: "center",
         },
         {
-          title: '店铺名称',
-          align: 'center',
-          key: 'shopName',
-          minWidth: 60
+          title: "店铺名称",
+          align: "center",
+          key: "shopName",
+          minWidth: 60,
         },
         {
-          title: '店长姓名',
-          align: 'center',
-          key: 'userName',
-          minWidth: 80
+          title: "店长姓名",
+          align: "center",
+          key: "userName",
+          minWidth: 80,
         },
         {
-          title: '店长手机',
-          align: 'center',
-          key: 'phone',
-          minWidth: 90
+          title: "店长手机",
+          align: "center",
+          key: "phone",
+          minWidth: 90,
         },
         {
-          title: '区域',
-          align: 'center',
-          key: 'city',
-          minWidth: 80
+          title: "区域",
+          align: "center",
+          key: "city",
+          minWidth: 80,
         },
         {
-          title: '门店地址',
-          align: 'center',
-          key: 'address',
-          minWidth: 80
+          title: "门店地址",
+          align: "center",
+          key: "address",
+          minWidth: 80,
         },
         {
-          title: '累计业绩/频次',
-          align: 'center',
-          key: 'performanceTotalStr',
-          minWidth: 100
+          title: "累计业绩/频次",
+          align: "center",
+          key: "performanceTotalStr",
+          minWidth: 100,
           // render(h, params, vm) {
           //   const amount = fenToYuanDot2(
           //     params.row.performanceTotalStr
@@ -415,58 +415,58 @@ export default {
           // }
         },
         {
-          title: '注册时间',
-          align: 'center',
-          key: 'registerTime',
-          minWidth: 80
+          title: "注册时间",
+          align: "center",
+          key: "registerTime",
+          minWidth: 80,
         },
         {
-          title: '最近下单时间',
-          align: 'center',
-          key: 'lastOneOrdertime',
-          minWidth: 80
+          title: "最近下单时间",
+          align: "center",
+          key: "lastOneOrdertime",
+          minWidth: 80,
         },
         {
-          title: '用户状态',
-          align: 'center',
+          title: "用户状态",
+          align: "center",
           minWidth: 60,
-          key: 'userStatus',
+          key: "userStatus",
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.userStatus === 'certified') {
+            if (row.userStatus === "certified") {
               return (
                 <div>
-                  <tag color='success'>{userStatusConvert(row.userStatus)}</tag>
+                  <tag color="success">{userStatusConvert(row.userStatus)}</tag>
                 </div>
               );
-            } else if (row.userStatus === 'locking') {
+            } else if (row.userStatus === "locking") {
               return (
                 <div>
-                  <tag color='error'>{userStatusConvert(row.userStatus)}</tag>
+                  <tag color="error">{userStatusConvert(row.userStatus)}</tag>
                 </div>
               );
-            } else if (row.userStatus === 'unaudited') {
+            } else if (row.userStatus === "unaudited") {
               return (
                 <div>
-                  <tag color='warning'>{userStatusConvert(row.userStatus)}</tag>
+                  <tag color="warning">{userStatusConvert(row.userStatus)}</tag>
                 </div>
               );
             }
             return (
               <div>
-                <tag color='primary'>{userStatusConvert(row.userStatus)}</tag>
+                <tag color="primary">{userStatusConvert(row.userStatus)}</tag>
               </div>
             );
-          }
+          },
         },
         {
-          title: '操作',
-          align: 'center',
+          title: "操作",
+          align: "center",
           minWidth: 60,
-          key: 'handle',
-          options: ['exchange']
-        }
-      ]
+          key: "handle",
+          options: ["exchange"],
+        },
+      ],
     };
   },
   computed: {
@@ -478,12 +478,12 @@ export default {
     },
     isSalesmanAnalysis() {
       return this.$route.query.id > 0;
-    }
+    },
   },
   created() {
     this.salesmanName = this.$route.query.salesmanName
       ? this.$route.query.salesmanName
-      : 'N/A';
+      : "N/A";
     this.currentSalesId = this.$route.query.id ? this.$route.query.id : null;
     this.getTableData();
     this.getAllSalesman();
@@ -551,7 +551,7 @@ export default {
     },
     handleExchangeBatch() {
       if (this.selectedUserIds.length === 0) {
-        this.$Message.error('请先选择要转让的用户');
+        this.$Message.error("请先选择要转让的用户");
         return;
       }
       this.assginSalesUserId = null;
@@ -561,19 +561,19 @@ export default {
     },
     handleAssgin() {
       if (this.selectedUserIds.length === 0) {
-        this.$Message.error('请先选择要转让的用户');
+        this.$Message.error("请先选择要转让的用户");
         return;
       }
       if (!this.assginSalesUserId) {
-        this.$Message.error('请先选择要转让的业务员');
+        this.$Message.error("请先选择要转让的业务员");
         return;
       }
-      const userIds = this.selectedUserIds.join(',');
+      const userIds = this.selectedUserIds.join(",");
       storeAssign({
         userIds,
-        assginSalesUserId: this.assginSalesUserId
+        assginSalesUserId: this.assginSalesUserId,
       }).then((res) => {
-        this.$Message.info('门店转让成功');
+        this.$Message.info("门店转让成功");
         this.getTableData();
         this.modalUser = false;
       });
@@ -586,14 +586,14 @@ export default {
     },
     onSelectionAllUser(selection) {
       if (selection.length > 1) {
-        this.$Message.warning('每次只能选择一个业务员');
+        this.$Message.warning("每次只能选择一个业务员");
         return;
       }
       this.assginSalesUserId = selection[0].id.toString();
     },
     onSelectionChangeUser(selection) {
       if (selection.length > 1) {
-        this.$Message.warning('每次只能选择一个业务员');
+        this.$Message.warning("每次只能选择一个业务员");
         return;
       }
       this.assginSalesUserId = selection[0].id.toString();
@@ -629,16 +629,16 @@ export default {
           this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
           tableData.forEach((item) => {
-            item['userType'] =
-              item['userType'] === 'sale' ? '业务员' : '普通用户';
-            item['userStatus'] = userStatusConvert(item['userStatus']);
-            item['salesUserStatus'] = userStatusConvert(
-              item['salesUserStatus']
+            item["userType"] =
+              item["userType"] === "sale" ? "业务员" : "普通用户";
+            item["userStatus"] = userStatusConvert(item["userStatus"]);
+            item["salesUserStatus"] = userStatusConvert(
+              item["salesUserStatus"]
             );
           });
           this.$refs.tables.handleDownload({
             filename: `会员分析信息-${new Date().valueOf()}`,
-            data: tableData
+            data: tableData,
           });
         })
         .finally(() => {
@@ -647,7 +647,7 @@ export default {
     },
     handleBack() {
       this.turnToPage({
-        name: 'wholesale-salesman-analysis'
+        name: "wholesale-salesman-analysis",
       });
     },
     handleSearch1() {
@@ -662,8 +662,8 @@ export default {
       this.pageSize = 10;
       this.clearSearchLoading = true;
       this.handleSearch1();
-    }
-  }
+    },
+  },
 };
 </script>
 

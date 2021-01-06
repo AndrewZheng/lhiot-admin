@@ -112,6 +112,7 @@
         </Row>
       </div>
     </Card>
+
     <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
         <span>新品上市活动详情</span>
@@ -120,7 +121,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 活动标题: </i-col>
+              <i-col span="6">
+                活动标题:
+              </i-col>
               <i-col span="18">
                 {{ activityNewProducts.title }}
               </i-col>
@@ -130,7 +133,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 开始时间: </i-col>
+              <i-col span="6">
+                开始时间:
+              </i-col>
               <i-col span="18">
                 {{
                   (activityNewProducts.beginTime = this.$moment(
@@ -144,7 +149,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 结束时间: </i-col>
+              <i-col span="6">
+                结束时间:
+              </i-col>
               <i-col span="18">
                 {{
                   (activityNewProducts.endTime = this.$moment(
@@ -158,9 +165,13 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 活动状态: </i-col>
+              <i-col span="6">
+                活动状态:
+              </i-col>
               <i-col v-if="activityNewProducts.status == 'ON'" span="18">
-                {{ "上架" }}
+                {{
+                  "上架"
+                }}
               </i-col>
               <i-col v-else span="18">
                 {{ "下架" }}
@@ -171,7 +182,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 主题色号: </i-col>
+              <i-col span="6">
+                主题色号:
+              </i-col>
               <i-col span="18">
                 {{ activityNewProducts.mainColour }}
               </i-col>
@@ -181,7 +194,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 主题图片: </i-col>
+              <i-col span="6">
+                主题图片:
+              </i-col>
               <i-col v-show="activityNewProducts.mainImage" span="6">
                 <div class="demo-upload-list">
                   <img :src="activityNewProducts.mainImage">
@@ -193,7 +208,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 分享图片: </i-col>
+              <i-col span="6">
+                分享图片:
+              </i-col>
               <i-col v-show="activityNewProducts.shareImage" span="6">
                 <div class="demo-upload-list">
                   <img :src="activityNewProducts.shareImage">
@@ -205,7 +222,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 分享文案: </i-col>
+              <i-col span="6">
+                分享文案:
+              </i-col>
               <i-col span="18">
                 <Input
                   :v-if="activityNewProducts.shareText"
@@ -220,7 +239,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 关联门店: </i-col>
+              <i-col span="6">
+                关联门店:
+              </i-col>
               <i-col span="16">
                 {{ showStoreName }}
               </i-col>
@@ -229,9 +250,12 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose"> 关闭 </Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
+
     <Modal v-model="modalEdit" :mask-closable="false" :width="800">
       <p slot="header">
         <span>{{ isCreate ? "创建新品上市活动" : "编辑新品上市活动" }}</span>
@@ -455,17 +479,35 @@
                 </Select>
               </FormItem>
             </i-col>
+            <i-col v-show="showStoreList" span="12">
+              <FormItem
+                :label-width="85"
+                label="所属城市:"
+                prop="cityCode"
+              >
+                <Select
+                  v-model="activityNewProducts.cityCode"
+                  style="width: 220px"
+                  @on-change="handleCitySwitch"
+                >
+                  <Option
+                    v-for="(item, index) in cityList"
+                    :key="index"
+                    :value="item.cityCode"
+                    class="ptb2-5"
+                    style="padding-left: 5px"
+                  >
+                    {{ item.cityName }}
+                  </Option>
+                </Select>
+              </FormItem>
+            </i-col>
           </Row>
           <Row v-show="showStoreList">
-            <i-col span="24">
+            <i-col v-if="storeData.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[0] }}
@@ -493,15 +535,10 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData1.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[1] }}
@@ -529,15 +566,10 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData2.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[2] }}
@@ -565,15 +597,10 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData3.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[3] }}
@@ -601,15 +628,10 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData4.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[4] }}
@@ -637,15 +659,10 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData5.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[5] }}
@@ -673,15 +690,10 @@
                 </CheckboxGroup>
               </FormItem>
             </i-col>
-            <i-col span="24">
+            <i-col v-if="storeData6.length>0" span="24">
               <FormItem>
                 <div
-                  style="
-                    border-bottom: 1px solid #e9e9e9;
-                    padding-bottom: 6px;
-                    margin-bottom: 6px;
-                    display: flex;
-                  "
+                  class="bottom-line"
                 >
                   <div style="margin-left: -54px; margin-right: 18px">
                     {{ storeNameList[6] }}
@@ -712,7 +724,7 @@
             <!-- <i-col span="24">
               <FormItem>
                 <div
-                  style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;display:flex;"
+                  class="bottom-line"
                 >
                   <div style="margin-left:-54px;margin-right:18px">{{storeNameList[7]}}</div>
                   <Checkbox
@@ -735,7 +747,9 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
         <Button
           :loading="modalEditLoading"
           type="primary"
@@ -745,6 +759,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 活动关联 -->
     <Modal v-model="modalRelevance" :mask-closable="false" :width="1200">
       <p slot="header">
@@ -903,9 +918,12 @@
         </Card>
       </div>
       <div slot="footer">
-        <Button @click="handleRelevanceClose"> 关闭 </Button>
+        <Button @click="handleRelevanceClose">
+          关闭
+        </Button>
       </div>
     </Modal>
+
     <!-- 券列表 -->
     <Modal
       v-model="modalAddCoupun"
@@ -957,7 +975,9 @@
         </Row>
       </Form>
       <div slot="footer">
-        <Button @click="handleAddClose"> 关闭 </Button>
+        <Button @click="handleAddClose">
+          关闭
+        </Button>
         <Button
           :loading="modalRelevanceLoading"
           type="primary"
@@ -967,6 +987,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 新品尝鲜 -->
     <Modal v-model="modalAddNewProduct" :mask-closable="false" :width="1200">
       <p slot="header">
@@ -1059,7 +1080,9 @@
         </Row>
       </Form>
       <div slot="footer">
-        <Button @click="handleAddClose"> 关闭 </Button>
+        <Button @click="handleAddClose">
+          关闭
+        </Button>
         <Button
           :loading="modalRelevanceLoading"
           type="primary"
@@ -1069,6 +1092,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 普通商品 -->
     <Modal v-model="modalAddproduct" :mask-closable="false" :width="1200">
       <p slot="header">
@@ -1164,7 +1188,9 @@
         </Row>
       </Form>
       <div slot="footer">
-        <Button @click="handleAddClose"> 关闭 </Button>
+        <Button @click="handleAddClose">
+          关闭
+        </Button>
         <Button
           v-if="sameGoodsStatus"
           :loading="modalRelevanceLoading"
@@ -1173,11 +1199,16 @@
         >
           确定
         </Button>
-        <Button v-else :loading="modalRelevanceLoading" type="warning">
+        <Button
+          v-else
+          :loading="modalRelevanceLoading"
+          type="warning"
+        >
           确定
         </Button>
       </div>
     </Modal>
+
     <!-- 拼团商品 -->
     <Modal v-model="modalAddTeambuy" :mask-closable="false" :width="1200">
       <p slot="header">
@@ -1294,7 +1325,9 @@
         </Row>
       </Form>
       <div slot="footer">
-        <Button @click="handleAddClose"> 关闭 </Button>
+        <Button @click="handleAddClose">
+          关闭
+        </Button>
         <Button
           :loading="modalRelevanceLoading"
           type="primary"
@@ -1304,6 +1337,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 预售商品 -->
     <Modal v-model="modalAddPresell" :mask-closable="false" :width="1200">
       <p slot="header">
@@ -1451,7 +1485,9 @@
         </Row>
       </Form>
       <div slot="footer">
-        <Button @click="handleAddClose"> 关闭 </Button>
+        <Button @click="handleAddClose">
+          关闭
+        </Button>
         <Button
           :loading="modalRelevanceLoading"
           type="primary"
@@ -1461,6 +1497,7 @@
         </Button>
       </div>
     </Modal>
+
     <Modal v-model="modalEditRank" :mask-closable="false">
       <p slot="header">
         <span>{{ "修改新品上市活动关联排序" }}</span>
@@ -1479,10 +1516,15 @@
         </Row>
       </Form>
       <div slot="footer">
-        <Button @click="handleEditRankClose"> 关闭 </Button>
-        <Button type="primary" @click="submitEditRank()"> 确定 </Button>
+        <Button @click="handleEditRankClose">
+          关闭
+        </Button>
+        <Button type="primary" @click="submitEditRank()">
+          确定
+        </Button>
       </div>
     </Modal>
+
     <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
@@ -1497,19 +1539,13 @@ import {
   updateNewProducts,
   deleteNewProducts,
   createNewProducts,
-  deletePicture,
   getNewProductsRelevance,
   createNewProductsRelevance,
   updateNewProductsRelevance,
-  // 券列表
   getCouponPagess,
-  // 商品列表
   getProductStandardsPages,
-  // 新品尝鲜
   getSeckillPages,
-  // 拼团
   getTeamBuyPages,
-  // 预售
   getPresellPages,
   getAreaStorePages
 } from '@/api/mini-program';
@@ -1517,14 +1553,12 @@ import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import uploadMixin from '@/mixins/uploadMixin.js';
+import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import { taskTypeEnum } from '@/libs/enumerate';
 import {
   couponStatusConvert,
   couponTypeConvert,
   couponScopeConvert,
-  couponUseLimitConvert,
-  userScopeConvert,
-  customPlanStatusConvert,
   imageStatusConvert,
   teamBuyStatusConvert
 } from '@/libs/converStatus';
@@ -1541,14 +1575,7 @@ import {
   relationStoreTypeEnum
 } from '@/libs/enumerate';
 import {
-  compareData,
-  getSmallCouponActivity,
   fenToYuanDot2,
-  fenToYuanDot2Number,
-  yuanToFenNumber,
-  replaceByTag,
-  replaceByTab,
-  HdDiscount,
   compareCouponData,
   secondsToDate
 } from '@/libs/util';
@@ -1564,6 +1591,7 @@ const activityNewProducts = {
   shareText: '',
   status: '',
   title: '',
+  cityCode: '0744',
   storeIds: null,
   relationStoreType: 'ALL'
 };
@@ -1572,10 +1600,10 @@ const ActivityNewProductsRelevance = {
   activityId: null,
   rank: 0,
   relationIds: null,
-  relationIds: null,
   relationType: '',
   status: 'ON'
 };
+
 const searchRowData = {
   beginTime: '',
   endTime: '',
@@ -1594,6 +1622,7 @@ const templateRowData = {
   sidx: 'createTime',
   sort: 'desc'
 };
+
 const productRowData = {
   productStandardId: '',
   productId: '',
@@ -1638,7 +1667,6 @@ const newproductRowData = {
   beginTime: null,
   endTime: null,
   title: '',
-  status: 'ON',
   activityType: 'NEW_TRY_ACTIVITY',
   page: 1,
   rows: 10,
@@ -1773,6 +1801,7 @@ const templateColumns = [
     }
   }
 ];
+
 const productColumns = [
   {
     type: 'selection',
@@ -1828,6 +1857,7 @@ const productColumns = [
     align: 'center'
   }
 ];
+
 // 拼团
 const teambuyColumns = [
   {
@@ -1862,12 +1892,13 @@ const teambuyColumns = [
             <tag color='warning'>{teamBuyStatusConvert(row.status).label}</tag>
           </div>
         );
+      } else {
+        return (
+          <div>
+            <tag color='primary'>{row.status}</tag>
+          </div>
+        );
       }
-      return (
-        <div>
-          <tag color='primary'>{row.status}</tag>
-        </div>
-      );
     }
   },
   {
@@ -2035,6 +2066,7 @@ const teambuyColumns = [
     }
   }
 ];
+
 // 预售
 const PresellColumns = [
   {
@@ -2302,15 +2334,15 @@ const newProductColumns = [
     key: 'userActivityLimit'
   }
 ];
+
 export default {
   components: {
     Tables,
     IViewUpload
   },
-  mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin],
+  mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin, relationStoreMixin],
   data() {
     return {
-      taskTypeEnum,
       ids: [],
       defaultListMain: [],
       uploadListMain: [],
@@ -2319,64 +2351,24 @@ export default {
       oldPicture: [],
       newPicture: [],
       save: [],
-      couponStatusEnum,
-      couponTypeEnum,
-      couponScopeEnum,
-      couponUseLimitEnum,
-      validDateTypeEnum,
-      userScopeEnum,
-      teamBuyStatusEnum,
-      teamBuyTypeEnum,
-      rewardActivitySettingEnum,
-      relationStoreTypeEnum,
       activityPreSaleRelations: [],
       activitySeckillRelations: [],
       activityTeambuyRelations: [],
       productStandardRelations: [],
       couponConfigManageRelations: [],
+      templatePageOpts: [5, 10],
       couponTemplateData: [],
       productData: [],
+      PresellTableData: [],
       teambuyTableData: [],
       productTotal: 0,
       newProductTableData: [],
-      newProductTotal: 0,
-      teambuyTableData: [],
-      teambuyTotal: 0,
-      PresellTableData: [],
-      storeNameList: [],
-      storeList: [],
-      storeData: [],
-      storeData1: [],
-      storeData2: [],
-      storeData3: [],
-      storeData4: [],
-      storeData5: [],
-      storeData6: [],
-      storeData7: [],
-      storeIds: [],
-      storeListData: [],
-      showStoreList: false,
-      showValidDate: true,
-      indeterminate: false,
-      indeterminate1: false,
-      indeterminate2: false,
-      indeterminate3: false,
-      indeterminate4: false,
-      indeterminate5: false,
-      indeterminate6: false,
-      indeterminate7: false,
-      checkAll: false,
-      checkAll1: false,
-      checkAll2: false,
-      checkAll3: false,
-      checkAll4: false,
-      checkAll5: false,
-      checkAll6: false,
-      checkAll7: false,
       PresellTotal: 0,
-      showStoreName: '',
-      activityId: null,
+      newProductTotal: 0,
       couponTemplateTotal: 0,
+      teambuyTotal: 0,
+      showValidDate: true,
+      activityId: null,
       sameGoodsStatus: true,
       modalEditLoading: false,
       modalRelevance: false,
@@ -2388,22 +2380,7 @@ export default {
       modalEditRank: false,
       editStatus: false,
       modalRelevanceLoading: false,
-      templatePageOpts: [5, 10],
-      templateColumns: templateColumns,
-      productColumns: productColumns,
-      teambuyColumns: teambuyColumns,
-      PresellColumns: PresellColumns,
-      newProductColumns: newProductColumns,
-      searchRowData: this._.cloneDeep(searchRowData),
-      activityNewProducts: this._.cloneDeep(activityNewProducts),
-      ActivityNewProductsRelation: this._.cloneDeep(
-        ActivityNewProductsRelevance
-      ),
-      searchTemplateRowData: _.cloneDeep(templateRowData),
-      searchProductRowData: _.cloneDeep(productRowData),
-      searchNewProductRowData: _.cloneDeep(newproductRowData),
-      searchteambuyRowData: _.cloneDeep(teambuyRowData),
-      searchPresellRowData: _.cloneDeep(PresellRowData),
+      showStoreName: '',
       statusTypeEnum: [
         { label: '上架', value: 'ON' },
         { label: '下架', value: 'OFF' }
@@ -2416,6 +2393,30 @@ export default {
         { label: '是', value: 'true' },
         { label: '否', value: 'false' }
       ],
+      taskTypeEnum,
+      couponStatusEnum,
+      couponTypeEnum,
+      couponScopeEnum,
+      couponUseLimitEnum,
+      validDateTypeEnum,
+      userScopeEnum,
+      teamBuyStatusEnum,
+      teamBuyTypeEnum,
+      relationStoreTypeEnum,
+      rewardActivitySettingEnum,
+      templateColumns: templateColumns,
+      productColumns: productColumns,
+      teambuyColumns: teambuyColumns,
+      PresellColumns: PresellColumns,
+      newProductColumns: newProductColumns,
+      searchRowData: _.cloneDeep(searchRowData),
+      activityNewProducts: _.cloneDeep(activityNewProducts),
+      ActivityNewProductsRelation: _.cloneDeep(ActivityNewProductsRelevance),
+      searchTemplateRowData: _.cloneDeep(templateRowData),
+      searchProductRowData: _.cloneDeep(productRowData),
+      searchNewProductRowData: _.cloneDeep(newproductRowData),
+      searchteambuyRowData: _.cloneDeep(teambuyRowData),
+      searchPresellRowData: _.cloneDeep(PresellRowData),
       columns: [
         {
           title: 'ID',
@@ -3038,7 +3039,6 @@ export default {
       this.modalEdit = true;
     },
     handleEdit(params) {
-      const _this = this;
       this.activityNewProducts.storeIds = '';
       this.storeIds = [];
       this.activityNewProducts.relationStoreType = 'ALL';
@@ -3062,163 +3062,13 @@ export default {
         const storeIds = this.activityNewProducts.storeIds
           .substring(1, this.activityNewProducts.storeIds.length - 1)
           .split('][');
-        storeIds.forEach((element) => {
-          this.storeIds.push(parseInt(element));
-        });
-        // 全选/反选按钮的样式
-        const sameArray = _this.storeList[0].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-
-        if (
-          sameArray.length > 0 &&
-          sameArray.length === this.storeList[0].storeList.length
-        ) {
-          this.indeterminate = false;
-          this.checkAll = true;
-        } else if (
-          sameArray.length > 0 &&
-          sameArray.length < this.storeList[0].storeList.length
-        ) {
-          this.indeterminate = true;
-          this.checkAll = false;
-        } else {
-          this.indeterminate = false;
-          this.checkAll = false;
-        }
-        const sameArray1 = _this.storeList[1].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray1.length > 0 &&
-          sameArray1.length === this.storeList[1].storeList.length
-        ) {
-          this.indeterminate1 = false;
-          this.checkAll1 = true;
-        } else if (
-          sameArray1.length > 0 &&
-          sameArray1.length < this.storeList[1].storeList.length
-        ) {
-          this.indeterminate1 = true;
-          this.checkAll1 = false;
-        } else {
-          this.indeterminate1 = false;
-          this.checkAll1 = false;
-        }
-        const sameArray2 = _this.storeList[2].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray2.length > 0 &&
-          sameArray2.length === this.storeList[2].storeList.length
-        ) {
-          this.indeterminate2 = false;
-          this.checkAll2 = true;
-        } else if (
-          sameArray2.length > 0 &&
-          sameArray2.length < this.storeList[2].storeList.length
-        ) {
-          this.indeterminate2 = true;
-          this.checkAll2 = false;
-        } else {
-          this.indeterminate2 = false;
-          this.checkAll2 = false;
-        }
-        const sameArray3 = _this.storeList[3].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray3.length > 0 &&
-          sameArray3.length === this.storeList[3].storeList.length
-        ) {
-          this.indeterminate3 = false;
-          this.checkAll3 = true;
-        } else if (
-          sameArray3.length > 0 &&
-          sameArray3.length < this.storeList[3].storeList.length
-        ) {
-          this.indeterminate3 = true;
-          this.checkAll3 = false;
-        } else {
-          this.indeterminate3 = false;
-          this.checkAll3 = false;
-        }
-        const sameArray4 = _this.storeList[4].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray4.length > 0 &&
-          sameArray4.length === this.storeList[4].storeList.length
-        ) {
-          this.indeterminate4 = false;
-          this.checkAll4 = true;
-        } else if (
-          sameArray4.length > 0 &&
-          sameArray4.length < this.storeList[4].storeList.length
-        ) {
-          this.indeterminate4 = true;
-          this.checkAll4 = false;
-        } else {
-          this.indeterminate4 = false;
-          this.checkAll4 = false;
-        }
-        const sameArray5 = _this.storeList[5].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray5.length > 0 &&
-          sameArray5.length === this.storeList[5].storeList.length
-        ) {
-          this.indeterminate5 = false;
-          this.checkAll5 = true;
-        } else if (
-          sameArray5.length > 0 &&
-          sameArray5.length < this.storeList[5].storeList.length
-        ) {
-          this.indeterminate5 = true;
-          this.checkAll5 = false;
-        } else {
-          this.indeterminate5 = false;
-          this.checkAll5 = false;
-        }
-        const sameArray6 = _this.storeList[6].storeList.filter(function(item) {
-          return _this.storeIds.indexOf(item.storeId) != -1;
-        });
-        if (
-          sameArray6.length > 0 &&
-          sameArray6.length === this.storeList[6].storeList.length
-        ) {
-          this.indeterminate6 = false;
-          this.checkAll6 = true;
-        } else if (
-          sameArray6.length > 0 &&
-          sameArray6.length < this.storeList[6].storeList.length
-        ) {
-          this.indeterminate6 = true;
-          this.checkAll6 = false;
-        } else {
-          this.indeterminate6 = false;
-          this.checkAll6 = false;
-        }
-        // let sameArray7 = _this.storeList[7].storeList.filter(function (item) {
-        //   return _this.storeIds.indexOf(item.storeId) != -1;
-        // });
-        // if (
-        //   sameArray7.length > 0 &&
-        //   sameArray7.length === this.storeList[7].storeList.length
-        // ) {
-        //   this.indeterminate7 = false;
-        //   this.checkAll7 = true;
-        // } else if (
-        //   sameArray7.length > 0 &&
-        //   sameArray7.length < this.storeList[7].storeList.length
-        // ) {
-        //   this.indeterminate7 = true;
-        //   this.checkAll7 = false;
-        // } else {
-        //   this.indeterminate7 = false;
-        //   this.checkAll7 = false;
-        // }
+        storeIds.forEach((element) => { this.storeIds.push(parseInt(element)); });
+        console.log('selected stores:', this.storeIds);
+        const firstStoreId = this.storeIds[0];
+        // 编辑时从返回的第一个storeId单独查询下cityCode来反选城市
+        const storeObj = this.allStoreList.find(item => item.storeId === firstStoreId);
+        this.activityNewProducts.cityCode = storeObj.cityCode;
+        this.getStore(true);
       } else {
         this.showStoreList = false;
         this.activityNewProducts.relationStoreType = 'ALL'; // storeIds为''默认关联的门店则是全部门店
@@ -3247,47 +3097,55 @@ export default {
         this.showStoreList = false;
       } else if (options.value === 'PART') {
         this.activityNewProducts.relationStoreType = 'PART';
-        this.indeterminate = false;
-        this.checkAll = false;
-        this.indeterminate1 = false;
-        this.checkAll1 = false;
-        this.indeterminate2 = false;
-        this.checkAll2 = false;
-        this.indeterminate3 = false;
-        this.checkAll3 = false;
-        this.indeterminate4 = false;
-        this.checkAll4 = false;
-        this.indeterminate5 = false;
-        this.checkAll5 = false;
-        this.indeterminate6 = false;
-        this.checkAll6 = false;
-        this.indeterminate7 = false;
-        this.checkAll7 = false;
-        this.storeIds = [];
-        this.activityNewProducts.storeIds = '';
+        // 新增时默认反选长沙市
+        if (this.isCreate) { this.activityNewProducts.cityCode = '0744'; }
+        this.storeCheckRest();
+        this.getStore();
         this.showStoreList = true;
       }
     },
-    getStore() {
-      getAreaStorePages().then((res) => {
-        this.storeList = res.array;
-        this.storeData = res.array[0].storeList;
-        this.storeData1 = res.array[1].storeList;
-        this.storeData2 = res.array[2].storeList;
-        this.storeData3 = res.array[3].storeList;
-        this.storeData4 = res.array[4].storeList;
-        this.storeData5 = res.array[5].storeList;
-        this.storeData6 = res.array[6].storeList;
-        // this.storeData7 = res.array[7].storeList;
-        const data = [];
-        for (const val of res.array) {
-          this.storeNameList.push(val.storeName);
-          data.push(val.storeList);
-        }
-        for (const value of data) {
-          this.storeListData = this.storeListData.concat(value);
-        }
-      });
+    storeCheckRest() {
+      this.indeterminate = false;
+      this.checkAll = false;
+      this.indeterminate1 = false;
+      this.checkAll1 = false;
+      this.indeterminate2 = false;
+      this.checkAll2 = false;
+      this.indeterminate3 = false;
+      this.checkAll3 = false;
+      this.indeterminate4 = false;
+      this.checkAll4 = false;
+      this.indeterminate5 = false;
+      this.checkAll5 = false;
+      this.indeterminate6 = false;
+      this.checkAll6 = false;
+      this.indeterminate7 = false;
+      this.checkAll7 = false;
+      this.storeIds = [];
+      this.activityNewProducts.storeIds = '';
+    },
+    getStore(isCheck) {
+      getAreaStorePages(this.activityNewProducts.cityCode)
+        .then((res) => {
+          this.storeList = res.array;
+          this.storeData = res.array[0] && res.array[0].storeList || [];
+          this.storeData1 = res.array[1] && res.array[1].storeList || [];
+          this.storeData2 = res.array[2] && res.array[2].storeList || [];
+          this.storeData3 = res.array[3] && res.array[3].storeList || [];
+          this.storeData4 = res.array[4] && res.array[4].storeList || [];
+          this.storeData5 = res.array[5] && res.array[5].storeList || [];
+          this.storeData6 = res.array[6] && res.array[6].storeList || [];
+          const data = [];
+          this.storeNameList = [];
+          res.array.forEach(item => {
+            this.storeNameList.push(item.storeName);
+            data.push(item.storeList);
+          });
+          this.storeListData = data;
+          if (isCheck) {
+            this.handleCheckSelected();
+          }
+        });
     },
     handleCheckAll(value) {
       const _this = this;
@@ -3514,38 +3372,6 @@ export default {
           this.activityNewProducts.storeIds = '[' + newArray.join('][') + ']';
         }
       }
-      // if (value === 7) {
-      //   const allIds7 = [];
-      //   let beforeIds = [];
-      //   if (this.indeterminate7) {
-      //     this.checkAll7 = false;
-      //   } else {
-      //     this.checkAll7 = !this.checkAll7;
-      //   }
-      //   this.indeterminate7 = false;
-      //   if (this.checkAll7) {
-      //     if (this.storeIds != null) {
-      //       for (let val of this.storeIds) {
-      //         allIds7.push(val);
-      //       }
-      //     }
-      //     this.storeList[value].storeList.forEach((item) => {
-      //       allIds7.push(item.storeId);
-      //       beforeIds.push(item.storeId);
-      //     });
-      //     this.storeIds = allIds7;
-      //     this.activityNewProducts.storeIds = "[" + allIds7.join("][") + "]";
-      //   } else {
-      //     this.storeList[value].storeList.forEach((item) => {
-      //       beforeIds.push(item.storeId);
-      //     });
-      //     let newArray = _this.storeIds.filter(function (item) {
-      //       return beforeIds.indexOf(item) == -1;
-      //     });
-      //     this.storeIds = newArray;
-      //     this.activityNewProducts.storeIds = "[" + newArray.join("][") + "]";
-      //   }
-      // }
     },
     checkAllGroupChange(data) {
       const sameArray = this.storeList[0].storeList.filter(function(item) {
@@ -3557,6 +3383,7 @@ export default {
       ) {
         this.indeterminate = false;
         this.checkAll = true;
+        this.activityNewProducts.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray.length < this.storeList[0].storeList.length
@@ -3580,6 +3407,7 @@ export default {
       ) {
         this.indeterminate1 = false;
         this.checkAll1 = true;
+        this.activityNewProducts.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray1.length < this.storeList[1].storeList.length
@@ -3603,6 +3431,7 @@ export default {
       ) {
         this.indeterminate2 = false;
         this.checkAll2 = true;
+        this.activityNewProducts.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray2.length < this.storeList[2].storeList.length
@@ -3626,6 +3455,7 @@ export default {
       ) {
         this.indeterminate3 = false;
         this.checkAll3 = true;
+        this.activityNewProducts.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray3.length < this.storeList[3].storeList.length
@@ -3649,6 +3479,7 @@ export default {
       ) {
         this.indeterminate4 = false;
         this.checkAll4 = true;
+        this.activityNewProducts.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray4.length < this.storeList[4].storeList.length
@@ -3672,6 +3503,7 @@ export default {
       ) {
         this.indeterminate5 = false;
         this.checkAll5 = true;
+        this.activityNewProducts.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray5.length < this.storeList[5].storeList.length
@@ -3695,6 +3527,7 @@ export default {
       ) {
         this.indeterminate6 = false;
         this.checkAll6 = true;
+        this.activityNewProducts.storeIds = '[' + data.join('][') + ']';
       } else if (
         data.length > 0 &&
         sameArray6.length < this.storeList[6].storeList.length
@@ -3708,29 +3541,6 @@ export default {
         this.checkAll6 = false;
       }
     },
-    // checkAllGroupChange7(data) {
-    //   let sameArray7 = this.storeList[7].storeList.filter(function (item) {
-    //     return data.indexOf(item.storeId) != -1;
-    //   });
-    //   if (
-    //     data.length > 0 &&
-    //     sameArray7.length === this.storeList[7].storeList.length
-    //   ) {
-    //     this.indeterminate7 = false;
-    //     this.checkAll7 = true;
-    //   } else if (
-    //     data.length > 0 &&
-    //     sameArray7.length < this.storeList[7].storeList.length
-    //   ) {
-    //     this.indeterminate7 = true;
-    //     this.checkAll7 = false;
-    //     this.activityNewProducts.storeIds = "[" + data.join("][") + "]";
-    //   }
-    //   if (sameArray7.length === 0) {
-    //     this.indeterminate7 = false;
-    //     this.checkAll7 = false;
-    //   }
-    // },
     editTableRow() {
       this.modalEditLoading = true;
       updateNewProducts(this.activityNewProducts)
@@ -3945,24 +3755,17 @@ export default {
       this.modalView = true;
     },
     relationStore() {
-      if (
-        this.activityNewProducts.storeIds === null ||
-        this.activityNewProducts.storeIds === ''
-      ) {
+      if (!this.activityNewProducts.storeIds) {
         return '全部门店';
       }
-      const ids = this.activityNewProducts.storeIds
-        .substring(1, this.activityNewProducts.storeIds.length - 1)
-        .split('][');
-      const list = this.storeListData;
+      const ids = this.activityNewProducts.storeIds.substring(1, this.activityNewProducts.storeIds.length - 1).split('][');
       let str = '';
-      if (list.length > 0) {
-        ids.forEach((id) => {
-          const item = list.find((item) => item.storeId == id);
-          str += item.storeName + ',';
-        });
-        return str.substring(0, str.length - 1);
-      }
+      ids.forEach((id) => {
+        const item = this.allStoreList.find(item => item.storeId == id);
+        if (!item) { return; }
+        str += item.storeName + ',';
+      });
+      return str.substring(0, str.length - 1);
     },
     handleSetting(params) {
       this.activityId = params.row.id;
@@ -3974,14 +3777,14 @@ export default {
     },
     // 添加活动券
     relevanceAllocation(value) {
-      this.searchTemplateRowData = _.cloneDeep(templateRowData);
-      this.searchProductRowData = _.cloneDeep(productRowData);
-      this.searchNewProductRowData = _.cloneDeep(newproductRowData);
-      this.searchteambuyRowData = _.cloneDeep(teambuyRowData);
-      this.searchPresellRowData = _.cloneDeep(PresellRowData);
-      this.ActivityNewProductsRelation = this._.cloneDeep(
+      (this.searchTemplateRowData = _.cloneDeep(templateRowData)),
+      (this.searchProductRowData = _.cloneDeep(productRowData)),
+      (this.searchNewProductRowData = _.cloneDeep(newproductRowData)),
+      (this.searchteambuyRowData = _.cloneDeep(teambuyRowData)),
+      (this.searchPresellRowData = _.cloneDeep(PresellRowData)),
+      (this.ActivityNewProductsRelation = this._.cloneDeep(
         ActivityNewProductsRelevance
-      );
+      ));
       if (value === 'NEW_COUPON') {
         let couponNum = 0;
         // 列表只允许有一张券
@@ -4039,6 +3842,7 @@ export default {
           }
         }
       }
+
       this.ActivityNewProductsRelation = this._.cloneDeep(params.row);
       if (params.row.status === 'ON') {
         this.ActivityNewProductsRelation.status = 'OFF';
@@ -4062,10 +3866,14 @@ export default {
     },
     // 券列表
     getTemplateTableData() {
-      getCouponPagess(this.searchTemplateRowData).then((res) => {
-        this.couponTemplateData = res.rows;
-        this.couponTemplateTotal = res.total;
-      });
+      getCouponPagess(this.searchTemplateRowData)
+        .then((res) => {
+          this.couponTemplateData = res.rows;
+          this.couponTemplateTotal = res.total;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     // 商品列表
     getProductTableData() {
@@ -4083,17 +3891,22 @@ export default {
     },
     // 新品尝鲜活动
     getSeckillPages() {
-      getSeckillPages(this.searchNewProductRowData).then((res) => {
-        this.newProductTableData = res.rows;
-        this.newProductTotal = res.total;
-      });
+      getSeckillPages(this.searchNewProductRowData)
+        .then((res) => {
+          this.newProductTableData = res.rows;
+          this.newProductTotal = res.total;
+        });
     },
     // 预售活动
     getPresellPages() {
-      getPresellPages(this.searchPresellRowData).then((res) => {
-        this.PresellTableData = res.rows;
-        this.PresellTotal = res.total;
-      });
+      getPresellPages(this.searchPresellRowData)
+        .then((res) => {
+          this.PresellTableData = res.rows;
+          this.PresellTotal = res.total;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     changeCouponPage(page) {
       this.searchTemplateRowData.page = page;

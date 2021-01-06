@@ -40,7 +40,9 @@
               :key="`search-col-${item.id}`"
               :value="item.id"
               class="pt5 pb5 pl15"
-            >{{ item.description }}</Option>
+            >
+              {{ item.description }}
+            </Option>
           </Select>
           <Select
             v-model="searchRowData.status"
@@ -54,7 +56,9 @@
               :key="`search-col-${item.id}`"
               :value="item.value"
               class="pt5 pb5 pl15"
-            >{{ item.label }}</Option>
+            >
+              {{ item.label }}
+            </Option>
           </Select>
           <Button
             v-waves
@@ -113,31 +117,45 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">广告位置:</i-col>
-              <i-col span="16">{{ advertisementPositionComputed }}</i-col>
+              <i-col span="8">
+                广告位置:
+              </i-col>
+              <i-col span="16">
+                {{ advertisementPositionComputed }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">广告名称:</i-col>
-              <i-col span="16">{{
-                advertisementDetail.advertisementName
-              }}</i-col>
+              <i-col span="8">
+                广告名称:
+              </i-col>
+              <i-col span="16">
+                {{
+                  advertisementDetail.advertisementName
+                }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">内容描述:</i-col>
-              <i-col span="16">{{ advertisementDetail.contentDesc }}</i-col>
+              <i-col span="8">
+                内容描述:
+              </i-col>
+              <i-col span="16">
+                {{ advertisementDetail.contentDesc }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">广告图:</i-col>
+              <i-col span="8">
+                广告图:
+              </i-col>
               <i-col span="16">
                 <img
                   :src="advertisementDetail.imageUrl"
@@ -150,58 +168,88 @@
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">广告状态:</i-col>
-              <i-col span="16">{{
-                advertisementDetail.status | couponStatusFilter
-              }}</i-col>
+              <i-col span="8">
+                广告状态:
+              </i-col>
+              <i-col span="16">
+                {{
+                  advertisementDetail.status | couponStatusFilter
+                }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">广告序号:</i-col>
-              <i-col span="16">{{ advertisementDetail.rankNo }}</i-col>
+              <i-col span="8">
+                广告序号:
+              </i-col>
+              <i-col span="16">
+                {{ advertisementDetail.rankNo }}
+              </i-col>
             </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                链接类型:
+              </i-col>
+              <i-col span="16">
+                {{
+                  advertisementDetail.linkType | advertisementLinkTypeFilter
+                }}
+              </i-col>
+            </Row>
+          </i-col>
+          <i-col span="12">
+            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+              <i-col span="8">
+                链接目标:
+              </i-col>
+              <i-col span="16">
+                {{
+                  advertisementDetail.advertiseRelation
+                }}
+              </i-col>
+            </Row>
+          </i-col>
+        </Row>
+        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
+          <i-col span="4">
+            有效时间:
+          </i-col>
+          <i-col span="16">
+            {{ validityPeriodComputed }}
           </i-col>
         </Row>
         <Row :gutter="8" type="flex" align="middle" class-name="mb10">
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">链接类型:</i-col>
-              <i-col span="16">{{
-                advertisementDetail.linkType | advertisementLinkTypeFilter
-              }}</i-col>
+              <i-col span="8">
+                创建人:
+              </i-col>
+              <i-col span="16">
+                {{ advertisementDetail.createUser }}
+              </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">链接目标:</i-col>
-              <i-col span="16">{{
-                advertisementDetail.advertiseRelation
-              }}</i-col>
-            </Row>
-          </i-col>
-        </Row>
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-          <i-col span="4">有效时间:</i-col>
-          <i-col span="16">{{ validityPeriodComputed }}</i-col>
-        </Row>
-        <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">创建人:</i-col>
-              <i-col span="16">{{ advertisementDetail.createUser }}</i-col>
-            </Row>
-          </i-col>
-          <i-col span="12">
-            <Row :gutter="8" type="flex" align="middle" class-name="mb10">
-              <i-col span="8">创建时间:</i-col>
-              <i-col span="16">{{ advertisementDetail.createTime }}</i-col>
+              <i-col span="8">
+                创建时间:
+              </i-col>
+              <i-col span="16">
+                {{ advertisementDetail.createTime }}
+              </i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">关闭</Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
@@ -231,7 +279,9 @@
                     :key="`search-col-${item.id}`"
                     :value="item.id"
                     class="pt5 pb5 pl15"
-                  >{{ item.description }}</Option>
+                  >
+                    {{ item.description }}
+                  </Option>
                 </Select>
               </FormItem>
             </i-col>
@@ -268,7 +318,9 @@
                     :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                  >
+                    {{ item.label }}
+                  </Option>
                 </Select>
               </FormItem>
             </i-col>
@@ -349,7 +401,9 @@
                     :value="item.value"
                     class="ptb2-5"
                     style="padding-left: 5px"
-                  >{{ item.label }}</Option>
+                  >
+                    {{ item.label }}
+                  </Option>
                 </Select>
               </FormItem>
             </i-col>
@@ -377,7 +431,9 @@
                     :key="index"
                     :value="item.value"
                     class="ptb2-5"
-                  >{{ item.label }}</Option>
+                  >
+                    {{ item.label }}
+                  </Option>
                 </Select>
               </FormItem>
             </i-col>
@@ -429,7 +485,9 @@
                     :key="index"
                     :value="item.value"
                     class="ptb2-5"
-                  >{{ item.label }}</Option>
+                  >
+                    {{ item.label }}
+                  </Option>
                 </Select>
                 <Row
                   v-if="advertisementDetail.isPermanent === 'OFF'"
@@ -460,12 +518,16 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">关闭</Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
           @click="handleSubmit('modalEdit')"
-        >确定</Button>
+        >
+          确定
+        </Button>
       </div>
     </Modal>
 

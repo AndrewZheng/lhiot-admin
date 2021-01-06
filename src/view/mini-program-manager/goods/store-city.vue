@@ -18,36 +18,19 @@
         <div slot="searchCondition">
           <Row>
             <Input
-              v-model="searchRowData.area"
-              placeholder="区域编码"
+              v-model="searchRowData.cityCode"
+              placeholder="城市编码"
               class="search-input mr5"
               style="width: auto"
               clearable
             ></Input>
             <Input
-              v-model="searchRowData.areaName"
-              placeholder="区域名称"
+              v-model="searchRowData.cityName"
+              placeholder="城市名称"
               class="search-input mr5"
               style="width: auto"
               clearable
             ></Input>
-            <Select
-              v-model="searchRowData.cityCode"
-              placeholder="所属城市"
-              style="padding-right: 5px; width: 100px"
-              clearable
-              @on-change="handleCityChange"
-            >
-              <Option
-                v-for="(item, index) in cityList"
-                :key="index"
-                :value="item.cityCode"
-                class="ptb2-5"
-                style="padding-left: 5px; width: 100px"
-              >
-                {{ item.cityName }}
-              </Option>
-            </Select>
             <Button
               :loading="searchLoading"
               class="search-btn mr5"
@@ -68,7 +51,7 @@
           </Row>
         </div>
         <div slot="operations">
-          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStoreArea">
+          <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStoreCity">
             <Icon type="md-add" />添加
           </Button>
         </div>
@@ -90,43 +73,21 @@
     <!-- 修改 -->
     <Modal v-model="modalEdit" :z-index="1000" :mask-closable="false">
       <p slot="header">
-        <span>门店区域信息</span>
+        <span>门店城市信息</span>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :model="storeArea" :rules="ruleInline" :label-width="90">
+        <Form ref="editForm" :model="storeCity" :rules="ruleInline" :label-width="90">
           <Row>
             <i-col span="24">
-              <FormItem
-                :label-width="85"
-                label="所属城市:"
-                prop="cityCode"
-                style="width:300px"
-              >
-                <Select v-model="storeArea.cityCode">
-                  <Option
-                    v-for="(item, index) in cityList"
-                    :key="index"
-                    :value="item.cityCode"
-                    class="ptb2-5"
-                    style="padding-left: 5px"
-                  >
-                    {{ item.cityName }}
-                  </Option>
-                </Select>
+              <FormItem label="城市编码:" prop="cityCode" style="width:300px">
+                <Input v-model="storeCity.cityCode"></Input>
               </FormItem>
             </i-col>
           </Row>
           <Row>
             <i-col span="24">
-              <FormItem label="区域编码:" prop="area" style="width:300px">
-                <Input v-model="storeArea.area"></Input>
-              </FormItem>
-            </i-col>
-          </Row>
-          <Row>
-            <i-col span="24">
-              <FormItem label="区域名称:" prop="areaName" style="width:300px">
-                <Input v-model="storeArea.areaName"></Input>
+              <FormItem label="城市名称:" prop="cityName" style="width:300px">
+                <Input v-model="storeCity.cityName"></Input>
               </FormItem>
             </i-col>
           </Row>
@@ -146,61 +107,45 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import IViewUpload from '_c/iview-upload';
 
 import {
-  deleteStoreArea,
-  getStoreAreaPages,
+  deleteStoreCity,
   getStoreCityPages,
-  editStoreArea,
-  createStoreArea
+  editStoreCity,
+  createStoreCity
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
 import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import searchMixin from '@/mixins/searchMixin.js';
 
-const storeArea = {
-  cityCode: '0744', // 默认长沙
-  area: '',
-  areaName: '',
+const storeCity = {
+  cityCode: '',
+  cityName: '',
   createTime: '',
   id: 0
 };
 
 const rowData = {
-  aera: '',
-  areaName: '',
-  cityCode: '0744',
+  cityCode: '',
+  cityName: '',
   sidx: 'id',
   sort: 'asc',
   page: 1,
   rows: 10
 };
 
-const cityRowData = {
-  cityCode: '',
-  cityName: '',
-  sidx: 'id',
-  sort: 'asc',
-  page: 1,
-  rows: -1
-};
-
 export default {
   components: {
-    Tables,
-    IViewUpload
+    Tables
   },
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
     return {
       createLoading: false,
       modalViewLoading: false,
-      cityList: [],
-      searchCityRowData: _.cloneDeep(cityRowData),
       searchRowData: _.cloneDeep(rowData),
-      storeArea: _.cloneDeep(storeArea),
+      storeCity: _.cloneDeep(storeCity),
       columns: [
         {
           type: 'selection',
@@ -215,31 +160,16 @@ export default {
           minWidth: 40
         },
         {
-          title: '区域编码',
-          key: 'area',
-          align: 'center',
-          minWidth: 100
-        },
-        {
-          title: '区域名称',
-          align: 'center',
-          key: 'areaName',
-          minWidth: 150
-        },
-        {
-          title: '所属城市',
+          title: '城市编码',
           key: 'cityCode',
-          render: (h, params, vm) => {
-            const { row } = params;
-            const obj = this.cityList.find(item => item.cityCode === row.cityCode);
-            if (obj) {
-              return h('span', obj.cityName + '');
-            } else {
-              return h('span', row.cityCode + '');
-            }
-          },
           align: 'center',
           minWidth: 100
+        },
+        {
+          title: '城市名称',
+          align: 'center',
+          key: 'cityName',
+          minWidth: 150
         },
         {
           title: '创建时间',
@@ -256,8 +186,8 @@ export default {
         }
       ],
       ruleInline: {
-        area: [
-          { required: true, message: '请输入区域编码' },
+        cityCode: [
+          { required: true, message: '请输入城市编码' },
           {
             validator(rule, value, callback, source, options) {
               const errors = [];
@@ -268,15 +198,13 @@ export default {
             }
           }
         ],
-        cityCode: [{ required: true, message: '请选择所属城市' }],
-        areaName: [{ required: true, message: '请输入区域名称' }]
+        cityName: [{ required: true, message: '请输入城市名称' }]
       }
     };
   },
   mounted() {
+    this.searchRowData = _.cloneDeep(rowData);
     this.getTableData();
-    this.getStoreCityPages();
-    this.resetSearchRowData();
   },
   created() {},
   methods: {
@@ -291,7 +219,7 @@ export default {
       this.loading = true;
       this.searchLoading = true;
       this.clearSearchLoading = true;
-      getStoreAreaPages(this.searchRowData)
+      getStoreCityPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
@@ -302,19 +230,10 @@ export default {
           this.clearSearchLoading = false;
         });
     },
-    getStoreCityPages() {
-      getStoreCityPages(this.searchCityRowData)
-        .then((res) => {
-          this.cityList = res.rows;
-        })
-    },
-    handleCityChange(value) {
-      this.getTableData();
-    },
     handleEdit(params) {
       this.resetFields();
       this.tempModalType = this.modalType.edit;
-      this.storeArea = _.cloneDeep(params.row);
+      this.storeCity = _.cloneDeep(params.row);
       this.modalEdit = true;
     },
     handleSubmit(name) {
@@ -322,19 +241,27 @@ export default {
         if (valid) {
           if (this.tempModalType === this.modalType.create) {
             // 添加状态
-            this.createStoreArea();
+            this.createStoreCity();
           } else if (this.tempModalType === this.modalType.edit) {
             // 编辑状态
-            this.editStoreArea();
+            this.editStoreCity();
           }
         } else {
           this.$Message.error('请完善信息!');
         }
       });
     },
-    createStoreArea() {
+    addStoreCity() {
+      this.resetFields();
+      if (this.tempModalType !== this.modalType.create) {
+        this.tempModalType = this.modalType.create;
+        this.storeCity = _.cloneDeep(storeCity);
+      }
+      this.modalEdit = true;
+    },
+    createStoreCity() {
       this.modalViewLoading = true;
-      createStoreArea(this.storeArea)
+      createStoreCity(this.storeCity)
         .then((res) => {
           this.$Message.success('创建成功!');
           this.getTableData();
@@ -344,9 +271,9 @@ export default {
           this.modalEdit = false;
         });
     },
-    editStoreArea() {
+    editStoreCity() {
       this.modalViewLoading = true;
-      editStoreArea(this.storeArea)
+      editStoreCity(this.storeCity)
         .then((res) => {
           this.$Message.success('修改成功!');
           this.getTableData();
@@ -356,27 +283,15 @@ export default {
           this.modalViewLoading = false;
         });
     },
-    addStoreArea() {
-      this.resetFields();
-      if (this.tempModalType !== this.modalType.create) {
-        this.tempModalType = this.modalType.create;
-        this.storeArea = _.cloneDeep(storeArea);
-      }
-      this.modalEdit = true;
-    },
-    // 删除
-    handleDelete(params) {
-      this.deleteTable(params.row.id);
-    },
     deleteTable(ids) {
       this.loading = true;
-      deleteStoreArea({
+      deleteStoreCity({
         ids
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -386,8 +301,7 @@ export default {
           this.$Message.success('删除成功!');
           this.getTableData();
         })
-        .catch((err) => {
-          console.log(err);
+        .finally(() => {
           this.loading = false;
         });
     }

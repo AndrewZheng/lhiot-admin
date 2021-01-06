@@ -59,7 +59,7 @@
           </Button>
         </div>
       </tables>
-      <div style="margin: 10px; overflow: hidden">
+      <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -81,7 +81,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 活动ID: </i-col>
+              <i-col span="6">
+                活动ID:
+              </i-col>
               <i-col span="18">
                 {{ activitiesDetail.id }}
               </i-col>
@@ -91,7 +93,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 活动名称: </i-col>
+              <i-col span="6">
+                活动名称:
+              </i-col>
               <i-col span="18">
                 {{ activitiesDetail.activityName }}
               </i-col>
@@ -101,7 +105,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 开始时间: </i-col>
+              <i-col span="6">
+                开始时间:
+              </i-col>
               <i-col span="18">
                 {{ activitiesDetail.startTime }}
               </i-col>
@@ -111,7 +117,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 结束时间: </i-col>
+              <i-col span="6">
+                结束时间:
+              </i-col>
               <i-col span="18">
                 {{ activitiesDetail.endTime }}
               </i-col>
@@ -121,16 +129,15 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 活动状态: </i-col>
+              <i-col span="6">
+                活动状态:
+              </i-col>
               <i-col v-if="activitiesDetail.status === 'VALID'" span="18">
                 <tag color="success">
                   {{ "有效" | imageStatusFilter }}
                 </tag>
               </i-col>
-              <i-col
-                v-else-if="activitiesDetail.status === 'INVALID'"
-                span="18"
-              >
+              <i-col v-else-if="activitiesDetail.status === 'INVALID'" span="18">
                 <tag color="error">
                   {{ "无效" | imageStatusFilter }}
                 </tag>
@@ -141,7 +148,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 默认次数: </i-col>
+              <i-col span="6">
+                默认次数:
+              </i-col>
               <i-col span="18">
                 {{ activitiesDetail.defaultCount }}
               </i-col>
@@ -151,7 +160,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 分享次数: </i-col>
+              <i-col span="6">
+                分享次数:
+              </i-col>
               <i-col span="18">
                 {{ activitiesDetail.shareCount }}
               </i-col>
@@ -171,7 +182,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 活动规则: </i-col>
+              <i-col span="6">
+                活动规则:
+              </i-col>
               <i-col span="18">
                 {{ activitiesDetail.content }}
               </i-col>
@@ -180,30 +193,22 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose"> 关闭 </Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
 
     <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000">
       <p slot="header">
-        <i-col>{{
-          tempModalType === modalType.edit ? "修改活动" : "创建活动"
-        }}</i-col>
+        <i-col>{{ tempModalType===modalType.edit?'修改活动':'创建活动' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form
-          ref="modalEdit"
-          :model="activitiesDetail"
-          :rules="ruleInline"
-          :label-width="100"
-        >
+        <Form ref="modalEdit" :model="activitiesDetail" :rules="ruleInline" :label-width="100">
           <Row>
             <Col span="22">
             <FormItem label="活动名称:" prop="activityName">
-              <Input
-                v-model="activitiesDetail.activityName"
-                :readonly="activitiesDetail.isValid"
-              ></Input>
+              <Input v-model="activitiesDetail.activityName" :readonly="activitiesDetail.isValid"></Input>
             </FormItem>
             </Col>
           </Row>
@@ -264,17 +269,13 @@
           <Row>
             <Col span="22">
             <FormItem label="活动状态:" prop="status">
-              <Select
-                v-model="activitiesDetail.status"
-                clearable
-                style="width: 160px"
-              >
+              <Select v-model="activitiesDetail.status" clearable style="width: 160px">
                 <Option
-                  v-for="(item, index) in couponStatusEnum"
+                  v-for="(item,index) in couponStatusEnum"
                   :key="index"
                   :value="item.value"
                   class="ptb2-5"
-                  style="padding-left: 5px; width: 100%"
+                  style="padding-left: 5px;width: 100%"
                 >
                   {{ item.label }}
                 </Option>
@@ -317,7 +318,7 @@
             <Col span="22">
             <FormItem label="活动规则:" prop="content">
               <Input
-                v-model="activitiesDetail.content"
+                v-model="activitiesDetail .content"
                 :rows="6"
                 placeholder="活动规则"
                 type="textarea"
@@ -328,12 +329,10 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose"> 关闭 </Button>
-        <Button
-          :loading="modalViewLoading"
-          type="primary"
-          @click="handleSubmit('modalEdit')"
-        >
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
           确定
         </Button>
       </div>
@@ -342,11 +341,11 @@
     <!-- 活动关联 -->
     <Modal v-model="modalRelevance" :mask-closable="false" :width="1200">
       <p slot="header">
-        <span>{{ "添加七夕活动关联" }}</span>
+        <span>{{ '添加七夕活动关联' }}</span>
       </p>
       <div class="modal-content" style="margin-top: 20px">
         <!-- 集字关联 -->
-        <Card style="margin-bottom: 16px">
+        <Card style="margin-bottom:16px">
           <tables
             ref="tablesCouponCon"
             v-model="collectWordSetting"
@@ -376,7 +375,7 @@
           </tables>
         </Card>
         <!-- 券关联 -->
-        <Card style="margin-bottom: 16px">
+        <Card style="margin-bottom:16px">
           <tables
             ref="tablesCouponCon"
             v-model="couponConfigManageRelations"
@@ -406,16 +405,13 @@
         </Card>
       </div>
       <div slot="footer">
-        <Button @click="handleRelevanceClose"> 关闭 </Button>
+        <Button @click="handleRelevanceClose">
+          关闭
+        </Button>
       </div>
     </Modal>
     <!-- 券列表 -->
-    <Modal
-      v-model="modalAddCoupun"
-      :width="1000"
-      :z-index="1000"
-      :mask-closable="false"
-    >
+    <Modal v-model="modalAddCoupun" :width="1000" :z-index="1000" :mask-closable="false">
       <p slot="header">
         <i-col>{{ "关联优惠券" }}</i-col>
       </p>
@@ -431,7 +427,7 @@
             search-place="top"
             @on-current-change="handleTemplateChange"
           ></tables>
-          <div style="margin: 10px; overflow: hidden">
+          <div style="margin: 10px;overflow: hidden">
             <Row type="flex" justify="end">
               <Page
                 :total="couponTemplateTotal"
@@ -447,7 +443,9 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button @click="handleAddClose"> 关闭 </Button>
+        <Button @click="handleAddClose">
+          关闭
+        </Button>
         <Button
           :loading="modalRelevanceLoading"
           type="primary"
@@ -458,14 +456,9 @@
       </div>
     </Modal>
     <!-- 集字配置 -->
-    <Modal
-      v-model="modalAddCollection"
-      :width="600"
-      :z-index="1000"
-      :mask-closable="false"
-    >
+    <Modal v-model="modalAddCollection" :width="600" :z-index="1000" :mask-closable="false">
       <p slot="header">
-        <i-col>{{ isCreateStatus ? "新增集字配置" : "修改集字配置" }}</i-col>
+        <i-col>{{ isCreateStatus?'新增集字配置':'修改集字配置' }}</i-col>
       </p>
       <div class="modal-content">
         <Form
@@ -506,7 +499,9 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleAddClose"> 关闭 </Button>
+        <Button @click="handleAddClose">
+          关闭
+        </Button>
         <Button
           :loading="modalRelevanceLoading"
           type="primary"
@@ -1186,6 +1181,7 @@ export default {
         this.tempModalType = this.modalType.create;
         this.activitiesDetail = _.cloneDeep(activitiesDetail);
       }
+
       this.modalEdit = true;
     },
     handleView(params) {
@@ -1221,13 +1217,16 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
-      this.loading = true;
       getUnifyActivityPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         })
-        .finally(() => {
+        .catch((error) => {
+          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1235,10 +1234,14 @@ export default {
     },
     // 券列表
     getTemplateTableData() {
-      getCouponPagess(this.searchTemplateRowData).then((res) => {
-        this.couponTemplateData = res.rows;
-        this.couponTemplateTotal = res.total;
-      });
+      getCouponPagess(this.searchTemplateRowData)
+        .then((res) => {
+          this.couponTemplateData = res.rows;
+          this.couponTemplateTotal = res.total;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     // 查看活动关联
     getUnifyActivity(id) {

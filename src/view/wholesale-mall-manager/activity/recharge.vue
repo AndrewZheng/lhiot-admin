@@ -43,7 +43,7 @@
           </Poptip>
         </div>
       </tables>
-      <div style="margin: 10px; overflow: hidden">
+      <div style="margin: 10px;overflow: hidden">
         <Row type="flex" justify="end">
           <Page
             :total="total"
@@ -57,13 +57,7 @@
       </div>
     </Card>
 
-    <Modal
-      v-model="modalEdit"
-      :width="1300"
-      :z-index="1000"
-      :mask-closable="false"
-      title="关联优惠券配置"
-    >
+    <Modal v-model="modalEdit" :width="1300" :z-index="1000" :mask-closable="false" title="关联优惠券配置">
       <div class="modal-content">
         <Card>
           <tables
@@ -125,7 +119,7 @@
               </Row>
             </div>
           </tables>
-          <div style="margin: 10px; overflow: hidden">
+          <div style="margin: 10px;overflow: hidden">
             <Row type="flex" justify="end">
               <Page
                 :total="configTotal"
@@ -139,26 +133,15 @@
           </div>
         </Card>
         <Row class="mt10">
-          <Form
-            ref="editForm"
-            :model="rewardConfig"
-            :rules="ruleInline"
-            :label-width="80"
-          >
+          <Form ref="editForm" :model="rewardConfig" :rules="ruleInline" :label-width="80">
             <Row>
               <i-col span="4">
                 <FormItem label="发送数量:" prop="rewardAmount">
-                  <InputNumber
-                    v-model="rewardConfig.rewardAmount"
-                  ></InputNumber>
+                  <InputNumber v-model="rewardConfig.rewardAmount"></InputNumber>
                 </FormItem>
               </i-col>
               <i-col span="4">
-                <FormItem
-                  :label-width="190"
-                  label="充值门槛（满xx元赠送）:"
-                  prop="rechargeAmount"
-                >
+                <FormItem :label-width="190" label="充值门槛（满xx元赠送）:" prop="rechargeAmount">
                   <InputNumber
                     :min="0"
                     :value="rechargeAmountComputed"
@@ -176,12 +159,10 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose"> 关闭 </Button>
-        <Button
-          :loading="modalViewLoading"
-          type="primary"
-          @click="handleSubmit"
-        >
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">
           确定
         </Button>
       </div>
@@ -760,7 +741,7 @@ export default {
         this.activityStatus = activity.vaild;
       }
       getRewardConfigPages(this.searchRowData)
-        .then((res) => {
+        .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
         })
@@ -772,7 +753,7 @@ export default {
     },
     getConfigTableData() {
       this.loadingConfig = true;
-      getCouponConfigPages(this.searchConfigRowData).then((res) => {
+      getCouponConfigPages(this.searchConfigRowData).then(res => {
         this.configTableData = res.rows;
         this.configTotal = res.total;
         this.loadingConfig = false;
@@ -801,7 +782,7 @@ export default {
       });
     },
     handleSubmit() {
-      this.$refs.editForm.validate((valid) => {
+      this.$refs.editForm.validate(valid => {
         if (valid) {
           if (this.isCreate) {
             this.createRewardConfig();
@@ -816,7 +797,7 @@ export default {
     createRewardConfig() {
       this.modalViewLoading = true;
       createRewardConfig(this.rewardConfig)
-        .then((res) => {
+        .then(res => {
           this.$Message.success('创建成功!');
           this.getTableData();
         })
@@ -828,7 +809,7 @@ export default {
     editRewardConfig() {
       this.modalViewLoading = true;
       editRewardConfig(this.rewardConfig)
-        .then((res) => {
+        .then(res => {
           this.$Message.success('修改成功!');
           this.getTableData();
         })
@@ -839,12 +820,12 @@ export default {
     },
     onConfigSelectionChange(selection) {
       this.rewardConfig.couponConfigIds = selection
-        .map((item) => item.id.toString())
+        .map(item => item.id.toString())
         .join(',');
     },
     onConfigSelectionAll(selection) {
       this.rewardConfig.couponConfigIds = selection
-        .map((item) => item.id.toString())
+        .map(item => item.id.toString())
         .join(',');
     },
     resetSearchRowData() {
@@ -863,7 +844,7 @@ export default {
       deleteRewardConfig({
         ids
       })
-        .then((res) => {
+        .then(res => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
             this.tableData.length == this.tableDataSelected.length &&
@@ -875,7 +856,7 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           this.loading = false;
         });
@@ -887,7 +868,7 @@ export default {
       this.modalEdit = true;
     },
     addTempData(name) {
-      this.$refs[name].validate((valid) => {
+      this.$refs[name].validate(valid => {
         if (valid) {
           const activityRegisterId = this.addRelationDetail.activityRegisterId;
           const couponTemplateIds = this.addRelationDetail.couponTemplateIds.split(
@@ -954,7 +935,7 @@ export default {
         return;
       }
       const tempDeleteList = [];
-      this.tableDataSelected.filter((value) => {
+      this.tableDataSelected.filter(value => {
         tempDeleteList.push(value.id);
       });
       const strTempDelete = tempDeleteList.join(',');

@@ -31,36 +31,32 @@
             <Select v-model="searchRowData.area" placeholder="所属区域" style="padding-right: 5px;width: 100px" clearable>
               <Option
                 v-for="(item,index) in areaList"
-                :key="index"
                 :value="item.area"
+                :key="index"
                 class="ptb2-5"
-                style="padding-left: 5px;width: 100px"
-              >
-                {{ item.areaName }}
+                style="padding-left: 5px;width: 100px">{{ item.areaName }}
               </Option>
             </Select>
             <Select v-if="applicationType == null" v-model="searchRowData.applicationType" placeholder="应用类型" style="padding-right: 5px;width: 100px" clearable>
               <Option
                 v-for="(item,index) in applicationTypeList"
-                :key="index"
                 :value="item.code"
+                :key="index"
                 class="ptb2-5"
-                style="padding-left: 5px"
-              >
-                {{ item.name }}
+                style="padding-left: 5px">{{ item.name }}
               </Option>
             </Select>
             <Button :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
-              <Icon type="md-search" />&nbsp;搜索
+              <Icon type="md-search"/>&nbsp;搜索
             </Button>
             <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-              <Icon type="md-refresh" />&nbsp;清除条件
+              <Icon type="md-refresh"/>&nbsp;清除条件
             </Button>
           </Row>
         </div>
         <div slot="operations">
           <Button v-waves :loading="createLoading" type="success" class="mr5" @click="addStore">
-            <Icon type="md-add" />
+            <Icon type="md-add"/>
             创建
           </Button>
         </div>
@@ -73,8 +69,7 @@
             show-sizer
             show-total
             @on-change="changePage"
-            @on-page-size-change="changePageSize"
-          ></Page>
+            @on-page-size-change="changePageSize"></Page>
         </Row>
       </div>
     </Card>
@@ -90,147 +85,93 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                商品编码:
-              </i-col>
-              <i-col span="18">
-                {{ storeDetail.code }}
-              </i-col>
+              <i-col span="6">商品编码:</i-col>
+              <i-col span="18">{{ storeDetail.code }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                门店名称:
-              </i-col>
-              <i-col span="18">
-                {{ storeDetail.name }}
-              </i-col>
+              <i-col span="6">门店名称:</i-col>
+              <i-col span="18">{{ storeDetail.name }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                所属区域:
-              </i-col>
-              <i-col span="18">
-                {{ storeDetail.area }}
-              </i-col>
+              <i-col span="6">所属区域:</i-col>
+              <i-col span="18">{{ storeDetail.area }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                所属旗舰店:
-              </i-col>
-              <i-col span="16">
-                {{ storeDetail.flagShip }}
-              </i-col>
+              <i-col span="8">所属旗舰店:</i-col>
+              <i-col span="16">{{ storeDetail.flagShip }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                门店状态:
-              </i-col>
-              <i-col span="18">
-                {{ storeDetail.status }}
-              </i-col>
+              <i-col span="6">门店状态:</i-col>
+              <i-col span="18">{{ storeDetail.status }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                门店电话:
-              </i-col>
-              <i-col span="18">
-                {{ storeDetail.phone }}
-              </i-col>
+              <i-col span="6">门店电话:</i-col>
+              <i-col span="18">{{ storeDetail.phone }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                位置经度:
-              </i-col>
-              <i-col span="18">
-                {{ storeDetail.latitude }}
-              </i-col>
+              <i-col span="6">位置经度:</i-col>
+              <i-col span="18">{{ storeDetail.latitude }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                位置纬度:
-              </i-col>
-              <i-col span="18">
-                {{ storeDetail.longitude }}
-              </i-col>
+              <i-col span="6">位置纬度:</i-col>
+              <i-col span="18">{{ storeDetail.longitude }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="6">
-                门店地址:
-              </i-col>
-              <i-col span="14">
-                {{ storeDetail.address }}
-              </i-col>
+              <i-col span="6">门店地址:</i-col>
+              <i-col span="14">{{ storeDetail.address }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                坐标系类型:
-              </i-col>
-              <i-col span="16">
-                {{ storeDetail.coordinateType|coordinateTypeFilter }}
-              </i-col>
+              <i-col span="8">坐标系类型:</i-col>
+              <i-col span="16">{{ storeDetail.coordinateType|coordinateTypeFilter }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="3">
-                应用类型:
-              </i-col>
-              <i-col span="21">
-                {{ applicationTypeComputed(storeDetail.applicationType) }}
-              </i-col>
+              <i-col span="3">应用类型:</i-col>
+              <i-col span="21">{{ applicationTypeComputed(storeDetail.applicationType) }}</i-col>
             </Row>
           </i-col>
         </Row>
         <Row class-name="mb20">
-          <i-col span="3">
-            录播地址:
-          </i-col>
-          <i-col span="21">
-            {{ storeDetail.tapeUrl }}
-          </i-col>
+          <i-col span="3">录播地址:</i-col>
+          <i-col span="21">{{ storeDetail.tapeUrl }}</i-col>
         </Row>
         <Row class-name="mb20">
-          <i-col span="3">
-            直播地址:
-          </i-col>
-          <i-col span="21">
-            {{ storeDetail.videoUrl }}
-          </i-col>
+          <i-col span="3">直播地址:</i-col>
+          <i-col span="21">{{ storeDetail.videoUrl }}</i-col>
         </Row>
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="3">
-                商品主图:
-              </i-col>
+              <i-col span="3">商品主图:</i-col>
               <i-col span="21">
                 <img :src="storeDetail.image" style="width: 300px">
               </i-col>
@@ -240,30 +181,20 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                直播时间起:
-              </i-col>
-              <i-col span="16">
-                {{ storeDetail.beginAt }}
-              </i-col>
+              <i-col span="8">直播时间起:</i-col>
+              <i-col span="16">{{ storeDetail.beginAt }}</i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8">
-                直播时间止:
-              </i-col>
-              <i-col span="16">
-                {{ storeDetail.endAt }}
-              </i-col>
+              <i-col span="8">直播时间止:</i-col>
+              <i-col span="16">{{ storeDetail.endAt }}</i-col>
             </Row>
           </i-col>
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
-          关闭
-        </Button>
+        <Button type="primary" @click="handleClose">关闭</Button>
       </div>
     </Modal>
 
@@ -284,7 +215,7 @@
             </Col>
             <Col span="12">
             <FormItem label="门店名称:" prop="name">
-              <Input v-model="storeDetail.name"></Input>
+              <Input v-model="storeDetail.name" ></Input>
             </FormItem>
             </Col>
           </Row>
@@ -294,12 +225,10 @@
               <Select v-model="storeDetail.area">
                 <Option
                   v-for="(item,index) in areaList"
-                  :key="index"
                   :value="item.area"
+                  :key="index"
                   class="ptb2-5"
-                  style="padding-left: 5px"
-                >
-                  {{ item.areaName }}
+                  style="padding-left: 5px">{{ item.areaName }}
                 </Option>
               </Select>
             </FormItem>
@@ -309,12 +238,10 @@
               <Select v-model="storeDetail.flagShip">
                 <Option
                   v-for="(item,index) in flagShipList"
-                  :key="index"
                   :value="item.flagShip"
+                  :key="index"
                   class="ptb2-5"
-                  style="padding-left: 5px"
-                >
-                  {{ item.name }}
+                  style="padding-left: 5px">{{ item.name }}
                 </Option>
               </Select>
             </FormItem>
@@ -326,31 +253,29 @@
               <Select v-model="storeDetail.status">
                 <Option
                   v-for="(item,index) in storeStatusEnum"
-                  :key="index"
                   :value="item.value"
+                  :key="index"
                   class="ptb2-5"
-                  style="padding-left: 5px"
-                >
-                  {{ item.label }}
+                  style="padding-left: 5px">{{ item.label }}
                 </Option>
               </Select>
             </FormItem>
             </Col>
             <Col span="12">
             <FormItem :label-width="85" label="门店电话:" prop="phone">
-              <Input v-model="storeDetail.phone"></Input>
+              <Input v-model="storeDetail.phone" ></Input>
             </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
             <FormItem label="位置经度:" prop="longitude">
-              <Input v-model="storeDetail.longitude"></Input>
+              <Input v-model="storeDetail.longitude" ></Input>
             </FormItem>
             </Col>
             <Col span="12">
             <FormItem label="位置纬度:" prop="latitude">
-              <Input v-model="storeDetail.latitude"></Input>
+              <Input v-model="storeDetail.latitude" ></Input>
             </FormItem>
             </Col>
           </Row>
@@ -360,12 +285,10 @@
               <Select v-model="storeDetail.storeType">
                 <Option
                   v-for="(item,index) in storeTypeEnum"
-                  :key="index"
                   :value="item.value"
+                  :key="index"
                   class="ptb2-5"
-                  style="padding-left: 5px"
-                >
-                  {{ item.label }}
+                  style="padding-left: 5px">{{ item.label }}
                 </Option>
               </Select>
             </FormItem>
@@ -375,12 +298,10 @@
               <Select v-model="storeDetail.coordinateType">
                 <Option
                   v-for="(item,index) in coordinateTypeEnum"
-                  :key="index"
                   :value="item.value"
+                  :key="index"
                   class="ptb2-5"
-                  style="padding-left: 5px"
-                >
-                  {{ item.label }}
+                  style="padding-left: 5px">{{ item.label }}
                 </Option>
               </Select>
             </FormItem>
@@ -392,12 +313,10 @@
               <Select v-model="storeDetail.applicationTypeBak" multiple clearable>
                 <Option
                   v-for="(item,index) in applicationTypeList"
-                  :key="index"
                   :value="item.code"
+                  :key="index"
                   class="ptb2-5"
-                  style="padding-left: 5px"
-                >
-                  {{ item.name }}
+                  style="padding-left: 5px">{{ item.name }}
                 </Option>
               </Select>
             </FormItem>
@@ -411,7 +330,7 @@
             </Col>
           </Row>
           <Row>
-            <FormItem label="推荐使用尺寸为400X225(单位:px):" prop="image">
+            <FormItem label="推荐使用尺寸为400X225(单位:px):" prop="image" >
               <Input v-show="false" v-model="storeDetail.image" style="width: auto"></Input>
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
@@ -444,18 +363,15 @@
           <Row align="middle" type="flex">
             <Col span="24">
             <FormItem label="直播地址:" prop="videoUrl">
-              <Input v-model="storeDetail.videoUrl" type="textarea"></Input>
+              <Input v-model="storeDetail.videoUrl" type="textarea" ></Input>
             </FormItem>
             </Col>
           </Row>
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose">
-          关闭
-        </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
-          确定
+        <Button @click="handleEditClose">关闭</Button>
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">确定
         </Button>
       </div>
     </Modal>
@@ -843,7 +759,11 @@ export default {
       getStorePages(this.searchRowData).then(res => {
         this.tableData = res.array;
         this.total = res.total;
-      }).finally(() => {
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
+      }).catch(error => {
+        console.log(error);
         this.loading = false;
         this.searchLoading = false;
         this.clearSearchLoading = false;

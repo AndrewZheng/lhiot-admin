@@ -19,6 +19,7 @@
         @on-selection-change="onSelectionChange"
         @on-relevance="onRelevance"
       >
+        <!--  @on-delete="handleDelete" -->
         <div slot="searchCondition">
           <Row>
             <Input
@@ -76,16 +77,16 @@
             <Icon type="md-add" />添加
           </Button>
           <!-- <Poptip
-              confirm
-              placement="bottom"
-              style="width: 100px"
-              title="您确认删除选中的内容吗?"
-              @on-ok="poptipOk"
-            >
-              <Button type="error" class="mr5">
-                <Icon type="md-trash" />批量删除
-              </Button>
-            </Poptip>-->
+            confirm
+            placement="bottom"
+            style="width: 100px"
+            title="您确认删除选中的内容吗?"
+            @on-ok="poptipOk"
+          >
+            <Button type="error" class="mr5">
+              <Icon type="md-trash" />批量删除
+            </Button>
+          </Poptip>-->
         </div>
       </tables>
       <div style="margin: 10px; overflow: hidden">
@@ -110,7 +111,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 活动ID: </i-col>
+              <i-col span="6">
+                活动ID:
+              </i-col>
               <i-col span="18">
                 {{ flashsaleDetail.id }}
               </i-col>
@@ -120,7 +123,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 活动名称: </i-col>
+              <i-col span="6">
+                活动名称:
+              </i-col>
               <i-col span="18">
                 {{ flashsaleDetail.title }}
               </i-col>
@@ -130,7 +135,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 开始时间: </i-col>
+              <i-col span="6">
+                开始时间:
+              </i-col>
               <i-col span="18">
                 {{ flashsaleDetail.beginTime }}
               </i-col>
@@ -140,7 +147,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 结束时间: </i-col>
+              <i-col span="6">
+                结束时间:
+              </i-col>
               <i-col span="18">
                 {{ flashsaleDetail.endTime }}
               </i-col>
@@ -150,7 +159,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 活动状态: </i-col>
+              <i-col span="6">
+                活动状态:
+              </i-col>
               <i-col v-if="flashsaleDetail.status === 'ON'" span="18">
                 <tag color="success">
                   {{ "开启" | imageStatusFilter }}
@@ -167,7 +178,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 领取奖励有效天数: </i-col>
+              <i-col span="6">
+                领取奖励有效天数:
+              </i-col>
               <i-col span="18">
                 {{ flashsaleDetail.receiveValidDays }}
               </i-col>
@@ -177,7 +190,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 使用奖励有效天数: </i-col>
+              <i-col span="6">
+                使用奖励有效天数:
+              </i-col>
               <i-col span="18">
                 {{ flashsaleDetail.useValidDays }}
               </i-col>
@@ -187,7 +202,9 @@
         <Row class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="6"> 描述: </i-col>
+              <i-col span="6">
+                描述:
+              </i-col>
               <i-col span="18">
                 {{ flashsaleDetail.remark }}
               </i-col>
@@ -196,7 +213,9 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose"> 关闭 </Button>
+        <Button type="primary" @click="handleClose">
+          关闭
+        </Button>
       </div>
     </Modal>
     <!-- 创建活动/修改活动/添加活动关联 -->
@@ -204,9 +223,9 @@
       <p slot="header">
         <i-col>
           {{
-            isEdit
+            tempModalType == modalType.edit
               ? "修改助力抢爆品活动"
-              : isCreate
+              : tempModalType == modalType.create
                 ? "创建助力抢爆品活动"
                 : "添加助力抢爆品活动和商品/券关联"
           }}
@@ -215,7 +234,7 @@
       <div class="modal-content">
         <Row
           v-if="
-            isEdit || isCreate
+            tempModalType == modalType.edit || tempModalType == modalType.create
           "
         >
           <Form
@@ -565,7 +584,7 @@
                   </i-col>
                   <i-col span="5">
                     <Button
-                      v-show="proFlag"
+                      v-show="this.proFlag === true"
                       v-waves
                       :loading="addTempDataLoading"
                       span="4"
@@ -582,7 +601,9 @@
             </Card>
           </Row>
 
-          <Divider orientation="center"> 已关联助力抢爆品活动商品/券 </Divider>
+          <Divider orientation="center">
+            已关联助力抢爆品活动商品/券
+          </Divider>
           <tables
             v-model="relationProducts"
             :columns="relationColumns"
@@ -596,10 +617,12 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button @click="handleEditClose"> 关闭 </Button>
+        <Button @click="handleEditClose">
+          关闭
+        </Button>
         <Button
           v-if="
-            isEdit || isCreate
+            tempModalType == modalType.edit || tempModalType == modalType.create
           "
           :loading="modalViewLoading"
           type="primary"
@@ -627,7 +650,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8"> 优惠券名称: </i-col>
+              <i-col span="8">
+                优惠券名称:
+              </i-col>
               <i-col span="16">
                 {{ activitiesCouponDetail.couponName }}
               </i-col>
@@ -635,7 +660,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8"> 优惠券类型: </i-col>
+              <i-col span="8">
+                优惠券类型:
+              </i-col>
               <i-col
                 v-if="activitiesCouponDetail.couponType === 'FULL_CUT_COUPON'"
                 span="16"
@@ -685,23 +712,33 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8"> 优惠/折扣额度: </i-col>
+              <i-col span="8">
+                优惠/折扣额度:
+              </i-col>
               <i-col
                 v-if="activitiesCouponDetail.couponType === 'DISCOUNT_COUPON'"
                 span="16"
               >
-                {{ activitiesCouponDetail.couponFee | fenToDiscountFilters }}
+                {{
+                  activitiesCouponDetail.couponFee | fenToDiscountFilters
+                }}
               </i-col>
               <i-col v-else span="16">
-                {{ activitiesCouponDetail.couponFee | fenToYuanDot2Filters }}
+                {{
+                  activitiesCouponDetail.couponFee | fenToYuanDot2Filters
+                }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8"> 最小购买金额: </i-col>
+              <i-col span="8">
+                最小购买金额:
+              </i-col>
               <i-col span="16">
-                {{ activitiesCouponDetail.minBuyFee | fenToYuanDot2Filters }}
+                {{
+                  activitiesCouponDetail.minBuyFee | fenToYuanDot2Filters
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -710,7 +747,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8"> 优惠券状态: </i-col>
+              <i-col span="8">
+                优惠券状态:
+              </i-col>
               <i-col
                 v-if="activitiesCouponDetail.couponStatus === 'VALID'"
                 span="16"
@@ -737,9 +776,13 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8"> 券有效期类型: </i-col>
+              <i-col span="8">
+                券有效期类型:
+              </i-col>
               <i-col span="16">
-                {{ activitiesCouponDetail.validDateType | validDateTypeFilter }}
+                {{
+                  activitiesCouponDetail.validDateType | validDateTypeFilter
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -753,7 +796,9 @@
         >
           <i-col span="12">
             <Row>
-              <i-col span="8"> 生效开始: </i-col>
+              <i-col span="8">
+                生效开始:
+              </i-col>
               <i-col span="16">
                 {{ activitiesCouponDetail.beginDay }}
               </i-col>
@@ -761,7 +806,9 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8"> 有效天数: </i-col>
+              <i-col span="8">
+                有效天数:
+              </i-col>
               <i-col span="16">
                 {{ activitiesCouponDetail.endDay }}
               </i-col>
@@ -778,17 +825,25 @@
         >
           <i-col span="12">
             <Row>
-              <i-col span="8"> 生效时间: </i-col>
+              <i-col span="8">
+                生效时间:
+              </i-col>
               <i-col span="16">
-                {{ activitiesCouponDetail.effectiveStartTime }}
+                {{
+                  activitiesCouponDetail.effectiveStartTime
+                }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8"> 失效时间: </i-col>
+              <i-col span="8">
+                失效时间:
+              </i-col>
               <i-col span="16">
-                {{ activitiesCouponDetail.effectiveEndTime }}
+                {{
+                  activitiesCouponDetail.effectiveEndTime
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -797,7 +852,9 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8"> 券使用范围: </i-col>
+              <i-col span="8">
+                券使用范围:
+              </i-col>
               <i-col
                 v-if="activitiesCouponDetail.couponScope === 'STORE'"
                 span="16"
@@ -834,9 +891,13 @@
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8"> 券使用限制: </i-col>
+              <i-col span="8">
+                券使用限制:
+              </i-col>
               <i-col span="16">
-                {{ activitiesCouponDetail.useLimitType | couponUseLimitFilter }}
+                {{
+                  activitiesCouponDetail.useLimitType | couponUseLimitFilter
+                }}
               </i-col>
             </Row>
           </i-col>
@@ -844,7 +905,9 @@
         <Row class-name="mb20">
           <i-col span="20">
             <Row>
-              <i-col span="5"> 使用规则: </i-col>
+              <i-col span="5">
+                使用规则:
+              </i-col>
               <i-col span="18">
                 {{ activitiesCouponDetail.couponRules }}
               </i-col>
@@ -857,7 +920,9 @@
         >
           <i-col span="24">
             <Row>
-              <i-col span="3"> 优惠券分享图: </i-col>
+              <i-col span="3">
+                优惠券分享图:
+              </i-col>
               <i-col span="21">
                 <img
                   :src="activitiesRelevanceDetail.shareImage"
@@ -875,15 +940,21 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8"> 商品名称: </i-col>
+              <i-col span="8">
+                商品名称:
+              </i-col>
               <i-col span="16">
-                {{ activitiesProductDetail.baseProductName }}
+                {{
+                  activitiesProductDetail.baseProductName
+                }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8"> 商品单位: </i-col>
+              <i-col span="8">
+                商品单位:
+              </i-col>
               <i-col span="16">
                 {{ activitiesProductDetail.baseUnit }}
               </i-col>
@@ -893,15 +964,21 @@
         <Row class-name="mb20">
           <i-col span="12">
             <Row>
-              <i-col span="8"> 商品原价: </i-col>
+              <i-col span="8">
+                商品原价:
+              </i-col>
               <i-col span="16">
-                {{ activitiesProductDetail.price | fenToYuanDot2Filters }}
+                {{
+                  activitiesProductDetail.price | fenToYuanDot2Filters
+                }}
               </i-col>
             </Row>
           </i-col>
           <i-col span="12">
             <Row>
-              <i-col span="8"> 商品助力价: </i-col>
+              <i-col span="8">
+                商品助力价:
+              </i-col>
               <i-col span="16">
                 {{ "¥" + discountPrice }}
               </i-col>
@@ -911,7 +988,9 @@
         <Row v-if="activitiesRelevanceDetail.type === 'PROD'" class-name="mb20">
           <i-col span="24">
             <Row>
-              <i-col span="3"> 商品分享图: </i-col>
+              <i-col span="3">
+                商品分享图:
+              </i-col>
               <i-col span="21">
                 <img
                   :src="activitiesRelevanceDetail.shareImage"
@@ -923,7 +1002,9 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleRelevanceClose"> 关闭 </Button>
+        <Button type="primary" @click="handleRelevanceClose">
+          关闭
+        </Button>
       </div>
     </Modal>
     <!-- 修改关联商品/券详情 -->
@@ -1012,9 +1093,9 @@
                     <div>
                       <img :src="item.url">
                       <!-- <div class="demo-upload-list-cover">
-                          <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
-                          <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
-                        </div>-->
+                        <Icon type="ios-eye-outline" @click.native="handleUploadView(item)"></Icon>
+                        <Icon type="ios-trash-outline" @click.native="handleRemoveMain(item)"></Icon>
+                      </div>-->
                     </div>
                   </template>
                   <template v-else>
@@ -1044,7 +1125,9 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="handleEditRelevanceClose"> 关闭 </Button>
+        <Button @click="handleEditRelevanceClose">
+          关闭
+        </Button>
         <Button
           :loading="modalViewLoading"
           type="primary"
@@ -1060,6 +1143,7 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
+import _ from 'lodash';
 import {
   deleteAssist,
   getAssistPages,
@@ -1079,14 +1163,19 @@ import searchMixin from '@/mixins/searchMixin.js';
 import {
   imageStatusConvert,
   expandTypeConvert,
-  couponTypeConvert
+  onSaleStatusConvert,
+  couponTypeConvert,
+  couponStatusConvert,
+  couponUseLimitConvert
 } from '@/libs/converStatus';
 import { imageStatusEnum, onSaleStatusEnum } from '@/libs/enumerate';
 import {
   fenToYuanDot2,
+  fenToYuanDot2Number,
   yuanToFenNumber,
   compareCouponData
 } from '@/libs/util';
+import { customPlanStatusConvert, appTypeConvert } from '@/libs/converStatus';
 
 const flashsaleDetail = {
   beginTime: null,
@@ -1204,98 +1293,7 @@ const couponRowData = {
   sort: 'desc'
 };
 
-const dataColumns = [
-  {
-    title: '活动ID',
-    align: 'center',
-    key: 'id',
-    minWidth: 90
-  },
-  {
-    title: '活动标题',
-    align: 'center',
-    key: 'title',
-    minWidth: 130
-  },
-  {
-    title: '开始时间',
-    align: 'center',
-    key: 'beginTime',
-    width: 120
-  },
-  {
-    title: '结束时间',
-    align: 'center',
-    key: 'endTime',
-    minWidth: 220,
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (!compareCouponData(row.endTime)) {
-        return <div style='color:red'>{row.endTime + '已过期'}</div>;
-      } else {
-        return <div>{row.endTime}</div>;
-      }
-    }
-  },
-  {
-    title: '修改时间',
-    align: 'center',
-    key: 'updateTime',
-    width: 120
-  },
-  {
-    title: '状态',
-    align: 'center',
-    key: 'status',
-    minWidth: 80,
-    render: (h, params, vm) => {
-      const { row } = params;
-      if (row.status === 'ON') {
-        return (
-          <div>
-            <tag color='success'>
-              {imageStatusConvert(row.status).label}
-            </tag>
-          </div>
-        );
-      } else if (row.status === 'OFF') {
-        return (
-          <div>
-            <tag color='error'>
-              {imageStatusConvert(row.status).label}
-            </tag>
-          </div>
-        );
-      }
-      return (
-        <div>
-          <tag color='primary'>{row.status ? row.status : 'N/A'}</tag>
-        </div>
-      );
-    }
-  },
-  {
-    title: '领取有效天数',
-    align: 'center',
-    key: 'receiveValidDays',
-    minWidth: 120
-  },
-  {
-    title: '使用有效天数',
-    align: 'center',
-    key: 'useValidDays',
-    minWidth: 120
-  },
-  {
-    title: '操作',
-    align: 'center',
-    minWidth: 170,
-    key: 'handle',
-    options: ['onSale', 'view', 'edit', 'settings']
-  }
-]
-
-const relationColumns = [
+const relationTempColumns = [
   {
     title: '商品/券名称',
     key: 'baseProductName',
@@ -1377,7 +1375,10 @@ const relationColumns = [
         }
         return <div>{row.couponConfigManage.couponType}</div>;
       } else if (row.type === 'PROD') {
-        if (row.productStandard.productStandardExpand.expandType === 'ASSIST_PRODUCT') {
+        if (
+          row.productStandard.productStandardExpand.expandType ==
+          'ASSIST_PRODUCT'
+        ) {
           return (
             <div>
               <tag color='green'>
@@ -1443,13 +1444,6 @@ const relationColumns = [
         </div>
       );
     }
-  },
-  {
-    title: '操作',
-    align: 'center',
-    minWidth: 120,
-    key: 'handle',
-    options: ['onSale', 'view', 'edit']
   }
 ];
 
@@ -1515,7 +1509,7 @@ const productColumns = [
     render: (h, params, vm) => {
       const { row } = params;
       if (row.productStandardExpand != null) {
-        if (row.productStandardExpand.expandType === 'DISCOUNT_PRODUCT') {
+        if (row.productStandardExpand.expandType == 'DISCOUNT_PRODUCT') {
           return (
             <div>
               <tag color='magenta'>
@@ -1523,7 +1517,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType === 'PULL_NEW_PRODUCT') {
+        } else if (row.productStandardExpand.expandType == 'PULL_NEW_PRODUCT') {
           return (
             <div>
               <tag color='orange'>
@@ -1531,7 +1525,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType === 'SECKILL_PRODUCT') {
+        } else if (row.productStandardExpand.expandType == 'SECKILL_PRODUCT') {
           return (
             <div>
               <tag color='blue'>
@@ -1539,7 +1533,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType === 'NEW_TRY_PRODUCT') {
+        } else if (row.productStandardExpand.expandType == 'NEW_TRY_PRODUCT') {
           return (
             <div>
               <tag color='blue'>
@@ -1547,7 +1541,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType === 'ASSIST_PRODUCT') {
+        } else if (row.productStandardExpand.expandType == 'ASSIST_PRODUCT') {
           return (
             <div>
               <tag color='green'>
@@ -1566,7 +1560,6 @@ const productColumns = [
     }
   }
 ];
-
 const couponColumns = [
   {
     type: 'index',
@@ -1610,9 +1603,8 @@ const couponColumns = [
             <tag color='blue'>{couponTypeConvert(row.couponType).label}</tag>
           </div>
         );
-      } else {
-        return <div>{row.couponType}</div>;
       }
+      return <div>{row.couponType}</div>;
     }
   },
   {
@@ -1648,8 +1640,9 @@ const couponColumns = [
       if (row.maxDiscountFee != null) {
         return <div>{fenToYuanDot2(row.maxDiscountFee)}</div>;
       } else {
-        return <div>N/A</div>;
+        return <div>{'N/A'}</div>;
       }
+      return <div>{fenToYuanDot2(row.maxDiscountFee)}</div>;
     }
   },
   {
@@ -1659,14 +1652,14 @@ const couponColumns = [
     minWidth: 90,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
+      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
         return <div>{row.effectiveStartTime}</div>;
       } else if (
-        row.source === 'SMALL' &&
+        row.source == 'SMALL' &&
         row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.beginDay}</div>;
-      } else if (row.source === 'HD') {
+      } else if (row.source == 'HD') {
         return <div>{row.effectiveStartTime}</div>;
       } else {
         return <div>N/A</div>;
@@ -1680,18 +1673,18 @@ const couponColumns = [
     minWidth: 90,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
+      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
         if (!compareCouponData(row.effectiveEndTime)) {
           return <div style='color:red'>{row.effectiveEndTime + '已过期'}</div>;
         } else {
           return <div>{row.effectiveEndTime}</div>;
         }
       } else if (
-        row.source === 'SMALL' &&
+        row.source == 'SMALL' &&
         row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.endDay}</div>;
-      } else if (row.source === 'HD') {
+      } else if (row.source == 'HD') {
         if (!compareCouponData(row.effectiveEndTime)) {
           return <div style='color:red'>{row.effectiveEndTime + '已过期'}</div>;
         } else {
@@ -1711,41 +1704,6 @@ export default {
   mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
   data() {
     return {
-      defaultListMain: [],
-      uploadListMain: [],
-      relationProducts: [],
-      areaList: [],
-      products: [],
-      coupons: [],
-      templatePageOpts: [5, 10],
-      productTotal: 0,
-      couponsTotal: 0,
-      addTempDataLoading: false,
-      tempTableLoading: false,
-      createLoading: false,
-      modalViewLoading: false,
-      editStatus: false,
-      modalRelevanceView: false,
-      modalRelevanceEdit: false,
-      proFlag: true,
-      onSaleStatusEnum,
-      topStatus: 'PROD',
-      discountPrice: '',
-      imageStatusEnum,
-      columns: dataColumns,
-      relationColumns,
-      productColumns,
-      couponColumns,
-      activitiesRelevanceDetail: {},
-      activitiesProductDetail: {},
-      activitiesCouponDetail: {},
-      searchRowData: _.cloneDeep(roleRowData),
-      searchRelationRowData: _.cloneDeep(relationRowData),
-      searchProductRowData: _.cloneDeep(productRowData),
-      searchCouponRowData: _.cloneDeep(couponRowData),
-      flashsaleDetail: _.cloneDeep(flashsaleDetail),
-      addRelationDetail: _.cloneDeep(relationDetail),
-      productDetail: _.cloneDeep(productDetail),
       ruleInline: {
         beginTime: [{ required: true, message: '请选择活动开始时间' }],
         endTime: [{ required: true, message: '请选择活动结束时间' }],
@@ -1806,7 +1764,141 @@ export default {
           }
         ],
         shareImage: [{ required: true, message: '请上传分享图片' }]
-      }
+      },
+      defaultListMain: [],
+      uploadListMain: [],
+      areaList: [],
+      templatePageOpts: [5, 10],
+      imageStatusEnum,
+      editStatus: false,
+      onSaleStatusEnum,
+      topStatus: 'PROD',
+      discountPrice: '',
+      columns: [
+        {
+          title: '活动ID',
+          align: 'center',
+          key: 'id',
+          minWidth: 90
+        },
+        {
+          title: '活动标题',
+          align: 'center',
+          key: 'title',
+          minWidth: 130
+        },
+        {
+          title: '开始时间',
+          align: 'center',
+          key: 'beginTime',
+          width: 120
+        },
+        {
+          title: '结束时间',
+          align: 'center',
+          key: 'endTime',
+          minWidth: 220,
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (!compareCouponData(row.endTime)) {
+              return <div style='color:red'>{row.endTime + '已过期'}</div>;
+            } else {
+              return <div>{row.endTime}</div>;
+            }
+          }
+        },
+        {
+          title: '修改时间',
+          align: 'center',
+          key: 'updateTime',
+          width: 120
+        },
+        {
+          title: '状态',
+          align: 'center',
+          key: 'status',
+          minWidth: 80,
+          render: (h, params, vm) => {
+            const { row } = params;
+            if (row.status === 'ON') {
+              return (
+                <div>
+                  <tag color='success'>
+                    {imageStatusConvert(row.status).label}
+                  </tag>
+                </div>
+              );
+            } else if (row.status === 'OFF') {
+              return (
+                <div>
+                  <tag color='error'>
+                    {imageStatusConvert(row.status).label}
+                  </tag>
+                </div>
+              );
+            }
+            return (
+              <div>
+                <tag color='primary'>{row.status ? row.status : 'N/A'}</tag>
+              </div>
+            );
+          }
+        },
+        {
+          title: '领取有效天数',
+          align: 'center',
+          key: 'receiveValidDays',
+          minWidth: 120
+        },
+        {
+          title: '使用有效天数',
+          align: 'center',
+          key: 'useValidDays',
+          minWidth: 120
+        },
+        {
+          title: '操作',
+          align: 'center',
+          minWidth: 170,
+          key: 'handle',
+          // "delete",
+          options: ['onSale', 'view', 'edit', 'settings']
+        }
+      ],
+      relationColumns: [
+        ...relationTempColumns,
+        {
+          title: '操作',
+          align: 'center',
+          minWidth: 120,
+          key: 'handle',
+          options: ['onSale', 'view', 'edit']
+        }
+      ],
+      productColumns: _.cloneDeep(productColumns),
+      couponColumns: _.cloneDeep(couponColumns),
+      addTempDataLoading: false,
+      tempTableLoading: false,
+      createLoading: false,
+      modalViewLoading: false,
+      searchRowData: _.cloneDeep(roleRowData),
+      searchRelationRowData: _.cloneDeep(relationRowData),
+      searchProductRowData: _.cloneDeep(productRowData),
+      searchCouponRowData: _.cloneDeep(couponRowData),
+      flashsaleDetail: _.cloneDeep(flashsaleDetail),
+      relationProducts: [],
+      addRelationDetail: _.cloneDeep(relationDetail),
+      productDetail: _.cloneDeep(productDetail),
+      products: [],
+      coupons: [],
+      productTotal: 0,
+      couponsTotal: 0,
+      activitiesRelevanceDetail: {},
+      activitiesProductDetail: {},
+      activitiesCouponDetail: {},
+      modalRelevanceView: false,
+      modalRelevanceEdit: false,
+      proFlag: true
     };
   },
   computed: {},
@@ -1925,6 +2017,12 @@ export default {
       this.flashsaleDetail = _.cloneDeep(flashsaleDetail);
       this.modalEdit = true;
     },
+    // 删除
+    // handleDelete(params) {
+    //   this.tableDataSelected = [];
+    //   this.tableDataSelected.push(params.row);
+    //   this.deleteTable(params.row.id);
+    // },
     deleteTable(ids) {
       this.loading = true;
       deleteAssist({
@@ -1933,7 +2031,7 @@ export default {
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length === this.tableDataSelected.length &&
+            this.tableData.length == this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -1960,13 +2058,16 @@ export default {
       this.modalEdit = true;
     },
     getTableData() {
-      this.loading = true;
       getAssistPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         })
-        .finally(() => {
+        .catch((error) => {
+          console.log(error);
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1981,7 +2082,7 @@ export default {
           });
           this.relationProducts = res.rows;
         })
-        .finally(() => {
+        .finally(res => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -2003,6 +2104,7 @@ export default {
     endTimeChange(value, date) {
       this.flashsaleDetail.endTime = value;
     },
+    // ====
     edBeginTimeChange(value) {
       this.searchRowData.beginTime = value;
     },
@@ -2044,6 +2146,34 @@ export default {
         }
       });
     },
+    // modalHandleEdit(params) {
+    //   this.$set(params.row, "isEdit", true);
+    // },
+    // modalHandleSave(params) {
+    //   const row = params.row;
+    //   // if (
+    //   //   row.id == null ||
+    //   //   row.id == 0 ||
+    //   //   row.salePrice <= 0 ||
+    //   //   row.goodsLimit <= 0 ||
+    //   //   row.userLimit <= 0
+    //   // ) {
+    //   //   this.$Message.error("请输入非0数");
+    //   //   return;
+    //   // }
+    //   // this.tempTableLoading = true;
+    //   // 如果前端没有剩余数量字段,则初始化剩余数量=商品数量
+    //   // row.remainCount = row.goodsLimit;
+    //   editAssistProductRelation(row)
+    //     .then(res => {
+    //       this.getRelationTableData();
+    //     })
+    //     .finally(res => {
+    //       this.tempTableLoading = false;
+    //     });
+    //   this.tempTableLoading = false;
+    //   this.$set(params.row, "isEdit", false);
+    // },
     modalHandleDelete(params) {
       this.tempTableLoading = true;
       deleteAssistProductRelation({ ids: params.row.id })
@@ -2136,7 +2266,7 @@ export default {
       if (this.addRelationDetail.type === 'PROD') {
         const activityProducts = this.relationProducts;
         const standardIds = [];
-        for (let item = 0; item < activityProducts.length; item++) {
+        for (var item = 0; item < activityProducts.length; item++) {
           standardIds.push(activityProducts[item].standardId);
         }
         if (
@@ -2157,7 +2287,7 @@ export default {
       } else if (this.addRelationDetail.type === 'COUPON') {
         const activityProducts = this.relationProducts;
         const couponIds = [];
-        for (let item = 0; item < activityProducts.length; item++) {
+        for (var item = 0; item < activityProducts.length; item++) {
           couponIds.push(activityProducts[item].couponConfigId);
         }
         if (couponIds.indexOf(currentRow.id) != -1) {
@@ -2243,16 +2373,22 @@ export default {
           this.modalRelevanceEdit = false;
           this.$Message.success('修改成功!');
           this.getRelationTableData();
-          this.addRelationDetail = _.cloneDeep(relationDetail);
-          this.uploadListMain = [];
+          (this.addRelationDetail = _.cloneDeep(relationDetail)),
+          (this.uploadListMain = []);
           // this.uploadListMain = [];
         })
         .finally((res) => {
           this.tempTableLoading = false;
         });
     },
+    // 上下架
     switchStatus(params) {
-      params.row.status = params.row.status === 'ON' ? 'OFF' : 'ON';
+      // this.relationProducts.status = this._.cloneDeep(params.row.status);
+      if (params.row.status === 'ON') {
+        params.row.status = 'OFF';
+      } else {
+        params.row.status = 'ON';
+      }
       this.loading = true;
       editAssistProductRelation(params.row)
         .then((res) => {
@@ -2261,13 +2397,14 @@ export default {
         .finally((res) => {
           this.tempTableLoading = false;
         });
+      this.tempTableLoading = false;
       this.$set(params.row, 'isEdit', false);
     }
   }
 };
 </script>
 
-  <style lang="scss" scoped>
+<style lang="scss" scoped>
 .tabChange {
   height: 50px;
   width: 230px;
