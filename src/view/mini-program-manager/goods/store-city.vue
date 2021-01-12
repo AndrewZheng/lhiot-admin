@@ -80,7 +80,7 @@
           <Row>
             <i-col span="24">
               <FormItem label="城市编码:" prop="cityCode" style="width:300px">
-                <Input v-model="storeCity.cityCode"></Input>
+                <Input v-model="storeCity.cityCode" :readonly="isEdit"></Input>
               </FormItem>
             </i-col>
           </Row>
