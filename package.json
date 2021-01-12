@@ -33,7 +33,7 @@
     "lockr": "^0.8.4",
     "lodash": "^4.17.13",
     "moment": "^2.22.2",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.14.0",
     "qs": "^6.9.0",
     "simplemde": "^1.11.2",
     "sortablejs": "^1.7.0",

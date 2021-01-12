@@ -2448,6 +2448,12 @@ export default {
             return;
           }
           if (_this.teambuyDetail.validDateType === 'FIXED_DATE') {
+            // 如果选择绝对日期，判空 时间控件null转date对象变为Invalid date字符串
+            console.log(`deliveryEndTime: ${_this.teambuyDetail.deliveryEndTime}`);
+            if (_this.teambuyDetail.deliveryEndTime === 'Invalid date') {
+              _this.$Message.error('请输入提货截止时间');
+              return;
+            }
             _this.teambuyDetail.deliveryEndTimeDay = 0;
           } else {
             _this.teambuyDetail.deliveryEndTime = null;

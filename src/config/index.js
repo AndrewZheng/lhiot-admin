@@ -28,11 +28,11 @@ export default {
    * @description 绿航集团旗下品牌 水果熟了 / 万翼果联-min_app 恰果果-qgg 绿航果业-lv_hang 跟图片资源请求配套使用
    */
 
-  brandType: 'min_app',
+  brandType: 'lv_hang',
   /**
  * @description 后台统一导出  测试 http://172.16.10.196:5000
  */
-  exportUploadUrl: `http://172.16.10.196:5000`,
+  exportUploadUrl: `http://172.16.10.189:5000`,
 
   /**
  * @description 绿航集团旗下品牌统一导出项目 水果熟了 /?type=minapp  万翼果联 /?type=wholesale 恰果果与绿航果业(待开发)
