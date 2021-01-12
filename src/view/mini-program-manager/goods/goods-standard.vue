@@ -3151,9 +3151,7 @@ export default {
         this.currentTableRowSelected.commissionPrice = null;
         this.currentTableRowSelected.storeIds = null;
         this.currentTableRowSelected.relationStoreType = 'ALL';
-        this.currentTableRowSelected.whetherLockShelf = 'NP';
-        this.currentTableRowSelected.image = null;
-        this.currentTableRowSelected.detailImage = null;
+        this.currentTableRowSelected.whetherLockShelf = 'NO';
         this.currentTableRowSelected.barcode = null;
         this.currentTableRowSelected.price = null;
         this.currentTableRowSelected.salePrice = null;
