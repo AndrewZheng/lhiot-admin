@@ -1482,6 +1482,10 @@ const btns = {
   },
   // 确认收货
   onReceive: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.orderType != 'BUY_COUPON_ALL_ORDER') {
     return h('Poptip', {
       props: {
         confirm: true,
@@ -1517,9 +1521,16 @@ const btns = {
         ])
       ])
     ]);
+  } else {
+    return ''
+  }
   },
   // 发送美团
   onMeituan: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.orderType != 'BUY_COUPON_ALL_ORDER') {
     return h('Poptip', {
       props: {
         confirm: true,
@@ -1555,6 +1566,55 @@ const btns = {
         ])
       ])
     ]);
+  } else {
+    return ''
+  }
+  },
+
+  // 购券重发
+  onCoupon: (h, params, vm) => {
+    const {
+      row
+    } = params;
+    if (row.orderType === 'BUY_COUPON_ALL_ORDER') {
+      return h('Poptip', {
+        props: {
+          confirm: true,
+          transfer: true,
+          title: '是否购券重发?'
+          // placement: params.index === 0 || params.index === 1 ? 'bottom' : 'top',
+        },
+        style: {
+          marginRight: '5px'
+        },
+        on: {
+          'on-ok': () => {
+            vm.$emit('on-coupon', params);
+          }
+        }
+      }, [
+        h('Tooltip', {
+          props: { placement: 'top', transfer: true, content: '购券重发' }
+        }, [
+          h('Button', {
+            props: {
+              type: 'success',
+              size: 'small'
+            }
+          }, [
+            h('Icon', {
+              props: {
+                type: 'md-sync',
+                size: 16,
+                color: '#fff'
+              }
+            })
+          ])
+        ])
+      ]);
+    } else {
+      return ''
+    }
   },
   analytics: (h, params, vm) => {
     return h('Tooltip', {
