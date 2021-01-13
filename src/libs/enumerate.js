@@ -908,7 +908,7 @@ export const expandTypeEnum = [
   {
     label: '助力商品',
     value: 'ASSIST_PRODUCT'
-  },
+  }
 ];
 
 export const pfExpandTypeEnum = [
@@ -2374,7 +2374,7 @@ export const miniOrderStatus = {
   ALREADY_RETURN: 'ALREADY_RETURN',
   FAILURE: 'FAILURE',
   FINISHED: 'FINISHED',
-  EXPIRED:'EXPIRED'
+  EXPIRED: 'EXPIRED'
 };
 
 export const miniOrderStatusEnum = [{
@@ -2699,7 +2699,7 @@ export const couponFromEnum = [{
 {
   label: '活动送券',
   value: 'activity'
-},
+}
 ];
 
 export const layoutEnum = [{
@@ -2786,7 +2786,7 @@ export const paymentFromEnum = [{
 {
   label: '订单',
   value: 'order'
-},
+}
   // {
   //   label: '发票',
   //   value: 'invoice'
@@ -2924,3 +2924,12 @@ export const serviceStatusEnum = [{
   value: 'FINISH'
 }]
 
+// 白名单—区分内外部用户
+export const whiteListEnum = [{
+  label: '外部用户',
+  value: 'EXTERIOR'
+},
+{
+  label: '内部用户',
+  value: 'INTERIOR'
+}]

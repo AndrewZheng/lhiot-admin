@@ -66,6 +66,7 @@ import {
   receiveStatusEnum,
   serviceModeEnum,
   serviceStatusEnum,
+  whiteListEnum,
   // 批发商城小程序
   userStatusEnum,
   userTypeEnum,
@@ -437,4 +438,8 @@ export const yesNoConvert = (value) => {
 
 export const deliverStatusConvert = (value) => {
   return convertFunction(value, deliverStatusEnum).label;
+}
+
+export const whiteListConvert = (value) => {
+  return convertFunction(value, whiteListEnum).label;
 }
