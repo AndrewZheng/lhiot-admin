@@ -37,7 +37,7 @@
           >
             <Option
               v-for="(item,index) in advertisementList"
-              :key="`search-col-${index}`"
+              :key="`adv-${index}`"
               :value="item.id"
               class="pt5 pb5 pl15"
             >
@@ -53,7 +53,7 @@
           >
             <Option
               v-for="(item,index) in status"
-              :key="`search-col-${index}`"
+              :key="`status-${index}`"
               :value="item.value"
               class="pt5 pb5 pl15"
             >
@@ -276,7 +276,7 @@
                 >
                   <Option
                     v-for="(item,index) in advertisementList"
-                    :key="`search-col-${index}`"
+                    :key="`modal-adv-${index}`"
                     :value="item.id"
                     class="pt5 pb5 pl15"
                   >
