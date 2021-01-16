@@ -36,8 +36,8 @@
             clearable
           >
             <Option
-              v-for="item in advertisementList"
-              :key="`search-col-${item.id}`"
+              v-for="(item,index) in advertisementList"
+              :key="`search-col-${index}`"
               :value="item.id"
               class="pt5 pb5 pl15"
             >
@@ -52,8 +52,8 @@
             clearable
           >
             <Option
-              v-for="item in status"
-              :key="`search-col-${item.id}`"
+              v-for="(item,index) in status"
+              :key="`search-col-${index}`"
               :value="item.value"
               class="pt5 pb5 pl15"
             >
@@ -275,8 +275,8 @@
                   @on-change="advertisementChange"
                 >
                   <Option
-                    v-for="item in advertisementList"
-                    :key="`search-col-${item.id}`"
+                    v-for="(item,index) in advertisementList"
+                    :key="`search-col-${index}`"
                     :value="item.id"
                     class="pt5 pb5 pl15"
                   >
