@@ -81,6 +81,38 @@
                 {{ item.label }}
               </Option>
             </Select>
+            <Select
+              v-model="searchRowData.isCanCoupon"
+              class="ml5"
+              placeholder="是否可用券"
+              style="width: 120px"
+              clearable
+            >
+              <Option
+                v-for="item in isUseCoupon"
+                :key="item.value"
+                :value="item.value"
+                class="ml15 mt10 mr15"
+              >
+                {{ item.label }}
+              </Option>
+            </Select>
+            <Select
+              v-model="searchRowData.whetherLockShelf"
+              placeholder="是否锁定上下架"
+              class="ml5"
+              style="width: 140px"
+              clearable
+            >
+              <Option
+                v-for="item in whetherLockShelfStatus"
+                :key="item.value"
+                :value="item.value"
+                class="ml15 mt10 mr15"
+              >
+                {{ item.label }}
+              </Option>
+            </Select>
             <InputNumber
               v-show="!showBack"
               v-model="searchMinPrice"
@@ -2054,6 +2086,8 @@ const roleRowData = {
   productType: '',
   productName: '',
   shelvesStatus: null,
+  isCanCoupon: '',
+  whetherLockShelf: '',
   minPrice: '',
   maxPrice: '',
   page: 1,
@@ -2404,6 +2438,28 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             if (row.whetherLockShelf === 'YES') {
+              return (
+                <div>
+                  <tag color='green'>{'是'}</tag>
+                </div>
+              );
+            } else {
+              return (
+                <div>
+                  <tag color='orange'>{'否'}</tag>
+                </div>
+              );
+            }
+          }
+        },
+        {
+          title: '是否可用券',
+          minWidth: 120,
+          key: 'isCanCoupon',
+          align: 'center',
+          render: (h, params) => {
+            const { row } = params;
+            if (row.isCanCoupon === 'YES') {
               return (
                 <div>
                   <tag color='green'>{'是'}</tag>
