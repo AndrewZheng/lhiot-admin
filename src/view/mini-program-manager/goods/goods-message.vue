@@ -44,7 +44,7 @@
                   clearable
                 ></Input>
                 <Button
-                  :searchLoading="searchLoading"
+                  :search-loading="searchLoading"
                   class="search-btn mr5"
                   type="primary"
                   @click="handleSearch"
@@ -202,7 +202,7 @@
               <i-col span="3">商品主图:</i-col>
               <i-col v-show="productDetail.image" span="21">
                 <div class="demo-upload-list">
-                  <img :src="productDetail.image" />
+                  <img :src="productDetail.image">
                   <div class="demo-upload-list-cover">
                     <Icon
                       type="ios-eye-outline"
@@ -266,82 +266,83 @@
         >
           <Row>
             <Col span="12">
-              <FormItem label="商品编码:" prop="productCode">
-                <Input
-                  v-model="productDetail.productCode"
-                  placeholder="商品编码"
-                ></Input>
-              </FormItem>
+            <FormItem label="商品编码:" prop="productCode">
+              <Input
+                v-model="productDetail.productCode"
+                placeholder="商品编码"
+              ></Input>
+            </FormItem>
             </Col>
             <Col span="12">
-              <FormItem label="商品名称:" prop="productName">
-                <Input
-                  v-model="productDetail.productName"
-                  placeholder="商品名称"
-                ></Input>
-              </FormItem>
+            <FormItem label="商品名称:" prop="productName">
+              <Input
+                v-model="productDetail.productName"
+                placeholder="商品名称"
+              ></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="24">
-              <FormItem label="商品分类:" prop="groupId">
-                <Cascader
-                  :data="goodsCategoryData"
-                  v-model="defaultGoodsCategoryData"
-                  span="21"
-                  style="width: 100%"
-                  @on-change="goodsCategoryChange"
-                ></Cascader>
-              </FormItem>
+            <FormItem label="商品分类:" prop="groupId">
+              <Cascader
+                v-model="defaultGoodsCategoryData"
+                :data="goodsCategoryData"
+                trigger="hover"
+                filterable
+                span="21"
+                style="width: 100%"
+                @on-change="goodsCategoryChange"
+              ></Cascader>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-              <FormItem label="商品状态:" prop="status">
-                <Select :value="productDetail.status" @on-change="statusChange">
-                  <Option
-                    v-for="(item, index) in productStatus"
-                    :value="item.value"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px"
-                  >
-                    {{ item.label }}
-                  </Option>
-                </Select>
-              </FormItem>
+            <FormItem label="商品状态:" prop="status">
+              <Select :value="productDetail.status" @on-change="statusChange">
+                <Option
+                  v-for="(item, index) in productStatus"
+                  :key="index"
+                  :value="item.value"
+                  class="ptb2-5"
+                  style="padding-left: 5px"
+                >
+                  {{ item.label }}
+                </Option>
+              </Select>
+            </FormItem>
             </Col>
             <Col span="12">
-              <FormItem label="产地编码:" prop="sourceCode">
-                <Input
-                  v-model="productDetail.sourceCode"
-                  placeholder="产地编码"
-                ></Input>
-              </FormItem>
+            <FormItem label="产地编码:" prop="sourceCode">
+              <Input
+                v-model="productDetail.sourceCode"
+                placeholder="产地编码"
+              ></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
             <Col span="12">
-              <FormItem label="基础单位:" prop="unitId">
-                <Select :value="productDetail.unitId" @on-change="uniteChange">
-                  <Option
-                    v-for="(item, index) in unitsList"
-                    :value="item.value"
-                    :key="index"
-                    class="ptb2-5"
-                    style="padding-left: 5px"
-                    >{{ item.label }}</Option
-                  >
-                </Select>
-              </FormItem>
+            <FormItem label="基础单位:" prop="unitId">
+              <Select :value="productDetail.unitId" @on-change="uniteChange">
+                <Option
+                  v-for="(item, index) in unitsList"
+                  :key="index"
+                  :value="item.value"
+                  class="ptb2-5"
+                  style="padding-left: 5px"
+                >{{ item.label }}</Option>
+              </Select>
+            </FormItem>
             </Col>
             <Col span="12">
-              <FormItem label="基础条码:" prop="baseBarcode">
-                <Input
-                  v-model.trim="productDetail.baseBarcode"
-                  placeholder="基础条码"
-                ></Input>
-              </FormItem>
+            <FormItem label="基础条码:" prop="baseBarcode">
+              <Input
+                v-model.trim="productDetail.baseBarcode"
+                placeholder="基础条码"
+              ></Input>
+            </FormItem>
             </Col>
           </Row>
           <Row>
@@ -351,20 +352,20 @@
             </FormItem>
             </Col>-->
             <Col span="12">
-              <FormItem label="重量(kg):" prop="baseQty">
-                <InputNumber
-                  v-model="productDetail.baseQty"
-                  placeholder="基础重量"
-                ></InputNumber>
-              </FormItem>
+            <FormItem label="重量(kg):" prop="baseQty">
+              <InputNumber
+                v-model="productDetail.baseQty"
+                placeholder="基础重量"
+              ></InputNumber>
+            </FormItem>
             </Col>
             <Col span="12">
-              <FormItem label="最低库存:" prop="limitQty">
-                <InputNumber
-                  v-model="productDetail.limitQty"
-                  placeholder="最低库存"
-                ></InputNumber>
-              </FormItem>
+            <FormItem label="最低库存:" prop="limitQty">
+              <InputNumber
+                v-model="productDetail.limitQty"
+                placeholder="最低库存"
+              ></InputNumber>
+            </FormItem>
             </Col>
           </Row>
           <Row>
@@ -381,7 +382,7 @@
               >
                 <template v-if="item.status === 'finished'">
                   <div>
-                    <img :src="item.url" />
+                    <img :src="item.url">
                     <div class="demo-upload-list-cover">
                       <Icon
                         type="ios-eye-outline"
@@ -436,68 +437,62 @@
       <div slot="footer">
         <Button @click="handleEditClose">关闭</Button>
         <Button
-          :loading="modalViewLoading"
+          :loading="modalEditLoading"
           type="primary"
           @click="handleSubmit('editForm')"
-          >确定</Button
-        >
+        >确定</Button>
       </div>
     </Modal>
 
     <Modal v-model="uploadVisible" title="图片预览">
-      <img :src="imgUploadViewItem" style="width: 100%" />
+      <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import IViewUpload from "_c/iview-upload";
-import _ from "lodash";
+import Tables from '_c/tables';
+import IViewUpload from '_c/iview-upload';
 import {
   createProduct,
   deleteProduct,
   editProduct,
-  getProduct,
   getProductPages,
   getProductCategoriesTree,
-  getProductUnits,
-  deletePicture,
-} from "@/api/mini-program";
+  getProductUnits
+} from '@/api/mini-program';
 import {
   buildMenu,
   convertTreeCategory,
   setSmallGoodsStandard,
-  convertTree,
-} from "@/libs/util";
-import CommonIcon from "_c/common-icon";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
-import { productStatusConvert } from "@/libs/converStatus";
+  convertTree
+} from '@/libs/util';
+import CommonIcon from '_c/common-icon';
+import uploadMixin from '@/mixins/uploadMixin';
+import tableMixin from '@/mixins/tableMixin.js';
+import { productStatusConvert } from '@/libs/converStatus';
 
 const productDetail = {
   id: 0,
-  productCode: "",
-  productName: "",
+  productCode: '',
+  productName: '',
   groupId: 0,
-  sourceCode: "",
-  image: "",
-  smallImage: "",
-  largeImage: "",
+  sourceCode: '',
+  image: '',
+  smallImage: '',
+  largeImage: '',
   status: null,
   unitId: 0,
-  baseBarcode: "",
-  hdSkuid: "",
-  videoUrl: "",
-  videoImage: "",
+  baseBarcode: '',
+  hdSkuid: '',
+  videoUrl: '',
+  videoImage: '',
   baseQty: 0,
   limitQty: 0,
-  description: "",
-  unitName: "",
-  groupName: "",
-  createUser: "",
+  description: '',
+  unitName: '',
+  groupName: '',
+  createUser: ''
 };
 
 const roleRowData = {
@@ -505,53 +500,19 @@ const roleRowData = {
   productCode: null,
   productName: null,
   page: 1,
-  rows: 10,
+  rows: 10
 };
 
 export default {
   components: {
     Tables,
-    IViewUpload,
+    IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
-      ruleInline: {
-        productCode: [{ required: true, message: "请输入商品编码" }],
-        productName: [{ required: true, message: "请输入商品名称" }],
-        status: [{ required: true, message: "请选择商品状态" }],
-        unitId: [{ required: true, message: "请选择商品单位" }],
-        baseBarcode: [{ required: true, message: "请输入基础条码" }],
-        description: [{ required: true, message: "请输入商品描述" }],
-        groupId: [{ required: true, message: "请选择商品分类" }],
-        image: [{ required: true, message: "请上传商品主图" }],
-        packagingUnit: [{ required: true, message: "请选择规格单位" }],
-        barcode: [
-          { required: true, message: "请输入规格条码" },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[0-9]\d*$/.test(value)) {
-                errors.push(new Error("必须为非零整数"));
-              }
-              callback(errors);
-            },
-          },
-        ],
-        limitQty: [{ required: true, message: "请输入安全库存" }],
-        baseQty: [
-          { required: true, message: "请输入重量" },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/.test(value)) {
-                errors.push(new Error("必须为大于0的数字"));
-              }
-              callback(errors);
-            },
-          },
-        ],
-      },
+      currentGroupId: 0,
+      currentName: '全部分类',
       menuData: [],
       defaultListMultiple: [],
       defaultListMain: [],
@@ -560,50 +521,88 @@ export default {
       oldPicture: [],
       newPicture: [],
       save: [],
-      // uploadListSecond: [],
-      // uploadListMultiple: [],
       goodsCategoryData: [],
-      defaultGoodsCategoryData: [41],
+      defaultGoodsCategoryData: [],
       proCategoryTreeList: [],
       tempSubImg: [],
       unitsList: [],
+      productStatus: [
+        { label: '正常', value: 'NORMAL' },
+        { label: '停采', value: 'STOP_MINING' }
+      ],
+      ruleInline: {
+        productCode: [{ required: true, message: '请输入商品编码' }],
+        productName: [{ required: true, message: '请输入商品名称' }],
+        status: [{ required: true, message: '请选择商品状态' }],
+        unitId: [{ required: true, message: '请选择商品单位' }],
+        baseBarcode: [{ required: true, message: '请输入基础条码' }],
+        description: [{ required: true, message: '请输入商品描述' }],
+        groupId: [{ required: true, message: '请选择商品分类' }],
+        image: [{ required: true, message: '请上传商品主图' }],
+        packagingUnit: [{ required: true, message: '请选择规格单位' }],
+        barcode: [
+          { required: true, message: '请输入规格条码' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[0-9]\d*$/.test(value)) {
+                errors.push(new Error('必须为非零整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        limitQty: [{ required: true, message: '请输入安全库存' }],
+        baseQty: [
+          { required: true, message: '请输入重量' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^(?!(0[0-9]{0,}$))[0-9]{1,}[.]{0,}[0-9]{0,}$/.test(value)) {
+                errors.push(new Error('必须为大于0的数字'));
+              }
+              callback(errors);
+            }
+          }
+        ]
+      },
       columns: [
         {
-          title: "ID",
-          key: "id",
+          title: 'ID',
+          key: 'id',
           minWidth: 60,
-          align: "center",
-          fixed: "left",
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: "商品图片",
-          key: "image",
-          align: "center",
+          title: '商品图片',
+          key: 'image',
+          align: 'center',
           minWidth: 120,
           render: (h, params, vm) => {
             const { row } = params;
-            const str = <img src={row.image} height="60" width="60" />;
+            const str = <img src={row.image} height='60' width='60' />;
             return <div>{str}</div>;
-          },
+          }
         },
         {
-          title: "商品编码",
-          align: "center",
-          key: "productCode",
+          title: '商品编码',
+          align: 'center',
+          key: 'productCode',
           sortable: true,
-          minWidth: 150,
+          minWidth: 150
         },
         {
-          title: "商品名称",
-          align: "center",
+          title: '商品名称',
+          align: 'center',
           sortable: true,
-          key: "productName",
-          minWidth: 120,
+          key: 'productName',
+          minWidth: 120
         },
         {
-          title: "类别",
-          align: "center",
-          key: "groupId",
+          title: '类别',
+          align: 'center',
+          key: 'groupId',
           minWidth: 100,
           render: (h, params) => {
             const { row } = params;
@@ -611,55 +610,55 @@ export default {
               (item) => row.groupId === item.id
             );
             if (obj) {
-              return h("span", obj.title);
+              return h('span', obj.title);
             }
-            return h("span", row.groupId);
-          },
+            return h('span', row.groupId);
+          }
         },
         {
-          title: "单位",
-          align: "center",
+          title: '单位',
+          align: 'center',
           minWidth: 70,
-          key: "unitName",
+          key: 'unitName'
         },
         {
-          title: "基础条码",
-          align: "center",
+          title: '基础条码',
+          align: 'center',
           minWidth: 120,
           sortable: true,
-          key: "baseBarcode",
+          key: 'baseBarcode'
         },
         {
-          title: "重量(kg)",
-          align: "center",
+          title: '重量(kg)',
+          align: 'center',
           minWidth: 100,
-          key: "baseQty",
+          key: 'baseQty'
         },
         {
-          title: "最低库存",
-          align: "center",
+          title: '最低库存',
+          align: 'center',
           minWidth: 100,
-          key: "limitQty",
+          key: 'limitQty'
         },
         {
-          title: "商品状态",
-          align: "center",
+          title: '商品状态',
+          align: 'center',
           minWidth: 100,
-          key: "status",
+          key: 'status',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.status === "NORMAL") {
+            if (row.status === 'NORMAL') {
               return (
                 <div>
-                  <tag color="success">
+                  <tag color='success'>
                     {productStatusConvert(row.status).label}
                   </tag>
                 </div>
               );
-            } else if (row.status === "STOP_MINING") {
+            } else if (row.status === 'STOP_MINING') {
               return (
                 <div>
-                  <tag color="error">
+                  <tag color='error'>
                     {productStatusConvert(row.status).label}
                   </tag>
                 </div>
@@ -667,56 +666,56 @@ export default {
             }
             return (
               <div>
-                <tag color="primary">{row.status}</tag>
+                <tag color='primary'>{row.status}</tag>
               </div>
             );
-          },
+          }
         },
         {
-          title: "操作",
-          align: "center",
+          title: '操作',
+          align: 'center',
           minWidth: 150,
-          key: "handle",
-          options: ["view", "edit", "settings"],
-        },
+          key: 'handle',
+          options: ['view', 'edit', 'settings']
+        }
       ],
-      createLoading: false,
-      modalViewLoading: false,
-      exportExcelLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
-      productDetail: _.cloneDeep(productDetail),
-      productStatus: [
-        { label: "正常", value: "NORMAL" },
-        { label: "停采", value: "STOP_MINING" },
-      ],
-      currentGroupId: 0,
-      currentName: "全部分类",
+      productDetail: _.cloneDeep(productDetail)
     };
   },
   created() {
     this.initMenuList();
+    this.getProductUnits();
   },
   mounted() {
-    // 清空上次搜索的结果
     this.searchRowData = _.cloneDeep(roleRowData);
-    this.getProductUnits();
     this.getProductCategoriesTree();
   },
   methods: {
+    getTableData() {
+      this.loading = true;
+      getProductPages(this.searchRowData)
+        .then((res) => {
+          this.tableData = res.rows;
+          this.total = res.total;
+        })
+        .finally(() => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
     getProductUnits() {
       getProductUnits().then((res) => {
         res.array.forEach((value) => {
-          const map = { label: "label", value: "value" };
+          const map = { label: 'label', value: 'value' };
           map.value = value.id;
           map.label = value.unitName;
           this.unitsList.push(map);
-          this.createLoading = false;
         });
       });
     },
     getProductCategoriesTree() {
-      this.loading = true;
-      // this.createLoading = true;
       getProductCategoriesTree()
         .then((res) => {
           this.proCategoryTreeList = [];
@@ -724,18 +723,14 @@ export default {
             this.proCategoryTreeList = res.array;
             const menuList = buildMenu(res.array);
             const map = {
-              id: "id",
-              title: "title",
-              children: "children",
+              id: 'id',
+              title: 'title',
+              children: 'children'
             };
             this.goodsCategoryData = convertTreeCategory(menuList, map, true);
-            this.createLoading = false;
+            this.getTableData();
           }
         })
-        .catch(() => {
-          this.createLoading = false;
-        });
-      this.getTableData();
     },
     resetSearchRowData() {
       this.searchRowData = _.cloneDeep(roleRowData);
@@ -745,7 +740,7 @@ export default {
       this.exportExcelLoading = true;
       // 导出不带分页搜索条件
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      let pageSize = this.searchRowData.page;
+      const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       getProductPages(this.searchRowData).then((res) => {
         const tableData = res.rows;
@@ -753,13 +748,13 @@ export default {
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
         tableData.forEach((item) => {
-          item["groupId"] = item["groupName"];
-          item["status"] = item["status"] === "NORMAL" ? "正常" : "停采";
+          item['groupId'] = item['groupName'];
+          item['status'] = item['status'] === 'NORMAL' ? '正常' : '停采';
         });
-        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+        const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
         this.$refs.tables.handleDownload({
           filename: `商品基础信息-${date}`,
-          data: tableData,
+          data: tableData
         });
         this.exportExcelLoading = false;
       });
@@ -770,123 +765,86 @@ export default {
       this.uploadListMain = [];
       this.productDetail.image = null;
     },
-    // ====
     handleSubmit(name1) {
-      // if (this.oldPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.oldPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
       this.$refs[name1].validate((valid) => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createProduct();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editProduct();
           }
         } else {
-          this.$Message.error("请完善信息!");
+          this.$Message.error('请完善信息!');
         }
       });
     },
     handleEditClose() {
-      // if (this.newPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.newPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
     },
-    // deletePicture(urls) {
-    //   deletePicture({
-    //     urls
-    //   })
-    //     .then(res => {})
-    //     .catch(() => {});
-    // },
-    // 商品主图
-    handleSuccessMain(response, file, fileList) {
-      this.uploadListMain = fileList;
-      this.productDetail.image = null;
-      this.productDetail.image = fileList[0].url;
-      this.newPicture.push(fileList[0].url);
-      this.oldPicture = this.save;
-    },
-    // 设置编辑商品的图片列表
-    setDefaultUploadList(res) {
-      if (res.image != null) {
-        const map = { status: "finished", url: "url" };
-        const mainImgArr = [];
-        map.url = res.image;
-        mainImgArr.push(map);
-        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
-        this.uploadListMain = mainImgArr;
-      }
-    },
     createProduct() {
-      this.modalViewLoading = true;
+      this.modalEditLoading = true;
       // this.productDetail.productSpecification.specificationQty = 1;
       createProduct({
-        ...this.productDetail,
+        ...this.productDetail
       })
         .then((res) => {
-          this.modalViewLoading = false;
+          this.modalEditLoading = false;
           this.modalEdit = false;
-          this.$Message.success("创建成功!");
+          this.$Message.success('创建成功!');
           this.getTableData();
         })
         .catch(() => {
-          this.modalViewLoading = false;
+          this.modalEditLoading = false;
           this.modalEdit = false;
         });
     },
     editProduct() {
-      this.modalViewLoading = true;
+      this.modalEditLoading = true;
       editProduct({
-        ...this.productDetail,
+        ...this.productDetail
       })
         .then((res) => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
+          this.modalEditLoading = false;
           this.getTableData();
         })
         .catch(() => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
+          this.modalEditLoading = false;
         });
     },
     // 选择分类
     goodsCategoryChange(value, selectedData) {
-      if (selectedData.length > 0) {
-        this.productDetail.groupId = selectedData[selectedData.length - 1].id;
+      if (value.length > 0) {
+        const valueArr = value.map(Number);
+        this.productDetail.groupId = value[value.length - 1];
+        this.defaultGoodsCategoryData = valueArr;
       } else {
         this.productDetail.groupId = null;
+        this.defaultGoodsCategoryData = [];
       }
-      this.defaultGoodsCategoryData = selectedData;
     },
     addProduct() {
       if (this.tempModalType !== this.modalType.create) {
         this.resetFields();
+        this.defaultGoodsCategoryData = [];
         this.tempModalType = this.modalType.create;
       }
       this.modalEdit = true;
     },
     // 删除
     deleteTable(ids) {
-      this.loading = true;
       deleteProduct({
-        ids,
+        ids
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -895,58 +853,30 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch((err) => {
-          console.log(err);
-          this.loading = false;
-        });
     },
     handleView(params) {
-      // this.resetFields();
       this.tempModalType = this.modalType.view;
-      this.loading = true;
-      getProduct({
-        id: params.row.id,
-      })
-        .then((res) => {
-          this.productDetail = res;
-          this.loading = false;
-          this.modalView = true;
-        })
-        .catch((error) => {
-          console.log(error);
-          this.loading = false;
-          this.modalView = true;
-        });
+      this.productDetail = _.cloneDeep(params.row);
+      this.modalView = true;
     },
     handleEdit(params) {
-      this.save = [];
-      this.save.push(params.row.image);
       this.resetFields();
       this.tempModalType = this.modalType.edit;
-      this.loading = true;
-      getProduct({
-        id: params.row.id,
-      })
-        .then((res) => {
-          this.loading = false;
-          this.productDetail = res;
-          this.setDefaultUploadList(res);
-          this.defaultGoodsCategoryData = [];
-          this.findGroupId(this.productDetail.groupId);
-          this.defaultGoodsCategoryData.reverse();
-          this.modalEdit = true;
-        })
-        .catch((error) => {
-          console.log(error);
-          this.loading = false;
-          this.modalEdit = true;
-        });
+      this.productDetail = _.cloneDeep(params.row);
+      this.save = [];
+      this.defaultGoodsCategoryData = [];
+      this.save.push(params.row.image);
+      this.setDefaultUploadList(this.productDetail);
+      this.findGroupId(this.productDetail.groupId);
+      console.log(`defaultGoodsCategoryData: `, ...this.defaultGoodsCategoryData);
+      this.defaultGoodsCategoryData.reverse();
+      this.modalEdit = true;
     },
     findGroupId(id) {
-      const obj = this.proCategoryTreeList.find((item) => {
-        return item.id === id;
-      });
-      this.defaultGoodsCategoryData.push(id);
+      const obj = this.proCategoryTreeList.find((item) => item.id === id);
+      if (typeof id !== 'undefined') {
+        this.defaultGoodsCategoryData.push(id);
+      }
       if (obj && obj.parentid !== 0) {
         this.findGroupId(obj.parentid);
       }
@@ -964,27 +894,30 @@ export default {
       rows.unitsList = this.unitsList;
       setSmallGoodsStandard(rows);
       this.turnToPage({
-        name: "small-goods-relation-standard",
+        name: 'small-goods-relation-standard',
         // name: 'small-goods-raltion-standard',
-        params: { productId: params.row.id, unitsList: this.unitsList },
+        params: { productId: params.row.id, unitsList: this.unitsList }
         // params: { id: params.row.id, unitsList: this.unitsList, productName: params.row.productName }
       });
     },
-    getTableData() {
-      getProductPages(this.searchRowData)
-        .then((res) => {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch((error) => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
+    // 商品主图
+    handleSuccessMain(response, file, fileList) {
+      this.uploadListMain = fileList;
+      this.productDetail.image = null;
+      this.productDetail.image = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
+    },
+    // 设置编辑商品的图片列表
+    setDefaultUploadList(res) {
+      if (res.image != null) {
+        const map = { status: 'finished', url: 'url' };
+        const mainImgArr = [];
+        map.url = res.image;
+        mainImgArr.push(map);
+        this.$refs.uploadMain.setDefaultFileList(mainImgArr);
+        this.uploadListMain = mainImgArr;
+      }
     },
     // 删除附图
     handleRemoveSecond(file) {
@@ -1014,14 +947,6 @@ export default {
         this.productDetail.detailImg = null;
       }
     },
-    // 商品主图
-    handleSuccessMain(response, file, fileList) {
-      this.uploadListMain = fileList;
-      this.productDetail.image = null;
-      this.productDetail.image = fileList[0].url;
-      this.newPicture.push(fileList[0].url);
-      this.oldPicture = this.save;
-    },
     statusChange(value) {
       this.productDetail.status = value;
     },
@@ -1031,8 +956,8 @@ export default {
         if (res && res.array.length > 0) {
           const menuList = buildMenu(res.array);
           const map = {
-            title: "title",
-            children: "children",
+            title: 'title',
+            children: 'children'
           };
           this.menuData = convertTree(menuList, map, true);
           if (this.menuData.length > 0) {
@@ -1042,18 +967,18 @@ export default {
       });
     },
     renderContent(h, { root, node, data }) {
-      if (data.type == "PARENT") {
+      if (data.type == 'PARENT') {
         return (
           <div
             style={{
-              display: "inline-block",
-              width: "100%",
-              fontSize: "14px",
-              cursor: "pointer",
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
             }}
           >
             <span>
-              <CommonIcon type="ios-folder" class="mr10" />
+              <CommonIcon type='ios-folder' class='mr10' />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -1064,14 +989,14 @@ export default {
         return (
           <div
             style={{
-              display: "inline-block",
-              width: "100%",
-              fontSize: "14px",
-              cursor: "pointer",
+              display: 'inline-block',
+              width: '100%',
+              fontSize: '14px',
+              cursor: 'pointer'
             }}
           >
             <span>
-              <CommonIcon type="ios-paper" class="mr10" />
+              <CommonIcon type='ios-paper' class='mr10' />
             </span>
             <span onClick={() => this.handleClick({ root, node, data })}>
               {data.title}
@@ -1081,11 +1006,10 @@ export default {
       }
     },
     handleClick({ root, node, data }) {
-      this.loading = true;
       // 展开当前节点
-      if (typeof data.expand === "undefined") {
+      if (typeof data.expand === 'undefined') {
         // this.$set(data, 'expend', true);
-        this.$set(data, "expend", false);
+        this.$set(data, 'expend', false);
         // if (data.children) {
         if (data.children) {
           this.expandChildren(data.children);
@@ -1099,27 +1023,13 @@ export default {
       // 获取新数据
       this.getTableData();
     },
-    expandChildren(array) {
-      array.forEach((item) => {
-        if (typeof item.expand === "undefined") {
-          // this.$set(item, 'expend', true);
-          this.$set(item, "expend", false);
-          // } else {
-        } else {
-          item.expand = !item.expand;
-        }
-        if (item.children) {
-          this.expandChildren(item.children);
-        }
-      });
-    },
     resetRowData() {
       this.productDetail = this._.cloneDeep(productDetail);
     },
     uniteChange(value) {
       this.productDetail.unitId = value;
-    },
-  },
+    }
+  }
 };
 </script>
 

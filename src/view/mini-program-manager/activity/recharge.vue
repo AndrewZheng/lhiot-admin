@@ -379,9 +379,7 @@ import {
   editRechargeRule,
   createRechargeRule
 } from '@/api/mini-program';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { couponStatusConvert, imageStatusConvert } from '@/libs/converStatus';
 import { couponStatusEnum, imageStatusEnum } from '@/libs/enumerate';
 import {
@@ -483,7 +481,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {
@@ -641,10 +639,10 @@ export default {
             this.$Message.error('结束时间必须大于开始时间!');
             return;
           }
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createRecharge();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editRecharge();
           }

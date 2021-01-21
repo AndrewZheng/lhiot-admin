@@ -311,7 +311,7 @@
       <p slot="header">
         <i-col>
           {{
-            tempModalType === modalType.edit ? "修改门店物料" : "创建门店物料"
+            isEdit ? "修改门店物料" : "创建门店物料"
           }}
         </i-col>
       </p>
@@ -336,7 +336,7 @@
             </FormItem>
             </Col>
           </Row>
-          <Row v-if="tempModalType === modalType.edit">
+          <Row v-if="isEdit">
             <Col span="22">
             <FormItem label="已关联门店:" prop="storeName">
               {{
@@ -349,7 +349,7 @@
             <Col span="22">
             <FormItem
               :label="
-                tempModalType === modalType.edit ? '更换门店:' : '关联门店:'
+                isEdit ? '更换门店:' : '关联门店:'
               "
               prop="storeId"
             >
@@ -357,7 +357,7 @@
                 v-model="storeMaterielDetail.storeId"
                 class="search-col"
                 :placeholder="
-                  tempModalType === modalType.edit
+                  isEdit
                     ? '请选择需更换的门店'
                     : '请选择需关联的门店'
                 "
@@ -408,9 +408,7 @@ import {
   getStoreMaterielDel
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
@@ -459,7 +457,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
       ruleInline: {
@@ -996,10 +994,10 @@ export default {
             this.storeMaterielDetail.storeId &&
             this.storeMaterielDetail.storeName
           ) {
-            if (this.tempModalType === this.modalType.create) {
+            if (this.isCreate) {
               // 添加状态
               this.storeMaterielCreate();
-            } else if (this.tempModalType === this.modalType.edit) {
+            } else if (this.isEdit) {
               // 编辑状态
               this.storeMaterielUpdate();
             }

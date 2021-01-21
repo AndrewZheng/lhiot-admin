@@ -310,7 +310,6 @@ import {
   getStoreSaleTotalPages
 } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
@@ -360,7 +359,7 @@ export default {
     CountTo,
     Tables
   },
-  mixins: [tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       mark: false,

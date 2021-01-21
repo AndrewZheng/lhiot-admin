@@ -388,7 +388,6 @@ import {
   refundFruitDoctorsSettlement
 } from '@/api/fruitermaster';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { settlementStatusConvert } from '@/libs/converStatus';
 import { settlementStatusEnum, settlementStatus } from '@/libs/enumerate';
 import { fenToYuanDot2 } from '../../../libs/util';
@@ -426,7 +425,7 @@ export default {
     Tables,
     BookTypeOption
   },
-  mixins: [tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       columns: [

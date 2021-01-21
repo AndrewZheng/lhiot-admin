@@ -230,7 +230,7 @@
           </Row>
         </Row>
         <Form
-          v-if="tempModalType === modalType.edit"
+          v-if="isEdit"
           ref="modalEdit"
           :model="feedbackDetail"
           :rules="ruleInline"
@@ -241,7 +241,7 @@
           </FormItem>
         </Form>
       </div>
-      <div v-if="tempModalType === modalType.edit" slot="footer">
+      <div v-if="isEdit" slot="footer">
         <Button :loading="feedbackLoading" type="primary" @click="handleEditOk('modalEdit')">
           确认
         </Button>
@@ -263,7 +263,6 @@ import {
   getSystemParameter
 } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { appTypeConvert } from '@/libs/converStatus';
 
 const feedbackDetail = {
@@ -294,7 +293,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {

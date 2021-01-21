@@ -395,7 +395,7 @@
       </p>
       <div class="modal-content">
         <Form
-          ref="modalEdit"
+          ref="editForm"
           :model="storeDetail"
           :rules="ruleInline"
           :label-width="90"
@@ -687,7 +687,7 @@
         <Button
           :loading="modalViewLoading"
           type="primary"
-          @click="handleSubmit('modalEdit')"
+          @click="handleSubmit('editForm')"
         >
           确定
         </Button>
@@ -713,9 +713,7 @@ import {
   createStore
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   storeType,
   storeStatus,
@@ -769,7 +767,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
       storeStatusEnum,
@@ -1032,6 +1030,7 @@ export default {
       });
     },
     handleCitySwitch(value) {
+      this.storeDetail.cityCode = value;
       // 当城市修改过后，重新获取区域列表
       getStoreAreas(value).then((res) => {
         this.areaList = res;
@@ -1039,16 +1038,17 @@ export default {
     },
     handleCityChange(value) {
       // 当城市修改过后，重新获取区域列表，门店列表
+      this.searchRowData.cityCode = value;
       this.getStoreAreas();
       this.getTableData();
     },
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createStore();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editStore();
           }
@@ -1092,6 +1092,7 @@ export default {
         this.tempModalType = this.modalType.create;
         this.storeDetail = _.cloneDeep(storeDetail);
       }
+      this.storeDetail.cityCode = this.searchRowData.cityCode ? this.searchRowData.cityCode : '0731';
       this.modalEdit = true;
     },
     // 删除
@@ -1127,7 +1128,7 @@ export default {
       this.getTableData();
     },
     resetFields() {
-      this.$refs.modalEdit.resetFields();
+      this.$refs.editForm.resetFields();
       this.$refs.uploadMain.clearFileList();
       this.uploadListMain = [];
       this.uploadwxImageList = [];

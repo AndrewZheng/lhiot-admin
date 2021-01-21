@@ -117,9 +117,7 @@ import Tables from '_c/tables';
 import _ from 'lodash';
 import config from '@/config';
 import { getUnifyExportList } from '@/api/mini-program';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 
 const roleRowData = {
   id: '',
@@ -132,7 +130,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       exportList: [],

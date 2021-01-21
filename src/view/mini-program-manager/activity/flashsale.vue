@@ -429,9 +429,7 @@ import {
   editFlashsaleProductRelation,
   getProductStandardsPages
 } from '@/api/mini-program';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { imageStatusConvert } from '@/libs/converStatus';
 import { imageStatusEnum } from '@/libs/enumerate';
 import {
@@ -759,7 +757,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {
@@ -937,10 +935,10 @@ export default {
             this.$Message.error('开始时间不能大于结束时间!');
             return;
           }
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createFlashsale();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editFlashsale();
           }

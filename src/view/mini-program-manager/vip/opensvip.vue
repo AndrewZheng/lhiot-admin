@@ -540,9 +540,7 @@ import {
   editSvipPackage
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   //   1.7
   packageTypeConvert,
@@ -754,7 +752,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
       distributionRuleInline: {
@@ -969,7 +967,7 @@ export default {
       this.$refs.editForm.validate(valid => {
         if (valid) {
           _this.replaceTextByTag();
-          if (this.tempModalType === this.modalType.edit) {
+          if (this.isEdit) {
             _this.editSvipPackage();
           }
         } else {

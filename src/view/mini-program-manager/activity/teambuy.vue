@@ -504,7 +504,7 @@
       <p slot="header">
         <i-col>
           {{
-            tempModalType === modalType.edit ? "修改团购活动" : "创建团购活动"
+            isEdit ? "修改团购活动" : "创建团购活动"
           }}
         </i-col>
       </p>
@@ -517,7 +517,7 @@
               :rules="ruleInline"
               :label-width="140"
             >
-              <Row v-show="tempModalType === modalType.edit">
+              <Row v-show="isEdit">
                 <i-col span="12">
                   <FormItem label="团购ID:" prop="id">
                     {{ teambuyDetail.id }}
@@ -535,7 +535,7 @@
                     <Input
                       v-model="teambuyDetail.activityName"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       style="width: 200px"
@@ -548,7 +548,7 @@
                       v-model="teambuyDetail.teamBuyType"
                       style="width: 200px"
                       :disabled="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                     >
@@ -572,7 +572,7 @@
                       v-model="teambuyDetail.content"
                       style="width: 200px"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                     ></Input>
@@ -586,7 +586,7 @@
                         :key="item.value"
                         :value="item.value"
                         :disabled="
-                          tempModalType === modalType.create &&
+                          isCreate &&
                             item.value == 'expire'
                         "
                         class="ptb2-5"
@@ -667,7 +667,7 @@
                       class="search-input"
                       style="width: 200px"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       @on-change="startTimeChange"
@@ -684,7 +684,7 @@
                       class="search-input"
                       style="width: 200px"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       @on-change="endTimeChange"
@@ -700,7 +700,7 @@
                       placeholder="券有效期类型"
                       style="width: 205px"
                       :disabled="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                     >
@@ -733,7 +733,7 @@
                       class="search-input"
                       style="width: 200px"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       @on-change="deliveryEndTimeChange"
@@ -748,7 +748,7 @@
                       label="提货截止天数"
                       style="width: 160px"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                     ></InputNumber>
@@ -763,7 +763,7 @@
                       :min="0"
                       style="width: 200px"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                     ></InputNumber>
@@ -777,7 +777,7 @@
                       v-model="teambuyDetail.hour"
                       :min="0"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       style="width: 60px"
@@ -787,7 +787,7 @@
                       v-model="teambuyDetail.minute"
                       :min="0"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       style="width: 60px"
@@ -797,7 +797,7 @@
                       v-model="teambuyDetail.second"
                       :min="0"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       style="width: 60px"
@@ -889,7 +889,7 @@
                       placeholder="活动价"
                       style="width: 200px"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       @on-change="activityPriceInputNumberOnchange"
@@ -901,7 +901,7 @@
                     <InputNumber
                       :min="0"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       :value="tourDiscountComputed"
@@ -948,7 +948,7 @@
                       v-model="teambuyDetail.commissionScale"
                       :min="0"
                       :readonly="
-                        tempModalType === modalType.edit &&
+                        isEdit &&
                           teambuyDetail.status === 'on'
                       "
                       style="padding-right: 5px; width: 200px"
@@ -962,7 +962,7 @@
                   </FormItem>
                 </i-col>
               </Row>
-              <Divider v-show="tempModalType === modalType.edit">
+              <Divider v-show="isEdit">
                 可修改部分
               </Divider>
               <Row>
@@ -1669,9 +1669,7 @@ import {
   getGoodsStandard
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import {
   teamBuyStatusConvert,
@@ -1820,7 +1818,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin, relationStoreMixin],
+  mixins: [uploadMixin, tableMixin, relationStoreMixin],
   data() {
     return {
       flagShipList: [],

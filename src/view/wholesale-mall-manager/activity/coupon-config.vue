@@ -141,7 +141,7 @@
       <p slot="header">
         <i-col>
           {{
-            tempModalType === modalType.edit ? "修改优惠券配置" : "创建优惠券配置"
+            isEdit ? "修改优惠券配置" : "创建优惠券配置"
           }}
         </i-col>
       </p>
@@ -380,9 +380,7 @@ import {
   editCouponConfig,
   createCouponConfig
 } from '@/api/wholesale';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   activityTypeEnum,
   couponTemplateTypeEnum,
@@ -550,7 +548,7 @@ export default {
       return str;
     }
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       couponFromEnum,

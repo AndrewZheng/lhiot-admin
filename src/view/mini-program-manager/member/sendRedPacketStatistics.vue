@@ -28,7 +28,7 @@
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
               </RadioGroup>
-              <div class="mark" v-show="mark === true">
+              <div v-show="mark === true" class="mark">
                 <DatePicker
                   :value="searchRowData.createBeginDate"
                   format="yyyy-MM-dd"
@@ -109,94 +109,91 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
-import { getWechatRewardPage } from "@/api/mini-program";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+import Tables from '_c/tables';
+import _ from 'lodash';
+import { getWechatRewardPage } from '@/api/mini-program';
+import uploadMixin from '@/mixins/uploadMixin';
+import tableMixin from '@/mixins/tableMixin.js';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber,
-} from "@/libs/util";
+  yuanToFenNumber
+} from '@/libs/util';
 
 const roleRowData = {
-  createBeginDate: "",
-  createEndDate: "",
-  sidx: "createTime",
-  sort: "desc",
-  receiveUserName: "",
-  receiveUserPhone: "",
+  createBeginDate: '',
+  createEndDate: '',
+  sidx: 'createTime',
+  sort: 'desc',
+  receiveUserName: '',
+  receiveUserPhone: '',
   page: 1,
-  rows: 10,
+  rows: 10
 };
 
 export default {
   components: {
-    Tables,
+    Tables
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
-      mark: false,
       mark: false,
       modalViewLoading: false,
       createLoading: false,
       totalAmount: 0,
       totalPage: 0,
-      button: "昨日",
+      button: '昨日',
       tableData: [],
       columns: [
         {
-          title: "发起人昵称",
-          align: "center",
-          key: "createUserName",
-          minWidth: 120,
+          title: '发起人昵称',
+          align: 'center',
+          key: 'createUserName',
+          minWidth: 120
         },
         {
-          title: "电话号码",
-          align: "center",
-          key: "createUserPhone",
-          minWidth: 120,
+          title: '电话号码',
+          align: 'center',
+          key: 'createUserPhone',
+          minWidth: 120
         },
         {
-          title: "创建时间",
-          align: "center",
-          key: "createTime",
-          minWidth: 60,
+          title: '创建时间',
+          align: 'center',
+          key: 'createTime',
+          minWidth: 60
         },
         {
-          title: "领取人昵称",
-          align: "center",
-          key: "receiveUserName",
-          minWidth: 60,
+          title: '领取人昵称',
+          align: 'center',
+          key: 'receiveUserName',
+          minWidth: 60
         },
         {
-          title: "领取人电话",
-          align: "center",
-          key: "receiveUserPhone",
-          minWidth: 60,
+          title: '领取人电话',
+          align: 'center',
+          key: 'receiveUserPhone',
+          minWidth: 60
         },
         {
-          title: "领取时间",
-          align: "center",
-          key: "receiveTime",
-          minWidth: 60,
+          title: '领取时间',
+          align: 'center',
+          key: 'receiveTime',
+          minWidth: 60
         },
         {
-          title: "领取金额",
-          align: "center",
-          key: "amount",
+          title: '领取金额',
+          align: 'center',
+          key: 'amount',
           minWidth: 60,
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.amount);
             return <div>{amount}</div>;
-          },
-        },
+          }
+        }
       ],
-      searchRowData: _.cloneDeep(roleRowData),
+      searchRowData: _.cloneDeep(roleRowData)
     };
   },
   computed: {},
@@ -207,14 +204,14 @@ export default {
   created() {},
   methods: {
     gettableData(value) {
-      let date = new Date();
+      const date = new Date();
       date.setDate(date.getDate());
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var today = `${year}-${month}-${day}`;
-      if (value === "昨日" || this.button === "昨日") {
-        let date = new Date();
+      if (value === '昨日' || this.button === '昨日') {
+        const date = new Date();
         date.setDate(date.getDate() - 1);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -223,8 +220,8 @@ export default {
         this.searchRowData.createBeginDate = yesterday;
         this.searchRowData.createEndDate = yesterday;
       }
-      if (value === "今日") {
-        let date = new Date();
+      if (value === '今日') {
+        const date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -233,8 +230,8 @@ export default {
         this.searchRowData.createBeginDate = today;
         this.searchRowData.createEndDate = today;
       }
-      if (value === "汇总") {
-        let date = new Date();
+      if (value === '汇总') {
+        const date = new Date();
         date.setDate(date.getDate() - 365);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -243,8 +240,8 @@ export default {
         this.searchRowData.createBeginDate = before;
         this.searchRowData.createEndDate = today;
       }
-      if (value === "最近7天") {
-        let date = new Date();
+      if (value === '最近7天') {
+        const date = new Date();
         date.setDate(date.getDate() - 7);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -253,8 +250,8 @@ export default {
         this.searchRowData.createBeginDate = sevenDay;
         this.searchRowData.createEndDate = today;
       }
-      if (value === "最近30天") {
-        let date = new Date();
+      if (value === '最近30天') {
+        const date = new Date();
         date.setDate(date.getDate() - 30);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -265,10 +262,10 @@ export default {
       }
       this.searchRowData.createBeginDate = this.$moment(
         this.searchRowData.createBeginDate
-      ).format("YYYY-MM-DD");
+      ).format('YYYY-MM-DD');
       this.searchRowData.createEndDate = this.$moment(
         this.searchRowData.createEndDate
-      ).format("YYYY-MM-DD");
+      ).format('YYYY-MM-DD');
       getWechatRewardPage(this.searchRowData)
         .then((res) => {
           this.tableData = res.pagingResultDto.rows;
@@ -286,33 +283,33 @@ export default {
         });
     },
     timeChange(value) {
-      if (value === "今日") {
+      if (value === '今日') {
         this.gettableData(value);
         this.mark = false;
-      } else if (value === "汇总") {
+      } else if (value === '汇总') {
         this.mark = false;
         this.gettableData(value);
-      } else if (value === "昨日") {
+      } else if (value === '昨日') {
         this.mark = false;
         this.gettableData(value);
-      } else if (value === "最近7天") {
+      } else if (value === '最近7天') {
         this.mark = false;
         this.gettableData(value);
-      } else if (value === "最近30天") {
+      } else if (value === '最近30天') {
         this.mark = false;
         this.gettableData(value);
-      } else if (value === "自定义时间") {
+      } else if (value === '自定义时间') {
         this.mark = true;
-        this.searchRowData.createBeginDate = "";
-        this.searchRowData.createEndDate = "";
+        this.searchRowData.createBeginDate = '';
+        this.searchRowData.createEndDate = '';
       }
     },
     starttimeChange(value, date) {
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.searchRowData.createBeginDate = value;
     },
     endtimeChange(value, date) {
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.searchRowData.createEndDate = value;
     },
     handleSearchMaterial() {
@@ -322,8 +319,8 @@ export default {
     handleClearMaterial() {
       // 重置数据
       this.searchRowData = _.cloneDeep(roleRowData);
-      this.button = "昨日";
-      this.gettableData("昨日");
+      this.button = '昨日';
+      this.gettableData('昨日');
     },
     changePageMaterial(page) {
       this.searchRowData.page = page;
@@ -337,7 +334,7 @@ export default {
     handleDownload(name) {
       const _this = this;
       this.searchRowData.rows = this.totalPage > 5000 ? 5000 : this.totalPage;
-      let pageSize = this.searchRowData.page;
+      const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       getWechatRewardPage(this.searchRowData).then((res) => {
         const tableData = res.pagingResultDto.rows;
@@ -345,20 +342,20 @@ export default {
         this.searchRowData.rows = 10;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
-        let _this = this;
+        const _this = this;
         tableData.forEach((item) => {
-          item["amount"] = (
-            item["amount"] / 100.0
+          item['amount'] = (
+            item['amount'] / 100.0
           ).toFixed(2);
         });
-        const date = _this.$moment(new Date()).format("YYYYMMDDHHmmss");
+        const date = _this.$moment(new Date()).format('YYYYMMDDHHmmss');
         _this.$refs.tables1.handleDownload({
           filename: `外卖红包数据统计-${date}`,
-          data: tableData,
+          data: tableData
         });
       });
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

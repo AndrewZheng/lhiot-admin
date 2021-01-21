@@ -214,7 +214,7 @@
     <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
         <span>{{
-          tempModalType === modalType.edit ? "修改FAQ" : "创建FAQ"
+          isEdit ? "修改FAQ" : "创建FAQ"
         }}</span>
       </p>
       <div class="modal-content">
@@ -293,8 +293,6 @@ import {
 import { buildMenu, convertTree } from '@/libs/util';
 import CommonIcon from '_c/common-icon';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import { appTypeEnum } from '@/libs/enumerate';
 import { appTypeConvert } from '@/libs/converStatus';
 
@@ -324,7 +322,7 @@ export default {
     Tables,
     CommonIcon
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {
@@ -492,7 +490,7 @@ export default {
         if (valid) {
           this.modalEditLoading = true;
           this.modalViewLoading = true;
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             if (!this.parentCategory.id) {
               this.faq.faqCategoryId = 0;
             } else {
@@ -506,7 +504,7 @@ export default {
                 this.modalEdit = false;
                 this.resetFields();
               });
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             editFaq(this.faq)
               .then((res) => {})
               .finally((res) => {

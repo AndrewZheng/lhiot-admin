@@ -4,10 +4,10 @@
       <div class="tabChange">
         <b
           data-index="issue"
-          @click="assistDataChange"
           :class=" topStatus=='issue' ? 'hot' : '' "
+          @click="assistDataChange"
         >发券统计</b>
-        <b data-index="use" @click="assistDataChange" :class=" topStatus=='use' ? 'hot' : '' ">用券统计</b>
+        <b data-index="use" :class=" topStatus=='use' ? 'hot' : '' " @click="assistDataChange">用券统计</b>
       </div>
       <Card v-show="topStatus==='issue'">
         <tables
@@ -31,7 +31,7 @@
                 <Radio label="最近30天"></Radio>
                 <Radio label="自定义时间"></Radio>
               </RadioGroup>
-              <div class="mark" v-show="mark===true">
+              <div v-show="mark===true" class="mark">
                 <DatePicker
                   :value="searchRowData.startDate"
                   format="yyyy-MM-dd"
@@ -59,8 +59,8 @@
               >
                 <Option
                   v-for="(item,index) in sourceType"
-                  :value="item.value"
                   :key="index"
+                  :value="item.value"
                   class="ptb2-5"
                 >{{ item.label }}</Option>
               </Select>
@@ -71,8 +71,8 @@
               >
                 <Option
                   v-for="(item,index) in couponWayList"
-                  :value="item.key"
                   :key="index"
+                  :value="item.key"
                   class="ptb2-5"
                 >{{ item.value }}</Option>
               </Select>
@@ -84,8 +84,8 @@
               >
                 <Option
                   v-for="(item,index) in couponTypeList"
-                  :value="item.key"
                   :key="index"
+                  :value="item.key"
                   class="ptb2-5"
                   style="padding-left: 5px;width: 100px"
                 >{{ item.value }}</Option>
@@ -99,31 +99,31 @@
               ></Input>
             </Row>
             <Row style="margin-top:10px;">
-            <div class="ml15 mt10" style="float:left">
-              发券总数<i style="color:red">{{totalNum}}</i> 张
-            </div>
-            <div style="float:right">
+              <div class="ml15 mt10" style="float:left">
+                发券总数<i style="color:red">{{ totalNum }}</i> 张
+              </div>
+              <div style="float:right">
                 <Button
-                :loading="searchLoading"
-                class="search-btn mr5"
-                type="primary"
-                @click="handleSearch"
-              >
-                <Icon type="md-search" />&nbsp;搜索
-              </Button>
-              <Button
-                v-waves
-                :loading="clearSearchLoading"
-                class="search-btn"
-                type="info"
-                @click="handleClear"
-              >
-                <Icon type="md-refresh" />&nbsp;清除
-              </Button>
-              <Button class="search-btn mr2" type="warning" @click="handleDownload('issue')">
-                <Icon type="md-download" />导出数据
-              </Button>
-            </div>
+                  :loading="searchLoading"
+                  class="search-btn mr5"
+                  type="primary"
+                  @click="handleSearch"
+                >
+                  <Icon type="md-search" />&nbsp;搜索
+                </Button>
+                <Button
+                  v-waves
+                  :loading="clearSearchLoading"
+                  class="search-btn"
+                  type="info"
+                  @click="handleClear"
+                >
+                  <Icon type="md-refresh" />&nbsp;清除
+                </Button>
+                <Button class="search-btn mr2" type="warning" @click="handleDownload('issue')">
+                  <Icon type="md-download" />导出数据
+                </Button>
+              </div>
             </Row>
           </div>
         </tables>
@@ -162,7 +162,7 @@
                 <Radio label="最近30天" class="mt5"></Radio>
                 <Radio label="自定义时间" class="mt5"></Radio>
               </RadioGroup>
-              <div class="mark" v-show="mark1===true">
+              <div v-show="mark1===true" class="mark">
                 <DatePicker
                   :value="searchRowData1.startDate"
                   format="yyyy-MM-dd"
@@ -181,7 +181,7 @@
                   style="width: 120px"
                   @on-change="searchRowData1.endDate=$event"
                 />
-              </div>               
+              </div>
               <Select
                 v-model="searchRowData1.source"
                 placeholder="发券平台"
@@ -190,8 +190,8 @@
               >
                 <Option
                   v-for="(item,index) in sourceType"
-                  :value="item.value"
                   :key="index"
+                  :value="item.value"
                   class="ptb2-5"
                 >{{ item.label }}</Option>
               </Select>
@@ -205,8 +205,8 @@
               >
                 <Option
                   v-for="(item,index) in storeList"
-                  :value="item.value"
                   :key="index"
+                  :value="item.value"
                   class="ptb2-5"
                 >{{ item.label }}</Option>
               </Select>
@@ -219,8 +219,8 @@
               >
                 <Option
                   v-for="(item,index) in couponWayList"
-                  :value="item.key"
                   :key="index"
+                  :value="item.key"
                   class="ptb2-5"
                 >{{ item.value }}</Option>
               </Select>
@@ -233,8 +233,8 @@
               >
                 <Option
                   v-for="(item,index) in couponTypeList"
-                  :value="item.key"
                   :key="index"
+                  :value="item.key"
                   class="ptb2-5"
                   style="width: 100px;"
                 >{{ item.value }}</Option>
@@ -248,30 +248,30 @@
               ></Input>
             </Row>
             <Row style="margin-top:10px">
-            <div class="ml15 mt10" style="float:left">
-              用券总数<i style="color:red">{{totalNum1}}</i> 张；总抵扣金额<i style="color:red">{{totalCouponAmount}}</i> 元；实收总金额<i style="color:red">{{totalAmountPayable}}</i> 元
-            </div>
+              <div class="ml15 mt10" style="float:left">
+                用券总数<i style="color:red">{{ totalNum1 }}</i> 张；总抵扣金额<i style="color:red">{{ totalCouponAmount }}</i> 元；实收总金额<i style="color:red">{{ totalAmountPayable }}</i> 元
+              </div>
               <div style="float:right">
                 <Button
-                :loading="searchLoading"
-                class="search-btn mr2"
-                type="primary"
-                @click="handleSearch1"
-              >
-                <Icon type="md-search" />&nbsp;搜索
-              </Button>
-              <Button
-                v-waves
-                :loading="clearSearchLoading"
-                class="search-btn"
-                type="info"
-                @click="handleClear1"
-              >
-                <Icon type="md-refresh" />&nbsp;清除
-              </Button>
-              <Button class="search-btn mr2" type="warning" @click="handleDownload('use')">
-                <Icon type="md-download" />导出
-              </Button>
+                  :loading="searchLoading"
+                  class="search-btn mr2"
+                  type="primary"
+                  @click="handleSearch1"
+                >
+                  <Icon type="md-search" />&nbsp;搜索
+                </Button>
+                <Button
+                  v-waves
+                  :loading="clearSearchLoading"
+                  class="search-btn"
+                  type="info"
+                  @click="handleClear1"
+                >
+                  <Icon type="md-refresh" />&nbsp;清除
+                </Button>
+                <Button class="search-btn mr2" type="warning" @click="handleDownload('use')">
+                  <Icon type="md-download" />导出
+                </Button>
               </div>
             </Row>
           </div>
@@ -294,25 +294,23 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
-import _ from "lodash";
+import Tables from '_c/tables';
+import _ from 'lodash';
 import {
   getSendCouponPages,
   getComboBoxs,
   getUseCouponPages,
-  getStorePages,
-} from "@/api/mini-program";
-import uploadMixin from "@/mixins/uploadMixin";
-import deleteMixin from "@/mixins/deleteMixin.js";
-import tableMixin from "@/mixins/tableMixin.js";
-import { couponTypeConvert } from "@/libs/converStatus";
-import { couponTypeEnum } from "@/libs/enumerate";
-import searchMixin from "@/mixins/searchMixin.js";
+  getStorePages
+} from '@/api/mini-program';
+import uploadMixin from '@/mixins/uploadMixin';
+import tableMixin from '@/mixins/tableMixin.js';
+import { couponTypeConvert } from '@/libs/converStatus';
+import { couponTypeEnum } from '@/libs/enumerate';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
-  yuanToFenNumber,
-} from "@/libs/util";
+  yuanToFenNumber
+} from '@/libs/util';
 
 const couponTemplateDetail = {};
 
@@ -324,7 +322,7 @@ const roleRowData = {
   couponType: null,
   couponName: null,
   startDate: null,
-  endDate: null,
+  endDate: null
 };
 
 const roleRowData1 = {
@@ -336,232 +334,232 @@ const roleRowData1 = {
   couponType: null,
   couponName: null,
   startDate: null,
-  endDate: null,
+  endDate: null
 };
 
 export default {
   components: {
-    Tables,
+    Tables
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
-      topStatus: "issue",
+      topStatus: 'issue',
       mark: false,
       mark1: false,
       num: 0,
       num1: 0,
       couponTypeList: [],
       couponWayList: [],
-      button: "今日",
-      button1: "今日",
+      button: '今日',
+      button1: '今日',
       couponTypeEnum,
       totalNum: 0,
       totalNum1: 0,
-      totalCouponAmount: "0.00",
-      totalAmountPayable: "0.00",
+      totalCouponAmount: '0.00',
+      totalAmountPayable: '0.00',
       totalPage: 0,
       storeList: [],
       sourceType: [
-        { label: "海鼎券", value: "HD" },
-        { label: "系统券", value: "SMALL" },
+        { label: '海鼎券', value: 'HD' },
+        { label: '系统券', value: 'SMALL' }
       ],
       columns: [
         {
-          title: "发券日期",
-          align: "center",
-          key: "receiveTime",
-          width: 130,
+          title: '发券日期',
+          align: 'center',
+          key: 'receiveTime',
+          width: 130
         },
         {
-          title: "发券平台",
-          align: "center",
-          key: "source",
+          title: '发券平台',
+          align: 'center',
+          key: 'source',
           width: 120,
           render(h, params, vm) {
             const { row } = params;
-            if (row.source === "SMALL") {
-              return <tag color="orange">{"小程序"}</tag>;
+            if (row.source === 'SMALL') {
+              return <tag color='orange'>{'小程序'}</tag>;
             } else {
-              return <tag color="cyan">{"海鼎"}</tag>;
+              return <tag color='cyan'>{'海鼎'}</tag>;
             }
-          },
+          }
         },
         {
-          title: "发券途径",
-          align: "center",
-          key: "couponWay",
-          width: 180,
+          title: '发券途径',
+          align: 'center',
+          key: 'couponWay',
+          width: 180
         },
         {
-          title: "券名称",
-          align: "center",
-          key: "couponName",
+          title: '券名称',
+          align: 'center',
+          key: 'couponName'
         },
         {
-          title: "活动名称",
-          align: "center",
-          key: "activityName",
+          title: '活动名称',
+          align: 'center',
+          key: 'activityName'
         },
         {
-          title: "券类型",
-          align: "center",
-          key: "couponType",
+          title: '券类型',
+          align: 'center',
+          key: 'couponType',
           width: 120,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.couponType === "FULL_CUT_COUPON") {
+            if (row.couponType === 'FULL_CUT_COUPON') {
               return (
                 <div>
-                  <tag color="magenta">
+                  <tag color='magenta'>
                     {couponTypeConvert(row.couponType).label}
                   </tag>
                 </div>
               );
-            } else if (row.couponType === "DISCOUNT_COUPON") {
+            } else if (row.couponType === 'DISCOUNT_COUPON') {
               return (
                 <div>
-                  <tag color="orange">
+                  <tag color='orange'>
                     {couponTypeConvert(row.couponType).label}
                   </tag>
                 </div>
               );
-            } else if (row.couponType === "CASH_COUPON") {
+            } else if (row.couponType === 'CASH_COUPON') {
               return (
                 <div>
-                  <tag color="cyan">
+                  <tag color='cyan'>
                     {couponTypeConvert(row.couponType).label}
                   </tag>
                 </div>
               );
-            } else if (row.couponType === "FREIGHT_COUPON") {
+            } else if (row.couponType === 'FREIGHT_COUPON') {
               return (
                 <div>
-                  <tag color="blue">
+                  <tag color='blue'>
                     {couponTypeConvert(row.couponType).label}
                   </tag>
                 </div>
               );
             }
             return <div>{row.couponType}</div>;
-          },
+          }
         },
         {
-          title: "发券数量",
-          align: "center",
-          key: "countNum",
-          width: 120,
+          title: '发券数量',
+          align: 'center',
+          key: 'countNum',
+          width: 120
         },
         {
-          title: "发券人数",
-          align: "center",
-          key: "countUser",
-          width: 120,
-        },
+          title: '发券人数',
+          align: 'center',
+          key: 'countUser',
+          width: 120
+        }
       ],
       columns1: [
         {
-          title: "用券日期",
-          align: "center",
-          key: "useTime",
-          width: 120,
+          title: '用券日期',
+          align: 'center',
+          key: 'useTime',
+          width: 120
         },
         {
-          title: "发券平台",
-          align: "center",
-          key: "source",
+          title: '发券平台',
+          align: 'center',
+          key: 'source',
           width: 150,
           render(h, params, vm) {
             const { row } = params;
-            if (row.source === "SMALL") {
-              return <tag color="orange">{"小程序"}</tag>;
+            if (row.source === 'SMALL') {
+              return <tag color='orange'>{'小程序'}</tag>;
             } else {
-              return <tag color="cyan">{"海鼎"}</tag>;
+              return <tag color='cyan'>{'海鼎'}</tag>;
             }
-          },
+          }
         },
         {
-          title: "发券途径",
-          align: "center",
-          key: "couponWay",
-          width: 160,
+          title: '发券途径',
+          align: 'center',
+          key: 'couponWay',
+          width: 160
         },
         {
-          title: "券名称",
-          align: "center",
-          key: "couponName",
+          title: '券名称',
+          align: 'center',
+          key: 'couponName'
         },
         {
-          title: "活动名称",
-          align: "center",
-          key: "activityName",
+          title: '活动名称',
+          align: 'center',
+          key: 'activityName'
         },
         {
-          title: "券类型",
-          align: "center",
-          key: "couponType",
+          title: '券类型',
+          align: 'center',
+          key: 'couponType',
           width: 140,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.couponType === "FULL_CUT_COUPON") {
+            if (row.couponType === 'FULL_CUT_COUPON') {
               return (
                 <div>
-                  <tag color="magenta">
+                  <tag color='magenta'>
                     {couponTypeConvert(row.couponType).label}
                   </tag>
                 </div>
               );
-            } else if (row.couponType === "DISCOUNT_COUPON") {
+            } else if (row.couponType === 'DISCOUNT_COUPON') {
               return (
                 <div>
-                  <tag color="orange">
+                  <tag color='orange'>
                     {couponTypeConvert(row.couponType).label}
                   </tag>
                 </div>
               );
-            } else if (row.couponType === "CASH_COUPON") {
+            } else if (row.couponType === 'CASH_COUPON') {
               return (
                 <div>
-                  <tag color="cyan">
+                  <tag color='cyan'>
                     {couponTypeConvert(row.couponType).label}
                   </tag>
                 </div>
               );
-            } else if (row.couponType === "FREIGHT_COUPON") {
+            } else if (row.couponType === 'FREIGHT_COUPON') {
               return (
                 <div>
-                  <tag color="blue">
+                  <tag color='blue'>
                     {couponTypeConvert(row.couponType).label}
                   </tag>
                 </div>
               );
             }
             return <div>{row.couponType}</div>;
-          },
+          }
         },
         {
-          title: "用券门店",
-          align: "center",
-          key: "storeName",
-          width: 180,
+          title: '用券门店',
+          align: 'center',
+          key: 'storeName',
+          width: 180
         },
         {
-          title: "抵扣金额",
-          align: "center",
-          key: "couponAmount",
+          title: '抵扣金额',
+          align: 'center',
+          key: 'couponAmount',
+          width: 120
+        },
+        {
+          title: '实收金额',
+          align: 'center',
           width: 120,
-        },
-        {
-          title: "实收金额",
-          align: "center",
-          width: 120,
-          key: "amountPayable",
-        },
+          key: 'amountPayable'
+        }
       ],
       searchRowData: _.cloneDeep(roleRowData),
       searchRowData1: _.cloneDeep(roleRowData1),
       couponTemplateDetail: _.cloneDeep(couponTemplateDetail),
-      tableData1: [],
+      tableData1: []
     };
   },
   computed: {},
@@ -584,14 +582,14 @@ export default {
       this.getTableData1();
     },
     getTableData(value) {
-      let date = new Date();
+      const date = new Date();
       date.setDate(date.getDate());
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var today = `${year}-${month}-${day}`;
-      if (value === "昨日") {
-        let date = new Date();
+      if (value === '昨日') {
+        const date = new Date();
         date.setDate(date.getDate() - 1);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -600,8 +598,8 @@ export default {
         this.searchRowData.startDate = yesterday;
         this.searchRowData.endDate = yesterday;
       }
-      if (this.button === "今日") {
-        let date = new Date();
+      if (this.button === '今日') {
+        const date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -610,8 +608,8 @@ export default {
         this.searchRowData.startDate = today;
         this.searchRowData.endDate = today;
       }
-      if (value === "今日") {
-        let date = new Date();
+      if (value === '今日') {
+        const date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -620,8 +618,8 @@ export default {
         this.searchRowData.startDate = today;
         this.searchRowData.endDate = today;
       }
-      if (value === "最近7天") {
-        let date = new Date();
+      if (value === '最近7天') {
+        const date = new Date();
         date.setDate(date.getDate() - 7);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -630,8 +628,8 @@ export default {
         this.searchRowData.startDate = sevenDay;
         this.searchRowData.endDate = today;
       }
-      if (value === "最近30天") {
-        let date = new Date();
+      if (value === '最近30天') {
+        const date = new Date();
         date.setDate(date.getDate() - 30);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -667,14 +665,14 @@ export default {
         });
     },
     getTableData1(value) {
-      let date = new Date();
+      const date = new Date();
       date.setDate(date.getDate());
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
       var day = date.getDate();
       var today = `${year}-${month}-${day}`;
-      if (value === "昨日") {
-        let date = new Date();
+      if (value === '昨日') {
+        const date = new Date();
         date.setDate(date.getDate() - 1);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -683,8 +681,8 @@ export default {
         this.searchRowData1.startDate = yesterday;
         this.searchRowData1.endDate = yesterday;
       }
-      if (this.button1 === "今日") {
-        let date = new Date();
+      if (this.button1 === '今日') {
+        const date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -693,8 +691,8 @@ export default {
         this.searchRowData1.startDate = today;
         this.searchRowData1.endDate = today;
       }
-      if (value === "今日") {
-        let date = new Date();
+      if (value === '今日') {
+        const date = new Date();
         date.setDate(date.getDate());
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -703,8 +701,8 @@ export default {
         this.searchRowData1.startDate = today;
         this.searchRowData1.endDate = today;
       }
-      if (value === "最近7天") {
-        let date = new Date();
+      if (value === '最近7天') {
+        const date = new Date();
         date.setDate(date.getDate() - 7);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -713,8 +711,8 @@ export default {
         this.searchRowData1.startDate = sevenDay;
         this.searchRowData1.endDate = today;
       }
-      if (value === "最近30天") {
-        let date = new Date();
+      if (value === '最近30天') {
+        const date = new Date();
         date.setDate(date.getDate() - 30);
         var year = date.getFullYear();
         var month = date.getMonth() + 1;
@@ -753,7 +751,7 @@ export default {
       getStorePages({ page: 1, rows: -1 })
         .then((res) => {
           res.rows.forEach((value) => {
-            const map = { label: "label", value: "value" };
+            const map = { label: 'label', value: 'value' };
             map.value = value.storeId;
             map.label = value.storeName;
             this.storeList.push(map);
@@ -788,20 +786,20 @@ export default {
       this.handleSearch1();
     },
     assistDataChange(e) {
-      let index = e.currentTarget.dataset.index;
+      const index = e.currentTarget.dataset.index;
       if (this.topStatus === index) {
         return;
       }
-      if (index === "use") {
+      if (index === 'use') {
         this.handleSearch1();
       }
-      (this.button = "今日"),
-        (this.button1 = "今日"),
-        (this.totalNum = 0),
-        (this.totalNum1 = 0),
-        (this.totalCouponAmount = "0.00"),
-        (this.totalAmountPayable = "0.00"),
-        (this.topStatus = index);
+      (this.button = '今日'),
+      (this.button1 = '今日'),
+      (this.totalNum = 0),
+      (this.totalNum1 = 0),
+      (this.totalCouponAmount = '0.00'),
+      (this.totalAmountPayable = '0.00'),
+      (this.topStatus = index);
     },
     changePage2(page) {
       this.searchRowData1.page = page;
@@ -813,61 +811,61 @@ export default {
       this.getTableData1();
     },
     timeChange(value) {
-      if (value === "今日") {
+      if (value === '今日') {
         this.getTableData(value);
         this.mark = false;
-      } else if (value === "昨日") {
+      } else if (value === '昨日') {
         this.mark = false;
         this.getTableData(value);
-      } else if (value === "最近7天") {
+      } else if (value === '最近7天') {
         this.mark = false;
         this.getTableData(value);
-      } else if (value === "最近30天") {
+      } else if (value === '最近30天') {
         this.mark = false;
         this.getTableData(value);
-      } else if (value === "自定义时间") {
+      } else if (value === '自定义时间') {
         this.mark = true;
-        this.searchRowData.startDate = "";
-        this.searchRowData.endDate = "";
+        this.searchRowData.startDate = '';
+        this.searchRowData.endDate = '';
       }
     },
     timeChange1(value) {
-      if (value === "今日") {
+      if (value === '今日') {
         this.getTableData1(value);
         this.mark1 = false;
-      } else if (value === "昨日") {
+      } else if (value === '昨日') {
         this.mark1 = false;
         this.getTableData1(value);
-      } else if (value === "最近7天") {
+      } else if (value === '最近7天') {
         this.mark1 = false;
         this.getTableData1(value);
-      } else if (value === "最近30天") {
+      } else if (value === '最近30天') {
         this.mark1 = false;
         this.getTableData1(value);
-      } else if (value === "自定义时间") {
+      } else if (value === '自定义时间') {
         this.mark1 = true;
-        this.searchRowData1.startDate = "";
-        this.searchRowData1.endDate = "";
+        this.searchRowData1.startDate = '';
+        this.searchRowData1.endDate = '';
       }
     },
     startTimeChange(value, date) {
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.searchRowData.startDate = value;
     },
     endTimeChange(value, date) {
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.searchRowData.endDate = value;
     },
     startTimeChange1(value, date) {
-      this.button1 = "自定义时间";
+      this.button1 = '自定义时间';
       this.searchRowData1.startDate = value;
     },
     endTimeChange1(value, date) {
-      this.button1 = "自定义时间";
+      this.button1 = '自定义时间';
       this.searchRowData1.endDate = value;
     },
     handleClear() {
-      this.button = "今日";
+      this.button = '今日';
       this.mark = false;
       this.resetSearchRowData();
       this.page = 1;
@@ -877,10 +875,10 @@ export default {
     },
     // 导出数据
     handleDownload(name) {
-      if (name === "issue") {
+      if (name === 'issue') {
         // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
         this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-        let pageSize = this.searchRowData.page;
+        const pageSize = this.searchRowData.page;
         this.searchRowData.page = 1;
         getSendCouponPages(this.searchRowData).then((res) => {
           const tableData = res.pagingResultDto.rows;
@@ -888,25 +886,25 @@ export default {
           this.searchRowData.rows = 10;
           this.searchRowData.page = pageSize;
           // 表格数据导出字段翻译
-          let _this = this;
+          const _this = this;
           tableData.forEach((item) => {
-            item["couponType"] = couponTypeConvert(item["couponType"]).label;
-            if (item["source"] === "SMALL") {
-              item["source"] = "小程序";
+            item['couponType'] = couponTypeConvert(item['couponType']).label;
+            if (item['source'] === 'SMALL') {
+              item['source'] = '小程序';
             } else {
-              item["source"] = "海鼎";
+              item['source'] = '海鼎';
             }
           });
-          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+          const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
           this.$refs.tables.handleDownload({
             filename: `发券数据统计-${date}`,
-            data: tableData,
+            data: tableData
           });
         });
       } else {
         this.searchRowData1.rows =
           this.totalPage > 5000 ? 5000 : this.totalPage;
-        let pageSize = this.searchRowData1.page;
+        const pageSize = this.searchRowData1.page;
         this.searchRowData1.page = 1;
         getUseCouponPages(this.searchRowData1).then((res) => {
           const tableData1 = res.pagingResultDto.rows;
@@ -914,24 +912,24 @@ export default {
           this.searchRowData1.rows = 10;
           this.searchRowData1.page = pageSize;
           // 表格数据导出字段翻译
-          let _this = this;
+          const _this = this;
           tableData1.forEach((item) => {
-            item["couponType"] = couponTypeConvert(item["couponType"]).label;
-            if (item["source"] === "SMALL") {
-              item["source"] = "小程序";
+            item['couponType'] = couponTypeConvert(item['couponType']).label;
+            if (item['source'] === 'SMALL') {
+              item['source'] = '小程序';
             } else {
-              item["source"] = "海鼎";
+              item['source'] = '海鼎';
             }
           });
-          const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+          const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
           this.$refs.tables1.handleDownload({
             filename: `用券数据统计-${date}`,
-            data: tableData1,
+            data: tableData1
           });
         });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

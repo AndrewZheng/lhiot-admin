@@ -531,11 +531,12 @@
         </Row>
       </div>
       <div slot="footer">
-        <Button type="primary" @click="handleClose">
+        <Button type="primary" @click="modalView = false">
           关闭
         </Button>
       </div>
     </Modal>
+
     <!-- 添加 -->
     <Modal v-model="modalEdit" :mask-closable="false" :width="900">
       <p slot="header">
@@ -1489,6 +1490,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 折扣配置 -->
     <Modal
       v-model="modalDiscount"
@@ -1798,6 +1800,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 海鼎会员价 -->
     <Modal
       v-model="modalHdSvip"
@@ -1957,7 +1960,6 @@ import Tables from '_c/tables';
 import config from '@/config';
 import DragList from '_c/drag-list';
 import IViewUpload from '_c/iview-upload';
-
 import {
   createProductStandard,
   deleteProductStandard,
@@ -1968,13 +1970,10 @@ import {
   getProductUnits,
   getProductPages,
   getHdProductInfo,
-  deletePicture,
   getAreaStorePages
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import {
   getSmallGoodsStandard,
@@ -2113,7 +2112,7 @@ export default {
     IViewUpload,
     DragList
   },
-  mixins: [uploadMixin, deleteMixin, searchMixin, tableMixin, relationStoreMixin],
+  mixins: [uploadMixin, tableMixin, relationStoreMixin],
   data() {
     return {
       productData: [],
@@ -2135,10 +2134,6 @@ export default {
       firstSuccess: true,
       showBack: false,
       isEnvironment: null,
-      loading: true,
-      modalViewLoading: false,
-      modalView: false,
-      modalEdit: false,
       modalDiscount: false,
       modalHdSvip: false,
       modalProduct: false,
@@ -2841,9 +2836,6 @@ export default {
       // 清楚掉表单数据
       this.$refs.modalDiscount.resetFields();
     },
-    handleClose() {
-      this.modalView = false;
-    },
     handleView(params) {
       this.tempModalType = this.modalType.view;
       this.productStandardDetail = this._.cloneDeep(params.row);
@@ -2918,8 +2910,8 @@ export default {
     },
     handleDiscount(params) {
       if (
-        params.row.productType == 'ORDINARY_PRODUCT' ||
-        params.row.productType == 'SHARE_PRODUCT'
+        params.row.productType === 'ORDINARY_PRODUCT' ||
+        params.row.productType === 'SHARE_PRODUCT'
       ) {
         this.$Message.error('普通商品&分享赚商品不允许配置');
         return;
@@ -3141,10 +3133,10 @@ export default {
           }
           this.defaultListMultiple_ = [];
           this.defaulSharetListMultiple = [];
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             this.createStandard();
             this.currentTableRowSelected = null;
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             this.editProductStandard();
           }
         } else {
@@ -3261,11 +3253,8 @@ export default {
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(() => {
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

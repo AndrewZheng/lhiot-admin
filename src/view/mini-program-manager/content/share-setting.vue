@@ -218,7 +218,7 @@
       <p slot="header">
         <i-col>
           {{
-            tempModalType === modalType.edit
+            isEdit
               ? "修改板块活动分享配置"
               : "创建板块活动分享配置"
           }}
@@ -360,9 +360,7 @@ import {
   updateShareSetting
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { imageStatusConvert, receiveTypeConvert } from '@/libs/converStatus';
 import { imageStatusEnum, receiveTypeEnum } from '@/libs/enumerate';
 import {
@@ -392,7 +390,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
       ruleInline: {
@@ -507,10 +505,10 @@ export default {
     handleSubmit() {
       this.$refs.editForm.validate((valid) => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createShareSettingPages();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.updateShareSetting();
           }

@@ -274,6 +274,8 @@
                 <Cascader
                   v-model="defaultGoodsCategoryData"
                   :data="goodsCategoryData"
+                  trigger="hover"
+                  filterable
                   span="21"
                   style="width: 100%"
                   @on-change="goodsCategoryChange"
@@ -538,9 +540,7 @@ import {
 } from '@/libs/util';
 
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 
 const productDetail = {
   id: 0,
@@ -577,7 +577,7 @@ export default {
     IViewUpload,
     DragList
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
       menuData: [],
@@ -622,8 +622,8 @@ export default {
         // goodsArea: [{ required: true, message: "请选择商品区域" }],
         // goodsBrand: [{ required: true, message: "请输入商品品牌" }],
         // placeOfOrigin: [{ required: true, message: "请输入商品产地" }],
-        categoryId: [{ required: true, message: "请选择商品分类" }],
-        goodsImage: [{ required: true, message: "请上传商品主图" }]
+        categoryId: [{ required: true, message: '请选择商品分类' }],
+        goodsImage: [{ required: true, message: '请上传商品主图' }]
         // goodsImages: [{ required: true, message: "请上传商品详情图" }],
         // otherImage: [{ required: true, message: '请上传服务保障图' }],
         // stockLimit: [{ required: true, message: "请输入安全库存" }]
@@ -932,7 +932,7 @@ export default {
       this.exportExcelLoading = true;
       // TODO：测试导出不带分页搜索条件 目前默认导出10条
       this.searchRowData.rows = this.total > 5000 ? 5000 : this.total;
-      let pageSize = this.searchRowData.page;
+      const pageSize = this.searchRowData.page;
       this.searchRowData.page = 1;
       getProductPages(this.searchRowData).then(res => {
         const tableData = res.rows;
@@ -951,7 +951,7 @@ export default {
             item.goodsArea = '';
           }
         });
-        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+        const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
         this.$refs.tables.handleDownload({
           filename: `商品基础信息-${date}`,
           data: tableData
@@ -961,13 +961,14 @@ export default {
     },
     // 选择分类
     goodsCategoryChange(value, selectedData) {
-      if (selectedData.length > 0) {
-        this.productDetail.categoryId =
-          selectedData[selectedData.length - 1].id;
+      if (value.length > 0) {
+        const valueArr = value.map(Number);
+        this.productDetail.categoryId = value[value.length - 1];
+        this.defaultGoodsCategoryData = valueArr;
       } else {
         this.productDetail.categoryId = null;
+        this.defaultGoodsCategoryData = [];
       }
-      this.defaultGoodsCategoryData = selectedData;
     },
     deleteTable(ids) {
       this.loading = true;

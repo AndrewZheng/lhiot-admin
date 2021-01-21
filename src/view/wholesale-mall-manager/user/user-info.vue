@@ -494,8 +494,6 @@ import {
   getUserGrade
 } from '@/api/wholesale';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import city from '@/assets/city/city.js';
 import {
   fenToYuanDot2,
@@ -863,7 +861,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ids: [],

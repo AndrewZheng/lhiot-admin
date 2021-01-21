@@ -129,8 +129,6 @@ import {
 import { buildMenu, convertTree } from '@/libs/util';
 import CommonIcon from '_c/common-icon';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 
 const faqCategory = {
   id: 0,
@@ -151,7 +149,7 @@ export default {
     Tables,
     CommonIcon
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {
@@ -273,7 +271,7 @@ export default {
           } else {
             this.faqCategory.parentId = this.parentCategory.id;
           }
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             createFaqCategories(this.faqCategory)
               .then(res => {})
               .finally(res => {
@@ -281,7 +279,7 @@ export default {
                 this.modalEditLoading = false;
                 this.modalEdit = false;
               });
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             editFaqCategories(this.faqCategory)
               .then(res => {})
               .finally(res => {

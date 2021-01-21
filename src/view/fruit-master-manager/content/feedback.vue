@@ -41,16 +41,16 @@
           >
             <Option
               v-for="item in feedbackStatus"
-              :value="item.value"
               :key="item.value"
+              :value="item.value"
               class="ml15 mt10"
             >{{ item.label }}</Option>
           </Select>
           <Button v-waves :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
-            <Icon type="md-search"/>&nbsp;搜索
+            <Icon type="md-search" />&nbsp;搜索
           </Button>
           <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-            <Icon type="md-refresh"/>&nbsp;清除条件
+            <Icon type="md-refresh" />&nbsp;清除条件
           </Button>
         </div>
       </tables>
@@ -151,7 +151,7 @@
           </Row>
         </Row>
         <Form
-          v-if="tempModalType === modalType.edit"
+          v-if="isEdit"
           ref="modalEdit"
           :model="feedbackDetail"
           :rules="ruleInline"
@@ -162,7 +162,7 @@
           </FormItem>
         </Form>
       </div>
-      <div v-if="tempModalType === modalType.edit" slot="footer">
+      <div v-if="isEdit" slot="footer">
         <Button :loading="feedbackLoading" type="primary" @click="handleEditOk('modalEdit')">确认</Button>
       </div>
       <!--
@@ -178,7 +178,6 @@ import Tables from '_c/tables';
 import _ from 'lodash';
 import { getFeedbacksPages, editFeedback } from '@/api/fruitermaster';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { getDictionary } from '@/api/basic';
 
 const feedbackDetail = {
@@ -208,7 +207,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {

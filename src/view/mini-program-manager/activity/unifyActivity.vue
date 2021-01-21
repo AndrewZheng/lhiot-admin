@@ -531,9 +531,7 @@ import {
   updateWollectWordRelevance
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   couponStatusConvert,
   couponTypeConvert,
@@ -748,14 +746,13 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
       ruleInline: {
         activityName: [{ required: true, message: '请输入活动名称' }],
         status: [{ required: true, message: '请选择活动状态' }],
         // banner: [{ required: true, message: "请添加活动图片" }],
-        status: [{ required: true, message: '请选择活动状态' }],
         content: [{ required: true, message: '请输入活动规则' }],
         startTime: [{ required: true, message: '请选择活动开始时间' }],
         endTime: [{ required: true, message: '请选择活动结束时间' }],
@@ -1136,10 +1133,10 @@ export default {
           extendedData.defaultCount = this.activitiesDetail.defaultCount;
           extendedData.shareCount = this.activitiesDetail.shareCount;
           this.activitiesDetail.extendedJsonStr = JSON.stringify(extendedData);
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createUnifyActivity();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.updateUnifyActivity();
           }

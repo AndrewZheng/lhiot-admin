@@ -391,9 +391,7 @@ import {
   getSystemSettingCategoryTree
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { teamBuyTypeEnum } from '@/libs/enumerate';
 import { buildMenu, convertTreeCategory } from '@/libs/util';
 
@@ -432,7 +430,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
       teamBuyTypeEnum,
@@ -540,7 +538,7 @@ export default {
   },
   computed: {
     modalTypeComputed() {
-      return this.tempModalType === this.modalType.edit;
+      return this.isEdit;
     }
   },
   mounted() {
@@ -574,10 +572,10 @@ export default {
             this.$Message.error('左侧标题顺序必须大于右侧标题顺序');
             return;
           }
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createSystemSetting();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editSystemSetting();
           }

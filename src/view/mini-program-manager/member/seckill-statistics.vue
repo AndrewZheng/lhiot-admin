@@ -83,7 +83,6 @@ import CountTo from '_c/count-to';
 import _ from 'lodash';
 import { seckillStatistics } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 
 const dataStatisticsDetail = {
   beginDate: '',
@@ -107,7 +106,7 @@ export default {
     Tables,
     CountTo
   },
-  mixins: [tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       columns: [
@@ -122,7 +121,6 @@ export default {
             } else {
               return <div>{'N/A'}</div>;
             }
-            return <div>{row.totalDate}</div>;
           }
         },
         {

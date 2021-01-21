@@ -225,7 +225,7 @@
     <Modal v-model="modalEdit" :mask-closable="false">
       <p slot="header">
         <span>{{
-          tempModalType === modalType.edit ? "修改广告位" : "创建广告"
+          isEdit ? "修改广告位" : "创建广告"
         }}</span>
       </p>
       <div class="modal-content">
@@ -335,8 +335,6 @@ import {
   editAdvertisementPosition
 } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 import {
   appTypesEnum,
@@ -374,7 +372,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
       ruleInline: {
@@ -593,10 +591,10 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createAdvertisementPosition();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editAdvertisementPosition();
           }

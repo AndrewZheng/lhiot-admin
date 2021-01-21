@@ -1550,8 +1550,6 @@ import {
   getAreaStorePages
 } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import uploadMixin from '@/mixins/uploadMixin.js';
 import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import { taskTypeEnum } from '@/libs/enumerate';
@@ -2340,7 +2338,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin, relationStoreMixin],
+  mixins: [tableMixin, uploadMixin, relationStoreMixin],
   data() {
     return {
       ids: [],

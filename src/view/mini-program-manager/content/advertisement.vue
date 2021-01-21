@@ -256,7 +256,7 @@
     <Modal v-model="modalEdit" :width="750" :mask-closable="false">
       <p slot="header">
         <span>{{
-          tempModalType === modalType.edit ? "修改广告" : "创建广告"
+          isEdit ? "修改广告" : "创建广告"
         }}</span>
       </p>
       <div class="modal-content">
@@ -619,9 +619,7 @@ import {
   getProductStandardsPages,
   deletePicture
 } from '@/api/mini-program';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 import IViewUpload from '_c/iview-upload';
 import { compareData } from '@/libs/util';
@@ -677,7 +675,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
       modalViewLoading: false,
@@ -1025,9 +1023,9 @@ export default {
               return;
             }
           }
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             this.createTableRow();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             this.editTableRow();
           }
         } else {

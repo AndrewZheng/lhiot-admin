@@ -123,8 +123,6 @@ import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
 import { getTaskRecordPages } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import uploadMixin from '@/mixins/uploadMixin.js';
 import {
   taskTypeEnum,
@@ -167,7 +165,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [tableMixin, searchMixin, deleteMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
       taskTypeEnum,
@@ -266,7 +264,7 @@ export default {
           title: '领取时间',
           align: 'center',
           key: 'receiveTime',
-          width: '120',
+          width: '120'
         },
         {
           title: '创建时间',

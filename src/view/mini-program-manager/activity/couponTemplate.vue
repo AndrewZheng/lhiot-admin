@@ -381,7 +381,7 @@
       <p slot="header">
         <i-col>
           {{
-            tempModalType === modalType.edit ? "修改优惠券模板" : "创建优惠券模板"
+            isEdit ? "修改优惠券模板" : "创建优惠券模板"
           }}
         </i-col>
       </p>
@@ -631,9 +631,7 @@ import {
   deletePicture
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   couponStatusConvert,
   couponTypeConvert,
@@ -680,7 +678,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
       ruleInline: {
@@ -957,10 +955,10 @@ export default {
             /\n|\r/g,
             '&'
           );
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createCouponTemplate();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editCouponTemplate();
           }

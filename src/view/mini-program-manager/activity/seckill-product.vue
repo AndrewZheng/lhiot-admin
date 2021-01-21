@@ -534,9 +534,7 @@ import {
   editSeckillProductRelation,
   getProductStandardsPages
 } from '@/api/mini-program';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   imageStatusConvert,
   expandTypeConvert,
@@ -984,7 +982,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {
@@ -1200,10 +1198,10 @@ export default {
               this.activitySeckillDetail.endTime
             ).format('YYYY-MM-DD HH:mm:ss');
           }
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createSeckill();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             this.editSeckill();
           }
         } else {

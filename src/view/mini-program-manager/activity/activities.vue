@@ -238,9 +238,7 @@ import {
   editActivities,
   createActivities
 } from '@/api/mini-program';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { imageStatusConvert } from '@/libs/converStatus';
 import { imageStatusEnum } from '@/libs/enumerate';
 
@@ -263,7 +261,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {
@@ -365,10 +363,10 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createActivities();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editActivities();
           }

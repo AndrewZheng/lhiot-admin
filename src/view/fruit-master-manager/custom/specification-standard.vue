@@ -21,20 +21,20 @@
           <Row>
             <Input v-model="searchRowData.description" placeholder="套餐周期描述" class="search-input mr5" style="width: auto" clearable></Input>
             <Button v-waves :loading="searchLoading" class="search-btn mr5" type="primary" @click="handleSearch">
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-              <Icon type="md-refresh"/>&nbsp;清除条件
+              <Icon type="md-refresh" />&nbsp;清除条件
             </Button>
           </Row>
         </div>
         <div slot="operations">
           <Button v-waves type="success" class="mr5" @click="handleAdd">
-            <Icon type="md-add"/>
+            <Icon type="md-add" />
             创建
           </Button>
           <Button type="error" class="mr5" @click="handleDeleteBatch">
-            <Icon type="md-trash"/>
+            <Icon type="md-trash" />
             删除
           </Button>
         </div>
@@ -47,7 +47,8 @@
             show-sizer
             show-total
             @on-change="changePage"
-            @on-page-size-change="changePageSize"></Page>
+            @on-page-size-change="changePageSize"
+          ></Page>
         </Row>
       </div>
     </Card>
@@ -117,7 +118,7 @@
             </Col>
           </Row>
           <Row>
-            <FormItem label="套餐规格配图: 建议尺寸;400x400(单位:px):" prop="image" >
+            <FormItem label="套餐规格配图: 建议尺寸;400x400(单位:px):" prop="image">
               <Input v-show="false" v-model="rowData.image" style="width: auto"></Input>
               <div v-for="item in uploadListMain" :key="item.url" class="demo-upload-list">
                 <template v-if="item.status === 'finished'">
@@ -165,9 +166,7 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import { getCustomPlanSpecificationStandardsPages, deleteCustomPlanSpecificationStandard, addCustomPlanSpecificationStandard, editCustomPlanSpecificationStandard } from '@/api/fruitermaster';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 import IViewUpload from '_c/iview-upload';
 import _ from 'lodash';
@@ -190,7 +189,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
       modalViewLoading: false,

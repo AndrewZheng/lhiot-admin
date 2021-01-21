@@ -179,9 +179,9 @@
               style="width: 160px; margin-top: 10px"
               @on-change="startTimeChange"
             />
-            <i v-show="mark === true || this.$route.name == 'small-skip-order'"
-              >-</i
-            >
+            <i
+              v-show="mark === true || this.$route.name == 'small-skip-order'"
+            >-</i>
             <DatePicker
               v-show="mark === true || this.$route.name == 'small-skip-order'"
               v-model="searchRowData.endTime"
@@ -548,8 +548,8 @@
                 <i-col span="18">
                   {{
                     orderDetail.deliverTime.startTime +
-                    " - " +
-                    orderDetail.deliverTime.endTime
+                      " - " +
+                      orderDetail.deliverTime.endTime
                   }}
                 </i-col>
               </Row>
@@ -778,9 +778,9 @@
       <Row style="background: lightgray">
         <i-col span="24" style="padding-left: 15px">
           满足以下几个条件的订单才允许调货：
-          <br />1.仅门店自提订单； <br />2.订单状态为待发货；
-          <br />3.海鼎状态为发送成功
-          <br />
+          <br>1.仅门店自提订单； <br>2.订单状态为待发货；
+          <br>3.海鼎状态为发送成功
+          <br>
         </i-col>
       </Row>
       <div slot="footer">
@@ -798,7 +798,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-import Tables from "_c/tables";
+import Tables from '_c/tables';
 import {
   getOrderCouponDetails,
   getOrderPages,
@@ -811,15 +811,14 @@ import {
   refundPt,
   sureReceive,
   sureMaituan,
-  retryCoupon,
-} from "@/api/mini-program";
-import tableMixin from "@/mixins/tableMixin.js";
-import searchMixin from "@/mixins/searchMixin.js";
+  retryCoupon
+} from '@/api/mini-program';
+import tableMixin from '@/mixins/tableMixin.js';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
-  getSmallGoodsStandard,
-} from "@/libs/util";
+  getSmallGoodsStandard
+} from '@/libs/util';
 import {
   receivingWayEnum,
   receivingWay,
@@ -832,8 +831,8 @@ import {
   miniHdStatusEnum,
   miniHdStatus,
   isAllRefundEnum,
-  deliverStatusEnum,
-} from "@/libs/enumerate";
+  deliverStatusEnum
+} from '@/libs/enumerate';
 import {
   orderTypeConvert,
   thirdDeliverStatusConvert,
@@ -842,18 +841,18 @@ import {
   receivingWayConvert,
   appTypeConvert,
   payTypeConvert,
-  isAllRefundConvert,
-} from "@/libs/converStatus";
+  isAllRefundConvert
+} from '@/libs/converStatus';
 
 const orderDetail = {
   id: 0,
-  code: "",
+  code: '',
   userId: 0,
   apply: null,
   orderType: null,
   storeId: 0,
-  storeCode: "",
-  storeName: "",
+  storeCode: '',
+  storeName: '',
   receivingWay: null,
   totalAmount: 0,
   amountPayable: 0,
@@ -861,62 +860,62 @@ const orderDetail = {
   couponAmount: 0,
   hdStatus: null,
   orderStatus: null,
-  address: "",
-  reason: "",
-  isAllRefund: "",
+  address: '',
+  reason: '',
+  isAllRefund: '',
   createAt: null,
-  recieveTime: "",
-  receiveUser: "",
-  contactPhone: "",
-  remark: "",
+  recieveTime: '',
+  receiveUser: '',
+  contactPhone: '',
+  remark: '',
   deliveryEndTime: null,
-  payType: "",
+  payType: '',
   payAt: null,
-  activityTeambuyContent: "",
-  hdOrderCode: "",
+  activityTeambuyContent: '',
+  hdOrderCode: '',
   orderProducts: [],
   orderFlows: [],
   allowRefund: null,
   deliverTime: {
-    display: "",
+    display: '',
     startTime: null,
     endTime: null,
-    status: null,
-  },
+    status: null
+  }
 };
 
 const deliverNote = {
-  StoreCode: "",
-  cancelTime: "",
-  createTime: "",
-  deliverCode: "",
+  StoreCode: '',
+  cancelTime: '',
+  createTime: '',
+  deliverCode: '',
   deliverName: null,
   deliverPhone: null,
-  deliverStatus: "",
-  deliverType: "",
+  deliverStatus: '',
+  deliverType: '',
   distance: 0,
-  failureCause: "",
+  failureCause: '',
   fee: 0,
   horsemanDistance: null,
   id: 0,
-  mtPeisongId: "",
-  orderCode: "",
-  orderId: "",
+  mtPeisongId: '',
+  orderCode: '',
+  orderId: '',
   preAerviceTime: null,
   receiveTime: null,
-  remark: "",
+  remark: '',
   sort: null,
   sortList: null,
-  storeCode: "",
-  toShopStatus: "",
-  weight: "",
+  storeCode: '',
+  toShopStatus: '',
+  weight: ''
 };
 
 const roleRowData = {
-  phone: "",
-  orderType: "",
-  orderCode: "",
-  apply: "",
+  phone: '',
+  orderType: '',
+  orderCode: '',
+  apply: '',
   startTime: null,
   endTime: null,
   page: 1,
@@ -924,19 +923,19 @@ const roleRowData = {
   storeName: null,
   recieveStartTime: null,
   recieveEndTime: null,
-  productNames: "",
-  totalOrderType: null,
+  productNames: '',
+  totalOrderType: null
 };
 
 export default {
   components: {
-    Tables,
+    Tables
   },
-  mixins: [tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       mark: true,
-      button: "今日",
+      button: '今日',
       num: 0,
       searchMark: true,
       deliverNoteList: [],
@@ -957,138 +956,138 @@ export default {
       miniOrderStatus,
       miniHdStatusEnum,
       miniHdStatus,
-      shippingAddress: "",
-      orderState: "",
+      shippingAddress: '',
+      orderState: '',
       tempColumnsView: [
         {
-          title: "配送方",
+          title: '配送方',
           minWidth: 100,
-          key: "deliverType",
+          key: 'deliverType'
         },
         {
-          title: "配送距离",
+          title: '配送距离',
           minWidth: 100,
-          key: "distance",
+          key: 'distance'
         },
         {
-          title: "配送费",
+          title: '配送费',
           minWidth: 100,
-          key: "fee",
+          key: 'fee',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.fee);
             return <div>{amount}</div>;
-          },
+          }
         },
         {
-          title: "配送状态",
+          title: '配送状态',
           minWidth: 100,
-          key: "deliverStatus",
+          key: 'deliverStatus',
           render: (h, params, vm) => {
             const { row } = params;
             return <div>{thirdDeliverStatusConvert(row.deliverStatus)}</div>;
-          },
+          }
         },
         {
-          title: "接单时间",
+          title: '接单时间',
           minWidth: 100,
-          key: "receiveTime",
+          key: 'receiveTime'
         },
         {
-          title: "配送员手机号",
+          title: '配送员手机号',
           minWidth: 110,
-          key: "deliverPhone",
-        },
+          key: 'deliverPhone'
+        }
       ],
       orderViewRelationsColumn: [
         {
-          title: "编码",
-          key: "barcode",
-          align: "center",
+          title: '编码',
+          key: 'barcode',
+          align: 'center'
         },
         {
-          title: "名称",
-          align: "center",
-          key: "productName",
+          title: '名称',
+          align: 'center',
+          key: 'productName'
         },
         {
-          title: "规格",
-          align: "center",
+          title: '规格',
+          align: 'center',
           width: 85,
           render(h, params, vm) {
             const { row } = params;
-            return <div>{row.productQty + "*" + row.standardQty}</div>;
-          },
+            return <div>{row.productQty + '*' + row.standardQty}</div>;
+          }
         },
         {
-          title: "数量",
-          align: "center",
+          title: '数量',
+          align: 'center',
           width: 85,
-          key: "productQty",
+          key: 'productQty'
         },
         {
-          title: "单位",
-          key: "unitName",
+          title: '单位',
+          key: 'unitName',
           width: 85,
-          align: "center",
+          align: 'center'
         },
         {
-          title: "原价",
-          key: "price",
+          title: '原价',
+          key: 'price',
           width: 85,
-          align: "center",
+          align: 'center',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.price);
             return <div>{amount}</div>;
-          },
+          }
         },
         {
-          title: "折后价",
-          align: "center",
+          title: '折后价',
+          align: 'center',
           width: 85,
-          key: "discountPrice",
+          key: 'discountPrice',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.discountPrice);
             return <div>{amount}</div>;
-          },
+          }
         },
         {
-          title: "总价",
-          align: "center",
+          title: '总价',
+          align: 'center',
           width: 85,
-          key: "discountPrice",
+          key: 'discountPrice',
           render(h, params, vm) {
             const amount = params.row.discountPrice / 100;
             const price = amount * params.row.productQty;
-            return <div>{"¥" + price.toFixed(2)}</div>;
-          },
+            return <div>{'¥' + price.toFixed(2)}</div>;
+          }
         },
         {
-          title: "是否退款",
-          align: "center",
+          title: '是否退款',
+          align: 'center',
           width: 100,
-          key: "refundStatus",
+          key: 'refundStatus',
           render: (h, params, vm) => {
             const orderStates = this.orderState;
             const { row } = params;
-            if (row.refundStatus === "REFUND" && orderStates === "FAILURE") {
+            if (row.refundStatus === 'REFUND' && orderStates === 'FAILURE') {
               return <div>未退款</div>;
             } else if (
-              row.refundStatus === "REFUND" &&
-              orderStates === "RETURNING"
+              row.refundStatus === 'REFUND' &&
+              orderStates === 'RETURNING'
             ) {
               return <div>退款中</div>;
             } else if (
-              row.refundStatus === "REFUND" &&
-              orderStates === "ALREADY_RETURN"
+              row.refundStatus === 'REFUND' &&
+              orderStates === 'ALREADY_RETURN'
             ) {
               return <div>已退款</div>;
-            } else if (row.refundStatus === "NOT_REFUND") {
+            } else if (row.refundStatus === 'NOT_REFUND') {
               return <div>未退款</div>;
             } else {
               return <div>N/A</div>;
             }
-          },
-        },
+          }
+        }
         // {
         //   title: "退款金额",
         //   width: 100,
@@ -1101,285 +1100,285 @@ export default {
       ],
       teambuyUserColumn: [
         {
-          title: "成员ID",
-          key: "id",
-          align: "center",
-          width: 100,
+          title: '成员ID',
+          key: 'id',
+          align: 'center',
+          width: 100
         },
         {
-          title: "用户昵称",
-          key: "nickName",
-          align: "center",
+          title: '用户昵称',
+          key: 'nickName',
+          align: 'center'
         },
         {
-          title: "联系方式",
-          key: "receiverMobile",
-          align: "center",
-          width: 130,
+          title: '联系方式',
+          key: 'receiverMobile',
+          align: 'center',
+          width: 130
         },
         {
-          title: "是否团长",
-          key: "tour",
-          align: "center",
-          width: 100,
-          render(h, params, vm) {
-            const { row } = params;
-            if (row.tour === "yes") {
-              return <div>{"是"}</div>;
-            } else {
-              return <div>{"否"}</div>;
-            }
-          },
-        },
-        {
-          title: "参团时间",
-          key: "joinTime",
-          align: "center",
-          width: 120,
-        },
-        {
-          title: "订单编码",
-          key: "orderCode",
-          align: "center",
-          width: 190,
-        },
-        {
-          title: "是否支付",
-          key: "payStatus",
-          align: "center",
+          title: '是否团长',
+          key: 'tour',
+          align: 'center',
           width: 100,
           render(h, params, vm) {
             const { row } = params;
-            if (row.payStatus === "paid") {
-              return <div>{"已支付"}</div>;
-            } else if (row.payStatus === "unpaid") {
-              return <div>{"未支付"}</div>;
-            } else if (row.payStatus === "paying") {
-              return <div>{"支付中"}</div>;
-            } else if (row.payStatus === "invalid") {
-              return <div>{"已失效"}</div>;
-            } else if (row.payStatus === "refund") {
-              return <div>{"已退款"}</div>;
+            if (row.tour === 'yes') {
+              return <div>{'是'}</div>;
             } else {
-              return <div>{"N/A"}</div>;
+              return <div>{'否'}</div>;
             }
-          },
+          }
         },
+        {
+          title: '参团时间',
+          key: 'joinTime',
+          align: 'center',
+          width: 120
+        },
+        {
+          title: '订单编码',
+          key: 'orderCode',
+          align: 'center',
+          width: 190
+        },
+        {
+          title: '是否支付',
+          key: 'payStatus',
+          align: 'center',
+          width: 100,
+          render(h, params, vm) {
+            const { row } = params;
+            if (row.payStatus === 'paid') {
+              return <div>{'已支付'}</div>;
+            } else if (row.payStatus === 'unpaid') {
+              return <div>{'未支付'}</div>;
+            } else if (row.payStatus === 'paying') {
+              return <div>{'支付中'}</div>;
+            } else if (row.payStatus === 'invalid') {
+              return <div>{'已失效'}</div>;
+            } else if (row.payStatus === 'refund') {
+              return <div>{'已退款'}</div>;
+            } else {
+              return <div>{'N/A'}</div>;
+            }
+          }
+        }
       ],
       columns: [
         {
-          type: "selection",
-          key: "",
+          type: 'selection',
+          key: '',
           width: 60,
-          align: "center",
-          fixed: "left",
+          align: 'center',
+          fixed: 'left'
         },
         {
-          title: "订单编号",
-          key: "code",
+          title: '订单编号',
+          key: 'code',
           sortable: true,
           width: 190,
-          fixed: "left",
-          align: "center",
+          fixed: 'left',
+          align: 'center'
         },
         {
-          title: "应用类型",
-          align: "center",
-          key: "apply",
+          title: '应用类型',
+          align: 'center',
+          key: 'apply',
           width: 110,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.apply === "WXSMALL_SHOP") {
+            if (row.apply === 'WXSMALL_SHOP') {
               return (
                 <div>
-                  <tag color="green">{appTypeConvert(row.apply).label}</tag>
+                  <tag color='green'>{appTypeConvert(row.apply).label}</tag>
                 </div>
               );
-            } else if (row.apply === "S_MALL") {
+            } else if (row.apply === 'S_MALL') {
               return (
                 <div>
-                  <tag color="gold">{appTypeConvert(row.apply).label}</tag>
+                  <tag color='gold'>{appTypeConvert(row.apply).label}</tag>
                 </div>
               );
             } else {
               return <div>{row.apply}</div>;
             }
-          },
+          }
         },
         {
-          title: "支付类型",
-          align: "center",
+          title: '支付类型',
+          align: 'center',
           width: 110,
-          key: "payType",
+          key: 'payType',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.payType === "weixin") {
+            if (row.payType === 'weixin') {
               return (
                 <div>
-                  <tag color="success">{payTypeConvert(row.payType).label}</tag>
+                  <tag color='success'>{payTypeConvert(row.payType).label}</tag>
                 </div>
               );
-            } else if (row.payType === "balance") {
+            } else if (row.payType === 'balance') {
               return (
                 <div>
-                  <tag color="pink">{payTypeConvert(row.payType).label}</tag>
+                  <tag color='pink'>{payTypeConvert(row.payType).label}</tag>
                 </div>
               );
-            } else if (row.payType === "haiding") {
+            } else if (row.payType === 'haiding') {
               return (
                 <div>
-                  <tag color="warning">{payTypeConvert(row.payType).label}</tag>
+                  <tag color='warning'>{payTypeConvert(row.payType).label}</tag>
                 </div>
               );
-            } else if (row.payType === "points") {
+            } else if (row.payType === 'points') {
               return (
                 <div>
-                  <tag color="pink">{payTypeConvert(row.payType).label}</tag>
+                  <tag color='pink'>{payTypeConvert(row.payType).label}</tag>
                 </div>
               );
             } else {
-              return <div>{"N/A"}</div>;
+              return <div>{'N/A'}</div>;
             }
-          },
+          }
         },
         {
-          title: "创建时间",
-          align: "center",
+          title: '创建时间',
+          align: 'center',
           width: 120,
-          key: "createAt",
+          key: 'createAt'
         },
         {
-          title: "提货时间",
-          align: "center",
+          title: '提货时间',
+          align: 'center',
           width: 120,
-          key: "recieveTime",
+          key: 'recieveTime'
         },
         {
-          title: "订单用户",
-          align: "center",
+          title: '订单用户',
+          align: 'center',
           width: 120,
-          key: "receiveUser",
+          key: 'receiveUser'
         },
         {
-          title: "手机号码",
-          align: "center",
+          title: '手机号码',
+          align: 'center',
           width: 130,
-          key: "contactPhone",
+          key: 'contactPhone'
         },
         {
-          title: "商品名称",
-          align: "center",
+          title: '商品名称',
+          align: 'center',
           minWidth: 300,
-          key: "productNames",
+          key: 'productNames'
         },
         {
-          title: "下单门店",
-          align: "center",
+          title: '下单门店',
+          align: 'center',
           width: 140,
-          key: "storeId",
+          key: 'storeId',
           render: (h, params) => {
             const { row } = params;
             const obj = this.storeList.find(
               (item) => row.storeId === item.storeId
             );
             if (obj) {
-              return h("span", obj.storeName);
+              return h('span', obj.storeName);
             }
-            return h("span", row.storeId);
-          },
+            return h('span', row.storeId);
+          }
         },
         {
-          title: "商品总价",
-          align: "center",
+          title: '商品总价',
+          align: 'center',
           width: 100,
-          key: "totalAmount",
+          key: 'totalAmount',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.totalAmount);
             return <div>{amount}</div>;
-          },
+          }
         },
         {
-          title: "运费",
-          align: "center",
+          title: '运费',
+          align: 'center',
           width: 100,
-          key: "deliveryAmount",
+          key: 'deliveryAmount',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.deliveryAmount);
-            return <div>{amount || "N/A"}</div>;
-          },
+            return <div>{amount || 'N/A'}</div>;
+          }
         },
         {
-          title: "订单总价",
-          align: "center",
+          title: '订单总价',
+          align: 'center',
           width: 100,
-          key: "allAmount",
+          key: 'allAmount',
           render(h, params, vm) {
             const amount = fenToYuanDot2(
               params.row.totalAmount + params.row.deliveryAmount
             );
-            return <div>{amount || "N/A"}</div>;
-          },
+            return <div>{amount || 'N/A'}</div>;
+          }
         },
         {
-          title: "优惠金额",
-          align: "center",
+          title: '优惠金额',
+          align: 'center',
           width: 100,
-          key: "couponAmount",
+          key: 'couponAmount',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.couponAmount);
             return <div>{amount}</div>;
-          },
+          }
         },
         {
-          title: "优惠券金额",
-          align: "center",
+          title: '优惠券金额',
+          align: 'center',
           width: 110,
-          key: "couponTicketAmount",
+          key: 'couponTicketAmount',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.couponTicketAmount);
             return <div>{amount}</div>;
-          },
+          }
         },
         {
-          title: "应付金额",
-          align: "center",
+          title: '应付金额',
+          align: 'center',
           width: 100,
-          key: "amountPayable",
+          key: 'amountPayable',
           render(h, params, vm) {
             const amount = fenToYuanDot2(params.row.amountPayable);
             return <div>{amount}</div>;
-          },
+          }
         },
         {
-          title: "活动名称",
+          title: '活动名称',
           width: 120,
-          key: "activityTeambuyContent",
+          key: 'activityTeambuyContent'
         },
         {
-          title: "券名称",
-          align: "center",
+          title: '券名称',
+          align: 'center',
           width: 150,
-          key: "couponName",
+          key: 'couponName'
         },
         {
-          title: "提货类型",
-          align: "center",
+          title: '提货类型',
+          align: 'center',
           width: 110,
-          key: "receivingWay",
+          key: 'receivingWay',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.receivingWay === "TO_THE_HOME") {
+            if (row.receivingWay === 'TO_THE_HOME') {
               return (
                 <div>
-                  <tag color="green">
+                  <tag color='green'>
                     {receivingWayConvert(row.receivingWay)}
                   </tag>
                 </div>
               );
-            } else if (row.receivingWay === "TO_THE_STORE") {
+            } else if (row.receivingWay === 'TO_THE_STORE') {
               return (
                 <div>
-                  <tag color="gold">
+                  <tag color='gold'>
                     {receivingWayConvert(row.receivingWay)}
                   </tag>
                 </div>
@@ -1387,51 +1386,51 @@ export default {
             } else {
               return <div>{row.receivingWay}</div>;
             }
-          },
+          }
         },
         {
-          title: "是否退款",
-          align: "center",
+          title: '是否退款',
+          align: 'center',
           width: 110,
-          key: "isAllRefund",
+          key: 'isAllRefund',
           render: (h, params, vm) => {
             const { row } = params;
             if (
-              row.isAllRefund === "NO" &&
-              row.orderStatus === "ALREADY_RETURN"
+              row.isAllRefund === 'NO' &&
+              row.orderStatus === 'ALREADY_RETURN'
             ) {
               return (
                 <div>
-                  <tag color="cyan">{isAllRefundConvert(row.isAllRefund)}</tag>
+                  <tag color='cyan'>{isAllRefundConvert(row.isAllRefund)}</tag>
                 </div>
               );
-            } else if (row.orderStatus === "ALREADY_RETURN") {
+            } else if (row.orderStatus === 'ALREADY_RETURN') {
               return (
                 <div>
-                  <tag color="blue">全部退款</tag>
+                  <tag color='blue'>全部退款</tag>
                 </div>
               );
             } else {
               return <div>N/A</div>;
             }
-          },
+          }
         },
         {
-          title: "退款金额",
-          align: "center",
+          title: '退款金额',
+          align: 'center',
           width: 110,
-          key: "refundFee",
+          key: 'refundFee',
           render(h, params, vm) {
             const refund = fenToYuanDot2(params.row.refundFee);
             return <div>{refund}</div>;
-          },
+          }
         },
         {
-          title: "订单状态",
-          align: "center",
+          title: '订单状态',
+          align: 'center',
           width: 110,
-          key: "orderStatus",
-          fixed: "right",
+          key: 'orderStatus',
+          fixed: 'right',
           render: (h, params, vm) => {
             const { row } = params;
             // WAIT_PAYMENT("待支付"),PAYMENTING("支付中"),WAIT_SEND_OUT("待发货"),
@@ -1439,48 +1438,48 @@ export default {
             // ALREADY_RETURN("退货完成"),FAILURE("已失效")
             // FINISHED("已完成")
             if (
-              row.orderStatus === "WAIT_PAYMENT" ||
-              row.orderStatus === "PAYMENTING" ||
-              row.orderStatus === "WAIT_SEND_OUT"
+              row.orderStatus === 'WAIT_PAYMENT' ||
+              row.orderStatus === 'PAYMENTING' ||
+              row.orderStatus === 'WAIT_SEND_OUT'
             ) {
               return (
                 <div>
-                  <tag color="default">
+                  <tag color='default'>
                     {miniOrderStatusConvert(row.orderStatus).label}
                   </tag>
                 </div>
               );
             } else if (
-              row.orderStatus === "SEND_OUT" ||
-              row.orderStatus === "DISPATCHING" ||
-              row.orderStatus === "RECEIVED" ||
-              row.orderStatus === "RETURNING"
+              row.orderStatus === 'SEND_OUT' ||
+              row.orderStatus === 'DISPATCHING' ||
+              row.orderStatus === 'RECEIVED' ||
+              row.orderStatus === 'RETURNING'
             ) {
               return (
                 <div>
-                  <tag color="primary">
+                  <tag color='primary'>
                     {miniOrderStatusConvert(row.orderStatus).label}
                   </tag>
                 </div>
               );
             } else if (
-              row.orderStatus === "FAILURE" ||
-              row.orderStatus === "EXPIRED"
+              row.orderStatus === 'FAILURE' ||
+              row.orderStatus === 'EXPIRED'
             ) {
               return (
                 <div>
-                  <tag color="error">
+                  <tag color='error'>
                     {miniOrderStatusConvert(row.orderStatus).label}
                   </tag>
                 </div>
               );
             } else if (
-              row.orderStatus === "ALREADY_RETURN" ||
-              row.orderStatus === "FINISHED"
+              row.orderStatus === 'ALREADY_RETURN' ||
+              row.orderStatus === 'FINISHED'
             ) {
               return (
                 <div>
-                  <tag color="success">
+                  <tag color='success'>
                     {miniOrderStatusConvert(row.orderStatus).label}
                   </tag>
                 </div>
@@ -1488,36 +1487,36 @@ export default {
             } else {
               return <div>{row.orderStatus}</div>;
             }
-          },
+          }
         },
         {
-          title: "海鼎状态",
-          align: "center",
+          title: '海鼎状态',
+          align: 'center',
           width: 100,
-          fixed: "right",
-          key: "hdStatus",
+          fixed: 'right',
+          key: 'hdStatus',
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.hdStatus === "NOT_SEND") {
+            if (row.hdStatus === 'NOT_SEND') {
               return (
                 <div>
-                  <tag color="warning">
+                  <tag color='warning'>
                     {miniHdStatusConvert(row.hdStatus).label}
                   </tag>
                 </div>
               );
-            } else if (row.hdStatus === "SEND_OUT") {
+            } else if (row.hdStatus === 'SEND_OUT') {
               return (
                 <div>
-                  <tag color="success">
+                  <tag color='success'>
                     {miniHdStatusConvert(row.hdStatus).label}
                   </tag>
                 </div>
               );
-            } else if (row.hdStatus === "SEND_FAILURE") {
+            } else if (row.hdStatus === 'SEND_FAILURE') {
               return (
                 <div>
-                  <tag color="error">
+                  <tag color='error'>
                     {miniHdStatusConvert(row.hdStatus).label}
                   </tag>
                 </div>
@@ -1525,7 +1524,7 @@ export default {
             } else {
               return <div>{row.hdStatus}</div>;
             }
-          },
+          }
         },
         // {
         //   title: '海鼎备货时间',
@@ -1552,21 +1551,21 @@ export default {
         //   sortable: true
         // },
         {
-          title: "操作",
+          title: '操作',
           minWidth: 180,
-          align: "center",
-          fixed: "right",
-          key: "handle",
-          options: ["view", "onHand", "onReceive", "onMeituan", "onCoupon"],
-        },
+          align: 'center',
+          fixed: 'right',
+          key: 'handle',
+          options: ['view', 'onHand', 'onReceive', 'onMeituan', 'onCoupon']
+        }
       ],
       currentTableRowSelected: null,
       searchRowData: _.cloneDeep(roleRowData),
       orderDetail: _.cloneDeep(orderDetail),
       deliverNote: _.cloneDeep(deliverNote),
-      exportType: "xlsx",
+      exportType: 'xlsx',
       downloadLoading: false,
-      tableDataSelected: [],
+      tableDataSelected: []
     };
   },
   created() {
@@ -1600,7 +1599,7 @@ export default {
     },
     handleRefund() {
       if (!this.searchRowData.endTime) {
-        this.$Message.error("请先选择结束时间，再手动退款");
+        this.$Message.error('请先选择结束时间，再手动退款');
         return false;
       }
       // 处理手动退款
@@ -1609,37 +1608,37 @@ export default {
       });
     },
     handleReimburse(params) {
-      if (params.row.orderStatus === "RETURNING") {
-        this.$Message.error("退货中订单不能操作退款");
+      if (params.row.orderStatus === 'RETURNING') {
+        this.$Message.error('退货中订单不能操作退款');
         return;
       }
-      if (params.row.orderStatus === "ALREADY_RETURN") {
-        this.$Message.error("退货完成订单不能操作退款");
+      if (params.row.orderStatus === 'ALREADY_RETURN') {
+        this.$Message.error('退货完成订单不能操作退款');
         return;
       }
-      if (params.row.orderStatus === "FAILURE") {
-        this.$Message.error("已失效的订单不能操作退款");
+      if (params.row.orderStatus === 'FAILURE') {
+        this.$Message.error('已失效的订单不能操作退款');
         return;
       }
       // if (params.row.orderType === "POINTS_BUYING") {
       //   this.$Message.error("积分兑换的订单不能操作退款");
       //   return;
       // }
-      if (params.row.apply === "S_MALL") {
+      if (params.row.apply === 'S_MALL') {
         refundPt({ orderCode: params.row.code })
           .then((res) => {
             this.loading = false;
-            this.$Message.success("拼团小程序退款成功");
+            this.$Message.success('拼团小程序退款成功');
             this.getTableData();
           })
           .catch(() => {
             this.loading = false;
           });
-      } else if (params.row.apply === "WXSMALL_SHOP") {
+      } else if (params.row.apply === 'WXSMALL_SHOP') {
         refundWx({ orderCode: params.row.code })
           .then((res) => {
             this.loading = false;
-            this.$Message.success("微信小程序退款成功");
+            this.$Message.success('微信小程序退款成功');
             this.getTableData();
           })
           .catch(() => {
@@ -1650,35 +1649,35 @@ export default {
     // 确认收货
     handSureReceive(params) {
       if (
-        params.row.orderStatus === "SEND_OUT" ||
-        params.row.orderStatus === "DISPATCHING" ||
-        params.row.orderStatus === "RETURNING"
+        params.row.orderStatus === 'SEND_OUT' ||
+        params.row.orderStatus === 'DISPATCHING' ||
+        params.row.orderStatus === 'RETURNING'
       ) {
         sureReceive({ orderId: params.row.id })
           .then((res) => {
             this.loading = false;
-            this.$Message.success("操作成功");
+            this.$Message.success('操作成功');
             this.getTableData();
           })
           .catch(() => {
             this.loading = false;
           });
       } else {
-        this.$Message.error("只有已发货和配送中的订单才能操作收货");
+        this.$Message.error('只有已发货和配送中的订单才能操作收货');
       }
     },
     // 发送美团
     handMeituan(params) {
-      if (params.row.receivingWay === "TO_THE_HOME") {
+      if (params.row.receivingWay === 'TO_THE_HOME') {
         if (
-          params.row.orderStatus === "WAIT_SEND_OUT" ||
-          params.row.orderStatus === "SEND_OUT" ||
-          params.row.orderStatus === "DISPATCHING"
+          params.row.orderStatus === 'WAIT_SEND_OUT' ||
+          params.row.orderStatus === 'SEND_OUT' ||
+          params.row.orderStatus === 'DISPATCHING'
         ) {
           sureMaituan({ orderCode: params.row.code })
             .then((res) => {
               this.loading = false;
-              this.$Message.success("操作成功");
+              this.$Message.success('操作成功');
               this.getTableData();
             })
             .catch(() => {
@@ -1686,68 +1685,68 @@ export default {
             });
         } else {
           this.$Message.error(
-            "只有待发货、已发货和配送中的订单才能操作发送美团"
+            '只有待发货、已发货和配送中的订单才能操作发送美团'
           );
         }
       } else {
-        this.$Message.error("只有送到家的订单才能操作发送美团");
+        this.$Message.error('只有送到家的订单才能操作发送美团');
       }
     },
     // 购券重发
     handCoupon(params) {
-        if (
-          params.row.orderStatus === "RECEIVED"
-        ) {
-      let orderId = params.row.id;
-      retryCoupon(orderId)
-        .then((res) => {
-          this.loading = false;
-          this.$Message.success("操作成功");
-          this.getTableData();
-        })
-        .catch(() => {
-          this.loading = false;
-        });
-        } else {
-          this.$Message.error(
-            "只有已收货订单才能操作购券重发"
-          );
-        }
+      if (
+        params.row.orderStatus === 'RECEIVED'
+      ) {
+        const orderId = params.row.id;
+        retryCoupon(orderId)
+          .then((res) => {
+            this.loading = false;
+            this.$Message.success('操作成功');
+            this.getTableData();
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+      } else {
+        this.$Message.error(
+          '只有已收货订单才能操作购券重发'
+        );
+      }
     },
     // 门店调货
     handleSubmit() {
       if (!this.currentTableRowSelected) {
         this.$Message.error(
-          "请用鼠标左键点击选择下方表格一行订单数据,才能进行调货处理"
+          '请用鼠标左键点击选择下方表格一行订单数据,才能进行调货处理'
         );
         return;
       }
-      if (this.currentTableRowSelected.apply != "S_MALL") {
-        this.$Message.error("该功能只适用于拼团小程序");
+      if (this.currentTableRowSelected.apply != 'S_MALL') {
+        this.$Message.error('该功能只适用于拼团小程序');
         return;
       }
       if (
         !this.currentTableRowSelected.storeId ||
         !this.currentTableRowSelected.newStoreId
       ) {
-        this.$Message.error("该订单门店id为空");
+        this.$Message.error('该订单门店id为空');
         return;
       }
       if (
         this.currentTableRowSelected.receivingWay !== receivingWay.TO_THE_STORE
       ) {
-        this.$Message.error("该订单提货方式不是门店自提！");
+        this.$Message.error('该订单提货方式不是门店自提！');
         return;
       }
       if (
         this.currentTableRowSelected.orderStatus !==
         miniOrderStatus.WAIT_SEND_OUT
       ) {
-        this.$Message.error("该订单不为待发货！");
+        this.$Message.error('该订单不为待发货！');
         return;
       }
       if (this.currentTableRowSelected.hdStatus !== miniHdStatus.SEND_OUT) {
-        this.$Message.error("该订单海鼎发送没有成功！");
+        this.$Message.error('该订单海鼎发送没有成功！');
         return;
       }
       this.modifyStoreInOrder();
@@ -1756,7 +1755,7 @@ export default {
     deliverOrder() {
       if (!this.currentTableRowSelected) {
         this.$Message.error(
-          "请用鼠标左键点击选择下方表格一行门店自提订单数据,才能进行调货处理"
+          '请用鼠标左键点击选择下方表格一行门店自提订单数据,才能进行调货处理'
         );
         return;
       }
@@ -1775,12 +1774,12 @@ export default {
       getOrder({ orderCode: params.row.code })
         .then((res) => {
           this.orderDetail = res;
-          let addresss = "";
+          let addresss = '';
           if (
-            this.orderDetail.receivingWay === "TO_THE_HOME" &&
+            this.orderDetail.receivingWay === 'TO_THE_HOME' &&
             this.orderDetail.receivingWay != null
           ) {
-            if (this.orderDetail.address.substr(0, 1) === "{") {
+            if (this.orderDetail.address.substr(0, 1) === '{') {
               addresss = JSON.parse(this.orderDetail.address);
               this.shippingAddress =
                 addresss.address + addresss.detailedAddress;
@@ -1789,14 +1788,14 @@ export default {
             }
           }
           if (
-            this.orderDetail.receivingWay === "TO_THE_HOME" &&
+            this.orderDetail.receivingWay === 'TO_THE_HOME' &&
             this.orderDetail.deliverNote != null
           ) {
             this.deliverNote = _.cloneDeep(this.orderDetail.deliverNote);
           }
           if (
             this.orderDetail != null &&
-            this.orderDetail.deliverTime != "" &&
+            this.orderDetail.deliverTime != '' &&
             this.orderDetail.deliverTime != null
           ) {
             this.orderDetail.deliverTime = JSON.parse(
@@ -1814,18 +1813,18 @@ export default {
     },
     couponDetails(params) {
       this.turnToPage({
-        name: "small-order-coupon-details",
+        name: 'small-order-coupon-details'
       });
     },
     monthOrder(params) {
       this.turnToPage({
-        name: "small-order-month-orders",
+        name: 'small-order-month-orders'
       });
     },
     // 获取数据
     getTableData() {
       this.loading = true;
-      if (this.$route.name === "small-skip-order") {
+      if (this.$route.name === 'small-skip-order') {
         const orderDel = getSmallGoodsStandard();
         this.searchRowData.totalOrderType = orderDel.typeCode;
         const date = new Date();
@@ -1846,10 +1845,10 @@ export default {
         } else {
           this.searchRowData.startTime = this.$moment(
             this.searchRowData.startTime
-          ).format("YYYY-MM-DD HH:mm:ss");
+          ).format('YYYY-MM-DD HH:mm:ss');
           this.searchRowData.endTime = this.$moment(
             this.searchRowData.endTime
-          ).format("YYYY-MM-DD HH:mm:ss");
+          ).format('YYYY-MM-DD HH:mm:ss');
         }
       } else {
         const date = new Date();
@@ -1860,16 +1859,16 @@ export default {
         var day1 = date.getDate() + 1;
         var start = `${year}-${month}-${day} 00:00:00`;
         var end = `${year}-${month}-${day} 23:59:59`;
-        if (this.button === "今日") {
+        if (this.button === '今日') {
           this.searchRowData.startTime = start;
           this.searchRowData.endTime = end;
         }
         this.searchRowData.startTime = this.$moment(
           this.searchRowData.startTime
-        ).format("YYYY-MM-DD HH:mm:ss");
+        ).format('YYYY-MM-DD HH:mm:ss');
         this.searchRowData.endTime = this.$moment(
           this.searchRowData.endTime
-        ).format("YYYY-MM-DD HH:mm:ss");
+        ).format('YYYY-MM-DD HH:mm:ss');
       }
       getOrderPages(this.searchRowData)
         .then((res) => {
@@ -1889,21 +1888,21 @@ export default {
         });
     },
     timeChange(value) {
-      if (value === "今日") {
+      if (value === '今日') {
         this.mark = true;
         this.getTableData();
-      } else if (value === "自定义时间") {
+      } else if (value === '自定义时间') {
         this.mark = true;
       }
     },
     startTimeChange(value, date) {
       this.searchMark = false;
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.searchRowData.startTime = value;
     },
     endTimeChange(value, date) {
       this.searchMark = false;
-      this.button = "自定义时间";
+      this.button = '自定义时间';
       this.searchRowData.endTime = value;
     },
     handleDownload() {
@@ -1920,37 +1919,37 @@ export default {
         const _this = this;
         tableData.forEach((item) => {
           const obj = _this.storeList.find((x) => item.storeId === x.storeId);
-          item["code"] = item["code"] + "";
-          item["apply"] = appTypeConvert(item["apply"]).label;
-          item["storeId"] =
-            obj && obj.storeName ? obj.storeName : item["storeId"]; // 如果找不到就显示门店Id
-          item["totalAmount"] = (item["totalAmount"] / 100.0).toFixed(2);
-          item["deliveryAmount"] = (item["deliveryAmount"] / 100.0).toFixed(2);
-          item["couponAmount"] = (item["couponAmount"] / 100.0).toFixed(2);
-          item["couponTicketAmount"] = (
-            item["couponTicketAmount"] / 100.0
+          item['code'] = item['code'] + '';
+          item['apply'] = appTypeConvert(item['apply']).label;
+          item['storeId'] =
+            obj && obj.storeName ? obj.storeName : item['storeId']; // 如果找不到就显示门店Id
+          item['totalAmount'] = (item['totalAmount'] / 100.0).toFixed(2);
+          item['deliveryAmount'] = (item['deliveryAmount'] / 100.0).toFixed(2);
+          item['couponAmount'] = (item['couponAmount'] / 100.0).toFixed(2);
+          item['couponTicketAmount'] = (
+            item['couponTicketAmount'] / 100.0
           ).toFixed(2);
-          item["amountPayable"] = (item["amountPayable"] / 100.0).toFixed(2);
-          item["refundFee"] = (item["refundFee"] / 100.0).toFixed(2);
-          item["orderType"] = orderTypeConvert(item["orderType"]);
-          item["deliverStatus"] = thirdDeliverStatusConvert(
-            item["deliverStatus"]
+          item['amountPayable'] = (item['amountPayable'] / 100.0).toFixed(2);
+          item['refundFee'] = (item['refundFee'] / 100.0).toFixed(2);
+          item['orderType'] = orderTypeConvert(item['orderType']);
+          item['deliverStatus'] = thirdDeliverStatusConvert(
+            item['deliverStatus']
           );
-          item["orderStatus"] = miniOrderStatusConvert(
-            item["orderStatus"]
+          item['orderStatus'] = miniOrderStatusConvert(
+            item['orderStatus']
           ).label;
-          item["hdStatus"] = miniHdStatusConvert(item["hdStatus"]).label;
-          item["receivingWay"] = receivingWayConvert(item["receivingWay"]);
-          item["status"] = miniOrderStatusConvert(item["status"]).label;
-          item["payType"] = payTypeConvert(item["payType"]).label;
-          item["isAllRefund"] = isAllRefundConvert(item["isAllRefund"]);
-          item["allAmount"] =
-            Number(item["totalAmount"]) + Number(item["deliveryAmount"]);
+          item['hdStatus'] = miniHdStatusConvert(item['hdStatus']).label;
+          item['receivingWay'] = receivingWayConvert(item['receivingWay']);
+          item['status'] = miniOrderStatusConvert(item['status']).label;
+          item['payType'] = payTypeConvert(item['payType']).label;
+          item['isAllRefund'] = isAllRefundConvert(item['isAllRefund']);
+          item['allAmount'] =
+            Number(item['totalAmount']) + Number(item['deliveryAmount']);
         });
-        const date = this.$moment(new Date()).format("YYYYMMDDHHmmss");
+        const date = this.$moment(new Date()).format('YYYYMMDDHHmmss');
         this.$refs.tables.handleDownload({
           filename: `普通订单信息-${date}`,
-          data: tableData,
+          data: tableData
         });
       });
     },
@@ -1961,7 +1960,7 @@ export default {
         if (index === 0) {
           sums[key] = {
             key,
-            value: "合计",
+            value: '合计'
           };
           return;
         }
@@ -1977,12 +1976,12 @@ export default {
           }, 0);
           sums[key] = {
             key,
-            value: v + " 元",
+            value: v + ' 元'
           };
         } else {
           sums[key] = {
             key,
-            value: "N/A",
+            value: 'N/A'
           };
         }
       });
@@ -2001,7 +2000,7 @@ export default {
       // TODO 未测试
       modifyStoreInOrder(this.currentTableRowSelected)
         .then((res) => {
-          this.$Message.info("调货成功！");
+          this.$Message.info('调货成功！');
           this.transferModalView = false;
         })
         .catch((error) => {
@@ -2015,17 +2014,17 @@ export default {
         this.tableDataSelected.filter((value) => {
           tempDeleteList.push(value.id);
         });
-        const ids = tempDeleteList.join(",");
+        const ids = tempDeleteList.join(',');
         resendToHd({ ids: ids }).then((res) => {
           const { disqualification, failure } = res;
           if (failure.length === 0) {
-            this.$Message.info("海鼎重发成功");
+            this.$Message.info('海鼎重发成功');
           } else {
-            const lst = failure.join(",");
+            const lst = failure.join(',');
             this.$Message.error({
               content: `海鼎重发失败订单：${lst}`,
               duration: 30,
-              closable: true,
+              closable: true
             });
           }
         });
@@ -2049,8 +2048,8 @@ export default {
     },
     goBack() {
       this.$router.back();
-    },
-  },
+    }
+  }
 };
 </script>
 

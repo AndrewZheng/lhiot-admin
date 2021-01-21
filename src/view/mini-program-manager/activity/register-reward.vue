@@ -192,7 +192,7 @@
       <p slot="header">
         <i-col>
           {{
-            tempModalType === modalType.edit
+            isEdit
               ? "修改注册送礼优惠券活动"
               : "创建注册送礼优惠券活动"
           }}
@@ -331,9 +331,7 @@ import {
   createRegister,
   editRegister
 } from '@/api/mini-program';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { imageStatusConvert, receiveTypeConvert } from '@/libs/converStatus';
 import { imageStatusEnum, receiveTypeEnum } from '@/libs/enumerate';
 import {
@@ -375,7 +373,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {
@@ -551,10 +549,10 @@ export default {
               '&'
             );
           }
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createRegister();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editRegister();
           }

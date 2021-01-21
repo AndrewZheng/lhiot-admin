@@ -620,11 +620,9 @@ import {
   settleDataTotalTrend
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
 import { couponTypeConvert } from '@/libs/converStatus';
 import { couponTypeEnum } from '@/libs/enumerate';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   fenToYuanDot2,
   fenToYuanDot2Number,
@@ -688,7 +686,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
       tableDataUse: [],

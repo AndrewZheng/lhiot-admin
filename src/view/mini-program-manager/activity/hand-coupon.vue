@@ -2419,9 +2419,7 @@ import {
   getGoodsStandard
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import {
   couponStatusConvert,
@@ -3202,7 +3200,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin, relationStoreMixin],
+  mixins: [tableMixin, uploadMixin, relationStoreMixin],
   data() {
     return {
       standardIdList: [],
@@ -3647,7 +3645,7 @@ export default {
           _this.extraValidator();
           _this.replaceTextByTag();
           if (
-            this.tempModalType === this.modalType.edit ||
+            this.isEdit ||
             this.tempModalType === null
           ) {
             _this.editCouponPage();

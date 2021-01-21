@@ -27,7 +27,7 @@
           ></Input>
           <Button
             v-waves
-            :searchLoading="searchLoading"
+            :search-loading="searchLoading"
             class="search-btn mr5"
             type="primary"
             @click="handleSearch"
@@ -97,8 +97,8 @@
               >
                 <Option
                   v-for="item in splitStatus"
-                  :value="item.value"
                   :key="item.value"
+                  :value="item.value"
                   class="ptb2-5"
                 >{{ item.label }}</Option>
               </Select>
@@ -116,7 +116,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   getProductUnitsPages,
   editProductUnits,
@@ -124,9 +123,6 @@ import {
   createProductUnits
 } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
-import deleteMixin from '@/mixins/deleteMixin.js';
-
 import { splitConvert } from '@/libs/converStatus';
 
 const unitDetail = {
@@ -146,9 +142,20 @@ export default {
   components: {
     Tables
   },
-  mixins: [tableMixin, searchMixin, deleteMixin],
+  mixins: [tableMixin],
   data() {
     return {
+      ids: [],
+      splitStatus: [
+        {
+          label: '是',
+          value: 'SEPARABLE'
+        },
+        {
+          label: '否',
+          value: 'NO_SEPARABLE'
+        }
+      ],
       ruleInline: {
         splitStatus: { required: true, message: '请填写是否可拆分' },
         unitName: { required: true, message: '请填写单位名称' }
@@ -186,21 +193,8 @@ export default {
           options: ['edit', 'delete']
         }
       ],
-      modalViewLoading: false,
-      clearSearchLoading: false,
-      splitStatus: [
-        {
-          label: '是',
-          value: 'SEPARABLE'
-        },
-        {
-          label: '否',
-          value: 'NO_SEPARABLE'
-        }
-      ],
       searchRowData: this._.cloneDeep(roleRowData),
-      unitDetail: this._.cloneDeep(unitDetail),
-      ids: []
+      unitDetail: this._.cloneDeep(unitDetail)
     };
   },
   created() {
@@ -213,9 +207,9 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             this.createTableRow();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             this.editTableRow();
           }
         } else {
@@ -252,7 +246,6 @@ export default {
     },
     getTableData() {
       getProductUnitsPages(this.searchRowData).then(res => {
-        // this.tableData = res.array;
         this.tableData = res.rows;
         this.total = res.total;
         this.loading = false;
@@ -294,13 +287,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.img {
-  width: 150px;
-  height: auto !important;
-}
-.add-image {
-  line-height: 48px;
-  vertical-align: text-bottom;
-  margin-right: 10px;
-}
 </style>

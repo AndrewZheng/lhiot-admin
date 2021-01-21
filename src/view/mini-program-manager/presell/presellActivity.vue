@@ -511,7 +511,7 @@
       <p slot="header">
         <i-col>
           {{
-            tempModalType === modalType.edit ? "修改预售活动" : "创建预售活动"
+            isEdit ? "修改预售活动" : "创建预售活动"
           }}
         </i-col>
       </p>
@@ -524,7 +524,7 @@
               :rules="ruleInline"
               :label-width="130"
             >
-              <Row v-show="tempModalType === modalType.edit">
+              <Row v-show="isEdit">
                 <i-col span="12">
                   <FormItem label="预售ID:" prop="id">
                     {{
@@ -541,7 +541,7 @@
                       style="width: 200px"
                       :readonly="
                         presellDetail.startedFlag === true &&
-                          tempModalType === modalType.edit
+                          isEdit
                       "
                     ></Input>
                   </FormItem>
@@ -570,7 +570,7 @@
                       style="width: 200px"
                       :readonly="
                         presellDetail.startedFlag === true &&
-                          tempModalType === modalType.edit
+                          isEdit
                       "
                     ></Input>
                   </FormItem>
@@ -642,7 +642,7 @@
                       placeholder="活动开始时间"
                       :readonly="
                         presellDetail.startedFlag === true &&
-                          tempModalType === modalType.edit
+                          isEdit
                       "
                       class="search-input"
                       style="width: 200px"
@@ -659,7 +659,7 @@
                       placeholder="活动结束时间"
                       :readonly="
                         presellDetail.startedFlag === true &&
-                          tempModalType === modalType.edit
+                          isEdit
                       "
                       class="search-input"
                       style="width: 200px"
@@ -677,7 +677,7 @@
                       style="padding-right: 5px; width: 200px"
                       :disabled="
                         presellDetail.startedFlag === true &&
-                          tempModalType === modalType.edit
+                          isEdit
                       "
                       @on-change="handleChange"
                     >
@@ -701,7 +701,7 @@
                         :min="0"
                         :readonly="
                           presellDetail.startedFlag === true &&
-                            tempModalType === modalType.edit
+                            isEdit
                         "
                         label="生效开始"
                         style="width: 60px"
@@ -721,7 +721,7 @@
                         type="date"
                         :readonly="
                           presellDetail.startedFlag === true &&
-                            tempModalType === modalType.edit
+                            isEdit
                         "
                         placeholder="提货开始时间"
                         style="width: 200px"
@@ -737,7 +737,7 @@
                         type="date"
                         :readonly="
                           presellDetail.startedFlag === true &&
-                            tempModalType === modalType.edit
+                            isEdit
                         "
                         placeholder="提货截止时间"
                         style="width: 200px"
@@ -779,7 +779,7 @@
                       placeholder="活动价"
                       :readonly="
                         presellDetail.startedFlag === true &&
-                          tempModalType === modalType.edit
+                          isEdit
                       "
                       style="width: 200px"
                       @on-change="activityPriceInputNumberOnchange"
@@ -829,7 +829,7 @@
                 </i-col>
               </Row>
               <Divider
-                v-show="tempModalType === modalType.edit"
+                v-show="isEdit"
               >
                 可修改部分
               </Divider>
@@ -1558,9 +1558,7 @@ import {
   deletePicture
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import relationStoreMixin from '@/mixins/relationStoreMixin.js';
 import {
   teamBuyStatusConvert,
@@ -1690,7 +1688,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin, relationStoreMixin],
+  mixins: [uploadMixin, tableMixin, relationStoreMixin],
   data() {
     return {
       flagShipList: [],

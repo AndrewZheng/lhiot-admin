@@ -92,7 +92,6 @@
 import Tables from '_c/tables';
 import { monthOrderPages } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { fenToYuanDot2, gitTime } from '@/libs/util';
 import {
   receivingWayEnum,
@@ -151,7 +150,7 @@ export default {
     Tables,
     BookTypeOption
   },
-  mixins: [tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       deliverNoteList: [],

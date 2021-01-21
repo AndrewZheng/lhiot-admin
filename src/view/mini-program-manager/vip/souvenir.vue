@@ -878,9 +878,7 @@ import {
   getHdCouponActivitiesPages
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   couponStatusConvert,
   couponTypeConvert,
@@ -1457,7 +1455,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
       relationRuleInline: {
@@ -1790,7 +1788,7 @@ export default {
         if (valid) {
           _this.extraValidator();
           _this.replaceTextByTag();
-          if (this.tempModalType === this.modalType.edit) {
+          if (this.isEdit) {
             _this.editSvipGift();
           }
         } else {

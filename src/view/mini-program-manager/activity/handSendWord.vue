@@ -187,9 +187,7 @@ import {
   getCollectWordRecord,
   sendCollectWord
 } from '@/api/mini-program';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 
 const collectWordDetail = {
   collectWordSettingId: '',
@@ -230,7 +228,7 @@ export default {
   components: {
     Tables
   },
-  mixins: [deleteMixin, tableMixin, searchMixin],
+  mixins: [tableMixin],
   data() {
     return {
       ruleInline: {

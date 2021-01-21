@@ -1157,9 +1157,7 @@ import {
   getCouponPagess
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import {
   imageStatusConvert,
   expandTypeConvert,
@@ -1701,7 +1699,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
       ruleInline: {
@@ -1963,10 +1961,10 @@ export default {
               this.flashsaleDetail.endTime
             ).format('YYYY-MM-DD HH:mm:ss');
           }
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createAssist();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editAssist();
           }

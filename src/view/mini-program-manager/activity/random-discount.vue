@@ -361,9 +361,7 @@ import {
   createRandomDiscount
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import { couponStatusConvert, imageStatusConvert } from '@/libs/converStatus';
 import { couponStatusEnum, imageStatusEnum } from '@/libs/enumerate';
 import {
@@ -400,7 +398,7 @@ export default {
     Tables,
     IViewUpload
   },
-  mixins: [uploadMixin, deleteMixin, tableMixin, searchMixin],
+  mixins: [uploadMixin, tableMixin],
   data() {
     return {
       ruleInline: {
@@ -563,10 +561,10 @@ export default {
             this.$Message.error('最低立减金额不能大于最高立减金额');
             return;
           }
-          if (this.tempModalType === this.modalType.create) {
+          if (this.isCreate) {
             // 添加状态
             this.createRandomDiscount();
-          } else if (this.tempModalType === this.modalType.edit) {
+          } else if (this.isEdit) {
             // 编辑状态
             this.editRandomDiscount();
           }

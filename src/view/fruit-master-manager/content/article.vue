@@ -41,7 +41,8 @@
               placeholder="注册时间止"
               class="search-input  mr5"
               style="width: 150px"
-              @on-change="endTimeChange"/>
+              @on-change="endTimeChange"
+            />
 
             <DatePicker
               v-model="searchRowData.beginPublishAt"
@@ -50,7 +51,8 @@
               class="search-input  mr5"
               style="width: 150px"
               placeholder="发布时间起"
-              @on-change="startPublishChange"/>
+              @on-change="startPublishChange"
+            />
             <i>-</i>
             <DatePicker
               v-model="searchRowData.endPublishAt"
@@ -58,19 +60,20 @@
               placeholder="发布时间止"
               style="width: 150px"
               class="mr5"
-              @on-change="endPublishChange"/>
+              @on-change="endPublishChange"
+            />
             <Button v-waves class="search-btn mr5" type="primary" @click="handleSearch">
-              <Icon type="md-search"/>&nbsp;搜索
+              <Icon type="md-search" />&nbsp;搜索
             </Button>
             <Button v-waves :loading="clearSearchLoading" class="search-btn" type="info" @click="handleClear">
-              <Icon type="md-refresh"/>&nbsp;清除条件
+              <Icon type="md-refresh" />&nbsp;清除条件
             </Button>
             </Col>
           </Row>
         </div>
         <div slot="operations">
           <Button v-waves type="success" class="mr5" @click="addArticle">
-            <Icon type="md-add"/>
+            <Icon type="md-add" />
             创建
           </Button>
           <Poptip
@@ -81,13 +84,13 @@
             @on-ok="poptipOk"
           >
             <Button type="error" class="mr5">
-              <Icon type="md-trash"/>
+              <Icon type="md-trash" />
               删除
             </Button>
           </Poptip>
           <!-- 多类型导出 -->
-          <BookTypeOption v-model="exportType" class="mr5"/>
-          <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download"/>导出</Button>
+          <BookTypeOption v-model="exportType" class="mr5" />
+          <Button :loading="downloadLoading" class="search-btn mr5" type="primary" @click="handleDownload"><Icon type="md-download" />导出</Button>
         </div>
       </tables>
       <div style="margin: 10px;overflow: hidden">
@@ -98,7 +101,8 @@
             show-sizer
             show-total
             @on-change="changePage"
-            @on-page-size-change="changePageSize"></Page>
+            @on-page-size-change="changePageSize"
+          ></Page>
         </Row>
       </div>
     </Card>
@@ -172,9 +176,7 @@
 import Tables from '_c/tables';
 import _ from 'lodash';
 import { getArticlesPages, deleteArticle, editArticle } from '@/api/fruitermaster';
-import deleteMixin from '@/mixins/deleteMixin.js';
 import tableMixin from '@/mixins/tableMixin.js';
-import searchMixin from '@/mixins/searchMixin.js';
 import uploadMixin from '@/mixins/uploadMixin';
 import BookTypeOption from '_c/book-type-option';
 
@@ -213,7 +215,7 @@ export default {
     Tables,
     BookTypeOption
   },
-  mixins: [deleteMixin, tableMixin, searchMixin, uploadMixin],
+  mixins: [tableMixin, uploadMixin],
   data() {
     return {
       modalViewLoading: false,
