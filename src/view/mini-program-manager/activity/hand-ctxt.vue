@@ -110,6 +110,7 @@
         </Row>
       </div>
     </Card>
+
     <!-- 查看 -->
     <Modal v-model="modalView" :width="800" :mask-closable="false" draggable scrollable>
       <p slot="header">
@@ -328,6 +329,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 添加 -->
     <Modal
       v-model="modalAdd"
@@ -637,6 +639,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 修改 -->
     <Modal v-model="modalEdit" :mask-closable="false" :width="1000" draggable>
       <p slot="header">
@@ -863,6 +866,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 添加手机号码 -->
     <Modal v-model="modalPhones" :mask-closable="false" :width="700" title="手动发券">
       <p slot="header">
@@ -915,7 +919,6 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
 import {
   getCouponPagess,
   deleteCouponPage,
@@ -931,8 +934,7 @@ import {
   couponStatusConvert,
   couponTypeConvert,
   couponScopeConvert,
-  couponUseLimitConvert,
-  userScopeConvert
+  couponUseLimitConvert
 } from '@/libs/converStatus';
 import {
   couponStatusEnum,
@@ -944,7 +946,6 @@ import {
 } from '@/libs/enumerate';
 import {
   compareData,
-  getSmallCouponActivity,
   fenToYuanDot2,
   fenToYuanDot2Number,
   yuanToFenNumber,
@@ -975,33 +976,6 @@ const relationDetail = {
   rank: 0, // 排序字段
   phones: '',
   couponBusinessType: 'MANUAL_SEND',
-  couponStatus: 'VALID'
-};
-
-const couponTemplateDetail = {
-  id: 0,
-  couponName: '',
-  couponType: null,
-  couponFee: 0,
-  minBuyFee: 0,
-  couponStatus: null,
-  couponImage: '',
-  createUser: '',
-  createTime: null,
-  couponRules: '',
-  couponScope: null
-};
-
-const hdCouponTemplateDetail = {
-  activityId: 0,
-  beginDate: null,
-  endDate: null,
-  couponName: '',
-  couponRemark: '',
-  couponType: '',
-  faceValue: 0,
-  price: 0,
-  useRule: '',
   couponStatus: 'VALID'
 };
 
@@ -1390,6 +1364,31 @@ export default {
   mixins: [tableMixin, uploadMixin],
   data() {
     return {
+      defaultListMain: [],
+      uploadListMain: [],
+      areaList: [],
+      addRelationList: [],
+      couponTemplateData: [],
+      hdCouponTemplateData: [],
+      templatePageOpts: [5, 10],
+      couponTemplateTotal: 0,
+      couponHdTemplateTotal: 0,
+      modalAdd: false,
+      addTempDataLoading: false,
+      tempTableLoading: false,
+      createLoading: false,
+      modalPhones: false,
+      modalViewLoading: false,
+      phones: '',
+      couponStatusEnum,
+      couponTypeEnum,
+      couponScopeEnum,
+      userScopeEnum,
+      couponUseLimitEnum,
+      validDateTypeEnum,
+      dataColumns: dataColumns,
+      templateColumns: templateColumns,
+      hdTemplateColumns: hdTemplateColumns,
       relationRuleInline: {
         effectiveStartTime: [{ required: false, message: '请选择生效时间' }],
         effectiveEndTime: [{ required: false, message: '请选择失效时间' }],
@@ -1402,36 +1401,12 @@ export default {
         couponName: [{ required: true, message: '请输入优惠券名称' }],
         phones: [{ required: true, message: '请输入手机号码' }]
       },
-      defaultListMain: [],
-      uploadListMain: [],
-      areaList: [],
-      phones: '',
-      couponStatusEnum,
-      couponTypeEnum,
-      couponScopeEnum,
-      userScopeEnum,
-      couponUseLimitEnum,
-      validDateTypeEnum,
-      dataColumns: dataColumns,
-      templatePageOpts: [5, 10],
-      templateColumns: templateColumns,
-      hdTemplateColumns: hdTemplateColumns,
-      addTempDataLoading: false,
-      tempTableLoading: false,
-      createLoading: false,
-      modalPhones: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchTemplateRowData: _.cloneDeep(templateRowData),
       searchHdTemplateRowData: _.cloneDeep(hdTemplateRowData),
       relationDetail: _.cloneDeep(relationDetail),
-      addRelationDetail: _.cloneDeep(relationDetail),
-      addRelationList: [],
-      couponTemplateData: [],
-      hdCouponTemplateData: [],
-      couponTemplateTotal: 0,
-      couponHdTemplateTotal: 0,
-      modalAdd: false
+      addRelationDetail: _.cloneDeep(relationDetail)
+
     };
   },
   computed: {
@@ -1441,13 +1416,13 @@ export default {
     systemCouponFixDate() {
       return (
         this.tempModalType === 'addTemplate' &&
-        this.addRelationDetail.validDateType == 'FIXED_DATE'
+        this.addRelationDetail.validDateType === 'FIXED_DATE'
       );
     },
     systemCouponUnFixDate() {
       return (
         this.tempModalType === 'addTemplate' &&
-        this.addRelationDetail.validDateType == 'UN_FIXED_DATE'
+        this.addRelationDetail.validDateType === 'UN_FIXED_DATE'
       );
     }
   },
@@ -1469,7 +1444,7 @@ export default {
       // 先清除对象
       this.resetFields();
       // 当展示的是添加系统优惠券
-      if (isShow && this.tempModalType == 'addTemplate') {
+      if (isShow && this.tempModalType === 'addTemplate') {
         this.addRelationDetail.couponScope = 'SMALL';
         this.addRelationDetail.useLimitType = 'SMALL_ALL';
       }
@@ -1760,15 +1735,13 @@ export default {
       this.modalViewLoading = true;
       // 添加的是系统券，填写来源为系统优惠券
       this.addRelationDetail.source = 'SMALL';
-      console.log('before create:', this.addRelationDetail);
       createCouponPage(this.addRelationDetail)
         .then((res) => {
-          this.modalViewLoading = false;
           this.modalAdd = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -1778,12 +1751,11 @@ export default {
       this.addRelationDetail.source = 'HD';
       createCouponPage(this.addRelationDetail)
         .then((res) => {
-          this.modalViewLoading = false;
           this.modalAdd = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -1792,12 +1764,8 @@ export default {
         .then((res) => {
           this.hdCouponTemplateData = res.rows;
           this.couponHdTemplateTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1833,7 +1801,7 @@ export default {
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {

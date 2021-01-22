@@ -277,13 +277,11 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
 import {
   deleteImage,
   getImagePages,
   editImage,
-  createImage,
-  deletePicture
+  createImage
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
 import tableMixin from '@/mixins/tableMixin.js';
@@ -313,16 +311,6 @@ export default {
   mixins: [uploadMixin, tableMixin],
   data() {
     return {
-      ruleInline: {
-        imageType: [{ required: true, message: '请选择图片类型' }],
-        rank: [
-          { required: true, message: '请输入排序序号' },
-          { message: '必须为非零整数', pattern: /^[1-9]\d*$/ }
-        ],
-        imageName: [{ required: true, message: '请输入图片名称' }],
-        imageStatus: [{ required: true, message: '请选择图片状态' }],
-        imageUrl: [{ required: true, message: '请上传图片详情' }]
-      },
       defaultListMain: [],
       uploadListMain: [],
       oldPicture: [],
@@ -333,6 +321,16 @@ export default {
         { label: '关闭', value: 'OFF' },
         { label: '开启', value: 'ON' }
       ],
+      ruleInline: {
+        imageType: [{ required: true, message: '请选择图片类型' }],
+        rank: [
+          { required: true, message: '请输入排序序号' },
+          { message: '必须为非零整数', pattern: /^[1-9]\d*$/ }
+        ],
+        imageName: [{ required: true, message: '请输入图片名称' }],
+        imageStatus: [{ required: true, message: '请选择图片状态' }],
+        imageUrl: [{ required: true, message: '请上传图片详情' }]
+      },
       columns: [
         {
           type: 'selection',
@@ -444,8 +442,6 @@ export default {
           options: ['view', 'edit', 'delete']
         }
       ],
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       imageDetail: _.cloneDeep(imageDetail)
     };
@@ -466,13 +462,38 @@ export default {
       this.uploadListMain = [];
       this.imageDetail.imageUrl = null;
     },
+    getTableData() {
+      getImagePages(this.searchRowData)
+        .then(res => {
+          this.tableData = res.rows;
+          this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        })
+        .catch(error => {
+          console.log(error);
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    handleView(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.view;
+      this.imageDetail = _.cloneDeep(params.row);
+      this.modalView = true;
+    },
+    handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.imageUrl);
+      this.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.imageDetail = _.cloneDeep(params.row);
+      this.setDefaultUploadList(this.imageDetail);
+      this.modalEdit = true;
+    },
     handleSubmit(name) {
-      // if (this.oldPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.oldPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
       this.$refs[name].validate(valid => {
         if (valid) {
           if (this.isCreate) {
@@ -488,23 +509,10 @@ export default {
       });
     },
     handleEditClose() {
-      // if (this.newPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.newPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
       this.oldPicture = [];
       this.newPicture = [];
       this.modalEdit = false;
     },
-    // deletePicture(urls) {
-    //   deletePicture({
-    //     urls
-    //   })
-    //     .then(res => {})
-    //     .catch(() => {});
-    // },
     createStore() {
       this.modalViewLoading = true;
       createImage(this.imageDetail)
@@ -540,21 +548,14 @@ export default {
       }
       this.modalEdit = true;
     },
-    // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
-    },
     deleteTable(ids) {
-      this.loading = true;
       deleteImage({
         ids
       })
         .then(res => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -562,10 +563,6 @@ export default {
           }
           this.tableDataSelected = [];
           this.getTableData();
-        })
-        .catch(err => {
-          console.log(err);
-          this.loading = false;
         });
     },
     // 设置编辑商品的图片列表
@@ -578,37 +575,6 @@ export default {
         this.$refs.uploadMain.setDefaultFileList(mainImgArr);
         this.uploadListMain = mainImgArr;
       }
-    },
-    handleView(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.view;
-      this.imageDetail = _.cloneDeep(params.row);
-      this.modalView = true;
-    },
-    handleEdit(params) {
-      this.save = [];
-      this.save.push(params.row.imageUrl);
-      this.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.imageDetail = _.cloneDeep(params.row);
-      this.setDefaultUploadList(this.imageDetail);
-      this.modalEdit = true;
-    },
-    getTableData() {
-      getImagePages(this.searchRowData)
-        .then(res => {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch(error => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);

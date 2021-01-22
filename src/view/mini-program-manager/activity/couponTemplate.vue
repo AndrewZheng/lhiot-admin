@@ -376,6 +376,7 @@
         </Button>
       </div>
     </Modal>
+
     <!-- 添加运费券模板 -->
     <Modal v-model="modalEdit" :mask-closable="false" :z-index="1000">
       <p slot="header">
@@ -613,6 +614,7 @@
         </Button>
       </div>
     </Modal>
+
     <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
@@ -622,13 +624,11 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
 import {
   deleteCouponTemplate,
   getCouponTemplatePages,
   editCouponTemplate,
-  createCouponTemplate,
-  deletePicture
+  createCouponTemplate
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
 import tableMixin from '@/mixins/tableMixin.js';
@@ -681,6 +681,15 @@ export default {
   mixins: [uploadMixin, tableMixin],
   data() {
     return {
+      defaultListMain: [],
+      uploadListMain: [],
+      areaList: [],
+      couponStatusEnum,
+      couponTypeEnum,
+      couponScopeEnum,
+      oldPicture: [],
+      newPicture: [],
+      save: [],
       ruleInline: {
         couponName: [{ required: true, message: '请输入优惠券名称' }],
         couponType: [{ required: true, message: '请选择优惠券类型' }],
@@ -709,15 +718,6 @@ export default {
         couponRules: [{ required: true, message: '请输入优惠券使用规则' }],
         couponScope: [{ required: true, message: '请选择优惠券使用范围' }]
       },
-      defaultListMain: [],
-      uploadListMain: [],
-      areaList: [],
-      couponStatusEnum,
-      couponTypeEnum,
-      couponScopeEnum,
-      oldPicture: [],
-      newPicture: [],
-      save: [],
       columns: [
         {
           type: 'selection',
@@ -904,8 +904,6 @@ export default {
           options: ['couponStatus', 'view', 'edit', 'delete']
         }
       ],
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       couponTemplateDetail: _.cloneDeep(couponTemplateDetail)
     };
@@ -936,133 +934,6 @@ export default {
       // this.$refs.uploadMain.clearFileList();
       this.uploadListMain = [];
       this.couponTemplateDetail.storeImage = null;
-    },
-    handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          // TODO ? 最小金额能否大于优惠金额,即用户不需要支付额外金额
-          if (this.couponTemplateDetail.couponType != 'DISCOUNT_COUPON') {
-            if (
-              this.couponTemplateDetail.minBuyFee <=
-              this.couponTemplateDetail.couponFee
-            ) {
-              this.$Message.error('最小购买金额必须大于优惠金额!');
-              return;
-            }
-          }
-          this.couponTemplateDetail.couponScope = 'SMALL';
-          this.couponTemplateDetail.couponRules = this.couponTemplateDetail.couponRules.replace(
-            /\n|\r/g,
-            '&'
-          );
-          if (this.isCreate) {
-            // 添加状态
-            this.createCouponTemplate();
-          } else if (this.isEdit) {
-            // 编辑状态
-            this.editCouponTemplate();
-          }
-        } else {
-          this.$Message.error('请完善信息!');
-        }
-      });
-    },
-    handleEditClose() {
-      // if (this.newPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.newPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
-      this.oldPicture = [];
-      this.newPicture = [];
-      this.modalEdit = false;
-    },
-    // deletePicture(urls) {
-    //   deletePicture({
-    //     urls
-    //   })
-    //     .then(res => {})
-    //     .catch(() => {});
-    // },
-    createCouponTemplate() {
-      this.modalViewLoading = true;
-      createCouponTemplate(this.couponTemplateDetail)
-        .then((res) => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
-          this.$Message.success('创建成功!');
-          this.getTableData();
-        })
-        .catch(() => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
-        });
-    },
-    editCouponTemplate() {
-      this.modalViewLoading = true;
-      editCouponTemplate(this.couponTemplateDetail)
-        .then((res) => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-          this.getTableData();
-        })
-        .catch(() => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-        });
-    },
-    addCouponTemplate() {
-      this.resetFields();
-      if (this.tempModalType !== this.modalType.create) {
-        this.tempModalType = this.modalType.create;
-        this.couponTemplateDetail = _.cloneDeep(couponTemplateDetail);
-      }
-
-      this.modalEdit = true;
-    },
-    // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
-    },
-    deleteTable(ids) {
-      this.loading = true;
-      deleteCouponTemplate({
-        ids
-      })
-        .then((res) => {
-          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-          if (
-            this.tableData.length == this.tableDataSelected.length &&
-            this.searchRowData.page === totalPage &&
-            this.searchRowData.page !== 1
-          ) {
-            this.searchRowData.page -= 1;
-          }
-          this.tableDataSelected = [];
-          this.getTableData();
-        })
-        .catch((err) => {
-          console.log(err);
-          this.loading = false;
-        });
-    },
-    handleView(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.view;
-      this.couponTemplateDetail = _.cloneDeep(params.row);
-      this.modalView = true;
-    },
-    handleEdit(params) {
-      this.save = [];
-      this.save.push(params.row.couponImage);
-      this.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.couponTemplateDetail = _.cloneDeep(params.row);
-      this.setDefaultUploadList(this.couponTemplateDetail);
-      this.modalEdit = true;
     },
     getTableData() {
       getCouponTemplatePages(this.searchRowData)
@@ -1097,6 +968,103 @@ export default {
       }
       this.loading = true;
       this.editCouponTemplate();
+    },
+    handleView(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.view;
+      this.couponTemplateDetail = _.cloneDeep(params.row);
+      this.modalView = true;
+    },
+    handleEdit(params) {
+      this.save = [];
+      this.save.push(params.row.couponImage);
+      this.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.couponTemplateDetail = _.cloneDeep(params.row);
+      this.setDefaultUploadList(this.couponTemplateDetail);
+      this.modalEdit = true;
+    },
+    handleSubmit(name) {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          // TODO ? 最小金额能否大于优惠金额,即用户不需要支付额外金额
+          if (this.couponTemplateDetail.couponType != 'DISCOUNT_COUPON') {
+            if (
+              this.couponTemplateDetail.minBuyFee <=
+              this.couponTemplateDetail.couponFee
+            ) {
+              this.$Message.error('最小购买金额必须大于优惠金额!');
+              return;
+            }
+          }
+          this.couponTemplateDetail.couponScope = 'SMALL';
+          this.couponTemplateDetail.couponRules = this.couponTemplateDetail.couponRules.replace(
+            /\n|\r/g,
+            '&'
+          );
+          if (this.isCreate) {
+            // 添加状态
+            this.createCouponTemplate();
+          } else if (this.isEdit) {
+            // 编辑状态
+            this.editCouponTemplate();
+          }
+        } else {
+          this.$Message.error('请完善信息!');
+        }
+      });
+    },
+    handleEditClose() {
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    createCouponTemplate() {
+      this.modalViewLoading = true;
+      createCouponTemplate(this.couponTemplateDetail)
+        .then((res) => {
+          this.modalEdit = false;
+          this.$Message.success('创建成功!');
+          this.getTableData();
+        })
+        .finally(() => {
+          this.modalViewLoading = false;
+        });
+    },
+    editCouponTemplate() {
+      this.modalViewLoading = true;
+      editCouponTemplate(this.couponTemplateDetail)
+        .then((res) => {
+          this.modalEdit = false;
+          this.$Message.success('操作成功!');
+          this.getTableData();
+        })
+        .finally(() => {
+          this.modalViewLoading = false;
+        });
+    },
+    addCouponTemplate() {
+      this.resetFields();
+      this.tempModalType = this.modalType.create;
+      this.couponTemplateDetail = _.cloneDeep(couponTemplateDetail);
+      this.modalEdit = true;
+    },
+    deleteTable(ids) {
+      deleteCouponTemplate({
+        ids
+      })
+        .then((res) => {
+          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+          if (
+            this.tableData.length === this.tableDataSelected.length &&
+            this.searchRowData.page === totalPage &&
+            this.searchRowData.page !== 1
+          ) {
+            this.searchRowData.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.getTableData();
+        })
     },
     handleRemoveMain(file) {
       this.$refs.uploadMain.deleteFile(file);

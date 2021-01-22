@@ -15,7 +15,7 @@
         @on-delete="handleDelete"
         @on-view="handleView"
         @on-edit="handleEdit"
-        @on-sale="onOff"
+        @on-sale="handleSwitch"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
@@ -368,7 +368,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   deleteRecharge,
   getRechargePages,
@@ -380,7 +379,7 @@ import {
   createRechargeRule
 } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import { couponStatusConvert, imageStatusConvert } from '@/libs/converStatus';
+import { imageStatusConvert } from '@/libs/converStatus';
 import { couponStatusEnum, imageStatusEnum } from '@/libs/enumerate';
 import {
   fenToYuanDot2,
@@ -484,6 +483,10 @@ export default {
   mixins: [tableMixin],
   data() {
     return {
+      addTempDataLoading: false,
+      tempTableLoading: false,
+      couponStatusEnum,
+      imageStatusEnum,
       ruleInline: {
         activityName: [{ required: true, message: '请输入活动名称' }],
         // minFee: [
@@ -514,8 +517,6 @@ export default {
           }
         ]
       },
-      couponStatusEnum,
-      imageStatusEnum,
       columns: [
         {
           type: 'selection',
@@ -589,10 +590,6 @@ export default {
           options: ['inlineEdit', 'delete']
         }
       ],
-      addTempDataLoading: false,
-      tempTableLoading: false,
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
       rechargeDetail: _.cloneDeep(rechargeDetail),
@@ -626,108 +623,6 @@ export default {
     },
     resetFields() {
       this.$refs.modalEdit.resetFields();
-    },
-    handleSubmit(name) {
-      this.$refs[name].validate(valid => {
-        if (valid) {
-          if (
-            compareData(
-              this.rechargeDetail.startTime,
-              this.rechargeDetail.endTime
-            )
-          ) {
-            this.$Message.error('结束时间必须大于开始时间!');
-            return;
-          }
-          if (this.isCreate) {
-            // 添加状态
-            this.createRecharge();
-          } else if (this.isEdit) {
-            // 编辑状态
-            this.editRecharge();
-          }
-        } else {
-          this.$Message.error('请完善信息!');
-        }
-      });
-    },
-    createRecharge() {
-      this.modalViewLoading = true;
-      createRecharge(this.rechargeDetail)
-        .then(res => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
-          this.$Message.success('创建成功!');
-          this.getTableData();
-        })
-        .catch(() => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
-        });
-    },
-    editRecharge() {
-      this.modalViewLoading = true;
-      editRecharge(this.rechargeDetail)
-        .then(res => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-          this.getTableData();
-        })
-        .catch(() => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-        });
-    },
-    addRecharge() {
-      this.resetFields();
-      if (this.tempModalType !== this.modalType.create) {
-        this.tempModalType = this.modalType.create;
-        this.rechargeDetail = _.cloneDeep(rechargeDetail);
-      }
-      this.modalEdit = true;
-    },
-    // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
-    },
-    deleteTable(ids) {
-      this.loading = true;
-      deleteRecharge({
-        ids
-      })
-        .then(res => {
-          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-          if (
-            this.tableData.length == this.tableDataSelected.length &&
-            this.searchRowData.page === totalPage &&
-            this.searchRowData.page !== 1
-          ) {
-            this.searchRowData.page -= 1;
-          }
-          this.tableDataSelected = [];
-          this.getTableData();
-        })
-        .catch(err => {
-          console.log(err);
-          this.loading = false;
-        });
-    },
-    handleView(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.view;
-      this.rechargeDetail = _.cloneDeep(params.row);
-      this.modalView = true;
-    },
-    handleEdit(params) {
-      // this.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.rechargeDetail = _.cloneDeep(params.row);
-      this.searchRelationRowData.activityRechargeId = params.row.id;
-      this.addRelationDetail.activityRechargeId = params.row.id;
-      this.getRelationTableData();
-      this.modalEdit = true;
     },
     getTableData() {
       getRechargePages(this.searchRowData)
@@ -769,15 +664,94 @@ export default {
           this.clearSearchLoading = false;
         });
     },
-    onOff(params) {
+    handleSwitch(params) {
       this.rechargeDetail = this._.cloneDeep(params.row);
-      if (params.row.onOff === 'ON') {
-        this.rechargeDetail.onOff = 'OFF';
-      } else {
-        this.rechargeDetail.onOff = 'ON';
-      }
-      this.loading = true;
+      this.rechargeDetail.onOff = params.row.onOff === 'ON' ? 'OFF' : 'ON';
       this.editRecharge();
+    },
+    handleView(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.view;
+      this.rechargeDetail = _.cloneDeep(params.row);
+      this.modalView = true;
+    },
+    handleEdit(params) {
+      // this.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.rechargeDetail = _.cloneDeep(params.row);
+      this.searchRelationRowData.activityRechargeId = params.row.id;
+      this.addRelationDetail.activityRechargeId = params.row.id;
+      this.getRelationTableData();
+      this.modalEdit = true;
+    },
+    handleSubmit(name) {
+      this.$refs[name].validate(valid => {
+        if (valid) {
+          if (
+            compareData(
+              this.rechargeDetail.startTime,
+              this.rechargeDetail.endTime
+            )
+          ) {
+            this.$Message.error('结束时间必须大于开始时间!');
+            return;
+          }
+          if (this.isCreate) {
+            this.createRecharge();
+          } else if (this.isEdit) {
+            this.editRecharge();
+          }
+        } else {
+          this.$Message.error('请完善信息!');
+        }
+      });
+    },
+    createRecharge() {
+      this.modalViewLoading = true;
+      createRecharge(this.rechargeDetail)
+        .then(res => {
+          this.modalEdit = false;
+          this.$Message.success('创建成功!');
+          this.getTableData();
+        })
+        .finally(() => {
+          this.modalViewLoading = false;
+        });
+    },
+    editRecharge() {
+      this.modalViewLoading = true;
+      editRecharge(this.rechargeDetail)
+        .then(res => {
+          this.modalEdit = false;
+          this.$Message.success('操作成功!');
+          this.getTableData();
+        })
+        .finally(() => {
+          this.modalViewLoading = false;
+        });
+    },
+    addRecharge() {
+      this.resetFields();
+      this.tempModalType = this.modalType.create;
+      this.rechargeDetail = _.cloneDeep(rechargeDetail);
+      this.modalEdit = true;
+    },
+    deleteTable(ids) {
+      deleteRecharge({
+        ids
+      })
+        .then(res => {
+          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+          if (
+            this.tableData.length === this.tableDataSelected.length &&
+            this.searchRowData.page === totalPage &&
+            this.searchRowData.page !== 1
+          ) {
+            this.searchRowData.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.getTableData();
+        })
     },
     startTimeChange(value, date) {
       this.rechargeDetail.startTime = value;
@@ -857,14 +831,12 @@ export default {
       this.modalViewLoading = true;
       createRechargeRule(this.addRelationDetail)
         .then(res => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getRelationTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
-          this.modalEdit = false;
         });
     },
     rechargeFeeInputNumberOnChange(value) {

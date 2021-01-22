@@ -579,7 +579,6 @@ export const storeTypeEnum = [{
   label: '加盟店',
   value: storeType.JOIN_STORE
 }
-
 ];
 
 // GCJ02("高德坐标系/火星坐标系"),
@@ -908,7 +907,7 @@ export const expandTypeEnum = [
   {
     label: '助力商品',
     value: 'ASSIST_PRODUCT'
-  },
+  }
 ];
 
 export const pfExpandTypeEnum = [
@@ -2704,7 +2703,7 @@ export const couponFromEnum = [{
 {
   label: '活动送券',
   value: 'activity'
-},
+}
 ];
 
 export const layoutEnum = [{
@@ -2791,7 +2790,7 @@ export const paymentFromEnum = [{
 {
   label: '订单',
   value: 'order'
-},
+}
   // {
   //   label: '发票',
   //   value: 'invoice'

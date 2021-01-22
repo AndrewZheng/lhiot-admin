@@ -733,6 +733,8 @@ export default {
         })
     },
     resetSearchRowData() {
+      this.currentGroupId = 0;
+      this.currentName = '全部分类';
       this.searchRowData = _.cloneDeep(roleRowData);
       this.getTableData();
     },
@@ -769,10 +771,8 @@ export default {
       this.$refs[name1].validate((valid) => {
         if (valid) {
           if (this.isCreate) {
-            // 添加状态
             this.createProduct();
           } else if (this.isEdit) {
-            // 编辑状态
             this.editProduct();
           }
         } else {
@@ -792,14 +792,12 @@ export default {
         ...this.productDetail
       })
         .then((res) => {
-          this.modalEditLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalEditLoading = false;
-          this.modalEdit = false;
         });
     },
     editProduct() {
@@ -809,11 +807,10 @@ export default {
       })
         .then((res) => {
           this.modalEdit = false;
-          this.modalEditLoading = false;
+          this.$Message.success('修改成功!');
           this.getTableData();
         })
-        .catch(() => {
-          this.modalEdit = false;
+        .finally(() => {
           this.modalEditLoading = false;
         });
     },
@@ -836,7 +833,6 @@ export default {
       }
       this.modalEdit = true;
     },
-    // 删除
     deleteTable(ids) {
       deleteProduct({
         ids
@@ -868,7 +864,6 @@ export default {
       this.save.push(params.row.image);
       this.setDefaultUploadList(this.productDetail);
       this.findGroupId(this.productDetail.groupId);
-      console.log(`defaultGoodsCategoryData: `, ...this.defaultGoodsCategoryData);
       this.defaultGoodsCategoryData.reverse();
       this.modalEdit = true;
     },
@@ -890,14 +885,12 @@ export default {
       }
     },
     handleSetting(params) {
-      var rows = params.row;
+      const rows = params.row;
       rows.unitsList = this.unitsList;
       setSmallGoodsStandard(rows);
       this.turnToPage({
         name: 'small-goods-relation-standard',
-        // name: 'small-goods-raltion-standard',
         params: { productId: params.row.id, unitsList: this.unitsList }
-        // params: { id: params.row.id, unitsList: this.unitsList, productName: params.row.productName }
       });
     },
     // 商品主图
@@ -967,7 +960,7 @@ export default {
       });
     },
     renderContent(h, { root, node, data }) {
-      if (data.type == 'PARENT') {
+      if (data.type === 'PARENT') {
         return (
           <div
             style={{
@@ -1020,7 +1013,6 @@ export default {
       this.currentName = data.title;
       this.currentGroupId = data.id;
       this.searchRowData.groupId = data.id;
-      // 获取新数据
       this.getTableData();
     },
     resetRowData() {

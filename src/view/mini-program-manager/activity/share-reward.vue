@@ -474,7 +474,6 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
 import {
   deleteShareReward,
   getShareRewardPages,
@@ -487,7 +486,6 @@ import {
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
 import tableMixin from '@/mixins/tableMixin.js';
-import { couponStatusConvert } from '@/libs/converStatus';
 import { couponStatusEnum } from '@/libs/enumerate';
 import {
   fenToYuanDot2,
@@ -593,6 +591,12 @@ export default {
   mixins: [uploadMixin, tableMixin],
   data() {
     return {
+      defaultListMain: [],
+      uploadListMain: [],
+      areaList: [],
+      addTempDataLoading: false,
+      tempTableLoading: false,
+      couponStatusEnum,
       ruleInline: {
         storeId: [{ required: true, message: '请选择门店' }],
         userId: [
@@ -620,10 +624,6 @@ export default {
           }
         ]
       },
-      defaultListMain: [],
-      uploadListMain: [],
-      areaList: [],
-      couponStatusEnum,
       columns: [
         {
           type: 'selection',
@@ -758,10 +758,6 @@ export default {
           options: ['inlineEdit', 'delete']
         }
       ],
-      addTempDataLoading: false,
-      tempTableLoading: false,
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
       shareRewardDetail: _.cloneDeep(shareRewardDetail),
@@ -797,10 +793,8 @@ export default {
       this.$refs[name].validate(valid => {
         if (valid) {
           if (this.isCreate) {
-            // 添加状态
             this.createShareReward();
           } else if (this.isEdit) {
-            // 编辑状态
             this.editShareReward();
           }
         } else {
@@ -812,14 +806,12 @@ export default {
       this.modalViewLoading = true;
       createShareReward(this.shareRewardDetail)
         .then(res => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
-          this.modalEdit = false;
         });
     },
     editShareReward() {
@@ -827,11 +819,10 @@ export default {
       editShareReward(this.shareRewardDetail)
         .then(res => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
+          this.$Message.success('操作成功!');
           this.getTableData();
         })
-        .catch(() => {
-          this.modalEdit = false;
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -843,21 +834,14 @@ export default {
       }
       this.modalEdit = true;
     },
-    // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
-    },
     deleteTable(ids) {
-      this.loading = true;
       deleteShareReward({
         ids
       })
         .then(res => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -865,10 +849,6 @@ export default {
           }
           this.tableDataSelected = [];
           this.getTableData();
-        })
-        .catch(err => {
-          console.log(err);
-          this.loading = false;
         });
     },
     handleView(params) {
@@ -889,25 +869,16 @@ export default {
         .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
     },
-    onOff(params) {
+    handleSwitch(params) {
       this.shareRewardDetail = this._.cloneDeep(params.row);
-      if (params.row.onOff === 'ON') {
-        this.shareRewardDetail.onOff = 'OFF';
-      } else {
-        this.shareRewardDetail.onOff = 'ON';
-      }
-      this.loading = true;
+      this.shareRewardDetail.onOff = params.row.onOff === 'ON' ? 'OFF' : 'ON';
       this.editShareReward();
     },
     startTimeChange(value, date) {
@@ -947,7 +918,6 @@ export default {
     getRelationTableData() {
       getShareRewardSettingPages(this.searchRelationRowData)
         .then(res => {
-          // 设置行是否可编辑
           if (res.rows.length !== 0) {
             res.rows.forEach(element => {
               element.isEdit = false;
@@ -957,12 +927,8 @@ export default {
             this.relationDetail = null;
           }
           // this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

@@ -2719,14 +2719,14 @@ const dataColumns = [
     minWidth: 120,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
+      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
         return <div>{row.effectiveStartTime}</div>;
       } else if (
-        row.source == 'SMALL' &&
+        row.source === 'SMALL' &&
         row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.beginDay}</div>;
-      } else if (row.source == 'HD') {
+      } else if (row.source === 'HD') {
         return <div>{row.beginDay}</div>;
       } else {
         return <div>N/A</div>;
@@ -2740,7 +2740,7 @@ const dataColumns = [
     minWidth: 180,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
+      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
         if (!compareCouponData(row.effectiveEndTime)) {
           return (
             <div style='color:red'>
@@ -2751,11 +2751,11 @@ const dataColumns = [
           return <div>{row.effectiveEndTime}</div>;
         }
       } else if (
-        row.source == 'SMALL' &&
+        row.source === 'SMALL' &&
         row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.endDay}</div>;
-      } else if (row.source == 'HD') {
+      } else if (row.source === 'HD') {
         return <div>{row.endDay}</div>;
         // if (!compareCouponData(row.effectiveEndTime)) {
         //   return <div style="color:red">{row.effectiveEndTime + "已过期"}</div>;
@@ -3103,7 +3103,7 @@ const productColumns = [
       const { row } = params;
 
       if (row.productStandardExpand != null) {
-        if (row.productStandardExpand.expandType == 'DISCOUNT_PRODUCT') {
+        if (row.productStandardExpand.expandType === 'DISCOUNT_PRODUCT') {
           return (
             <div>
               <tag color='magenta'>
@@ -3111,7 +3111,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == 'PULL_NEW_PRODUCT') {
+        } else if (row.productStandardExpand.expandType === 'PULL_NEW_PRODUCT') {
           return (
             <div>
               <tag color='orange'>
@@ -3119,7 +3119,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == 'SECKILL_PRODUCT') {
+        } else if (row.productStandardExpand.expandType === 'SECKILL_PRODUCT') {
           return (
             <div>
               <tag color='blue'>
@@ -3127,7 +3127,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == 'SHARE_PRODUCT') {
+        } else if (row.productStandardExpand.expandType === 'SHARE_PRODUCT') {
           return (
             <div>
               <tag color='blue'>
@@ -3135,7 +3135,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == 'ASSIST_PRODUCT') {
+        } else if (row.productStandardExpand.expandType === 'ASSIST_PRODUCT') {
           return (
             <div>
               <tag color='green'>
@@ -3379,7 +3379,7 @@ export default {
       // 先清除对象
       this.resetFields();
       // 当展示的是添加系统优惠券
-      if (isShow && this.tempModalType == 'addTemplate') {
+      if (isShow && this.tempModalType === 'addTemplate') {
         this.addRelationDetail.couponScope = 'SMALL';
         this.addRelationDetail.useLimitType = 'SMALL_ALL';
       }
@@ -3480,13 +3480,11 @@ export default {
             this.$Message.success('发送成功！');
             this.modalPhones = false;
           }
-        })
-        .catch((error) => {
-          console.log(error);
         });
     },
     getTableData() {
       this.validCoupon = 0;
+      this.loading = true;
       getCouponPagess(this.searchRowData)
         .then((res) => {
           if (this.hdCouponType === '新人注册首单立减券') {
@@ -3499,12 +3497,8 @@ export default {
           }
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -3521,12 +3515,8 @@ export default {
         .then((res) => {
           this.couponTemplateData = res.rows;
           this.couponTemplateTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -3570,7 +3560,6 @@ export default {
       this.handleTemplateSearch();
     },
     editCouponPage() {
-      // 编辑状态
       this.tempTableLoading = true;
       editCouponPage(this.addRelationDetail)
         .then((res) => {
@@ -3695,12 +3684,11 @@ export default {
       this.addRelationDetail.source = 'SMALL';
       createCouponPage(this.addRelationDetail)
         .then((res) => {
-          this.modalViewLoading = false;
           this.modalAdd = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -3709,12 +3697,11 @@ export default {
       this.addRelationDetail.source = 'HD';
       createCouponPage(this.addRelationDetail)
         .then((res) => {
-          this.modalViewLoading = false;
           this.modalAdd = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -3723,12 +3710,8 @@ export default {
         .then((res) => {
           this.hdCouponTemplateData = res.rows;
           this.couponHdTemplateTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -3791,7 +3774,7 @@ export default {
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {

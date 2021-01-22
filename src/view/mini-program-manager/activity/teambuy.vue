@@ -1665,7 +1665,6 @@ import {
   createTeamBuy,
   getAreaStorePages,
   getProductStandardsPages,
-  deletePicture,
   getGoodsStandard
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
@@ -1889,7 +1888,7 @@ export default {
           minWidth: 100,
           render: (h, params) => {
             const { row } = params;
-            if (row.status == 'on') {
+            if (row.status === 'on') {
               return (
                 <div>
                   <tag color='success'>
@@ -1897,7 +1896,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.status == 'off') {
+            } else if (row.status === 'off') {
               return (
                 <div>
                   <tag color='error'>
@@ -1905,7 +1904,7 @@ export default {
                   </tag>
                 </div>
               );
-            } else if (row.status == 'expire') {
+            } else if (row.status === 'expire') {
               return (
                 <div>
                   <tag color='warning'>
@@ -2139,7 +2138,7 @@ export default {
           minWidth: 130,
           render: (h, params, vm) => {
             const { row } = params;
-            if (row.productType == 'TEAM_BUY_PRODUCT') {
+            if (row.productType === 'TEAM_BUY_PRODUCT') {
               return (
                 <div>
                   <tag color='magenta'>
@@ -2224,10 +2223,6 @@ export default {
           key: 'rank'
         }
       ],
-      searchRowData: _.cloneDeep(roleRowData),
-      searchProductRowData: _.cloneDeep(productRowData),
-      productDetail: _.cloneDeep(productStandardDetail),
-      teambuyDetail: _.cloneDeep(teambuyDetail),
       ruleInline: {
         rank: [
           { required: true, message: '请输入排序序号' },
@@ -2354,7 +2349,11 @@ export default {
         rewardActivitySetting: [
           { required: true, message: '请选择红包活动设置' }
         ]
-      }
+      },
+      searchRowData: _.cloneDeep(roleRowData),
+      searchProductRowData: _.cloneDeep(productRowData),
+      productDetail: _.cloneDeep(productStandardDetail),
+      teambuyDetail: _.cloneDeep(teambuyDetail)
     };
   },
   computed: {
@@ -2654,14 +2653,13 @@ export default {
       this.deleteTable(params.row.storeId);
     },
     deleteTable(ids) {
-      this.loading = true;
       deleteTeamBuy({
         ids
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -2670,10 +2668,6 @@ export default {
           this.tableDataSelected = [];
           this.getTableData();
         })
-        .catch((err) => {
-          console.log(err);
-          this.loading = false;
-        });
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
@@ -2809,12 +2803,8 @@ export default {
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

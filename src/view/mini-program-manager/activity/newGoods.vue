@@ -1556,7 +1556,6 @@ import { taskTypeEnum } from '@/libs/enumerate';
 import {
   couponStatusConvert,
   couponTypeConvert,
-  couponScopeConvert,
   imageStatusConvert,
   teamBuyStatusConvert
 } from '@/libs/converStatus';
@@ -1872,19 +1871,19 @@ const teambuyColumns = [
     minWidth: 100,
     render: (h, params) => {
       const { row } = params;
-      if (row.status == 'on') {
+      if (row.status === 'on') {
         return (
           <div>
             <tag color='success'>{teamBuyStatusConvert(row.status).label}</tag>
           </div>
         );
-      } else if (row.status == 'off') {
+      } else if (row.status === 'off') {
         return (
           <div>
             <tag color='error'>{teamBuyStatusConvert(row.status).label}</tag>
           </div>
         );
-      } else if (row.status == 'expire') {
+      } else if (row.status === 'expire') {
         return (
           <div>
             <tag color='warning'>{teamBuyStatusConvert(row.status).label}</tag>
@@ -2081,13 +2080,13 @@ const PresellColumns = [
     minWidth: 100,
     render: (h, params) => {
       const { row } = params;
-      if (row.status == 'VALID') {
+      if (row.status === 'VALID') {
         return (
           <div>
             <tag color='success'>{'上架'}</tag>
           </div>
         );
-      } else if (row.status == 'INVALID') {
+      } else if (row.status === 'INVALID') {
         return (
           <div>
             <tag color='error'>{'下架'}</tag>
@@ -2368,7 +2367,6 @@ export default {
       showValidDate: true,
       activityId: null,
       sameGoodsStatus: true,
-      modalEditLoading: false,
       modalRelevance: false,
       modalAddCoupun: false,
       modalAddproduct: false,
@@ -2649,7 +2647,7 @@ export default {
           render: (h, params, vm) => {
             const { row } = params;
             if (
-              row.couponConfigManage.source == 'SMALL' &&
+              row.couponConfigManage.source === 'SMALL' &&
               row.couponConfigManage.validDateType === 'FIXED_DATE'
             ) {
               if (!compareCouponData(row.couponConfigManage.effectiveEndTime)) {
@@ -2662,11 +2660,11 @@ export default {
                 return <div>{row.couponConfigManage.effectiveEndTime}</div>;
               }
             } else if (
-              row.couponConfigManage.source == 'SMALL' &&
+              row.couponConfigManage.source === 'SMALL' &&
               row.couponConfigManage.validDateType === 'UN_FIXED_DATE'
             ) {
               return <div>{row.couponConfigManage.endDay}</div>;
-            } else if (row.couponConfigManage.source == 'HD') {
+            } else if (row.couponConfigManage.source === 'HD') {
               if (!compareCouponData(row.couponConfigManage.effectiveEndTime)) {
                 return (
                   <div style='color:red'>
@@ -3001,14 +2999,12 @@ export default {
     getNewProductsRelevance(id) {
       getNewProductsRelevance(id)
         .then((res) => {
-          (this.activityPreSaleRelations = res.activityPreSaleRelations),
-          (this.activitySeckillRelations = res.activitySeckillRelations),
-          (this.activityTeambuyRelations = res.activityTeambuyRelations),
-          (this.productStandardRelations = res.productStandardRelations),
-          (this.couponConfigManageRelations =
-              res.couponConfigManageRelations);
+          this.activityPreSaleRelations = res.activityPreSaleRelations;
+          this.activitySeckillRelations = res.activitySeckillRelations;
+          this.activityTeambuyRelations = res.activityTeambuyRelations;
+          this.productStandardRelations = res.productStandardRelations;
+          this.couponConfigManageRelations = res.couponConfigManageRelations;
         })
-        .finally(() => {});
     },
     // 修改活动关联
     updateNewProductsRelevance(data) {
@@ -3566,7 +3562,6 @@ export default {
         });
     },
     deleteTable(ids) {
-      this.loading = true;
       deleteNewProducts({
         ids
       })
@@ -3583,9 +3578,6 @@ export default {
           this.$Message.success('删除成功!');
           this.getTableData();
         })
-        .finally(() => {
-          this.loading = false;
-        });
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {

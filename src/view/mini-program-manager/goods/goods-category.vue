@@ -107,17 +107,22 @@
         }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="editForm" :label-width="100">
+        <Form
+          ref="editForm"
+          :model="currentCategory"
+          :rules="ruleInline"
+          :label-width="100"
+        >
           <FormItem v-show="addSon" label="父级ID:">
             <i-col>{{ parentCategory.id }}</i-col>
           </FormItem>
           <FormItem v-show="addSon" label="父级分类:">
             <i-col>{{ parentCategory.groupName }}</i-col>
           </FormItem>
-          <FormItem label="子分类名:">
+          <FormItem label="子分类名:" prop="groupName">
             <Input
               v-model="currentCategory.groupName"
-              placeholder="子分类名"
+              placeholder="请输入子分类名"
             ></Input>
           </FormItem>
         </Form>
@@ -171,9 +176,9 @@ export default {
       currentParentId: 0,
       currentParentName: '',
       menuData: [],
-      currentCategory: _.cloneDeep(currentCategory),
-      parentCategory: _.cloneDeep(currentCategory),
-      searchRowData: _.cloneDeep(roleRowData),
+      ruleInline: {
+        groupName: [{ required: true, message: '请输入子分类名称' }]
+      },
       columns: [
         {
           type: 'selection',
@@ -204,13 +209,127 @@ export default {
           minWidth: 150,
           options: ['edit', 'delete']
         }
-      ]
+      ],
+      currentCategory: _.cloneDeep(currentCategory),
+      parentCategory: _.cloneDeep(currentCategory),
+      searchRowData: _.cloneDeep(roleRowData)
     };
   },
   created() {
     this.initMenuList();
   },
   methods: {
+    getTableData() {
+      this.loading = true;
+      getProductCategoriesPages(this.searchRowData).then((res) => {
+        this.tableData = res.rows;
+        this.total = res.total;
+      }).finally(() => {
+        this.loading = false;
+        this.searchLoading = false;
+        this.clearSearchLoading = false;
+      });
+    },
+    createSonRow() {
+      if (!this.parentCategory.id) {
+        this.$Message.warning('请从左侧选择一个父分类');
+        return;
+      }
+      this.addSon = true;
+      this.resetRowData();
+      this.currentCategory.parentId = this.parentCategory.id;
+      this.tempModalType = this.modalType.create;
+      this.modalEdit = true;
+    },
+    createParentRow() {
+      this.addSon = false;
+      this.resetRowData();
+      this.currentCategory.parentId = 0;
+      this.tempModalType = this.modalType.create;
+      this.modalEdit = true;
+    },
+    resetRowData() {
+      this.currentCategory = _.cloneDeep(currentCategory);
+    },
+    // 编辑分类
+    handleEdit(params) {
+      this.$refs.editForm.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.currentCategory = _.cloneDeep(params.row);
+      this.modalEdit = true;
+    },
+    handleEditClose() {
+      this.modalEdit = false;
+    },
+    handleSubmit() {
+      this.$refs.editForm.validate((valid) => {
+        if (valid) {
+          if (this.isCreate) {
+            this.createProductCategories();
+          } else if (this.isEdit) {
+            this.editProductCategories();
+          }
+        } else {
+          this.$Message.error('请完善信息!');
+        }
+      });
+    },
+    createProductCategories() {
+      this.modalEditLoading = true;
+      createProductCategories(this.currentCategory)
+        .then((res) => {
+          this.initMenuList();
+          this.modalEdit = false;
+        })
+        .finally(() => {
+          this.modalEditLoading = false;
+        });
+    },
+    editProductCategories() {
+      this.modalEditLoading = true;
+      editProductCategories(this.currentCategory)
+        .then((res) => {
+          this.initMenuList();
+          this.modalEdit = false;
+        })
+        .finally(() => {
+          this.modalEditLoading = false;
+        });
+    },
+    // 删除
+    deleteTable(ids) {
+      this.loading = true;
+      delProductCategories({
+        ids
+      })
+        .then((res) => {
+          const totalPage = Math.ceil(this.total / this.pageSize);
+          if (
+            this.tableData.length === this.tableDataSelected.length &&
+            this.page === totalPage &&
+            this.page !== 1
+          ) {
+            this.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.initMenuList();
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+    },
+    // 初始化商品菜单列表
+    initMenuList() {
+      getProductCategoriesTree().then((res) => {
+        const menuList = buildMenu(res.array);
+        const map = {
+          title: 'title',
+          children: 'children'
+        };
+        this.menuData = convertTree(menuList, map, true);
+        this.getTableData();
+      });
+    },
     renderContent(h, { root, node, data }) {
       if (data.type === 'PARENT') {
         return (
@@ -248,140 +367,23 @@ export default {
         );
       }
     },
-    createSonRow() {
-      if (!this.parentCategory.id) {
-        this.$Message.warning('请从左侧选择一个父分类');
-        return;
-      }
-      this.resetRowData();
-      if (this.tempModalType !== this.modalType.create) {
-        this.currentCategory = this._.cloneDeep(currentCategory);
-      }
-      this.addSon = true;
-      this.currentCategory.parentId = this.parentCategory.id;
-      this.tempModalType = this.modalType.create;
-      this.modalEdit = true;
-    },
-    createParentRow() {
-      this.addSon = false;
-      this.resetRowData();
-      if (this.tempModalType !== this.modalType.create) {
-        this.currentCategory = this._.cloneDeep(currentCategory);
-      }
-      this.currentCategory.parentId = 0;
-      this.tempModalType = this.modalType.create;
-      this.modalEdit = true;
-    },
-    resetRowData() {
-      this.currentCategory = this._.cloneDeep(currentCategory);
-    },
-    handleSubmit() {
-      if (!this.currentCategory.groupName) {
-        this.$Message.warning('请输入子分类');
-        return;
-      }
-      if (this.isCreate) {
-        this.createProductCategories();
-      } else if (this.isEdit) {
-        this.editProductCategories();
-      }
-    },
-    createProductCategories() {
-      this.modalEditLoading = true;
-      createProductCategories(this.currentCategory)
-        .then((res) => {})
-        .finally((res) => {
-          this.initMenuList();
-          this.modalEditLoading = false;
-          this.modalEdit = false;
-        });
-    },
-    editProductCategories() {
-      this.modalEditLoading = true;
-      editProductCategories(this.currentCategory)
-        .then((res) => {})
-        .finally((res) => {
-          this.initMenuList();
-          this.modalEditLoading = false;
-          this.modalEdit = false;
-        });
-    },
-    handleEditClose() {
-      this.modalEdit = false;
-    },
-    // 删除
-    deleteTable(ids) {
-      this.loading = true;
-      delProductCategories({
-        ids
-      })
-        .then((res) => {
-          const totalPage = Math.ceil(this.total / this.pageSize);
-          if (
-            this.tableData.length === this.tableDataSelected.length &&
-            this.page === totalPage &&
-            this.page !== 1
-          ) {
-            this.page -= 1;
-          }
-          this.tableDataSelected = [];
-          this.initMenuList();
-        })
-        .catch(() => {
-          this.loading = false;
-        });
-    },
-    // 编辑分类
-    handleEdit(params) {
-      // this.$refs.modalEdit.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.currentCategory = _.cloneDeep(params.row);
-      this.modalEdit = true;
-    },
-    getTableData() {
-      this.loading = true;
-      getProductCategoriesPages(this.searchRowData).then((res) => {
-        this.tableData = res.rows;
-        this.total = res.total;
-      }).finally(() => {
-        this.loading = false;
-        this.searchLoading = false;
-        this.clearSearchLoading = false;
-      });
-    },
-    // 初始化商品菜单列表
-    initMenuList() {
-      getProductCategoriesTree().then((res) => {
-        const menuList = buildMenu(res.array);
-        const map = {
-          title: 'title',
-          children: 'children'
-        };
-        this.menuData = convertTree(menuList, map, true);
-        this.getTableData();
-      });
-    },
     handleClick({ root, node, data }) {
       this.loading = true;
-      // 递归展开当前节点
       if (typeof data.expand === 'undefined') {
         this.$set(data, 'expend', false);
         if (data.children) {
           this.expandChildren(data.children);
         }
       }
-
       if (typeof data.selected === 'undefined') {
         this.$set(data, 'selected', true);
       } else {
         this.$set(data, 'selected', !data.selected);
       }
-
       this.parentCategory.id = data.id;
       this.parentCategory.groupName = data.title;
       this.currentParentId = data.id;
       this.searchRowData.parentId = data.id;
-      // 获取新数据
       this.getTableData();
     },
     resetSearchRowData() {

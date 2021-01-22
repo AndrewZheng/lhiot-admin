@@ -324,7 +324,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   getRegisterPages,
   deleteRegister,
@@ -332,7 +331,7 @@ import {
   editRegister
 } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import { imageStatusConvert, receiveTypeConvert } from '@/libs/converStatus';
+import { imageStatusConvert } from '@/libs/converStatus';
 import { imageStatusEnum, receiveTypeEnum } from '@/libs/enumerate';
 import {
   compareData,
@@ -376,6 +375,15 @@ export default {
   mixins: [tableMixin],
   data() {
     return {
+      defaultListMain: [],
+      uploadListMain: [],
+      addTempDataLoading: false,
+      tempTableLoading: false,
+      templateLoading: false,
+      modalRelation: false,
+      editStatus: false,
+      imageStatusEnum,
+      receiveTypeEnum,
       ruleInline: {
         activityName: [
           { required: true, message: '请输入活动名称' },
@@ -417,10 +425,6 @@ export default {
         endTime: [{ required: true, message: '请选择活动结束时间' }],
         receiveType: [{ required: true, message: '请选择活动结束时间' }]
       },
-      defaultListMain: [],
-      uploadListMain: [],
-      imageStatusEnum,
-      receiveTypeEnum,
       columns: [
         {
           type: 'selection',
@@ -499,12 +503,6 @@ export default {
           options: ['onSale', 'view', 'edit', 'delete', 'settings']
         }
       ],
-      addTempDataLoading: false,
-      tempTableLoading: false,
-      templateLoading: false,
-      modalViewLoading: false,
-      modalRelation: false,
-      editStatus: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
       registerDetail: _.cloneDeep(registerDetail)
@@ -634,12 +632,6 @@ export default {
         name: 'small-vip-activities-associated'
       });
     },
-    // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
-    },
     deleteTable(ids) {
       this.loading = true;
       deleteRegister({
@@ -666,10 +658,7 @@ export default {
       this.resetFields();
       this.tempModalType = this.modalType.view;
       this.registerDetail = _.cloneDeep(params.row);
-      this.registerDetail.activityRule = this.registerDetail.activityRule.replace(
-        /&/g,
-        '\n'
-      );
+      this.registerDetail.activityRule = this.registerDetail.activityRule.replace(/&/g, '\n');
       this.modalView = true;
     },
     handleEdit(params) {
@@ -677,10 +666,7 @@ export default {
       this.tempModalType = this.modalType.edit;
       this.resetFields();
       this.registerDetail = _.cloneDeep(params.row);
-      this.registerDetail.activityRule = this.registerDetail.activityRule.replace(
-        /&/g,
-        '\n'
-      );
+      this.registerDetail.activityRule = this.registerDetail.activityRule.replace(/&/g, '\n');
       this.modalEdit = true;
     },
     getTableData() {

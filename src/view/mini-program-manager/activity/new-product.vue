@@ -14,12 +14,11 @@
         search-place="top"
         @on-view="handleView"
         @on-edit="handleEdit"
-        @on-sale="onOff"
+        @on-sale="handleSwitch"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
         @on-relevance="onRelevance"
       >
-        <!--  @on-delete="handleDelete" -->
         <div slot="searchCondition">
           <Row>
             <Input
@@ -468,7 +467,7 @@
                   </i-col>-->
                   <i-col span="4">
                     <Button
-                      v-show="this.proFlag === true"
+                      v-show="proFlag === true"
                       v-waves
                       :loading="addTempDataLoading"
                       span="4"
@@ -537,17 +536,14 @@ import {
 import tableMixin from '@/mixins/tableMixin.js';
 import {
   imageStatusConvert,
-  expandTypeConvert,
-  onSaleStatusConvert
+  expandTypeConvert
 } from '@/libs/converStatus';
 import { imageStatusEnum, onSaleStatusEnum } from '@/libs/enumerate';
 import {
   fenToYuanDot2,
-  fenToYuanDot2Number,
   yuanToFenNumber,
   compareCouponData
 } from '@/libs/util';
-import { customPlanStatusConvert, appTypeConvert } from '@/libs/converStatus';
 
 const activitySeckillDetail = {
   beginTime: null,
@@ -929,7 +925,7 @@ const productColumns = [
     render: (h, params, vm) => {
       const { row } = params;
       if (row.productStandardExpand != null) {
-        if (row.productStandardExpand.expandType == 'DISCOUNT_PRODUCT') {
+        if (row.productStandardExpand.expandType === 'DISCOUNT_PRODUCT') {
           return (
             <div>
               <tag color='magenta'>
@@ -937,7 +933,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == 'PULL_NEW_PRODUCT') {
+        } else if (row.productStandardExpand.expandType === 'PULL_NEW_PRODUCT') {
           return (
             <div>
               <tag color='orange'>
@@ -945,7 +941,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == 'SECKILL_PRODUCT') {
+        } else if (row.productStandardExpand.expandType === 'SECKILL_PRODUCT') {
           return (
             <div>
               <tag color='blue'>
@@ -953,7 +949,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == 'NEW_TRY_PRODUCT') {
+        } else if (row.productStandardExpand.expandType === 'NEW_TRY_PRODUCT') {
           return (
             <div>
               <tag color='blue'>
@@ -961,7 +957,7 @@ const productColumns = [
               </tag>
             </div>
           );
-        } else if (row.productStandardExpand.expandType == 'ASSIST_PRODUCT') {
+        } else if (row.productStandardExpand.expandType === 'ASSIST_PRODUCT') {
           return (
             <div>
               <tag color='green'>
@@ -988,57 +984,17 @@ export default {
   mixins: [tableMixin],
   data() {
     return {
-      ruleInline: {
-        beginTime: [{ required: true, message: '请选择活动开始时间' }],
-        endTime: [{ required: true, message: '请选择活动结束时间' }],
-        status: [{ required: true, message: '请选择活动状态' }],
-        title: [{ required: true, message: '请输入活动标题' }],
-        userActivityLimit: [
-          { required: true, message: '请输入活动每人限购份数' }
-        ]
-      },
-      relationRuleInline: {
-        activityLimit: [
-          { required: true, message: '请输入库存总数' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        rank: [
-          { required: true, message: '请输入商品排序' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
-              }
-              callback(errors);
-            }
-          }
-        ],
-        userLimit: [
-          { required: true, message: '请输入限购数量' },
-          {
-            validator(rule, value, callback, source, options) {
-              const errors = [];
-              if (!/^[-1-9]\d*$/.test(value)) {
-                errors.push(new Error('必须为非零整数'));
-              }
-              callback(errors);
-            }
-          }
-        ]
-      },
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
       templatePageOpts: [5, 10],
+      relationProducts: [],
+      products: [],
+      addTempDataLoading: false,
+      tempTableLoading: false,
+      editStatus: false,
+      proFlag: true,
+      productTotal: 0,
       imageStatusEnum,
       onSaleStatusEnum,
       columns: [
@@ -1142,21 +1098,59 @@ export default {
         }
       ],
       productColumns: _.cloneDeep(productColumns),
-      addTempDataLoading: false,
-      tempTableLoading: false,
-      createLoading: false,
-      modalViewLoading: false,
-      editStatus: false,
+      ruleInline: {
+        beginTime: [{ required: true, message: '请选择活动开始时间' }],
+        endTime: [{ required: true, message: '请选择活动结束时间' }],
+        status: [{ required: true, message: '请选择活动状态' }],
+        title: [{ required: true, message: '请输入活动标题' }],
+        userActivityLimit: [
+          { required: true, message: '请输入活动每人限购份数' }
+        ]
+      },
+      relationRuleInline: {
+        activityLimit: [
+          { required: true, message: '请输入库存总数' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-1-9]\d*$/.test(value)) {
+                errors.push(new Error('必须为非零整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        rank: [
+          { required: true, message: '请输入商品排序' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-1-9]\d*$/.test(value)) {
+                errors.push(new Error('必须为非零整数'));
+              }
+              callback(errors);
+            }
+          }
+        ],
+        userLimit: [
+          { required: true, message: '请输入限购数量' },
+          {
+            validator(rule, value, callback, source, options) {
+              const errors = [];
+              if (!/^[-1-9]\d*$/.test(value)) {
+                errors.push(new Error('必须为非零整数'));
+              }
+              callback(errors);
+            }
+          }
+        ]
+      },
       searchRowData: _.cloneDeep(roleRowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
       searchProductRowData: _.cloneDeep(productRowData),
       activitySeckillDetail: _.cloneDeep(activitySeckillDetail),
-      relationProducts: [],
       addRelationDetail: _.cloneDeep(relationDetail),
-      productDetail: _.cloneDeep(productDetail),
-      products: [],
-      productTotal: 0,
-      proFlag: true
+      productDetail: _.cloneDeep(productDetail)
     };
   },
   computed: {},
@@ -1178,6 +1172,55 @@ export default {
       this.$refs.editForm.resetFields();
       //   this.uploadListMain = [];
       //   this.activitySeckillDetail.storeImage = null;
+    },
+    getTableData() {
+      getSeckillPages(this.searchRowData)
+        .then((res) => {
+          this.tableData = res.rows;
+          this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    getRelationTableData() {
+      getSeckillProductRelationPages(this.searchRelationRowData)
+        .then((res) => {
+          // 设置行是否可编辑
+          // if (res && res.rows.length > 0) {
+          res.rows.forEach((element) => {
+            element.isEdit = false;
+          });
+          this.relationProducts = res.rows;
+        })
+        .finally(res => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    handleSwitch(params) {
+      this.activitySeckillDetail = this._.cloneDeep(params.row);
+      this.activitySeckillDetail.status = params.row.status === 'ON' ? 'OFF' : 'ON';
+      this.editSeckill();
+    },
+    handleView(params) {
+      this.tempModalType = this.modalType.view;
+      this.activitySeckillDetail = _.cloneDeep(params.row);
+      this.modalView = true;
+    },
+    handleEdit(params) {
+      // this.resetFields();
+      this.editStatus = !compareCouponData(params.row.beginTime);
+      this.tempModalType = this.modalType.edit;
+      this.activitySeckillDetail = _.cloneDeep(params.row);
+      this.modalEdit = true;
     },
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
@@ -1253,12 +1296,6 @@ export default {
       this.activitySeckillDetail = _.cloneDeep(activitySeckillDetail);
       this.modalEdit = true;
     },
-    // 删除
-    // handleDelete(params) {
-    //   this.tableDataSelected = [];
-    //   this.tableDataSelected.push(params.row);
-    //   this.deleteTable(params.row.id);
-    // },
     deleteTable(ids) {
       this.loading = true;
       deleteFlashsale({
@@ -1267,7 +1304,7 @@ export default {
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -1281,67 +1318,12 @@ export default {
           this.loading = false;
         });
     },
-    handleView(params) {
-      this.tempModalType = this.modalType.view;
-      this.activitySeckillDetail = _.cloneDeep(params.row);
-      this.modalView = true;
-    },
-    handleEdit(params) {
-      // this.resetFields();
-      this.editStatus = !compareCouponData(params.row.beginTime);
-      this.tempModalType = this.modalType.edit;
-      this.activitySeckillDetail = _.cloneDeep(params.row);
-      this.modalEdit = true;
-    },
-    getTableData() {
-      getSeckillPages(this.searchRowData)
-        .then((res) => {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch((error) => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
-    },
-    getRelationTableData() {
-      getSeckillProductRelationPages(this.searchRelationRowData)
-        .then((res) => {
-          // 设置行是否可编辑
-          // if (res && res.rows.length > 0) {
-          res.rows.forEach((element) => {
-            element.isEdit = false;
-          });
-          this.relationProducts = res.rows;
-        })
-        .finally(res => {
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
-    },
-    onOff(params) {
-      this.activitySeckillDetail = this._.cloneDeep(params.row);
-      if (params.row.status === 'ON') {
-        this.activitySeckillDetail.status = 'OFF';
-      } else {
-        this.activitySeckillDetail.status = 'ON';
-      }
-      this.loading = true;
-      this.editSeckill();
-    },
     startTimeChange(value, date) {
       this.activitySeckillDetail.beginTime = value;
     },
     endTimeChange(value, date) {
       this.activitySeckillDetail.endTime = value;
     },
-    // ====
     edBeginTimeChange(value) {
       this.searchRowData.beginTime = value;
     },
@@ -1365,9 +1347,7 @@ export default {
       }
       this.$refs[name].validate((valid) => {
         if (valid) {
-          const productStandardIds = this.addRelationDetail.standardId.split(
-            ','
-          );
+          const productStandardIds = this.addRelationDetail.standardId.split(',');
           if (this.addRelationDetail.standardId === '') {
             this.$Message.error('请选择一个要关联的商品!');
             return;

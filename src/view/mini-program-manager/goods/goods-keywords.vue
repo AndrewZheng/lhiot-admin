@@ -201,7 +201,7 @@
         <Button
           :loading="modalEditLoading"
           type="primary"
-          @click="handleSubmit('editForm')"
+          @click="handleSubmit"
         >确定</Button>
       </div>
     </Modal>
@@ -522,10 +522,6 @@ export default {
       productNameList: [],
       productNameArray: [],
       productData: [],
-      searchRowData: _.cloneDeep(roleRowData),
-      keywordDetail: _.cloneDeep(keywordDetail),
-      productStandardRelation: _.cloneDeep(relationData),
-      searchProductRowData: _.cloneDeep(productRowData),
       ruleInline: {
         activityCode: [{ required: true, message: '请输入活动编码' }],
         activityName: [{ required: true, message: '请输入活动名称' }]
@@ -567,7 +563,11 @@ export default {
           key: 'handle',
           options: ['view', 'edit', 'delete']
         }
-      ]
+      ],
+      searchRowData: _.cloneDeep(roleRowData),
+      keywordDetail: _.cloneDeep(keywordDetail),
+      productStandardRelation: _.cloneDeep(relationData),
+      searchProductRowData: _.cloneDeep(productRowData)
     };
   },
   mounted() {
@@ -577,14 +577,15 @@ export default {
   created() {},
   methods: {
     resetSearchRowData() {
+      this.clearSearchLoading = true;
       this.searchRowData = _.cloneDeep(roleRowData);
       this.getTableData();
     },
     resetFields() {
       this.$refs.editForm.resetFields();
     },
-    handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
+    handleSubmit() {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (this.isCreate) {
             // 添加状态

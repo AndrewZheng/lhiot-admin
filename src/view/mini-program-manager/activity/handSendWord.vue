@@ -179,11 +179,8 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   getCollectWordPages,
-  editActivities,
-  createActivities,
   getCollectWordRecord,
   sendCollectWord
 } from '@/api/mini-program';
@@ -231,6 +228,9 @@ export default {
   mixins: [tableMixin],
   data() {
     return {
+      collectWordData: [],
+      failPhone: [],
+      modalCollectWord: false,
       ruleInline: {
         quantity: [
           { required: true, message: '请输入发送数量' },
@@ -410,11 +410,6 @@ export default {
         { label: '是', value: 'YES' },
         { label: '否', value: 'NO' }
       ],
-      collectWordData: [],
-      createLoading: false,
-      modalViewLoading: false,
-      modalCollectWord: false,
-      failPhone: [],
       searchRowData: _.cloneDeep(roleRowData),
       collectWordDetail: _.cloneDeep(collectWordDetail),
       sendWordToPhone: _.cloneDeep(sendWordToPhone)
@@ -431,19 +426,15 @@ export default {
       this.getTableData();
     },
     resetFields() {
-      this.$refs.modalEdit.resetFields();
+      this.$refs.modalSendWord.resetFields();
     },
     getTableData() {
       getCollectWordPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -454,7 +445,6 @@ export default {
         .then((res) => {
           this.collectWordData = res;
         })
-        .catch((error) => {});
     },
     handleAddClose() {
       this.modalCollectWord = false;
@@ -464,8 +454,8 @@ export default {
       this.sendWordToPhone.id = currentTemplate.id;
     },
     addSendWord() {
-      (this.sendWordToPhone = _.cloneDeep(sendWordToPhone)),
-      (this.failPhone = []),
+      this.sendWordToPhone = _.cloneDeep(sendWordToPhone);
+      this.failPhone = [];
       this.getCollectWordRecord();
       this.modalCollectWord = true;
     },
@@ -501,7 +491,6 @@ export default {
             this.getTableData();
           }
         })
-        .catch((error) => {});
     }
   }
 };

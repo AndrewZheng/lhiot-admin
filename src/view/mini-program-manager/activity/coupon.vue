@@ -16,7 +16,7 @@
         @on-view="handleView"
         @on-edit="handleEdit"
         @on-relevance="handleSetting"
-        @custom-on-sale="onOff"
+        @custom-on-sale="handleSwitch"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
@@ -725,7 +725,6 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
 import {
   deleteCoupon,
   getCouponPages,
@@ -736,9 +735,7 @@ import {
   createCouponTemplateRelation,
   editCouponTemplateRelation,
   getCouponTemplatePages,
-  getHdCouponActivitiesPages,
-  getSystemParameter,
-  deletePicture
+  getSystemParameter
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
 import tableMixin from '@/mixins/tableMixin.js';
@@ -746,8 +743,7 @@ import tableMixin from '@/mixins/tableMixin.js';
 import {
   couponStatusConvert,
   couponTypeConvert,
-  couponScopeConvert,
-  couponActivityTypeConvert
+  couponScopeConvert
 } from '@/libs/converStatus';
 import {
   couponStatusEnum,
@@ -1133,6 +1129,23 @@ export default {
   mixins: [tableMixin, uploadMixin],
   data() {
     return {
+      activityClassify: [],
+      oldPicture: [],
+      newPicture: [],
+      save: [],
+      defaultListMain: [],
+      uploadListMain: [],
+      areaList: [],
+      addStatus: false,
+      editStatus: false,
+      addTempDataLoading: false,
+      tempTableLoading: false,
+      couponTemplateTotal: 0,
+      couponStatusEnum,
+      couponTypeEnum,
+      couponScopeEnum,
+      couponActivityTypeEnum,
+      selectActivityType: 'COUPON_CENTER_ACTIVITY',
       ruleInline: {
         activityName: [{ required: true, message: '请输入活动名称' }],
         ifEffective: [{ required: true, message: '请选择活动开关' }],
@@ -1158,20 +1171,6 @@ export default {
           }
         ]
       },
-      defaultListMain: [],
-      uploadListMain: [],
-      areaList: [],
-      addStatus: false,
-      couponStatusEnum,
-      couponTypeEnum,
-      couponScopeEnum,
-      editStatus: false,
-      couponActivityTypeEnum,
-      activityClassify: [],
-      oldPicture: [],
-      newPicture: [],
-      save: [],
-      selectActivityType: 'COUPON_CENTER_ACTIVITY',
       columns: [
         {
           title: '活动编号',
@@ -1284,10 +1283,6 @@ export default {
         }
       ],
       templateColumns: _.cloneDeep(templateColumns),
-      addTempDataLoading: false,
-      tempTableLoading: false,
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       searchRelationRowData: _.cloneDeep(relationRowData),
       searchTemplateRowData: _.cloneDeep(templateRowData),
@@ -1296,8 +1291,7 @@ export default {
       relationDetail: _.cloneDeep(relationDetail),
       addRelationDetail: _.cloneDeep(relationDetail),
       couponTemplateDetail: _.cloneDeep(couponTemplateDetail),
-      hdCouponTemplateDetail: _.cloneDeep(hdCouponTemplateDetail),
-      couponTemplateTotal: 0
+      hdCouponTemplateDetail: _.cloneDeep(hdCouponTemplateDetail)
     };
   },
   computed: {
@@ -1330,163 +1324,6 @@ export default {
       this.$refs.uploadMain.clearFileList();
       this.uploadListMain = [];
       this.couponDetail.storeImage = null;
-    },
-    handCouponType(value) {
-      this.searchRowData.page = 1;
-      this.searchLoading = true;
-      this.getTableData();
-      this.selectActivityType = value;
-    },
-    handleSubmit(name) {
-      // if (this.oldPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.oldPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
-      this.couponDetail.activityType = this.searchRowData.activityType;
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          if (
-            compareData(this.couponDetail.beginTime, this.couponDetail.endTime)
-          ) {
-            this.$Message.error('结束时间必须大于开始时间!');
-            return;
-          }
-          // 活动规则换行用“&”拼接
-          if (
-            this.couponDetail.activityRuel !== null ||
-            this.couponDetail.activityContent !== ''
-          ) {
-            this.couponDetail.activityRuel = this.couponDetail.activityRuel.replace(
-              /\n|\r/g,
-              '&'
-            );
-          }
-          // 应用类型为小程序-WXSMALL_SHOP
-          this.couponDetail.applicationType = 'WXSMALL_SHOP';
-          if (this.isCreate) {
-            // 添加状态
-            this.createCoupon();
-          } else if (this.isEdit) {
-            // 编辑状态
-            this.editCoupon();
-          }
-        } else {
-          this.$Message.error('请完善信息!');
-        }
-      });
-    },
-    handleEditClose() {
-      // if (this.newPicture.length > 0) {
-      //   const urls = {
-      //     urls: this.newPicture
-      //   };
-      //   this.deletePicture(urls);
-      // }
-      this.oldPicture = [];
-      this.newPicture = [];
-      this.modalEdit = false;
-    },
-    // deletePicture(urls) {
-    //   deletePicture({
-    //     urls
-    //   })
-    //     .then(res => {})
-    //     .catch(() => {});
-    // },
-    createCoupon() {
-      this.modalViewLoading = true;
-      createCoupon(this.couponDetail)
-        .then((res) => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
-          this.$Message.success('创建成功!');
-          this.getTableData();
-        })
-        .catch(() => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
-        });
-    },
-    editCoupon() {
-      this.modalViewLoading = true;
-      this.couponDetail.beginTime = this.$moment(
-        this.couponDetail.beginTime
-      ).format('YYYY-MM-DD HH:mm:ss');
-      this.couponDetail.endTime = this.$moment(
-        this.couponDetail.endTime
-      ).format('YYYY-MM-DD HH:mm:ss');
-      editCoupon(this.couponDetail)
-        .then((res) => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-          this.getTableData();
-        })
-        .catch(() => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-        });
-    },
-    addCoupon() {
-      // this.resetFields();
-      this.editStatus = false;
-      if (this.tempModalType !== this.modalType.create) {
-        this.tempModalType = this.modalType.create;
-        this.couponDetail = _.cloneDeep(couponDetail);
-      }
-      this.modalEdit = true;
-    },
-    // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
-    },
-    deleteTable(ids) {
-      this.loading = true;
-      deleteCoupon({
-        ids
-      })
-        .then((res) => {
-          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-          if (
-            this.tableData.length == this.tableDataSelected.length &&
-            this.searchRowData.page === totalPage &&
-            this.searchRowData.page !== 1
-          ) {
-            this.searchRowData.page -= 1;
-          }
-          this.tableDataSelected = [];
-          this.getTableData();
-        })
-        .catch((err) => {
-          console.log(err);
-          this.loading = false;
-        });
-    },
-    handleView(params) {
-      this.modalView = true;
-      this.tempModalType = this.modalType.view;
-      this.couponDetail = _.cloneDeep(params.row);
-      this.couponDetail.activityRuel = this.couponDetail.activityRuel.replace(
-        /&/g,
-        '\n'
-      );
-    },
-    handleEdit(params) {
-      // this.resetFields();
-      this.editStatus = !compareCouponData(params.row.beginTime);
-      this.save = [];
-      this.save.push(params.row.activityImage);
-      this.tempModalType = this.modalType.edit;
-      this.couponDetail = _.cloneDeep(params.row);
-      this.couponDetail.activityRuel = this.couponDetail.activityRuel.replace(
-        /&/g,
-        '\n'
-      );
-      this.setDefaultUploadList(params.row);
-      this.modalEdit = true;
     },
     getTableData() {
       getCouponPages(this.searchRowData)
@@ -1524,14 +1361,32 @@ export default {
           console.log(error);
         });
     },
-    onOff(params) {
-      this.couponDetail = this._.cloneDeep(params.row);
-      if (params.row.ifEffective === 'VALID') {
-        this.couponDetail.ifEffective = 'INVALID';
-      } else {
-        this.couponDetail.ifEffective = 'VALID';
-      }
-      this.loading = true;
+    handleView(params) {
+      this.modalView = true;
+      this.tempModalType = this.modalType.view;
+      this.couponDetail = _.cloneDeep(params.row);
+      this.couponDetail.activityRuel = this.couponDetail.activityRuel.replace(
+        /&/g,
+        '\n'
+      );
+    },
+    handleEdit(params) {
+      // this.resetFields();
+      this.editStatus = !compareCouponData(params.row.beginTime);
+      this.save = [];
+      this.save.push(params.row.activityImage);
+      this.tempModalType = this.modalType.edit;
+      this.couponDetail = _.cloneDeep(params.row);
+      this.couponDetail.activityRuel = this.couponDetail.activityRuel.replace(
+        /&/g,
+        '\n'
+      );
+      this.setDefaultUploadList(params.row);
+      this.modalEdit = true;
+    },
+    handleSwitch(params) {
+      this.couponDetail = _.cloneDeep(params.row);
+      this.couponDetail.ifEffective = params.row.ifEffective === 'VALID' ? 'INVALID' : 'VALID';
       this.editCoupon();
     },
     beginTimeChange(value, date) {
@@ -1541,6 +1396,104 @@ export default {
     endTimeChange(value, date) {
       this.couponDetail.endTime = value;
       this.couponDetail.formEndTime = value;
+    },
+    handCouponType(value) {
+      this.searchRowData.page = 1;
+      this.searchLoading = true;
+      this.getTableData();
+      this.selectActivityType = value;
+    },
+    handleSubmit(name) {
+      this.couponDetail.activityType = this.searchRowData.activityType;
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          if (
+            compareData(this.couponDetail.beginTime, this.couponDetail.endTime)
+          ) {
+            this.$Message.error('结束时间必须大于开始时间!');
+            return;
+          }
+          // 活动规则换行用“&”拼接
+          if (
+            this.couponDetail.activityRuel !== null ||
+            this.couponDetail.activityContent !== ''
+          ) {
+            this.couponDetail.activityRuel = this.couponDetail.activityRuel.replace(
+              /\n|\r/g,
+              '&'
+            );
+          }
+          // 应用类型为小程序-WXSMALL_SHOP
+          this.couponDetail.applicationType = 'WXSMALL_SHOP';
+          if (this.isCreate) {
+            this.createCoupon();
+          } else if (this.isEdit) {
+            this.editCoupon();
+          }
+        } else {
+          this.$Message.error('请完善信息!');
+        }
+      });
+    },
+    handleEditClose() {
+      this.oldPicture = [];
+      this.newPicture = [];
+      this.modalEdit = false;
+    },
+    createCoupon() {
+      this.modalViewLoading = true;
+      createCoupon(this.couponDetail)
+        .then((res) => {
+          this.modalEdit = false;
+          this.$Message.success('创建成功!');
+          this.getTableData();
+        })
+        .finally(() => {
+          this.modalViewLoading = false;
+        });
+    },
+    editCoupon() {
+      this.modalViewLoading = true;
+      this.couponDetail.beginTime = this.$moment(
+        this.couponDetail.beginTime
+      ).format('YYYY-MM-DD HH:mm:ss');
+      this.couponDetail.endTime = this.$moment(
+        this.couponDetail.endTime
+      ).format('YYYY-MM-DD HH:mm:ss');
+      editCoupon(this.couponDetail)
+        .then((res) => {
+          this.modalEdit = false;
+          this.getTableData();
+        })
+        .finally(() => {
+          this.modalViewLoading = false;
+        });
+    },
+    addCoupon() {
+      // this.resetFields();
+      this.editStatus = false;
+      if (this.tempModalType !== this.modalType.create) {
+        this.tempModalType = this.modalType.create;
+        this.couponDetail = _.cloneDeep(couponDetail);
+      }
+      this.modalEdit = true;
+    },
+    deleteTable(ids) {
+      deleteCoupon({
+        ids
+      })
+        .then((res) => {
+          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+          if (
+            this.tableData.length === this.tableDataSelected.length &&
+            this.searchRowData.page === totalPage &&
+            this.searchRowData.page !== 1
+          ) {
+            this.searchRowData.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.getTableData();
+        });
     },
     // 设置编辑商品的图片列表
     setDefaultUploadList(res) {
@@ -1736,14 +1689,12 @@ export default {
       this.modalViewLoading = true;
       createCouponTemplateRelation(this.addRelationDetail)
         .then((res) => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getRelationTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
-          this.modalEdit = false;
         });
     }
   }

@@ -1600,14 +1600,14 @@ const dataColumns = [
     minWidth: 180,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
+      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
         return <div>{row.effectiveStartTime}</div>;
       } else if (
-        row.source == 'SMALL' &&
+        row.source === 'SMALL' &&
         row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.beginDay}</div>;
-      } else if (row.source == 'HD') {
+      } else if (row.source === 'HD') {
         return <div>{row.effectiveStartTime}</div>;
       } else {
         return <div>N/A</div>;
@@ -1621,7 +1621,7 @@ const dataColumns = [
     minWidth: 230,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
+      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
         if (!compareCouponData(row.effectiveEndTime)) {
           return (
             <div style='color:red'>{row.effectiveEndTime + ' 已过期'}</div>
@@ -1630,11 +1630,11 @@ const dataColumns = [
           return <div>{row.effectiveEndTime}</div>;
         }
       } else if (
-        row.source == 'SMALL' &&
+        row.source === 'SMALL' &&
         row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.endDay}</div>;
-      } else if (row.source == 'HD') {
+      } else if (row.source === 'HD') {
         if (!compareCouponData(row.effectiveEndTime)) {
           return <div style='color:red'>{row.effectiveEndTime + '已过期'}</div>;
         } else {
@@ -1942,16 +1942,14 @@ export default {
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
-      buyCouponActStatus: false,
       addRelationList: [],
       couponTemplateData: [],
       hdCouponTemplateData: [],
       templatePageOpts: [5, 10],
+      buyCouponActStatus: false,
       showValidDate: true,
       addTempDataLoading: false,
       tempTableLoading: false,
-      createLoading: false,
-      modalViewLoading: false,
       activityCouponType: '',
       PresellTotal: 0,
       couponTemplateTotal: 0,
@@ -1964,13 +1962,6 @@ export default {
       relationStoreTypeEnum,
       userScopeEnum,
       dataColumns: dataColumns,
-      templateColumns: _.cloneDeep(templateColumns),
-      hdTemplateColumns: _.cloneDeep(hdTemplateColumns),
-      searchRowData: _.cloneDeep(roleRowData),
-      searchTemplateRowData: _.cloneDeep(templateRowData),
-      searchHdTemplateRowData: _.cloneDeep(hdTemplateRowData),
-      couponDetail: _.cloneDeep(couponDetail),
-      addRelationDetail: _.cloneDeep(relationDetail),
       ruleInline: {
         effectiveStartTime: [{ required: false, message: '请选择生效时间' }],
         effectiveEndTime: [{ required: false, message: '请选择失效时间' }],
@@ -1987,7 +1978,14 @@ export default {
             }
           }
         ]
-      }
+      },
+      templateColumns: _.cloneDeep(templateColumns),
+      hdTemplateColumns: _.cloneDeep(hdTemplateColumns),
+      searchRowData: _.cloneDeep(roleRowData),
+      searchTemplateRowData: _.cloneDeep(templateRowData),
+      searchHdTemplateRowData: _.cloneDeep(hdTemplateRowData),
+      couponDetail: _.cloneDeep(couponDetail),
+      addRelationDetail: _.cloneDeep(relationDetail)
     };
   },
   computed: {
@@ -2231,7 +2229,7 @@ export default {
       this.$refs.addForm.resetFields();
       this.addRelationDetail = _.cloneDeep(relationDetail);
       // 当展示的是添加系统优惠券
-      if (this.tempModalType == 'addTemplate') {
+      if (this.tempModalType === 'addTemplate') {
         this.addRelationDetail.couponScope = 'SMALL';
         this.addRelationDetail.useLimitType = 'SMALL_ALL';
       }
@@ -2263,13 +2261,12 @@ export default {
       this.addRelationList.push(this.addRelationDetail);
       createCouponTemplateRelation(this.addRelationList)
         .then((res) => {
-          this.modalViewLoading = false;
           this.$Message.success('创建成功!');
           this.modalAdd = false;
           this.getRelationTableData();
           this.addRelationList = [];
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -2278,12 +2275,8 @@ export default {
         .then((res) => {
           this.hdCouponTemplateData = res.rows;
           this.couponHdTemplateTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -2329,7 +2322,7 @@ export default {
       });
     },
     handleTemplateAdd() {
-      if (this.addRelationDetail.couponName == '') {
+      if (this.addRelationDetail.couponName === '') {
         this.$Message.error('请先关联一张优惠券模板!');
         return false;
       }
@@ -2370,7 +2363,7 @@ export default {
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {

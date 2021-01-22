@@ -97,7 +97,7 @@
         <Button @click="handleEditClose">
           关闭
         </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('editForm')">
+        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit">
           确定
         </Button>
       </div>
@@ -142,8 +142,6 @@ export default {
     return {
       createLoading: false,
       modalViewLoading: false,
-      searchRowData: _.cloneDeep(rowData),
-      storeCity: _.cloneDeep(storeCity),
       columns: [
         {
           type: 'selection',
@@ -197,7 +195,9 @@ export default {
           }
         ],
         cityName: [{ required: true, message: '请输入城市名称' }]
-      }
+      },
+      searchRowData: _.cloneDeep(rowData),
+      storeCity: _.cloneDeep(storeCity)
     };
   },
   mounted() {
@@ -215,8 +215,6 @@ export default {
     },
     getTableData() {
       this.loading = true;
-      this.searchLoading = true;
-      this.clearSearchLoading = true;
       getStoreCityPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
@@ -234,14 +232,12 @@ export default {
       this.storeCity = _.cloneDeep(params.row);
       this.modalEdit = true;
     },
-    handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
+    handleSubmit() {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (this.isCreate) {
-            // 添加状态
             this.createStoreCity();
           } else if (this.isEdit) {
-            // 编辑状态
             this.editStoreCity();
           }
         } else {
@@ -261,28 +257,27 @@ export default {
       this.modalViewLoading = true;
       createStoreCity(this.storeCity)
         .then((res) => {
+          this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
         .finally(() => {
           this.modalViewLoading = false;
-          this.modalEdit = false;
         });
     },
     editStoreCity() {
       this.modalViewLoading = true;
       editStoreCity(this.storeCity)
         .then((res) => {
+          this.modalEdit = false;
           this.$Message.success('修改成功!');
           this.getTableData();
         })
         .finally(() => {
-          this.modalEdit = false;
           this.modalViewLoading = false;
         });
     },
     deleteTable(ids) {
-      this.loading = true;
       deleteStoreCity({
         ids
       })
@@ -299,9 +294,6 @@ export default {
           this.$Message.success('删除成功!');
           this.getTableData();
         })
-        .finally(() => {
-          this.loading = false;
-        });
     }
   }
 };

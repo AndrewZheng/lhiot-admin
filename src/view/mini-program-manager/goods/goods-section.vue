@@ -225,7 +225,7 @@
         <Button
           :loading="modalEditLoading"
           type="primary"
-          @click="handleSubmit('editForm')"
+          @click="handleSubmit"
         >确认</Button>
       </div>
     </Modal>
@@ -874,8 +874,8 @@ export default {
       this.tempModalType = this.modalType.edit;
       this.modalEdit = true;
     },
-    handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
+    handleSubmit() {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           if (!this.productStandardRelation.productSectionId) {
             this.$Message.warning('商品板块id不能为空');
@@ -886,28 +886,33 @@ export default {
             return;
           }
           if (this.isCreate) {
-            this.modalEditLoading = true;
-            createProductSectionRelation(this.productStandardRelation)
-              .then((res) => {
-                this.initMenuList();
-                this.modalEditLoading = false;
-                this.modalEdit = false;
-              }
-              );
+            this.createRowData();
           } else if (this.isEdit) {
-            this.modalEditLoading = true;
-            editProductSectionRelation(this.productStandardRelation)
-              .then((res) => {
-                this.initMenuList();
-                this.modalEditLoading = false;
-                this.modalEdit = false;
-              }
-              );
+            this.updateRowData();
           }
         }
       });
     },
-    // 删除
+    createRowData() {
+      this.modalEditLoading = true;
+      createProductSectionRelation(this.productStandardRelation)
+        .then((res) => {
+          this.initMenuList();
+          this.modalEdit = false;
+        }).finally(() => {
+          this.modalEditLoading = false;
+        });
+    },
+    updateRowData() {
+      this.modalEditLoading = true;
+      editProductSectionRelation(this.productStandardRelation)
+        .then((res) => {
+          this.initMenuList();
+          this.modalEdit = false;
+        }).finally(() => {
+          this.modalEditLoading = false;
+        });
+    },
     deleteTable(ids) {
       this.loading = true;
       deleteProductSectionRelation({

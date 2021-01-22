@@ -2375,7 +2375,7 @@ export default {
           align: 'center',
           minWidth: 100,
           key: 'price',
-          render(h, params, vm) {
+          render(h, params) {
             const amount = fenToYuanDot2(params.row.price);
             return <div>{amount}</div>;
           }
@@ -2385,7 +2385,7 @@ export default {
           align: 'center',
           minWidth: 100,
           key: 'salePrice',
-          render(h, params, vm) {
+          render(h, params) {
             const amount = fenToYuanDot2(params.row.salePrice);
             return <div>{amount}</div>;
           }
@@ -2435,7 +2435,7 @@ export default {
           minWidth: 100,
           key: 'whetherLockShelf',
           align: 'center',
-          render: (h, params, vm) => {
+          render: (h, params) => {
             const { row } = params;
             if (row.whetherLockShelf === 'YES') {
               return (
@@ -3233,7 +3233,7 @@ export default {
           }
           this.updateProStandardExpand();
         } else {
-          this.$Message.error('请完善信息!');
+          this.$Message.error('请完善商品规格信息!');
         }
       });
     },

@@ -382,7 +382,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   deleteSystemSetting,
   getSystemSettingPages,
@@ -399,7 +398,6 @@ const systemDetail = {
   id: 0,
   indexName: 'WXSMALL_PIN_TUAN',
   indexValue: '',
-  // indexValueTemp暂存indexValue的值
   indexValueTemp: {
     titleParams: [
       {
@@ -433,6 +431,9 @@ export default {
   mixins: [uploadMixin, tableMixin],
   data() {
     return {
+      systemCategoryData: [],
+      defaultSystemCategoryData: [],
+      systemCategoriesTreeList: [],
       teamBuyTypeEnum,
       ruleInline: {
         indexName: [{ required: true, message: '请输入键' }],
@@ -527,11 +528,6 @@ export default {
           options: ['view', 'edit', 'delete']
         }
       ],
-      systemCategoryData: [],
-      defaultSystemCategoryData: [41],
-      systemCategoriesTreeList: [],
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
       systemDetail: _.cloneDeep(systemDetail)
     };
@@ -573,10 +569,8 @@ export default {
             return;
           }
           if (this.isCreate) {
-            // 添加状态
             this.createSystemSetting();
           } else if (this.isEdit) {
-            // 编辑状态
             this.editSystemSetting();
           }
         } else {
@@ -586,35 +580,27 @@ export default {
     },
     createSystemSetting() {
       this.modalViewLoading = true;
-      // 将暂存的indexValueTemp赋值给真实的indexValue
-      this.systemDetail.indexValue = JSON.stringify(
-        this.systemDetail.indexValueTemp
-      );
+      this.systemDetail.indexValue = JSON.stringify(this.systemDetail.indexValueTemp);
       createSystemSetting(this.systemDetail)
         .then(res => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
     editSystemSetting() {
       this.modalViewLoading = true;
-      // 将暂存的indexValueTemp赋值给真实的indexValue
-      this.systemDetail.indexValue = JSON.stringify(
-        this.systemDetail.indexValueTemp
-      );
+      this.systemDetail.indexValue = JSON.stringify(this.systemDetail.indexValueTemp);
       editSystemSetting(this.systemDetail)
         .then(res => {
           this.modalEdit = false;
-          this.modalViewLoading = false;
+          this.$Message.success('操作成功!');
           this.getTableData();
         })
-        .catch(() => {
-          this.modalEdit = false;
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -626,14 +612,7 @@ export default {
       }
       this.modalEdit = true;
     },
-    // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
-    },
     deleteTable(ids) {
-      this.loading = true;
       deleteSystemSetting({
         ids
       })
@@ -648,10 +627,6 @@ export default {
           }
           this.tableDataSelected = [];
           this.getTableData();
-        })
-        .catch(err => {
-          console.log(err);
-          this.loading = false;
         });
     },
     handleView(params) {
@@ -679,12 +654,8 @@ export default {
             });
           }
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(error => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

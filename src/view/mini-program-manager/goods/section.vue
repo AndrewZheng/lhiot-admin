@@ -189,7 +189,7 @@
         <Button
           :loading="modalEditLoading"
           type="primary"
-          @click="handleSubmit('editForm')"
+          @click="handleSubmit"
         >确定</Button>
       </div>
     </Modal>
@@ -350,6 +350,15 @@ export default {
     this.parentCategory.groupName = '全部版块';
   },
   methods: {
+    resetFields() {
+      this.$refs.editForm.resetFields();
+      this.$refs.uploadMain.clearFileList();
+      this.uploadListMain = [];
+      this.currentCategory.sectionImg = null;
+    },
+    resetSearchRowData() {
+      this.searchRowData = _.cloneDeep(roleRowData);
+    },
     getTableData() {
       this.loading = true;
       getProductSectionPages(this.searchRowData).then((res) => {
@@ -379,8 +388,8 @@ export default {
     },
     handleBack() {
       this.parentCategory.groupName = '全部版块';
-      this.initMenuList();
       this.resetSearchRowData();
+      this.initMenuList();
     },
     addSection() {
       this.resetFields();
@@ -391,42 +400,41 @@ export default {
       this.tempModalType = this.modalType.create;
       this.modalEdit = true;
     },
-    handleSubmit(name) {
-      if (!this.parentCategory.id) {
-        this.currentCategory.parentId = 0;
-      } else {
-        this.currentCategory.parentId = this.parentCategory.id;
-      }
-      this.$refs[name].validate((valid) => {
+    handleSubmit() {
+      this.currentCategory.parentId = this.parentCategory.id ? this.parentCategory.id : 0;
+      this.$refs.editForm.validate(valid => {
         if (valid) {
-          this.modalEditLoading = true;
           if (this.isCreate) {
-            createProductSection(this.currentCategory)
-              .then((res) => {
-                this.modalEdit = false;
-                this.initMenuList();
-              })
-              .finally((res) => {
-                this.modalEditLoading = false;
-              });
+            this.createRowData();
           } else if (this.isEdit) {
-            editProductSection(this.currentCategory)
-              .then((res) => {
-                this.initMenuList();
-                this.modalEdit = false;
-              })
-              .finally((res) => {
-                this.modalEditLoading = false;
-              });
+            this.updateRowData();
           }
         } else {
           this.$Message.error('请完善板块信息!');
         }
       });
     },
-    handleRemoveMain(file) {
-      this.$refs.uploadMain.deleteFile(file);
-      this.currentCategory.sectionImg = null;
+    createRowData() {
+      this.modalEditLoading = true;
+      createProductSection(this.currentCategory)
+        .then((res) => {
+          this.modalEdit = false;
+          this.initMenuList();
+        })
+        .finally((res) => {
+          this.modalEditLoading = false;
+        });
+    },
+    updateRowData() {
+      this.modalEditLoading = true;
+      editProductSection(this.currentCategory)
+        .then((res) => {
+          this.modalEdit = false;
+          this.initMenuList();
+        })
+        .finally((res) => {
+          this.modalEditLoading = false;
+        });
     },
     deleteTable(ids) {
       deleteProductSectionValidation({ ids })
@@ -541,14 +549,9 @@ export default {
       this.newPicture.push(fileList[0].url);
       this.oldPicture = this.save;
     },
-    resetFields() {
-      this.$refs.editForm.resetFields();
-      this.$refs.uploadMain.clearFileList();
-      this.uploadListMain = [];
+    handleRemoveMain(file) {
+      this.$refs.uploadMain.deleteFile(file);
       this.currentCategory.sectionImg = null;
-    },
-    resetSearchRowData() {
-      this.searchRowData = _.cloneDeep(roleRowData);
     }
   }
 };

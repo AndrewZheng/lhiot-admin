@@ -737,50 +737,6 @@ const relationDetail = {
   cityCode: '0731'
 };
 
-const productStandardDetail = {
-  id: 0,
-  productId: 0,
-  barcode: '',
-  specification: '',
-  standardQty: 0,
-  unitId: 0,
-  productUnit: '',
-  price: 0,
-  salePrice: 0,
-  rank: 0,
-  description: null,
-  shelvesStatus: null,
-  applyType: '',
-  productName: '',
-  createUser: null,
-  image: null,
-  productDescription: '',
-  productCode: '',
-  baseProductName: '',
-  baseProductDescription: '',
-  groupId: 0,
-  groupName: '',
-  sourceCode: '',
-  baseImage: '',
-  smallImage: '',
-  largeImage: '',
-  status: '',
-  baseUnitId: 0,
-  baseUnit: '',
-  baseBarcode: '',
-  hdSkuid: '',
-  videoUrl: '',
-  videoImage: '',
-  baseQty: 0,
-  limitQty: 0,
-  queryStatus: null,
-  invEnough: null,
-  invNum: null,
-  saleCount: null,
-  positionName: null,
-  dbId: null
-};
-
 const roleRowData = {
   // status: '',
   productName: null,
@@ -1170,12 +1126,8 @@ export default {
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1186,11 +1138,8 @@ export default {
         .then((res) => {
           this.couponTemplateData = res.rows;
           this.couponTemplateTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch(() => {
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -1299,7 +1248,7 @@ export default {
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {

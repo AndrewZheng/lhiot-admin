@@ -1826,7 +1826,7 @@
           关闭
         </Button>
         <Button
-          :loading="modalViewLoading"
+          :loading="modalEditLoading"
           type="primary"
           @click="handleTemplateEdit"
         >
@@ -1847,7 +1847,6 @@ import IViewUpload from '_c/iview-upload';
 
 import {
   getCouponExchangePages,
-  deleteCouponExchange,
   createCouponExchange,
   editCouponExchange,
   getCouponTemplatePages,
@@ -2131,14 +2130,14 @@ const dataColumns = [
     width: 120,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
+      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
         return <div>{row.effectiveStartTime}</div>;
       } else if (
-        row.source == 'SMALL' &&
+        row.source === 'SMALL' &&
         row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.beginDay}</div>;
-      } else if (row.source == 'HD') {
+      } else if (row.source === 'HD') {
         return <div>{row.effectiveStartTime}</div>;
       } else {
         return <div>N/A</div>;
@@ -2152,18 +2151,18 @@ const dataColumns = [
     width: 220,
     render: (h, params, vm) => {
       const { row } = params;
-      if (row.source == 'SMALL' && row.validDateType === 'FIXED_DATE') {
+      if (row.source === 'SMALL' && row.validDateType === 'FIXED_DATE') {
         if (!compareCouponData(row.effectiveEndTime)) {
           return <div style='color:red'>{row.effectiveEndTime + '已过期'}</div>;
         } else {
           return <div>{row.effectiveEndTime}</div>;
         }
       } else if (
-        row.source == 'SMALL' &&
+        row.source === 'SMALL' &&
         row.validDateType === 'UN_FIXED_DATE'
       ) {
         return <div>{row.endDay}</div>;
-      } else if (row.source == 'HD') {
+      } else if (row.source === 'HD') {
         if (!compareCouponData(row.effectiveEndTime)) {
           return <div style='color:red'>{row.effectiveEndTime + '已过期'}</div>;
         } else {
@@ -2466,8 +2465,6 @@ export default {
       templatePageOpts: [5, 10],
       addTempDataLoading: false,
       tempTableLoading: false,
-      createLoading: false,
-      modalViewLoading: false,
       modalAdd: false,
       showValidDate: true,
       couponTemplateTotal: 0,
@@ -2588,7 +2585,7 @@ export default {
       // 先清除对象
       this.resetFields();
       // 当展示的是添加系统优惠券
-      if (isShow && this.tempModalType == 'addTemplate') {
+      if (isShow && this.tempModalType === 'addTemplate') {
         this.addRelationDetail.couponScope = 'SMALL';
         this.addRelationDetail.useLimitType = 'SMALL_ALL';
       }
@@ -2685,7 +2682,7 @@ export default {
     },
     editCouponExchange() {
       // 编辑状态
-      this.tempTableLoading = true;
+      this.modalEditLoading = true;
       editCouponExchange(this.addRelationDetail)
         .then((res) => {
           this.modalEdit = false;
@@ -2693,7 +2690,7 @@ export default {
           this.getTableData();
         })
         .finally((res) => {
-          this.tempTableLoading = false;
+          this.modalEditLoading = false;
         });
     },
     replaceTextByTab() {
@@ -2750,7 +2747,7 @@ export default {
     },
     handleTemplateEdit() {
       const _this = this;
-      if (this.addRelationDetail.couponName == '') {
+      if (this.addRelationDetail.couponName === '') {
         this.$Message.error('请先关联一张优惠券模板!');
         return false;
       }
@@ -2840,12 +2837,11 @@ export default {
       this.addRelationDetail.source = 'HD';
       createCouponExchange(this.addRelationDetail)
         .then((res) => {
-          this.modalViewLoading = false;
           this.modalAdd = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -2854,12 +2850,8 @@ export default {
         .then((res) => {
           this.hdCouponTemplateData = res.rows;
           this.couponHdTemplateTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;

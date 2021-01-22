@@ -15,7 +15,7 @@
         @on-view="handleView"
         @on-delete="handleDelete"
         @on-edit="handleEdit"
-        @on-sale="onOff"
+        @on-sale="handleSwitch"
         @on-select-all="onSelectionAll"
         @on-selection-change="onSelectionChange"
       >
@@ -176,7 +176,7 @@
         <i-col>{{ tempModalType===modalType.edit?'修改活动':'创建活动' }}</i-col>
       </p>
       <div class="modal-content">
-        <Form ref="modalEdit" :model="activitiesDetail" :rules="ruleInline" :label-width="100">
+        <Form ref="editForm" :model="activitiesDetail" :rules="ruleInline" :label-width="100">
           <Row>
             <Col span="18">
             <FormItem label="活动编码:" prop="activityCode">
@@ -221,7 +221,7 @@
         <Button @click="handleEditClose">
           关闭
         </Button>
-        <Button :loading="modalViewLoading" type="primary" @click="handleSubmit('modalEdit')">
+        <Button :loading="modalEditLoading" type="primary" @click="handleSubmit">
           确定
         </Button>
       </div>
@@ -231,7 +231,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   deleteActivities,
   getActivitiesPages,
@@ -264,11 +263,6 @@ export default {
   mixins: [tableMixin],
   data() {
     return {
-      ruleInline: {
-        activityCode: [{ required: true, message: '请输入活动编码' }],
-        activityName: [{ required: true, message: '请输入活动名称' }],
-        onOff: [{ required: true, message: '请选择活动状态' }]
-      },
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
@@ -338,8 +332,11 @@ export default {
           options: ['onSale', 'view', 'edit', 'delete']
         }
       ],
-      createLoading: false,
-      modalViewLoading: false,
+      ruleInline: {
+        activityCode: [{ required: true, message: '请输入活动编码' }],
+        activityName: [{ required: true, message: '请输入活动名称' }],
+        onOff: [{ required: true, message: '请选择活动状态' }]
+      },
       searchRowData: _.cloneDeep(roleRowData),
       activitiesDetail: _.cloneDeep(activitiesDetail)
     };
@@ -355,88 +352,27 @@ export default {
       this.getTableData();
     },
     resetFields() {
-      this.$refs.modalEdit.resetFields();
+      this.$refs.editForm.resetFields();
       // this.$refs.uploadMain.clearFileList();
       this.uploadListMain = [];
       this.activitiesDetail.storeImage = null;
     },
-    handleSubmit(name) {
-      this.$refs[name].validate(valid => {
-        if (valid) {
-          if (this.isCreate) {
-            // 添加状态
-            this.createActivities();
-          } else if (this.isEdit) {
-            // 编辑状态
-            this.editActivities();
-          }
-        } else {
-          this.$Message.error('请完善信息!');
-        }
-      });
-    },
-    createActivities() {
-      this.modalViewLoading = true;
-      createActivities(this.activitiesDetail)
+    getTableData() {
+      getActivitiesPages(this.searchRowData)
         .then(res => {
-          this.modalViewLoading = false;
-          this.modalEdit = false;
-          this.$Message.success('创建成功!');
-          this.getTableData();
+          this.tableData = res.rows;
+          this.total = res.total;
         })
-        .catch(() => {
-          this.modalViewLoading = false;
-        });
-    },
-    editActivities() {
-      this.modalViewLoading = true;
-      editActivities(this.activitiesDetail)
-        .then(res => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-          this.getTableData();
-        })
-        .catch(() => {
-          this.modalEdit = false;
-          this.modalViewLoading = false;
-        });
-    },
-    addActivities() {
-      this.resetFields();
-      if (this.tempModalType !== this.modalType.create) {
-        this.tempModalType = this.modalType.create;
-        this.activitiesDetail = _.cloneDeep(activitiesDetail);
-      }
-
-      this.modalEdit = true;
-    },
-    // 删除
-    handleDelete(params) {
-      this.tableDataSelected = [];
-      this.tableDataSelected.push(params.row);
-      this.deleteTable(params.row.id);
-    },
-    deleteTable(ids) {
-      this.loading = true;
-      deleteActivities({
-        ids
-      })
-        .then(res => {
-          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
-          if (
-            this.tableData.length == this.tableDataSelected.length &&
-            this.searchRowData.page === totalPage &&
-            this.searchRowData.page !== 1
-          ) {
-            this.searchRowData.page -= 1;
-          }
-          this.tableDataSelected = [];
-          this.getTableData();
-        })
-        .catch(err => {
-          console.log(err);
+        .finally(() => {
           this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
         });
+    },
+    handleSwitch(params) {
+      this.activitiesDetail = this._.cloneDeep(params.row);
+      this.activitiesDetail.onOff = params.row.onOff === 'ON' ? 'OFF' : 'ON';
+      this.editActivities();
     },
     handleView(params) {
       this.resetFields();
@@ -450,31 +386,65 @@ export default {
       this.activitiesDetail = _.cloneDeep(params.row);
       this.modalEdit = true;
     },
-    getTableData() {
-      getActivitiesPages(this.searchRowData)
+    handleSubmit() {
+      this.$refs.editForm.validate(valid => {
+        if (valid) {
+          if (this.isCreate) {
+            this.createActivities();
+          } else if (this.isEdit) {
+            this.editActivities();
+          }
+        } else {
+          this.$Message.error('请完善信息!');
+        }
+      });
+    },
+    createActivities() {
+      this.modalEditLoading = true;
+      createActivities(this.activitiesDetail)
         .then(res => {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
+          this.modalEdit = false;
+          this.$Message.success('创建成功!');
+          this.getTableData();
         })
-        .catch(error => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
+        .finally(() => {
+          this.modalEditLoading = false;
         });
     },
-    onOff(params) {
-      this.activitiesDetail = this._.cloneDeep(params.row);
-      if (params.row.onOff === 'ON') {
-        this.activitiesDetail.onOff = 'OFF';
-      } else {
-        this.activitiesDetail.onOff = 'ON';
-      }
-      this.loading = true;
-      this.editActivities();
+    editActivities() {
+      this.modalEditLoading = true;
+      editActivities(this.activitiesDetail)
+        .then(res => {
+          this.modalEdit = false;
+          this.$Message.success('操作成功!');
+          this.getTableData();
+        })
+        .finally(() => {
+          this.modalEditLoading = false;
+        });
+    },
+    addActivities() {
+      this.resetFields();
+      this.tempModalType = this.modalType.create;
+      this.activitiesDetail = _.cloneDeep(activitiesDetail);
+      this.modalEdit = true;
+    },
+    deleteTable(ids) {
+      deleteActivities({
+        ids
+      })
+        .then(res => {
+          const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
+          if (
+            this.tableData.length === this.tableDataSelected.length &&
+            this.searchRowData.page === totalPage &&
+            this.searchRowData.page !== 1
+          ) {
+            this.searchRowData.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.getTableData();
+        });
     }
   }
 };
