@@ -168,12 +168,9 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import { serviceFeedback, getSystemParameter } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import { commentScoreConvert } from '@/libs/converStatus';
 import { commentScoreTypeEnum } from '@/libs/enumerate';
-const activitiesDetail = {};
 
 const roleRowData = {
   storeName: '',
@@ -310,8 +307,7 @@ export default {
       feedbackTitleList: [],
       createLoading: false,
       modalViewLoading: false,
-      searchRowData: _.cloneDeep(roleRowData),
-      activitiesDetail: _.cloneDeep(activitiesDetail)
+      searchRowData: _.cloneDeep(roleRowData)
     };
   },
   mounted() {
@@ -333,12 +329,8 @@ export default {
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -355,9 +347,6 @@ export default {
             this.feedbackTitleList.push(map);
           });
         })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     // 导出数据
     handleDownload() {
@@ -371,7 +360,6 @@ export default {
         this.searchRowData.rows = 10;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
-        const _this = this;
         tableData.forEach((item) => {
           item['environmentScore'] = item['environmentScore'] + '星';
           item['fruitScore'] = item['fruitScore'] + '星';

@@ -114,7 +114,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import config from '@/config';
 import { getUnifyExportList } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
@@ -136,9 +135,9 @@ export default {
       exportList: [],
       exportData: [],
       exportCondition: [],
-      exportUrl: '',
       createLoading: false,
       modalViewLoading: false,
+      exportUrl: '',
       searchRowData: _.cloneDeep(roleRowData)
     };
   },
@@ -159,7 +158,6 @@ export default {
             this.exportList.push(map);
           });
         })
-        .catch((error) => {});
     },
     handSelectExport(val) {
       this.searchRowData = _.cloneDeep(roleRowData);

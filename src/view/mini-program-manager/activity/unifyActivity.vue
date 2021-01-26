@@ -735,7 +735,6 @@ export default {
   mixins: [tableMixin, uploadMixin],
   data() {
     return {
-
       defaultListMain: [],
       uploadListMain: [],
       couponConfigManageRelations: [],

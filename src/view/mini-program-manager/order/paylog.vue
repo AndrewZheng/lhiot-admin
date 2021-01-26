@@ -221,7 +221,6 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import CountTo from '_c/count-to';
-import _ from 'lodash';
 import { getPaymentLogPages, getPaymentLogSum } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
 import { fenToYuanDot2, fenToYuanDot2Number } from '@/libs/util';
@@ -282,6 +281,11 @@ export default {
   mixins: [tableMixin],
   data() {
     return {
+      sum: 0,
+      appTypeEnum,
+      payTypeEnum,
+      payStepEnum,
+      sourceTypeEnum,
       columns: [
         {
           title: '订单ID',
@@ -467,15 +471,8 @@ export default {
           width: 140
         }
       ],
-      createLoading: false,
-      modalViewLoading: false,
       searchRowData: _.cloneDeep(roleRowData),
-      paymentLogDetail: _.cloneDeep(paymentLogDetail),
-      appTypeEnum,
-      payTypeEnum,
-      payStepEnum,
-      sourceTypeEnum,
-      sum: 0
+      paymentLogDetail: _.cloneDeep(paymentLogDetail)
     };
   },
   mounted() {
@@ -484,6 +481,44 @@ export default {
   },
   created() {},
   methods: {
+    resetSearchRowData() {
+      this.searchRowData = _.cloneDeep(roleRowData);
+      this.getTableData();
+    },
+    getTableData() {
+      const _this = this;
+      getPaymentLogPages(this.searchRowData)
+        .then((res) => {
+          this.tableData = res.rows;
+          this.total = res.total;
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+      // 金额统计
+      getPaymentLogSum(this.searchRowData).then(function(result) {
+        _this.sum = `金额总计: ¥${fenToYuanDot2Number(result)} 元`;
+      });
+    },
+    handleView(params) {
+      this.tempModalType = this.modalType.view;
+      this.paymentLogDetail = _.cloneDeep(params.row);
+      this.modalView = true;
+    },
+    startTimeChange(value, date) {
+      this.paymentLogDetail.startTime = value;
+      this.searchRowData.startTime = value;
+    },
+    endTimeChange(value, date) {
+      this.paymentLogDetail.endTime = value;
+      this.searchRowData.endTime = value;
+    },
     // 导出
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条
@@ -510,44 +545,6 @@ export default {
           data: tableData
         });
       });
-    },
-    resetSearchRowData() {
-      this.searchRowData = _.cloneDeep(roleRowData);
-      this.getTableData();
-    },
-    handleView(params) {
-      this.tempModalType = this.modalType.view;
-      this.paymentLogDetail = _.cloneDeep(params.row);
-      this.modalView = true;
-    },
-    getTableData() {
-      const _this = this;
-      getPaymentLogPages(this.searchRowData)
-        .then((res) => {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch((error) => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
-      // 金额统计
-      getPaymentLogSum(this.searchRowData).then(function(result) {
-        _this.sum = `金额总计: ¥${fenToYuanDot2Number(result)} 元`;
-      });
-    },
-    startTimeChange(value, date) {
-      this.paymentLogDetail.startTime = value;
-      this.searchRowData.startTime = value;
-    },
-    endTimeChange(value, date) {
-      this.paymentLogDetail.endTime = value;
-      this.searchRowData.endTime = value;
     }
   }
 };

@@ -392,7 +392,7 @@
       </p>
       <div class="modal-content">
         <Form
-          ref="modalEdit"
+          ref="editFrom"
           :model="evaluateDetail"
           :rules="ruleInline"
           :label-width="100"
@@ -562,12 +562,13 @@
         <Button
           :loading="modalViewLoading"
           type="primary"
-          @click="handleSubmit()"
+          @click="handleSubmit"
         >
           确定
         </Button>
       </div>
     </Modal>
+
     <Modal v-model="uploadVisible" title="图片预览">
       <img :src="imgUploadViewItem" style="width: 100%">
     </Modal>
@@ -578,14 +579,9 @@
 import Tables from '_c/tables';
 import IViewUpload from '_c/iview-upload';
 import DragList from '_c/drag-list';
-import _ from 'lodash';
 import { getEvaluatePages, replyEvaluate } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
-import {
-  imageStatusConvert,
-  deliveryTypeConvert,
-  commentScoreConvert
-} from '@/libs/converStatus';
+import { deliveryTypeConvert } from '@/libs/converStatus';
 import {
   imageStatusEnum,
   deliveryTypeEnum,
@@ -647,11 +643,6 @@ export default {
   mixins: [tableMixin],
   data() {
     return {
-      searchRowData: _.cloneDeep(roleRowData),
-      evaluateDetail: _.cloneDeep(evaluateDetail),
-      ruleInline: {
-        answerContent: [{ required: true, message: '请输入评价回复' }]
-      },
       defaultListMain: [],
       uploadListMain: [],
       areaList: [],
@@ -670,6 +661,9 @@ export default {
         { label: '是', value: 'YES' },
         { label: '否', value: 'NO' }
       ],
+      ruleInline: {
+        answerContent: [{ required: true, message: '请输入评价回复' }]
+      },
       columns: [
         {
           title: '订单编号',
@@ -808,8 +802,8 @@ export default {
           options: ['view', 'setTop', 'setSta', 'edit']
         }
       ],
-      createLoading: false,
-      modalViewLoading: false
+      searchRowData: _.cloneDeep(roleRowData),
+      evaluateDetail: _.cloneDeep(evaluateDetail)
     };
   },
   mounted() {
@@ -823,10 +817,59 @@ export default {
       this.getTableData();
     },
     resetFields() {
-      this.$refs.modalEdit.resetFields();
+      this.$refs.editForm.resetFields();
+    },
+    getTableData() {
+      if (this.searchRowData.beginDate) {
+        this.searchRowData.beginDate = this.$moment(
+          this.searchRowData.beginDate
+        ).format('YYYY-MM-DD HH:mm:ss');
+      }
+      if (this.searchRowData.endDate) {
+        this.searchRowData.endDate = this.$moment(
+          this.searchRowData.endDate
+        ).format('YYYY-MM-DD HH:mm:ss');
+      }
+      getEvaluatePages(this.searchRowData)
+        .then((res) => {
+          this.tableData = res.rows;
+          this.total = res.total;
+        })
+        .finally(() => {
+          this.loading = false;
+          this.searchLoading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    handleView(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.view;
+      this.evaluateList = [];
+      this.evaluateDetail = _.cloneDeep(params.row);
+      const arr = params.row.commentImages.split(',');
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] != '') {
+          this.evaluateList.push(arr[i]);
+        }
+      }
+      this.modalView = true;
+    },
+    handleEdit(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.evaluateList = [];
+      this.evaluateDetail = _.cloneDeep(params.row);
+      const arr = params.row.commentImages.split(',');
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] != '') {
+          this.evaluateList.push(arr[i]);
+        }
+      }
+      this.evaluateStatus = !!params.row.answerContent;
+      this.modalEdit = true;
     },
     handleSubmit() {
-      this.$refs.modalEdit.validate((valid) => {
+      this.$refs.editForm.validate((valid) => {
         if (valid) {
           const evaluateData = this.evaluateDetail;
           evaluateData.istop = 'NO';
@@ -846,64 +889,6 @@ export default {
           this.modalEdit = false;
         });
     },
-    handleView(params) {
-      this.resetFields();
-      this.tempModalType = this.modalType.view;
-      this.evaluateDetail = _.cloneDeep(params.row);
-      this.evaluateList = [];
-      this.evaluateDetail = _.cloneDeep(params.row);
-
-      const arr = params.row.commentImages.split(',');
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i] != '') {
-          this.evaluateList.push(arr[i]);
-        }
-      }
-      this.modalView = true;
-    },
-    handleEdit(params) {
-      this.resetFields();
-      this.evaluateList = [];
-      this.evaluateDetail = _.cloneDeep(params.row);
-      const arr = params.row.commentImages.split(',');
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i] != '') {
-          this.evaluateList.push(arr[i]);
-        }
-      }
-      console.log('121232', this.evaluateList);
-      params.row.answerContent
-        ? (this.evaluateStatus = true)
-        : (this.evaluateStatus = false);
-
-      this.modalEdit = true;
-    },
-    getTableData() {
-      if (this.searchRowData.beginDate) {
-        this.searchRowData.beginDate = this.$moment(
-          this.searchRowData.beginDate
-        ).format('YYYY-MM-DD HH:mm:ss');
-      }
-      if (this.searchRowData.endDate) {
-        this.searchRowData.endDate = this.$moment(
-          this.searchRowData.endDate
-        ).format('YYYY-MM-DD HH:mm:ss');
-      }
-      getEvaluatePages(this.searchRowData)
-        .then((res) => {
-          this.tableData = res.rows;
-          this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        })
-        .catch((error) => {
-          console.log(error);
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
-        });
-    },
     beginTimeChange(value, date) {
       this.evaluateDetail.beginDate = value;
     },
@@ -912,7 +897,7 @@ export default {
     },
     handleSetTop(params) {
       const evaluateData = _.cloneDeep(params.row);
-      evaluateData.istop = params.row.istop == 'YES' ? 'NO' : 'YES';
+      evaluateData.istop = params.row.istop === 'YES' ? 'NO' : 'YES';
       this.replyEvaluate(evaluateData);
     },
     handleSetSta(params) {
@@ -936,7 +921,6 @@ export default {
         this.searchRowData.rows = 10;
         this.searchRowData.page = pageSize;
         // 表格数据导出字段翻译
-        const _this = this;
         tableData.forEach((item) => {
           item['deliveryComment'] = deliveryTypeConvert(
             item['deliveryComment']
@@ -957,7 +941,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.mr20 {
-  margin-right: 20px;
-}
 </style>

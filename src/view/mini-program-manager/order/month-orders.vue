@@ -94,17 +94,6 @@ import { monthOrderPages } from '@/api/mini-program';
 import tableMixin from '@/mixins/tableMixin.js';
 import { fenToYuanDot2, gitTime } from '@/libs/util';
 import {
-  receivingWayEnum,
-  receivingWay,
-  orderStatusEnum,
-  miniOrderTypeEnum,
-  appTypeEnum,
-  miniOrderStatusEnum,
-  miniOrderStatus,
-  miniHdStatusEnum,
-  miniHdStatus
-} from '@/libs/enumerate';
-import {
   orderTypeConvert,
   thirdDeliverStatusConvert,
   miniOrderStatusConvert,
@@ -114,7 +103,7 @@ import {
   payTypeConvert,
   isAllRefundConvert
 } from '@/libs/converStatus';
-import BookTypeOption from '_c/book-type-option';
+
 const orderDetail = {
   id: 0,
   amountPayable: '', // 应付金额
@@ -147,8 +136,7 @@ const roleRowData = {
 
 export default {
   components: {
-    Tables,
-    BookTypeOption
+    Tables
   },
   mixins: [tableMixin],
   data() {
@@ -157,8 +145,8 @@ export default {
       haiDingStatus: [],
       storeList: [],
       transferModalView: false,
-      modalViewLoading: false,
       deliverOrderLoading: false,
+      downloadLoading: false,
       columns: [
         {
           type: 'selection',
@@ -460,10 +448,7 @@ export default {
       ],
       currentTableRowSelected: null,
       searchRowData: _.cloneDeep(roleRowData),
-      orderDetail: _.cloneDeep(orderDetail),
-      exportType: 'xlsx',
-      downloadLoading: false,
-      tableDataSelected: []
+      orderDetail: _.cloneDeep(orderDetail)
     };
   },
   created() {
@@ -481,24 +466,21 @@ export default {
       this.searchRowData = this._.cloneDeep(roleRowData);
       this.getTableData();
     },
-    goBack() {
-      this.turnToPage('small-order');
-    },
     getTableData() {
       this.loading = true;
       monthOrderPages(this.searchRowData)
         .then(res => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.clearSearchLoading = false;
-          this.searchLoading = false;
         })
-        .catch(() => {
+        .finally(() => {
           this.loading = false;
           this.clearSearchLoading = false;
           this.searchLoading = false;
         });
+    },
+    goBack() {
+      this.turnToPage('small-order');
     },
     handleDownload() {
       // 导出不分页 按条件查出多少条导出多少条 限制每次最多5000条

@@ -295,6 +295,7 @@
         </Row>
       </div>
     </Card>
+
     <!--查看订单详情-->
     <Modal v-model="modalView" :width="1000" :mask-closable="false">
       <p slot="header">
@@ -697,6 +698,7 @@
         <Button type="primary" @click="handleClose"> 关闭 </Button>
       </div>
     </Modal>
+
     <!-- 订单调货 -->
     <Modal v-model="transferModalView">
       <p slot="header">
@@ -800,7 +802,6 @@
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
 import {
-  getOrderCouponDetails,
   getOrderPages,
   getOrder,
   getStorePages,
@@ -816,7 +817,6 @@ import {
 import tableMixin from '@/mixins/tableMixin.js';
 import {
   fenToYuanDot2,
-  fenToYuanDot2Number,
   getSmallGoodsStandard
 } from '@/libs/util';
 import {
@@ -934,15 +934,14 @@ export default {
   mixins: [tableMixin],
   data() {
     return {
-      mark: true,
-      button: '今日',
-      num: 0,
-      searchMark: true,
       deliverNoteList: [],
       haiDingStatus: [],
       storeList: [],
+      num: 0,
+      mark: true,
+      searchMark: true,
+      downloadLoading: false,
       transferModalView: false,
-      modalViewLoading: false,
       deliverOrderLoading: false,
       orderType: miniOrderTypeEnum,
       orderStatus: orderStatusEnum,
@@ -958,6 +957,7 @@ export default {
       miniHdStatus,
       shippingAddress: '',
       orderState: '',
+      button: '今日',
       tempColumnsView: [
         {
           title: '配送方',
@@ -1562,10 +1562,7 @@ export default {
       currentTableRowSelected: null,
       searchRowData: _.cloneDeep(roleRowData),
       orderDetail: _.cloneDeep(orderDetail),
-      deliverNote: _.cloneDeep(deliverNote),
-      exportType: 'xlsx',
-      downloadLoading: false,
-      tableDataSelected: []
+      deliverNote: _.cloneDeep(deliverNote)
     };
   },
   created() {
@@ -1874,14 +1871,11 @@ export default {
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.clearSearchLoading = false;
-          this.searchLoading = false;
           if (this.num < 1) {
             this.handleSearch();
           }
         })
-        .catch(() => {
+        .finally(() => {
           this.loading = false;
           this.clearSearchLoading = false;
           this.searchLoading = false;
@@ -2054,13 +2048,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.img {
-  width: 150px;
-  height: auto !important;
-}
-.add-image {
-  line-height: 48px;
-  vertical-align: text-bottom;
-  margin-right: 10px;
-}
 </style>

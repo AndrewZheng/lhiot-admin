@@ -80,7 +80,7 @@
                 v-waves
                 type="success"
                 class="mr5"
-                @click="createTableRow"
+                @click="handleCreate"
               >
                 <Icon type="md-add" />添加
               </Button>
@@ -113,6 +113,7 @@
       </i-col>
     </Row>
 
+    <!--查看菜单 -->
     <Modal v-model="modalView" :mask-closable="false">
       <p slot="header">
         <span>FAQ详情</span>
@@ -219,7 +220,7 @@
       </p>
       <div class="modal-content">
         <Form
-          ref="modalEdit"
+          ref="editForm"
           :label-width="100"
           :model="faq"
           :rules="ruleInline"
@@ -271,7 +272,7 @@
         <Button
           :loading="modalEditLoading"
           type="primary"
-          @click="asyncEditOK('modalEdit')"
+          @click="handleSubmit"
         >
           确定
         </Button>
@@ -282,7 +283,6 @@
 
 <script type="text/ecmascript-6">
 import Tables from '_c/tables';
-import _ from 'lodash';
 import {
   createFaq,
   deleteFaq,
@@ -325,6 +325,10 @@ export default {
   mixins: [tableMixin],
   data() {
     return {
+      menuData: [],
+      currentParentId: 0,
+      currentParentName: '',
+      appTypeEnum,
       ruleInline: {
         title: { required: true, message: '请输入FAQ标题' },
         content: { required: true, message: '请输入FAQ内容' },
@@ -342,8 +346,6 @@ export default {
         ],
         applicationType: { required: true, message: '请选择应用类型' }
       },
-      menuData: [],
-      appTypeEnum,
       columns: [
         {
           title: 'ID',
@@ -418,22 +420,125 @@ export default {
           options: ['view', 'edit', 'delete']
         }
       ],
-      modalEdit: false,
-      modalViewLoading: false,
-      modalEditLoading: false,
-      currentParentName: '',
-      currentParentId: 0,
-      faq: this._.cloneDeep(faq),
-      parentCategory: this._.cloneDeep(faq),
-      searchRowData: this._.cloneDeep(roleRowData)
+      faq: _.cloneDeep(faq),
+      parentCategory: _.cloneDeep(faq),
+      searchRowData: _.cloneDeep(roleRowData)
     };
   },
   created() {
     this.initMenuList();
   },
   methods: {
+    resetFields() {
+      this.$refs.editForm.resetFields();
+      this.faq = _.cloneDeep(faq);
+    },
+    resetSearchRowData() {
+      this.clearSearchLoading = true;
+      this.searchRowData = _.cloneDeep(roleRowData);
+      this.getTableData();
+    },
+    uniteChange(value) {
+      this.faq.applicationType = value;
+    },
+    getTableData() {
+      this.loading = true;
+      getFaqPages(this.searchRowData)
+        .then((res) => {
+          this.tableData = res.rows;
+          this.total = res.total;
+        }).finally(() => {
+          this.loading = false;
+          this.clearSearchLoading = false;
+        });
+    },
+    handleCreate() {
+      if (!this.parentCategory.categoryName) {
+        this.$Message.info('请先选中需要添加的类目!');
+        return;
+      }
+      this.faq = _.cloneDeep(faq);
+      this.faq.faqCategoryId = this.currentParentId;
+      this.tempModalType = this.modalType.create;
+      this.modalEdit = true;
+    },
+    handleView(params) {
+      this.tempModalType = this.modalType.view;
+      this.faq = _.cloneDeep(params.row);
+      this.modalView = true;
+    },
+    handleEdit(params) {
+      this.resetFields();
+      this.tempModalType = this.modalType.edit;
+      this.faq = _.cloneDeep(params.row);
+      this.modalEdit = true;
+    },
+    handleSubmit() {
+      this.$refs.editForm.validate((valid) => {
+        if (valid) {
+          if (this.isCreate) {
+            this.faq.faqCategoryId = !this.parentCategory.id ? 0 : this.parentCategory.id;
+            this.createRowData();
+          } else if (this.isEdit) {
+            this.editRowData();
+          }
+        } else {
+          this.$Message.error('请完善信息!');
+        }
+      });
+    },
+    createRowData() {
+      this.modalEditLoading = true;
+      createFaq(this.faq)
+        .then((res) => {
+          this.modalEdit = false;
+          this.initMenuList();
+        })
+        .finally(() => {
+          this.modalEditLoading = false;
+        });
+    },
+    editRowData() {
+      this.modalEditLoading = true;
+      editFaq(this.faq)
+        .then((res) => {
+          this.modalEdit = false;
+          this.initMenuList();
+        })
+        .finally(() => {
+          this.modalEditLoading = false;
+        });
+    },
+    deleteTable(ids) {
+      deleteFaq({
+        ids
+      })
+        .then((res) => {
+          const totalPage = Math.ceil(this.total / this.pageSize);
+          if (
+            this.tableData.length === this.tableDataSelected.length &&
+            this.page === totalPage &&
+            this.page !== 1
+          ) {
+            this.page -= 1;
+          }
+          this.tableDataSelected = [];
+          this.initMenuList();
+        })
+    },
+    initMenuList() {
+      getFaqCategoriesTree().then((res) => {
+        const menuList = buildMenu(res.array);
+        const map = {
+          title: 'title',
+          children: 'children'
+        };
+        this.menuData = convertTree(menuList, map, true);
+        this.getTableData();
+      });
+    },
     renderContent(h, { root, node, data }) {
-      if (data.type == 'PARENT') {
+      if (data.type === 'PARENT') {
         return (
           <div
             style={{
@@ -469,114 +574,6 @@ export default {
         );
       }
     },
-    createTableRow() {
-      if (!this.parentCategory.categoryName) {
-        this.$Message.info('请先选中需要添加的类目!');
-        return;
-      }
-      if (this.tempModalType !== this.modalType.create) {
-        this.faq = this._.cloneDeep(faq);
-      }
-      this.faq.faqCategoryId = this.currentParentId;
-      this.tempModalType = this.modalType.create;
-      this.modalEdit = true;
-    },
-    resetFields() {
-      this.$refs.modalEdit.resetFields();
-      this.faq = _.cloneDeep(faq);
-    },
-    asyncEditOK(name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          this.modalEditLoading = true;
-          this.modalViewLoading = true;
-          if (this.isCreate) {
-            if (!this.parentCategory.id) {
-              this.faq.faqCategoryId = 0;
-            } else {
-              this.faq.faqCategoryId = this.parentCategory.id;
-            }
-            createFaq(this.faq)
-              .then((res) => {})
-              .finally((res) => {
-                this.initMenuList();
-                this.modalEditLoading = false;
-                this.modalEdit = false;
-                this.resetFields();
-              });
-          } else if (this.isEdit) {
-            editFaq(this.faq)
-              .then((res) => {})
-              .finally((res) => {
-                this.initMenuList();
-                this.modalEditLoading = false;
-                this.modalEdit = false;
-                this.resetFields();
-              });
-          }
-        } else {
-          this.$Message.error('请完善信息!');
-        }
-      });
-    },
-    // 删除
-    deleteTable(ids) {
-      this.loading = true;
-      deleteFaq({
-        ids
-      })
-        .then((res) => {
-          const totalPage = Math.ceil(this.total / this.pageSize);
-          if (
-            this.tableData.length === this.tableDataSelected.length &&
-            this.page === totalPage &&
-            this.page !== 1
-          ) {
-            this.page -= 1;
-          }
-          this.tableDataSelected = [];
-          this.initMenuList();
-        })
-        .catch(() => {
-          this.loading = false;
-        });
-    },
-    // 编辑分类
-    handleEdit(params) {
-      // this.$refs.modalEdit.resetFields();
-      this.tempModalType = this.modalType.edit;
-      this.faq = _.cloneDeep(params.row);
-      this.modalEdit = true;
-    },
-    getTableData() {
-      this.loading = true;
-      getFaqPages(this.searchRowData).then((res) => {
-        // if (this.menuData.length > 0) {
-        // 现在对象是 PagerResultObject res.rows获取数据，如果是Pages res.array获取数据
-        this.tableData = res.rows;
-        this.total = res.total;
-        this.loading = false;
-        this.clearSearchLoading = false;
-        // }
-      });
-    },
-    // 初始化商品菜单列表
-    initMenuList() {
-      getFaqCategoriesTree().then((res) => {
-        // if (res && res.array.length > 0) {
-        const menuList = buildMenu(res.array);
-        const map = {
-          title: 'title',
-          children: 'children'
-        };
-        this.menuData = convertTree(menuList, map, true);
-        // if (this.menuData.length > 0) {
-        this.getTableData();
-        //   }
-        // }
-      });
-    },
-
     handleClick({ root, node, data }) {
       this.loading = true;
       // 展开当前节点
@@ -594,35 +591,7 @@ export default {
       this.parentCategory.categoryName = data.title;
       this.currentParentId = data.id;
       this.searchRowData.parentId = data.id;
-      // 获取新数据
       this.getTableData();
-    },
-    expandChildren(array) {
-      array.forEach((item) => {
-        if (typeof item.expand === 'undefined') {
-          // this.$set(item, 'expend', true);
-          this.$set(item, 'expend', false);
-          // } else {
-        } else {
-          item.expand = !item.expand;
-        }
-        if (item.children) {
-          this.expandChildren(item.children);
-        }
-      });
-    },
-    resetSearchRowData() {
-      this.clearSearchLoading = true;
-      this.searchRowData = this._.cloneDeep(roleRowData);
-      this.getTableData();
-    },
-    handleView(params) {
-      this.tempModalType = this.modalType.view;
-      this.faq = _.cloneDeep(params.row);
-      this.modalView = true;
-    },
-    uniteChange(value) {
-      this.faq.applicationType = value;
     }
   }
 };

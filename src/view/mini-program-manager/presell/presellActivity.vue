@@ -1545,7 +1545,6 @@
 import Tables from '_c/tables';
 import config from '@/config';
 import IViewUpload from '_c/iview-upload';
-import _ from 'lodash';
 import {
   deleteTeamBuy,
   getPresellPages,
@@ -1554,8 +1553,7 @@ import {
   getGoodsStandard,
   getAreaStorePages,
   getProductStandardsPages,
-  getTeamBuyPages,
-  deletePicture
+  getTeamBuyPages
 } from '@/api/mini-program';
 import uploadMixin from '@/mixins/uploadMixin';
 import tableMixin from '@/mixins/tableMixin.js';
@@ -1577,7 +1575,6 @@ import {
   fenToYuanDot2Number,
   yuanToFenNumber,
   compareData,
-  secondsToDate,
   compareCouponData
 } from '@/libs/util';
 
@@ -1704,8 +1701,6 @@ export default {
       loading: true,
       modalProduct: false,
       modalGoodsStandard: false,
-      createLoading: false,
-      modalViewLoading: false,
       exportExcelLoading: false,
       currentTableRowSelected: null,
       isEnvironment: null,
@@ -2075,10 +2070,6 @@ export default {
           key: 'rank'
         }
       ],
-      searchRowData: _.cloneDeep(roleRowData),
-      searchProductRowData: _.cloneDeep(productRowData),
-      productDetail: _.cloneDeep(productStandardDetail),
-      presellDetail: _.cloneDeep(preselldata),
       ruleInline: {
         rank: [
           { required: true, message: '请输入排序序号' },
@@ -2181,7 +2172,11 @@ export default {
             }
           }
         ]
-      }
+      },
+      searchRowData: _.cloneDeep(roleRowData),
+      searchProductRowData: _.cloneDeep(productRowData),
+      productDetail: _.cloneDeep(productStandardDetail),
+      presellDetail: _.cloneDeep(preselldata)
     };
   },
   computed: {
@@ -2304,7 +2299,6 @@ export default {
     },
     handleSubmit(name) {
       const _this = this;
-      console.log('213131', _this.presellDetail.storeIds);
       if (
         _this.presellDetail.relationStoreType === 'PART' &&
         (_this.presellDetail.storeIds == null ||
@@ -2330,10 +2324,8 @@ export default {
           .format('YYYY-MM-DD HH:mm:ss');
       }
       if (_this.tempModalType === _this.modalType.create) {
-        // 添加状态
         _this.createStore();
       } else if (_this.tempModalType === _this.modalType.edit) {
-        // 编辑状态
         _this.editStore();
       }
     },
@@ -2347,28 +2339,23 @@ export default {
       this.presellDetail.id = null; // 新建时不需要传递id
       createPresell(this.presellDetail)
         .then((res) => {
-          this.modalViewLoading = false;
           this.modalEdit = false;
           this.$Message.success('创建成功!');
           this.getTableData();
         })
-        .catch(() => {
+        .finally(() => {
           this.modalViewLoading = false;
-          this.modalEdit = false;
-          this.getTableData();
         });
     },
     editStore() {
       this.modalViewLoading = true;
       editPresell(this.presellDetail)
         .then((res) => {
-          this.getTableData();
           this.modalEdit = false;
-          this.modalViewLoading = false;
+          this.$Message.success('操作成功!');
+          this.getTableData();
         })
-        .catch(() => {
-          this.modalEdit = false;
-          this.getTableData();
+        .finally(() => {
           this.modalViewLoading = false;
         });
     },
@@ -2413,21 +2400,19 @@ export default {
       this.getStore();
       this.modalEdit = true;
     },
-    // 删除
     handleDelete(params) {
       this.tableDataSelected = [];
       this.tableDataSelected.push(params.row);
       this.deleteTable(params.row.storeId);
     },
     deleteTable(ids) {
-      this.loading = true;
       deleteTeamBuy({
         ids
       })
         .then((res) => {
           const totalPage = Math.ceil(this.total / this.searchRowData.pageSize);
           if (
-            this.tableData.length == this.tableDataSelected.length &&
+            this.tableData.length === this.tableDataSelected.length &&
             this.searchRowData.page === totalPage &&
             this.searchRowData.page !== 1
           ) {
@@ -2435,10 +2420,6 @@ export default {
           }
           this.tableDataSelected = [];
           this.getTableData();
-        })
-        .catch((err) => {
-          console.log(err);
-          this.loading = false;
         });
     },
     // 设置编辑商品的图片列表
@@ -2525,32 +2506,17 @@ export default {
       });
     },
     getTableData() {
+      this.loading = true;
       getPresellPages(this.searchRowData)
         .then((res) => {
           this.tableData = res.rows;
           this.total = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
         });
-    },
-    handleRemoveMain(file) {
-      this.$refs.uploadMain.deleteFile(file);
-      this.presellDetail.storeImage = null;
-    },
-    // 商品主图
-    handleSuccessMain(response, file, fileList) {
-      this.uploadListMain = fileList;
-      this.presellDetail.banner = null;
-      this.presellDetail.banner = fileList[0].url;
-      this.newPicture.push(fileList[0].url);
-      this.oldPicture = this.save;
     },
     startTimeChange(value, date) {
       this.presellDetail.startTime = value;
@@ -3111,12 +3077,8 @@ export default {
         .then((res) => {
           this.productData = res.rows;
           this.productTotal = res.total;
-          this.loading = false;
-          this.searchLoading = false;
-          this.clearSearchLoading = false;
         })
-        .catch((error) => {
-          console.log(error);
+        .finally(() => {
           this.loading = false;
           this.searchLoading = false;
           this.clearSearchLoading = false;
@@ -3141,7 +3103,6 @@ export default {
       this.getProductTableData();
     },
     handleProductClear() {
-      // 重置商品搜索数据
       this.resetSearchProductRowData();
       this.page = 1;
       this.pageSize = 10;
@@ -3166,12 +3127,7 @@ export default {
     },
     statusChange(params) {
       this.presellDetail = _.cloneDeep(params.row);
-      if (params.row.status === 'VALID') {
-        this.presellDetail.status = 'INVALID';
-      } else {
-        this.presellDetail.status = 'VALID';
-      }
-      this.loading = true;
+      this.presellDetail.status = params.row.status === 'VALID' ? 'INVALID' : 'VALID';
       this.editStore();
     },
     aboutGoods() {
@@ -3188,6 +3144,18 @@ export default {
       this.presellDetail.deliveryStartTime = '';
       this.presellDetail.deliveryEndTime = '';
       this.presellDetail.beginDay = 0;
+    },
+    handleRemoveMain(file) {
+      this.$refs.uploadMain.deleteFile(file);
+      this.presellDetail.storeImage = null;
+    },
+    // 商品主图
+    handleSuccessMain(response, file, fileList) {
+      this.uploadListMain = fileList;
+      this.presellDetail.banner = null;
+      this.presellDetail.banner = fileList[0].url;
+      this.newPicture.push(fileList[0].url);
+      this.oldPicture = this.save;
     }
   }
 };
